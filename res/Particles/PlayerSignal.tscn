@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://cu0k2rhob4ny2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_voeeb"]
+cull_mode = 2
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(1, 0.54902, 0, 1)
+
+[sub_resource type="Curve" id="Curve_vu5sy"]
+_data = [Vector2(0, 0), 0.0, 1.4, 0, 0, Vector2(0.504505, 1), 0.0, 0.0, 0, 0, Vector2(0.981982, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_qf5yd"]
+curve = SubResource("Curve_vu5sy")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_o2lbd"]
+particle_flag_align_y = true
+gravity = Vector3(0, 0, 0)
+scale_min = 0.25
+scale_max = 0.25
+scale_curve = SubResource("CurveTexture_qf5yd")
+
+[sub_resource type="TorusMesh" id="TorusMesh_4lm8q"]
+inner_radius = 2.7
+outer_radius = 4.8
+rings = 4
+ring_segments = 4
+
+[node name="Player_signal" type="GPUParticles3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+top_level = true
+material_override = SubResource("StandardMaterial3D_voeeb")
+emitting = false
+amount = 3
+lifetime = 3.0
+one_shot = true
+speed_scale = 2.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_o2lbd")
+draw_pass_1 = SubResource("TorusMesh_4lm8q")

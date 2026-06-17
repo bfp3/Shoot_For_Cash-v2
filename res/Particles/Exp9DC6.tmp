@@ -1,0 +1,299 @@
+[gd_scene load_steps=34 format=3 uid="uid://cfa1w262hcddw"]
+
+[ext_resource type="Script" path="res://800_materials/Particles/Explosion.gd" id="1_kfvqd"]
+[ext_resource type="AudioStream" uid="uid://27lu8660akto" path="res://400_sound/Player_SFX/Hover_craft_fire_sfx.wav" id="2_sdxui"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_045wb"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_56nae"]
+sky_material = SubResource("ProceduralSkyMaterial_045wb")
+
+[sub_resource type="Environment" id="Environment_n1565"]
+background_mode = 2
+sky = SubResource("Sky_56nae")
+tonemap_mode = 2
+glow_enabled = true
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
+volumetric_fog_length = 1000.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig4be"]
+albedo_color = Color(1, 0.454902, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.454902, 0, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="Curve" id="Curve_00gkx"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.772595, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_quxye"]
+curve = SubResource("Curve_00gkx")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pkylq"]
+particle_flag_align_y = true
+spread = 180.0
+initial_velocity_min = 120.0
+initial_velocity_max = 140.0
+scale_min = 5.0
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_quxye")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4lkxc"]
+top_radius = 0.15
+bottom_radius = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crlpb"]
+albedo_color = Color(1, 0.866667, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_030hl"]
+albedo_color = Color(0.113725, 0.866667, 1, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="Gradient" id="Gradient_kvcba"]
+offsets = PackedFloat32Array(0, 0.688889, 1)
+colors = PackedColorArray(1, 0.937255, 0, 1, 1, 0.454902, 0, 1, 0.682353, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_f1yvb"]
+gradient = SubResource("Gradient_kvcba")
+
+[sub_resource type="Curve" id="Curve_j0jif"]
+max_value = 5.0
+_data = [Vector2(0, 1.95543), 0.0, 0.0, 0, 0, Vector2(1, 0.96), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_74wr8"]
+curve = SubResource("Curve_j0jif")
+
+[sub_resource type="Curve" id="Curve_qwaty"]
+_data = [Vector2(0, 0.0937144), 0.0, 0.0, 0, 0, Vector2(0.253644, 0.992572), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_ekau5"]
+curve = SubResource("Curve_qwaty")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ii83n"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, -1, 0)
+spread = 90.0
+initial_velocity_min = 20.0
+initial_velocity_max = 40.0
+gravity = Vector3(0, 5, 0)
+scale_min = 5.0
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_ekau5")
+color = Color(1, 0.937255, 0, 1)
+color_ramp = SubResource("GradientTexture1D_f1yvb")
+emission_curve = SubResource("CurveTexture_74wr8")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1151m"]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_827ts"]
+material = SubResource("StandardMaterial3D_1151m")
+radial_segments = 6
+rings = 4
+
+[sub_resource type="Curve" id="Curve_qwq53"]
+_data = [Vector2(0.00874636, 0.138286), 0.0, 0.0, 0, 0, Vector2(0.670554, 0.747429), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_tnsfl"]
+curve = SubResource("Curve_qwq53")
+
+[sub_resource type="Curve" id="Curve_iltts"]
+_data = [Vector2(0, 0.0937144), 0.0, 0.0, 0, 0, Vector2(0.253644, 0.992572), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_3ug5n"]
+curve = SubResource("Curve_iltts")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3fnrg"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 40.0
+gravity = Vector3(0, 5, 0)
+scale_min = 5.0
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_3ug5n")
+color = Color(0.449894, 0.482363, 0.478408, 1)
+alpha_curve = SubResource("CurveTexture_tnsfl")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tq21j"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 40.0
+gravity = Vector3(0, 34.555, 0)
+scale_min = 5.0
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_3ug5n")
+color = Color(0.449894, 0.482363, 0.478408, 1)
+alpha_curve = SubResource("CurveTexture_tnsfl")
+
+[sub_resource type="SphereMesh" id="SphereMesh_oftn5"]
+material = SubResource("StandardMaterial3D_1151m")
+radius = 1.075
+height = 1.885
+radial_segments = 6
+rings = 4
+
+[sub_resource type="FogMaterial" id="FogMaterial_214jp"]
+density = 0.01
+emission = Color(0.695503, 0.695503, 0.695503, 1)
+height_falloff = 0.000735171
+edge_fade = 3.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uiasx"]
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.380207, 0.145527, 9.62615e-08, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_tm1t8"]
+radius = 22.85
+height = 2.945
+radial_segments = 4
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wwm8r"]
+shading_mode = 0
+albedo_color = Color(0.0728426, 0.0728426, 0.0728426, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_b0nhq"]
+radius = 22.85
+height = 2.945
+radial_segments = 4
+rings = 1
+
+[node name="Explosion" type="Node3D"]
+script = ExtResource("1_kfvqd")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_n1565")
+
+[node name="Debris" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_ig4be")
+emitting = false
+amount = 24
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-70.5, -70, -63.5, 141, 140, 127)
+process_material = SubResource("ParticleProcessMaterial_pkylq")
+draw_pass_1 = SubResource("CylinderMesh_4lkxc")
+
+[node name="Debris2" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_crlpb")
+emitting = false
+amount = 24
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-70.5, -70, -63.5, 141, 140, 127)
+process_material = SubResource("ParticleProcessMaterial_pkylq")
+draw_pass_1 = SubResource("CylinderMesh_4lkxc")
+
+[node name="Debris3" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_030hl")
+emitting = false
+amount = 24
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-70.5, -70, -63.5, 141, 140, 127)
+process_material = SubResource("ParticleProcessMaterial_pkylq")
+draw_pass_1 = SubResource("CylinderMesh_4lkxc")
+
+[node name="Fire" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 12
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_ii83n")
+draw_pass_1 = SubResource("SphereMesh_827ts")
+
+[node name="Smoke" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 12
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_3fnrg")
+draw_pass_1 = SubResource("SphereMesh_827ts")
+
+[node name="Smoke2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+emitting = false
+amount = 100
+lifetime = 5.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_tq21j")
+draw_pass_1 = SubResource("SphereMesh_oftn5")
+
+[node name="FogVolume" type="FogVolume" parent="."]
+size = Vector3(100, 500, 100)
+shape = 0
+material = SubResource("FogMaterial_214jp")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+autostart = true
+
+[node name="Explosion_sfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_sdxui")
+volume_db = 60.0
+pitch_scale = 2.0
+
+[node name="Explosion_sfx2" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_sdxui")
+volume_db = 60.0
+pitch_scale = 1.5
+
+[node name="Explosion_sfx3" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_sdxui")
+volume_db = 60.0
+
+[node name="Dirt_hole" type="Node3D" parent="."]
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Dirt_hole"]
+material_override = SubResource("StandardMaterial3D_uiasx")
+mesh = SubResource("SphereMesh_tm1t8")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Dirt_hole"]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_uiasx")
+mesh = SubResource("SphereMesh_tm1t8")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="Dirt_hole"]
+transform = Transform3D(0.320429, 0, 0.185, 0, 0.37, 0, -0.185, 0, 0.320429, 0, 1.06418, 0)
+material_override = SubResource("StandardMaterial3D_wwm8r")
+mesh = SubResource("SphereMesh_b0nhq")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="Dirt_hole"]
+transform = Transform3D(0.095763, 0, 0.357393, 0, 0.37, 0, -0.357393, 0, 0.095763, 0, 1.06418, 0)
+material_override = SubResource("StandardMaterial3D_wwm8r")
+mesh = SubResource("SphereMesh_b0nhq")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="Dirt_hole"]
+transform = Transform3D(-0.0957631, 0, 0.357393, 0, 0.37, 0, -0.357393, 0, -0.0957631, 0, 1.06418, 0)
+material_override = SubResource("StandardMaterial3D_wwm8r")
+mesh = SubResource("SphereMesh_b0nhq")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

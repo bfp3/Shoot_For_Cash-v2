@@ -1,0 +1,81 @@
+[gd_resource type="ParticleProcessMaterial" format=3 uid="uid://b4wcp8sndq674"]
+
+[ext_resource type="Texture2D" uid="uid://13ocjdtnrw4g" path="res://res/Explosion_paid_patreon/textures/smoke_ramp.tres" id="1_l3s1t"]
+
+[sub_resource type="Curve" id="Curve_bkfno"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_i5yip"]
+curve = SubResource("Curve_bkfno")
+
+[sub_resource type="Curve" id="Curve_cxu14"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_38jdf"]
+curve = SubResource("Curve_cxu14")
+
+[sub_resource type="Curve" id="Curve_ne40x"]
+_data = [Vector2(0, 1), 0.0, -3.28549, 0, 0, Vector2(0.504021, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_v3f6i"]
+texture_mode = 1
+curve = SubResource("Curve_ne40x")
+
+[sub_resource type="Curve" id="Curve_4xpe5"]
+_data = [Vector2(0, 0.400518), 0.0, 3.42605, 0, 0, Vector2(0.504021, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -5.33409, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_uvfuc"]
+curve = SubResource("Curve_4xpe5")
+
+[sub_resource type="Curve" id="Curve_hf5yr"]
+_data = [Vector2(0.00536193, 0), 0.0, 3.23463, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_k5vwq"]
+curve = SubResource("Curve_hf5yr")
+
+[sub_resource type="Curve" id="Curve_uy1rc"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_kxxwn"]
+curve = SubResource("Curve_uy1rc")
+
+[resource]
+lifetime_randomness = 0.6
+particle_flag_align_y = true
+particle_flag_rotate_y = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 0.25
+emission_ring_inner_radius = 0.2
+emission_ring_cone_angle = 90.0
+spread = 180.0
+flatness = 1.0
+angular_velocity_min = -90.0
+angular_velocity_max = 90.0
+angular_velocity_curve = SubResource("CurveTexture_i5yip")
+radial_velocity_min = 5.0
+radial_velocity_max = 6.0
+radial_velocity_curve = SubResource("CurveTexture_v3f6i")
+gravity = Vector3(0, -5, 0)
+tangential_accel_min = -30.0
+tangential_accel_max = -10.0
+tangential_accel_curve = SubResource("CurveTexture_k5vwq")
+damping_min = 10.0
+damping_max = 11.0
+damping_curve = SubResource("CurveTexture_38jdf")
+scale_min = 0.45
+scale_max = 0.5
+scale_curve = SubResource("CurveTexture_uvfuc")
+color = Color(0.65098, 0.65098, 0.65098, 1)
+color_ramp = ExtResource("1_l3s1t")
+turbulence_noise_scale = 0.0
+turbulence_noise_speed = Vector3(0, 1, 0)
+turbulence_influence_over_life = SubResource("CurveTexture_kxxwn")

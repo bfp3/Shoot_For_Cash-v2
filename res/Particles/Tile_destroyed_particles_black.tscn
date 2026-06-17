@@ -1,0 +1,66 @@
+[gd_scene load_steps=10 format=3 uid="uid://bwwlkt721bvyk"]
+
+[ext_resource type="Texture2D" uid="uid://b1cq48v71eomq" path="res://300_environment/Downloaded_assets/TurboSquid/Rock_Rock020_1K-JPG_NormalDX.png" id="1_21i72"]
+
+[sub_resource type="Curve" id="Curve_6t84p"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.13242, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_5hj7b"]
+curve_y = SubResource("Curve_6t84p")
+
+[sub_resource type="Curve" id="Curve_jedj8"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.730594, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_hg4vu"]
+curve = SubResource("Curve_jedj8")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8ikm6"]
+emission_shape_scale = Vector3(1, 25, 1)
+emission_shape = 3
+emission_box_extents = Vector3(25, 0, 25)
+spread = 0.0
+flatness = 1.0
+directional_velocity_min = 1.0
+directional_velocity_max = 1.0
+directional_velocity_curve = SubResource("CurveXYZTexture_5hj7b")
+gravity = Vector3(0, 0, 0)
+scale_min = 0.0
+scale_curve = SubResource("CurveTexture_hg4vu")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ftrpe"]
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+emission = Color(1, 0.2, 0, 1)
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("1_21i72")
+uv1_scale = Vector3(0.01, 0.01, 0.01)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_5u7ig"]
+material = SubResource("StandardMaterial3D_ftrpe")
+size = Vector3(5, 0.2, 5)
+
+[sub_resource type="GDScript" id="GDScript_5wnf2"]
+script/source = "extends GPUParticles3D
+
+func _on_finished() -> void:
+	self.queue_free()
+"
+
+[node name="Tile_broken_black" type="GPUParticles3D"]
+emitting = false
+amount = 500
+lifetime = 15.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-1000, -1000, -1000, 2000, 2000, 2000)
+process_material = SubResource("ParticleProcessMaterial_8ikm6")
+draw_pass_1 = SubResource("BoxMesh_5u7ig")
+script = SubResource("GDScript_5wnf2")
+
+[connection signal="finished" from="." to="." method="_on_finished"]

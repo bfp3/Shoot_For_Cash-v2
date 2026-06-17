@@ -1,0 +1,467 @@
+[gd_scene format=3 uid="uid://cwc0w5wd5loo4"]
+
+[ext_resource type="Script" uid="uid://c8qc34b6tcsr3" path="res://res/Particles/Explosion.gd" id="1_l8scv"]
+[ext_resource type="Texture2D" path="res://700_2D_UI_elements/HUD_ring_images/white_circle_ring.png" id="2_msouk"]
+[ext_resource type="Texture2D" path="res://900_misc/Explosion_paid_patreon/textures/explosion_ground_decal.png" id="3_w2as4"]
+[ext_resource type="Script" path="res://900_misc/Custom_Classes/Trails3D.gd" id="4_3sq1c"]
+[ext_resource type="AudioStream" path="res://400_sound/Player_SFX/Hover_craft_fire_sfx.wav" id="5_6j68s"]
+
+
+[sub_resource type="BoxMesh" id="BoxMesh_8ajje"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="Shader" id="Shader_b8l3e"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.dev's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx,unshaded;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_linear_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_linear_mipmap,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_linear_mipmap,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+uniform sampler2D mask;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	albedo_tex.rgb = mix(pow((albedo_tex.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)),vec3(2.4)),albedo_tex.rgb.rgb * (1.0 / 12.92),lessThan(albedo_tex.rgb,vec3(0.04045)));
+	albedo_tex *= COLOR;
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+	ALPHA *= albedo.a * albedo_tex.a;
+	
+	ALPHA *= texture(mask, UV).r;// * albedo_tex.r;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_66rdb"]
+render_priority = 0
+shader = SubResource("Shader_b8l3e")
+shader_parameter/albedo = Color(0.15, 0.15, 0.15, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/texture_albedo = ExtResource("3_w2as4")
+shader_parameter/mask = ExtResource("3_w2as4")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_iwudn"]
+size = Vector2(80, 80)
+
+[sub_resource type="Gradient" id="Gradient_vqydl"]
+offsets = PackedFloat32Array(0, 0.42328, 0.52381, 0.597884)
+colors = PackedColorArray(1, 1, 1, 0, 0.0707071, 0.0707071, 0.0707071, 0.929293, 0, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rqn6t"]
+gradient = SubResource("Gradient_vqydl")
+width = 608
+height = 25
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2167e"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_npbwy"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_sbf7i"]
+radius = 1.0
+
+[sub_resource type="Gradient" id="Gradient_kvcba"]
+offsets = PackedFloat32Array(0, 0.688889, 1)
+colors = PackedColorArray(1, 0.937255, 0, 1, 1, 0.454902, 0, 1, 0.682353, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_sx2pe"]
+gradient = SubResource("Gradient_kvcba")
+
+[sub_resource type="Curve" id="Curve_j0jif"]
+max_value = 5.0
+_data = [Vector2(0, 1.95543), 0.0, 0.0, 0, 0, Vector2(1, 0.96), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_vkd12"]
+curve = SubResource("Curve_j0jif")
+
+[sub_resource type="Curve" id="Curve_qwaty"]
+_data = [Vector2(0, 0.0937144), 0.0, 0.0, 0, 0, Vector2(0.253644, 0.992572), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_48qgk"]
+curve = SubResource("Curve_qwaty")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ii83n"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, -1, 0)
+spread = 90.0
+initial_velocity_min = 20.0
+initial_velocity_max = 40.0
+gravity = Vector3(0, 5, 0)
+scale_min = 5.0
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_48qgk")
+color = Color(1, 0.937255, 0, 1)
+color_ramp = SubResource("GradientTexture1D_sx2pe")
+emission_curve = SubResource("CurveTexture_vkd12")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q1e2q"]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_827ts"]
+material = SubResource("StandardMaterial3D_q1e2q")
+radial_segments = 6
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_48dj8"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="Curve" id="Curve_qwq53"]
+_data = [Vector2(0.00874636, 0.138286), 0.0, 0.0, 0, 0, Vector2(0.670554, 0.747429), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_xe5lp"]
+curve = SubResource("Curve_qwq53")
+
+[sub_resource type="Curve" id="Curve_iltts"]
+_data = [Vector2(0, 0.0937144), 0.0, 0.0, 0, 0, Vector2(0.253644, 0.992572), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_udjqr"]
+curve = SubResource("Curve_iltts")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3fnrg"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 40.0
+gravity = Vector3(0, 5, 0)
+scale_min = 5.0
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_udjqr")
+color = Color(0.449894, 0.482363, 0.478408, 1)
+alpha_curve = SubResource("CurveTexture_xe5lp")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tq21j"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 40.0
+gravity = Vector3(0, 34.555, 0)
+scale_min = 5.0
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_udjqr")
+color = Color(0.449894, 0.482363, 0.478408, 1)
+alpha_curve = SubResource("CurveTexture_xe5lp")
+
+[sub_resource type="SphereMesh" id="SphereMesh_oftn5"]
+material = SubResource("StandardMaterial3D_q1e2q")
+radius = 1.075
+height = 1.885
+radial_segments = 6
+rings = 4
+
+[sub_resource type="Gradient" id="Gradient_lvwq6"]
+offsets = PackedFloat32Array(0, 0.42328, 0.52381, 0.597884)
+colors = PackedColorArray(1, 1, 1, 0, 0.0707071, 0.0707071, 0.0707071, 0.929293, 0, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_cyfwu"]
+gradient = SubResource("Gradient_lvwq6")
+width = 608
+height = 25
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="Explosion" type="Node3D"]
+script = ExtResource("1_l8scv")
+
+[node name="Test_Mesh" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("BoxMesh_8ajje")
+
+[node name="Dirt_hole" type="Node3D" parent="."]
+visible = false
+
+[node name="Noise_texture2" type="Decal" parent="Dirt_hole"]
+visible = false
+size = Vector3(30, 12, 30)
+texture_albedo = ExtResource("2_msouk")
+modulate = Color(0.194349, 0.194349, 0.194349, 1)
+normal_fade = 0.3
+
+[node name="Explosion_plane" type="MeshInstance3D" parent="Dirt_hole"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_66rdb")
+mesh = SubResource("PlaneMesh_iwudn")
+skeleton = NodePath("")
+
+[node name="Circle_decal" type="Decal" parent="Dirt_hole"]
+visible = false
+size = Vector3(60, 15, 60)
+texture_albedo = SubResource("GradientTexture2D_rqn6t")
+texture_normal = SubResource("GradientTexture2D_rqn6t")
+modulate = Color(0, 0, 0, 1)
+normal_fade = 0.3
+
+[node name="Noise_texture3" type="Decal" parent="Dirt_hole"]
+visible = false
+size = Vector3(15, 12, 15)
+texture_albedo = ExtResource("2_msouk")
+modulate = Color(0.194349, 0.194349, 0.194349, 1)
+normal_fade = 0.3
+
+[node name="Explosion_particles" type="Node3D" parent="."]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Explosion_particles"]
+gravity_scale = 10.0
+linear_velocity = Vector3(0, 300, 0)
+angular_velocity = Vector3(0, 8.72665, 0)
+
+[node name="Trail3D" type="MeshInstance3D" parent="Explosion_particles/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+material_override = SubResource("StandardMaterial3D_2167e")
+skeleton = NodePath("../../..")
+script = ExtResource("4_3sq1c")
+_fromWidth = 9.0
+_endColor = Color(1, 1, 1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Explosion_particles/RigidBody3D"]
+shape = SubResource("SphereShape3D_npbwy")
+
+[node name="Area3D" type="Area3D" parent="Explosion_particles"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Explosion_particles/Area3D"]
+shape = SubResource("SphereShape3D_sbf7i")
+
+[node name="Fire" type="GPUParticles3D" parent="Explosion_particles"]
+emitting = false
+amount = 12
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 180
+process_material = SubResource("ParticleProcessMaterial_ii83n")
+draw_pass_1 = SubResource("SphereMesh_827ts")
+
+[node name="Smoke" type="GPUParticles3D" parent="Explosion_particles"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, 0, 1, 0, -10, 0)
+material_override = SubResource("StandardMaterial3D_48dj8")
+emitting = false
+amount = 40
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 180
+process_material = SubResource("ParticleProcessMaterial_3fnrg")
+draw_pass_1 = SubResource("SphereMesh_827ts")
+
+[node name="Smoke2" type="GPUParticles3D" parent="Explosion_particles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+material_override = SubResource("StandardMaterial3D_48dj8")
+emitting = false
+amount = 40
+lifetime = 3.0
+one_shot = true
+fixed_fps = 180
+process_material = SubResource("ParticleProcessMaterial_tq21j")
+draw_pass_1 = SubResource("SphereMesh_oftn5")
+
+[node name="Timer" type="Timer" parent="Explosion_particles"]
+wait_time = 7.0
+one_shot = true
+autostart = true
+
+[node name="Explosion_sfx" type="AudioStreamPlayer3D" parent="Explosion_particles"]
+stream = ExtResource("5_6j68s")
+volume_db = 30.0
+pitch_scale = 2.0
+max_distance = 450.0
+max_polyphony = 5
+
+[node name="Explosion_sfx2" type="AudioStreamPlayer3D" parent="Explosion_particles"]
+stream = ExtResource("5_6j68s")
+volume_db = 30.0
+pitch_scale = 1.5
+max_distance = 450.0
+max_polyphony = 5
+
+[node name="Explosion_sfx3" type="AudioStreamPlayer3D" parent="Explosion_particles"]
+stream = ExtResource("5_6j68s")
+volume_db = 30.0
+max_distance = 450.0
+max_polyphony = 5
+
+[node name="Explosion_sfx4" type="AudioStreamPlayer3D" parent="Explosion_particles"]
+stream = ExtResource("5_6j68s")
+volume_db = 40.0
+pitch_scale = 2.5
+autoplay = true
+max_distance = 450.0
+max_polyphony = 5
+
+[node name="Explosion_sfx5" type="AudioStreamPlayer3D" parent="Explosion_particles"]
+stream = ExtResource("5_6j68s")
+volume_db = 40.0
+pitch_scale = 0.5
+autoplay = true
+max_distance = 450.0
+max_polyphony = 5
+
+[node name="Explosion_sfx6" type="AudioStreamPlayer3D" parent="Explosion_particles"]
+stream = ExtResource("5_6j68s")
+volume_db = 40.0
+pitch_scale = 3.0
+autoplay = true
+max_distance = 450.0
+max_polyphony = 5
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -50, 0)
+size = Vector3(300, 100, 300)
+
+[node name="Explosion_csg" type="CSGSphere3D" parent="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, 0)
+operation = 2
+radius = 32.655
+radial_segments = 13
+smooth_faces = false
+
+[node name="Circle_decal" type="Decal" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -32, 0)
+size = Vector3(121.605, 22.115, 149.72)
+texture_albedo = SubResource("GradientTexture2D_cyfwu")
+texture_normal = SubResource("GradientTexture2D_cyfwu")
+modulate = Color(0, 0, 0, 1)
+normal_fade = 0.3
+
+[node name="Circle_decal2" type="Decal" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -25.4354, 0)
+size = Vector3(91.605, 22.115, 89.72)
+texture_albedo = SubResource("GradientTexture2D_cyfwu")
+texture_normal = SubResource("GradientTexture2D_cyfwu")
+modulate = Color(0, 0, 0, 1)
+normal_fade = 0.3
+
+[node name="Circle_decal3" type="Decal" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -25.4354, 0)
+size = Vector3(91.605, 22.115, 89.72)
+texture_albedo = SubResource("GradientTexture2D_cyfwu")
+texture_normal = SubResource("GradientTexture2D_cyfwu")
+modulate = Color(0, 0, 0, 1)
+
+[node name="Circle_decal4" type="Decal" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -25.4354, 0)
+size = Vector3(91.605, 22.115, 89.72)
+texture_albedo = SubResource("GradientTexture2D_cyfwu")
+texture_normal = SubResource("GradientTexture2D_cyfwu")
+modulate = Color(0, 0, 0, 1)
+
+[node name="Circle_decal5" type="Decal" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -25.4354, 0)
+size = Vector3(91.605, 22.115, 89.72)
+texture_albedo = SubResource("GradientTexture2D_cyfwu")
+texture_normal = SubResource("GradientTexture2D_cyfwu")
+modulate = Color(0, 0, 0, 1)
+
+[node name="Circle_decal6" type="Decal" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -25.4354, 0)
+size = Vector3(91.605, 22.115, 89.72)
+texture_albedo = SubResource("GradientTexture2D_cyfwu")
+texture_normal = SubResource("GradientTexture2D_cyfwu")
+modulate = Color(0, 0, 0, 1)
+
+[node name="Circle_decal7" type="Decal" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -25.4354, 0)
+size = Vector3(91.605, 22.115, 89.72)
+texture_albedo = SubResource("GradientTexture2D_cyfwu")
+texture_normal = SubResource("GradientTexture2D_cyfwu")
+modulate = Color(0, 0, 0, 1)
+
+[node name="Circle_decal8" type="Decal" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -9.43545, 0)
+size = Vector3(91.605, 22.115, 89.72)
+texture_albedo = SubResource("GradientTexture2D_cyfwu")
+texture_normal = SubResource("GradientTexture2D_cyfwu")
+modulate = Color(0, 0, 0, 1)
+
+[node name="Noise_texture3" type="Decal" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -32.2186, 0)
+size = Vector3(37.305, 22.225, 35.77)
+texture_albedo = ExtResource("2_msouk")
+modulate = Color(0, 0, 0, 0.592157)
+normal_fade = 0.3
+
+[node name="CSGSphere3D2" type="CSGSphere3D" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.0067, 3.2, -3.20001)
+radius = 20.8
+radial_segments = 13
+smooth_faces = false
+
+[node name="CSGSphere3D3" type="CSGSphere3D" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.0067, 3.2, -35.2)
+radius = 6.58727
+radial_segments = 13
+smooth_faces = false
+
+[node name="CSGSphere3D4" type="CSGSphere3D" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.9933, 0.844993, -35.2)
+radius = 8.08648
+radial_segments = 13
+smooth_faces = false
+
+[node name="CSGSphere3D5" type="CSGSphere3D" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00670624, 0.844993, -35.2)
+radius = 8.08648
+radial_segments = 13
+smooth_faces = false
+
+[node name="CSGSphere3D6" type="CSGSphere3D" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.93, 0.844993, 28.8)
+radius = 16.0
+radial_segments = 13
+smooth_faces = false
+
+[node name="CSGSphere3D8" type="CSGSphere3D" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.07003, 0.844993, 28.8)
+radius = 16.0
+radial_segments = 13
+smooth_faces = false
+
+[node name="CSGSphere3D7" type="CSGSphere3D" parent="CSGBox3D/Explosion_csg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.93, 0.844993, 28.8)
+radius = 8.08648
+radial_segments = 13
+smooth_faces = false
+
+[connection signal="body_entered" from="Explosion_particles/Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="timeout" from="Explosion_particles/Timer" to="." method="_on_timer_timeout"]

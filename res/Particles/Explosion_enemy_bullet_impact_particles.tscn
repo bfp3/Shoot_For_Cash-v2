@@ -1,0 +1,108 @@
+[gd_scene format=3 uid="uid://bo1rn6s367gku"]
+
+[ext_resource type="Script" uid="uid://dfslsq8crnyfc" path="res://res/Particles/explosion_small_impact_shot.gd" id="1_gum68"]
+[ext_resource type="AudioStream" path="res://addons/character-controller/example/main/jute-dh-steps/stepwood_1.wav" id="2_6og1t"]
+[ext_resource type="AudioStream" path="res://400_sound/Player_SFX/Hover_craft_fire_sfx.wav" id="2_ttmx4"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig4be"]
+albedo_color = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="Curve" id="Curve_00gkx"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.772595, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_vjb26"]
+curve = SubResource("Curve_00gkx")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pkylq"]
+particle_flag_align_y = true
+spread = 180.0
+initial_velocity_min = 120.0
+initial_velocity_max = 140.0
+scale_min = 5.0
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_vjb26")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4lkxc"]
+top_radius = 0.1
+bottom_radius = 0.0
+height = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crlpb"]
+albedo_color = Color(0.4, 0.4, 0.4, 1)
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_030hl"]
+shading_mode = 0
+albedo_color = Color(1, 0.55, 0, 1)
+
+[node name="Small_enemy_impact_shots_shratnels" type="Node3D"]
+script = ExtResource("1_gum68")
+
+[node name="Explosion_particles" type="Node3D" parent="."]
+
+[node name="Debris" type="GPUParticles3D" parent="Explosion_particles"]
+visible = false
+material_override = SubResource("StandardMaterial3D_ig4be")
+emitting = false
+amount = 20
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-70.5, -70, -63.5, 141, 140, 127)
+process_material = SubResource("ParticleProcessMaterial_pkylq")
+draw_pass_1 = SubResource("CylinderMesh_4lkxc")
+
+[node name="Debris2" type="GPUParticles3D" parent="Explosion_particles"]
+material_override = SubResource("StandardMaterial3D_crlpb")
+emitting = false
+amount = 20
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-70.5, -70, -63.5, 141, 140, 127)
+process_material = SubResource("ParticleProcessMaterial_pkylq")
+draw_pass_1 = SubResource("CylinderMesh_4lkxc")
+
+[node name="Debris3" type="GPUParticles3D" parent="Explosion_particles"]
+material_override = SubResource("StandardMaterial3D_030hl")
+emitting = false
+amount = 20
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-70.5, -70, -63.5, 141, 140, 127)
+process_material = SubResource("ParticleProcessMaterial_pkylq")
+draw_pass_1 = SubResource("CylinderMesh_4lkxc")
+
+[node name="Timer" type="Timer" parent="Explosion_particles"]
+wait_time = 2.0
+one_shot = true
+autostart = true
+
+[node name="Stepwood1" type="AudioStreamPlayer" parent="Explosion_particles"]
+stream = ExtResource("2_6og1t")
+volume_db = -15.0
+autoplay = true
+bus = &"Pitch_in_half"
+
+[node name="Explosion_sfx" type="AudioStreamPlayer3D" parent="Explosion_particles"]
+stream = ExtResource("2_ttmx4")
+volume_db = 10.0
+pitch_scale = 10.0
+max_distance = 450.0
+max_polyphony = 5
+
+[node name="Explosion_sfx2" type="AudioStreamPlayer3D" parent="Explosion_particles"]
+stream = ExtResource("2_ttmx4")
+volume_db = 10.0
+pitch_scale = 10.0
+max_distance = 450.0
+max_polyphony = 5
+
+[connection signal="timeout" from="Explosion_particles/Timer" to="." method="_on_timer_timeout"]

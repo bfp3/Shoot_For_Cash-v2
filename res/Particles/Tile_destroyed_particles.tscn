@@ -1,0 +1,55 @@
+[gd_scene load_steps=9 format=3 uid="uid://okors41d4kuk"]
+
+[ext_resource type="Material" uid="uid://xt6ouxfqoih5" path="res://800_3D_materials/Dark_grey_walls_tile_material.tres" id="1_6t84p"]
+
+[sub_resource type="Curve" id="Curve_6t84p"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.13242, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_5hj7b"]
+curve_y = SubResource("Curve_6t84p")
+
+[sub_resource type="Curve" id="Curve_jedj8"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.730594, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_hg4vu"]
+curve = SubResource("Curve_jedj8")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8ikm6"]
+emission_shape_scale = Vector3(1, 25, 1)
+emission_shape = 3
+emission_box_extents = Vector3(25, 0, 25)
+spread = 0.0
+flatness = 1.0
+directional_velocity_min = 1.0
+directional_velocity_max = 1.0
+directional_velocity_curve = SubResource("CurveXYZTexture_5hj7b")
+gravity = Vector3(0, 0, 0)
+scale_min = 0.0
+scale_curve = SubResource("CurveTexture_hg4vu")
+
+[sub_resource type="BoxMesh" id="BoxMesh_5u7ig"]
+material = ExtResource("1_6t84p")
+size = Vector3(5, 0.2, 5)
+
+[sub_resource type="GDScript" id="GDScript_5wnf2"]
+script/source = "extends GPUParticles3D
+
+func _on_finished() -> void:
+	self.queue_free()
+"
+
+[node name="Concrete_particles_broken_tile" type="GPUParticles3D"]
+emitting = false
+amount = 500
+lifetime = 15.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-1000, -1000, -1000, 2000, 2000, 2000)
+process_material = SubResource("ParticleProcessMaterial_8ikm6")
+draw_pass_1 = SubResource("BoxMesh_5u7ig")
+script = SubResource("GDScript_5wnf2")
+
+[connection signal="finished" from="." to="." method="_on_finished"]

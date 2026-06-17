@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://buh6c7fughiwt"]
+
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="1_w4c2i"]
+
+
+[sub_resource type="GDScript" id="GDScript_qhbtx"]
+script/source = "extends Decal
+
+@export var dur := 2.5
+
+func activate() -> void:
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, \"scale\", Vector3.ONE, 0.01)
+	tween.tween_property(self, \"modulate\", Color('FFFFFF50'), 0.25)
+	tween.tween_property(self, \"size\", Vector3(1,1,1), dur)
+	tween.parallel().tween_property(self, \"modulate\", Color.TRANSPARENT, dur)
+	await tween.finished
+	self.queue_free()
+"
+
+[node name="Ring" type="Decal"]
+size = Vector3(0.1, 1, 0.1)
+texture_albedo = ExtResource("1_w4c2i")
+modulate = Color(1, 1, 1, 0)
+normal_fade = 0.999
+script = SubResource("GDScript_qhbtx")
+dur = 0.5

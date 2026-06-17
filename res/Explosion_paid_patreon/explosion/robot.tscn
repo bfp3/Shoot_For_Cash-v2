@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://bb8ooqvrt5kil"]
+
+[ext_resource type="Script" uid="uid://dfh50mfsajejx" path="res://res/Explosion_paid_patreon/explosion/robot.gd" id="1_4ayna"]
+
+[sub_resource type="Curve" id="Curve_vk2ep"]
+max_value = 4.0
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0.25), 0.0, 0.0, 0, 0, Vector2(0.4, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 0.25), 0.0, 0.0, 0, 0, Vector2(0.550117, 1), 0.0, 0.0, 0, 0, Vector2(0.601399, 0.25), 0.0, 0.0, 0, 0, Vector2(0.65035, 1), 0.0, 0.0, 0, 0, Vector2(0.701632, 0.25), 0.0, 0.0, 0, 0, Vector2(0.752914, 1), 0.0, 0.0, 0, 0, Vector2(0.769231, 0.25), 0.0, 0.0, 0, 0, Vector2(0.804196, 1), 0.0, 0.0, 0, 0, Vector2(0.825175, 0.25), 0.0, 0.0, 0, 0, Vector2(0.850816, 1), 0.0, 0.0, 0, 0, Vector2(0.871795, 0.252632), 0.0, 0.0, 0, 0, Vector2(0.899767, 1), 0.0, 0.0, 0, 0, Vector2(0.925408, 0.252632), 0.0, 0.0, 0, 0, Vector2(0.95338, 1), 0.0, 0.0, 0, 0, Vector2(0.965035, 0.252632), 0.0, 0.0, 0, 0, Vector2(1, 4), 0.0, 0.0, 0, 0]
+point_count = 20
+
+[sub_resource type="Curve" id="Curve_pwjif"]
+max_value = 4.0
+_data = [Vector2(0, 4), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_tpf5q"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.78392, 0.854271)
+colors = PackedColorArray(1, 0, 0, 1, 2, 2, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_hgy70"]
+offsets = PackedFloat32Array(0, 0.0577889, 1)
+colors = PackedColorArray(1.5, 1.5, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vc10a"]
+disable_ambient_light = true
+albedo_color = Color(0.501961, 0.501961, 0.501961, 1)
+metallic_specular = 0.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_g5usb"]
+material = SubResource("StandardMaterial3D_vc10a")
+
+[node name="Robot" type="Node3D"]
+script = ExtResource("1_4ayna")
+emissionCurve = SubResource("Curve_vk2ep")
+resetCurve = SubResource("Curve_pwjif")
+emissionColorRamp = SubResource("Gradient_tpf5q")
+resetColorRamp = SubResource("Gradient_hgy70")
+
+[node name="GFX" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.25, 0)
+mesh = SubResource("SphereMesh_g5usb")

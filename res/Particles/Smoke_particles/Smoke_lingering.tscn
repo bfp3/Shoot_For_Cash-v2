@@ -1,0 +1,95 @@
+[gd_scene load_steps=14 format=3 uid="uid://d11o2t2rbwqhx"]
+
+[sub_resource type="Curve" id="Curve_r5hod"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.244131, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_achgs"]
+curve = SubResource("Curve_r5hod")
+
+[sub_resource type="Curve" id="Curve_nw7h3"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ddhre"]
+curve = SubResource("Curve_nw7h3")
+
+[sub_resource type="Gradient" id="Gradient_svpwx"]
+offsets = PackedFloat32Array(0.0145349, 1)
+colors = PackedColorArray(0.22, 0.22, 0.22, 1, 0.45, 0.45, 0.45, 0.286275)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_dxei3"]
+gradient = SubResource("Gradient_svpwx")
+
+[sub_resource type="Curve" id="Curve_xv0g5"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.764045), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_1vdnc"]
+curve = SubResource("Curve_xv0g5")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_m1iy8"]
+lifetime_randomness = 0.8
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 0.25
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+direction = Vector3(0, 0.1, 0)
+spread = 5.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+angular_velocity_curve = SubResource("CurveTexture_ddhre")
+gravity = Vector3(0, 0, 0)
+scale_min = 0.1
+scale_max = 4.0
+scale_curve = SubResource("CurveTexture_1vdnc")
+color_ramp = SubResource("GradientTexture1D_dxei3")
+alpha_curve = SubResource("CurveTexture_achgs")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_1w5uy"]
+load_path = "res://.godot/imported/particle_sprite_smoke.webp-94067ca765f9db23717d2d11ab74a1f8.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glmo1"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("CompressedTexture2D_1w5uy")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_4susa"]
+material = SubResource("StandardMaterial3D_glmo1")
+
+[sub_resource type="GDScript" id="GDScript_7ib4i"]
+script/source = "extends GPUParticles3D
+
+var duplicate_particles := false
+
+func _ready():
+	one_shot = true
+	duplicate_particles = true
+	finished.connect(_on_finished)
+
+func _on_finished() -> void:
+	if duplicate_particles:
+		print_debug(\"deleting self I am smoke_lingering scene\")
+		self.queue_free()
+"
+
+[node name="Smoke_lingering" type="GPUParticles3D"]
+amount = 25
+lifetime = 15.0
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+process_material = SubResource("ParticleProcessMaterial_m1iy8")
+draw_pass_1 = SubResource("QuadMesh_4susa")
+script = SubResource("GDScript_7ib4i")

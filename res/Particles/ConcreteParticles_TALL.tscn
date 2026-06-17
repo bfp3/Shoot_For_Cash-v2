@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://ufxemvffju6d"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oa3qn"]
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.34, 0.34, 0.34, 1)
+
+[sub_resource type="Curve" id="Curve_klj48"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_5688p"]
+curve = SubResource("Curve_klj48")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xqwi8"]
+emission_shape_scale = Vector3(25, 50, 25)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.0
+scale_curve = SubResource("CurveTexture_5688p")
+
+[sub_resource type="BoxMesh" id="BoxMesh_i3ln6"]
+size = Vector3(5, 1, 5)
+
+[sub_resource type="GDScript" id="GDScript_m5qy1"]
+script/source = "extends GPUParticles3D
+
+func _on_finished() -> void:
+	self.queue_free()
+"
+
+[node name="Concrete_particles" type="GPUParticles3D"]
+material_override = SubResource("StandardMaterial3D_oa3qn")
+emitting = false
+amount = 500
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-1000, -1000, -1000, 2000, 2000, 2000)
+process_material = SubResource("ParticleProcessMaterial_xqwi8")
+draw_pass_1 = SubResource("BoxMesh_i3ln6")
+script = SubResource("GDScript_m5qy1")
+
+[connection signal="finished" from="." to="." method="_on_finished"]

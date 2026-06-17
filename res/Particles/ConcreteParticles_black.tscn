@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3 uid="uid://cidsnkmt4ofyc"]
+
+[ext_resource type="Texture2D" uid="uid://b1cq48v71eomq" path="res://300_environment/Downloaded_assets/TurboSquid/Rock_Rock020_1K-JPG_NormalDX.png" id="1_inor8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rk8au"]
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+emission = Color(1, 0.2, 0, 1)
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("1_inor8")
+uv1_scale = Vector3(0.01, 0.01, 0.01)
+uv1_triplanar = true
+
+[sub_resource type="Curve" id="Curve_hjq87"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_maec4"]
+curve = SubResource("Curve_hjq87")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rcipb"]
+emission_shape_scale = Vector3(25, 0, 25)
+emission_shape = 3
+emission_box_extents = Vector3(1, 0, 1)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.0
+scale_curve = SubResource("CurveTexture_maec4")
+
+[sub_resource type="BoxMesh" id="BoxMesh_i3ln6"]
+size = Vector3(5, 1, 5)
+
+[sub_resource type="GDScript" id="GDScript_m5qy1"]
+script/source = "extends GPUParticles3D
+
+func _on_finished() -> void:
+	self.queue_free()
+"
+
+[node name="Concrete_particles_black" type="GPUParticles3D"]
+material_override = SubResource("StandardMaterial3D_rk8au")
+emitting = false
+amount = 250
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-1000, -1000, -1000, 2000, 2000, 2000)
+process_material = SubResource("ParticleProcessMaterial_rcipb")
+draw_pass_1 = SubResource("BoxMesh_i3ln6")
+script = SubResource("GDScript_m5qy1")
+
+[connection signal="finished" from="." to="." method="_on_finished"]

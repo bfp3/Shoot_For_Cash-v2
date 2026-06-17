@@ -1,0 +1,300 @@
+[gd_scene format=3 uid="uid://dfvq5kdc2624h"]
+
+[ext_resource type="Material" uid="uid://dhy6xy008ctmo" path="res://res/Explosion_paid_patreon/materials/checkerboard.tres" id="2_5ghot"]
+[ext_resource type="Material" uid="uid://f1rpmoyb3uii" path="res://res/Explosion_paid_patreon/shaders/toon_smoke_showcase.tres" id="3_5slg0"]
+[ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="8_rby2l"]
+[ext_resource type="Script" uid="uid://dtacrd0gqe0g2" path="res://res/Explosion_paid_patreon/scripts/impact_frame.gd" id="23_gwt7l"]
+
+[sub_resource type="Environment" id="Environment_5b8sp"]
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 3.0
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.07
+glow_bloom = 0.1
+fog_light_color = Color(0.5, 0.5, 0.5, 1)
+fog_light_energy = 0.15
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.04
+adjustment_enabled = true
+adjustment_contrast = 1.1
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_8xye5"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_avj0g"]
+material = ExtResource("2_5ghot")
+
+[sub_resource type="Shader" id="Shader_uxllw"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.dev's CanvasItemMaterial.
+
+shader_type canvas_item;
+render_mode blend_mix;
+
+void fragment()
+{
+	vec4 tex = texture(TEXTURE, UV);
+	float grayscale = clamp((tex.r + tex.g + tex.b) * 0.3333f, 0.0, 1.0);
+	float step_val = step(0.75, 1.0 - grayscale);
+	
+	COLOR = vec4(vec3(step_val), 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1cyss"]
+shader = SubResource("Shader_uxllw")
+
+[sub_resource type="Shader" id="Shader_62q1h"]
+code = "shader_type spatial;
+render_mode blend_mix,
+		depth_draw_opaque,
+		cull_back,
+		diffuse_toon,
+		specular_disabled,
+		ambient_light_disabled,
+		alpha_to_coverage;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,
+		filter_linear_mipmap,
+		repeat_enable;
+uniform float alpha_scissor_threshold;
+uniform float alpha_antialiasing_edge;
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+
+uniform sampler2D depth_texture : hint_depth_texture, 
+		repeat_disable, 
+		filter_nearest;
+uniform float fade_distance = 0.5;
+
+uniform sampler2D erosion_tex;
+uniform vec2 erosion_tiling = vec2(1.0, 1.0);
+
+uniform sampler2D erosion_curve;
+uniform float erosion_threshold_offset = 0.2;
+
+uniform sampler2D erosion_offset_y_curve;
+
+uniform sampler2D dark_side : hint_default_black;
+uniform sampler2D bright_side : hint_default_black;
+
+uniform float threshold = -0.25;
+uniform float threshold_offset = 0.25;
+
+varying float lifetime;
+
+void vertex() {
+	lifetime = INSTANCE_CUSTOM.y;
+	
+	if (!OUTPUT_IS_SRGB) {
+		COLOR.rgb = mix(
+			pow((COLOR.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)), vec3(2.4)), 
+			COLOR.rgb * (1.0 / 12.92), 
+			lessThan(COLOR.rgb, vec3(0.04045))
+			);
+	}
+	
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+float fresnel(float amount, vec3 normal, vec3 view)
+{
+	return pow(
+		(1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0 )), 
+		amount
+		);
+}
+
+float depth_fade(vec2 screen_uv, vec4 world_pos, vec3 vertex) {
+	float depth_tex = textureLod(depth_texture, screen_uv, 0.0).r;
+	world_pos.xyz /= world_pos.w;
+	
+	float fade = clamp(
+		1.0-smoothstep(world_pos.z+fade_distance,world_pos.z,vertex.z),
+		0.0,
+		1.0
+		);
+	return fade;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	albedo_tex.rgb = mix(
+		pow((albedo_tex.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)),vec3(2.4)),
+		albedo_tex.rgb.rgb * (1.0 / 12.92),
+		lessThan(albedo_tex.rgb,vec3(0.04045))
+		);
+	albedo_tex *= COLOR;
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	
+	ALPHA *= albedo.a * albedo_tex.a;
+	
+	float erosion_offset_y = texture(
+		erosion_offset_y_curve, 
+		vec2(lifetime)
+		).r;
+		
+	float erosion = texture(
+		erosion_tex, 
+		UV * erosion_tiling + vec2(0.0, erosion_offset_y)
+		).r;
+	
+	float smoothstep_min = texture(erosion_curve, vec2(lifetime)).r;
+	float smoothstep_max = smoothstep_min + erosion_threshold_offset;
+	
+	float erosion_smooth = smoothstep(
+		smoothstep_min,
+		smoothstep_max,
+		erosion
+	);
+	
+	ALPHA *= erosion_smooth;
+	
+	float depth_tex = textureLod(depth_texture, SCREEN_UV, 0.0).r;
+	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0-1.0, depth_tex, 1.0);
+	float fade = depth_fade(SCREEN_UV, world_pos, VERTEX);
+	
+	ALPHA *= fade;
+}
+
+void light() {
+	// standard
+	DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) 
+			* ATTENUATION 
+			* ALBEDO;
+	
+	vec3 dark_color = texture(dark_side, vec2(0.0)).rgb;
+	vec3 bright_color = texture(bright_side, vec2(0.0)).rgb;
+	
+	vec3 custom = mix(
+		dark_color, 
+		bright_color, 
+		smoothstep(
+			threshold, 
+			threshold + threshold_offset, 
+			dot(NORMAL, LIGHT)
+			)
+		);
+	
+	float fres = fresnel(2.0, NORMAL, VIEW);
+	
+	DIFFUSE_LIGHT = (
+		ALBEDO + 
+		(fres * clamp(ATTENUATION - 0.75, 0.0, 1.0))
+		) * custom;
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_vol5h"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_onprk"]
+gradient = SubResource("Gradient_vol5h")
+
+[sub_resource type="Gradient" id="Gradient_croak"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.6, 0.6, 0.6, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_k4cgx"]
+gradient = SubResource("Gradient_croak")
+
+[sub_resource type="Curve" id="Curve_60mnd"]
+min_value = -0.5
+max_value = 1.1
+_data = [Vector2(0, 0.401574), 0.0, 0.55, 0, 1]
+point_count = 1
+
+[sub_resource type="CurveTexture" id="CurveTexture_tvw0c"]
+curve = SubResource("Curve_60mnd")
+
+[sub_resource type="Curve" id="Curve_sr4cn"]
+_data = [Vector2(0, 1), 0.0, -0.131689, 0, 1]
+point_count = 1
+
+[sub_resource type="CurveTexture" id="CurveTexture_m2bu1"]
+curve = SubResource("Curve_sr4cn")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0jq47"]
+load_path = "res://.godot/imported/smoke_erosion_b.png-ed7bdedcf54ba5dc87cbaeefd2302393.s3tc.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lpbei"]
+render_priority = 0
+shader = SubResource("Shader_62q1h")
+shader_parameter/albedo = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/alpha_scissor_threshold = 0.125
+shader_parameter/alpha_antialiasing_edge = 0.25
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/fade_distance = 0.75
+shader_parameter/erosion_tiling = Vector2(2, 1)
+shader_parameter/erosion_threshold_offset = 0.2
+shader_parameter/threshold = -0.25
+shader_parameter/threshold_offset = 0.2
+shader_parameter/erosion_tex = SubResource("CompressedTexture2D_0jq47")
+shader_parameter/erosion_curve = SubResource("CurveTexture_tvw0c")
+shader_parameter/erosion_offset_y_curve = SubResource("CurveTexture_m2bu1")
+shader_parameter/dark_side = SubResource("GradientTexture1D_k4cgx")
+shader_parameter/bright_side = SubResource("GradientTexture1D_onprk")
+
+[node name="Main" type="Node3D"]
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.864735, -0.278279, 0.418084, 0, 0.832458, 0.554088, -0.502228, -0.47914, 0.719856, 6.61243, 10.7635, 11.3853)
+current = true
+fov = 30.0
+near = 0.001
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_5b8sp")
+camera_attributes = SubResource("CameraAttributesPhysical_8xye5")
+
+[node name="Floor" type="MeshInstance3D" parent="Environment"]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+material_override = ExtResource("2_5ghot")
+mesh = SubResource("PlaneMesh_avj0g")
+skeleton = NodePath("../..")
+
+[node name="Light" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(0.494604, -0.86114, -0.11749, 0.170802, -0.0362379, 0.984639, -0.85217, -0.507074, 0.129162, 0, 10, 0)
+light_energy = 0.25
+shadow_enabled = true
+directional_shadow_mode = 1
+directional_shadow_split_1 = 1.0
+directional_shadow_pancake_size = 0.0
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("23_gwt7l")
+impact_frame_duration = 0.05
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+material = SubResource("ShaderMaterial_1cyss")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Smoke Sample" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, -2, 2, 0)
+visible = false
+material_override = ExtResource("3_5slg0")
+mesh = ExtResource("8_rby2l")
+
+[node name="Smoke Colored" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 0, 2, 0)
+material_override = SubResource("ShaderMaterial_lpbei")
+mesh = ExtResource("8_rby2l")

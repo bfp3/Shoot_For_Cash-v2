@@ -1,0 +1,956 @@
+[gd_scene format=4 uid="uid://bu6l4mo3xg3tj"]
+
+[ext_resource type="Script" uid="uid://bamujoan0guya" path="res://res/Explosion_paid_patreon/mini_mech_explosion.gd" id="1_b026h"]
+[ext_resource type="PackedScene" uid="uid://bb8ooqvrt5kil" path="res://res/Explosion_paid_patreon/explosion/robot.tscn" id="3_0rg34"]
+[ext_resource type="Texture2D" uid="uid://c3dpweb12l02k" path="res://res/Explosion_paid_patreon/textures/explosion_shine.png" id="5_7wcnb"]
+[ext_resource type="Script" uid="uid://cgx5nwxtj6ofn" path="res://res/Explosion_paid_patreon/explosion/explosion.gd" id="5_8efml"]
+[ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="6_jir74"]
+[ext_resource type="Material" uid="uid://c66mc200y264r" path="res://res/Explosion_paid_patreon/shaders/toon_smoke.tres" id="7_70u61"]
+[ext_resource type="Material" uid="uid://c63ix825cmkcv" path="res://res/Explosion_paid_patreon/shaders/particle_process/upward_glow_smoke.tres" id="9_1qnf6"]
+[ext_resource type="Material" uid="uid://crk0nlqokh5qw" path="res://res/Explosion_paid_patreon/shaders/toon_smoke_front.tres" id="9_rna46"]
+[ext_resource type="Material" uid="uid://bxffdr771hoy5" path="res://res/Explosion_paid_patreon/shaders/particle_process/upward_smoke.tres" id="9_t6qfi"]
+[ext_resource type="Material" uid="uid://b4wcp8sndq674" path="res://res/Explosion_paid_patreon/shaders/particle_process/radial_smoke.tres" id="10_36138"]
+[ext_resource type="Material" uid="uid://b3yaq363dgwj1" path="res://res/Explosion_paid_patreon/shaders/particle_process/radial_glow_smoke.tres" id="11_efwxg"]
+[ext_resource type="Shader" uid="uid://dxxbfd0encyw0" path="res://res/Explosion_paid_patreon/shaders/explosion_ring.tres" id="13_gfdrq"]
+[ext_resource type="Texture2D" uid="uid://bwjv6kudlm0dt" path="res://res/Explosion_paid_patreon/textures/gradient_0.png" id="14_gg3at"]
+[ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="14_pwylf"]
+[ext_resource type="Material" uid="uid://chyvbrq6joyst" path="res://res/Explosion_paid_patreon/shaders/particle_process/explosion_ring.tres" id="15_atkvp"]
+[ext_resource type="Material" uid="uid://wens4igj632m" path="res://res/Explosion_paid_patreon/shaders/particle_process/upper_explosion_ring.tres" id="18_1fdd3"]
+[ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="18_bodvm"]
+[ext_resource type="Material" uid="uid://fv8lfqolxyqf" path="res://res/embers_material.tres" id="19_bodvm"]
+[ext_resource type="Texture2D" uid="uid://fac5ltu1pmcj" path="res://res/Explosion_paid_patreon/textures/explosion_ground_decal.png" id="19_nq333"]
+[ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="20_di6rn"]
+[ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="21_d3ff1"]
+[ext_resource type="Texture2D" uid="uid://d18463bturnkg" path="res://res/Explosion_paid_patreon/textures/explosion_streak.png" id="21_f57i6"]
+
+[sub_resource type="Animation" id="Animation_inmsi"]
+resource_name = "sequence"
+length = 8.5
+loop_mode = 1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Explosion/Robot")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.5, 5.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"values": [{
+"args": [0.0],
+"method": &"setEmission"
+}, {
+"args": [],
+"method": &"powerUp"
+}, {
+"args": [],
+"method": &"powerDown"
+}]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Explosion/explosion")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 5.5),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"set_one_shot"
+}, {
+"args": [],
+"method": &"play"
+}]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Explosion/shine")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 5, 5.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"values": [{
+"args": [],
+"method": &"hide"
+}, {
+"args": [],
+"method": &"show"
+}, {
+"args": [],
+"method": &"hide"
+}]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Explosion/shine")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"restart"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6ap3w"]
+_data = {
+&"sequence": SubResource("Animation_inmsi")
+}
+
+[sub_resource type="Animation" id="Animation_6if8e"]
+resource_name = "Preview"
+length = 3.5
+loop_mode = 1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("explosion")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"set_one_shot"
+}, {
+"args": [],
+"method": &"play"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cat6o"]
+_data = {
+&"preview": SubResource("Animation_6if8e")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ctl4e"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("5_7wcnb")
+proximity_fade_enabled = true
+proximity_fade_distance = 2.0
+
+[sub_resource type="Curve" id="Curve_db3t7"]
+_data = [Vector2(0, 0), 0.0, 3.09223, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ux20x"]
+texture_mode = 1
+curve = SubResource("Curve_db3t7")
+
+[sub_resource type="Curve" id="Curve_hij0e"]
+_limits = [0.0, 5.0, 0.0, 1.0]
+_data = [Vector2(0.00268096, 1.0399), 0.0, 12.0065, 0, 0, Vector2(1, 5), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_sy8ks"]
+texture_mode = 1
+curve = SubResource("Curve_hij0e")
+
+[sub_resource type="Curve" id="Curve_0f8fx"]
+_limits = [0.0, 8.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 18.0077, 0, 0, Vector2(0.715818, 4.01243), 0.0, 0.0, 0, 0, Vector2(0.989276, 7.94611), 21.5352, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_npttx"]
+curve = SubResource("Curve_0f8fx")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xvw5g"]
+particle_flag_rotate_y = true
+angular_velocity_min = 45.0
+angular_velocity_max = 45.0
+gravity = Vector3(0, 0, 0)
+scale_min = 1.5
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_npttx")
+color = Color(3, 3, 2, 1)
+alpha_curve = SubResource("CurveTexture_ux20x")
+emission_curve = SubResource("CurveTexture_sy8ks")
+
+[sub_resource type="QuadMesh" id="QuadMesh_kgjr6"]
+
+[sub_resource type="Curve" id="Curve_blhqb"]
+_data = [Vector2(0, 0), 0.0, 3.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_3e027"]
+curve = SubResource("Curve_blhqb")
+
+[sub_resource type="Gradient" id="Gradient_7jdvo"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ldlb2"]
+gradient = SubResource("Gradient_7jdvo")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ie6hv"]
+render_priority = -1
+shader = ExtResource("13_gfdrq")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/proximity_fade_distance = 0.5
+shader_parameter/alpha_scissor_threshold = 0.05
+shader_parameter/alpha_antialiasing_edge = 0.3
+shader_parameter/albedo_texture_size = Vector2i(2048, 2048)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(0, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/base_erosion_curve = SubResource("CurveTexture_3e027")
+shader_parameter/erosion_offset_a = 0.1
+shader_parameter/erosion_offset_b = 0.2
+shader_parameter/mask = ExtResource("14_gg3at")
+shader_parameter/color_ramp = SubResource("GradientTexture1D_ldlb2")
+shader_parameter/energy = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_k0lxt"]
+top_radius = 2.0
+bottom_radius = 2.0
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_47tjf"]
+top_radius = 3.875
+bottom_radius = 0.0
+
+[sub_resource type="Shader" id="Shader_68gyi"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.dev's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx,unshaded;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_linear_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_linear_mipmap,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_linear_mipmap,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+uniform sampler2D mask;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	albedo_tex.rgb = mix(pow((albedo_tex.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)),vec3(2.4)),albedo_tex.rgb.rgb * (1.0 / 12.92),lessThan(albedo_tex.rgb,vec3(0.04045)));
+	albedo_tex *= COLOR;
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+	ALPHA *= albedo.a * albedo_tex.a;
+	
+	ALPHA *= texture(mask, UV).r;// * albedo_tex.r;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_maft8"]
+render_priority = 0
+shader = SubResource("Shader_68gyi")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/texture_albedo = ExtResource("19_nq333")
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(0, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/mask = ExtResource("19_nq333")
+
+[sub_resource type="Curve" id="Curve_42vmd"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_4lxv0"]
+curve = SubResource("Curve_42vmd")
+
+[sub_resource type="Curve" id="Curve_wxaip"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 3), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="CurveTexture" id="CurveTexture_ep640"]
+curve = SubResource("Curve_wxaip")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kdmqr"]
+particle_flag_rotate_y = true
+angle_max = 360.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_ep640")
+color = Color(0, 0, 0, 1)
+alpha_curve = SubResource("CurveTexture_4lxv0")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_3lo68"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7g8d4"]
+render_priority = 2
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("21_f57i6")
+billboard_keep_scale = true
+
+[sub_resource type="Curve" id="Curve_g1vq0"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_v4s7f"]
+curve = SubResource("Curve_g1vq0")
+
+[sub_resource type="Curve" id="Curve_4akho"]
+_data = [Vector2(0, 0.501554), 0.0, 1.61514, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_xc6y7"]
+curve = SubResource("Curve_4akho")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_d23x3"]
+lifetime_randomness = 0.75
+particle_flag_rotate_y = true
+emission_shape_offset = Vector3(0, -1.5, 0)
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 1.0
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+direction = Vector3(0, 1, 0)
+spread = 30.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+gravity = Vector3(0, 0, 0)
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_xc6y7")
+color = Color(2, 2, 2, 1)
+color_ramp = ExtResource("18_bodvm")
+alpha_curve = SubResource("CurveTexture_v4s7f")
+
+[sub_resource type="QuadMesh" id="QuadMesh_8vvfv"]
+
+[sub_resource type="Curve" id="Curve_foen1"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_blb0d"]
+texture_mode = 1
+curve = SubResource("Curve_foen1")
+
+[sub_resource type="Curve" id="Curve_im8nt"]
+_data = [Vector2(0, 0), 0.0, 2.89056, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ovlpg"]
+curve = SubResource("Curve_im8nt")
+
+[sub_resource type="Curve" id="Curve_0ak4y"]
+_data = [Vector2(0, 1), 0.0, -2.29396, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_b6kxi"]
+curve = SubResource("Curve_0ak4y")
+
+[sub_resource type="Curve" id="Curve_p56iw"]
+_data = [Vector2(0.00268096, 0.973057), 0.0, -23.8681, 0, 0, Vector2(0.10992, 0.0569948), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_uvb68"]
+curve = SubResource("Curve_p56iw")
+
+[sub_resource type="Curve" id="Curve_jyo7i"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.87403, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_tfuqf"]
+curve = SubResource("Curve_jyo7i")
+
+[sub_resource type="Curve" id="Curve_b4jtx"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_aqenm"]
+curve = SubResource("Curve_b4jtx")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5b7ih"]
+lifetime_randomness = 1.0
+particle_flag_rotate_y = true
+emission_shape = 1
+emission_sphere_radius = 3.0
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+angular_velocity_curve = SubResource("CurveTexture_ovlpg")
+radial_velocity_min = 10.0
+radial_velocity_max = 20.0
+radial_velocity_curve = SubResource("CurveTexture_uvb68")
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 0.25
+radial_accel_max = 0.5
+tangential_accel_min = -4.0
+tangential_accel_max = -2.0
+damping_min = 3.0
+damping_max = 10.0
+damping_curve = SubResource("CurveTexture_b6kxi")
+scale_min = 0.1
+scale_max = 0.2
+scale_curve = SubResource("CurveTexture_tfuqf")
+color_ramp = ExtResource("18_bodvm")
+alpha_curve = SubResource("CurveTexture_blb0d")
+anim_offset_max = 1.0
+turbulence_enabled = true
+turbulence_noise_speed = Vector3(1, 1, 1)
+turbulence_influence_min = 0.25
+turbulence_influence_max = 1.0
+turbulence_influence_over_life = SubResource("CurveTexture_aqenm")
+
+[sub_resource type="QuadMesh" id="QuadMesh_hmhao"]
+
+[sub_resource type="Curve" id="Curve_xd6ro"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_h1u04"]
+texture_mode = 1
+curve = SubResource("Curve_xd6ro")
+
+[sub_resource type="Curve" id="Curve_deoxo"]
+_data = [Vector2(0, 0), 0.0, 2.89056, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_dq5oe"]
+curve = SubResource("Curve_deoxo")
+
+[sub_resource type="Curve" id="Curve_omfu7"]
+_data = [Vector2(0, 1), 0.0, -2.29396, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_c4b5a"]
+curve = SubResource("Curve_omfu7")
+
+[sub_resource type="Curve" id="Curve_38itp"]
+_data = [Vector2(0.00268096, 0.973057), 0.0, -23.8681, 0, 0, Vector2(0.10992, 0.0569948), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_2xjcm"]
+curve = SubResource("Curve_38itp")
+
+[sub_resource type="Curve" id="Curve_schup"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.87403, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_gtxpu"]
+curve = SubResource("Curve_schup")
+
+[sub_resource type="Curve" id="Curve_2kj25"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_gpgks"]
+curve = SubResource("Curve_2kj25")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bodvm"]
+lifetime_randomness = 1.0
+particle_flag_rotate_y = true
+emission_shape = 1
+emission_sphere_radius = 0.5
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+angular_velocity_curve = SubResource("CurveTexture_dq5oe")
+radial_velocity_min = 10.0
+radial_velocity_max = 20.0
+radial_velocity_curve = SubResource("CurveTexture_2xjcm")
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 0.25
+radial_accel_max = 0.5
+tangential_accel_min = -4.0
+tangential_accel_max = -2.0
+damping_min = 3.0
+damping_max = 10.0
+damping_curve = SubResource("CurveTexture_c4b5a")
+scale_min = 0.1
+scale_max = 0.2
+scale_curve = SubResource("CurveTexture_gtxpu")
+color_ramp = ExtResource("18_bodvm")
+alpha_curve = SubResource("CurveTexture_h1u04")
+anim_offset_max = 1.0
+turbulence_enabled = true
+turbulence_noise_speed = Vector3(1, 1, 1)
+turbulence_influence_min = 0.25
+turbulence_influence_max = 1.0
+turbulence_influence_over_life = SubResource("CurveTexture_gpgks")
+
+[sub_resource type="Shader" id="Shader_8jgsh"]
+code = "shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_toon,specular_disabled,ambient_light_disabled,alpha_to_coverage;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_linear_mipmap,repeat_enable;
+uniform float alpha_scissor_threshold;
+uniform float alpha_antialiasing_edge;
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_linear_mipmap,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_linear_mipmap,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+uniform sampler2D depth_texture : hint_depth_texture, repeat_disable, filter_nearest;
+uniform float fade_distance = 0.5;
+
+uniform sampler2D erosion_tex;
+uniform vec2 erosion_tiling = vec2(1.0, 1.0);
+uniform sampler2D erosion_curve;
+uniform sampler2D erosion_offset_y_curve;
+uniform float erosion_threshold_offset = 0.2;
+
+uniform sampler2D dark_side : hint_default_black;
+uniform sampler2D bright_side : hint_default_black;
+
+uniform float threshold = -0.25;
+uniform float threshold_offset = 0.25;
+
+varying float lifetime;
+
+void vertex() {
+	lifetime = INSTANCE_CUSTOM.y;
+	
+	if (!OUTPUT_IS_SRGB) {
+		COLOR.rgb = mix(pow((COLOR.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)), vec3(2.4)), COLOR.rgb * (1.0 / 12.92), lessThan(COLOR.rgb, vec3(0.04045)));
+	}
+	
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+float fresnel(float amount, vec3 normal, vec3 view)
+{
+	return pow((1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0 )), amount);
+}
+
+float depth_fade(vec2 screen_uv, vec4 world_pos, vec3 vertex) {
+	float depth_tex = textureLod(depth_texture, screen_uv, 0.0).r;
+	world_pos.xyz /= world_pos.w;
+	
+	float fade = clamp(1.0-smoothstep(world_pos.z+fade_distance,world_pos.z,vertex.z),0.0,1.0);
+	return fade;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	albedo_tex.rgb = mix(pow((albedo_tex.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)),vec3(2.4)),albedo_tex.rgb.rgb * (1.0 / 12.92),lessThan(albedo_tex.rgb,vec3(0.04045)));
+	albedo_tex *= COLOR;
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+	ALPHA *= albedo.a * albedo_tex.a;
+	//ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold;
+	//ALPHA_ANTIALIASING_EDGE = alpha_antialiasing_edge;
+	//ALPHA_TEXTURE_COORDINATE = UV * vec2(albedo_texture_size);
+	
+	float erosion_offset_y = texture(erosion_offset_y_curve, vec2(lifetime)).r;
+	
+	float erosion = texture(erosion_tex, UV * erosion_tiling + vec2(0.0, erosion_offset_y)).r;
+	
+	float smoothstep_min = texture(erosion_curve, vec2(lifetime)).r;
+	float smoothstep_max = smoothstep_min + erosion_threshold_offset;
+	
+	float erosion_smooth = smoothstep(
+		smoothstep_min,
+		smoothstep_max,
+		erosion
+	);
+	
+	ALPHA *= erosion_smooth;
+	
+	float depth_tex = textureLod(depth_texture, SCREEN_UV, 0.0).r;
+	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0-1.0, depth_tex, 1.0);
+	float fade = depth_fade(SCREEN_UV, world_pos, VERTEX);
+	
+	ALPHA *= fade;
+}
+
+void light() {
+	// standard
+	DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * ALBEDO;
+	
+	vec3 dark_color = texture(dark_side, vec2(0.0)).rgb;
+	vec3 bright_color = texture(bright_side, vec2(0.0)).rgb;
+	
+	vec3 custom = mix(
+		dark_color, 
+		bright_color, 
+		smoothstep(
+			threshold, 
+			threshold + threshold_offset, 
+			dot(NORMAL, LIGHT)
+			)
+		);
+	
+	float fres = fresnel(2.0, NORMAL, VIEW);
+	
+	DIFFUSE_LIGHT = (ALBEDO + (fres * clamp(ATTENUATION - 0.75, 0.0, 1.0))) * custom;// * ATTENUATION;
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_708uo"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.99558, 0.99558, 0.99558, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_f1wex"]
+gradient = SubResource("Gradient_708uo")
+
+[sub_resource type="Gradient" id="Gradient_a3iqv"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.288519, 0.288518, 0.288518, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6b5n4"]
+gradient = SubResource("Gradient_a3iqv")
+
+[sub_resource type="Curve" id="Curve_n367x"]
+_limits = [0.0, 1.1, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 3.25, 0, 0, Vector2(1, 1.1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_dg4ju"]
+curve = SubResource("Curve_n367x")
+
+[sub_resource type="Curve" id="Curve_37inu"]
+_data = [Vector2(0, 0), 0.0, 2.5, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_47s1t"]
+curve = SubResource("Curve_37inu")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bodvm"]
+render_priority = 1
+shader = SubResource("Shader_8jgsh")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/alpha_scissor_threshold = 0.125
+shader_parameter/alpha_antialiasing_edge = 0.25
+shader_parameter/albedo_texture_size = Vector2i(0, 0)
+shader_parameter/point_size = 0.0
+shader_parameter/roughness = 0.1
+shader_parameter/metallic_texture_channel = Vector4(0, 0, 0, 0)
+shader_parameter/specular = 0.0
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/fade_distance = 0.75
+shader_parameter/erosion_tex = ExtResource("14_pwylf")
+shader_parameter/erosion_tiling = Vector2(2, 1)
+shader_parameter/erosion_curve = SubResource("CurveTexture_dg4ju")
+shader_parameter/erosion_offset_y_curve = SubResource("CurveTexture_47s1t")
+shader_parameter/erosion_threshold_offset = 0.2
+shader_parameter/dark_side = SubResource("GradientTexture1D_6b5n4")
+shader_parameter/bright_side = SubResource("GradientTexture1D_f1wex")
+shader_parameter/threshold = 0.0
+shader_parameter/threshold_offset = 0.075
+
+[sub_resource type="Curve" id="Curve_bkfno"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_qrf0u"]
+curve = SubResource("Curve_bkfno")
+
+[sub_resource type="Curve" id="Curve_2fg5v"]
+_limits = [0.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 2), 0.0, 0.0, 0, 0, Vector2(1, 0), -4.92824, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_tnyki"]
+curve = SubResource("Curve_2fg5v")
+
+[sub_resource type="Curve" id="Curve_4xpe5"]
+_data = [Vector2(0, 0.400518), 0.0, 3.42605, 0, 0, Vector2(0.504021, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -5.33409, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_y47pu"]
+curve = SubResource("Curve_4xpe5")
+
+[sub_resource type="Curve" id="Curve_uy1rc"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ijgso"]
+curve = SubResource("Curve_uy1rc")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wwqlh"]
+lifetime_randomness = 0.4
+particle_flag_rotate_y = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+angular_velocity_min = -1.6093254e-05
+angular_velocity_max = -1.6093254e-05
+angular_velocity_curve = SubResource("CurveTexture_qrf0u")
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 0.5
+scale_curve = SubResource("CurveTexture_y47pu")
+color_ramp = ExtResource("18_bodvm")
+emission_curve = SubResource("CurveTexture_tnyki")
+turbulence_noise_scale = 0.0
+turbulence_noise_speed = Vector3(0, 1, 0)
+turbulence_influence_over_life = SubResource("CurveTexture_ijgso")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_wwqlh"]
+resource_name = "basic_rock_Cube"
+_surfaces = [{
+"aabb": AABB(-1.39844, -1.56195, -1.35064, 2.76726, 3.12744, 2.89723),
+"attribute_data": PackedByteArray("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"),
+"format": 34896613399,
+"index_count": 1392,
+"index_data": PackedByteArray("TgCKAIsAjACNAEUAjACOAI0AQwCOAIwAQwBEAI4AAQBEAEMAAQBDAI8AAQCQAEQAkACRABcAAQCRAJAAAQCSAJEAkwABAJQAlQABAJMAkgCWABYAAQCWAJIAlwABAJUAlwCVAJgAmQABAJcAmQCXAJoAmgCXAJsASAABAJkASACZAJwASACWAAEAnQBIAJ4AnwBIAJ0AnwCWAEgAlgCgAKEAlgCiAKAAlgCjAKIAogCjAHkAnwCjAJYAowCfAKQAowCkAKUApACfAKYApACmAKcApgCfAKgAqACfAKkAqgCrAEAAbwBtAKwAHwCtAK4ArwCtAB8AsACvAB0AsQCvALAArQCvALEAsQCwALIAsQCyALMArQC0AEkArQC1ALQArQCxALUAtAC1AEoAtQCxALYAtgCxAB4AtQC2AE0AtwC4ALkAuAC3ALoAugC3ALsAuAC6ALwAvQA7AL4AvwA7AL0AwAA7AL8AOwDBAMIAOwCBAMEAwACBADsAwwDAAMQAxQDAAMMAxQCBAMAAxQDGAIEAxgDHAIAAxQDHAMYAxwDFAMgAyADFAH8AyAB/ABQAfwDFAMkAyQDFAMoAWADLAMwAWADNAMsAywDNACkAWADOAM0AzQDOAM8AWADQAM4AzgDQANEA0ABYANIA0ADSANMA1ADVANYAYADXANgA1wBiANkA1wBfAGIAYABfANcAXwA1AGEAXwDaADUAXwDbANoAYADbAF8AYADcANsANgDcAGAA3ABpAN0A3ABoAGkA3AA2AGgAaAA2AA8ADwA2AN4A3wAGAOAAdgAGAN8ABgAHAOEABgDiAAcAdAAGAHYAdADiAAYAdAB2AOMA4gDkAOUA4gDmAOQAdADmAOIA5wB0AOgADQDnAAgA6QDnAA0A6QB0AOcAcAB0AOkAcADmAHQA5gDqAOsA5gDsAOoA5gDtAOwAcADtAOYAcwBwAO4AcwDtAHAAcQBzAO8AcQDwAHMAcwDwAO0A7QDxAPIA7QB8APEA8QB8APMA7QD0AHwA7QDwAPQA9AD1APYA9ADwAPUA8AD3APgA8AD5APcA9wD5APoAcQBmAPAA8ABmAPkA+wBmAHEA+QD8AP0A+QBmAPwA/ABmAP4A/wBmAPsA/wD7AAABAQFmAP8AAgEBAQoAAgFmAAEBAwECAQ4ABAEDAW4AZwADAQQBZwACAQMBZwBmAAIBBQFmAGcABgFmAAUBBgEHAWYABgEFAQgBBgEJAQcBBQFnAAoBBgFlAAkBCQFlAAsBCgEMAQ0BCgFnAAwBDAFnAA4BDgFnAA8BDgEPARABDwFnABEBEQFnAGsAawBnABIBEQFrABMBBgEUAWUAZQAUARUBFAEGAWMAYwAGARYBFAFjADcAFAE3ABcBNwBjADkANwA5ABgBOQBjADgAOABjABkBOAAZARoBGgEZARsBGwEZAWQAGgEbARwBHAEbAR0BGgEcAR4BHwEgASEBIgEgAR8BIwEiATQAJAEiASMBIgFaACABJAFaACIBIAElASYBIAFaACUBJQFaACcBKAEkASkBKgEkASgBKgFaACQBWgArASwBWgBdACsBWgAtAV0AXQAtAS4BWgAqAVwAWgBcAC0BLQFcADMAXAAqAVsAXABbAC8BXAAvAV4AMAExATIBMAFRADEBMwEwATQBIQAwATMBIQBRADABIQAzATUBIgBRACEANgEhADcBIgAhADYBIgA4AVEAOQEiADoBGwAiADkBTwAiABsATwA4ASIAOAE7ATwBOAE9ATsBOAE+AT0BOAFPAD4BPgFPACgAKABPACAAPgEoAD8BPwEoAEABPgE/AUEBQgFHAEMBQgFEAUcARQFEAUIBRAFFAUYARAFGAEYBRgBFAUcBRwFFAUgBSQFKAUsBSQFMAUoBSgFMAU0BVwBOAU8BUAFXAFEBUgFXAFABTgFTAVQBVwBTAU4BMQBXAFIBMQBSASoAVwBVAVMBMQBWAVcAVwBWAVUBUwFUAFYAUwFVAVQAVABXAVMAVABVAVcBVwFVAVgBVQFZAVoBWQFbAVwBWQFdAVsBVQFdAVkBWwFdASwAVQFeAV0BXQFeAV8BXQFfAS4AVQFWAV4BVgFgAWEBVgE+AGABYAE+AIMAVgE9AD4AVgExAD0APQAxAGIBPQBiAWMBPgA9AGQBPgBkAWUBiABmAWcBaAFmAYgAaQFmAWgBaQFoAT8AZgFqAWsBZgGFAGoBagGFAGwBaQGFAGYBhQBtAW4BhQBvAW0BbwFBAHABbwGHAEEAbwFxAYcAbwFyAXEBcgGGAHMBbwGGAHIBdAFvAYUAdQFvAXQBdAGFAIQAdgFvAXUBdgGGAG8BdgF1AXcBhACFAGkBhgB2AXgBhgB4AXkBeAF2AXoBegF2AXsBeAF6AXwBfAF6AUIAeAF8AX0BfgGEAH8BgAGEAH4BdAGEAIABdAGAAYEBhACCAYMBhABpAYIBggFpAYQBggGEAYUBhQGEAYkAhAFpAYYBhgFpAYcBhAGGAYgBiQGKAXUAiQGLAYoBigGLAYwBjAEDAAUAjAGNAQMAjAGOAY0BjAGLAY4BjgGLAY8BiwECAAQAiwGQAQIAiQGQAYsBkQGQAYkBkgGRAQsAkwGRAZIBkQEJAJABkAEJAAAAkwEJAJEBCQCUAZUBkwGUAQkAkwEMAJQBlAEMAJYBlgEMAJcBDAAVAHcADACYARUADACTAZgBEgCTARMAmAGTARIAmAGZAXgAmAF7AJkBmAESABoAGgASAH0AGgB9AJoBmgF9ABEAmwEaAHIAGQAaAJsBmAEaABkAmAEZABgAmAEYAHsAGAAZAJwBGACcARAAGAAQAJ0BewAYAJ4BngEYAJ8BngGfAXoAewCeAaABewCgAaEBoAGeAaIBoAGiAaMBpAGlAS0ApAEvAKUBpgGnAToAqAGnAaYBpwGpATwApwGqAakBqAGqAacBIwCoAYIAqwGoASMAqwGqAagBJQCrAawBrQGrASUArQGqAasBJACtAVIArgGtASQArgGqAa0BqgFZAH4AqgGvAVkAqgGwAa8BrwGwATIAqgGxAbABsAGxAbIBsAGyATAAqgErALEBsQErALMBrgErAKoBrgG0ASsArgG1AbQBtQG2AbcBtQGuAbYBtgGuAVUAVQCuAbgBVQC4AbkBuAGuASYAJgCuAboBugGuAScAuwG8Ab0BvgG8AbsBvAG/AcABvAHBAb8BvgHBAbwBwQHCAcMBvgHCAcEBvgHEAcIBvgHFAcQBxQHGAccBvgHGAcUBxgFQAMgBxgHJAVAAxgG+AckBUADJAcoBUADKAcsBygHJAcwByQHNAUwAyQG+Ac0BzQG+Ac4BzQHOAc8BzwHOAdAB0AHOARwAzgG+AdEB0gG+AdMB0gHTAdQB1QG+AdIB1QHSAdYB0QG+AdUB1wHVAdgB0QHVAdcB0QHXAdkBzgHRAdoBzgHaAdsB2wHaAdwB2gHRAd0B3QHRAd4B2gHdAUsA3wFsAOAB3wHhAWwA4QHiAeMB4QHkAeIB5QHhAd8B5QHkAeEB5gHfAWoA5QHfAeYB5QHmAecB6AHlAekB6gHlAegB6wHlAeoB6wHqAewB7QHlAesB7QHkAeUB7gHkAe0B7wHkAe4B8AHkAe8B8QHkAfAB5AHyAfMB5AH0AfIB5AHxAfQB9AHxAfUB9QHxAfYB9AH1AfcB9AH3AfgB9AH4AfkB+AH3AfoB+AH6AfsB"),
+"lods": [0.134463, PackedByteArray("QwBEAEUAAQBEAEMAAQAXAEQAAQAWABcARgAXABYARwAXAEYASAAWAAEARgBJAEcARwBJAEoAHABGAEsAHABJAEYATABJABwASgAeAE0ASgAdAB4ASQAdAEoAHQBJAB8ASQBOAB8ATgAhAB8ASQAhAE4AIQAjAB8ATwBJAEwATwBMAFAASQAiACEASQBPABsASQAbACIATwAiABsAIgBRACEAIQBRACUAIQAlACMAIgAkAFEATwAkACIAJAAlAFIATwBQACAAKABPACAAJABPACYAJgBPACgAIABTACgAVABTACAAJgAoAFUAVAAgAFYAVAApAFMAVgApAFQAVwApAFYAJAAmACcAVQAnACYAJwAlACQAWABVACkAKwAnAFUAWAArAFUAKQAsAFgAKwBYACwAKQAtACwALAAtAC4AKQAvAC0AVwAvACkAJwArAFkAJwBZACUAWQArADAAWQAwADIAMABaADIAMgBaAFkANABaADAAWwBaADQAWgBbAFwAWgBcAF0AXABbAF4AXQBcADMAXwBcAF4AXwBeADUAYABcAF8AYAAzAFwAXwA1AGEAYABfAGIAYQBiAF8AYwBhADUAOABjAGQAOQBjADgANwBjADkANwBhAGMAYQA3AGUAYQBlAGYAYQBmAGIAYgBnAGAAYgBmAGcANgAzAGAAYABnADYAMwA2AGgAaAA2AA8ANgBnAA8AMwBoAGkAMwBpAGoADwBrAGgADwBnAGsAawBpAGgAaQBsAGoAaQBtAGwAbgBpAGsAZwBuAGsAaQANAG0AbgANAGkAZwAOAG4ADgANAG4AZwBmAA4AbQANABQAbQAUAG8ACgANAA4ADgBmAAoADQAKAHAACgBmAHEAcAAKAHEAcQBmAHIAcgBmABAAcABxAHMAcQByAHMAcAB0AA0ADQB0AAgAcwALAHAAcwByAAsAcAB1AHQAcAALAHUAdAAGAHYAdAAFAAYABgAFAAcAdAB1AAUABQB1AAMAAgADAHUAAwACAAQAdQAJAAIAdQALAAkAAgAJAAAAAAABAAIADAAAAAkADAABAAAACwAMAAkASAABAAwADAAVAHcADAASABUAEgBIABUADAALABIAeABIABIAeAAWAEgAeAB5ABYAeQB4AHoAegB4AHsAEgB7AHgAewAYAHoAEgAYAHsAEgALABMACwB8ABMAEwB8ABIACwARAHwACwByABEAEQByABoAGgB9ABEAGgASAH0AGQAaAHIAEgAaABkAEgAZABgAcgAQABkAGAAZABAAfgB/ADwAfwB+ABQAPABZAH4AgAB/ABQAOgBZADwAfwA6ADwAgAA6AH8AJQBZADoAOgCAAIEAJQA6ACMAOgCBAIIAIwA6AIIAggCBADsAggA7ACMALwA+AIMAPgCEAIMAgwCEAC8APgCFAIQALwA9AD4APQCFAD4ALwAxAD0AMQAvAFcAMQBXACoAhgA9ADEAhgAxAEIAPQCGAIUAhQCGAIcAhQCHAEEAhACFAD8APwCFAIgAhAA/AIkAiQA/AEAA"), 0.405681, PackedByteArray("AAABAAIAAwACAAQABQACAAMABgAFAAcACAAFAAYACAACAAUAAgAJAAAACgACAAgAAgALAAkACgALAAIADAAAAAkADAABAAAACwAMAAkADQAKAAgACgANAA4ADgANAA8ADgAQAAoADwAQAA4ACgARAAsACgAQABEADAALABIAEgALABMACwARABMAEwARABIADwANABQAFQABAAwADAASABUAFQAWAAEAAQAWABcAEgAYABUAFgAVABgAEgAZABgAGAAZABAAEQAQABkAEgAaABkAGQAaABEAGgASABEAFgAbABcAHAAbABYAFwAdAB4AGwAdABcAHQAbAB8AIAAbABwAGwAhAB8AIAAiABsAGwAiACEAIQAjAB8AIgAkACEAIAAkACIAIQAkACUAIQAlACMAJAAgACYAJwAlACQAJAAmACcAJgAgACgAKAAnACYAIAApACgAKgApACAAKwAnACgAKQArACgAJwAUACUAJwArABQAJQAUACMAKwApACwAKQAtACwALAAtAC4AKQAvAC0AKgAvACkAFAArADAAMQAvACoAFAAwADIAMAAzADIAMgAzABQANAAzADAANQAzADQADwAUADMAMwA2AA8ANgAzADUANQAPADYANQAQAA8ANQA3ABAANwA1ADgANwA4ADkAOgAUADsAOgA7ACMAIwAUADwAFAA6ADwAIwA8ADoALwA9AD4ALwA/AEAALwAxAD0ALwBBAD8APgBBAC8APQBBAD4AQQA9ADEAQQAxAEIA")],
+"name": "Material",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 508,
+"vertex_data": PackedByteArray("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")
+}]
+blend_shape_mode = 0
+
+[node name="Main" type="Node3D" unique_id=1074605845 node_paths=PackedStringArray("sequence_anim", "preview_anim", "robot")]
+script = ExtResource("1_b026h")
+sequence_anim = NodePath("Explosion/RobotAnimation")
+preview_anim = NodePath("Explosion/ParticlesAnimation")
+robot = NodePath("Explosion/Robot")
+
+[node name="Explosion" type="Node3D" parent="." unique_id=1088321716]
+
+[node name="RobotAnimation" type="AnimationPlayer" parent="Explosion" unique_id=2120128497]
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_6ap3w")
+
+[node name="ParticlesAnimation" type="AnimationPlayer" parent="Explosion" unique_id=1278399649]
+libraries/ = SubResource("AnimationLibrary_cat6o")
+
+[node name="Robot" parent="Explosion" unique_id=1642034845 instance=ExtResource("3_0rg34")]
+
+[node name="shine" type="GPUParticles3D" parent="Explosion" unique_id=1145879013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+material_override = SubResource("StandardMaterial3D_ctl4e")
+emitting = false
+amount = 1
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_xvw5g")
+draw_pass_1 = SubResource("QuadMesh_kgjr6")
+
+[node name="explosion" type="Node3D" parent="Explosion" unique_id=1354861046]
+script = ExtResource("5_8efml")
+
+[node name="upward_smoke" type="GPUParticles3D" parent="Explosion/explosion" unique_id=880401180]
+material_override = ExtResource("7_70u61")
+cast_shadow = 0
+emitting = false
+amount = 20
+lifetime = 3.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+draw_order = 3
+transform_align = 1
+process_material = ExtResource("9_t6qfi")
+draw_pass_1 = ExtResource("6_jir74")
+
+[node name="upward_smoke_glow" type="GPUParticles3D" parent="Explosion/explosion" unique_id=1020104799]
+material_override = ExtResource("9_rna46")
+cast_shadow = 0
+emitting = false
+amount = 30
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-5, -5, -5, 10, 10, 10)
+draw_order = 3
+transform_align = 1
+process_material = ExtResource("9_1qnf6")
+draw_pass_1 = ExtResource("6_jir74")
+
+[node name="radial_smoke" type="GPUParticles3D" parent="Explosion/explosion" unique_id=1716613724]
+material_override = ExtResource("7_70u61")
+cast_shadow = 0
+emitting = false
+amount = 100
+lifetime = 3.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+draw_order = 3
+transform_align = 2
+process_material = ExtResource("10_36138")
+draw_pass_1 = ExtResource("6_jir74")
+
+[node name="radial_smoke_glow" type="GPUParticles3D" parent="Explosion/explosion" unique_id=1404251391]
+material_override = ExtResource("9_rna46")
+cast_shadow = 0
+emitting = false
+amount = 60
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+draw_order = 3
+transform_align = 1
+process_material = ExtResource("11_efwxg")
+draw_pass_1 = ExtResource("6_jir74")
+
+[node name="ground_ring" type="GPUParticles3D" parent="Explosion/explosion" unique_id=1330855127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+sorting_offset = -1.0
+material_override = SubResource("ShaderMaterial_ie6hv")
+emitting = false
+amount = 1
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = ExtResource("15_atkvp")
+draw_pass_1 = SubResource("CylinderMesh_k0lxt")
+
+[node name="upper_ring" type="GPUParticles3D" parent="Explosion/explosion" unique_id=1903160731]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+sorting_offset = -1.0
+material_override = SubResource("ShaderMaterial_ie6hv")
+emitting = false
+amount = 1
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = ExtResource("18_1fdd3")
+draw_pass_1 = SubResource("CylinderMesh_47tjf")
+
+[node name="ground_decal" type="GPUParticles3D" parent="Explosion/explosion" unique_id=1596138291]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+material_override = SubResource("ShaderMaterial_maft8")
+emitting = false
+amount = 1
+lifetime = 3.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_kdmqr")
+draw_pass_1 = SubResource("PlaneMesh_3lo68")
+
+[node name="spikes" type="GPUParticles3D" parent="Explosion/explosion" unique_id=965048775]
+material_override = SubResource("StandardMaterial3D_7g8d4")
+emitting = false
+amount = 12
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+draw_order = 3
+transform_align = 3
+process_material = SubResource("ParticleProcessMaterial_d23x3")
+draw_pass_1 = SubResource("QuadMesh_8vvfv")
+
+[node name="embers" type="GPUParticles3D" parent="Explosion/explosion" unique_id=2090966046]
+material_override = ExtResource("19_bodvm")
+emitting = false
+amount = 100
+lifetime = 4.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_5b7ih")
+draw_pass_1 = SubResource("QuadMesh_hmhao")
+
+[node name="shine" type="GPUParticles3D" parent="." unique_id=2058772989]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+material_override = SubResource("StandardMaterial3D_ctl4e")
+emitting = false
+amount = 1
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_xvw5g")
+draw_pass_1 = SubResource("QuadMesh_kgjr6")
+
+[node name="AoE" type="Node3D" parent="." unique_id=217274190]
+script = ExtResource("20_di6rn")
+delays = {
+&"embers": 0.0,
+&"upward_smoke_glow": 0.0
+}
+
+[node name="embers" type="GPUParticles3D" parent="AoE" unique_id=1999044587]
+material_override = ExtResource("19_bodvm")
+emitting = false
+amount = 50
+lifetime = 4.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_bodvm")
+draw_pass_1 = SubResource("QuadMesh_hmhao")
+
+[node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE" unique_id=282237787]
+material_override = SubResource("ShaderMaterial_bodvm")
+cast_shadow = 0
+emitting = false
+amount = 1
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+draw_order = 3
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_wwqlh")
+draw_pass_1 = ExtResource("6_jir74")
+
+[node name="small_rock" type="MeshInstance3D" parent="." unique_id=865145210]
+unique_name_in_owner = true
+transform = Transform3D(0.0448047, -0.1231, 0, 0.1231, 0.0448047, 0, 0, 0, 0.131, 0, 0, 0)
+material_override = ExtResource("21_d3ff1")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_wwqlh")

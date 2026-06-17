@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dp8sc57wwccfl"]
+
+[ext_resource type="Texture2D" uid="uid://bcw8pm2r7ietr" path="res://res/Procreate/Akira.png" id="1_prx4a"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_700i0"]
+albedo_texture = ExtResource("1_prx4a")
+emission = Color(0.831373, 0.831373, 0.831373, 1)
+emission_energy_multiplier = 0.0
+backlight = Color(1, 1, 1, 1)
+refraction_enabled = true
+uv1_scale = Vector3(0.68, 0.68, 0.68)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_vjtkx"]
+size = Vector3(3, 3, 0.1)
+
+[node name="Poster" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.21189, 1.90734, -2.5397)
+material_override = SubResource("StandardMaterial3D_700i0")
+mesh = SubResource("BoxMesh_vjtkx")

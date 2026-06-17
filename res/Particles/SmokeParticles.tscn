@@ -1,0 +1,101 @@
+[gd_scene load_steps=12 format=3 uid="uid://et23uuifbyrw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5hdbm"]
+transparency = 1
+albedo_color = Color(0.309804, 0.309804, 0.309804, 0.560784)
+
+[sub_resource type="Curve" id="Curve_862b7"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.236486, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_58tvo"]
+curve = SubResource("Curve_862b7")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kvfrr"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+gravity = Vector3(0, 10, 0)
+scale_curve = SubResource("CurveTexture_58tvo")
+
+[sub_resource type="SphereMesh" id="SphereMesh_lvfys"]
+radius = 30.0
+height = 60.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_r3c5h"]
+emission_shape_scale = Vector3(15.765, 16.275, 46.685)
+emission_shape = 1
+emission_sphere_radius = 1.0
+gravity = Vector3(0, 60.925, 0)
+scale_curve = SubResource("CurveTexture_58tvo")
+
+[sub_resource type="SphereMesh" id="SphereMesh_r858e"]
+radius = 5.0
+height = 10.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ovrhm"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+gravity = Vector3(0, 300, 0)
+scale_curve = SubResource("CurveTexture_58tvo")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1ff28"]
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.000141793, 0.000116319, 2.03098e-05, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_57kb0"]
+emission_shape_scale = Vector3(20, 20, 20)
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 1.0
+emission_ring_inner_radius = 0.0
+gravity = Vector3(0, 10, 0)
+scale_curve = SubResource("CurveTexture_58tvo")
+
+[sub_resource type="SphereMesh" id="SphereMesh_j7hbw"]
+radius = 37.0
+height = 50.0
+
+[node name="Smoke_particles" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_5hdbm")
+emitting = false
+amount = 18
+lifetime = 2.0
+one_shot = true
+speed_scale = 0.35
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_kvfrr")
+draw_pass_1 = SubResource("SphereMesh_lvfys")
+
+[node name="GPUParticles3D4" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_5hdbm")
+amount = 50
+lifetime = 8.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_r3c5h")
+draw_pass_1 = SubResource("SphereMesh_r858e")
+
+[node name="GPUParticles3D3" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_5hdbm")
+emitting = false
+amount = 18
+one_shot = true
+speed_scale = 0.35
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_ovrhm")
+draw_pass_1 = SubResource("SphereMesh_lvfys")
+
+[node name="GPUParticles3D2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+material_override = SubResource("StandardMaterial3D_1ff28")
+emitting = false
+amount = 50
+lifetime = 0.5
+one_shot = true
+speed_scale = 0.8
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_57kb0")
+draw_pass_1 = SubResource("SphereMesh_j7hbw")

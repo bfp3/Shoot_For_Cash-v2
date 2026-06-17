@@ -1,0 +1,195 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://c66mc200y264r"]
+
+[ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="1_1ciu5"]
+
+[sub_resource type="Shader" id="Shader_62q1h"]
+code = "shader_type spatial;
+render_mode blend_mix,
+		depth_draw_opaque,
+		cull_back,
+		diffuse_toon,
+		specular_disabled,
+		ambient_light_disabled,
+		alpha_to_coverage;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,
+		filter_linear_mipmap,
+		repeat_enable;
+uniform float alpha_scissor_threshold;
+uniform float alpha_antialiasing_edge;
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+
+uniform sampler2D depth_texture : hint_depth_texture, 
+		repeat_disable, 
+		filter_nearest;
+uniform float fade_distance = 0.5;
+
+uniform sampler2D erosion_tex;
+uniform vec2 erosion_tiling = vec2(1.0, 1.0);
+
+uniform sampler2D erosion_curve;
+uniform float erosion_threshold_offset = 0.2;
+
+uniform sampler2D erosion_offset_y_curve;
+
+uniform sampler2D dark_side : hint_default_black;
+uniform sampler2D bright_side : hint_default_black;
+
+uniform float threshold = -0.25;
+uniform float threshold_offset = 0.25;
+
+varying float lifetime;
+
+void vertex() {
+	lifetime = INSTANCE_CUSTOM.y;
+	
+	if (!OUTPUT_IS_SRGB) {
+		COLOR.rgb = mix(
+			pow((COLOR.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)), vec3(2.4)), 
+			COLOR.rgb * (1.0 / 12.92), 
+			lessThan(COLOR.rgb, vec3(0.04045))
+			);
+	}
+	
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+float fresnel(float amount, vec3 normal, vec3 view)
+{
+	return pow(
+		(1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0 )), 
+		amount
+		);
+}
+
+float depth_fade(vec2 screen_uv, vec4 world_pos, vec3 vertex) {
+	float depth_tex = textureLod(depth_texture, screen_uv, 0.0).r;
+	world_pos.xyz /= world_pos.w;
+	
+	float fade = clamp(
+		1.0-smoothstep(world_pos.z+fade_distance,world_pos.z,vertex.z),
+		0.0,
+		1.0
+		);
+	return fade;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	albedo_tex.rgb = mix(
+		pow((albedo_tex.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)),vec3(2.4)),
+		albedo_tex.rgb.rgb * (1.0 / 12.92),
+		lessThan(albedo_tex.rgb,vec3(0.04045))
+		);
+	albedo_tex *= COLOR;
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	
+	ALPHA *= albedo.a * albedo_tex.a;
+	
+	float erosion_offset_y = texture(
+		erosion_offset_y_curve, 
+		vec2(lifetime)
+		).r;
+		
+	float erosion = texture(
+		erosion_tex, 
+		UV * erosion_tiling + vec2(0.0, erosion_offset_y)
+		).r;
+	
+	float smoothstep_min = texture(erosion_curve, vec2(lifetime)).r;
+	float smoothstep_max = smoothstep_min + erosion_threshold_offset;
+	
+	float erosion_smooth = smoothstep(
+		smoothstep_min,
+		smoothstep_max,
+		erosion
+	);
+	
+	ALPHA *= erosion_smooth;
+	
+	float depth_tex = textureLod(depth_texture, SCREEN_UV, 0.0).r;
+	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0-1.0, depth_tex, 1.0);
+	float fade = depth_fade(SCREEN_UV, world_pos, VERTEX);
+	
+	ALPHA *= fade;
+}
+
+void light() {
+	// standard
+	DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) 
+			* ATTENUATION 
+			* ALBEDO;
+	
+	vec3 dark_color = texture(dark_side, vec2(0.0)).rgb;
+	vec3 bright_color = texture(bright_side, vec2(0.0)).rgb;
+	
+	vec3 custom = mix(
+		dark_color, 
+		bright_color, 
+		smoothstep(
+			threshold, 
+			threshold + threshold_offset, 
+			dot(NORMAL, LIGHT)
+			)
+		);
+	
+	float fres = fresnel(2.0, NORMAL, VIEW);
+	
+	DIFFUSE_LIGHT = (
+		ALBEDO + 
+		(fres * clamp(ATTENUATION - 0.75, 0.0, 1.0))
+		) * custom;
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_708uo"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.99558, 0.99558, 0.99558, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_uwnnm"]
+gradient = SubResource("Gradient_708uo")
+
+[sub_resource type="Gradient" id="Gradient_a3iqv"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.288519, 0.288518, 0.288518, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6s5g8"]
+gradient = SubResource("Gradient_a3iqv")
+
+[sub_resource type="Curve" id="Curve_n367x"]
+_limits = [0.0, 1.1, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 3.25, 0, 0, Vector2(1, 1.1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_s4ua3"]
+curve = SubResource("Curve_n367x")
+
+[sub_resource type="Curve" id="Curve_37inu"]
+_data = [Vector2(0, 0), 0.0, 2.5, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_qb8yg"]
+curve = SubResource("Curve_37inu")
+
+[resource]
+render_priority = 0
+shader = SubResource("Shader_62q1h")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/alpha_scissor_threshold = 0.125
+shader_parameter/alpha_antialiasing_edge = 0.25
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/fade_distance = 0.75
+shader_parameter/erosion_tex = ExtResource("1_1ciu5")
+shader_parameter/erosion_tiling = Vector2(2, 1)
+shader_parameter/erosion_curve = SubResource("CurveTexture_s4ua3")
+shader_parameter/erosion_threshold_offset = 0.2
+shader_parameter/erosion_offset_y_curve = SubResource("CurveTexture_qb8yg")
+shader_parameter/dark_side = SubResource("GradientTexture1D_6s5g8")
+shader_parameter/bright_side = SubResource("GradientTexture1D_uwnnm")
+shader_parameter/threshold = 0.0
+shader_parameter/threshold_offset = 0.075
