@@ -140,7 +140,10 @@ func has_line_of_sight(target: Node3D) -> bool:
 
 	# Only StaticBody3D blocks line of sight
 	if collider is StaticBody3D:
-		return false
+		if collider.name.contains('Shover'):
+			return true
+		else:
+			return false
 
 	return true
 

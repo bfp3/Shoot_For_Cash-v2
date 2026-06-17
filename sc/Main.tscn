@@ -113,6 +113,46 @@ _data = {
 }
 point_count = 2
 
+[sub_resource type="Animation" id="Animation_tnw34"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_nn6vd"]
+resource_name = "push_up"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 5, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ec2we"]
+_data = {
+&"RESET": SubResource("Animation_tnw34"),
+&"push_up": SubResource("Animation_nn6vd")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ymbdo"]
+size = Vector3(40, 1, 9.025)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_nh3e2"]
 size = Vector3(40, 0.1, 56)
 
@@ -663,6 +703,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
 pulse_magnitude = 0.8
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
+root_node = NodePath("../Shover")
+libraries/ = SubResource("AnimationLibrary_ec2we")
+speed_scale = 0.2
+
 [node name="Container_1" type="Node3D" parent="Rocks" unique_id=189760907]
 
 [node name="Rock_Instance" parent="Rocks/Container_1" unique_id=1089661090 instance=ExtResource("21_e0u1b")]
@@ -731,6 +776,25 @@ volume_db = -10.0
 pitch_scale = 0.7
 max_polyphony = 2
 
+[node name="Shover" type="StaticBody3D" parent="Rocks" unique_id=1202508704]
+collision_layer = 7
+collision_mask = 7
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rocks/Shover" unique_id=1619768210]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2012472, 0)
+shape = SubResource("BoxShape3D_ymbdo")
+debug_color = Color(0, 1, 0, 1)
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Rocks/Shover" unique_id=1565011847]
+transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, -20.699135, 3.0234952, -4.9721565)
+shape = SubResource("BoxShape3D_ymbdo")
+debug_color = Color(0, 1, 0, 1)
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Rocks/Shover" unique_id=1086062209]
+transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 20.741976, 3.0234952, -4.9721565)
+shape = SubResource("BoxShape3D_ymbdo")
+debug_color = Color(0, 1, 0, 1)
+
 [node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("23_ellt3")]
 unique_name_in_owner = true
 process_mode = 3
@@ -750,6 +814,7 @@ script = ExtResource("24_dse8t")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Splash_zone" unique_id=915563512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.23500001, 10.400002)
 shape = SubResource("BoxShape3D_nh3e2")
+disabled = true
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Splash_zone" unique_id=1142810847]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.2624941, 0.4667511)

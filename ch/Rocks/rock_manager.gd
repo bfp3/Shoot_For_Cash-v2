@@ -114,20 +114,27 @@ func bounce_rocks() -> void:
 			break
 		
 		body.bounce_rocks()
+		
+		#$AnimationPlayer.play('push_up')
+		
 		var x_variation = randf_range(-2.0, 2.0)
 		const z_variation = 0.0
+		#var upward_force = randf_range(9.5, 10.0)
 		var upward_force = randf_range(9.5, 10.0)
+		
 		var impulse = Vector3(x_variation, upward_force, z_variation) * pulse_magnitude
 		
 		body.apply_central_impulse(impulse)
 
 		counter += 1
-		#await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.1).timeout
 		
 		if counter >= rocks_limit:
 			break
 
 	spin_rocks()
+	
+
 
 func spin_rocks() -> void:
 	

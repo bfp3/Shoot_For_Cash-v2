@@ -139,6 +139,10 @@ func update_prepare_rock() -> void:
 	force_mult.shuffle()
 	await get_tree().process_frame
 	setup_rock_type()
+	await get_tree().create_timer(0.2).timeout
+	global_position = start_pos
+	#global_position.x += randi_range(-16,16)
+	#global_position.x = clamp(global_position.x, -2,2)
 	
 func update_active() -> void:
 	enable_collision()
@@ -659,7 +663,9 @@ func add_to_rocks_round() -> void:
 
 func bounce_rocks() -> void:
 	update_gravity(0.04)
-	global_position = start_pos
+	#global_position = start_pos
+	#global_position.x += randi_range(-16,16)
+	#global_position.x = clamp(global_position.x, -2,2)
 
 func start_destroyed_process() -> void:
 
