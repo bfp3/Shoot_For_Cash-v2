@@ -332,12 +332,13 @@ func start_destroyed_process() -> void:
 		
 	#$Mesh/Yellow_particles.emitting = true
 	rock_activated = false
+	freeze = true
 	enter_state(State.HIT)
 	
 	#if !destroyed_by_marked:
 	
 	remove_from_group('Target')
-	print("reaching")
+
 	play_destroy_sfx()
 	
 	if is_in_group('Target'):

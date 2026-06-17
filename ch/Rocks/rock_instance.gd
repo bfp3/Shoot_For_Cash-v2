@@ -780,7 +780,8 @@ func expand_blast_radius() -> void:
 		return
 	
 	%explosion_radius_mesh.show()
-	
+	$Explosion_area.show()
+	print('called insdie expand blast radius')
 	var blast_node : Area3D = $Explosion_area
 	blast_node.show()
 	blast_node.monitoring = true
@@ -793,7 +794,7 @@ func expand_blast_radius() -> void:
 	await tween.finished
 	$Explosion_area/CollisionShape3D.disabled = true
 	blast_node.scale = Vector3.ONE
-	%explosion_radius_mesh.transparency = 0.2
+	%explosion_radius_mesh.transparency = 0.0
 	blast_node.hide()
 	blast_node.monitoring = false
 	
