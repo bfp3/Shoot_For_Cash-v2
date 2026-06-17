@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://ch3q4y3jfsf6a"]
+
+[ext_resource type="Script" uid="uid://10vyrvexi5go" path="res://unfiled/targets/missile.gd" id="1_2h36l"]
+[ext_resource type="AudioStream" uid="uid://7wb4jou4pe18" path="res://sfx/ES_sound_effects/ES_Bomb Fall High Pitch - SFX Producer.wav" id="2_8glla"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3e6go"]
+transparency = 1
+albedo_color = Color(1, 0.47451, 0, 1)
+emission_enabled = true
+emission = Color(0.74902, 0.235294, 0, 1)
+emission_energy_multiplier = 40.0
+
+[sub_resource type="Curve" id="Curve_vmnjx"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.84968, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_cmtrb"]
+curve = SubResource("Curve_vmnjx")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_m7dnh"]
+particle_flag_align_y = true
+direction = Vector3(0, -9, 0)
+gravity = Vector3(0, -50, 0)
+scale_min = 0.9
+scale_curve = SubResource("CurveTexture_cmtrb")
+color = Color(0.929412, 0.32549, 0, 0.988235)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_wptu3"]
+radius = 3.3
+height = 11.0
+
+[node name="Missile" type="Node3D"]
+script = ExtResource("1_2h36l")
+
+[node name="GPUParticles3D2" type="GPUParticles3D" parent="."]
+layers = 3
+sorting_use_aabb_center = false
+material_override = SubResource("StandardMaterial3D_3e6go")
+amount = 80
+lifetime = 2.5
+preprocess = 2.0
+fixed_fps = 60
+visibility_aabb = AABB(-279.989, -247.021, -51.6353, 559.979, 494.041, 103.271)
+trail_enabled = true
+process_material = SubResource("ParticleProcessMaterial_m7dnh")
+draw_pass_1 = SubResource("CapsuleMesh_wptu3")
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="MissileLaunch" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("2_8glla")
+volume_db = -10.0
+bus = &"Intercom"

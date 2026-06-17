@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://dkpa0p2o867c2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qdyh2"]
+albedo_color = Color(0.359069, 0.359069, 0.359069, 1)
+metallic = 1.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_be6sj"]
+radius = 9.0
+height = 86.03
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_wrjsw"]
+radius = 5.0
+height = 10.0
+
+[node name="Boat" type="Node3D" unique_id=1784959298]
+
+[node name="Base" type="MeshInstance3D" parent="." unique_id=259675131]
+transform = Transform3D(0.999998, -3.19744e-14, 4.23516e-21, 0, 1.31134e-07, 0.999998, -3.19744e-14, -0.999998, 1.31134e-07, -0.0376516, -0.449835, -2.92012)
+material_override = SubResource("StandardMaterial3D_qdyh2")
+mesh = SubResource("CapsuleMesh_be6sj")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1740183123]
+transform = Transform3D(0.999998, 0, 3.19744e-14, 0, 0.999998, 0, -3.19744e-14, 0, 0.999998, -0.0376518, 9.55017, 17.0799)
+material_override = SubResource("StandardMaterial3D_qdyh2")
+mesh = SubResource("CapsuleMesh_wrjsw")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=216180971]
+transform = Transform3D(0.999998, 0, 3.19744e-14, 0, 0.999998, 0, -3.19744e-14, 0, 0.999998, -0.0376519, 8.84336, 27.8568)
+material_override = SubResource("StandardMaterial3D_qdyh2")
+mesh = SubResource("CapsuleMesh_wrjsw")

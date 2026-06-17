@@ -1,0 +1,331 @@
+[gd_scene format=3 uid="uid://caous0v0otyxf"]
+
+[ext_resource type="AudioStream" uid="uid://dvmkfwmyhweyr" path="res://sfx/ES_sound_effects/ES_Bell Ding - SFX Producer.wav" id="1_0vxu7"]
+[ext_resource type="Script" uid="uid://b44vjan1vydb5" path="res://lib/dev_tool_hotkeys.gd" id="1_hbjt3"]
+[ext_resource type="FontFile" uid="uid://dy8r1rfu6d74j" path="res://unfiled/Fonts/droid-sans/DroidSans-Bold.ttf" id="2_o2q6t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sn2bn"]
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_0vxu7"]
+Panel/styles/panel = SubResource("StyleBoxFlat_sn2bn")
+
+[sub_resource type="LabelSettings" id="LabelSettings_venh2"]
+font = ExtResource("2_o2q6t")
+font_size = 25
+font_color = Color(0.61, 0.61, 0.61, 1)
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Dev_tool_hotkeys" type="Node" unique_id=1321001106]
+process_mode = 3
+script = ExtResource("1_hbjt3")
+
+[node name="Control" type="Control" parent="." unique_id=114500575]
+visible = false
+layout_mode = 3
+anchor_left = 0.803125
+anchor_top = 0.698148
+anchor_right = 0.969792
+anchor_bottom = 0.933333
+offset_bottom = 6.10352e-05
+pivot_offset = Vector2(320, 100)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="GridContainer" type="GridContainer" parent="Control" unique_id=229364698]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.525
+anchor_bottom = 0.981481
+offset_right = -180.0
+offset_bottom = -24.0
+columns = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="7" type="Panel" parent="Control/GridContainer" unique_id=1954648901]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/7" unique_id=448525602]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "7
+Speed"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="8" type="Panel" parent="Control/GridContainer" unique_id=1492507954]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/8" unique_id=1645120650]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "8
+Slow"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Amounts_to_be_used" type="Control" parent="Control/GridContainer/8" unique_id=1111688857]
+layout_mode = 1
+anchor_right = 0.0875
+anchor_bottom = 0.037037
+offset_left = 6.0
+offset_top = 46.0001
+offset_right = 6.0
+offset_bottom = 46.0001
+metadata/_edit_use_anchors_ = true
+
+[node name="health_unit" type="Panel" parent="Control/GridContainer/8/Amounts_to_be_used" unique_id=1964568608]
+z_index = 2
+custom_minimum_size = Vector2(15, 5)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 8.75772
+anchor_top = -18.3749
+anchor_right = 10.2937
+anchor_bottom = -2.62499
+offset_left = -5.78
+offset_top = -0.5
+offset_right = -4.22
+offset_bottom = -30.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(7.5, 2.5)
+theme = SubResource("Theme_0vxu7")
+metadata/_edit_use_anchors_ = true
+
+[node name="health_unit2" type="Panel" parent="Control/GridContainer/8/Amounts_to_be_used" unique_id=1403145485]
+z_index = 2
+custom_minimum_size = Vector2(15, 5)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 8.75772
+anchor_top = -14.775
+anchor_right = 10.2937
+anchor_bottom = 0.974996
+offset_left = -5.78
+offset_top = -0.5
+offset_right = -4.22
+offset_bottom = -30.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(7.5, 2.5)
+theme = SubResource("Theme_0vxu7")
+metadata/_edit_use_anchors_ = true
+
+[node name="health_unit3" type="Panel" parent="Control/GridContainer/8/Amounts_to_be_used" unique_id=751770890]
+z_index = 2
+custom_minimum_size = Vector2(15, 5)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 8.75772
+anchor_top = -11.175
+anchor_right = 10.2937
+anchor_bottom = 4.57499
+offset_left = -5.78
+offset_top = -0.5
+offset_right = -4.22
+offset_bottom = -30.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(7.5, 2.5)
+theme = SubResource("Theme_0vxu7")
+metadata/_edit_use_anchors_ = true
+
+[node name="Health_hbox_container" type="HBoxContainer" parent="Control/GridContainer/8/Amounts_to_be_used" unique_id=1156764430]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_right = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="9" type="Panel" parent="Control/GridContainer" unique_id=214651054]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/9" unique_id=2042243576]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "9
+Mouse"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="4" type="Panel" parent="Control/GridContainer" unique_id=1373428325]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/4" unique_id=1648129317]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "4
+Pause"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="5" type="Panel" parent="Control/GridContainer" unique_id=269178918]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/5" unique_id=2022429304]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "5
+Unpause"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="6" type="Panel" parent="Control/GridContainer" unique_id=5846592]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/6" unique_id=447237490]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "6
+Win Game"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="1" type="Panel" parent="Control/GridContainer" unique_id=203125849]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/1" unique_id=1425431393]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "1
+Default"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="2" type="Panel" parent="Control/GridContainer" unique_id=1735916683]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/2" unique_id=709190060]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "2
+801"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="3" type="Panel" parent="Control/GridContainer" unique_id=1702348471]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/3" unique_id=1600006071]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "3
+Dev_mode"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="0" type="Panel" parent="Control/GridContainer" unique_id=630841100]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/GridContainer/0" unique_id=1219778812]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0
+Show/Hide"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="menu_sfx" type="AudioStreamPlayer" parent="." unique_id=1321969078]
+stream = ExtResource("1_0vxu7")
+volume_db = -40.0
+pitch_scale = 5.0
+
+[node name="Dev_mode_control" type="Control" parent="." unique_id=792982862]
+visible = false
+layout_mode = 3
+anchor_left = 0.046
+anchor_top = 0.83
+anchor_right = 0.137
+anchor_bottom = 0.948
+offset_left = -88.32
+offset_top = -0.400024
+offset_right = -7.04001
+offset_bottom = 56.1599
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Dev_mode_control" unique_id=514557538]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.5
+offset_top = -15.0
+offset_right = 252.5
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Developer Mode: ON"
+label_settings = SubResource("LabelSettings_venh2")
+horizontal_alignment = 1
+vertical_alignment = 1

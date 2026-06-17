@@ -1,0 +1,270 @@
+[gd_scene format=3 uid="uid://cv0tx4fxf8p3j"]
+
+[ext_resource type="PackedScene" uid="uid://csjn5y54u01tr" path="res://ch/00_Hood/player-v2.tscn" id="1_3x2qj"]
+[ext_resource type="Environment" uid="uid://bchxsokc33ru8" path="res://res/skyEnvironments/early_morning.tres" id="2_wv46p"]
+[ext_resource type="Texture2D" uid="uid://dwlpx7g1iy3r" path="res://res/textures_2D/texture_materials/corrugated_iron_02_4k/textures/corrugated_iron_02_diff_4k.png" id="3_p574x"]
+[ext_resource type="Texture2D" uid="uid://dlu30sq1pi8le" path="res://res/textures_2D/texture_materials/corrugated_iron_02_4k/textures/corrugated_iron_02_nor_dx_4k.png" id="4_0n3bm"]
+[ext_resource type="Texture2D" uid="uid://b8vx1m0r44wj4" path="res://res/textures_2D/texture_materials/corrugated_iron_02_4k/textures/corrugated_iron_02_rough_4k.png" id="5_eie6n"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mpwdh"]
+albedo_color = Color(0.282353, 0.282353, 0.282353, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjbvu"]
+albedo_texture = ExtResource("3_p574x")
+roughness_texture = ExtResource("5_eie6n")
+normal_enabled = true
+normal_texture = ExtResource("4_0n3bm")
+uv1_scale = Vector3(2.9, 2.9, 2.9)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="player-v2" parent="." instance=ExtResource("1_3x2qj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6, 7.60802)
+
+[node name="Tunnel" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -14.4904, 0)
+flip_faces = true
+radius = 3.0
+height = 13.0
+sides = 36
+
+[node name="topLevel" type="CSGBox3D" parent="."]
+material_override = SubResource("StandardMaterial3D_mpwdh")
+use_collision = true
+flip_faces = true
+size = Vector3(20, 20, 20)
+
+[node name="Door2" type="CSGCylinder3D" parent="topLevel"]
+transform = Transform3D(-1, 0, -8.74228e-08, -8.74228e-08, 0, 1, 0, 1, 0, -1.86225e-06, -7.69832, 10)
+operation = 2
+flip_faces = true
+radius = 6.0
+
+[node name="topLevelSubtraction" type="CSGBox3D" parent="topLevel"]
+operation = 2
+size = Vector3(18, 18, 18)
+
+[node name="b1" type="CSGBox3D" parent="topLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -29, 0)
+flip_faces = true
+size = Vector3(20, 20, 20)
+
+[node name="Door3" type="CSGCylinder3D" parent="topLevel/b1"]
+transform = Transform3D(-1, 0, -8.74228e-08, -8.74228e-08, 0, 1, 0, 1, 0, 5.85585e-07, -6.69831, -11.248)
+operation = 2
+flip_faces = true
+radius = 6.0
+height = 4.54
+
+[node name="topLevelSubtraction" type="CSGBox3D" parent="topLevel/b1"]
+operation = 2
+size = Vector3(18, 18, 18)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="topLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -14.4904, 0)
+operation = 2
+radius = 2.0
+height = 13.0
+sides = 36
+
+[node name="Lighting" type="Node" parent="."]
+
+[node name="f1" type="Node3D" parent="Lighting"]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.30302, 0, -8.66024)
+light_energy = 4.0
+omni_range = 8.0
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.69698, 0, -8.66024)
+light_energy = 4.0
+omni_range = 8.0
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -7, -8.66024)
+light_energy = 4.0
+omni_range = 8.0
+
+[node name="OmniLight3D4" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -7, -0.0197639)
+light_energy = 4.0
+omni_range = 8.0
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -22.4249, -0.0197639)
+light_color = Color(0.901961, 0.0352941, 0, 1)
+light_energy = 10.0
+omni_range = 8.0
+
+[node name="OmniLight3D6" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.69698, -27.4249, -7.01976)
+light_color = Color(1, 0.219608, 0.0941176, 1)
+light_energy = 10.0
+omni_range = 8.0
+
+[node name="OmniLight3D7" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.77243, -27.4249, -7.01976)
+light_color = Color(1, 0.219608, 0.0941176, 1)
+light_energy = 10.0
+omni_range = 8.0
+
+[node name="OmniLight3D8" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -22.4249, 10.9802)
+light_color = Color(1, 0.219608, 0.0941176, 1)
+light_energy = 10.0
+omni_range = 8.0
+
+[node name="OmniLight3D9" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.69698, -27.4249, 3.98024)
+light_color = Color(1, 0.219608, 0.0941176, 1)
+light_energy = 10.0
+omni_range = 8.0
+
+[node name="OmniLight3D10" type="OmniLight3D" parent="Lighting/f1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.77243, -27.4249, 3.98024)
+light_color = Color(1, 0.219608, 0.0941176, 1)
+light_energy = 10.0
+omni_range = 8.0
+
+[node name="f2" type="Node3D" parent="Lighting"]
+
+[node name="OmniLight3D11" type="OmniLight3D" parent="Lighting/f2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.30302, -27, -15.6602)
+light_energy = 4.0
+omni_range = 8.0
+
+[node name="OmniLight3D12" type="OmniLight3D" parent="Lighting/f2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.69698, -27, -85.6602)
+light_energy = 4.0
+omni_range = 16.0
+
+[node name="OmniLight3D13" type="OmniLight3D" parent="Lighting/f2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -34, -68.6602)
+light_energy = 4.0
+omni_range = 20.0
+
+[node name="OmniLight3D14" type="OmniLight3D" parent="Lighting/f2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -34, -46.0198)
+light_energy = 4.0
+omni_range = 18.0
+
+[node name="OmniLight3D15" type="OmniLight3D" parent="Lighting/f2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -28.4249, -71.0198)
+light_color = Color(0.901961, 0.0352941, 0, 1)
+light_energy = 10.0
+omni_range = 25.0
+
+[node name="OmniLight3D16" type="OmniLight3D" parent="Lighting/f2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.69698, -27.4249, -57.0198)
+light_color = Color(1, 0.219608, 0.0941176, 1)
+light_energy = 10.0
+omni_range = 22.0
+
+[node name="OmniLight3D17" type="OmniLight3D" parent="Lighting/f2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.77243, -27.4249, -26.0198)
+light_color = Color(1, 0.219608, 0.0941176, 1)
+light_energy = 10.0
+omni_range = 28.0
+
+[node name="f3" type="Node3D" parent="Lighting"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -52, 0, -111)
+
+[node name="OmniLight3D11" type="OmniLight3D" parent="Lighting/f3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.30302, -27, -15.6602)
+light_energy = 4.0
+omni_range = 8.0
+
+[node name="OmniLight3D12" type="OmniLight3D" parent="Lighting/f3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.69698, -27, -85.6602)
+light_energy = 4.0
+omni_range = 16.0
+
+[node name="OmniLight3D13" type="OmniLight3D" parent="Lighting/f3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -34, -68.6602)
+light_energy = 4.0
+omni_range = 20.0
+
+[node name="OmniLight3D14" type="OmniLight3D" parent="Lighting/f3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -34, -46.0198)
+light_energy = 4.0
+omni_range = 18.0
+
+[node name="OmniLight3D15" type="OmniLight3D" parent="Lighting/f3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.303021, -28.4249, -71.0198)
+light_color = Color(0.901961, 0.0352941, 0, 1)
+light_energy = 10.0
+omni_range = 25.0
+
+[node name="OmniLight3D16" type="OmniLight3D" parent="Lighting/f3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.69698, -27.4249, -57.0198)
+light_color = Color(1, 0.219608, 0.0941176, 1)
+light_energy = 10.0
+omni_range = 22.0
+
+[node name="OmniLight3D17" type="OmniLight3D" parent="Lighting/f3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.77243, -27.4249, -26.0198)
+light_color = Color(1, 0.219608, 0.0941176, 1)
+light_energy = 10.0
+omni_range = 28.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting"]
+environment = ExtResource("2_wv46p")
+
+[node name="b1-Hallway" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -29, -51)
+material_override = SubResource("StandardMaterial3D_bjbvu")
+use_collision = true
+flip_faces = true
+size = Vector3(20, 20, 80)
+
+[node name="Door2" type="CSGCylinder3D" parent="b1-Hallway"]
+transform = Transform3D(-1, 0, -8.74228e-08, -8.74228e-08, 0, 1, 0, 1, 0, 5.85585e-07, -6.69831, 39.752)
+operation = 2
+flip_faces = true
+radius = 6.0
+height = 4.54
+
+[node name="topLevelSubtraction" type="CSGBox3D" parent="b1-Hallway"]
+operation = 2
+size = Vector3(18, 18, 79.95)
+
+[node name="Door" type="CSGCylinder3D" parent="b1-Hallway"]
+transform = Transform3D(-1, 0, -8.74228e-08, -8.74228e-08, 0, 1, 0, 1, 0, 5.85585e-07, -6.69831, -40)
+operation = 2
+flip_faces = true
+radius = 6.0
+sides = 12
+
+[node name="b1-Hallway2" type="CSGBox3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.26763e-06, -29, -101)
+material_override = SubResource("StandardMaterial3D_bjbvu")
+use_collision = true
+flip_faces = true
+size = Vector3(20, 20, 80)
+
+[node name="Door3" type="CSGCylinder3D" parent="b1-Hallway2"]
+transform = Transform3D(4.37114e-08, 1, 3.82137e-15, -8.74228e-08, 0, 1, 1, -4.37114e-08, 8.74228e-08, 9.29276, -6.69831, -2.25941e-06)
+operation = 2
+flip_faces = true
+radius = 6.0
+sides = 12
+
+[node name="Door2" type="CSGCylinder3D" parent="b1-Hallway2"]
+transform = Transform3D(-1, 0, -8.74228e-08, -8.74228e-08, 0, 1, 0, 1, 0, 5.85585e-07, -6.69831, 39.752)
+operation = 2
+flip_faces = true
+radius = 6.0
+height = 4.54
+
+[node name="topLevelSubtraction" type="CSGBox3D" parent="b1-Hallway2"]
+operation = 2
+size = Vector3(18, 18, 79.95)
+
+[node name="Door" type="CSGCylinder3D" parent="b1-Hallway2"]
+transform = Transform3D(-1, 0, -8.74228e-08, -8.74228e-08, 0, 1, 0, 1, 0, 5.85585e-07, -6.69831, -40)
+operation = 2
+flip_faces = true
+radius = 6.0
+sides = 12

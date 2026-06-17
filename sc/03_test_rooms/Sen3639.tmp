@@ -1,0 +1,77 @@
+[gd_scene load_steps=11 format=3 uid="uid://7j106und801p"]
+
+[ext_resource type="Script" path="res://600_scripts/100_levels/sensor_test_room.gd" id="1_ok1bh"]
+[ext_resource type="Environment" uid="uid://dyd7wpkcsjgmq" path="res://800_materials/skyEnvironments/late_night.tres" id="2_ti02m"]
+[ext_resource type="PackedScene" uid="uid://dy1vulywyvpcy" path="res://200_assets/targets/sensor.tscn" id="3_662rm"]
+[ext_resource type="PackedScene" uid="uid://csjn5y54u01tr" path="res://300_characters/00_Hood/player-v2.tscn" id="5_gedxw"]
+[ext_resource type="PackedScene" uid="uid://4pw25o0qn7a5" path="res://200_assets/environment_decoration/post.tscn" id="10_10vue"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gt5a5"]
+albedo_color = Color(0.372549, 0.176471, 0.0235294, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_erycf"]
+size = Vector3(40, 1, 80)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ufdud"]
+size = Vector3(40.4377, 1, 80)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7ujrx"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dig4u"]
+size = Vector3(10, 1, 10)
+
+[node name="Sensor_test_room" type="Node3D"]
+script = ExtResource("1_ok1bh")
+
+[node name="SensorPost" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.8373, 8.72841, 114.341)
+
+[node name="post" parent="SensorPost" instance=ExtResource("10_10vue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Sensor" parent="SensorPost" instance=ExtResource("3_662rm")]
+
+[node name="player-v2" parent="." instance=ExtResource("5_gedxw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.032, 1, 75.3063)
+
+[node name="Geometry" type="StaticBody3D" parent="."]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 19.65, -2.93, 125.872)
+
+[node name="FloorMesh" type="MeshInstance3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.14862)
+material_override = SubResource("StandardMaterial3D_gt5a5")
+mesh = SubResource("BoxMesh_erycf")
+skeleton = NodePath("../FloorCol")
+
+[node name="FloorCol" type="CollisionShape3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.14862)
+shape = SubResource("BoxShape3D_ufdud")
+
+[node name="PlatformMesh" type="MeshInstance3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.415, -0.552493, 1.03802, -3.43747)
+mesh = SubResource("BoxMesh_7ujrx")
+
+[node name="PlatformCol" type="CollisionShape3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.415, -0.552493, 1.03802, -3.43747)
+shape = SubResource("BoxShape3D_dig4u")
+
+[node name="PlatformRampCSG" type="CSGPolygon3D" parent="Geometry"]
+transform = Transform3D(-1.09278e-08, -8.05002e-16, 10, -0.240499, 0.0682674, -4.20501e-07, -0.0682674, -0.240499, -1.19362e-07, 4.4417, 0.945218, -0.585976)
+use_collision = true
+polygon = PackedVector2Array(-0.354983, -6.94996, -1.47691, 3.64468, 2.37808, 2.51017)
+
+[node name="PlatformRampCSG2" type="CSGPolygon3D" parent="Geometry"]
+transform = Transform3D(8.11728e-10, 2.86858e-09, -10, -0.240555, 0.0680701, 0, 0.0680701, 0.240555, 1.19249e-07, -5.55241, 0.945218, -6.29778)
+use_collision = true
+polygon = PackedVector2Array(-0.354983, -6.94996, -1.47691, 3.64468, 2.37808, 2.51017)
+
+[node name="Lighting" type="Node" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0)
+light_color = Color(0, 0.168627, 0.333333, 1)
+sky_mode = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting"]
+environment = ExtResource("2_ti02m")

@@ -1,0 +1,896 @@
+[gd_scene format=3 uid="uid://cj3hlihw2uspw"]
+
+[ext_resource type="Script" uid="uid://b8pym47cccjcg" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/hud_feedback_corner.gd" id="1_6urlp"]
+[ext_resource type="Script" uid="uid://3tr2af6hsw5c" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/player_won_feedback_system.gd" id="1_qhppr"]
+[ext_resource type="PackedScene" uid="uid://wvemhe8ivy2m" path="res://lib/HUD_Feedback_Corner_Folder/Main_score_tally.tscn" id="1_qylpp"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="2_6urlp"]
+[ext_resource type="PackedScene" uid="uid://dag0n40ug6tsf" path="res://lib/HUD_Feedback_Corner_Folder/Enemy_shots_astray_feedback.tscn" id="2_jw10o"]
+[ext_resource type="FontFile" uid="uid://dy8r1rfu6d74j" path="res://unfiled/Fonts/droid-sans/DroidSans-Bold.ttf" id="3_gghq7"]
+[ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="4_p4xhn"]
+[ext_resource type="Script" uid="uid://or737o6rwcyt" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/game_won_special_yellow.gd" id="5_5e6ml"]
+[ext_resource type="PackedScene" uid="uid://c4u3c1u1bfao" path="res://lib/HUD_Feedback_Corner_Folder/cage_damage_feedback.tscn" id="5_fkevw"]
+[ext_resource type="AudioStream" uid="uid://bb7eb5q4ybfql" path="res://sfx/Camera_waking_up_3.wav" id="5_jw10o"]
+[ext_resource type="Script" uid="uid://ddffnuu6dc0bl" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/points_particles_receptor.gd" id="5_y7crx"]
+[ext_resource type="PackedScene" uid="uid://bn61uifa163wl" path="res://unfiled/Circle_polygon/Circle_Polygon.tscn" id="6_tuqr4"]
+[ext_resource type="Shader" uid="uid://65e33jg1ql4e" path="res://res/Shaders/goggles_shader.gdshader" id="7_uywbt"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="9_tuqr4"]
+[ext_resource type="Texture2D" uid="uid://clyuw55mgmybq" path="res://res/textures_2D/HUD_center_piece.png" id="15_tuqr4"]
+[ext_resource type="Script" uid="uid://b85qgj0avk04j" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/score_mult.gd" id="16_tuqr4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_av1no"]
+bg_color = Color(0.35, 0.35, 0.35, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 10
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 6.0
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_kbm6s"]
+Panel/styles/panel = SubResource("StyleBoxFlat_av1no")
+
+[sub_resource type="Animation" id="Animation_l6emn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [2.67908]
+}
+
+[sub_resource type="Animation" id="Animation_etobj"]
+resource_name = "rot"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_y227k"]
+_data = {
+&"RESET": SubResource("Animation_l6emn"),
+&"rot": SubResource("Animation_etobj")
+}
+
+[sub_resource type="LabelSettings" id="LabelSettings_y7crx"]
+font = ExtResource("3_gghq7")
+font_size = 40
+font_color = Color(0.78, 0.78, 0.78, 1)
+outline_size = 2
+outline_color = Color(0.13, 0.13, 0.13, 1)
+shadow_size = 3
+shadow_color = Color(0.17, 0.17, 0.17, 1)
+shadow_offset = Vector2(-1, -1)
+
+[sub_resource type="GDScript" id="GDScript_y7crx"]
+script/source = "extends Control
+
+const POINTS_ADDED_SFX = preload(\"res://sfx/Camera_waking_up_3.wav\")
+
+var current_score := 0
+var temp_final_score := 0
+var calculating_score := false
+var last_bonus_100_milestone := 0
+var await_time: float = 0.01
+var countdown_await_time : float = 0.01
+var adding_points_increment := 4
+var start_points_for_countdown := 0
+var game_won := false
+
+func _ready() -> void:
+	EventBus.instance.cannonball_destroyed.connect(update_hidden_score)
+	GameManager.current_score_displayed = 0
+	$Coins_label.text = str(GameManager.current_score_displayed).pad_zeros(2)
+	$Coins_label.modulate = Color('FFFFFF00')
+	start_tween()
+
+func start_tween() -> void:
+	start_points_for_countdown = ScoreGl.winning_score
+	$Coins_label.text = str(start_points_for_countdown).pad_zeros(2)
+	var tween = create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_interval(2.0)
+	tween.tween_property($Coins_label, \"modulate\", Color('FFFFFF99'), 0.25)
+	tween.tween_interval(2.0)
+	await tween.finished
+	start_countdown()
+
+func start_countdown() -> void:
+	var pitch_volume: float = 4.0
+	while start_points_for_countdown > 0:
+		if start_points_for_countdown == 0:
+			break
+
+		var points_remaining = start_points_for_countdown
+		if points_remaining < 10:
+			countdown_await_time += 0.04 * (3 - points_remaining)
+			countdown_await_time = abs(countdown_await_time)
+
+		CommonCode.play_sound_instance_pitch_adjusted(POINTS_ADDED_SFX, -69.0, pitch_volume)
+		start_points_for_countdown = clamp(start_points_for_countdown - 23, 0, ScoreGl.winning_score)
+
+		$Coins_label.text = str(start_points_for_countdown).pad_zeros(2)
+		$\"../../Main_score_Tally\".pulse_ring()
+		var tween = create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property($Coins_label, \"scale\", Vector2.ONE * 1.1, countdown_await_time)
+		tween.parallel().tween_property($Coins_label, \"modulate\", Color('FFFFFF'), countdown_await_time)
+		tween.tween_property($Coins_label, \"scale\", Vector2.ONE, countdown_await_time)
+		tween.parallel().tween_property($Coins_label, \"modulate\", Color('FFFFDD'), countdown_await_time)
+		await tween.finished
+
+		pitch_volume -= 0.05
+
+func update_hidden_score() -> void:
+	if game_won:
+		return
+	var orig_score : float = GameManager.current_score_not_displayed
+	orig_score += (GameManager.bombs_hit_by_player + GameManager.shots_missed_during_round) * ScoreGl.score_multiplier
+	if orig_score >= ScoreGl.winning_score:
+		game_won = true
+		adding_points_increment = 10
+		temp_final_score = orig_score
+		var level = get_tree().get_first_node_in_group('level_root')
+		if level:
+			level.process_mode = Node.PROCESS_MODE_DISABLED
+		while_loop()
+
+func update_points_total(final_score : int) -> void:
+	if calculating_score:
+		return
+
+	adding_points_increment = 4
+	calculating_score = true
+	GameManager.current_score_not_displayed += (GameManager.bombs_hit_by_player + GameManager.shots_missed_during_round) * ScoreGl.score_multiplier
+	temp_final_score = GameManager.current_score_not_displayed
+	temp_final_score = clamp(temp_final_score, 0, ScoreGl.winning_score)
+	check_win_condition()
+	while_loop()
+
+func while_loop():
+	var pitch_volume: float = 1.0
+
+	while GameManager.current_score_displayed < temp_final_score:
+		if GameManager.current_score_displayed == ScoreGl.winning_score:
+			GameManager.current_score_displayed = ScoreGl.winning_score
+			GameManager.current_score_not_displayed = ScoreGl.winning_score
+			GameManager.player_has_winning_score = true
+			EventBus.instance.player_has_hit_winning_score.emit()
+			#if game_won:
+			var level = get_tree().get_first_node_in_group('level_root')
+			if level:
+				level.process_mode = Node.PROCESS_MODE_INHERIT
+			break
+
+		var points_remaining = temp_final_score - GameManager.current_score_displayed
+		if points_remaining < 12:
+			adding_points_increment = 2
+			await_time += 0.04 * (3 - points_remaining)
+			await_time = abs(await_time)
+
+		# Bonus ammo check and force score snap
+		if GameManager.current_score_displayed + adding_points_increment >= last_bonus_100_milestone + 100:
+			last_bonus_100_milestone += 100
+			GameManager.current_score_displayed = last_bonus_100_milestone
+			$Coins_label.text = str(GameManager.current_score_displayed).pad_zeros(2)
+			give_player_ammo_bonus()
+			if !game_won:
+				await get_tree().create_timer(0.1).timeout
+				multiple_of_a_hundred()
+			else:
+				multiple_of_a_hundred()
+			continue  # Skip this loop to avoid double-counting
+
+		CommonCode.play_sound_instance_pitch_adjusted(POINTS_ADDED_SFX, -65.0, pitch_volume)
+		GameManager.current_score_displayed = clamp(GameManager.current_score_displayed + adding_points_increment, 0, ScoreGl.winning_score)
+		$Coins_label.text = str(GameManager.current_score_displayed).pad_zeros(2)
+		$\"../../Main_score_Tally\".pulse_ring()
+
+		var tween = create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property($Coins_label, \"scale\", Vector2.ONE * 1.1, await_time)
+		tween.parallel().tween_property($Coins_label, \"modulate\", Color('FFFFFF'), await_time)
+		tween.tween_property($Coins_label, \"scale\", Vector2.ONE, await_time)
+		tween.parallel().tween_property($Coins_label, \"modulate\", Color('FFFFDD'), await_time)
+		await tween.finished
+
+		pitch_volume += 0.1
+
+	$Coins_label.text = str(GameManager.current_score_displayed).pad_zeros(2)
+	$\"../../Main_score_Tally\".fully_realised_score_indicator()
+	reset_score()
+
+func give_player_ammo_bonus() -> void:
+	var ammo_management_sytem := get_tree().get_first_node_in_group(\"Ammo_management_system\")
+	if ammo_management_sytem:
+		ammo_management_sytem.received_bonus_ammo()
+	else:
+		print_debug(\"ERROR: Can't find the ammo system\")
+
+func tween_score() -> void:
+	current_score += 1
+	var dur := 0.2
+	var tween = create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property($Coins_label, \"text\", str(current_score).pad_zeros(2), dur)
+	await tween.finished
+	while_loop()
+
+func reset_score() -> void:
+	var new_feedback = get_tree().get_first_node_in_group(\"HUD_feedback_corner\")
+	if new_feedback:
+		new_feedback.fade_out_score()
+		await get_tree().create_timer(0.25).timeout
+		new_feedback.red_damage_hud_feedback_return_to_normal()
+
+	await_time = 0.02
+	temp_final_score = 0
+	calculating_score = false
+
+func check_win_condition() -> void:
+	var SMS = get_tree().get_first_node_in_group('score_feedback_node')
+	if SMS:
+		SMS.check_win_condition()
+
+func multiple_of_a_hundred() -> void:
+	var new_feedback : HUD_feedback_corner = get_tree().get_first_node_in_group(\"HUD_feedback_corner\")
+	if new_feedback:
+		new_feedback.feedback_on_a_hundred()
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_c5sey"]
+font = ExtResource("3_gghq7")
+font_size = 50
+font_color = Color(1, 0.827167, 0.39, 1)
+outline_color = Color(1, 0.883833, 0.59, 1)
+shadow_size = 0
+shadow_color = Color(0.2, 0.179, 0.13, 1)
+shadow_offset = Vector2(0, 0)
+
+[sub_resource type="Gradient" id="Gradient_y7crx"]
+offsets = PackedFloat32Array(0.03163017, 0.25060827)
+colors = PackedColorArray(0.501961, 0.501961, 0.501961, 0, 1, 0.466667, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_tuqr4"]
+gradient = SubResource("Gradient_y7crx")
+use_hdr = true
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.495726, 0.41453)
+repeat = 2
+
+[sub_resource type="GDScript" id="GDScript_uywbt"]
+script/source = "extends Control
+
+@onready var pineapple_emoji: TextureRect = $Pineapple_emoji
+@onready var silhouette: TextureRect = $Silhouette
+
+func _ready() -> void:
+	modulate = Color('00000000')
+
+func show_pineapple() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_IN)
+	tween.tween_interval(0.4)
+	tween.tween_property(self, \"modulate\", Color('FFFFFF'), 0.6)
+	await tween.finished
+	if GameManager.pineapples_hit > 1:
+		display_pineapple()
+	else:
+		pass
+	
+func fade_pineapple() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_IN)
+	tween.tween_interval(0.4)
+	tween.tween_property(self, \"modulate\", Color('FFFFFF00'), 0.4)
+
+func display_pineapple() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_IN)
+	tween.tween_interval(0.4)
+	tween.tween_property(silhouette, \"modulate\", Color('FFFFFF'), 0.2)
+	await tween.finished
+	var tween_2 = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	tween_2.tween_property(silhouette, \"rotation\", -0.1, 0.1)
+	tween_2.tween_property(silhouette, \"rotation\", 0.1, 0.1)
+	tween_2.tween_property(silhouette, \"rotation\", -0.1, 0.1)
+	tween_2.tween_property(silhouette, \"rotation\", 0.1, 0.1)
+	tween_2.tween_property(silhouette, \"rotation\", -0.1, 0.1)
+	tween_2.tween_property(silhouette, \"rotation\", 0.1, 0.1)
+	tween_2.tween_property(silhouette, \"rotation\", 0.0, 0.15)
+	await tween_2.finished
+
+func fade_out_pineapple() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_IN)
+	tween.tween_interval(0.4)
+	tween.tween_property(silhouette, \"modulate\", Color('000000'), 1.0)
+	await tween.finished
+	fade_pineapple()
+
+func hit_pineapple() -> void:
+	$\"../Main_score_Tally\".hit_pineapple()
+"
+
+[sub_resource type="GDScript" id="GDScript_61ou1"]
+script/source = "extends Control
+
+#scoring points is going to reduce the number further
+
+@onready var coins_label: Label = $Countdown/Coins_label
+@onready var texture_rect: TextureRect = $Countdown/TextureRect
+
+@export var countdown_speed: float = 1.0
+
+var countdown_value: int = 0
+@onready var countdown_timer: Timer = $Timer
+
+func _ready() -> void:
+	if GameManager.in_retry_world:
+		show()
+		start_countdown()
+		#EventBus.instance.cannonball_destroyed.connect(_reduce_score)
+		EventBus.instance.red_cannonball_destroyed.connect(_reduce_score.bind(ScoreGl.red_dots))
+		EventBus.instance.standard_cannonball_destroyed.connect(_reduce_score.bind(ScoreGl.grey_dots))
+		EventBus.instance.standard_cannonball_destroyed_astray.connect(_reduce_score.bind(ScoreGl.grey_dots_astray))
+		EventBus.instance.special_cannonball_destroyed_astray.connect(_reduce_score.bind(ScoreGl.special_bonus_bomb))
+	else:
+		hide()
+		
+func _reduce_score(_score : float) -> void:
+	countdown_value -= _score
+	
+func start_countdown() -> void:
+	countdown_value = ScoreGl.winning_score
+	coins_label.text = str(countdown_value)
+	
+	# Set up the countdown timer
+	countdown_timer.wait_time = countdown_speed
+	countdown_timer.one_shot = false
+	countdown_timer.timeout.connect(_on_countdown_tick)
+	add_child(countdown_timer)
+	countdown_timer.start()
+	
+func _on_countdown_tick() -> void:
+	countdown_value = clamp(countdown_value - 1, 0, ScoreGl.winning_score)
+	coins_label.text = str(countdown_value)
+
+	if countdown_value <= 0:
+		countdown_timer.stop()
+		timer_finished()
+	
+func timer_finished() -> void:
+	EventBus.instance.player_has_hit_winning_score.emit()
+	EventBus.instance.game_won.emit()
+
+	print('timer ran out')
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wpqwp"]
+shader = ExtResource("7_uywbt")
+shader_parameter/time_fluc = 1.0
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_qhppr"]
+
+[node name="HUD_feedback_corner" type="Control" unique_id=1693544327 groups=["HUD_feedback_corner"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 540)
+script = ExtResource("1_6urlp")
+
+[node name="Corner_Container" type="Control" parent="." unique_id=1044013748]
+z_index = -1
+layout_mode = 1
+anchor_left = 0.833854
+anchor_top = 0.790741
+anchor_right = 0.967188
+anchor_bottom = 0.961111
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset = Vector2(128, 92)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="Corner_Container" unique_id=1192549976]
+visible = false
+modulate = Color(1, 1, 1, 0.588235)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(128, 92)
+mouse_filter = 2
+theme = SubResource("Theme_kbm6s")
+metadata/_edit_use_anchors_ = true
+
+[node name="Player_won" type="Control" parent="Corner_Container" unique_id=1516660692]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qhppr")
+
+[node name="Pulse_point_1" type="Control" parent="Corner_Container/Player_won" unique_id=713706145]
+anchors_preset = 0
+offset_left = 140.0
+offset_top = 78.0
+offset_right = 180.0
+offset_bottom = 118.0
+pivot_offset = Vector2(20, 20)
+
+[node name="Pulse" type="TextureRect" parent="Corner_Container/Player_won/Pulse_point_1" unique_id=483516707]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+scale = Vector2(3.435, 3.435)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_6urlp")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Pulse_point_2" type="Control" parent="Corner_Container/Player_won" unique_id=951720050]
+anchors_preset = 0
+offset_left = 54.0
+offset_top = 46.0
+offset_right = 94.0
+offset_bottom = 86.0
+pivot_offset = Vector2(20, 20)
+
+[node name="Pulse" type="TextureRect" parent="Corner_Container/Player_won/Pulse_point_2" unique_id=1312155305]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = -1.0
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_6urlp")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Pulse_point_3" type="Control" parent="Corner_Container/Player_won" unique_id=787804255]
+anchors_preset = 0
+offset_left = 43.0
+offset_top = 116.0
+offset_right = 83.0
+offset_bottom = 156.0
+pivot_offset = Vector2(20, 20)
+
+[node name="Pulse" type="TextureRect" parent="Corner_Container/Player_won/Pulse_point_3" unique_id=307270943]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = -1.0
+scale = Vector2(1.5, 1.5)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_6urlp")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Main_score_Tally" parent="Corner_Container" unique_id=763683831 instance=ExtResource("1_qylpp")]
+layout_mode = 1
+anchor_left = 0.429685
+anchor_top = 0.250001
+anchor_right = 0.820309
+anchor_bottom = 0.79348
+offset_right = 0.0
+
+[node name="Points_particles_receptor" type="Control" parent="Corner_Container" unique_id=735749905 groups=["points_receptor_ui"]]
+visible = false
+z_index = 1
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchor_left = -5.92966
+anchor_top = -0.448271
+anchor_right = -5.53904
+anchor_bottom = 0.0952085
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(384.999, 443)
+script = ExtResource("5_y7crx")
+circle_radius = 56.1
+metadata/_edit_use_anchors_ = true
+
+[node name="Circle_polygon" parent="Corner_Container/Points_particles_receptor" unique_id=960981802 instance=ExtResource("6_tuqr4")]
+visible = false
+position = Vector2(49.5, 49.5)
+rotation = 2.67908
+color = Color(0.3, 0.3, 0.3, 0.286275)
+polygon = PackedVector2Array(4.3473526e-15, -71, 11.106847, -70.12588, 21.940207, -67.52502, 32.233326, -63.261463, 41.732754, -57.44021, 50.204582, -50.204582, 57.44021, -41.732754, 63.261463, -32.233326, 67.52502, -21.940207, 70.12588, -11.106847, 71, 0, 70.12588, 11.106847, 67.52502, 21.940207, 63.261463, 32.233326, 57.44021, 41.732754, 50.204582, 50.204582, 41.732754, 57.44021, 32.233326, 63.261463, 21.940207, 67.52502, 11.106847, 70.12588, 4.3473526e-15, 71, -11.106847, 70.12588, -21.940207, 67.52502, -32.233326, 63.261463, -41.732754, 57.44021, -50.204582, 50.204582, -57.44021, 41.732754, -63.261463, 32.233326, -67.52502, 21.940207, -70.12588, 11.106847, -71, 8.694705e-15, -70.12588, -11.106847, -67.52502, -21.940207, -63.261463, -32.233326, -57.44021, -41.732754, -50.204582, -50.204582, -41.732754, -57.44021, -32.233326, -63.261463, -21.940207, -67.52502, -11.106847, -70.12588, -1.3042058e-14, -71)
+uv = PackedVector2Array(61.2808, -3.80103, 71.9183, -2.96384, 82.294, -0.472832, 92.1522, 3.61057, 101.25, 9.18577, 109.364, 16.1157, 116.294, 24.2296, 121.869, 33.3276, 125.953, 43.1858, 128.444, 53.5615, 129.281, 64.199, 128.444, 74.8365, 125.953, 85.2122, 121.869, 95.0704, 116.294, 104.168, 109.364, 112.282, 101.25, 119.212, 92.1522, 124.787, 82.294, 128.871, 71.9183, 131.362, 61.2808, 132.199, 50.6433, 131.362, 40.2676, 128.871, 30.4094, 124.787, 21.3114, 119.212, 13.1975, 112.282, 6.26764, 104.168, 0.692432, 95.0704, -3.39096, 85.2122, -5.88197, 74.8365, -6.71917, 64.199, -5.88197, 53.5615, -3.39096, 43.1858, 0.692432, 33.3276, 6.26764, 24.2296, 13.1975, 16.1157, 21.3114, 9.18577, 30.4094, 3.61057, 40.2676, -0.472832, 50.6433, -2.96384, 61.2808, -3.80103)
+radius = 71
+thickness = 4
+ring_shape = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Corner_Container/Points_particles_receptor/Circle_polygon" unique_id=964370639]
+libraries/ = SubResource("AnimationLibrary_y227k")
+autoplay = &"rot"
+speed_scale = 0.25
+
+[node name="Ring_polygon" parent="Corner_Container/Points_particles_receptor" unique_id=39128530 instance=ExtResource("6_tuqr4")]
+visible = false
+position = Vector2(49.5, 49.5)
+rotation = 2.67908
+polygon = PackedVector2Array(4.3473526e-15, -71, 11.106847, -70.12588, 21.940207, -67.52502, 32.233326, -63.261463, 41.732754, -57.44021, 50.204582, -50.204582, 57.44021, -41.732754, 63.261463, -32.233326, 67.52502, -21.940207, 70.12588, -11.106847, 71, 0, 70.12588, 11.106847, 67.52502, 21.940207, 63.261463, 32.233326, 57.44021, 41.732754, 50.204582, 50.204582, 41.732754, 57.44021, 32.233326, 63.261463, 21.940207, 67.52502, 11.106847, 70.12588, 4.3473526e-15, 71, -11.106847, 70.12588, -21.940207, 67.52502, -32.233326, 63.261463, -41.732754, 57.44021, -50.204582, 50.204582, -57.44021, 41.732754, -63.261463, 32.233326, -67.52502, 21.940207, -70.12588, 11.106847, -71, 8.694705e-15, -70.12588, -11.106847, -67.52502, -21.940207, -63.261463, -32.233326, -57.44021, -41.732754, -50.204582, -50.204582, -41.732754, -57.44021, -32.233326, -63.261463, -21.940207, -67.52502, -11.106847, -70.12588, -1.3042058e-14, -71, -1.2307294e-14, -67, -10.481109, -66.17512, -20.70414, -63.720787, -30.417362, -59.697437, -39.38161, -54.20414, -47.376152, -47.376152, -54.20414, -39.38161, -59.697437, -30.417362, -63.720787, -20.70414, -66.17512, -10.481109, -67, 8.2048626e-15, -66.17512, 10.481109, -63.720787, 20.70414, -59.697437, 30.417362, -54.20414, 39.38161, -47.376152, 47.376152, -39.38161, 54.20414, -30.417362, 59.697437, -20.70414, 63.720787, -10.481109, 66.17512, 4.1024313e-15, 67, 10.481109, 66.17512, 20.70414, 63.720787, 30.417362, 59.697437, 39.38161, 54.20414, 47.376152, 47.376152, 54.20414, 39.38161, 59.697437, 30.417362, 63.720787, 20.70414, 66.17512, 10.481109, 67, 0, 66.17512, -10.481109, 63.720787, -20.70414, 59.697437, -30.417362, 54.20414, -39.38161, 47.376152, -47.376152, 39.38161, -54.20414, 30.417362, -59.697437, 20.70414, -63.720787, 10.481109, -66.17512, 4.1024313e-15, -67)
+uv = PackedVector2Array(61.2808, -3.80103, 71.9183, -2.96384, 82.294, -0.472832, 92.1522, 3.61057, 101.25, 9.18577, 109.364, 16.1157, 116.294, 24.2296, 121.869, 33.3276, 125.953, 43.1858, 128.444, 53.5615, 129.281, 64.199, 128.444, 74.8365, 125.953, 85.2122, 121.869, 95.0704, 116.294, 104.168, 109.364, 112.282, 101.25, 119.212, 92.1522, 124.787, 82.294, 128.871, 71.9183, 131.362, 61.2808, 132.199, 50.6433, 131.362, 40.2676, 128.871, 30.4094, 124.787, 21.3114, 119.212, 13.1975, 112.282, 6.26764, 104.168, 0.692432, 95.0704, -3.39096, 85.2122, -5.88197, 74.8365, -6.71917, 64.199, -5.88197, 53.5615, -3.39096, 43.1858, 0.692432, 33.3276, 6.26764, 24.2296, 13.1975, 16.1157, 21.3114, 9.18577, 30.4094, 3.61057, 40.2676, -0.472832, 50.6433, -2.96384, 61.2808, -3.80103)
+radius = 71
+thickness = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Corner_Container/Points_particles_receptor/Ring_polygon" unique_id=392085226]
+libraries/ = SubResource("AnimationLibrary_y227k")
+autoplay = &"rot"
+speed_scale = 0.25
+
+[node name="Total" type="Label" parent="Corner_Container/Points_particles_receptor" unique_id=1204473813]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.00933336
+anchor_top = 0.282814
+anchor_right = 1.00933
+anchor_bottom = 1.05832
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(15, 12)
+text = "0"
+label_settings = SubResource("LabelSettings_y7crx")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Game_won_tally" type="Control" parent="Corner_Container" unique_id=1929691357]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchor_left = 0.43229
+anchor_top = 0.247383
+anchor_right = 0.822913
+anchor_bottom = 0.790862
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(384.999, 443)
+script = ExtResource("5_5e6ml")
+metadata/_edit_use_anchors_ = true
+
+[node name="Scale_control" type="Control" parent="Corner_Container/Game_won_tally" unique_id=1238702186]
+layout_mode = 1
+anchor_left = -0.175
+anchor_top = -0.175
+anchor_right = 1.175
+anchor_bottom = 1.175
+offset_left = 17.5
+offset_top = 17.5
+offset_right = -17.4999
+offset_bottom = -17.5
+scale = Vector2(1.35, 1.35)
+pivot_offset = Vector2(50, 50)
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="Corner_Container/Game_won_tally/Scale_control" unique_id=1091266635]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("2_6urlp")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="Corner_Container/Game_won_tally/Scale_control" unique_id=2063809574]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("2_6urlp")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light" type="TextureRect" parent="Corner_Container/Game_won_tally/Scale_control" unique_id=1462820834]
+modulate = Color(1, 0.633333, 0, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("9_tuqr4")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Enemy_shots_astray_feedback" parent="Corner_Container" unique_id=637099083 instance=ExtResource("2_jw10o")]
+visible = false
+layout_mode = 1
+offset_left = -265.001
+offset_top = -157.0
+offset_right = 134.999
+offset_bottom = 243.0
+
+[node name="Cage_damage_feedback" parent="Corner_Container" unique_id=1874324482 instance=ExtResource("5_fkevw")]
+visible = false
+layout_mode = 1
+anchor_left = 0.21289
+anchor_top = 0.247283
+anchor_right = 0.365233
+anchor_bottom = 0.45924
+offset_left = -30.5
+offset_top = -30.5
+offset_right = 30.5
+offset_bottom = 30.5
+scale = Vector2(0.39, 0.39)
+
+[node name="Current_total_score_tally" type="Control" parent="Corner_Container" unique_id=1274018041]
+z_index = 1
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchor_left = 0.428384
+anchor_top = 0.241948
+anchor_right = 0.819008
+anchor_bottom = 0.785427
+offset_left = -5.34058e-05
+offset_top = -5.72205e-05
+offset_right = -0.000274658
+offset_bottom = 3.05176e-05
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+metadata/_edit_use_anchors_ = true
+
+[node name="Coins_tracker" type="Control" parent="Corner_Container/Current_total_score_tally" unique_id=647138476 groups=["coins_tracker"]]
+process_mode = 3
+layout_mode = 1
+anchor_left = 0.36
+anchor_top = 0.34
+anchor_right = 0.66
+anchor_bottom = 0.83
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(15, 15)
+script = SubResource("GDScript_y7crx")
+metadata/_edit_use_anchors_ = true
+
+[node name="Coins_label" type="Label" parent="Corner_Container/Current_total_score_tally/Coins_tracker" unique_id=295561736]
+modulate = Color(1, 1, 1, 0.568627)
+clip_children = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.850002
+anchor_top = -0.204082
+anchor_right = 1.95
+anchor_bottom = 1.10204
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(42, 32)
+text = "801"
+label_settings = SubResource("LabelSettings_c5sey")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="Corner_Container/Current_total_score_tally/Coins_tracker/Coins_label" unique_id=1459370882]
+self_modulate = Color(1, 1, 1, 0.486275)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -62.0
+offset_top = -63.0
+offset_right = 62.0
+offset_bottom = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_tuqr4")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Corner_Container/Current_total_score_tally/Coins_tracker" unique_id=2100593331]
+stream = ExtResource("5_jw10o")
+volume_db = -40.0
+pitch_scale = 5.0
+
+[node name="Pineapple_module" type="Control" parent="Corner_Container" unique_id=1713986717]
+visible = false
+layout_mode = 1
+anchor_left = 1.5225
+anchor_top = -1.3175
+anchor_right = 1.9225
+anchor_bottom = -0.9175
+pivot_offset = Vector2(20, 20)
+script = SubResource("GDScript_uywbt")
+metadata/_edit_use_anchors_ = true
+
+[node name="Pineapple_emoji" type="TextureRect" parent="Corner_Container/Pineapple_module" unique_id=326923192]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_p4xhn")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Silhouette" type="TextureRect" parent="Corner_Container/Pineapple_module" unique_id=1725008798]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_p4xhn")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Countdown_container" type="Control" parent="." unique_id=1866770897]
+visible = false
+z_index = -1
+layout_mode = 1
+anchor_left = 0.833854
+anchor_top = 0.790741
+anchor_right = 0.967188
+anchor_bottom = 0.961111
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset = Vector2(128, 92)
+mouse_filter = 2
+script = SubResource("GDScript_61ou1")
+countdown_speed = 0.2
+metadata/_edit_use_anchors_ = true
+
+[node name="Countdown" type="Control" parent="Countdown_container" unique_id=1385023590]
+layout_mode = 1
+anchor_left = 0.218749
+anchor_top = 0.0489132
+anchor_right = 1.03906
+anchor_bottom = 0.951089
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="Countdown_container/Countdown" unique_id=283363868]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("15_tuqr4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Coins_label" type="Label" parent="Countdown_container/Countdown" unique_id=257330248]
+modulate = Color(1, 1, 1, 0.568627)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.447619
+anchor_top = 0.385542
+anchor_right = 0.552381
+anchor_bottom = 0.674699
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(11, 24)
+text = "0"
+label_settings = SubResource("LabelSettings_c5sey")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Timer" type="Timer" parent="Countdown_container" unique_id=1189369589]
+
+[node name="Control" type="Control" parent="." unique_id=1135035163]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control" unique_id=614437310]
+visible = false
+modulate = Color(1, 1, 1, 0.0784314)
+z_index = 1
+material = SubResource("ShaderMaterial_wpqwp")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_qhppr")
+
+[node name="Score_mult" type="Control" parent="." unique_id=656483894]
+visible = false
+anchors_preset = 0
+offset_left = 1673.0
+offset_top = 817.0
+offset_right = 1923.0
+offset_bottom = 967.0
+pivot_offset = Vector2(125, 75)
+script = ExtResource("16_tuqr4")
+
+[node name="Label" type="Label" parent="Score_mult" unique_id=1899702275]
+modulate = Color(1, 1, 1, 0.262745)
+layout_mode = 0
+offset_left = -25.0
+offset_top = -61.0
+offset_right = 176.0
+offset_bottom = 64.625
+scale = Vector2(1.335, 1.335)
+pivot_offset = Vector2(100, 62)
+theme_override_font_sizes/font_size = 50
+text = "Mult"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GridContainer" type="HBoxContainer" parent="Score_mult" unique_id=409467581]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -333.0
+offset_top = -247.0
+offset_right = -83.0
+offset_bottom = 103.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="Acquired" type="TextureRect" parent="Score_mult" unique_id=898282271]
+visible = false
+modulate = Color(1, 0.505882, 0, 0.741176)
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("9_tuqr4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Remaining" type="TextureRect" parent="Score_mult" unique_id=583498477]
+visible = false
+modulate = Color(1, 1, 1, 0.243137)
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("9_tuqr4")
+expand_mode = 1
+stretch_mode = 5

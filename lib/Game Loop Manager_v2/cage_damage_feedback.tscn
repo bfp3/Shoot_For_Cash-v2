@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://d2wf1siitfrd1"]
+
+[ext_resource type="Script" uid="uid://ca4mo7ytjev5m" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/cage_damage_feedback.gd" id="1_d5iy5"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="2_uy3e3"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="3_2hcy0"]
+
+
+
+[node name="Round_tally" type="Control"]
+z_index = 1
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 3
+anchor_right = 0.0520833
+anchor_bottom = 0.0925926
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+script = ExtResource("1_d5iy5")
+metadata/_edit_use_anchors_ = true
+
+[node name="Light" type="TextureRect" parent="."]
+modulate = Color(0.54, 0.378, 0.378, 0.541176)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("2_uy3e3")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="."]
+modulate = Color(0.54, 0.378, 0.378, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("3_2hcy0")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="."]
+modulate = Color(0.54, 0.378, 0.378, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("3_2hcy0")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true

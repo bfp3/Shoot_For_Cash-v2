@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://dat2kb6hdn6xj" path="res://res/gradients/red-mountain.tres" id="1_jx2bo"]
+[ext_resource type="Texture2D" uid="uid://bjvqw7ov63qy8" path="res://res/gradients/treebase.tres" id="2_4ocu5"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hn236"]
+albedo_texture = ExtResource("1_jx2bo")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2vw3r"]
+albedo_texture = ExtResource("2_4ocu5")
+
+[node name="oldTrees" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="treetop" type="CSGPolygon3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.20858, 0)
+material_override = SubResource("StandardMaterial3D_hn236")
+polygon = PackedVector2Array(-2.2, -0.1, 0.5, 1.2, 2.8, -0.1)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="base" type="CSGPolygon3D" parent="."]
+transform = Transform3D(0.3, 0, 0, 0, 0.8, 0, 0, 0, 0.23, 0, -1.36003, 0)
+material_override = SubResource("StandardMaterial3D_2vw3r")
+polygon = PackedVector2Array(-0.437002, -3.4714, -1, 3, 1, 3, 0.472888, -3.31539)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 6
+smooth_faces = true

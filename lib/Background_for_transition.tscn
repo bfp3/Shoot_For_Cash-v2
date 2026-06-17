@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://chle87b343nu1"]
+
+[sub_resource type="GDScript" id="GDScript_qpetq"]
+script/source = "extends ColorRect
+#
+#func _ready() -> void:
+	#show()
+
+func fade_in() -> void:
+	var tween = create_tween()
+	tween.tween_property(self, 'modulate', Color.TRANSPARENT, 0.15).set_trans(Tween.TRANS_LINEAR)
+	await tween.finished
+
+func fade_out() -> void:
+	show()
+	var tween = create_tween()
+	tween.tween_property(self, 'modulate', Color.BLACK, 0.15).set_trans(Tween.TRANS_LINEAR)
+	await tween.finished
+
+func instant_fade_in() -> void:
+	show()
+	self.modulate = Color.BLACK
+"
+
+[node name="Background_for_transition" type="ColorRect" unique_id=1260056533]
+visible = false
+z_index = 10
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = SubResource("GDScript_qpetq")

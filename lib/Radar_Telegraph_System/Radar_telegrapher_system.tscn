@@ -1,0 +1,374 @@
+[gd_scene format=3 uid="uid://gvmtrcomnx17"]
+
+[ext_resource type="Script" uid="uid://b2vlma2voqwfs" path="res://lib/Radar_Telegraph_System/Scripts/radar_telegrapher_system.gd" id="1_dlr4e"]
+[ext_resource type="Script" uid="uid://cujijbpi5fic7" path="res://lib/Radar_Telegraph_System/Scripts/batch_probability_handler.gd" id="2_067rl"]
+[ext_resource type="Script" uid="uid://dl08rmj36d5vw" path="res://lib/Radar_Telegraph_System/Scripts/bonus_shot_handler.gd" id="3_2opgq"]
+[ext_resource type="Script" uid="uid://b06pg62ma4m2i" path="res://lib/Radar_Telegraph_System/Scripts/radar_telegraph_animator.gd" id="4_jwvx0"]
+[ext_resource type="Script" uid="uid://cslprn04xd3nv" path="res://lib/Radar_Telegraph_System/Scripts/RT_dots_selection.gd" id="5_2opgq"]
+[ext_resource type="Script" uid="uid://fu5xk8l3o70i" path="res://lib/Radar_Telegraph_System/Scripts/dot_reveal_probability.gd" id="5_jwvx0"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="6_jwvx0"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="8_detua"]
+[ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://unfiled/Themes/ammo_manager_theme.tres" id="9_a3n8d"]
+[ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="9_g01te"]
+
+
+[sub_resource type="GDScript" id="GDScript_detua"]
+script/source = "extends TextureRect
+@onready var white_orig_3: TextureRect = $White_orig3
+
+var tween_scale : Tween = null
+var tween_pos : Tween = null
+var tween_pulse : Tween = null
+var tween_fade : Tween = null
+var color_black := false
+
+func _ready() -> void:
+	#await get_tree().create_timer(6.0).timeout
+	#if get_parent().modulate == Color(0.15, 0.15, 0.15, 255.0):
+		#color_black = true
+		#print('ITS TRUE')
+	tween()
+	tween_up_down()
+	
+func _process(delta: float) -> void:
+	
+	if get_parent().modulate == Color(0.15, 0.15, 0.15, 255.0):
+		color_black = true
+		set_process(false)
+
+func tween() -> void:
+	if color_black:
+		#tween_no_pulse()
+		return
+	tween_scale = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween_scale.tween_property(self, \"scale\", Vector2.ONE * 1.05, 2.0)
+	tween_scale.tween_interval(0.15)
+	tween_scale.tween_callback(pulse_ring)
+	tween_scale.tween_interval(1.0)
+	tween_scale.tween_property(self, \"scale\", Vector2.ONE, 2.5)
+	await tween_scale.finished
+	tween()
+	
+
+func tween_up_down() -> void:
+	tween_pos = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween_pos.tween_property(self, \"global_position:y\", 1, 3.0).as_relative()
+	tween_pos.tween_interval(0.15)
+	tween_pos.tween_property(self, \"global_position:y\", -1, 3.0).as_relative()
+	await tween_pos.finished
+	tween_up_down()
+	
+func fade_away() -> void:
+	if tween_scale:
+		tween_scale.kill()
+	if tween_pos:
+		tween_pos.kill()
+	if tween_pulse:
+		tween_pulse.kill()
+	
+	tween_fade = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween_fade.tween_property(get_parent(), \"modulate\", Color('FFFFFF'),0.5)
+	tween_fade.tween_property(get_parent(), \"modulate\", Color('FFFFFF00'),0.5)
+	await tween_fade.finished
+	self.queue_free()
+
+func pulse_ring() -> void:
+	return
+	
+	var new_ring =  white_orig_3.duplicate()
+	get_parent().add_child(new_ring)
+	new_ring.show()
+	#new_ring.top_level = true
+	#new_ring.position = white_orig_3.position
+	#new_ring.z_index = -1
+	new_ring.modulate = get_parent().modulate  #Color('FFFFFFDD')
+	#new_ring.self_modulate = Color('FFFFFF99')
+	new_ring.scale = Vector2.ONE
+	
+	if tween_pulse:
+		tween_pulse.kill()
+	
+	tween_pulse = create_tween().set_ease(Tween.EASE_OUT)
+	tween_pulse.tween_property(new_ring, \"scale\", Vector2.ONE * 1.2, 2.0)
+	tween_pulse.parallel().tween_property(new_ring, \"modulate\", Color('FFFFFF00'), 1.0)
+	tween_pulse.parallel().tween_property(new_ring, \"self_modulate\", Color('FFFFFF00'), 1.0)
+	tween_pulse.tween_interval(0.15)
+	#tween_pulse.tween_callback(new_ring.queue_free)
+	await tween_pulse.finished
+	new_ring.queue_free()
+"
+
+[sub_resource type="GDScript" id="GDScript_a3n8d"]
+script/source = "extends Control
+
+@onready var pineapple_1: TextureRect = $PanelContainer/MarginContainer/HBoxContainer/Pineapple_1
+@onready var pineapple_2: TextureRect = $PanelContainer/MarginContainer/HBoxContainer/Pineapple_2
+@onready var pineapple_3: TextureRect = $PanelContainer/MarginContainer/HBoxContainer/Pineapple_3
+@onready var h_box_container: HBoxContainer = $PanelContainer/MarginContainer/HBoxContainer
+
+func _ready() -> void:
+	for i in h_box_container.get_children():
+		i.modulate = Color('FFFFFF00')
+
+func display_pineapples() -> void:
+	show()
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(pineapple_1, \"modulate\", Color('FFFFFF'), 0.5)
+	tween.tween_property(pineapple_2, \"modulate\", Color('FFFFFF'), 0.5)
+	tween.tween_property(pineapple_3, \"modulate\", Color('FFFFFF'), 0.5)
+	await tween.finished
+	display_pineapple()
+
+func hide_display():
+
+	var children = get_children()
+	if children.size() == 0:
+		return
+	children.reverse()
+	for child in children:
+		var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(child, \"modulate\", Color('FFFFFF00'), 0.5)
+		await tween.finished
+		#if child != null:
+			#child.queue_free()
+	#
+			
+	#await get_tree().create_timer(0.1).timeout
+	#
+	#if get_children().size() > 0:
+		#for i in get_children():
+			#i.queue_free()
+
+
+func display_pineapple() -> void:
+
+	for i in h_box_container.get_children():
+		jiggle_loop(i)
+		
+		
+func jiggle_loop(pineapple : TextureRect) -> void:
+	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(pineapple, \"rotation\", -0.1, 0.1)
+	tween.tween_property(pineapple, \"rotation\", 0.1, 0.1)
+	tween.tween_property(pineapple, \"rotation\", -0.1, 0.1)
+	tween.tween_property(pineapple, \"rotation\", 0.1, 0.1)
+	tween.tween_property(pineapple, \"rotation\", -0.1, 0.1)
+	tween.tween_property(pineapple, \"rotation\", 0.1, 0.1)
+	tween.tween_property(pineapple, \"rotation\", 0.0, 0.15)
+	await tween.finished
+	await get_tree().create_timer(2.0).timeout
+	display_pineapple()
+"
+
+[node name="RadarTelegrapherSystem" type="Control" groups=["Radar_telegrapher_system"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dlr4e")
+
+[node name="BatchProbabilityHandler" type="Node" parent="."]
+script = ExtResource("2_067rl")
+
+[node name="BonusShotHandler" type="Node" parent="."]
+script = ExtResource("3_2opgq")
+
+[node name="RadarTelegraphAnimator" type="Node" parent="."]
+script = ExtResource("4_jwvx0")
+
+[node name="DotRevealProbability" type="Node" parent="."]
+script = ExtResource("5_jwvx0")
+
+[node name="Dots" type="Control" parent="."]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchor_right = 0.0364583
+anchor_bottom = 0.0648148
+offset_right = -30.0001
+offset_bottom = -30.0
+pivot_offset = Vector2(20, 20)
+script = ExtResource("5_2opgq")
+metadata/_edit_use_anchors_ = true
+
+[node name="White_orig" type="TextureRect" parent="Dots"]
+visible = false
+modulate = Color(0.0980392, 0.0980392, 0.0980392, 1)
+custom_minimum_size = Vector2(30, 20)
+layout_mode = 0
+anchor_right = 0.857143
+anchor_bottom = 0.714286
+pivot_offset = Vector2(30, 25)
+texture = ExtResource("8_detua")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Dot_control" type="Control" parent="Dots"]
+custom_minimum_size = Vector2(40, 40)
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -30.0
+offset_bottom = -30.0
+pivot_offset = Vector2(20, 20)
+metadata/_edit_use_anchors_ = true
+
+[node name="White" type="TextureRect" parent="Dots/Dot_control"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("6_jwvx0")
+expand_mode = 1
+stretch_mode = 4
+script = SubResource("GDScript_detua")
+metadata/_edit_use_anchors_ = true
+
+[node name="White_orig2" type="TextureRect" parent="Dots/Dot_control/White"]
+modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("8_detua")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="White_orig3" type="TextureRect" parent="Dots/Dot_control/White"]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9, 0.9)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("8_detua")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Dots_presentation" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.831771
+anchor_top = 0.227778
+anchor_right = 1.03646
+anchor_bottom = 0.338889
+pivot_offset = Vector2(392.245, 60)
+metadata/_edit_use_anchors_ = true
+
+[node name="PanelContainer" type="PanelContainer" parent="Dots_presentation"]
+layout_direction = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.392043
+anchor_top = -0.0724998
+anchor_right = 0.646
+anchor_bottom = 0.253
+offset_right = 0.195053
+offset_bottom = 0.940016
+pivot_offset = Vector2(50, 20)
+theme = ExtResource("9_a3n8d")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Dots_presentation/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 15
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Dots_presentation/PanelContainer/MarginContainer"]
+layout_direction = 3
+layout_mode = 2
+theme_override_constants/separation = 13
+metadata/_edit_use_anchors_ = true
+
+[node name="Pineapples" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.239062
+anchor_top = 0.0907407
+anchor_right = 0.759896
+anchor_bottom = 0.201852
+grow_horizontal = 0
+pivot_offset = Vector2(500, 52)
+script = SubResource("GDScript_a3n8d")
+metadata/_edit_use_anchors_ = true
+
+[node name="PanelContainer" type="PanelContainer" parent="Pineapples"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.299678
+anchor_top = -0.0975004
+anchor_right = 0.645678
+anchor_bottom = 0.735835
+offset_right = 2.00006
+offset_bottom = 1.99999
+pivot_offset = Vector2(500, 60)
+theme = ExtResource("9_a3n8d")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Pineapples/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 15
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Pineapples/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 43
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Pineapple_1" type="TextureRect" parent="Pineapples/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(70, 50)
+layout_mode = 2
+texture = ExtResource("9_g01te")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Pineapple_2" type="TextureRect" parent="Pineapples/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+texture = ExtResource("9_g01te")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Pineapple_3" type="TextureRect" parent="Pineapples/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+texture = ExtResource("9_g01te")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Dots_presentation_old" type="Control" parent="."]
+visible = false
+clip_contents = true
+layout_mode = 1
+anchor_left = 0.836458
+anchor_top = 0.222222
+anchor_right = 0.940625
+anchor_bottom = 0.259259
+grow_horizontal = 0
+pivot_offset = Vector2(100, 20)
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Dots_presentation_old"]
+layout_mode = 0
+anchor_right = 0.2
+anchor_bottom = 1.0
+pivot_offset = Vector2(20, 20)
+metadata/_edit_use_anchors_ = true

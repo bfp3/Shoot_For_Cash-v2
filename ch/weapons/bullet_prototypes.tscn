@@ -1,0 +1,220 @@
+[gd_scene format=3 uid="uid://b4wcb8mtwrt27"]
+
+[ext_resource type="Script" uid="uid://s3cmnx5lr8nh" path="res://res/Particles/trail_particles_script.gd" id="1_o2oqx"]
+
+
+[sub_resource type="GDScript" id="GDScript_bo640"]
+script/source = "extends Area3D
+
+@export var speed: float = 0.3	  # Base speed of the projectile
+@export var arc_strength: float = 0.1 # Controls how high the arc goes
+
+@export var total_time: float = 2.0
+
+var target_pos: Vector3
+var velocity: Vector3
+var travel_time: float  # Time to reach target
+var start_pos: Vector3
+var hit_something: bool = false
+
+var points: Array = []
+var num_points: int = 50
+
+var tween : Tween = null
+@export var constant_speed := false
+
+func shoot(target : Vector3):
+	start_pos = global_position
+	
+	target_pos = target
+	var distance = start_pos.distance_to(target_pos)
+	# Adjust total_time dynamically if constant_speed is enabled
+	if constant_speed:
+		var reference_distance = 17.5  # Midpoint of 15-20
+		var reference_time = 2.0
+		total_time = max(0.3, (distance / reference_distance) * reference_time)  # Prevents time from going too low
+	
+	await points_array_setup(start_pos, target_pos)
+	# Calculate distance and required travel time
+	#var distance = start_pos.distance_to(target_pos)
+	#travel_time = distance / speed  / 10 # Estimate time based on speed
+	#print(travel_time)
+	## Calculate initial velocity to reach target at the right time
+	#velocity = (target_pos - start_pos) / travel_time
+	#
+	## Add an arc (adjust Y velocity to create a curve)
+	#velocity.y = (4 * arc_strength * distance) / travel_time
+	#
+	## Rotate to face movement direction
+	
+	tween_shot()
+
+func points_array_setup(start_pos: Vector3, end_pos: Vector3) -> Array:
+	var distance = start_pos.distance_to(end_pos)
+	var h_max = distance * arc_strength 
+
+	for i in range(1, num_points):
+		var t = float(i) / num_points  
+		var x = lerp(start_pos.x, end_pos.x, t)
+		var z = lerp(start_pos.z, end_pos.z, t)
+		var y = lerp(start_pos.y, end_pos.y, t) + h_max * (1 - (2 * t - 1) ** 2)
+		points.append(Vector3(x, y, z))
+	
+	points.append(end_pos)
+	return points
+	
+
+func tween_shot() -> void:
+	if points.is_empty():
+		print(\"EMPTY\")
+		return
+	
+	  # 3 seconds duration
+	var step_time: float = total_time / num_points
+	
+	tween = create_tween()
+	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	
+	for i in range(points.size()):
+		if hit_something:
+			break
+		
+		#print(step_time)
+		step_time = clamp(step_time, 0.0, 0.03)
+		if i > 26 && i < 42:
+			step_time = step_time - 0.0015
+			
+			#print(step_time)
+		tween.tween_property($Marker3D, \"global_position\", points[i], 0.001)
+		tween.tween_property(self, \"global_position\", points[i], step_time)
+	
+	await tween.finished
+	expand_area()
+	
+	
+func expand_area() -> void:
+	var tweeny = create_tween()
+	tweeny.tween_property($CollisionShape3D2, \"scale\", Vector3.ONE * 3, 0.1)
+	await tweeny.finished
+	cleanUp()
+	
+func _physics_process(delta: float):
+	#if hit_something:
+		#return
+#
+	## Apply gravity effect over time
+	#velocity.y -= (arc_strength * 9.8) * delta
+#
+	## Move the projectile
+	#global_position += velocity * delta
+#
+	## Check collisions
+	if $Mesh.global_position != $Marker3D.global_position:
+		$Mesh.look_at($Marker3D.global_position, Vector3.UP, true)
+
+
+func _on_body_entered(body: Node):
+	hit_something = true
+	queue_free()  # Destroy the projectile
+
+
+func _on_timer_timeout() -> void:
+	if tween:
+		tween.kill()
+	$Mesh.hide()
+	hide()
+	await get_tree().create_timer(1.0).timeout
+	queue_free()
+	
+	
+func cleanUp() -> void:
+	trails_reparent()
+	$CollisionShape3D2.call_deferred(\"set_disable_mode\", true)
+	$Mesh.hide()
+	hide()
+	
+	await get_tree().create_timer(1.0).timeout
+	queue_free()
+
+	
+func trails_reparent() -> void:
+	if $Trails:
+		$Trails.connect_signal()
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f6h0v"]
+radius = 0.018
+height = 0.05
+
+[sub_resource type="Curve" id="Curve_eqwke"]
+_data = [Vector2(0, 0.876405), 0.0, 0.0, 0, 0, Vector2(0.421875, 1), 0.0, 0.0, 0, 0, Vector2(0.640625, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_a5hil"]
+curve = SubResource("Curve_eqwke")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_eqwke"]
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_a5hil")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eqwke"]
+diffuse_mode = 3
+specular_mode = 1
+
+[sub_resource type="SphereMesh" id="SphereMesh_a5hil"]
+material = SubResource("StandardMaterial3D_eqwke")
+radius = 0.013
+height = 0.025
+radial_segments = 5
+rings = 5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_427xo"]
+top_radius = 0.0
+bottom_radius = 0.03
+height = 0.1
+radial_segments = 4
+
+[node name="bullet_area_3d" type="Area3D" groups=["bullet"]]
+collision_layer = 3
+collision_mask = 3
+collision_priority = 100.0
+script = SubResource("GDScript_bo640")
+speed = 2.0
+total_time = 1.0
+constant_speed = true
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+process_priority = 100
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_f6h0v")
+
+[node name="Timer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 30.0
+one_shot = true
+autostart = true
+
+[node name="Trails" type="GPUParticles3D" parent="."]
+amount = 100
+preprocess = 0.1
+fixed_fps = 60
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_eqwke")
+draw_pass_1 = SubResource("SphereMesh_a5hil")
+script = ExtResource("1_o2oqx")
+
+[node name="Marker3D" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.474602)
+top_level = true
+
+[node name="Mesh" type="Node3D" parent="."]
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(1, 0, 0, 0, -1.17225e-07, 1, 0, -1, -1.17225e-07, 0, 0, -0.0521715)
+mesh = SubResource("CylinderMesh_427xo")
+skeleton = NodePath("../..")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

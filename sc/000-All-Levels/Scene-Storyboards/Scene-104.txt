@@ -1,0 +1,108 @@
+frame
+	set next-scene Scene-106
+	set Scene-104 fade_in
+	until time 2
+	
+frame
+	set Scene-104 fade_out
+	until time 2
+	
+frame
+	set birds
+	set clouds fastest
+	set popper1 idle
+	set popper2 idle
+	set popper3 idle
+	set popper4 idle
+	set popper5 idle
+	set popper6 idle
+	set popper7 idle
+	set popper8 idle
+	set popper9 idle
+	set popper10 idle
+	set popper11 idle
+	set popper12 idle
+	play poppergrowl
+	until time 5
+	
+frame
+	set popper1 throw
+	set popper2 throw
+	set popper3 throw
+	set popper4 throw
+	set popper5 throw
+	set popper6 throw
+	set popper7 throw
+	set popper8 throw
+	set popper9 throw
+	set popper10 throw
+	set popper11 throw
+	set popper12 throw
+
+frame
+	set birds
+	set clouds medium
+	set popper2 walk-throw
+	until die popper1
+	until die popper2
+
+frame
+	end
+	
+frame
+	set popper1 smokebomb-smokebomb-smokebomb
+	set popper2 attack
+	until die popper1
+	until die popper2
+	until time wait-short
+
+
+frame
+	set popper1 walky-attack-idle-idle
+	set popper2 walky-attack-idle-idle
+	until die popper1
+	until die popper2
+	
+frame
+	set popper1 idle-attack-idle-smokebomb
+	set popper2 idle-attack-idle-smokebomb-walky-walky
+	until die popper1
+	until die popper2
+	
+frame
+	end
+	
+frame
+	set popper1 throw-idle
+	set popper2 walk-walk-walk-throw
+	until time 10
+
+frame
+	hide popper1
+	until time 0
+
+frame
+	set popper2 throw-walk-idle
+	until time 5
+	
+frame
+	set popper1 walk-throw-idle
+	set popper2 walk-throw-idle
+	until die popper1
+	until die popper2
+	
+frame
+	until die popper1
+	until die popper2
+
+frame
+	end
+	
+frame
+	set popper1 attack
+	set popper2 attack
+	set popper3 attack
+	set popper4 attack
+	set popper5 attack
+	until die popper1
+	until die popper2

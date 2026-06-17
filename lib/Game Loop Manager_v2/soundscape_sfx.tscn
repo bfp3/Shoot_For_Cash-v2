@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://c1htg7o0y0hpg"]
+
+[ext_resource type="AudioStream" uid="uid://cc2iigb6x8nqm" path="res://sfx/night-noises.wav" id="1_lgv4h"]
+[ext_resource type="Script" uid="uid://dmy4q4yan6uuw" path="res://lib/Game Loop Manager_v2/Scripts/soundscape_sfx.gd" id="2_bjavr"]
+
+
+[node name="background_soundscape" type="AudioStreamPlayer" groups=["soundscape"]]
+stream = ExtResource("1_lgv4h")
+volume_db = -80.0
+autoplay = true
+script = ExtResource("2_bjavr")

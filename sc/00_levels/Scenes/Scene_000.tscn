@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://du8jkbnxjunui"]
+
+[sub_resource type="GDScript" id="GDScript_ilgyk"]
+script/source = "extends Node3D
+
+#const LEVEL_1_STANDARD_GRID_14_X_14 = preload('res://100_levels/2025_Levels/Level_Component_Scenes/Scene-003.tscn')
+#
+#func _ready() -> void:
+	#print('hello')
+	#var current_scene = LEVEL_1_STANDARD_GRID_14_X_14.instantiate()
+	#add_child(current_scene)
+"
+
+[node name="Scene-000" type="Node3D"]
+script = SubResource("GDScript_ilgyk")

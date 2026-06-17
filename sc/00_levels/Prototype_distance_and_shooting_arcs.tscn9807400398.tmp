@@ -1,0 +1,1054 @@
+[gd_scene load_steps=42 format=4 uid="uid://bx54xnfeh7m42"]
+
+[ext_resource type="Script" uid="uid://uxnvxnke3pvq" path="res://600_scripts/100_levels/level1-proto.gd" id="1_pstht"]
+[ext_resource type="PackedScene" uid="uid://cju41swvx7pgc" path="res://200_characters/environment_decoration/structure_parts/wire_frame.tscn" id="3_stgxu"]
+[ext_resource type="PackedScene" uid="uid://bwexwu4pd7ote" path="res://200_characters/environment_decoration/exported_Mesh/tallBase.tscn" id="4_a6bu3"]
+[ext_resource type="PackedScene" uid="uid://khv1h2fbb8h6" path="res://200_characters/targets/target_creator.tscn" id="5_si3we"]
+[ext_resource type="PackedScene" uid="uid://cxqry0burrjjd" path="res://200_characters/02_enemies/birdsAnimated.tscn" id="6_yandf"]
+[ext_resource type="PackedScene" uid="uid://bwwqs8ytry7wo" path="res://200_characters/environment_decoration/trees.tscn" id="7_h0xo1"]
+[ext_resource type="PackedScene" uid="uid://djq7nljg07i1b" path="res://200_characters/environment_decoration/mountain.tscn" id="8_woqev"]
+[ext_resource type="PackedScene" uid="uid://co3ymswhw35pe" path="res://800_3D_materials/Particles/Smoke_particles/SmokeDestroyedOutwards.tscn" id="9_m2asb"]
+[ext_resource type="PackedScene" uid="uid://bbnwa3i4ksui2" path="res://200_characters/environment_decoration/helicopter.tscn" id="9_w0wvc"]
+[ext_resource type="Texture2D" uid="uid://cm7rexclle14j" path="res://800_3D_materials/Kenney_prototype_textures/Dark/texture_01.png" id="10_pstht"]
+[ext_resource type="Environment" uid="uid://bchxsokc33ru8" path="res://800_3D_materials/skyEnvironments/early_morning.tres" id="11_m4ccm"]
+[ext_resource type="Texture2D" uid="uid://dpiqjoxdk4vu6" path="res://800_3D_materials/gradients/moon.tres" id="12_qgvjj"]
+[ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://400_sounds/01_music/BP_tunes/oasisWorld.wav" id="13_pk31n"]
+[ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://200_characters/Player.tscn" id="14_8xwgl"]
+[ext_resource type="PackedScene" uid="uid://cihlkfpdmvbwf" path="res://300_assets/Ammo/Ammo_pickup.tscn" id="16_44fc0"]
+[ext_resource type="PackedScene" uid="uid://cktjxtcndplo4" path="res://300_assets/Target_launcher/Target_launcher_cannon.tscn" id="17_urvy1"]
+[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://400_sounds/Placeholder_SFX/Target_shot_out_of_device_7.wav" id="18_hcy87"]
+[ext_resource type="PackedScene" uid="uid://gr8ak4fqnwip" path="res://300_assets/100_targets/Basic_moving_target.tscn" id="18_l7ic3"]
+[ext_resource type="PackedScene" uid="uid://bv4biam5a28od" path="res://300_assets/Level_cages/Bunny_cage_scene_1.tscn" id="18_pstht"]
+[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://400_sounds/00_sfx/ES_sound_effects/ES_Balloon Pop 2 - SFX Producer.wav" id="19_stgxu"]
+[ext_resource type="LabelSettings" uid="uid://b80p3fi2salg0" path="res://700_2D_nodes_UI/Fonts/Themes/Basic theme.tres" id="21_stgxu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x7ptu"]
+albedo_color = Color(0.45098, 0.360784, 0, 1)
+emission = Color(0.172549, 0.172549, 0.172549, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vpplx"]
+size = Vector3(2400, 24, 2400)
+
+[sub_resource type="Gradient" id="Gradient_m2asb"]
+offsets = PackedFloat32Array(0.0127796, 0.319489)
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_44fc0"]
+noise_type = 3
+fractal_octaves = 2
+domain_warp_enabled = true
+domain_warp_type = 2
+domain_warp_amplitude = 35.91
+domain_warp_frequency = 1.665
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_urvy1"]
+width = 500
+height = 500
+color_ramp = SubResource("Gradient_m2asb")
+noise = SubResource("FastNoiseLite_44fc0")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l7ic3"]
+diffuse_mode = 3
+specular_mode = 1
+albedo_texture = ExtResource("10_pstht")
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+normal_scale = 0.5
+normal_texture = SubResource("NoiseTexture2D_urvy1")
+uv1_offset = Vector3(0.25, 0, 0.25)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_lm4he"]
+size = Vector3(161.32, 24, 711.32)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vyyjy"]
+albedo_texture = ExtResource("12_qgvjj")
+emission_enabled = true
+emission = Color(1, 0.913725, 0.345098, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_nbs8u"]
+_surfaces = [{
+"aabb": AABB(-1.5, -1.5, -1.5, 3, 3, 3),
+"attribute_data": PackedByteArray("q6qqPVVVVT+rqio+VVVVP6uqKj4AAIA/q6qqPQAAAD+rqio+AAAAP6uqKj6rqio/q6oqPquqKj+rqqo9q6oqP6uqqj0AAAA/q6oqPgAAAD8AAIA+AAAAPwAAgD6rqio/AACAPquqKj+rqio+q6oqP6uqKj4AAAA/q6qqPauqKj+rqio+q6oqP6uqKj5VVVU/q6oqPquqKj8AAIA+q6oqPwAAgD5VVVU/AACAPlVVVT+rqio+VVVVP6uqKj6rqio/AAAAAAAAAD+rqqo9AAAAP6uqqj2rqio/q6qqPauqKj8AAAAAq6oqPwAAAAAAAAA/AAAAAKuqKj+rqqo9q6oqP6uqqj1VVVU/q6qqPVVVVT8AAAAAVVVVPwAAAACrqio/q6oqPlVVVT+rqqo9VVVVP6uqqj2rqio/q6oqPlVVVT8AAIA+VVVVPwAAgD4AAIA/AAAAAFVVVT+rqqo9VVVVP6uqqj0AAIA/VVXVPquqqj4AAAA/q6qqPgAAAD8AAAA/AACAPgAAAD+rqqo+AAAAP6uqqj6rqio/q6qqPquqKj8AAIA+q6oqPwAAgD4AAAA/q6qqPgAAAD9VVdU+AAAAP1VV1T6rqio/VVXVPquqKj+rqqo+q6oqP6uqqj4AAAA/AACAPquqKj+rqqo+q6oqP6uqqj5VVVU/q6qqPlVVVT8AAIA+VVVVPwAAgD6rqio/AAAAP6uqKj9VVdU+q6oqP1VV1T4AAAA/VVXVPgAAAD8AAAA/AAAAPwAAAD+rqio/VVXVPlVVVT+rqqo+VVVVP6uqqj6rqio/AACAPlVVVT+rqqo+VVVVP6uqqj4AAIA/q6qqPlVVVT9VVdU+VVVVP1VV1T4AAIA/VVXVPlVVVT8AAAA/VVVVPwAAAD8AAIA/q6qqPquqKj9VVdU+q6oqP1VV1T5VVVU/VVXVPquqKj8AAAA/q6oqPwAAAD9VVVU/q6qqPQAAAD8AAAAAAAAAPwAAAACrqqo+AACAPquqqj6rqio+q6qqPquqKj6rqio+q6oqPquqKj4AAIA+q6oqPgAAgD6rqqo+q6qqPauqqj6rqio+q6qqPquqKj4AAAA/q6oqPgAAAD+rqqo9AAAAP6uqqj2rqqo+q6oqPquqqj4AAIA+q6qqPgAAgD4AAAA/AACAPgAAAD+rqio+AAAAP6uqKj6rqqo+q6oqPquqqj6rqqo9q6qqPquqqj2rqio+AAAAAKuqKj6rqqo9q6oqPquqqj2rqqo+q6qqPauqqj4AAAAAq6qqPgAAAACrqio+AACAPquqKj6rqio+q6oqPquqKj4AAAAAq6qqPauqKj6rqio+q6oqPquqKj6rqqo+q6qqPauqKj4AAAAAq6oqPgAAAAAAAAAAq6oqPquqKj6rqqo9q6oqPquqqj0AAAAAAAAAAKuqqj6rqqo9q6qqPquqqj0AAAA/AAAAP1VVVT9VVdU+VVVVP1VV1T6rqio/q6qqPquqqj4AAIA+q6qqPgAAgD6rqio+AACAPquqKj6rqqo+q6oqPquqqj6rqqo+VVXVPquqqj6rqqo+q6qqPquqqj6rqio+AACAPquqqj6rqqo+q6qqPquqqj4AAAA/q6qqPgAAAD8AAIA+AAAAPwAAgD6rqqo+q6qqPquqqj5VVdU+q6qqPlVV1T4AAAA/VVXVPgAAAD+rqqo+AAAAP6uqqj6rqqo+q6qqPquqKj4AAIA+q6oqPgAAgD4AAAAAq6qqPquqKj5VVdU+q6oqPlVV1T6rqqo+VVXVPquqKj6rqqo+q6oqPquqqj4AAAAAAAAAP6uqKj5VVdU+q6oqPlVV1T4AAAAAAAAAP6uqqj5VVdU+q6qqPlVV1T6rqio+VVXVPquqKj4AAAA/q6oqPgAAAD+rqqo+AAAAPwAAAD9VVdU+AAAAP1VV1T6rqqo+AABAP6uqKj9VVVU/q6oqP1VVVT9VVVU/q6pqPwAAAD8AAIA/AAAAPwAAgD+rqio/AACAP6uqKj+rqmo/q6oqP6uqaj8AAAA/q6pqP6uqKj8AAIA/q6oqPwAAgD9VVVU/AACAP1VVVT+rqmo/VVVVP6uqaj+rqio/VVVVP6uqKj+rqmo/q6oqP6uqaj9VVVU/q6pqP1VVVT8AAIA/VVVVPwAAgD8AAIA/VVVVP1VVVT+rqmo/VVVVP6uqaj8AAIA/q6pqP1VVVT9VVVU/VVVVP1VVVT+rqio/AABAP1VVVT9VVVU/VVVVP1VVVT8AAIA/VVVVPwAAAD+rqmo/AAAAP6uqaj+rqio/q6pqP6uqKj9VVVU/q6oqP1VVVT8AAAA/AABAPwAAAD9VVVU/AAAAP1VVVT+rqio/VVVVP6uqKj8AAEA/q6oqPwAAQD8AAAA/VVVVP1VVVT8AAEA/VVVVPwAAQD+rqio/q6oqPwAAAD9VVRU/AAAAP1VVFT+rqqo+VVUVP6uqKj8AAAA/q6oqPwAAAD8AAAA/AAAAPwAAAD9VVRU/AAAAP1VVFT+rqio/VVUVP1VVVT+rqio/VVVVP6uqKj8AAIA/AAAAP1VVVT9VVRU/VVVVP1VVFT8AAIA/q6oqP1VVVT9VVRU/VVVVP1VVFT+rqio/q6oqP1VVVT8AAEA/VVVVPwAAQD8AAIA/VVUVP1VVVT8AAAA/VVVVPwAAAD+rqio/AAAAP6uqKj9VVRU/q6oqP1VVFT9VVVU/q6oqPwAAAD8AAEA/AAAAPwAAQD+rqio/AABAP6uqKj+rqio/q6oqP6uqKj8AAAA/VVUVPwAAAD+rqio/AAAAP6uqKj+rqio/q6oqP6uqKj9VVRU/q6oqP1VVFT8AAAA/AABAP1VVVT+rqio/VVVVP6uqKj+rqio/q6oqP6uqKj8AAEA/q6oqPwAAQD9VVVU/VVVVPwAAAD8AAEA/AAAAPwAAQD+rqqo+q6pqP6uqKj4AAIA/q6oqPgAAgD+rqqo+AACAP6uqqj6rqmo/q6qqPquqaj+rqio+AACAP6uqKj6rqmo/q6oqPquqaj8AAAAAq6pqP6uqKj5VVVU/q6oqPlVVVT8AAAAAVVVVP6uqKj4AAEA/q6oqPgAAQD8AAAAAVVVVP6uqKj6rqmo/q6oqPquqaj+rqqo+q6pqP6uqqj4AAIA/q6qqPgAAgD8AAAA/AACAPwAAAD+rqmo/AAAAP6uqaj+rqqo+q6pqP6uqqj5VVVU/q6qqPlVVVT+rqio+AABAP6uqKj5VVVU/q6oqPlVVVT+rqqo+VVVVP6uqqj4AAEA/q6qqPgAAQD+rqio+VVVVP6uqqj6rqmo/q6qqPquqaj8AAAA/q6pqPwAAAD9VVVU/AAAAP1VVVT+rqqo+AABAP6uqqj5VVVU/q6qqPlVVVT8AAAA/VVUVP6uqKj+rqio/q6oqP6uqKj9VVVU/q6oqP6uqKj5VVRU/q6oqPlVVFT8AAAAAVVUVP6uqKj4AAAA/q6oqPgAAAD8AAAAAAABAP6uqKj6rqio/q6oqPquqKj8AAAAAVVUVP6uqKj6rqio/q6oqPquqKj+rqqo+AAAAP6uqKj5VVRU/q6oqPlVVFT+rqqo+VVUVP6uqqj4AAAA/q6qqPgAAAD+rqio+q6oqP6uqqj5VVRU/q6qqPlVVFT+rqio+VVUVPwAAAD8AAAA/AAAAPwAAAD+rqqo+AAAAP6uqqj5VVRU/q6qqPlVVFT8AAAA/q6oqP6uqKj4AAEA/q6oqPgAAQD+rqqo+AABAP6uqqj6rqio/q6qqPquqKj+rqio+q6oqP6uqqj4AAEA/q6qqPgAAQD8AAAA/AABAPwAAAD+rqio/AAAAP6uqKj+rqqo+VVUVP6uqqj6rqio/q6qqPquqKj8AAAA/"),
+"format": 34359738391,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 360,
+"vertex_data": PackedByteArray("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4/x7l2O48Vlq/6SX/3//f////7/Zrv9///9s1zagwVlp/7aoNqDBWWn/tqjwfmZRuvI6tv9//3////+/8H5mUbryOrY2oMFZaf+2qHKTfzvb/DaocpN/O9v8Nqh+fHg07/BPsPB+ZlG68jq2NaS4POP8e5dyk3872/w2qDagwVlp/7aoNaS4POP8e5f2sHg02Pslgf9/AAD//4WNfnx4NO/wT7Byk3872/w2qP9/AAD//4XNwNnH35UAtqiZLvD+/QGav/////8AAP+/////f////////9muAACS6MDZiTmVAP2WwNmJOZUA/ZZX0GZRNf+ZgP///3/////////ZrgAAkuj//9kuAABs1/HZjSGUAA+o8dmNIZQAD6jA2Yk5lQD9lv//2a4AAJLoV9BmUTX/mYDA2Yk5lQD9ln+7DCgjAzaWf7sMKCMDNpb2sHg02PslgVfQZlE1/5mAZdEOAckAAL/x2Y0hlAAPqP//2S4AAGzX///ZLgAAbNf/////AAD/v2XRDgHJAAC/uLyCGBsD9aZ/uwwoIwM2lsDZiTmVAP2W9rB4NNj7JYF/uwwoIwM2lv9/AAAAAIWNf7sMKCMDNpa4vIIYGwP1pv9/AAAAAP+fuLyCGBsD9aZ3tIEDJgTFvP9/AAAAAHiywNmJOZUA/Zbx2Y0hlAAPqLi8ghgbA/Wm8dmNIZQAD6hl0Q4ByQAAv3e0gQMmBMW82a7/f///bNf/f/9/////vw6BmK4b9BnKZdGnr8kAmYCJuT2maf/9lguof8Tb/DaWC6h/xNv8NpZ3tAfPJgQlgWXRp6/JAJmAjaENpmr/D6iJuT2maf/9liXR/3///5LoJdH/f///kujZrv9///9s142hDaZq/w+oibk9pmn//ZZl0aevyQCZgP///3//////////f/////8l0f9///+S6Im5PaZp//2Wibk9pmn//ZaNoQ2mav8PqIKYRsPj/PWmgIOGyzX3ss6CmEbD4/z1po2hDaZq/w+ojaENpmr/D6gOgZiuG/QZyoCDhss197LOd7QHzyYEJYELqH/E2/w2lv9//////3jygphGw+P89aYLqH/E2/w2lom5PaZp//2WgphGw+P89aaAg4bLNfeyzv9//////3iyC6h/xNv8NpaCmEbD4/z1pv9///////+fDoGYrhv0GcqNoQ2mav8PqNmu/3///2zX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")
+}]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stgxu"]
+albedo_texture = ExtResource("10_pstht")
+uv1_offset = Vector3(0.25, 0, 0.25)
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_urvy1"]
+albedo_color = Color(0.42, 0.301, 0.21, 1)
+metallic = 1.0
+roughness = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_57x3o"]
+albedo_color = Color(0.45098, 0.360784, 0, 1)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_44fc0"]
+bounce = 0.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_44fc0"]
+size = Vector3(1, 0.5, 0.5)
+
+[sub_resource type="GDScript" id="GDScript_l7ic3"]
+script/source = "extends Node3D
+
+func _ready() -> void:
+	for i in get_children():
+		i.add_to_group('TargetMarkers')
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pstht"]
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.38, 0.38, 0.38, 1)
+albedo_texture = ExtResource("10_pstht")
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = SubResource("NoiseTexture2D_urvy1")
+uv1_offset = Vector3(0.25, 0, 0.25)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="GDScript" id="GDScript_a6bu3"]
+script/source = "extends Control
+
+@onready var health_unit: ColorRect = $health_unit
+@onready var health_remaining_label: Label = $health_remaining_label
+@onready var health_hbox_container: HBoxContainer = $Health_hbox_container
+@onready var _2d_marker_pos: Marker2D = $\"2D_marker_pos\"
+
+@onready var health_loading_sound: AudioStreamPlayer = $health_loading_sound
+@onready var take_damage_sound: AudioStreamPlayer = $take_damage_sound
+
+@export var starting_health := 10
+var health_remaining := starting_health
+
+signal out_of_health
+
+func _ready() -> void:
+	first_load()
+	var bunny_cage = get_tree().get_first_node_in_group('Bunny_Cage_physical')
+	bunny_cage.taken_a_hit_from_a_target.connect(taken_a_hit)
+
+func first_load() -> void:
+	clear_ui_elements()
+	load_health(health_remaining)
+	update_labels()
+	update_hbox_positions()
+
+func taken_a_hit() -> void:
+	print_debug(\"TAKEN A HIT HAS BEEN CONNECTED TO\")
+	if health_remaining > 0:
+		health_remaining -= 1
+		take_damage_sound.play()
+		remove_one_health()
+		update_labels()
+		#update_hbox_positions()
+		
+		if health_remaining == 0:
+			out_of_health.emit()
+
+func update_ammo_display(ammo_count: int, cartridge_count: int) -> void:
+	health_remaining = ammo_count
+	
+	if health_remaining == 0:
+		out_of_health.emit()
+		remove_one_health()
+	else:
+		remove_one_health()
+
+	update_labels()
+	#update_hbox_positions()
+
+func remove_one_health() -> void:
+	if health_hbox_container.get_children().size() == 0:
+		return
+	var last_health = health_hbox_container.get_children().back()
+	
+	$take_damage_sound.play()
+	
+	if last_health:
+		send_to_tween(last_health)
+		
+		
+	
+
+func load_health(count: int) -> void:
+	clear_ammo()
+	for _i in range(count):
+		var new_health = health_unit.duplicate()
+		health_hbox_container.add_child(new_health)
+		new_health.show()
+		health_loading_sound.play()
+		await get_tree().create_timer(0.05).timeout
+
+func send_to_tween(last_health: ColorRect) -> void:
+	var dur : float = 0.5
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(last_health, \"scale\", Vector2.ONE * 1.25, dur)
+	tween.parallel().tween_property(last_health, \"modulate\", Color('FFFFFF00'), dur)
+	tween.parallel().tween_property(last_health, \"position:y\", 50.0, dur).as_relative()
+	tween.tween_callback(last_health.queue_free)
+	await tween.finished
+
+func show_out_of_ammo_effect() -> void:
+	modulate = Color.RED
+	take_damage_sound.play()
+	await get_tree().create_timer(0.5).timeout
+	modulate = Color.WHITE
+
+func update_labels() -> void:
+	health_remaining_label.text = str(health_remaining)
+
+func update_hbox_positions() -> void:
+	
+	health_hbox_container.position = _2d_marker_pos.position
+	health_remaining_label.position = health_hbox_container.position - Vector2(-2, 110)
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(health_hbox_container, \"position:x\", health_hbox_container.position.x - health_hbox_container.size.x / 2, 0.1)
+	await tween.finished
+
+func clear_ui_elements() -> void:
+	clear_ammo()
+
+func clear_ammo() -> void:
+	for child in health_hbox_container.get_children():
+		child.queue_free()
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_si3we"]
+font_size = 80
+font_color = Color(0.73, 0.73, 0.73, 0.431373)
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hcy87"]
+diffuse_mode = 3
+specular_mode = 1
+
+[sub_resource type="GDScript" id="GDScript_hcy87"]
+script/source = "#@tool
+extends Node
+
+const BASIC_THEME = preload(\"res://700_2D_nodes_UI/Fonts/Themes/Basic theme.tres\")
+#@export_tool_button(\"Button Gen\") var create_buttons = show_restart_menu
+
+@export var timer_mode := true # True for timer mode, False for countdown mode
+@export var total_time_limit := 300 # Initial time in seconds (e.g., 300 seconds = 5 minutes)
+@export var activated := true
+@onready var label: Label = $Label
+
+var last_time = Time.get_unix_time_from_system()
+
+var player
+
+var time_remaining: float = 0
+
+func _ready() -> void:
+	#pivot_offset = size / 2 # dont know why but it doesn't work
+	label.pivot_offset = label.size / 2
+	
+	tween()
+	set_process(false)
+	
+func tween() -> void:
+	
+	if activated:
+		time_remaining = total_time_limit
+		update_label(time_remaining * 1000)
+	else:
+		self.visible = false
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(label, \"modulate\", Color('ffffff00'), 0.01)
+	
+	tween.tween_property(label, \"modulate\", Color('ffffff'), 0.5)
+	tween.parallel().tween_property(label, \"scale\", Vector2(2,2), 0.01)
+	tween.tween_property(label, \"position:y\", 10, 1.5)
+	tween.parallel().tween_property(label, \"scale\", Vector2(1,1), 1.5)
+	await tween.finished
+
+	
+
+#func _process(delta: float) -> void:
+	#if activated:
+		#update_countdown(delta)
+		#
+
+
+func _process(_delta: float) -> void:
+	if activated:
+		var current_time = Time.get_unix_time_from_system()
+		var real_delta = current_time - last_time
+		last_time = current_time
+		update_countdown(real_delta)  # Use real-time delta
+
+
+func update_countdown(delta: float) -> void:
+	if time_remaining > 0:
+		time_remaining -= delta
+		if time_remaining <= 0:
+			time_remaining = 0
+			on_timer_end()
+		update_label(int(time_remaining * 1000)) # Update label in milliseconds
+
+func update_label(current_time: int) -> void:
+	var minutes = current_time / 1000 / 60
+	var seconds = current_time / 1000 % 60
+	var msec = current_time % 1000 / 10
+	var minute_str = str(minutes).pad_zeros(2)
+	var second_str = str(seconds).pad_zeros(2)
+	var msec_str = str(msec).pad_zeros(2)
+	label.text = minute_str + \":\" + second_str + \":\" + msec_str
+
+func on_timer_end() -> void:
+	return
+	var label_fin = $Label2
+	player = get_tree().get_first_node_in_group('Player_char')
+	player.set_process_input(false)
+	player.set_physics_process(false)
+	player.set_process(Node.PROCESS_MODE_DISABLED)
+	if label_fin:
+		label_fin.show()
+	
+	label_fin.scale = Vector2(0.01,0.01)
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	
+	tween.tween_interval(0.1)
+	tween.tween_property(label_fin, \"modulate\", Color('ffffff00'), 0.01)
+	tween.tween_property(label_fin, \"modulate\", Color('ffffff'), 0.5)
+	tween.parallel().tween_property(label_fin, \"scale\", Vector2(2,2), 0.5)
+	tween.tween_property(label_fin, \"scale\", Vector2(1,1), 0.5)
+	tween.tween_interval(0.5)
+	tween.tween_property(label_fin, \"scale\", Vector2.ONE * 1.25, 0.35)
+	tween.tween_property(label_fin, \"scale\", Vector2(0.01,0.01), 0.5)
+	await tween.finished
+	
+	
+
+
+func restart_scene() -> void:
+	print_debug('You lose, restart the scene')
+	return
+	player.set_process(Node.PROCESS_MODE_INHERIT)
+	player.set_process_input(true)
+	player.set_physics_process(true)
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	await get_tree().create_timer(0.25).timeout
+	get_tree().reload_current_scene()
+"
+
+[node name="level1_proto" type="Node3D"]
+script = ExtResource("1_pstht")
+
+[node name="wireFrames" type="Node3D" parent="."]
+
+[node name="wireFrame" parent="wireFrames" instance=ExtResource("3_stgxu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.25)
+
+[node name="tallBaseContainer" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+visible = false
+
+[node name="tallBase" parent="tallBaseContainer" instance=ExtResource("4_a6bu3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 12.35, 12)
+
+[node name="targetCreator" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1200)
+
+[node name="target_creator" parent="targetCreator" instance=ExtResource("5_si3we")]
+transform = Transform3D(5.96244e-08, 0, -5, 0, 5, 0, 5, 0, 5.96244e-08, 11.5, 0.5, -1181)
+visible = false
+
+[node name="target_creator2" parent="targetCreator" instance=ExtResource("5_si3we")]
+transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -10.5, 27, -1184.5)
+visible = false
+
+[node name="targetLoadPoint" type="Marker3D" parent="targetCreator"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38, 51.5, -1136)
+
+[node name="decoration" type="Node3D" parent="."]
+
+[node name="birds" parent="decoration" instance=ExtResource("6_yandf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 40, -60)
+motion_mode = 1
+
+[node name="birds2" parent="decoration" instance=ExtResource("6_yandf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 30, -40)
+motion_mode = 1
+
+[node name="trees" type="Node3D" parent="decoration"]
+
+[node name="fore1" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.447, 1.8764, 28.816)
+visible = false
+
+[node name="foreLeft" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.0548, 2.34837, 1.31448)
+
+[node name="foreRight" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.7304, 2.14944, 0.933655)
+
+[node name="fore9" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.5824, 1.68678, 5.69512)
+
+[node name="fore2" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 75.1927, 2.41481, 77.3876)
+
+[node name="fore6" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 59.6994, 2.83838, 46.3125)
+
+[node name="fore8" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -81.3006, 2.89009, 46.3125)
+
+[node name="fore4" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 74.55, 2.79488, 209.143)
+
+[node name="fore10" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -56.95, 2.97715, 209.143)
+
+[node name="midground3" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.507, 2.33223, 90)
+
+[node name="weakTree" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56.259, 2.008, 276.234)
+
+[node name="bgTree" parent="decoration/trees" instance=ExtResource("7_h0xo1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.563, 2.008, 276.234)
+
+[node name="balconyForeground" type="Node3D" parent="decoration"]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 1.77636e-14, 0, 0.1, 10.639, -0.57293, 2.191)
+visible = false
+
+[node name="topRail" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 1.766, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(5, 0.05, 1)
+
+[node name="leftPole" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -11.505, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="middlePole" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -11.701, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="rightPole" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 2.03288e-20, 0, 1, -13.104, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -14.5, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 0.919834, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(5, 0.2, 1)
+
+[node name="balconyForeground2" type="Node3D" parent="decoration"]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 1.77636e-14, 0, 0.1, 6.7551, -0.57293, 2.191)
+visible = false
+
+[node name="topRail" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 1.766, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(5, 0.05, 1)
+
+[node name="leftPole" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -11.505, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="middlePole" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -11.701, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="rightPole" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 2.03288e-20, 0, 1, -13.104, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -14.5, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 0.919834, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(5, 0.2, 1)
+
+[node name="mountain" parent="decoration" instance=ExtResource("8_woqev")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -152.362, -6.157, 706.552)
+
+[node name="mountain2" parent="decoration/mountain" instance=ExtResource("8_woqev")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -108, 0, 0)
+
+[node name="mountain3" parent="decoration/mountain" instance=ExtResource("8_woqev")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -143.192, -4.47378, 0)
+
+[node name="helicopter" parent="decoration" instance=ExtResource("9_w0wvc")]
+transform = Transform3D(0.962651, 2.39877e-06, -2.45716, 1.56598, 2.03362, 0.613514, 1.89349, -1.68187, 0.741821, -69.2817, 0, 217.811)
+
+[node name="Smoke_destroyed_outwards" parent="decoration/helicopter" instance=ExtResource("9_m2asb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68.6532, -1.15931e-05, 215.16)
+amount = 1000
+
+[node name="floor" type="Node3D" parent="decoration"]
+
+[node name="foreground" type="StaticBody3D" parent="decoration/floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 27.5)
+collision_layer = 7
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="decoration/floor/foreground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 1200)
+shape = SubResource("BoxShape3D_vpplx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="decoration/floor/foreground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 355.4)
+material_override = SubResource("StandardMaterial3D_l7ic3")
+mesh = SubResource("BoxMesh_lm4he")
+skeleton = NodePath("../..")
+
+[node name="Lighting" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting"]
+environment = ExtResource("11_m4ccm")
+
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Lighting"]
+transform = Transform3D(1, -1.49012e-08, 2.98023e-08, 1.49012e-08, 1, 2.98023e-08, 0, 0, 1, -35, 15, 340.237)
+material_override = SubResource("StandardMaterial3D_vyyjy")
+mesh = SubResource("ArrayMesh_nbs8u")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, -0.587785, 0.809017, 0, -0.809017, -0.587785, -10, 8.8, 0)
+light_color = Color(0.992157, 0.627451, 0.27451, 1)
+shadow_enabled = true
+shadow_opacity = 0.2
+directional_shadow_max_distance = 63.0
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+light_color = Color(1, 0.588235, 0.360784, 1)
+shadow_enabled = true
+omni_range = 10.0
+omni_attenuation = 0.5
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.05, 0.5)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.05, 1.5)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.05, 3.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.05, 4.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.05, 5.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.05, 6.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D18" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.05, 10)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="CSGBox3D17" type="CSGBox3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.05, 2.475)
+visible = false
+size = Vector3(0.5, 0.1, 0.5)
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="OasisSong" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("13_pk31n")
+volume_db = -20.0
+
+[node name="targetTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="Player" parent="." instance=ExtResource("14_8xwgl")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1, 0)
+crosshair_lerp_speed = 3.0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -13.65, 9)
+material_override = SubResource("StandardMaterial3D_l7ic3")
+use_collision = true
+size = Vector3(10, 27.3, 28)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, -4.5)
+operation = 2
+size = Vector3(8, 6, 3.5)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.5, -1.75, 13.5)
+material_override = SubResource("StandardMaterial3D_l7ic3")
+use_collision = true
+size = Vector3(35, 3.5, 28)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, -1.75, -3)
+material_override = SubResource("StandardMaterial3D_l7ic3")
+use_collision = true
+size = Vector3(8.5, 3.5, 5)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.5, -0.145, 13.5)
+material_override = SubResource("StandardMaterial3D_stgxu")
+use_collision = true
+size = Vector3(35, 0.5, 28)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43, -13.65, 13.5)
+material_override = SubResource("StandardMaterial3D_l7ic3")
+use_collision = true
+size = Vector3(76, 28.3, 28)
+
+[node name="Frame" type="Node3D" parent="."]
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Frame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.4953, 1.51338, 26.875)
+visible = false
+material_override = SubResource("StandardMaterial3D_l7ic3")
+use_collision = true
+size = Vector3(1, 3, 42)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Frame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 11.25)
+material_override = SubResource("StandardMaterial3D_l7ic3")
+use_collision = true
+size = Vector3(2, 3, 0.5)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Frame/CSGBox3D4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.998916, 0, -0.2539)
+material_override = SubResource("StandardMaterial3D_urvy1")
+size = Vector3(0.1, 0.035, 0.1)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="Frame/CSGBox3D4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.998916, 1.35799, -0.2539)
+material_override = SubResource("StandardMaterial3D_urvy1")
+size = Vector3(0.1, 0.035, 0.1)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="Frame/CSGBox3D4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00108, 0, -0.2539)
+material_override = SubResource("StandardMaterial3D_urvy1")
+size = Vector3(0.1, 0.035, 0.1)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="Frame/CSGBox3D4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00108, 1.35799, -0.2539)
+material_override = SubResource("StandardMaterial3D_urvy1")
+size = Vector3(0.1, 0.035, 0.1)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="Frame/CSGBox3D4"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.677911, 1.479, -0.2539)
+material_override = SubResource("StandardMaterial3D_urvy1")
+size = Vector3(0.1, 0.035, 0.1)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="Frame/CSGBox3D4"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.680079, 1.479, -0.2539)
+material_override = SubResource("StandardMaterial3D_urvy1")
+size = Vector3(0.1, 0.035, 0.1)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="Frame/CSGBox3D4"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.677911, -1.521, -0.2539)
+material_override = SubResource("StandardMaterial3D_urvy1")
+size = Vector3(0.1, 0.035, 0.1)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="Frame/CSGBox3D4"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.680079, -1.521, -0.2539)
+material_override = SubResource("StandardMaterial3D_urvy1")
+size = Vector3(0.1, 0.035, 0.1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="Frame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.5, 20)
+material_override = SubResource("StandardMaterial3D_l7ic3")
+use_collision = true
+size = Vector3(2, 3, 0.5)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Frame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -2, 4.25)
+material_override = SubResource("StandardMaterial3D_57x3o")
+use_collision = true
+size = Vector3(1, 3, 13.5)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="Frame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -2, 4.25)
+material_override = SubResource("StandardMaterial3D_57x3o")
+use_collision = true
+size = Vector3(1, 3, 13.5)
+
+[node name="Moving_target" parent="." node_paths=PackedStringArray("marker_a", "marker_b", "marker_c") instance=ExtResource("18_l7ic3")]
+transform = Transform3D(1, 0, 8.74226e-08, 0, 0.999998, 0, -8.74228e-08, 0, 0.999998, 0.351589, 0.5, 14.0325)
+marker_a = NodePath("Marker_a")
+marker_b = NodePath("Marker_b")
+marker_c = NodePath("Marker_c")
+stationary = true
+
+[node name="Marker_a" type="Marker3D" parent="Moving_target"]
+
+[node name="Marker_b" type="Marker3D" parent="Moving_target"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.93402e-07, 0, 4.50001)
+
+[node name="Marker_c" type="Marker3D" parent="Moving_target"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.86805e-07, -4.00001, 9.00002)
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." groups=["Ammo_crate"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.4, 9.5)
+physics_material_override = SubResource("PhysicsMaterial_44fc0")
+gravity_scale = 2.0
+
+[node name="Ammo_pickup" parent="RigidBody3D" instance=ExtResource("16_44fc0")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("BoxShape3D_44fc0")
+
+[node name="RigidBody3D2" type="RigidBody3D" parent="." groups=["Ammo_crate"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.4, 9.5)
+physics_material_override = SubResource("PhysicsMaterial_44fc0")
+gravity_scale = 2.0
+
+[node name="Ammo_pickup" parent="RigidBody3D2" instance=ExtResource("16_44fc0")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D2"]
+shape = SubResource("BoxShape3D_44fc0")
+
+[node name="RigidBody3D3" type="RigidBody3D" parent="." groups=["Ammo_crate"]]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 5.5, 0.9, 9.5)
+physics_material_override = SubResource("PhysicsMaterial_44fc0")
+gravity_scale = 2.0
+
+[node name="Ammo_pickup" parent="RigidBody3D3" instance=ExtResource("16_44fc0")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D3"]
+shape = SubResource("BoxShape3D_44fc0")
+
+[node name="RigidBody3D4" type="RigidBody3D" parent="." groups=["Ammo_crate"]]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 4, 0.4, 12.5)
+physics_material_override = SubResource("PhysicsMaterial_44fc0")
+gravity_scale = 2.0
+
+[node name="Ammo_pickup" parent="RigidBody3D4" instance=ExtResource("16_44fc0")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D4"]
+shape = SubResource("BoxShape3D_44fc0")
+
+[node name="Target_cannon" parent="." instance=ExtResource("17_urvy1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1, -3.5)
+
+[node name="Target_cannon2" parent="." instance=ExtResource("17_urvy1")]
+process_mode = 4
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1, -3.5)
+launch_speed = 22.0
+original_launch_speed = 7.5
+
+[node name="Target_markers" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.5)
+script = SubResource("GDScript_l7ic3")
+
+[node name="Marker3D" type="Marker3D" parent="Target_markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.21035, 0)
+
+[node name="Marker3D2" type="Marker3D" parent="Target_markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.21035, 1)
+
+[node name="Marker3D3" type="Marker3D" parent="Target_markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51958, -1.21035, 1)
+
+[node name="Marker3D4" type="Marker3D" parent="Target_markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51958, -1.21035, 0)
+
+[node name="Marker3D6" type="Marker3D" parent="Target_markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.66977, -1.21035, 1)
+
+[node name="Marker3D7" type="Marker3D" parent="Target_markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.66977, -1.21035, 0)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.75, 6.2)
+material_override = SubResource("StandardMaterial3D_pstht")
+size = Vector3(8, 3.5, 0.1)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.975, -1.75, 4.475)
+material_override = SubResource("StandardMaterial3D_pstht")
+size = Vector3(0.05, 3.5, 3.45)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.975, -1.75, 4.475)
+material_override = SubResource("StandardMaterial3D_pstht")
+size = Vector3(0.05, 3.5, 3.45)
+
+[node name="Side_panel" type="Node3D" parent="."]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Side_panel"]
+offset_left = -8.0
+offset_top = 456.0
+offset_right = 504.0
+offset_bottom = 968.0
+
+[node name="SubViewport" type="SubViewport" parent="Side_panel/SubViewportContainer"]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="Side_panel/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.987688, 0.156434, 0, -0.156434, 0.987688, 0, -4.74, 5.88)
+
+[node name="visual_component" type="Control" parent="Side_panel" groups=["Side_panel_of_hostage"]]
+layout_mode = 3
+anchor_left = 0.046
+anchor_top = 0.474
+anchor_right = 0.258
+anchor_bottom = 0.556
+offset_left = 111.68
+offset_top = 461.08
+offset_right = -217.76
+offset_bottom = 451.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(20, 20)
+script = SubResource("GDScript_a6bu3")
+
+[node name="health_unit" type="ColorRect" parent="Side_panel/visual_component"]
+visible = false
+custom_minimum_size = Vector2(40, 60)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -37.5997
+offset_bottom = -18.48
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 30)
+color = Color(0, 0.88, 0, 0.690196)
+
+[node name="health_remaining_label" type="Label" parent="Side_panel/visual_component"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -98.0
+offset_top = -146.0
+offset_right = 94.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 0
+label_settings = SubResource("LabelSettings_si3we")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Health_hbox_container" type="HBoxContainer" parent="Side_panel/visual_component"]
+layout_mode = 2
+anchor_right = 5.464
+anchor_bottom = 0.765
+offset_right = -424.005
+offset_bottom = -60.0372
+
+[node name="2D_marker_pos" type="Marker2D" parent="Side_panel/visual_component"]
+position = Vector2(-160, -448)
+
+[node name="health_loading_sound" type="AudioStreamPlayer" parent="Side_panel/visual_component"]
+stream = ExtResource("18_hcy87")
+volume_db = -27.0
+pitch_scale = 1.5
+
+[node name="take_damage_sound" type="AudioStreamPlayer" parent="Side_panel/visual_component"]
+stream = ExtResource("19_stgxu")
+volume_db = -31.0
+pitch_scale = 0.22
+
+[node name="ColorRect" type="ColorRect" parent="Side_panel"]
+z_index = -1
+offset_right = 512.0
+offset_bottom = 1096.0
+color = Color(0, 0, 0, 0.635294)
+
+[node name="Prisoner_mesh" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.1, 4)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Prisoner_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+size = Vector3(1, 0.1, 1)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Prisoner_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
+size = Vector3(1, 0.1, 1)
+
+[node name="CSGBox3D4" type="CSGCylinder3D" parent="Prisoner_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0, 0.45)
+radius = 0.05
+height = 0.8
+
+[node name="CSGBox3D5" type="CSGCylinder3D" parent="Prisoner_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0, 0.45)
+radius = 0.05
+height = 0.8
+
+[node name="CSGBox3D6" type="CSGCylinder3D" parent="Prisoner_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11759e-08, 0, 0.45)
+radius = 0.05
+height = 0.8
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Prisoner_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.76837e-07, 0)
+size = Vector3(1, 0.8, 1)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Prisoner_mesh/CSGBox3D3"]
+operation = 2
+size = Vector3(0.8, 0.8, 1)
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Prisoner_mesh"]
+material_override = SubResource("StandardMaterial3D_hcy87")
+radius = 0.35
+radial_segments = 22
+rings = 11
+
+[node name="CSGSphere3D2" type="CSGSphere3D" parent="Prisoner_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0, 0.4)
+material_override = SubResource("StandardMaterial3D_hcy87")
+radius = 0.145
+radial_segments = 22
+rings = 11
+
+[node name="CSGSphere3D3" type="CSGSphere3D" parent="Prisoner_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0, 0.4)
+material_override = SubResource("StandardMaterial3D_hcy87")
+radius = 0.145
+radial_segments = 22
+rings = 11
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.128393, 4.5)
+size = Vector3(2.5, 0.2, 2.5)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.611499, 4.5)
+size = Vector3(0.25, 1.27979, 0.25)
+
+[node name="Bunny_cage_scene" parent="." instance=ExtResource("18_pstht")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 4.5)
+
+[node name="Timer" type="Control" parent="."]
+layout_mode = 3
+anchor_left = 0.006
+anchor_top = 0.919
+anchor_right = 0.254
+anchor_bottom = 0.956
+offset_left = 0.48
+offset_top = -0.52002
+offset_right = 12.32
+offset_bottom = -0.47998
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(244, 40)
+script = SubResource("GDScript_hcy87")
+
+[node name="Label" type="Label" parent="Timer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.23
+anchor_top = -0.613
+anchor_right = 0.311
+offset_left = -0.240005
+offset_top = 0.52
+offset_right = 0.231995
+offset_bottom = -1.0
+label_settings = ExtResource("21_stgxu")
+
+[connection signal="timeout" from="targetTimer" to="." method="_on_timer_timeout"]
+
+[editable path="decoration/helicopter"]

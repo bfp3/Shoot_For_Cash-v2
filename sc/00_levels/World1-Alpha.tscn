@@ -1,0 +1,1170 @@
+[gd_scene format=3 uid="uid://ceqhqiphfdi35"]
+
+[ext_resource type="Script" uid="uid://dawxyb3ygv7h3" path="res://unfiled/survive.gd" id="1_gw06r"]
+[ext_resource type="PackedScene" uid="uid://csjn5y54u01tr" path="res://ch/00_Hood/player-v2.tscn" id="2_sekp2"]
+[ext_resource type="PackedScene" uid="uid://vp74kljnc3o3" path="res://ch/Sensors/Sensor_car2.tscn" id="3_7egyc"]
+[ext_resource type="PackedScene" uid="uid://bwwqs8ytry7wo" path="res://ch/environment_decoration/trees.tscn" id="3_cim5w"]
+[ext_resource type="Texture2D" uid="uid://cxcwd7qsypxif" path="res://res/Procreate/Hood.png" id="4_w3d2e"]
+[ext_resource type="PackedScene" uid="uid://bwexwu4pd7ote" path="res://ch/environment_decoration/exported_Mesh/tallBase.tscn" id="5_m0nfb"]
+[ext_resource type="PackedScene" uid="uid://djq7nljg07i1b" path="res://ch/environment_decoration/mountain.tscn" id="7_ejcv8"]
+[ext_resource type="PackedScene" path="res://200_assets/environment_decoration/helicopter.tscn" id="11_dnnxc"]
+[ext_resource type="Shader" path="res://800_materials/Shaders/water.gdshader" id="12_55co3"]
+[ext_resource type="Texture2D" uid="uid://dcgokhqae0ani" path="res://res/Text_pngs/Digital_iD_detained_message.png" id="13_4kw30"]
+[ext_resource type="Texture2D" uid="uid://d1y6idb5pvbj3" path="res://res/Text_pngs/we_care_for_your_safety.png" id="13_p1qrn"]
+[ext_resource type="Texture2D" uid="uid://dpiqjoxdk4vu6" path="res://res/gradients/moon.tres" id="14_nka0f"]
+[ext_resource type="Environment" uid="uid://dyd7wpkcsjgmq" path="res://res/skyEnvironments/late_night.tres" id="15_1crkf"]
+[ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://sfx/BP_tunes/oasisWorld.wav" id="15_v41sl"]
+[ext_resource type="AudioStream" uid="uid://bp1yceg657hqq" path="res://sfx/windFull.WAV" id="16_ntl31"]
+[ext_resource type="AudioStream" uid="uid://bjhic4kqet7dw" path="res://sfx/MC_tunes/USERSONG164.WAV" id="19_kb3j3"]
+[ext_resource type="PackedScene" uid="uid://84isy7iht1b5" path="res://ch/Shelter/Shelter.tscn" id="20_yqclu"]
+[ext_resource type="PackedScene" uid="uid://cw3j0xoqlfw5n" path="res://ch/targets/Sensor.tscn" id="22_umus8"]
+[ext_resource type="AudioStream" uid="uid://bwmeochytcteg" path="res://sfx/missileWhoosh.wav" id="23_5688j"]
+[ext_resource type="AudioStream" uid="uid://h8ka65gev0pv" path="res://sfx/02_dialogue/openingSequence.wav" id="23_i5xfk"]
+[ext_resource type="PackedScene" uid="uid://bu4pmaeifdse0" path="res://ch/Shelter/Shelter-shell.tscn" id="24_tuedv"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_siwc4"]
+transparency = 1
+albedo_texture = ExtResource("4_w3d2e")
+rim_enabled = true
+rim_tint = 1.0
+backlight = Color(1, 1, 1, 1)
+uv1_scale = Vector3(1.63, 2.165, 3.315)
+uv1_offset = Vector3(0.685, 0.635, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kci1p"]
+lightmap_size_hint = Vector2i(41, 56)
+size = Vector3(3.55, 3.085, 10.27)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_cvgk1"]
+points = PackedVector3Array(1.775, 1.5422, 2.0075, 1.775, -1.5425, 2.0075, 1.775, 1.5422, -2.0075, -1.775, 1.5422, 2.0075, -1.775, -1.5425, 2.0075, 1.775, -1.5425, -2.0075, -1.775, 1.5422, -2.0075, -1.775, -1.5425, -2.0075)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yhvdl"]
+size = Vector3(1, 6, 5.575)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kbgi7"]
+albedo_texture = ExtResource("14_nka0f")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_amd40"]
+albedo_texture = ExtResource("14_nka0f")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_evyco"]
+size = Vector3(40, 2, 800)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ms0p7"]
+albedo_color = Color(0.364706, 0.415686, 0.431373, 1)
+normal_enabled = true
+uv1_scale = Vector3(120, 120, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kukao"]
+size = Vector3(40, 2, 800)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vpplx"]
+size = Vector3(2400, 2, 2400)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_g60yw"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ccot8"]
+noise = SubResource("FastNoiseLite_g60yw")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6i04p"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_um6dj"]
+width = 1080
+height = 1080
+noise = SubResource("FastNoiseLite_6i04p")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t16hq"]
+render_priority = 0
+shader = ExtResource("12_55co3")
+shader_parameter/albedo = Color(0, 0.478431, 0.65098, 1)
+shader_parameter/metallic = 0.0
+shader_parameter/roughness = 0.01
+shader_parameter/wave_direction = Vector2(2, 0)
+shader_parameter/wave_direction2 = Vector2(0, 6)
+shader_parameter/time_scale = 0.005
+shader_parameter/texture_normal = SubResource("NoiseTexture2D_ccot8")
+shader_parameter/texture_normal2 = SubResource("NoiseTexture2D_um6dj")
+
+[sub_resource type="BoxMesh" id="BoxMesh_lm4he"]
+size = Vector3(2400, 800, 2400)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x5jii"]
+transparency = 1
+albedo_texture = ExtResource("13_4kw30")
+metallic = 1.0
+emission_enabled = true
+emission = Color(0.909804, 0.909804, 0.909804, 1)
+uv1_scale = Vector3(-2.395, -0.487, 0)
+uv1_offset = Vector3(0.485, 1.6, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4k2ku"]
+size = Vector3(29.645, 16.555, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mg8pr"]
+transparency = 1
+albedo_texture = ExtResource("13_p1qrn")
+metallic = 1.0
+emission_enabled = true
+emission = Color(0.909804, 0.909804, 0.909804, 1)
+uv1_scale = Vector3(-5.91, -1.357, -5.91)
+uv1_offset = Vector3(0.325, 1.845, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yxfeo"]
+size = Vector3(17.82, 13.82, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3fxuh"]
+transparency = 1
+albedo_texture = ExtResource("13_p1qrn")
+metallic = 1.0
+emission_enabled = true
+emission = Color(0.909804, 0.909804, 0.909804, 1)
+uv1_scale = Vector3(-5.91, -1.357, -5.91)
+uv1_offset = Vector3(0.325, 1.845, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8wb2c"]
+size = Vector3(36.81, 26.05, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4n05p"]
+size = Vector3(1, 62, 400)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1h7t4"]
+transparency = 1
+albedo_color = Color(0.6, 1, 1, 0.454902)
+
+[sub_resource type="BoxMesh" id="BoxMesh_daqq0"]
+size = Vector3(1, 60, 400)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rt3n7"]
+transparency = 1
+albedo_color = Color(0.6, 1, 1, 0.454902)
+
+[sub_resource type="BoxMesh" id="BoxMesh_um4tb"]
+size = Vector3(1, 60, 40)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_bog7w"]
+points = PackedVector3Array(0.5, 30, 20, -0.5, 30, 20, 0.5, -30, 20, 0.5, 30, -20, -0.5, 30, -20, -0.5, -30, 20, 0.5, -30, -20, -0.5, -30, -20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qdyh2"]
+albedo_color = Color(0.359069, 0.359069, 0.359069, 1)
+metallic = 1.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_be6sj"]
+radius = 0.9
+height = 6.685
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_wrjsw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vyyjy"]
+albedo_texture = ExtResource("14_nka0f")
+emission_enabled = true
+emission = Color(1, 0.913725, 0.345098, 1)
+emission_energy_multiplier = 508.0
+
+[node name="World1-Alpha" type="Node3D"]
+script = ExtResource("1_gw06r")
+
+[node name="player-v2" parent="." instance=ExtResource("2_sekp2")]
+transform = Transform3D(-0.052336, 0.138982, -0.988911, 4.65023e-10, 0.990268, 0.139173, 0.998629, 0.00728378, -0.0518266, 64.029, -8.67299, -194.725)
+
+[node name="MissileSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -50, 842.8)
+
+[node name="SensorContainer" type="Node3D" parent="."]
+
+[node name="Sensor_floating_container" type="Node3D" parent="SensorContainer"]
+
+[node name="Sensor_float_rigid" parent="SensorContainer/Sensor_floating_container" instance=ExtResource("3_7egyc")]
+transform = Transform3D(-3.08288e-08, -2.98023e-08, 1, -0.522498, 0.85264, 0, -0.85264, -0.522498, -4.47035e-08, -3.27644, 57.9425, 362.032)
+
+[node name="Sensor_float_rigid2" parent="SensorContainer/Sensor_floating_container" instance=ExtResource("3_7egyc")]
+transform = Transform3D(-3.08288e-08, -2.98023e-08, 1, -0.522498, 0.85264, 0, -0.85264, -0.522498, -4.47035e-08, -3.27644, 38.2483, 329.894)
+
+[node name="Sensor_float_rigid3" parent="SensorContainer/Sensor_floating_container" instance=ExtResource("3_7egyc")]
+transform = Transform3D(-0.258819, -2.23517e-08, -0.965925, 0.504695, 0.85264, -0.135232, 0.823587, -0.522498, -0.22068, 21.8376, 51.5082, 351.532)
+
+[node name="SensorContainer" type="Node3D" parent="SensorContainer"]
+
+[node name="Sensor1" parent="SensorContainer/SensorContainer" instance=ExtResource("22_umus8")]
+transform = Transform3D(1, 5.96046e-08, -5.96046e-08, -2.01434e-15, 0.5, 0.866025, -4.12205e-16, -0.866025, 0.5, 20.0464, 15.1897, 67.3561)
+
+[node name="Sensor2" parent="SensorContainer/SensorContainer" instance=ExtResource("22_umus8")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.04634, 6.18967, 168.985)
+
+[node name="LightRayMesh" parent="SensorContainer/SensorContainer/Sensor2/securityCamera" index="2"]
+visible = false
+
+[node name="SensorHood" type="StaticBody3D" parent="SensorContainer/SensorContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.13001, 5.57577, 169.023)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SensorContainer/SensorContainer/SensorHood"]
+transform = Transform3D(0.07, 0, 0, 0, 0.805, 0, 0, 0, 0.205, -0.0166802, 0, 0.0522919)
+material_overlay = SubResource("StandardMaterial3D_siwc4")
+mesh = SubResource("BoxMesh_kci1p")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SensorContainer/SensorContainer/SensorHood"]
+shape = SubResource("ConvexPolygonShape3D_cvgk1")
+
+[node name="Sensor3" parent="SensorContainer/SensorContainer" instance=ExtResource("22_umus8")]
+transform = Transform3D(0.167577, 0.492929, -0.853778, 4.37114e-08, 0.866025, 0.5, 0.985859, -0.0837888, 0.145126, 17.0463, 6.18967, 229.985)
+
+[node name="LightRayMesh" parent="SensorContainer/SensorContainer/Sensor3/securityCamera" index="2"]
+visible = false
+
+[node name="SensorEnd" parent="SensorContainer/SensorContainer" instance=ExtResource("22_umus8")]
+transform = Transform3D(0.995662, 1.49012e-08, -0.0930484, 0.0240827, 0.965926, 0.257696, 0.0898778, -0.258819, 0.961735, 4.04638, 73.6271, 387.959)
+
+[node name="securityCamera" parent="SensorContainer/SensorContainer/SensorEnd" index="1"]
+transform = Transform3D(-1.52, 0, -3.85348e-06, 0, 1.52, 0, 3.85348e-06, 0, -1.52, 0.0989845, -0.278198, -0.139008)
+
+[node name="LightRayMesh" parent="SensorContainer/SensorContainer/SensorEnd/securityCamera" index="2"]
+visible = false
+
+[node name="RayCast3D" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="0"]
+transform = Transform3D(1, -6.39488e-14, 2.84217e-14, -5.29396e-22, 1, 0, 7.94093e-23, 0, 1, 4.76837e-07, -1.52588e-05, 0)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="RayCast3D2" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="1"]
+transform = Transform3D(0.99863, -6.39488e-14, 0.052336, 1.86265e-09, 1, 0, -0.052336, 0, 0.99863, 4.76837e-07, -1.52588e-05, 0)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="RayCast3D3" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="2"]
+transform = Transform3D(0.99863, -6.39488e-14, -0.052336, -1.86265e-09, 1, 0, 0.052336, 0, 0.99863, 4.76837e-07, -1.52588e-05, 0)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="RayCast3D4" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="3"]
+transform = Transform3D(0.996195, -6.39488e-14, -0.0871557, 0, 1, -2.98023e-08, 0.0871557, 0, 0.996195, 4.76837e-07, -1.52588e-05, 0)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="RayCast3D5" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="4"]
+transform = Transform3D(0.996195, -6.39488e-14, 0.0871557, 0, 1, -2.98023e-08, -0.0871557, 0, 0.996195, 4.76837e-07, -1.52588e-05, 0)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="RayCast3D6" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="5"]
+transform = Transform3D(1, -8.17124e-14, 9.23706e-14, -5.29396e-22, 0.998631, -0.052336, 7.94093e-23, 0.052336, 0.998631, 4.76837e-07, 0, 0)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="RayCast3D7" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="6"]
+transform = Transform3D(0.99863, 0.00273905, 0.0522642, 1.86265e-09, 0.99863, -0.052336, -0.052336, 0.0522643, 0.997261, 4.76837e-07, -4.57764e-05, -6.10352e-05)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="RayCast3D8" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="7"]
+transform = Transform3D(0.99863, -0.00273905, -0.0522642, -1.86265e-09, 0.99863, -0.052336, 0.052336, 0.0522643, 0.997261, 4.76837e-07, -4.57764e-05, -6.10352e-05)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="RayCast3D9" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="8"]
+transform = Transform3D(0.996195, -0.00456138, -0.0870362, 0, 0.998631, -0.0523361, 0.0871557, 0.0521368, 0.99483, 4.76837e-07, -1.52588e-05, 0)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="RayCast3D10" parent="SensorContainer/SensorContainer/SensorEnd/RayContainer" index="9"]
+transform = Transform3D(0.996195, 0.00456138, 0.0870364, 0, 0.998631, -0.0523361, -0.0871557, 0.0521368, 0.99483, 4.76837e-07, -1.52588e-05, 0)
+target_position = Vector3(0, 0, -12.59)
+
+[node name="ShelterContainer" type="Node3D" parent="."]
+
+[node name="Shelter1" parent="ShelterContainer" instance=ExtResource("20_yqclu")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 13.136, 4.28682, -32.162)
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="ShelterContainer/Shelter1"]
+transform = Transform3D(1, 0, 1.49214e-13, 0, 1, 0, -1.49214e-13, 0, 1, -7.1096, 0.535526, -0.149492)
+omni_range = 6.0
+omni_attenuation = 0.517633
+
+[node name="MusicStartArea" type="Area3D" parent="ShelterContainer/Shelter1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.136, -0.28682, 0.162001)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ShelterContainer/Shelter1/MusicStartArea"]
+shape = SubResource("BoxShape3D_yhvdl")
+
+[node name="Shelter1_5" parent="ShelterContainer" instance=ExtResource("20_yqclu")]
+transform = Transform3D(0.0261417, 0, -0.999657, 0, 1, 0, 0.999657, 0, 0.0261417, 30.663, 4.28682, 124.558)
+
+[node name="ShelterB" parent="ShelterContainer" instance=ExtResource("20_yqclu")]
+transform = Transform3D(-4.37113e-08, 0, -0.999999, 0, 1, 0, 0.999999, 0, -4.37113e-08, 0.7716, 71.0208, 382.2)
+
+[node name="DoorMesh" parent="ShelterContainer/ShelterB/Door" index="3"]
+material_override = SubResource("StandardMaterial3D_kbgi7")
+
+[node name="DoorMesh2" parent="ShelterContainer/ShelterB/Door" index="4"]
+material_override = SubResource("StandardMaterial3D_amd40")
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="ShelterContainer/ShelterB"]
+transform = Transform3D(1, 0, 1.24345e-13, 0, 1, 0, -1.24345e-13, 0, 1, -9.31979, 4.30059, -5.51389)
+light_color = Color(1, 0.964706, 0, 1)
+light_energy = 23.999
+light_indirect_energy = 16.0
+omni_range = 34.0
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="ShelterContainer/ShelterB"]
+transform = Transform3D(1, 0, 1.20792e-13, 0, 1, 0, -1.20792e-13, 0, 1, 9.68015, 7.30059, 0.486135)
+light_color = Color(1, 0.964706, 0, 1)
+light_energy = 23.999
+light_indirect_energy = 16.0
+omni_range = 12.0
+
+[node name="ShelterB_platforms" type="Node3D" parent="ShelterContainer"]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 1, 10, 338)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(1, 0, 0, 0, 0.206136, -0.978524, 0, 0.978524, 0.206136, 1, 30.032, 12.361)
+use_collision = true
+size = Vector3(6, 72, 1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(1, 0, 0, 0, 0.365414, -0.93085, 0, 0.93085, 0.365414, 18, 15.4784, -51.5856)
+use_collision = true
+size = Vector3(6, 40, 1)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(3.57628e-07, 0.909708, 0.415252, -0.258819, -0.401099, 0.878715, 0.965928, -0.107474, 0.23545, 15.4798, 39.1096, 52.6583)
+use_collision = true
+size = Vector3(6, 22, 1)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(3.57628e-07, 0.909708, 0.415252, -0.258819, -0.401099, 0.878715, 0.965928, -0.107474, 0.23545, 15.4798, 37.5567, 58.454)
+use_collision = true
+size = Vector3(6, 22, 1)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(1.24797e-07, 0.99991, 0.0134389, -0.258819, -0.0129805, 0.965844, 0.965928, -0.00347821, 0.258796, 0.999638, 42.5793, 48.4115)
+use_collision = true
+size = Vector3(5.33, 15.545, 1)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(0.999912, -0.00950285, 0.00950265, -0.012981, -0.499938, 0.865968, -0.0034784, -0.866009, -0.50002, -1.98108, 43.6181, 50.154)
+use_collision = true
+size = Vector3(5.33, 4, 1)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(1.24797e-07, 0.99991, 0.0134389, -0.258819, -0.0129805, 0.965844, 0.965928, -0.00347821, 0.258796, 14.9043, 36.1542, 44.6193)
+use_collision = true
+size = Vector3(6, 22, 1)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(1.24797e-07, 0.99991, 0.0134389, -0.258819, -0.0129805, 0.965844, 0.965928, -0.00347821, 0.258796, 30.9029, 35.9465, 44.5636)
+use_collision = true
+size = Vector3(6, 22, 1)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(1, 0, 0, 0, 0.965927, -0.258819, 0, 0.258819, 0.965927, 4, 33.4236, 60.7198)
+use_collision = true
+size = Vector3(24, 4, 30)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(1, 0, 0, 0, 0.965927, -0.258819, 0, 0.258819, 0.965927, 0, 37.6155, 56.6667)
+use_collision = true
+size = Vector3(16, 4, 20)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(1, 0, 0, 0, 0.965927, -0.258819, 0, 0.258819, 0.965927, 0, 41.4792, 57.7019)
+use_collision = true
+size = Vector3(12, 4, 14)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="ShelterContainer/ShelterB_platforms"]
+transform = Transform3D(1, 0, 0, 0, 1, -2.98023e-08, 0, 2.98023e-08, 1, 10, 23.0301, -27.9931)
+use_collision = true
+size = Vector3(24, 1, 10)
+
+[node name="Floor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5769, -18.6247, 0)
+
+[node name="Bridge" type="StaticBody3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17.7952, 405.803)
+collision_layer = 7
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/Bridge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -494)
+shape = SubResource("BoxShape3D_evyco")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor/Bridge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -494)
+material_override = SubResource("StandardMaterial3D_ms0p7")
+mesh = SubResource("BoxMesh_kukao")
+skeleton = NodePath("../..")
+
+[node name="Decoration" type="Node3D" parent="."]
+
+[node name="mountain" parent="Decoration" instance=ExtResource("7_ejcv8")]
+transform = Transform3D(2.41481, 0, -0.647048, 0, 2.5, 0, 0.647048, 0, 2.41481, -333.362, -6.157, 706.552)
+
+[node name="mountain2" parent="Decoration/mountain" instance=ExtResource("7_ejcv8")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -108, 0, 0)
+
+[node name="mountain3" parent="Decoration/mountain" instance=ExtResource("7_ejcv8")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -143.192, -4.47378, 0)
+
+[node name="helicopter" parent="Decoration" instance=ExtResource("11_dnnxc")]
+transform = Transform3D(0.962651, 2.39877e-06, -2.45716, 1.56598, 2.03362, 0.613514, 1.89349, -1.68187, 0.741821, -69.2817, -12.9071, 228.486)
+
+[node name="water" type="Node3D" parent="Decoration"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -476)
+
+[node name="foreground" type="StaticBody3D" parent="Decoration/water"]
+collision_layer = 7
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Decoration/water/foreground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -13, 1200)
+shape = SubResource("BoxShape3D_vpplx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Decoration/water/foreground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -412, 1200)
+material_override = SubResource("ShaderMaterial_t16hq")
+mesh = SubResource("BoxMesh_lm4he")
+skeleton = NodePath("../..")
+
+[node name="Trees" type="Node3D" parent="Decoration"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -429.683, -6.2978, 170)
+
+[node name="Tree2" parent="Decoration/Trees" instance=ExtResource("3_cim5w")]
+transform = Transform3D(2.89778, 0, 0.776457, 0, 3, 0, -0.776457, 0, 2.89778, -77.181, 9.45678, 150.072)
+
+[node name="Tree3" parent="Decoration/Trees" instance=ExtResource("3_cim5w")]
+transform = Transform3D(1.93185, 0, 0.517638, 0, 2, 0, -0.517638, 0, 1.93185, -56.181, 6.45678, 145.853)
+
+[node name="Tree4" parent="Decoration/Trees" instance=ExtResource("3_cim5w")]
+transform = Transform3D(2.89778, 0, 0.776457, 0, 3, 0, -0.776457, 0, 2.89778, -58.181, 5.45678, 132.072)
+
+[node name="Level_Layout" type="Node3D" parent="Decoration"]
+
+[node name="ShelterContainer1" type="Node3D" parent="Decoration/Level_Layout"]
+
+[node name="Shelter-shell1" parent="Decoration/Level_Layout/ShelterContainer1" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 4.38384, 27)
+
+[node name="Shelter-shell2" parent="Decoration/Level_Layout/ShelterContainer1" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 12.4039, 27)
+
+[node name="Shelter-shell3" parent="Decoration/Level_Layout/ShelterContainer1" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 12.4039, 18)
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer1"]
+transform = Transform3D(0.992915, 0.101861, -0.0611968, 0.067533, -0.0599621, 0.995914, 0.0977751, -0.99299, -0.0664162, 22.4153, 12.9782, 22)
+light_energy = 9.0
+spot_range = 14.0
+spot_angle = 44.13
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer1"]
+transform = Transform3D(0.992915, 0.101861, -0.0611968, 0.067533, -0.059962, 0.995914, 0.0977752, -0.99299, -0.0664162, 30.4153, 11.9782, 17)
+light_energy = 9.0
+spot_range = 14.0
+spot_angle = 44.13
+
+[node name="Shelter-shell4" parent="Decoration/Level_Layout/ShelterContainer1" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 6.40385, 18)
+
+[node name="Shelter-shell11" parent="Decoration/Level_Layout/ShelterContainer1" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 4.38384, 39.3537)
+
+[node name="Shelter-shell12" parent="Decoration/Level_Layout/ShelterContainer1" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 12.4039, 39.3537)
+
+[node name="ShelterContainer2" type="Node3D" parent="Decoration/Level_Layout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
+
+[node name="Shelter-shell1" parent="Decoration/Level_Layout/ShelterContainer2" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 4.38384, 27)
+
+[node name="Shelter-shell2" parent="Decoration/Level_Layout/ShelterContainer2" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 12.4039, 27)
+
+[node name="Shelter-shell11" parent="Decoration/Level_Layout/ShelterContainer2" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 4.38384, 39.3537)
+
+[node name="Shelter-shell12" parent="Decoration/Level_Layout/ShelterContainer2" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 12.4039, 39.3537)
+
+[node name="ShelterContainer5" type="Node3D" parent="Decoration/Level_Layout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -31)
+
+[node name="Shelter-shell1" parent="Decoration/Level_Layout/ShelterContainer5" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 4.38384, 27)
+
+[node name="Shelter-shell2" parent="Decoration/Level_Layout/ShelterContainer5" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 12.4039, 27)
+
+[node name="Shelter-shell11" parent="Decoration/Level_Layout/ShelterContainer5" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 4.38384, 39.3537)
+
+[node name="Shelter-shell12" parent="Decoration/Level_Layout/ShelterContainer5" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 12.4039, 39.3537)
+
+[node name="ShelterContainer6" type="Node3D" parent="Decoration/Level_Layout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -31)
+
+[node name="Shelter-shell1" parent="Decoration/Level_Layout/ShelterContainer6" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 4.38384, 27)
+
+[node name="Shelter-shell2" parent="Decoration/Level_Layout/ShelterContainer6" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 12.4039, 27)
+
+[node name="Shelter-shell11" parent="Decoration/Level_Layout/ShelterContainer6" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 4.38384, 39.3537)
+
+[node name="Shelter-shell12" parent="Decoration/Level_Layout/ShelterContainer6" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34, 12.4039, 39.3537)
+
+[node name="ShelterContainer3" type="Node3D" parent="Decoration/Level_Layout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 29)
+
+[node name="Shelter-shell1" parent="Decoration/Level_Layout/ShelterContainer3" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1, 0, -3.55271e-15, 0, 1, 0, 3.55271e-15, 0, -1, 31.1768, 4.38384, 42.1768)
+
+[node name="Shelter-shell2" parent="Decoration/Level_Layout/ShelterContainer3" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1, 0, -3.55271e-15, 0, 1, 0, 3.55271e-15, 0, -1, 26.1768, 12.4039, 42.1768)
+
+[node name="Shelter-shell11" parent="Decoration/Level_Layout/ShelterContainer3" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1, 0, -3.55271e-15, 0, 1, 0, 3.55271e-15, 0, -1, 7.82317, 4.38384, 42.1768)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(-1, 1.55294e-22, -3.55271e-15, -3.55271e-15, -4.37114e-08, 1, 0, 1, 4.37114e-08, 16.8232, 9.40385, 47.1768)
+light_energy = 3.0
+spot_range = 14.08
+spot_angle = 75.75
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(-1, 1.55294e-22, -3.55271e-15, -3.55271e-15, -4.37114e-08, 1, 0, 1, 4.37114e-08, 28.8232, 17.4039, 47.1768)
+light_energy = 3.0
+spot_range = 14.08
+spot_angle = 51.55
+
+[node name="SpotLight3D4" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(-1, 1.55294e-22, -3.55271e-15, -3.55271e-15, -4.37114e-08, 1, 0, 1, 4.37114e-08, 22.8232, 21.4039, 58.1768)
+light_energy = 6.0
+spot_range = 47.485
+spot_angle = 44.95
+
+[node name="SpotLight3D8" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(-0.5, 3.78552e-08, -0.866025, -0.866025, -2.18557e-08, 0.5, 0, 1, 4.37114e-08, -4.17683, 5.40385, 20.1768)
+light_energy = 6.0
+spot_range = 14.0
+spot_angle = 48.1123
+
+[node name="SpotLight3D6" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(-1, 1.55294e-22, -3.55271e-15, -3.55271e-15, -4.37114e-08, 1, 0, 1, 4.37114e-08, 18.8232, 21.4039, 105.177)
+light_energy = 6.0
+spot_range = 47.485
+spot_angle = 44.95
+
+[node name="SpotLight3D7" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(-1, 1.02354e-22, -3.55271e-15, -3.43166e-15, 0.258819, 0.965926, 9.19509e-16, 0.965926, -0.258819, 29.8232, 15.4039, 84.1768)
+light_energy = 6.0
+spot_range = 47.485
+spot_angle = 26.55
+
+[node name="SpotLight3D10" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(-1, -1.21452e-21, -3.55272e-15, -3.55271e-15, -0.002077, 0.999998, -7.3802e-18, 0.999998, 0.002077, 26.8232, 16.4039, 93.1768)
+light_energy = 6.0
+spot_range = 47.485
+spot_angle = 26.55
+
+[node name="SpotLight3D9" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 30.8232, 15.4039, 70.1768)
+light_energy = 6.0
+spot_range = 47.485
+spot_angle = 26.55
+
+[node name="SpotLight3D5" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(-1, 1.55294e-22, -3.55271e-15, -3.55271e-15, -4.37114e-08, 1, 0, 1, 4.37114e-08, 22.8232, 12.4039, 54.1768)
+light_energy = 6.0
+spot_range = 47.485
+spot_angle = 44.95
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="Decoration/Level_Layout/ShelterContainer3"]
+transform = Transform3D(-1, 1.55294e-22, -3.55271e-15, -3.55271e-15, -4.37114e-08, 1, 0, 1, 4.37114e-08, 9.82317, 9.40385, 55.1768)
+light_energy = 3.0
+spot_range = 14.08
+spot_angle = 41.65
+
+[node name="Shelter-shell12" parent="Decoration/Level_Layout/ShelterContainer3" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1, 0, -3.55271e-15, 0, 1, 0, 3.55271e-15, 0, -1, 13.8232, 12.4039, 42.1768)
+
+[node name="ShelterContainer4" type="Node3D" parent="Decoration/Level_Layout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 29)
+
+[node name="Shelter-shell1" parent="Decoration/Level_Layout/ShelterContainer4" instance=ExtResource("24_tuedv")]
+transform = Transform3D(9.51274e-08, 0, 1.705, 0, 1, 0, -1.26, 0, 1.28724e-07, 36.0112, 4.38384, 31.1768)
+
+[node name="Shelter-shell2" parent="Decoration/Level_Layout/ShelterContainer4" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, 1, 0, 1, 0, -1, 0, 4.37114e-08, 38.1768, 12.4039, 30.1768)
+
+[node name="Shelter-shell3" parent="Decoration/Level_Layout/ShelterContainer4" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-4.37114e-08, 1, 4.98689e-15, -1, -4.37114e-08, 1.14087e-07, 8.74228e-08, 0, 1.305, 38.1768, 6.40385, 20.1768)
+
+[node name="Shelter-shell11" parent="Decoration/Level_Layout/ShelterContainer4" instance=ExtResource("24_tuedv")]
+transform = Transform3D(7.54979e-08, 0, -2.21, 0, 1, 0, 1, 0, 1.6685e-07, 16.8232, 4.38384, 33.1768)
+
+[node name="Shelter-shell12" parent="Decoration/Level_Layout/ShelterContainer4" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 12.8232, 12.4039, 33.1768)
+
+[node name="Shelter-shell13" parent="Decoration/Level_Layout/ShelterContainer4" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 12.8232, 12.4039, 20.1768)
+
+[node name="Shelter-shell14" parent="Decoration/Level_Layout/ShelterContainer4" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 12.8232, 12.4039, 8.01502)
+
+[node name="Shelter-shell15" parent="Decoration/Level_Layout/ShelterContainer4" instance=ExtResource("24_tuedv")]
+transform = Transform3D(1.47221e-08, 0, -1, 0, 1, 0, 0.195, 0, 7.54979e-08, 12.8232, 4.40385, 4.01502)
+
+[node name="Shelter-shell" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(1.47, 0, 4.47035e-08, 0, 1.665, 0, -6.57141e-08, 0, 1, 9, 6.97818, 27.5629)
+
+[node name="Shelter-shell26" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(1, -6.37025e-08, 4.47035e-08, 4.47035e-08, 1.425, 1.85808e-14, -4.47035e-08, -2.36299e-14, 1, 18.4153, 9.97818, -1)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Decoration/Level_Layout/Shelter-shell26"]
+transform = Transform3D(1, 1.49012e-08, -3.43743e-22, -1.49012e-08, 1, -2.30682e-14, 5.04871e-29, 2.30682e-14, 1, -10.7453, -6.08175, -4.76837e-07)
+light_energy = 2.0
+omni_range = 7.0
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Decoration/Level_Layout/Shelter-shell26"]
+transform = Transform3D(0.918456, 0.287754, -0.27136, 0.220678, -0.220291, 0.513317, 0.146405, -0.884685, -0.442604, -0.258819, 0.580136, 4)
+light_energy = 9.0
+spot_range = 14.0
+spot_angle = 44.13
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="Decoration/Level_Layout/Shelter-shell26"]
+transform = Transform3D(1, -7.81597e-14, 3.31181e-07, -8.88178e-15, -4.37114e-08, 0.600599, 1.42109e-14, -1, -7.27796e-08, -16.2588, 1.18074, -8)
+light_energy = 9.0
+spot_range = 14.0
+spot_angle = 44.13
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="Decoration/Level_Layout/Shelter-shell26"]
+transform = Transform3D(1, -6.75016e-14, 3.31181e-07, -1.77636e-14, -4.37114e-08, 0.600599, 2.84217e-14, -1, -7.27796e-08, -16.2588, 1.18074, 18.4389)
+light_energy = 9.0
+spot_range = 14.0
+spot_angle = 44.13
+
+[node name="Shelter-shell47" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(3.72038e-10, 3.0937e-14, -1, 1.77636e-15, 1.665, 1.50281e-14, 0.375, 1.64405e-21, 9.92106e-10, 25.2902, 21.0147, -1)
+
+[node name="Shelter-shell65" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.63918e-08, 4.58016e-14, -1, 1.77636e-15, 2.465, 1.85808e-14, 0.375, -1.16766e-14, -4.37114e-08, 31.8984, 26.7525, -1)
+
+[node name="Shelter-shell27" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.999964, -0.0142173, -0.000256129, 0.00853774, 1.66494, -0.00103595, 0.000264964, 0.00172116, 0.999999, 5.3917, 17.7693, -1.00355)
+
+[node name="Shelter-shell28" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.999963, -0.0142159, -0.00025613, 0.0085378, 1.66494, -0.00103595, 0.000264964, 0.00172116, 0.999999, 12.756, 4.10249, -1)
+
+[node name="Shelter-shell2" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(1, 0, 4.47035e-08, 0, 3.23, 0, -4.47035e-08, 0, 1, 4.90854, 12.9782, -22)
+
+[node name="Shelter-shell54" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-8.52372e-08, 0, -0.57, 0, 3.151, 0, 1.95, 0, -2.49155e-08, -1, 12.9782, -5)
+
+[node name="Shelter-shell55" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-8.52372e-08, 0, -0.57, 0, 3.151, 0, 1.95, 0, -2.49155e-08, -1, 12.9782, 22.0674)
+
+[node name="Shelter-shell56" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-5.52949e-08, 0, -0.57, 0, 3.151, 0, 1.265, 0, -2.49155e-08, 36, 12.9782, 81.0674)
+
+[node name="Shelter-shell57" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-7.54021e-08, 0, -0.57, 0, 3.151, 0, 1.725, 0, -2.49155e-08, 36, 12.9782, 102.251)
+
+[node name="Shelter-shell58" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-8.85156e-08, 0, -0.57, 0, 3.151, 0, 2.025, 0, -2.49155e-08, 36, 12.9782, 128.509)
+
+[node name="Shelter-shell59" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-8.85156e-08, 0, -0.57, 0, 3.151, 0, 2.025, 0, -2.49155e-08, -1, 12.9782, 128.509)
+
+[node name="Shelter-shell60" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-7.67135e-08, 0, -0.57, 0, 3.151, 0, 1.755, 0, -2.49155e-08, -1, 12.9782, 102.075)
+
+[node name="Shelter-shell3" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 29, 4.38384, 81)
+
+[node name="Shelter-shell12" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-8.74228e-09, 0, -0.2, 0, 0.2, 0, 0.2, 0, -8.74228e-09, 25, 1.38384, 81)
+
+[node name="Shelter-shell13" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-8.74228e-09, 0, -0.2, 0, 0.2, 0, 0.2, 0, -8.74228e-09, 25, 1.38384, 83.6867)
+
+[node name="Shelter-shell14" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-8.74228e-09, 0, -0.2, 0, 0.2, 0, 0.2, 0, -8.74228e-09, 25, 3.03614, 83.6867)
+
+[node name="Shelter-shell15" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.199581, 0, -0.0129378, 0, 0.2, 0, 0.0129378, 0, -0.199581, 24, 1.38384, 85.7741)
+
+[node name="Shelter-shell16" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.199581, 0, -0.0129378, 0, 0.2, 0, 0.0129378, 0, -0.199581, 24, 3.03614, 85.7741)
+
+[node name="Shelter-shell17" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.199581, 0, -0.0129378, 0, 0.2, 0, 0.0129378, 0, -0.199581, 24, 4.61445, 85.7741)
+
+[node name="Shelter-shell19" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(2.98023e-08, 0, 0.2, 0, 0.2, 0, -0.2, 0, 2.98023e-08, 29, 9.38384, 79.9913)
+
+[node name="Shelter-shell20" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(2.98023e-08, 0, 0.2, 0, 0.2, 0, -0.2, 0, 2.98023e-08, 29, 9.38384, 77.3047)
+
+[node name="Shelter-shell21" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(2.98023e-08, 0, 0.2, 0, 0.2, 0, -0.2, 0, 2.98023e-08, 29, 11.0361, 77.3047)
+
+[node name="Shelter-shell22" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.199581, 0, 0.0129378, 0, 0.2, 0, -0.0129378, 0, 0.199581, 29, 9.38384, 75.2172)
+
+[node name="Shelter-shell23" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.199581, 0, 0.0129378, 0, 0.2, 0, -0.0129378, 0, 0.199581, 29, 11.0361, 75.2172)
+
+[node name="Shelter-shell24" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.199581, 0, 0.0129378, 0, 0.2, 0, -0.0129378, 0, 0.199581, 29, 12.6145, 75.2172)
+
+[node name="Shelter-shell25" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.199581, 0, 0.0129378, 0, 0.2, 0, -0.0129378, 0, 0.199581, 29, 14.2668, 75.2172)
+
+[node name="Shelter-shell11" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.0969, 4.38384, 81)
+
+[node name="Shelter-shell5" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.91069e-15, -4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, 4.37114e-08, 29, 6.38384, 149)
+
+[node name="Shelter-shell6" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1, 4.37114e-08, 4.37114e-08, -4.37114e-08, -4.37114e-08, -1, -4.37114e-08, -1, 4.37114e-08, 14, 3.38384, 159)
+
+[node name="Shelter-shell7" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1, 4.37114e-08, 4.37114e-08, 4.37114e-08, 1, 0, -4.37114e-08, 3.55271e-15, -1, 6, 4.38384, 149)
+
+[node name="Shelter-shell8" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 2.96, 0, 1, 0, -4.37114e-08, 5, 11.908, 160)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Decoration/Level_Layout/Shelter-shell8"]
+transform = Transform3D(1, 0, 0, 0, 0.337838, 0, 0, 0, 1, 4, -0.337837, -4.2819)
+light_energy = 3.0
+
+[node name="Shelter-shell32" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 2.96, 0, 1, 0, -4.37114e-08, 29, 11.908, 160)
+
+[node name="Shelter-shell37" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 5, 11.908, 222.721)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Decoration/Level_Layout/Shelter-shell37"]
+transform = Transform3D(0.233918, 0, 1.24345e-14, 0, 0.337838, 0, 0, 0, 1, 0.233932, -2.09909, -5.91289)
+
+[node name="Shelter-shell38" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 29, 11.908, 222.721)
+
+[node name="Shelter-shell41" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-3, 0, 1.50996e-07, 0, 2.96, 0, -4.52987e-07, 0, -1, 18, 10.908, 315.721)
+
+[node name="Shelter-shell43" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-4.305, 0, 1.58621e-06, 0, 9.33, 0, -6.50037e-07, 0, -10.505, 18, 19.908, 405.721)
+
+[node name="Shelter-shell45" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-7.715, 0, 1.14077e-06, 0, 6.709, 0, -1.16493e-06, 0, -7.555, 15, 83.908, 420.721)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Decoration/Level_Layout/Shelter-shell45"]
+transform = Transform3D(0.112083, 0.0271563, 0.0591667, -0.0748629, 0.053765, 0.11714, -2.07751e-08, -0.120297, 0.0552139, 4.73983, 0.647941, 6.88287)
+light_energy = 29.32
+spot_range = 42.09
+spot_angle = 19.8563
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="Decoration/Level_Layout/Shelter-shell45"]
+transform = Transform3D(0.112083, -0.0271564, -0.0591667, 0.074863, 0.053765, 0.11714, -2.07751e-08, -0.120297, 0.0552138, -1.33811, 0.666095, 6.88287)
+light_energy = 30.0
+spot_range = 42.09
+spot_angle = 19.8563
+
+[node name="Shelter-shell42" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.26, 0, 1.50996e-07, 0, 2.96, 0, -1.90255e-07, 0, -1, 29, 34.8783, 315.721)
+
+[node name="Shelter-shell39" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 3, 11.908, -50.771)
+
+[node name="Shelter-shell40" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 32, 11.908, -70.771)
+
+[node name="Shelter-shell66" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 32, 11.908, -123.389)
+
+[node name="Shelter-shell69" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 3.64614, 11.908, -104.959)
+
+[node name="Shelter-shell71" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 3.64614, 11.908, -162.59)
+
+[node name="Shelter-shell84" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86648e-08, 0, -0.625, 0, 3.565, 0, 0.427, 0, -2.73196e-08, 9.64614, 9.923, -218.165)
+
+[node name="Shelter-shell72" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 3.64614, 11.908, -216.024)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Decoration/Level_Layout/Shelter-shell72"]
+transform = Transform3D(0.233918, 0, 1.24345e-14, 0, 0.337838, 0, 0, 0, 1, 1.16964, 0, -5)
+light_energy = 7.195
+omni_range = 17.0
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="Decoration/Level_Layout/Shelter-shell72"]
+transform = Transform3D(0.233918, 0, 1.24345e-14, 0, 0.337838, 0, 0, 0, 1, 6.84816, 0, -5)
+light_energy = 7.195
+omni_range = 17.0
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="Decoration/Level_Layout/Shelter-shell72"]
+transform = Transform3D(0.233918, 0, 1.24345e-14, 0, 0.337838, 0, 0, 0, 1, 23.3002, 0, -5)
+light_energy = 7.195
+omni_range = 17.0
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="Decoration/Level_Layout/Shelter-shell72"]
+transform = Transform3D(0.233918, 0, 1.24345e-14, 0, 0.337838, 0, 0, 0, 1, 15.347, 0, -24.2174)
+light_energy = 7.195
+omni_range = 17.0
+
+[node name="Shelter-shell77" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.90669e-06, 0, -1, 0, 2.96, 0, 43.62, 0, -4.37114e-08, 35.6461, -10.092, -216.024)
+
+[node name="Shelter-shell78" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.90669e-06, 0, -1, 0, 2.96, 0, 43.62, 0, -4.37114e-08, 35.6461, -10.092, 311.884)
+
+[node name="Shelter-shell79" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.90669e-06, 0, -1, 0, 2.96, 0, 43.62, 0, -4.37114e-08, 1.44257, -10.092, -216.024)
+
+[node name="Shelter-shell80" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.90669e-06, 0, -1, 0, 2.96, 0, 43.62, 0, -4.37114e-08, 1.44257, -10.092, 311.884)
+
+[node name="Shelter-shell76" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-2.48982, -1.11422e-07, 0.0975, 1.4375, -6.46929e-08, 0.168875, -6.23062e-08, 2.96, 7.36105e-09, 52.6461, -8.64649, -199.024)
+
+[node name="Shelter-shell83" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.618524, -1.61864e-08, 0.0521205, 0.480122, -9.39795e-09, 0.067145, -1.27895e-08, 0.43, 3.42946e-09, 42.112, -1.31684, -202.024)
+
+[node name="Shelter-shell73" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 3.64614, 11.908, -268.547)
+
+[node name="Shelter-shell74" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 33.006, 11.908, -268.547)
+
+[node name="Shelter-shell81" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 32.9769, 11.908, -238.879)
+
+[node name="Shelter-shell82" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.86866e-07, 0, -1, 0, 2.96, 0, 4.275, 0, -4.37114e-08, 33.006, 11.908, -170.566)
+
+[node name="Shelter-shell75" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(4.27355, 0, 0.0260548, 0, 2.96, 0, -0.111384, 0, 0.99966, 19.2144, 11.908, -299.234)
+
+[node name="Shelter-shell85" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-4.04767e-07, -3.45, -4.37114e-08, 0, -1.50804e-07, 1, -9.26, 1.50804e-07, 1.91069e-15, 17.7278, 24.0892, -252.679)
+
+[node name="Shelter-shell70" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(5.60599e-07, 2.96, -4.37114e-08, 1.63364e-14, 1.29386e-07, 1, 4.275, -3.88157e-07, 1.91069e-15, 18.7605, 25.5189, -151.237)
+
+[node name="Shelter-shell86" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-2.676, -9.03515e-08, -1.05546e-07, -1.16972e-07, 2.067, -3.05543e-08, 4.04065e-07, -9.03514e-08, -0.699, 17.7154, 25.5189, 72.4411)
+
+[node name="Shelter-shell44" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.00922861, 0.953979, 3.25854e-10, 1.37697, 0.00639368, -4.86196e-08, -2.07921e-07, 0, -0.322, 25.3006, 8.95437, -70.771)
+
+[node name="Shelter-shell49" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.00254005, 0.571987, -2.91422e-08, 0.378991, 0.00383353, -2.91415e-08, -5.68413e-08, -8.69465e-08, -0.193, 20.3006, 2.56117, -69.771)
+
+[node name="Shelter-shell50" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.24201e-10, 1.1015e-08, 0.085, 0.40699, 0.00175928, -1.73468e-18, -0.00284138, 0.251994, -3.71547e-09, 20.3006, 2.56117, -0.771004)
+
+[node name="Shelter-shell51" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.24201e-10, 1.1015e-08, 0.085, 0.40699, 0.00175928, -1.73468e-18, -0.00284138, 0.251994, -3.71547e-09, 22.4293, 2.56117, -0.771004)
+
+[node name="Shelter-shell52" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.40699, -0.00175928, -3.71547e-09, -1.79143e-08, 1.09381e-08, 0.085, -0.00284138, 0.251994, -3.71547e-09, 21.3332, 3.14005, -0.771004)
+
+[node name="Shelter-shell53" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.40699, -0.00175928, -3.71547e-09, -1.79143e-08, 1.09381e-08, 0.085, -0.00284138, 0.251994, -3.71547e-09, 21.3332, 1.45951, -0.771004)
+
+[node name="SafetyMessage2" type="MeshInstance3D" parent="Decoration/Level_Layout"]
+transform = Transform3D(1.28903e-08, -0.0013404, 0.0349992, -6.98492e-10, -0.191996, -0.000244343, 0.295, -2.32831e-10, -1.5299e-09, 34.205, 6.535, 97.073)
+material_override = SubResource("StandardMaterial3D_x5jii")
+mesh = SubResource("BoxMesh_4k2ku")
+skeleton = NodePath("../Shelter-shell61")
+
+[node name="Shelter-shell61" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.294993, -0.0013404, 0, 0.00205946, -0.191995, 0, 0, 0, 0.035, 15.6459, 9.99998, 221.991)
+
+[node name="SafetyMessage" type="MeshInstance3D" parent="Decoration/Level_Layout/Shelter-shell61"]
+transform = Transform3D(1, 4.19095e-09, 1.56125e-17, -9.31323e-09, 1, -2.21189e-09, 0, -4.19095e-09, 1, -3.96885, 10.977, -2.52002)
+material_override = SubResource("StandardMaterial3D_mg8pr")
+mesh = SubResource("BoxMesh_yxfeo")
+
+[node name="SafetyMessage2" type="MeshInstance3D" parent="Decoration/Level_Layout/Shelter-shell61"]
+transform = Transform3D(1, 4.65661e-09, 1.64799e-17, -9.31323e-09, 1, -2.21189e-09, 0, -4.19095e-09, 1, -6.96885, 10.977, -14800.5)
+material_override = SubResource("StandardMaterial3D_3fxuh")
+mesh = SubResource("BoxMesh_8wb2c")
+
+[node name="Shelter-shell62" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.000664608, -0.249102, -0.0128538, 0.40699, 0.0001481, 0.000591302, -0.00276256, -0.0381095, 0.0840204, 9.15718, 2.9114, 231.482)
+
+[node name="Shelter-shell63" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.40699, -0.00175928, -3.71547e-09, -1.79143e-08, 1.09381e-08, 0.085, -0.00284138, 0.251994, -3.71547e-09, 10.3332, 8.83832, 224.736)
+
+[node name="Shelter-shell67" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.892, 0, 0, 0, 0.252, 0, 0, 0, 0.085, 17.3883, 16.5154, -0.264206)
+
+[node name="Shelter-shell64" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.40699, -0.00175928, -3.71547e-09, -1.79143e-08, 1.09381e-08, 0.085, -0.00284138, 0.251994, -3.71547e-09, 10.3332, 7.15777, 224.736)
+
+[node name="Shelter-shell48" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-0.00922861, 0.953979, 3.25854e-10, 1.37697, 0.00639368, -4.86196e-08, -2.07921e-07, 0, -0.322, 9.52308, 8.95437, -70.771)
+
+[node name="Shelter-shell33" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(1.91069e-15, -2.96, 4.37114e-08, -4.37114e-08, -1.29386e-07, -1, 1, 0, -4.37114e-08, 18, 26.9656, 160)
+
+[node name="Shelter-shell9" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.0321088, -1.4035e-09, -0.999484, 0.999484, -8.74003e-08, 0.0321088, -8.74002e-08, -1, -1.40352e-09, 29, 7.38384, 170)
+
+[node name="Shelter-shell34" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.0321088, -1.4035e-09, -0.999484, 0.999484, -8.74003e-08, 0.0321088, -8.74002e-08, -1, -1.40352e-09, 29, 20.0616, 170)
+
+[node name="Shelter-shell35" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.0321088, -1.4035e-09, -0.999484, 0.999484, -8.74003e-08, 0.0321088, -8.74002e-08, -1, -1.40352e-09, 29, 7.06159, 178.452)
+
+[node name="Shelter-shell36" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(0.0321088, -1.4035e-09, -0.999484, 4.37114e-08, 1, 1.22125e-15, 0.999484, -4.36889e-08, 0.0321088, 29, 5.06159, 189.236)
+
+[node name="Shelter-shell10" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 17, 6.38384, 225)
+
+[node name="Shelter-shell4" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(2.01, 0, 0, 0, -1.28949e-08, -3.06, 0, 0.295, -1.33757e-07, 24, 9.38384, 93)
+
+[node name="Shelter-shell18" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(2.01, 0, 0, 0, -1.28949e-08, -3.06, 0, 0.295, -1.33757e-07, 12.9709, 9.38384, 102.114)
+
+[node name="Shelter-shell29" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(1.65, 0, 0, 0, -1.05782e-08, -2.512, 0, 0.242, -1.09803e-07, 28.9709, 7.89904, 132.114)
+
+[node name="Shelter-shell30" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(1.045, 0, 0, 0, -1.05782e-08, -2.512, 0, 0.242, -1.09803e-07, 7.5872, 7.89904, 131.114)
+
+[node name="Shelter-shell31" parent="Decoration/Level_Layout" instance=ExtResource("24_tuedv")]
+transform = Transform3D(-1.90145e-08, -1.05782e-08, -6.397, -0.435, -1.05782e-08, 2.79622e-07, -1.90145e-08, 0.242, -2.79622e-07, 19.5872, 17.899, 132.114)
+
+[node name="Boundaries" type="Node3D" parent="Decoration"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -90.19)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Decoration/Boundaries"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Decoration/Boundaries/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.926, 30, 201.966)
+shape = SubResource("BoxShape3D_4n05p")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Decoration/Boundaries/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.074, 30, 201.966)
+shape = SubResource("BoxShape3D_4n05p")
+
+[node name="GlassRight" type="MeshInstance3D" parent="Decoration/Boundaries/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.926, 30, 201.966)
+material_override = SubResource("StandardMaterial3D_1h7t4")
+mesh = SubResource("BoxMesh_daqq0")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="GlassLeft" type="MeshInstance3D" parent="Decoration/Boundaries/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.2828, 30, 201.966)
+material_override = SubResource("StandardMaterial3D_1h7t4")
+mesh = SubResource("BoxMesh_daqq0")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="GlassBack" type="MeshInstance3D" parent="Decoration/Boundaries/StaticBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.2828, 30, 0.966003)
+visible = false
+material_override = SubResource("StandardMaterial3D_rt3n7")
+mesh = SubResource("BoxMesh_um4tb")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Decoration/Boundaries/StaticBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.2828, 30, 0.966003)
+shape = SubResource("ConvexPolygonShape3D_bog7w")
+disabled = true
+
+[node name="GlassFront" type="MeshInstance3D" parent="Decoration/Boundaries/StaticBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.2828, 30, 400.966)
+visible = false
+material_override = SubResource("StandardMaterial3D_rt3n7")
+mesh = SubResource("BoxMesh_um4tb")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Decoration/Boundaries/StaticBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.2828, 30, 400.966)
+visible = false
+shape = SubResource("ConvexPolygonShape3D_bog7w")
+disabled = true
+
+[node name="Boat" type="Node3D" parent="Decoration"]
+transform = Transform3D(4.785, 0, 0, 0, 4.785, 0, 0, 0, 4.785, 100.195, 43.29, -204.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Decoration/Boat"]
+transform = Transform3D(1, 0, 0, 0, 1.31134e-07, 1, 0, -1, 1.31134e-07, -6, -12, 1)
+material_override = SubResource("StandardMaterial3D_qdyh2")
+mesh = SubResource("CapsuleMesh_be6sj")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Decoration/Boat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -11, 3)
+material_override = SubResource("StandardMaterial3D_qdyh2")
+mesh = SubResource("CapsuleMesh_wrjsw")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Decoration/Boat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -11.7068, 1.77696)
+material_override = SubResource("StandardMaterial3D_qdyh2")
+mesh = SubResource("CapsuleMesh_wrjsw")
+
+[node name="tallBaseContainer" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15161, 0.169474, 7.85269)
+
+[node name="tallBase" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.35, 0)
+
+[node name="tallBase2" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 12.35, 0)
+
+[node name="tallBase3" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.35, 29.1089)
+
+[node name="tallBase4" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 12.35, 29.1089)
+
+[node name="tallBase5" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.35, 53)
+
+[node name="tallBase6" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 12.35, 53)
+
+[node name="tallBase7" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.35, 82.1089)
+
+[node name="tallBase8" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 12.35, 82.1089)
+
+[node name="tallBase9" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.35, 106)
+
+[node name="tallBase10" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 12.35, 106)
+
+[node name="tallBase11" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.35, 135.109)
+
+[node name="tallBase12" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 12.35, 135.109)
+
+[node name="tallBase13" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.35, 159)
+
+[node name="tallBase14" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 12.35, 159)
+
+[node name="tallBase15" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.35, 188.109)
+
+[node name="tallBase16" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 12.35, 188.109)
+
+[node name="tallBase17" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.805, 0)
+
+[node name="tallBase18" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 36.805, 0)
+
+[node name="tallBase19" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.805, 29.1089)
+
+[node name="tallBase20" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 36.805, 29.1089)
+
+[node name="tallBase21" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.805, 53)
+
+[node name="tallBase22" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 36.805, 53)
+
+[node name="tallBase23" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.805, 82.1089)
+
+[node name="tallBase24" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 36.805, 82.1089)
+
+[node name="tallBase25" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.805, 106)
+
+[node name="tallBase26" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 36.805, 106)
+
+[node name="tallBase27" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.805, 135.109)
+
+[node name="tallBase28" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 36.805, 135.109)
+
+[node name="tallBase29" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.805, 159)
+
+[node name="tallBase30" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 36.805, 159)
+
+[node name="tallBase31" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.805, 188.109)
+
+[node name="tallBase32" parent="tallBaseContainer" instance=ExtResource("5_m0nfb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7302, 36.805, 188.109)
+
+[node name="Lighting" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting"]
+environment = ExtResource("15_1crkf")
+
+[node name="sun" type="CSGSphere3D" parent="Lighting"]
+transform = Transform3D(1, -1.49012e-08, 2.98023e-08, 1.49012e-08, 1, 2.98023e-08, 0, 0, 1, 14.8643, 906.745, 1419.17)
+visible = false
+material_override = SubResource("StandardMaterial3D_vyyjy")
+radius = 12.0
+
+[node name="sun2" type="CSGSphere3D" parent="Lighting"]
+transform = Transform3D(1, -1.49012e-08, 4.4409e-16, 1.49012e-08, 1, 0, -4.4409e-16, 6.61747e-24, 1, -1071.76, 221.04, 772.705)
+material_override = SubResource("StandardMaterial3D_vyyjy")
+radius = 12.0
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="OasisSong" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("15_v41sl")
+volume_db = -6.0
+pitch_scale = 0.95
+autoplay = true
+
+[node name="WindSFX" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("16_ntl31")
+volume_db = -10.0
+autoplay = true
+
+[node name="DeathSFX" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("23_5688j")
+volume_db = -10.0
+
+[node name="openingSequence" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("23_i5xfk")
+
+[node name="Alternative" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("19_kb3j3")
+pitch_scale = 1.2
+
+[node name="ScreenFade" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="ScreenFade"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="body_entered" from="ShelterContainer/Shelter1/MusicStartArea" to="." method="_on_area_3d_body_entered"]
+
+[editable path="SensorContainer/SensorContainer/Sensor2"]
+[editable path="SensorContainer/SensorContainer/Sensor3"]
+[editable path="SensorContainer/SensorContainer/SensorEnd"]
+[editable path="ShelterContainer/Shelter1"]
+[editable path="ShelterContainer/ShelterB"]
+[editable path="Decoration/helicopter"]

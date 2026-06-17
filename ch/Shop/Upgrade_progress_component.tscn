@@ -1,0 +1,270 @@
+[gd_scene format=3 uid="uid://ck6lfy3kh3eqy"]
+
+[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="1_tmhd1"]
+[ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://unfiled/Themes/ammo_manager_theme.tres" id="2_v1a8s"]
+[ext_resource type="StyleBox" uid="uid://b0ho0ncfb085s" path="res://res/progress_bar_green.tres" id="3_ivrgr"]
+[ext_resource type="StyleBox" uid="uid://c4p7ad54klwn" path="res://res/progress_bar_no_progress.tres" id="4_ivrgr"]
+[ext_resource type="Script" uid="uid://i51mtvivb3yr" path="res://ch/Shop/GunUpgrade_Permanent.gd" id="5_nbtj3"]
+[ext_resource type="Script" uid="uid://drmqfnbqyvmps" path="res://ch/Shop/tooltip.gd" id="6_tcien"]
+[ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="7_b3it5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbtj3"]
+bg_color = Color(0.32, 0.32, 0.32, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.32, 0.2976, 0.22399999, 1)
+
+[node name="Button" type="Button" unique_id=173612620 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx")]
+custom_minimum_size = Vector2(120.715, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1604.0
+offset_bottom = -978.0
+grow_horizontal = 2
+grow_vertical = 2
+disabled = true
+script = ExtResource("5_nbtj3")
+upgrade_name_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/Label")
+progress_bar_container = NodePath("Upgrade_Permanent_button/Control/ProgressBar_container")
+purchase_progress_bar = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/PurchaseHoldProgressBar")
+tooltip = NodePath("Upgrade_Permanent_button/TolltipControl/Tooltip")
+description = "Test Description"
+focus_enter_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+focus_exit_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+cost_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/CostLabel")
+purchase_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+
+[node name="Upgrade_Permanent_button" type="HBoxContainer" parent="." unique_id=1277739787]
+custom_minimum_size = Vector2(50, 94.405)
+layout_mode = 0
+offset_right = 350.0
+offset_bottom = 100.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="Upgrade_Permanent_button" unique_id=1349711160]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ProgressBar_container" type="HBoxContainer" parent="Upgrade_Permanent_button/Control" unique_id=583839821]
+layout_mode = 0
+offset_top = 61.0
+offset_right = 316.0
+offset_bottom = 70.0
+mouse_filter = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=805487862]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="ProgressBar2" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=1801626517]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="ProgressBar3" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=561342716]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="ProgressBar4" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=1985430430]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="ProgressBar5" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=371260171]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="ProgressBar6" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=45759874]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="ProgressBar7" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=174953450]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="ProgressBar8" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=1305759628]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="ProgressBar9" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=632271123]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="ProgressBar10" type="ProgressBar" parent="Upgrade_Permanent_button/Control/ProgressBar_container" unique_id=146464698]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("4_ivrgr")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+show_percentage = false
+
+[node name="UpgradePanel" type="Panel" parent="Upgrade_Permanent_button/Control" unique_id=696861470]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 28.0
+offset_right = 314.0
+offset_bottom = 53.07
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+mouse_filter = 2
+theme = ExtResource("2_v1a8s")
+
+[node name="PurchaseHoldProgressBar" type="ProgressBar" parent="Upgrade_Permanent_button/Control/UpgradePanel" unique_id=380143476]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 1.0
+offset_right = 312.0
+offset_bottom = 25.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_nbtj3")
+theme_override_styles/fill = ExtResource("3_ivrgr")
+step = 1.0
+show_percentage = false
+
+[node name="Label" type="RichTextLabel" parent="Upgrade_Permanent_button/Control/UpgradePanel" unique_id=963885621]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0370961
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+theme = ExtResource("2_v1a8s")
+bbcode_enabled = true
+text = "[i] Scope Radius [/i]"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CostLabel" type="Label" parent="Upgrade_Permanent_button/Control/UpgradePanel" unique_id=1188717592]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="PowerLevel_label" type="Label" parent="Upgrade_Permanent_button/Control/UpgradePanel" unique_id=1782013562]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 44.0
+offset_right = 130.0
+offset_bottom = 72.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TolltipControl" type="Control" parent="Upgrade_Permanent_button" unique_id=957901245]
+visible = false
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Tooltip" type="PanelContainer" parent="Upgrade_Permanent_button/TolltipControl" unique_id=2083996572]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -53.0
+offset_right = 272.0
+offset_bottom = -77.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("6_tcien")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Upgrade_Permanent_button/TolltipControl/Tooltip" unique_id=1661605874]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control2" type="Control" parent="Upgrade_Permanent_button" unique_id=1293651331]
+z_index = 339
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Tooltip" type="PanelContainer" parent="Upgrade_Permanent_button/Control2" unique_id=1726632803]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.015, 1.015)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="Upgrade_Permanent_button/Control2/Tooltip" unique_id=2132094383]
+modulate = Color(1, 0.78039217, 0, 1)
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("1_tmhd1")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="Upgrade_Permanent_button" unique_id=248242240]
+stream = ExtResource("7_b3it5")
+volume_db = -37.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="Upgrade_Permanent_button" unique_id=992727905]
+stream = ExtResource("7_b3it5")
+volume_db = -50.0
+pitch_scale = 0.9

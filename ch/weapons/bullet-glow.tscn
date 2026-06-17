@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://bj5uwlh0ibvg2"]
+
+[ext_resource type="Script" uid="uid://dynbxeel12v73" path="res://unfiled/bullet-glow.gd" id="1_vx5dx"]
+[ext_resource type="Script" uid="uid://bwlrctgnumck2" path="res://unfiled/bullet_tracer.gd" id="2_1wrbo"]
+
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f6h0v"]
+radius = 0.16
+height = 0.444
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_872kd"]
+albedo_color = Color(0.368627, 0.368627, 0.368627, 1)
+emission_enabled = true
+emission = Color(0.929412, 0.870588, 0, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_8qda6"]
+radius = 0.04
+height = 0.25
+
+[node name="bullet" type="RigidBody3D" groups=["bullet"]]
+rotation_edit_mode = 2
+collision_layer = 7
+collision_mask = 7
+mass = 2.0
+center_of_mass_mode = 1
+gravity_scale = 0.1
+continuous_cd = true
+can_sleep = false
+script = ExtResource("1_vx5dx")
+
+[node name="BulletGlow" type="CollisionShape3D" parent="."]
+process_priority = 100
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_f6h0v")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_872kd")
+mesh = SubResource("CapsuleMesh_8qda6")
+
+[node name="Timer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+enabled = false
+target_position = Vector3(0, 0, 20)
+collide_with_areas = true
+debug_shape_custom_color = Color(0.898039, 0, 0.870588, 1)
+
+[node name="BulletTracer" type="MeshInstance3D" parent="."]
+script = ExtResource("2_1wrbo")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

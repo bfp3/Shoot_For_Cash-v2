@@ -1,0 +1,557 @@
+[gd_scene format=3 uid="uid://ckf0v7lvr2jqy"]
+
+[ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://unfiled/Themes/ammo_manager_theme.tres" id="1_r6tfx"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="2_0ryko"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="3_npedy"]
+
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n75le"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_myl1f"]
+font_size = 35
+font_color = Color(0.73, 0.73, 0.73, 0.431373)
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[sub_resource type="LabelSettings" id="LabelSettings_j58se"]
+font_size = 15
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n75le"]
+bg_color = Color(1, 0.353333, 0.03, 1)
+draw_center = false
+skew = Vector2(0.1, 0)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_detail = 3
+shadow_color = Color(0, 0, 0, 0.207843)
+shadow_size = 2
+shadow_offset = Vector2(-5.05, 4.835)
+anti_aliasing = false
+
+[sub_resource type="Theme" id="Theme_4nra6"]
+Panel/styles/panel = SubResource("StyleBoxFlat_n75le")
+
+[sub_resource type="Theme" id="Theme_d7tms"]
+Panel/styles/panel = SubResource("StyleBoxFlat_n75le")
+
+[node name="Ammo_ver_3" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 1038)
+
+[node name="Ammo_sub_control" type="Control" parent="."]
+custom_minimum_size = Vector2(220, 80)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -83.0
+offset_right = 220.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(220, 40)
+
+[node name="Panel" type="PanelContainer" parent="Ammo_sub_control"]
+custom_minimum_size = Vector2(220, 76)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = 2.0
+offset_right = -3.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(214, 38)
+theme = ExtResource("1_r6tfx")
+
+[node name="MarginContainer" type="MarginContainer" parent="Ammo_sub_control/Panel"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Ammo_sub_control/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_n75le")
+
+[node name="Number_display" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(82, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Number_display"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="bullets_remaining2" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Number_display/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.1
+
+[node name="Ammo_panel" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Number_display/VBoxContainer/bullets_remaining2"]
+modulate = Color(1, 1, 1, 0.517647)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -2.87135
+anchor_top = 0.276596
+anchor_right = -2.31038
+anchor_bottom = 1.04255
+offset_left = 264.451
+offset_right = 269.451
+offset_bottom = 0.999998
+theme = ExtResource("1_r6tfx")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Number_display/VBoxContainer/bullets_remaining2/Ammo_panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+
+[node name="ammo_label" type="Label" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Number_display/VBoxContainer/bullets_remaining2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -2.73538
+anchor_top = 0.212766
+anchor_right = -2.24757
+anchor_bottom = 0.212766
+offset_left = 258.301
+offset_right = 258.301
+offset_bottom = 49.0
+text = "06"
+label_settings = SubResource("LabelSettings_myl1f")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Number_display/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.6
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining_label" type="Label" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Number_display/VBoxContainer/bullets_remaining"]
+modulate = Color(0.729412, 0.729412, 0.729412, 0.431373)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -28.55
+offset_top = -14.355
+offset_right = -5.55
+offset_bottom = 13.645
+grow_horizontal = 0
+grow_vertical = 2
+pivot_offset = Vector2(11.5, 14)
+text = "18"
+label_settings = SubResource("LabelSettings_j58se")
+horizontal_alignment = 1
+
+[node name="Ammo_panel" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Number_display/VBoxContainer/bullets_remaining"]
+visible = false
+modulate = Color(1, 1, 1, 0.517647)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.353659
+anchor_top = 0.0365958
+anchor_right = 0.97561
+anchor_bottom = 0.842553
+offset_bottom = 0.245066
+theme = ExtResource("1_r6tfx")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Number_display/VBoxContainer/bullets_remaining/Ammo_panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+
+[node name="VSeparator2" type="VSeparator" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_n75le")
+
+[node name="Bullets_display" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 102.8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 10.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Ammo_loaded" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_stretch_ratio = 197.4
+
+[node name="PanelContainer" type="PanelContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Ammo_loaded"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.441
+anchor_top = 0.487
+anchor_right = 0.442
+anchor_bottom = 0.487
+offset_left = -99.548
+offset_top = -23.48
+offset_right = 92.224
+offset_bottom = 25.52
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.735)
+pivot_offset = Vector2(100, 26)
+theme = ExtResource("1_r6tfx")
+
+[node name="MarginContainer" type="MarginContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Ammo_loaded/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Ammo_loaded/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="ammo_unit" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Ammo_loaded/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 2
+theme = SubResource("Theme_4nra6")
+
+[node name="ammo_unit2" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Ammo_loaded/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 2
+theme = SubResource("Theme_4nra6")
+
+[node name="ammo_unit3" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Ammo_loaded/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 2
+theme = SubResource("Theme_4nra6")
+
+[node name="ammo_unit4" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Ammo_loaded/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 2
+theme = SubResource("Theme_4nra6")
+
+[node name="ammo_unit5" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Ammo_loaded/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 2
+theme = SubResource("Theme_4nra6")
+
+[node name="ammo_unit6" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Ammo_loaded/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 2
+theme = SubResource("Theme_4nra6")
+
+[node name="Reserve_ammo" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer"]
+modulate = Color(1, 1, 1, 0.215686)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.00438596
+anchor_top = -0.08225
+anchor_right = 0.846491
+anchor_bottom = 0.375625
+offset_top = -3.71
+offset_bottom = 3.975
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.735)
+pivot_offset = Vector2(95, 14)
+theme = ExtResource("1_r6tfx")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="ammo_unit" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit2" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit3" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit4" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit5" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit6" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit7" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit8" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit9" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit10" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit11" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit12" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit13" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit14" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit15" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit16" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit17" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="ammo_unit18" type="Panel" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/Bullets_display/VBoxContainer/Reserve_ammo/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme = SubResource("Theme_d7tms")
+
+[node name="VSeparator3" type="VSeparator" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_n75le")
+
+[node name="HUD_ilght_main" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_stretch_ratio = 27.35
+
+[node name="HUD_Light_Control" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_ilght_main"]
+modulate = Color(1, 1, 1, 0.0823529)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -33.0
+offset_top = -26.0
+offset_right = 17.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Light" type="TextureRect" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_ilght_main/HUD_Light_Control"]
+modulate = Color(0.44, 0.44, 0.44, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("2_0ryko")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_ilght_main/HUD_Light_Control"]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("3_npedy")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_ilght_main/HUD_Light_Control"]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.04
+anchor_top = -0.02
+anchor_right = 1.1
+anchor_bottom = 1.08
+offset_left = 2.0
+offset_top = 1.0
+offset_bottom = -3.565
+pivot_offset = Vector2(27, 25)
+texture = ExtResource("3_npedy")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light4" type="TextureRect" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_ilght_main/HUD_Light_Control"]
+visible = false
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.2, 0.2)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("3_npedy")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Pulse" type="TextureRect" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_ilght_main/HUD_Light_Control"]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.00134277
+offset_bottom = -0.000732422
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("3_npedy")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="HUD_light_mini_shot" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="HUD_Light_Control" type="Control" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_light_mini_shot"]
+modulate = Color(1, 1, 1, 0.0823529)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_right = -10.0
+offset_bottom = -33.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset = Vector2(20, 20)
+
+[node name="Light" type="TextureRect" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_light_mini_shot/HUD_Light_Control"]
+modulate = Color(0.44, 0.44, 0.44, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("2_0ryko")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_light_mini_shot/HUD_Light_Control"]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("3_npedy")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_light_mini_shot/HUD_Light_Control"]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.925, 0.925)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("3_npedy")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light4" type="TextureRect" parent="Ammo_sub_control/Panel/MarginContainer/HBoxContainer/HUD_light_mini_shot/HUD_Light_Control"]
+visible = false
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.2, 0.2)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("3_npedy")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true

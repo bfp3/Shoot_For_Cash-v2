@@ -1,0 +1,1572 @@
+[gd_scene format=3 uid="uid://dnp4avescdsoy"]
+
+[ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://unfiled/Themes/ammo_manager_theme.tres" id="1_c1a6s"]
+[ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="2_nafsb"]
+[ext_resource type="Script" uid="uid://h0bbd0et1xy0" path="res://lib/Pineapples_display_intro/Scripts/dots_phase.gd" id="3_uu7y1"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="4_m8lfi"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="5_xwmel"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="6_tee84"]
+[ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="7_pwuj8"]
+[ext_resource type="AudioStream" uid="uid://bmmratmawbv6y" path="res://sfx/sfx_dot_1.wav" id="8_fxk0r"]
+[ext_resource type="AudioStream" uid="uid://cflwuwauqncrs" path="res://sfx/popper-grr-002.wav" id="9_8c14f"]
+[ext_resource type="AudioStream" uid="uid://dw8m2vyhfcrhu" path="res://sfx/pineapple_sound_2.wav" id="10_jphf2"]
+[ext_resource type="AudioStream" uid="uid://c7xko6f6va2gy" path="res://sfx/popper-angry-001.wav" id="11_5myao"]
+[ext_resource type="AudioStream" uid="uid://cydvvxw2pq66a" path="res://sfx/pineapple_shake_1.wav" id="12_t833c"]
+
+
+[sub_resource type="GDScript" id="GDScript_7rylr"]
+script/source = "extends Control
+
+@onready var ring_duplicate: Control = $Ring_duplicate
+
+@onready var pineapple: TextureRect = $PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer/MarginContainer/TextureRect
+@onready var pineapple_2: TextureRect = $PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer/MarginContainer/TextureRect
+@onready var pineapple_3: TextureRect = $PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer/MarginContainer/TextureRect
+
+@onready var pineapple_panel: PanelContainer = $PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer
+@onready var pineapple_panel_2: PanelContainer = $PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer
+@onready var pineapple_panel_3: PanelContainer = $PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer
+@onready var color_rect: ColorRect = $ColorRect
+@onready var text_box: Control = $Text_box
+
+@export var colour_bronze = Color('854505e6')
+@export var colour_silver = Color('bdbdbd99') 
+@export var colour_gold = Color('f5d50a') 
+
+signal finished_display
+
+
+func _ready() -> void:
+	
+	pineapple.modulate = Color('000000')
+	pineapple_2.modulate = Color('000000')
+	pineapple_3.modulate = Color('000000')
+	
+	pineapple_panel.modulate = Color('FFFFFF00')
+	pineapple_panel_2.modulate = Color('FFFFFF00')
+	pineapple_panel_3.modulate = Color('FFFFFF00')
+	
+	#self.modulate = Color('FFFFFF00')
+	$PanelContainer.modulate = Color('FFFFFF00')
+	
+	
+	#$Dots_phase2.first_phase()
+	first_phase()
+	
+	
+
+func first_phase() -> void:
+	$Dots_phase.start_dots_phase()
+	#await get_tree().create_timer(0.5).timeout
+	second_phase()
+	
+func second_phase() -> void:
+	
+	var tween = create_tween().set_ease(Tween.EASE_IN)
+	
+	tween.tween_property($PanelContainer, \"modulate\", Color('FFFFFF'), 0.5)
+	tween.parallel().tween_property($SFX/Panel_fade_in, \"playing\", true, 0.01)
+	
+	#tween.tween_interval(1.0)
+	#tween.tween_interval(0.5)
+	
+	#tween.tween_property(pineapple_panel, \"modulate\", Color('FFFFFF'), 0.25)
+	#tween.parallel().tween_property($SFX/Pineapple_1, \"playing\", true, 0.01)
+	#
+	#tween.tween_property(pineapple_panel_2, \"modulate\", Color('FFFFFF'), 0.25)
+	#tween.parallel().tween_property($SFX/Pineapple_2, \"playing\", true, 0.01)
+	#
+	#tween.tween_property(pineapple_panel_3, \"modulate\", Color('FFFFFF'), 0.25)
+	#tween.parallel().tween_property($SFX/Pineapple_3, \"playing\", true, 0.01)
+	await tween.finished
+	
+	#pineapple_panel.modulate = Color('FFFFFF')
+	#pineapple_panel_2.modulate = Color('FFFFFF')
+	#pineapple_panel_3.modulate = Color('FFFFFF')
+	
+	third_phase()
+	
+func third_phase() -> void:
+	#await get_tree().create_timer(0.25).timeout
+	shake_pineapple(pineapple)
+	shake_pineapple(pineapple_2)
+	shake_pineapple(pineapple_3)
+	#await get_tree().create_timer(0.5).timeout
+	#create_rings_during_shake(pineapple, 1, colour_bronze, 0.25)
+	#await get_tree().create_timer(0.25).timeout
+	#shake_pineapple(pineapple_2)
+	#await get_tree().create_timer(0.5).timeout
+	#create_rings_during_shake(pineapple_2, 1, colour_silver, 0.25)
+	#await get_tree().create_timer(0.35).timeout
+	#shake_pineapple(pineapple_3)
+	#await get_tree().create_timer(0.5).timeout
+	#create_rings_during_shake(pineapple_3, 1, colour_gold, 0.25)
+	
+	#await get_tree().create_timer(2.0).timeout
+	
+	#hide_pineapples()
+
+func create_rings_during_shake(pineapple_target : Control, amount_of_rings : int, start_colour : Color, dur : float) -> void:
+	return
+	for i in range(amount_of_rings):
+		var ring = ring_duplicate.duplicate()
+		add_child(ring)
+		ring.show()
+		ring.scale = Vector2.ONE * 3
+		ring.modulate = start_colour
+		ring.pivot_offset = ring.size / 2
+		ring.global_position = pineapple_target.global_position
+		var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(ring, \"modulate\", Color('FFFFFF00'), dur)
+		tween.parallel().tween_property(ring, \"scale\", Vector2.ONE * 6, dur)
+		tween.tween_callback(ring.queue_free)
+		await tween.finished
+
+
+func shake_pineapple(target_pineapple : TextureRect) -> void:	
+	
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	#tween.tween_interval(0.5)
+	tween.tween_property($SFX/Pine_shake_1, \"playing\", true, 0.01).set_delay(0.25)
+	tween.tween_callback(change_modulate.bind(target_pineapple))
+	#tween.tween_interval(1.0)
+	tween.tween_property(target_pineapple, \"rotation\", -0.05, 0.1)
+	tween.tween_property(target_pineapple, \"rotation\", 0.05, 0.1)
+	tween.tween_property(target_pineapple, \"rotation\", -0.05, 0.12)
+	tween.tween_property(target_pineapple, \"rotation\", 0.05, 0.15)
+	tween.tween_property(target_pineapple, \"rotation\", -0.05, 0.12)
+	#tween.tween_property(target_pineapple, \"rotation\", 0.05, 0.12)
+	#tween.tween_property(target_pineapple, \"rotation\", -0.05, 0.12)
+	tween.tween_property(target_pineapple, \"rotation\", 0.0, 0.15)
+	tween.tween_interval(0.25)
+	await tween.finished
+	hide_pineapples()
+	return
+	
+	
+	tween.tween_property(target_pineapple, \"rotation\", -0.05, 0.1)
+	tween.tween_property(target_pineapple, \"rotation\", 0.05, 0.15)
+	tween.tween_property(target_pineapple, \"rotation\", -0.05, 0.12)
+	tween.tween_property(target_pineapple, \"rotation\", 0.05, 0.12)
+	tween.tween_property(target_pineapple, \"rotation\", -0.05, 0.12)
+	tween.tween_property(target_pineapple, \"rotation\", 0.0, 0.15)
+	await tween.finished
+
+func change_modulate(target_pineapple : TextureRect) -> void:
+	var dur : float = 0.25
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT)
+	#tween.tween_interval(dur)
+	tween.tween_property(target_pineapple, \"modulate\", Color('FFFFFF'), dur)
+	tween.parallel().tween_property(target_pineapple.get_parent().get_parent(), \"modulate\", Color('FFFFFF'), dur)
+	tween.tween_interval(dur)
+	#tween.tween_property(target_pineapple, \"modulate\", Color('FFFFFF00'), dur)
+	#tween.parallel().tween_property(target_pineapple.get_parent().get_parent(), \"modulate\", Color('FFFFFF00'), dur)
+	await tween.finished
+	
+func hide_pineapples() -> void:
+	var dur : float = 0.5
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT)
+	
+	#tween.tween_interval(0.5)
+	tween.tween_callback($Dots_phase.fade_dots_phase)
+	tween.tween_interval(0.25)
+	tween.tween_callback(smoke_particles)
+	tween.tween_property(pineapple, \"modulate\", Color('FFFFFF00'), dur)
+	tween.parallel().tween_property(pineapple_2, \"modulate\", Color('FFFFFF00'), dur)
+	tween.parallel().tween_property(pineapple_3, \"modulate\", Color('FFFFFF00'), dur)
+
+	tween.parallel().tween_property(pineapple_panel, \"modulate\", Color('FFFFFF00'), dur)
+	tween.parallel().tween_property(pineapple_panel_2, \"modulate\", Color('FFFFFF00'), dur)
+	tween.parallel().tween_property(pineapple_panel_3, \"modulate\", Color('FFFFFF00'), dur)
+	#tween.tween_interval(0.2)
+	#tween.tween_callback($Dots_phase.fade_dots_phase)
+	#tween.tween_interval(0.3)
+	#tween.tween_callback(smoke_particles)
+	
+	
+	# Fade out whole UI
+	tween.tween_property($PanelContainer, \"modulate\", Color('FFFFFF00'), 0.25)
+	
+	#tween.parallel().tween_property($SFX/Panel_fade_in2, \"playing\", true, 0.01)
+	
+	#tween.tween_interval(1.5)
+	#
+	#tween.tween_callback(text_box.display_text)
+	#tween.tween_interval(1.0)
+	tween.tween_callback(emit_finished) #.set_delay(1.5)
+	
+	tween.tween_interval(1.5)
+	tween.parallel().tween_property($ColorRect, \"modulate\", Color('00000000'), 1.5)
+	
+	
+	tween.tween_interval(1.0)
+	await tween.finished
+	
+	#await get_tree().create_timer(10.0).timeout
+	#self.queue_free()
+	
+	
+func smoke_particles() -> void:
+	var array_of_smoke : Array= [$Smoke_sprite, $Smoke_sprite2, $Smoke_sprite3]
+	
+	$Smoke_sprite.show()
+	$Smoke_sprite2.show()
+	$Smoke_sprite3.show()
+	
+	$Smoke_sprite.play(\"default\")
+	$Smoke_sprite2.play(\"default\")
+	$Smoke_sprite3.play(\"default\")
+	
+	await $Smoke_sprite3.animation_finished
+	
+	for i in array_of_smoke:
+		var tween = create_tween()
+		tween.tween_property(i, \"modulate\", Color('FFFFFF00'), 0.25).set_ease(Tween.EASE_OUT)
+		
+func emit_finished() -> void:
+	finished_display.emit()
+"
+
+[sub_resource type="GDScript" id="GDScript_sr0ha"]
+script/source = "extends Control
+
+const SFX_DOT_1 = preload(\"res://400_sounds/SFX_pineapple_intro/sfx_dot_1.wav\")
+const SFX_DOT_2 = preload(\"res://400_sounds/SFX_pineapple_intro/sfx_dot_2.wav\")
+const SFX_DOT_3 = preload(\"res://400_sounds/SFX_pineapple_intro/sfx_dot_3.wav\")
+
+@onready var sfx: Node = $\"../SFX\"
+
+@onready var dot: Control = $Dot
+@onready var dot_2: Control = $Dot2
+@onready var dot_3: Control = $Dot3
+
+func colour_outline() -> void:
+	var colour = Color('f5e10a82')
+	
+	$Dot/Outline.modulate = colour
+	$Dot2/Outline.modulate = colour
+	$Dot3/Outline.modulate = colour
+
+func _ready() -> void:
+	#
+	#colour_outline()
+	#
+	#modulate = Color('FFFFFF00')
+	dot.modulate = Color('FFFFFF00')
+	dot_2.modulate = Color('FFFFFF00')
+	dot_3.modulate = Color('FFFFFF00')
+	#
+	dot.scale = Vector2.ONE * 3
+	dot_2.scale = Vector2.ONE * 3
+	dot_3.scale = Vector2.ONE * 3
+
+	$Smoke_sprite.hide()
+
+func first_phase() -> void:
+	modulate = Color('FFFFFF')
+	
+	await get_tree().create_timer(0.6).timeout
+	#$\"../SFX/Telegraph_sound\".play()
+	
+	fade_in_tween(dot_2)
+	sfx.play_sound(SFX_DOT_2)
+	await get_tree().create_timer(1.0).timeout
+	$Smoke_sprite.show()
+	$Smoke_sprite.play(\"default\")
+	separate_tween_left()
+	sfx.play_sound(SFX_DOT_1)
+	separate_tween_right()
+	sfx.play_sound(SFX_DOT_3)
+	
+	#await get_tree().create_timer(1.1).timeout
+	
+
+func separate_tween_left() -> void:
+	
+	var new_dot = dot_2.duplicate()
+	add_child(new_dot)
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(new_dot, \"modulate\", Color('FFFFFF'), 0.25)
+	tween.parallel().tween_property(new_dot, \"position\", dot.position, 0.5)
+	await tween.finished
+	$Smoke_sprite2.show()
+	$Smoke_sprite2.play(\"default\")
+	
+func fade_out_tween() -> void:
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, \"modulate\", Color('FFFFFF00'), 0.5)
+	await tween.finished
+	#finished()
+
+func separate_tween_right() -> void:
+	
+	var new_dot = dot_2.duplicate()
+	add_child(new_dot)
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(new_dot, \"modulate\", Color('FFFFFF'), 0.25)
+	tween.parallel().tween_property(new_dot, \"position\", dot_3.position, 0.5)
+	await tween.finished
+	$Smoke_sprite3.show()
+	$Smoke_sprite3.play(\"default\")
+	finished()
+	
+func fade_in_tween(current_dot : Control) -> void:
+	
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(current_dot, \"modulate\", Color('FFFFFF'), 0.25)
+	tween.parallel().tween_property(current_dot, \"scale\", Vector2.ONE * 1.0, 0.25)
+
+	await tween.finished
+
+
+func finished() -> void:
+	$\"..\".first_phase()
+	await get_tree().create_timer(0.5).timeout
+	fade_out_tween()
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pjr7p"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(0, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fwom1"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(256, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_njqvu"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(512, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f4e35"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(768, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_najge"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1024, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7djja"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1280, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jwjil"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1536, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_21td1"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1792, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sx5lq"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(0, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fxp3v"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(256, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tfsrt"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(512, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0y201"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(768, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lqu3s"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1024, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ovynx"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1280, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l5bf8"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1536, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ocfye"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1792, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1rkw2"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(0, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p2ekq"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(256, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5mjfc"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(512, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6em1o"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(768, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4r7iv"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1024, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fdwgb"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1280, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8f7m"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1536, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3re1u"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1792, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_elayt"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(0, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q8dml"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(256, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6f3wf"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(512, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1x2f6"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(768, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tbqfv"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1024, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n7bn6"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1280, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_noxmv"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1536, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ufd6t"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1792, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pckq1"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(0, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ixouq"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(256, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3odal"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(512, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a5s3f"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(768, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4nep"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1024, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uv31i"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1280, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xwkb8"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1536, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b7ova"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1792, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a246o"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(0, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sqt5b"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(256, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4mrk"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(512, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qybrd"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(768, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vamqy"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1024, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q0x4i"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1280, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y1gg3"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1536, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0tfl8"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1792, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ogfc5"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(0, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7dtul"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(256, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tka44"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(512, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_buijp"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(768, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k50et"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1024, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5gjux"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1280, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1mow"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1536, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5f5q3"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1792, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_net0u"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(0, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gcoqv"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(256, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bc7w4"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(512, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sryyf"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(768, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k7mc0"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1024, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1i3wg"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1280, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ryskl"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1536, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ojg18"]
+atlas = ExtResource("7_pwuj8")
+region = Rect2(1792, 1792, 256, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w5jrr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pjr7p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fwom1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_njqvu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f4e35")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_najge")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7djja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jwjil")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_21td1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sx5lq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fxp3v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tfsrt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0y201")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lqu3s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ovynx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l5bf8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ocfye")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1rkw2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p2ekq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5mjfc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6em1o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4r7iv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fdwgb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j8f7m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3re1u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_elayt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q8dml")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6f3wf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1x2f6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tbqfv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n7bn6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_noxmv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ufd6t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pckq1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ixouq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3odal")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a5s3f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e4nep")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uv31i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xwkb8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b7ova")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a246o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sqt5b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e4mrk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qybrd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vamqy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q0x4i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y1gg3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0tfl8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ogfc5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7dtul")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tka44")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_buijp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k50et")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5gjux")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1mow")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5f5q3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_net0u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gcoqv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bc7w4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sryyf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k7mc0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1i3wg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ryskl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ojg18")
+}],
+"loop": false,
+"name": &"default",
+"speed": 60.0
+}]
+
+[sub_resource type="GDScript" id="GDScript_smwuq"]
+script/source = "extends Node
+
+func play_sound(audio : AudioStream) -> void:
+	#return
+	CommonCode.play_sound_instance(audio, -40.0)
+"
+
+[sub_resource type="GDScript" id="GDScript_qq3yi"]
+resource_name = "text_box"
+script/source = "extends Control
+@onready var label: Label = $PanelContainer/MarginContainer/Control/Label
+@onready var sfx: AudioStreamPlayer = $PanelContainer/MarginContainer/Control/SFX
+@onready var sfx_2: AudioStreamPlayer = $PanelContainer/MarginContainer/Control/SFX2
+
+func _ready() -> void:
+	modulate = Color.TRANSPARENT
+	label.scale = Vector2.ZERO
+	
+func display_text() -> void:
+	
+	var dur : float = 0.25
+	
+	#sfx.play()
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, \"modulate\", Color('FFFFFF'), dur)
+	tween.parallel().tween_property(label, \"scale\", Vector2.ONE * 1.15, dur)
+	tween.tween_property(label, \"scale\", Vector2.ONE, dur)
+	tween.tween_interval(dur)
+	await tween.finished
+	hide_text()
+	
+func hide_text() -> void:
+	var dur : float = 0.5
+	
+	#sfx_2.play()
+	
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(label, \"scale\", Vector2.ONE * 1.15, dur)
+	tween.tween_property($PanelContainer, \"modulate\", Color('FFFFFF00'), dur)
+	tween.parallel().tween_property(label, \"scale\", Vector2.ZERO, dur)
+	tween.parallel().tween_callback(smoke_particles)
+	tween.tween_interval(0.25)
+	await tween.finished
+	
+func smoke_particles() -> void:
+	$Smoke_sprite.show()
+	$Smoke_sprite.play('default')
+	#await $Smoke_sprite.animation_finished
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property($Smoke_sprite, \"scale\", Vector2.ONE * 6, 5.0)
+	tween.parallel().tween_property($Smoke_sprite, \"modulate\", Color.TRANSPARENT, 5.0)
+	#tween.tween_interval(0.75)
+	#tween.tween_property($Smoke_sprite, \"modulate\", Color.TRANSPARENT, 1.0)
+	await tween.finished
+	if self != null:
+		self.queue_free()
+"
+
+[node name="Show_prize_short_version" type="Control"]
+z_index = 2
+layout_mode = 3
+anchor_left = 0.85
+anchor_top = 0.689
+anchor_right = 0.85
+anchor_bottom = 0.689
+offset_left = -960.0
+offset_top = -536.12
+offset_right = 960.0
+offset_bottom = 543.88
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(960, 540)
+script = SubResource("GDScript_7rylr")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -111.0
+offset_top = -31.0
+offset_right = 111.0
+offset_bottom = 31.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+pivot_offset = Vector2(120, 41)
+theme = ExtResource("1_c1a6s")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Pineapple" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.05
+anchor_bottom = 1.05
+offset_right = -37.0
+offset_bottom = -80.963
+pivot_offset = Vector2(21, 21)
+theme = ExtResource("1_c1a6s")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer/MarginContainer"]
+z_index = 1
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("2_nafsb")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Pineapple2" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.05
+anchor_bottom = 1.05
+offset_right = -37.0
+offset_bottom = -80.963
+pivot_offset = Vector2(21, 21)
+theme = ExtResource("1_c1a6s")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer/MarginContainer"]
+z_index = 1
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("2_nafsb")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Pineapple3" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.05
+anchor_bottom = 1.05
+offset_right = -37.0
+offset_bottom = -80.963
+pivot_offset = Vector2(20, 20)
+theme = ExtResource("1_c1a6s")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer/MarginContainer"]
+z_index = 1
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("2_nafsb")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Dots_phase" type="Control" parent="."]
+modulate = Color(0.96, 0.8832, 0.0384, 0.509804)
+custom_minimum_size = Vector2(210, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -36.0
+offset_right = 82.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+pivot_offset = Vector2(100, 20)
+script = ExtResource("3_uu7y1")
+colour_bronze = Color(0.52, 0.2704, 0.0208, 0.901961)
+colour_silver = Color(0.74, 0.74, 0.74, 1)
+colour_gold = Color(0.96, 0.83712, 0.0384, 1)
+
+[node name="Dot" type="Control" parent="Dots_phase"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -20.0
+offset_right = -60.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Circle" type="TextureRect" parent="Dots_phase/Dot"]
+modulate = Color(1, 1, 1, 0.117647)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("4_m8lfi")
+expand_mode = 1
+
+[node name="Outline" type="TextureRect" parent="Dots_phase/Dot"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Outline2" type="TextureRect" parent="Dots_phase/Dot"]
+modulate = Color(0.3, 0.3, 0.3, 0.368627)
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Dot2" type="Control" parent="Dots_phase"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Circle" type="TextureRect" parent="Dots_phase/Dot2"]
+modulate = Color(1, 1, 1, 0.117647)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("4_m8lfi")
+expand_mode = 1
+
+[node name="Outline" type="TextureRect" parent="Dots_phase/Dot2"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Outline2" type="TextureRect" parent="Dots_phase/Dot2"]
+modulate = Color(0.3, 0.3, 0.3, 0.368627)
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Dot3" type="Control" parent="Dots_phase"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 60.0
+offset_top = -20.0
+offset_right = 100.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Background_glow" type="TextureRect" parent="Dots_phase/Dot3"]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2.485, 2.485)
+pivot_offset = Vector2(25, 25)
+texture = ExtResource("6_tee84")
+expand_mode = 1
+
+[node name="Background_glow2" type="TextureRect" parent="Dots_phase/Dot3"]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.785398
+scale = Vector2(2.485, 2.485)
+pivot_offset = Vector2(25, 25)
+texture = ExtResource("6_tee84")
+expand_mode = 1
+
+[node name="Circle" type="TextureRect" parent="Dots_phase/Dot3"]
+modulate = Color(1, 1, 1, 0.117647)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("4_m8lfi")
+expand_mode = 1
+
+[node name="Outline" type="TextureRect" parent="Dots_phase/Dot3"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.5
+offset_top = -22.1667
+offset_right = 22.5
+offset_bottom = 22.8333
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Outline2" type="TextureRect" parent="Dots_phase/Dot3"]
+modulate = Color(0.3, 0.3, 0.3, 0.368627)
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Dots_phase2" type="Control" parent="."]
+modulate = Color(0.96, 0.8832, 0.0384, 0.509804)
+custom_minimum_size = Vector2(210, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -36.0
+offset_right = 82.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+pivot_offset = Vector2(100, 20)
+script = SubResource("GDScript_sr0ha")
+
+[node name="Dot" type="Control" parent="Dots_phase2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -20.0
+offset_right = -60.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Outline" type="TextureRect" parent="Dots_phase2/Dot"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Dot2" type="Control" parent="Dots_phase2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Outline" type="TextureRect" parent="Dots_phase2/Dot2"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Dot3" type="Control" parent="Dots_phase2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 60.0
+offset_top = -20.0
+offset_right = 100.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Outline" type="TextureRect" parent="Dots_phase2/Dot3"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Smoke_sprite" type="AnimatedSprite2D" parent="Dots_phase2"]
+visible = false
+position = Vector2(104.667, 21.3333)
+scale = Vector2(0.72, 0.72)
+sprite_frames = SubResource("SpriteFrames_w5jrr")
+speed_scale = 0.5
+
+[node name="Smoke_sprite2" type="AnimatedSprite2D" parent="Dots_phase2"]
+visible = false
+position = Vector2(24.6666, 21.3333)
+scale = Vector2(0.72, 0.72)
+sprite_frames = SubResource("SpriteFrames_w5jrr")
+speed_scale = 0.5
+
+[node name="Smoke_sprite3" type="AnimatedSprite2D" parent="Dots_phase2"]
+visible = false
+position = Vector2(185.333, 21.3333)
+scale = Vector2(0.72, 0.72)
+sprite_frames = SubResource("SpriteFrames_w5jrr")
+speed_scale = 0.5
+
+[node name="SFX" type="Node" parent="."]
+script = SubResource("GDScript_smwuq")
+
+[node name="Telegraph_sound" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("8_fxk0r")
+volume_db = -30.0
+
+[node name="Panel_fade_in2" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("8_fxk0r")
+volume_db = -40.0
+pitch_scale = 0.5
+
+[node name="Pineapple_1" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("9_8c14f")
+volume_db = -30.0
+
+[node name="Pineapple_2" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("10_jphf2")
+volume_db = -30.0
+
+[node name="Pineapple_3" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("11_5myao")
+volume_db = -30.0
+
+[node name="Pineapple_4" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("11_5myao")
+volume_db = -28.0
+pitch_scale = 0.8
+
+[node name="Pine_shake_1" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("12_t833c")
+volume_db = -44.0
+pitch_scale = 0.8
+
+[node name="Text_box" type="Control" parent="."]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 20)
+script = SubResource("GDScript_qq3yi")
+
+[node name="PanelContainer" type="PanelContainer" parent="Text_box"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 20)
+theme = ExtResource("1_c1a6s")
+
+[node name="MarginContainer" type="MarginContainer" parent="Text_box/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+
+[node name="Control" type="Control" parent="Text_box/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Text_box/PanelContainer/MarginContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 20)
+text = "Good luck."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SFX" type="AudioStreamPlayer" parent="Text_box/PanelContainer/MarginContainer/Control"]
+stream = ExtResource("8_fxk0r")
+volume_db = -30.0
+pitch_scale = 2.0
+
+[node name="SFX2" type="AudioStreamPlayer" parent="Text_box/PanelContainer/MarginContainer/Control"]
+stream = ExtResource("8_fxk0r")
+volume_db = -42.0
+pitch_scale = 1.5
+
+[node name="Smoke_sprite" type="AnimatedSprite2D" parent="Text_box"]
+visible = false
+position = Vector2(96, 22)
+sprite_frames = SubResource("SpriteFrames_w5jrr")
+speed_scale = 0.5
+
+[node name="Ring_duplicate" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Outline_ring" type="TextureRect" parent="Ring_duplicate"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("5_xwmel")
+expand_mode = 1
+
+[node name="Smoke_sprite" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(947.16, 530.16)
+sprite_frames = SubResource("SpriteFrames_w5jrr")
+
+[node name="Smoke_sprite2" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(707.16, 530.16)
+sprite_frames = SubResource("SpriteFrames_w5jrr")
+
+[node name="Smoke_sprite3" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(1187.83, 530.16)
+sprite_frames = SubResource("SpriteFrames_w5jrr")

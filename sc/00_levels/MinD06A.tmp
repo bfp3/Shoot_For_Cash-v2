@@ -1,0 +1,634 @@
+[gd_scene load_steps=33 format=3 uid="uid://bb08lmcr21s2e"]
+
+[ext_resource type="Script" path="res://600_scripts/100_levels/Minefield.gd" id="1_p2vyd"]
+[ext_resource type="PackedScene" uid="uid://bwexwu4pd7ote" path="res://200_assets/environment_decoration/exported_Mesh/tallBase.tscn" id="4_iqj1m"]
+[ext_resource type="PackedScene" uid="uid://khv1h2fbb8h6" path="res://200_assets/targets/target_creator.tscn" id="5_u2vts"]
+[ext_resource type="PackedScene" uid="uid://dau6o4gakxoeq" path="res://300_characters/00_Hood/player.tscn" id="6_frkbh"]
+[ext_resource type="PackedScene" uid="uid://cxqry0burrjjd" path="res://300_characters/02_enemies/birdsAnimated.tscn" id="7_ojbw5"]
+[ext_resource type="PackedScene" uid="uid://bwwqs8ytry7wo" path="res://200_assets/environment_decoration/trees.tscn" id="8_8qyr0"]
+[ext_resource type="PackedScene" uid="uid://djq7nljg07i1b" path="res://200_assets/environment_decoration/mountain.tscn" id="9_nb7e0"]
+[ext_resource type="Texture2D" uid="uid://kdva080m52at" path="res://800_materials/gradients/mountain-distant.tres" id="10_k5w3t"]
+[ext_resource type="Texture2D" uid="uid://brm4tvdptq4gf" path="res://800_materials/gradients/sky-gradient.tres" id="11_yojhi"]
+[ext_resource type="PackedScene" uid="uid://4pw25o0qn7a5" path="res://200_assets/environment_decoration/post.tscn" id="12_02a46"]
+[ext_resource type="PackedScene" path="res://200_assets/environment_decoration/helicopter.tscn" id="13_dyq3m"]
+[ext_resource type="Texture2D" uid="uid://dsmre3g6oaxny" path="res://800_materials/textures_2D/texture_materials/park_sand_diff_2k.png" id="14_7ufnh"]
+[ext_resource type="Texture2D" uid="uid://dpiqjoxdk4vu6" path="res://800_materials/gradients/moon.tres" id="16_vbgys"]
+[ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://400_sounds/01_music/BP_tunes/oasisWorld.wav" id="17_24vn5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u04cc"]
+albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sss5j"]
+albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h5xh0"]
+albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_omcjr"]
+albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[sub_resource type="Animation" id="Animation_xb0hs"]
+resource_name = "beakWobble"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("head:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.5, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.27358, 0, 0), Vector3(0.27358, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_facun"]
+resource_name = "flying"
+loop_mode = 1
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("leftWing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.5, 1, 0, -0.0977605, 0, 1, 1, 0, 0, 0)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("leftWing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.5, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_htrv4"]
+_data = {
+"beakWobble": SubResource("Animation_xb0hs"),
+"flying": SubResource("Animation_facun")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x7ptu"]
+albedo_color = Color(0.45098, 0.360784, 0, 1)
+emission = Color(0.172549, 0.172549, 0.172549, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_frjbo"]
+albedo_color = Color(0.537255, 0.478431, 0.227451, 1)
+albedo_texture = ExtResource("10_k5w3t")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_654ar"]
+albedo_texture = ExtResource("11_yojhi")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rfu0l"]
+albedo_color = Color(0.937255, 0.764706, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qyouh"]
+albedo_color = Color(1, 0.607843, 0.121569, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4yc12"]
+albedo_color = Color(0.588235, 0.478431, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgqy0"]
+albedo_color = Color(0.537255, 0.537255, 0.537255, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vpplx"]
+size = Vector3(2400, 24, 2400)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ux1ru"]
+albedo_texture = ExtResource("14_7ufnh")
+normal_enabled = true
+uv1_scale = Vector3(120, 120, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lm4he"]
+size = Vector3(2400, 24, 2400)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vyyjy"]
+albedo_texture = ExtResource("16_vbgys")
+emission_enabled = true
+emission = Color(1, 0.913725, 0.345098, 1)
+
+[node name="Minefield" type="Node3D"]
+script = ExtResource("1_p2vyd")
+
+[node name="player" parent="." instance=ExtResource("6_frkbh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1, 0)
+
+[node name="tallBaseContainer" type="Node3D" parent="."]
+
+[node name="tallBase" parent="tallBaseContainer" instance=ExtResource("4_iqj1m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.35, 0)
+
+[node name="targetCreator" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1200)
+
+[node name="target_creator" parent="targetCreator" instance=ExtResource("5_u2vts")]
+transform = Transform3D(5.96244e-08, 0, -5, 0, 5, 0, 5, 0, 5.96244e-08, 38, 50.5, -1136.5)
+
+[node name="target_creator2" parent="targetCreator" instance=ExtResource("5_u2vts")]
+transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, 0, 50.5, -1136.5)
+
+[node name="targetLoadPoint" type="Marker3D" parent="targetCreator"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38, 51.5, -1136)
+
+[node name="decoration" type="Node3D" parent="."]
+
+[node name="birds" parent="decoration" instance=ExtResource("7_ojbw5")]
+transform = Transform3D(-0.351275, 0, -0.355817, 0, 0.5, 0, 0.355817, 0, -0.351275, 156, 10, 198.949)
+motion_mode = 1
+
+[node name="body2" type="Node3D" parent="decoration/birds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.8016, 10.0032, -27.244)
+
+[node name="head" type="CSGSphere3D" parent="decoration/birds/body2"]
+transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_u04cc")
+
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds/body2/head"]
+transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
+material_override = SubResource("StandardMaterial3D_sss5j")
+polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds/body2"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
+material_override = SubResource("StandardMaterial3D_h5xh0")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds/body2"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
+material_override = SubResource("StandardMaterial3D_omcjr")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds/body2"]
+libraries = {
+"": SubResource("AnimationLibrary_htrv4")
+}
+
+[node name="birds2" parent="decoration" instance=ExtResource("7_ojbw5")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 2.48, 51.233, -320)
+motion_mode = 1
+
+[node name="body2" type="Node3D" parent="decoration/birds2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.8016, 10.0032, -27.244)
+
+[node name="head" type="CSGSphere3D" parent="decoration/birds2/body2"]
+transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_u04cc")
+
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body2/head"]
+transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
+material_override = SubResource("StandardMaterial3D_sss5j")
+polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body2"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
+material_override = SubResource("StandardMaterial3D_h5xh0")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body2"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
+material_override = SubResource("StandardMaterial3D_omcjr")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body2"]
+libraries = {
+"": SubResource("AnimationLibrary_htrv4")
+}
+
+[node name="body3" type="Node3D" parent="decoration/birds2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.28308, 0.200062, -5.88916)
+visible = false
+
+[node name="head" type="CSGSphere3D" parent="decoration/birds2/body3"]
+transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_u04cc")
+
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body3/head"]
+transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
+material_override = SubResource("StandardMaterial3D_sss5j")
+polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body3"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
+material_override = SubResource("StandardMaterial3D_h5xh0")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body3"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
+material_override = SubResource("StandardMaterial3D_omcjr")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body3"]
+libraries = {
+"": SubResource("AnimationLibrary_htrv4")
+}
+
+[node name="body4" type="Node3D" parent="decoration/birds2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.88034, -0.0983906, -6.07811)
+visible = false
+
+[node name="head" type="CSGSphere3D" parent="decoration/birds2/body4"]
+transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_u04cc")
+
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body4/head"]
+transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
+material_override = SubResource("StandardMaterial3D_sss5j")
+polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body4"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
+material_override = SubResource("StandardMaterial3D_h5xh0")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body4"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46767, -0.00892258, -0.00012207)
+material_override = SubResource("StandardMaterial3D_omcjr")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body4"]
+libraries = {
+"": SubResource("AnimationLibrary_htrv4")
+}
+
+[node name="body5" type="Node3D" parent="decoration/birds2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.84302, 0.762184, -1.37595)
+visible = false
+
+[node name="head" type="CSGSphere3D" parent="decoration/birds2/body5"]
+transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_u04cc")
+
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body5/head"]
+transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
+material_override = SubResource("StandardMaterial3D_sss5j")
+polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body5"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
+material_override = SubResource("StandardMaterial3D_h5xh0")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body5"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
+material_override = SubResource("StandardMaterial3D_omcjr")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body5"]
+libraries = {
+"": SubResource("AnimationLibrary_htrv4")
+}
+
+[node name="trees" type="Node3D" parent="decoration"]
+
+[node name="fore1" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 12.447, 1.8764, 32.816)
+visible = false
+
+[node name="foreLeft" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.0548, 2.34837, 1.31448)
+
+[node name="foreRight" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.73038, 2.14944, 0.933655)
+
+[node name="fore9" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.5824, 1.68678, 5.69512)
+
+[node name="fore2" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 85.1927, 2.41481, 77.3876)
+
+[node name="fore6" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 69.6994, 2.83838, 46.3125)
+
+[node name="fore8" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -71.3006, 2.89009, 46.3125)
+
+[node name="fore4" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 178.05, 2.79488, 209.143)
+
+[node name="fore10" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -185.95, 2.97715, 209.143)
+
+[node name="midground3" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.507, 2.33223, 90)
+
+[node name="weakTree" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56.259, 2.008, 276.234)
+
+[node name="bgTree" parent="decoration/trees" instance=ExtResource("8_8qyr0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.563, 2.008, 276.234)
+
+[node name="balconyForeground" type="Node3D" parent="decoration"]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 1.77636e-14, 0, 0.1, 10.639, -0.57293, 3.191)
+
+[node name="topRail" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.766, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(5, 0.05, 1)
+
+[node name="leftPole" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.995, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="middlePole" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.799, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="rightPole" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 1, -0.604, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/balconyForeground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(5, 0.2, 1)
+
+[node name="balconyForeground2" type="Node3D" parent="decoration"]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 1.77636e-14, 0, 0.1, 6.7551, -0.57293, 3.191)
+
+[node name="topRail" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.766, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(5, 0.05, 1)
+
+[node name="leftPole" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.995, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="middlePole" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.799, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="rightPole" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 1, -0.604, 1.436, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/balconyForeground2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
+material_override = SubResource("StandardMaterial3D_x7ptu")
+size = Vector3(5, 0.2, 1)
+
+[node name="mountain" parent="decoration" instance=ExtResource("9_nb7e0")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -152.362, -6.157, 706.552)
+
+[node name="mountain2" parent="decoration/mountain" instance=ExtResource("9_nb7e0")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -108, 0, 0)
+
+[node name="mountain3" parent="decoration/mountain" instance=ExtResource("9_nb7e0")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -143.192, -4.47378, 0)
+
+[node name="building" type="Node3D" parent="decoration"]
+transform = Transform3D(0.181721, 0, 0.571819, 0, 0.6, 0, -0.571819, 0, 0.181721, 113.24, -0.294436, 153.45)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="decoration/building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.52588e-05, 3, 4.41892)
+material_override = SubResource("StandardMaterial3D_frjbo")
+size = Vector3(3, 5, 3)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="decoration/building/CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.558988, -0.776339)
+material_override = SubResource("StandardMaterial3D_654ar")
+operation = 2
+size = Vector3(1, 1, 2)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="decoration/building"]
+transform = Transform3D(4, 0, 0, 0, -1.74846e-07, -4, 0, 4, -1.74846e-07, 1.51676, 0.599169, 2.8677)
+material_override = SubResource("StandardMaterial3D_rfu0l")
+polygon = PackedVector2Array(0, 0, -0.023124, 0.735265, 1, 1)
+
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="decoration/building"]
+transform = Transform3D(-0.285767, 3.98971, -0.0229428, 0.31398, -0.000441829, -3.98766, -3.97741, -0.286687, -0.313141, -5.25959, 0.227809, 7.14831)
+polygon = PackedVector2Array(0, 0, 0, 1, 1, 1)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="decoration/building"]
+transform = Transform3D(0.999985, 0.00545492, -4.68194e-05, -0.00545492, 0.999838, -0.0171649, -4.68194e-05, 0.0171649, 0.999853, 0, 5.57368, 3.02597)
+material_override = SubResource("StandardMaterial3D_qyouh")
+size = Vector3(8, 0.2, 1)
+
+[node name="CSGPolygon3D3" type="CSGPolygon3D" parent="decoration/building"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -0.2, 0, 1, -8.74228e-09, 4.0032, 5.46824, 2.53115)
+material_override = SubResource("StandardMaterial3D_qyouh")
+polygon = PackedVector2Array(0, 0, 0, 1, 1, 1)
+
+[node name="CSGPolygon3D4" type="CSGPolygon3D" parent="decoration/building"]
+transform = Transform3D(1.31134e-07, 1, 8.74228e-09, 3.82137e-15, 4.37114e-08, -0.2, -1, 1.31134e-07, -3.28406e-16, -4.98102, 5.46824, 3.51594)
+material_override = SubResource("StandardMaterial3D_qyouh")
+polygon = PackedVector2Array(0, 0, 0, 1, 1, 1)
+
+[node name="balcony" type="Node3D" parent="decoration/building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.23958)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="decoration/building/balcony"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.91983, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(5, 0.05, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/building/balcony"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="decoration/building/balcony"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="decoration/building/balcony"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="decoration/building/balcony"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/building/balcony"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/building/balcony"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(5, 0.2, 1)
+
+[node name="balcony2" type="Node3D" parent="decoration/building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 1.23958)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="decoration/building/balcony2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.91983, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(5, 0.05, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/building/balcony2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="decoration/building/balcony2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="decoration/building/balcony2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="decoration/building/balcony2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/building/balcony2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/building/balcony2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(5, 0.2, 1)
+
+[node name="balcony3" type="Node3D" parent="decoration/building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 1.23958)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="decoration/building/balcony3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.91983, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(5, 0.05, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/building/balcony3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="decoration/building/balcony3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="decoration/building/balcony3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="decoration/building/balcony3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/building/balcony3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(0.1, 0.9, 0.5)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/building/balcony3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
+material_override = SubResource("StandardMaterial3D_4yc12")
+size = Vector3(5, 0.2, 1)
+
+[node name="windows" type="Node3D" parent="decoration/building"]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="decoration/building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.36315, 2.90085)
+omni_range = 4.0
+
+[node name="post" parent="decoration/building" instance=ExtResource("12_02a46")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.6244, 4.16262, -31.9468)
+material_override = SubResource("StandardMaterial3D_xgqy0")
+
+[node name="post2" parent="decoration/building" instance=ExtResource("12_02a46")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 4.163, 10)
+visible = false
+material_override = SubResource("StandardMaterial3D_xgqy0")
+
+[node name="helicopter" parent="decoration" instance=ExtResource("13_dyq3m")]
+transform = Transform3D(0.962651, 2.39877e-06, -2.45716, 1.56598, 2.03362, 0.613514, 1.89349, -1.68187, 0.741821, -69.2817, 0, 217.811)
+
+[node name="floor" type="Node3D" parent="decoration"]
+
+[node name="foreground" type="StaticBody3D" parent="decoration/floor"]
+collision_layer = 7
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="decoration/floor/foreground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 1200)
+shape = SubResource("BoxShape3D_vpplx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="decoration/floor/foreground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 1200)
+material_override = SubResource("StandardMaterial3D_ux1ru")
+mesh = SubResource("BoxMesh_lm4he")
+skeleton = NodePath("../..")
+
+[node name="floor2" type="Node3D" parent="decoration"]
+
+[node name="foreground" type="StaticBody3D" parent="decoration/floor2"]
+collision_layer = 7
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="decoration/floor2/foreground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, -1200)
+shape = SubResource("BoxShape3D_vpplx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="decoration/floor2/foreground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, -1200)
+material_override = SubResource("StandardMaterial3D_ux1ru")
+mesh = SubResource("BoxMesh_lm4he")
+skeleton = NodePath("../..")
+
+[node name="Lighting" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting"]
+
+[node name="sun" type="CSGSphere3D" parent="Lighting"]
+transform = Transform3D(1, -1.49012e-08, 2.98023e-08, 1.49012e-08, 1, 2.98023e-08, 0, 0, 1, 0, 15, -489.423)
+visible = false
+material_override = SubResource("StandardMaterial3D_vyyjy")
+radius = 1.5
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, -0.998259, 0.0589754, 0, -0.0589754, -0.998259, 0, 8.8, 0)
+light_color = Color(0.992157, 0.627451, 0.27451, 1)
+shadow_enabled = true
+shadow_bias = 0.187
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="OasisSong" type="AudioStreamPlayer3D" parent="SFX"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.63928, 0)
+stream = ExtResource("17_24vn5")
+unit_size = 1.0
+
+[node name="targetTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[connection signal="timeout" from="targetTimer" to="." method="_on_timer_timeout"]
+
+[editable path="decoration/helicopter"]

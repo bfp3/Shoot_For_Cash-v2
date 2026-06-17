@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://coe3lyb0bhk1q"]
+
+[sub_resource type="GDScript" id="GDScript_gpfq2"]
+script/source = "extends Node
+
+var shots_fired := 0
+var total_time_remaining := 0.0
+var damage_to_cage := 0
+var targets_successfully_destroyed := 0
+var player_gold := 0
+var player_progress_bar_multi := 1
+var is_shop_open: bool = false
+var current_round := 0
+"
+
+[node name="Globals_player_stats" type="Node"]
+script = SubResource("GDScript_gpfq2")

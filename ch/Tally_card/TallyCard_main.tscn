@@ -1,0 +1,1129 @@
+[gd_scene format=3 uid="uid://q855h2qsq0w7"]
+
+[ext_resource type="Script" uid="uid://bmkw103pryi4x" path="res://ch/Tally_card/tally_card_main.gd" id="1_d46ke"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="2_cuwcq"]
+[ext_resource type="Script" uid="uid://cqpequchxvc6x" path="res://ch/Tally_card/game_progress.gd" id="3_3q72g"]
+[ext_resource type="Texture2D" uid="uid://bl6g8v8djrlds" path="res://unfiled/Decal_placeholders/counter_clock_arrow_2.png" id="3_4k5lx"]
+[ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://unfiled/Ammo_display/bullet_texture_plain.png" id="3_ecf0a"]
+[ext_resource type="StyleBox" uid="uid://c4p7ad54klwn" path="res://res/progress_bar_no_progress.tres" id="3_iforg"]
+[ext_resource type="StyleBox" uid="uid://b0ho0ncfb085s" path="res://res/progress_bar_green.tres" id="4_3q72g"]
+[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="4_ecf0a"]
+[ext_resource type="PackedScene" uid="uid://b04e2sb5337vo" path="res://ch/Tally_card/TallyComponent_v3.tscn" id="4_iforg"]
+[ext_resource type="Script" uid="uid://dbbltr23d26u6" path="res://ch/Shop/money_label.gd" id="5_7r173"]
+[ext_resource type="Script" uid="uid://drmqfnbqyvmps" path="res://ch/Shop/tooltip.gd" id="6_ta7gf"]
+[ext_resource type="AudioStream" uid="uid://cqfuywy300at4" path="res://sfx/opt_2.wav" id="15_dtccr"]
+[ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="16_paduv"]
+[ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="17_7fyvj"]
+[ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="18_4aw3d"]
+[ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="19_hv4et"]
+[ext_resource type="AudioStream" uid="uid://c5he7tw0onue" path="res://sfx/shop_reroll_sfx_01.wav" id="20_udkoh"]
+[ext_resource type="AudioStream" uid="uid://xh6kpfpcl3mh" path="res://sfx/shop_mystery_box_sfx_01.wav" id="21_ox8qs"]
+[ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="22_fftbp"]
+[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="23_lasy3"]
+[ext_resource type="AudioStream" uid="uid://ecijroapobxk" path="res://sfx/Egg_pulse_sfx.wav" id="24_b1p76"]
+[ext_resource type="AudioStream" uid="uid://bde0632jwh1jq" path="res://sfx/Egg_pulse_sfx_reverse.wav" id="25_ea12e"]
+[ext_resource type="AudioStream" uid="uid://dmjy34fgs3ny8" path="res://sfx/HUD on click.wav" id="27_6wu0l"]
+[ext_resource type="AudioStream" uid="uid://jmf0o5ogd3uv" path="res://sfx/HUD on_v2.wav" id="28_rudri"]
+[ext_resource type="AudioStream" uid="uid://dold0eft66v4p" path="res://sfx/HUD on.wav" id="29_slobm"]
+[ext_resource type="AudioStream" uid="uid://fossjjbbmh7" path="res://sfx/low_pitch_humming.wav" id="30_38x7i"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="31_u4dph"]
+
+[sub_resource type="Curve" id="Curve_onfim"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_vhsx8"]
+curve = SubResource("Curve_onfim")
+
+[sub_resource type="Curve" id="Curve_r6l2h"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_64t06"]
+curve = SubResource("Curve_r6l2h")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yuebc"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(534.76, 362.53, 1)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_64t06")
+color = Color(0.25882354, 0.81960785, 0, 1)
+alpha_curve = SubResource("CurveTexture_vhsx8")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_arg5w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iforg"]
+
+[sub_resource type="Curve" id="Curve_bux34"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_bux34"]
+curve = SubResource("Curve_bux34")
+
+[sub_resource type="Curve" id="Curve_m83ei"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ecf0a"]
+curve = SubResource("Curve_m83ei")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q6qkh"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_velocity_min = 99.99998
+radial_velocity_max = 199.99997
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_ecf0a")
+color = Color(1, 0.78039217, 0, 1)
+alpha_curve = SubResource("CurveTexture_bux34")
+hue_variation_min = -1.0
+hue_variation_max = 0.99999994
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bux34"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_velocity_min = 99.99998
+radial_velocity_max = 199.99997
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_64t06")
+color = Color(0.25882354, 0.81960785, 0, 1)
+alpha_curve = SubResource("CurveTexture_vhsx8")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3q72g"]
+
+[sub_resource type="Theme" id="Theme_4k5lx"]
+RichTextLabel/colors/default_color = Color(0.8, 0.8, 0.8, 1)
+RichTextLabel/font_sizes/normal_font_size = 18
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1teaa"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
+
+[sub_resource type="Animation" id="Animation_3q72g"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_4k5lx"]
+resource_name = "light_wobble"
+length = 5.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CenterContainer:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.5333333, 5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CenterContainer:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.2333333, 3.74, 5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.00174532925199472, -0.00174532925199472, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CenterContainer:scale")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2.52, 5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.99, 0.99), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cuwcq"]
+_data = {
+&"RESET": SubResource("Animation_3q72g"),
+&"light_wobble": SubResource("Animation_4k5lx")
+}
+
+[node name="TallyCard" type="Control" unique_id=1212322380 node_paths=PackedStringArray("cash_earned_label") groups=["tally_card_menu"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1_d46ke")
+cash_earned_label = NodePath("CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/NumberLabel")
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=1056980214]
+self_modulate = Color(1, 1, 1, 0.5058824)
+layout_mode = 0
+offset_left = 1038.0001
+offset_top = 93.0
+offset_right = 1550.0001
+offset_bottom = 605.0
+rotation = 3.1415927
+scale = Vector2(0.15, 0.15)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("3_ecf0a")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect4" type="TextureRect" parent="." unique_id=594436550]
+self_modulate = Color(1, 1, 1, 0.3882353)
+layout_mode = 0
+offset_left = 700.9999
+offset_top = 269.0
+offset_right = 1212.9999
+offset_bottom = 781.0
+rotation = 3.1415927
+scale = Vector2(1.45, 1.45)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("4_ecf0a")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect3" type="TextureRect" parent="." unique_id=97407066]
+self_modulate = Color(1, 1, 1, 0.5058824)
+layout_mode = 0
+offset_left = 366.00003
+offset_top = 476.0
+offset_right = 878.0
+offset_bottom = 988.0
+scale = Vector2(0.15, 0.15)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("3_ecf0a")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=685089417]
+position = Vector2(962, 551)
+amount = 100
+lifetime = 4.0
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_yuebc")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1625197918]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9948992, 0.9948992)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=785012210]
+custom_minimum_size = Vector2(250, 250)
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = ExtResource("2_cuwcq")
+
+[node name="MainPanel" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=461386074]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HSeparator5" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=1168585334]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
+
+[node name="CashHboxcontainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=555082800]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1341660736]
+custom_minimum_size = Vector2(135, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="TotalRocks" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=507413251]
+visible = false
+custom_minimum_size = Vector2(200, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
+
+[node name="TitleLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks" unique_id=318496818]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i]SCORE[/i]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="NumberLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks" unique_id=121854785]
+self_modulate = Color(1, 0.78039217, 0, 1)
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 70
+bbcode_enabled = true
+text = "$00"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+script = ExtResource("5_7r173")
+tooltip_dataset = "tooltip_total_score"
+
+[node name="Tooltip" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel" unique_id=1416415398]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.1608203
+anchor_top = 0.31410217
+anchor_right = 1.1081288
+anchor_bottom = 0.5250397
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("6_ta7gf")
+metadata/_edit_use_anchors_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel/Tooltip" unique_id=707550776]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator4" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=141557445]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="CashEarned" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=391685329]
+custom_minimum_size = Vector2(200, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
+
+[node name="TitleLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=1289664472]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i]EARNINGS[/i]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="NumberLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=263932816]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 70
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Tooltip" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/NumberLabel" unique_id=1905369223]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.1608203
+anchor_top = 0.31410217
+anchor_right = 0.8391797
+anchor_bottom = 0.5250397
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("6_ta7gf")
+metadata/_edit_use_anchors_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/NumberLabel/Tooltip" unique_id=1104524896]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator3" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1769694785]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="Fines" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=389115546]
+custom_minimum_size = Vector2(200, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
+
+[node name="TitleLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines" unique_id=353837213]
+clip_contents = false
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i]FINES[/i]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="NumberLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines" unique_id=161285833]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 70
+theme_override_font_sizes/italics_font_size = 50
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Tooltip" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel" unique_id=1781084112]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.3467688
+anchor_top = 0.31410217
+anchor_right = 0.6532312
+anchor_bottom = 0.5250397
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("6_ta7gf")
+metadata/_edit_use_anchors_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel/Tooltip" unique_id=1779935107]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1987157655]
+custom_minimum_size = Vector2(85, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="CashHboxcontainer2" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1278365589]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2" unique_id=2024162150]
+custom_minimum_size = Vector2(279, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="TotalRocks" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2" unique_id=1253496808]
+custom_minimum_size = Vector2(200, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
+
+[node name="perfectScoreParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=1698175890]
+unique_name_in_owner = true
+position = Vector2(96.05121, 72.974396)
+scale = Vector2(1.005127, 1.005127)
+emitting = false
+amount = 50
+lifetime = 2.5
+one_shot = true
+explosiveness = 0.8
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_q6qkh")
+
+[node name="TitleLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=408558362]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i]SCORE[/i]"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="NumberLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=905765579]
+self_modulate = Color(1, 0.78039217, 0, 1)
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 70
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Tooltip" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/NumberLabel" unique_id=1205148405]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.1608203
+anchor_top = 0.31410217
+anchor_right = 1.1081288
+anchor_bottom = 0.5250397
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("6_ta7gf")
+metadata/_edit_use_anchors_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/NumberLabel/Tooltip" unique_id=366242511]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator4" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2" unique_id=1069955720]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="Item_List" type="FlowContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=208860132]
+visible = false
+custom_minimum_size = Vector2(0, 190)
+layout_mode = 2
+alignment = 1
+
+[node name="Nothing" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=834535786 instance=ExtResource("4_iforg")]
+layout_mode = 2
+description = "Nothing..."
+rock_type = ""
+icon_texture = ExtResource("3_4k5lx")
+
+[node name="Rocks" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1096068837 instance=ExtResource("4_iforg")]
+layout_mode = 2
+
+[node name="Coal" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=216271256 instance=ExtResource("4_iforg")]
+layout_mode = 2
+rock_type = "rock_type_2"
+icon_modulate = Color(0.24, 0.24, 0.24, 1)
+
+[node name="Gold" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=113580913 instance=ExtResource("4_iforg")]
+layout_mode = 2
+rock_type = "rock_type_3"
+icon_modulate = Color(1, 0.78039217, 0, 1)
+
+[node name="Clay Rocks" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=233664546 instance=ExtResource("4_iforg")]
+layout_mode = 2
+rock_type = "rock_type_4"
+icon_modulate = Color(0.81960785, 0, 0, 1)
+
+[node name="Plastic Bottles" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=82464469 instance=ExtResource("4_iforg")]
+visible = false
+layout_mode = 2
+
+[node name="Tires" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1403801708 instance=ExtResource("4_iforg")]
+visible = false
+layout_mode = 2
+
+[node name="Scrap Metal" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1365494356 instance=ExtResource("4_iforg")]
+visible = false
+layout_mode = 2
+
+[node name="Oil Drums" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1624599254 instance=ExtResource("4_iforg")]
+visible = false
+layout_mode = 2
+
+[node name="Cargo Crates" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=547775032 instance=ExtResource("4_iforg")]
+visible = false
+layout_mode = 2
+
+[node name="Rare Goodies" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=854578873 instance=ExtResource("4_iforg")]
+visible = false
+layout_mode = 2
+
+[node name="Crackers" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1219068111 instance=ExtResource("4_iforg")]
+visible = false
+layout_mode = 2
+
+[node name="Cash Out" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=313444988]
+custom_minimum_size = Vector2(200, 128)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/Cash Out" unique_id=151705255]
+position = Vector2(397.2461, 74.37421)
+emitting = false
+amount = 100
+lifetime = 0.8
+one_shot = true
+explosiveness = 0.7
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_bux34")
+
+[node name="TitleLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/Cash Out" unique_id=709325133]
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i]CASH[/i]"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="NumberLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/Cash Out" unique_id=1643114876]
+clip_contents = false
+custom_minimum_size = Vector2(170, 146.15)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 10
+theme_override_font_sizes/normal_font_size = 110
+theme_override_font_sizes/bold_font_size = 90
+theme_override_font_sizes/bold_italics_font_size = 90
+theme_override_font_sizes/italics_font_size = 90
+theme_override_font_sizes/mono_font_size = 90
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Tooltip" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel" unique_id=753653019]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 48.246094
+offset_bottom = -52.753906
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("6_ta7gf")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel/Tooltip" unique_id=2023187228]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator6" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=293657851]
+visible = false
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
+
+[node name="GameProgress" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1662972478 node_paths=PackedStringArray("area_1", "area_2", "area_3", "area_4", "area_5", "tally_main")]
+visible = false
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+alignment = 1
+script = ExtResource("3_3q72g")
+area_1 = NodePath("VBoxContainer/ProgressBars/MOSS")
+area_2 = NodePath("VBoxContainer/ProgressBars/REDD")
+area_3 = NodePath("VBoxContainer/ProgressBars/Glory")
+area_4 = NodePath("VBoxContainer/ProgressBars/Area4")
+area_5 = NodePath("VBoxContainer/ProgressBars/Area5")
+tally_main = NodePath("../../../..")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/MainPanel/GameProgress" unique_id=1891688302]
+custom_minimum_size = Vector2(720, 0)
+layout_mode = 2
+theme_override_constants/separation = -32
+alignment = 1
+
+[node name="ProgressBars" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer" unique_id=1224973268]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars" unique_id=1978930951]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_3q72g")
+
+[node name="MOSS" type="ProgressBar" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars" unique_id=1373811004]
+visible = false
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.78039217, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = ExtResource("3_iforg")
+theme_override_styles/fill = ExtResource("4_3q72g")
+step = 0.5
+show_percentage = false
+
+[node name="MOSS" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars/MOSS" unique_id=1279214158]
+custom_minimum_size = Vector2(20, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = SubResource("Theme_4k5lx")
+bbcode_enabled = true
+text = "MOSS"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="REDD" type="ProgressBar" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars" unique_id=924385840]
+visible = false
+modulate = Color(0.41, 0.41, 0.41, 1)
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.78039217, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = ExtResource("3_iforg")
+theme_override_styles/fill = ExtResource("4_3q72g")
+step = 0.5
+show_percentage = false
+
+[node name="REDD" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars/REDD" unique_id=938510817]
+custom_minimum_size = Vector2(20, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = SubResource("Theme_4k5lx")
+bbcode_enabled = true
+text = "REDD"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Glory" type="ProgressBar" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars" unique_id=533001863]
+visible = false
+modulate = Color(0.41, 0.41, 0.41, 1)
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.78039217, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = ExtResource("3_iforg")
+theme_override_styles/fill = ExtResource("4_3q72g")
+step = 0.5
+show_percentage = false
+
+[node name="Glory" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars/Glory" unique_id=1086590297]
+custom_minimum_size = Vector2(20, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = SubResource("Theme_4k5lx")
+bbcode_enabled = true
+text = "SCRAMBLES"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Area4" type="ProgressBar" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars" unique_id=1880086716]
+visible = false
+modulate = Color(0.41, 0.41, 0.41, 1)
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.78039217, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = ExtResource("3_iforg")
+theme_override_styles/fill = ExtResource("4_3q72g")
+step = 0.5
+show_percentage = false
+
+[node name="AREA4" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars/Area4" unique_id=2119765622]
+custom_minimum_size = Vector2(20, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = SubResource("Theme_4k5lx")
+bbcode_enabled = true
+text = "ZONE 4"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Area5" type="ProgressBar" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars" unique_id=814291852]
+visible = false
+modulate = Color(0.41, 0.41, 0.41, 1)
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.78039217, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = ExtResource("3_iforg")
+theme_override_styles/fill = ExtResource("4_3q72g")
+step = 0.5
+show_percentage = false
+
+[node name="AREA5" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars/Area5" unique_id=1312050970]
+custom_minimum_size = Vector2(20, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = SubResource("Theme_4k5lx")
+bbcode_enabled = true
+text = "ZONE 5"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator6" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/GameProgress/VBoxContainer/ProgressBars" unique_id=761274390]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_3q72g")
+
+[node name="ButtonsHBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1750056005]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer" unique_id=1423245519]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=628323630]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=132084556]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1797492704]
+custom_minimum_size = Vector2(65, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
+
+[node name="SHOP" type="Button" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1101489225 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+visible = false
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 26
+text = "Shop"
+script = ExtResource("31_u4dph")
+focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1385393748]
+custom_minimum_size = Vector2(73, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
+
+[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1519659985 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "I'm Ok"
+script = ExtResource("31_u4dph")
+focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+
+[node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1637319920]
+custom_minimum_size = Vector2(592.975, 23.65)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="EndDemo" type="Button" parent="." unique_id=1098994479 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.0009259259
+anchor_bottom = 0.0009259259
+offset_left = 860.0
+offset_top = 828.097
+offset_right = 1060.0
+offset_bottom = 859.097
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 16
+text = "End Demo"
+script = ExtResource("31_u4dph")
+focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../SFX/focus_exit")
+purchase_sfx = NodePath("../SFX/purchase")
+metadata/_edit_use_anchors_ = true
+
+[node name="SFX" type="Node" parent="." unique_id=818937010]
+
+[node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1075327639]
+stream = ExtResource("16_paduv")
+volume_db = -40.0
+
+[node name="shop_purchase_01" type="AudioStreamPlayer" parent="SFX" unique_id=921652107]
+stream = ExtResource("17_7fyvj")
+volume_db = -40.0
+
+[node name="shop_purchase_02" type="AudioStreamPlayer" parent="SFX" unique_id=1901638632]
+stream = ExtResource("18_4aw3d")
+volume_db = -15.0
+pitch_scale = 1.2
+
+[node name="shop_purchase_03" type="AudioStreamPlayer" parent="SFX" unique_id=1452359778]
+stream = ExtResource("19_hv4et")
+volume_db = -40.0
+
+[node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=334161139]
+stream = ExtResource("20_udkoh")
+volume_db = -40.0
+
+[node name="shop_mystery_box_01" type="AudioStreamPlayer" parent="SFX" unique_id=733293965]
+stream = ExtResource("21_ox8qs")
+volume_db = -40.0
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=618503378]
+stream = ExtResource("22_fftbp")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=475387272]
+stream = ExtResource("22_fftbp")
+volume_db = -50.0
+
+[node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1148902315]
+stream = ExtResource("23_lasy3")
+volume_db = -40.0
+pitch_scale = 3.0
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=759328512]
+stream = ExtResource("24_b1p76")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1492928252]
+stream = ExtResource("25_ea12e")
+volume_db = -40.0
+pitch_scale = 1.5
+
+[node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=1251476345]
+stream = ExtResource("27_6wu0l")
+volume_db = -34.0
+
+[node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=1631394354]
+stream = ExtResource("28_rudri")
+volume_db = -20.0
+
+[node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=389034069]
+stream = ExtResource("29_slobm")
+volume_db = -21.0
+
+[node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=815406511]
+stream = ExtResource("30_38x7i")
+pitch_scale = 0.4
+
+[node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1199956550]
+stream = ExtResource("15_dtccr")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="perfect_score" type="AudioStreamPlayer" parent="SFX" unique_id=1467602528]
+stream = ExtResource("18_4aw3d")
+volume_db = -14.0
+pitch_scale = 1.1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1059437881]
+libraries/ = SubResource("AnimationLibrary_cuwcq")
+autoplay = &"light_wobble"
+
+[node name="100_percent" type="Control" parent="." unique_id=961449738]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 12.0
+offset_top = -51.0
+offset_right = 162.0
+offset_bottom = 99.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="100_percent" unique_id=113222203]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 0
+offset_left = -127.0
+offset_top = -41.0
+offset_right = 28.0
+offset_bottom = 43.0
+rotation = -0.46425757
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/bold_font_size = 30
+theme_override_font_sizes/bold_italics_font_size = 30
+theme_override_font_sizes/italics_font_size = 31
+bbcode_enabled = true
+text = "[wave][rainbow][i]100%"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="100_percent/RichTextLabel" unique_id=1869445004]
+visible = false
+self_modulate = Color(1, 1, 1, 0.57254905)
+show_behind_parent = true
+layout_mode = 0
+anchor_left = 0.21731035
+anchor_top = 0.21588317
+anchor_right = 0.80382043
+anchor_bottom = 0.8139071
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/SHOP" to="." method="_on_shop_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/NextRound" to="." method="_on_next_round_pressed"]
+[connection signal="pressed" from="EndDemo" to="." method="_on_end_demo_pressed"]

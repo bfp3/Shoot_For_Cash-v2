@@ -1,0 +1,35 @@
+scene
+	show popper1 idle-walk-walk
+	until time 5
+	
+scene
+	show popper2 idle-idle-idle-walk
+	until time 5
+
+scene
+	show popper1 throw-idle
+	show popper2 walk-walk-walk-throw
+	until time 10
+
+scene
+	hide popper1
+	show popper2 idle-walk-throw
+	until time 5
+
+scene
+	show popper1 walk-walk-throw
+	show popper2 throw-throw-idle
+	until time 10
+
+scene
+	show popper1 idle-throw-walk
+	show popper2 walk-throw-idle
+	until die popper1
+	until die popper2
+
+scene
+	until die popper1
+	until die popper2
+
+scene
+	end

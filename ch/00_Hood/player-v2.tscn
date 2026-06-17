@@ -1,0 +1,381 @@
+[gd_scene format=3 uid="uid://csjn5y54u01tr"]
+
+[ext_resource type="Script" uid="uid://uyqpuwn0nimp" path="res://unfiled/player-v2.gd" id="1_duylq"]
+[ext_resource type="PackedScene" uid="uid://diy46oqmlcoim" path="res://ch/00_Hood/player_camera.tscn" id="2_wduy2"]
+[ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="3_k40il"]
+[ext_resource type="AudioStream" uid="uid://dfgsdlfejvxv3" path="res://sfx/gun-whit-ay-yah.wav" id="4_yjkwk"]
+[ext_resource type="AudioStream" uid="uid://dkwml8iopcne3" path="res://sfx/gunLocked.wav" id="5_mhehf"]
+[ext_resource type="Script" uid="uid://qkjasvilntnt" path="res://unfiled/gun.gd" id="6_cegcw"]
+[ext_resource type="PackedScene" uid="uid://cn70eo30neg4j" path="res://res/Particles/MuzzleParticles.tscn" id="9_k0gp1"]
+[ext_resource type="AudioStream" uid="uid://kypyn7i6q4x1" path="res://sfx/ES_sound_effects/ES_Steampunk Robot 2 - SFX Producer.wav" id="11_qjxoc"]
+[ext_resource type="AudioStream" uid="uid://dnoowo6kvg8v8" path="res://sfx/ES_sound_effects/ES_Gear Multimedia 5 - SFX Producer.wav" id="12_nydw3"]
+[ext_resource type="PackedScene" uid="uid://coiaim1isa436" path="res://res/Shaders/goggles_vision.tscn" id="12_qfp7n"]
+[ext_resource type="AudioStream" uid="uid://le5lbqtd73ll" path="res://sfx/ES_sound_effects/ES_Rocket Booster 4 - SFX Producer.wav" id="13_rjm5l"]
+[ext_resource type="Script" uid="uid://bpxeka1hi585b" path="res://unfiled/reticle.gd" id="13_w53pa"]
+[ext_resource type="Script" uid="uid://cqs6dysijkw4t" path="res://unfiled/health.gd" id="17_xay23"]
+[ext_resource type="Script" uid="uid://bj6vqqcmj70lv" path="res://ch/Timer/timer.gd" id="20_p0wrd"]
+[ext_resource type="Shader" uid="uid://csuj1m88swtwc" path="res://res/Shaders/sensor_spotted_you.gdshader" id="22_b7gvl"]
+
+[sub_resource type="Animation" id="Animation_qvmgu"]
+resource_name = "pullOut"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0.318264, -1.08344, -1.04686), Vector3(0.36, -0.186, -0.897)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(1.5708, -3.14159, 0), Vector3(0, -3.14159, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../../../SFX/gunLocked:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_4a8je"]
+resource_name = "shoot"
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.02, 0.396133, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0.36, -0.186, -0.9), Vector3(0.36, -0.186, -0.857), Vector3(0.36, -0.186, -0.857), Vector3(0.36, -0.186, -0.9)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.02, 0.396133, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -3.14159, 0), Vector3(-0.00872665, -3.14159, 0), Vector3(-0.00872665, -3.14159, 0), Vector3(0, -3.14159, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = false
+tracks/2/path = NodePath("..:fov")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.02, 0.4, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [45.0, 47.0, 47.0, 45.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vxxeu"]
+_data = {
+&"pullOut": SubResource("Animation_qvmgu"),
+&"shoot": SubResource("Animation_4a8je")
+}
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cmetm"]
+radius = 1.0
+height = 4.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_osuf3"]
+radius = 1.045
+height = 6.0
+
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_i2msq"]
+length = 1.641
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blv2s"]
+shader = ExtResource("22_b7gvl")
+
+[node name="player-v2" type="CharacterBody3D" unique_id=1152580537]
+process_mode = 3
+collision_layer = 13
+collision_mask = 13
+wall_min_slide_angle = 0.349066
+script = ExtResource("1_duylq")
+
+[node name="Head" type="Node3D" parent="." unique_id=2113044156]
+process_mode = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.2, 0.207668)
+
+[node name="Camera3D" parent="Head" unique_id=2032222546 instance=ExtResource("2_wduy2")]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 0.4, 0.144)
+cull_mask = 1
+fov = 90.0
+
+[node name="Torch" type="SpotLight3D" parent="Head/Camera3D" unique_id=263214074]
+light_energy = 0.0
+spot_range = 50.0
+spot_angle = 17.7
+
+[node name="interaction" type="RayCast3D" parent="Head/Camera3D" unique_id=422612108]
+visible = false
+target_position = Vector3(0, 0, -10)
+
+[node name="hand" type="Marker3D" parent="Head/Camera3D" unique_id=65034111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.45945e-07, 0, -8.53261)
+visible = false
+
+[node name="gun" parent="Head/Camera3D" unique_id=1307826392 instance=ExtResource("3_k40il")]
+transform = Transform3D(-0.2, 5.9517e-09, -5.07001e-07, 0, 0.199986, 0.00234764, 5.07036e-07, 0.00234764, -0.199986, 0.36, -0.186, -0.842159)
+visible = false
+script = ExtResource("6_cegcw")
+
+[node name="animations" type="AnimationPlayer" parent="Head/Camera3D/gun" unique_id=1904069208]
+libraries/ = SubResource("AnimationLibrary_vxxeu")
+
+[node name="GunBarrel" type="Marker3D" parent="Head/Camera3D" unique_id=1017093740]
+transform = Transform3D(-0.2, 5.9517e-09, -5.07001e-07, 0, 0.199986, 0.00234764, 5.07036e-07, 0.00234764, -0.199986, 0.36, -0.186, -1.69494)
+
+[node name="MuzzleParticles" parent="Head/Camera3D/GunBarrel" unique_id=482675593 instance=ExtResource("9_k0gp1")]
+transform = Transform3D(5.175, 7.10543e-14, 0, -1.13687e-13, 5.175, 2.6077e-08, 2.72848e-12, -2.6077e-08, 5.175, -4.76837e-07, -0.00196934, 0.167821)
+
+[node name="Area3D" type="Area3D" parent="." unique_id=893496591]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2077633443]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00181982, 0.00404295, -0.372179)
+shape = SubResource("CapsuleShape3D_cmetm")
+
+[node name="BodyCol" type="CollisionShape3D" parent="." unique_id=948706876]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4593, 0)
+shape = SubResource("CapsuleShape3D_osuf3")
+
+[node name="SeparationCol" type="CollisionShape3D" parent="." unique_id=1580488762]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -1.30449, 0)
+shape = SubResource("SeparationRayShape3D_i2msq")
+
+[node name="ControlsInstructions" type="Control" parent="." unique_id=434964985]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ControlsInstructions" unique_id=541192219]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 41.0
+offset_right = 348.0
+offset_bottom = 441.0
+pivot_offset = Vector2(150, 200)
+theme_override_colors/default_color = Color(0.709804, 0.709804, 0.709804, 1)
+bbcode_enabled = true
+text = "Shoot		[Left Mouse]
+Torch		[Middle Mouse]
+Interact	[Right Mouse]
+Jump		[Spacebar]
+Sprint		[Shift]
+Zoom In	[Q]
+Zoom Out	[E]
+Hide Controls [I]"
+tab_size = 12
+
+[node name="CrossHair" type="Control" parent="." unique_id=766940467]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+
+[node name="Reticle" type="CenterContainer" parent="CrossHair" unique_id=1889244038 node_paths=PackedStringArray("RETICLE_LINES")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("13_w53pa")
+DOT_RADIUS = 2.0
+RETICLE_LINES = [null, null, null, null]
+
+[node name="Top" type="Line2D" parent="CrossHair/Reticle" unique_id=665461909]
+points = PackedVector2Array(0, -5, 0, -15)
+width = 2.0
+
+[node name="Tip" type="Line2D" parent="CrossHair/Reticle" unique_id=1971221847]
+points = PackedVector2Array(0, -12, 0, -15)
+width = 2.0
+default_color = Color(0.776471, 0, 0.0980392, 1)
+
+[node name="Right" type="Line2D" parent="CrossHair/Reticle" unique_id=110939742]
+points = PackedVector2Array(15, 0, 5, 0)
+width = 2.0
+
+[node name="Bottom" type="Line2D" parent="CrossHair/Reticle" unique_id=950280664]
+points = PackedVector2Array(-5, 0, -15, 0)
+width = 2.0
+
+[node name="Left" type="Line2D" parent="CrossHair/Reticle" unique_id=1121755787]
+points = PackedVector2Array(0, 5, 0, 15)
+width = 2.0
+
+[node name="InputText" type="RichTextLabel" parent="CrossHair" unique_id=1553087067]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.46276
+anchor_top = 0.515741
+anchor_right = 0.48776
+anchor_bottom = 0.555556
+offset_left = 1.5
+offset_top = 3.0
+offset_right = 93.5
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(70, 70)
+metadata/_edit_use_anchors_ = true
+
+[node name="Health" type="Control" parent="." unique_id=437723356]
+visible = false
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+script = ExtResource("17_xay23")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Health" unique_id=89325205]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PausedText" type="Control" parent="." unique_id=1820172074]
+process_mode = 2
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -27.0
+offset_top = -47.0
+offset_right = 36.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PausedText" unique_id=1335245850]
+layout_mode = 0
+offset_right = 169.0
+offset_bottom = 60.0
+text = "PAUSED"
+
+[node name="SFX" type="Node" parent="." unique_id=802376497]
+
+[node name="gunsfx" type="AudioStreamPlayer" parent="SFX" unique_id=1364821261]
+stream = ExtResource("4_yjkwk")
+volume_db = -20.0
+
+[node name="gunLocked" type="AudioStreamPlayer" parent="SFX" unique_id=1150076992]
+stream = ExtResource("5_mhehf")
+
+[node name="cameraMovement" type="AudioStreamPlayer" parent="SFX" unique_id=695785709]
+stream = ExtResource("11_qjxoc")
+volume_db = -30.0
+pitch_scale = 3.0
+
+[node name="jetPack" type="AudioStreamPlayer" parent="SFX" unique_id=1565993991]
+stream = ExtResource("13_rjm5l")
+volume_db = -30.0
+pitch_scale = 5.0
+bus = &"Title"
+
+[node name="goggles_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=126518369]
+stream = ExtResource("12_nydw3")
+
+[node name="Battery" type="Control" parent="." unique_id=1476566990]
+light_mask = 3
+visibility_layer = 3
+z_index = 10
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Timer" type="RichTextLabel" parent="Battery" unique_id=2062587103]
+layout_mode = 1
+offset_left = 200.0
+offset_top = 200.0
+offset_right = 450.0
+offset_bottom = 300.0
+script = ExtResource("20_p0wrd")
+
+[node name="TimerTime" type="Timer" parent="Battery/Timer" unique_id=1557926645]
+one_shot = true
+
+[node name="Goggles" parent="." unique_id=1561874266 instance=ExtResource("12_qfp7n")]
+visible = false
+
+[node name="Control" type="Control" parent="." unique_id=398938584]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control" unique_id=1041931477]
+visible = false
+material = SubResource("ShaderMaterial_blv2s")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="timeout" from="Battery/Timer/TimerTime" to="Battery/Timer" method="_on_timer_timeout"]

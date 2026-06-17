@@ -1,0 +1,347 @@
+frame
+	set Scene-102 fade_out
+	until 2
+
+frame
+	set scene-next Scene-104
+	set smokemine mist
+	set smokemine2 mist
+	set smokemine3 mist
+	until 1
+
+frame
+	set Scene-102 fade_in
+	set player move
+	#until 4
+	until notify player
+	
+frame
+	set player move
+	#until 4
+	until notify player
+	
+frame
+	set player move
+	#until 4
+	until notify player
+	
+frame
+	play song-002 fff-fff
+	until 2
+
+frame
+	set player move
+	#until 4
+	until notify player
+
+frame
+	play song-002 stop
+	play build-up-sound-01
+	play sfx-click loop-ppp-ppp-ppp
+	until 3
+
+frame
+	set player move
+	set Scene-102 fade_in
+	play build-up-sound-01 loop
+	until 1
+
+frame
+	play build-up-sound-01 stop
+	play sfx-click stop
+	#play ctr-credits ppp3
+	play jungle-song-01 fff-loop
+	set clouds fastest
+	set smokemine detonate
+	#set smokemine3 detonate
+	until 1
+	
+frame
+	set smokemine2 detonate
+	set smokemine4 detonate
+	set popper1 smokebomb3-throw3-idle2
+	set popper2 walk3-throw3-idle2
+	until die popper2
+	until die popper1
+	
+frame
+	play misc-001 fff
+	play move-into-the-heat 3d-ppp-left-left
+	play popper-surprised-001 fff
+	until die popper2
+	until die popper1
+	
+frame
+	until 1
+
+frame
+	play jungle-song-01 stop
+	set clouds slow
+	set smokemine2 mist
+	play sfx-click loop-ppp
+	#until 3
+	until 1
+	
+frame
+	play sfx-click stop
+	play song-002
+	until 1
+	
+	
+	
+frame
+	
+	until 30
+	
+	
+# PHASE 2 STARTS
+frame
+	play song-002 stop
+	play build-up-sound-01
+	play sfx-click loop
+	until 3
+
+frame
+	play build-up-sound-01 loop
+	until 1
+	
+frame
+	play build-up-sound-01 stop
+	play sfx-click stop
+	play ctr-credits ppp
+	set clouds fastest
+	until 1
+	
+
+frame
+	play ctr-credits stop
+	play misc-001
+	set popper2 smokebomb-idle-idle
+	until die popper2
+	
+frame
+	end
+	
+	
+	
+
+
+frame
+	set Scene-102 fade_out
+	set popper1 idle-walk-walk
+	until die popper1
+
+frame
+	play sfx-click loop-ppp-ppp-ppp
+	set popper1 walk-walk-notify
+	set popper2 walk-walk-notify
+	until 2
+
+frame
+	play sfx-click loop-ppp-ppp
+	until time 3
+
+frame
+	play sfx-click stop
+	until time 5
+	
+frame
+	set popper1 walk-walk-notify
+	set popper2 walk-walk-notify
+	until die popper1
+	until die popper2
+
+frame
+	set birds fast
+	until time 1
+	
+frame
+	set sun higher
+	set clouds fastest
+	until time 1
+
+frame
+	set popper1 walk
+	until time 1
+	
+frame
+	play move-into-the-heat ppp-left-left
+	set clouds medium
+	until time 1
+
+frame
+	set popper1 idle-idle-notify
+	until time 1
+	until notify popper1
+	
+frame
+	play popper-surprised-001 ppp-left-left
+	until notify popper1
+	until time 1
+	
+frame
+	set popper1 idle-walk-notify
+	until notify popper1
+	
+frame
+	set popper1 idle-throw-idle-notify
+	until notify popper1
+	
+frame
+	set popper1 idle-duck
+	set popper2 idle-walk-idle-throw-notify
+	until notify popper2
+	
+frame
+	set popper1 idle-walk-idle-throw
+	set popper2 idle-throw-walk-throw
+	until die popper1
+	until die popper2
+	
+frame
+	set popper1 idle-throw
+	set popper2 idle-throw
+	until die popper1
+	until die popper2
+	
+.First batch killed
+	
+frame
+	until time 3
+	
+frame
+	set sun higher
+	until time 3
+	
+frame
+	set popper3 throw-notify
+	set popper4 idle-walk-walk-notify
+	until notify popper4
+	
+frame
+	set popper3 smokebomb-walk-throw
+	set popper4 idle-walk-walk-notify
+	until notify popper4
+
+frame
+	set popper3 smokebomb-walk-throw
+	set popper4 throw-walk-walk
+	until die popper3
+	until die popper4
+
+frame
+	set popper3 smokebomb-walk-throw
+	set popper4 throw-walk-walk-smokebomb
+	until die popper3
+	until die popper4
+	
+frame
+	set sun higher
+	until time 3
+	
+frame
+	set popper5 throw-notify
+	set popper6 idle-walk-walk-notify
+	until notify popper6
+	
+frame
+	set popper5 smokebomb-walk-throw
+	set popper6 idle-walk-walk-notify
+	until notify popper6
+
+frame
+	set popper5 smokebomb-walk-throw
+	set popper6 throw-walk-walk
+	until die popper5
+	until die popper6
+
+frame
+	set popper5 smokebomb-walk-throw
+	set popper6 throw-walk-walk-smokebomb
+	until die popper5
+	until die popper6
+
+frame
+	until time 2
+	
+frame
+	set player-exit-scene start
+	set hostages free_hostages
+	until time 6
+	
+frame
+	set Scene-102 fade_in
+	until time 2
+	
+frame
+	end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+frame
+	set sun higher
+	play popper-grr stop
+	until time 5
+
+frame
+	set popper2 throw-throw-throw
+	until die popper1
+
+frame
+	define attack idle-smokebomb-throw-idle-throw
+	define walky walk-duck-throw-smokebomb
+	define wait-short 5
+	next
+	
+frame
+	set popper1 walk-throw-idle
+	until die popper1
+	until time 5
+	
+frame
+	set popper1 throw-idle-walk-throw
+	until die popper1
+	until time 10
+	
+frame
+	set popper1 duck-throw-idle-throw-idle-idle
+	until die popper1
+	until time 7
+	
+frame
+	set popper1 walk-throw-idle-idle
+	set popper2 walk-idle-smokebomb-smokebomb-smokebomb
+	until die popper1
+	until die popper2
+	until time 10
+	
+frame
+	set popper1 walk-throw-throw-idle
+	set popper2 idle-smokebomb-smokebomb-smokebomb
+	until die popper1
+	until die popper2
+	
+frame
+	set popper1 walk-throw-throw-idle
+	set popper2 idle-smokebomb-smokebomb-smokebomb
+	until die popper1
+	until die popper2
+	
+frame
+	end
+
+
+#frame
+	#play woke-up-this-morn 3d-ppp-ppp-ppp
+	#play popper-grr loop-right-right

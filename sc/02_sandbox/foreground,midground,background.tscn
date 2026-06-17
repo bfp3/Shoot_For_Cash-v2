@@ -1,0 +1,118 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://800_materials/textures_2D/texture_materials/M_Dark.tres" id="4_g4qud"]
+[ext_resource type="Texture2D" uid="uid://dpiqjoxdk4vu6" path="res://res/gradients/moon.tres" id="6_7ct3c"]
+[ext_resource type="Environment" uid="uid://xeixcbjm02e4" path="res://res/skyEnvironments/late_afternoon_sky.tres" id="6_7kkdv"]
+[ext_resource type="PackedScene" path="res://300_characters/00_Hood/player.tscn" id="7_tlv50"]
+[ext_resource type="PackedScene" uid="uid://bwwqs8ytry7wo" path="res://ch/environment_decoration/trees.tscn" id="8_25p5a"]
+[ext_resource type="PackedScene" path="res://200_assets/environment_decoration/mountain.tscn" id="9_qq3wl"]
+
+
+[sub_resource type="BoxMesh" id="BoxMesh_egctf"]
+size = Vector3(8, 4, 4)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_4rksp"]
+data = PackedVector3Array(-4, 2, 2, 4, 2, 2, -4, -2, 2, 4, 2, 2, 4, -2, 2, -4, -2, 2, 4, 2, -2, -4, 2, -2, 4, -2, -2, -4, 2, -2, -4, -2, -2, 4, -2, -2, 4, 2, 2, 4, 2, -2, 4, -2, 2, 4, 2, -2, 4, -2, -2, 4, -2, 2, -4, 2, -2, -4, 2, 2, -4, -2, -2, -4, 2, 2, -4, -2, 2, -4, -2, -2, 4, 2, 2, -4, 2, 2, 4, 2, -2, -4, 2, 2, -4, 2, -2, 4, 2, -2, -4, -2, 2, 4, -2, 2, -4, -2, -2, 4, -2, 2, 4, -2, -2, -4, -2, -2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6q747"]
+albedo_color = Color(0.294118, 0.568627, 0.203922, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s0woj"]
+size = Vector3(400, 0.5, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v5fst"]
+albedo_color = Color(0.533333, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lm4he"]
+size = Vector3(400, 0.5, 160)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h0par"]
+albedo_color = Color(0, 0.0941176, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d5vac"]
+size = Vector3(400, 0.5, 600)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vyyjy"]
+albedo_texture = ExtResource("6_7ct3c")
+emission_enabled = true
+emission = Color(1, 0.913725, 0.345098, 1)
+
+[node name="sandbox - f,m,b" type="Node3D"]
+
+[node name="treeMarkers" type="Node3D" parent="."]
+
+[node name="foregroundTree" parent="treeMarkers" instance=ExtResource("8_25p5a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.75, 9.5)
+
+[node name="midgroundStart" parent="treeMarkers" instance=ExtResource("8_25p5a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 1.75, 30)
+
+[node name="midgroundHalf" parent="treeMarkers" instance=ExtResource("8_25p5a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 1.75, 90)
+
+[node name="midgroundEnd" parent="treeMarkers" instance=ExtResource("8_25p5a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 1.75, 170)
+
+[node name="horizon" parent="treeMarkers" instance=ExtResource("8_25p5a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 1.75, 270)
+
+[node name="horizonLeft" parent="treeMarkers" instance=ExtResource("8_25p5a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 1.75, 270)
+
+[node name="player" parent="." instance=ExtResource("7_tlv50")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28, 1)
+
+[node name="mountain" parent="." instance=ExtResource("9_qq3wl")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -288, -3, 570)
+
+[node name="mountain2" parent="mountain" instance=ExtResource("9_qq3wl")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -108, 0, 0)
+
+[node name="Cube" type="MeshInstance3D" parent="mountain"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -0.0123588, 2.39082, 41.6812)
+visible = false
+mesh = SubResource("BoxMesh_egctf")
+skeleton = NodePath("../../floor")
+surface_material_override/0 = ExtResource("4_g4qud")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="mountain/Cube"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="mountain/Cube/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_4rksp")
+
+[node name="floor" type="Node3D" parent="."]
+
+[node name="foreground" type="MeshInstance3D" parent="floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+material_override = SubResource("StandardMaterial3D_6q747")
+mesh = SubResource("BoxMesh_s0woj")
+
+[node name="midground" type="MeshInstance3D" parent="floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 90)
+material_override = SubResource("StandardMaterial3D_v5fst")
+mesh = SubResource("BoxMesh_lm4he")
+
+[node name="horizon" type="MeshInstance3D" parent="floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 470)
+material_override = SubResource("StandardMaterial3D_h0par")
+mesh = SubResource("BoxMesh_d5vac")
+
+[node name="Lighting" type="Node" parent="."]
+
+[node name="WorldEnvironment2" type="WorldEnvironment" parent="Lighting"]
+environment = ExtResource("6_7kkdv")
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="Lighting/WorldEnvironment2"]
+transform = Transform3D(1, 0, 0, 0, 0.973223, 0.229863, 0, -0.229863, 0.973223, 0, 2.112, 6.021)
+light_color = Color(0.980392, 0.556863, 0.537255, 1)
+light_energy = 0.5
+shadow_enabled = true
+shadow_transmittance_bias = -16.0
+shadow_opacity = 0.5
+shadow_blur = 10.0
+directional_shadow_max_distance = 45.0
+sky_mode = 1
+
+[node name="sun" type="CSGSphere3D" parent="Lighting"]
+transform = Transform3D(1, -1.49012e-08, 2.98023e-08, 1.49012e-08, 1, 2.98023e-08, 0, 0, 1, 195.715, 0.93395, 400)
+material_override = SubResource("StandardMaterial3D_vyyjy")

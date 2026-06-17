@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://csc7dstgv81nb"]
+
+[ext_resource type="Script" uid="uid://bj6vqqcmj70lv" path="res://ch/Timer/timer.gd" id="1_5lc31"]
+[ext_resource type="LabelSettings" uid="uid://b80p3fi2salg0" path="res://unfiled/Fonts/Themes/Basic theme.tres" id="2_y73li"]
+[ext_resource type="AudioStream" uid="uid://ynxorljpjjbk" path="res://sfx/reload_sound_01.wav" id="3_l7mi1"]
+[ext_resource type="AudioStream" uid="uid://chv5qmlsn4jnf" path="res://sfx/Clock_ticking.wav" id="4_od5kt"]
+[ext_resource type="AudioStream" uid="uid://cydvvxw2pq66a" path="res://sfx/pineapple_shake_1.wav" id="5_rov52"]
+[ext_resource type="AudioStream" uid="uid://dw8m2vyhfcrhu" path="res://sfx/pineapple_sound_2.wav" id="6_hl3ol"]
+[ext_resource type="AudioStream" uid="uid://dtr0oa4sjad2k" path="res://sfx/sfx-click.wav" id="7_caafk"]
+[ext_resource type="AudioStream" uid="uid://dvmkfwmyhweyr" path="res://sfx/ES_sound_effects/ES_Bell Ding - SFX Producer.wav" id="8_y73li"]
+
+[node name="Timer" type="Control" unique_id=779418741]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1_5lc31")
+ticking_sfx_max_db = -45.0
+
+[node name="Timer_centerPOS" type="Control" parent="." unique_id=764080607]
+layout_mode = 1
+anchor_left = 0.49947917
+anchor_top = 0.425
+anchor_right = 0.5005208
+anchor_bottom = 0.42685184
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/_edit_use_anchors_ = true
+
+[node name="TimeLabel" type="Label" parent="." unique_id=18379456]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -112.5
+offset_top = 32.0
+offset_right = 112.5
+offset_bottom = 143.66669
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "Timer"
+label_settings = ExtResource("2_y73li")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ReloadSound" type="AudioStreamPlayer" parent="." unique_id=928440455]
+stream = ExtResource("3_l7mi1")
+volume_db = -35.0
+max_polyphony = 10
+
+[node name="TimerTickingSFX" type="AudioStreamPlayer" parent="." unique_id=759069217]
+stream = ExtResource("4_od5kt")
+volume_db = -40.0
+
+[node name="TimeRanOut" type="AudioStreamPlayer" parent="." unique_id=330653728]
+stream = ExtResource("5_rov52")
+volume_db = -35.0
+
+[node name="TimeRanOut2" type="AudioStreamPlayer" parent="." unique_id=1511347680]
+stream = ExtResource("6_hl3ol")
+volume_db = -20.0
+
+[node name="TimeRanOut3" type="AudioStreamPlayer" parent="." unique_id=2140835152]
+stream = ExtResource("7_caafk")
+volume_db = -31.0
+
+[node name="TimeRanOut4" type="AudioStreamPlayer" parent="." unique_id=586072521]
+stream = ExtResource("8_y73li")
+volume_db = -50.0
+pitch_scale = 0.8

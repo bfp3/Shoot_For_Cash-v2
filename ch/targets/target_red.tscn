@@ -1,0 +1,105 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://environmentAssets/redTarget.gd" id="1_harm0"]
+[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="2_a0t1j"]
+[ext_resource type="Script" path="res://environmentAssets/redTargetMesh.gd" id="2_wuy4w"]
+[ext_resource type="AudioStream" uid="uid://douwgwjwt0hl1" path="res://sfx/ES_sound_effects/ES_Bomb Timer Beeps Count 1 - SFX Producer.wav" id="4_aah10"]
+[ext_resource type="AudioStream" uid="uid://cps8uhp6h2r3" path="res://sfx/bomb_countdown_single.wav" id="5_yu3sv"]
+[ext_resource type="AudioStream" uid="uid://cfi15vbqm0igf" path="res://sfx/metalSound shortened.wav" id="6_d2wk4"]
+
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_te0lg"]
+rough = true
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_k1uwx"]
+margin = 0.0
+height = 0.241
+radius = 0.826
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ibbo"]
+albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rvm72"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.2
+
+[sub_resource type="TorusMesh" id="TorusMesh_h31jf"]
+outer_radius = 0.328
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wni5p"]
+albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_r072a"]
+inner_radius = 0.75
+outer_radius = 0.615
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pxng8"]
+albedo_color = Color(0.807843, 0.0117647, 0, 1)
+emission_enabled = true
+emission = Color(0.807843, 0.0117647, 0, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_21tm5"]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.2
+
+[node name="redTarget" type="RigidBody3D"]
+collision_layer = 5
+physics_material_override = SubResource("PhysicsMaterial_te0lg")
+continuous_cd = true
+max_contacts_reported = 4
+contact_monitor = true
+lock_rotation = true
+script = ExtResource("1_harm0")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+process_priority = 10
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_k1uwx")
+
+[node name="innerRing" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -1.55114e-09, -0.0354859)
+material_override = SubResource("StandardMaterial3D_3ibbo")
+mesh = SubResource("CylinderMesh_rvm72")
+skeleton = NodePath("")
+
+[node name="middleRing" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -3.21807e-09, -0.073621)
+material_override = SubResource("StandardMaterial3D_3ibbo")
+mesh = SubResource("TorusMesh_h31jf")
+skeleton = NodePath("")
+
+[node name="outRing2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -4.25129e-09, -0.0972582)
+material_override = SubResource("StandardMaterial3D_wni5p")
+mesh = SubResource("TorusMesh_r072a")
+skeleton = NodePath("")
+
+[node name="red" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_pxng8")
+mesh = SubResource("CylinderMesh_21tm5")
+skeleton = NodePath("")
+script = ExtResource("2_wuy4w")
+
+[node name="hitSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_a0t1j")
+
+[node name="selfDestructTimer" type="Timer" parent="."]
+wait_time = 4.5
+one_shot = true
+
+[node name="selfDestructNoise" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_aah10")
+unit_size = 15.0
+
+[node name="countdownSFX" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_yu3sv")
+
+[node name="popSFX" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_d2wk4")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="selfDestructTimer" to="." method="_on_self_destruct_timer_timeout"]

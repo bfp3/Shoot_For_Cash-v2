@@ -1,0 +1,49 @@
+[gd_scene load_steps=13 format=3 uid="uid://bnd1ifkp64c8q"]
+
+[ext_resource type="Script" uid="uid://brd1an8161gkw" path="res://500_sequences/Cannonball_System/CMS/cms.gd" id="1_tmp8x"]
+[ext_resource type="Script" uid="uid://debt3n47lp3kl" path="res://500_sequences/Cannonball_System/CMS/cms_data_tracking.gd" id="2_m2c8o"]
+[ext_resource type="Script" uid="uid://dsmfpphuf7d68" path="res://500_sequences/Cannonball_System/CMS/cms_next_batch_creation.gd" id="2_pgouo"]
+[ext_resource type="Script" uid="uid://cujijbpi5fic7" path="res://500_sequences/Radar_Telegraph_System/Scripts/batch_probability_handler.gd" id="3_odjl5"]
+[ext_resource type="Script" uid="uid://dl08rmj36d5vw" path="res://500_sequences/Radar_Telegraph_System/Scripts/bonus_shot_handler.gd" id="4_0levp"]
+[ext_resource type="Script" uid="uid://fu5xk8l3o70i" path="res://500_sequences/Radar_Telegraph_System/Scripts/dot_reveal_probability.gd" id="5_ibi5x"]
+[ext_resource type="Script" uid="uid://bryfg57rx3hai" path="res://500_sequences/Cannonball_System/CMS/cms_check_for_winning_score.gd" id="6_hx1pn"]
+[ext_resource type="Script" uid="uid://cksk352wk5cx0" path="res://500_sequences/Cannonball_System/CMS/cms_smokescreen_odds.gd" id="6_odjl5"]
+[ext_resource type="Script" uid="uid://d333e2fe8oy8q" path="res://500_sequences/Cannonball_System/CMS/cms_player_won_the_game_seqeunce.gd" id="9_umuhw"]
+[ext_resource type="Script" uid="uid://dw5vq7th8i07" path="res://500_sequences/Cannonball_System/CMS/player_lost_the_game_sequence.gd" id="10_odjl5"]
+[ext_resource type="PackedScene" uid="uid://uaid8r4y647e" path="res://500_sequences/Pineapple_ending_sequence/PineappleEndingSequence.tscn" id="11_0levp"]
+[ext_resource type="Script" uid="uid://e7x0h6y5k3lm" path="res://500_sequences/Pineapple_ending_sequence/Scripts/v2_pineapple_ending_sequence.gd" id="12_ibi5x"]
+
+[node name="CMS" type="Node" groups=["CMS"]]
+script = ExtResource("1_tmp8x")
+
+[node name="BatchCreator" type="Node" parent="."]
+script = ExtResource("2_pgouo")
+
+[node name="BatchProbabilityHandler" type="Node" parent="BatchCreator"]
+script = ExtResource("3_odjl5")
+
+[node name="BonusShotHandler" type="Node" parent="BatchCreator"]
+script = ExtResource("4_0levp")
+
+[node name="DotRevealProbability" type="Node" parent="BatchCreator"]
+script = ExtResource("5_ibi5x")
+
+[node name="SmokescreenOdds" type="Node" parent="."]
+script = ExtResource("6_odjl5")
+
+[node name="CheckIfPlayerWon" type="Node" parent="."]
+script = ExtResource("6_hx1pn")
+
+[node name="CMSDataTracking" type="Node" parent="."]
+script = ExtResource("2_m2c8o")
+
+[node name="Player_won_the_game_seqeunce" type="Node" parent="."]
+script = ExtResource("9_umuhw")
+
+[node name="Player_lost_the_game_sequence" type="Node" parent="."]
+script = ExtResource("10_odjl5")
+
+[node name="V2_Pineapple_ending_sequence2" parent="." instance=ExtResource("11_0levp")]
+script = ExtResource("12_ibi5x")
+
+[node name="Pineapple_ending_sequence" parent="." instance=ExtResource("11_0levp")]

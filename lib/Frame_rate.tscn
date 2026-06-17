@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bb2qsoi6n8m2r"]
+
+[ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="1_8tk0h"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8tk0h"]
+font_size = 32
+outline_size = 10
+outline_color = Color(0.42, 0.42, 0.42, 0.392157)
+
+[node name="Frame_rate" type="Control" unique_id=439145462]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Label" type="Label" parent="." unique_id=2113754555]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.083
+anchor_top = 0.111
+anchor_right = 0.083
+anchor_bottom = 0.111
+offset_left = -87.36
+offset_top = 112.12
+offset_right = -32.36
+offset_bottom = 157.12
+text = "FPS"
+label_settings = SubResource("LabelSettings_8tk0h")
+script = ExtResource("1_8tk0h")
+
+[node name="Timer" type="Timer" parent="." unique_id=1710339876]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="Label" method="_on_timer_timeout"]

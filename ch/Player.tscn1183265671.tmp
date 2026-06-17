@@ -1,0 +1,281 @@
+[gd_scene load_steps=9 format=3 uid="uid://bowsa0qmgtgxx"]
+
+[ext_resource type="Texture2D" uid="uid://bppatqrj8eote" path="res://800_3D_materials/Kenney_prototype_textures/Light/texture_02.png" id="1_x46qe"]
+[ext_resource type="AudioStream" uid="uid://b6r6mcbey572i" path="res://400_sounds/Placeholder_SFX/Shoot_sfx_1.wav" id="2_uns27"]
+[ext_resource type="Texture2D" uid="uid://dqnnhtck516xt" path="res://700_2D_nodes_UI/Decal_placeholders/Ring_cherries.png" id="3_mm7cb"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://700_2D_nodes_UI/Decal_placeholders/Cherry_placeholder_icon.png" id="4_2p5fl"]
+
+[sub_resource type="GDScript" id="GDScript_pq7i7"]
+script/source = "extends Node3D
+const ARROW = preload(\"res://300_assets/Arrows/Arrow.tscn\")
+@export var rotation_speed: float = 0.1
+@export var clamp_up: float = 75.0
+@export var clamp_down: float = -75.0
+
+@export var pan_amount: float = 2.0  # How much the camera should pan
+@export var pan_threshold: float = 0.2  # Percentage of screen width to trigger pan
+
+@export var panning_camera: bool = true  # New export variable to toggle panning camera
+
+@onready var raycast: RayCast3D = $RayCast3D
+@onready var cam: Camera3D = $Cam_pivot/Camera3D
+@onready var crosshair: Control = $Crosshair
+@onready var cam_pivot: Node3D = $Cam_pivot
+@onready var camera_3d: Camera3D = $Cam_pivot/Camera3D
+@onready var hand_marker: Marker3D = $Cam_pivot/Hand/Marker3D
+
+var rotation_x: float = 0.0
+
+func _ready() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func handle_pan_up_and_down(delta) -> void:
+	var viewport_size = get_viewport().size
+	var screen_height = viewport_size.y
+	var crosshair_y = crosshair.position.y
+	
+	crosshair.position.y = clamp(crosshair.position.y, 0, screen_height - crosshair.size.y)
+	
+	if crosshair_y <= 70:
+		cam_pivot.rotation_degrees.x += pan_amount * delta  # Apply a small pan to the left
+		cam_pivot.rotation_degrees.x = clamp(cam_pivot.rotation_degrees.x, -5, 5)
+		
+	elif crosshair_y >= 1000:
+		cam_pivot.rotation_degrees.x -= pan_amount * delta  # Apply a small pan to the left
+		cam_pivot.rotation_degrees.x = clamp(cam_pivot.rotation_degrees.x, -5, 5)
+
+func handle_pan_left_and_right(delta) -> void:
+	var viewport_size = get_viewport().size
+	var screen_width = viewport_size.x
+	var crosshair_x = crosshair.position.x
+	
+	crosshair.position.x = clamp(crosshair.position.x, 0, screen_width - crosshair.size.x)
+	
+	if crosshair_x <= 200:
+		cam_pivot.rotation_degrees.y += pan_amount * delta  # Apply a small pan to the left
+		cam_pivot.rotation_degrees.y = clamp(cam_pivot.rotation_degrees.y, -5, 5)
+	elif crosshair_x >= 1718:
+		cam_pivot.rotation_degrees.y -= pan_amount * delta  # Apply a small pan to the left
+		cam_pivot.rotation_degrees.y = clamp(cam_pivot.rotation_degrees.y, -5, 5)
+
+
+func _process(delta: float) -> void:
+	handle_pan_up_and_down(delta)
+	handle_pan_left_and_right(delta)
+	handle_raycast_movement(delta)
+	
+func handle_raycast_movement(delta : float) -> void:
+	var space_state = get_world_3d().direct_space_state
+	var start: Vector3
+	var direction: Vector3
+
+	var viewport = get_viewport()
+	var screen_pos = crosshair.position
+	var mouse_ray = camera_3d.project_ray_origin(screen_pos)
+	var ray_dir = camera_3d.project_ray_normal(screen_pos)
+		
+	start = mouse_ray
+	direction = ray_dir * 500  # You can adjust this distance as needed
+
+	var end = start + direction
+	var query = PhysicsRayQueryParameters3D.create(start, end)
+	var result = space_state.intersect_ray(query)
+	
+	if result:
+		#var collider = result #.get_collider()
+		$Aim_decal.global_position = result.position
+		$Aim_decal.show()
+	else:
+		$Aim_decal.hide()
+
+
+func _input(event):
+	if panning_camera:
+		if event is InputEventMouseMotion:
+			var delta = event.relative * rotation_speed
+			
+			rotate_y(-deg_to_rad(delta.x))
+			
+			rotation_x = clamp(rotation_x - delta.y, clamp_down, clamp_up)
+			cam_pivot.rotation_degrees.x = rotation_x
+	else:
+		if event is InputEventMouseMotion:
+			crosshair.position += event.relative
+			
+		if Input.is_action_just_pressed(\"shoot_weapon\"):
+			shoot_target()
+			cam.shake_camera()
+
+	if Input.is_action_just_pressed(\"quit\"):
+		get_tree().quit()
+		
+	if Input.is_action_just_pressed(\"restart\"):
+		get_tree().reload_current_scene()
+
+func shoot_target():
+	
+	$SFX/Shoot_sfx.play()
+	
+	var space_state = get_world_3d().direct_space_state
+	var start: Vector3
+	var direction: Vector3
+
+	if panning_camera:
+		start = camera_3d.global_transform.origin
+		direction = -camera_3d.global_transform.basis.z * 100
+	else:
+		# Calculate the direction from the crosshair position in the screen space
+		var viewport = get_viewport()
+		var screen_pos = crosshair.position
+		var mouse_ray = camera_3d.project_ray_origin(screen_pos)
+		var ray_dir = camera_3d.project_ray_normal(screen_pos)
+		
+		start = mouse_ray
+		direction = ray_dir * 1000  # You can adjust this distance as needed
+
+	var end = start + direction
+	var query = PhysicsRayQueryParameters3D.create(start, end)
+	var result = space_state.intersect_ray(query)
+	
+	if result:
+		#print(\"Hit: \", result.collider, \" at \", result.position)
+		
+		#if result.collider.is_in_group(\"target\"):
+			#result.collider.get_parent().get_parent().player_hit_me()
+		
+		prepare_arrow(direction) # result.position
+	else:
+		#print_debug(\"No collision detected\")
+		prepare_arrow(direction)
+
+func prepare_arrow(target_pos: Vector3):
+	var new_arrow = ARROW.instantiate()
+	get_tree().get_current_scene().add_child(new_arrow)
+	new_arrow.set_direction(target_pos) 
+	new_arrow.global_position = hand_marker.global_position
+	
+	#var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	#tween.tween_property(new_arrow, \"global_position\", target_pos, 1.0)
+"
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_p23d5"]
+shading_mode = 0
+albedo_color = Color(0.41, 0.41, 0.41, 1)
+albedo_texture = ExtResource("1_x46qe")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_u3bs4"]
+
+[sub_resource type="GDScript" id="GDScript_p23d5"]
+script/source = "extends Camera3D
+
+
+@export var shake_amount := 3
+@export var move_speed := 0.1
+
+var cam_shake_tween : Tween = null
+var orig_pos : Vector3
+
+func _ready() -> void:
+	orig_pos = global_position
+
+func shake_camera() -> void:
+	if cam_shake_tween:
+		cam_shake_tween.kill()
+		#return
+	global_position = orig_pos
+	cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	for i in range(shake_amount):
+		cam_shake_tween.tween_property(self, \"global_position:z\", -1, move_speed).as_relative()
+		cam_shake_tween.tween_property(self, \"global_position:z\", 1, move_speed).as_relative()
+	await cam_shake_tween.finished
+	global_position = orig_pos
+"
+
+[node name="Player" type="Node3D"]
+script = SubResource("GDScript_pq7i7")
+rotation_speed = 0.05
+pan_amount = 20.0
+panning_camera = false
+
+[node name="Cam_pivot" type="Node3D" parent="."]
+
+[node name="Hand" type="Node3D" parent="Cam_pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -1, -5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cam_pivot/Hand"]
+material_override = SubResource("ORMMaterial3D_p23d5")
+mesh = SubResource("BoxMesh_u3bs4")
+
+[node name="Marker3D" type="Marker3D" parent="Cam_pivot/Hand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, 5)
+
+[node name="Camera3D" type="Camera3D" parent="Cam_pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.13453)
+fov = 50.0
+size = 240.0
+script = SubResource("GDScript_p23d5")
+shake_amount = 1
+move_speed = 0.5
+
+[node name="Crosshair" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Line2D" type="Line2D" parent="Crosshair"]
+visible = false
+position = Vector2(20, 19)
+points = PackedVector2Array(-20, 0, -9.93, 0)
+width = 2.0
+
+[node name="Line2D5" type="Line2D" parent="Crosshair"]
+position = Vector2(20, 20)
+points = PackedVector2Array(-5, 0, 5, 0)
+width = 2.0
+
+[node name="Line2D2" type="Line2D" parent="Crosshair"]
+visible = false
+position = Vector2(20, 19)
+rotation = -1.5708
+points = PackedVector2Array(-20, 0, 0, 0)
+width = 2.0
+
+[node name="Line2D3" type="Line2D" parent="Crosshair"]
+visible = false
+position = Vector2(20, 19)
+rotation = 3.14159
+points = PackedVector2Array(-20, 0, 0, 0)
+width = 2.0
+
+[node name="Line2D4" type="Line2D" parent="Crosshair"]
+visible = false
+position = Vector2(20, 19)
+rotation = 1.5708
+points = PackedVector2Array(-20, 0, 0, 0)
+width = 2.0
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="Shoot_sfx" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("2_uns27")
+volume_db = -10.0
+pitch_scale = 0.5
+
+[node name="Aim_decal" type="Decal" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+size = Vector3(1, 5, 1)
+texture_albedo = ExtResource("3_mm7cb")
+
+[node name="Aim_decal2" type="Decal" parent="Aim_decal"]
+size = Vector3(1, 5, 1)
+texture_albedo = ExtResource("4_2p5fl")

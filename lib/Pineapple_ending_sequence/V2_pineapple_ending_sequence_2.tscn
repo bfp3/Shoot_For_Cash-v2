@@ -1,0 +1,121 @@
+[gd_scene format=3 uid="uid://cxmirbvecyqjt"]
+
+[ext_resource type="Script" uid="uid://e7x0h6y5k3lm" path="res://lib/Pineapple_ending_sequence/Scripts/v2_pineapple_ending_sequence.gd" id="1_4aqti"]
+[ext_resource type="PackedScene" uid="uid://b5wang725r8ve" path="res://lib/Pineapple_ending_sequence/UponShootingPineapple.tscn" id="2_1vxm6"]
+[ext_resource type="Script" uid="uid://c2wf8p85uv1ui" path="res://lib/Pineapple_ending_sequence/Scripts/upon_shooting_pineapple.gd" id="3_op5km"]
+[ext_resource type="Script" uid="uid://4ehkekfqbsnf" path="res://lib/Pineapple_ending_sequence/Scripts/clear_away_panels.gd" id="4_7ec2r"]
+[ext_resource type="PackedScene" uid="uid://wn81j624y71u" path="res://lib/Pineapples_display_intro/Show_prize_short_version.tscn" id="5_3ynhx"]
+[ext_resource type="Script" uid="uid://d22lxmeadubri" path="res://lib/Pineapple_ending_sequence/Scripts/pineapple_telegraph_same_as_intro.gd" id="6_xbxlh"]
+[ext_resource type="AudioStream" uid="uid://d2c0xepidbqxe" path="res://sfx/Incidental_music/Metronome_no_loop.wav" id="7_1vxm6"]
+[ext_resource type="AudioStream" uid="uid://cjufvdag565ig" path="res://sfx/Copyright_free/Beethoven_snippet_trumpets_space_arp_v2.wav" id="8_op5km"]
+
+
+[node name="V2_Pineapple_ending_sequence2" type="Node" groups=["pineapple_ending_seqeunce_manager"]]
+script = ExtResource("1_4aqti")
+
+[node name="Player_shoot_pineapple" parent="." instance=ExtResource("2_1vxm6")]
+visible = false
+script = ExtResource("3_op5km")
+
+[node name="Dots_phase" parent="Player_shoot_pineapple" index="2"]
+modulate = Color(0.96, 0.8832, 0.0384, 0.509804)
+z_index = 0
+
+[node name="Dot" parent="Player_shoot_pineapple/Dots_phase" index="0"]
+custom_minimum_size = Vector2(0, 0)
+scale = Vector2(1, 1)
+pivot_offset = Vector2(20, 20)
+
+[node name="Circle" parent="Player_shoot_pineapple/Dots_phase/Dot" index="2"]
+modulate = Color(1, 1, 1, 0.117647)
+scale = Vector2(1, 1)
+stretch_mode = 0
+
+[node name="Outline" parent="Player_shoot_pineapple/Dots_phase/Dot" index="3"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+custom_minimum_size = Vector2(45, 45)
+
+[node name="Dot2" parent="Player_shoot_pineapple/Dots_phase" index="1"]
+custom_minimum_size = Vector2(0, 0)
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+scale = Vector2(1, 1)
+pivot_offset = Vector2(20, 20)
+
+[node name="Circle" parent="Player_shoot_pineapple/Dots_phase/Dot2" index="2"]
+modulate = Color(1, 1, 1, 0.117647)
+scale = Vector2(1, 1)
+stretch_mode = 0
+
+[node name="Outline" parent="Player_shoot_pineapple/Dots_phase/Dot2" index="3"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+custom_minimum_size = Vector2(45, 45)
+
+[node name="Dot3" parent="Player_shoot_pineapple/Dots_phase" index="2"]
+custom_minimum_size = Vector2(0, 0)
+offset_left = 60.0
+offset_top = -20.0
+offset_right = 100.0
+offset_bottom = 20.0
+scale = Vector2(1, 1)
+pivot_offset = Vector2(20, 20)
+
+[node name="Background_glow" parent="Player_shoot_pineapple/Dots_phase/Dot3" index="0"]
+visible = false
+modulate = Color(1, 1, 1, 1)
+scale = Vector2(2.485, 2.485)
+
+[node name="Background_glow2" parent="Player_shoot_pineapple/Dots_phase/Dot3" index="1"]
+visible = false
+modulate = Color(1, 1, 1, 1)
+scale = Vector2(2.485, 2.485)
+
+[node name="Circle" parent="Player_shoot_pineapple/Dots_phase/Dot3" index="2"]
+modulate = Color(1, 1, 1, 0.117647)
+scale = Vector2(1, 1)
+stretch_mode = 0
+
+[node name="Outline" parent="Player_shoot_pineapple/Dots_phase/Dot3" index="3"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+custom_minimum_size = Vector2(45, 45)
+offset_left = -22.5
+offset_top = -22.1667
+offset_right = 22.5
+offset_bottom = 22.8333
+
+[node name="PanelContainer" parent="Player_shoot_pineapple/PanelContainer/MarginContainer/HBoxContainer/Pineapple" index="0"]
+offset_left = 0.0
+offset_right = -37.0
+offset_bottom = -80.963
+
+[node name="TextureRect" parent="Player_shoot_pineapple/PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer/MarginContainer" index="0"]
+visible = false
+
+[node name="Smoke_sprite" parent="Player_shoot_pineapple" index="8"]
+visible = false
+
+[node name="Smoke_sprite2" parent="Player_shoot_pineapple" index="9"]
+visible = false
+
+[node name="Smoke_sprite3" parent="Player_shoot_pineapple" index="10"]
+visible = false
+
+[node name="Clear_away_panels" type="Node" parent="."]
+script = ExtResource("4_7ec2r")
+
+[node name="Pineapple_telegraph_same_as_intro" parent="." instance=ExtResource("5_3ynhx")]
+script = ExtResource("6_xbxlh")
+time_until_pineapples_disappear = 1.5
+
+[node name="NoEffects120bpmNoLoop" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_1vxm6")
+volume_db = -80.0
+
+[node name="Trumpets" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_op5km")
+volume_db = -24.0
+
+[editable path="Player_shoot_pineapple"]
+[editable path="Pineapple_telegraph_same_as_intro"]

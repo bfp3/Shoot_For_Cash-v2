@@ -1,0 +1,1523 @@
+[gd_scene format=3 uid="uid://clkvt5u0ifd86"]
+
+[ext_resource type="AudioStream" uid="uid://bmmratmawbv6y" path="res://sfx/sfx_dot_1.wav" id="3_pgkd0"]
+[ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="4_qicn3"]
+[ext_resource type="PackedScene" uid="uid://bn61uifa163wl" path="res://unfiled/Circle_polygon/Circle_Polygon.tscn" id="5_v4bl3"]
+[ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="6_251sa"]
+[ext_resource type="AudioStream" uid="uid://cflwuwauqncrs" path="res://sfx/popper-grr-002.wav" id="7_tgbha"]
+[ext_resource type="AudioStream" uid="uid://dw8m2vyhfcrhu" path="res://sfx/pineapple_sound_2.wav" id="8_b4od5"]
+[ext_resource type="AudioStream" uid="uid://c7xko6f6va2gy" path="res://sfx/popper-angry-001.wav" id="9_s0uo5"]
+[ext_resource type="AudioStream" uid="uid://cydvvxw2pq66a" path="res://sfx/pineapple_shake_1.wav" id="10_fjm5e"]
+[ext_resource type="Texture2D" uid="uid://csl74rswr2smp" path="res://res/textures_2D/Fuji_mountain_3.png" id="11_kjgmj"]
+[ext_resource type="Texture2D" uid="uid://b8wgnqghjdkhj" path="res://res/textures_2D/Fuji_mountain.png" id="12_qkrpm"]
+[ext_resource type="Texture2D" uid="uid://dpaxj2x45retb" path="res://res/textures_2D/Cloud_1.png" id="13_64ck7"]
+[ext_resource type="Texture2D" uid="uid://b0a31br53s8w" path="res://res/textures_2D/Cloud_2.png" id="14_jq6l1"]
+[ext_resource type="Texture2D" uid="uid://c7unvcfoulwxr" path="res://res/textures_2D/Cloud_3.png" id="15_ran8e"]
+[ext_resource type="Texture2D" uid="uid://c80krktofac25" path="res://res/textures_2D/Cloud_4.png" id="16_y8v78"]
+
+
+[sub_resource type="GDScript" id="GDScript_608u3"]
+script/source = "extends Control
+
+@onready var control: Control = $Circles/Control
+#@onready var pineapple_texture: TextureRect = $Circles/Control/Circle_polygon/Pineapple_texture
+@onready var circle_polygon: Polygon2D = $Pineapple_control/Circle_polygon
+@onready var pineapple_texture: TextureRect = $Pineapple_control/pineapple_texture
+@onready var pineapple_container: Control = $Pineapple_container
+@onready var pineapple_unit: Control = $Pineapple_control
+@onready var smoke_sprite: AnimatedSprite2D = $Pineapple_control/Smoke_sprite
+@onready var pineapples_collected: Control = $Pineapples_collected
+
+@export var do_not_move_on := false
+
+var amount_of_pineapples_collected := 0
+
+func _ready() -> void:
+	
+	amount_of_pineapples_collected = GameManager.total_number_of_pineapples_collected
+	
+	#GlobalMusic.incidental_music.play_incidental_music()
+
+	circle_polygon.scale = Vector2.ZERO
+	#pineapple_texture.scale = Vector2.ZERO
+	smoke_sprite.hide()
+	circle_polygon.modulate = Color.TRANSPARENT
+	await get_tree().create_timer(3.1).timeout
+
+	#start_sequence()
+	#heart_beat_cherry()
+	$Fuji_control.fade_out()
+	$Pineapples_collected.fade_out()
+	await get_tree().create_timer(2.0).timeout
+	if do_not_move_on:
+		return
+	#$Fuji_control.fade_out()
+	#GlobalMusic.incidental_music.stop_incidental_music()
+	prepare_for_transition()
+	#end_sequence()
+	
+	
+func start_sequence() -> void:
+	#smoke_sequence()
+	$SFX/Panel_fade_in2.play()
+	var dur : float = 0.6
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tween.tween_interval(0.1)
+	tween.tween_property(circle_polygon, \"scale\", Vector2.ONE, dur)
+	tween.parallel().tween_property(pineapple_texture, \"scale\", Vector2.ONE, dur)
+	tween.parallel().tween_property(circle_polygon, \"modulate\", Color.WHITE, dur * 8)
+
+	await tween.finished
+	
+func heart_beat_cherry() -> void:
+	$SFX/Cherry_heart.play()
+	$SFX/Cherry_heart2.play()
+	
+	# Pulse the cherry scale with a bounce + slight squash
+	var tween := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_interval(1.0)
+	tween.tween_property(pineapple_texture, \"scale\", Vector2(1.1, 0.95), 0.15)
+	tween.tween_property(pineapple_texture, \"scale\", Vector2.ONE, 0.15)
+	tween.tween_interval(1.0)
+	tween.tween_property(pineapple_texture, \"scale\", Vector2(1.1, 0.95), 0.15)
+	tween.tween_property(pineapple_texture, \"scale\", Vector2.ONE, 0.15)
+	tween.tween_property(pineapple_texture, \"scale\", Vector2(1.1, 0.95), 0.15)
+	tween.tween_property(pineapple_texture, \"scale\", Vector2.ONE, 0.15)
+	#tween.tween_interval(0.2)
+	await tween.finished
+	start_fading_circle()
+	
+	
+func start_fading_circle() -> void:
+	var dur : float = 1.5
+	var tween = create_tween().set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(pineapple_texture, \"modulate\", Color('b8000000'), 0.5).set_trans(Tween.TRANS_LINEAR)
+	await tween.finished
+	circle_polygon.hide()
+	
+	
+func end_sequence() -> void:
+	var dur : float = 1.5
+	var tween = create_tween().set_ease(Tween.EASE_OUT)
+	tween.tween_property(circle_polygon, \"scale\", Vector2.ZERO, dur)
+	tween.parallel().tween_property(pineapple_texture, \"scale\", Vector2.ZERO, dur)
+	tween.parallel().tween_property(circle_polygon, \"modulate\", Color.TRANSPARENT, 0.75).set_trans(Tween.TRANS_LINEAR)
+	
+	tween.parallel().tween_callback(smoke_sequence).set_delay(0.5)
+	await tween.finished
+	prepare_for_transition()
+	
+func prepare_for_transition() -> void:
+	BackgroundForTransition.fade_in()
+	await get_tree().create_timer(0.15).timeout
+	var next_scene = GameManager.next_level_directory()
+	get_tree().change_scene_to_file(next_scene)
+
+func smoke_sequence() -> void:
+	smoke_sprite.show()
+	
+	smoke_sprite.play(\"default\")
+	$SFX/Smoke_sound.play()
+	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
+	tween.tween_property(smoke_sprite, \"modulate\", Color.TRANSPARENT, 1.0).set_trans(Tween.TRANS_LINEAR)
+	await tween.finished
+	smoke_sprite.modulate = Color.WHITE
+	smoke_sprite.hide()
+"
+
+[sub_resource type="GDScript" id="GDScript_4obph"]
+script/source = "extends Control
+
+@onready var pineapple_unit: Control = $PineappleTemplate  # Template Control node
+
+@export var rot_speed := 0.1
+@export var dist_radius := 375.0
+@export var scale_factor := 0.4
+@export var collected_color: Color = Color(\"ffffff\")
+@export var uncollected_color: Color = Color(\"ffffff30\")
+@onready var new_container: Control = $New_container
+
+@onready var smoke_sfx := $Smoke_sound
+@onready var not_collected: AudioStreamPlayer = $Not_collected
+
+var delay_time := 0.25
+var amount_of_pineapples_collected := 0  # Can be dynamically assigned from GameManager
+
+var time := 0.01
+
+func _ready() -> void:
+	amount_of_pineapples_collected = GameManager.total_number_of_pineapples_collected
+	create_pineapple_circle()
+
+func fade_out() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_LINEAR)
+	tween.tween_interval(1.0)
+	tween.tween_property(self, \"modulate\", Color.TRANSPARENT, 0.5)
+
+func create_pineapple_circle() -> void:
+	var total : int = 10 #ScoreGl.PINEAPPLES_AMOUNT_TO_COMPLETE
+	var radius := dist_radius
+
+	# Clear any existing children except the template
+	#for child in get_children():
+		#if child != pineapple_unit:
+			#child.queue_free()
+
+	for i in range(total):
+		var angle = TAU * float(i) / float(total)
+		var pos = Vector2(cos(angle), sin(angle)) * -radius
+
+		var pineapple = pineapple_unit.duplicate() as Control
+		pineapple.show()
+		new_container.add_child(pineapple)
+		pineapple.position = pos
+		var target_scale = Vector2.ONE * scale_factor
+		pineapple.scale = Vector2.ZERO
+		
+		var tween = create_tween()
+		tween.tween_property(pineapple, \"scale\", target_scale, 0.25)
+		
+		var is_collected := i < amount_of_pineapples_collected
+		pineapple.get_child(0).collected = is_collected
+		pineapple.modulate = collected_color if is_collected else uncollected_color
+
+		if is_collected:
+			smoke_sfx.play()
+		else:
+			not_collected.play()
+
+		await get_tree().create_timer(delay_time).timeout
+		delay_time = max(0.05, delay_time - 0.025)  # Prevent going negative
+
+func _process(_delta: float) -> void:
+	
+	rotation += _delta * rot_speed
+	if time >= 0.5:
+		time = 0
+		_adjust_params()
+
+func _adjust_params() -> void:
+	
+	var total := new_container.get_child_count() - 1  # Exclude template
+	var index := 0
+
+	for child in new_container.get_children():
+		#if child != Control:
+			#return
+		if child == pineapple_unit:
+			continue
+		var angle := TAU * float(index) / float(total)
+		var pos := Vector2(cos(angle), sin(angle)) * -dist_radius
+		child.position = pos
+		child.scale = Vector2.ONE * scale_factor
+
+		var is_collected := index < amount_of_pineapples_collected
+		child.modulate = collected_color if is_collected else uncollected_color
+
+		index += 1
+"
+
+[sub_resource type="GDScript" id="GDScript_cdrd4"]
+script/source = "extends Control
+
+@onready var circle_spawn_container: Control = $Control
+@onready var circle_polygon_template: Polygon2D = $Control/Circle_polygon
+
+const TOTAL_CIRCLES := 100
+
+func _ready() -> void:
+	circle_polygon_template.hide()
+	spawn_circle_explosion()
+
+func spawn_circle_explosion() -> void:
+	randomize()
+	for i in TOTAL_CIRCLES:
+		var circle_instance : Polygon2D = circle_polygon_template.duplicate()
+		circle_instance.show()
+		circle_instance.scale = Vector2.ZERO
+		circle_instance.modulate = Color(1, 1, 1, 0.6)  # Optional: faded white
+
+		# Random position offset from center (optional, tweak for effect)
+		var offset = Vector2(randi_range(0, 1920), randi_range(0, 1080))
+		circle_instance.position += offset
+		
+		circle_spawn_container.add_child(circle_instance)
+		var rand_scale = randf_range(1.0, 3.0)
+		
+		var target_scale = Vector2(rand_scale, rand_scale)
+		var delay = randf_range(0.0, 1.0)
+
+		var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(circle_instance, \"scale\", target_scale, delay * 6).set_delay(delay)
+		tween.tween_property(circle_instance, \"scale\", Vector2.ZERO, delay * 6)
+"
+
+[sub_resource type="GDScript" id="GDScript_ksx3h"]
+script/source = "extends Control
+
+@onready var circle_spawn_container: Control = $Control
+@onready var circle_polygon_template: Polygon2D = $Control/Circle_polygon
+
+const TOTAL_CIRCLES := 100
+
+func _ready() -> void:
+	circle_polygon_template.hide()
+	spawn_circle_explosion()
+
+func spawn_circle_explosion() -> void:
+	randomize()
+	for i in TOTAL_CIRCLES:
+		var circle_instance : Polygon2D = circle_polygon_template.duplicate()
+		circle_instance.show()
+		circle_instance.scale = Vector2.ZERO
+		circle_instance.modulate = Color(1, 1, 1, 0.6)  # Optional: faded white
+
+		# Random position offset from center (optional, tweak for effect)
+		var offset = Vector2(randi_range(0, 1920), randi_range(0, 1080))
+		circle_instance.position += offset
+		
+		circle_spawn_container.add_child(circle_instance)
+		var rand_scale = randf_range(1.0, 3.0)
+		
+		var target_scale = Vector2(rand_scale, rand_scale)
+		var delay = randf_range(0.0, 1.0)
+
+		var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(circle_instance, \"scale\", target_scale, delay * 6).set_delay(delay)
+		tween.tween_property(circle_instance, \"scale\", Vector2.ZERO, delay * 6)
+"
+
+[sub_resource type="Animation" id="Animation_jacqp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture_offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_sxxhn"]
+resource_name = "texture_offset_anim"
+length = 15.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture_offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 1000)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_y180j"]
+_data = {
+&"RESET": SubResource("Animation_jacqp"),
+&"texture_offset_anim": SubResource("Animation_sxxhn")
+}
+
+[sub_resource type="GDScript" id="GDScript_pgkd0"]
+script/source = "extends TextureRect
+
+var collected := false
+var bounce_time := 0.0
+@export var bounce_height := 10.0
+@export var bounce_speed := 4.0
+var original_y := 0.0
+
+func _ready():
+	await get_tree().create_timer(0.1).timeout
+	original_y = position.y
+
+func _process(delta: float) -> void:
+
+	rotation -= delta * 0.1
+	if collected:
+		bounce_time += delta
+		position.y = original_y + sin(bounce_time * bounce_speed) * bounce_height
+	#else:
+		#set_process(false)
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pjr7p"]
+atlas = ExtResource("6_251sa")
+region = Rect2(0, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fwom1"]
+atlas = ExtResource("6_251sa")
+region = Rect2(256, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_njqvu"]
+atlas = ExtResource("6_251sa")
+region = Rect2(512, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f4e35"]
+atlas = ExtResource("6_251sa")
+region = Rect2(768, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_najge"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1024, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7djja"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1280, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jwjil"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1536, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_21td1"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1792, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sx5lq"]
+atlas = ExtResource("6_251sa")
+region = Rect2(0, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fxp3v"]
+atlas = ExtResource("6_251sa")
+region = Rect2(256, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tfsrt"]
+atlas = ExtResource("6_251sa")
+region = Rect2(512, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0y201"]
+atlas = ExtResource("6_251sa")
+region = Rect2(768, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lqu3s"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1024, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ovynx"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1280, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l5bf8"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1536, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ocfye"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1792, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1rkw2"]
+atlas = ExtResource("6_251sa")
+region = Rect2(0, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p2ekq"]
+atlas = ExtResource("6_251sa")
+region = Rect2(256, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5mjfc"]
+atlas = ExtResource("6_251sa")
+region = Rect2(512, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6em1o"]
+atlas = ExtResource("6_251sa")
+region = Rect2(768, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4r7iv"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1024, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fdwgb"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1280, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8f7m"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1536, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3re1u"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1792, 512, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_elayt"]
+atlas = ExtResource("6_251sa")
+region = Rect2(0, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q8dml"]
+atlas = ExtResource("6_251sa")
+region = Rect2(256, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6f3wf"]
+atlas = ExtResource("6_251sa")
+region = Rect2(512, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1x2f6"]
+atlas = ExtResource("6_251sa")
+region = Rect2(768, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tbqfv"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1024, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n7bn6"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1280, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_noxmv"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1536, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ufd6t"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1792, 768, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pckq1"]
+atlas = ExtResource("6_251sa")
+region = Rect2(0, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ixouq"]
+atlas = ExtResource("6_251sa")
+region = Rect2(256, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3odal"]
+atlas = ExtResource("6_251sa")
+region = Rect2(512, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a5s3f"]
+atlas = ExtResource("6_251sa")
+region = Rect2(768, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4nep"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1024, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uv31i"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1280, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xwkb8"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1536, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b7ova"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1792, 1024, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a246o"]
+atlas = ExtResource("6_251sa")
+region = Rect2(0, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sqt5b"]
+atlas = ExtResource("6_251sa")
+region = Rect2(256, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4mrk"]
+atlas = ExtResource("6_251sa")
+region = Rect2(512, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qybrd"]
+atlas = ExtResource("6_251sa")
+region = Rect2(768, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vamqy"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1024, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q0x4i"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1280, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y1gg3"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1536, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0tfl8"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1792, 1280, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ogfc5"]
+atlas = ExtResource("6_251sa")
+region = Rect2(0, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7dtul"]
+atlas = ExtResource("6_251sa")
+region = Rect2(256, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tka44"]
+atlas = ExtResource("6_251sa")
+region = Rect2(512, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_buijp"]
+atlas = ExtResource("6_251sa")
+region = Rect2(768, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k50et"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1024, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5gjux"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1280, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1mow"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1536, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5f5q3"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1792, 1536, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_net0u"]
+atlas = ExtResource("6_251sa")
+region = Rect2(0, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gcoqv"]
+atlas = ExtResource("6_251sa")
+region = Rect2(256, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bc7w4"]
+atlas = ExtResource("6_251sa")
+region = Rect2(512, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sryyf"]
+atlas = ExtResource("6_251sa")
+region = Rect2(768, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k7mc0"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1024, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1i3wg"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1280, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ryskl"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1536, 1792, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ojg18"]
+atlas = ExtResource("6_251sa")
+region = Rect2(1792, 1792, 256, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_puhxt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pjr7p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fwom1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_njqvu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f4e35")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_najge")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7djja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jwjil")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_21td1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sx5lq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fxp3v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tfsrt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0y201")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lqu3s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ovynx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l5bf8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ocfye")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1rkw2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p2ekq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5mjfc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6em1o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4r7iv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fdwgb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j8f7m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3re1u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_elayt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q8dml")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6f3wf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1x2f6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tbqfv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n7bn6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_noxmv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ufd6t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pckq1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ixouq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3odal")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a5s3f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e4nep")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uv31i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xwkb8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b7ova")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a246o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sqt5b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e4mrk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qybrd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vamqy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q0x4i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y1gg3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0tfl8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ogfc5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7dtul")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tka44")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_buijp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k50et")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5gjux")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1mow")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5f5q3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_net0u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gcoqv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bc7w4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sryyf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k7mc0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1i3wg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ryskl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ojg18")
+}],
+"loop": false,
+"name": &"default",
+"speed": 120.0
+}]
+
+[sub_resource type="GDScript" id="GDScript_qicn3"]
+script/source = "extends Control
+
+func _ready() -> void:
+	modulate = Color.TRANSPARENT
+	fade_in()
+	
+func fade_in() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_LINEAR)
+	tween.tween_interval(1.0)
+	tween.tween_property(self, \"modulate\", Color.WHITE, 1.5)
+
+func fade_out() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_LINEAR)
+	tween.tween_interval(1.0)
+	tween.tween_property(self, \"modulate\", Color.TRANSPARENT, 0.5)
+"
+
+[sub_resource type="Gradient" id="Gradient_cneuj"]
+offsets = PackedFloat32Array(0, 0.232143, 0.486607, 0.785714)
+colors = PackedColorArray(0.533333, 0.270588, 0.215686, 1, 0.0313726, 0.145098, 0.239216, 1, 0.976471, 0.941176, 0.811765, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_tvqle"]
+gradient = SubResource("Gradient_cneuj")
+fill_to = Vector2(0, 0.773504)
+
+[sub_resource type="GDScript" id="GDScript_v4bl3"]
+script/source = "extends Control
+
+@export var move_direction: Vector2 = Vector2.LEFT
+@export var move_speed: float = 50.0
+
+@onready var cut_off_marker: Marker2D = $Cut_off_marker
+@onready var restart_marker: Marker2D = $Restart_marker
+
+@onready var texture_rects: Array = [
+	$TextureRect,
+	$TextureRect2,
+	$TextureRect3,
+	$TextureRect4,
+	$TextureRect5,
+	$TextureRect6,
+	$TextureRect7,
+	$TextureRect8,
+	$TextureRect9,
+	$TextureRect10
+]
+
+func _ready() -> void:
+	move_direction = move_direction.normalized()
+
+func _process(delta: float) -> void:
+	for rect in texture_rects:
+		rect.position += move_direction * move_speed * delta
+
+		# Handle horizontal movement
+		if move_direction.x != 0:
+			if (move_direction.x < 0 and rect.position.x <= cut_off_marker.position.x) or \\
+			   (move_direction.x > 0 and rect.position.x >= cut_off_marker.position.x):
+				rect.position.x = restart_marker.position.x
+
+		# Handle vertical movement
+		if move_direction.y != 0:
+			if (move_direction.y < 0 and rect.position.y <= cut_off_marker.position.y) or \\
+			   (move_direction.y > 0 and rect.position.y >= cut_off_marker.position.y):
+				rect.position.y = restart_marker.position.y
+"
+
+[node name="Pineapple_transition" type="Control"]
+z_index = 6
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 540)
+script = SubResource("GDScript_608u3")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Pineapples_collected" type="Control" parent="."]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchor_left = 0.473958
+anchor_top = 0.453704
+anchor_right = 0.526042
+anchor_bottom = 0.546296
+offset_right = -6.10352e-05
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+script = SubResource("GDScript_4obph")
+metadata/_edit_use_anchors_ = true
+
+[node name="Not_collected" type="AudioStreamPlayer" parent="Pineapples_collected"]
+stream = ExtResource("3_pgkd0")
+volume_db = -41.0
+pitch_scale = 0.3
+
+[node name="Smoke_sound" type="AudioStreamPlayer" parent="Pineapples_collected"]
+stream = ExtResource("3_pgkd0")
+volume_db = -41.0
+
+[node name="PineappleTemplate" type="Control" parent="Pineapples_collected"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0006
+offset_top = -50.0
+offset_right = -10.0006
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="pineapple_texture" type="TextureRect" parent="Pineapples_collected/PineappleTemplate"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 180.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 100)
+mouse_filter = 0
+texture = ExtResource("4_qicn3")
+expand_mode = 1
+stretch_mode = 4
+script = SubResource("GDScript_cdrd4")
+
+[node name="Circle_polygon" parent="Pineapples_collected/PineappleTemplate/pineapple_texture" instance=ExtResource("5_v4bl3")]
+position = Vector2(100, 100)
+color = Color(1, 0.72549, 0, 1)
+polygon = PackedVector2Array(7.65379e-15, -125, 19.5543, -123.461, 38.6271, -118.882, 56.7488, -111.376, 73.4732, -101.127, 88.3883, -88.3883, 101.127, -73.4732, 111.376, -56.7488, 118.882, -38.6271, 123.461, -19.5543, 125, 0, 123.461, 19.5543, 118.882, 38.6271, 111.376, 56.7488, 101.127, 73.4732, 88.3883, 88.3883, 73.4732, 101.127, 56.7488, 111.376, 38.6271, 118.882, 19.5543, 123.461, 7.65379e-15, 125, -19.5543, 123.461, -38.6271, 118.882, -56.7488, 111.376, -73.4732, 101.127, -88.3883, 88.3883, -101.127, 73.4732, -111.376, 56.7488, -118.882, 38.6271, -123.461, 19.5543, -125, 1.53076e-14, -123.461, -19.5543, -118.882, -38.6271, -111.376, -56.7488, -101.127, -73.4732, -88.3883, -88.3883, -73.4732, -101.127, -56.7488, -111.376, -38.6271, -118.882, -19.5543, -123.461, -2.29614e-14, -125, -2.11245e-14, -115, -17.99, -113.584, -35.537, -109.372, -52.2089, -102.466, -67.5953, -93.037, -81.3173, -81.3173, -93.037, -67.5953, -102.466, -52.2089, -109.372, -35.537, -113.584, -17.99, -115, 1.4083e-14, -113.584, 17.99, -109.372, 35.537, -102.466, 52.2089, -93.037, 67.5953, -81.3173, 81.3173, -67.5953, 93.037, -52.2089, 102.466, -35.537, 109.372, -17.99, 113.584, 7.04149e-15, 115, 17.99, 113.584, 35.537, 109.372, 52.2089, 102.466, 67.5953, 93.037, 81.3173, 81.3173, 93.037, 67.5953, 102.466, 52.2089, 109.372, 35.537, 113.584, 17.99, 115, 0, 113.584, -17.99, 109.372, -35.537, 102.466, -52.2089, 93.037, -67.5953, 81.3173, -81.3173, 67.5953, -93.037, 52.2089, -102.466, 35.537, -109.372, 17.99, -113.584, 7.04149e-15, -115)
+radius = 125
+
+[node name="New_container" type="Control" parent="Pineapples_collected"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+metadata/_edit_use_anchors_ = true
+
+[node name="Pineapple_container" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="Circles" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 540)
+script = SubResource("GDScript_ksx3h")
+
+[node name="Control" type="Control" parent="Circles"]
+layout_mode = 1
+anchor_left = 0.02
+anchor_top = 0.02
+anchor_right = 0.98
+anchor_bottom = 0.98
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 540)
+
+[node name="Circle_polygon" parent="Circles/Control" instance=ExtResource("5_v4bl3")]
+self_modulate = Color(0.72, 0.72, 0.72, 0)
+position = Vector2(257.6, 250.4)
+polygon = PackedVector2Array(6.12303e-15, -100, 15.6434, -98.7688, 30.9017, -95.1057, 45.399, -89.1007, 58.7785, -80.9017, 70.7107, -70.7107, 80.9017, -58.7785, 89.1007, -45.399, 95.1057, -30.9017, 98.7688, -15.6434, 100, 0, 98.7688, 15.6434, 95.1057, 30.9017, 89.1007, 45.399, 80.9017, 58.7785, 70.7107, 70.7107, 58.7785, 80.9017, 45.399, 89.1007, 30.9017, 95.1057, 15.6434, 98.7688, 6.12303e-15, 100, -15.6434, 98.7688, -30.9017, 95.1057, -45.399, 89.1007, -58.7785, 80.9017, -70.7107, 70.7107, -80.9017, 58.7785, -89.1007, 45.399, -95.1057, 30.9017, -98.7688, 15.6434, -100, 1.22461e-14, -98.7688, -15.6434, -95.1057, -30.9017, -89.1007, -45.399, -80.9017, -58.7785, -70.7107, -70.7107, -58.7785, -80.9017, -45.399, -89.1007, -30.9017, -95.1057, -15.6434, -98.7688, -1.83691e-14, -100, -9.18455e-15, -50, -7.82172, -49.3844, -15.4509, -47.5528, -22.6995, -44.5503, -29.3893, -40.4509, -35.3553, -35.3553, -40.4509, -29.3893, -44.5503, -22.6995, -47.5528, -15.4509, -49.3844, -7.82172, -50, 6.12303e-15, -49.3844, 7.82172, -47.5528, 15.4509, -44.5503, 22.6995, -40.4509, 29.3893, -35.3553, 35.3553, -29.3893, 40.4509, -22.6995, 44.5503, -15.4509, 47.5528, -7.82172, 49.3844, 3.06152e-15, 50, 7.82172, 49.3844, 15.4509, 47.5528, 22.6995, 44.5503, 29.3893, 40.4509, 35.3553, 35.3553, 40.4509, 29.3893, 44.5503, 22.6995, 47.5528, 15.4509, 49.3844, 7.82172, 50, 0, 49.3844, -7.82172, 47.5528, -15.4509, 44.5503, -22.6995, 40.4509, -29.3893, 35.3553, -35.3553, 29.3893, -40.4509, 22.6995, -44.5503, 15.4509, -47.5528, 7.82172, -49.3844, 3.06152e-15, -50)
+thickness = 50
+
+[node name="Pineapple_texture" type="TextureRect" parent="Circles/Control/Circle_polygon"]
+modulate = Color(0.72, 0.648, 0, 0.0196078)
+custom_minimum_size = Vector2(200, 200)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 100)
+mouse_filter = 0
+texture = ExtResource("4_qicn3")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Pineapple_control" type="Control" parent="."]
+visible = false
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.75, 0.75)
+pivot_offset = Vector2(100, 100)
+
+[node name="Circle_polygon" parent="Pineapple_control" instance=ExtResource("5_v4bl3")]
+position = Vector2(98.6667, 110.667)
+color = Color(0.95, 0.601667, 0, 1)
+polygon = PackedVector2Array(1.22461e-14, -200, 31.2869, -197.538, 61.8034, -190.211, 90.7981, -178.201, 117.557, -161.803, 141.421, -141.421, 161.803, -117.557, 178.201, -90.7981, 190.211, -61.8034, 197.538, -31.2869, 200, 0, 197.538, 31.2869, 190.211, 61.8034, 178.201, 90.7981, 161.803, 117.557, 141.421, 141.421, 117.557, 161.803, 90.7981, 178.201, 61.8034, 190.211, 31.2869, 197.538, 1.22461e-14, 200, -31.2869, 197.538, -61.8034, 190.211, -90.7981, 178.201, -117.557, 161.803, -141.421, 141.421, -161.803, 117.557, -178.201, 90.7981, -190.211, 61.8034, -197.538, 31.2869, -200, 2.44921e-14, -197.538, -31.2869, -190.211, -61.8034, -178.201, -90.7981, -161.803, -117.557, -141.421, -141.421, -117.557, -161.803, -90.7981, -178.201, -61.8034, -190.211, -31.2869, -197.538, -3.67382e-14, -200, -3.30644e-14, -180, -28.1582, -177.784, -55.6231, -171.19, -81.7183, -160.381, -105.801, -145.623, -127.279, -127.279, -145.623, -105.801, -160.381, -81.7183, -171.19, -55.6231, -177.784, -28.1582, -180, 2.20429e-14, -177.784, 28.1582, -171.19, 55.6231, -160.381, 81.7183, -145.623, 105.801, -127.279, 127.279, -105.801, 145.623, -81.7183, 160.381, -55.6231, 171.19, -28.1582, 177.784, 1.10215e-14, 180, 28.1582, 177.784, 55.6231, 171.19, 81.7183, 160.381, 105.801, 145.623, 127.279, 127.279, 145.623, 105.801, 160.381, 81.7183, 171.19, 55.6231, 177.784, 28.1582, 180, 0, 177.784, -28.1582, 171.19, -55.6231, 160.381, -81.7183, 145.623, -105.801, 127.279, -127.279, 105.801, -145.623, 81.7183, -160.381, 55.6231, -171.19, 28.1582, -177.784, 1.10215e-14, -180)
+radius = 200
+thickness = 20
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Pineapple_control/Circle_polygon"]
+libraries = {
+&"": SubResource("AnimationLibrary_y180j")
+}
+autoplay = "texture_offset_anim"
+
+[node name="pineapple_texture" type="TextureRect" parent="Pineapple_control"]
+visible = false
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 100)
+mouse_filter = 0
+texture = ExtResource("4_qicn3")
+expand_mode = 1
+stretch_mode = 4
+script = SubResource("GDScript_pgkd0")
+
+[node name="Smoke_sprite" type="AnimatedSprite2D" parent="Pineapple_control"]
+visible = false
+position = Vector2(108, 120)
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_puhxt")
+speed_scale = 0.25
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="Smoke_sound" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("3_pgkd0")
+volume_db = -30.0
+
+[node name="Panel_fade_in2" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("3_pgkd0")
+volume_db = -40.0
+pitch_scale = 0.3
+
+[node name="Pineapple_1" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("7_tgbha")
+volume_db = -30.0
+
+[node name="Cherry_heart" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("8_b4od5")
+volume_db = -50.0
+
+[node name="Cherry_heart2" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("9_s0uo5")
+volume_db = -30.0
+
+[node name="Pineapple_4" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("9_s0uo5")
+volume_db = -28.0
+pitch_scale = 0.8
+
+[node name="Pine_shake_1" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("10_fjm5e")
+volume_db = -44.0
+pitch_scale = 0.8
+
+[node name="Fuji_control" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.514
+anchor_right = 0.5
+anchor_bottom = 0.514
+offset_left = -254.0
+offset_top = -250.12
+offset_right = 246.0
+offset_bottom = 249.88
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(250, 250)
+script = SubResource("GDScript_qicn3")
+
+[node name="Circle_polygon5" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+z_index = 1
+position = Vector2(260, 236)
+scale = Vector2(0.68, 0.68)
+color = Color(0.72, 0.72, 0.72, 0.0941176)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(1.51239e-14, -247, 38.6393, -243.959, 76.3272, -234.911, 112.136, -220.079, 145.183, -199.827, 174.655, -174.655, 199.827, -145.183, 220.079, -112.136, 234.911, -76.3272, 243.959, -38.6393, 247, 0, 243.959, 38.6393, 234.911, 76.3272, 220.079, 112.136, 199.827, 145.183, 174.655, 174.655, 145.183, 199.827, 112.136, 220.079, 76.3272, 234.911, 38.6393, 243.959, 1.51239e-14, 247, -38.6393, 243.959, -76.3272, 234.911, -112.136, 220.079, -145.183, 199.827, -174.655, 174.655, -199.827, 145.183, -220.079, 112.136, -234.911, 76.3272, -243.959, 38.6393, -247, 3.02478e-14, -243.959, -38.6393, -234.911, -76.3272, -220.079, -112.136, -199.827, -145.183, -174.655, -174.655, -145.183, -199.827, -112.136, -220.079, -76.3272, -234.911, -38.6393, -243.959, -4.53717e-14, -247)
+radius = 247
+thickness = 186
+ring_shape = false
+
+[node name="Circle_polygon6" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+z_index = 1
+position = Vector2(260, 236)
+scale = Vector2(0.68, 0.68)
+color = Color(0.72, 0.72, 0.72, 0.0196078)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(3.31868e-14, -542, 84.7875, -535.327, 167.487, -515.473, 246.063, -482.926, 318.58, -438.487, 383.252, -383.252, 438.487, -318.58, 482.926, -246.063, 515.473, -167.487, 535.327, -84.7875, 542, 0, 535.327, 84.7875, 515.473, 167.487, 482.926, 246.063, 438.487, 318.58, 383.252, 383.252, 318.58, 438.487, 246.063, 482.926, 167.487, 515.473, 84.7875, 535.327, 3.31868e-14, 542, -84.7875, 535.327, -167.487, 515.473, -246.063, 482.926, -318.58, 438.487, -383.252, 383.252, -438.487, 318.58, -482.926, 246.063, -515.473, 167.487, -535.327, 84.7875, -542, 6.63737e-14, -535.327, -84.7875, -515.473, -167.487, -482.926, -246.063, -438.487, -318.58, -383.252, -383.252, -318.58, -438.487, -246.063, -482.926, -167.487, -515.473, -84.7875, -535.327, -9.95605e-14, -542, -4.44532e-14, -242, -37.8571, -239.021, -74.7821, -230.156, -109.866, -215.624, -142.244, -195.782, -171.12, -171.12, -195.782, -142.244, -215.624, -109.866, -230.156, -74.7821, -239.021, -37.8571, -242, 2.96355e-14, -239.021, 37.8571, -230.156, 74.7821, -215.624, 109.866, -195.782, 142.244, -171.12, 171.12, -142.244, 195.782, -109.866, 215.624, -74.7821, 230.156, -37.8571, 239.021, 1.48177e-14, 242, 37.8571, 239.021, 74.7821, 230.156, 109.866, 215.624, 142.244, 195.782, 171.12, 171.12, 195.782, 142.244, 215.624, 109.866, 230.156, 74.7821, 239.021, 37.8571, 242, 0, 239.021, -37.8571, 230.156, -74.7821, 215.624, -109.866, 195.782, -142.244, 171.12, -171.12, 142.244, -195.782, 109.866, -215.624, 74.7821, -230.156, 37.8571, -239.021, 1.48177e-14, -242)
+radius = 542
+thickness = 300
+
+[node name="Circle_polygon7" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+z_index = 1
+position = Vector2(260, 236)
+scale = Vector2(0.68, 0.68)
+color = Color(0.72, 0.72, 0.72, 0.0196078)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(3.44114e-14, -562, 87.9162, -555.081, 173.668, -534.494, 255.143, -500.746, 330.335, -454.668, 397.394, -397.394, 454.668, -330.335, 500.746, -255.143, 534.494, -173.668, 555.081, -87.9162, 562, 0, 555.081, 87.9162, 534.494, 173.668, 500.746, 255.143, 454.668, 330.335, 397.394, 397.394, 330.335, 454.668, 255.143, 500.746, 173.668, 534.494, 87.9162, 555.081, 3.44114e-14, 562, -87.9162, 555.081, -173.668, 534.494, -255.143, 500.746, -330.335, 454.668, -397.394, 397.394, -454.668, 330.335, -500.746, 255.143, -534.494, 173.668, -555.081, 87.9162, -562, 6.88229e-14, -555.081, -87.9162, -534.494, -173.668, -500.746, -255.143, -454.668, -330.335, -397.394, -397.394, -330.335, -454.668, -255.143, -500.746, -173.668, -534.494, -87.9162, -555.081, -1.03234e-13, -562, -1.01397e-13, -552, -86.3518, -545.204, -170.577, -524.983, -250.603, -491.836, -324.457, -446.577, -390.323, -390.323, -446.577, -324.457, -491.836, -250.603, -524.983, -170.577, -545.204, -86.3518, -552, 6.75983e-14, -545.204, 86.3518, -524.983, 170.577, -491.836, 250.603, -446.577, 324.457, -390.323, 390.323, -324.457, 446.577, -250.603, 491.836, -170.577, 524.983, -86.3518, 545.204, 3.37991e-14, 552, 86.3518, 545.204, 170.577, 524.983, 250.603, 491.836, 324.457, 446.577, 390.323, 390.323, 446.577, 324.457, 491.836, 250.603, 524.983, 170.577, 545.204, 86.3518, 552, 0, 545.204, -86.3518, 524.983, -170.577, 491.836, -250.603, 446.577, -324.457, 390.323, -390.323, 324.457, -446.577, 250.603, -491.836, 170.577, -524.983, 86.3518, -545.204, 3.37991e-14, -552)
+radius = 562
+
+[node name="Circle_polygon8" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+z_index = 1
+position = Vector2(260, 236)
+scale = Vector2(0.68, 0.68)
+color = Color(0.72, 0.72, 0.72, 0.0117647)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(2.339e-14, -382, 59.758, -377.297, 118.044, -363.304, 173.424, -340.365, 224.534, -309.044, 270.115, -270.115, 309.044, -224.534, 340.365, -173.424, 363.304, -118.044, 377.297, -59.758, 382, 0, 377.297, 59.758, 363.304, 118.044, 340.365, 173.424, 309.044, 224.534, 270.115, 270.115, 224.534, 309.044, 173.424, 340.365, 118.044, 363.304, 59.758, 377.297, 2.339e-14, 382, -59.758, 377.297, -118.044, 363.304, -173.424, 340.365, -224.534, 309.044, -270.115, 270.115, -309.044, 224.534, -340.365, 173.424, -363.304, 118.044, -377.297, 59.758, -382, 4.678e-14, -377.297, -59.758, -363.304, -118.044, -340.365, -173.424, -309.044, -224.534, -270.115, -270.115, -224.534, -309.044, -173.424, -340.365, -118.044, -363.304, -59.758, -377.297, -7.01699e-14, -382, -6.8333e-14, -372, -58.1936, -367.42, -114.954, -353.793, -168.884, -331.454, -218.656, -300.954, -263.044, -263.044, -300.954, -218.656, -331.454, -168.884, -353.793, -114.954, -367.42, -58.1936, -372, 4.55554e-14, -367.42, 58.1936, -353.793, 114.954, -331.454, 168.884, -300.954, 218.656, -263.044, 263.044, -218.656, 300.954, -168.884, 331.454, -114.954, 353.793, -58.1936, 367.42, 2.27777e-14, 372, 58.1936, 367.42, 114.954, 353.793, 168.884, 331.454, 218.656, 300.954, 263.044, 263.044, 300.954, 218.656, 331.454, 168.884, 353.793, 114.954, 367.42, 58.1936, 372, 0, 367.42, -58.1936, 353.793, -114.954, 331.454, -168.884, 300.954, -218.656, 263.044, -263.044, 218.656, -300.954, 168.884, -331.454, 114.954, -353.793, 58.1936, -367.42, 2.27777e-14, -372)
+radius = 382
+
+[node name="Circle_polygon" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+self_modulate = Color(1, 0.6, 0, 1)
+clip_children = 1
+z_index = 1
+position = Vector2(260, 236)
+scale = Vector2(0.68, 0.68)
+texture = null
+invert_enabled = true
+invert_border = 0.1
+polygon = PackedVector2Array(1.41442e-14, -231, 36.1364, -228.156, 71.3829, -219.694, 104.872, -205.823, 135.778, -186.883, 163.342, -163.342, 186.883, -135.778, 205.823, -104.872, 219.694, -71.3829, 228.156, -36.1364, 231, 0, 228.156, 36.1364, 219.694, 71.3829, 205.823, 104.872, 186.883, 135.778, 163.342, 163.342, 135.778, 186.883, 104.872, 205.823, 71.3829, 219.694, 36.1364, 228.156, 1.41442e-14, 231, -36.1364, 228.156, -71.3829, 219.694, -104.872, 205.823, -135.778, 186.883, -163.342, 163.342, -186.883, 135.778, -205.823, 104.872, -219.694, 71.3829, -228.156, 36.1364, -231, 2.82884e-14, -228.156, -36.1364, -219.694, -71.3829, -205.823, -104.872, -186.883, -135.778, -163.342, -163.342, -135.778, -186.883, -104.872, -205.823, -71.3829, -219.694, -36.1364, -228.156, -4.24326e-14, -231, -6.99863e-14, -381, -59.6015, -376.309, -117.735, -362.353, -172.97, -339.473, -223.946, -308.235, -269.408, -269.408, -308.235, -223.946, -339.473, -172.97, -362.353, -117.735, -376.309, -59.6015, -381, 4.66575e-14, -376.309, 59.6015, -362.353, 117.735, -339.473, 172.97, -308.235, 223.946, -269.408, 269.408, -223.946, 308.235, -172.97, 339.473, -117.735, 362.353, -59.6015, 376.309, 2.33288e-14, 381, 59.6015, 376.309, 117.735, 362.353, 172.97, 339.473, 223.946, 308.235, 269.408, 269.408, 308.235, 223.946, 339.473, 172.97, 362.353, 117.735, 376.309, 59.6015, 381, 0, 376.309, -59.6015, 362.353, -117.735, 339.473, -172.97, 308.235, -223.946, 269.408, -269.408, 223.946, -308.235, 172.97, -339.473, 117.735, -362.353, 59.6015, -376.309, 2.33288e-14, -381)
+radius = 231
+thickness = -150
+
+[node name="TextureRect" type="TextureRect" parent="Fuji_control/Circle_polygon"]
+self_modulate = Color(1, 1, 1, 0.0117647)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(250, 250)
+texture = ExtResource("11_kjgmj")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Circle_polygon3" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+self_modulate = Color(1, 0.6, 0, 1)
+clip_children = 1
+z_index = 1
+position = Vector2(260, 236)
+scale = Vector2(0.68, 0.68)
+texture = null
+invert_enabled = true
+polygon = PackedVector2Array(1.29196e-14, -211, 33.0077, -208.402, 65.2026, -200.673, 95.792, -188.002, 124.023, -170.703, 149.2, -149.2, 170.703, -124.023, 188.002, -95.792, 200.673, -65.2026, 208.402, -33.0077, 211, 0, 208.402, 33.0077, 200.673, 65.2026, 188.002, 95.792, 170.703, 124.023, 149.2, 149.2, 124.023, 170.703, 95.792, 188.002, 65.2026, 200.673, 33.0077, 208.402, 1.29196e-14, 211, -33.0077, 208.402, -65.2026, 200.673, -95.792, 188.002, -124.023, 170.703, -149.2, 149.2, -170.703, 124.023, -188.002, 95.792, -200.673, 65.2026, -208.402, 33.0077, -211, 2.58392e-14, -208.402, -33.0077, -200.673, -65.2026, -188.002, -95.792, -170.703, -124.023, -149.2, -149.2, -124.023, -170.703, -95.792, -188.002, -65.2026, -200.673, -33.0077, -208.402, -3.87588e-14, -211, -2.35308e-13, -1281, -200.393, -1265.23, -395.851, -1218.3, -581.562, -1141.38, -752.953, -1036.35, -905.804, -905.804, -1036.35, -752.953, -1141.38, -581.562, -1218.3, -395.851, -1265.23, -200.393, -1281, 1.56872e-13, -1265.23, 200.393, -1218.3, 395.851, -1141.38, 581.562, -1036.35, 752.953, -905.804, 905.804, -752.953, 1036.35, -581.562, 1141.38, -395.851, 1218.3, -200.393, 1265.23, 7.8436e-14, 1281, 200.393, 1265.23, 395.851, 1218.3, 581.562, 1141.38, 752.953, 1036.35, 905.804, 905.804, 1036.35, 752.953, 1141.38, 581.562, 1218.3, 395.851, 1265.23, 200.393, 1281, 0, 1265.23, -200.393, 1218.3, -395.851, 1141.38, -581.562, 1036.35, -752.953, 905.804, -905.804, 752.953, -1036.35, 581.562, -1141.38, 395.851, -1218.3, 200.393, -1265.23, 7.8436e-14, -1281)
+radius = 211
+thickness = -1070
+
+[node name="Moon" parent="Fuji_control/Circle_polygon3" instance=ExtResource("5_v4bl3")]
+z_index = 1
+position = Vector2(105.882, -82.3528)
+color = Color(1, 0.983833, 0.03, 0.447059)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(6.12303e-16, -10, 3.09017, -9.51057, 5.87785, -8.09017, 8.09017, -5.87785, 9.51057, -3.09017, 10, 0, 9.51057, 3.09017, 8.09017, 5.87785, 5.87785, 8.09017, 3.09017, 9.51057, 6.12303e-16, 10, -3.09017, 9.51057, -5.87785, 8.09017, -8.09017, 5.87785, -9.51057, 3.09017, -10, 1.22461e-15, -9.51057, -3.09017, -8.09017, -5.87785, -5.87785, -8.09017, -3.09017, -9.51057, -1.83691e-15, -10)
+radius = 10
+segments = 20
+ring_shape = false
+
+[node name="Moon2" parent="Fuji_control/Circle_polygon3/Moon" instance=ExtResource("5_v4bl3")]
+z_index = 1
+scale = Vector2(1.845, 1.845)
+color = Color(1, 0.7575, 0.03, 0.447059)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(7.34764e-16, -12, 3.7082, -11.4127, 7.05342, -9.7082, 9.7082, -7.05342, 11.4127, -3.7082, 12, 0, 11.4127, 3.7082, 9.7082, 7.05342, 7.05342, 9.7082, 3.7082, 11.4127, 7.34764e-16, 12, -3.7082, 11.4127, -7.05342, 9.7082, -9.7082, 7.05342, -11.4127, 3.7082, -12, 1.46953e-15, -11.4127, -3.7082, -9.7082, -7.05342, -7.05342, -9.7082, -3.7082, -11.4127, -2.20429e-15, -12, -1.83691e-15, -10, -3.09017, -9.51057, -5.87785, -8.09017, -8.09017, -5.87785, -9.51057, -3.09017, -10, 1.22461e-15, -9.51057, 3.09017, -8.09017, 5.87785, -5.87785, 8.09017, -3.09017, 9.51057, 6.12303e-16, 10, 3.09017, 9.51057, 5.87785, 8.09017, 8.09017, 5.87785, 9.51057, 3.09017, 10, 0, 9.51057, -3.09017, 8.09017, -5.87785, 5.87785, -8.09017, 3.09017, -9.51057, 6.12303e-16, -10)
+radius = 12
+thickness = 2
+segments = 20
+
+[node name="Moon3" parent="Fuji_control/Circle_polygon3/Moon" instance=ExtResource("5_v4bl3")]
+z_index = 1
+scale = Vector2(1.355, 1.355)
+color = Color(1, 0.7575, 0.03, 0.447059)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(7.34764e-16, -12, 3.7082, -11.4127, 7.05342, -9.7082, 9.7082, -7.05342, 11.4127, -3.7082, 12, 0, 11.4127, 3.7082, 9.7082, 7.05342, 7.05342, 9.7082, 3.7082, 11.4127, 7.34764e-16, 12, -3.7082, 11.4127, -7.05342, 9.7082, -9.7082, 7.05342, -11.4127, 3.7082, -12, 1.46953e-15, -11.4127, -3.7082, -9.7082, -7.05342, -7.05342, -9.7082, -3.7082, -11.4127, -2.20429e-15, -12, -1.83691e-15, -10, -3.09017, -9.51057, -5.87785, -8.09017, -8.09017, -5.87785, -9.51057, -3.09017, -10, 1.22461e-15, -9.51057, 3.09017, -8.09017, 5.87785, -5.87785, 8.09017, -3.09017, 9.51057, 6.12303e-16, 10, 3.09017, 9.51057, 5.87785, 8.09017, 8.09017, 5.87785, 9.51057, 3.09017, 10, 0, 9.51057, -3.09017, 8.09017, -5.87785, 5.87785, -8.09017, 3.09017, -9.51057, 6.12303e-16, -10)
+radius = 12
+thickness = 2
+segments = 20
+
+[node name="Moon4" parent="Fuji_control/Circle_polygon3/Moon" instance=ExtResource("5_v4bl3")]
+z_index = 1
+scale = Vector2(0.53, 0.53)
+color = Color(1, 0.7575, 0.03, 0.447059)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(7.34764e-16, -12, 6, -10.3923, 10.3923, -6, 12, 0, 10.3923, 6, 6, 10.3923, 7.34764e-16, 12, -6, 10.3923, -10.3923, 6, -12, 1.46953e-15, -10.3923, -6, -6, -10.3923, -2.20429e-15, -12, -1.83691e-15, -10, -5, -8.66025, -8.66025, -5, -10, 1.22461e-15, -8.66025, 5, -5, 8.66025, 6.12303e-16, 10, 5, 8.66025, 8.66025, 5, 10, 0, 8.66025, -5, 5, -8.66025, 6.12303e-16, -10)
+radius = 12
+thickness = 2
+segments = 12
+
+[node name="ColorRect" type="Polygon2D" parent="Fuji_control/Circle_polygon3"]
+position = Vector2(127.222, -219.269)
+scale = Vector2(1.09623, 1.46587)
+texture = SubResource("GradientTexture2D_tvqle")
+polygon = PackedVector2Array(-321.5, -29.5, 96, -32, 112, 280, -344, 264)
+uv = PackedVector2Array(-321.5, -29.5, 96, -32, 112, 280, -344, 264)
+
+[node name="Silhouette_fuji" type="TextureRect" parent="Fuji_control/Circle_polygon3"]
+modulate = Color(0, 0, 0, 0.772549)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -163.235
+offset_right = 250.0
+offset_bottom = 336.765
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.89, 0.89)
+pivot_offset = Vector2(250, 250)
+texture = ExtResource("12_qkrpm")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Control" type="Control" parent="Fuji_control/Circle_polygon3/Silhouette_fuji"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -159.706
+offset_top = -336.893
+offset_right = 222.294
+offset_bottom = -36.8928
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.17, 1.17)
+pivot_offset = Vector2(150, 150)
+
+[node name="TextureRect" type="TextureRect" parent="Fuji_control/Circle_polygon3"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -155.882
+offset_right = 250.0
+offset_bottom = 344.118
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.845, 0.845)
+pivot_offset = Vector2(250, 250)
+texture = ExtResource("12_qkrpm")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Control" type="Control" parent="Fuji_control/Circle_polygon3/TextureRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -159.706
+offset_top = -336.893
+offset_right = 222.294
+offset_bottom = -36.8928
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.17, 1.17)
+pivot_offset = Vector2(150, 150)
+script = SubResource("GDScript_v4bl3")
+
+[node name="TextureRect" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 276.311
+offset_top = 320.104
+offset_right = 476.311
+offset_bottom = 520.104
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("13_64ck7")
+expand_mode = 1
+stretch_mode = 4
+flip_h = true
+
+[node name="TextureRect2" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 341.88
+offset_top = 237.976
+offset_right = 541.88
+offset_bottom = 437.976
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("14_jq6l1")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect3" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 7.02148
+offset_top = 305.694
+offset_right = 207.021
+offset_bottom = 505.694
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("15_ran8e")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect4" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 73.6129
+offset_top = 248.252
+offset_right = 273.613
+offset_bottom = 448.252
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("16_y8v78")
+expand_mode = 1
+stretch_mode = 4
+flip_h = true
+
+[node name="TextureRect5" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = -59.6038
+offset_top = 163.71
+offset_right = 140.396
+offset_bottom = 363.71
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("15_ran8e")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect6" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+self_modulate = Color(0, 0, 0, 0.513726)
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 276.311
+offset_top = 177.307
+offset_right = 476.311
+offset_bottom = 377.307
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("13_64ck7")
+expand_mode = 1
+stretch_mode = 4
+flip_h = true
+
+[node name="TextureRect7" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+self_modulate = Color(0, 0, 0, 0.513726)
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 341.88
+offset_top = 95.1789
+offset_right = 541.88
+offset_bottom = 295.179
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("14_jq6l1")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect8" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+self_modulate = Color(0, 0, 0, 0.513726)
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 7.02148
+offset_top = 162.897
+offset_right = 207.021
+offset_bottom = 362.897
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("15_ran8e")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect9" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+self_modulate = Color(0, 0, 0, 0.513726)
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = -59.6038
+offset_top = 20.9129
+offset_right = 140.396
+offset_bottom = 220.913
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("15_ran8e")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect10" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+self_modulate = Color(0, 0, 0, 0.513726)
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 73.6129
+offset_top = 105.455
+offset_right = 273.613
+offset_bottom = 305.455
+scale = Vector2(0.58, 0.58)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("16_y8v78")
+expand_mode = 1
+stretch_mode = 4
+flip_h = true
+
+[node name="Cut_off_marker" type="Marker2D" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+position = Vector2(-180.995, 120.664)
+
+[node name="Restart_marker" type="Marker2D" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+position = Vector2(432.378, 120.664)
+
+[node name="Circle_polygon2" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+visible = false
+self_modulate = Color(1, 0.6, 0, 1)
+z_index = 1
+position = Vector2(260, 236)
+scale = Vector2(0.68, 0.68)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(1.41442e-14, -231, 36.1364, -228.156, 71.3829, -219.694, 104.872, -205.823, 135.778, -186.883, 163.342, -163.342, 186.883, -135.778, 205.823, -104.872, 219.694, -71.3829, 228.156, -36.1364, 231, 0, 228.156, 36.1364, 219.694, 71.3829, 205.823, 104.872, 186.883, 135.778, 163.342, 163.342, 135.778, 186.883, 104.872, 205.823, 71.3829, 219.694, 36.1364, 228.156, 1.41442e-14, 231, -36.1364, 228.156, -71.3829, 219.694, -104.872, 205.823, -135.778, 186.883, -163.342, 163.342, -186.883, 135.778, -205.823, 104.872, -219.694, 71.3829, -228.156, 36.1364, -231, 2.82884e-14, -228.156, -36.1364, -219.694, -71.3829, -205.823, -104.872, -186.883, -135.778, -163.342, -163.342, -135.778, -186.883, -104.872, -205.823, -71.3829, -219.694, -36.1364, -228.156, -4.24326e-14, -231, -3.87588e-14, -211, -33.0077, -208.402, -65.2026, -200.673, -95.792, -188.002, -124.023, -170.703, -149.2, -149.2, -170.703, -124.023, -188.002, -95.792, -200.673, -65.2026, -208.402, -33.0077, -211, 2.58392e-14, -208.402, 33.0077, -200.673, 65.2026, -188.002, 95.792, -170.703, 124.023, -149.2, 149.2, -124.023, 170.703, -95.792, 188.002, -65.2026, 200.673, -33.0077, 208.402, 1.29196e-14, 211, 33.0077, 208.402, 65.2026, 200.673, 95.792, 188.002, 124.023, 170.703, 149.2, 149.2, 170.703, 124.023, 188.002, 95.792, 200.673, 65.2026, 208.402, 33.0077, 211, 0, 208.402, -33.0077, 200.673, -65.2026, 188.002, -95.792, 170.703, -124.023, 149.2, -149.2, 124.023, -170.703, 95.792, -188.002, 65.2026, -200.673, 33.0077, -208.402, 1.29196e-14, -211)
+radius = 231
+thickness = 20
+
+[node name="Circle_polygon4" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+self_modulate = Color(1, 0.6, 0, 1)
+clip_children = 2
+z_index = 1
+position = Vector2(260, 236)
+scale = Vector2(0.68, 0.68)
+texture = null
+invert_border = 0.1
+polygon = PackedVector2Array(1.45728e-14, -238, 37.2314, -235.07, 73.546, -226.351, 108.05, -212.06, 139.893, -192.546, 168.291, -168.291, 192.546, -139.893, 212.06, -108.05, 226.351, -73.546, 235.07, -37.2314, 238, 0, 235.07, 37.2314, 226.351, 73.546, 212.06, 108.05, 192.546, 139.893, 168.291, 168.291, 139.893, 192.546, 108.05, 212.06, 73.546, 226.351, 37.2314, 235.07, 1.45728e-14, 238, -37.2314, 235.07, -73.546, 226.351, -108.05, 212.06, -139.893, 192.546, -168.291, 168.291, -192.546, 139.893, -212.06, 108.05, -226.351, 73.546, -235.07, 37.2314, -238, 2.91456e-14, -235.07, -37.2314, -226.351, -73.546, -212.06, -108.05, -192.546, -139.893, -168.291, -168.291, -139.893, -192.546, -108.05, -212.06, -73.546, -226.351, -37.2314, -235.07, -4.37184e-14, -238, -4.35348e-14, -237, -37.075, -234.082, -73.237, -225.4, -107.596, -211.169, -139.305, -191.737, -167.584, -167.584, -191.737, -139.305, -211.169, -107.596, -225.4, -73.237, -234.082, -37.075, -237, 2.90232e-14, -234.082, 37.075, -225.4, 73.237, -211.169, 107.596, -191.737, 139.305, -167.584, 167.584, -139.305, 191.737, -107.596, 211.169, -73.237, 225.4, -37.075, 234.082, 1.45116e-14, 237, 37.075, 234.082, 73.237, 225.4, 107.596, 211.169, 139.305, 191.737, 167.584, 167.584, 191.737, 139.305, 211.169, 107.596, 225.4, 73.237, 234.082, 37.075, 237, 0, 234.082, -37.075, 225.4, -73.237, 211.169, -107.596, 191.737, -139.305, 167.584, -167.584, 139.305, -191.737, 107.596, -211.169, 73.237, -225.4, 37.075, -234.082, 1.45116e-14, -237)
+radius = 238
+thickness = 1

@@ -1,0 +1,191 @@
+extends Camera3D
+class_name Player_Camera
+
+const CAMERA_WAKING_UP = preload("res://sfx/Camera_waking_up.wav")
+
+@export var amount_of_shakes := 1
+@export var shake_amount := 0.01
+@export var move_speed := 0.25
+@export var camera_shaking := false
+var camera_shaking_bomb := false
+var camera_stop_all_shaking := false
+
+@export var magnitude_of_camera_shake := 1.0
+
+@export var temp_amount := 0.1
+@export var temp_dur := 0.1
+var cam_shake_tween : Tween = null
+var orig_pos : Vector3
+var orig_rot : Vector3
+
+@export var zoom_tween_speed := 0.5
+@export var zoom_magnitude := 2.0
+
+@export var shoot_shake_amount := 1.0
+
+func _ready() -> void:
+	orig_pos = global_position
+	orig_rot = rotation_degrees
+
+
+
+func shake_camera_sky_mines() -> void:
+
+	var _shake_amount : float = 1.1
+	var _dur : float = 0.1
+	if cam_shake_tween:
+		cam_shake_tween.kill()
+	cam_shake_tween = create_tween().set_trans(Tween.TRANS_CUBIC) #.set_trans(Tween.TRANS_CUBIC)
+	#for i in range(amount_of_shakes):
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", _shake_amount, _dur)
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", -_shake_amount, _dur)
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", 0.0, _dur + 0.1)
+	await cam_shake_tween.finished
+
+func shake_camera_shooting() -> void:
+	#if camera_stop_all_shaking: return
+
+	#if camera_shaking:
+	if cam_shake_tween:
+		cam_shake_tween.kill()
+
+	cam_shake_tween = create_tween() #.set_trans(Tween.TRANS_CUBIC)
+	#for i in range(amount_of_shakes):
+	cam_shake_tween.tween_property(self, "position:z", shoot_shake_amount, move_speed).as_relative()
+	cam_shake_tween.tween_property(self, "position:z", 0.0, move_speed * 1.5)
+	cam_shake_tween.parallel().tween_property(self, "position:y", 0.0, move_speed * 1.5)
+	await cam_shake_tween.finished
+	#global_position = orig_pos
+		
+		
+func pulse_shake_camera() -> void:
+	var _orig_pos_y : float = self.global_position.y
+	var tween_pulse_shake = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween_pulse_shake.tween_interval(0.1)
+	tween_pulse_shake.tween_property(self, "global_position:y", -0.2, move_speed).as_relative()
+	tween_pulse_shake.tween_interval(0.1)
+	tween_pulse_shake.tween_property(self, "global_position:y", _orig_pos_y, 1.0)
+	await tween_pulse_shake.finished
+	
+
+func shake_camera_rock_destroyed() -> void:
+	
+	var _shake_amount: float = 0.5 #0.25
+
+	if cam_shake_tween:
+		cam_shake_tween.kill()
+
+	#orig_rot = rotation_degrees
+
+	cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", -_shake_amount, temp_dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", -_shake_amount, temp_dur).as_relative()
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", _shake_amount, temp_dur * 1.5).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", _shake_amount, temp_dur * 1.5).as_relative()
+	cam_shake_tween.tween_property(self, "rotation_degrees", Vector3.ZERO, 0.75)
+	await cam_shake_tween.finished
+	camera_shaking_bomb = false
+\
+	
+
+
+func shake_camera_based_on_position(distance : float) -> void:
+	pass
+	
+	#
+	##return
+##
+	##if camera_stop_all_shaking: return
+	##if camera_shaking_bomb:
+		##return
+##
+	##camera_shaking_bomb = true
+	#
+	#var _shake_amount: float = 0.5 #0.25
+#
+	#if cam_shake_tween:
+		#cam_shake_tween.kill()
+#
+	#orig_rot = rotation_degrees
+	##rotation_degrees = orig_rot
+	#cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	##for i in range(2):
+	#cam_shake_tween.tween_property(self, "rotation_degrees:x", -_shake_amount, temp_dur).as_relative()
+	#cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", -_shake_amount, temp_dur).as_relative()
+	#cam_shake_tween.tween_property(self, "rotation_degrees:x", _shake_amount, temp_dur * 1.5).as_relative()
+	#cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", _shake_amount, temp_dur * 1.5).as_relative()
+	#cam_shake_tween.tween_property(self, "rotation_degrees", Vector3.ZERO, 0.75)
+	#await cam_shake_tween.finished
+	#camera_shaking_bomb = false
+	##rotation_degrees = orig_rot
+	##rotation_degrees = Vector3.ZERO
+	#
+	
+	
+func little_camera_movement() -> void:
+	print('1: CALLED BUT SHOULD NOT BE')
+	
+	if camera_stop_all_shaking: return
+
+	var orig_fov = 70
+	var _shake_amount = 0.25
+	var little_camera_zoomy = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+	little_camera_zoomy.tween_property(self, "fov", zoom_magnitude, zoom_tween_speed * 3).as_relative()
+	little_camera_zoomy.tween_property(self, "fov", orig_fov, zoom_tween_speed * 5)
+	little_camera_zoomy.parallel().tween_callback(camera_sounds)
+	little_camera_zoomy.tween_property(self, "rotation_degrees:x", -_shake_amount, zoom_tween_speed).as_relative()
+	little_camera_zoomy.parallel().tween_property(self, "rotation_degrees:z", -_shake_amount, zoom_tween_speed).as_relative()
+	little_camera_zoomy.tween_property(self, "rotation_degrees:x", _shake_amount, zoom_tween_speed * 1.5).as_relative()
+	little_camera_zoomy.parallel().tween_property(self, "rotation_degrees:z", _shake_amount, zoom_tween_speed * 1.5).as_relative()
+
+	await little_camera_zoomy.finished
+#
+#func camera_shake_on_target() -> void:
+	#return
+	#print('3: CALLED BUT SHOULD NOT BE')
+	#if camera_stop_all_shaking: return
+#
+	#var temp_dur_shoot : float = 0.1
+	#var shake_amount_2: float = 0.15
+#
+	#if cam_shake_tween:
+		#cam_shake_tween.kill()
+#
+	#rotation_degrees = orig_rot
+	#cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	#cam_shake_tween.tween_interval(0.2)
+	#cam_shake_tween.tween_property(self, "rotation_degrees:x", -shake_amount_2, temp_dur_shoot).as_relative()
+	#cam_shake_tween.tween_property(self, "rotation_degrees:y", shake_amount_2, temp_dur_shoot).as_relative()
+	#cam_shake_tween.tween_property(self, "rotation_degrees:x", shake_amount_2, temp_dur_shoot * 1.5).as_relative()
+	#cam_shake_tween.tween_property(self, "rotation_degrees:y", -shake_amount_2, temp_dur_shoot * 2.5).as_relative()
+#
+	#await cam_shake_tween.finished
+	#camera_shaking_bomb = false
+	#rotation_degrees = orig_rot
+
+func camera_sounds() -> void:
+	if camera_stop_all_shaking: return  # ✅ Added check
+	CommonCode.play_sound_instance_pitch_adjusted(CAMERA_WAKING_UP, -10.0, 1.0)
+#
+#func camera_shake_on_player_hit() -> void:
+	#print('5: CALLED BUT SHOULD NOT BE')
+	#if camera_stop_all_shaking: return
+#
+	#var temp_dur_shoot : float = 0.1
+	#var shake_amount_2: float = 2.50
+#
+	#if cam_shake_tween:
+		#cam_shake_tween.kill()
+#
+	#rotation_degrees = orig_rot
+	#cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	#cam_shake_tween.tween_interval(0.2)
+	#cam_shake_tween.tween_property(self, "rotation_degrees:x", -shake_amount_2, temp_dur_shoot).as_relative()
+	#cam_shake_tween.tween_property(self, "rotation_degrees:y", shake_amount_2, temp_dur_shoot).as_relative()
+	#cam_shake_tween.tween_property(self, "rotation_degrees:x", shake_amount_2, temp_dur_shoot * 1.5).as_relative()
+	#cam_shake_tween.tween_property(self, "rotation_degrees:y", -shake_amount_2, temp_dur_shoot * 2.5).as_relative()
+#
+	#await cam_shake_tween.finished
+	#camera_shaking_bomb = false
+	#rotation_degrees = orig_rot

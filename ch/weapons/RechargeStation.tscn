@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://gugdiary17ny"]
+
+[ext_resource type="Script" uid="uid://c4166t2ntrnkm" path="res://unfiled/recharge_station.gd" id="1_eefbc"]
+[ext_resource type="Script" uid="uid://ccn81txtvomjg" path="res://unfiled/targets/target_red_glow_mesh.gd" id="2_3o428"]
+[ext_resource type="AudioStream" uid="uid://fdt7n168b5tj" path="res://sfx/ES_sound_effects/ES_Electricity 4 - SFX Producer.wav" id="3_o1on1"]
+[ext_resource type="AudioStream" uid="uid://behlieuw6clbp" path="res://sfx/ES_sound_effects/ES_Weapon Charge Up - SFX Producer.wav" id="4_onrp3"]
+
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_s1yjo"]
+bounce = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5pto6"]
+albedo_color = Color(1, 1, 0, 1)
+emission_enabled = true
+emission = Color(0.988235, 0.988235, 0, 1)
+emission_energy_multiplier = 5.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_w64sp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wb81w"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2p7v0"]
+size = Vector3(1.5, 1.5, 1.5)
+
+[node name="RechargeStation" type="Node3D"]
+script = ExtResource("1_eefbc")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+mass = 10.0
+physics_material_override = SubResource("PhysicsMaterial_s1yjo")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
+material_override = SubResource("StandardMaterial3D_5pto6")
+mesh = SubResource("BoxMesh_w64sp")
+skeleton = NodePath("")
+script = ExtResource("2_3o428")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("BoxShape3D_wb81w")
+
+[node name="Area3D" type="Area3D" parent="RigidBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D/Area3D"]
+shape = SubResource("BoxShape3D_2p7v0")
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="RechargeStationSFX" type="AudioStreamPlayer3D" parent="SFX"]
+stream = ExtResource("3_o1on1")
+volume_db = -10.0
+pitch_scale = 2.0
+
+[node name="RechargeSoundSFX" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("4_onrp3")
+pitch_scale = 6.0
+
+[connection signal="body_entered" from="RigidBody3D/Area3D" to="." method="_on_area_3d_body_entered"]

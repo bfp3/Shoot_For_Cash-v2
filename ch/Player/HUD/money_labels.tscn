@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://dy6clm2tp8825"]
+
+[ext_resource type="Script" uid="uid://dtms7614f6vnv" path="res://ch/Money/money_labels.gd" id="1_aaxe5"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_aaxe5"]
+font_size = 80
+font_color = Color(0.25882354, 0.81960785, 0, 1)
+outline_size = 10
+outline_color = Color(0.42, 0.42, 0.42, 0.392157)
+
+[node name="Money_labels" type="Control" unique_id=2075768694 groups=["money_manager"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_aaxe5")
+
+[node name="Label3D" type="Label" parent="." unique_id=1118549578]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7294428
+anchor_top = 0.85265046
+anchor_right = 0.818474
+anchor_bottom = 0.98654705
+offset_left = 19.46997
+offset_top = 16.470825
+offset_right = -19.46997
+offset_bottom = -16.470825
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(1.295, 1.295)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "$0"
+label_settings = SubResource("LabelSettings_aaxe5")
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true

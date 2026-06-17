@@ -1,0 +1,150 @@
+[gd_scene format=3 uid="uid://c1s4hb4it4ha6"]
+
+[ext_resource type="FontFile" uid="uid://dy8r1rfu6d74j" path="res://unfiled/Fonts/droid-sans/DroidSans-Bold.ttf" id="1_b8cwx"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="2_ucyfw"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="3_txcpu"]
+
+
+[sub_resource type="GDScript" id="GDScript_dfvms"]
+script/source = "extends Control
+
+const HUD_ON_CLICK = preload(\"res://400_sounds/HUD Sfx/HUD on click.wav\")
+
+#@onready var hud_light_control: Control = $HUD_Light_Control
+@onready var hud_light_control: Control = $Round_tally
+
+func _ready() -> void:
+	hud_light_control.modulate = Color('FFFFFF00')
+	await get_tree().create_timer(0.4).timeout
+	
+	blink_HUD_light()
+
+func blink_HUD_light() -> void:
+	var tween = create_tween()
+	#tween.tween_interval(0.5)
+	#play_click_sound()
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.1 * 4)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF00'), 0.125 * 10)
+	await tween.finished
+	self.queue_free()
+
+#func play_click_sound() -> void:
+	#await get_tree().create_timer(0.2).timeout
+	#CommonCode.play_sound_instance_pitch_adjusted(HUD_ON_CLICK, -32.0, 2.1)
+	#await get_tree().create_timer(0.1).timeout
+		#
+	
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_0dvhr"]
+font = ExtResource("1_b8cwx")
+font_size = 26
+font_color = Color(0.42, 0.42, 0.42, 1)
+outline_size = 2
+outline_color = Color(0.13, 0.13, 0.13, 1)
+shadow_size = 3
+shadow_color = Color(0.17, 0.17, 0.17, 1)
+shadow_offset = Vector2(-1, -1)
+
+[node name="Shot_Feedback" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = 5.0
+offset_right = -1.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_dfvms")
+
+[node name="Round_tally" type="Control" parent="."]
+z_index = 34
+layout_mode = 1
+anchor_left = 0.866667
+anchor_top = 0.826852
+anchor_right = 0.935417
+anchor_bottom = 0.949074
+offset_left = -34.0
+offset_top = -34.0
+offset_right = 34.0
+offset_bottom = 34.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.66, 0.66)
+pivot_offset = Vector2(100, 100)
+metadata/_edit_use_anchors_ = true
+
+[node name="Score_label" type="Label" parent="Round_tally"]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.165
+anchor_top = 0.26
+anchor_right = 0.865
+anchor_bottom = 0.76
+pivot_offset = Vector2(70, 50)
+text = "Score Tally"
+label_settings = SubResource("LabelSettings_0dvhr")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Light" type="TextureRect" parent="Round_tally"]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.025
+anchor_top = -0.025
+anchor_right = 1.025
+anchor_bottom = 1.025
+offset_left = 85.0
+offset_top = 85.0
+offset_right = -85.0
+offset_bottom = -85.0
+scale = Vector2(5.25, 5.25)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_ucyfw")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="Round_tally"]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.025
+anchor_top = -0.025
+anchor_right = 1.025
+anchor_bottom = 1.025
+offset_left = 85.0
+offset_top = 85.0
+offset_right = -85.0
+offset_bottom = -85.0
+scale = Vector2(5.25, 5.25)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("3_txcpu")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="Round_tally"]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.025
+anchor_top = -0.025
+anchor_right = 1.025
+anchor_bottom = 1.025
+offset_left = 85.0
+offset_top = 85.0
+offset_right = -85.0
+offset_bottom = -85.0
+scale = Vector2(5.25, 5.25)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("3_txcpu")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true

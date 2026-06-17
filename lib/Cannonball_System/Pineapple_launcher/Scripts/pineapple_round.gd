@@ -1,0 +1,383 @@
+extends CharacterBody3D
+
+
+# THIS IS PINEAPPLE UNIT
+const PINEAPPLE_ROUND = preload('uid://dtpxrtm4x8p2c')
+const BOMBS_LANDING_IN_THE_DISTANCE = preload('uid://disfcwr18xhfw')
+const RED_TAKEN_OUT_SFX = preload("res://sfx/pineapple_sound_3.wav")
+const ARROW_AREA_3D = preload("res://ch/weapons/bullet_area3D.tscn")
+
+var respawn_time := 0.5
+var waypoints: Array[Vector3] = [] # List of positions
+var durations: Array[float] = []   # Duration for each movement segment
+var current_index: int = 0         # The index of the current segment
+var elapsed_time: float = 0.0      # Time spent in current segment
+var tween_duration: float = 0.0    # Total duration of current segment
+
+var target_hit := false
+var move_points = []
+var start_time = 0.0
+var travel_times = []
+var travel_directions = []
+var current_speed = 0.0
+
+var smokescreen := false
+
+var target_position: Vector3
+@export var travel_time: float = 2.0  # How long the arc should last
+@export var arc_strength: float = 0.5 # Controls height of the arc
+var destroy_siblings_mode := false
+
+var start_position: Vector3
+var tween_moving_to_marker: Tween = null
+var points: Array = []
+var num_points: int = 50
+
+var has_target_position := false
+
+var dying := false
+var moving := true
+
+var slow_travel_time : float
+var fast_travel_time : float
+
+var special_bomb_undetected_on_radar := false
+
+
+@export var split_odds: float = 0.5  # Probability of splitting into 3
+var has_been_split := false
+var spawned_my_own_arrow := false
+var target_is_going_to_hit_cage := false
+var new_arrow : Node3D = null
+@export var arrow_speed := 20.0  # Adjust speed as needed := 0.1
+
+signal target_destroyed
+signal bomb_destroyed
+
+var was_hit := false
+
+var target_node : Node3D
+var will_hit_cage := false
+
+#@onready var special_mesh: Node3D = $Mesh/Special_mesh
+#@onready var bomb_mesh: Node3D = $Mesh/Bomb_mesh
+@onready var particles: GPUParticles3D = $Particles/Trails
+var has_been_marked := false
+
+func _ready() -> void:
+
+	#var CMS = get_tree().get_first_node_in_group('CMS')
+	#if CMS:
+		#connect("bomb_destroyed", CMS._on_cannonball_destroyed)
+		#CMS._on_pineapple_created()
+	self.show()
+	
+	tumbling_tween()
+	scale_tween()
+	
+func marking_myself_as_target() -> void:
+	#remove_from_group('Target')
+	#remove_from_group('cannonball')
+	has_been_marked = true
+	#$Marked.show()
+	#$Timer.stop()
+	#$Timer.start()
+	
+func scale_tween() -> void:
+	
+	scale = Vector3.ONE / 10
+
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, "scale", Vector3.ONE / 2, 0.15)
+	await tween.finished
+	
+func tumbling_tween() -> void:
+	var dur : float = 3.0
+	$Mesh.look_at(target_position, Vector3.UP, true)
+	var tween = create_tween().set_loops()
+	tween.tween_property($Mesh, "rotation_degrees:x", 360.0, dur).as_relative()
+	await tween.finished
+
+func spawn_my_arrow() -> void:
+
+	if new_arrow:
+		return
+
+	new_arrow = ARROW_AREA_3D.instantiate()
+	#add_child(new_arrow)
+	get_tree().get_current_scene().add_child(new_arrow)
+	var player_gun = get_tree().get_first_node_in_group('player_gun')
+	
+	new_arrow.global_position = player_gun.get_barrel_position()
+	spawned_my_own_arrow = true
+
+func _physics_process(delta: float) -> void:
+	
+	if spawned_my_own_arrow and new_arrow:
+		var direction = (global_position - new_arrow.global_position).normalized()
+		new_arrow.global_position += direction * arrow_speed * delta
+		new_arrow.look_at(global_position, Vector3.UP, true)
+		
+	if not moving:
+		destroy_self()
+		return
+
+func target_launcher_fire(threat_type : String) -> void:
+	target_position = find_target_position()
+	generate_arc_path(global_position, target_position)
+	start_arc_movement()
+	set_meta("type", threat_type)
+	
+	
+func find_target_position() -> Vector3:
+	var marker_node = get_tree().get_first_node_in_group("Target_Markers_manager")
+	if marker_node == null:
+		push_error("No TargetMarkers node found")
+		return global_position
+
+	return marker_node.get_children().pick_random().global_position
+
+func generate_arc_path(start_pos: Vector3, end_pos: Vector3):
+	waypoints.clear()
+	
+	var distance = start_pos.distance_to(end_pos)
+	var h_max = distance * arc_strength  # Arc height scales with distance
+	
+	for i in range(num_points + 1):
+		var t = float(i) / num_points  # Normalized time (0 to 1)
+		
+		var x = lerp(start_pos.x, end_pos.x, t)
+		var z = lerp(start_pos.z, end_pos.z, t)
+		var y = lerp(start_pos.y, end_pos.y, t) + h_max * (1 - (2 * t - 1) ** 2)
+		
+		waypoints.append(Vector3(x, y, z))
+
+func start_arc_movement():
+	if waypoints.is_empty() or not moving:
+		return
+
+	
+	# You can decide how many iterations are fast
+	var fast_iterations = 20
+	var step_time : float
+	var current_travel_time : float
+	
+	tween_moving_to_marker = create_tween()
+	tween_moving_to_marker.set_trans(Tween.TRANS_LINEAR)
+	tween_moving_to_marker.set_ease(Tween.EASE_IN_OUT)
+	
+	durations.clear()  # Ensure no old values remain
+
+	for i in range(waypoints.size() - 1):
+		step_time = (fast_travel_time if i < fast_iterations else slow_travel_time) / num_points
+		durations.append(step_time)  # Store step duration
+
+	
+	for i in range(waypoints.size()):
+
+		#print(i)
+		# For the first fast_iterations steps, set the travel time to fast_travel_time
+		if i < fast_iterations:
+			current_travel_time = fast_travel_time
+			#print('Fast')
+		# After fast_iterations, set the travel time to slow_travel_time
+		else:
+			current_travel_time = slow_travel_time
+			#print('Slow')
+		
+		# Calculate step time based on the current travel time
+		step_time = current_travel_time / num_points
+		
+		# Move the target to the next point
+		tween_moving_to_marker.tween_property(self, "global_position", waypoints[i], step_time)
+
+	
+	await tween_moving_to_marker.finished
+	global_position = target_position  # Snap to final position
+	hit_the_ground_tween()
+#func where(time: float) -> Vector3:
+	#var predicted_position : Vector3
+	#predicted_position = $Unique_marker.global_position + velocity * time
+	#return predicted_position
+	
+	
+#func where(time: float) -> Vector3:
+	#return Vector3.ZERO
+	##print("WAY POINTS ", waypoints)
+	#if waypoints.is_empty():
+		#push_error("waypoints array is empty!")
+		#return Vector3.ZERO
+	#
+	#if waypoints.size() == 1:
+		#push_error("waypoints array is empty_3!")
+		#return waypoints[0]  # If only one point, return it
+#
+	#var future_time = elapsed_time + time
+	#var temp_index = current_index
+	#var _temp_elapsed = elapsed_time
+	#
+	#
+	#while temp_index < waypoints.size() - 1:
+		#var segment_duration = durations[temp_index]
+		#
+		##print("Checking segment:", temp_index, "Duration:", segment_duration, "Future Time Left:", future_time)
+		#
+		#if future_time <= segment_duration:
+			## Interpolate within this segment
+			#var t = future_time / segment_duration
+			#var interpolated_pos = waypoints[temp_index].lerp(waypoints[temp_index + 1], t)
+			##print("Interpolating between:", waypoints[temp_index], "and", waypoints[temp_index + 1], "at t =", t)
+			##print("Predicted Position:", interpolated_pos)
+			#return interpolated_pos
+		#
+		## Move to the next segment
+		#future_time -= segment_duration
+		#temp_index += 1
+		#_temp_elapsed = 0.0
+	#
+	#return waypoints[waypoints.size() - 1]
+
+
+
+func smoke_particles() -> void:
+	var new_particles = $Particles/Smoke_quick #.duplicate()
+	if new_particles:
+		new_particles.emitting = true
+		new_particles.duplicate_particles = true
+		new_particles.show()
+		new_particles.reparent(get_tree().get_current_scene(), true)
+		#get_tree().get_current_scene().add_child(new_particles)
+		new_particles.global_position = global_position
+	
+
+func hit_the_ground_tween() -> void:
+	
+	#instance_hud_missed_shot_feedback()
+	was_hit_tween()
+	EventBus.instance.pineapple_hit_ground.emit()
+
+
+func spawn_pineapple_rigid() -> void:
+	if !target_hit:
+		return
+	var pine_drop = PINEAPPLE_ROUND.instantiate()
+	get_tree().get_current_scene().add_child(pine_drop)
+	pine_drop.global_position = global_position
+	
+func was_hit_tween() -> void:
+	trails_reparent()
+	bomb_destroyed.emit()
+	if new_arrow:
+		new_arrow.hide()
+
+	if tween_moving_to_marker:
+		tween_moving_to_marker.stop()  # Stop the ongoing movement tween
+
+	moving = false  # Prevent further movement
+
+	smoke_particles()
+	
+	$hitSound.play_sound()
+	$Yellow_particles.emitting = true
+	$Yellow_particles2.emitting = true
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	#tween.tween_property($Mesh, "scale", Vector3.ONE * 0.27, 0.1)
+	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.15)
+	#tween.tween_callback(explosive_particles)
+	tween.tween_interval(respawn_time)
+	await tween.finished
+	$Mesh.hide()
+	destroy_self()
+
+func destroy_siblings() -> void:
+	if destroy_siblings_mode:
+		if !was_hit:
+			was_hit = true
+
+			var parent = get_parent()
+			for sibling in parent.get_children():
+				print(parent.get_children().size(), " Number of children")
+				if sibling != self and sibling.is_in_group('cannonball') and not sibling.was_hit:
+					sibling.was_hit = true
+					sibling.was_hit_tween()
+					await get_tree().create_timer(0.25).timeout
+
+
+func play_red_hit_sfx() -> void:
+	await get_tree().create_timer(0.5).timeout
+	CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 0.75)
+	await get_tree().create_timer(0.1).timeout
+	CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.75)
+	CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.0)
+	
+
+func _on_area_3d_area_entered(area: Area3D) -> void:
+	
+	if area.is_in_group('bullet') && !target_hit:
+		area.queue_free()
+		target_hit = true
+
+		if area.has_method('cleanUp'):
+			area.cleanUp()
+		
+		was_hit_tween()
+		instance_hud_feedback()
+		GameManager.pineapples_hit += 1
+		EventBus.instance.pineapple_shot.emit()
+	
+		var pineapple_sequence : PineappleEndingSeqeunceManager = get_tree().get_first_node_in_group('pineapple_ending_seqeunce_manager')
+		if pineapple_sequence:
+			pineapple_sequence.pineapple_collected()
+			return
+
+			
+func add_unique_marker(pos : Vector3) -> void:
+	$Unique_marker.show()
+	$Unique_marker.global_position = pos
+
+
+func instance_hud_feedback() -> void:
+	var new_feedback = get_tree().get_first_node_in_group("HUD_feedback_corner")
+	if new_feedback:
+		new_feedback.hit_pineapple()
+
+#func instance_hud_missed_shot_feedback() -> void:
+	#var new_feedback = get_tree().get_first_node_in_group("HUD_feedback_corner")
+	#new_feedback.hud_missed_pineapple_feedback()
+	#return
+	#GameManager.shots_missed_during_round += ScoreGl.grey_dots_astray
+	#
+	#var new_feedback = get_tree().get_first_node_in_group("HUD_feedback_corner")
+	#if new_feedback:
+		#if smokescreen:
+			#new_feedback.points_added_blink_feedback(ScoreGl.smokescreen_rounds)
+			#return
+			#
+			##new_feedback.points_added_blink_feedback(ScoreGl.grey_dots_astray)
+
+func destroy_self() -> void:
+	target_destroyed.emit()
+	spawn_pineapple_rigid()
+	shake_camera_on_impact()
+	
+	var crash_sound = BOMBS_LANDING_IN_THE_DISTANCE.instantiate()
+	get_tree().get_current_scene().add_child(crash_sound)
+	crash_sound.play_sound_gently()
+	
+
+	if will_hit_cage:
+		#await play_red_hit_sfx()
+		self.queue_free()
+	else:
+		self.queue_free()
+
+func shake_camera_on_impact() -> void:
+	var player_cam = get_tree().get_first_node_in_group('player_cam')
+	var distance_from_player = global_position.distance_to(player_cam.global_position)
+	player_cam.shake_camera_based_on_position(distance_from_player)
+
+
+	
+func trails_reparent() -> void:
+	if $Particles/Trails:
+		$Particles/Trails.connect_signal()

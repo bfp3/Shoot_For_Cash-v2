@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://byk72ga2a46wy"]
+
+[ext_resource type="PackedScene" uid="uid://c4xwc8hqid2ai" path="res://untitled.blend" id="1_b67m2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b0gl5"]
+albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[node name="Handgun" instance=ExtResource("1_b67m2")]
+
+[node name="Cube_007" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_b0gl5")
+
+[node name="Cube_001" parent="Cube_007" index="0"]
+material_override = SubResource("StandardMaterial3D_b0gl5")
+
+[node name="Cube_003" parent="Cube_007" index="1"]
+material_override = SubResource("StandardMaterial3D_b0gl5")

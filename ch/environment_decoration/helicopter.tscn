@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://bbnwa3i4ksui2"]
+
+[ext_resource type="Texture2D" uid="uid://ikpnffkolpqk" path="res://res/gradients/water-gradient.tres" id="1_sdfh7"]
+[ext_resource type="Texture2D" uid="uid://drbs23wlukqyg" path="res://res/Procreate/Camo.png" id="1_t2lmp"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1byup"]
+albedo_texture = ExtResource("1_t2lmp")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4bprl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tsja2"]
+albedo_texture = ExtResource("1_t2lmp")
+
+[sub_resource type="BoxMesh" id="BoxMesh_5ol3q"]
+size = Vector3(0.7, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bruhj"]
+albedo_texture = ExtResource("1_t2lmp")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nsbob"]
+radius = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8vyf7"]
+albedo_texture = ExtResource("1_sdfh7")
+
+[sub_resource type="BoxMesh" id="BoxMesh_nllpg"]
+size = Vector3(2, 0.05, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qwwra"]
+size = Vector3(1, 0.05, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v5j1r"]
+albedo_texture = ExtResource("1_t2lmp")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lhqvq"]
+top_radius = 0.05
+bottom_radius = 0.25
+
+[sub_resource type="PrismMesh" id="PrismMesh_ec334"]
+size = Vector3(0.2, 1, 0.1)
+
+[node name="helicopter" type="Node3D"]
+
+[node name="base" type="Node3D" parent="."]
+
+[node name="frontCockpit" type="MeshInstance3D" parent="base"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_1byup")
+mesh = SubResource("CapsuleMesh_4bprl")
+skeleton = NodePath("../..")
+
+[node name="squareBase" type="MeshInstance3D" parent="base"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.862206, -0.336124)
+material_override = SubResource("StandardMaterial3D_tsja2")
+mesh = SubResource("BoxMesh_5ol3q")
+skeleton = NodePath("../..")
+
+[node name="top" type="MeshInstance3D" parent="base"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.13531, -0.938486)
+material_override = SubResource("StandardMaterial3D_bruhj")
+mesh = SubResource("CapsuleMesh_nsbob")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="base"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04992, 1.40377, -0.323159)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="base"]
+transform = Transform3D(-0.623197, 0, -0.782065, 0, 1, 0, 0.782065, 0, -0.623197, 0.643181, 1.40377, -1.05237)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="base"]
+transform = Transform3D(-0.623197, 0, -0.782065, 0, 1, 0, 0.782065, 0, -0.623197, -0.576411, 1.40377, 0.478119)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="base"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.07467, 1.40377, -0.323159)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="base"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0160673, 1.44448, -0.323159)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_qwwra")
+skeleton = NodePath("../..")
+
+[node name="tailNode" type="Node3D" parent="."]
+transform = Transform3D(1, -0.000429533, -0.000851338, -0.000398041, 0.623272, -0.782005, 0.000866509, 0.782005, 0.623271, 0, -1.0064, -1.43036)
+
+[node name="tail4" type="MeshInstance3D" parent="tailNode"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.01, 1.15, -2.769)
+material_override = SubResource("StandardMaterial3D_v5j1r")
+mesh = SubResource("CylinderMesh_lhqvq")
+skeleton = NodePath("../..")
+
+[node name="tail5" type="MeshInstance3D" parent="tailNode"]
+transform = Transform3D(2.98023e-08, 0, 1, 0, 1, 0, -1, 0, 2.98023e-08, -0.0804748, 1.47647, -3.71742)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("PrismMesh_ec334")
+skeleton = NodePath("../..")
+
+[node name="tail6" type="MeshInstance3D" parent="tailNode"]
+transform = Transform3D(2.98023e-08, 0, 1, 0, 1, 0, -1, 0, 2.98023e-08, 0.0964563, 1.47647, -3.71742)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("PrismMesh_ec334")
+skeleton = NodePath("../..")

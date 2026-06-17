@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://coh5v4seg68yo"]
+
+[ext_resource type="Script" uid="uid://kd7vea0qdi2y" path="res://ch/HUD_components/rocks_remaining_main_2D.gd" id="1_cftqi"]
+[ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://unfiled/Photos/ROCKS - title_rock_centered_large.png" id="2_4b7fn"]
+
+[node name="RocksRemainingCounter" type="Control" unique_id=1693544327]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 16.0
+offset_right = 8.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 540)
+mouse_filter = 2
+script = ExtResource("1_cftqi")
+
+[node name="Container" type="Control" parent="." unique_id=856470115]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -371.0
+offset_top = -261.0
+offset_right = 111.0
+offset_bottom = 24.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RockTexture2D" type="TextureRect" parent="Container" unique_id=1720650827]
+modulate = Color(0.38, 0.38, 0.38, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -3.0
+offset_right = -2.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.69, 0.69)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_4b7fn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RockTexture2D4" type="TextureRect" parent="Container/RockTexture2D" unique_id=1039629905]
+self_modulate = Color(0.59, 0.59, 0.59, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 99.200195
+offset_top = 35.53589
+offset_right = 99.200195
+offset_bottom = 35.53589
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.254, 0.254)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_4b7fn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RockTexture2D2" type="TextureRect" parent="Container/RockTexture2D" unique_id=1951203250]
+self_modulate = Color(0.82, 0.82, 0.82, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -83.406494
+offset_top = 38.433655
+offset_right = -83.406494
+offset_bottom = 38.433655
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.6, 0.6)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_4b7fn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RockTexture2D3" type="TextureRect" parent="Container/RockTexture2D" unique_id=1011782735]
+self_modulate = Color(0.9, 0.9, 0.9, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.418945
+offset_top = 71.76697
+offset_right = 64.418945
+offset_bottom = 71.76697
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.309, 0.309)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_4b7fn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LabelRocksRemaining" type="RichTextLabel" parent="Container" unique_id=2095577995]
+modulate = Color(1, 0.78039217, 0, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -82.0
+offset_top = -73.0
+offset_right = 68.0
+offset_bottom = 77.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+focus_mode = 0
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 80
+text = "00"
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1

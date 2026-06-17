@@ -1,0 +1,2730 @@
+[gd_scene format=3 uid="uid://dqwfc7tkdebow"]
+
+[ext_resource type="Script" uid="uid://btsbvhp421kgq" path="res://sc/scene-100.gd" id="1_5fn12"]
+[ext_resource type="Script" uid="uid://cxq1gyi7m7b7q" path="res://ch/round_manager.gd" id="2_pji6g"]
+[ext_resource type="Script" uid="uid://dl73eie0p7fwm" path="res://lib/level_music_control.gd" id="3_qsdge"]
+[ext_resource type="AudioStream" uid="uid://cc2iigb6x8nqm" path="res://sfx/night-noises.wav" id="4_ki1rw"]
+[ext_resource type="AudioStream" uid="uid://vwd54i0bx1ys" path="res://sfx/ocean_gulls_sfx_01.wav" id="5_3vvr1"]
+[ext_resource type="AudioStream" uid="uid://ctog6xv23361y" path="res://sfx/AMB_Dark_Castle_Loop_01.wav" id="5_an2hp"]
+[ext_resource type="AudioStream" uid="uid://wiy8keftax6e" path="res://sfx/Windmill Sunburst.wav" id="5_u26ts"]
+[ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://ch/Player.tscn" id="5_ys56s"]
+[ext_resource type="AudioStream" uid="uid://bp1yceg657hqq" path="res://sfx/windFull.WAV" id="6_43pd7"]
+[ext_resource type="AudioStream" uid="uid://cs3n5clnfoe5o" path="res://sfx/Copyright_free/Chopin - Ballade no. 1 in G minor, Op. 23 [Copyright Free].wav" id="6_hgpqe"]
+[ext_resource type="AudioStream" uid="uid://drvarhxuygv0r" path="res://sfx/birds_noises.wav" id="6_k3oa0"]
+[ext_resource type="AudioStream" uid="uid://db33f0w5kew1x" path="res://sfx/ocean_waves_sfx_01.wav" id="6_roilk"]
+[ext_resource type="AudioStream" uid="uid://vyxgc20qwdty" path="res://sfx/Copyright_free/Strauss  The Blue Danube Waltz.mp3" id="7_2gt6x"]
+[ext_resource type="AudioStream" uid="uid://kcrsa5k3eq7l" path="res://sfx/Seagull - Sound Effect.wav" id="7_uuy6g"]
+[ext_resource type="AudioStream" uid="uid://deq5brrn7c28" path="res://sfx/Windmill Sprint.wav" id="8_an2hp"]
+[ext_resource type="AudioStream" uid="uid://dkv7laql8xotx" path="res://sfx/Flag Flap.wav" id="8_ygja6"]
+[ext_resource type="Shader" uid="uid://d3ak3drqp32j5" path="res://res/Shaders/simplified_TV_shader.gdshader" id="11_g1a02"]
+[ext_resource type="Script" uid="uid://d2hbdu3aenrpl" path="res://lib/tv_hud_shader.gd" id="12_vk6w3"]
+[ext_resource type="AudioStream" uid="uid://pmtd0sxpr2dx" path="res://sfx/Windmill_Sprint_TITLE.wav" id="12_vntk7"]
+[ext_resource type="PackedScene" uid="uid://coh5v4seg68yo" path="res://ch/HUD_components/rocks_remaining_counter.tscn" id="21_an2hp"]
+[ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="26_nrngk"]
+[ext_resource type="AudioStream" uid="uid://ecijroapobxk" path="res://sfx/Egg_pulse_sfx.wav" id="26_vntk7"]
+[ext_resource type="Script" uid="uid://cbcv8383lu5sl" path="res://ch/splash_zone.gd" id="27_ive30"]
+[ext_resource type="AudioStream" uid="uid://bde0632jwh1jq" path="res://sfx/Egg_pulse_sfx_reverse.wav" id="27_pexel"]
+[ext_resource type="AudioStream" uid="uid://byflv4pbw8mdn" path="res://sfx/water_splash_sfx_01.wav" id="28_mg8jv"]
+[ext_resource type="AudioStream" uid="uid://b4oqw265ffpdr" path="res://sfx/water_splash_sfx_02.wav" id="29_a5o51"]
+[ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="30_5qsiu"]
+[ext_resource type="PackedScene" uid="uid://b51vopusw334w" path="res://ch/Rocks/Shootable_object.tscn" id="32_ouxq4"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="37_jvwte"]
+[ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="42_ys56s"]
+[ext_resource type="AudioStream" uid="uid://duqg3ux67t4tf" path="res://sfx/Sonoma_birds.wav" id="46_g1a02"]
+[ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://sfx/BP_tunes/oasisWorld.wav" id="47_vk6w3"]
+[ext_resource type="Environment" uid="uid://5qgk8j6tll6x" path="res://res/2d_Canvas_world_env.tres" id="53_an2hp"]
+[ext_resource type="Script" uid="uid://c7htjgdubhb0n" path="res://ch/splash_screen/splash_screen_v2.gd" id="54_om6sf"]
+[ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://unfiled/Ammo_display/bullet_texture_plain.png" id="56_sgtkv"]
+[ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="56_ucbwt"]
+[ext_resource type="AudioStream" uid="uid://mbyekv7f3n1p" path="res://sfx/opt_3_fade_shortened.wav" id="57_5g4o0"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="58_ia88j"]
+[ext_resource type="Script" uid="uid://dbbltr23d26u6" path="res://ch/Shop/money_label.gd" id="59_h46i8"]
+[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="59_hsuqi"]
+[ext_resource type="Script" uid="uid://drmqfnbqyvmps" path="res://ch/Shop/tooltip.gd" id="60_aakku"]
+[ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="60_ki1rw"]
+[ext_resource type="AudioStream" uid="uid://dpi523s5wv3r7" path="res://sfx/rock_hit_sfx_01.wav" id="60_pexel"]
+[ext_resource type="Script" uid="uid://cpd2olefkkvep" path="res://ch/Player/scripts/player_scope_radius_draw.gd" id="61_pexel"]
+[ext_resource type="Script" uid="uid://bw1d87pjqlmjw" path="res://ch/HUD_components/bullets_per_round_indication.gd" id="63_43pd7"]
+[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="65_nh3e2"]
+[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_sound_effects/ES_Balloon Pop 2 - SFX Producer.wav" id="66_84tyu"]
+[ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://unfiled/Photos/ROCKS - title_rock_centered_large.png" id="66_an2hp"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="66_od35a"]
+[ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="67_2fegi"]
+[ext_resource type="Script" uid="uid://c66tdaw8j27r3" path="res://ch/HUD_components/total_rocks.gd" id="67_43pd7"]
+[ext_resource type="Texture2D" uid="uid://gbka4yjc0p4k" path="res://unfiled/Ammo_display/bullet_texture.png" id="67_u26ts"]
+[ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="68_ckl38"]
+[ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="68_nh3e2"]
+[ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="69_whoub"]
+[ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="70_qskv3"]
+[ext_resource type="AudioStream" uid="uid://c5he7tw0onue" path="res://sfx/shop_reroll_sfx_01.wav" id="71_23edt"]
+[ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="71_wwmxw"]
+[ext_resource type="AudioStream" uid="uid://xh6kpfpcl3mh" path="res://sfx/ shop_mystery_box_sfx_01.wav" id="72_11mca"]
+[ext_resource type="Script" uid="uid://3le0jpjo3qtu" path="res://ch/background_transition.gd" id="72_uuy6g"]
+[ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="73_2dulk"]
+[ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="73_bcevg"]
+[ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="73_ygja6"]
+[ext_resource type="AudioStream" uid="uid://dmjy34fgs3ny8" path="res://sfx/HUD on click.wav" id="75_xr0ka"]
+[ext_resource type="AudioStream" uid="uid://jmf0o5ogd3uv" path="res://sfx/HUD on_v2.wav" id="76_wqbq6"]
+[ext_resource type="AudioStream" uid="uid://dold0eft66v4p" path="res://sfx/HUD on.wav" id="77_erb5b"]
+[ext_resource type="AudioStream" uid="uid://fossjjbbmh7" path="res://sfx/low_pitch_humming.wav" id="78_tpx2r"]
+[ext_resource type="AudioStream" uid="uid://cqfuywy300at4" path="res://sfx/opt_2.wav" id="79_1tcj8"]
+
+[sub_resource type="Curve3D" id="Curve3D_gr7pb"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 118.694, 3.755, 135, -5.77, 1.5, 0, 100, 34.74, 0, -74, -16.5, -27.5, -190, 10, 180),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nh3e2"]
+size = Vector3(40, 0.1, 56)
+
+[sub_resource type="Gradient" id="Gradient_an2hp"]
+offsets = PackedFloat32Array(0, 0.1756374, 0.305949, 0.38243628)
+colors = PackedColorArray(0, 0.4862745, 0.7490196, 1, 0.06710001, 0.18472837, 0.61, 1, 0.11555753, 0.23940638, 0.5091781, 1, 0.144, 0.2715, 0.45, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_43pd7"]
+gradient = SubResource("Gradient_an2hp")
+
+[sub_resource type="Curve" id="Curve_nh3e2"]
+_data = [Vector2(0, 0.673668), 0.0, 0.0, 0, 0, Vector2(0.15567282, 1), 0.0, 0.0, 0, 0, Vector2(0.2480211, 0.673668), 0.0, 0.0, 0, 0, Vector2(0.31134564, 1), 0.0, 0.0, 0, 0, Vector2(0.44327173, 0.6936475), 0.0, 0.0, 0, 0, Vector2(0.52242744, 1), 0.0, 0.0, 0, 0, Vector2(0.6094987, 0.6403688), 0.0, 0.0, 0, 0, Vector2(0.6622691, 1), 0.0, 0.0, 0, 0, Vector2(0.74670184, 0.6403688), 0.0, 0.0, 0, 0, Vector2(0.8680739, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 11
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_84tyu"]
+curve_x = SubResource("Curve_nh3e2")
+curve_y = SubResource("Curve_nh3e2")
+curve_z = SubResource("Curve_nh3e2")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_84tyu"]
+lifetime_randomness = 1.0
+emission_shape_scale = Vector3(1, 1, 0)
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 3.0
+initial_velocity_max = 4.0
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, -2, 0)
+scale_min = 0.5
+scale_curve = SubResource("CurveXYZTexture_84tyu")
+color_ramp = SubResource("GradientTexture1D_43pd7")
+hue_variation_min = -0.020000022
+hue_variation_max = 0.019999977
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u26ts"]
+transparency = 1
+cull_mode = 1
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("37_jvwte")
+
+[sub_resource type="QuadMesh" id="QuadMesh_k3oa0"]
+material = SubResource("StandardMaterial3D_u26ts")
+size = Vector2(0.15, 0.15)
+
+[sub_resource type="Animation" id="Animation_uuy6g"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ygja6"]
+resource_name = "sailing_boat"
+length = 10.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(1000, 0, 0), Vector3(-1000, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n1xtn"]
+_data = {
+&"RESET": SubResource("Animation_uuy6g"),
+&"sailing_boat": SubResource("Animation_ygja6")
+}
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_taal3"]
+shader = ExtResource("11_g1a02")
+shader_parameter/overlay = false
+shader_parameter/aberration = 0.01000004797499998
+shader_parameter/brightness = 1.0
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.0
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.105
+shader_parameter/vignette_opacity = 0.800000038
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_67uld"]
+
+[sub_resource type="Curve" id="Curve_onfim"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_vhsx8"]
+curve = SubResource("Curve_onfim")
+
+[sub_resource type="Curve" id="Curve_r6l2h"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_64t06"]
+curve = SubResource("Curve_r6l2h")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yuebc"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(534.76, 362.53, 1)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 10.0
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_64t06")
+alpha_curve = SubResource("CurveTexture_vhsx8")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_arg5w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iforg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1teaa"]
+
+[sub_resource type="Animation" id="Animation_uxymg"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_exbpr"]
+resource_name = "new_animation"
+length = 14.566667
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5.2, 9.235343),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -6.283185307179586, -6.283185307179586]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.3333334, 2.1333334, 2.8333333, 3.3375256, 3.9666667, 5.2, 9.235343),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.9, 0.9), Vector2(0.9, 0.9), Vector2(1, 1), Vector2(0.9, 0.9), Vector2(0.9, 0.9), Vector2(1, 1), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_le04b"]
+_data = {
+&"RESET": SubResource("Animation_uxymg"),
+&"new_animation": SubResource("Animation_exbpr")
+}
+
+[sub_resource type="Gradient" id="Gradient_ive30"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
+
+[sub_resource type="Gradient" id="Gradient_hsuqi"]
+colors = PackedColorArray(0, 0, 0, 1, 0.1, 0.1, 0.1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_uxymg"]
+gradient = SubResource("Gradient_hsuqi")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Animation" id="Animation_le04b"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-332.50662, -90.36029)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.2, 0.2)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_b5kcl"]
+resource_name = "new_animation"
+length = 5.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.7670083, 5.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-332.50662, -90.36029), Vector2(-330, -87.77), Vector2(-332.50662, -90.36029)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2.7670083, 5.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0.2, 0.2), Vector2(0.18, 0.18), Vector2(0.2, 0.2)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.4666667, 3.7666667, 5.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.17453292519943295, -0.17453292519943295, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_om6sf"]
+_data = {
+&"RESET": SubResource("Animation_le04b"),
+&"new_animation": SubResource("Animation_b5kcl")
+}
+
+[sub_resource type="Curve" id="Curve_uxymg"]
+_limits = [0.0, 101.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 17.022476), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_exbpr"]
+_data = [Vector2(1e-05, 0.033707857), 0.0, 0.0, 0, 0, Vector2(1, 0.033707857), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_le04b"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_b5kcl"]
+curve_x = SubResource("Curve_uxymg")
+curve_y = SubResource("Curve_exbpr")
+curve_z = SubResource("Curve_le04b")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_uxymg"]
+particle_flag_disable_z = true
+angle_min = 35.00001
+angle_max = 58.400013
+direction = Vector3(0, 50, 0)
+gravity = Vector3(0, 0, 0)
+tangential_accel_min = 9.999997
+tangential_accel_max = 9.999997
+scale_min = 5.0
+scale_max = 5.0
+scale_curve = SubResource("CurveXYZTexture_b5kcl")
+
+[sub_resource type="GDScript" id="GDScript_k3oa0"]
+script/source = "extends Control
+#
+#@onready var ammo_container_hbox: HBoxContainer =  $'../../Ammo_panel_3D/Bullet_cabinet/MarginContainer/HBoxContainer'
+#@onready var ammo_single_unit: TextureRect = $'../../Ammo_panel_3D/Bullet_reference'
+#@onready var reload_sound: AudioStreamPlayer = $'../../Ammo_panel_3D/reload_sound'
+#
+#@onready var deload_sound : AudioStreamPlayer = $'../../Ammo_panel_3D/deload_sound'
+#
+##@onready var ammo_label: Label = $ammo_label
+#@onready var reserve_label: Label = $'../../Ammo_panel_3D/Remaining_bullets_label'
+#@onready var ammo_label: Label = $'../../Ammo_panel_3D/Loaded_bullets_label'
+#
+##@onready var ammo_marker: Node2D = $\"../Ammo_marker\"
+##@onready var reserve_marker: Node2D = $\"../Cartridge_marker\"
+#
+#var loaded_bullets := 0
+#var reserve_bullets := 0
+#var first_reload_completed := false
+#
+#var tweened_ammo := []
+#
+#
+#func _ready() -> void:
+	#pass
+#
+#func game_started_update() -> void:
+	## Optional initial sync if needed
+	#pass
+#
+#func update_ammo_display(loaded: int, reserve: int) -> void:
+	#loaded_bullets = loaded
+	#reserve_bullets = reserve
+	#
+	#reload_ammo(loaded_bullets)
+	#reload_ammo(loaded)
+#
+#func reduce_ammo() -> void:
+	#if loaded_bullets > 0:
+		#loaded_bullets -= 1
+		#reserve_bullets += 1  # Optional: comment this out if spent bullets should be lost
+#
+	##if loaded_bullets == 0:
+		##clear_ammo()
+	#
+	#deload_sound.play()
+	#
+	#var candidates = ammo_container_hbox.get_children()
+#
+	#for i in range(candidates.size() - 1, -1, -1):
+		#var node = candidates[i]
+		#if !tweened_ammo.has(node):
+			#tweened_ammo.append(node)
+			#send_to_tween_reducer(node)
+			#break
+#
+	##if last_ammo:
+		##send_to_tween_reducer(last_ammo)
+#
+		##update_labels()
+	##reserve_label.text = \"|\" + str(reserve_bullets) + \"|\"
+#
+#func deduct_ammo() -> void:
+	##if loaded_bullets > 0:
+	#loaded_bullets = get_parent().current_loaded_bullets
+	##loaded_bullets = clamp(loaded_bullets - 1, 0, loaded_bullets)
+	#
+	#if loaded_bullets == 0:
+		#clear_ammo()
+	#
+	#var candidates = ammo_container_hbox.get_children()
+#
+	#for i in range(candidates.size() - 1, -1, -1):
+		#var node = candidates[i]
+		#if !tweened_ammo.has(node):
+			#tweened_ammo.append(node)
+			#send_to_tween_reducer(node)
+			#break
+		#
+	##var last_ammo = ammo_container_hbox.get_children().back()
+	##if last_ammo:
+		##send_to_tween(last_ammo)
+#
+		##update_labels()
+#
+#func reset_loaded_ammo() -> void:
+	#loaded_bullets = 0
+	#clear_ammo()
+	##update_labels()
+#
+#
+#func reset_ammo_after_round() -> void:
+	#get_parent().current_loaded_bullets = 0
+	#await toss_out_ammo()
+	#clear_ammo()
+	#
+#
+#func toss_out_ammo() -> void:
+	#for last_ammo in ammo_container_hbox.get_children():
+		#deload_sound.play()
+		#var dur := 0.45
+		#var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		#tween.tween_property(last_ammo, \"scale\", Vector2.ONE * 1.25, dur)
+		#tween.parallel().tween_property(last_ammo, \"modulate\", Color('FFFFFF00'), dur)
+		#tween.parallel().tween_property(last_ammo, \"position:x\", -50.0, dur).as_relative()
+		#tween.parallel().tween_property(last_ammo, \"position:y\", -50.0, dur).as_relative()
+		#tween.tween_callback(last_ammo.queue_free)
+		#await tween.finished
+		#loaded_bullets = clamp(loaded_bullets - 1 , 0 ,loaded_bullets)
+		##update_labels()
+#
+#func reload_ammo(count: int) -> void:
+	##clear_ammo()
+	#var volume : float
+	#if first_reload_completed:
+		#-35.0
+	#else:
+		#-80.0
+	#first_reload_completed = true
+	#
+	##for i in range(count):
+	#if ammo_container_hbox.get_children().size() < 6:
+		#var new_ammo = ammo_single_unit.duplicate()
+		#ammo_container_hbox.add_child(new_ammo)
+		#new_ammo.show()
+	#
+	#reload_sound.play()
+	##await get_tree().create_timer(0.05).timeout
+	###reserve_label.text = \"|\" + str(reserve_bullets) + \"|\"
+	#
+#func remove_last_ammo() -> void:
+	#if ammo_container_hbox.get_child_count() == 0:
+		#return
+#
+	#var last_ammo := ammo_container_hbox.get_child(ammo_container_hbox.get_child_count() - 1)
+	#ammo_container_hbox.remove_child(last_ammo)  # <--- removes it from the HBox
+#
+	#send_to_tween(last_ammo)
+#
+#
+#
+#func send_to_tween(last_ammo: TextureRect) -> void:
+	#var dur := 0.3
+	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	##tween.tween_property(last_ammo, \"scale\", Vector2.ONE * 1.25, dur)
+	#tween.parallel().tween_property(last_ammo, \"modulate\", Color('FFFFFF00'), dur)
+	#tween.parallel().tween_property(last_ammo, \"position:x\", 10.0, dur).as_relative()
+	#tween.tween_callback(last_ammo.queue_free)
+	##await tween.finished
+#
+#
+#func send_to_tween_reducer(last_ammo: TextureRect) -> void:
+	#var dur := 0.35
+	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	##tween.tween_property(last_ammo, \"scale\", Vector2.ONE * 1.25, dur)
+	#tween.parallel().tween_property(last_ammo, \"modulate\", Color('FFFFFF00'), dur)
+	#tween.parallel().tween_property(last_ammo, \"position:x\", -25.0, dur).as_relative()
+	#tween.tween_callback(last_ammo.queue_free)
+	##await tween.finished
+#
+#
+#func clear_ammo() -> void:
+	#for child in ammo_container_hbox.get_children():
+		#child.queue_free()
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uuy6g"]
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ygja6"]
+bg_color = Color(0.0322, 0.05236, 0.07, 1)
+border_width_top = 1
+border_color = Color(0.6, 0.733333, 1, 0.407843)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.03, 0.03, 0.03, 1)
+shadow_size = 1
+shadow_offset = Vector2(0.5, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n1xtn"]
+draw_center = false
+border_width_bottom = 1
+border_color = Color(0.8, 0.8, 0.8, 0.235294)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3vvr1"]
+bg_color = Color(0, 0.03, 0.06, 1)
+border_width_left = 1
+border_width_top = 4
+border_width_right = 1
+border_color = Color(0, 0, 0, 0.901961)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_roilk"]
+font_size = 36
+shadow_color = Color(0.12, 0.12, 0.12, 1)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ulsu7"]
+font_size = 19
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+shadow_color = Color(0.19, 0.19, 0.19, 1)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="GDScript" id="GDScript_t3w06"]
+script/source = "extends TextureRect
+
+@export var lamp_off : Color = Color('84461b15')
+@export var lamp_on_brightest : Color = Color('84461b')
+
+var hud_light_on := false
+
+func silence_phase_blinking() -> void:
+	
+	var tween = create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.3)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075 * 3)
+	tween.tween_property(self, \"modulate\", Color('84461b00'), 0.075 * 3)
+	await tween.finished
+
+func hud_lamp_on_phase():
+
+	hud_light_on = true
+	var tween = create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.3)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075 * 3)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.5)
+	tween.tween_property(self, \"modulate\", Color('84461b00'), 0.075 * 3)
+	await tween.finished
+	
+	return
+"
+
+[sub_resource type="GDScript" id="GDScript_wwmxw"]
+script/source = "extends TextureRect
+
+@export var lamp_off : Color = Color('84461b15')
+@export var lamp_on_brightest : Color = Color('84461b')
+
+
+func shot_hit_blinking() -> void:
+	show()
+	var tween = create_tween()
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075)
+	tween.tween_interval(0.1)
+
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075)
+	tween.tween_interval(0.1)
+
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.3)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075 * 3)
+	await tween.finished
+	hide()
+"
+
+[sub_resource type="Gradient" id="Gradient_dv8gk"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.463415)
+colors = PackedColorArray(0, 0, 0, 0, 0.32, 0.32, 0.32, 0.117647)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ymcw3"]
+frequency = 1.0
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_c5sey"]
+height = 94
+noise = SubResource("FastNoiseLite_ymcw3")
+color_ramp = SubResource("Gradient_dv8gk")
+seamless = true
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4n7q2"]
+texture = SubResource("NoiseTexture2D_c5sey")
+modulate_color = Color(0.11, 0.495667, 1, 1)
+
+[sub_resource type="Curve" id="Curve_43pd7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ecf0a"]
+curve = SubResource("Curve_43pd7")
+
+[sub_resource type="Curve" id="Curve_84tyu"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_t852v"]
+curve = SubResource("Curve_84tyu")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_u26ts"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_velocity_min = 99.99998
+radial_velocity_max = 199.99997
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_t852v")
+color = Color(1, 0.78039217, 0, 1)
+alpha_curve = SubResource("CurveTexture_ecf0a")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_13acb"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_43pd7"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fgned"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_nh3e2"]
+Button/styles/normal = SubResource("StyleBoxFlat_13acb")
+Panel/styles/panel = SubResource("StyleBoxFlat_43pd7")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_fgned")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_an2hp"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_43pd7"]
+points = PackedVector3Array(-1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, 1)
+
+[sub_resource type="GDScript" id="GDScript_84tyu"]
+script/source = "extends Node3D
+
+@onready var pineapple:= $Pineapple
+
+
+func bonus_pineapple() -> void:
+	pineapple.update_active()
+"
+
+[node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "rocks_on_screen_counter", "music_manager", "red_circle", "main_game_canvas") groups=["scene_manager"]]
+script = ExtResource("1_5fn12")
+intro_title_screen = true
+player = NodePath("Player")
+round_manager = NodePath("Round_manager")
+start_cam = NodePath("Camera3D")
+round_timer = NodePath("MainGameCanvasLayer/SubViewportContainer/SubViewport/Timer")
+HUD_CRT = NodePath("TV_hud")
+splash_screen = NodePath("SplashScreenCanvasLayer/SplashScreen_v2")
+rocks_on_screen_counter = NodePath("MainGameCanvasLayer/SubViewportContainer/SubViewport/RocksRemainingCounter")
+music_manager = NodePath("Music")
+red_circle = NodePath("MainGameCanvasLayer/SubViewportContainer/SubViewport/Red_circle")
+main_game_canvas = NodePath("MainGameCanvasLayer")
+
+[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("level_layout", "scene_transition_screen", "upgrade_menu", "tally_menu", "round_timer", "place_name", "player", "current_song", "ending_song", "rocks_container", "music_manager", "hud_system", "birds") groups=["round_manager"]]
+script = ExtResource("2_pji6g")
+level_layout = NodePath("../Level_Visual")
+scene_transition_screen = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Background_transition")
+upgrade_menu = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Shop_Main_Menu")
+tally_menu = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/TallyCard")
+round_timer = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Timer")
+place_name = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Place_name")
+player = NodePath("../Player")
+current_song = NodePath("../Music/MathAnim")
+ending_song = NodePath("../Music/EndingSong")
+rocks_container = NodePath("../Rocks")
+music_manager = NodePath("../Music")
+hud_system = NodePath("../TV_hud")
+birds = NodePath("../BirdsFlightPath/PathFollow3D/Bird_fly_by_helpers")
+
+[node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("opening_song")]
+script = ExtResource("3_qsdge")
+opening_song = NodePath("Opening_song")
+
+[node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
+stream = ExtResource("46_g1a02")
+volume_db = -45.0
+autoplay = true
+
+[node name="Birds4" type="AudioStreamPlayer" parent="Music" unique_id=1693840937]
+stream = ExtResource("5_3vvr1")
+volume_db = -35.0
+autoplay = true
+
+[node name="Birds5" type="AudioStreamPlayer" parent="Music" unique_id=348778646]
+stream = ExtResource("6_roilk")
+volume_db = -38.0
+autoplay = true
+
+[node name="TitleMusic" type="AudioStreamPlayer" parent="Music" unique_id=1063747069]
+stream = ExtResource("5_u26ts")
+volume_db = -35.0
+
+[node name="Birds2" type="AudioStreamPlayer" parent="Music" unique_id=1520904327]
+stream = ExtResource("6_k3oa0")
+volume_db = -35.0
+autoplay = true
+
+[node name="Birds3" type="AudioStreamPlayer" parent="Music" unique_id=1611956174]
+stream = ExtResource("7_uuy6g")
+volume_db = -49.0
+autoplay = true
+
+[node name="Flag" type="AudioStreamPlayer" parent="Music" unique_id=537681908]
+stream = ExtResource("8_ygja6")
+volume_db = -45.0
+pitch_scale = 0.8
+
+[node name="Ambient_background_noise" type="AudioStreamPlayer" parent="Music" unique_id=1835353061]
+stream = ExtResource("5_an2hp")
+volume_db = -40.0
+pitch_scale = 0.7
+
+[node name="WindNoises" type="AudioStreamPlayer" parent="Music" unique_id=1363719912]
+stream = ExtResource("6_43pd7")
+volume_db = -23.0
+
+[node name="NightNoises" type="AudioStreamPlayer" parent="Music" unique_id=1949811683]
+stream = ExtResource("4_ki1rw")
+volume_db = -54.0
+
+[node name="Oasis" type="AudioStreamPlayer" parent="Music" unique_id=230623079]
+stream = ExtResource("47_vk6w3")
+volume_db = -30.0
+
+[node name="MathAnim" type="AudioStreamPlayer" parent="Music" unique_id=1667690039]
+stream = ExtResource("8_an2hp")
+volume_db = -30.0
+
+[node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
+stream = ExtResource("8_an2hp")
+volume_db = -30.0
+
+[node name="MathAnim2" type="AudioStreamPlayer" parent="Music" unique_id=924511348]
+stream = ExtResource("8_an2hp")
+volume_db = -60.0
+
+[node name="Chopin" type="AudioStreamPlayer" parent="Music" unique_id=1364310332]
+stream = ExtResource("6_hgpqe")
+volume_db = -40.0
+
+[node name="BlueDanude" type="AudioStreamPlayer" parent="Music" unique_id=2132155843]
+stream = ExtResource("7_2gt6x")
+volume_db = -45.0
+
+[node name="EndingSong" type="AudioStreamPlayer" parent="Music" unique_id=468679081]
+stream = ExtResource("12_vntk7")
+volume_db = -20.0
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1533254053]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 15.835)
+keep_aspect = 0
+fov = 60.0
+far = 2000.0
+
+[node name="BirdsFlightPath" type="Path3D" parent="." unique_id=659428985]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+curve = SubResource("Curve3D_gr7pb")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="BirdsFlightPath" unique_id=1230755136]
+transform = Transform3D(0.7509671, -0.013788617, 0.6601236, 4.6563725e-10, 0.99968433, 0.020883655, -0.6602613, -0.015682878, 0.7508105, -5.77, 1.5, 0)
+use_model_front = true
+loop = false
+
+[node name="Bird_fly_by_helpers" parent="BirdsFlightPath/PathFollow3D" unique_id=1451433032 instance=ExtResource("30_5qsiu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Rocks" type="Node3D" parent="." unique_id=859468523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
+script = ExtResource("26_nrngk")
+pulse_magnitude = 0.8
+
+[node name="Container_1" type="Node3D" parent="Rocks" unique_id=189760907]
+
+[node name="Shootable_object" parent="Rocks/Container_1" unique_id=1089661090 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08000016, 0.42300034)
+
+[node name="Shootable_object2" parent="Rocks/Container_1" unique_id=641614515 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7, -0.08000016, 0.42300034)
+
+[node name="Shootable_object3" parent="Rocks/Container_1" unique_id=977217555 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, -0.08000016, 0.42300034)
+
+[node name="Shootable_object4" parent="Rocks/Container_1" unique_id=614925084 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.8, -0.08000016, 0.42300034)
+
+[node name="Shootable_object5" parent="Rocks/Container_1" unique_id=1804095401 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, -0.08000016, 0.42300034)
+
+[node name="Shootable_object6" parent="Rocks/Container_1" unique_id=1648636095 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2257867, -0.08000016, 2.3499985)
+
+[node name="Shootable_object7" parent="Rocks/Container_1" unique_id=1588486015 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.925786, -0.08000016, 2.3499985)
+
+[node name="Shootable_object8" parent="Rocks/Container_1" unique_id=2122944651 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4742131, -0.08000016, 2.3499985)
+
+[node name="Shootable_object9" parent="Rocks/Container_1" unique_id=1306876008 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.774214, -0.08000016, 2.3499985)
+
+[node name="Shootable_object10" parent="Rocks/Container_1" unique_id=702490276 instance=ExtResource("32_ouxq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, -0.08000016, 2.3499985)
+
+[node name="Gold_sfx" type="AudioStreamPlayer" parent="Rocks" unique_id=951137588]
+stream = ExtResource("69_whoub")
+volume_db = -10.0
+pitch_scale = 0.7
+max_polyphony = 2
+
+[node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("5_ys56s")]
+unique_name_in_owner = true
+process_mode = 3
+transform = Transform3D(-1, 8.379102e-09, 8.70203e-08, 0, 0.9953962, -0.09584575, -8.742278e-08, -0.09584575, -0.9953962, -0.74, -0.875, 0.5)
+roundManager = NodePath("../Round_manager")
+rotation_speed = 0.8
+
+[node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 38.15)
+monitoring = false
+monitorable = false
+script = ExtResource("27_ive30")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Splash_zone" unique_id=915563512]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.23500001, 10.400002)
+shape = SubResource("BoxShape3D_nh3e2")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Splash_zone" unique_id=1142810847]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.2624941, 0.4667511)
+emitting = false
+amount = 30
+lifetime = 2.0
+one_shot = true
+explosiveness = 0.9
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_84tyu")
+draw_pass_1 = SubResource("QuadMesh_k3oa0")
+
+[node name="splash_sfx_01" type="AudioStreamPlayer" parent="Splash_zone" unique_id=28607076]
+stream = ExtResource("28_mg8jv")
+volume_db = -18.0
+
+[node name="splash_sfx_02" type="AudioStreamPlayer" parent="Splash_zone" unique_id=911794202]
+stream = ExtResource("29_a5o51")
+volume_db = -18.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=391338382]
+root_node = NodePath("../Player")
+libraries/ = SubResource("AnimationLibrary_n1xtn")
+speed_scale = 0.005
+
+[node name="Level_Visual" type="Node3D" parent="." unique_id=1485757792]
+
+[node name="TV_hud" type="TextureRect" parent="." unique_id=1738601225 groups=["TV_CRT_Filter"]]
+unique_name_in_owner = true
+z_index = 1
+material = SubResource("ShaderMaterial_taal3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("CanvasTexture_67uld")
+script = ExtResource("12_vk6w3")
+start_up = true
+metadata/_edit_use_anchors_ = true
+
+[node name="SplashScreenCanvasLayer" type="CanvasLayer" parent="." unique_id=1613004485]
+
+[node name="SplashScreen_v2" type="Control" parent="SplashScreenCanvasLayer" unique_id=1109729386]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("54_om6sf")
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=685089417]
+position = Vector2(962, 551)
+emitting = false
+lifetime = 4.0
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_yuebc")
+
+[node name="CenterContainer" type="CenterContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=1625197918]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9948992, 0.9948992)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="MainPanel" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer" unique_id=785012210]
+custom_minimum_size = Vector2(1100, 500)
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = ExtResource("58_ia88j")
+
+[node name="MainPanel" type="VBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel" unique_id=461386074]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HSeparator5" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=1168585334]
+custom_minimum_size = Vector2(0, 41.305)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
+
+[node name="CashHboxcontainer" type="HBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=555082800]
+visible = false
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1341660736]
+custom_minimum_size = Vector2(135, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="TotalRocks" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=507413251]
+custom_minimum_size = Vector2(200, 128)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
+
+[node name="TitleLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks" unique_id=318496818]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i]SCORE[/i]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="NumberLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks" unique_id=121854785]
+self_modulate = Color(1, 0.78039217, 0, 1)
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 70
+bbcode_enabled = true
+text = "$00"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+script = ExtResource("59_h46i8")
+tooltip_dataset = "tooltip_total_score"
+
+[node name="Tooltip" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel" unique_id=1416415398]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.1608203
+anchor_top = 0.31410217
+anchor_right = 1.1081288
+anchor_bottom = 0.5250397
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("60_aakku")
+metadata/_edit_use_anchors_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel/Tooltip" unique_id=707550776]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator4" type="VSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=141557445]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="CashEarned" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=391685329]
+custom_minimum_size = Vector2(200, 128)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
+
+[node name="TitleLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=1289664472]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i]EARNINGS[/i]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="NumberLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=263932816]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 70
+bbcode_enabled = true
+text = "$00"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+script = ExtResource("59_h46i8")
+tooltip_dataset = "tooltip_total_earnings"
+
+[node name="Tooltip" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/NumberLabel" unique_id=1905369223]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.1608203
+anchor_top = 0.31410217
+anchor_right = 0.8391797
+anchor_bottom = 0.5250397
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("60_aakku")
+metadata/_edit_use_anchors_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/NumberLabel/Tooltip" unique_id=1104524896]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator3" type="VSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1769694785]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="Fines" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=389115546]
+custom_minimum_size = Vector2(200, 128)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
+
+[node name="TitleLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines" unique_id=353837213]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i]FINES[/i]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="NumberLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines" unique_id=161285833]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 70
+theme_override_font_sizes/italics_font_size = 50
+bbcode_enabled = true
+text = "$00"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+script = ExtResource("59_h46i8")
+tooltip_dataset = "tooltip_total_fines"
+
+[node name="Tooltip" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel" unique_id=1781084112]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.3467688
+anchor_top = 0.31410217
+anchor_right = 0.6532312
+anchor_bottom = 0.5250397
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("60_aakku")
+metadata/_edit_use_anchors_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel/Tooltip" unique_id=1779935107]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator2" type="VSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1987157655]
+custom_minimum_size = Vector2(85, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
+[node name="HSeparator4" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=912371730]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
+
+[node name="HSeparator6" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=293657851]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
+
+[node name="ButtonsHBoxContainer" type="HBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=1750056005]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer" unique_id=1423245519]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=628323630]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HSeparator" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=132084556]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
+
+[node name="StartGame" type="Button" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1519659985 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+z_index = 1
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 30
+script = ExtResource("66_od35a")
+focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+
+[node name="TextureRect" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" unique_id=1131831230]
+self_modulate = Color(1, 0.78039217, 0, 1)
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("59_hsuqi")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/TextureRect" unique_id=772579282]
+libraries/ = SubResource("AnimationLibrary_le04b")
+autoplay = &"new_animation"
+speed_scale = 3.0
+
+[node name="center_container" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" unique_id=1482503167]
+modulate = Color(1, 1, 1, 0.19607843)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -4.020508
+offset_bottom = -4.020508
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.25, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="up" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=195380176]
+visible = false
+points = PackedVector2Array(0, -500, 0, -100)
+width = 4.0
+gradient = SubResource("Gradient_ive30")
+texture_mode = 2
+
+[node name="down" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=1822908109]
+visible = false
+points = PackedVector2Array(0, 500, 0, 100)
+width = 4.0
+gradient = SubResource("Gradient_ive30")
+texture_mode = 2
+
+[node name="left" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=2010528898]
+points = PackedVector2Array(-628, 0, -130, 0)
+width = 4.0
+gradient = SubResource("Gradient_ive30")
+texture_mode = 2
+joint_mode = 2
+
+[node name="right" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=640537034]
+points = PackedVector2Array(758, 0, 130, 0)
+width = 4.0
+gradient = SubResource("Gradient_ive30")
+texture_mode = 2
+joint_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1797492704]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
+
+[node name="SpacePanel2" type="Panel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1637319920]
+custom_minimum_size = Vector2(10, 23.65)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="SFX" type="Node" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=818937010]
+
+[node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1075327639]
+stream = ExtResource("67_2fegi")
+volume_db = -40.0
+
+[node name="start_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=2098260800]
+stream = ExtResource("57_5g4o0")
+volume_db = -30.0
+pitch_scale = 0.7
+
+[node name="shop_purchase_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=921652107]
+stream = ExtResource("68_ckl38")
+volume_db = -40.0
+
+[node name="shop_purchase_02" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1901638632]
+stream = ExtResource("69_whoub")
+volume_db = -15.0
+pitch_scale = 1.2
+
+[node name="shop_purchase_03" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1452359778]
+stream = ExtResource("70_qskv3")
+volume_db = -40.0
+
+[node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=334161139]
+stream = ExtResource("71_23edt")
+volume_db = -40.0
+
+[node name="shop_mystery_box_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=733293965]
+stream = ExtResource("72_11mca")
+volume_db = -40.0
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=618503378]
+stream = ExtResource("73_2dulk")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=475387272]
+stream = ExtResource("73_2dulk")
+volume_db = -50.0
+
+[node name="purchase" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1148902315]
+stream = ExtResource("65_nh3e2")
+volume_db = -40.0
+pitch_scale = 3.0
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=759328512]
+stream = ExtResource("26_vntk7")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1492928252]
+stream = ExtResource("27_pexel")
+volume_db = -40.0
+pitch_scale = 1.5
+
+[node name="hud_click_1" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1251476345]
+stream = ExtResource("75_xr0ka")
+volume_db = -34.0
+
+[node name="hud_click_2" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1631394354]
+stream = ExtResource("76_wqbq6")
+volume_db = -20.0
+
+[node name="hud_click_3" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=389034069]
+stream = ExtResource("77_erb5b")
+volume_db = -21.0
+autoplay = true
+
+[node name="low_humming" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=815406511]
+stream = ExtResource("78_tpx2r")
+pitch_scale = 0.4
+
+[node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1199956550]
+stream = ExtResource("79_1tcj8")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="BlackScreen" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=992935780]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="RichTextLabel" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BlackScreen" unique_id=2120545789]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_uxymg")
+
+[node name="TempLogo" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=594436550]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -255.99994
+offset_top = -248.0
+offset_right = 256.0
+offset_bottom = 264.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.305, 1.305)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("66_an2hp")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet2" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=1056980214]
+visible = false
+self_modulate = Color(0.22, 0.22, 0.22, 1)
+layout_mode = 0
+offset_left = 186.33472
+offset_top = 141.36035
+offset_right = 698.3347
+offset_bottom = 653.36035
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("56_sgtkv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet3" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=697000681]
+self_modulate = Color(0.22, 0.22, 0.22, 1)
+layout_mode = 0
+offset_left = 229.2461
+offset_top = 141.36035
+offset_right = 741.2461
+offset_bottom = 653.36035
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("56_sgtkv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet5" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=708204961]
+self_modulate = Color(0.22, 0.22, 0.22, 1)
+layout_mode = 0
+offset_left = 287.4839
+offset_top = 141.36035
+offset_right = 799.4839
+offset_bottom = 653.36035
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("56_sgtkv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet6" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=1026862140]
+self_modulate = Color(0.22, 0.22, 0.22, 1)
+layout_mode = 0
+offset_left = 330.3943
+offset_top = 141.36035
+offset_right = 842.3943
+offset_bottom = 653.36035
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("56_sgtkv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=97407066]
+self_modulate = Color(0.22, 0.22, 0.22, 1)
+layout_mode = 0
+offset_left = -230.00537
+offset_top = 140.10358
+offset_right = 281.99463
+offset_bottom = 652.1036
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("56_sgtkv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet4" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=682272177]
+self_modulate = Color(0.22, 0.22, 0.22, 1)
+layout_mode = 0
+offset_left = -272.92017
+offset_top = 140.10358
+offset_right = 239.07983
+offset_bottom = 652.1036
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("56_sgtkv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RockLarge" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=117091773]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -526.4387
+offset_top = -346.3603
+offset_right = -14.43869
+offset_bottom = 165.63965
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.2, 0.2)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("66_an2hp")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockLarge" unique_id=567227839]
+libraries/ = SubResource("AnimationLibrary_om6sf")
+autoplay = &"new_animation"
+speed_scale = 3.0
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockLarge" unique_id=516753885]
+show_behind_parent = true
+position = Vector2(459.77063, 91.9541)
+amount = 2
+lifetime = 2.0
+preprocess = 1.0
+speed_scale = 0.5
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_uxymg")
+
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockLarge" unique_id=61560867]
+show_behind_parent = true
+position = Vector2(735.63257, 30.651306)
+amount = 2
+lifetime = 2.0
+preprocess = 1.0
+speed_scale = 0.5
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_uxymg")
+
+[node name="GPUParticles2D3" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockLarge" unique_id=2145888099]
+show_behind_parent = true
+position = Vector2(950.19165, 57.471252)
+amount = 2
+lifetime = 2.0
+preprocess = 1.0
+speed_scale = 0.5
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_uxymg")
+
+[node name="RockSmall" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=1021791281]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -431.45065
+offset_top = -358.13782
+offset_right = 80.54935
+offset_bottom = 153.86212
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.12, 0.12)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("66_an2hp")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RockSmall2" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=2045065334]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -388.53903
+offset_top = -363.50146
+offset_right = 123.46097
+offset_bottom = 148.49847
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.06, 0.06)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("66_an2hp")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copyright" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=672892314]
+modulate = Color(0.4, 0.4, 0.4, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/Copyright" unique_id=681882853]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -499.5
+offset_top = 320.0
+offset_right = 499.5
+offset_bottom = 460.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/italics_font_size = 20
+bbcode_enabled = true
+text = "[i]© 2026 WORMFOOD 
+all rights reserved"
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BrandName" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=59022775]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName" unique_id=910870837]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -307.0
+offset_top = 18.0
+offset_right = 307.0
+offset_bottom = 158.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 100
+bbcode_enabled = true
+text = "WORMFOOD"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName" unique_id=1674868597]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -101.0
+offset_top = 156.0
+offset_right = 101.0
+offset_bottom = 212.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_font_sizes/italics_font_size = 40
+bbcode_enabled = true
+text = "[i]presents..."
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameName" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=1764852665]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=704275748]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 110.0
+offset_top = -123.0
+offset_right = 610.0
+offset_bottom = -39.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/italics_font_size = 30
+bbcode_enabled = true
+text = "[i]GIUSEPPES"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel4" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=441704417]
+modulate = Color(0.5, 0.26999998, 0.26999998, 1)
+clip_contents = false
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -425.5
+offset_top = -39.0
+offset_right = 439.5
+offset_bottom = 115.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/italics_font_size = 110
+bbcode_enabled = true
+text = "[i] [color=#ffc700]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]!"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=2118421025]
+modulate = Color(0.28, 0.28, 0.28, 1)
+clip_contents = false
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -429.5
+offset_top = -45.0
+offset_right = 435.5
+offset_bottom = 109.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/italics_font_size = 110
+bbcode_enabled = true
+text = "[i] [color=#ffc700]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]!"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=302123878]
+clip_contents = false
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -432.5
+offset_top = -45.0
+offset_right = 432.5
+offset_bottom = 109.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/bold_font_size = 110
+theme_override_font_sizes/bold_italics_font_size = 110
+theme_override_font_sizes/italics_font_size = 110
+bbcode_enabled = true
+text = "[i] [color=#ffc700]Shoot[/color] for [wave][color=#42d100][b]CASH[/b][/color][/wave]!"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=2135516292]
+custom_minimum_size = Vector2(840, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -396.0
+offset_top = -34.0
+offset_right = 444.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainGameCanvasLayer" type="CanvasLayer" parent="." unique_id=778582470]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="MainGameCanvasLayer" unique_id=477368348]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="MainGameCanvasLayer/SubViewportContainer" unique_id=1316949492]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+anisotropic_filtering_level = 0
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=853256584]
+environment = ExtResource("53_an2hp")
+
+[node name="Money_labels" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=2012145336 instance=ExtResource("42_ys56s")]
+
+[node name="Timer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=779418741 instance=ExtResource("73_bcevg")]
+start_time = 5.0
+
+[node name="Place_name" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=877796412]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("71_wwmxw")
+
+[node name="CenterPOS" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Place_name" unique_id=1728009373]
+layout_mode = 1
+anchor_left = 0.49947917
+anchor_top = 0.425
+anchor_right = 0.5005208
+anchor_bottom = 0.42685184
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/_edit_use_anchors_ = true
+
+[node name="PlaceLabel" type="RichTextLabel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Place_name" unique_id=422115750]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -112.5
+offset_top = -24.0
+offset_right = 112.5
+offset_bottom = 87.66669
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 19
+theme_override_font_sizes/bold_font_size = 40
+bbcode_enabled = true
+text = "[b]MOSS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RocksRemainingCounter" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=1693544327 node_paths=PackedStringArray("round_manager") instance=ExtResource("21_an2hp")]
+visible = false
+round_manager = NodePath("../../../../Round_manager")
+
+[node name="ReloadSound" type="AudioStreamPlayer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/RocksRemainingCounter" unique_id=433372361]
+stream = ExtResource("60_pexel")
+volume_db = -46.0
+pitch_scale = 0.5
+
+[node name="Ammo_panel_3D_control" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=821818603]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Ammo_panel_3D" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control" unique_id=101646207]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.363094
+anchor_top = 0.899667
+anchor_right = 0.640687
+anchor_bottom = 0.983667
+offset_left = 37.859375
+offset_top = -26.640442
+offset_right = 26.755737
+offset_bottom = -30.000488
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(1.26, 1.26)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("63_43pd7")
+metadata/_edit_use_anchors_ = true
+
+[node name="visual_component" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=1824512410]
+visible = false
+layout_mode = 1
+anchor_left = 0.491
+anchor_top = 0.893
+anchor_right = 0.511
+anchor_bottom = 0.93
+offset_left = -19.6399
+offset_top = -35.72
+offset_right = 19.5599
+offset_bottom = 2.79998
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(20, 20)
+mouse_filter = 2
+script = SubResource("GDScript_k3oa0")
+
+[node name="Panel2" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=64179305]
+modulate = Color(0, 0, 0, 1)
+z_index = -5
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_right = 0.0012207
+offset_bottom = 0.00012207
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uuy6g")
+
+[node name="Front_metal" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=46975336]
+z_index = -4
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_right = 0.0012207
+offset_bottom = 0.00012207
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ygja6")
+
+[node name="Inner_light_rim" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=1088417007]
+z_index = -3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.257684
+anchor_top = 0.166666
+anchor_right = 0.851066
+anchor_bottom = 0.902773
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_n1xtn")
+metadata/_edit_use_anchors_ = true
+
+[node name="Bullet_cabinet" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=617005964]
+z_index = -3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.257684
+anchor_top = 0.152777
+anchor_right = 0.851066
+anchor_bottom = 0.888884
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3vvr1")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Bullet_cabinet" unique_id=1327438069]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.0239044
+anchor_right = 1.0239
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(125, 26)
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Bullet_cabinet/MarginContainer" unique_id=70630417]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_constants/separation = -15
+
+[node name="Ammo_container" type="HBoxContainer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Bullet_cabinet/MarginContainer" unique_id=188594656]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_constants/separation = -5
+
+[node name="Bullet_label_panel" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=968901758]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.3016
+offset_top = 11.0
+offset_right = -328.697
+offset_bottom = -7.99988
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3vvr1")
+
+[node name="Bullet_label_panel2" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=1394207833]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.3016
+offset_top = 11.0
+offset_right = -328.697
+offset_bottom = -7.99988
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_n1xtn")
+
+[node name="Total_bullets_panel" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=51048149]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 303.015
+offset_top = 24.0
+offset_right = -81.9838
+offset_bottom = -20.0004
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3vvr1")
+
+[node name="Total_bullets_panel2" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=247472074]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 304.015
+offset_top = 24.0
+offset_right = -81.9838
+offset_bottom = -20.0004
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(18, 14)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_n1xtn")
+
+[node name="ammo_label" type="Label" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=1368768843]
+modulate = Color(0.45, 0.45, 0.45, 1)
+z_as_relative = false
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.103532
+anchor_top = 0.132986
+anchor_right = 0.245376
+anchor_bottom = 0.966316
+offset_left = -6.34918
+offset_right = -6.34917
+grow_vertical = 2
+pivot_offset = Vector2(30, 30)
+text = "07"
+label_settings = SubResource("LabelSettings_roilk")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Remaining_bullets_label" type="Label" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=1474785097]
+visible = false
+modulate = Color(0.46, 0.46, 0.46, 1)
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.0114821
+anchor_top = 0.132989
+anchor_right = 0.130362
+anchor_bottom = 0.966318
+offset_left = 297.602
+offset_right = 297.602
+grow_vertical = 2
+pivot_offset = Vector2(30, 30)
+text = "18"
+label_settings = SubResource("LabelSettings_ulsu7")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Big_light" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=1306271950]
+custom_minimum_size = Vector2(46, 46)
+anchors_preset = 0
+anchor_left = 0.862886
+anchor_top = 0.0416665
+anchor_right = 0.971633
+anchor_bottom = 0.680552
+pivot_offset = Vector2(23, 23)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="bottom_rim" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Big_light" unique_id=1585043042]
+modulate = Color(1, 1, 1, 0.164706)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0673908
+anchor_top = 0.0689113
+anchor_right = 0.932608
+anchor_bottom = 0.938477
+offset_left = -0.504976
+offset_top = 0.950078
+offset_right = -0.304974
+offset_bottom = 0.950077
+scale = Vector2(0.995, 1)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="indent" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Big_light" unique_id=909796569]
+modulate = Color(0, 0.0313726, 0.0588235, 1)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0652174
+anchor_top = 0.0652174
+anchor_right = 0.934783
+anchor_bottom = 0.934783
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="top_rim" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Big_light" unique_id=200220762]
+modulate = Color(1, 1, 1, 0.164706)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.141196
+anchor_right = 0.852172
+anchor_bottom = 0.845543
+offset_left = -3.79993
+offset_top = -4.47999
+offset_right = 3.80007
+offset_bottom = 3.12
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="shadow" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Big_light" unique_id=1560154411]
+modulate = Color(0, 0, 0, 0.596078)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.147825
+anchor_top = 0.169565
+anchor_right = 0.852173
+anchor_bottom = 0.873913
+offset_left = -3.79994
+offset_top = -2.50998
+offset_right = 3.80006
+offset_bottom = 5.09002
+scale = Vector2(0.87, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="top_light" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Big_light" unique_id=962827359]
+modulate = Color(0.0336, 0.0530133, 0.07, 1)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.147826
+anchor_right = 0.852172
+anchor_bottom = 0.852174
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="flashing_light" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Big_light" unique_id=991933788]
+modulate = Color(1.353256, 0.7614771, 0.33877775, 1)
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.147826
+anchor_right = 0.852172
+anchor_bottom = 0.852174
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+script = SubResource("GDScript_t3w06")
+metadata/_edit_use_anchors_ = true
+
+[node name="Small_light" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=1835667772]
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 1
+anchor_left = 0.89551
+anchor_top = 0.677774
+anchor_right = 0.939009
+anchor_bottom = 0.933329
+offset_left = -13.8
+offset_top = -13.8
+offset_right = 13.8
+offset_bottom = 13.8
+scale = Vector2(0.4, 0.4)
+pivot_offset = Vector2(23, 23)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="bottom_rim" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Small_light" unique_id=1450178410]
+modulate = Color(1, 1, 1, 0.164706)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.0673908
+anchor_top = 0.0689127
+anchor_right = 0.932608
+anchor_bottom = 0.938478
+offset_left = -0.0999758
+offset_top = 0.630017
+offset_right = 0.100025
+offset_bottom = 0.630016
+scale = Vector2(0.995, 1)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="indent" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Small_light" unique_id=439278353]
+modulate = Color(0, 0.0313726, 0.0588235, 1)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0652174
+anchor_top = 0.0652174
+anchor_right = 0.934783
+anchor_bottom = 0.934783
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="top_rim" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Small_light" unique_id=593501820]
+modulate = Color(1, 1, 1, 0.164706)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.141196
+anchor_right = 0.852172
+anchor_bottom = 0.845543
+offset_left = -3.79993
+offset_top = -4.89999
+offset_right = 3.80007
+offset_bottom = 2.7
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="shadow" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Small_light" unique_id=2054820697]
+modulate = Color(0, 0, 0, 0.596078)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.147826
+anchor_top = 0.211196
+anchor_right = 0.852174
+anchor_bottom = 0.915543
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="top_light" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Small_light" unique_id=2040173845]
+modulate = Color(0.0470588, 0.0745098, 0.0980392, 1)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.147826
+anchor_right = 0.852172
+anchor_bottom = 0.852174
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="small_flashing_light" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Small_light" unique_id=1945800610]
+unique_name_in_owner = true
+modulate = Color(0.52, 0.277333, 0.104, 0)
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.147826
+anchor_right = 0.852172
+anchor_bottom = 0.852174
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("37_jvwte")
+expand_mode = 1
+stretch_mode = 5
+script = SubResource("GDScript_wwmxw")
+metadata/_edit_use_anchors_ = true
+
+[node name="Noise_texture" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=379454310]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_right = 0.0012207
+offset_bottom = 0.00012207
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_4n7q2")
+
+[node name="reload_sound" type="AudioStreamPlayer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=855915463]
+stream = ExtResource("65_nh3e2")
+volume_db = -35.0
+pitch_scale = 1.5
+
+[node name="bonus_ammo" type="AudioStreamPlayer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=1979473076]
+stream = ExtResource("65_nh3e2")
+volume_db = -37.0
+pitch_scale = 2.0
+
+[node name="deload_sound" type="AudioStreamPlayer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=725732788]
+stream = ExtResource("65_nh3e2")
+volume_db = -38.0
+
+[node name="out_of_ammo_sound" type="AudioStreamPlayer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=930428408]
+stream = ExtResource("66_84tyu")
+volume_db = -31.0
+pitch_scale = 5.5
+
+[node name="reloading_movement_sfx" type="AudioStreamPlayer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=740331662]
+stream = ExtResource("66_84tyu")
+volume_db = -57.0
+pitch_scale = 4.0
+
+[node name="Bullet_reference" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D" unique_id=303140871]
+modulate = Color(0.819608, 0.803922, 0.741176, 1)
+layout_mode = 0
+mouse_filter = 2
+texture = ExtResource("67_u26ts")
+expand_mode = 3
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="Bullet_reference2" type="TextureRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Ammo_panel_3D_control/Ammo_panel_3D/Bullet_reference" unique_id=2112402546]
+modulate = Color(0, 0, 0, 0.498039)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("67_u26ts")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Red_circle" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=1564745122 node_paths=PackedStringArray("player")]
+unique_name_in_owner = true
+process_mode = 3
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("61_pexel")
+player = NodePath("../../../../Player")
+circle_color = Color(1, 0, 0, 0.5019608)
+test_radius = 50.0
+
+[node name="TallyCard" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=813632953 node_paths=PackedStringArray("round_manager") instance=ExtResource("60_ki1rw")]
+unique_name_in_owner = true
+round_manager = NodePath("../../../../Round_manager")
+
+[node name="Shop_Main_Menu" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=973405492 node_paths=PackedStringArray("round_manager", "money_control") instance=ExtResource("56_ucbwt")]
+unique_name_in_owner = true
+round_manager = NodePath("../../../../Round_manager")
+money_control = NodePath("../Money_labels")
+test_mode = false
+
+[node name="Background_transition" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=605168212]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+z_index = 4096
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("72_uuy6g")
+
+[node name="ColorRect" type="ColorRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Background_transition" unique_id=1109783148]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Frame_rate" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=439145462]
+visible = false
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 592.0
+offset_bottom = 50.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("73_ygja6")
+
+[node name="Label" type="Label" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Frame_rate" unique_id=2113754555]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 8.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "FPS"
+
+[node name="Timer" type="Timer" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Frame_rate" unique_id=1710339876]
+autostart = true
+
+[node name="TotalRocks" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=691444451]
+custom_minimum_size = Vector2(200, 128)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 646.0
+offset_top = 378.0
+offset_right = 846.0
+offset_bottom = 528.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+size_flags_vertical = 3
+script = ExtResource("67_43pd7")
+
+[node name="perfectScoreParticles" type="GPUParticles2D" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/TotalRocks" unique_id=2084724390]
+unique_name_in_owner = true
+position = Vector2(100.01019, 71.892365)
+scale = Vector2(1.005127, 1.005127)
+emitting = false
+amount = 25
+one_shot = true
+explosiveness = 0.8
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_u26ts")
+
+[node name="TitleLabel" type="RichTextLabel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/TotalRocks" unique_id=1626693062]
+visible = false
+self_modulate = Color(0.24, 0.24, 0.24, 1)
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 150.0
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i]SCORE[/i]"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="NumberLabel" type="RichTextLabel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/TotalRocks" unique_id=1444107163]
+clip_contents = false
+layout_mode = 0
+offset_top = -16.0
+offset_right = 200.0
+offset_bottom = 134.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 70
+bbcode_enabled = true
+text = "0/0"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/TotalRocks" unique_id=1807013211]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = -20.0
+offset_right = 1.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.745, 0.745)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme = SubResource("Theme_nh3e2")
+
+[node name="floor2" type="MeshInstance3D" parent="." unique_id=1359241023]
+transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 30, 0, -3.39, 50)
+visible = false
+mesh = SubResource("PlaneMesh_an2hp")
+skeleton = NodePath("../../BackgroundMesh")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="floor2" unique_id=1935846493]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor2/StaticBody3D" unique_id=2663720]
+shape = SubResource("ConvexPolygonShape3D_43pd7")
+
+[node name="floor5" type="MeshInstance3D" parent="." unique_id=1020859611]
+transform = Transform3D(15, 0, 0, 0, -4.371139e-08, -15, 0, 1, -6.556708e-07, 0, -17.265, 20.300001)
+visible = false
+mesh = SubResource("PlaneMesh_an2hp")
+skeleton = NodePath("../../../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="floor5" unique_id=1846687704]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor5/StaticBody3D" unique_id=908553122]
+shape = SubResource("ConvexPolygonShape3D_43pd7")
+
+[node name="Pineapple" type="Node3D" parent="." unique_id=859325861]
+script = SubResource("GDScript_84tyu")
+
+[node name="Pineapple" parent="Pineapple" unique_id=1539472592 instance=ExtResource("68_nh3e2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 24.3)
+
+[connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
+[connection signal="pressed" from="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" to="SplashScreenCanvasLayer/SplashScreen_v2" method="_on_start_game_pressed"]
+[connection signal="timeout" from="MainGameCanvasLayer/SubViewportContainer/SubViewport/Frame_rate/Timer" to="MainGameCanvasLayer/SubViewportContainer/SubViewport/Frame_rate" method="_on_timer_timeout"]
+
+[editable path="MainGameCanvasLayer/SubViewportContainer/SubViewport/Shop_Main_Menu"]
+[editable path="MainGameCanvasLayer/SubViewportContainer/SubViewport/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]

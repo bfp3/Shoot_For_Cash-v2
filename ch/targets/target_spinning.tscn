@@ -1,0 +1,331 @@
+[gd_scene format=3 uid="uid://c02tq3g6rhexo"]
+
+[ext_resource type="Script" uid="uid://dsupw8ckixyvm" path="res://unfiled/targets/target_spinning.gd" id="1_6gp2u"]
+[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="4_4k6s0"]
+[ext_resource type="AudioStream" uid="uid://cps8uhp6h2r3" path="res://sfx/bomb_countdown_single.wav" id="5_ftlfj"]
+[ext_resource type="AudioStream" uid="uid://cfi15vbqm0igf" path="res://sfx/metalSound shortened.wav" id="6_pmeb1"]
+[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_sound_effects/ES_Balloon Pop 2 - SFX Producer.wav" id="7_0i2w1"]
+[ext_resource type="Texture2D" uid="uid://c32ixyuon6b25" path="res://res/textures_2D/blackCircle.png" id="8_1wmkr"]
+
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_hi0ka"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_srs4n"]
+height = 0.285
+radius = 0.85
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_k1uwx"]
+margin = 0.0
+height = 0.2
+radius = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ibbo"]
+albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rvm72"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lwweu"]
+albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_ds8rl"]
+outer_radius = 0.328
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wni5p"]
+albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_r072a"]
+inner_radius = 0.75
+outer_radius = 0.615
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r2sqn"]
+albedo_color = Color(0.560784, 0.486275, 0.0117647, 1)
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0xr4e"]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.2
+
+[sub_resource type="GDScript" id="GDScript_6ehoh"]
+script/source = "extends MeshInstance3D
+
+var glowMaterial
+var pulseSpeed = 0.05  # Adjust the speed of the pulsation
+var minEmission = 0.001  # Adjust the minimum emission value
+var maxEmission = 0.1 # Adjust the maximum emission value
+var pulseDirection = 1  # 1 for increasing, -1 for decreasing
+
+func _ready():
+	glowMaterial = self.material_override
+
+func _process(delta):
+	# Calculate the new emission value
+	var currentEmission = glowMaterial.emission_energy_multiplier
+
+	if pulseDirection == 1:
+		currentEmission += delta * pulseSpeed
+		if currentEmission >= maxEmission:
+			currentEmission = maxEmission
+			pulseDirection = -1
+	else:
+		currentEmission -= delta * pulseSpeed
+		if currentEmission <= minEmission:
+			currentEmission = minEmission
+			pulseDirection = 1
+
+	# Update the material's emission
+	glowMaterial.emission_energy_multiplier = currentEmission
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h7bgg"]
+albedo_color = Color(0, 0.596078, 0.0196078, 1)
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_krqws"]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.2
+
+[sub_resource type="GDScript" id="GDScript_s2xxd"]
+script/source = "extends MeshInstance3D
+
+var glowMaterial
+var pulseSpeed = 0.05  # Adjust the speed of the pulsation
+var minEmission = 0.001  # Adjust the minimum emission value
+var maxEmission = 0.1 # Adjust the maximum emission value
+var pulseDirection = 1  # 1 for increasing, -1 for decreasing
+
+func _ready():
+	glowMaterial = self.material_override
+
+func _process(delta):
+	# Calculate the new emission value
+	var currentEmission = glowMaterial.emission_energy_multiplier
+
+	if pulseDirection == 1:
+		currentEmission += delta * pulseSpeed
+		if currentEmission >= maxEmission:
+			currentEmission = maxEmission
+			pulseDirection = -1
+	else:
+		currentEmission -= delta * pulseSpeed
+		if currentEmission <= minEmission:
+			currentEmission = minEmission
+			pulseDirection = 1
+
+	# Update the material's emission
+	glowMaterial.emission_energy_multiplier = currentEmission
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t31sf"]
+albedo_color = Color(0, 0.376471, 0.803922, 1)
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_isbdf"]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.2
+
+[sub_resource type="GDScript" id="GDScript_8jc1l"]
+script/source = "extends MeshInstance3D
+
+var glowMaterial
+var pulseSpeed = 0.05  # Adjust the speed of the pulsation
+var minEmission = 0.001  # Adjust the minimum emission value
+var maxEmission = 0.1 # Adjust the maximum emission value
+var pulseDirection = 1  # 1 for increasing, -1 for decreasing
+
+func _ready():
+	glowMaterial = self.material_override
+
+func _process(delta):
+	# Calculate the new emission value
+	var currentEmission = glowMaterial.emission_energy_multiplier
+
+	if pulseDirection == 1:
+		currentEmission += delta * pulseSpeed
+		if currentEmission >= maxEmission:
+			currentEmission = maxEmission
+			pulseDirection = -1
+	else:
+		currentEmission -= delta * pulseSpeed
+		if currentEmission <= minEmission:
+			currentEmission = minEmission
+			pulseDirection = 1
+
+	# Update the material's emission
+	glowMaterial.emission_energy_multiplier = currentEmission
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_den0y"]
+albedo_color = Color(0.933333, 0, 0.0392157, 1)
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lg77e"]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.2
+
+[sub_resource type="GDScript" id="GDScript_ga316"]
+script/source = "extends MeshInstance3D
+
+var glowMaterial
+var pulseSpeed = 0.05  # Adjust the speed of the pulsation
+var minEmission = 0.001  # Adjust the minimum emission value
+var maxEmission = 0.1 # Adjust the maximum emission value
+var pulseDirection = 1  # 1 for increasing, -1 for decreasing
+
+func _ready():
+	glowMaterial = self.material_override
+
+func _process(delta):
+	# Calculate the new emission value
+	var currentEmission = glowMaterial.emission_energy_multiplier
+
+	if pulseDirection == 1:
+		currentEmission += delta * pulseSpeed
+		if currentEmission >= maxEmission:
+			currentEmission = maxEmission
+			pulseDirection = -1
+	else:
+		currentEmission -= delta * pulseSpeed
+		if currentEmission <= minEmission:
+			currentEmission = minEmission
+			pulseDirection = 1
+
+	# Update the material's emission
+	glowMaterial.emission_energy_multiplier = currentEmission
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8celr"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 1)
+albedo_texture = ExtResource("8_1wmkr")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_il16q"]
+size = Vector2(0.1, 0.1)
+
+[sub_resource type="GDScript" id="GDScript_srs4n"]
+script/source = "extends AudioStreamPlayer
+
+@onready var parent = get_parent()
+@export var max_distance = 15.0
+@export var max_volume_db = -24.0
+@export var min_volume_db = -40.0
+
+func play_sound() -> void:
+	distance_from_player()
+	if not playing:
+		play()
+
+func distance_from_player() -> void:
+	var player = get_tree().get_first_node_in_group('Player')
+	var distance = parent.global_position.distance_to(player.global_position)
+	prints(\"DISTANCE\", distance)
+	distance = clamp(distance, 1.0, max_distance)
+	var volume_db = max_volume_db + (min_volume_db - max_volume_db) * (distance - 1) / (max_distance - 1)
+	volume_db = clamp(volume_db, min_volume_db, max_volume_db)
+	self.volume_db = volume_db
+"
+
+[node name="targetSpinning" type="RigidBody3D"]
+physics_material_override = SubResource("PhysicsMaterial_hi0ka")
+contact_monitor = true
+max_contacts_reported = 5
+linear_damp = 1.0
+script = ExtResource("1_6gp2u")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_srs4n")
+
+[node name="coin" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_k1uwx")
+
+[node name="innerRing" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -1.55114e-09, -0.0354859)
+material_override = SubResource("StandardMaterial3D_3ibbo")
+mesh = SubResource("CylinderMesh_rvm72")
+skeleton = NodePath("")
+
+[node name="middleRing" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -3.21807e-09, -0.073621)
+material_override = SubResource("StandardMaterial3D_lwweu")
+mesh = SubResource("TorusMesh_ds8rl")
+skeleton = NodePath("")
+
+[node name="outRing2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -4.25129e-09, -0.0972582)
+material_override = SubResource("StandardMaterial3D_wni5p")
+mesh = SubResource("TorusMesh_r072a")
+skeleton = NodePath("")
+
+[node name="yellow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_r2sqn")
+mesh = SubResource("CylinderMesh_0xr4e")
+skeleton = NodePath("")
+script = SubResource("GDScript_6ehoh")
+
+[node name="green" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_h7bgg")
+mesh = SubResource("CylinderMesh_krqws")
+skeleton = NodePath("")
+script = SubResource("GDScript_s2xxd")
+
+[node name="blue" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_t31sf")
+mesh = SubResource("CylinderMesh_isbdf")
+skeleton = NodePath("")
+script = SubResource("GDScript_8jc1l")
+
+[node name="red" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_den0y")
+mesh = SubResource("CylinderMesh_lg77e")
+skeleton = NodePath("")
+script = SubResource("GDScript_ga316")
+
+[node name="hitSound_3d" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_4k6s0")
+
+[node name="countdownSFX" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_ftlfj")
+
+[node name="popSFX" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_pmeb1")
+
+[node name="exitSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("7_0i2w1")
+pitch_scale = 2.0
+
+[node name="bulletHole" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_8celr")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_il16q")
+
+[node name="hitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_4k6s0")
+volume_db = -30.0
+script = SubResource("GDScript_srs4n")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="finished" from="exitSound" to="." method="_on_exit_sound_finished"]

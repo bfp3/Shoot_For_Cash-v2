@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://h25jkhsaw3wo"]
+
+[ext_resource type="Texture2D" uid="uid://dwlpx7g1iy3r" path="res://res/textures_2D/texture_materials/corrugated_iron_02_4k/textures/corrugated_iron_02_diff_4k.png" id="1_6ys44"]
+[ext_resource type="Texture2D" uid="uid://b8vx1m0r44wj4" path="res://res/textures_2D/texture_materials/corrugated_iron_02_4k/textures/corrugated_iron_02_rough_4k.png" id="2_swwri"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x0c5y"]
+albedo_texture = ExtResource("1_6ys44")
+metallic = 1.0
+roughness_texture = ExtResource("2_swwri")
+normal_enabled = true
+normal_texture = ExtResource("2_swwri")
+rim_enabled = true
+rim_tint = 0.0
+clearcoat_enabled = true
+clearcoat_roughness = 1.0
+anisotropy_enabled = true
+anisotropy = 1.0
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_porbd"]
+lightmap_size_hint = Vector2i(14, 21)
+add_uv2 = true
+
+[node name="PrismSeal" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_x0c5y")
+mesh = SubResource("BoxMesh_porbd")

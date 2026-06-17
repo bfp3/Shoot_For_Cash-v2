@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bsfysuuh12fmj"]
+
+[ext_resource type="Script" uid="uid://dymn8cpnltgec" path="res://unfiled/targets/bomb.gd" id="1_jwa18"]
+[ext_resource type="Texture2D" uid="uid://bcw8pm2r7ietr" path="res://res/Procreate/Akira.png" id="2_7bjaa"]
+[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_sound_effects/ES_Balloon Pop 2 - SFX Producer.wav" id="2_0672w"]
+[ext_resource type="AudioStream" uid="uid://douwgwjwt0hl1" path="res://sfx/ES_sound_effects/ES_Bomb Timer Beeps Count 1 - SFX Producer.wav" id="3_4n3b3"]
+[ext_resource type="Script" uid="uid://ccn81txtvomjg" path="res://unfiled/targets/target_red_glow_mesh.gd" id="3_qn7fw"]
+
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_gmx0d"]
+radius = 40.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8avh0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ih86"]
+albedo_texture = ExtResource("2_7bjaa")
+emission_enabled = true
+emission = Color(0.215686, 0.215686, 0.215686, 1)
+uv1_scale = Vector3(1.335, 1.335, 1.335)
+
+[sub_resource type="SphereMesh" id="SphereMesh_a28yj"]
+
+[node name="Bomb" type="RigidBody3D"]
+linear_damp = 1.0
+script = ExtResource("1_jwa18")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_gmx0d")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_8avh0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_4ih86")
+mesh = SubResource("SphereMesh_a28yj")
+skeleton = NodePath("../CollisionShape3D")
+script = ExtResource("3_qn7fw")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="BombSFX" type="AudioStreamPlayer3D" parent="SFX"]
+stream = ExtResource("2_0672w")
+
+[node name="BombCountdown" type="AudioStreamPlayer3D" parent="SFX"]
+stream = ExtResource("3_4n3b3")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

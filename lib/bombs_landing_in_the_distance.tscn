@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://disfcwr18xhfw"]
+
+[ext_resource type="AudioStream" uid="uid://cvrs1b8b4t8er" path="res://sfx/bomb_hit_sfx_2.wav" id="1_6mnqb"]
+
+[sub_resource type="GDScript" id="GDScript_un8yy"]
+script/source = "extends AudioStreamPlayer
+
+@onready var parent = get_parent()
+@export var max_distance = 15.0
+@export var max_volume_db = -32.0
+@export var min_volume_db = -41.0
+
+func play_sound() -> void:
+	distance_from_player()
+	if not playing:
+		play()
+		await self.finished
+		self.queue_free()
+
+func play_sound_gently() -> void:
+	distance_from_player()
+	volume_db -= 15.0
+	if not playing:
+		play()
+		await self.finished
+		self.queue_free()
+
+func distance_from_player() -> void:
+	var player = get_tree().get_first_node_in_group('Player')
+	var distance = parent.global_position.distance_to(player.global_position)
+	#print_debug(\"DISTANCE\", distance)
+	distance = clamp(distance, 1.0, max_distance)
+	var _vol = max_volume_db + (min_volume_db - max_volume_db) * (distance - 1) / (max_distance - 1)
+	_vol = clamp(_vol, min_volume_db, max_volume_db)
+	self.volume_db = _vol
+	
+	
+"
+
+[node name="hitSound" type="AudioStreamPlayer" unique_id=210277996]
+stream = ExtResource("1_6mnqb")
+volume_db = -30.0
+pitch_scale = 0.1
+script = SubResource("GDScript_un8yy")

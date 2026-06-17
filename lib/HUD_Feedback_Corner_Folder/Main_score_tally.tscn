@@ -1,0 +1,375 @@
+[gd_scene format=3 uid="uid://wvemhe8ivy2m"]
+
+[ext_resource type="Script" uid="uid://5gy2t63mg6p" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/main_score_tally.gd" id="1_3kwpg"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="2_etobj"]
+[ext_resource type="PackedScene" uid="uid://bn61uifa163wl" path="res://unfiled/Circle_polygon/Circle_Polygon.tscn" id="2_l6emn"]
+[ext_resource type="FontFile" uid="uid://dy8r1rfu6d74j" path="res://unfiled/Fonts/droid-sans/DroidSans-Bold.ttf" id="3_l6emn"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="3_xvbxv"]
+[ext_resource type="Texture2D" uid="uid://clyuw55mgmybq" path="res://res/textures_2D/HUD_center_piece.png" id="3_y227k"]
+[ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://unfiled/Photos/ROCKS - title_rock_centered_large.png" id="7_qg6kv"]
+
+[sub_resource type="Animation" id="Animation_l6emn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [2.67908]
+}
+
+[sub_resource type="Animation" id="Animation_etobj"]
+resource_name = "rot"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_y227k"]
+_data = {
+&"RESET": SubResource("Animation_l6emn"),
+&"rot": SubResource("Animation_etobj")
+}
+
+[sub_resource type="Gradient" id="Gradient_6xua4"]
+offsets = PackedFloat32Array(0.141066, 0.260188, 0.752351)
+colors = PackedColorArray(0.57, 0.57, 0.57, 1, 0.54, 0.54, 0.54, 1, 0.568627, 0.568627, 0.568627, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_l6emn"]
+gradient = SubResource("Gradient_6xua4")
+width = 40
+height = 40
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_2qyir"]
+font = ExtResource("3_l6emn")
+font_size = 40
+font_color = Color(0.78, 0.78, 0.78, 1)
+outline_size = 2
+outline_color = Color(0.13, 0.13, 0.13, 1)
+shadow_size = 3
+shadow_color = Color(0.17, 0.17, 0.17, 1)
+shadow_offset = Vector2(-1, -1)
+
+[node name="Main_score_Tally" type="Control" unique_id=218818419]
+z_index = 1
+layout_mode = 3
+anchor_left = 0.473958
+anchor_top = 0.453704
+anchor_right = 0.526042
+anchor_bottom = 0.546296
+offset_right = -6.10352e-05
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+script = ExtResource("1_3kwpg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Circle_polygon" parent="." unique_id=939283867 instance=ExtResource("2_l6emn")]
+visible = false
+position = Vector2(49.5, 49.5)
+rotation = 2.67908
+color = Color(0.3, 0.3, 0.3, 0.286275)
+polygon = PackedVector2Array(3.5513584e-15, -58, 9.073198, -57.285927, 17.922987, -55.161278, 26.331448, -51.67838, 34.091545, -46.922985, 41.01219, -41.01219, 46.922985, -34.091545, 51.67838, -26.331448, 55.161278, -17.922987, 57.285927, -9.073198, 58, 0, 57.285927, 9.073198, 55.161278, 17.922987, 51.67838, 26.331448, 46.922985, 34.091545, 41.01219, 41.01219, 34.091545, 46.922985, 26.331448, 51.67838, 17.922987, 55.161278, 9.073198, 57.285927, 3.5513584e-15, 58, -9.073198, 57.285927, -17.922987, 55.161278, -26.331448, 51.67838, -34.091545, 46.922985, -41.01219, 41.01219, -46.922985, 34.091545, -51.67838, 26.331448, -55.161278, 17.922987, -57.285927, 9.073198, -58, 7.102717e-15, -57.285927, -9.073198, -55.161278, -17.922987, -51.67838, -26.331448, -46.922985, -34.091545, -41.01219, -41.01219, -34.091545, -46.922985, -26.331448, -51.67838, -17.922987, -55.161278, -9.073198, -57.285927, -1.0654075e-14, -58, -9.9193115e-15, -54, -8.447461, -53.33517, -16.686918, -51.35705, -24.515486, -48.114353, -31.740402, -43.686916, -38.183765, -38.183765, -43.686916, -31.740402, -48.114353, -24.515486, -51.35705, -16.686918, -53.33517, -8.447461, -54, 6.6128743e-15, -53.33517, 8.447461, -51.35705, 16.686918, -48.114353, 24.515486, -43.686916, 31.740402, -38.183765, 38.183765, -31.740402, 43.686916, -24.515486, 48.114353, -16.686918, 51.35705, -8.447461, 53.33517, 3.3064372e-15, 54, 8.447461, 53.33517, 16.686918, 51.35705, 24.515486, 48.114353, 31.740402, 43.686916, 38.183765, 38.183765, 43.686916, 31.740402, 48.114353, 24.515486, 51.35705, 16.686918, 53.33517, 8.447461, 54, 0, 53.33517, -8.447461, 51.35705, -16.686918, 48.114353, -24.515486, 43.686916, -31.740402, 38.183765, -38.183765, 31.740402, -43.686916, 24.515486, -48.114353, 16.686918, -51.35705, 8.447461, -53.33517, 3.3064372e-15, -54)
+uv = PackedVector2Array(61.2808, -3.80103, 71.9183, -2.96384, 82.294, -0.472832, 92.1522, 3.61057, 101.25, 9.18577, 109.364, 16.1157, 116.294, 24.2296, 121.869, 33.3276, 125.953, 43.1858, 128.444, 53.5615, 129.281, 64.199, 128.444, 74.8365, 125.953, 85.2122, 121.869, 95.0704, 116.294, 104.168, 109.364, 112.282, 101.25, 119.212, 92.1522, 124.787, 82.294, 128.871, 71.9183, 131.362, 61.2808, 132.199, 50.6433, 131.362, 40.2676, 128.871, 30.4094, 124.787, 21.3114, 119.212, 13.1975, 112.282, 6.26764, 104.168, 0.692432, 95.0704, -3.39096, 85.2122, -5.88197, 74.8365, -6.71917, 64.199, -5.88197, 53.5615, -3.39096, 43.1858, 0.692432, 33.3276, 6.26764, 24.2296, 13.1975, 16.1157, 21.3114, 9.18577, 30.4094, 3.61057, 40.2676, -0.472832, 50.6433, -2.96384, 61.2808, -3.80103)
+radius = 58
+thickness = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Circle_polygon" unique_id=532478321]
+libraries/ = SubResource("AnimationLibrary_y227k")
+autoplay = &"rot"
+speed_scale = 0.25
+
+[node name="Scale_control" type="Control" parent="." unique_id=1995758893]
+visible = false
+modulate = Color(1, 1, 1, 0.0823529)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.9, 0.9)
+pivot_offset = Vector2(50, 50)
+metadata/_edit_use_anchors_ = true
+
+[node name="Circle_polygon" parent="Scale_control" unique_id=162188561 instance=ExtResource("2_l6emn")]
+visible = false
+position = Vector2(51.1115, 49)
+color = Color(0.52, 0.52, 0.52, 0.619608)
+polygon = PackedVector2Array(4.3473526e-15, -71, 12.3290205, -69.92135, 24.28343, -66.71818, 35.5, -61.487804, 45.63792, -54.389156, 54.389156, -45.63792, 61.487804, -35.5, 66.71818, -24.28343, 69.92135, -12.3290205, 71, 0, 69.92135, 12.3290205, 66.71818, 24.28343, 61.487804, 35.5, 54.389156, 45.63792, 45.63792, 54.389156, 35.5, 61.487804, 24.28343, 66.71818, 12.3290205, 69.92135, 4.3473526e-15, 71, -12.3290205, 69.92135, -24.28343, 66.71818, -35.5, 61.487804, -45.63792, 54.389156, -54.389156, 45.63792, -61.487804, 35.5, -66.71818, 24.28343, -69.92135, 12.3290205, -71, 8.694705e-15, -69.92135, -12.3290205, -66.71818, -24.28343, -61.487804, -35.5, -54.389156, -45.63792, -45.63792, -54.389156, -35.5, -61.487804, -24.28343, -66.71818, -12.3290205, -69.92135, -1.3042058e-14, -71, -3.673819e-15, -20, -3.4729636, -19.696156, -6.840403, -18.793852, -10, -17.320507, -12.855753, -15.3208885, -15.3208885, -12.855753, -17.320507, -10, -18.793852, -6.840403, -19.696156, -3.4729636, -20, 2.4492127e-15, -19.696156, 3.4729636, -18.793852, 6.840403, -17.320507, 10, -15.3208885, 12.855753, -12.855753, 15.3208885, -10, 17.320507, -6.840403, 18.793852, -3.4729636, 19.696156, 1.2246064e-15, 20, 3.4729636, 19.696156, 6.840403, 18.793852, 10, 17.320507, 12.855753, 15.3208885, 15.3208885, 12.855753, 17.320507, 10, 18.793852, 6.840403, 19.696156, 3.4729636, 20, 0, 19.696156, -3.4729636, 18.793852, -6.840403, 17.320507, -10, 15.3208885, -12.855753, 12.855753, -15.3208885, 10, -17.320507, 6.840403, -18.793852, 3.4729636, -19.696156, 1.2246064e-15, -20)
+radius = 71
+thickness = 51
+segments = 36
+
+[node name="Light" type="TextureRect" parent="Scale_control" unique_id=143551288]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+clip_children = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.499994
+anchor_top = -0.5
+anchor_right = 1.50001
+anchor_bottom = 1.5
+offset_left = 50.0
+offset_top = 49.9997
+offset_right = -50.0015
+offset_bottom = -50.0003
+scale = Vector2(1.385, 1.385)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("3_xvbxv")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light" type="TextureRect" parent="Scale_control/Light" unique_id=272587799]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -0.00135803
+offset_bottom = 0.000221252
+pivot_offset = Vector2(50, 50)
+texture = SubResource("GradientTexture2D_l6emn")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Light_basic" type="TextureRect" parent="Scale_control" unique_id=581930599]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.499994
+anchor_top = -0.5
+anchor_right = 1.50001
+anchor_bottom = 1.5
+offset_left = 50.0
+offset_top = 50.0
+offset_right = -50.0015
+offset_bottom = -50.0
+scale = Vector2(1.385, 1.385)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("3_xvbxv")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2_d" parent="Scale_control" unique_id=858085258 instance=ExtResource("2_l6emn")]
+position = Vector2(51.3334, 49.1111)
+color = Color(0.541176, 0.541176, 0.541176, 0.541176)
+texture = null
+polygon = PackedVector2Array(4.3473526e-15, -71, 11.106847, -70.12588, 21.940207, -67.52502, 32.233326, -63.261463, 41.732754, -57.44021, 50.204582, -50.204582, 57.44021, -41.732754, 63.261463, -32.233326, 67.52502, -21.940207, 70.12588, -11.106847, 71, 0, 70.12588, 11.106847, 67.52502, 21.940207, 63.261463, 32.233326, 57.44021, 41.732754, 50.204582, 50.204582, 41.732754, 57.44021, 32.233326, 63.261463, 21.940207, 67.52502, 11.106847, 70.12588, 4.3473526e-15, 71, -11.106847, 70.12588, -21.940207, 67.52502, -32.233326, 63.261463, -41.732754, 57.44021, -50.204582, 50.204582, -57.44021, 41.732754, -63.261463, 32.233326, -67.52502, 21.940207, -70.12588, 11.106847, -71, 8.694705e-15, -70.12588, -11.106847, -67.52502, -21.940207, -63.261463, -32.233326, -57.44021, -41.732754, -50.204582, -50.204582, -41.732754, -57.44021, -32.233326, -63.261463, -21.940207, -67.52502, -11.106847, -70.12588, -1.3042058e-14, -71, -1.2307294e-14, -67, -10.481109, -66.17512, -20.70414, -63.720787, -30.417362, -59.697437, -39.38161, -54.20414, -47.376152, -47.376152, -54.20414, -39.38161, -59.697437, -30.417362, -63.720787, -20.70414, -66.17512, -10.481109, -67, 8.2048626e-15, -66.17512, 10.481109, -63.720787, 20.70414, -59.697437, 30.417362, -54.20414, 39.38161, -47.376152, 47.376152, -39.38161, 54.20414, -30.417362, 59.697437, -20.70414, 63.720787, -10.481109, 66.17512, 4.1024313e-15, 67, 10.481109, 66.17512, 20.70414, 63.720787, 30.417362, 59.697437, 39.38161, 54.20414, 47.376152, 47.376152, 54.20414, 39.38161, 59.697437, 30.417362, 63.720787, 20.70414, 66.17512, 10.481109, 67, 0, 66.17512, -10.481109, 63.720787, -20.70414, 59.697437, -30.417362, 54.20414, -39.38161, 47.376152, -47.376152, 39.38161, -54.20414, 30.417362, -59.697437, 20.70414, -63.720787, 10.481109, -66.17512, 4.1024313e-15, -67)
+uv = PackedVector2Array(61.2808, -3.80103, 71.9183, -2.96384, 82.294, -0.472832, 92.1522, 3.61057, 101.25, 9.18577, 109.364, 16.1157, 116.294, 24.2296, 121.869, 33.3276, 125.953, 43.1858, 128.444, 53.5615, 129.281, 64.199, 128.444, 74.8365, 125.953, 85.2122, 121.869, 95.0704, 116.294, 104.168, 109.364, 112.282, 101.25, 119.212, 92.1522, 124.787, 82.294, 128.871, 71.9183, 131.362, 61.2808, 132.199, 50.6433, 131.362, 40.2676, 128.871, 30.4094, 124.787, 21.3114, 119.212, 13.1975, 112.282, 6.26764, 104.168, 0.692432, 95.0704, -3.39096, 85.2122, -5.88197, 74.8365, -6.71917, 64.199, -5.88197, 53.5615, -3.39096, 43.1858, 0.692432, 33.3276, 6.26764, 24.2296, 13.1975, 16.1157, 21.3114, 9.18577, 30.4094, 3.61057, 40.2676, -0.472832, 50.6433, -2.96384, 61.2808, -3.80103)
+radius = 71
+thickness = 4
+
+[node name="Light2" type="TextureRect" parent="Scale_control" unique_id=1001622732]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.212497
+anchor_top = -0.2125
+anchor_right = 1.2125
+anchor_bottom = 1.2125
+offset_left = 21.25
+offset_top = 21.25
+offset_right = -21.2503
+offset_bottom = -21.25
+scale = Vector2(1.425, 1.425)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("2_etobj")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="Scale_control" unique_id=1872173588]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.277497
+anchor_top = -0.2775
+anchor_right = 1.2775
+anchor_bottom = 1.2775
+offset_left = 27.75
+offset_top = 27.75
+offset_right = -27.7507
+offset_bottom = -27.75
+scale = Vector2(1.555, 1.555)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("2_etobj")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Control" type="Control" parent="." unique_id=86534217]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+
+[node name="Score_per_shot_total" type="Label" parent="Control" unique_id=1560351576]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -11.0
+offset_top = -24.0
+offset_right = 11.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(11, 24)
+text = "0"
+label_settings = SubResource("LabelSettings_2qyir")
+horizontal_alignment = 1
+
+[node name="backup" type="Control" parent="." unique_id=1971253281]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Circle_polygon" parent="backup" unique_id=1026945395 instance=ExtResource("2_l6emn")]
+position = Vector2(49.5, 49.5)
+rotation = 2.67908
+color = Color(0.3, 0.3, 0.3, 0.286275)
+polygon = PackedVector2Array(4.3473526e-15, -71, 11.106847, -70.12588, 21.940207, -67.52502, 32.233326, -63.261463, 41.732754, -57.44021, 50.204582, -50.204582, 57.44021, -41.732754, 63.261463, -32.233326, 67.52502, -21.940207, 70.12588, -11.106847, 71, 0, 70.12588, 11.106847, 67.52502, 21.940207, 63.261463, 32.233326, 57.44021, 41.732754, 50.204582, 50.204582, 41.732754, 57.44021, 32.233326, 63.261463, 21.940207, 67.52502, 11.106847, 70.12588, 4.3473526e-15, 71, -11.106847, 70.12588, -21.940207, 67.52502, -32.233326, 63.261463, -41.732754, 57.44021, -50.204582, 50.204582, -57.44021, 41.732754, -63.261463, 32.233326, -67.52502, 21.940207, -70.12588, 11.106847, -71, 8.694705e-15, -70.12588, -11.106847, -67.52502, -21.940207, -63.261463, -32.233326, -57.44021, -41.732754, -50.204582, -50.204582, -41.732754, -57.44021, -32.233326, -63.261463, -21.940207, -67.52502, -11.106847, -70.12588, -1.3042058e-14, -71, -1.2307294e-14, -67, -10.481109, -66.17512, -20.70414, -63.720787, -30.417362, -59.697437, -39.38161, -54.20414, -47.376152, -47.376152, -54.20414, -39.38161, -59.697437, -30.417362, -63.720787, -20.70414, -66.17512, -10.481109, -67, 8.2048626e-15, -66.17512, 10.481109, -63.720787, 20.70414, -59.697437, 30.417362, -54.20414, 39.38161, -47.376152, 47.376152, -39.38161, 54.20414, -30.417362, 59.697437, -20.70414, 63.720787, -10.481109, 66.17512, 4.1024313e-15, 67, 10.481109, 66.17512, 20.70414, 63.720787, 30.417362, 59.697437, 39.38161, 54.20414, 47.376152, 47.376152, 54.20414, 39.38161, 59.697437, 30.417362, 63.720787, 20.70414, 66.17512, 10.481109, 67, 0, 66.17512, -10.481109, 63.720787, -20.70414, 59.697437, -30.417362, 54.20414, -39.38161, 47.376152, -47.376152, 39.38161, -54.20414, 30.417362, -59.697437, 20.70414, -63.720787, 10.481109, -66.17512, 4.1024313e-15, -67)
+uv = PackedVector2Array(61.2808, -3.80103, 71.9183, -2.96384, 82.294, -0.472832, 92.1522, 3.61057, 101.25, 9.18577, 109.364, 16.1157, 116.294, 24.2296, 121.869, 33.3276, 125.953, 43.1858, 128.444, 53.5615, 129.281, 64.199, 128.444, 74.8365, 125.953, 85.2122, 121.869, 95.0704, 116.294, 104.168, 109.364, 112.282, 101.25, 119.212, 92.1522, 124.787, 82.294, 128.871, 71.9183, 131.362, 61.2808, 132.199, 50.6433, 131.362, 40.2676, 128.871, 30.4094, 124.787, 21.3114, 119.212, 13.1975, 112.282, 6.26764, 104.168, 0.692432, 95.0704, -3.39096, 85.2122, -5.88197, 74.8365, -6.71917, 64.199, -5.88197, 53.5615, -3.39096, 43.1858, 0.692432, 33.3276, 6.26764, 24.2296, 13.1975, 16.1157, 21.3114, 9.18577, 30.4094, 3.61057, 40.2676, -0.472832, 50.6433, -2.96384, 61.2808, -3.80103)
+radius = 71
+thickness = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="backup/Circle_polygon" unique_id=1663914752]
+libraries/ = SubResource("AnimationLibrary_y227k")
+autoplay = &"rot"
+speed_scale = 0.25
+
+[node name="Scale_control" type="Control" parent="backup" unique_id=1765709923]
+modulate = Color(1, 1, 1, 0.0823529)
+layout_mode = 1
+anchor_left = -0.175
+anchor_top = -0.175
+anchor_right = 1.175
+anchor_bottom = 1.175
+offset_left = 17.5
+offset_top = 17.5
+offset_right = -17.4999
+offset_bottom = -17.5
+scale = Vector2(1.35, 1.35)
+pivot_offset = Vector2(50, 50)
+metadata/_edit_use_anchors_ = true
+
+[node name="Circle_polygon" parent="backup/Scale_control" unique_id=405805695 instance=ExtResource("2_l6emn")]
+position = Vector2(49.5, 49.5)
+color = Color(0.52, 0.52, 0.52, 0.619608)
+texture_offset = Vector2(67.25, 41.215)
+polygon = PackedVector2Array(2.9390552e-15, -48, 8.335113, -47.27077, 16.416967, -45.105247, 24, -41.569218, 30.853806, -36.770134, 36.770134, -30.853806, 41.569218, -24, 45.105247, -16.416967, 47.27077, -8.335113, 48, 0, 47.27077, 8.335113, 45.105247, 16.416967, 41.569218, 24, 36.770134, 30.853806, 30.853806, 36.770134, 24, 41.569218, 16.416967, 45.105247, 8.335113, 47.27077, 2.9390552e-15, 48, -8.335113, 47.27077, -16.416967, 45.105247, -24, 41.569218, -30.853806, 36.770134, -36.770134, 30.853806, -41.569218, 24, -45.105247, 16.416967, -47.27077, 8.335113, -48, 5.8781105e-15, -47.27077, -8.335113, -45.105247, -16.416967, -41.569218, -24, -36.770134, -30.853806, -30.853806, -36.770134, -24, -41.569218, -16.416967, -45.105247, -8.335113, -47.27077, -8.817166e-15, -48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+radius = 48
+thickness = 48
+segments = 36
+
+[node name="Light" type="TextureRect" parent="backup/Scale_control" unique_id=2009828172]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025007
+anchor_top = -0.00489007
+anchor_right = 1.02501
+anchor_bottom = 0.99511
+offset_right = 0.502441
+offset_bottom = 0.607605
+scale = Vector2(1.245, 1.245)
+pivot_offset = Vector2(489, 379)
+texture = ExtResource("3_y227k")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2_d" parent="backup/Scale_control" unique_id=1634726303 instance=ExtResource("2_l6emn")]
+position = Vector2(49.8168, 50.0325)
+scale = Vector2(0.740741, 0.740741)
+color = Color(0.541176, 0.541176, 0.541176, 0.541176)
+texture = null
+polygon = PackedVector2Array(4.3473526e-15, -71, 11.106847, -70.12588, 21.940207, -67.52502, 32.233326, -63.261463, 41.732754, -57.44021, 50.204582, -50.204582, 57.44021, -41.732754, 63.261463, -32.233326, 67.52502, -21.940207, 70.12588, -11.106847, 71, 0, 70.12588, 11.106847, 67.52502, 21.940207, 63.261463, 32.233326, 57.44021, 41.732754, 50.204582, 50.204582, 41.732754, 57.44021, 32.233326, 63.261463, 21.940207, 67.52502, 11.106847, 70.12588, 4.3473526e-15, 71, -11.106847, 70.12588, -21.940207, 67.52502, -32.233326, 63.261463, -41.732754, 57.44021, -50.204582, 50.204582, -57.44021, 41.732754, -63.261463, 32.233326, -67.52502, 21.940207, -70.12588, 11.106847, -71, 8.694705e-15, -70.12588, -11.106847, -67.52502, -21.940207, -63.261463, -32.233326, -57.44021, -41.732754, -50.204582, -50.204582, -41.732754, -57.44021, -32.233326, -63.261463, -21.940207, -67.52502, -11.106847, -70.12588, -1.3042058e-14, -71, -1.2307294e-14, -67, -10.481109, -66.17512, -20.70414, -63.720787, -30.417362, -59.697437, -39.38161, -54.20414, -47.376152, -47.376152, -54.20414, -39.38161, -59.697437, -30.417362, -63.720787, -20.70414, -66.17512, -10.481109, -67, 8.2048626e-15, -66.17512, 10.481109, -63.720787, 20.70414, -59.697437, 30.417362, -54.20414, 39.38161, -47.376152, 47.376152, -39.38161, 54.20414, -30.417362, 59.697437, -20.70414, 63.720787, -10.481109, 66.17512, 4.1024313e-15, 67, 10.481109, 66.17512, 20.70414, 63.720787, 30.417362, 59.697437, 39.38161, 54.20414, 47.376152, 47.376152, 54.20414, 39.38161, 59.697437, 30.417362, 63.720787, 20.70414, 66.17512, 10.481109, 67, 0, 66.17512, -10.481109, 63.720787, -20.70414, 59.697437, -30.417362, 54.20414, -39.38161, 47.376152, -47.376152, 39.38161, -54.20414, 30.417362, -59.697437, 20.70414, -63.720787, 10.481109, -66.17512, 4.1024313e-15, -67)
+uv = PackedVector2Array(61.2808, -3.80103, 71.9183, -2.96384, 82.294, -0.472832, 92.1522, 3.61057, 101.25, 9.18577, 109.364, 16.1157, 116.294, 24.2296, 121.869, 33.3276, 125.953, 43.1858, 128.444, 53.5615, 129.281, 64.199, 128.444, 74.8365, 125.953, 85.2122, 121.869, 95.0704, 116.294, 104.168, 109.364, 112.282, 101.25, 119.212, 92.1522, 124.787, 82.294, 128.871, 71.9183, 131.362, 61.2808, 132.199, 50.6433, 131.362, 40.2676, 128.871, 30.4094, 124.787, 21.3114, 119.212, 13.1975, 112.282, 6.26764, 104.168, 0.692432, 95.0704, -3.39096, 85.2122, -5.88197, 74.8365, -6.71917, 64.199, -5.88197, 53.5615, -3.39096, 43.1858, 0.692432, 33.3276, 6.26764, 24.2296, 13.1975, 16.1157, 21.3114, 9.18577, 30.4094, 3.61057, 40.2676, -0.472832, 50.6433, -2.96384, 61.2808, -3.80103)
+radius = 71
+thickness = 4
+
+[node name="Light2" type="TextureRect" parent="backup/Scale_control" unique_id=742877949]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.00454671
+anchor_top = 0.00489006
+anchor_right = 1.00455
+anchor_bottom = 1.00489
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("2_etobj")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="backup/Scale_control" unique_id=1965664216]
+visible = false
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("2_etobj")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Score_per_shot_total" type="Label" parent="backup" unique_id=1088124565]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.00933336
+anchor_top = 0.282814
+anchor_right = 1.00933
+anchor_bottom = 1.05832
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(15, 12)
+text = "0"
+label_settings = SubResource("LabelSettings_2qyir")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="RockIcon" type="TextureRect" parent="." unique_id=922291911]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.5474937
+anchor_top = -0.5375016
+anchor_right = 1.0075034
+anchor_bottom = 1.0174983
+offset_left = 56.175026
+offset_top = 56.175003
+offset_right = 0.67432404
+offset_bottom = 0.67500305
+scale = Vector2(1.6, 1.6)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("7_qg6kv")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true

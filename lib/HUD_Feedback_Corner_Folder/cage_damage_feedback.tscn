@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://c4u3c1u1bfao"]
+
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="1_r4yg0"]
+[ext_resource type="Script" uid="uid://ca4mo7ytjev5m" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/cage_damage_feedback.gd" id="1_wpojp"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="2_wpojp"]
+[ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://unfiled/Photos/ROCKS - title_rock_centered_large.png" id="4_ymruo"]
+
+
+[node name="Round_tally" type="Control" unique_id=598870013]
+z_index = 1
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 3
+anchor_right = 0.0520833
+anchor_bottom = 0.0925926
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+script = ExtResource("1_wpojp")
+metadata/_edit_use_anchors_ = true
+
+[node name="Light" type="TextureRect" parent="." unique_id=1995303668]
+visible = false
+modulate = Color(0.54, 0.378, 0.378, 0.541176)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("1_r4yg0")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="." unique_id=112342937]
+visible = false
+modulate = Color(0.54, 0.378, 0.378, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("2_wpojp")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="." unique_id=92390747]
+visible = false
+modulate = Color(0.54, 0.378, 0.378, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("2_wpojp")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light4" type="TextureRect" parent="." unique_id=1518204959]
+modulate = Color(0.5411765, 0.3764706, 0.3764706, 0.5411765)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -0.615
+offset_top = -0.67
+offset_right = -0.614998
+offset_bottom = -0.669998
+scale = Vector2(1.64, 1.64)
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("4_ymruo")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true

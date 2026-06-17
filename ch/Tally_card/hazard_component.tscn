@@ -1,0 +1,97 @@
+[gd_scene format=3 uid="uid://bmaqbbmp5xal0"]
+
+[ext_resource type="Script" uid="uid://xfiwfsn5jdyl" path="res://ch/Tally_card/hazard_component.gd" id="1_wehlx"]
+[ext_resource type="Texture2D" uid="uid://paagq86rhmq3" path="res://res/unknown_icon.png" id="2_588rc"]
+[ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://unfiled/Photos/ROCKS - title_rock_centered_large.png" id="2_ew40k"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_m8ba4"]
+content_margin_left = 0.0
+content_margin_top = 4.0
+content_margin_right = 0.0
+content_margin_bottom = 4.0
+color = Color(0.5, 0.5, 0.5, 1)
+thickness = 3
+vertical = true
+
+[node name="Mine" type="HBoxContainer" unique_id=2132305159 node_paths=PackedStringArray("item_icon", "item_name", "item_value", "item_destroyed", "item_cash_reward")]
+custom_minimum_size = Vector2(0, 60)
+size_flags_vertical = 3
+script = ExtResource("1_wehlx")
+item_icon = NodePath("ItemIcon")
+icon_texture = ExtResource("2_588rc")
+item_name = NodePath("ItemName")
+item_value = NodePath("ItemValue")
+item_destroyed = NodePath("ItemDestroyed")
+item_cash_reward = NodePath("TotalCashEarned")
+
+[node name="VSeparator" type="VSeparator" parent="." unique_id=216769352]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = -5
+theme_override_styles/separator = SubResource("StyleBoxLine_m8ba4")
+
+[node name="ItemIcon" type="TextureRect" parent="." unique_id=384658149]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("2_ew40k")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VSeparator2" type="VSeparator" parent="." unique_id=1621051345]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = -5
+theme_override_styles/separator = SubResource("StyleBoxLine_m8ba4")
+
+[node name="ItemName" type="RichTextLabel" parent="." unique_id=266436566]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 27
+bbcode_enabled = true
+vertical_alignment = 1
+
+[node name="VSeparator3" type="VSeparator" parent="." unique_id=393741934]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = -5
+theme_override_styles/separator = SubResource("StyleBoxLine_m8ba4")
+
+[node name="ItemValue" type="RichTextLabel" parent="." unique_id=1093425497]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 27
+vertical_alignment = 1
+
+[node name="ItemDestroyed" type="RichTextLabel" parent="." unique_id=574261517]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 27
+bbcode_enabled = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator5" type="VSeparator" parent="." unique_id=1489110144]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = -5
+theme_override_styles/separator = SubResource("StyleBoxLine_m8ba4")
+
+[node name="TotalCashEarned" type="RichTextLabel" parent="." unique_id=612278790]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 27
+bbcode_enabled = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator6" type="VSeparator" parent="." unique_id=605171368]
+visible = false
+custom_minimum_size = Vector2(12.08, 5)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = -5
+theme_override_styles/separator = SubResource("StyleBoxLine_m8ba4")

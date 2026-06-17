@@ -1,0 +1,66 @@
+[gd_scene format=4 uid="uid://sjs7v6euem4n"]
+
+[ext_resource type="Script" uid="uid://f65tu6smfqsf" path="res://lib/Flag_rollout_Scene/flag_rollout.gd" id="1_l5pgo"]
+[ext_resource type="Shader" uid="uid://bkpjfaqbvhiu2" path="res://res/Shaders/FlagRollout.gdshader" id="2_s0yeb"]
+
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_3rkiy"]
+_surfaces = [{
+"aabb": AABB(-0.25, -5.4025, -0.25, 0.5, 10.805, 0.5),
+"attribute_data": PackedByteArray("AABAPwAAAAAAAGA/AAAAAAAAYD8AAIA/eoJaPwAAAAAAAIA/AAAAAAAAAD8AAAA/AAAAPgAAgD8AAAAAAACAPwAAAAAAAAAA////PgAAAAB6glo/AAAAAAAAAD8AAAA/AACAPgAAgD8AAAA+AACAPwAAAD4AAAAAAACAPwAAAAB4glo/AAAAAAAAAD8AAAA/AAAAAAAAgD8AAGA/AACAPwAAYD8AAAAAeIJaPwAAAAAAAAA/AAAAAAAAAD8AAAA/AABgPwAAgD8AAEA/AACAPwAAQD8AAAAAAAAAAAAAAAAAAAA+AAAAAAAAAD4AAIA/////PgAAAAB6glo/AAAAAAAAgD8AAAAAAAAAPgAAAAAAAIA+AAAAAAAAgD4AAIA/GvYVPgAAAAD///8+AAAAAAAAgD8AAAAAAABgPwAAAAAAAAAAAAAAAAAAAAAAAIA/eIJaPwAAAAAAAAA/AAAAAAAAgD8AAAAAAAAAPwAAAAAAACA/AAAAAAAAID8AAIA/AAAAPwAAAAAY9hU+AAAAAAAAgD8AAAAAGvYVPgAAAAD///8+AAAAAAAAAD8AAAA/AADAPgAAgD8AAIA+AACAPwAAgD4AAAAAAAAAAAAAAAAa9hU+AAAAAAAAAD8AAAA/AAAAPwAAgD8AAMA+AACAPwAAwD4AAAAAAAAAPwAAAAAY9hU+AAAAAAAAAD8AAAA/AABAPwAAgD8AACA/AACAPwAAID8AAAAAGPYVPgAAAAAAAAAAAAAAAAAAAD8AAAA/AAAgPwAAgD8AAAA/AACAPwAAAD8AAAAAAACAPgAAAAAAAMA+AAAAAAAAwD4AAIA/AAAAAAAAAAAa9hU+AAAAAAAAgD8AAAAAAADAPgAAAAAAAAA/AAAAAAAAAD8AAIA/AAAgPwAAAAAAAEA/AAAAAAAAQD8AAIA/GPYVPgAAAAAAAAAAAAAAAAAAgD8AAAAA"),
+"format": 34359738391,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 90,
+"vertex_data": PackedByteArray("Lt5MMUjhrMAAAIC+8QQ1PkjhrMD1BDW+8QQ1PkjhrED1BDW+AACAPkjhrEAAAAAA8wQ1PkjhrEDzBDU+AAAAAEjhrEAAAAAA8wQ1PkjhrEDzBDU+AACAPkjhrEAAAAAAAACAPkjhrMAAAAAA8wQ1PkjhrEDzBDU+Lr07skjhrEAAAIA+AAAAAEjhrEAAAAAALr07skjhrEAAAIA+8wQ1PkjhrEDzBDU+8wQ1PkjhrMDzBDU+8QQ1PkjhrED1BDW+AACAPkjhrEAAAAAAAAAAAEjhrEAAAAAAAACAPkjhrEAAAAAA8QQ1PkjhrED1BDW+8QQ1PkjhrMD1BDW+Lt5MMUjhrEAAAIC+8QQ1PkjhrED1BDW+AAAAAEjhrEAAAAAA8QQ1PkjhrED1BDW+Lt5MMUjhrEAAAIC+Lt5MMUjhrMAAAIC+AACAPkjhrMAAAAAA8wQ1PkjhrMDzBDU+8wQ1PkjhrEDzBDU+Lr07skjhrMAAAIA+8wQ1PkjhrMDzBDU+AACAPkjhrMAAAAAA8wQ1PkjhrMDzBDU+Lr07skjhrMAAAIA+Lr07skjhrEAAAIA+8wQ1vkjhrMDzBDU+Lr07skjhrMAAAIA+AACAPkjhrMAAAAAA8QQ1PkjhrMD1BDW+AACAPkjhrMAAAAAAAACAPkjhrEAAAAAA8QQ1PkjhrMD1BDW+Lt5MMUjhrMAAAIC+AACAPkjhrMAAAAAAAACAvkjhrMAuvbuy9AQ1vkjhrMDyBDW+9AQ1vkjhrEDyBDW+Lt5MMUjhrMAAAIC+9AQ1vkjhrMDyBDW+AACAPkjhrMAAAAAALr07skjhrEAAAIA+8wQ1vkjhrEDzBDU+AAAAAEjhrEAAAAAA8wQ1vkjhrEDzBDU+Lr07skjhrEAAAIA+Lr07skjhrMAAAIA+8wQ1vkjhrEDzBDU+AACAvkjhrEAuvbuyAAAAAEjhrEAAAAAAAACAvkjhrEAuvbuy8wQ1vkjhrEDzBDU+8wQ1vkjhrMDzBDU+9AQ1vkjhrEDyBDW+Lt5MMUjhrEAAAIC+AAAAAEjhrEAAAAAALt5MMUjhrEAAAIC+9AQ1vkjhrEDyBDW+9AQ1vkjhrMDyBDW+AACAvkjhrEAuvbuy9AQ1vkjhrEDyBDW+AAAAAEjhrEAAAAAA9AQ1vkjhrEDyBDW+AACAvkjhrEAuvbuyAACAvkjhrMAuvbuyLr07skjhrMAAAIA+8wQ1vkjhrMDzBDU+8wQ1vkjhrEDzBDU+AACAvkjhrMAuvbuy8wQ1vkjhrMDzBDU+AACAPkjhrMAAAAAA8wQ1vkjhrMDzBDU+AACAvkjhrMAuvbuyAACAvkjhrEAuvbuy9AQ1vkjhrMDyBDW+Lt5MMUjhrMAAAIC+Lt5MMUjhrEAAAIC+9AQ1vkjhrMDyBDW+AACAvkjhrMAuvbuyAACAPkjhrMAAAAAA//938Hfw/7///ym3Kbf/v///1cjVyP+//3///4Ja/7//f///glr/v/9///+CWv+/1cj/f9VI/7///4aPho//v3fw/394cP+//3///30l/7//f///fSX/v/9///99Jf+/ho//f4cP/7/VyP9/1Uj/vym3/38pN/+//3///wAAvhL/f///AAC+Ev9///8AAL4S//+GjwAAwwf//9XIAABqJP//KbcAAJQb/3///wAAQS3/f///AABBLf9///8AAEEt///VyNXI/78AAHfw///Cx///d/B38P+/d/D/f3hw/78pt/9/KTf/v9XI/3/VSP+//38AAP///7//fwAA////v/9/AAD///+/Kbf/fyk3/794cP9/AADCx4aP/3+HD/+//38AAP///7//fwAA////v/9/AAD///+///8ptwAAlBt38P9////DB///ho8AAMMH/38AAP///7//fwAA////v/9/AAD///+/AACGj///O/gAANXI//+U2wAAKbf//2rk/38AAP///7//fwAA////v/9/AAD///+//3///wAAvdL/f///AAC90v9///8AAL3S1Uj/fwAAlNuGj/9/hw//v3hw/38AAMLH/3///wAAQO3/f///AABA7f9///8AAEDthw//fwAAO/jVSP9/AACU2yk3/38AAGrk/3///30l/z//f///fSX/P/9///99Jf8/AAB38P//wscAACm3//9q5AAA1cj//5Tb/3///4Ja/z//f///glr/P/9///+CWv8/AAApt///auSHD/9/AAA7+AAAho///zv4eHD/fwAAwscpN/9/AABq5NVI/38AAJTb/38AAP///7//fwAA////v/9/AAD///+/KTf/fwAAauQAAIaP//87+IcP/38AADv4AADVyP//lNv//3fwd/D/vwAAd/D//8LH/38AAP///7//fwAA////v/9/AAD///+/")
+}]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_vk737"]
+load_path = "res://.godot/imported/Egg_emoji.png-920f0a272124dfa974f39912f6cc40be.s3tc.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ytks"]
+render_priority = 0
+shader = ExtResource("2_s0yeb")
+shader_parameter/flag_texture = SubResource("CompressedTexture2D_vk737")
+shader_parameter/wave_speed = 2.0
+shader_parameter/wave_height = 0.05
+shader_parameter/wave_frequency = 10.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_u8ask"]
+subdivide_width = 10
+subdivide_depth = 10
+
+[node name="Start_flag" type="Node3D"]
+script = ExtResource("1_l5pgo")
+start_flag = true
+
+[node name="Post_mesh" type="Node3D" parent="."]
+transform = Transform3D(0.175, 0, 0, 0, 0.3, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Post" type="MeshInstance3D" parent="Post_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.02642, 0)
+mesh = SubResource("ArrayMesh_3rkiy")
+
+[node name="Flag_holder" type="Node3D" parent="."]
+transform = Transform3D(0.175, 0, 0, 0, 0.3, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="FlagMesh" type="MeshInstance3D" parent="Flag_holder"]
+transform = Transform3D(8, 0, 0, 0, 3, 0, 0, 0, 1, 4.24, 2.005, 0)
+material_override = SubResource("ShaderMaterial_3ytks")
+mesh = SubResource("QuadMesh_u8ask")
+skeleton = NodePath("../..")
+
+[node name="Label3D" type="Label3D" parent="Flag_holder/FlagMesh"]
+transform = Transform3D(0.635, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.00923344)
+pixel_size = 0.01
+shaded = true
+double_sided = false
+alpha_cut = 3
+texture_filter = 1
+render_priority = 1
+outline_render_priority = 0
+modulate = Color(0.71, 0, 0, 1)
+outline_modulate = Color(1, 1, 1, 1)
+font_size = 23
+outline_size = 4
+uppercase = true

@@ -1,0 +1,293 @@
+[gd_scene format=3 uid="uid://cxqry0burrjjd"]
+
+[ext_resource type="Script" uid="uid://dhr1ngi3s3ti5" path="res://unfiled/birds.gd" id="1_7atob"]
+[ext_resource type="AudioStream" uid="uid://kcrsa5k3eq7l" path="res://sfx/Seagull - Sound Effect.wav" id="2_fhdt0"]
+[ext_resource type="AudioStream" uid="uid://d1ucv04bvsq64" path="res://sfx/windSnippet.wav" id="3_c1rx4"]
+[ext_resource type="PackedScene" uid="uid://crflenc26g7jw" path="res://res/Trails_scene.tscn" id="4_726um"]
+
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oi6o2"]
+radius = 1.5
+height = 3.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p115v"]
+albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c4rsd"]
+albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fln0i"]
+albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l84tw"]
+albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
+
+[sub_resource type="Animation" id="Animation_xb0hs"]
+resource_name = "beakWobble"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("head:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.5, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.27358, 0, 0), Vector3(0.27358, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_facun"]
+resource_name = "flying"
+loop_mode = 1
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("leftWing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.5, 1, 0, -0.0977605, 0, 1, 1, 0, 0, 0)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("leftWing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.5, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_htrv4"]
+_data = {
+&"beakWobble": SubResource("Animation_xb0hs"),
+&"flying": SubResource("Animation_facun")
+}
+
+[sub_resource type="GDScript" id="GDScript_q7kt8"]
+resource_name = "trails_built_in"
+script/source = "extends MeshInstance3D
+#class_name Trail3D
+
+const MAX_POINTS := 120  # (20 seconds ÷ 0.2s interval = 100, add margin)
+
+var _points = []
+var _widths = []
+var _lifePoints = []
+
+var _current_index := 0
+var _time_since_last_point := 0.0
+var _frame_counter := 0
+
+@export var _trailEnabled : bool = true
+@export var _fromWidth : float = 0.5
+@export var _toWidth : float = 0.0
+@export_range(0.5, 1.5) var _scaleAcceleration : float = 1.0
+@export var _motionDelta : float = 0.1
+@export var _lifespan : float = 20.0
+@export var _startColor : Color = Color(1, 1, 1, 1)
+@export var _endColor : Color = Color(1, 1, 1, 1)
+
+var _oldPos : Vector3
+
+func _ready() -> void:
+	_oldPos = global_transform.origin
+	mesh = ArrayMesh.new()
+
+	# Pre-allocate
+	_points.resize(MAX_POINTS)
+	_widths.resize(MAX_POINTS)
+	_lifePoints.resize(MAX_POINTS)
+	for i in MAX_POINTS:
+		_points[i] = Vector3.ZERO
+		_widths[i] = [Vector3.ZERO, Vector3.ZERO, Vector3.ZERO]
+		_lifePoints[i] = -1.0  # -1 means inactive
+
+func _process(delta: float) -> void:
+	if not _trailEnabled:
+		return
+	
+	if get_global_transform().basis.determinant() == 0.0:
+		print(\"⚠️ Warning: Non-invertible basis detected on \", self.name)
+
+	
+	# Update time and position
+	_time_since_last_point += delta
+	if (_oldPos - global_transform.origin).length() > _motionDelta and _time_since_last_point >= 0.2:
+		_append_point()
+		_time_since_last_point = 0.0
+		_oldPos = global_transform.origin
+
+	# Update lifetimes
+	for i in MAX_POINTS:
+		if _lifePoints[i] >= 0.0:
+			_lifePoints[i] += delta
+			if _lifePoints[i] > _lifespan:
+				_lifePoints[i] = -1.0  # expire point
+
+	# Throttle mesh updates
+	_frame_counter += 1
+	if _frame_counter % 2 == 0:
+		_update_trail_mesh()
+
+func _append_point() -> void:
+	var pos = global_transform.origin
+	var basis_x = global_transform.basis.x
+
+	_points[_current_index] = pos
+	_widths[_current_index] = [basis_x * _fromWidth, basis_x * _fromWidth, -basis_x * _toWidth]
+	_lifePoints[_current_index] = 0.0
+
+	_current_index = (_current_index + 1) % MAX_POINTS
+
+func _update_trail_mesh() -> void:
+	var st = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLE_STRIP)
+
+	var valid_indices := []
+	for i in range(MAX_POINTS):
+		if _lifePoints[i] >= 0.0:
+			valid_indices.append(i)
+
+	if valid_indices.size() < 2:
+		mesh.clear_surfaces()
+		return
+
+	for order in range(valid_indices.size()):
+		var i = valid_indices[order]
+		var t = float(order) / (valid_indices.size() - 1.0)
+		var curr_color = _startColor.lerp(_endColor, 1 - t)
+
+		var base_width = _widths[i][0]
+		var taper_width = _widths[i][1]
+		var width = base_width
+
+		if taper_width.is_finite() and base_width.is_finite():
+			width -= pow(1.0 - t, _scaleAcceleration) * taper_width
+		else:
+			width = Vector3.ZERO  # fallback to avoid NaN
+
+		var point_pos = _points[i]
+	
+		var local_pos1 = point_pos + width - global_transform.origin
+		var local_pos2 = point_pos - width - global_transform.origin
+
+
+		if local_pos1.is_finite() and local_pos2.is_finite():
+			st.set_color(curr_color)
+			st.set_uv(Vector2(t, 0))
+			st.add_vertex(local_pos1)
+
+			st.set_color(curr_color)
+			st.set_uv(Vector2(t, 1))
+			st.add_vertex(local_pos2)
+
+		
+		#st.set_color(curr_color)
+		#st.set_uv(Vector2(t, 0))
+		#st.add_vertex(to_local(point_pos + width))
+#
+		#st.set_color(curr_color)
+		#st.set_uv(Vector2(t, 1))
+		#st.add_vertex(to_local(point_pos - width))
+
+	mesh.clear_surfaces()
+	st.commit(mesh)
+	
+	
+func detach_from_parent():
+	# Stop appending new points
+	_trailEnabled = false
+
+	# Convert the trail's global transform to a world-space dummy
+	var old_global = global_transform
+	var parent = get_parent()
+
+	if parent:
+		parent.remove_child(self)
+
+	# Add directly to the scene tree root
+	get_tree().root.add_child(self)
+	self.global_transform = old_global  # Critical: preserve world transform
+
+	# Start fading and eventually remove
+	fade_out_and_destroy_self()
+
+func _reparent_trail(saved_transform: Transform3D) -> void:
+	if not is_inside_tree():
+		await ready  # Wait if not yet inside the scene tree
+
+	# Add to root or any existing fallback node
+	var scene_root = get_tree()
+	scene_root.add_child(self)
+	
+	global_transform = saved_transform  # Restore world-space position
+
+	fade_out_and_destroy_self()
+
+
+func fade_out_and_destroy_self() -> void:
+	await get_tree().create_timer(_lifespan).timeout
+	get_parent().remove_child(self)
+	if self != null:
+		self.queue_free()
+"
+
+[node name="birds" type="CharacterBody3D"]
+safe_margin = 1.0
+script = ExtResource("1_7atob")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -0.102804)
+shape = SubResource("CapsuleShape3D_oi6o2")
+
+[node name="body" type="Node3D" parent="."]
+
+[node name="head" type="CSGSphere3D" parent="body"]
+transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_p115v")
+
+[node name="beak" type="CSGPolygon3D" parent="body/head"]
+transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
+material_override = SubResource("StandardMaterial3D_c4rsd")
+polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="leftWing" type="CSGPolygon3D" parent="body"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
+material_override = SubResource("StandardMaterial3D_fln0i")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="rightWing" type="CSGPolygon3D" parent="body"]
+transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
+material_override = SubResource("StandardMaterial3D_l84tw")
+polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body"]
+libraries = {
+&"": SubResource("AnimationLibrary_htrv4")
+}
+
+[node name="birdSFX" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_fhdt0")
+volume_db = -20.0
+unit_size = 1.0
+max_db = -5.0
+
+[node name="windSFX2" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_c1rx4")
+volume_db = 2.0
+unit_size = 92.0
+
+[node name="Trails_built_in" parent="." instance=ExtResource("4_726um")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9, 0.195225, 0.0253683)
+script = SubResource("GDScript_q7kt8")
+_fromWidth = 0.15
+_motionDelta = 0.001
+_lifespan = 32.065
+_startColor = Color(0.35, 0.35, 0.35, 1)
+
+[node name="Trails_built_in2" parent="." instance=ExtResource("4_726um")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.195225, 0.0253683)
+script = SubResource("GDScript_q7kt8")
+_fromWidth = 0.15
+_motionDelta = 0.001
+_lifespan = 32.065
+_startColor = Color(0.35, 0.35, 0.35, 1)

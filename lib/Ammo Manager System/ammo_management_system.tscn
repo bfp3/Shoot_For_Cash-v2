@@ -1,0 +1,460 @@
+[gd_scene format=3 uid="uid://bhkjw8ie7mnx2"]
+
+[ext_resource type="Script" uid="uid://cf2vk1qkss2f0" path="res://lib/Ammo Manager System/ammo_management_system.gd" id="1_vrcju"]
+[ext_resource type="Script" uid="uid://wnylm28cq1d6" path="res://lib/Ammo Manager System/ammo_selector_gui.gd" id="2_xeubq"]
+[ext_resource type="Script" uid="uid://ca6vllshdxdka" path="res://lib/Ammo Manager System/total_bullets_remaining.gd" id="3_xeubq"]
+[ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://unfiled/Themes/ammo_manager_theme.tres" id="4_47osj"]
+
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lqmfg"]
+bg_color = Color(0.560784, 0.560784, 0.560784, 1)
+skew = Vector2(0.15, 0)
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_detail = 3
+shadow_color = Color(0.21, 0.21, 0.21, 0.564706)
+shadow_offset = Vector2(-0.78, 0)
+
+[sub_resource type="Theme" id="Theme_47osj"]
+Panel/styles/panel = SubResource("StyleBoxFlat_lqmfg")
+
+[sub_resource type="GDScript" id="GDScript_xeubq"]
+script/source = "extends Panel
+
+var bullet_inside = null
+
+func make_empty_outline():
+	# Show crawling ants effect, or a dashed outline
+	modulate = Color(0, 0, 0, 0.5)
+
+func drop_bullet(bullet):
+	if bullet_inside:
+		return
+	bullet_inside = bullet
+	bullet.set_parent(self)
+	bullet.rect_position = Vector2.ZERO
+	bullet.set_dropped_successfully(true)
+
+func has_bullet() -> void:
+	pass
+"
+
+[sub_resource type="GDScript" id="GDScript_pemot"]
+script/source = "extends Container
+"
+
+[sub_resource type="GDScript" id="GDScript_47osj"]
+script/source = "extends Panel
+
+signal drag_stopped
+
+var dropped_successfully := false
+
+func _gui_input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		start_drag()
+
+func start_drag():
+	set_drag_preview(self)
+	set_process(true)
+
+func _process(delta):
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		global_position = get_viewport().get_mouse_position()
+	else:
+		emit_signal(\"drag_stopped\", self)
+		set_process(false)
+
+func was_dropped_successfully() -> bool:
+	return dropped_successfully
+
+func set_dropped_successfully(val: bool):
+	dropped_successfully = val
+"
+
+[sub_resource type="GDScript" id="GDScript_0l5ov"]
+script/source = "extends Control
+#
+#const RELOAD_SOUND = preload(\"res://400_sounds/Placeholder_SFX/Target_shot_out_of_device_7.wav\")
+#
+#@onready var ammo_container_hbox: HBoxContainer = $Ammo_container
+#@onready var cartridge_amount_container: HBoxContainer = $Cartridge_amount_container
+#@onready var ammo_single_unit: Panel = $ammo_unit
+#@onready var cartridge_unit: Panel = $cartridge_unit
+#
+#@onready var reload_sound: AudioStreamPlayer = $\"../reload_sound\"
+#
+#@onready var cartridge_label: Label = $cartridge_label
+#@onready var ammo_label: Label = $ammo_label
+#
+#var ammo_remaining := 0
+#var cartridge_remaining := 0
+#var first_reload_completed := false
+#
+#func _ready() -> void:
+	##await get_tree().create_timer(0.05).timeout
+	#pass
+	#
+#func game_started_update() -> void:
+	#ammo_remaining = get_parent().current_amount_of_ammo_remaining
+	#cartridge_remaining = get_parent().current_amount_of_cartridges_remaining
+#
+	#first_load()
+	#await get_tree().create_timer(5.0).timeout
+	#$\"../reload_sound\".volume_db = -27.0
+#
+#func first_load() -> void:
+	#$\"../reload_sound\".volume_db = -80.0
+	#clear_ui_elements()
+	#reload_ammo(ammo_remaining)
+	#reload_cartridges(cartridge_remaining)
+	#update_labels()
+	#update_hbox_positions()
+	#first_reload_completed = true
+	#
+#func update_ammo_display(ammo_count: int, cartridge_count: int) -> void:
+	#ammo_remaining = ammo_count
+	#cartridge_remaining = cartridge_count
+#
+	#if ammo_remaining == 0 and cartridge_remaining > 0:
+		#reload_from_cartridge()
+	#elif ammo_remaining == 0:
+		#show_out_of_ammo_effect()
+	#else:
+		#remove_last_ammo()
+#
+	#update_labels()
+	#update_hbox_positions()
+	#
+#func gain_an_ammo() -> void:
+	#ammo_remaining = clamp(ammo_remaining + 1, 0, get_parent().max_number_of_bullets_per_cartridge)
+	#if ammo_remaining >= 6:
+		#if cartridge_remaining >= 3:
+			##reload_fast(ammo_remaining)
+			#update_labels()
+			#return
+		#else:
+			#add_cartrige()
+	#else:
+		#reload_fast(ammo_remaining)
+		#update_labels()
+	##var new_ammo = ammo_container_hbox.get_children().back().duplicate()
+	##ammo_container_hbox.add_child(new_ammo)
+#
+#func add_cartrige() -> void:
+	#pass
+#
+#func reload_from_cartridge() -> void:
+	#cartridge_remaining -= 1
+	#ammo_remaining = 6
+	#reload_ammo(6)
+	#reload_cartridges(cartridge_remaining)
+#
+#func remove_last_ammo() -> void:
+	#var last_ammo = ammo_container_hbox.get_children().back()
+	#if last_ammo:
+		#send_to_tween(last_ammo)
+#
+#func reload_ammo(count: int) -> void:
+	#clear_ammo()
+	#var volume = -80.0
+	#if first_reload_completed:
+		#volume = -27.0
+	#
+	#await get_tree().create_timer(0.5).timeout
+	#for _i in range(count):
+		#var new_ammo = ammo_single_unit.duplicate()
+		#ammo_container_hbox.add_child(new_ammo)
+		#new_ammo.show()
+		##reload_sound.play()
+		#CommonCode.play_sound_instance_pitch_adjusted(RELOAD_SOUND, volume, 1.5)
+		#await get_tree().create_timer(0.1).timeout
+	#
+#
+#func reload_fast(count: int) -> void:
+	#clear_ammo()
+	#for _i in range(count):
+		#var new_ammo = ammo_single_unit.duplicate()
+		#ammo_container_hbox.add_child(new_ammo)
+		#new_ammo.show()
+		#reload_sound.play()
+		#await get_tree().create_timer(0.05).timeout
+#
+#func reload_cartridges(count: int) -> void:
+	#clear_cartridges()
+	#for _i in range(count):
+		#var new_cartridge = cartridge_unit.duplicate()
+		#cartridge_amount_container.add_child(new_cartridge)
+		#new_cartridge.show()
+		#reload_sound.play()
+		#await get_tree().create_timer(0.05).timeout
+#
+#func send_to_tween(last_ammo: Panel) -> void:
+	#var dur : float = 0.5
+	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	#tween.tween_property(last_ammo, \"scale\", Vector2.ONE * 1.25, dur)
+	#tween.parallel().tween_property(last_ammo, \"modulate\", Color('FFFFFF00'), dur)
+	#tween.parallel().tween_property(last_ammo, \"position:x\", 50.0, dur).as_relative()
+	##tween.parallel().tween_property(last_ammo, \"position:y\", -50.0, dur).as_relative()
+	##tween.parallel().tween_property(last_ammo, \"position:y\", -50.0, dur).as_relative()
+	#tween.tween_callback(last_ammo.queue_free)
+	#await tween.finished
+#
+#func show_out_of_ammo_effect() -> void:
+	#modulate = Color.RED
+	#await get_tree().create_timer(0.5).timeout
+	#modulate = Color.WHITE
+#
+#func update_labels() -> void:
+	##ammo_label.text = \"0\" + str(ammo_remaining)
+	#$ammo_label2.text = \"0\" + str(ammo_remaining)
+	#cartridge_label.text = str(cartridge_remaining)
+#
+#func update_hbox_positions() -> void:
+	#
+	#ammo_container_hbox.position = $\"../Ammo_marker\".position
+	#ammo_label.position = ammo_container_hbox.position - Vector2(-2, 110)
+	#cartridge_amount_container.position = $\"../Cartridge_marker\".position
+	#cartridge_label.position = cartridge_amount_container.position - Vector2(10, 35)
+#
+#func clear_ui_elements() -> void:
+	#clear_ammo()
+	#clear_cartridges()
+#
+#func clear_ammo() -> void:
+	#for child in ammo_container_hbox.get_children():
+		#child.queue_free()
+#
+#func clear_cartridges() -> void:
+	#for child in cartridge_amount_container.get_children():
+		#child.queue_free()
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_j3nna"]
+font_size = 80
+font_color = Color(0.73, 0.73, 0.73, 0.431373)
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[sub_resource type="LabelSettings" id="LabelSettings_72rf7"]
+font_size = 45
+font_color = Color(0.73, 0.73, 0.73, 0.431373)
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[node name="AmmoManagementSystem" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vrcju")
+
+[node name="AmmoSelectorGUI" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 776.0
+offset_top = 864.0
+offset_right = 1200.0
+offset_bottom = 928.0
+script = ExtResource("2_xeubq")
+
+[node name="PanelContainer" type="PanelContainer" parent="AmmoSelectorGUI"]
+layout_mode = 0
+offset_right = 408.0
+offset_bottom = 48.0
+
+[node name="MarginContainer" type="MarginContainer" parent="AmmoSelectorGUI/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AmmoSelectorGUI/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ammo_slot" type="Panel" parent="AmmoSelectorGUI/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 2
+theme = SubResource("Theme_47osj")
+script = SubResource("GDScript_xeubq")
+
+[node name="ammo_slot2" type="Panel" parent="AmmoSelectorGUI/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 2
+theme = SubResource("Theme_47osj")
+script = SubResource("GDScript_xeubq")
+
+[node name="ammo_slot3" type="Panel" parent="AmmoSelectorGUI/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 2
+theme = SubResource("Theme_47osj")
+script = SubResource("GDScript_xeubq")
+
+[node name="ammo_slot4" type="Panel" parent="AmmoSelectorGUI/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 2
+theme = SubResource("Theme_47osj")
+script = SubResource("GDScript_xeubq")
+
+[node name="ammo_slot5" type="Panel" parent="AmmoSelectorGUI/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 2
+theme = SubResource("Theme_47osj")
+script = SubResource("GDScript_xeubq")
+
+[node name="ammo_slot6" type="Panel" parent="AmmoSelectorGUI/PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 2
+theme = SubResource("Theme_47osj")
+script = SubResource("GDScript_xeubq")
+
+[node name="LoadoutSlots" type="Container" parent="AmmoSelectorGUI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.0943396
+anchor_bottom = 0.625
+script = SubResource("GDScript_pemot")
+metadata/_edit_use_anchors_ = true
+
+[node name="ConfirmButton" type="Button" parent="AmmoSelectorGUI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.879717
+anchor_right = 1.38443
+anchor_bottom = 0.625
+offset_left = 37.5
+offset_right = -37.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Confirm Loadout"
+metadata/_edit_use_anchors_ = true
+
+[node name="Ammo_slot_duplicate" type="Control" parent="AmmoSelectorGUI"]
+anchors_preset = 0
+anchor_right = 0.0943396
+anchor_bottom = 0.625
+metadata/_edit_use_anchors_ = true
+
+[node name="ammo_slot" type="Panel" parent="AmmoSelectorGUI/Ammo_slot_duplicate"]
+visible = false
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -0.00012207
+offset_right = -9.99992
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(15, 20)
+theme = SubResource("Theme_47osj")
+script = SubResource("GDScript_xeubq")
+
+[node name="TotalBulletsRemaining" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 1344.0
+offset_top = 864.0
+offset_right = 1376.0
+offset_bottom = 896.0
+script = ExtResource("3_xeubq")
+
+[node name="BulletsContainer" type="Container" parent="TotalBulletsRemaining"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.904762
+anchor_bottom = 0.269231
+metadata/_edit_use_anchors_ = true
+
+[node name="PanelContainer" type="PanelContainer" parent="TotalBulletsRemaining"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.0625
+anchor_top = -0.0625
+anchor_right = 6.25
+anchor_bottom = 1.09375
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="TotalBulletsRemaining/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TotalBulletsRemaining/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ShuffleButton" type="Button" parent="TotalBulletsRemaining"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.70703
+anchor_top = -1.25
+anchor_right = 3.67578
+anchor_bottom = -0.28125
+text = "Shuffle"
+metadata/_edit_use_anchors_ = true
+
+[node name="ammo_unit" type="Panel" parent="TotalBulletsRemaining"]
+visible = false
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.0585938
+anchor_bottom = 0.192308
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(15, 20)
+theme = SubResource("Theme_47osj")
+script = SubResource("GDScript_47osj")
+metadata/_edit_use_anchors_ = true
+
+[node name="Visual_component" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.480771
+anchor_top = 0.859926
+anchor_right = 0.521187
+anchor_bottom = 0.932593
+offset_right = -6.10352e-05
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(20, 20)
+script = SubResource("GDScript_0l5ov")
+metadata/_edit_use_anchors_ = true
+
+[node name="ammo_label" type="Label" parent="Visual_component"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -2.41238
+anchor_top = 0.159022
+anchor_right = 0.0618542
+anchor_bottom = 1.56065
+grow_horizontal = 2
+grow_vertical = 0
+label_settings = SubResource("LabelSettings_j3nna")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ammo_label2" type="Label" parent="Visual_component"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -2.38661
+anchor_top = 0.0698272
+anchor_right = 0.0876274
+anchor_bottom = 1.47146
+grow_horizontal = 2
+grow_vertical = 0
+text = "06"
+label_settings = SubResource("LabelSettings_72rf7")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="Visual_component"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -1.89692
+anchor_top = 0.19419
+anchor_right = 3.56702
+anchor_bottom = 1.11162
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_47osj")
+metadata/_edit_use_anchors_ = true

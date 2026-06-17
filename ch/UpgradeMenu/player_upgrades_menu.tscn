@@ -1,0 +1,244 @@
+[gd_scene format=3 uid="uid://bdensd4lt5d21"]
+
+[ext_resource type="PackedScene" uid="uid://cu0bay1llw7ua" path="res://unfiled/upgrade_tree/UpgradeNode.tscn" id="2_tt3pq"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_qoks8"]
+[ext_resource type="AudioStream" uid="uid://d0ss7gmv3nri2" path="res://sfx/opt_1.wav" id="4_pi65y"]
+[ext_resource type="AudioStream" uid="uid://cqfuywy300at4" path="res://sfx/opt_2.wav" id="5_05e6e"]
+[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="6_wnee6"]
+
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vpxog"]
+bg_color = Color(0.08, 0.09, 0.11, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.28, 0.31, 0.35, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="PlayerUpgradesMenu" type="Control" unique_id=1039631378]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=2049562831]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 0.55)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1003701894]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=1563013033]
+custom_minimum_size = Vector2(980, 640)
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_vpxog")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=2108757679]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=920022823]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "PICK AN UPGRADE"
+horizontal_alignment = 1
+
+[node name="MoneyLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1816750967]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Money: 20"
+horizontal_alignment = 1
+
+[node name="TreePanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=355797227]
+custom_minimum_size = Vector2(930, 470)
+layout_mode = 2
+
+[node name="TreeCanvas" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1011939309]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Connections" type="Node2D" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=1365774387]
+unique_name_in_owner = true
+
+[node name="ShotCooldown" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=815960918 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_tt3pq")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 128.0
+offset_top = 28.0
+offset_right = 338.0
+offset_bottom = 124.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+upgrade_id = &"0"
+upgrade_name = "Cooldown"
+description = "Reduce Shot Cooldown"
+effect_text = "Decrease cooldown between shots by 5%"
+max_cost = 100
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="NodeBulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=1894568410 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_tt3pq")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 130.0
+offset_top = 190.0
+offset_right = 340.0
+offset_bottom = 286.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+upgrade_id = &"1"
+upgrade_name = "Bullet Speed ++"
+description = "-"
+effect_text = "Bullet go fast"
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="NodeRadius" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=961582574 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_tt3pq")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 360.0
+offset_top = 190.0
+offset_right = 570.0
+offset_bottom = 286.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+upgrade_id = &"2"
+upgrade_name = "Scope Radius Increase"
+description = "Scope Radius Increase"
+effect_text = "+ 2.5%"
+max_cost = 40
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="ScopeMoveSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=568581218 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_tt3pq")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 590.0
+offset_top = 190.0
+offset_right = 800.0
+offset_bottom = 286.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+upgrade_id = &"3"
+upgrade_name = "Scope Move Speed"
+description = "-"
+effect_text = "+5 Speed"
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="BulletDamageOutput" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=66549038 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_tt3pq")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 590.0
+offset_top = 318.0
+offset_right = 800.0
+offset_bottom = 414.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+upgrade_id = &"4"
+upgrade_name = "Bullet Damage +++"
+description = "-"
+effect_text = "-"
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="BulletMax" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=766310177 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_tt3pq")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 590.0
+offset_top = 30.0
+offset_right = 800.0
+offset_bottom = 126.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+upgrade_id = &"5"
+upgrade_name = "Add Bullets Per Shot"
+description = "-"
+effect_text = "-"
+max_value = 1
+min_cost = 5
+max_cost = 25
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="BulletDelay" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=1535885250 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_tt3pq")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 358.0
+offset_top = 30.0
+offset_right = 568.0
+offset_bottom = 126.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+upgrade_id = &"6"
+upgrade_name = "Decrease Delay"
+description = "Decrease Delay Between Bullets"
+effect_text = "-"
+max_value = 1
+min_cost = 5
+max_cost = 25
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1606776391 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 18
+text = "Continue"
+script = ExtResource("3_qoks8")
+focus_enter_sfx = NodePath("../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../SFX/purchase")
+purchase_sfx = NodePath("../../../../SFX/purchase")
+
+[node name="ReRoll" type="Button" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=926108376]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
+text = "Reroll"
+
+[node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="." unique_id=269772169]
+stream = ExtResource("4_pi65y")
+volume_db = -20.0
+
+[node name="SFX" type="Node" parent="." unique_id=252627288]
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1204715136]
+stream = ExtResource("4_pi65y")
+volume_db = -40.0
+pitch_scale = 6.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=1798101429]
+stream = ExtResource("5_05e6e")
+volume_db = -40.0
+pitch_scale = 4.0
+
+[node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1064532511]
+stream = ExtResource("6_wnee6")
+volume_db = -20.0
+pitch_scale = 3.0
+
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/ReRoll" to="." method="_on_re_roll_pressed"]

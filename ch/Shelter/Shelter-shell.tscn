@@ -1,0 +1,145 @@
+[gd_scene format=3 uid="uid://bu4pmaeifdse0"]
+
+[ext_resource type="Texture2D" uid="uid://drbs23wlukqyg" path="res://res/Procreate/Camo.png" id="2_14msl"]
+[ext_resource type="AudioStream" uid="uid://bkxcl53gn3ai7" path="res://sfx/shelterDoor.wav" id="3_ncnfe"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sdd2h"]
+albedo_texture = ExtResource("2_14msl")
+
+[sub_resource type="BoxMesh" id="BoxMesh_db43a"]
+size = Vector3(0.2, 8, 5.115)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_4mvpj"]
+points = PackedVector3Array(0.1, 4, 2.5575, -0.1, 4, 2.5575, 0.1, -4, 2.5575, 0.1, 4, -2.5575, -0.1, 4, -2.5575, -0.1, -4, 2.5575, 0.1, -4, -2.5575, -0.1, -4, -2.5575)
+
+[sub_resource type="Animation" id="Animation_hh3ax"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ctgkf"]
+resource_name = "close"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -1.22248, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_vv0c0"]
+resource_name = "open"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -1.22248, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_47qpe"]
+_data = {
+"RESET": SubResource("Animation_hh3ax"),
+"close": SubResource("Animation_ctgkf"),
+"open": SubResource("Animation_vv0c0")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ykj3l"]
+albedo_texture = ExtResource("2_14msl")
+
+[sub_resource type="BoxMesh" id="BoxMesh_jhitf"]
+size = Vector3(0.52, 7.5, 0.31)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_uxxb6"]
+points = PackedVector3Array(-0.26, -3.75, -0.155, -0.26, -3.75, 0.155, -0.26, 3.75, -0.155, 0.26, -3.75, -0.155, 0.26, -3.75, 0.155, -0.26, 3.75, 0.155, 0.26, 3.75, -0.155, 0.26, 3.75, 0.155)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6jdsf"]
+albedo_texture = ExtResource("2_14msl")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eeed2"]
+transparency = 1
+albedo_color = Color(0.756863, 1, 1, 0.133333)
+metallic_specular = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_rdoiv"]
+size = Vector3(2.5, 0.59, 0.065)
+
+[node name="Shelter-shell" type="Node3D"]
+
+[node name="Door" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05889, 0, -2.69748)
+
+[node name="DoorMesh" type="MeshInstance3D" parent="Door"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.092669, 0, 2.65204)
+material_override = SubResource("StandardMaterial3D_sdd2h")
+mesh = SubResource("BoxMesh_db43a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.092669, 0, 2.65204)
+shape = SubResource("ConvexPolygonShape3D_4mvpj")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Door"]
+libraries = {
+"": SubResource("AnimationLibrary_47qpe")
+}
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="DoorHinge" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.30846, 0, -2.7689)
+material_override = SubResource("StandardMaterial3D_ykj3l")
+mesh = SubResource("BoxMesh_jhitf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.30846, 0, -2.7689)
+shape = SubResource("ConvexPolygonShape3D_uxxb6")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+material_override = SubResource("StandardMaterial3D_6jdsf")
+calculate_tangents = false
+use_collision = true
+size = Vector3(12, 8, 6)
+
+[node name="HollowedOut" type="CSGBox3D" parent="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.39494, 0, 0)
+operation = 2
+size = Vector3(11.6253, 7, 5)
+
+[node name="Window" type="CSGBox3D" parent="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.39494, 0.489329, 2.74782)
+operation = 2
+size = Vector3(2.48958, 0.551123, 0.638307)
+
+[node name="WindowGlass" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388416, 0.45476, 2.78089)
+material_override = SubResource("StandardMaterial3D_eeed2")
+mesh = SubResource("BoxMesh_rdoiv")
+skeleton = NodePath("")
+
+[node name="Node" type="Node" parent="."]
+
+[node name="DoorOpen" type="AudioStreamPlayer" parent="Node"]
+stream = ExtResource("3_ncnfe")
+volume_db = -10.0
+bus = &"Title"

@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://duu0ejbhlvcyp"]
+
+[ext_resource type="Texture2D" uid="uid://dwlpx7g1iy3r" path="res://res/textures_2D/texture_materials/corrugated_iron_02_4k/textures/corrugated_iron_02_diff_4k.png" id="1_p5afi"]
+[ext_resource type="Texture2D" uid="uid://dlu30sq1pi8le" path="res://res/textures_2D/texture_materials/corrugated_iron_02_4k/textures/corrugated_iron_02_nor_dx_4k.png" id="2_gj8w5"]
+[ext_resource type="Texture2D" uid="uid://b8vx1m0r44wj4" path="res://res/textures_2D/texture_materials/corrugated_iron_02_4k/textures/corrugated_iron_02_rough_4k.png" id="3_m11g0"]
+
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g7ssp"]
+albedo_texture = ExtResource("1_p5afi")
+roughness_texture = ExtResource("3_m11g0")
+normal_enabled = true
+normal_texture = ExtResource("2_gj8w5")
+uv1_scale = Vector3(4.03, 4.03, 4.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xejqn"]
+size = Vector3(5, 5, 5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_s7nlu"]
+points = PackedVector3Array(2.5, 2.5, 2.5, 2.5, 2.5, -2.5, -2.5, 2.5, 2.5, 2.5, -2.5, 2.5, 2.5, -2.5, -2.5, -2.5, 2.5, -2.5, -2.5, -2.5, 2.5, -2.5, -2.5, -2.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ew380"]
+albedo_color = Color(0.647059, 0.647059, 0.647059, 1)
+metallic = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_apv4c"]
+size = Vector3(1.5, 2, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cn2uf"]
+albedo_color = Color(0.407843, 0.407843, 0.407843, 1)
+metallic = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_wbx0i"]
+size = Vector3(0.01, 2, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_161ea"]
+albedo_color = Color(0.408329, 0.408329, 0.408329, 1)
+metallic = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_sn45y"]
+size = Vector3(0.01, 1.5, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2au7l"]
+albedo_color = Color(0.537255, 0.537255, 0.537255, 1)
+metallic = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_eioex"]
+size = Vector3(2.785, 2.51, 0.1)
+
+[node name="Bunker_simple" type="Node3D"]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
+
+[node name="Bunker" type="StaticBody3D" parent="."]
+
+[node name="BunkerMesh" type="MeshInstance3D" parent="Bunker"]
+material_override = SubResource("StandardMaterial3D_g7ssp")
+mesh = SubResource("BoxMesh_xejqn")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bunker"]
+shape = SubResource("ConvexPolygonShape3D_s7nlu")
+
+[node name="DoorMesh" type="MeshInstance3D" parent="Bunker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.48594, -2.46065)
+material_override = SubResource("StandardMaterial3D_ew380")
+mesh = SubResource("BoxMesh_apv4c")
+
+[node name="DoorMiddleStrip" type="MeshInstance3D" parent="Bunker/DoorMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0483494)
+material_override = SubResource("StandardMaterial3D_cn2uf")
+mesh = SubResource("BoxMesh_wbx0i")
+skeleton = NodePath("../..")
+
+[node name="DoorMiddleStrip2" type="MeshInstance3D" parent="Bunker/DoorMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.746059, 0, -0.0483494)
+material_override = SubResource("StandardMaterial3D_cn2uf")
+mesh = SubResource("BoxMesh_wbx0i")
+skeleton = NodePath("../..")
+
+[node name="DoorMiddleStrip4" type="MeshInstance3D" parent="Bunker/DoorMesh"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.00161523, 1, -0.0483494)
+material_override = SubResource("StandardMaterial3D_161ea")
+mesh = SubResource("BoxMesh_sn45y")
+skeleton = NodePath("../..")
+
+[node name="DoorMiddleStrip3" type="MeshInstance3D" parent="Bunker/DoorMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.758692, 0, -0.0483494)
+material_override = SubResource("StandardMaterial3D_cn2uf")
+mesh = SubResource("BoxMesh_wbx0i")
+skeleton = NodePath("../..")
+
+[node name="OuterDoor" type="MeshInstance3D" parent="Bunker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.23374, -2.45535)
+material_override = SubResource("StandardMaterial3D_2au7l")
+mesh = SubResource("BoxMesh_eioex")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Bunker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.75838)
+light_energy = 3.0
+omni_range = 6.0

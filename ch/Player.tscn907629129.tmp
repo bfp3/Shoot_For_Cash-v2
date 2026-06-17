@@ -1,0 +1,3268 @@
+[gd_scene format=3 uid="uid://bowsa0qmgtgxx"]
+
+[ext_resource type="Script" uid="uid://da45gubie1h3t" path="res://ch/Player/scripts/player.gd" id="1_6ljxy"]
+[ext_resource type="Script" uid="uid://cs7vsmgbbvl75" path="res://ch/Player/scripts/player_damage_area.gd" id="2_c5sey"]
+[ext_resource type="PackedScene" uid="uid://c1xmbypmcx558" path="res://lib/Mini_objective/Mini_objective_instance.tscn" id="2_hwyif"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://700_2D_nodes_UI/Decal_placeholders/Watchtower_radar_ring.png" id="2_kbm6s"]
+[ext_resource type="Script" uid="uid://cmaibuguvrae8" path="res://ch/Player/scripts/handle_raycast.gd" id="2_kkix3"]
+[ext_resource type="AudioStream" uid="uid://b6r6mcbey572i" path="res://sfx/Shoot_sfx_1.wav" id="2_uns27"]
+[ext_resource type="AudioStream" uid="uid://cy2pdgnkfa4hd" path="res://sfx/Random_sound_1.wav" id="3_0locf"]
+[ext_resource type="AudioStream" uid="uid://dusyb80v1vhh5" path="res://sfx/Random_sound_2.wav" id="4_bhgqf"]
+[ext_resource type="AudioStream" uid="uid://b0nchvxfh1tp1" path="res://sfx/Camera_waking_up.wav" id="5_hwyif"]
+[ext_resource type="AudioStream" uid="uid://dxu7hm25x4nxh" path="res://sfx/Random_sound_11.wav" id="5_phc0d"]
+[ext_resource type="AudioStream" uid="uid://dfgsdlfejvxv3" path="res://sfx/gun-whit-ay-yah.wav" id="6_kyarp"]
+[ext_resource type="AudioStream" uid="uid://cspahf30pivac" path="res://sfx/gun_combination_1.wav" id="6_ts3hu"]
+[ext_resource type="AudioStream" uid="uid://5gob10kelrti" path="res://sfx/Random_sound_10.wav" id="6_yrgup"]
+[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="7_d7tms"]
+[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_sound_effects/ES_Balloon Pop 2 - SFX Producer.wav" id="8_c5sey"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="9_ts3hu"]
+[ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://700_2D_nodes_UI/Themes/ammo_manager_theme.tres" id="9_wfw8x"]
+[ext_resource type="AudioStream" uid="uid://cc13w4ilb1uvk" path="res://sfx/Gun_SFX_attempt_2.wav" id="10_dpvnf"]
+[ext_resource type="Script" uid="uid://bh2xro2ru0ok0" path="res://ch/Player/scripts/crosshair.gd" id="10_hwyif"]
+[ext_resource type="Script" uid="uid://lqvwdyu058t8" path="res://ch/Player/scripts/cam_pivot.gd" id="10_kkix3"]
+[ext_resource type="AudioStream" uid="uid://byhtcxrbwtssh" path="res://600_scripts/400_sounds/Hovercraft_turning_SFX_left_v3.wav" id="10_kqwld"]
+[ext_resource type="Script" uid="uid://snu7cq0wsbqk" path="res://ch/Player/scripts/player_camera.gd" id="10_n6ds6"]
+[ext_resource type="Script" uid="uid://b8y6taxle6ne8" path="res://ch/Player/scripts/ammo_panel_3d.gd" id="10_qu2ht"]
+[ext_resource type="AudioStream" uid="uid://cjjll1huuw6r0" path="res://600_scripts/400_sounds/Hovercraft_turning_SFX_right_v3.wav" id="11_f3vr7"]
+[ext_resource type="Script" uid="uid://bw1d87pjqlmjw" path="res://ch/HUD_components/bullets_per_round_indication.gd" id="11_iph0b"]
+[ext_resource type="AudioStream" uid="uid://mbyekv7f3n1p" path="res://sfx/opt_3_fade_shortened.wav" id="12_j58se"]
+[ext_resource type="Script" uid="uid://dekncurcyax44" path="res://ch/Player/scripts/shoot_weapon_script_v2.gd" id="17_0locf"]
+[ext_resource type="Texture2D" uid="uid://ddmi855wc0e7w" path="res://700_2D_nodes_UI/Mini_objectives/mock-up_2.png" id="17_6ljxy"]
+[ext_resource type="Texture2D" uid="uid://mxvorteyq2i1" path="res://res/segmented_ring.png" id="18_emrcn"]
+[ext_resource type="AudioStream" uid="uid://ynxorljpjjbk" path="res://sfx/reload_sound_01.wav" id="19_0locf"]
+[ext_resource type="FontFile" uid="uid://hwtrvtud8cr4" path="res://700_2D_nodes_UI/Fonts/kenney_kenney-fonts/Fonts/Kenney Mini Square Mono.ttf" id="19_iph0b"]
+[ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="21_iph0b"]
+[ext_resource type="Texture2D" uid="uid://gbka4yjc0p4k" path="res://700_2D_nodes_UI/Ammo_display/bullet_texture.png" id="22_kkix3"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hv0dl"]
+font = ExtResource("19_iph0b")
+font_size = 50
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 3
+
+[sub_resource type="Gradient" id="Gradient_dpvnf"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_j58se"]
+offsets = PackedFloat32Array(0, 0.0969163)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="GDScript" id="GDScript_yrgup"]
+script/source = "extends Node3D
+
+#var current_pos := 0
+
+#func bh_Activate(_parent : Node3D, _behaviour : String) -> void:
+	#match _behaviour:
+		#\"move\":
+			#move_player_to_next_pos()
+#
+#func move_player_to_next_pos() -> void:
+#
+	#var parent = get_parent()
+	#var next_pos : Transform3D = get_next_position()
+	#if !next_pos:
+		#return
+		#
+	#var dur : float = 3.0
+	#var tween = create_tween()
+	#tween.tween_property(parent, \"global_transform\", next_pos, 7.0)
+	#await tween.finished
+	#print(self.name)
+	#EventBus.instance.actor_event.emit(self.name, \"notify\")
+	## Emit some kind of signal saying that I'm finished moving, and load the next script.
+	#
+#func get_next_position() -> Transform3D:
+	#current_pos += 1
+	#
+	#var node = get_tree().get_root().find_child('playerpos' + str(current_pos), true, false)
+	#if node == null:
+		#print('No position to move to')
+		#print('Transform Identity', global_transform)
+		#return global_transform
+		#
+	#else:
+		#return node.global_transform
+		#
+	#
+	
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0locf"]
+transparency = 1
+cull_mode = 2
+no_depth_test = true
+albedo_color = Color(1.8247963, 0, 0, 1)
+albedo_texture = ExtResource("9_ts3hu")
+
+[sub_resource type="QuadMesh" id="QuadMesh_bhgqf"]
+material = SubResource("StandardMaterial3D_0locf")
+
+[sub_resource type="GDScript" id="GDScript_kbm6s"]
+resource_name = "HUD_lamp"
+script/source = "extends Control
+
+@onready var hud_light_control: Control = $HUD_Light_Control
+
+@export var lamp_off : Color = Color('ffffff15')
+@export var lamp_on_brightest : Color = Color('ffffff')
+
+
+@onready var new_light_flasher: TextureRect = $'../Ammo_panel_3D/Big_light/flashing_light'
+
+var tween_pulse : Tween = null
+var hud_light_on := false
+
+func silence_phase_blinking() -> void:
+	new_light_flasher.silence_phase_blinking()
+	
+	var tween = create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_on_brightest, 0.3)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075 * 3)
+	await tween.finished
+
+func hud_lamp_on_phase():
+	new_light_flasher.hud_lamp_on_phase()
+	
+	hud_light_on = true
+	var tween = create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.1)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.3)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075 * 3)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.5)
+	tween.tween_callback(pulse_ring)
+	await tween.finished
+	
+	return
+
+func pulse_ring() -> void:
+
+	if !hud_light_on:
+		return
+	var new_pulse = $HUD_Light_Control/Pulse.duplicate()
+	$HUD_Light_Control.add_child(new_pulse)
+	new_pulse.modulate = Color('8a8a8a8a')
+	
+	tween_pulse = create_tween().set_ease(Tween.EASE_IN)
+	tween_pulse.tween_property(new_pulse, \"modulate\", Color('FFFFFF00'), 1.5)
+	tween_pulse.parallel().tween_property(new_pulse, \"scale\", Vector2.ONE * 2.0, 2.5)
+	tween_pulse.tween_callback(new_pulse.queue_free)
+	await tween_pulse.finished
+	pulse_ring()
+
+func hud_lamp_off_phase() -> void:
+	if tween_pulse:
+		tween_pulse.stop()
+		tween_pulse.kill()
+	if $HUD_Light_Control.get_children().size() > 4:
+		$HUD_Light_Control.get_children().back().queue_free()
+	hud_light_on = false
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.5)
+	await tween.finished
+	
+func hud_lamp_settle_phase() -> void:
+	new_light_flasher.silence_phase_blinking()
+	
+	var tween = create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.1)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.3)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075 * 3)
+	await tween.finished
+"
+
+[sub_resource type="GDScript" id="GDScript_4g2aa"]
+resource_name = "HUD_lamp_mini"
+script/source = "extends Control
+
+@onready var hud_light_control: Control = $HUD_Light_Control
+@export var lamp_off : Color = Color('ffffff15')
+@export var lamp_on_brightest : Color = Color('ffffff')
+
+
+
+func shot_hit_blinking() -> void:
+	var tween = create_tween()
+	#tween.tween_interval(0.5)
+	tween.tween_callback(pulse_ring)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075)
+	tween.tween_interval(0.1)
+	tween.tween_callback(pulse_ring)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075)
+	tween.tween_interval(0.1)
+	tween.tween_callback(pulse_ring)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_on_brightest, 0.3)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075 * 3)
+	await tween.finished
+
+func hud_lamp_on_phase():
+	var tween = create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.1)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.3)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075 * 3)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.5)
+	await tween.finished
+	return	
+	
+func pulse_ring() -> void:
+	var new_pulse = $HUD_Light_Control/Light2.duplicate()
+	$HUD_Light_Control.add_child(new_pulse)
+	new_pulse.modulate = Color('8a8a8a8a')
+	
+	var tween = create_tween().set_ease(Tween.EASE_IN)
+	tween.tween_property(new_pulse, \"modulate\", Color('FFFFFF00'), 1.5)
+	tween.parallel().tween_property(new_pulse, \"scale\", Vector2.ONE * 2.0, 2.5)
+	await tween.finished
+	if new_pulse:
+		new_pulse.queue_free()
+
+func hud_lamp_off_phase() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_OUT)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.5)
+	await tween.finished
+	
+func hud_lamp_settle_phase() -> void:
+	var tween = create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.1)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075)
+	tween.tween_property(hud_light_control, \"modulate\", Color('FFFFFF'), 0.3)
+	tween.tween_property(hud_light_control, \"modulate\", lamp_off, 0.075 * 3)
+	await tween.finished
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_n75le"]
+line_spacing = -15.485
+font_size = 22
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[sub_resource type="LabelSettings" id="LabelSettings_j58se"]
+font_size = 15
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[sub_resource type="LabelSettings" id="LabelSettings_myl1f"]
+font_size = 35
+font_color = Color(0.73, 0.73, 0.73, 0.431373)
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[sub_resource type="GDScript" id="GDScript_0locf"]
+script/source = "extends Control
+#
+#@onready var ammo_container_hbox: HBoxContainer =  $'../../Ammo_panel_3D/Bullet_cabinet/MarginContainer/HBoxContainer'
+#@onready var ammo_single_unit: TextureRect = $'../../Ammo_panel_3D/Bullet_reference'
+#@onready var reload_sound: AudioStreamPlayer = $'../../Ammo_panel_3D/reload_sound'
+#
+#@onready var deload_sound : AudioStreamPlayer = $'../../Ammo_panel_3D/deload_sound'
+#
+##@onready var ammo_label: Label = $ammo_label
+#@onready var reserve_label: Label = $'../../Ammo_panel_3D/Remaining_bullets_label'
+#@onready var ammo_label: Label = $'../../Ammo_panel_3D/Loaded_bullets_label'
+#
+##@onready var ammo_marker: Node2D = $\"../Ammo_marker\"
+##@onready var reserve_marker: Node2D = $\"../Cartridge_marker\"
+#
+#var loaded_bullets := 0
+#var reserve_bullets := 0
+#var first_reload_completed := false
+#
+#var tweened_ammo := []
+#
+#
+#func _ready() -> void:
+	#pass
+#
+#func game_started_update() -> void:
+	## Optional initial sync if needed
+	#pass
+#
+#func update_ammo_display(loaded: int, reserve: int) -> void:
+	#loaded_bullets = loaded
+	#reserve_bullets = reserve
+	#
+	#reload_ammo(loaded_bullets)
+	#reload_ammo(loaded)
+#
+#func reduce_ammo() -> void:
+	#if loaded_bullets > 0:
+		#loaded_bullets -= 1
+		#reserve_bullets += 1  # Optional: comment this out if spent bullets should be lost
+#
+	##if loaded_bullets == 0:
+		##clear_ammo()
+	#
+	#deload_sound.play()
+	#
+	#var candidates = ammo_container_hbox.get_children()
+#
+	#for i in range(candidates.size() - 1, -1, -1):
+		#var node = candidates[i]
+		#if !tweened_ammo.has(node):
+			#tweened_ammo.append(node)
+			#send_to_tween_reducer(node)
+			#break
+#
+	##if last_ammo:
+		##send_to_tween_reducer(last_ammo)
+#
+		##update_labels()
+	##reserve_label.text = \"|\" + str(reserve_bullets) + \"|\"
+#
+#func deduct_ammo() -> void:
+	##if loaded_bullets > 0:
+	#loaded_bullets = get_parent().current_loaded_bullets
+	##loaded_bullets = clamp(loaded_bullets - 1, 0, loaded_bullets)
+	#
+	#if loaded_bullets == 0:
+		#clear_ammo()
+	#
+	#var candidates = ammo_container_hbox.get_children()
+#
+	#for i in range(candidates.size() - 1, -1, -1):
+		#var node = candidates[i]
+		#if !tweened_ammo.has(node):
+			#tweened_ammo.append(node)
+			#send_to_tween_reducer(node)
+			#break
+		#
+	##var last_ammo = ammo_container_hbox.get_children().back()
+	##if last_ammo:
+		##send_to_tween(last_ammo)
+#
+		##update_labels()
+#
+#func reset_loaded_ammo() -> void:
+	#loaded_bullets = 0
+	#clear_ammo()
+	##update_labels()
+#
+#
+#func reset_ammo_after_round() -> void:
+	#get_parent().current_loaded_bullets = 0
+	#await toss_out_ammo()
+	#clear_ammo()
+	#
+#
+#func toss_out_ammo() -> void:
+	#for last_ammo in ammo_container_hbox.get_children():
+		#deload_sound.play()
+		#var dur := 0.45
+		#var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		#tween.tween_property(last_ammo, \"scale\", Vector2.ONE * 1.25, dur)
+		#tween.parallel().tween_property(last_ammo, \"modulate\", Color('FFFFFF00'), dur)
+		#tween.parallel().tween_property(last_ammo, \"position:x\", -50.0, dur).as_relative()
+		#tween.parallel().tween_property(last_ammo, \"position:y\", -50.0, dur).as_relative()
+		#tween.tween_callback(last_ammo.queue_free)
+		#await tween.finished
+		#loaded_bullets = clamp(loaded_bullets - 1 , 0 ,loaded_bullets)
+		##update_labels()
+#
+#func reload_ammo(count: int) -> void:
+	##clear_ammo()
+	#var volume : float
+	#if first_reload_completed:
+		#-35.0
+	#else:
+		#-80.0
+	#first_reload_completed = true
+	#
+	##for i in range(count):
+	#if ammo_container_hbox.get_children().size() < 6:
+		#var new_ammo = ammo_single_unit.duplicate()
+		#ammo_container_hbox.add_child(new_ammo)
+		#new_ammo.show()
+	#
+	#reload_sound.play()
+	##await get_tree().create_timer(0.05).timeout
+	###reserve_label.text = \"|\" + str(reserve_bullets) + \"|\"
+	#
+#func remove_last_ammo() -> void:
+	#if ammo_container_hbox.get_child_count() == 0:
+		#return
+#
+	#var last_ammo := ammo_container_hbox.get_child(ammo_container_hbox.get_child_count() - 1)
+	#ammo_container_hbox.remove_child(last_ammo)  # <--- removes it from the HBox
+#
+	#send_to_tween(last_ammo)
+#
+#
+#
+#func send_to_tween(last_ammo: TextureRect) -> void:
+	#var dur := 0.3
+	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	##tween.tween_property(last_ammo, \"scale\", Vector2.ONE * 1.25, dur)
+	#tween.parallel().tween_property(last_ammo, \"modulate\", Color('FFFFFF00'), dur)
+	#tween.parallel().tween_property(last_ammo, \"position:x\", 10.0, dur).as_relative()
+	#tween.tween_callback(last_ammo.queue_free)
+	##await tween.finished
+#
+#
+#func send_to_tween_reducer(last_ammo: TextureRect) -> void:
+	#var dur := 0.35
+	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	##tween.tween_property(last_ammo, \"scale\", Vector2.ONE * 1.25, dur)
+	#tween.parallel().tween_property(last_ammo, \"modulate\", Color('FFFFFF00'), dur)
+	#tween.parallel().tween_property(last_ammo, \"position:x\", -25.0, dur).as_relative()
+	#tween.tween_callback(last_ammo.queue_free)
+	##await tween.finished
+#
+#
+#func clear_ammo() -> void:
+	#for child in ammo_container_hbox.get_children():
+		#child.queue_free()
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n75le"]
+bg_color = Color(1, 0.353333, 0.03, 1)
+draw_center = false
+skew = Vector2(0.1, 0)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_detail = 3
+shadow_color = Color(0, 0, 0, 0.207843)
+shadow_size = 2
+shadow_offset = Vector2(-5.05, 4.835)
+anti_aliasing = false
+
+[sub_resource type="Theme" id="Theme_4nra6"]
+Panel/styles/panel = SubResource("StyleBoxFlat_n75le")
+
+[sub_resource type="GDScript" id="GDScript_1lfbp"]
+script/source = "extends Control
+#
+#@onready var bullets_remaining_label: Label = $bullets_remaining/bullets_remaining_label
+#@onready var current_ammo_label: Label = $ammo_label
+#@onready var ammo_container: HBoxContainer = $visual_component/PanelContainer/MarginContainer/Ammo_container
+#@onready var ammo_unit: Panel = $visual_component/ammo_unit
+#@onready var bonus_ammo_sfx: AudioStreamPlayer = $bonus_ammo
+#@onready var visual_component: Control = $visual_component
+#
+#@onready var reload_sound: AudioStreamPlayer = $reload_sound
+#@onready var deload_sound: AudioStreamPlayer = $deload_sound
+#@onready var out_of_ammo_sound: AudioStreamPlayer = $out_of_ammo_sound
+#
+#@export var max_loaded_bullets: int = 6
+#@export var total_reserve_bullets: int = 24
+#
+#@export var dev_mode := false
+#
+#@export var new_ammo_container : Control
+#@onready var new_ammo_display = new_ammo_container.get_script()
+#
+#
+#var orig_pos : Vector2
+#
+#var first_reload := true
+#var free_ammo_mode := false
+#
+#var bonus_ammo_amount := 1
+#var current_loaded_bullets: int = 0
+#var reserve_bullets: int = total_reserve_bullets
+#var label_orig_colour : Color
+#var loading := true
+#
+#func _free_ammo_mode_start() -> void:
+	#free_ammo_mode = true
+	#$'../Ammo_panel_3D'._free_ammo_mode_start()
+	#
+#func _free_ammo_mode_finished() -> void:
+	#$'../Ammo_panel_3D'._free_ammo_mode_finished()
+	#free_ammo_mode = false
+	#
+#func update_global_ammo() -> void:
+	#return
+	#ScoreGl.total_ammo = reserve_bullets + current_loaded_bullets
+	#print('updated the ammo global', reserve_bullets, \" + spare bully\", current_loaded_bullets, \" \", ScoreGl.total_ammo)
+#
+#func _ready() -> void:
+	#
+	##reserve_bullets = ScoreGl.total_ammo 
+	#
+	#EventBus.instance.game_won.connect(update_global_ammo)
+	#
+	#EventBus.instance.free_ammo_mode_started.connect(_free_ammo_mode_start)
+	#EventBus.instance.free_ammo_mode_finished.connect(_free_ammo_mode_finished)
+	#
+	#orig_pos = global_position
+	#label_orig_colour = bullets_remaining_label.label_settings.font_color
+	##first_load_ammo()
+	#if first_reload:
+		#await get_tree().create_timer(0.1).timeout
+		#reset_ammo_after_round()
+	#
+#func update_labels() -> void:
+	#bullets_remaining_label.text = str(reserve_bullets).pad_zeros(2)
+	#current_ammo_label.text = str(current_loaded_bullets).pad_zeros(2)
+	#
+#func first_load_ammo() -> void:
+	#current_loaded_bullets = 6
+	#while ammo_container.get_children().size() < 6:
+		#var new_ammo = ammo_unit.duplicate()
+		#ammo_container.add_child(new_ammo)
+		#new_ammo.show()
+		#await get_tree().create_timer(0.15).timeout
+	#
+	#await get_tree().create_timer(0.1).timeout
+#
+	##update_labels()
+	#update_labels()
+	#if new_ammo_container:
+		#new_ammo_container.sync_ammo_state(reserve_bullets, current_loaded_bullets)
+#
+#
+#func reload_ammo(amount: int, temp_bullets : int, temp_reserve : int) -> void:
+	#new_ammo_container.reload_ammo(amount, temp_bullets, temp_reserve)
+	#
+	#if !first_reload:
+		#await reloading_phase()
+	#bullets_remaining_label.text = str(temp_reserve).pad_zeros(2)
+	#current_ammo_label.text = str(temp_bullets).pad_zeros(2)
+	#
+	#for i in range(amount):
+		#var new_ammo = ammo_unit.duplicate()
+		#ammo_container.add_child(new_ammo)
+		#new_ammo.show()
+		#if !first_reload:
+			#reload_sound.play()
+		#temp_bullets += 1
+		#temp_reserve -= 1
+		#reserve_label_animation()
+		#current_ammo_label_animation()
+		#
+		#await get_tree().create_timer(0.075).timeout
+		#bullets_remaining_label.text = str(temp_reserve).pad_zeros(2)
+		#current_ammo_label.text = str(temp_bullets).pad_zeros(2)
+		#if i >= amount - 1:
+			#await get_tree().create_timer(0.375).timeout
+		#else:
+			#await get_tree().create_timer(0.05).timeout
+	#await get_tree().create_timer(0.1).timeout
+	#
+	#first_reload = false
+	#loading = false
+	#update_labels()
+	##update_labels()
+	#EventBus.instance.finished_standard_reload.emit()
+	#
+	#if new_ammo_container:
+		#new_ammo_container.sync_ammo_state(reserve_bullets, current_loaded_bullets)
+#
+	#reloading_phase_complete()
+#
+#
+#func reserve_label_animation() -> void:
+	#var tween = create_tween().set_ease(Tween.EASE_IN_OUT)
+	#tween.tween_property(bullets_remaining_label, \"scale\", Vector2.ONE * 1.2, 0.075)
+	#tween.parallel().tween_property(bullets_remaining_label, \"label_settings:font_color\", Color('FFFFFF'), 0.075)
+	#tween.tween_property(bullets_remaining_label, \"scale\", Vector2.ONE, 0.075)
+	#tween.parallel().tween_property(bullets_remaining_label, \"label_settings:font_color\", label_orig_colour, 0.075)
+	#
+#func current_ammo_label_animation() -> void:
+	#var tween = create_tween().set_ease(Tween.EASE_IN_OUT)
+	#tween.tween_interval(0.075)
+	#tween.tween_property(current_ammo_label, \"scale\", Vector2.ONE * 1.2, 0.075)
+	#tween.parallel().tween_property(current_ammo_label, \"label_settings:font_color\", Color('FFFFFF'), 0.075)
+	#tween.tween_property(current_ammo_label, \"scale\", Vector2.ONE, 0.075)
+	#tween.parallel().tween_property(current_ammo_label, \"label_settings:font_color\", Color('bababa6e'), 0.075)
+	#
+#
+#func reset_ammo_after_round() -> void:
+	#
+	#new_ammo_container.reset_ammo_after_round()
+	#
+	#var needed_bullets = max_loaded_bullets - current_loaded_bullets
+	#var bullets_to_load = min(needed_bullets, reserve_bullets)
+	#
+	#var temp_bullets_amount = current_loaded_bullets
+	#var temp_reserve_amount = reserve_bullets
+	#
+	#reserve_bullets -= bullets_to_load
+	#current_loaded_bullets += bullets_to_load
+	#
+	## Refill the visual ammo container
+	#reload_ammo(bullets_to_load, temp_bullets_amount, temp_reserve_amount)
+#
+#func reset_ammo_after_round_delay() -> void:
+	#var needed_bullets = max_loaded_bullets - current_loaded_bullets
+	#var bullets_to_load = min(needed_bullets, reserve_bullets)
+	#
+	#var temp_bullets_amount = current_loaded_bullets
+	#var temp_reserve_amount = reserve_bullets
+	#
+	#reserve_bullets -= bullets_to_load
+	#current_loaded_bullets += bullets_to_load
+	#
+	## Refill the visual ammo container
+	#reload_ammo(bullets_to_load, temp_bullets_amount, temp_reserve_amount)
+#
+#func check_can_shoot() -> bool:
+	#
+	#if free_ammo_mode:
+		#return true
+	#
+	#if loading:
+		#out_of_ammo_sound.play()
+		#show_out_of_ammo_effect()
+		#new_ammo_container.show_out_of_ammo_effect()
+		#return false
+	#
+	#if dev_mode:
+		#current_loaded_bullets += 1
+		#return true
+	#
+	#if current_loaded_bullets > 0:
+		#current_loaded_bullets = clamp(current_loaded_bullets - 1, 0, current_loaded_bullets)
+		#if new_ammo_container:
+			#new_ammo_container.sync_ammo_state(reserve_bullets, current_loaded_bullets)
+		#return true
+#
+	#else:
+		#if new_ammo_container: # and new_ammo_display.mirror_enabled:
+			#new_ammo_container.sync_ammo_state(reserve_bullets, current_loaded_bullets)
+		#out_of_ammo_sound.play()
+		#show_out_of_ammo_effect()
+		#new_ammo_container.show_out_of_ammo_effect()
+		#return false
+		#
+#
+#func show_out_of_ammo_effect() -> void:
+	#modulate = Color.RED
+	#await get_tree().create_timer(0.5).timeout
+	#modulate = Color.WHITE
+#
+#func ammo_used_remove_one() -> void:
+	#if free_ammo_mode:
+		#return
+	#if visual_component:
+		#visual_component.deduct_ammo()
+	#update_labels()
+#
+#
+#
+#func received_bonus_ammo() -> void:
+	#for i in range(bonus_ammo_amount):
+		#bonus_ammo_sfx.play()
+		#reserve_bullets += 1
+		#bullets_remaining_label.scale = Vector2.ONE * 1.5
+		#bullets_remaining_label.label_settings.font_color = Color('FFFFFF')
+		#await get_tree().create_timer(0.15).timeout
+		#bullets_remaining_label.text = str(reserve_bullets).pad_zeros(2)
+		#bullets_remaining_label.scale = Vector2.ONE * 1.0
+		#bullets_remaining_label.label_settings.font_color = label_orig_colour
+		#
+	#update_labels()
+	#
+	#if new_ammo_container:
+		#new_ammo_container.sync_ammo_state(reserve_bullets, current_loaded_bullets)
+#
+#
+#func reloading_phase() -> void:
+	#var dur : float = 0.25
+	#var lamp : Control = $'../HUD_lamp'
+	#var lamp_mini : Control = $'../HUD_lamp_mini'
+	#var ammo_light : Control = $Ammo_light
+	#$reloading_movement_sfx.pitch_scale = 4.5
+	#$reloading_movement_sfx.play()
+#
+	#
+	#var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_ELASTIC)
+	#tween.tween_property(ammo_light, \"modulate\", Color('ffffff50'), 0.05).set_trans(Tween.TRANS_LINEAR)
+	#tween.tween_property(ammo_light, \"modulate\", Color('ffffff00'), 0.05).set_trans(Tween.TRANS_LINEAR)
+	#tween.tween_property(ammo_light, \"modulate\", Color('ffffff50'), 0.05).set_trans(Tween.TRANS_LINEAR)
+	#tween.tween_property(ammo_light, \"modulate\", Color('ffffff00'), 0.05).set_trans(Tween.TRANS_LINEAR)
+	#tween.tween_property(ammo_light, \"modulate\", Color('ffffff50'), 0.15).set_trans(Tween.TRANS_LINEAR)
+	#tween.tween_property(self, \"position:y\", -20.0, dur).as_relative()
+	#tween.parallel().tween_property(lamp, \"position:y\", -20.0, dur).as_relative()
+	#tween.parallel().tween_property(lamp_mini, \"position:y\", -20.0, dur).as_relative()
+	#tween.parallel().tween_property(self, \"scale\", Vector2(1.02,1.02), dur)
+	#tween.parallel().tween_property($visual_component/Panel2, \"self_modulate\", Color('FFFFFF50'), dur).set_trans(Tween.TRANS_LINEAR)
+	#await tween.finished
+	#
+#func reloading_phase_complete() -> void:
+	#var dur : float = 0.5
+	#var lamp : Control = $'../HUD_lamp'
+	#var lamp_mini : Control = $'../HUD_lamp_mini'
+	#var ammo_light : Control = $Ammo_light
+	#$reloading_movement_sfx.pitch_scale = 3.0
+	#$reloading_movement_sfx.play()
+	#
+	#var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	#tween.tween_property(self, \"global_position\", orig_pos, dur)
+	#tween.parallel().tween_property(lamp, \"global_position:y\", 0.0, dur)
+	#tween.parallel().tween_property(lamp_mini, \"global_position:y\", -1.0, dur)
+	#tween.parallel().tween_property(self, \"scale\", Vector2.ONE, dur)
+	#tween.tween_property($visual_component/Panel2, \"self_modulate\", Color('FFFFFF00'), dur).set_trans(Tween.TRANS_LINEAR)
+	#tween.parallel().tween_property(ammo_light, \"modulate\", Color('ffffff15'), dur).set_trans(Tween.TRANS_LINEAR)
+"
+
+[sub_resource type="Environment" id="Environment_0locf"]
+background_mode = 3
+background_canvas_max_layer = 1
+ambient_light_source = 1
+reflected_light_source = 1
+glow_enabled = true
+glow_intensity = 6.4
+glow_bloom = 0.07
+glow_blend_mode = 0
+
+[sub_resource type="Gradient" id="Gradient_wfw8x"]
+colors = PackedColorArray(0.02, 0.04, 0.04, 1, 0.033, 0.09845, 0.11, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_n75le"]
+gradient = SubResource("Gradient_wfw8x")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d7tms"]
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c5sey"]
+bg_color = Color(0.0322, 0.05236, 0.07, 1)
+border_width_top = 1
+border_color = Color(0.6, 0.733333, 1, 0.407843)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.03, 0.03, 0.03, 1)
+shadow_size = 1
+shadow_offset = Vector2(0.5, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kkix3"]
+draw_center = false
+border_width_bottom = 1
+border_color = Color(0.8, 0.8, 0.8, 0.235294)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wfw8x"]
+bg_color = Color(0, 0.03, 0.06, 1)
+border_width_left = 1
+border_width_top = 4
+border_width_right = 1
+border_color = Color(0, 0, 0, 0.901961)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mh36x"]
+font_size = 36
+shadow_color = Color(0.12, 0.12, 0.12, 1)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_kkix3"]
+font_size = 19
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+shadow_color = Color(0.19, 0.19, 0.19, 1)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="GDScript" id="GDScript_qu2ht"]
+script/source = "extends TextureRect
+
+@onready var hud_light_control: Control = $HUD_Light_Control
+
+@export var lamp_off : Color = Color('84461b15')
+@export var lamp_on_brightest : Color = Color('84461b')
+
+var hud_light_on := false
+
+func silence_phase_blinking() -> void:
+	
+	var tween = create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.3)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075 * 3)
+	tween.tween_property(self, \"modulate\", Color('84461b00'), 0.075 * 3)
+	await tween.finished
+
+func hud_lamp_on_phase():
+
+	hud_light_on = true
+	var tween = create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.3)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075 * 3)
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.5)
+	tween.tween_property(self, \"modulate\", Color('84461b00'), 0.075 * 3)
+	await tween.finished
+	
+	return
+"
+
+[sub_resource type="GDScript" id="GDScript_kkix3"]
+script/source = "extends TextureRect
+
+@export var lamp_off : Color = Color('84461b15')
+@export var lamp_on_brightest : Color = Color('84461b')
+
+
+func shot_hit_blinking() -> void:
+	show()
+	var tween = create_tween()
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075)
+	tween.tween_interval(0.1)
+
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.1)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075)
+	tween.tween_interval(0.1)
+
+	tween.tween_property(self, \"modulate\", lamp_on_brightest, 0.3)
+	tween.tween_property(self, \"modulate\", lamp_off, 0.075 * 3)
+	await tween.finished
+	hide()
+"
+
+[sub_resource type="Gradient" id="Gradient_1lfbp"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.463415)
+colors = PackedColorArray(0, 0, 0, 0, 0.32, 0.32, 0.32, 0.117647)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0locf"]
+frequency = 1.0
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_c5sey"]
+height = 94
+noise = SubResource("FastNoiseLite_0locf")
+color_ramp = SubResource("Gradient_1lfbp")
+seamless = true
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_phc0d"]
+texture = SubResource("NoiseTexture2D_c5sey")
+modulate_color = Color(0.11, 0.495667, 1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6ljxy"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.01
+radial_segments = 8
+
+[sub_resource type="Curve" id="Curve_n75le"]
+_data = [Vector2(0, 0.94382), 0.0, 0.0, 0, 0, Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.275676, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_6yecc"]
+curve = SubResource("Curve_n75le")
+
+[sub_resource type="Curve" id="Curve_d7tms"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_3tqdj"]
+curve = SubResource("Curve_d7tms")
+
+[sub_resource type="Gradient" id="Gradient_c5sey"]
+offsets = PackedFloat32Array(0.0145349, 1)
+colors = PackedColorArray(0.22, 0.22, 0.22, 1, 0.45, 0.45, 0.45, 0.286275)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_an2ri"]
+gradient = SubResource("Gradient_c5sey")
+
+[sub_resource type="Curve" id="Curve_wfw8x"]
+_data = [Vector2(0, 0.29781), 0.0, 0.0, 0, 0, Vector2(0.0425532, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_h46b1"]
+curve = SubResource("Curve_wfw8x")
+
+[sub_resource type="Curve" id="Curve_mh36x"]
+_limits = [-200.0, 200.0, 0.0, 1.0]
+_data = [Vector2(0.00550964, -1.72412), 0.0, 0.0, 0, 0, Vector2(0.347107, 93.5345), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_p7fxj"]
+curve = SubResource("Curve_mh36x")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1lfbp"]
+lifetime_randomness = 0.8
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 0.0
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+direction = Vector3(0, 1, 0)
+spread = 5.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+angular_velocity_curve = SubResource("CurveTexture_3tqdj")
+radial_velocity_min = -2.23517e-05
+radial_velocity_max = -2.23517e-05
+gravity = Vector3(0, -0.1, 0)
+tangential_accel_min = -2.23517e-06
+tangential_accel_max = 0.0999978
+tangential_accel_curve = SubResource("CurveTexture_p7fxj")
+scale_min = 0.1
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_h46b1")
+color_ramp = SubResource("GradientTexture1D_an2ri")
+alpha_curve = SubResource("CurveTexture_6yecc")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0locf"]
+load_path = "res://.godot/imported/particle_sprite_smoke.webp-94067ca765f9db23717d2d11ab74a1f8.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lqk8l"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("CompressedTexture2D_0locf")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_n75le"]
+material = SubResource("StandardMaterial3D_lqk8l")
+size = Vector2(5, 5)
+
+[sub_resource type="GDScript" id="GDScript_phc0d"]
+script/source = "extends GPUParticles3D
+
+var duplicate_particles := true
+
+func _ready():
+	await get_tree().create_timer(0.1).timeout
+	emitting = true
+	one_shot = true
+	await finished
+	_on_finished()
+
+func _on_finished() -> void:
+	if duplicate_particles:
+		self.queue_free()
+"
+
+[sub_resource type="GDScript" id="GDScript_bhgqf"]
+script/source = "extends GPUParticles3D
+
+var duplicate_particles := true
+
+func _ready():
+	await get_tree().create_timer(0.1).timeout
+	one_shot = true
+	await finished
+	_on_finished()
+
+func _on_finished() -> void:
+	if duplicate_particles:
+		self.queue_free()
+"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wfw8x"]
+radius = 0.505
+
+[sub_resource type="GDScript" id="GDScript_lfemk"]
+script/source = "extends Node3D
+
+@export var shake_amount := 1.0
+@export var move_speed := 0.1
+
+var shake_tween : Tween = null
+
+
+func shake_gun() -> void:
+	if shake_tween:
+		shake_tween.kill()
+
+
+	shake_tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	shake_tween.tween_property($Rail_position, \"rotation_degrees:x\", shake_amount, 0.05).as_relative()
+	shake_tween.tween_property($Rail_position, \"rotation_degrees:x\", 0.0, 0.15)
+	await shake_tween.finished
+
+
+func _process(delta: float) -> void:
+	$Rail_position.global_position.y = 0.36
+	$Rail_position.global_position.z = -0.36
+"
+
+[sub_resource type="SphereMesh" id="SphereMesh_lfemk"]
+radius = 0.01
+height = 0.02
+
+[sub_resource type="BoxMesh" id="BoxMesh_lfemk"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="GDScript" id="GDScript_ts3hu"]
+script/source = "extends Node
+
+@onready var turn_left: AudioStreamPlayer = $Turn_left
+@onready var turn_right: AudioStreamPlayer = $Turn_right
+@onready var turn_up: AudioStreamPlayer = $Turn_up
+@onready var turn_down: AudioStreamPlayer = $Turn_down
+@onready var stop_timer: Timer = $StopTimer # Add a Timer node to your scene and reference it here
+
+var last_mouse_motion_x = 0.0
+var last_mouse_motion_y = 0.0
+var threshold := 20
+
+func _ready() -> void:
+	stop_timer.wait_time = 0.1 # Adjust this value to change how frequently the timer checks for mouse movement
+	stop_timer.start()
+	EventBus.instance.game_lost.connect(mute)
+	EventBus.instance.level_restarted.connect(unmute)
+
+
+func mute() -> void:
+	turn_left.volume_db = -80
+	turn_right.volume_db = -80
+	turn_up.volume_db = -80
+	turn_down.volume_db = -80
+	
+func unmute() -> void:
+	turn_left.volume_db = -44
+	turn_right.volume_db = -44
+	turn_up.volume_db = -44
+	turn_down.volume_db = -44
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		last_mouse_motion_x = event.relative.x
+		last_mouse_motion_y = event.relative.y
+
+		# Handle left/right movement (x-axis)
+		var turning_left = last_mouse_motion_x < -threshold
+		var turning_right = last_mouse_motion_x > threshold
+
+		# Handle up/down movement (y-axis)
+		var turning_up = last_mouse_motion_y < -threshold
+		var turning_down = last_mouse_motion_y > threshold
+		
+		if turning_left:
+			if not turn_left.playing:
+				turn_left.play()
+			turn_right.stop()
+
+		elif turning_right:
+			if not turn_right.playing:
+				turn_right.play(0.5)
+			turn_left.stop()
+
+		# Play sound for up movement
+		if turning_up:
+			if not turn_up.playing:
+				turn_up.play()
+			turn_down.stop()
+
+		# Play sound for down movement
+		elif turning_down:
+			if not turn_down.playing:
+				turn_down.play(0.5)
+			turn_up.stop()
+
+func _on_stop_timer_timeout() -> void:
+	turn_left.stop()
+	turn_right.stop()
+	turn_up.stop()
+	turn_down.stop()
+
+	last_mouse_motion_x = 0.0
+	last_mouse_motion_y = 0.0
+"
+
+[sub_resource type="GDScript" id="GDScript_hwyif"]
+resource_name = "HUD_display"
+script/source = "extends Control
+
+class_name HUD_Lines
+
+@export var duration := 1.0
+@onready var vs: ColorRect = $\"../Vs\"
+
+func _ready() -> void:
+	#modulate = Color('FFFFFF00')
+	modulate = Color('FFFFFF')
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_interval(2.0)
+	tween.tween_property(self, \"modulate\", Color('FFFFFF'), 3.0).set_ease(Tween.EASE_IN)
+	await tween.finished
+
+func turn_red() -> void:
+	return
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, \"modulate\", Color('FF0000'), duration)
+	await tween.finished
+	
+func turn_yellow() -> void:
+	return
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, \"modulate\", Color('ffcc00'), duration)
+	await tween.finished
+	
+func turn_white() -> void:
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, \"modulate\", Color('FFFFFF'), duration)
+	await tween.finished
+	
+func turn_blue() -> void:
+	return
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, \"modulate\", Color('0000FF'), duration)
+	await tween.finished
+	
+func vs_off() -> void:
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	#tween.tween_property(vs, \"color\", Color('6e484800'), duration)
+	tween.tween_property(vs, \"color:a\", 0, duration)
+	#0d470e8b
+	await tween.finished
+	
+func vs_half() -> void:
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(vs, \"color\", Color('6e484830'), duration)
+	await tween.finished
+	
+func vs_full() -> void:
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(vs, \"color\", Color('6e484860'), duration + 0.5)
+	await tween.finished
+	
+func vs_blue() -> void:
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(vs, \"color\", Color('3a5a6230'), duration)
+	await tween.finished
+	
+"
+
+[node name="Player" type="Node3D" unique_id=1061800479 groups=["Player"]]
+script = ExtResource("1_6ljxy")
+
+[node name="Shoot_weapon_script" type="Node3D" parent="." unique_id=2019545500]
+script = ExtResource("17_0locf")
+
+[node name="Crosshair" type="Control" parent="." unique_id=44491024 groups=["HUD_crosshair"]]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("10_hwyif")
+target_color = Color(0.6, 0, 0, 0.662745)
+
+[node name="OutOfTimeLabel" type="Label" parent="Crosshair" unique_id=652058433]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -143.0
+offset_top = -47.833405
+offset_right = 195.0
+offset_bottom = 15.166595
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.5, 1.5)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "ROUND END"
+label_settings = SubResource("LabelSettings_hv0dl")
+horizontal_alignment = 1
+
+[node name="Large_outer_scope" type="Control" parent="Crosshair" unique_id=60949367]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.137255)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+
+[node name="center_container" type="Control" parent="Crosshair/Large_outer_scope" unique_id=1431900935]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="up" type="Line2D" parent="Crosshair/Large_outer_scope/center_container" unique_id=1701205219]
+points = PackedVector2Array(0, -500, 0, -100)
+width = 4.0
+gradient = SubResource("Gradient_dpvnf")
+texture_mode = 2
+
+[node name="down" type="Line2D" parent="Crosshair/Large_outer_scope/center_container" unique_id=1097769709]
+points = PackedVector2Array(0, 500, 0, 100)
+width = 4.0
+gradient = SubResource("Gradient_dpvnf")
+texture_mode = 2
+
+[node name="left" type="Line2D" parent="Crosshair/Large_outer_scope/center_container" unique_id=521089921]
+points = PackedVector2Array(-628, 0, -130, 0)
+width = 4.0
+gradient = SubResource("Gradient_dpvnf")
+texture_mode = 2
+
+[node name="right" type="Line2D" parent="Crosshair/Large_outer_scope/center_container" unique_id=1035190640]
+points = PackedVector2Array(753, 0, 130, 0)
+width = 4.0
+gradient = SubResource("Gradient_dpvnf")
+texture_mode = 2
+
+[node name="Inner_scope" type="Control" parent="Crosshair" unique_id=50226001]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.137255)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="TextureRect" type="TextureRect" parent="Crosshair/Inner_scope" unique_id=1715470668]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4375
+anchor_top = 0.4375
+anchor_right = 0.5625
+anchor_bottom = 0.5625
+offset_left = -17.5
+offset_top = -17.5
+offset_right = 17.5
+offset_bottom = 17.5
+scale = Vector2(0.125, 0.125)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect2" type="TextureRect" parent="Crosshair/Inner_scope" unique_id=256446628]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.83000004
+anchor_top = -0.8300002
+anchor_right = 1.8299999
+anchor_bottom = 1.8300003
+offset_left = 33.2
+offset_top = 33.20001
+offset_right = -33.199997
+offset_bottom = -33.200005
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2.66, 2.66)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="center_container" type="Control" parent="Crosshair/Inner_scope" unique_id=216145941]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/_edit_use_anchors_ = true
+
+[node name="up" type="Line2D" parent="Crosshair/Inner_scope/center_container" unique_id=185278447]
+position = Vector2(20, 0)
+points = PackedVector2Array(0, 0, 0, 10)
+width = 4.0
+default_color = Color(1, 1, 1, 0.960784)
+gradient = SubResource("Gradient_j58se")
+
+[node name="down" type="Line2D" parent="Crosshair/Inner_scope/center_container" unique_id=1610313425]
+position = Vector2(20, 0)
+points = PackedVector2Array(0, 40, 0, 30)
+width = 4.0
+default_color = Color(1, 1, 1, 0.960784)
+gradient = SubResource("Gradient_j58se")
+
+[node name="left" type="Line2D" parent="Crosshair/Inner_scope/center_container" unique_id=1523186136]
+points = PackedVector2Array(0, 20, 10, 20)
+width = 4.0
+gradient = SubResource("Gradient_j58se")
+
+[node name="right" type="Line2D" parent="Crosshair/Inner_scope/center_container" unique_id=1935596608]
+points = PackedVector2Array(40, 20, 30, 20)
+width = 4.0
+gradient = SubResource("Gradient_j58se")
+
+[node name="blackTexture" type="TextureRect" parent="Crosshair/Inner_scope" unique_id=789006330]
+modulate = Color(1, 1, 1, 0.133333)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.325, 0.325)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Cooldown_progressBar" type="TextureProgressBar" parent="Crosshair/Inner_scope" unique_id=2021230418]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.24313726)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -512.0
+offset_right = 512.0
+offset_bottom = 512.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.111, 0.111)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+value = 100.0
+fill_mode = 4
+texture_under = ExtResource("18_emrcn")
+texture_progress = ExtResource("18_emrcn")
+tint_under = Color(1, 1, 1, 0.05882353)
+
+[node name="Cooldown_progressBar2" type="TextureProgressBar" parent="Crosshair/Inner_scope" unique_id=58604069]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1000.0
+offset_top = -1000.0
+offset_right = 1000.0
+offset_bottom = 1000.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.05, 0.05)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+value = 100.0
+fill_mode = 4
+texture_under = ExtResource("2_kbm6s")
+texture_progress = ExtResource("2_kbm6s")
+tint_under = Color(1, 1, 1, 0.05882353)
+
+[node name="player" type="Node3D" parent="." unique_id=176347855]
+process_mode = 4
+visible = false
+script = SubResource("GDScript_yrgup")
+
+[node name="Handle_raycast" type="Node3D" parent="." unique_id=1898339695]
+visible = false
+script = ExtResource("2_kkix3")
+
+[node name="Decal" type="Decal" parent="Handle_raycast" unique_id=1762411362]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+size = Vector3(0.12, 0.12, 0.12)
+texture_albedo = ExtResource("9_ts3hu")
+texture_emission = ExtResource("9_ts3hu")
+modulate = Color(1, 0, 0, 1)
+
+[node name="DecalMesh" type="MeshInstance3D" parent="Handle_raycast/Decal" unique_id=1633238576]
+transform = Transform3D(0.35, 0, 0, 0, -1.5298985e-08, 0.35, 0, -0.35, -1.5298985e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_bhgqf")
+skeleton = NodePath("../..")
+
+[node name="Picking_raycast" type="Node3D" parent="Handle_raycast" unique_id=716371366]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+
+[node name="Mini_objective_Instance" parent="." unique_id=288492586 instance=ExtResource("2_hwyif")]
+layer = -1
+
+[node name="Mini_objectives" type="Control" parent="." unique_id=1146374372]
+visible = false
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = -72.0
+offset_right = 72.0
+offset_bottom = -32.0
+grow_vertical = 0
+
+[node name="TextureRect" type="TextureRect" parent="Mini_objectives" unique_id=934958784]
+layout_mode = 0
+offset_left = 40.0
+offset_top = -129.0
+offset_right = 273.0
+offset_bottom = 104.0
+texture = ExtResource("17_6ljxy")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="HUD_lamp" type="Control" parent="." unique_id=744877287 groups=["HUD_lamp"]]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 17.0
+offset_right = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_kbm6s")
+
+[node name="HUD_Light_Control" type="Control" parent="HUD_lamp" unique_id=1891358486]
+modulate = Color(1, 1, 1, 0.0823529)
+layout_mode = 1
+anchor_left = 0.553646
+anchor_top = 0.936111
+anchor_right = 0.579687
+anchor_bottom = 0.982408
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+scale = Vector2(1.25, 1.25)
+pivot_offset = Vector2(20, 20)
+metadata/_edit_use_anchors_ = true
+
+[node name="Light" type="TextureRect" parent="HUD_lamp/HUD_Light_Control" unique_id=1753385184]
+modulate = Color(0.44, 0.44, 0.44, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="HUD_lamp/HUD_Light_Control" unique_id=40729186]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="HUD_lamp/HUD_Light_Control" unique_id=172324611]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.925, 0.925)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light4" type="TextureRect" parent="HUD_lamp/HUD_Light_Control" unique_id=1231371813]
+visible = false
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.2, 0.2)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Pulse" type="TextureRect" parent="HUD_lamp/HUD_Light_Control" unique_id=1552532504]
+modulate = Color(0.541176, 0.541176, 0.541176, 0.541176)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.00134277
+offset_bottom = -0.000732422
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="HUD_lamp_mini" type="Control" parent="." unique_id=589403461 groups=["HUD_lamp_mini"]]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = -1.0
+offset_right = 9.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_4g2aa")
+
+[node name="HUD_Light_Control" type="Control" parent="HUD_lamp_mini" unique_id=1273936107]
+modulate = Color(1, 1, 1, 0.0823529)
+layout_mode = 1
+anchor_left = 0.580208
+anchor_top = 0.926852
+anchor_right = 0.60625
+anchor_bottom = 0.973148
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset = Vector2(20, 20)
+metadata/_edit_use_anchors_ = true
+
+[node name="Light" type="TextureRect" parent="HUD_lamp_mini/HUD_Light_Control" unique_id=2079971298]
+modulate = Color(0.44, 0.44, 0.44, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="HUD_lamp_mini/HUD_Light_Control" unique_id=2136048564]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="HUD_lamp_mini/HUD_Light_Control" unique_id=1362245542]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.925, 0.925)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light4" type="TextureRect" parent="HUD_lamp_mini/HUD_Light_Control" unique_id=1342124722]
+visible = false
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.2, 0.2)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Ammo_auto_loading" type="Control" parent="." unique_id=570593003 node_paths=PackedStringArray("player") groups=["Ammo_management_system"]]
+layout_mode = 3
+anchor_left = 0.392
+anchor_top = 0.93
+anchor_right = 0.611
+anchor_bottom = 0.993
+offset_left = 164.36
+offset_top = -0.400208
+offset_right = -216.12
+offset_bottom = -28.4401
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+script = ExtResource("11_iph0b")
+player = NodePath("..")
+
+[node name="Ammo_light" type="Control" parent="Ammo_auto_loading" unique_id=206094583]
+modulate = Color(1, 1, 1, 0.196078)
+layout_mode = 1
+anchor_left = 5.59749
+anchor_top = 0.947499
+anchor_right = 6.00249
+anchor_bottom = 1.3525
+offset_left = -11.9
+offset_top = -11.9
+offset_right = 11.9
+offset_bottom = 11.9
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.405, 0.405)
+pivot_offset = Vector2(20, 20)
+metadata/_edit_use_anchors_ = true
+
+[node name="HUD_Light_Control" type="Control" parent="Ammo_auto_loading/Ammo_light" unique_id=2082775414]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset = Vector2(20, 20)
+
+[node name="Light" type="TextureRect" parent="Ammo_auto_loading/Ammo_light/HUD_Light_Control" unique_id=1721782509]
+modulate = Color(0.44, 0.44, 0.44, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="Ammo_auto_loading/Ammo_light/HUD_Light_Control" unique_id=1818328576]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="Ammo_auto_loading/Ammo_light/HUD_Light_Control" unique_id=561665367]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.925, 0.925)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining" type="Control" parent="Ammo_auto_loading" unique_id=1420616808]
+visible = false
+layout_mode = 1
+anchor_left = -4.12499
+anchor_top = 0.375004
+anchor_right = -3.12499
+anchor_bottom = 1.375
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining_label" type="Label" parent="Ammo_auto_loading/bullets_remaining" unique_id=1458361551]
+modulate = Color(0.729412, 0.729412, 0.729412, 0.431373)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(20, 20)
+text = "18"
+label_settings = SubResource("LabelSettings_n75le")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+justification_flags = 35
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining_label3" type="Label" parent="Ammo_auto_loading/bullets_remaining" unique_id=1705745185]
+visible = false
+modulate = Color(0.729412, 0.729412, 0.729412, 0.431373)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -2.36363
+anchor_top = -1.35717
+anchor_right = -1.45454
+anchor_bottom = 0.749997
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(10, 30)
+text = "18"
+label_settings = SubResource("LabelSettings_j58se")
+horizontal_alignment = 1
+vertical_alignment = 3
+autowrap_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining_label2" type="Label" parent="Ammo_auto_loading/bullets_remaining" unique_id=724975033]
+visible = false
+modulate = Color(0.729412, 0.729412, 0.729412, 0.431373)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.909091
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(25, 15)
+text = "18"
+label_settings = SubResource("LabelSettings_j58se")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Ammo_panel" type="Panel" parent="Ammo_auto_loading" unique_id=598210177]
+modulate = Color(1, 1, 1, 0.517647)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -3.07501
+anchor_top = 0.349999
+anchor_right = -1.92501
+anchor_bottom = 1.25
+offset_left = -2.0
+offset_right = 3.0
+offset_bottom = 1.0
+pivot_offset = Vector2(30, 20)
+theme = ExtResource("9_wfw8x")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Ammo_auto_loading/Ammo_panel" unique_id=2059367318]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.145455
+anchor_top = -0.299997
+anchor_right = 0.981818
+anchor_bottom = 1.25
+offset_right = -1.0
+offset_bottom = 1.0
+pivot_offset = Vector2(27, 20)
+theme_override_constants/margin_left = 10
+metadata/_edit_use_anchors_ = true
+
+[node name="ammo_label" type="Label" parent="Ammo_auto_loading/Ammo_panel/MarginContainer" unique_id=1137189094]
+layout_mode = 2
+text = "00"
+label_settings = SubResource("LabelSettings_myl1f")
+metadata/_edit_use_anchors_ = true
+
+[node name="visual_component" type="Control" parent="Ammo_auto_loading" unique_id=1138330545]
+layout_mode = 1
+anchor_left = 0.491
+anchor_top = 0.893
+anchor_right = 0.511
+anchor_bottom = 0.93
+offset_left = -19.6399
+offset_top = -35.72
+offset_right = 19.5599
+offset_bottom = 2.80001
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(20, 20)
+script = SubResource("GDScript_0locf")
+
+[node name="Panel" type="Panel" parent="Ammo_auto_loading/visual_component" unique_id=697272585]
+z_index = -1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -186.0
+offset_top = -24.0
+offset_right = 238.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("9_wfw8x")
+
+[node name="Panel2" type="Panel" parent="Ammo_auto_loading/visual_component" unique_id=1508285372]
+self_modulate = Color(1, 1, 1, 0)
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.15
+anchor_top = 0.8
+anchor_right = 1.15
+anchor_bottom = 0.8
+offset_left = -212.0
+offset_top = -36.0
+offset_right = 212.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02, 1.1)
+pivot_offset = Vector2(212, 36)
+theme = ExtResource("9_wfw8x")
+
+[node name="ammo_unit" type="Panel" parent="Ammo_auto_loading/visual_component" unique_id=425255411]
+visible = false
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -0.00012207
+offset_right = -9.99992
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(15, 20)
+theme = SubResource("Theme_4nra6")
+
+[node name="PanelContainer" type="PanelContainer" parent="Ammo_auto_loading/visual_component" unique_id=940012120]
+layout_mode = 0
+offset_left = -66.0
+offset_top = 7.0
+offset_right = -24.0
+offset_bottom = 47.0
+theme = ExtResource("9_wfw8x")
+
+[node name="MarginContainer" type="MarginContainer" parent="Ammo_auto_loading/visual_component/PanelContainer" unique_id=76597277]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
+
+[node name="Ammo_container" type="HBoxContainer" parent="Ammo_auto_loading/visual_component/PanelContainer/MarginContainer" unique_id=2030755320]
+layout_mode = 2
+theme_override_constants/separation = 18
+metadata/_edit_use_anchors_ = true
+
+[node name="reload_sound" type="AudioStreamPlayer" parent="Ammo_auto_loading" unique_id=1978910595]
+stream = ExtResource("7_d7tms")
+volume_db = -35.0
+pitch_scale = 1.5
+
+[node name="bonus_ammo" type="AudioStreamPlayer" parent="Ammo_auto_loading" unique_id=1686482305]
+stream = ExtResource("7_d7tms")
+volume_db = -37.0
+pitch_scale = 2.0
+
+[node name="deload_sound" type="AudioStreamPlayer" parent="Ammo_auto_loading" unique_id=1807915570]
+stream = ExtResource("7_d7tms")
+volume_db = -38.0
+
+[node name="out_of_ammo_sound" type="AudioStreamPlayer" parent="Ammo_auto_loading" unique_id=96350879]
+stream = ExtResource("8_c5sey")
+volume_db = -31.0
+pitch_scale = 5.5
+
+[node name="reloading_movement_sfx" type="AudioStreamPlayer" parent="Ammo_auto_loading" unique_id=636977204]
+stream = ExtResource("8_c5sey")
+volume_db = -57.0
+pitch_scale = 4.0
+
+[node name="ColorRect" type="ColorRect" parent="Ammo_auto_loading" unique_id=401837965]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 6.22499
+anchor_top = 1.85
+anchor_right = 6.34999
+anchor_bottom = 2.85
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(2.5, 0)
+theme = ExtResource("9_wfw8x")
+color = Color(0.32, 0.32, 0.32, 0.321569)
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect2" type="ColorRect" parent="Ammo_auto_loading" unique_id=1977941015]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -3.99999
+anchor_top = 1.85
+anchor_right = -3.87499
+anchor_bottom = 2.85
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(2.5, 0)
+theme = ExtResource("9_wfw8x")
+color = Color(0.32, 0.32, 0.32, 0.321569)
+metadata/_edit_use_anchors_ = true
+
+[node name="XAmmo_auto_loading2" type="Control" parent="." unique_id=719447688 groups=["Ammo_management_system"]]
+visible = false
+layout_mode = 3
+anchor_left = 0.392
+anchor_top = 0.93
+anchor_right = 0.611
+anchor_bottom = 0.993
+offset_left = 164.36
+offset_top = -0.400208
+offset_right = -216.12
+offset_bottom = -28.4401
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+script = SubResource("GDScript_1lfbp")
+
+[node name="Ammo_light" type="Control" parent="XAmmo_auto_loading2" unique_id=794074749]
+modulate = Color(1, 1, 1, 0.196078)
+layout_mode = 1
+anchor_left = 5.59749
+anchor_top = 0.947499
+anchor_right = 6.00249
+anchor_bottom = 1.3525
+offset_left = -11.9
+offset_top = -11.9
+offset_right = 11.9
+offset_bottom = 11.9
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.405, 0.405)
+pivot_offset = Vector2(20, 20)
+metadata/_edit_use_anchors_ = true
+
+[node name="HUD_Light_Control" type="Control" parent="XAmmo_auto_loading2/Ammo_light" unique_id=727615561]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset = Vector2(20, 20)
+
+[node name="Light" type="TextureRect" parent="XAmmo_auto_loading2/Ammo_light/HUD_Light_Control" unique_id=638293904]
+modulate = Color(0.44, 0.44, 0.44, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light2" type="TextureRect" parent="XAmmo_auto_loading2/Ammo_light/HUD_Light_Control" unique_id=665612478]
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Light3" type="TextureRect" parent="XAmmo_auto_loading2/Ammo_light/HUD_Light_Control" unique_id=926217671]
+visible = false
+modulate = Color(0.56, 0.56, 0.56, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.925, 0.925)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_kbm6s")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining" type="Control" parent="XAmmo_auto_loading2" unique_id=1919379980]
+layout_mode = 1
+anchor_left = -4.12499
+anchor_top = 0.375004
+anchor_right = -3.12499
+anchor_bottom = 1.375
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining_label" type="Label" parent="XAmmo_auto_loading2/bullets_remaining" unique_id=138667816]
+modulate = Color(0.729412, 0.729412, 0.729412, 0.431373)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(20, 20)
+text = "18"
+label_settings = SubResource("LabelSettings_n75le")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+justification_flags = 35
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining_label3" type="Label" parent="XAmmo_auto_loading2/bullets_remaining" unique_id=975244601]
+visible = false
+modulate = Color(0.729412, 0.729412, 0.729412, 0.431373)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -2.36363
+anchor_top = -1.35717
+anchor_right = -1.45454
+anchor_bottom = 0.749997
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(10, 30)
+text = "18"
+label_settings = SubResource("LabelSettings_j58se")
+horizontal_alignment = 1
+vertical_alignment = 3
+autowrap_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="bullets_remaining_label2" type="Label" parent="XAmmo_auto_loading2/bullets_remaining" unique_id=100261306]
+visible = false
+modulate = Color(0.729412, 0.729412, 0.729412, 0.431373)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.909091
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(25, 15)
+text = "18"
+label_settings = SubResource("LabelSettings_j58se")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Ammo_panel" type="Panel" parent="XAmmo_auto_loading2" unique_id=1007731433]
+modulate = Color(1, 1, 1, 0.517647)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -3.07501
+anchor_top = 0.349999
+anchor_right = -1.92501
+anchor_bottom = 1.25
+offset_left = -2.0
+offset_right = 3.0
+offset_bottom = 1.0
+pivot_offset = Vector2(30, 20)
+theme = ExtResource("9_wfw8x")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="XAmmo_auto_loading2/Ammo_panel" unique_id=907176673]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.145455
+anchor_top = -0.299997
+anchor_right = 0.981818
+anchor_bottom = 1.25
+offset_right = -1.0
+offset_bottom = 1.0
+pivot_offset = Vector2(27, 20)
+theme_override_constants/margin_left = 10
+metadata/_edit_use_anchors_ = true
+
+[node name="ammo_label" type="Label" parent="XAmmo_auto_loading2" unique_id=1495744367]
+layout_mode = 0
+anchor_left = -3.00001
+anchor_top = 0.274999
+anchor_right = -2.00001
+anchor_bottom = 1.5
+pivot_offset = Vector2(20, 24)
+text = "00"
+label_settings = SubResource("LabelSettings_myl1f")
+metadata/_edit_use_anchors_ = true
+
+[node name="visual_component" type="Control" parent="XAmmo_auto_loading2" unique_id=341241353]
+layout_mode = 1
+anchor_left = 0.491
+anchor_top = 0.893
+anchor_right = 0.511
+anchor_bottom = 0.93
+offset_left = -19.6399
+offset_top = -35.72
+offset_right = 19.5599
+offset_bottom = 2.80001
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(20, 20)
+script = SubResource("GDScript_0locf")
+
+[node name="Panel" type="Panel" parent="XAmmo_auto_loading2/visual_component" unique_id=2045343927]
+z_index = -1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -186.0
+offset_top = -24.0
+offset_right = 238.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("9_wfw8x")
+
+[node name="Panel2" type="Panel" parent="XAmmo_auto_loading2/visual_component" unique_id=123861237]
+self_modulate = Color(1, 1, 1, 0)
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.15
+anchor_top = 0.8
+anchor_right = 1.15
+anchor_bottom = 0.8
+offset_left = -212.0
+offset_top = -36.0
+offset_right = 212.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.02, 1.1)
+pivot_offset = Vector2(212, 36)
+theme = ExtResource("9_wfw8x")
+
+[node name="ammo_unit" type="Panel" parent="XAmmo_auto_loading2/visual_component" unique_id=1393173849]
+visible = false
+custom_minimum_size = Vector2(15, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -0.00012207
+offset_right = -9.99992
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(15, 20)
+theme = SubResource("Theme_4nra6")
+
+[node name="PanelContainer" type="PanelContainer" parent="XAmmo_auto_loading2/visual_component" unique_id=61249124]
+layout_mode = 0
+offset_left = -66.0
+offset_top = 7.0
+offset_right = -24.0
+offset_bottom = 47.0
+theme = ExtResource("9_wfw8x")
+
+[node name="MarginContainer" type="MarginContainer" parent="XAmmo_auto_loading2/visual_component/PanelContainer" unique_id=616186122]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
+
+[node name="Ammo_container" type="HBoxContainer" parent="XAmmo_auto_loading2/visual_component/PanelContainer/MarginContainer" unique_id=1807072148]
+layout_mode = 2
+theme_override_constants/separation = 18
+metadata/_edit_use_anchors_ = true
+
+[node name="reload_sound" type="AudioStreamPlayer" parent="XAmmo_auto_loading2" unique_id=341554865]
+stream = ExtResource("7_d7tms")
+volume_db = -35.0
+pitch_scale = 1.5
+
+[node name="bonus_ammo" type="AudioStreamPlayer" parent="XAmmo_auto_loading2" unique_id=263991257]
+stream = ExtResource("7_d7tms")
+volume_db = -37.0
+pitch_scale = 2.0
+
+[node name="deload_sound" type="AudioStreamPlayer" parent="XAmmo_auto_loading2" unique_id=784715687]
+stream = ExtResource("7_d7tms")
+volume_db = -38.0
+
+[node name="out_of_ammo_sound" type="AudioStreamPlayer" parent="XAmmo_auto_loading2" unique_id=1225747269]
+stream = ExtResource("8_c5sey")
+volume_db = -31.0
+pitch_scale = 5.5
+
+[node name="reloading_movement_sfx" type="AudioStreamPlayer" parent="XAmmo_auto_loading2" unique_id=2137679363]
+stream = ExtResource("8_c5sey")
+volume_db = -57.0
+pitch_scale = 4.0
+
+[node name="ColorRect" type="ColorRect" parent="XAmmo_auto_loading2" unique_id=694218629]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 6.22499
+anchor_top = 1.85
+anchor_right = 6.34999
+anchor_bottom = 2.85
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(2.5, 0)
+theme = ExtResource("9_wfw8x")
+color = Color(0.32, 0.32, 0.32, 0.321569)
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect2" type="ColorRect" parent="XAmmo_auto_loading2" unique_id=2093060798]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -3.99999
+anchor_top = 1.85
+anchor_right = -3.87499
+anchor_bottom = 2.85
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(2.5, 0)
+theme = ExtResource("9_wfw8x")
+color = Color(0.32, 0.32, 0.32, 0.321569)
+metadata/_edit_use_anchors_ = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2111619088]
+layer = 0
+visible = false
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer" unique_id=2060444302]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=1468629431]
+disable_3d = true
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+use_hdr_2d = true
+size = Vector2i(1920, 1080)
+render_target_update_mode = 0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=919729945]
+environment = SubResource("Environment_0locf")
+
+[node name="Control" type="Control" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=536694362]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Ammo_panel_3D" type="Control" parent="CanvasLayer/SubViewportContainer/SubViewport/Control" unique_id=1437243202]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.363094
+anchor_top = 0.899667
+anchor_right = 0.640687
+anchor_bottom = 0.983667
+offset_left = 37.859375
+offset_top = -26.640442
+offset_right = 26.755737
+offset_bottom = -30.000488
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(1.26, 1.26)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("10_qu2ht")
+metadata/_edit_use_anchors_ = true
+
+[node name="visual_component" type="Control" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1243978926]
+visible = false
+layout_mode = 1
+anchor_left = 0.491
+anchor_top = 0.893
+anchor_right = 0.511
+anchor_bottom = 0.93
+offset_left = -19.6399
+offset_top = -35.72
+offset_right = 19.5599
+offset_bottom = 2.79998
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(20, 20)
+script = SubResource("GDScript_0locf")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1472577731]
+visible = false
+layout_mode = 0
+offset_left = -40.0
+offset_top = -96.0
+offset_right = 480.0
+offset_bottom = 224.0
+texture = SubResource("GradientTexture2D_n75le")
+
+[node name="Panel2" type="Panel" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1191495626]
+modulate = Color(0, 0, 0, 1)
+z_index = -5
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_right = 0.0012207
+offset_bottom = 0.00012207
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_d7tms")
+
+[node name="Front_metal" type="Panel" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=983550839]
+z_index = -4
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_right = 0.0012207
+offset_bottom = 0.00012207
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_c5sey")
+
+[node name="Inner_light_rim" type="Panel" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1440836108]
+z_index = -3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.257684
+anchor_top = 0.166666
+anchor_right = 0.851066
+anchor_bottom = 0.902773
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kkix3")
+metadata/_edit_use_anchors_ = true
+
+[node name="Bullet_cabinet" type="Panel" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1768230033]
+z_index = -3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.257684
+anchor_top = 0.152777
+anchor_right = 0.851066
+anchor_bottom = 0.888884
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wfw8x")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Bullet_cabinet" unique_id=1200672092]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.0239044
+anchor_right = 1.0239
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(125, 26)
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Bullet_cabinet/MarginContainer" unique_id=572072274]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_constants/separation = -15
+
+[node name="Ammo_container" type="HBoxContainer" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Bullet_cabinet/MarginContainer" unique_id=1881682490]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_constants/separation = -5
+
+[node name="Bullet_label_panel" type="Panel" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=2138890530]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.3016
+offset_top = 11.0
+offset_right = -328.697
+offset_bottom = -7.99988
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wfw8x")
+
+[node name="Bullet_label_panel2" type="Panel" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1553679678]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.3016
+offset_top = 11.0
+offset_right = -328.697
+offset_bottom = -7.99988
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kkix3")
+
+[node name="Total_bullets_panel" type="Panel" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1572245170]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 303.015
+offset_top = 24.0
+offset_right = -81.9838
+offset_bottom = -20.0004
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wfw8x")
+
+[node name="Total_bullets_panel2" type="Panel" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=677855000]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 304.015
+offset_top = 24.0
+offset_right = -81.9838
+offset_bottom = -20.0004
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(18, 14)
+theme_override_styles/panel = SubResource("StyleBoxFlat_kkix3")
+
+[node name="Loaded_bullets_label" type="Label" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=691199805]
+modulate = Color(0.45, 0.45, 0.45, 1)
+z_as_relative = false
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.103532
+anchor_top = 0.132986
+anchor_right = 0.245376
+anchor_bottom = 0.966316
+offset_left = -6.34918
+offset_right = -6.34917
+grow_vertical = 2
+pivot_offset = Vector2(30, 30)
+text = "07"
+label_settings = SubResource("LabelSettings_mh36x")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Remaining_bullets_label" type="Label" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1198210263]
+modulate = Color(0.46, 0.46, 0.46, 1)
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.0114821
+anchor_top = 0.132989
+anchor_right = 0.130362
+anchor_bottom = 0.966318
+offset_left = 297.602
+offset_right = 297.602
+grow_vertical = 2
+pivot_offset = Vector2(30, 30)
+text = "18"
+label_settings = SubResource("LabelSettings_kkix3")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Big_light" type="Control" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=245708762]
+custom_minimum_size = Vector2(46, 46)
+anchors_preset = 0
+anchor_left = 0.862886
+anchor_top = 0.0416665
+anchor_right = 0.971633
+anchor_bottom = 0.680552
+pivot_offset = Vector2(23, 23)
+metadata/_edit_use_anchors_ = true
+
+[node name="bottom_rim" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Big_light" unique_id=1554233904]
+modulate = Color(1, 1, 1, 0.164706)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0673908
+anchor_top = 0.0689113
+anchor_right = 0.932608
+anchor_bottom = 0.938477
+offset_left = -0.504976
+offset_top = 0.950078
+offset_right = -0.304974
+offset_bottom = 0.950077
+scale = Vector2(0.995, 1)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="indent" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Big_light" unique_id=1631695591]
+modulate = Color(0, 0.0313726, 0.0588235, 1)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0652174
+anchor_top = 0.0652174
+anchor_right = 0.934783
+anchor_bottom = 0.934783
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="top_rim" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Big_light" unique_id=1356143867]
+modulate = Color(1, 1, 1, 0.164706)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.141196
+anchor_right = 0.852172
+anchor_bottom = 0.845543
+offset_left = -3.79993
+offset_top = -4.47999
+offset_right = 3.80007
+offset_bottom = 3.12
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="shadow" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Big_light" unique_id=117333081]
+modulate = Color(0, 0, 0, 0.596078)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.147825
+anchor_top = 0.169565
+anchor_right = 0.852173
+anchor_bottom = 0.873913
+offset_left = -3.79994
+offset_top = -2.50998
+offset_right = 3.80006
+offset_bottom = 5.09002
+scale = Vector2(0.87, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="top_light" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Big_light" unique_id=1404748822]
+modulate = Color(0.0336, 0.0530133, 0.07, 1)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.147826
+anchor_right = 0.852172
+anchor_bottom = 0.852174
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="flashing_light" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Big_light" unique_id=606920344]
+modulate = Color(1.353256, 0.7614771, 0.33877775, 1)
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.147826
+anchor_right = 0.852172
+anchor_bottom = 0.852174
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+script = SubResource("GDScript_qu2ht")
+metadata/_edit_use_anchors_ = true
+
+[node name="Small_light" type="Control" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1165946595]
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 1
+anchor_left = 0.89551
+anchor_top = 0.677774
+anchor_right = 0.939009
+anchor_bottom = 0.933329
+offset_left = -13.8
+offset_top = -13.8
+offset_right = 13.8
+offset_bottom = 13.8
+scale = Vector2(0.4, 0.4)
+pivot_offset = Vector2(23, 23)
+metadata/_edit_use_anchors_ = true
+
+[node name="bottom_rim" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Small_light" unique_id=1472338303]
+modulate = Color(1, 1, 1, 0.164706)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.0673908
+anchor_top = 0.0689127
+anchor_right = 0.932608
+anchor_bottom = 0.938478
+offset_left = -0.0999758
+offset_top = 0.630017
+offset_right = 0.100025
+offset_bottom = 0.630016
+scale = Vector2(0.995, 1)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="indent" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Small_light" unique_id=200058242]
+modulate = Color(0, 0.0313726, 0.0588235, 1)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0652174
+anchor_top = 0.0652174
+anchor_right = 0.934783
+anchor_bottom = 0.934783
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="top_rim" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Small_light" unique_id=1403040642]
+modulate = Color(1, 1, 1, 0.164706)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.141196
+anchor_right = 0.852172
+anchor_bottom = 0.845543
+offset_left = -3.79993
+offset_top = -4.89999
+offset_right = 3.80007
+offset_bottom = 2.7
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="shadow" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Small_light" unique_id=487647344]
+modulate = Color(0, 0, 0, 0.596078)
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.147826
+anchor_top = 0.211196
+anchor_right = 0.852174
+anchor_bottom = 0.915543
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="top_light" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Small_light" unique_id=1373371673]
+modulate = Color(0.0470588, 0.0745098, 0.0980392, 1)
+z_index = -4
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.147826
+anchor_right = 0.852172
+anchor_bottom = 0.852174
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="small_flashing_light" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Small_light" unique_id=1082754903]
+unique_name_in_owner = true
+modulate = Color(0.52, 0.277333, 0.104, 0)
+layout_mode = 0
+anchor_left = 0.147824
+anchor_top = 0.147826
+anchor_right = 0.852172
+anchor_bottom = 0.852174
+offset_left = -3.8
+offset_top = -3.8
+offset_right = 3.8
+offset_bottom = 3.8
+scale = Vector2(0.81, 0.81)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 5
+script = SubResource("GDScript_kkix3")
+metadata/_edit_use_anchors_ = true
+
+[node name="Noise_texture" type="Panel" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1403617210]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_right = 0.0012207
+offset_bottom = 0.00012207
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_phc0d")
+
+[node name="reload_sound" type="AudioStreamPlayer" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=907182356]
+stream = ExtResource("7_d7tms")
+volume_db = -35.0
+pitch_scale = 1.5
+
+[node name="bonus_ammo" type="AudioStreamPlayer" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1157414847]
+stream = ExtResource("7_d7tms")
+volume_db = -37.0
+pitch_scale = 2.0
+
+[node name="deload_sound" type="AudioStreamPlayer" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=484343297]
+stream = ExtResource("7_d7tms")
+volume_db = -38.0
+
+[node name="out_of_ammo_sound" type="AudioStreamPlayer" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=1773411238]
+stream = ExtResource("8_c5sey")
+volume_db = -31.0
+pitch_scale = 5.5
+
+[node name="reloading_movement_sfx" type="AudioStreamPlayer" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=134153616]
+stream = ExtResource("8_c5sey")
+volume_db = -57.0
+pitch_scale = 4.0
+
+[node name="Bullet_reference" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D" unique_id=271550240]
+modulate = Color(0.819608, 0.803922, 0.741176, 1)
+layout_mode = 0
+texture = ExtResource("22_kkix3")
+expand_mode = 3
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="Bullet_reference2" type="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/Control/Ammo_panel_3D/Bullet_reference" unique_id=197313210]
+modulate = Color(0, 0, 0, 0.498039)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("22_kkix3")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Cam_pivot" type="Node3D" parent="." unique_id=674976526]
+script = ExtResource("10_kkix3")
+amplitude = 0.01
+frequency = 0.8
+mod_amount = 5
+
+[node name="Hand" type="Node3D" parent="Cam_pivot" unique_id=810295425]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -1, -5)
+
+[node name="Marker3D" type="Marker3D" parent="Cam_pivot/Hand" unique_id=2001041844]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, 5)
+
+[node name="Camera3D" type="Camera3D" parent="Cam_pivot" unique_id=1699277447 groups=["player_cam"]]
+transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0, 1.25)
+keep_aspect = 0
+current = true
+fov = 70.0
+size = 13.665
+script = ExtResource("10_n6ds6")
+
+[node name="Right_side_points_marker" type="MeshInstance3D" parent="Cam_pivot/Camera3D" unique_id=602014885]
+transform = Transform3D(0.345, 0, 0, 0, 0.345, 0, 0, 0, 0.345, 0.052, -0.027, -0.09)
+visible = false
+mesh = SubResource("CylinderMesh_6ljxy")
+skeleton = NodePath("../..")
+
+[node name="points_marker" type="Marker3D" parent="Cam_pivot/Camera3D/Right_side_points_marker" unique_id=1255733487 groups=["points_particles_marker"]]
+
+[node name="Left_side_points_marker" type="MeshInstance3D" parent="Cam_pivot/Camera3D" unique_id=1423207813]
+transform = Transform3D(0.345, 0, 0, 0, 0.345, 0, 0, 0, 0.345, -0.052, -0.027, -0.09)
+visible = false
+mesh = SubResource("CylinderMesh_6ljxy")
+skeleton = NodePath("../..")
+
+[node name="points_marker" type="Marker3D" parent="Cam_pivot/Camera3D/Left_side_points_marker" unique_id=1772719746 groups=["points_particles_marker"]]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Cam_pivot/Camera3D" unique_id=1016400170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.00218, 5.75349)
+light_energy = 5.0
+light_cull_mask = 4294967293
+spot_range = 51.5
+spot_attenuation = 0.5
+spot_angle = 25.0
+spot_angle_attenuation = 3.24901
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Cam_pivot/Camera3D" unique_id=1243599587]
+stream = ExtResource("5_hwyif")
+volume_db = -10.0
+pitch_scale = 2.0
+
+[node name="Smoke_particles" type="GPUParticles3D" parent="Cam_pivot/Camera3D" unique_id=1513543507]
+transform = Transform3D(1, 0, 0, 0, 0.999998, 0, 0, 0, 0.999998, 0, 0, -1.25)
+emitting = false
+amount = 20
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+local_coords = true
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_1lfbp")
+draw_pass_1 = SubResource("QuadMesh_n75le")
+script = SubResource("GDScript_phc0d")
+
+[node name="Smoke_particles2" type="GPUParticles3D" parent="Cam_pivot/Camera3D" unique_id=1597489858]
+transform = Transform3D(1, 0, 0, 0, 0.999998, 0, 0, 0, 0.999998, 0, 0, -1.25)
+emitting = false
+amount = 20
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+local_coords = true
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_1lfbp")
+draw_pass_1 = SubResource("QuadMesh_n75le")
+script = SubResource("GDScript_bhgqf")
+
+[node name="SFX" type="Node" parent="." unique_id=228994868]
+
+[node name="Shoot_sfx_old" type="AudioStreamPlayer" parent="SFX" unique_id=1795019256]
+stream = ExtResource("2_uns27")
+volume_db = -10.0
+pitch_scale = 0.5
+
+[node name="Reload" type="AudioStreamPlayer" parent="SFX" unique_id=823412518]
+stream = ExtResource("19_0locf")
+volume_db = -35.0
+pitch_scale = 2.0
+
+[node name="Flicker_sound" type="AudioStreamPlayer" parent="SFX" unique_id=30628132]
+stream = ExtResource("21_iph0b")
+volume_db = -25.0
+
+[node name="Shoot_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1161407676]
+stream = ExtResource("6_ts3hu")
+volume_db = -10.0
+pitch_scale = 0.5
+
+[node name="gun" type="Node" parent="." unique_id=1051516705]
+
+[node name="gunsfx" type="AudioStreamPlayer" parent="gun" unique_id=999900192]
+stream = ExtResource("10_dpvnf")
+volume_db = -30.0
+pitch_scale = 1.3
+
+[node name="gunsfx_second" type="AudioStreamPlayer" parent="gun" unique_id=1892136532]
+unique_name_in_owner = true
+stream = ExtResource("10_dpvnf")
+volume_db = -30.0
+pitch_scale = 1.5
+
+[node name="on_target_sfx" type="AudioStreamPlayer" parent="gun" unique_id=1933994311]
+stream = ExtResource("12_j58se")
+volume_db = -30.0
+pitch_scale = 0.7
+
+[node name="gunsfx_old" type="AudioStreamPlayer" parent="gun" unique_id=1150426928]
+stream = ExtResource("6_kyarp")
+volume_db = -52.0
+
+[node name="Player_damage_area" type="Area3D" parent="." unique_id=1049284217]
+script = ExtResource("2_c5sey")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player_damage_area" unique_id=1757868048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
+shape = SubResource("SphereShape3D_wfw8x")
+
+[node name="sfx_1" type="AudioStreamPlayer" parent="Player_damage_area" unique_id=1088991261]
+stream = ExtResource("3_0locf")
+volume_db = -30.0
+pitch_scale = 0.5
+
+[node name="sfx_2" type="AudioStreamPlayer" parent="Player_damage_area" unique_id=2044880947]
+stream = ExtResource("4_bhgqf")
+volume_db = -30.0
+pitch_scale = 0.5
+
+[node name="sfx_3" type="AudioStreamPlayer" parent="Player_damage_area" unique_id=919452556]
+stream = ExtResource("5_phc0d")
+volume_db = -11.0
+
+[node name="dead" type="AudioStreamPlayer" parent="Player_damage_area" unique_id=1549500770]
+stream = ExtResource("6_yrgup")
+volume_db = -32.0
+
+[node name="Crosshair_3D" type="Node3D" parent="." unique_id=1236025971]
+script = SubResource("GDScript_lfemk")
+shake_amount = 35.0
+
+[node name="Camera_pos" type="MeshInstance3D" parent="Crosshair_3D" unique_id=305039363]
+visible = false
+mesh = SubResource("SphereMesh_lfemk")
+
+[node name="Rail_position" type="MeshInstance3D" parent="Crosshair_3D" unique_id=910214488 groups=["Bullet_position"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.578657, 0)
+transparency = 1.0
+mesh = SubResource("BoxMesh_lfemk")
+
+[node name="Mouse_turning_SFX" type="Node" parent="." unique_id=1347696153]
+unique_name_in_owner = true
+script = SubResource("GDScript_ts3hu")
+
+[node name="Turn_left" type="AudioStreamPlayer" parent="Mouse_turning_SFX" unique_id=903944783]
+stream = ExtResource("10_kqwld")
+volume_db = -44.0
+
+[node name="Turn_right" type="AudioStreamPlayer" parent="Mouse_turning_SFX" unique_id=1593587119]
+stream = ExtResource("11_f3vr7")
+volume_db = -44.0
+
+[node name="Turn_up" type="AudioStreamPlayer" parent="Mouse_turning_SFX" unique_id=2086884424]
+stream = ExtResource("10_kqwld")
+volume_db = -44.0
+pitch_scale = 1.05
+
+[node name="Turn_down" type="AudioStreamPlayer" parent="Mouse_turning_SFX" unique_id=1491761300]
+stream = ExtResource("11_f3vr7")
+volume_db = -44.0
+pitch_scale = 1.05
+
+[node name="StopTimer" type="Timer" parent="Mouse_turning_SFX" unique_id=913610066]
+wait_time = 0.5
+
+[node name="Vs" type="ColorRect" parent="." unique_id=1184863103]
+z_index = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.431373, 0.282353, 0.282353, 0)
+
+[node name="HUD_display" type="Control" parent="." unique_id=1591500116 groups=["HUD_Lines"]]
+visible = false
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = SubResource("GDScript_hwyif")
+
+[node name="Main" type="ColorRect" parent="HUD_display" unique_id=629977671]
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 16.0
+grow_horizontal = 2
+color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+
+[node name="top_left_edge" type="ColorRect" parent="HUD_display" unique_id=1124562312]
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 5.0
+offset_top = 31.0
+offset_right = -1887.0
+offset_bottom = 33.0
+grow_horizontal = 2
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="Reference_14_gap" type="ColorRect" parent="HUD_display" unique_id=403918335]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 237.0
+offset_right = 58.0
+offset_bottom = 517.0
+pivot_offset = Vector2(0, 140)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="Left_bottom" type="ColorRect" parent="HUD_display" unique_id=1344433543]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 743.0
+offset_right = 58.0
+offset_bottom = 1023.0
+pivot_offset = Vector2(0, 140)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="Right_top" type="ColorRect" parent="HUD_display" unique_id=1281755979]
+layout_mode = 0
+offset_left = 1864.0
+offset_top = 237.0
+offset_right = 1866.0
+offset_bottom = 517.0
+pivot_offset = Vector2(0, 140)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="Top_left" type="ColorRect" parent="HUD_display" unique_id=1877254401]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 335.0
+offset_top = 31.0
+offset_right = -1305.0
+offset_bottom = 33.0
+grow_horizontal = 2
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="Top_left2" type="ColorRect" parent="HUD_display" unique_id=627997970]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 822.0
+offset_top = 31.0
+offset_right = -818.0
+offset_bottom = 33.0
+grow_horizontal = 2
+scale = Vector2(2.35, 1)
+pivot_offset = Vector2(140, 0)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="Right_bottom" type="ColorRect" parent="HUD_display" unique_id=2139789091]
+layout_mode = 0
+offset_left = 1864.0
+offset_top = 743.0
+offset_right = 1866.0
+offset_bottom = 1023.0
+pivot_offset = Vector2(0, 140)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_far_left" type="ColorRect" parent="HUD_display" unique_id=1295724339]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 70.0
+offset_top = 1040.0
+offset_right = -1570.0
+offset_bottom = 1042.0
+grow_horizontal = 2
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_far_left2" type="ColorRect" parent="HUD_display" unique_id=1199179734]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 49.0
+offset_top = 1040.0
+offset_right = -1857.0
+offset_bottom = 1042.0
+grow_horizontal = 2
+pivot_offset = Vector2(7, 1)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_far_left6" type="ColorRect" parent="HUD_display" unique_id=1081322368]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 49.0
+offset_top = 750.0
+offset_right = -1857.0
+offset_bottom = 752.0
+grow_horizontal = 2
+pivot_offset = Vector2(7, 1)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_far_left7" type="ColorRect" parent="HUD_display" unique_id=671849666]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1860.0
+offset_top = 750.0
+offset_right = -46.0
+offset_bottom = 752.0
+grow_horizontal = 2
+pivot_offset = Vector2(7, 1)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_far_left3" type="ColorRect" parent="HUD_display" unique_id=1802654023]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 50.0
+offset_top = 1043.0
+offset_right = -1856.0
+offset_bottom = 1045.0
+grow_horizontal = 2
+rotation = 1.57079
+pivot_offset = Vector2(7, 1)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_far_left4" type="ColorRect" parent="HUD_display" unique_id=1826046693]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1860.0
+offset_top = 1040.0
+offset_right = -46.0
+offset_bottom = 1042.0
+grow_horizontal = 2
+pivot_offset = Vector2(7, 1)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_far_left5" type="ColorRect" parent="HUD_display" unique_id=1143655800]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1858.0
+offset_top = 1043.0
+offset_right = -48.0
+offset_bottom = 1045.0
+grow_horizontal = 2
+rotation = 1.57079
+pivot_offset = Vector2(7, 1)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_mid_left" type="ColorRect" parent="HUD_display" unique_id=2038969067]
+unique_name_in_owner = true
+visible = false
+z_index = -4
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 457.0
+offset_top = 1040.0
+offset_right = -1183.0
+offset_bottom = 1042.0
+grow_horizontal = 2
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_mid_left2" type="ColorRect" parent="HUD_display" unique_id=650282600]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 457.0
+offset_top = 1040.0
+offset_right = -1280.0
+offset_bottom = 1042.0
+grow_horizontal = 2
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_far_right" type="ColorRect" parent="HUD_display" unique_id=1287758788]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1573.0
+offset_top = 1040.0
+offset_right = -67.0
+offset_bottom = 1042.0
+grow_horizontal = 2
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="bottom_far_right2" type="ColorRect" parent="HUD_display" unique_id=1420120231]
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1186.0
+offset_top = 1040.0
+offset_right = -454.0
+offset_bottom = 1042.0
+grow_horizontal = 2
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="Top_right" type="ColorRect" parent="HUD_display" unique_id=823920385]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1306.0
+offset_top = 31.0
+offset_right = -334.0
+offset_bottom = 33.0
+grow_horizontal = 2
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[node name="top_right_edge" type="ColorRect" parent="HUD_display" unique_id=1453065201]
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1914.0
+offset_top = 31.0
+offset_right = 22.0
+offset_bottom = 33.0
+grow_horizontal = 2
+scale = Vector2(-1, 1)
+color = Color(0.5, 0.5, 0.5, 0.392157)
+
+[connection signal="body_entered" from="Player_damage_area" to="Player_damage_area" method="_on_body_entered"]
+[connection signal="timeout" from="Mouse_turning_SFX/StopTimer" to="Mouse_turning_SFX" method="_on_stop_timer_timeout"]

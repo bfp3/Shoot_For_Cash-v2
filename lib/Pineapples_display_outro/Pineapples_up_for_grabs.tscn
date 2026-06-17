@@ -1,0 +1,134 @@
+[gd_scene format=3 uid="uid://bh5d5b7hdale8"]
+
+[ext_resource type="Script" uid="uid://djbm030gtbryl" path="res://lib/Pineapples_display_outro/Scripts/pineapples_up_for_grabs_outro.gd" id="1_3yc0h"]
+[ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://unfiled/Themes/ammo_manager_theme.tres" id="2_rmf0t"]
+[ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="3_g51wv"]
+
+
+[node name="Pineapples_up_for_grabs" type="Control"]
+z_index = 2
+layout_mode = 3
+anchor_left = 0.4375
+anchor_top = 0.472222
+anchor_right = 0.670833
+anchor_bottom = 0.585185
+offset_top = 42.0
+offset_right = -224.0
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(120, 30)
+script = ExtResource("1_3yc0h")
+metadata/_edit_use_anchors_ = true
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+anchor_right = 0.995885
+anchor_bottom = 1.01235
+offset_right = -211.625
+offset_bottom = -117.85
+pivot_offset = Vector2(120, 41)
+theme = ExtResource("2_rmf0t")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Pineapple" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.05
+anchor_bottom = 1.05
+offset_right = -37.0
+offset_bottom = -80.963
+pivot_offset = Vector2(21, 21)
+theme = ExtResource("2_rmf0t")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer/MarginContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_g51wv")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Pineapple2" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.05
+anchor_bottom = 1.05
+offset_right = -37.0
+offset_bottom = -80.963
+pivot_offset = Vector2(21, 21)
+theme = ExtResource("2_rmf0t")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer/MarginContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_g51wv")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Pineapple3" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.05
+anchor_bottom = 1.05
+offset_right = -37.0
+offset_bottom = -80.963
+pivot_offset = Vector2(20, 20)
+theme = ExtResource("2_rmf0t")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer/MarginContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_g51wv")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true

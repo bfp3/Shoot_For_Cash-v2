@@ -1,0 +1,33 @@
+frame
+	set next-scene Scene-102
+	until time 2
+	
+frame
+	set logo show_logo
+	until time 3
+	
+frame
+	set logo hide_logo
+	until time 1
+	
+frame
+	set Scene-000 start
+	play song-intro-theme ppp-ppp
+	play move-into-the-heat ppp
+	until time 6
+	
+frame
+	set play-button show_button
+	until button-accept play-button
+	
+frame
+	set play-button hide_button
+	next
+	
+frame
+	set level transition
+	play sfx-click ppp-ppp
+	until notify level
+
+frame
+	end
