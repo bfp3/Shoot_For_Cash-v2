@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://2y255jv7qhaw"]
+
+[sub_resource type="GDScript" id="GDScript_8p8aj"]
+resource_name = "cherries_for_turtle"
+script/source = "extends Node3D
+
+var collected := false
+
+func destroy_self() -> void:
+	var tween = create_tween()
+	tween.tween_property($mesh, \"transparency\", 1.0, 0.5)
+	await tween.finished
+	self.queue_free()
+
+func _on_area_3d_area_entered(area: Area3D) -> void:
+	if area.is_in_group('Turtle') && !collected:
+		collected = true
+		destroy_self()
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n84tb"]
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_bnuya"]
+radius = 0.05
+height = 0.1
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wrkot"]
+radius = 0.0609437
+
+[node name="Dots_to_collect" type="Node3D"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 0, 0, 0)
+script = SubResource("GDScript_8p8aj")
+
+[node name="mesh" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_n84tb")
+mesh = SubResource("SphereMesh_bnuya")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_wrkot")
+
+[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]

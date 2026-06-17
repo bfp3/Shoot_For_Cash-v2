@@ -22,7 +22,7 @@ var	force_mult : Array = [3,4]
 var force_mult_index := 0
 
 @onready var money_label_3d: Label3D = $Money_Label3D
-@onready var gold_label_3d: Label3D = $Gold_label3D
+
 @onready var pineapple_mesh:= $Mesh/small_rock
 @onready var main_col: CollisionShape3D = $main_col
 @onready var current_mesh : MeshInstance3D= pineapple_mesh
@@ -52,8 +52,8 @@ func _ready() -> void:
 	
 	await get_tree().create_timer(0.2).timeout
 	
-	enter_state(State.INACTIVE)
-	EventBus.instance.egg_pulsed.connect(enter_state.bind(State.ACTIVE))
+	enter_state(State.ACTIVE)
+	#EventBus.instance.egg_pulsed.connect(enter_state.bind(State.ACTIVE))
 
 
 func enter_state(new_state : State) -> void:
@@ -108,8 +108,6 @@ func update_active() -> void:
 	rock_activated = true
 	global_position = start_pos
 	health = 1
-	
-	rock_activated = true
 	$Mesh.show()
 	
 func update_hit() -> void:
@@ -195,7 +193,6 @@ func reset_stats() -> void:
 	rock_type_name = ""
 	health = 0
 	cash_value = 0
-
 	
 	falling = false
 	rock_destroyed = false

@@ -49,7 +49,8 @@ func update_inactive() -> void:
 	
 func update_prepare_rocks() -> void:
 	splash_zone.reset_detected_bodies()
-	rocks_limit = get_rock_limit()
+	#rocks_limit = get_rock_limit()
+	rocks_limit = 10
 	gl_PlayerState.log_rocks(rocks_limit)
 	
 	var counter := 0
@@ -113,7 +114,7 @@ func bounce_rocks() -> void:
 			break
 		
 		body.bounce_rocks()
-		var x_variation = randf_range(-1.0, 1.0)
+		var x_variation = randf_range(-2.0, 2.0)
 		const z_variation = 0.0
 		var upward_force = randf_range(9.5, 10.0)
 		var impulse = Vector3(x_variation, upward_force, z_variation) * pulse_magnitude
@@ -121,7 +122,7 @@ func bounce_rocks() -> void:
 		body.apply_central_impulse(impulse)
 
 		counter += 1
-		await get_tree().create_timer(0.1).timeout
+		#await get_tree().create_timer(0.1).timeout
 		
 		if counter >= rocks_limit:
 			break

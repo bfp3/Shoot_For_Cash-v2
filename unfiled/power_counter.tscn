@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://b7g0coqyjei64"]
+
+[ext_resource type="Script" uid="uid://ccyqx0ukv2xl7" path="res://unfiled/power_counter.gd" id="1_fuy85"]
+
+
+[node name="PowerCounter" type="Control"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fuy85")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -224.0
+offset_top = -224.0
+offset_right = -152.0
+offset_bottom = -125.0
+grow_horizontal = 0
+grow_vertical = 0
+rotation = 0.523599
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/icon_hover_color = Color(0.901961, 0.901961, 0.901961, 1)
+theme_override_colors/icon_normal_color = Color(0.854902, 0.854902, 0.854902, 1)
+
+[node name="AmmoCountLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2

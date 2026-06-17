@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://cfhcejh3wxy6m"]
+
+[ext_resource type="Script" uid="uid://bxilcoajtnfmr" path="res://ch/Radar/Scripts/radar_dot.gd" id="1_mcv7u"]
+
+
+[sub_resource type="SphereMesh" id="SphereMesh_mcv7u"]
+radius = 8.0
+height = 16.0
+radial_segments = 7
+rings = 16
+
+[sub_resource type="Gradient" id="Gradient_ut071"]
+offsets = PackedFloat32Array(0, 0.141066, 0.200627)
+colors = PackedColorArray(1, 1, 1, 1, 0.4, 0.4, 0.4, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mcv7u"]
+gradient = SubResource("Gradient_ut071")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Curve" id="Curve_ut071"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="GDScript" id="GDScript_ut071"]
+script/source = "extends Line2D
+
+@export var radar_dot_path: NodePath  # Drag the radar dot in the editor
+@export var max_points := 50
+@export var point_spacing := 2.0
+
+var radar_dot: Node2D
+var last_position := Vector2.ZERO
+
+func _ready():
+	if has_node(radar_dot_path):
+		radar_dot = get_node(radar_dot_path)
+	else:
+		push_error(\"Radar dot not found\")
+		return
+
+	last_position = get_local_position_from_global(radar_dot.global_position)
+	clear_points()
+
+func _process(_delta):
+	if radar_dot == null:
+		return
+
+	var local_pos = get_local_position_from_global(radar_dot.global_position)
+
+	if last_position.distance_to(local_pos) >= point_spacing:
+		add_point(local_pos)
+		last_position = local_pos
+
+	if points.size() > max_points:
+		remove_point(0)
+
+func get_local_position_from_global(global_pos: Vector2) -> Vector2:
+	var canvas_transform = get_canvas_transform()
+	return canvas_transform.affine_inverse() * global_pos
+"
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_mcv7u")
+
+[node name="RadarDot" type="MeshInstance2D" parent="."]
+clip_children = 2
+mesh = SubResource("SphereMesh_mcv7u")
+
+[node name="Sprite2D" type="Sprite2D" parent="RadarDot"]
+show_behind_parent = true
+position = Vector2(4.76837e-07, 0)
+texture = SubResource("GradientTexture2D_mcv7u")
+
+[node name="Line2D" type="Line2D" parent="."]
+top_level = true
+z_index = -1
+position = Vector2(4.76837e-07, 0)
+points = PackedVector2Array(0, -15, 0, -6.5)
+width = 5.0
+width_curve = SubResource("Curve_ut071")
+default_color = Color(0.56, 0.56, 0.56, 0.0666667)
+joint_mode = 1
+begin_cap_mode = 2
+end_cap_mode = 2
+script = SubResource("GDScript_ut071")
+radar_dot_path = NodePath("../RadarDot")
+max_points = 25

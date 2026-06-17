@@ -236,8 +236,8 @@ func choose_rock_type() -> int:
 
 			else:
 				allowed_rocks.append(RockSize.MEDIUM_REDD)
-				if current_rock_limit > 5:
-					var rand_chance := randi_range(0, 3)
+				#if current_rock_limit > 5:
+					#var rand_chance := randi_range(0, 3)
 					#if rand_chance > 2:
 						#allowed_rocks.append(RockSize.HAZARD_SMALL)
 
@@ -324,7 +324,7 @@ func setup_rock_type() -> void:
 			rock_type_name 		= "rock_type_2"
 			health 				= int(gl_DataSet.get_value("rock_type_2", 1))
 			cash_value 			= int(gl_DataSet.get_value("rock_type_2", 0))
-			cash_value *= 1.5
+			cash_value = cash_value * 2
 			huge_rock.visible = true
 			main_col.scale = Vector3.ONE * 0.225
 			main_col.scale *= 1.5

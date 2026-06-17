@@ -1,0 +1,143 @@
+[gd_scene load_steps=4 format=3 uid="uid://bn03x4wr4kdbd"]
+
+[sub_resource type="GDScript" id="GDScript_4hj2f"]
+script/source = "extends Control
+
+@onready var sub_viewport: SubViewport = $Sub_root_control/SubViewportContainer/SubViewport
+@onready var sub_control: Control = $Sub_root_control
+
+@export var sub_view_camera : Camera3D
+@export var scale_amount := 5
+var expanding := false
+
+var orig_scale : Vector2
+var orig_pos : Vector2
+@export var expand_repos : Vector2 = Vector2(400, 200.0)
+
+func _ready() -> void:
+	expand_repos = $Marker2D.global_position
+	orig_scale = sub_control.scale
+	orig_pos = sub_control.global_position
+	sub_view_camera.reparent(sub_viewport)
+
+
+func _on_button_pressed() -> void:
+	if expanding:
+		return
+	expanding = true
+	
+	#sub_viewport.size = sub_viewport.size 
+	
+	#return
+	var dur : float = 0.5
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_LINEAR)
+	#tween.tween_property(sub_viewport, \"size\", sub_viewport.size * scale_amount, dur)
+	tween.tween_property(sub_control, \"scale\", sub_control.scale * scale_amount, dur)
+	#tween.parallel().tween_property(sub_control, \"global_position\", expand_repos, dur)
+	tween.tween_interval(1.0)
+	tween.tween_property(sub_control, \"scale\", Vector2.ONE, dur)
+	#tween.tween_property(sub_viewport, \"size\", Vector2i(256,180), dur / 2)
+	#tween.parallel().tween_property(sub_control, \"global_position\", orig_pos, dur / 2)
+	await tween.finished
+	
+	expanding = false
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_av1no"]
+bg_color = Color(0.35, 0.35, 0.35, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 10
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 6.0
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_drble"]
+Panel/styles/panel = SubResource("StyleBoxFlat_av1no")
+
+[node name="Radar_view_panel" type="Control" groups=["radar_subviewport"]]
+z_index = -1
+layout_mode = 3
+anchor_left = 0.854167
+anchor_top = 0.0259259
+anchor_right = 0.9875
+anchor_bottom = 0.192593
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 90)
+mouse_filter = 2
+script = SubResource("GDScript_4hj2f")
+metadata/_edit_use_anchors_ = true
+
+[node name="Sub_root_control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(256, 0)
+mouse_filter = 2
+
+[node name="Button" type="Button" parent="Sub_root_control"]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 1000
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.125
+anchor_top = -0.125
+anchor_right = 1.125
+anchor_bottom = 1.125
+offset_left = 32.0
+offset_top = 22.5
+offset_right = -32.0
+offset_bottom = -22.5
+scale = Vector2(1.25, 1.25)
+pivot_offset = Vector2(128, 90)
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="Sub_root_control"]
+modulate = Color(1, 1, 1, 0.588235)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(128, 92)
+mouse_filter = 2
+theme = SubResource("Theme_drble")
+metadata/_edit_use_anchors_ = true
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Sub_root_control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(256, 0)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="SubViewport" type="SubViewport" parent="Sub_root_control/SubViewportContainer"]
+handle_input_locally = false
+msaa_2d = 3
+msaa_3d = 3
+canvas_item_default_texture_filter = 0
+size = Vector2i(256, 180)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="Marker2D" type="Marker2D" parent="."]
+top_level = true
+position = Vector2(832, 540)
+
+[connection signal="pressed" from="Sub_root_control/Button" to="." method="_on_button_pressed"]

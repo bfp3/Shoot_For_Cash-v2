@@ -1,0 +1,1380 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://900_time_capsules/bedford.gd" id="1_tuj3r"]
+[ext_resource type="Texture2D" uid="uid://brm4tvdptq4gf" path="res://res/gradients/sky-gradient.tres" id="2_6hu0c"]
+[ext_resource type="PackedScene" path="res://300_characters/00_Hood/player.tscn" id="3_a1w8h"]
+[ext_resource type="AudioStream" uid="uid://cc2iigb6x8nqm" path="res://sfx/night-noises.wav" id="4_jevf6"]
+[ext_resource type="PackedScene" uid="uid://bwwqs8ytry7wo" path="res://ch/environment_decoration/trees.tscn" id="5_5ijhn"]
+[ext_resource type="PackedScene" path="res://200_assets/environment_decoration/bridge.tscn" id="6_bk37h"]
+[ext_resource type="Texture2D" uid="uid://dat2kb6hdn6xj" path="res://res/gradients/red-mountain.tres" id="7_1cx0e"]
+[ext_resource type="Texture2D" uid="uid://ceadr1qr2d0pq" path="res://res/gradients/big-mountain.tres" id="8_cc1fm"]
+[ext_resource type="Texture2D" uid="uid://dpiqjoxdk4vu6" path="res://res/gradients/moon.tres" id="9_mf403"]
+[ext_resource type="PackedScene" path="res://300_characters/02_enemies/birds.tscn" id="10_kqbtf"]
+[ext_resource type="AudioStream" uid="uid://kcrsa5k3eq7l" path="res://sfx/Seagull - Sound Effect.wav" id="11_ydndg"]
+[ext_resource type="Texture2D" uid="uid://ikpnffkolpqk" path="res://res/gradients/water-gradient.tres" id="12_812xe"]
+[ext_resource type="AudioStream" uid="uid://2a15o8htrkmd" path="res://sfx/ES_sound_effects/ES_Laser Cannon Charge - SFX Producer.wav" id="13_3of05"]
+[ext_resource type="AudioStream" uid="uid://bjhic4kqet7dw" path="res://sfx/MC_tunes/USERSONG164.WAV" id="14_32qmf"]
+
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_q3j2t"]
+panorama = ExtResource("2_6hu0c")
+filter = false
+
+[sub_resource type="Sky" id="Sky_f5nfh"]
+sky_material = SubResource("PanoramaSkyMaterial_q3j2t")
+
+[sub_resource type="Environment" id="Environment_hdlek"]
+background_mode = 2
+background_color = Color(0.72549, 0.72549, 0.72549, 1)
+sky = SubResource("Sky_f5nfh")
+sky_custom_fov = 85.5
+sky_rotation = Vector3(4.54484, -1.48353, 0)
+ambient_light_source = 3
+reflected_light_source = 2
+glow_enabled = true
+glow_normalized = true
+glow_intensity = 0.2
+glow_strength = 1.05
+glow_bloom = 1.0
+glow_blend_mode = 4
+glow_hdr_threshold = 0.55
+fog_light_color = Color(0, 0.360784, 0.407843, 1)
+fog_density = 0.005
+fog_aerial_perspective = 0.5
+volumetric_fog_density = 0.001
+volumetric_fog_emission = Color(1, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ipbuh"]
+albedo_texture = ExtResource("7_1cx0e")
+billboard_keep_scale = true
+grow_amount = 10.947
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_srj5q"]
+render_priority = 1
+albedo_texture = ExtResource("8_cc1fm")
+billboard_keep_scale = true
+grow_amount = 10.947
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ky6xs"]
+albedo_texture = ExtResource("7_1cx0e")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5dnfj"]
+render_priority = 1
+albedo_texture = ExtResource("9_mf403")
+emission_enabled = true
+emission = Color(1, 0.827451, 0, 1)
+emission_energy_multiplier = 59.0
+ao_light_affect = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hvbxh"]
+albedo_texture = ExtResource("2_6hu0c")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ulbc"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+backlight_enabled = true
+backlight = Color(1, 1, 1, 1)
+billboard_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_01lj4"]
+albedo_texture = ExtResource("12_812xe")
+
+[node name="Bedford" type="Node3D"]
+script = ExtResource("1_tuj3r")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_hdlek")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.999391, 0, -0.0348995, 0, 1, 0, 0.0348995, 0, 0.999391, -57.243, 13.2, -120.425)
+fov = 47.3
+
+[node name="player" parent="." instance=ExtResource("3_a1w8h")]
+transform = Transform3D(-0.0454328, 0, -0.998967, 0, 1, 0, 0.998967, 0, -0.0454328, -54.0505, 9.62307, -25.7182)
+
+[node name="bgnoise" type="AudioStreamPlayer3D" parent="player"]
+transform = Transform3D(0.0183948, 0, 0.999831, 0, 1, 0, -0.999831, 0, 0.0183948, -4.23179, 1.47448, -7.6285)
+stream = ExtResource("4_jevf6")
+autoplay = true
+
+[node name="Camera3D" type="Camera3D" parent="player"]
+transform = Transform3D(0.935444, 0, 0.353475, 0, 1, 0, -0.353475, 0, 0.935444, 42, 0, 0)
+
+[node name="foreground" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.95171, 6.79398, -19.936)
+
+[node name="topLeft" parent="foreground" instance=ExtResource("5_5ijhn")]
+transform = Transform3D(0.97115, -0.372128, -0.5655, 0.282511, 1.36953, -0.134146, 0.748749, -0.0340792, 0.784086, -42.7499, 5.52432, -6.42879)
+visible = false
+
+[node name="bottomLeft" parent="foreground" instance=ExtResource("5_5ijhn")]
+transform = Transform3D(-0.236839, 0, 0.971549, 0, 1, 0, -0.971549, 0, -0.236839, -42.2643, 2.65864, -11.1504)
+visible = false
+
+[node name="topRight" parent="foreground" instance=ExtResource("5_5ijhn")]
+transform = Transform3D(0.0439635, 1.86265e-09, 1.09985, 0.0620485, 2.69929, -0.000411675, -2.69893, 0.0620567, 0.0179067, -40.5827, 5.95884, 11.4457)
+
+[node name="bottomRight" parent="foreground" instance=ExtResource("5_5ijhn")]
+transform = Transform3D(-0.260522, 0, 1.0687, 0, 1.1, 0, -1.0687, 0, -0.260522, -40.5901, 3.21033, 9.13081)
+
+[node name="middleRight" parent="foreground" instance=ExtResource("5_5ijhn")]
+transform = Transform3D(-0.355258, 0, 1.45732, 0, 1.5, 0, -1.45732, 0, -0.355258, -42.7033, 4.79349, 4.64359)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="foreground/middleRight"]
+transform = Transform3D(0.666667, 0, 0, 0, 0.666667, 0, 1.49012e-08, 0, 0.666667, -3.2964, 9.07941, -0.20171)
+omni_range = 3.72534
+
+[node name="midGround" type="Node3D" parent="."]
+transform = Transform3D(-0.998755, 0, 0.0498784, 0, 1, 0, -0.0498784, 0, -0.998755, -130.055, 0.00469017, -492.389)
+
+[node name="bridge" type="Node3D" parent="midGround"]
+transform = Transform3D(20.7592, 5.13192, -10.4808, -0.419376, 97.7139, 1.56101, 12.0365, -5.44638, 18.1305, 280.655, 302.365, 661.49)
+
+[node name="longBridge" parent="midGround/bridge" instance=ExtResource("6_bk37h")]
+transform = Transform3D(0.988248, 0.144034, 0.0511832, -0.148767, 0.983227, 0.105515, -0.0351269, -0.11189, 0.9931, 0.00970459, -0.135631, -0.047184)
+visible = false
+
+[node name="longBridge2" parent="midGround/bridge" instance=ExtResource("6_bk37h")]
+transform = Transform3D(0.995138, -0.093734, 0.0302292, 0.0957077, 0.992782, -0.0722822, -0.0232355, 0.0748238, 0.996927, 10.9004, -2.51788, -0.810104)
+
+[node name="redRock" type="CSGPolygon3D" parent="midGround/bridge"]
+transform = Transform3D(0.00826232, -0.000728085, 0.0408328, 0.000778821, 0.0101743, 2.38258e-05, -0.0465317, 0.00353971, 0.00947858, 2.45668, -2.53219, -15.9827)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="midGround/bridge/redRock"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="redRock2" type="CSGPolygon3D" parent="midGround/bridge"]
+transform = Transform3D(0.00826232, -0.000728085, 0.0408328, 0.000778821, 0.0101743, 2.38258e-05, -0.0465317, 0.00353971, 0.00947858, 22.6194, -2.63054, -4.40921)
+visible = false
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="midGround/bridge/redRock2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="redRock3" type="CSGPolygon3D" parent="midGround/bridge"]
+transform = Transform3D(0.00826232, -0.000728085, 0.0408328, 0.000778821, 0.0101743, 2.38258e-05, -0.0465317, 0.00353971, 0.00947858, -1.06565, -2.3853, -7.78064)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="midGround/bridge/redRock3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="leftMount" type="CSGPolygon3D" parent="midGround/bridge"]
+transform = Transform3D(0.185441, -0.00364042, 0.411964, 0.00251913, 0.0508714, -0.0129046, -0.107869, 0.0176986, 0.918462, -0.913893, -0.210213, -0.980579)
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="rightMount" type="CSGPolygon3D" parent="midGround/bridge"]
+transform = Transform3D(0.110892, -0.00364042, 0.685243, 0.00368425, 0.0508715, -0.00492255, -0.20083, 0.0176986, 0.492229, 34.5821, -0.0553639, -1.13741)
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="bridge2" type="Node3D" parent="midGround"]
+transform = Transform3D(23.8193, 2.57848, -2.51199, -0.419376, 97.7139, 1.56101, 2.9094, -7.02504, 20.7907, -631.846, 302.365, -705.539)
+
+[node name="longBridge" parent="midGround/bridge2" instance=ExtResource("6_bk37h")]
+transform = Transform3D(0.968022, 0.126376, 0.216713, -0.119475, 0.991828, -0.0447107, -0.220593, 0.0173877, 0.975211, 2.72961, -0.385599, 1.04332)
+
+[node name="longBridge2" parent="midGround/bridge2" instance=ExtResource("6_bk37h")]
+transform = Transform3D(1, 8.61473e-09, -9.31323e-10, 4.22006e-10, 1, -1.16043e-06, 0, 1.10269e-06, 1, 11.0108, -0.0023067, 0.0397072)
+visible = false
+
+[node name="redRock" type="CSGPolygon3D" parent="midGround/bridge2"]
+transform = Transform3D(0.00826232, -0.000728085, 0.0408328, 0.000778821, 0.0101743, 2.38258e-05, -0.0465317, 0.00353971, 0.00947858, 2.45668, -2.53219, -15.9827)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="midGround/bridge2/redRock"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="redRock2" type="CSGPolygon3D" parent="midGround/bridge2"]
+transform = Transform3D(0.00826232, -0.000728085, 0.0408328, 0.000778821, 0.0101743, 2.38258e-05, -0.0465317, 0.00353971, 0.00947858, 22.6194, -2.63054, -4.40921)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="midGround/bridge2/redRock2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="redRock3" type="CSGPolygon3D" parent="midGround/bridge2"]
+transform = Transform3D(0.00826232, -0.000728085, 0.0408328, 0.000778821, 0.0101743, 2.38258e-05, -0.0465317, 0.00353971, 0.00947858, -1.06565, -2.3853, -7.78064)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="midGround/bridge2/redRock3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="leftMount" type="CSGPolygon3D" parent="midGround/bridge2"]
+transform = Transform3D(0.185441, -0.00364042, 0.411964, 0.00251913, 0.0508714, -0.0129046, -0.107869, 0.0176986, 0.918462, -0.913893, -0.210213, -0.980579)
+visible = false
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="rightMount" type="CSGPolygon3D" parent="midGround/bridge2"]
+transform = Transform3D(0.110892, -0.00364042, 0.685243, 0.00368425, 0.0508715, -0.00492255, -0.20083, 0.0176986, 0.492229, 34.5821, -0.0553639, -1.13741)
+visible = false
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="longBridge3" parent="midGround/bridge2" instance=ExtResource("6_bk37h")]
+transform = Transform3D(0.46408, 0.162946, 0.0021119, -0.105543, 0.488227, 0.0139777, 0.0496868, 0.0321002, 0.5134, 8.33827, -1.20135, 1.9876)
+
+[node name="bridge3" type="Node3D" parent="midGround"]
+transform = Transform3D(18.5696, 5.93612, -13.2427, -0.419376, 97.7139, 1.56101, 15.1984, -4.55655, 16.2232, -1240.33, 302.365, -1162.53)
+
+[node name="longBridge" parent="midGround/bridge3" instance=ExtResource("6_bk37h")]
+transform = Transform3D(0.999978, -0.00635884, -0.00185803, 0.00634999, 0.999969, -0.00472415, 0.00188804, 0.00471219, 0.999987, 0.0114555, -0.160076, -0.0556908)
+visible = false
+
+[node name="longBridge2" parent="midGround/bridge3" instance=ExtResource("6_bk37h")]
+transform = Transform3D(0.990452, -0.00224286, 0.13784, 0.00216108, 0.999997, 0.000742926, -0.137841, -0.00043793, 0.990454, 11.0108, -0.0023067, 0.039711)
+visible = false
+
+[node name="redRock" type="CSGPolygon3D" parent="midGround/bridge3"]
+transform = Transform3D(0.0295786, -0.00213433, -0.0340233, -0.00046197, 0.0102659, -0.000537106, 0.0368642, -0.00257507, 0.0244804, 2.45668, -2.53219, -15.9827)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="midGround/bridge3/redRock"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="redRock2" type="CSGPolygon3D" parent="midGround/bridge3"]
+transform = Transform3D(0.00826232, -0.000728085, 0.0408328, 0.000778821, 0.0101743, 2.38258e-05, -0.0465317, 0.00353971, 0.00947858, 22.6194, -2.63054, -4.40921)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="midGround/bridge3/redRock2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="redRock3" type="CSGPolygon3D" parent="midGround/bridge3"]
+transform = Transform3D(-0.0457703, 0.00327064, 0.0125698, -7.9881e-06, 0.0102304, 0.000692698, -0.0117965, 0.00110379, -0.0399835, -1.06564, -2.3853, -7.78064)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="midGround/bridge3/redRock3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="leftMount" type="CSGPolygon3D" parent="midGround/bridge3"]
+transform = Transform3D(0.185441, -0.00364042, 0.411964, 0.00251913, 0.0508715, -0.0129046, -0.107869, 0.0176986, 0.918462, -0.913895, -0.210213, -0.980579)
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="rightMount" type="CSGPolygon3D" parent="midGround/bridge3"]
+transform = Transform3D(0.110892, -0.00364042, 0.685243, 0.00368425, 0.0508715, -0.00492255, -0.20083, 0.0176986, 0.492229, 34.5821, -0.0553639, -1.13741)
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="bridge5" type="Node3D" parent="midGround"]
+transform = Transform3D(19.8878, 5.49224, -11.6958, -0.419376, 97.7139, 1.56101, 13.4276, -5.08281, 17.3716, -2935.37, 265.488, -1722.35)
+visible = false
+
+[node name="longBridge" parent="midGround/bridge5" instance=ExtResource("6_bk37h")]
+transform = Transform3D(0.988076, -0.145513, -0.0503443, 0.14542, 0.989355, -0.00552597, 0.0506112, -0.00186092, 0.998717, 55.3518, -1.07664, 16.1994)
+
+[node name="background" type="Node3D" parent="."]
+transform = Transform3D(0.156728, 0, -0.987642, 0, 1, 0, 0.987642, 0, 0.156728, 0, 0, 0)
+
+[node name="bigMountain" type="CSGPolygon3D" parent="background"]
+transform = Transform3D(4.1745, 0, -0.068265, 0, 17.0658, 0, 0.116386, 0, 2.44852, 551.668, 21.2822, -3235.34)
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 3.73702, 4.20982, 26.2935, -1.15983)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="redMountainBig" type="CSGPolygon3D" parent="background"]
+transform = Transform3D(64.2524, 0.491458, 9.2834, 0.426647, 120.905, -1.28874, -18.1012, 4.59424, 32.9222, 155.458, 130.711, -3042.56)
+material_override = SubResource("StandardMaterial3D_ky6xs")
+use_collision = true
+polygon = PackedVector2Array(-4.49045, -0.946268, 0.468492, 1.20025, 5.97131, -1.04364)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 15
+smooth_faces = true
+
+[node name="bridge6" type="Node3D" parent="background/redMountainBig"]
+transform = Transform3D(-0.361817, -0.0161675, 0.021752, -0.00186083, 0.809393, 0.00632136, 0.0310573, 0.107533, -0.611024, 8.32093, 1.25429, -15.3589)
+
+[node name="longBridge" parent="background/redMountainBig/bridge6" instance=ExtResource("6_bk37h")]
+transform = Transform3D(0.595021, 0.0302411, 0.365082, -0.0496943, 0.408834, -0.0177217, -0.36535, -0.00635728, 0.596994, -0.13332, -0.113817, -1.27533)
+visible = false
+
+[node name="longBridge2" parent="background/redMountainBig/bridge6" instance=ExtResource("6_bk37h")]
+transform = Transform3D(0.989144, -0.0170985, 0.140901, 0.0418756, 0.40964, 0.00174533, -0.14085, 0.00171131, 0.990023, 8.79056, -1.09846, 0.337029)
+visible = false
+
+[node name="redRock" type="CSGPolygon3D" parent="background/redMountainBig/bridge6"]
+transform = Transform3D(0.0460504, -0.00338089, -0.0115679, 2.74935e-05, 0.0102305, -0.00069321, 0.0106507, -0.000693905, 0.0402848, 4.41725, -2.52417, -24.6792)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="background/redMountainBig/bridge6/redRock"]
+transform = Transform3D(0.873924, 0.0550457, 0.155392, 0, 0.997371, 0.07246, 2.98023e-08, -5.58794e-09, 1.14728, 4.22534, 56.7026, -106.854)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="redRock2" type="CSGPolygon3D" parent="background/redMountainBig/bridge6"]
+transform = Transform3D(0.0472158, -0.00348077, -0.00411266, 0.00016793, 0.0102203, -0.000683992, 0.00217296, -7.81688e-05, 0.0417107, 29.46, -2.00911, -36.3921)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="background/redMountainBig/bridge6/redRock2"]
+transform = Transform3D(0.979022, 0.00110144, -0.105925, -2.22045e-16, 0.999986, 0.00524179, -1.49012e-08, -4.65661e-10, 1.02144, 3.13501, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="redRock3" type="CSGPolygon3D" parent="background/redMountainBig/bridge6"]
+transform = Transform3D(0.0468484, -0.00346889, 0.00337529, 0.000301099, 0.0102105, -0.000652919, -0.00626163, 0.000537123, 0.0417773, 18.2747, -1.75895, -41.7918)
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="background/redMountainBig/bridge6/redRock3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="leftMount" type="CSGPolygon3D" parent="background/redMountainBig/bridge6"]
+transform = Transform3D(0.185441, -0.00364042, 0.411964, 0.00251913, 0.0508714, -0.0129046, -0.107869, 0.0176986, 0.918462, -0.913898, -0.210214, -0.980576)
+visible = false
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="rightMount" type="CSGPolygon3D" parent="background/redMountainBig/bridge6"]
+transform = Transform3D(0.110892, -0.00364042, 0.685243, 0.00368425, 0.0508715, -0.00492255, -0.20083, 0.0176986, 0.492229, 34.5821, -0.0553639, -1.13741)
+visible = false
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="redMountainMedium" type="CSGPolygon3D" parent="background"]
+transform = Transform3D(41.9995, -0.0707204, 4.46541, 0.270971, 59.4386, -1.23064, -5.78578, 2.27038, 32.3572, 367.647, 51.0337, -1364.34)
+visible = false
+material_override = SubResource("StandardMaterial3D_ky6xs")
+use_collision = true
+polygon = PackedVector2Array(-4.49045, -0.946268, 0.468492, 1.20025, 5.97131, -1.04364)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 15
+smooth_faces = true
+
+[node name="OmniLight3D" type="OmniLight3D" parent="background/redMountainMedium"]
+transform = Transform3D(-0.00820702, 6.82121e-11, -0.0221127, 6.27551e-11, 0.0168118, 0, 0.0286815, -2.19416e-10, -0.010645, 2.91931, 0.563253, 3.42205)
+light_energy = 11.373
+omni_range = 184.41
+omni_attenuation = 1.23114
+
+[node name="largemountainLeftBack" type="CSGPolygon3D" parent="background"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -600.132, 280.681, -845.688)
+visible = false
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="leftMount" type="CSGPolygon3D" parent="background"]
+transform = Transform3D(4.94745, 0, -3.13937, 0, 5, 0, 0.72299, 0, 21.4829, -417.318, 280.681, -176.461)
+visible = false
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="leftMount2" type="CSGPolygon3D" parent="background"]
+transform = Transform3D(4.72509, 0, -7.09994, 0, 12.0893, 0, 1.6351, 0, 20.5173, -760.086, 657.866, -1535.63)
+visible = false
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="rightMount" type="CSGPolygon3D" parent="background"]
+transform = Transform3D(4.91373, 0, 3.59395, 0, 5, 0, -0.924817, 0, 19.0953, 247.044, 280.681, -230.164)
+visible = false
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="eyeOfSauron" type="CSGSphere3D" parent="background"]
+transform = Transform3D(5, 0, -4.76837e-07, 0, 5, 0, 4.76837e-07, 0, 5, 494.534, 165.863, -3591.96)
+flip_faces = true
+radius = 13.682
+material = SubResource("StandardMaterial3D_5dnfj")
+
+[node name="backdrop" type="CSGBox3D" parent="background"]
+transform = Transform3D(-0.995725, -1.5035e-07, 0.0923706, 1.50996e-07, -1, 0, 0.0923706, 1.39476e-08, 0.995725, 0, 250.325, 143.87)
+visible = false
+material_override = SubResource("StandardMaterial3D_hvbxh")
+size = Vector3(20000, 500, 0)
+
+[node name="mainSky" type="Node3D" parent="."]
+visible = false
+
+[node name="nightSky" type="Node3D" parent="mainSky"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 13.9622, 473.678)
+
+[node name="star1" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -21.4193, 45.2664, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star2" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 35.458, 55.577, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star3" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 7.25936, 56.0365, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star4" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 23.1436, 41.2666, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star5" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.05162, 36.39, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star6" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -32.7882, 52.709, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star7" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -79.3295, 65.0682, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star8" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -22.4522, 75.3788, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star9" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -50.6509, 75.8383, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star10" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -34.7666, 61.0684, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star11" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -59.9618, 56.1918, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star12" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -90.6984, 72.5107, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star13" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -40.2744, 27.7812, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star14" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 16.603, 38.0918, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star15" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -11.5957, 38.5513, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star16" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 4.28855, 23.7814, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star17" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -20.9067, 18.9048, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star18" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -51.6433, 35.2237, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star19" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -98.1846, 47.583, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star20" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -41.3073, 57.8936, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star21" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -69.5059, 58.3531, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star22" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -53.6217, 43.5832, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star23" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -78.8169, 38.7066, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star24" type="CSGSphere3D" parent="mainSky/nightSky"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -109.553, 55.0255, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="nightSky2" type="Node3D" parent="mainSky"]
+transform = Transform3D(-2.18557e-07, 0, -1, 0, 5, 0, 5, 0, -4.37114e-08, 242.156, 44.586, 60.8463)
+
+[node name="star1" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -21.4193, 45.2664, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star2" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 35.458, 55.577, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star3" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 7.25936, 56.0365, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star4" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 23.1436, 41.2666, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star5" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.05162, 36.39, -160.355)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star6" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -32.7882, 52.709, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star7" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -79.3295, 65.0682, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star8" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -22.4522, 75.3788, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star9" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -50.6509, 75.8383, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star10" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -34.7666, 61.0684, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star11" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -59.9618, 56.1918, -160.355)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star12" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -90.6984, 72.5107, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star13" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -40.2744, 27.7812, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star14" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 16.603, 38.0918, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star15" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -11.5957, 38.5513, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star16" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 4.28855, 23.7814, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star17" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -20.9067, 18.9048, -160.355)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star18" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -51.6433, 35.2237, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star19" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -98.1846, 47.583, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star20" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -41.3073, 57.8936, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star21" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -69.5059, 58.3531, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star22" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -53.6217, 43.5832, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star23" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -78.8169, 38.7066, -160.355)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star24" type="CSGSphere3D" parent="mainSky/nightSky2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -109.553, 55.0255, -161.572)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="nightSky3" type="Node3D" parent="mainSky"]
+transform = Transform3D(-1.74846e-07, 0, -1, 0, 4, 0, 4, 0, -4.37114e-08, -476.221, 3.28043, 152.76)
+
+[node name="star1" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -21.4193, 45.2664, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star2" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 35.458, 55.577, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star3" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 7.25937, 56.0365, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star4" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 23.1436, 41.2666, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star5" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.05161, 36.39, 388.492)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star6" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -32.7882, 52.709, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star7" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -79.3295, 65.0682, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star8" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -22.4522, 75.3788, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star9" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -50.6509, 75.8383, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star10" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -34.7666, 61.0684, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star11" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -59.9618, 56.1918, 388.492)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star12" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -90.6984, 72.5107, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star13" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -40.2744, 27.7812, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star14" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 16.603, 38.0918, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star15" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -11.5957, 38.5513, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star16" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 4.28856, 23.7814, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star17" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -20.9067, 18.9048, 388.492)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star18" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -51.6433, 35.2237, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star19" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -98.1846, 47.583, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star20" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -41.3073, 57.8936, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star21" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -69.5059, 58.3531, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star22" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -53.6217, 43.5832, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star23" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -78.8169, 38.7066, 388.492)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star24" type="CSGSphere3D" parent="mainSky/nightSky3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -109.553, 55.0255, 387.275)
+radius = 2.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="nightSky4" type="Node3D" parent="mainSky"]
+transform = Transform3D(4.8753, 0, 0.22194, -0.0654836, 4.99129, 0.0575385, -1.10777, -0.295051, 0.973361, 17.2803, -16.1648, -107.585)
+
+[node name="star1" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -21.4193, 45.2664, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star2" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 35.458, 55.577, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star3" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 7.25936, 56.0365, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star4" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 23.1436, 41.2666, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star5" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.05162, 36.39, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star6" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -32.7882, 52.709, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star7" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -79.3295, 65.0682, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star8" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -22.4522, 75.3788, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star9" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -50.6509, 75.8383, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star10" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -34.7666, 61.0684, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star11" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -59.9618, 56.1918, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star12" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -90.6984, 72.5107, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star13" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -40.2744, 27.7812, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star14" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 16.603, 38.0918, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star15" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -11.5957, 38.5513, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star16" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 4.28855, 23.7814, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star17" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -20.9067, 18.9048, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star18" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -51.6433, 35.2237, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star19" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -98.1846, 47.583, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star20" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -41.3073, 57.8936, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star21" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -69.5059, 58.3531, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star22" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -53.6217, 43.5832, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star23" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -78.8169, 38.7066, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star24" type="CSGSphere3D" parent="mainSky/nightSky4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -109.553, 55.0255, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="nightSky5" type="Node3D" parent="mainSky"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 23.177, 99.3031, 60.8463)
+
+[node name="star1" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -21.4193, 45.2664, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star2" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 35.458, 55.577, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star3" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 7.25936, 56.0365, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star4" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 23.1436, 41.2666, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star5" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.05162, 36.39, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star6" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -32.7882, 52.709, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star7" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -79.3295, 65.0682, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star8" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -22.4522, 75.3788, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star9" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -50.6509, 75.8383, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star10" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -34.7666, 61.0684, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star11" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -59.9618, 56.1918, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star12" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -90.6984, 72.5107, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star13" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -40.2744, 27.7812, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star14" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 16.603, 38.0918, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star15" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -11.5957, 38.5513, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star16" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 4.28855, 23.7814, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star17" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -20.9067, 18.9048, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star18" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -51.6433, 35.2237, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star19" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -98.1846, 47.583, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star20" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -41.3073, 57.8936, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star21" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -69.5059, 58.3531, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star22" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -53.6217, 43.5832, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star23" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -78.8169, 38.7066, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star24" type="CSGSphere3D" parent="mainSky/nightSky5"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -109.553, 55.0255, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="nightSky6" type="Node3D" parent="mainSky"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -719.652, 80.0727, 60.8463)
+
+[node name="star1" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -21.4193, 45.2664, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star2" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 35.458, 55.577, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star3" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 7.25936, 56.0365, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star4" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 23.1436, 41.2666, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star5" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.05162, 36.39, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star6" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -32.7882, 52.709, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star7" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -79.3295, 65.0682, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star8" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -22.4522, 75.3788, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star9" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -50.6509, 75.8383, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star10" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -34.7666, 61.0684, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star11" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -59.9618, 56.1918, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star12" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -90.6984, 72.5107, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star13" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -40.2744, 27.7812, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star14" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 16.603, 38.0918, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star15" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -11.5957, 38.5513, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star16" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 4.28855, 23.7814, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star17" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -20.9067, 18.9048, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star18" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -51.6433, 35.2237, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star19" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -98.1846, 47.583, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star20" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -41.3073, 57.8936, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star21" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -69.5059, 58.3531, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star22" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -53.6217, 43.5832, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star23" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -78.8169, 38.7066, -160.355)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="star24" type="CSGSphere3D" parent="mainSky/nightSky6"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -109.553, 55.0255, -161.572)
+smooth_faces = false
+material = SubResource("StandardMaterial3D_5ulbc")
+
+[node name="birdContainer" type="Node3D" parent="."]
+transform = Transform3D(-0.058975, 0, 0.998259, 0, 1, 0, -0.998259, 0, -0.058975, -346.943, 86.3685, -47.5906)
+
+[node name="birds" parent="birdContainer" instance=ExtResource("10_kqbtf")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, -5.44553, 0, -0.321716)
+
+[node name="birds2" parent="birdContainer" instance=ExtResource("10_kqbtf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.6646, 4.06261, -0.0339966)
+
+[node name="birds3" parent="birdContainer" instance=ExtResource("10_kqbtf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.251663, 8.50747, -0.0289612)
+
+[node name="birdSFX" type="AudioStreamPlayer3D" parent="birdContainer"]
+stream = ExtResource("11_ydndg")
+unit_size = 100.0
+autoplay = true
+max_distance = 3258.18
+
+[node name="birdContainer2" type="Node3D" parent="."]
+transform = Transform3D(-2.89836, 0.670109, 0.387843, 0.61208, 2.90339, -0.442333, -0.474158, -0.348217, -2.94175, -114.462, 38.6441, 225.866)
+visible = false
+
+[node name="birds" parent="birdContainer2" instance=ExtResource("10_kqbtf")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
+
+[node name="birds2" parent="birdContainer2" instance=ExtResource("10_kqbtf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.09, -8.23207, -7.62939e-06)
+
+[node name="birds3" parent="birdContainer2" instance=ExtResource("10_kqbtf")]
+transform = Transform3D(1, -3.72529e-09, 0, 7.45058e-09, 1, 0, 0, 2.23517e-08, 1, -7.98756, 11.6208, 1.10049)
+
+[node name="birds4" parent="birdContainer2" instance=ExtResource("10_kqbtf")]
+transform = Transform3D(0.677167, 0.177237, 0.00568455, -0.177325, 0.676671, 0.0259685, 0.00108002, -0.0265613, 0.699495, -22.0597, 4.78249, 2.98952)
+
+[node name="birdSFX" type="AudioStreamPlayer3D" parent="birdContainer2"]
+stream = ExtResource("11_ydndg")
+unit_size = 100.0
+autoplay = true
+max_distance = 3258.18
+
+[node name="landWater" type="CSGBox3D" parent="."]
+transform = Transform3D(0.156728, -4.41511e-08, -0.987642, 0, 1, -4.47035e-08, 0.987642, 7.00627e-09, 0.156728, 1.81529, 6.08316, -0.288065)
+material_override = SubResource("StandardMaterial3D_01lj4")
+size = Vector3(10000, 1, 10000)
+
+[node name="scannerBeam" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_3of05")
+volume_db = -15.0
+pitch_scale = 0.8
+
+[node name="music" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57.6787, 14.9825, -10.2864)
+stream = ExtResource("14_32qmf")
+volume_db = -3.0
+
+[node name="Timer" type="Timer" parent="music"]
+process_callback = 0
+wait_time = 60.0
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="music/Timer" to="." method="_on_timer_timeout"]

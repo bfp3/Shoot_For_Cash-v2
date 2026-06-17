@@ -1,6 +1,5 @@
 extends Control
 
-@onready var title_label: RichTextLabel = $TitleLabel
 @onready var rocks_hit_label: RichTextLabel = $NumberLabel
 
 @onready var perfect_score_particles: GPUParticles2D = %perfectScoreParticles
@@ -22,7 +21,7 @@ func _ready() -> void:
 	EventBus.instance.open_shop.connect(_update_for_new_round)
 	#EventBus.instance.close_shop.connect(_update_for_new_round)
 	EventBus.instance.rock_destroyed.connect(_on_rock_destroyed)
-	_move_to_corner()
+
 	
 func _update_for_new_round() -> void:
 	await get_tree().create_timer(1.0).timeout
@@ -40,12 +39,6 @@ func _on_rock_destroyed() -> void:
 	perfect_score_particles.emitting = true
 	scale_tween()
 
-func _move_to_corner() -> void:
-	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(self, "global_position", target_pos, 0.3)
-	tween.parallel().tween_property(title_label, "self_modulate", Color('3d3d3d'), 0.3)
-	scale_tween()
-	
 func _move_to_center() -> void:
 	return
 	#calculate_score()

@@ -4,12 +4,8 @@ extends Node
 @onready var ambient_background_noise: AudioStreamPlayer = $Ambient_background_noise
 @onready var night_noises: AudioStreamPlayer = $NightNoises
 @onready var oasis: AudioStreamPlayer = $Oasis
-@onready var chopin: AudioStreamPlayer = $Chopin
-@onready var blue_danude: AudioStreamPlayer = $BlueDanude
 @onready var ending_song: AudioStreamPlayer = $EndingSong
 @onready var wind_noises: AudioStreamPlayer = $WindNoises
-@onready var math_anim: AudioStreamPlayer = $MathAnim
-
 # Stores each song's original/default volume
 var default_volume_map : Dictionary = {}
 
@@ -38,10 +34,9 @@ func default_volumes() -> void:
 		ambient_background_noise,
 		night_noises,
 		oasis,
-		chopin,
-		blue_danude,
+
 		wind_noises,
-		math_anim,
+
 		ending_song
 	]
 	
@@ -68,13 +63,7 @@ func shop_music_raise_volume() -> void:
 		return
 		
 	var targ_volume := -30.0
-	
-	if current_song == math_anim:
-		current_song.stop()
-		current_song.play(126.0)
-		targ_volume = -47.0
-
-	
+		
 	var tween := create_tween()
 	tween.tween_property(current_song, "volume_db", targ_volume, 3.0)
 	

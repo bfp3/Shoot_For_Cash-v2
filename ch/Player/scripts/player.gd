@@ -483,9 +483,6 @@ func player_did_not_miss() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed('backward'):
-		#play_perfect_sfx()
-		perfect_score()
 	
 	if current_state != State.ACTIVE:
 		return

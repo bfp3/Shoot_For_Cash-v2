@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://cimhbn6jjf4j5"]
+
+[ext_resource type="Script" uid="uid://c8y05vnq7fcyh" path="res://unfiled/upgrade_tree/UpgradeManager.gd" id="1_ha5jr"]
+[ext_resource type="PackedScene" uid="uid://cu0bay1llw7ua" path="res://unfiled/upgrade_tree/UpgradeNode.tscn" id="2_w0j8g"]
+
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.08, 0.09, 0.11, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.28, 0.31, 0.35, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="UpgradeTreeMenu" type="Control" unique_id=1981391603]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_ha5jr")
+current_money = 0
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1224033229]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 0.55)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2009129895]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=1476996170]
+custom_minimum_size = Vector2(980, 640)
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=167999425]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1364947367]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "UPGRADE TREE"
+horizontal_alignment = 1
+
+[node name="MoneyLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=2120053726]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Money: 20"
+horizontal_alignment = 1
+
+[node name="TreePanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1423951352]
+custom_minimum_size = Vector2(930, 470)
+layout_mode = 2
+
+[node name="TreeCanvas" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=285799491]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Connections" type="Node2D" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=145234013]
+unique_name_in_owner = true
+
+[node name="NodeSafeScope" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=681547099 instance=ExtResource("2_w0j8g")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 360.0
+offset_top = 28.0
+offset_right = 570.0
+offset_bottom = 124.0
+
+[node name="NodeBulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=1399478382 instance=ExtResource("2_w0j8g")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 130.0
+offset_top = 190.0
+offset_right = 340.0
+offset_bottom = 286.0
+
+[node name="NodeRoot" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=2144249831 instance=ExtResource("2_w0j8g")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 360.0
+offset_top = 190.0
+offset_right = 570.0
+offset_bottom = 286.0
+
+[node name="NodeBulletsPerShot" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/TreeCanvas" unique_id=116216989 instance=ExtResource("2_w0j8g")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 590.0
+offset_top = 190.0
+offset_right = 800.0
+offset_bottom = 286.0
+cost = 100
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1566061341]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
+text = "Continue"

@@ -171,7 +171,7 @@ func disable_collision() -> void:
 
 func enable_collision() -> void:
 	return
-	set_collision_layer_value(1, true)
+	#set_collision_layer_value(1, true)
 
 
 func update_gravity(_gravity_scale : float) -> void:

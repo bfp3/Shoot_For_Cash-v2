@@ -7,7 +7,6 @@
 [ext_resource type="AudioStream" uid="uid://duqg3ux67t4tf" path="res://sfx/Sonoma_birds.wav" id="4_8twtg"]
 [ext_resource type="AudioStream" uid="uid://vwd54i0bx1ys" path="res://sfx/ocean_gulls_sfx_01.wav" id="5_3ga0b"]
 [ext_resource type="AudioStream" uid="uid://db33f0w5kew1x" path="res://sfx/ocean_waves_sfx_01.wav" id="6_vwwt2"]
-[ext_resource type="AudioStream" uid="uid://wiy8keftax6e" path="res://sfx/Windmill Sunburst.wav" id="7_mdemw"]
 [ext_resource type="AudioStream" uid="uid://drvarhxuygv0r" path="res://sfx/birds_noises.wav" id="8_qmj5w"]
 [ext_resource type="AudioStream" uid="uid://kcrsa5k3eq7l" path="res://sfx/Seagull - Sound Effect.wav" id="9_swp41"]
 [ext_resource type="AudioStream" uid="uid://dkv7laql8xotx" path="res://sfx/Flag Flap.wav" id="10_heewt"]
@@ -16,10 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://cc2iigb6x8nqm" path="res://sfx/night-noises.wav" id="13_vycyu"]
 [ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://sfx/BP_tunes/oasisWorld.wav" id="14_85u0j"]
 [ext_resource type="AudioStream" uid="uid://deq5brrn7c28" path="res://sfx/Windmill Sprint.wav" id="15_lwcfe"]
-[ext_resource type="AudioStream" uid="uid://cs3n5clnfoe5o" path="res://sfx/Copyright_free/Chopin - Ballade no. 1 in G minor, Op. 23 [Copyright Free].wav" id="16_acvv8"]
-[ext_resource type="AudioStream" uid="uid://vyxgc20qwdty" path="res://sfx/Copyright_free/Strauss  The Blue Danube Waltz.mp3" id="17_fim8e"]
-[ext_resource type="AudioStream" uid="uid://pmtd0sxpr2dx" path="res://sfx/Windmill_Sprint_TITLE.wav" id="18_yc8qr"]
-[ext_resource type="AudioStream" uid="uid://bbmjb8yoilfuh" path="res://sfx/Ticking_song.wav" id="19_2300m"]
+[ext_resource type="AudioStream" uid="uid://bjhic4kqet7dw" path="res://sfx/MC_tunes/USERSONG164.WAV" id="16_tnw34"]
 [ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="19_gu7ia"]
 [ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="20_l8wgb"]
 [ext_resource type="AudioStream" uid="uid://due6g7wbw8x21" path="res://sfx/one_hundred_percent.wav" id="20_tnw34"]
@@ -110,6 +106,7 @@ scale_curve = SubResource("CurveTexture_3gdew")
 alpha_curve = SubResource("CurveTexture_fuvvr")
 
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
+bake_interval = 5.0
 _data = {
 "points": PackedVector3Array(0, 0, 0, 118.694, 3.755, 135, -5.77, 1.5, 0, 100, 34.74, 0, -74, -16.5, -27.5, -190, 10, 180),
 "tilts": PackedFloat32Array(0, 0)
@@ -539,7 +536,7 @@ splash_screen = NodePath("SplashScreenCanvasLayer/SplashScreen_v2")
 music_manager = NodePath("Music")
 main_game_canvas = NodePath("MainGameCanvasLayer")
 
-[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("level_layout", "scene_transition_screen", "upgrade_menu", "tally_menu", "round_timer", "place_name", "player", "current_song", "ending_song", "rocks_container", "music_manager", "hud_system", "birds") groups=["round_manager"]]
+[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("level_layout", "scene_transition_screen", "upgrade_menu", "tally_menu", "round_timer", "place_name", "player", "ending_song", "rocks_container", "music_manager", "hud_system", "birds") groups=["round_manager"]]
 script = ExtResource("2_wtxnc")
 level_layout = NodePath("../Level_Visual")
 scene_transition_screen = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Background_transition")
@@ -548,7 +545,6 @@ tally_menu = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/T
 round_timer = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Timer")
 place_name = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Place_name")
 player = NodePath("../Player")
-current_song = NodePath("../Music/MathAnim")
 ending_song = NodePath("../Music/EndingSong")
 rocks_container = NodePath("../Rocks")
 music_manager = NodePath("../Music")
@@ -598,10 +594,6 @@ stream = ExtResource("6_vwwt2")
 volume_db = -38.0
 autoplay = true
 
-[node name="TitleMusic" type="AudioStreamPlayer" parent="Music" unique_id=1063747069]
-stream = ExtResource("7_mdemw")
-volume_db = -35.0
-
 [node name="Birds2" type="AudioStreamPlayer" parent="Music" unique_id=1520904327]
 stream = ExtResource("8_qmj5w")
 volume_db = -35.0
@@ -634,34 +626,13 @@ volume_db = -54.0
 stream = ExtResource("14_85u0j")
 volume_db = -30.0
 
-[node name="MathAnim" type="AudioStreamPlayer" parent="Music" unique_id=1667690039]
-stream = ExtResource("15_lwcfe")
-volume_db = -30.0
-
 [node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
 stream = ExtResource("15_lwcfe")
 volume_db = -30.0
 
-[node name="MathAnim2" type="AudioStreamPlayer" parent="Music" unique_id=924511348]
-stream = ExtResource("15_lwcfe")
-volume_db = -60.0
-
-[node name="Chopin" type="AudioStreamPlayer" parent="Music" unique_id=1364310332]
-stream = ExtResource("16_acvv8")
-volume_db = -40.0
-
-[node name="BlueDanude" type="AudioStreamPlayer" parent="Music" unique_id=2132155843]
-stream = ExtResource("17_fim8e")
-volume_db = -45.0
-
 [node name="EndingSong" type="AudioStreamPlayer" parent="Music" unique_id=468679081]
-stream = ExtResource("18_yc8qr")
+stream = ExtResource("16_tnw34")
 volume_db = -20.0
-
-[node name="TickingSong" type="AudioStreamPlayer" parent="Music" unique_id=1129005483]
-stream = ExtResource("19_2300m")
-volume_db = -55.0
-pitch_scale = 1.1
 
 [node name="PerfectPineappleRound" type="AudioStreamPlayer" parent="Music" unique_id=1838793762]
 unique_name_in_owner = true
@@ -695,70 +666,64 @@ pulse_magnitude = 0.8
 [node name="Container_1" type="Node3D" parent="Rocks" unique_id=189760907]
 
 [node name="Rock_Instance" parent="Rocks/Container_1" unique_id=1089661090 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08000016, 0.42300034)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4728577, -0.08000016, 0.42300034)
 
 [node name="Rock_Instance2" parent="Rocks/Container_1" unique_id=641614515 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7, -0.08000016, 0.42300034)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8336112, -0.08000016, 1.3238792)
 
 [node name="Rock_Instance3" parent="Rocks/Container_1" unique_id=977217555 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, -0.08000016, 0.42300034)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.658868, -0.08000016, 1.2910194)
 
 [node name="Rock_Instance4" parent="Rocks/Container_1" unique_id=614925084 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.8, -0.08000016, 0.42300034)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.798102, -0.08000016, 0.42300034)
 
 [node name="Rock_Instance5" parent="Rocks/Container_1" unique_id=1804095401 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, -0.08000016, 0.42300034)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5083055, -0.08000016, 0.31597328)
 
 [node name="Rock_Instance6" parent="Rocks/Container_1" unique_id=1648636095 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2257867, -0.08000016, 2.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.63919, -0.08000016, 1.9668274)
 
 [node name="Rock_Instance7" parent="Rocks/Container_1" unique_id=1588486015 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.925786, -0.08000016, 2.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.451482, -0.08000016, 2.3499985)
 
 [node name="Rock_Instance8" parent="Rocks/Container_1" unique_id=2122944651 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4742131, -0.08000016, 2.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5166283, -0.08000016, 2.3499985)
 
 [node name="Rock_Instance9" parent="Rocks/Container_1" unique_id=1306876008 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.774214, -0.08000016, 2.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.997283, -0.08000016, 2.9794903)
 
 [node name="Rock_Instance10" parent="Rocks/Container_1" unique_id=702490276 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, -0.08000016, 2.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4127793, -0.08000016, 2.3499985)
 
 [node name="Rock_Instance11" parent="Rocks/Container_1" unique_id=1826283916 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -0.08000016, 3.249998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6957083, -0.08000016, 3.249998)
 
 [node name="Rock_Instance12" parent="Rocks/Container_1" unique_id=1936738185 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.08000016, 3.249998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4926226, -0.08000016, 3.249998)
 
 [node name="Rock_Instance13" parent="Rocks/Container_1" unique_id=511030969 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.08000016, 3.249998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.390077, -0.08000016, 3.249998)
 
 [node name="Rock_Instance14" parent="Rocks/Container_1" unique_id=869067105 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -0.08000016, 3.249998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.036045, -0.08000016, 3.249998)
 
 [node name="Rock_Instance15" parent="Rocks/Container_1" unique_id=221535877 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.4, -0.08000016, 1.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3772593, -0.08000016, 1.3499985)
 
 [node name="Rock_Instance16" parent="Rocks/Container_1" unique_id=559020077 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3999996, -0.08000016, 1.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 2.2553158)
 
 [node name="Rock_Instance17" parent="Rocks/Container_1" unique_id=1641853172 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3999996, -0.08000016, 1.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7047248, -0.08000016, 1.3499985)
 
 [node name="Rock_Instance18" parent="Rocks/Container_1" unique_id=931775137 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2999997, -0.08000016, 1.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6097546, -0.08000016, 1.3499985)
 
 [node name="Rock_Instance19" parent="Rocks/Container_1" unique_id=202729113 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2999997, -0.08000016, 0.2516575)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 1.2710171)
 
 [node name="Rock_Instance20" parent="Rocks/Container_1" unique_id=1000269966 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.00412, -0.08000016, 0.2516575)
-
-[node name="Rock_Instance21" parent="Rocks/Container_1" unique_id=906731465 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0041199, -0.08000016, 0.2516575)
-
-[node name="Rock_Instance22" parent="Rocks/Container_1" unique_id=2100806577 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1041198, -0.08000016, 0.2516575)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4504056, -0.08000016, 0.2516575)
 
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="Rocks" unique_id=951137588]
 stream = ExtResource("22_r5akd")
@@ -1997,8 +1962,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 24)
 
 [node name="Balloon_container" type="Node3D" parent="." unique_id=906093422]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -100, 22)
-script = SubResource("GDScript_84tyu")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 22)
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 5.1099997, 2.2999992)

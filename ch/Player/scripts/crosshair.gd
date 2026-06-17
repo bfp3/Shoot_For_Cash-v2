@@ -197,12 +197,12 @@ func cross_hair_fade_in() -> void:
 
 func cannot_shoot_obstacle_in_way() -> void:
 	return
-	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(self, "modulate", Color.BLACK ,0.1)
-	tween.parallel().tween_property(self, "rotation", 0.1 ,0.1)
-	tween.tween_property(self, "modulate", Color.WHITE, 0.1)
-	tween.parallel().tween_property(self, "rotation", -0.1 ,0.1)
-	tween.tween_property(self, "rotation", 0.0 ,0.1)
+	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	#tween.tween_property(self, "modulate", Color.BLACK ,0.1)
+	#tween.parallel().tween_property(self, "rotation", 0.1 ,0.1)
+	#tween.tween_property(self, "modulate", Color.WHITE, 0.1)
+	#tween.parallel().tween_property(self, "rotation", -0.1 ,0.1)
+	#tween.tween_property(self, "rotation", 0.0 ,0.1)
 
 
 func crosshair_shooting_something() -> void:

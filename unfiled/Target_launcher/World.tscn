@@ -1,0 +1,145 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Launcher.gd" type="Script" id=1]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 200, 2, 200 )
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 0.352941, 0.262745, 0.337255, 1 )
+
+[sub_resource type="ConcavePolygonShape" id=3]
+data = PoolVector3Array( -100, 1, 100, 100, 1, 100, -100, -1, 100, 100, 1, 100, 100, -1, 100, -100, -1, 100, 100, 1, -100, -100, 1, -100, 100, -1, -100, -100, 1, -100, -100, -1, -100, 100, -1, -100, 100, 1, 100, 100, 1, -100, 100, -1, 100, 100, 1, -100, 100, -1, -100, 100, -1, 100, -100, 1, -100, -100, 1, 100, -100, -1, -100, -100, 1, 100, -100, -1, 100, -100, -1, -100, 100, 1, 100, -100, 1, 100, 100, 1, -100, -100, 1, 100, -100, 1, -100, 100, 1, -100, -100, -1, 100, 100, -1, 100, -100, -1, -100, 100, -1, 100, 100, -1, -100, -100, -1, -100 )
+
+[sub_resource type="CubeMesh" id=4]
+
+[sub_resource type="SpatialMaterial" id=5]
+albedo_color = Color( 0.466667, 0.635294, 0.0431373, 1 )
+
+[sub_resource type="SpatialMaterial" id=6]
+albedo_color = Color( 0.00392157, 0.294118, 0.0705882, 1 )
+
+[sub_resource type="SphereShape" id=7]
+radius = 4.0
+
+[sub_resource type="SphereMesh" id=8]
+radius = 4.0
+height = 8.0
+
+[sub_resource type="SpatialMaterial" id=9]
+albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="Animation" id=10]
+length = 6.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0, 0, 360 ) ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "spin"
+length = 8.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0, 360, 0 ) ]
+}
+
+[node name="World" type="Spatial"]
+
+[node name="Ground" type="MeshInstance" parent="."]
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="StaticBody" type="StaticBody" parent="Ground"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Ground/StaticBody"]
+shape = SubResource( 3 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.807733, 0.281236, -0.518145, 0, 0.878884, 0.477036, 0.589549, -0.385318, 0.709903, 0, 25.5965, -82.4204 )
+shadow_enabled = true
+
+[node name="MissileLauncher" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 47 )
+script = ExtResource( 1 )
+fire_rate = 0.5
+missile_speed = 100.0
+missile_turn_speed = 50.0
+
+[node name="Base" type="MeshInstance" parent="MissileLauncher"]
+transform = Transform( 3.71871, 0, 0, 0, 1, 0, 0, 0, 3.71871, 0, 0, 0 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
+
+[node name="Base2" type="MeshInstance" parent="MissileLauncher"]
+transform = Transform( 1.48951, 0, 0, 0, 2.61452, 0, 0, 0, 2.26737, 0, 2.18251, 0 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
+
+[node name="LauncherBase" type="Spatial" parent="MissileLauncher"]
+transform = Transform( 1, 0, 0, 0, 0.900577, -0.434697, 0, 0.434697, 0.900577, 0, 7.86135, -4.80909 )
+
+[node name="Base3" type="MeshInstance" parent="MissileLauncher/LauncherBase"]
+transform = Transform( 2.26737, 0, 0, 0, 2.29575, 4.76837e-07, 0, -1.78814e-07, 5.88743, 0, 9.53674e-07, 5.65821 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 6 )
+
+[node name="FirePoint" type="Spatial" parent="MissileLauncher/LauncherBase"]
+transform = Transform( 1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, 0, -0.505237 )
+
+[node name="FireTimer" type="Timer" parent="MissileLauncher"]
+
+[node name="TargetBase" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 47.8088, -42 )
+
+[node name="Target" type="Spatial" parent="TargetBase" groups=[
+"targets",
+]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 39.0711, 0, 0 )
+
+[node name="KinematicBody" type="KinematicBody" parent="TargetBase/Target"]
+
+[node name="CollisionShape" type="CollisionShape" parent="TargetBase/Target/KinematicBody"]
+shape = SubResource( 7 )
+
+[node name="MeshInstance" type="MeshInstance" parent="TargetBase/Target"]
+mesh = SubResource( 8 )
+material/0 = SubResource( 9 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TargetBase"]
+autoplay = "spin"
+anims/spin = SubResource( 10 )
+
+[node name="CamBase" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.1807, 0 )
+
+[node name="Camera" type="Camera" parent="CamBase"]
+transform = Transform( 0.82327, 0.251869, -0.508713, -0.0419722, 0.92073, 0.387937, 0.566096, -0.298025, 0.768581, -47.5301, 66.2772, 73.0105 )
+current = true
+far = 1000.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CamBase"]
+autoplay = "spin"
+anims/spin = SubResource( 11 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 121.436, 19.6661, -5.30813e-06 )
+far = 1000.0

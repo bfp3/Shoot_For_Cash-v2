@@ -15,7 +15,7 @@ const SFX_DOT_3 = preload("res://sfx/sfx_dot_3.wav")
 @export var colour_gold = Color('f5d50a') 
 
 func colour_outline() -> void:
-	var colour = Color('f5e10a82')
+	var _colour = Color('f5e10a82')
 	
 	$Dot/Outline.modulate = colour_gold
 	$Dot2/Outline.modulate = colour_gold

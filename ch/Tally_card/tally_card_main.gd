@@ -474,7 +474,7 @@ func sfx_close_tally() -> void:
 	$SFX/low_humming.stop()
 
 func blink_penalty_red() -> void:
-	var original_color := penalties_number_label.self_modulate
+	var _original_color := penalties_number_label.self_modulate
 
 	for i in 3:
 		penalties_number_label.self_modulate = Color("aa000050")

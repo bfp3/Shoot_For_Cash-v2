@@ -211,11 +211,11 @@ func update_power_label_position() -> void:
 
 		await get_tree().process_frame
 
-		var bar_center : Vector2 = last_bar.position + (last_bar.size * 0.5)
+		var _bar_center : Vector2 = last_bar.position + (last_bar.size * 0.5)
 
 		power_level_label.position = Vector2(
-			bar_center.x - power_level_label.size.x * 0.5,
-			bar_center.y - power_level_label.size.y * -1.3
+			_bar_center.x - power_level_label.size.x * 0.5,
+			_bar_center.y - power_level_label.size.y * -1.3
 		)
 
 		return

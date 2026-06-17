@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://fn5wekggayrw"]
+
+[ext_resource type="AudioStream" uid="uid://io6qlq4650og" path="res://sfx/Points_added.wav" id="1_xfhj2"]
+[ext_resource type="AudioStream" uid="uid://4xvnrukt3xlc" path="res://sfx/Points_added_2.wav" id="2_po50s"]
+
+
+[sub_resource type="GDScript" id="GDScript_2yr7f"]
+script/source = "extends Node
+
+var current_score := 0.0
+
+func _ready() -> void:
+	update_score(0.0)
+
+func update_score(point_value : float) -> void:
+	$Points_added.play()
+	current_score += point_value
+	$Control/Label.text = \"Current Score: \" + str(current_score)
+	await $Points_added.finished
+	$Points_added2.play()
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_u3bs4"]
+font_size = 40
+font_color = Color(0.400698, 0.400698, 0.400698, 1)
+outline_size = 10
+outline_color = Color(0.176419, 0.176419, 0.176419, 1)
+
+[node name="Score" type="Node" groups=["score_count"]]
+script = SubResource("GDScript_2yr7f")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 32.0
+offset_right = 80.0
+offset_bottom = 72.0
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Points"
+label_settings = SubResource("LabelSettings_u3bs4")
+
+[node name="Points_added" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_xfhj2")
+volume_db = -20.0
+
+[node name="Points_added2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_po50s")
+volume_db = -20.0

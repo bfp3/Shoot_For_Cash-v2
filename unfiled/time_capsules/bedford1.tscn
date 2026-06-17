@@ -1,0 +1,290 @@
+[gd_scene format=3 uid="uid://i1pk3w4x5qr5"]
+
+[ext_resource type="Texture2D" uid="uid://brm4tvdptq4gf" path="res://res/gradients/sky-gradient.tres" id="1_nodqv"]
+[ext_resource type="Texture2D" uid="uid://ceadr1qr2d0pq" path="res://res/gradients/big-mountain.tres" id="3_2dm6p"]
+[ext_resource type="Texture2D" uid="uid://dat2kb6hdn6xj" path="res://res/gradients/red-mountain.tres" id="4_jteb3"]
+[ext_resource type="Texture2D" uid="uid://dpiqjoxdk4vu6" path="res://res/gradients/moon.tres" id="5_mfst7"]
+[ext_resource type="Texture2D" uid="uid://ikpnffkolpqk" path="res://res/gradients/water-gradient.tres" id="6_v7yxw"]
+[ext_resource type="PackedScene" uid="uid://bwwqs8ytry7wo" path="res://ch/environment_decoration/trees.tscn" id="7_y7w5m"]
+[ext_resource type="AudioStream" uid="uid://kcrsa5k3eq7l" path="res://sfx/Seagull - Sound Effect.wav" id="9_i7t0g"]
+[ext_resource type="AudioStream" uid="uid://cc2iigb6x8nqm" path="res://sfx/night-noises.wav" id="10_w0gtp"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_q3j2t"]
+panorama = ExtResource("1_nodqv")
+filter = false
+
+[sub_resource type="Sky" id="Sky_f5nfh"]
+sky_material = SubResource("PanoramaSkyMaterial_q3j2t")
+
+[sub_resource type="Environment" id="Environment_hdlek"]
+background_mode = 2
+background_color = Color(0.72549, 0.72549, 0.72549, 1)
+sky = SubResource("Sky_f5nfh")
+sky_custom_fov = 85.5
+sky_rotation = Vector3(4.54484, 0, 0)
+ambient_light_source = 3
+reflected_light_source = 2
+glow_enabled = true
+glow_normalized = true
+glow_intensity = 0.2
+glow_strength = 1.05
+glow_bloom = 1.0
+glow_blend_mode = 4
+glow_hdr_threshold = 0.55
+fog_light_color = Color(0, 0.360784, 0.407843, 1)
+fog_density = 0.005
+fog_aerial_perspective = 0.5
+volumetric_fog_density = 0.001
+volumetric_fog_emission = Color(1, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_htc0d"]
+albedo_color = Color(0.988235, 0.847059, 0.901961, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_srj5q"]
+render_priority = 1
+albedo_texture = ExtResource("3_2dm6p")
+billboard_keep_scale = true
+grow_amount = 10.947
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ky6xs"]
+albedo_texture = ExtResource("4_jteb3")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ipbuh"]
+albedo_texture = ExtResource("4_jteb3")
+billboard_keep_scale = true
+grow_amount = 10.947
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5dnfj"]
+render_priority = 1
+albedo_texture = ExtResource("5_mfst7")
+emission_enabled = true
+emission = Color(1, 0.827451, 0, 1)
+emission_energy_multiplier = 59.0
+ao_light_affect = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_01lj4"]
+albedo_texture = ExtResource("6_v7yxw")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hvbxh"]
+albedo_texture = ExtResource("1_nodqv")
+
+[node name="Bedford1" type="Node3D" unique_id=160626973]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1103114324]
+environment = SubResource("Environment_hdlek")
+
+[node name="player" parent="." unique_id=1854843414]
+transform = Transform3D(-0.0454328, 0, -0.998967, 0, 1, 0, 0.998967, 0, -0.0454328, -55.9, 10.846, -22.43)
+visible = false
+
+[node name="background" type="Node3D" parent="." unique_id=885395212]
+
+[node name="iceMountain" type="CSGPolygon3D" parent="background" unique_id=1137440552]
+transform = Transform3D(7.33574, 0, -0.102808, 0, 5.56787, 0, 0.201446, 0, 3.7438, -23.3586, 30.7249, -437.464)
+material_override = SubResource("StandardMaterial3D_htc0d")
+polygon = PackedVector2Array(0, 0, -2.3, 0, 0.271533, 1.94401, 3.93425, -0.85473)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="background/iceMountain" unique_id=586299453]
+transform = Transform3D(0.417922, -0.897393, -0.141517, 0.54255, 0.121594, 0.831176, -0.728684, -0.424147, 0.537698, 1.3152, -0.585935, 4.12476)
+visible = false
+polygon = PackedVector2Array(-0.661741, -2.20879, -4.32295, 4.24766, 1.04491, 1.28027, 1.35433, 0.656469)
+
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="background/iceMountain" unique_id=785642847]
+transform = Transform3D(0.315629, 0.856288, -0.408838, -0.525644, 0.516496, 0.675966, 0.789985, 0.00154857, 0.613124, -0.593922, -2.60197, 6.92796)
+polygon = PackedVector2Array(-2.95393, -1.42703, -1.265, 1.22853, 5.14409, 1.7382, 1.35433, 0.656469)
+
+[node name="bigMountain" type="CSGPolygon3D" parent="background" unique_id=999451154]
+transform = Transform3D(4.17612, 0, 0, 0, 7.47686, 0, 0, 0, 2.44947, -23.1951, 0.697937, -437.914)
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 3.73702, 4.20982, 20.9708, -0.117311)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="redMountain" type="CSGPolygon3D" parent="background" unique_id=898493181]
+transform = Transform3D(7.39731, 0, 0, 0, 10.3767, 0, 0, 0, 5.70214, 38.9987, 16.46, -466.058)
+material_override = SubResource("StandardMaterial3D_ky6xs")
+use_collision = true
+polygon = PackedVector2Array(-4.49045, -0.946268, 0.468492, 1.20025, 5.97131, -1.04364)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 15
+smooth_faces = true
+
+[node name="bigMountain2" type="CSGPolygon3D" parent="background" unique_id=1260890163]
+transform = Transform3D(-26.6396, 0, 3.24072, 0, 181.624, 0, -10.8042, 0, -7.99053, 1186.06, 12.2844, -2654.39)
+visible = false
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 20.9708, -0.117311)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="towerOfSauron" type="CSGPolygon3D" parent="background" unique_id=1540352825]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -600.132, 280.681, -845.688)
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="towerOfSauron2" type="CSGPolygon3D" parent="background" unique_id=1669387196]
+transform = Transform3D(4.94745, 0, -3.13937, 0, 5, 0, 0.72299, 0, 21.4829, -417.318, 280.681, -176.461)
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="towerOfSauron3" type="CSGPolygon3D" parent="background" unique_id=134213046]
+transform = Transform3D(4.91373, 0, 3.59395, 0, 5, 0, -0.924817, 0, 19.0953, 240.926, 280.681, -310.466)
+material_override = SubResource("StandardMaterial3D_srj5q")
+polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="towerOfSauron4" type="CSGPolygon3D" parent="background" unique_id=1999249441]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51.1093, 54.134, 61.7542)
+visible = false
+material_override = SubResource("StandardMaterial3D_ipbuh")
+polygon = PackedVector2Array(-5, 0, 22.0598, 0.19857, 48.835, -56.0016)
+mode = 1
+spin_degrees = 360.0
+spin_sides = 8
+smooth_faces = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="background/towerOfSauron4" unique_id=2024751663]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13494, 57.3461, -107.52)
+light_color = Color(0.878431, 0, 0, 1)
+omni_range = 240.421
+omni_attenuation = 0.0974195
+
+[node name="eyeOfSauron" type="CSGSphere3D" parent="background" unique_id=2051607222]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 411.217, 102.955, -2706.74)
+flip_faces = true
+radius = 13.682
+material = SubResource("StandardMaterial3D_5dnfj")
+
+[node name="moon" type="CSGSphere3D" parent="background" unique_id=831195406]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 0.947, -5.38726, 26.7958, -150.444)
+visible = false
+flip_faces = true
+material = SubResource("StandardMaterial3D_5dnfj")
+
+[node name="water" type="CSGBox3D" parent="background" unique_id=479523608]
+transform = Transform3D(1, 0, 0, 0, 1, -4.47035e-08, 0, 4.47035e-08, 1, 0, 6.08316, -1.838)
+material_override = SubResource("StandardMaterial3D_01lj4")
+size = Vector3(10000, 1, 10000)
+
+[node name="moonlight" type="OmniLight3D" parent="background" unique_id=580524312]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.422, 9.52, -0.6)
+visible = false
+light_color = Color(0.788235, 0.647059, 0.411765, 1)
+light_energy = 1.865
+light_specular = 16.0
+distance_fade_begin = 1811.24
+omni_range = 4096.0
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="background" unique_id=1061120086]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.4432, 54.0663, -518.59)
+light_color = Color(0.470588, 0.470588, 0.470588, 1)
+light_specular = 14.338
+omni_range = 4096.0
+
+[node name="backdrop" type="CSGBox3D" parent="background" unique_id=1149332531]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.8781, -2.52251)
+visible = false
+material_override = SubResource("StandardMaterial3D_hvbxh")
+size = Vector3(1000, 15.639, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="background" unique_id=506342185]
+transform = Transform3D(1, 0, 0, 0, 0.993838, -0.110845, 0, 0.110845, 0.993838, 0, 6.892, 65.9856)
+light_energy = 0.01
+sky_mode = 1
+
+[node name="Trees" type="Node3D" parent="." unique_id=1823107517]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, -49.0292, 10.0075, -30.311)
+
+[node name="Trees" parent="Trees" unique_id=645300170 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -31.5792, 1.63868, -3.03248)
+
+[node name="Trees2" parent="Trees" unique_id=1760522580 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, -36.8121, 0.780064, 0)
+
+[node name="Trees3" parent="Trees" unique_id=1313412772 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(2.9966, 0.142784, 0, -0.142784, 2.9966, 0, 0, 0, 3, -16.6107, -7.29571, -64.4576)
+
+[node name="Trees10" parent="Trees" unique_id=1483007099 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -1387.08, 720.623, -2053.19)
+
+[node name="Trees4" parent="Trees" unique_id=1524565803 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(2.03817, 0, 1.44771, 0, 2.5, 0, -1.44771, 0, 2.03817, -81.343, -0.541222, 17.1957)
+
+[node name="Trees5" parent="Trees" unique_id=886538933 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(1.75, 0, 0, 0, 1.75, 0, 0, 0, 1.75, -81.9751, -2.98205, 32.0018)
+
+[node name="Trees6" parent="Trees" unique_id=1380866474 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70.0362, -5.03052, 37.6872)
+
+[node name="Trees7" parent="Trees" unique_id=1939807796 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(4.47561, 0, 0.467879, 0, 4.5, 0, -0.467879, 0, 4.47561, 281.507, -2.85281, -1001.69)
+
+[node name="Trees8" parent="Trees" unique_id=1023426617 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(4.5, 0, 0, 0, 4.5, 0, 0, 0, 4.5, 165.427, 26.8612, -1026.43)
+
+[node name="Trees9" parent="Trees" unique_id=677709953 instance=ExtResource("7_y7w5m")]
+transform = Transform3D(4.5, 0, 0, 0, 4.5, 0, 0, 0, 4.5, 56.3104, 42.0155, -965.694)
+
+[node name="birdContainer" type="Node3D" parent="." unique_id=911156110]
+transform = Transform3D(0.829982, 0, 2.8829, 0, 3, 0, -2.8829, 0, 0.829982, -347.076, 191.057, -194.879)
+
+[node name="birds" parent="birdContainer" unique_id=682372758]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
+
+[node name="birds2" parent="birdContainer" unique_id=123660240]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.09, -8.23207, -7.62939e-06)
+
+[node name="birds3" parent="birdContainer" unique_id=1002708795]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.236511, 9.71935, 0)
+
+[node name="birdSFX" type="AudioStreamPlayer3D" parent="birdContainer" unique_id=2005748940]
+stream = ExtResource("9_i7t0g")
+unit_size = 100.0
+autoplay = true
+max_distance = 3258.18
+
+[node name="birdContainer2" type="Node3D" parent="." unique_id=428366432]
+transform = Transform3D(-2.89836, 0.670109, 0.387843, 0.61208, 2.90339, -0.442333, -0.474158, -0.348217, -2.94175, -114.462, 38.6441, 225.866)
+
+[node name="birds" parent="birdContainer2" unique_id=67872337]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
+
+[node name="birds2" parent="birdContainer2" unique_id=2109664544]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.09, -8.23207, -7.62939e-06)
+
+[node name="birds3" parent="birdContainer2" unique_id=1534891100]
+transform = Transform3D(1, -3.72529e-09, 0, 7.45058e-09, 1, 0, 0, 2.23517e-08, 1, -7.98756, 11.6208, 1.10049)
+
+[node name="birds4" parent="birdContainer2" unique_id=690585986]
+transform = Transform3D(0.677167, 0.177237, 0.00568455, -0.177325, 0.676671, 0.0259685, 0.00108002, -0.0265613, 0.699495, -22.0597, 4.78249, 2.98952)
+
+[node name="birdSFX" type="AudioStreamPlayer3D" parent="birdContainer2" unique_id=1871611318]
+stream = ExtResource("9_i7t0g")
+unit_size = 100.0
+autoplay = true
+max_distance = 3258.18
+
+[node name="bgnoise" type="AudioStreamPlayer3D" parent="." unique_id=61221332]
+transform = Transform3D(0.997963, 0, -0.0638009, 0, 1, 0, 0.0638009, 0, 0.997963, -48.0871, 12.3205, -26.3108)
+stream = ExtResource("10_w0gtp")
+autoplay = true

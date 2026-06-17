@@ -1,0 +1,308 @@
+[gd_scene format=3 uid="uid://sqa5wyfrj3k8"]
+
+[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="1_3gkrf"]
+[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_sound_effects/ES_Balloon Pop 2 - SFX Producer.wav" id="2_n72i0"]
+[ext_resource type="PackedScene" uid="uid://csfwmpvafvdcs" path="res://unfiled/stars_for_cage.tscn" id="3_h7d0o"]
+
+
+[sub_resource type="GDScript" id="GDScript_3gkrf"]
+resource_name = "hostage_health_bar_manager"
+script/source = "extends Control
+
+#@onready var health_unit: Panel = $health_unit
+#@onready var health_remaining_label: Label = $health_remaining_label
+#@onready var health_hbox_container: HBoxContainer = $Health_hbox_container
+#@onready var _2d_marker_pos: Marker2D = $\"2D_marker_pos\"
+
+@onready var health_loading_sound: AudioStreamPlayer = $health_loading_sound
+@onready var take_damage_sound: AudioStreamPlayer = $take_damage_sound
+
+@onready var starting_health : int = $\"../..\".starting_health
+@onready var health_remaining := starting_health
+
+@onready var array_of_stars : Array = [$Stars, $Stars2, $Stars3, $Stars4, $Stars5]
+
+var amount_of_hits := 0
+
+var pending_star_reductions: int = 0
+var is_processing_reductions: bool = false
+
+signal finished_health_calculation_phase
+signal out_of_health
+
+func _ready() -> void:
+	var hostage_cage = get_tree().get_nodes_in_group('Egg_Cage')
+	for hostage in hostage_cage:
+		if !hostage.has_method('taken_a_hit'):
+			return
+		else:
+			hostage.taken_a_hit_from_a_target.connect(taken_a_hit)
+	
+	for star in array_of_stars:
+		star.modulate = Color.TRANSPARENT
+	
+func start_up_tween() -> void:
+	
+	var dur : float = 0.25
+	
+	var tween : Tween = create_tween()
+	tween.tween_property($Stars, \"modulate\", Color.WHITE, dur)
+	tween.parallel().tween_property($Stars, \"scale\", Vector2.ONE * 1.3, 0.05)
+	tween.parallel().tween_property($Stars, \"scale\", Vector2.ONE, dur).set_delay(0.2)
+	tween.parallel().tween_property($Stars2, \"modulate\", Color.WHITE, dur).set_delay(0.4)
+	tween.parallel().tween_property($Stars3, \"modulate\", Color.WHITE, dur).set_delay(0.6)
+	tween.parallel().tween_property($Stars4, \"modulate\", Color.WHITE, dur).set_delay(0.8)
+	tween.parallel().tween_property($Stars5, \"modulate\", Color.WHITE, dur).set_delay(1.4)
+	tween.parallel().tween_property($Stars5, \"scale\", Vector2.ONE * 1.3, 0.05).set_delay(1.4)
+	tween.parallel().tween_property($Stars5, \"scale\", Vector2.ONE, dur).set_delay(1.8)
+	await tween.finished
+
+func taken_a_hit() -> void:
+	amount_of_hits = amount_of_hits + 1
+	notify_hud_about_damage()
+	
+
+func play_low_health_anim() -> void:
+	$'../../Damage_rect'.show()
+	$'../../Damage_rect/AnimationPlayer'.play('low_health')
+	
+
+	
+
+func no_hits_taken() -> void:
+	for star in array_of_stars:
+		if star.star_acquired:
+			star.no_damage_taken()
+			await get_tree().create_timer(0.1).timeout
+		else:
+			return
+
+func start_health_calc_phase() -> void:
+	if amount_of_hits == 0:
+		await no_hits_taken()
+		await get_tree().create_timer(1.0).timeout
+		finish_health_calc_phase()
+		return
+
+	#var hits = min(amount_of_hits, health_remaining)
+	#if health_remaining > 0:
+		#if health_remaining < 3:
+			#$\"../../SFX\".hostage_low_on_health()
+		
+	health_remaining -= amount_of_hits
+		#take_damage_sound.play()
+
+	pending_star_reductions += amount_of_hits
+	if !is_processing_reductions:
+		is_processing_reductions = true
+		await process_star_reductions()
+
+
+func finish_health_calc_phase() -> void:
+	amount_of_hits = 0
+	
+	if health_remaining > 0:
+		finished_health_calculation_phase.emit()
+	else:
+		out_of_health.emit()
+
+func process_star_reductions() -> void:
+	while pending_star_reductions > 0:
+		await reduce_stars()
+		pending_star_reductions -= 1
+
+	is_processing_reductions = false
+	finish_health_calc_phase()
+	
+
+func reduce_stars():
+	array_of_stars.reverse()
+	for i in array_of_stars:
+		if i.star_acquired:
+			await i.star_lost_tween()
+			array_of_stars.erase(i)
+			array_of_stars.reverse()
+			return
+		else:
+			return null
+
+
+func send_to_tween(last_health: Panel) -> void:
+	shake_viewport()
+	%Hostage_face.shake_hostage_face_viewport()
+	var dur : float = 0.8
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(last_health, \"scale\", Vector2.ONE * 1.25, dur)
+	tween.parallel().tween_property(last_health, \"modulate\", Color('FFFFFF00'), dur)
+	tween.parallel().tween_property(last_health, \"position:y\", 50.0, dur).as_relative()
+	tween.tween_callback(last_health.queue_free)
+	await tween.finished
+
+func shake_viewport() -> void:
+	var viewport = $\"../SubViewportContainer\"
+	var dur : float = 0.05
+	for i in range(10):
+		var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_property(viewport, \"rotation\", -0.02, dur)
+		tween.tween_property(viewport, \"rotation\", 0.02, dur)
+		tween.tween_property(viewport, \"rotation\", 0.0, dur)
+		await tween.finished
+
+func notify_hud_about_damage() -> void:
+	var new_feedback = get_tree().get_first_node_in_group(\"HUD_feedback_corner\")
+	if new_feedback:
+		new_feedback.cage_taken_damage()
+
+#func update_hbox_positions() -> void:
+	#return
+	##health_hbox_container.position = _2d_marker_pos.position
+	#health_remaining_label.position = health_hbox_container.position - Vector2(-2, 110)
+	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	#tween.tween_property(health_hbox_container, \"position:x\", health_hbox_container.position.x - health_hbox_container.size.x / 2, 0.1)
+	#await tween.finished
+
+#func clear_ui_elements() -> void:
+	#clear_ammo()
+#
+#func clear_ammo() -> void:
+	#for child in health_hbox_container.get_children():
+		#child.queue_free()
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3gkrf"]
+draw_center = false
+border_width_left = 2
+border_width_top = 15
+border_width_right = 5
+border_width_bottom = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_two27"]
+bg_color = Color(0.5, 0.5, 0.5, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.7, 0.7, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 20
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_xxlmk"]
+Panel/styles/panel = SubResource("StyleBoxFlat_two27")
+
+[node name="hostage_health_bar" type="Control" groups=["hostage_health_bar_manager"]]
+layout_mode = 3
+anchor_top = 0.884239
+anchor_right = 0.533333
+anchor_bottom = 0.907156
+offset_top = 10.3
+offset_right = 113.467
+offset_bottom = 14.0833
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(134, 5)
+script = SubResource("GDScript_3gkrf")
+metadata/_edit_use_anchors_ = true
+
+[node name="health_loading_sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_3gkrf")
+volume_db = -80.0
+pitch_scale = 1.5
+
+[node name="take_damage_sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_n72i0")
+volume_db = -31.0
+pitch_scale = 0.22
+
+[node name="star_lost_sfx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_n72i0")
+volume_db = -40.0
+
+[node name="Panel3" type="Panel" parent="."]
+self_modulate = Color(0.08, 0.133333, 0.16, 0.756863)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0699999
+anchor_top = -0.37384
+anchor_right = 0.969999
+anchor_bottom = 2.62616
+offset_left = -12.4995
+offset_top = -1.61996
+offset_right = 12.5005
+offset_bottom = -11.62
+scale = Vector2(0.9, 0.83)
+pivot_offset = Vector2(125, 7)
+theme_override_styles/panel = SubResource("StyleBoxFlat_3gkrf")
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel2" type="Panel" parent="."]
+modulate = Color(1, 1, 1, 0.588235)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0699999
+anchor_top = -1.25
+anchor_right = 0.969999
+anchor_bottom = 1.75
+offset_left = -12.5
+offset_top = 4.815
+offset_right = 12.5
+offset_bottom = -5.185
+scale = Vector2(0.9, 0.54)
+pivot_offset = Vector2(125, 7)
+theme = SubResource("Theme_xxlmk")
+metadata/_edit_use_anchors_ = true
+
+[node name="Stars" parent="." instance=ExtResource("3_h7d0o")]
+layout_mode = 1
+anchor_left = 0.0519999
+anchor_top = -2.375
+anchor_right = 0.212
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true
+
+[node name="Stars2" parent="." instance=ExtResource("3_h7d0o")]
+layout_mode = 1
+anchor_left = 0.244
+anchor_top = -2.375
+anchor_right = 0.404
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true
+
+[node name="Stars3" parent="." instance=ExtResource("3_h7d0o")]
+layout_mode = 1
+anchor_left = 0.436
+anchor_top = -2.375
+anchor_right = 0.595999
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true
+
+[node name="Stars4" parent="." instance=ExtResource("3_h7d0o")]
+layout_mode = 1
+anchor_left = 0.627999
+anchor_top = -2.375
+anchor_right = 0.787999
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true
+
+[node name="Stars5" parent="." instance=ExtResource("3_h7d0o")]
+layout_mode = 1
+anchor_left = 0.819999
+anchor_top = -2.375
+anchor_right = 0.979999
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true

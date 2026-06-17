@@ -1,0 +1,89 @@
+[gd_scene format=4 uid="uid://bi5vv6btrrqjs"]
+
+[ext_resource type="Texture2D" uid="uid://j5xwk5mja6ur" path="res://unfiled/Decal_placeholders/motif_sign.png" id="1_3enpb"]
+
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tkgcx"]
+noise_type = 3
+frequency = 0.0224
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_p7c66"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_tkgcx")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p7c66"]
+diffuse_mode = 1
+specular_mode = 1
+albedo_color = Color(0.18, 0.18, 0.18, 1)
+metallic = 0.25
+roughness = 0.8
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+normal_enabled = true
+normal_scale = 0.3
+normal_texture = SubResource("NoiseTexture2D_p7c66")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4j2wq"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_c0itt"]
+_surfaces = [{
+"aabb": AABB(-0.5, -0.5, -0.5, 1, 1, 1),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAACAAEAAwAEAAEABQAAAAIAAwAAAAUABAAGAAIABQACAAYAAwAHAAQAAwAFAAcABwAGAAQABwAFAAYA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("AAAAAP//AAAAAP//AAAAAAAA/////wAAAAAAAAAAAAD/////AAAAAP//AAD//wAA////////AAD//wAAAAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_g6n35"]
+resource_name = "square_tile_Cube_001"
+_surfaces = [{
+"aabb": AABB(-0.5, -0.5, -0.5, 1, 1, 1),
+"attribute_data": PackedByteArray("/1////+f/7//n////1//v/9f/7//n/9//5//v/9f/3//X/9//5//P/+f/3//X/8//1//P/+fAAD/n/8//18AAP8f/3//X/8//1//f/8f/z//n/9//9//P//f/3//n/8/"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEAFAAVABYAFAAXABUA"),
+"material": SubResource("StandardMaterial3D_4j2wq"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("AAAAAP//VNUAAP//AABU1QAA/////1TVAAAAAAAAVNUAAAAAAAD///////8AAP//AAD//wAA/////wAAAAD/////AAAAAFTV////////VNX/////AABU1f//AAD//1TV//8AAP///78AAP//////v/////////+/AAAAAP///78AAAAAAAD/v///AAD///+///8AAAAA/78AAAAA////v/////8AAP//AAD///////8AAP//AAD/////////////VNVU1VTVVNVU1VTVVNVU1f+//7//v/+//7//v/+//7+qKqoqqiqqKqoqqiqqKqoq/////////////////////wAA/38AAP9/AAD/fwAA/3//f/+//3//v/9//7//f/+/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_c0itt")
+
+[node name="Tile_mesh" type="MeshInstance3D"]
+transform = Transform3D(0.95, 0, 0, 0, 0.1, 0, 0, 0, 0.95, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_p7c66")
+mesh = SubResource("ArrayMesh_g6n35")
+skeleton = NodePath("")
+
+[node name="Decal3" type="Decal" parent="."]
+transform = Transform3D(-1.05263, 0, -9.2024e-08, 0, 10, 0, 9.2024e-08, 0, -1.05263, 0, 0, -0.263157)
+size = Vector3(1.19, 0.131, 0.5)
+texture_albedo = ExtResource("1_3enpb")
+texture_normal = ExtResource("1_3enpb")
+texture_orm = ExtResource("1_3enpb")
+modulate = Color(1, 1, 1, 0.105882)
+upper_fade = 0.00816141
+lower_fade = 0.0046875
+distance_fade_enabled = true
+distance_fade_begin = 5.0
+distance_fade_length = 6.0
+
+[node name="Decal2" type="Decal" parent="."]
+transform = Transform3D(1.05263, 0, 1.88225e-07, 0, 10, 0, -1.88225e-07, 0, 1.05263, 0, 0, 0.263159)
+size = Vector3(1.19, 0.131, 0.5)
+texture_albedo = ExtResource("1_3enpb")
+texture_normal = ExtResource("1_3enpb")
+texture_orm = ExtResource("1_3enpb")
+modulate = Color(1, 1, 1, 0.105882)
+upper_fade = 0.00816141
+lower_fade = 0.0046875
+distance_fade_enabled = true
+distance_fade_begin = 5.0
+distance_fade_length = 18.0

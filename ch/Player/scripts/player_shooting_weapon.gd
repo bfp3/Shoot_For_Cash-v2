@@ -357,8 +357,8 @@ func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos 
 func play_accurate_sounds() -> void:
 	return
 	#await get_tree().create_timer(0.05).timeout
-	create_shot_instance(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
-	pitch_adjustment += 0.05
+	#create_shot_instance(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
+	#pitch_adjustment += 0.05
 	
 
 func create_shot_instance(sound_file : AudioStreamWAV, volume_db : float, pitch_scale : float) -> void:

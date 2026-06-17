@@ -1,0 +1,542 @@
+[gd_scene format=3 uid="uid://dk6glag3eftnt"]
+
+[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="1_bgu48"]
+[ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="2_yhdxt"]
+[ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="3_xgcbq"]
+
+
+[sub_resource type="GDScript" id="GDScript_nhn7o"]
+script/source = "extends Node3D
+
+const LAUNCHING_TARGET = preload(\"res://300_assets/100_targets/Launching_target.tscn\")
+
+@export var launch_speed: float = 5.0  # Controls how fast the target moves
+@export var arc_strength: float = 0.5   # Controls the height of the launch arc
+
+@export var original_launch_speed : float = 5.0
+@export var pineapple_launcher := false
+@export var is_active := false
+@onready var mesh: Node3D = $mesh
+
+@onready var smoke_particles_gpu: GPUParticles3D = $Smoke_quick2
+var counter := 0
+@onready var marker_3d: Marker3D = %Marker3D
+
+signal bomb_launched
+
+var target_position
+
+var pineapple_shot := false
+
+func _ready() -> void:
+	
+	original_launch_speed = launch_speed
+	return
+	#if !is_active:
+		#$Timer.stop()
+	#else:
+		#$Timer.start(randi_range(1,2))
+		
+func visual_fire():
+	mesh_launcher_tween()
+	
+func assign_round_parameters(shots: int, interval: float) -> void:
+
+	for i in shots:
+		prepare_target_for_launch()
+		await get_tree().create_timer(0.5).timeout
+
+
+func _on_round_timer_timeout() -> void:
+	var shots_to_fire = get_meta(\"shots_to_fire\")
+	if counter < shots_to_fire:
+		_on_timer_timeout()
+	else:
+		$Timer.stop()
+
+
+func _on_timer_timeout() -> void:
+	#return
+	counter +=1 
+	if counter >= 4:
+		return
+		
+	prepare_target_for_launch()
+	
+	launch_speed = original_launch_speed
+	$Timer.start(1.0)
+
+func stop_timer() -> void:
+	$Timer.stop()
+
+
+func prepare_target_for_launch() -> void:
+	
+	var target_instance = LAUNCHING_TARGET.instantiate()
+
+	target_instance.slow_travel_time = launch_speed * 2
+	target_instance.fast_travel_time = launch_speed * 2
+	target_instance.travel_time = launch_speed
+	target_instance.arc_strength = arc_strength
+	
+	var bomb_container_array = get_tree().get_first_node_in_group(\"bomb_container_array\")
+	bomb_container_array.add_child(target_instance)
+	
+	if pineapple_shot:
+		target_instance.pineapple.show()
+		target_instance.bomb_mesh.hide()
+		
+	else:
+		target_instance.pineapple.hide()
+		target_instance.bomb_mesh.show()
+	
+	target_instance.global_position = %Marker3D.global_position
+	await launching_tween(target_instance)
+	
+	target_instance.target_launcher_fire()
+
+func play_launch_animation(target_instance: Node3D) -> void:
+	launching_tween(target_instance)
+	
+
+
+func mesh_launcher_tween() -> void:
+	var launcher_tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	launcher_tween.tween_property(mesh, \"global_position:y\", -0.05, 0.75).as_relative().set_ease(Tween.EASE_IN)
+	launcher_tween.tween_interval(0.15)
+	launcher_tween.tween_property(mesh, \"global_position:y\", 0.05, 1.5).as_relative().set_ease(Tween.EASE_OUT)
+	await launcher_tween.finished
+
+func launching_tween(target_instance : Node3D) -> void:
+	
+	#mesh_launcher_tween()
+	target_instance.scale = Vector3.ONE / 10
+	#var SMOKE_LINGERING = load(\"res://800_3D_materials/Particles/Smoke_particles/Smoke_lingering.tscn\")
+	#CommonCode.spawn_particles(SMOKE_LINGERING, 15.0, $Marker3D.global_position + Vector3(0,0.5,0), true)
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	#tween.tween_interval(0.74)
+	#smoke_particles_2()
+	#smoke_particles()
+	tween.tween_callback(smoke_particles)
+	tween.tween_callback(smoke_particles_2)
+	tween.tween_property(target_instance, \"scale\", Vector3.ONE / 2, 0.15)
+	await tween.finished
+	firing_sequence()
+	
+	#bomb_launched.emit()
+	
+func smoke_particles() -> void:
+	#CommonCode.spawn_particles()
+	var new_particles = $Smoke_quick2.duplicate()
+	get_tree().get_current_scene().add_child(new_particles)
+	new_particles.show()
+	new_particles.global_position = %Marker3D.global_position + Vector3(0,0.5,0) # $Smoke_quick2.position 
+	new_particles.emitting = true
+	new_particles.duplicate_particles = true
+
+func smoke_particles_2() -> void:
+	#CommonCode.spawn_particles()
+	var new_particles_2 = $Smoke_quick3.duplicate()
+	get_tree().get_current_scene().add_child(new_particles_2)
+	new_particles_2.show()
+	new_particles_2.global_position =  %Marker3D.global_position + Vector3(0,0.5,0) #$Smoke_quick3.position
+	new_particles_2.emitting = true
+	new_particles_2.duplicate_particles = true
+
+func firing_sequence() -> void:
+	
+	if $launch_sound:
+		var launch_sound = $launch_sound #.play(0.15)
+		CommonCode.play_sound_duplicate_instance(launch_sound, 0.15, launch_sound.volume_db)
+		
+func smoke_up() -> void:
+	if $launch_sound:
+		var launch_sound = $launch_sound
+		var launch_sound_dup = preload(\"res://400_sounds/00_sfx/Arrow_release.wav\")
+		#CommonCode.play_sound_duplicate_instance(launch_sound, 0.15, launch_sound.volume_db - 5.0)
+		var pitch_fluc : float = randf_range(0.05,0.15)
+		var vol_fluc =  randf_range(10.0, 15.0)
+		CommonCode.play_sound_instance_pitch_adjusted(launch_sound_dup, launch_sound.volume_db - vol_fluc, pitch_fluc)
+		smoke_particles_destruction()
+		
+func smoke_particles_destruction() -> void:
+	var new_particles_2 = $Smoke_quick4.duplicate()
+	get_tree().get_current_scene().add_child(new_particles_2)
+	new_particles_2.show()
+	new_particles_2.global_position =  %Marker3D.global_position + Vector3(0,0.5,0) #$Smoke_quick3.position
+	new_particles_2.emitting = true
+	new_particles_2.duplicate_particles = true
+"
+
+[sub_resource type="GDScript" id="GDScript_oowog"]
+script/source = "extends AudioStreamPlayer
+
+@onready var parent = get_parent()
+@export var max_distance = 15.0
+@export var max_volume_db = -24.0
+@export var min_volume_db = -40.0
+
+func play_sound() -> void:
+	distance_from_player()
+	if not playing:
+		play()
+
+func distance_from_player() -> void:
+	var player = get_tree().get_first_node_in_group('Player')
+	var distance = parent.global_position.distance_to(player.global_position)
+	#print_debug(\"DISTANCE\", distance)
+	distance = clamp(distance, 1.0, max_distance)
+	var volume_db = max_volume_db + (min_volume_db - max_volume_db) * (distance - 1) / (max_distance - 1)
+	volume_db = clamp(volume_db, min_volume_db, max_volume_db)
+	self.volume_db = volume_db
+"
+
+[sub_resource type="Curve" id="Curve_oowog"]
+_data = [Vector2(0, 0.94382), 0.0, 0.0, 0, 0, Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.275676, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_ixjm1"]
+curve = SubResource("Curve_oowog")
+
+[sub_resource type="Curve" id="Curve_vfg0b"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_o3w7n"]
+curve = SubResource("Curve_vfg0b")
+
+[sub_resource type="Gradient" id="Gradient_deuiu"]
+offsets = PackedFloat32Array(0.0145349, 1)
+colors = PackedColorArray(0.22, 0.22, 0.22, 1, 0.45, 0.45, 0.45, 0.286275)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_f2m8g"]
+gradient = SubResource("Gradient_deuiu")
+
+[sub_resource type="Curve" id="Curve_ixjm1"]
+_data = [Vector2(0, 0.0226277), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_vfg0b"]
+curve = SubResource("Curve_ixjm1")
+
+[sub_resource type="Curve" id="Curve_w5d4t"]
+_data = [Vector2(0, 0.29781), 0.0, 0.0, 0, 0, Vector2(0.0425532, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_saw8a"]
+curve = SubResource("Curve_w5d4t")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vbv87"]
+lifetime_randomness = 0.8
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 0.0
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+direction = Vector3(0, 1, 0)
+spread = 5.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+angular_velocity_curve = SubResource("CurveTexture_o3w7n")
+radial_velocity_min = 0.0999776
+radial_velocity_max = 0.199978
+radial_velocity_curve = SubResource("CurveTexture_vfg0b")
+gravity = Vector3(0, 0.01, 0)
+scale_min = 0.1
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_saw8a")
+color_ramp = SubResource("GradientTexture1D_f2m8g")
+alpha_curve = SubResource("CurveTexture_ixjm1")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1cot"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("2_yhdxt")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_f2m8g"]
+material = SubResource("StandardMaterial3D_y1cot")
+
+[sub_resource type="GDScript" id="GDScript_w5d4t"]
+script/source = "extends GPUParticles3D
+
+var duplicate_particles := false
+
+func _ready():
+	one_shot = true
+
+func _on_finished() -> void:
+	if duplicate_particles:
+		self.queue_free()
+"
+
+[sub_resource type="Curve" id="Curve_o3w7n"]
+_data = [Vector2(0, 0.94382), 0.0, 0.0, 0, 0, Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.275676, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_bgu48"]
+curve = SubResource("Curve_o3w7n")
+
+[sub_resource type="Curve" id="Curve_f2m8g"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_yhdxt"]
+curve = SubResource("Curve_f2m8g")
+
+[sub_resource type="Gradient" id="Gradient_saw8a"]
+offsets = PackedFloat32Array(0.0145349, 1)
+colors = PackedColorArray(0.22, 0.22, 0.22, 1, 0.45, 0.45, 0.45, 0.286275)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xgcbq"]
+gradient = SubResource("Gradient_saw8a")
+
+[sub_resource type="Curve" id="Curve_2wk13"]
+_data = [Vector2(0, 0.0226277), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_omqjg"]
+curve = SubResource("Curve_2wk13")
+
+[sub_resource type="Curve" id="Curve_4w4pp"]
+_data = [Vector2(0, 0.29781), 0.0, 0.0, 0, 0, Vector2(0.0425532, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_pdgfr"]
+curve = SubResource("Curve_4w4pp")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kiyn4"]
+lifetime_randomness = 0.8
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 0.0
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+direction = Vector3(0, 1, 0)
+spread = 5.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+angular_velocity_curve = SubResource("CurveTexture_yhdxt")
+radial_velocity_min = 0.0999776
+radial_velocity_max = 0.199978
+radial_velocity_curve = SubResource("CurveTexture_omqjg")
+gravity = Vector3(0, -0.1, 0)
+scale_min = 0.1
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_pdgfr")
+color_ramp = SubResource("GradientTexture1D_xgcbq")
+alpha_curve = SubResource("CurveTexture_bgu48")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_bxpqi"]
+load_path = "res://.godot/imported/particle_sprite_smoke.webp-94067ca765f9db23717d2d11ab74a1f8.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pyjor"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("CompressedTexture2D_bxpqi")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_vlyji"]
+material = SubResource("StandardMaterial3D_pyjor")
+size = Vector2(5, 5)
+
+[sub_resource type="GDScript" id="GDScript_ehlva"]
+script/source = "extends GPUParticles3D
+
+var duplicate_particles := false
+
+func _ready():
+	one_shot = true
+
+func _on_finished() -> void:
+	if duplicate_particles:
+		self.queue_free()
+"
+
+[sub_resource type="Gradient" id="Gradient_ojjcr"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.522222)
+colors = PackedColorArray(0, 0, 0, 0, 0.53, 0.53, 0.53, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_82n6n"]
+noise_type = 3
+fractal_octaves = 2
+domain_warp_enabled = true
+domain_warp_type = 2
+domain_warp_amplitude = 35.91
+domain_warp_frequency = 1.665
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_omqjg"]
+width = 200
+height = 200
+seamless = true
+color_ramp = SubResource("Gradient_ojjcr")
+noise = SubResource("FastNoiseLite_82n6n")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nhn7o"]
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.56, 0.56, 0.56, 1)
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = SubResource("NoiseTexture2D_omqjg")
+uv1_scale = Vector3(0.02, 0.02, 0.02)
+uv1_offset = Vector3(0.25, 0, -0.295)
+uv1_triplanar = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tulqe"]
+top_radius = 0.25
+bottom_radius = 0.35
+height = 0.75
+
+[sub_resource type="BoxMesh" id="BoxMesh_oowog"]
+size = Vector3(0.05, 0.05, 0.02)
+
+[node name="Target_cannon" type="Node3D"]
+script = SubResource("GDScript_nhn7o")
+arc_strength = 0.2
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="launch_sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_bgu48")
+volume_db = -27.0
+pitch_scale = 0.08
+script = SubResource("GDScript_oowog")
+
+[node name="Smoke_quick2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.379668, 0)
+top_level = true
+visible = false
+amount = 40
+lifetime = 110.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_vbv87")
+draw_pass_1 = SubResource("QuadMesh_f2m8g")
+script = SubResource("GDScript_w5d4t")
+
+[node name="Smoke_quick3" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
+top_level = true
+visible = false
+emitting = false
+amount = 40
+lifetime = 20.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+local_coords = true
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_vbv87")
+draw_pass_1 = SubResource("QuadMesh_f2m8g")
+script = SubResource("GDScript_w5d4t")
+
+[node name="Smoke_quick4" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
+top_level = true
+visible = false
+emitting = false
+amount = 73
+lifetime = 20.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+local_coords = true
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_kiyn4")
+draw_pass_1 = SubResource("QuadMesh_vlyji")
+script = SubResource("GDScript_ehlva")
+
+[node name="mesh" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.265, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_nhn7o")
+mesh = SubResource("CylinderMesh_tulqe")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.515, 0)
+material_override = SubResource("StandardMaterial3D_nhn7o")
+mesh = SubResource("CylinderMesh_tulqe")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="mesh"]
+transform = Transform3D(0.993572, -0.113203, 0, 0.113203, 0.993572, 0, 0, 0, 1, 0.236422, 0.0976839, -0.00177176)
+material_override = ExtResource("3_xgcbq")
+mesh = SubResource("BoxMesh_oowog")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="mesh"]
+transform = Transform3D(0.993572, 0.113203, 0, -0.113203, 0.993572, 0, 0, 0, 1, -0.236, 0.098, -0.002)
+material_override = ExtResource("3_xgcbq")
+mesh = SubResource("BoxMesh_oowog")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="mesh"]
+transform = Transform3D(-4.34304e-08, 4.94827e-09, 1, 0.113203, 0.993572, 0, -0.993572, 0.113203, -4.37114e-08, 0.000325208, 0.0976839, -0.238097)
+material_override = ExtResource("3_xgcbq")
+mesh = SubResource("BoxMesh_oowog")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="mesh"]
+transform = Transform3D(-4.34304e-08, -4.94827e-09, 1, -0.113203, 0.993572, 0, -0.993572, -0.113203, -4.37114e-08, 9.69866e-05, 0.098, 0.234325)
+material_override = ExtResource("3_xgcbq")
+mesh = SubResource("BoxMesh_oowog")
+skeleton = NodePath("../..")
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0180176, 0)
+material_override = SubResource("StandardMaterial3D_nhn7o")
+radius = 0.255
+height = 0.43
+sides = 18
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="mesh/CSGCylinder3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0395264, 0)
+operation = 2
+radius = 0.2
+height = 0.415088
+sides = 18
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="mesh/CSGCylinder3D2/CSGCylinder3D"]
+radius = 0.18
+height = 0.336035
+sides = 18
+
+[node name="Marker3D" type="Marker3D" parent="mesh"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104982, 0)
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="finished" from="Smoke_quick2" to="Smoke_quick2" method="_on_finished"]
+[connection signal="finished" from="Smoke_quick3" to="Smoke_quick3" method="_on_finished"]
+[connection signal="finished" from="Smoke_quick4" to="Smoke_quick4" method="_on_finished"]

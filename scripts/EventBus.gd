@@ -140,6 +140,7 @@ func XXemit_all_signals() -> void:
 	popper_has_died.emit()
 
 	# PINEAPPLES
+	pineapple_round_used.emit()
 	pineapple_shot.emit()
 	pineapple_hit_ground.emit()
 	pineapple_launched.emit()

@@ -1,0 +1,1222 @@
+[gd_scene format=3 uid="uid://7s6i1p81bg51"]
+
+[ext_resource type="Texture2D" uid="uid://dylgoijv5vwqs" path="res://unfiled/Decal_placeholders/Egg_2D_sprites/egg_grey.png" id="1_bolqw"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="2_glfcm"]
+[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="2_hofsv"]
+[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_sound_effects/ES_Balloon Pop 2 - SFX Producer.wav" id="3_53ro4"]
+[ext_resource type="Texture2D" uid="uid://dt3ige5xp4l4c" path="res://unfiled/Hostage_sub_viewport/Hostage_expressions/Hostage_parts/Eyes.png" id="6_sn2bn"]
+[ext_resource type="Texture2D" uid="uid://bwa0ksghjxse5" path="res://unfiled/Hostage_sub_viewport/Hostage_expressions/Hostage_parts/eyebrow_right.png" id="7_lgvvv"]
+[ext_resource type="Texture2D" uid="uid://cjlmxyip3qjs5" path="res://unfiled/Hostage_sub_viewport/Hostage_expressions/Hostage_parts/eyebrow_left.png" id="8_osxch"]
+[ext_resource type="PackedScene" uid="uid://csfwmpvafvdcs" path="res://unfiled/stars_for_cage.tscn" id="11_lgvvv"]
+[ext_resource type="PackedScene" uid="uid://sqa5wyfrj3k8" path="res://unfiled/hostage_health_manager.tscn" id="12_osxch"]
+
+
+[sub_resource type="GDScript" id="GDScript_4hj2f"]
+script/source = "extends Control
+@onready var egg_health_points: Control = %egg_health_points
+@onready var king_eggs_face: Control = $King_eggs_face
+
+@export var starting_health : int = 5
+
+@export var await_time := 2.5
+@export var fade_in_dur := 1.0
+
+func _ready() -> void:
+	EventBus.instance.main_egg_destroyed.connect(_hostage_killed)
+	
+	fade_in_tween()
+	king_eggs_face.hide()
+
+func _hostage_killed() -> void:
+	var tween = create_tween()
+	tween.tween_property(%Hostage_face, \"modulate\", Color.TRANSPARENT, 0.25).set_trans(Tween.TRANS_LINEAR)
+	await tween.finished
+	%Hostage_face.hide()
+
+func fade_in_tween() -> void:
+	modulate = Color.TRANSPARENT
+	await get_tree().create_timer(await_time).timeout
+	
+	var tween = create_tween()
+	tween.tween_property(self, \"modulate\", Color.WHITE, fade_in_dur)
+	await tween.finished
+	egg_health_points.start_up_tween()
+	await get_tree().create_timer(2.5).timeout
+	king_eggs_face.fade_in_king_egg_face()
+
+
+
+	
+	
+func init_sequence_intro() -> void:
+	await get_tree().create_timer(6.0).timeout
+	%hostage_health_bar.initialise_health_bar()
+	await get_tree().create_timer(2.0).timeout
+	%Hostage_timer.initialise_timer()
+
+func init_sequence_no_intro() -> void:
+	%hostage_health_bar.initialise_health_bar()
+	%Hostage_timer.initialise_timer()
+"
+
+[sub_resource type="Gradient" id="Gradient_bolqw"]
+offsets = PackedFloat32Array(0, 0.526646, 1)
+colors = PackedColorArray(0, 0, 0, 0, 1, 0.45, 0.45, 0.635294, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_sn2bn"]
+gradient = SubResource("Gradient_bolqw")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Animation" id="Animation_osxch"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_lgvvv"]
+resource_name = "low_health"
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_two27"]
+_data = {
+&"RESET": SubResource("Animation_osxch"),
+&"low_health": SubResource("Animation_lgvvv")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_av1no"]
+bg_color = Color(0.35, 0.35, 0.35, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 10
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 6.0
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_glfcm"]
+Panel/styles/panel = SubResource("StyleBoxFlat_av1no")
+
+[sub_resource type="GDScript" id="GDScript_fp0th"]
+script/source = "extends Control
+
+
+func _ready() -> void:
+	hide()
+	
+func fade_in_king_egg_face() -> void:
+	modulate = Color.TRANSPARENT
+	show()
+	var tween = create_tween().set_ease(Tween.EASE_IN)
+	tween.tween_property(self, \"modulate\", Color.WHITE, 0.5)
+	await tween.finished
+"
+
+[sub_resource type="GDScript" id="GDScript_sn2bn"]
+script/source = "extends Control
+
+@onready var left_eye: TextureRect = $Eyes/left_eye
+@onready var right_eye: TextureRect = $Eyes/right_eye
+@onready var left_eyebrow: TextureRect = $Eyes/left_eyebrow
+@onready var right_eyebrow: TextureRect = $Eyes/right_eyebrow
+
+var left_eye_default_pos : Vector2 = Vector2(104.0, 74.0)
+var right_eye_default_pos : Vector2 = Vector2(122.0, 74.0)
+
+@export var y_limit_up := 68.0
+@export var y_limit_down := 80.0
+
+@export var left_eye_leftmost_side_limit := 96.0
+@export var left_eye_rightmost_side_limit := 108.0
+
+@export var eyebrow_move_up := 0.2
+@export var eyebrow_move_down := 0.2
+
+@export var eyebrow_rotation_min := 0.1  # Minimum rotation (in degrees)
+@export var eyebrow_rotation_max := 0.2  # Maximum rotation (in degrees)
+
+const EYE_X_DISTANCE := 10.0
+
+func _ready():
+	var orig_modulate = self.modulate
+	self.modulate = Color('FFFFFF')
+	
+	var hostage_cage = get_tree().get_first_node_in_group(\"Egg_Cage\")
+	if hostage_cage:
+		hostage_cage.taken_a_hit_from_a_target.connect(shake_hostage_face_viewport)
+	
+	start_eye_animation()
+	#var tween_modulate = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	#tween_modulate.tween_property(self, \"modulate\", orig_modulate, 5.0).set_delay(1.0)
+	
+
+func start_eye_animation():
+	randomize()
+	look_around()
+
+func look_around():
+	var delay = randf_range(0.3, 1.5)
+
+	# Pick a random position for the left eye within its limits
+	var left_target_x = randf_range(left_eye_leftmost_side_limit, left_eye_rightmost_side_limit)
+	
+	# Calculate the right eye's X position based on the fixed distance
+	var right_target_x = left_target_x + EYE_X_DISTANCE
+	
+	# Clamp the right eye position to its limits
+	right_target_x = clamp(right_target_x, left_eye_rightmost_side_limit + EYE_X_DISTANCE, 588.816)  # Assuming the right side limit
+	left_target_x = right_target_x - EYE_X_DISTANCE  # Recalculate left eye position
+
+	# Pick a random position for the Y-axis
+	var target_y = randf_range(y_limit_up, y_limit_down)
+	
+	# Choose a random speed for the animation
+	var speed = randf_range(0.6, 1.5)
+
+	# Create tweens for both eyes
+	var tween_left = create_tween()
+	var tween_right = create_tween()
+
+	# Animate the left eye
+	tween_left.tween_property(left_eye, \"position\", Vector2(left_target_x, target_y), speed).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	
+	# Animate the right eye
+	tween_right.tween_property(right_eye, \"position\", Vector2(right_target_x, target_y), speed).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+	# Call the look_around function again after a random delay
+	tween_right.tween_callback(Callable(self, \"look_around\")).set_delay(delay)
+
+	# Eyebrow animations
+	move_eyebrows()
+
+func move_eyebrows():
+	# Randomize vertical movement and rotation
+	var eyebrow_move_y = randf_range(-eyebrow_move_down, eyebrow_move_up)
+	var eyebrow_rotation = randf_range(eyebrow_rotation_min, eyebrow_rotation_max)
+	var speed = randf_range(0.6, 1.8)
+
+	# Create tweens for both eyebrows
+	var tween_left_eyebrow = create_tween()
+	var tween_right_eyebrow = create_tween()
+
+	# Animate the left eyebrow (vertical and rotation)
+	tween_left_eyebrow.tween_property(left_eyebrow, \"position\", left_eyebrow.position + Vector2(0, eyebrow_move_y), speed).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween_left_eyebrow.tween_property(left_eyebrow, \"rotation\", eyebrow_rotation, speed).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+	# Animate the right eyebrow (vertical and rotation)
+	tween_right_eyebrow.tween_property(right_eyebrow, \"position\", right_eyebrow.position + Vector2(0, eyebrow_move_y), speed).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween_right_eyebrow.tween_property(right_eyebrow, \"rotation\", eyebrow_rotation, speed).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func shake_hostage_face_viewport() -> void:
+	#%Scared.hide()
+	#%Squinting.show()
+	
+	var viewport = get_parent().get_parent()
+	var dur : float = 0.05
+	for i in range(8):
+		var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_property(viewport, \"rotation\", -0.02, dur)
+		tween.tween_property(viewport, \"rotation\", 0.02, dur)
+		tween.tween_property(viewport, \"rotation\", 0.0, dur)
+		await tween.finished
+	
+	#%Scared.show()
+	#%Squinting.hide()
+"
+
+[sub_resource type="Theme" id="Theme_lgvvv"]
+HBoxContainer/constants/separation = 35
+
+[sub_resource type="GDScript" id="GDScript_hcy87"]
+script/source = "extends Control
+
+const BASIC_THEME = preload(\"res://700_2D_nodes_UI/Fonts/Themes/Basic theme.tres\")
+
+@export var timer_mode := true # True for timer mode, False for countdown mode
+@export var total_time_limit := 300 # Initial time in seconds (e.g., 300 seconds = 5 minutes)
+@export var activated := true
+@onready var label: Label = $Label
+var timer_stopped := false
+
+var time_elapsed: float = 0.0  # Custom time tracker, starts at 0
+var time_remaining: float = 0.0
+var time_remainder: float = 0.0
+@onready var tick_sound: AudioStreamPlayer = $tick_sound
+const CLOCK_TICK = preload(\"res://400_sounds/Placeholder_SFX/Clock_tick.wav\")
+const CLOCK_TICK_URGENT = preload(\"res://400_sounds/gun_sfx/timer_running_out_sfx.wav\")
+
+
+signal timed_out
+signal ammo_countdown_finished
+
+
+var sfx_timer : Timer
+
+func one_second_gone() -> void:
+	if timer_stopped:
+		return
+	
+	var volume = -49.0
+
+	if time_remainder <= 20.0:
+		$Label.label_settings.font_color =  Color(\"FFFFFF\")
+		$Label.label_pulsing_tween()
+		volume = -40.0
+	if time_remainder <= 10.0:
+		#$Label.modulate = Color.RED
+		#$Label.label_settings.font_color = Color.DARK_RED
+		#volume = -25.0
+		volume = -38.0
+		CommonCode.play_sound_instance(CLOCK_TICK_URGENT, volume)
+		
+	if time_remainder <= 5.0:
+		#$Label.modulate = Color.DARK_RED
+		volume = -36.0
+		CommonCode.play_sound_instance(CLOCK_TICK_URGENT, volume)
+		
+	if time_remainder <= 3.0:
+		#volume = -35.0
+		CommonCode.play_sound_instance(CLOCK_TICK_URGENT, volume)
+		
+	else:
+		CommonCode.play_sound_instance_pitch_adjusted(CLOCK_TICK, volume, 5.0)
+
+func _ready() -> void:
+	
+	var continue_screen = get_tree().get_first_node_in_group(\"continue_screen\")
+	if continue_screen:
+		continue_screen.reset_timer.connect(reset_timer)
+	hide()
+
+
+func initialise_timer() -> void:
+	if !activated:
+		return
+	label.pivot_offset = label.size / 2
+	var level = get_tree().get_first_node_in_group(\"level_root\")
+	if level:
+		total_time_limit = level.timer_start_time
+	tween()
+	set_process(false)
+	
+	# Start a timer to call one_second_gone() every second
+	sfx_timer = Timer.new()
+	sfx_timer.wait_time = 1.0
+	sfx_timer.one_shot = false
+	sfx_timer.timeout.connect(one_second_gone)
+	add_child(sfx_timer)
+
+func tween() -> void:
+	var dur : float = 3.0
+	show()
+	if activated:
+		time_remaining = total_time_limit
+		update_label(time_remaining * 1000)  # Show time in milliseconds
+	else:
+		self.visible = false
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(label, \"modulate\", Color('ffffff00'), 0.01)
+	tween.tween_property(label, \"modulate\", Color('ffffff'), dur)
+	tween.tween_property(label, \"position:y\", 2, dur).as_relative()
+	tween.parallel().tween_property(label, \"scale\", Vector2(1, 1), dur)
+	await tween.finished
+
+	activated = true
+	if sfx_timer:
+		sfx_timer.start(1.0)
+		set_process(true)
+
+func _process(_delta: float) -> void:
+	if activated:
+		time_elapsed += _delta  # Increment time_elapsed based on _delta
+		var remaining_time = total_time_limit - time_elapsed  # Calculate remaining time
+		time_remainder = remaining_time
+		if remaining_time <= 0:
+			activated = false  # Stop when time runs out
+			remaining_time = 0  # Ensure no negative time
+			on_timer_end()
+
+		update_countdown(remaining_time)  # Update with remaining time
+
+func update_countdown(remaining_time: float) -> void:
+	if remaining_time > 0:
+		update_label(int(remaining_time * 1000))  # Update the label in milliseconds
+	else:
+		on_timer_end()
+
+func update_label(current_time: int) -> void:
+	var minutes = current_time / 1000 / 60
+	var seconds = current_time / 1000 % 60
+	var msec = current_time % 1000 / 10
+	var minute_str = str(minutes).pad_zeros(2)
+	var second_str = str(seconds).pad_zeros(2)
+	label.text = minute_str + \":\" + second_str
+
+func on_timer_end() -> void:
+	timer_stopped = true
+	sfx_timer.stop()
+	timed_out.emit()  # Emit signal when time is up
+	ammo_countdown_finished.emit()
+	set_process(false)
+	$Label.stop_flashing()
+
+func reset_timer() -> void:
+	time_elapsed = 0.0
+	time_remainder = total_time_limit
+	timer_stopped = false
+	activated = true
+
+	update_label(int(time_remainder * 1000))
+	$Label.label_settings.font_color = Color(\"FFFFFF\")
+	$Label.stop_flashing()
+
+	# Restart the sfx timer
+	if sfx_timer == null:
+		sfx_timer = Timer.new()
+		sfx_timer.wait_time = 1.0
+		sfx_timer.one_shot = false
+		sfx_timer.timeout.connect(one_second_gone)
+		add_child(sfx_timer)
+	else:
+		if not sfx_timer.is_stopped():
+			sfx_timer.stop()
+	sfx_timer.start()
+
+	# Resume processing
+	set_process(true)
+
+	# Optionally show and reanimate the label
+	show()
+
+func stop_timer_lose_condition() -> void:
+	
+	if sfx_timer != null:
+		sfx_timer.stop()
+		sfx_timer.queue_free()
+	set_process(false)
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, \"modulate\", Color('ffffff00'), 1.0)
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_sn2bn"]
+font_size = 30
+font_color = Color(0.73, 0.73, 0.73, 0.431373)
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[sub_resource type="GDScript" id="GDScript_lgvvv"]
+script/source = "extends Label
+@onready var panel: Panel = $\"../Panel\"
+
+var started_to_pulse := false
+
+var tween_flash : Tween = null
+
+func _ready() -> void:
+	panel.hide()
+
+func label_pulsing_tween() -> void:
+	if started_to_pulse:
+		return
+	
+	var dur : float = 0.5
+	panel.show()
+	tween_flash = create_tween().set_loops()
+	tween_flash.tween_property(panel, \"modulate\", Color('ffffff'), 0.15)
+	tween_flash.tween_property(panel, \"modulate\", Color('ffffff20'), 0.85)
+	#tween.tween_property(self, \"modulate\", Color('ffffff00'), dur)
+	await tween_flash.finished
+
+func stop_flashing() -> void:
+	if started_to_pulse:
+		if tween_flash:
+			tween_flash.kill()
+			tween_flash.stop()
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_osxch"]
+bg_color = Color(0.5, 0, 0, 0.819608)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.64, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 20
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_two27"]
+Panel/styles/panel = SubResource("StyleBoxFlat_osxch")
+
+[sub_resource type="GDScript" id="GDScript_a6bu3"]
+script/source = "extends Control
+
+@onready var health_unit: Panel = $health_unit
+@onready var health_remaining_label: Label = $health_remaining_label
+@onready var health_hbox_container: HBoxContainer = $Health_hbox_container
+@onready var _2d_marker_pos: Marker2D = $\"2D_marker_pos\"
+
+@onready var health_loading_sound: AudioStreamPlayer = $health_loading_sound
+@onready var take_damage_sound: AudioStreamPlayer = $take_damage_sound
+
+@onready var starting_health : int = $\"../..\".starting_health
+@onready var health_remaining := starting_health
+
+@onready var array_of_stars : Array = [$Stars, $Stars2, $Stars3, $Stars4, $Stars5]
+
+signal out_of_health
+
+
+func _ready() -> void:
+	return
+	var hostage_cage = get_tree().get_first_node_in_group('Egg_Cage')
+	hostage_cage.taken_a_hit_from_a_target.connect(taken_a_hit)
+	hide()
+
+func initialise_health_bar() -> void:
+	return
+	first_time_loading_weapon()
+	
+	
+func first_time_loading_weapon() -> void:
+	return
+	#show()
+	clear_ui_elements()
+	load_health(health_remaining)
+	update_labels()
+	update_hbox_positions()
+	
+
+func taken_a_hit(hits: int = 1) -> void:
+	return
+	hits = min(hits, health_remaining)  # Ensure we don't remove more than we have
+	if health_remaining > 0:
+		if health_remaining < 3:
+			$\"../../SFX\".hostage_low_on_health()
+		health_remaining -= hits
+		take_damage_sound.play()
+		remove_health_units(hits)
+		update_labels()
+		
+		if health_remaining == 0:
+			out_of_health.emit()
+	
+	await get_tree().create_timer(1.0).timeout
+
+
+func remove_health_units(count: int) -> void:
+	return
+	reduce_stars()
+	
+	#
+	#for i in range(count):
+		#if health_hbox_container.get_children().size() == 0:
+			#return
+		#var last_health = health_hbox_container.get_children().back()
+		#if last_health:
+			#send_to_tween(last_health)
+
+func load_health(count: int) -> void:
+	return
+	clear_ammo()
+	for _i in range(count):
+		var new_health = health_unit.duplicate()
+		health_hbox_container.add_child(new_health)
+		new_health.show()
+		health_loading_sound.play()
+		await get_tree().create_timer(0.05).timeout
+
+func reduce_stars() -> void:
+	return
+	array_of_stars.reverse()
+	for i in array_of_stars:
+		if i.star_acquired:
+			i.star_lost_tween()
+			array_of_stars.erase(i)
+			array_of_stars.reverse()
+			break
+		else:
+			return
+
+func send_to_tween(last_health: Panel) -> void:
+	return
+	shake_viewport()
+	%Hostage_face.shake_hostage_face_viewport()
+	var dur : float = 0.8
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(last_health, \"scale\", Vector2.ONE * 1.25, dur)
+	tween.parallel().tween_property(last_health, \"modulate\", Color('FFFFFF00'), dur)
+	tween.parallel().tween_property(last_health, \"position:y\", 50.0, dur).as_relative()
+	tween.tween_callback(last_health.queue_free)
+	await tween.finished
+
+func shake_viewport() -> void:
+	return
+	var viewport = $\"../SubViewportContainer\"
+	var dur : float = 0.05
+	for i in range(10):
+		var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_property(viewport, \"rotation\", -0.02, dur)
+		tween.tween_property(viewport, \"rotation\", 0.02, dur)
+		tween.tween_property(viewport, \"rotation\", 0.0, dur)
+		await tween.finished
+
+
+	
+func update_labels() -> void:
+	return
+	health_remaining_label.text = str(health_remaining)
+
+func update_hbox_positions() -> void:
+	return
+	#health_hbox_container.position = _2d_marker_pos.position
+	health_remaining_label.position = health_hbox_container.position - Vector2(-2, 110)
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(health_hbox_container, \"position:x\", health_hbox_container.position.x - health_hbox_container.size.x / 2, 0.1)
+	await tween.finished
+
+
+func clear_ui_elements() -> void:
+	return
+	clear_ammo()
+
+func clear_ammo() -> void:
+	return
+	for child in health_hbox_container.get_children():
+		child.queue_free()
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sn2bn"]
+bg_color = Color(0.35, 0.35, 0.35, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 20
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_bolqw"]
+Panel/styles/panel = SubResource("StyleBoxFlat_sn2bn")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lgvvv"]
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_osxch"]
+Panel/styles/panel = SubResource("StyleBoxFlat_lgvvv")
+
+[sub_resource type="LabelSettings" id="LabelSettings_si3we"]
+font_size = 80
+font_color = Color(0.73, 0.73, 0.73, 0.431373)
+outline_size = 2
+outline_color = Color(0.37, 0.37, 0.37, 0.74902)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_two27"]
+bg_color = Color(0.5, 0.5, 0.5, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.7, 0.7, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 20
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_xxlmk"]
+Panel/styles/panel = SubResource("StyleBoxFlat_two27")
+
+[sub_resource type="GDScript" id="GDScript_glfcm"]
+script/source = "extends Node
+const LOW_HEALTH = preload(\"res://400_sounds/Incidental_music/Metronome_SFX/Space_arp_80bpm - Theyre_coming.wav\")
+
+func hostage_low_on_health() -> void:
+	CommonCode.play_sound_instance(LOW_HEALTH, -5.0)
+"
+
+[node name="Side_panel" type="Control"]
+layout_mode = 3
+anchor_right = 0.133333
+anchor_bottom = 0.17037
+offset_right = 0.000640869
+offset_bottom = 0.000396729
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 92)
+script = SubResource("GDScript_4hj2f")
+metadata/_edit_use_anchors_ = true
+
+[node name="Damage_rect" type="TextureRect" parent="."]
+visible = false
+z_index = -2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_sn2bn")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Damage_rect"]
+libraries = {
+&"": SubResource("AnimationLibrary_two27")
+}
+
+[node name="Panel" type="Panel" parent="."]
+modulate = Color(1, 1, 1, 0.588235)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset = Vector2(128, 92)
+theme = SubResource("Theme_glfcm")
+
+[node name="King_eggs_face" type="Control" parent="."]
+z_index = -1
+layout_mode = 1
+anchor_top = -0.0434783
+anchor_right = 1.0
+anchor_bottom = 0.956522
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 92)
+script = SubResource("GDScript_fp0th")
+
+[node name="Hostage_face" type="Control" parent="King_eggs_face"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_top = 0.130435
+anchor_right = 1.0
+anchor_bottom = 1.13043
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 92)
+script = SubResource("GDScript_sn2bn")
+metadata/_edit_use_anchors_ = true
+
+[node name="Eyes_cage" type="TextureRect" parent="King_eggs_face/Hostage_face"]
+modulate = Color(1, 1, 1, 0.164706)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -30.0
+offset_top = -44.0
+offset_right = 34.0
+offset_bottom = 12.0008
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(160, 120)
+texture = ExtResource("1_bolqw")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Eyes" type="TextureRect" parent="King_eggs_face/Hostage_face"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 92)
+texture = ExtResource("6_sn2bn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="left_eye" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes"]
+modulate = Color(0.45, 0.45, 0.45, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.049
+anchor_bottom = 1.0
+offset_left = 104.0
+offset_top = 74.0
+offset_right = -144.544
+offset_bottom = -90.0
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_glfcm")
+expand_mode = 1
+
+[node name="right_eye" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes"]
+modulate = Color(0.45, 0.45, 0.45, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 122.0
+offset_top = 74.0
+offset_right = -114.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("2_glfcm")
+expand_mode = 1
+
+[node name="left_eyebrow" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes"]
+modulate = Color(0.55, 0.55, 0.55, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 58.0
+offset_top = 2.0
+offset_right = 58.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 92)
+texture = ExtResource("7_lgvvv")
+expand_mode = 1
+stretch_mode = 4
+flip_h = true
+
+[node name="right_eyebrow" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes"]
+modulate = Color(0.55, 0.55, 0.55, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 58.0
+offset_top = 2.0
+offset_right = 58.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 92)
+texture = ExtResource("8_osxch")
+expand_mode = 1
+stretch_mode = 4
+flip_h = true
+
+[node name="Jail" type="Control" parent="King_eggs_face"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 92)
+
+[node name="Top_cell" type="Panel" parent="King_eggs_face/Jail"]
+modulate = Color(1, 1, 1, 0.235294)
+layout_mode = 2
+anchor_top = -0.0333333
+anchor_right = 1.0
+offset_top = 63.1333
+offset_right = -16.0
+offset_bottom = 63.0
+
+[node name="Bottom_cell" type="Panel" parent="King_eggs_face/Jail"]
+modulate = Color(1, 1, 1, 0.235294)
+layout_mode = 2
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.03333
+offset_top = -26.0
+offset_right = -16.0
+offset_bottom = -26.1327
+
+[node name="HBoxContainer" type="HBoxContainer" parent="King_eggs_face/Jail"]
+clip_contents = true
+layout_direction = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 18.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.5)
+pivot_offset = Vector2(128, 92)
+theme = SubResource("Theme_lgvvv")
+
+[node name="Panel" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+modulate = Color(1, 1, 1, 0.235294)
+custom_minimum_size = Vector2(20, 90)
+layout_mode = 2
+
+[node name="Panel2" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+modulate = Color(1, 1, 1, 0.235294)
+custom_minimum_size = Vector2(20, 90)
+layout_mode = 2
+
+[node name="Panel3" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+modulate = Color(1, 1, 1, 0.235294)
+custom_minimum_size = Vector2(20, 90)
+layout_mode = 2
+
+[node name="Panel4" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+modulate = Color(1, 1, 1, 0.235294)
+custom_minimum_size = Vector2(20, 90)
+layout_mode = 2
+
+[node name="Panel5" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+modulate = Color(1, 1, 1, 0.235294)
+custom_minimum_size = Vector2(20, 90)
+layout_mode = 2
+
+[node name="Sub_root_control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(240, 240)
+
+[node name="Hostage_timer" type="Control" parent="Sub_root_control" groups=["level_timer"]]
+unique_name_in_owner = true
+z_index = 1
+layout_mode = 1
+anchor_left = 0.353517
+anchor_right = 0.646486
+anchor_bottom = 0.27174
+grow_horizontal = 2
+pivot_offset = Vector2(37.5, 25)
+script = SubResource("GDScript_hcy87")
+activated = false
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Sub_root_control/Hostage_timer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.133333
+anchor_top = 0.04
+anchor_right = 0.866667
+anchor_bottom = 0.96
+grow_horizontal = 2
+pivot_offset = Vector2(27, 23)
+text = "06"
+label_settings = SubResource("LabelSettings_sn2bn")
+horizontal_alignment = 1
+script = SubResource("GDScript_lgvvv")
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="Sub_root_control/Hostage_timer"]
+modulate = Color(1, 1, 1, 0.588235)
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.123333
+anchor_top = 0.15
+anchor_right = 1.12667
+anchor_bottom = 0.89
+offset_left = 9.25
+offset_top = -6.5
+offset_right = -9.5
+offset_bottom = 6.5
+scale = Vector2(1.25, 0.74)
+pivot_offset = Vector2(37, 25)
+theme = SubResource("Theme_two27")
+metadata/_edit_use_anchors_ = true
+
+[node name="Sub_view_border" type="ColorRect" parent="Sub_root_control"]
+visible = false
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -5.0
+offset_top = -7.0
+offset_right = -217.0
+offset_bottom = -293.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(134, 97)
+color = Color(0.42, 0.42, 0.42, 0.392157)
+
+[node name="hostage_health_bar" type="Control" parent="Sub_root_control" groups=["Side_panel_of_hostage"]]
+unique_name_in_owner = true
+process_mode = 4
+visible = false
+layout_mode = 1
+anchor_top = 0.884239
+anchor_right = 0.533333
+anchor_bottom = 0.907156
+offset_top = 10.3
+offset_right = 113.467
+offset_bottom = 14.0833
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(134, 5)
+script = SubResource("GDScript_a6bu3")
+metadata/_edit_use_anchors_ = true
+
+[node name="Extra_border" type="ColorRect" parent="Sub_root_control/hostage_health_bar"]
+visible = false
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(125, 5)
+color = Color(0.42, 0.42, 0.42, 0.392157)
+
+[node name="Panel" type="Panel" parent="Sub_root_control/hostage_health_bar"]
+visible = false
+modulate = Color(1, 1, 1, 0.588235)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.224998
+anchor_right = 0.996094
+anchor_bottom = 0.624992
+offset_right = 1.0
+offset_bottom = 4.0
+scale = Vector2(1, 0.8)
+pivot_offset = Vector2(128, 4)
+theme = SubResource("Theme_bolqw")
+metadata/_edit_use_anchors_ = true
+
+[node name="health_unit_color" type="ColorRect" parent="Sub_root_control/hostage_health_bar"]
+visible = false
+z_index = 2
+custom_minimum_size = Vector2(20, 5)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.096
+anchor_top = -0.0625
+anchor_right = 0.176
+anchor_bottom = 0.5625
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(10, 2.5)
+color = Color(0.878431, 0.878431, 0.878431, 0.431373)
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect" type="ColorRect" parent="Sub_root_control/hostage_health_bar/health_unit_color"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 7.5)
+color = Color(0.42, 0.42, 0.42, 0.392157)
+
+[node name="health_unit" type="Panel" parent="Sub_root_control/hostage_health_bar"]
+visible = false
+z_index = 2
+custom_minimum_size = Vector2(20, 5)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.08
+anchor_bottom = 0.5
+offset_top = -0.5
+offset_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(10, 2.5)
+theme = SubResource("Theme_osxch")
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect" type="Panel" parent="Sub_root_control/hostage_health_bar/health_unit"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 7.5)
+
+[node name="health_remaining_label" type="Label" parent="Sub_root_control/hostage_health_bar"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -98.0
+offset_top = -146.0
+offset_right = 94.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 0
+label_settings = SubResource("LabelSettings_si3we")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Health_hbox_container" type="HBoxContainer" parent="Sub_root_control/hostage_health_bar"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_right = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="2D_marker_pos" type="Marker2D" parent="Sub_root_control/hostage_health_bar"]
+visible = false
+position = Vector2(16, 27)
+
+[node name="health_loading_sound" type="AudioStreamPlayer" parent="Sub_root_control/hostage_health_bar"]
+stream = ExtResource("2_hofsv")
+volume_db = -80.0
+pitch_scale = 1.5
+
+[node name="take_damage_sound" type="AudioStreamPlayer" parent="Sub_root_control/hostage_health_bar"]
+stream = ExtResource("3_53ro4")
+volume_db = -31.0
+pitch_scale = 0.22
+
+[node name="Panel2" type="Panel" parent="Sub_root_control/hostage_health_bar"]
+modulate = Color(1, 1, 1, 0.588235)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0699999
+anchor_top = -1.25
+anchor_right = 0.969999
+anchor_bottom = 1.75
+offset_left = -12.5
+offset_top = 4.815
+offset_right = 12.5
+offset_bottom = -5.185
+scale = Vector2(0.9, 0.54)
+pivot_offset = Vector2(125, 7)
+theme = SubResource("Theme_xxlmk")
+metadata/_edit_use_anchors_ = true
+
+[node name="Stars" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+layout_mode = 1
+anchor_left = 0.0519999
+anchor_top = -2.375
+anchor_right = 0.212
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true
+
+[node name="Stars2" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+layout_mode = 1
+anchor_left = 0.244
+anchor_top = -2.375
+anchor_right = 0.404
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true
+
+[node name="Stars3" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+layout_mode = 1
+anchor_left = 0.436
+anchor_top = -2.375
+anchor_right = 0.595999
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true
+
+[node name="Stars4" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+layout_mode = 1
+anchor_left = 0.627999
+anchor_top = -2.375
+anchor_right = 0.787999
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true
+
+[node name="Stars5" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+layout_mode = 1
+anchor_left = 0.819999
+anchor_top = -2.375
+anchor_right = 0.979999
+anchor_bottom = 2.62499
+offset_right = 0.0
+scale = Vector2(1.13, 1.13)
+star_acquired = true
+
+[node name="egg_health_points" parent="Sub_root_control" instance=ExtResource("12_osxch")]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_top = 0.940217
+anchor_right = 0.976563
+anchor_bottom = 0.983696
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="SFX" type="Node" parent="."]
+script = SubResource("GDScript_glfcm")

@@ -1,0 +1,98 @@
+[gd_scene load_steps=5 format=3 uid="uid://dug413hyxbcov"]
+
+[sub_resource type="GDScript" id="GDScript_xu3fl"]
+script/source = "extends Node3D
+
+const SMOKEBOMB = preload(\"res://500_sequences/Cannonball_System/Cannonballs/Spotter_projectiles_smokebomb.tscn\")
+@onready var path_follow_template: PathFollow3D = $'../smokebomb_launcher/PathFollow3D'
+
+func bh_Activate(parent: Node3D, behaviour: String) -> void:
+	var tokens = behaviour.strip_edges().split(\"-\", false)
+
+	for token in tokens:
+		var name = token.strip_edges().to_lower()
+		match name:
+			\"detonate\":
+				var path = pick_child()
+				if path and path is Path3D:
+					var new_path_follow = path_follow_template.duplicate() as PathFollow3D
+					path.add_child(new_path_follow)
+					new_path_follow.owner = get_tree().current_scene  # Ensure it's editable if needed
+
+					var smoke_instance = SMOKEBOMB.instantiate()
+					new_path_follow.add_child(smoke_instance)
+					smoke_instance.owner = get_tree().current_scene
+				else:
+					push_error(\"No valid Path3D found to attach the PathFollow3D.\")
+			_:
+				push_error(\"Unknown behavior name: '%s'\" % name)
+
+func pick_child() -> Node3D:
+	var path_nodes = get_children().filter(func(child): return child is Path3D)
+	if path_nodes.size() > 0:
+		return path_nodes.pick_random()
+	else:
+		print(\"No Path3D nodes available.\")
+		return null
+"
+
+[sub_resource type="Curve3D" id="Curve3D_cgnp6"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 2.2, -2.7, -0.5, -2.2, 2.7, 0.5, -2.915, 5, 0, 0, 0, 0, 0, 0, 0, -9.11, 0, 0),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
+
+[sub_resource type="Curve3D" id="Curve3D_ddxdi"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, -3, 0, 0, -5.79, 5, 0, 0, 0, 0, 0, 0, 0, -14.64, 0, 0),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
+
+[sub_resource type="GDScript" id="GDScript_lsb76"]
+script/source = "extends PathFollow3D
+
+
+@export var speed := 2.0
+
+func _ready() -> void:
+	progress = 0.0
+
+func _process(delta: float) -> void:
+	speed += 0.01
+	progress += speed * delta
+"
+
+[node name="smokebomb_launcher" type="Node3D"]
+script = SubResource("GDScript_xu3fl")
+
+[node name="Path3D" type="Path3D" parent="."]
+curve = SubResource("Curve3D_cgnp6")
+
+[node name="Path3D2" type="Path3D" parent="."]
+transform = Transform3D(0.819152, 0, -0.573576, 0, 1, 0, 0.573576, 0, 0.819152, 0, 0, 0)
+curve = SubResource("Curve3D_cgnp6")
+
+[node name="Path3D3" type="Path3D" parent="."]
+transform = Transform3D(0.866025, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866025, 0, 0, 0)
+curve = SubResource("Curve3D_cgnp6")
+
+[node name="Path3D4" type="Path3D" parent="."]
+curve = SubResource("Curve3D_ddxdi")
+
+[node name="Path3D5" type="Path3D" parent="."]
+transform = Transform3D(0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, 0.258819, 0, 0, 0)
+curve = SubResource("Curve3D_ddxdi")
+
+[node name="Path3D6" type="Path3D" parent="."]
+transform = Transform3D(0.866025, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866025, 0, 0, 0)
+curve = SubResource("Curve3D_ddxdi")
+
+[node name="Path3D7" type="Path3D" parent="."]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 0, 0, 0)
+curve = SubResource("Curve3D_ddxdi")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="."]
+loop = false
+script = SubResource("GDScript_lsb76")

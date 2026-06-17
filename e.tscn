@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://cjh2iedtauc77"]
+
+[sub_resource type="GDScript" id="GDScript_1xss8"]
+script/source = "extends Node3D
+
+@onready var label: Label = $Label
+
+var cubes: Array[MeshInstance3D] = []
+
+const SPAWN_PER_FRAME := 50
+const MAX_CUBES := 10000
+
+func _process(delta):
+
+	# Spawn cubes
+	if cubes.size() < MAX_CUBES:
+
+		for i in range(SPAWN_PER_FRAME):
+
+			var cube := MeshInstance3D.new()
+			cube.mesh = BoxMesh.new()
+
+			cube.position = Vector3(
+				randf_range(-200, 200),
+				randf_range(-200, 200),
+				randf_range(-200, 200)
+			)
+
+			add_child(cube)
+			cubes.append(cube)
+
+	# Rotate every cube every frame
+	for cube in cubes:
+
+		if is_instance_valid(cube):
+
+			cube.rotate_x(delta)
+			cube.rotate_y(delta * 2.0)
+			cube.rotate_z(delta * 0.5)
+
+	# Update stats
+	label.text = (
+		\"FPS: \" + str(Engine.get_frames_per_second()) +
+		\"\\nObjects: \" + str(cubes.size())
+	)
+"
+
+[node name="Node3D" type="Node3D" unique_id=2053212257]
+script = SubResource("GDScript_1xss8")
+
+[node name="Label" type="Label" parent="." unique_id=331670283]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1991375994]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=374243473]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=127676744]
