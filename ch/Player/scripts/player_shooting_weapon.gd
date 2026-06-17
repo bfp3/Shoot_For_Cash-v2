@@ -30,6 +30,8 @@ var auto_fire := false
 var current_xray_targets : Array = []
 var pitch_adjustment := 0.02
 
+var shooting_sky_mine := false
+
 #func _process(delta: float) -> void:
 	#if player.current_state != player.State.ACTIVE:
 		#return
@@ -53,6 +55,7 @@ func apply_upgrades() -> void:
 
 
 func get_targets_in_scope() -> Array:
+	
 	var max_check_distance := view_limit
 	var targets_in_scope: Array = []
 
@@ -116,11 +119,7 @@ func has_line_of_sight(target: Node3D) -> bool:
 	var origin = camera_3d.global_position
 	var target_pos = target.global_position
 
-	var query = PhysicsRayQueryParameters3D.create(
-		origin,
-		target_pos
-	)
-
+	var query = PhysicsRayQueryParameters3D.create(origin, target_pos)
 	query.collide_with_bodies = true
 	query.collide_with_areas = false
 
@@ -129,7 +128,21 @@ func has_line_of_sight(target: Node3D) -> bool:
 	if result.is_empty():
 		return true
 
-	return result.collider == target
+	var collider = result.collider
+
+	# Hit the target directly
+	if collider == target:
+		return true
+
+	# Ignore other target objects
+	if collider.is_in_group("Target"):
+		return true
+
+	# Only StaticBody3D blocks line of sight
+	if collider is StaticBody3D:
+		return false
+
+	return true
 
 	
 func mark_target() -> void:
@@ -215,15 +228,30 @@ func process_target_hit(target, damage, screen_offset) -> void:
 			damage,
 			screen_offset
 		)
-	
+		
+		
+		
+		
 func shoot_target() -> void:
+	
+	if shooting_sky_mine:
+		return
+	
 	_reset_pitch_adjustment()
 
 	var targets = get_targets_in_scope()
 
+
+	if gl_PlayerState.dataset.power_sky_mine > 0:
+		shooting_sky_mine = true
+
+		if !targets.is_empty():
+			targets = [targets[0]] # Only the closest target
+
 	if targets.is_empty():
 		shoot_bullet_without_target()
 		play_missed_sounds()
+		shooting_sky_mine = false
 		return
 
 	$"../SFX/Flicker_sound".play()
@@ -261,12 +289,19 @@ func shoot_target() -> void:
 			damage,
 			screen_offset
 		)
-		
+
 		if time_ran_out:
 			break
 
-		# Delay only between launching bullets
-		await get_tree().create_timer(power_bullet_delay).timeout
+		var delay := power_bullet_delay
+
+		if shooting_sky_mine:
+			delay += 0.5
+
+		await get_tree().create_timer(delay).timeout
+		
+		shooting_sky_mine = false
+		
 	
 	
 func Xshoot_target() -> void:

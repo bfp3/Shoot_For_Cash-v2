@@ -177,6 +177,7 @@ func round_end_check_rock_status() -> void:
 		_:
 			print("We are in some other state ", current_state)
 
+
 func update_disabled() -> void:
 	update_gravity(1.0)
 	disable_collision()
@@ -750,14 +751,16 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		#return
 	if player_has_marked_rock == false:
 		if body is RigidBody3D:
-			print('push rock away from blast radius')
 			var force_dir = (body.global_position - global_position)
 			force_dir = force_dir.normalized()	
-			body.apply_central_impulse(force_dir * 3)
+			body.apply_central_impulse(force_dir * 2)
 			return
 	
 	if body.name.contains('Rock_Instance'):
-		body.start_destroyed_process()
+		#body.start_destroyed_process()
+		body.hit_by_player(1, Vector2.ZERO)
+		await get_tree().create_timer(0.5).timeout
+		body.freeze = true
 		
 	if body.name.contains('Balloon'):
 		if player_has_marked_rock == false:

@@ -43,21 +43,23 @@ func shake_camera_sky_mines() -> void:
 	await cam_shake_tween.finished
 
 func shake_camera_shooting() -> void:
-	#if camera_stop_all_shaking: return
-
-	#if camera_shaking:
 	if cam_shake_tween:
 		cam_shake_tween.kill()
 
+	# Prevent more than 2 recoil pushes from stacking
+	var max_recoil := shoot_shake_amount * 2.0
+
+	# Clamp the target position before tweening
+	var target_z : float = max(position.z + shoot_shake_amount, max_recoil)
+
 	cam_shake_tween = create_tween() #.set_trans(Tween.TRANS_CUBIC)
-	#for i in range(amount_of_shakes):
-	cam_shake_tween.tween_property(self, "position:z", shoot_shake_amount, move_speed).as_relative()
+
+	cam_shake_tween.tween_property(self, "position:z", target_z, move_speed)
 	cam_shake_tween.tween_property(self, "position:z", 0.0, move_speed * 1.5)
 	cam_shake_tween.parallel().tween_property(self, "position:y", 0.0, move_speed * 1.5)
+
 	await cam_shake_tween.finished
 	#global_position = orig_pos
-		
-		
 func pulse_shake_camera() -> void:
 	var _orig_pos_y : float = self.global_position.y
 	var tween_pulse_shake = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
