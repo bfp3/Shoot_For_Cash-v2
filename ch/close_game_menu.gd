@@ -161,8 +161,17 @@ func _make_style(bg: Color, border: Color, width: int) -> StyleBoxFlat:
 
 
 func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed('escape'):
+		
+	if Input.is_action_just_pressed("escape"):
 		_on_pressed()
+
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			if %QuitMenu.visible:
+				var menu_rect = %QuitMenu.get_global_rect()
+
+				if !menu_rect.has_point(event.position):
+					%QuitMenu.hide()
 	
 	
 func _on_pressed() -> void:
@@ -172,6 +181,7 @@ func _on_pressed() -> void:
 		%QuitMenu.show()
 	
 	#get_tree().quit()
+
 
 
 func _on_close_game_pressed() -> void:

@@ -9,6 +9,32 @@
 [ext_resource type="AudioStream" uid="uid://dtr0oa4sjad2k" path="res://sfx/sfx-click.wav" id="7_caafk"]
 [ext_resource type="AudioStream" uid="uid://dvmkfwmyhweyr" path="res://sfx/ES_sound_effects/ES_Bell Ding - SFX Producer.wav" id="8_y73li"]
 
+[sub_resource type="Curve" id="Curve_y73li"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_l7mi1"]
+curve_x = SubResource("Curve_y73li")
+
+[sub_resource type="Curve" id="Curve_od5kt"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_rov52"]
+curve = SubResource("Curve_od5kt")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hl3ol"]
+particle_flag_disable_z = true
+spread = 1.0
+flatness = 1.0
+directional_velocity_min = 499.99997
+directional_velocity_max = 499.99997
+directional_velocity_curve = SubResource("CurveXYZTexture_l7mi1")
+gravity = Vector3(0, 0, 0)
+scale_min = 50.0
+scale_max = 50.0
+scale_curve = SubResource("CurveTexture_rov52")
+
 [node name="Timer" type="Control" unique_id=779418741]
 layout_mode = 3
 anchors_preset = 15
@@ -70,5 +96,15 @@ volume_db = -31.0
 
 [node name="TimeRanOut4" type="AudioStreamPlayer" parent="." unique_id=586072521]
 stream = ExtResource("8_y73li")
-volume_db = -50.0
-pitch_scale = 0.8
+volume_db = -55.0
+pitch_scale = 0.6
+
+[node name="timeOutParticles" type="GPUParticles2D" parent="." unique_id=2124328898]
+unique_name_in_owner = true
+position = Vector2(1086, 97)
+emitting = false
+amount = 3
+lifetime = 0.5
+one_shot = true
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_hl3ol")

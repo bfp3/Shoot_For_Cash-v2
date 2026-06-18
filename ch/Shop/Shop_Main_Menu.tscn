@@ -109,7 +109,7 @@ hue_variation_max = -2.2351742e-08
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vom4t"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn8lj"]
 bg_color = Color(0.09803922, 0.09803922, 0.11372549, 1)
 border_width_left = 2
 border_width_top = 2
@@ -124,9 +124,56 @@ corner_detail = 10
 
 [sub_resource type="Theme" id="Theme_vrkmk"]
 Button/styles/hover = null
-Button/styles/normal = SubResource("StyleBoxFlat_vom4t")
+Button/styles/normal = SubResource("StyleBoxFlat_cn8lj")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vrkmk"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_cn8lj"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(534.76, 362.53, 1)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 10.0
+scale_max = 20.0
+scale_curve = SubResource("CurveTexture_64t06")
+color = Color(1, 0.74583334, 0.39, 1)
+alpha_curve = SubResource("CurveTexture_vhsx8")
+hue_variation_min = -2.2351742e-08
+hue_variation_max = -2.2351742e-08
+
+[sub_resource type="Curve" id="Curve_cn8lj"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_8o1tj"]
+curve = SubResource("Curve_cn8lj")
+
+[sub_resource type="Curve" id="Curve_ei2sf"]
+_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_scjtr"]
+curve = SubResource("Curve_ei2sf")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hi3s5"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 120.0
+initial_velocity_max = 240.0
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 80, 0)
+scale_min = 8.0
+scale_max = 16.0
+scale_curve = SubResource("CurveTexture_scjtr")
+color = Color(1, 0.78, 0, 1)
+alpha_curve = SubResource("CurveTexture_8o1tj")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
 
@@ -809,6 +856,128 @@ custom_minimum_size = Vector2(50, 34.5)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
+[node name="TicketPurchasedPopUp" type="CenterContainer" parent="." unique_id=344167720]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="TicketPurchasedPopUp" unique_id=1759319141]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 2
+color = Color(0, 0, 0, 0.3137255)
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="TicketPurchasedPopUp" unique_id=1704906822]
+position = Vector2(962, 551)
+emitting = false
+amount = 600
+lifetime = 5.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_cn8lj")
+
+[node name="MainPanel" type="PanelContainer" parent="TicketPurchasedPopUp" unique_id=475322432]
+custom_minimum_size = Vector2(600, 400)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("5_vom4t")
+
+[node name="TreePanel" type="Control" parent="TicketPurchasedPopUp/MainPanel" unique_id=1006452892]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="ReddTicket" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=957449504 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -105.0
+offset_top = -125.0
+offset_right = 105.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+disabled = true
+upgrade_icon = ExtResource("12_kvqbn")
+shop_main_menu = NodePath("../../../..")
+hold_duration = 0.8
+upgrade_type = "ticket_redd"
+upgrade_name = "Ticket To Redd"
+purchase_sfx = NodePath("../../../../SFX/purchase")
+
+[node name="HBoxContainer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket/VBoxContainer" parent_id_path=PackedInt32Array(957449504, 493506063) index="2" unique_id=129271411]
+visible = false
+
+[node name="CostLabel" parent="TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket/VBoxContainer" parent_id_path=PackedInt32Array(957449504, 493506063) index="3" unique_id=1697108673]
+visible = false
+
+[node name="ticket_particles" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=1618108805]
+unique_name_in_owner = true
+z_index = 3
+position = Vector2(-176, -124)
+emitting = false
+amount = 32
+lifetime = 0.8
+one_shot = true
+explosiveness = 0.95
+randomness = 0.4
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_hi3s5")
+
+[node name="ticket_particles2" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=316854253]
+unique_name_in_owner = true
+z_index = 3
+position = Vector2(200, -124)
+emitting = false
+amount = 32
+lifetime = 0.8
+one_shot = true
+explosiveness = 0.95
+randomness = 0.4
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_hi3s5")
+
+[node name="ticket_particles3" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=1590122366]
+unique_name_in_owner = true
+z_index = 3
+position = Vector2(200, 124)
+emitting = false
+amount = 32
+lifetime = 0.8
+one_shot = true
+explosiveness = 0.95
+randomness = 0.4
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_hi3s5")
+
+[node name="ticket_particles4" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=1199686298]
+unique_name_in_owner = true
+z_index = 3
+position = Vector2(-176, 124)
+emitting = false
+amount = 32
+lifetime = 0.8
+one_shot = true
+explosiveness = 0.95
+randomness = 0.4
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_hi3s5")
+
 [node name="NextRound" type="Button" parent="." unique_id=185981390 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 visible = false
 layout_mode = 0
@@ -888,10 +1057,10 @@ vertical_alignment = 1
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 727.0
-offset_top = 916.0
-offset_right = 879.0
-offset_bottom = 947.0
+offset_left = 1271.0
+offset_top = 460.0
+offset_right = 1423.0
+offset_bottom = 491.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -924,10 +1093,10 @@ vertical_alignment = 1
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 1049.0
-offset_top = 916.0
-offset_right = 1201.0
-offset_bottom = 947.0
+offset_left = 1271.0
+offset_top = 521.0
+offset_right = 1423.0
+offset_bottom = 552.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -1156,3 +1325,4 @@ pitch_scale = 0.4
 [connection signal="pressed" from="QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]
 
 [editable path="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]
+[editable path="TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket"]

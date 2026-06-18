@@ -56,6 +56,8 @@
 [ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="54_i541k"]
 [ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="55_3u5oq"]
 [ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="56_4ta1g"]
+[ext_resource type="PackedScene" uid="uid://dpbgyfs2kgdtr" path="res://ch/demo_end_screen/Demo_end_screen.tscn" id="61_ec2we"]
+[ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
 [ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="63_err0d"]
 [ext_resource type="PackedScene" uid="uid://cxmirbvecyqjt" path="res://lib/Pineapple_ending_sequence/V2_pineapple_ending_sequence_2.tscn" id="63_nn6vd"]
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
@@ -497,6 +499,10 @@ func start() -> void:
 	
 "
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ec2we"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ymbdo"]
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_an2hp"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_43pd7"]
@@ -798,7 +804,6 @@ debug_color = Color(0, 1, 0, 1)
 
 [node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("23_ellt3")]
 unique_name_in_owner = true
-process_mode = 3
 transform = Transform3D(-1, 8.379102e-09, 8.70203e-08, 0, 0.9953962, -0.09584575, -8.742278e-08, -0.09584575, -0.9953962, -0.74, -0.875, 0.5)
 roundManager = NodePath("../Round_manager")
 rotation_speed = 0.8
@@ -1872,6 +1877,83 @@ autostart = true
 [node name="V2_Pineapple_ending_sequence2" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=448524514 instance=ExtResource("63_nn6vd")]
 script = SubResource("GDScript_ec2we")
 
+[node name="DemoEndScreen" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=1212322380 node_paths=PackedStringArray("round_manager") instance=ExtResource("61_ec2we")]
+visible = false
+round_manager = NodePath("../../../../Round_manager")
+
+[node name="QuitMenu" type="PanelContainer" parent="MainGameCanvasLayer" unique_id=2079405395]
+unique_name_in_owner = true
+process_mode = 3
+custom_minimum_size = Vector2(205, 205)
+anchors_preset = -1
+anchor_left = -0.18333334
+anchor_top = -0.08148148
+anchor_right = -0.18333334
+anchor_bottom = 2.4810185
+offset_left = 598.0
+offset_top = 813.0
+offset_right = 803.0
+offset_bottom = -1749.5
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = ExtResource("31_hwubp")
+script = ExtResource("62_ymbdo")
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainGameCanvasLayer/QuitMenu" unique_id=368530600]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer" unique_id=778298384]
+custom_minimum_size = Vector2(19.4, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer" unique_id=1321358755]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=2068529690]
+custom_minimum_size = Vector2(50, 12.18)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=143841262]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 19
+bbcode_enabled = true
+text = "Are You Sure?"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="HSeparator4" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1472225335]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+
+[node name="CloseGame" type="Button" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1448034943]
+layout_mode = 2
+text = "Quit"
+script = ExtResource("34_v17ib")
+
+[node name="HSeparator2" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=445130285]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+
+[node name="CancelMenu" type="Button" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=2054175066]
+layout_mode = 2
+text = "Keep Playing"
+script = ExtResource("34_v17ib")
+
+[node name="HSeparator3" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1389113148]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+
+[node name="VSeparator2" type="VSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer" unique_id=1405237058]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
+
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
@@ -2039,7 +2121,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 24)
 
 [node name="Balloon_container" type="Node3D" parent="." unique_id=906093422]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -100, 20)
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 5.1099997, 2.2999992)
@@ -2092,7 +2174,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.099999, 1.3571558, 2.29999
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" to="SplashScreenCanvasLayer/SplashScreen_v2" method="_on_start_game_pressed"]
 [connection signal="timeout" from="MainGameCanvasLayer/SubViewportContainer/SubViewport/Frame_rate/Timer" to="MainGameCanvasLayer/SubViewportContainer/SubViewport/Frame_rate" method="_on_timer_timeout"]
+[connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]
+[connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="MainGameCanvasLayer/QuitMenu" method="_on_cancel_menu_pressed"]
 
 [editable path="MainGameCanvasLayer/SubViewportContainer/SubViewport/Shop_Main_Menu"]
 [editable path="MainGameCanvasLayer/SubViewportContainer/SubViewport/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]
+[editable path="MainGameCanvasLayer/SubViewportContainer/SubViewport/Shop_Main_Menu/TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket"]
 [editable path="Pineapple/Player_shoot_pineapple"]

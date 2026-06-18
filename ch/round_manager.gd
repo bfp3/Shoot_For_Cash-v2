@@ -9,6 +9,8 @@ const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
 
 const DEMO_END_SCREEN = preload('uid://dpbgyfs2kgdtr')
 
+var game_has_been_beaten := false
+
 var round_finished := false
 var transitioning_worlds := false
 @export var pineapple_mode := false
@@ -144,6 +146,9 @@ func update_round_first_round() -> void:
 func update_round_start() -> void:
 	
 	success = false
+	
+	while game_has_been_beaten:
+		await get_tree().process_frame
 	
 	if gl_PlayerState.dataset.stage_name == 'start':
 		go_to_fake_round()
@@ -406,14 +411,16 @@ func move_to_glory() -> void:
 	
 	new_scene.name = 'current_level_layout'
 	
+	await get_tree().create_timer(0.1).timeout
+	#if egg_pulse == null:
+	find_egg()
 	
 	await get_tree().create_timer(1.0).timeout
 	scene_transition_screen.next_level_finish()
 	place_name.update_place_name()
 	
 	#rocks_container.reset_rock_back_on()
-	if egg_pulse == null:
-		find_egg()
+
 	await get_tree().create_timer(1.0).timeout
 	transitioning_worlds = false
 	enter_state(RoundState.SHOP_END)
@@ -421,17 +428,36 @@ func move_to_glory() -> void:
 
 
 func update_end_demo() -> void:
-
+	
+	enter_state(RoundState.INACTIVE)
+	game_has_been_beaten = true
 	scene_transition_screen.demo_end_fadein()
 	await get_tree().create_timer(0.5).timeout
-	player.facing_north = true
-	player.flip_around()
+	EventBus.instance.game_beaten.emit()
+
+	await get_tree().create_timer(0.5).timeout
+
+	level_layout.get_child(0).queue_free()
+
+	var new_scene = LEVEL_LAYOUT_03_GLORY.instantiate()
+	level_layout.add_child(new_scene)
+	new_scene.name = 'current_level_layout'
+	
+	await get_tree().create_timer(0.5).timeout
+	#if egg_pulse == null:
+	find_egg()
+	
+	
 	await get_tree().create_timer(1.0).timeout
-	var demo_screen = DEMO_END_SCREEN.instantiate()
-	$'../MainGameCanvasLayer'.add_child(demo_screen)
-		
+	scene_transition_screen.next_level_finish()
+	place_name.update_place_name()
+
 	await get_tree().create_timer(1.0).timeout
-	scene_transition_screen.demo_end_fadeout()
+	
+	var demo_screen : Control = $'../MainGameCanvasLayer/SubViewportContainer/SubViewport/DemoEndScreen'
+	demo_screen.enter_state(demo_screen.State.OPEN_MENU)
+	
+
 	
 func stop_player() -> void:
 	player.stop_player()

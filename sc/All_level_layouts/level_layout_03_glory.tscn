@@ -753,6 +753,78 @@ func _ready() -> void:
 		#new_arrow.look_at($Unique_marker.global_position, Vector3.UP, true)
 "
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7es23"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_2mrtx"]
+_surfaces = [{
+"aabb": AABB(-0.5, -0.5, -0.5, 1, 1, 1),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAACAAEAAwAEAAEABQAAAAIAAwAAAAUABAAGAAIABQACAAYAAwAHAAQAAwAFAAcABwAGAAQABwAFAAYA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("AAAAAP//AAAAAP//AAAAAAAA/////wAAAAAAAAAAAAD/////AAAAAP//AAD//wAA////////AAD//wAAAAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_43dy6"]
+resource_name = "Brick_wall_1_Cube_006"
+_surfaces = [{
+"aabb": AABB(-0.5, -0.5, -0.5, 1, 1, 1),
+"attribute_data": PackedByteArray("/1////+f/7//n////1//v/9f/7//n/9//5//v/9f/3//X/9//5//P/+f/3//X/8//1//P/+fAAD/n/8//18AAP8f/3//X/8//1//f/8f/z//n/9//9//P//f/3//n/8/"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEAFAAVABYAFAAXABUA"),
+"material": SubResource("StandardMaterial3D_7es23"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("AAAAAP//VNUAAP//AABU1QAA/////1TVAAAAAAAAVNUAAAAAAAD///////8AAP//AAD//wAA/////wAAAAD/////AAAAAFTV////////VNX/////AABU1f//AAD//1TV//8AAP///78AAP//////v/////////+/AAAAAP///78AAAAAAAD/v///AAD///+///8AAAAA/78AAAAA////v/////8AAP//AAD///////8AAP//AAD/////////////VNVU1VTVVNVU1VTVVNVU1f+//7//v/+//7//v/+//7+qKqoqqiqqKqoqqiqqKqoq/////////////////////wAA/38AAP9/AAD/fwAA/3//f/+//3//v/9//7//f/+/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_2mrtx")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hsuqi"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_a8c3o"]
+_surfaces = [{
+"aabb": AABB(-0.5, -0.5, -0.5, 2, 1, 1),
+"format": 34896613377,
+"index_count": 72,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAACAAEAAwAEAAEABQAAAAIAAwAAAAUABAAGAAIABQACAAYABQAEAAYAAwAHAAQAAwAFAAcABQAHAAQABwAGAAQABwAFAAYACAAGAAQABwAIAAQACAAJAAYABwAKAAgACgAJAAgABwAFAAsABwALAAoACwAFAAYACgALAAkACwAGAAkA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 12,
+"vertex_data": PackedByteArray("AAAAAP//AAAAAP//AAAAAAAA/////wAAAAAAAAAAAAD/f///AAAAAP9/AAD//wAA/3//////AAD/fwAAAAAAAP////8AAAAA////////AAD//wAAAAAAAP//AAD//wAA")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_cam14"]
+resource_name = "Brick_wall_1_Cube_016"
+_surfaces = [{
+"aabb": AABB(-0.5, -0.5, -0.5, 2, 1, 1),
+"attribute_data": PackedByteArray("/1////+f/7//n////1//v/9f/7//n/9//5//v/9f/3//X/9//5//P/+f/3//X/8//1//P/+fAAD/n/8//18AAP8f/3//X/8//1//f/8f/z//n/9//9//P//f/3//n/8//1////+f/7//n////1//v/9f/7//n/9//5//v/9f/3//X/9//5//P/+f/3//X/8//1//P/+fAAD/n/8//18AAP8f/3//X/8//1//f/8f/z//n/9//9//P//f/3//n/8/"),
+"format": 34896613399,
+"index_count": 72,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEAFAAVABYAFAAXABUAGAAZABoAGAAbABkAHAAdAB4AHAAfAB0AIAAhACIAIAAjACEAJAAlACYAJAAnACUAKAApACoAKAArACkALAAtAC4ALAAvAC0A"),
+"material": SubResource("StandardMaterial3D_hsuqi"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 48,
+"vertex_data": PackedByteArray("AAAAAP//VNUAAP//AABU1QAA/////1TVAAAAAAAAVNUAAAAAAAD///9///8AAP//AAD//wAA////fwAAAAD///9/AAAAAFTV/3//////VNX/f///AABU1f9/AAD//1TV/38AAP///78AAP//////v/9///////+/AAAAAP///78AAAAAAAD/v/9/AAD///+//38AAAAA/78AAAAA////v/9///8AAP//AAD///////8AAP//AAD///9//////////38AAP//VNX/f///AABU1f9//////1TV/38AAAAAVNX/fwAAAAD///////8AAP///3///wAA/////wAAAAD/////AAAAAFTV////////VNX/////AABU1f//AAD//1TV//8AAP///7//f///////v/////////+//38AAP///7//fwAAAAD/v///AAD///+///8AAAAA/7//fwAA////v/////8AAP///3//////////f///AAD/////////////VNVU1VTVVNVU1VTVVNVU1f+//7//v/+//7//v/+//7+qKqoqqiqqKqoqqiqqKqoq/////////////////////wAA/38AAP9/AAD/fwAA/3//f/+//3//v/9//7//f/+/VNVU1VTVVNVU1VTVVNVU1f+//7//v/+//7//v/+//7+qKqoqqiqqKqoqqiqqKqoq/////////////////////wAA/38AAP9/AAD/fwAA/3//f/+//3//v/9//7//f/+/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_a8c3o")
+
+[sub_resource type="TextMesh" id="TextMesh_h3wc1"]
+text = "III"
+font_size = 64
+
+[sub_resource type="TextMesh" id="TextMesh_70pp7"]
+text = "I"
+font_size = 64
+
 [sub_resource type="Curve" id="Curve_n1xtn"]
 _data = [Vector2(0, 0.031645536), 0.0, 0.0, 0, 0]
 point_count = 1
@@ -1284,7 +1356,7 @@ speed_scale = 0.005
 [node name="brick_fountain_2" parent="Boatmesh" unique_id=2052265067 instance=ExtResource("4_tlfj3")]
 transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, 4.73, -2.505, 11.775)
 
-[node name="Cube_001" parent="Boatmesh/brick_fountain_2" index="0" unique_id=1921091074]
+[node name="Cube_001" parent="Boatmesh/brick_fountain_2" index="0" unique_id=563318589]
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 
@@ -1300,7 +1372,7 @@ surface_material_override/0 = SubResource("ShaderMaterial_45qhx")
 [node name="brick_fountain_4" parent="Boatmesh" unique_id=754689571 instance=ExtResource("4_tlfj3")]
 transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, -6.27, -2.505, 11.775)
 
-[node name="Cube_001" parent="Boatmesh/brick_fountain_4" index="0" unique_id=1921091074]
+[node name="Cube_001" parent="Boatmesh/brick_fountain_4" index="0" unique_id=563318589]
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 
@@ -1583,7 +1655,7 @@ surface_material_override/0 = SubResource("ShaderMaterial_45qhx")
 [node name="brick_fountain_3" parent="Boatmesh" unique_id=142482850 instance=ExtResource("4_tlfj3")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.70000064, -2.505, -6.675)
 
-[node name="Cube_001" parent="Boatmesh/brick_fountain_3" index="0" unique_id=1921091074]
+[node name="Cube_001" parent="Boatmesh/brick_fountain_3" index="0" unique_id=563318589]
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 
@@ -1692,6 +1764,38 @@ is_in_cage = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9713247, 0, 2.64154)
 script = SubResource("GDScript_vntk7")
 is_in_cage = true
+
+[node name="Right_tall_pillar7" type="MeshInstance3D" parent="Boatmesh" unique_id=1891859778]
+transform = Transform3D(1.155, 0, 0, 0, 0.179, 0, 0, 0, 1.155, 4.635185, -2.0240922, 11.823767)
+material_override = ExtResource("6_ihysi")
+mesh = SubResource("ArrayMesh_43dy6")
+skeleton = NodePath("")
+
+[node name="Motto" type="MeshInstance3D" parent="Boatmesh" unique_id=1932342578]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 4.61619, -3.597, 11.82)
+material_override = ExtResource("6_ihysi")
+mesh = SubResource("ArrayMesh_cam14")
+skeleton = NodePath("")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Boatmesh/Motto" unique_id=478493516]
+transform = Transform3D(1.43301e-15, 0.75, -3.27835e-08, 3.27835e-08, -3.27835e-08, -0.75, -0.75, 0, -3.27835e-08, -0.35, 0.521689, -0.0446892)
+material_override = ExtResource("6_ihysi")
+mesh = SubResource("TextMesh_h3wc1")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Boatmesh/Motto" unique_id=308481372]
+transform = Transform3D(1.068, -5.58632e-08, -4.66838e-08, -4.66838e-08, -5.58632e-08, -1.068, 4.66838e-08, 1.278, -4.66838e-08, -0.2, 0.507602, -0.015398)
+material_override = ExtResource("6_ihysi")
+mesh = SubResource("TextMesh_70pp7")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Boatmesh/Motto" unique_id=1864332923]
+transform = Transform3D(-6.55671e-08, -0.75, -3.27835e-08, 3.27835e-08, 3.27835e-08, -0.75, 0.75, -6.55671e-08, 3.27835e-08, 1.35, 0.521689, -0.015398)
+material_override = ExtResource("6_ihysi")
+mesh = SubResource("TextMesh_h3wc1")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Boatmesh/Motto" unique_id=1000471588]
+transform = Transform3D(-1.068, 1.67589e-07, -4.66838e-08, 4.66838e-08, -5.58632e-08, -1.068, -1.40051e-07, -1.278, 4.66838e-08, 1.2, 0.507602, -0.0446892)
+material_override = ExtResource("6_ihysi")
+mesh = SubResource("TextMesh_70pp7")
 
 [node name="BackgroundMesh" type="Node3D" parent="." unique_id=1382970896]
 visible = false
@@ -2727,7 +2831,7 @@ transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -13.803294, 0.26028, 21
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 2.1967049, 0.26028, 21.05036)
 
 [node name="Walls5" type="MeshInstance3D" parent="." unique_id=2111808262]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1, -20.962757)
 mesh = SubResource("BoxMesh_kmsae")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Walls5" unique_id=1145562571]
@@ -2736,7 +2840,7 @@ mesh = SubResource("BoxMesh_kmsae")
 shape = SubResource("ConvexPolygonShape3D_gn0sv")
 
 [node name="Walls6" type="MeshInstance3D" parent="." unique_id=260344014]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.6, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.6, -20.962757)
 mesh = SubResource("BoxMesh_kmsae")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Walls6" unique_id=104460217]
@@ -2745,7 +2849,7 @@ mesh = SubResource("BoxMesh_kmsae")
 shape = SubResource("ConvexPolygonShape3D_gn0sv")
 
 [node name="Walls2" type="MeshInstance3D" parent="." unique_id=1142989498]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, -20.962757)
 mesh = SubResource("BoxMesh_kmsae")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Walls2" unique_id=1281882315]
@@ -2754,7 +2858,7 @@ mesh = SubResource("BoxMesh_kmsae")
 shape = SubResource("ConvexPolygonShape3D_gn0sv")
 
 [node name="Walls3" type="MeshInstance3D" parent="." unique_id=1732555888]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, -20.962757)
 mesh = SubResource("BoxMesh_kmsae")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Walls3" unique_id=1039132422]
@@ -2763,7 +2867,7 @@ mesh = SubResource("BoxMesh_kmsae")
 shape = SubResource("ConvexPolygonShape3D_gn0sv")
 
 [node name="Walls4" type="MeshInstance3D" parent="." unique_id=820415943]
-transform = Transform3D(-4.371139e-08, -2.555, 0, 1, -1.116826e-07, 0, 0, 0, 1, 0.100000024, 3.8236375, 23)
+transform = Transform3D(-4.371139e-08, -2.555, 0, 1, -1.116826e-07, 0, 0, 0, 1, 0.100000024, 3.8236375, -20.962757)
 mesh = SubResource("BoxMesh_kmsae")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Walls4" unique_id=1147122258]

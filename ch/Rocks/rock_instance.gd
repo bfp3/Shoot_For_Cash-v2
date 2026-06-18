@@ -636,7 +636,7 @@ func first_rock() -> void:
 	var base_scale  := Vector3.ONE * 0.3
 
 	# Random subtype: 1x / 2x / 3x
-	var size_multiplier : int = 2
+	var size_multiplier : int = 1
 
 	health = base_health * size_multiplier
 	cash_value = base_cash

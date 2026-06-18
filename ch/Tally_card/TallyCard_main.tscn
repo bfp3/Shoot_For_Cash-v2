@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://b04e2sb5337vo" path="res://ch/Tally_card/TallyComponent_v3.tscn" id="4_iforg"]
 [ext_resource type="Script" uid="uid://dbbltr23d26u6" path="res://ch/Shop/money_label.gd" id="5_7r173"]
 [ext_resource type="Script" uid="uid://drmqfnbqyvmps" path="res://ch/Shop/tooltip.gd" id="6_ta7gf"]
+[ext_resource type="Script" uid="uid://c66tdaw8j27r3" path="res://ch/HUD_components/total_rocks.gd" id="7_ecf0a"]
 [ext_resource type="AudioStream" uid="uid://cqfuywy300at4" path="res://sfx/opt_2.wav" id="15_dtccr"]
 [ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="16_paduv"]
 [ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="17_7fyvj"]
@@ -98,6 +99,88 @@ color = Color(1, 0.78039217, 0, 1)
 alpha_curve = SubResource("CurveTexture_bux34")
 hue_variation_min = -1.0
 hue_variation_max = 0.99999994
+
+[sub_resource type="Curve" id="Curve_t852v"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_q6qkh"]
+curve = SubResource("Curve_t852v")
+
+[sub_resource type="Curve" id="Curve_d46ke"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_t852v"]
+curve = SubResource("Curve_d46ke")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tjy4i"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_velocity_min = 99.99998
+radial_velocity_max = 199.99997
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_t852v")
+color = Color(1, 0.78039217, 0, 1)
+alpha_curve = SubResource("CurveTexture_q6qkh")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_13acb"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_43pd7"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fgned"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_8ryl7"]
+Button/styles/normal = SubResource("StyleBoxFlat_13acb")
+Panel/styles/panel = SubResource("StyleBoxFlat_43pd7")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_fgned")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bux34"]
 particle_flag_disable_z = true
@@ -282,6 +365,40 @@ grow_vertical = 2
 scale = Vector2(0.9948992, 0.9948992)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
+
+[node name="100_percent" type="Control" parent="CenterContainer" unique_id=961449738]
+unique_name_in_owner = true
+z_index = 1
+custom_minimum_size = Vector2(150, 100)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/100_percent" unique_id=113222203]
+layout_mode = 0
+offset_left = -39.308838
+offset_top = -26.84259
+offset_right = 40.691162
+offset_bottom = 23.15741
+rotation = -0.34906584
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/bold_font_size = 30
+theme_override_font_sizes/bold_italics_font_size = 30
+theme_override_font_sizes/italics_font_size = 31
+bbcode_enabled = true
+text = "[wave][rainbow][i]100%"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Panel" type="Panel" parent="CenterContainer/100_percent/RichTextLabel" unique_id=1869445004]
+visible = false
+self_modulate = Color(1, 1, 1, 0.57254905)
+show_behind_parent = true
+layout_mode = 0
+anchor_left = 0.21731035
+anchor_top = 0.21588317
+anchor_right = 0.80382043
+anchor_bottom = 0.8139071
+metadata/_edit_use_anchors_ = true
 
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=785012210]
 custom_minimum_size = Vector2(250, 250)
@@ -468,33 +585,6 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 
-[node name="Tooltip" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel" unique_id=1781084112]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.3467688
-anchor_top = 0.31410217
-anchor_right = 0.6532312
-anchor_bottom = 0.5250397
-offset_right = 50.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("6_ta7gf")
-metadata/_edit_use_anchors_ = true
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel/Tooltip" unique_id=1779935107]
-layout_mode = 2
-mouse_filter = 2
-bbcode_enabled = true
-text = "Testing Tooltip"
-fit_content = true
-scroll_active = false
-autowrap_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="VSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1987157655]
 custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
@@ -555,34 +645,72 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Tooltip" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/NumberLabel" unique_id=1205148405]
-visible = false
+[node name="TotalRocks2" type="Control" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2" unique_id=1829060586]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("7_ecf0a")
+on_tally_sheet = true
+temp_disabled = true
+
+[node name="perfectScoreParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks2" unique_id=1189901685]
+position = Vector2(-207.13647, 28.28125)
+scale = Vector2(1.005127, 1.005127)
+emitting = false
+amount = 25
+one_shot = true
+explosiveness = 0.8
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_tjy4i")
+
+[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks2" unique_id=815286498]
+custom_minimum_size = Vector2(180, 130)
 layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.1608203
-anchor_top = 0.31410217
-anchor_right = 1.1081288
-anchor_bottom = 0.5250397
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -65.0
+offset_right = 90.0
+offset_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("6_ta7gf")
-metadata/_edit_use_anchors_ = true
+theme = SubResource("Theme_8ryl7")
+theme_override_styles/panel = ExtResource("2_cuwcq")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/NumberLabel/Tooltip" unique_id=366242511]
-layout_mode = 2
-mouse_filter = 2
+[node name="NumberLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks2" unique_id=227208638]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -75.0
+offset_right = 100.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 70
 bbcode_enabled = true
-text = "Testing Tooltip"
+text = "01"
 fit_content = true
-scroll_active = false
-autowrap_mode = 2
+autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="VSeparator4" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2" unique_id=1069955720]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
 
@@ -691,31 +819,6 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 
-[node name="Tooltip" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel" unique_id=753653019]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 48.246094
-offset_bottom = -52.753906
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("6_ta7gf")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel/Tooltip" unique_id=2023187228]
-layout_mode = 2
-mouse_filter = 2
-bbcode_enabled = true
-text = "Testing Tooltip"
-fit_content = true
-scroll_active = false
-autowrap_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="HSeparator6" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=293657851]
 visible = false
 custom_minimum_size = Vector2(0, 30)
@@ -725,7 +828,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
 
-[node name="GameProgress" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1662972478 node_paths=PackedStringArray("area_1", "area_2", "area_3", "area_4", "area_5", "tally_main")]
+[node name="GameProgress" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1662972478 node_paths=PackedStringArray("area_1", "area_2", "area_3", "area_4", "area_5")]
 visible = false
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
@@ -736,7 +839,6 @@ area_2 = NodePath("VBoxContainer/ProgressBars/REDD")
 area_3 = NodePath("VBoxContainer/ProgressBars/Glory")
 area_4 = NodePath("VBoxContainer/ProgressBars/Area4")
 area_5 = NodePath("VBoxContainer/ProgressBars/Area5")
-tally_main = NodePath("../../../..")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/MainPanel/GameProgress" unique_id=1891688302]
 custom_minimum_size = Vector2(720, 0)
@@ -977,26 +1079,6 @@ custom_minimum_size = Vector2(592.975, 23.65)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
-[node name="EndDemo" type="Button" parent="." unique_id=1098994479 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.0009259259
-anchor_bottom = 0.0009259259
-offset_left = 860.0
-offset_top = 828.097
-offset_right = 1060.0
-offset_bottom = 859.097
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/font_size = 16
-text = "End Demo"
-script = ExtResource("31_u4dph")
-focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../SFX/focus_exit")
-purchase_sfx = NodePath("../SFX/purchase")
-metadata/_edit_use_anchors_ = true
-
 [node name="SFX" type="Node" parent="." unique_id=818937010]
 
 [node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1075327639]
@@ -1077,53 +1159,5 @@ pitch_scale = 1.1
 libraries/ = SubResource("AnimationLibrary_cuwcq")
 autoplay = &"light_wobble"
 
-[node name="100_percent" type="Control" parent="." unique_id=961449738]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 12.0
-offset_top = -51.0
-offset_right = 162.0
-offset_bottom = 99.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="RichTextLabel" type="RichTextLabel" parent="100_percent" unique_id=113222203]
-custom_minimum_size = Vector2(150, 50)
-layout_mode = 0
-offset_left = -127.0
-offset_top = -41.0
-offset_right = 28.0
-offset_bottom = 43.0
-rotation = -0.46425757
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/normal_font_size = 35
-theme_override_font_sizes/bold_font_size = 30
-theme_override_font_sizes/bold_italics_font_size = 30
-theme_override_font_sizes/italics_font_size = 31
-bbcode_enabled = true
-text = "[wave][rainbow][i]100%"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Panel" type="Panel" parent="100_percent/RichTextLabel" unique_id=1869445004]
-visible = false
-self_modulate = Color(1, 1, 1, 0.57254905)
-show_behind_parent = true
-layout_mode = 0
-anchor_left = 0.21731035
-anchor_top = 0.21588317
-anchor_right = 0.80382043
-anchor_bottom = 0.8139071
-metadata/_edit_use_anchors_ = true
-
 [connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/SHOP" to="." method="_on_shop_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/NextRound" to="." method="_on_next_round_pressed"]
-[connection signal="pressed" from="EndDemo" to="." method="_on_end_demo_pressed"]

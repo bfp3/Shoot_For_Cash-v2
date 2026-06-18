@@ -59,9 +59,7 @@ func _ready() -> void:
 	default_pivot_offset = Vector2(0, size.y)
 	pivot_offset = default_pivot_offset
 
-
-	
-	enter_state(State.OPEN_MENU)
+	#enter_state(State.OPEN_MENU)
 
 
 
@@ -173,7 +171,7 @@ func update_open_menu() -> void:
 	
 	menu_in_display = true
 	#game_progress.update_game_progress()
-	sfx_open_tally()
+	#sfx_open_tally()
 
 	modulate.a = 0.0
 	scale = Vector2.ONE * 0.01
@@ -194,7 +192,7 @@ func update_open_menu() -> void:
 	await reveal_stats()
 	
 	enter_state(State.IN_MENU)
-	$SFX/Demo_finished_music.play()
+	#$SFX/Demo_finished_music.play()
 
 func update_close_menu() -> void:
 	sfx_close_tally()
@@ -450,4 +448,6 @@ func _on_shop_pressed() -> void:
 	round_manager.enter_state(round_manager.RoundState.TALLY_END)
 	
 func _on_next_round_pressed() -> void:
-	get_tree().reload_current_scene()
+	enter_state(State.CLOSE_MENU)
+	round_manager.game_has_been_beaten = false
+	

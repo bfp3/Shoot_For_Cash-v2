@@ -65,7 +65,9 @@ func _process(delta: float) -> void:
 
 func ran_out_of_time() -> void:
 	gl_PlayerState.check_all_rocks_cleared()
+	$TimeRanOut.play()
 	$TimeRanOut4.play()
+		#%timeOutParticles.emitting = true
 	enter_state(State.FINISHED)
 	#timer_label.text = "0:00"
 

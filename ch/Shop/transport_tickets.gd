@@ -12,7 +12,13 @@ extends HBoxContainer
 
 func _ready():
 	update_tickets()
+	EventBus.instance.game_beaten.connect(_hide_tickets)
 
+
+func _hide_tickets() -> void:
+	for i in tickets_array:
+		i.hide()
+		i.disabled = true
 
 func update_tickets() -> void:
 	for i in tickets_array:

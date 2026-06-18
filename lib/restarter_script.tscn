@@ -7,13 +7,13 @@ var last_escape_time := 0.0
 const DOUBLE_TAP_WINDOW := 0.4 # seconds
 
 func _input(event) -> void:
-	if event.is_action_pressed(\"escape\"):
-		var current_time = Time.get_ticks_msec() / 1000.0
-		
-		if current_time - last_escape_time <= DOUBLE_TAP_WINDOW:
-			get_tree().quit()
-		
-		last_escape_time = current_time
+	#if event.is_action_pressed(\"escape\"):
+		#var current_time = Time.get_ticks_msec() / 1000.0
+		#
+		#if current_time - last_escape_time <= DOUBLE_TAP_WINDOW:
+			#get_tree().quit()
+		#
+		#last_escape_time = current_time
 
 	if event.is_action_pressed(\"restart\"):
 		gl_PlayerState.reset_all()

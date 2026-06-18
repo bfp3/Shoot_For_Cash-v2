@@ -434,14 +434,14 @@ _data = {
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_ecf0a"]
+[sub_resource type="CurveTexture" id="CurveTexture_txfio"]
 curve = SubResource("Curve_fuvvr")
 
 [sub_resource type="Curve" id="Curve_3gdew"]
 _data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_t852v"]
+[sub_resource type="CurveTexture" id="CurveTexture_1tjj5"]
 curve = SubResource("Curve_3gdew")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_11n43"]
@@ -458,11 +458,11 @@ tangential_accel_min = -2.2351742e-06
 tangential_accel_max = -2.2351742e-06
 scale_min = 5.0
 scale_max = 10.0
-scale_curve = SubResource("CurveTexture_t852v")
+scale_curve = SubResource("CurveTexture_1tjj5")
 color = Color(1, 0.78039217, 0, 1)
-alpha_curve = SubResource("CurveTexture_ecf0a")
+alpha_curve = SubResource("CurveTexture_txfio")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_13acb"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3gdew"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
 border_width_left = 1
 border_width_top = 1
@@ -477,7 +477,7 @@ corner_radius_bottom_left = 5
 corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_43pd7"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lf8qf"]
 bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
 border_width_left = 3
 border_width_top = 3
@@ -492,7 +492,7 @@ corner_radius_bottom_left = 5
 corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fgned"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_11n43"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
 border_width_left = 1
 border_width_top = 1
@@ -508,9 +508,9 @@ corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
 [sub_resource type="Theme" id="Theme_pivo4"]
-Button/styles/normal = SubResource("StyleBoxFlat_13acb")
-Panel/styles/panel = SubResource("StyleBoxFlat_43pd7")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_fgned")
+Button/styles/normal = SubResource("StyleBoxFlat_3gdew")
+Panel/styles/panel = SubResource("StyleBoxFlat_lf8qf")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_11n43")
 
 [sub_resource type="Curve" id="Curve_pivo4"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -1908,6 +1908,8 @@ size_flags_horizontal = 4
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("29_mxtxj")
+on_tally_sheet = true
+temp_disabled = null
 
 [node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/TotalRocks" unique_id=1489176079]
 unique_name_in_owner = true

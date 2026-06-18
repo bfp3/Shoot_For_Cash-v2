@@ -175,6 +175,7 @@ func log_buy(power_name:String, price:float, unit:int=1) -> bool:
 	
 	dataset[power_name] += unit
 	dataset.cash = dataset.cash - price
+	print(dataset.cash, " Cash, ", price, " Price")
 	EventBus.instance.purchase_made.emit(power_name)
 	
 	var d: Dictionary = {

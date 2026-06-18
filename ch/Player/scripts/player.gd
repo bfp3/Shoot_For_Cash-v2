@@ -38,15 +38,13 @@ var _is_currently_shooting := false
 @export var power_bullet_damage : int = 1
 @export var power_bullet_delay := 0.5 #0.15
 
-
-
 @export var rotation_speed := 0.5
 
 var pan_speed: float = 8.0
 
 @onready var crosshair: Control = %Crosshair
 @onready var cam_pivot: Node3D = $Cam_pivot
-@onready var camera_3d: Player_Camera = $Cam_pivot/Camera3D
+@onready var camera_3d:= $Cam_pivot/Camera3D
 
 var joystick_sensitivity := 500.0
 
@@ -191,12 +189,17 @@ func handle_pan_left_and_right(delta) -> void:
 
 func _process(delta: float) -> void:
 	
-	update_gun_look()
+	
 	
 	if Input.is_action_pressed('middle_mouse'):
 		Engine.time_scale = 6.0
 	else:
 		Engine.time_scale = 1.0
+	
+	if current_state == State.IN_SHOP:
+		print('in shop')
+		return 
+		
 	
 	if _is_currently_shooting:
 
@@ -226,6 +229,7 @@ func _process(delta: float) -> void:
 	
 	if current_state == State.ROUND_FINISHED:
 		crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
+		update_gun_look() 
 		return
 	
 	if current_state == State.INACTIVE || current_state == State.IN_SHOP:
@@ -262,8 +266,8 @@ func _process(delta: float) -> void:
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
 	
-	
-	handle_pan_keyboard(delta)
+	update_gun_look()
+	#handle_pan_keyboard(delta)
 	
 func update_gun_look() -> void:
 
@@ -582,25 +586,7 @@ func pulse_shake_camera() -> void:
 func perfect_score() -> void:
 	$SFX/PerfectScore4.play(0.5)
 	$SFX/Flicker_sound.play()
-	await get_tree().create_timer(0.25).timeout
-
-	var perfect_score_node = %PerfectScore
-
-	# Store the final position
-	var target_position = perfect_score_node.position
-
-	# Start slightly off to the left
-	perfect_score_node.position = target_position + Vector2(-100, 0)
-	perfect_score_node.modulate.a = 0.0
-	perfect_score_node.show()
-
-	# Slide + fade in
-	var tween := create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(perfect_score_node, "position", target_position, 0.15)
-	tween.tween_property(perfect_score_node, "modulate:a", 1.0, 0.15)
-
-	#await tween.finished
+	
 	await get_tree().create_timer(0.1).timeout
 	# Effects once fully visible
 	pulse_shake_camera()

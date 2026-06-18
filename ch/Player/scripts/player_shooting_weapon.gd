@@ -24,7 +24,7 @@ var power_bullet_speed = 30.0
 var power_bullet_damage : int = 1
 var power_bullet_delay := 0.5
 
-@onready var camera_3d: Camera3D = $"../Cam_pivot/Camera3D"
+@onready var player_camera := $"../Cam_pivot/Camera3D"
 
 var auto_fire := false
 var current_xray_targets : Array = []
@@ -66,17 +66,17 @@ func get_targets_in_scope() -> Array:
 		if !is_instance_valid(target):
 			continue
 
-		if camera_3d.is_position_behind(target.global_position):
+		if player_camera.is_position_behind(target.global_position):
 			continue
 
-		if camera_3d.global_position.distance_squared_to(target.global_position) > max_check_distance * max_check_distance:
+		if player_camera.global_position.distance_squared_to(target.global_position) > max_check_distance * max_check_distance:
 			continue
 			
 		if !has_line_of_sight(target):
 			%Crosshair.cannot_shoot_obstacle_in_way()
 			continue
 
-		var screen_pos = camera_3d.unproject_position(target.global_position)
+		var screen_pos = player_camera.unproject_position(target.global_position)
 
 		# Distance from scope center to rock center
 		var center_dist = screen_pos.distance_to(crosshair.global_position)
@@ -91,8 +91,8 @@ func get_targets_in_scope() -> Array:
 		var world_radius : float = target.main_col.scale.x
 		world_radius = world_radius / 2
 
-		var edge_screen_pos = camera_3d.unproject_position(
-			target.global_position + camera_3d.global_basis.x * world_radius
+		var edge_screen_pos = player_camera.unproject_position(
+			target.global_position + player_camera.global_basis.x * world_radius
 		)
 
 		var screen_radius = screen_pos.distance_to(edge_screen_pos)
@@ -116,7 +116,7 @@ func get_targets_in_scope() -> Array:
 	return targets_in_scope
 
 func has_line_of_sight(target: Node3D) -> bool:
-	var origin = camera_3d.global_position
+	var origin = player_camera.global_position
 	var target_pos = target.global_position
 
 	var query = PhysicsRayQueryParameters3D.create(origin, target_pos)
@@ -150,8 +150,8 @@ func has_line_of_sight(target: Node3D) -> bool:
 	
 func mark_target() -> void:
 	var screen_pos = crosshair.global_position #+ (crosshair.size * 0.5)
-	var origin = camera_3d.project_ray_origin(screen_pos)
-	var direction = camera_3d.project_ray_normal(screen_pos)
+	var origin = player_camera.project_ray_origin(screen_pos)
+	var direction = player_camera.project_ray_normal(screen_pos)
 	var end = origin + direction * view_limit
 
 	var space_state = get_world_3d().direct_space_state
@@ -277,13 +277,13 @@ func shoot_target() -> void:
 
 		%Crosshair.crosshair_shake()
 		player_gun.get_barrel_position(target.global_position.x)
-		$"../Cam_pivot/Camera3D".shake_camera_shooting()
+		player_camera.shake_camera_shooting()
 
 		target.play_accurate_sounds()
 
 		spawn_projectile(target, power_bullet_speed)
 
-		var rock_screen_pos = camera_3d.unproject_position(target.global_position)
+		var rock_screen_pos = player_camera.unproject_position(target.global_position)
 		var screen_offset = rock_screen_pos - crosshair.global_position
 
 		# Start the hit timer independently
@@ -342,7 +342,7 @@ func Xshoot_target() -> void:
 		target.play_accurate_sounds()
 		spawn_projectile(target, power_bullet_speed)
 
-		var rock_screen_pos = camera_3d.unproject_position(target.global_position)
+		var rock_screen_pos = player_camera.unproject_position(target.global_position)
 		var screen_offset = rock_screen_pos - crosshair.global_position
 
 		await get_tree().create_timer(power_bullet_speed).timeout
@@ -384,7 +384,7 @@ func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos 
 	new_bullet.global_transform = player_gun.get_barrel_position()
 
 	
-	#camera_3d.shake_camera_shooting()
+	#player_camera.shake_camera_shooting()
 	#new_bullet.bullet_setup(_target, result_pos, 0.0)
 	new_bullet.bullet_setup(_target, _power_bullet_speed)
 	
@@ -472,14 +472,14 @@ func shoot_bullet_without_target() -> void:
 	#var crosshair = $"../Crosshair/Inner_scope/TextureRect"
 	##var screen_pos = crosshair.global_position + crosshair.size * 0.5
 	#var screen_pos = crosshair.global_position #+ crosshair_offset
-	#var ray_origin = camera_3d.project_ray_origin(screen_pos)
-	#var ray_direction = camera_3d.project_ray_normal(screen_pos)
+	#var ray_origin = player_camera.project_ray_origin(screen_pos)
+	#var ray_direction = player_camera.project_ray_normal(screen_pos)
 #
 	#var aim_point = ray_origin + ray_direction * 500.0
 #
 	#new_bullet.move_direction =	(aim_point - barrel_pos).normalized()
 #
-	#camera_3d.shake_camera_shooting()
+	#player_camera.shake_camera_shooting()
 #
 	#await get_tree().create_timer(await_time).timeout
 	
@@ -493,8 +493,8 @@ func shoot_bullet_without_target() -> void:
 		#return
 #
 	#var screen_pos = crosshair.global_position
-	#var origin = camera_3d.project_ray_origin(screen_pos)
-	#var direction = camera_3d.project_ray_normal(screen_pos)
+	#var origin = player_camera.project_ray_origin(screen_pos)
+	#var direction = player_camera.project_ray_normal(screen_pos)
 #
 	#var pinch_center = origin + direction #* view_limit
 #

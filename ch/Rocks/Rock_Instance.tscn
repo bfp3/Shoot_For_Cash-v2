@@ -25,7 +25,9 @@
 [ext_resource type="PackedScene" uid="uid://bh211snc0txl4" path="res://res/Particles/Smoke_coloured.tscn" id="18_yskhd"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="19_mj3mj"]
 [ext_resource type="AudioStream" uid="uid://bqhmb13v3o82t" path="res://sfx/Random_sound_7.wav" id="19_uhgr1"]
+[ext_resource type="AudioStream" uid="uid://b250wyw160ev" path="res://sfx/unsorted/opt_5.wav" id="20_4wuxv"]
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="21_27dlh"]
+[ext_resource type="AudioStream" uid="uid://qfrmhg6v637p" path="res://sfx/unsorted/opt_4.wav" id="21_eq13p"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="21_y4gyo"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="22_63gdt"]
 
@@ -988,6 +990,14 @@ max_polyphony = 2
 [node name="Hazard_sfx" type="AudioStreamPlayer" parent="." unique_id=1014297588]
 stream = ExtResource("19_uhgr1")
 volume_db = -5.0
+
+[node name="Freeze_sfx" type="AudioStreamPlayer" parent="." unique_id=2079997345]
+stream = ExtResource("20_4wuxv")
+volume_db = -15.0
+
+[node name="Freeze_sfx2" type="AudioStreamPlayer" parent="." unique_id=1813387723]
+stream = ExtResource("21_eq13p")
+volume_db = -15.0
 
 [node name="AoE" type="Node3D" parent="." unique_id=708438174]
 top_level = true

@@ -36,7 +36,7 @@ var full_score := false
 @export var cash_earned_label : RichTextLabel
 @export var total_cash_earned_label : RichTextLabel
 @export var test_mode := false
-@onready var game_progress: HBoxContainer = $CenterContainer/MainPanel/MainPanel/GameProgress
+#@onready var game_progress: HBoxContainer = $CenterContainer/MainPanel/MainPanel/GameProgress
 
 enum State {
 	INACTIVE,
@@ -187,7 +187,7 @@ func update_open_menu() -> void:
 	update_all()
 	
 	menu_in_display = true
-	game_progress.update_game_progress()
+	#game_progress.update_game_progress()
 	sfx_open_tally()
 
 	modulate.a = 0.0
@@ -372,12 +372,12 @@ func feedback_effects() -> void:
 	if score_result == ScoreResult.PERFECT_SCORE:
 		
 		%perfectScoreParticles.emitting = true
-		await get_tree().create_timer(0.5).timeout
+		await get_tree().create_timer(0.25).timeout
 		$SFX/perfect_score.play()
 		
 		var tween = create_tween()
-		tween.tween_property(%'100_percent', "modulate:a", 1.0, 0.15)
-		tween.tween_interval(1.7)
+		tween.tween_property(%'100_percent', "modulate:a", 1.0, 0.1)
+		tween.tween_interval(1.0)
 		tween.tween_property(%'100_percent', "modulate:a", 0.0, 0.15)
 		await tween.finished
 		$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.amount += 1
@@ -514,9 +514,3 @@ func _on_go_to_next_place_pressed() -> void:
 	%GoToNextPlace.hide()
 	enter_state(State.CLOSE_MENU)
 	round_manager.enter_state(round_manager.RoundState.NEXT_LEVEL)
-
-
-func _on_end_demo_pressed() -> void:
-	%EndDemo.hide()
-	enter_state(State.CLOSE_MENU)
-	round_manager.enter_state(round_manager.RoundState.END_DEMO)

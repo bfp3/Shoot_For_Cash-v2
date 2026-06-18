@@ -49,8 +49,8 @@ func update_inactive() -> void:
 	
 func update_prepare_rocks() -> void:
 	splash_zone.reset_detected_bodies()
-	#rocks_limit = get_rock_limit()
-	rocks_limit = 10
+	rocks_limit = get_rock_limit()
+	#rocks_limit = 10
 	gl_PlayerState.log_rocks(rocks_limit)
 	
 	var counter := 0

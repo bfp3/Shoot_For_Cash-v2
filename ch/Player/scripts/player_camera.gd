@@ -1,5 +1,4 @@
 extends Camera3D
-class_name Player_Camera
 
 const CAMERA_WAKING_UP = preload("res://sfx/Camera_waking_up.wav")
 
@@ -60,6 +59,7 @@ func shake_camera_shooting() -> void:
 
 	await cam_shake_tween.finished
 	#global_position = orig_pos
+	
 func pulse_shake_camera() -> void:
 	var _orig_pos_y : float = self.global_position.y
 	var tween_pulse_shake = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
@@ -87,7 +87,7 @@ func shake_camera_rock_destroyed() -> void:
 	cam_shake_tween.tween_property(self, "rotation_degrees", Vector3.ZERO, 0.75)
 	await cam_shake_tween.finished
 	camera_shaking_bomb = false
-\
+
 	
 
 

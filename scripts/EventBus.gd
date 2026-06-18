@@ -1,7 +1,8 @@
 extends Node
 
 signal health_changed(new_health)
-signal game_won
+signal game_won()
+signal game_beaten()
 signal game_lost()
 signal cannonball_fired()
 signal player_has_hit_winning_score()
@@ -100,6 +101,7 @@ func _init():
 func XXemit_all_signals() -> void:
 	health_changed.emit(100) # Example value
 	game_won.emit()
+	game_beaten.emit()
 	game_lost.emit()
 	cannonball_fired.emit()
 	player_has_hit_winning_score.emit()

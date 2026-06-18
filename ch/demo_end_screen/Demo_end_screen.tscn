@@ -13,7 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="11_4uil5"]
 [ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="12_i00hl"]
 [ext_resource type="AudioStream" uid="uid://c5he7tw0onue" path="res://sfx/shop_reroll_sfx_01.wav" id="13_eusbm"]
-[ext_resource type="AudioStream" uid="uid://xh6kpfpcl3mh" path="res://sfx/ shop_mystery_box_sfx_01.wav" id="14_jj5pr"]
+[ext_resource type="AudioStream" uid="uid://xh6kpfpcl3mh" path="res://sfx/shop_mystery_box_sfx_01.wav" id="14_jj5pr"]
 [ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="15_c16qu"]
 [ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="16_h4xss"]
 [ext_resource type="AudioStream" uid="uid://ecijroapobxk" path="res://sfx/Egg_pulse_sfx.wav" id="17_4itw5"]
@@ -58,6 +58,23 @@ alpha_curve = SubResource("CurveTexture_vhsx8")
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_arg5w"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vom4t"]
+bg_color = Color(0.09803922, 0.09803922, 0.11372549, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.55, 0.7, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 10
+
+[sub_resource type="Theme" id="Theme_c5dla"]
+Button/styles/hover = null
+Button/styles/normal = SubResource("StyleBoxFlat_vom4t")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iforg"]
 
@@ -181,6 +198,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 script = ExtResource("1_c5dla")
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=685089417]
+visible = false
 position = Vector2(962, 551)
 amount = 100
 lifetime = 4.0
@@ -197,6 +215,11 @@ grow_vertical = 2
 scale = Vector2(0.9948992, 0.9948992)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="CenterContainer" unique_id=636300411]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 2
+color = Color(0, 0, 0, 0.3137255)
 
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=785012210]
 custom_minimum_size = Vector2(250, 250)
@@ -219,13 +242,75 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
 
 [node name="CashHboxcontainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=555082800]
 layout_mode = 2
+alignment = 2
 
 [node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1341660736]
+visible = false
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
 
+[node name="DoneButton" type="Button" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1566860871 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 120)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
+script = ExtResource("8_p2noj")
+border_outline_colour = Color(0.46799996, 0.46799996, 0.52, 1)
+editable = true
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/DoneButton" unique_id=6153412]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i][wave][color=]DONE
+"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/DoneButton" unique_id=193154173]
+modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_c5dla")
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
+
+[node name="VSeparator4" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=805253570]
+custom_minimum_size = Vector2(26.38, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
+
 [node name="CashEarned" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=391685329]
+visible = false
 custom_minimum_size = Vector2(200, 128)
 layout_mode = 2
 size_flags_vertical = 3
@@ -254,10 +339,12 @@ autowrap_mode = 0
 vertical_alignment = 1
 
 [node name="VSeparator3" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1769694785]
+visible = false
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
 
 [node name="Fines" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=389115546]
+visible = false
 custom_minimum_size = Vector2(200, 128)
 layout_mode = 2
 size_flags_vertical = 3
@@ -289,6 +376,7 @@ autowrap_mode = 0
 vertical_alignment = 1
 
 [node name="Rounds" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1068664309]
+visible = false
 custom_minimum_size = Vector2(200, 128)
 layout_mode = 2
 size_flags_vertical = 3
@@ -321,6 +409,7 @@ autowrap_mode = 0
 vertical_alignment = 1
 
 [node name="RocksDestroyed" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=106525152]
+visible = false
 custom_minimum_size = Vector2(200, 128)
 layout_mode = 2
 size_flags_vertical = 3
@@ -353,6 +442,7 @@ autowrap_mode = 0
 vertical_alignment = 1
 
 [node name="RocksDestroyed2" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=649558385]
+visible = false
 custom_minimum_size = Vector2(200, 128)
 layout_mode = 2
 size_flags_vertical = 3
@@ -411,11 +501,13 @@ autowrap_mode = 0
 vertical_alignment = 1
 
 [node name="VSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1987157655]
+visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
 
 [node name="Item_List" type="FlowContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=208860132]
+visible = false
 layout_mode = 2
 alignment = 1
 
@@ -444,6 +536,7 @@ rock_type = "rock_type_4"
 icon_modulate = Color(0.81960785, 0, 0, 1)
 
 [node name="HSeparator4" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=912371730]
+visible = false
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -452,6 +545,7 @@ theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
 
 [node name="Cash Out" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=313444988]
+visible = false
 custom_minimum_size = Vector2(200, 128)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
@@ -502,6 +596,7 @@ theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
 
 [node name="GameProgress" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1662972478]
+visible = false
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 alignment = 1
@@ -701,6 +796,7 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_3q72g")
 
 [node name="ButtonsHBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1750056005]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 4
 
@@ -749,6 +845,10 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
 custom_minimum_size = Vector2(592.975, 23.65)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="TreePanel" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=93255532]
+custom_minimum_size = Vector2(930, 250)
+layout_mode = 2
 
 [node name="SFX" type="Node" parent="." unique_id=818937010]
 
@@ -830,5 +930,27 @@ pitch_scale = 2.0
 libraries/ = SubResource("AnimationLibrary_cuwcq")
 autoplay = &"light_wobble"
 
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=1353853436]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -343.0
+offset_top = -98.0
+offset_right = 343.0
+offset_bottom = 98.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 70
+bbcode_enabled = true
+text = "Thanks For Playing
+Enjoy [wave]Endless Mode."
+fit_content = true
+autowrap_mode = 0
+
+[connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/DoneButton" to="." method="_on_next_round_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/NextRound" to="." method="_on_next_round_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/SHOP" to="." method="_on_shop_pressed"]
