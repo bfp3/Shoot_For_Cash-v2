@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://da45gubie1h3t" path="res://ch/Player/scripts/player.gd" id="1_6ljxy"]
 [ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="2_kbm6s"]
 [ext_resource type="AudioStream" uid="uid://b6r6mcbey572i" path="res://sfx/Shoot_sfx_1.wav" id="2_uns27"]
-[ext_resource type="AudioStream" uid="uid://b0nchvxfh1tp1" path="res://sfx/Camera_waking_up.wav" id="5_hwyif"]
 [ext_resource type="AudioStream" uid="uid://dfgsdlfejvxv3" path="res://sfx/gun-whit-ay-yah.wav" id="6_kyarp"]
 [ext_resource type="AudioStream" uid="uid://cspahf30pivac" path="res://sfx/gun_combination_1.wav" id="6_ts3hu"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://unfiled/Ammo_display/bullet_texture_plain.png" id="8_b1tng"]
@@ -16,7 +15,6 @@
 [ext_resource type="Script" uid="uid://snu7cq0wsbqk" path="res://ch/Player/scripts/player_camera.gd" id="10_n6ds6"]
 [ext_resource type="AudioStream" uid="uid://cjjll1huuw6r0" path="res://sfx/Hovercraft_turning_SFX_right_v3.wav" id="11_f3vr7"]
 [ext_resource type="AudioStream" uid="uid://mbyekv7f3n1p" path="res://sfx/opt_3_fade_shortened.wav" id="12_j58se"]
-[ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="12_rpy68"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="13_isobx"]
 [ext_resource type="Script" uid="uid://1uqdupt170u1" path="res://ch/Player/scripts/player_gun.gd" id="13_mxtxj"]
 [ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="14_f75d4"]
@@ -39,92 +37,6 @@
 [ext_resource type="Texture2D" uid="uid://cxk0yxen5f6sp" path="res://unfiled/Decal_placeholders/pineapple_1024x1024.png" id="34_11n43"]
 [ext_resource type="Texture2D" uid="uid://cdibh2x081m8m" path="res://res/auto_fire_icon.png" id="34_fuvvr"]
 [ext_resource type="Texture2D" uid="uid://celcha768vcmg" path="res://res/sky_mine_icon.png" id="35_bpx2c"]
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_mxtxj"]
-dof_blur_far_enabled = true
-dof_blur_far_distance = 2000.0
-dof_blur_far_transition = 200.0
-
-[sub_resource type="Curve" id="Curve_n75le"]
-_data = [Vector2(0, 0.94382), 0.0, 0.0, 0, 0, Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.275676, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 4
-
-[sub_resource type="CurveTexture" id="CurveTexture_6yecc"]
-curve = SubResource("Curve_n75le")
-
-[sub_resource type="Curve" id="Curve_d7tms"]
-_limits = [-360.0, 360.0, 0.0, 1.0]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_3tqdj"]
-curve = SubResource("Curve_d7tms")
-
-[sub_resource type="Gradient" id="Gradient_c5sey"]
-offsets = PackedFloat32Array(0.0145349, 1)
-colors = PackedColorArray(0.22, 0.22, 0.22, 1, 0.45, 0.45, 0.45, 0.286275)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_an2ri"]
-gradient = SubResource("Gradient_c5sey")
-
-[sub_resource type="Curve" id="Curve_wfw8x"]
-_data = [Vector2(0, 0.29781), 0.0, 0.0, 0, 0, Vector2(0.0425532, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 4
-
-[sub_resource type="CurveTexture" id="CurveTexture_h46b1"]
-curve = SubResource("Curve_wfw8x")
-
-[sub_resource type="Curve" id="Curve_mh36x"]
-_limits = [-200.0, 200.0, 0.0, 1.0]
-_data = [Vector2(0.00550964, -1.72412), 0.0, 0.0, 0, 0, Vector2(0.347107, 93.5345), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_p7fxj"]
-curve = SubResource("Curve_mh36x")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1lfbp"]
-lifetime_randomness = 0.8
-emission_shape = 6
-emission_ring_axis = Vector3(0, 1, 0)
-emission_ring_height = 0.0
-emission_ring_radius = 0.0
-emission_ring_inner_radius = 0.5
-emission_ring_cone_angle = 90.0
-direction = Vector3(0, 1, 0)
-spread = 5.0
-angular_velocity_min = -30.0
-angular_velocity_max = 30.0
-angular_velocity_curve = SubResource("CurveTexture_3tqdj")
-radial_velocity_min = -2.23517e-05
-radial_velocity_max = -2.23517e-05
-gravity = Vector3(0, -0.1, 0)
-tangential_accel_min = -2.23517e-06
-tangential_accel_max = 0.0999978
-tangential_accel_curve = SubResource("CurveTexture_p7fxj")
-scale_min = 0.1
-scale_max = 2.0
-scale_curve = SubResource("CurveTexture_h46b1")
-color_ramp = SubResource("GradientTexture1D_an2ri")
-alpha_curve = SubResource("CurveTexture_6yecc")
-anim_speed_min = 1.0
-anim_speed_max = 1.0
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0locf"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lqk8l"]
-transparency = 1
-shading_mode = 0
-vertex_color_use_as_albedo = true
-albedo_texture = SubResource("CompressedTexture2D_0locf")
-billboard_mode = 3
-billboard_keep_scale = true
-particles_anim_h_frames = 8
-particles_anim_v_frames = 8
-particles_anim_loop = false
-
-[sub_resource type="QuadMesh" id="QuadMesh_n75le"]
-material = SubResource("StandardMaterial3D_lqk8l")
-size = Vector2(5, 5)
 
 [sub_resource type="Curve" id="Curve_emrcn"]
 _data = [Vector2(0, 0.460674), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -623,7 +535,6 @@ script = ExtResource("10_kkix3")
 [node name="Camera3D" type="Camera3D" parent="Cam_pivot" unique_id=1699277447 groups=["player_cam"]]
 transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0, 0)
 keep_aspect = 0
-attributes = SubResource("CameraAttributesPractical_mxtxj")
 current = true
 fov = 60.0
 size = 0.05
@@ -632,47 +543,12 @@ script = ExtResource("10_n6ds6")
 move_speed = 0.05
 shoot_shake_amount = 0.2
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Cam_pivot/Camera3D" unique_id=1016400170]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.00218, 5.75349)
+[node name="SpotLight3D" type="SpotLight3D" parent="Cam_pivot/Camera3D" unique_id=585521769]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -5.02986e-07, 1.3371801, -6.82349)
 spot_range = 75.0
 spot_attenuation = 0.22
 spot_angle = 25.0
 spot_angle_attenuation = 3.24901
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Cam_pivot/Camera3D" unique_id=1243599587]
-stream = ExtResource("5_hwyif")
-volume_db = -10.0
-pitch_scale = 2.0
-
-[node name="Smoke_particles" type="GPUParticles3D" parent="Cam_pivot/Camera3D" unique_id=1513543507]
-transform = Transform3D(1, 0, 0, 0, 0.999998, 0, 0, 0, 0.999998, 0, 0, -1.25)
-emitting = false
-amount = 20
-lifetime = 2.0
-one_shot = true
-explosiveness = 1.0
-fixed_fps = 60
-visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
-local_coords = true
-draw_order = 3
-process_material = SubResource("ParticleProcessMaterial_1lfbp")
-draw_pass_1 = SubResource("QuadMesh_n75le")
-script = ExtResource("12_rpy68")
-
-[node name="Smoke_particles2" type="GPUParticles3D" parent="Cam_pivot/Camera3D" unique_id=1597489858]
-transform = Transform3D(1, 0, 0, 0, 0.999998, 0, 0, 0, 0.999998, 0, 0, -1.25)
-emitting = false
-amount = 20
-lifetime = 2.0
-one_shot = true
-explosiveness = 1.0
-fixed_fps = 60
-visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
-local_coords = true
-draw_order = 3
-process_material = SubResource("ParticleProcessMaterial_1lfbp")
-draw_pass_1 = SubResource("QuadMesh_n75le")
-script = ExtResource("12_rpy68")
 
 [node name="Player_gun" type="Node3D" parent="Cam_pivot/Camera3D" unique_id=548588123 groups=["player_gun"]]
 unique_name_in_owner = true
@@ -680,7 +556,7 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -
 script = ExtResource("13_mxtxj")
 
 [node name="Sparks01" type="GPUParticles3D" parent="Cam_pivot/Camera3D/Player_gun" unique_id=1763354739]
-transform = Transform3D(-1, 0, -8.766586e-08, 0, 0.99999994, 0, 8.766587e-08, 0, -1.0000001, -4.154753e-08, -1.1920929e-07, 0.81614715)
+transform = Transform3D(-1, 0, -8.766586e-08, 0, 0.99999994, 0, 8.766587e-08, 0, -1.0000001, -1.2284135e-06, -1.1920929e-07, 14.392311)
 emitting = false
 amount = 10
 lifetime = 0.15000000000000002
@@ -690,7 +566,7 @@ process_material = SubResource("ParticleProcessMaterial_8wrod")
 draw_pass_1 = SubResource("QuadMesh_g6ubq")
 
 [node name="embers" type="GPUParticles3D" parent="Cam_pivot/Camera3D/Player_gun" unique_id=471194883]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1.8945887e-07, 0.31421822, 1.3490001)
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1.3763247e-06, 0.31421822, 14.925163)
 material_override = SubResource("StandardMaterial3D_rpy68")
 emitting = false
 amount = 5

@@ -454,7 +454,7 @@ func update_end_demo() -> void:
 
 	await get_tree().create_timer(1.0).timeout
 	
-	var demo_screen : Control = $'../MainGameCanvasLayer/SubViewportContainer/SubViewport/DemoEndScreen'
+	var demo_screen : Control = $'../MainGameCanvasLayer/DemoEndScreen'
 	demo_screen.enter_state(demo_screen.State.OPEN_MENU)
 	
 

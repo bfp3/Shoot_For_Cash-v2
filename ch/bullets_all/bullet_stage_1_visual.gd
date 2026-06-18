@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 
 	if !is_instance_valid(target_node):
 		#queue_free()
-		$Trails.one_shot = true
+		#$Trails.one_shot = true
 		$Bullet_mesh.hide()
 		return
 
@@ -46,9 +46,10 @@ func _physics_process(delta: float) -> void:
 func cleanUp() -> void:
 	target_node = null
 	#$Trails.emitting = false
-	$Trails.one_shot = true
-	$Bullet_mesh.hide()
+	#$Trails.one_shot = true
+	#$Bullet_mesh.hide()
+	self.queue_free()
 
 
-func _on_trails_finished() -> void:
-	queue_free()
+#func _on_trails_finished() -> void:
+	#queue_free()

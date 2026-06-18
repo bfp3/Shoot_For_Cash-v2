@@ -1,0 +1,234 @@
+[gd_scene format=3 uid="uid://dp74l4ybob7km"]
+
+[ext_resource type="Environment" uid="uid://5qgk8j6tll6x" path="res://res/2d_Canvas_world_env.tres" id="1_w4ge1"]
+[ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="2_3iai2"]
+[ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="3_yrjef"]
+[ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="4_vgxjb"]
+[ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="5_6rdep"]
+[ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="6_b6nkt"]
+[ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="7_7qk1s"]
+[ext_resource type="PackedScene" uid="uid://cxmirbvecyqjt" path="res://lib/Pineapple_ending_sequence/V2_pineapple_ending_sequence_2.tscn" id="8_qqxcg"]
+[ext_resource type="PackedScene" uid="uid://dpbgyfs2kgdtr" path="res://ch/demo_end_screen/Demo_end_screen.tscn" id="9_l1q7p"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="10_x41y2"]
+[ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="11_ftnal"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="12_xgkue"]
+
+[sub_resource type="GDScript" id="GDScript_ec2we"]
+script/source = "extends Node
+
+
+var final_rounds_shooting := false
+
+
+func _ready() -> void:
+	await get_tree().create_timer(2.0).timeout
+
+func start() -> void:
+	$Pineapple_telegraph_same_as_intro.first_phase()
+
+		
+	
+	
+"
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ec2we"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ymbdo"]
+
+[node name="MainGameCanvasLayer" type="CanvasLayer" unique_id=1399267917]
+layer = -1
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=283459394]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=295735800]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+anisotropic_filtering_level = 0
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport" unique_id=604995854]
+environment = ExtResource("1_w4ge1")
+
+[node name="Money_labels" parent="SubViewportContainer/SubViewport" unique_id=2075768694 instance=ExtResource("2_3iai2")]
+
+[node name="Timer" parent="SubViewportContainer/SubViewport" unique_id=779418741 instance=ExtResource("3_yrjef")]
+mouse_filter = 2
+start_time = 5.0
+
+[node name="Place_name" type="Control" parent="SubViewportContainer/SubViewport" unique_id=1872639056]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("4_vgxjb")
+
+[node name="CenterPOS" type="Control" parent="SubViewportContainer/SubViewport/Place_name" unique_id=474017005]
+layout_mode = 1
+anchor_left = 0.49947917
+anchor_top = 0.425
+anchor_right = 0.5005208
+anchor_bottom = 0.42685184
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/_edit_use_anchors_ = true
+
+[node name="PlaceLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Place_name" unique_id=1189354724]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -112.5
+offset_top = -24.0
+offset_right = 112.5
+offset_bottom = 87.66669
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 19
+theme_override_font_sizes/bold_font_size = 40
+bbcode_enabled = true
+text = "[b]MOSS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TallyCard" parent="SubViewportContainer/SubViewport" unique_id=1212322380 node_paths=PackedStringArray("round_manager") instance=ExtResource("5_6rdep")]
+unique_name_in_owner = true
+visible = false
+mouse_filter = 2
+round_manager = NodePath("")
+
+[node name="Shop_Main_Menu" parent="SubViewportContainer/SubViewport" unique_id=973405492 node_paths=PackedStringArray("round_manager", "money_control") instance=ExtResource("6_b6nkt")]
+unique_name_in_owner = true
+round_manager = NodePath("")
+money_control = NodePath("../Money_labels")
+test_mode = false
+
+[node name="Frame_rate" type="Control" parent="SubViewportContainer/SubViewport" unique_id=1835966262]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 592.0
+offset_bottom = 50.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("7_7qk1s")
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Frame_rate" unique_id=150480759]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 8.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "FPS"
+
+[node name="Timer" type="Timer" parent="SubViewportContainer/SubViewport/Frame_rate" unique_id=2086393518]
+autostart = true
+
+[node name="V2_Pineapple_ending_sequence2" parent="SubViewportContainer/SubViewport" unique_id=475251545 instance=ExtResource("8_qqxcg")]
+script = SubResource("GDScript_ec2we")
+
+[node name="DemoEndScreen" parent="SubViewportContainer/SubViewport" unique_id=1176497219 node_paths=PackedStringArray("round_manager") instance=ExtResource("9_l1q7p")]
+visible = false
+round_manager = NodePath("")
+
+[node name="QuitMenu" type="PanelContainer" parent="." unique_id=1964515022]
+unique_name_in_owner = true
+process_mode = 3
+custom_minimum_size = Vector2(205, 205)
+anchors_preset = -1
+anchor_left = -0.18333334
+anchor_top = -0.08148148
+anchor_right = -0.18333334
+anchor_bottom = 2.4810185
+offset_left = 598.0
+offset_top = 813.0
+offset_right = 803.0
+offset_bottom = -1749.5
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = ExtResource("10_x41y2")
+script = ExtResource("11_ftnal")
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="QuitMenu" unique_id=2147450142]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="QuitMenu/HBoxContainer" unique_id=26994530]
+custom_minimum_size = Vector2(19.4, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="QuitMenu/HBoxContainer" unique_id=1935242130]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=801029803]
+custom_minimum_size = Vector2(50, 12.18)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=231938108]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 19
+bbcode_enabled = true
+text = "Are You Sure?"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="HSeparator4" type="HSeparator" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=170624369]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+
+[node name="CloseGame" type="Button" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=346425050]
+layout_mode = 2
+text = "Quit"
+script = ExtResource("12_xgkue")
+
+[node name="HSeparator2" type="HSeparator" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=52916818]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+
+[node name="CancelMenu" type="Button" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=223904876]
+layout_mode = 2
+text = "Keep Playing"
+script = ExtResource("12_xgkue")
+
+[node name="HSeparator3" type="HSeparator" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=2104469572]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+
+[node name="VSeparator2" type="VSeparator" parent="QuitMenu/HBoxContainer" unique_id=2011211539]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
+
+[connection signal="timeout" from="SubViewportContainer/SubViewport/Frame_rate/Timer" to="SubViewportContainer/SubViewport/Frame_rate" method="_on_timer_timeout"]
+[connection signal="pressed" from="QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="QuitMenu" method="_on_close_game_pressed"]
+[connection signal="pressed" from="QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="QuitMenu" method="_on_cancel_menu_pressed"]
+
+[editable path="SubViewportContainer/SubViewport/Shop_Main_Menu"]
+[editable path="SubViewportContainer/SubViewport/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]
+[editable path="SubViewportContainer/SubViewport/Shop_Main_Menu/TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket"]
