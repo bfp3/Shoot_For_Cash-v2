@@ -107,6 +107,10 @@ alpha_curve = SubResource("CurveTexture_vhsx8")
 hue_variation_min = -2.2351742e-08
 hue_variation_max = -2.2351742e-08
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cn8lj"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn8lj"]
@@ -174,10 +178,6 @@ scale_max = 16.0
 scale_curve = SubResource("CurveTexture_scjtr")
 color = Color(1, 0.78, 0, 1)
 alpha_curve = SubResource("CurveTexture_8o1tj")
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cn8lj"]
 
 [node name="Shop_Main_Menu" type="Control" unique_id=973405492 node_paths=PackedStringArray("money_control", "reveal_skill_sfx") groups=["shop_main_menu"]]
 layout_mode = 3
@@ -297,6 +297,85 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
+
+[node name="QuitControl" type="Control" parent="CenterContainer" unique_id=623695201]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+
+[node name="QuitMenu" type="PanelContainer" parent="CenterContainer/QuitControl" unique_id=652711176]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(205, 205)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -1.6413333
+anchor_top = 0.18251856
+anchor_right = -1.6413333
+anchor_bottom = 2.7450185
+offset_left = 356.6667
+offset_top = 341.74072
+offset_right = 561.6667
+offset_bottom = -734.5093
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = ExtResource("5_vom4t")
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/QuitControl/QuitMenu" unique_id=1223709064]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=473970147]
+custom_minimum_size = Vector2(19.4, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=1734679969]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1006108101]
+custom_minimum_size = Vector2(50, 12.18)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=107992642]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 19
+bbcode_enabled = true
+text = "Are You Sure?"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="HSeparator4" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=722915459]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="CloseGame" type="Button" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1842338374 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+layout_mode = 2
+text = "Quit"
+script = ExtResource("3_y3o4g")
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=225086530]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="CancelMenu" type="Button" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=348898124]
+layout_mode = 2
+text = "Keep Playing"
+script = ExtResource("3_y3o4g")
+
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1304174969]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="VSeparator2" type="VSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=1039230397]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
 
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=1211974115]
 custom_minimum_size = Vector2(980, 640)
@@ -1161,82 +1240,6 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="QuitMenu" type="PanelContainer" parent="." unique_id=652711176]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(205, 205)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.18333334
-anchor_top = -0.08148148
-anchor_right = -0.18333334
-anchor_bottom = 2.4810185
-offset_left = 598.0
-offset_top = 813.0
-offset_right = 803.0
-offset_bottom = -1749.5
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_styles/panel = ExtResource("5_vom4t")
-metadata/_edit_use_anchors_ = true
-
-[node name="HBoxContainer" type="HBoxContainer" parent="QuitMenu" unique_id=1223709064]
-layout_mode = 2
-
-[node name="VSeparator" type="VSeparator" parent="QuitMenu/HBoxContainer" unique_id=473970147]
-custom_minimum_size = Vector2(19.4, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="QuitMenu/HBoxContainer" unique_id=1734679969]
-layout_mode = 2
-
-[node name="HSeparator" type="HSeparator" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=1006108101]
-custom_minimum_size = Vector2(50, 12.18)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=107992642]
-custom_minimum_size = Vector2(150, 50)
-layout_mode = 2
-theme_override_font_sizes/normal_font_size = 19
-bbcode_enabled = true
-text = "Are You Sure?"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-
-[node name="HSeparator4" type="HSeparator" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=722915459]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="CloseGame" type="Button" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=1842338374 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
-layout_mode = 2
-text = "Quit"
-script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../SFX/purchase")
-
-[node name="HSeparator2" type="HSeparator" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=225086530]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="CancelMenu" type="Button" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=348898124]
-layout_mode = 2
-text = "Keep Playing"
-script = ExtResource("3_y3o4g")
-
-[node name="HSeparator3" type="HSeparator" parent="QuitMenu/HBoxContainer/VBoxContainer" unique_id=1304174969]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="VSeparator2" type="VSeparator" parent="QuitMenu/HBoxContainer" unique_id=1039230397]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
-
 [node name="SFX" type="Node" parent="." unique_id=192443435]
 
 [node name="BG_Music" type="AudioStreamPlayer" parent="SFX" unique_id=583917528]
@@ -1316,13 +1319,13 @@ volume_db = -21.0
 stream = ExtResource("30_vom4t")
 pitch_scale = 0.4
 
+[connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_close_game_pressed"]
+[connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="update_close_menu"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]
 [connection signal="pressed" from="MaxOutPowers" to="." method="_on_max_out_powers_pressed"]
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]
-[connection signal="pressed" from="QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_close_game_pressed"]
-[connection signal="pressed" from="QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]
 
 [editable path="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]
 [editable path="TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket"]

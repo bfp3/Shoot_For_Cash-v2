@@ -37,8 +37,8 @@ func _ready() -> void:
 	self.hide()
 	await crosshair_fade_out_mode()
 	
-	EventBus.instance.open_shop.connect(_on_shop_entered)
-	EventBus.instance.close_shop.connect(_on_shop_finished)
+	#EventBus.instance.open_shop.connect(_on_shop_entered)
+	#EventBus.instance.close_shop.connect(_on_shop_finished)
 
 	up_pos_y = up.position.y
 	down_pos_y = down.position.y
