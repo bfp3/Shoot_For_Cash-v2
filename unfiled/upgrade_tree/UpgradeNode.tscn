@@ -7,7 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="3_qxmyh"]
 [ext_resource type="Script" uid="uid://drmqfnbqyvmps" path="res://ch/Shop/tooltip.gd" id="5_vhsx8"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="5_xtm01"]
-[ext_resource type="AudioStream" uid="uid://cjpci1sgf0wi" path="res://sfx/REMOVE FROM GAME _TEMPORARY SOUNDS ONLY/polychrome1.ogg" id="8_mntah"]
+[ext_resource type="AudioStream" uid="uid://dgooigvs82ygq" path="res://sfx/shop_free_sfx_01.wav" id="8_gxbd8"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="9_gxbd8"]
 
 [sub_resource type="Theme" id="Theme_64t06"]
@@ -543,8 +543,8 @@ stream = ExtResource("3_qxmyh")
 volume_db = -34.0
 
 [node name="Free_sfx" type="AudioStreamPlayer" parent="." unique_id=1901564952]
-stream = ExtResource("8_mntah")
-volume_db = -48.0
+stream = ExtResource("8_gxbd8")
+volume_db = -52.0
 
 [node name="focus_exit" type="AudioStreamPlayer" parent="." unique_id=2031807403]
 stream = ExtResource("3_qxmyh")
@@ -559,7 +559,6 @@ amount = 12
 lifetime = 0.5
 one_shot = true
 explosiveness = 1.0
-fixed_fps = 12
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_gxbd8")
 

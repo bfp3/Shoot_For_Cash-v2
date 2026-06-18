@@ -30,7 +30,6 @@
 [ext_resource type="PackedScene" uid="uid://b4b5m4iiqsxfk" path="res://unfiled/Hostage_sub_viewport/Radar_viewport.tscn" id="28_jp1ay"]
 [ext_resource type="PackedScene" uid="uid://cxqry0burrjjd" path="res://ch/02_enemies/birdsAnimated.tscn" id="29_koyg5"]
 [ext_resource type="Environment" uid="uid://cq3pswbma6of4" path="res://res/area_2_world_env.tres" id="30_xv505"]
-[ext_resource type="AudioStream" uid="uid://vyxgc20qwdty" path="res://sfx/Copyright_free/Strauss  The Blue Danube Waltz.mp3" id="31_qhsw5"]
 [ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://sfx/BP_tunes/oasisWorld.wav" id="32_fxeoi"]
 [ext_resource type="Texture2D" uid="uid://b830br7pig61j" path="res://res/Kenney_prototype_textures/Dark/texture_08.png" id="33_ew0fq"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="34_m8bcq"]
@@ -52,7 +51,6 @@
 [ext_resource type="Texture2D" uid="uid://b8wgnqghjdkhj" path="res://res/textures_2D/Fuji_mountain.png" id="50_kqim3"]
 [ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="51_k4xim"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="52_mm7j7"]
-
 
 [sub_resource type="GDScript" id="GDScript_j63gk"]
 script/source = "extends Node3D
@@ -868,196 +866,196 @@ shading_mode = 0
 disable_fog = true
 albedo_texture = ExtResource("52_mm7j7")
 
-[node name="Level_2" type="Node3D" groups=["level_root"]]
+[node name="Level_2" type="Node3D" unique_id=1953497985 groups=["level_root"]]
 script = ExtResource("1_hucnp")
 
-[node name="HealthManager" parent="." instance=ExtResource("2_728id")]
+[node name="HealthManager" parent="." unique_id=2064636904 instance=ExtResource("2_728id")]
 
-[node name="CMS" parent="." instance=ExtResource("3_rh4rn")]
+[node name="CMS" parent="." unique_id=1877949287 instance=ExtResource("3_rh4rn")]
 
-[node name="FlagRollout" parent="." instance=ExtResource("4_8it3a")]
+[node name="FlagRollout" parent="." unique_id=881887602 instance=ExtResource("4_8it3a")]
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, -7.609, -1.38252, 19.582)
 
-[node name="Cannon_Launcher" parent="." instance=ExtResource("5_23381")]
+[node name="Cannon_Launcher" parent="." unique_id=1152910388 instance=ExtResource("5_23381")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 21.5)
 
-[node name="Launcher_container" parent="Cannon_Launcher" index="1"]
+[node name="Launcher_container" parent="Cannon_Launcher" index="2" unique_id=129265720]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0.950001)
 
-[node name="Target_cannon4" parent="Cannon_Launcher/Launcher_container" index="3"]
+[node name="Target_cannon4" parent="Cannon_Launcher/Launcher_container" index="3" unique_id=1358307688]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 9.5)
 
-[node name="Target_cannon5" parent="Cannon_Launcher/Launcher_container" index="4"]
+[node name="Target_cannon5" parent="Cannon_Launcher/Launcher_container" index="4" unique_id=2029843475]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.1, 11)
 arc_strength = 0.15
 
-[node name="Target_cannon6" parent="Cannon_Launcher/Launcher_container" index="5"]
+[node name="Target_cannon6" parent="Cannon_Launcher/Launcher_container" index="5" unique_id=1377164433]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.1, 11)
 arc_strength = 0.15
 
-[node name="Target_cannon8" parent="Cannon_Launcher/Launcher_container" index="7"]
+[node name="Target_cannon8" parent="Cannon_Launcher/Launcher_container" index="7" unique_id=134031522]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 10, 8.45, 31.7257)
 arc_strength = 0.1
 
-[node name="Pineapple_launcher" parent="Cannon_Launcher/Pineapple_launcher" index="0"]
+[node name="Pineapple_launcher" parent="Cannon_Launcher/Pineapple_launcher" parent_id_path=PackedInt32Array(1152910388, 998180776) index="0" unique_id=1306895522]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
 
-[node name="Pineapple_launcher2" parent="Cannon_Launcher/Pineapple_launcher" index="1"]
+[node name="Pineapple_launcher2" parent="Cannon_Launcher/Pineapple_launcher" parent_id_path=PackedInt32Array(1152910388, 998180776) index="1" unique_id=930804783]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.4, 0.950001)
 
-[node name="Pineapple_launcher3" parent="Cannon_Launcher/Pineapple_launcher" index="2"]
+[node name="Pineapple_launcher3" parent="Cannon_Launcher/Pineapple_launcher" parent_id_path=PackedInt32Array(1152910388, 998180776) index="2" unique_id=397858265]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.55, -0.2, 0.949999)
 
-[node name="Launcher_zone_mesh" type="Node3D" parent="Cannon_Launcher" groups=["Launcher_zone_mesh"]]
+[node name="Launcher_zone_mesh" type="Node3D" parent="Cannon_Launcher" unique_id=1963168426 groups=["Launcher_zone_mesh"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.6)
 script = SubResource("GDScript_j63gk")
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Cannon_Launcher/Launcher_zone_mesh"]
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Cannon_Launcher/Launcher_zone_mesh" unique_id=415238751]
 material_override = SubResource("StandardMaterial3D_y8nxn")
 
-[node name="Castle_wall_reference" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="Castle_wall_reference" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=287767325]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0.253)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(20, 1, 1)
 
-[node name="CSGBox3D33" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D33" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=655224488]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 5.503)
 use_collision = true
 size = Vector3(250, 1.215, 0.5)
 
-[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=613324383]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -0.267782)
 use_collision = true
 size = Vector3(32.255, 0.2, 1.5)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1124531692]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, 0.253)
 use_collision = true
 
-[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D7"]
+[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D7" unique_id=73881908]
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0.539, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D7"]
+[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D7" unique_id=1940672369]
 transform = Transform3D(1.00001, 0, -8.19564e-08, 0, 1, 0, 8.19564e-08, 0, 1.00001, 0, 0.5365, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(0.5, 0.2, 0.5)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1354192956]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 0.253)
 use_collision = true
 
-[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D8"]
+[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D8" unique_id=579298606]
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0.539, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D8"]
+[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D8" unique_id=505780213]
 transform = Transform3D(1.00001, 0, -8.19564e-08, 0, 1, 0, 8.19564e-08, 0, 1.00001, 0, 0.5365, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(0.5, 0.2, 0.5)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=360414742]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 0.253)
 use_collision = true
 
-[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D9"]
+[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D9" unique_id=495362221]
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0.539, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D32" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D9"]
+[node name="CSGBox3D32" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D9" unique_id=176420288]
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0.339, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D9"]
+[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D9" unique_id=200743325]
 transform = Transform3D(1.00001, 0, -8.19564e-08, 0, 1, 0, 8.19564e-08, 0, 1.00001, 0, 0.5365, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(0.5, 0.2, 0.5)
 
-[node name="CSGBox3D10" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D10" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1571591869]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.53674e-07, 1, 0.253)
 use_collision = true
 
-[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D10"]
+[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D10" unique_id=1980281313]
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0.539, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D10"]
+[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D10" unique_id=546519589]
 transform = Transform3D(1.00001, 0, -8.19564e-08, 0, 1, 0, 8.19564e-08, 0, 1.00001, 0, 0.5365, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(0.5, 0.2, 0.5)
 
-[node name="CSGBox3D11" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D11" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1682154872]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, 0.253)
 use_collision = true
 
-[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D11"]
+[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D11" unique_id=314745398]
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0.539, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D11"]
+[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D11" unique_id=842493695]
 transform = Transform3D(1.00001, 0, -8.19564e-08, 0, 1, 0, 8.19564e-08, 0, 1.00001, 0, 0.5365, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(0.5, 0.2, 0.5)
 
-[node name="CSGBox3D12" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D12" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=220907311]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 0.253)
 use_collision = true
 
-[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D12"]
+[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D12" unique_id=1859010593]
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0.539, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D12"]
+[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D12" unique_id=591156944]
 transform = Transform3D(1.00001, 0, -8.19564e-08, 0, 1, 0, 8.19564e-08, 0, 1.00001, 0, 0.5365, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(0.5, 0.2, 0.5)
 
-[node name="CSGBox3D13" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D13" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=658601844]
 transform = Transform3D(0.999614, 0, 0.0277821, 0, 1, 0, -0.0277821, 0, 0.999614, -6, 1, 0.253)
 use_collision = true
 
-[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D13"]
+[node name="CSGBox3D30" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D13" unique_id=200194544]
 transform = Transform3D(1, 0, -1.86265e-09, 0, 1, 0, 1.86265e-09, 0, 1, 0, 0.539, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D13"]
+[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/CSGBox3D13" unique_id=1096513798]
 transform = Transform3D(1.00001, 0, -8.19564e-08, 0, 1, 0, 8.19564e-08, 0, 1.00001, 0, 0.5365, 0)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(0.5, 0.2, 0.5)
 
-[node name="PILLAR" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="PILLAR" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1197181910]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 1.25, 0.253)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1, 3.5, 1)
 script = SubResource("GDScript_h6ckc")
 
-[node name="Decal" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR"]
+[node name="Decal" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR" unique_id=1014104263]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.348, -1, 0.047)
 size = Vector3(1, 0.369, 1)
 texture_albedo = ExtResource("8_gtacw")
@@ -1065,7 +1063,7 @@ modulate = Color(1, 1, 1, 0)
 upper_fade = 0.00502394
 lower_fade = 0.00520111
 
-[node name="Decal2" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR"]
+[node name="Decal2" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR" unique_id=584897644]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.348, 0, 0.047)
 size = Vector3(1, 0.369, 1)
 texture_albedo = ExtResource("8_gtacw")
@@ -1073,7 +1071,7 @@ modulate = Color(1, 1, 1, 0)
 upper_fade = 0.00502394
 lower_fade = 0.00520111
 
-[node name="Decal3" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR"]
+[node name="Decal3" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR" unique_id=225718815]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.348, 1, 0.047)
 size = Vector3(1, 0.369, 1)
 texture_albedo = ExtResource("8_gtacw")
@@ -1081,14 +1079,14 @@ modulate = Color(1, 1, 1, 0)
 upper_fade = 0.00502394
 lower_fade = 0.00520111
 
-[node name="PILLAR2" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="PILLAR2" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=253655099]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10, 1.25, 0.253)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(1, 3.5, 1)
 script = SubResource("GDScript_h6ckc")
 
-[node name="Decal" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR2"]
+[node name="Decal" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR2" unique_id=728888444]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.348, -1, 0.047)
 visible = false
 size = Vector3(1, 0.369, 1)
@@ -1096,7 +1094,7 @@ texture_albedo = ExtResource("8_gtacw")
 upper_fade = 0.00502394
 lower_fade = 0.00520111
 
-[node name="Decal2" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR2"]
+[node name="Decal2" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR2" unique_id=1544846105]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.348, 0, 0.047)
 visible = false
 size = Vector3(1, 0.369, 1)
@@ -1104,7 +1102,7 @@ texture_albedo = ExtResource("8_gtacw")
 upper_fade = 0.00502394
 lower_fade = 0.00520111
 
-[node name="Decal3" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR2"]
+[node name="Decal3" type="Decal" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D/PILLAR2" unique_id=2040692350]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.348, 1, 0.047)
 visible = false
 size = Vector3(1, 0.369, 1)
@@ -1112,104 +1110,104 @@ texture_albedo = ExtResource("8_gtacw")
 upper_fade = 0.00502394
 lower_fade = 0.00520111
 
-[node name="CSGBox3D24" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D24" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=873762716]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.87328, 0.270164)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.47)
 
-[node name="CSGBox3D25" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D25" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=819426330]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 3.07328, 0.270164)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.47)
 
-[node name="CSGBox3D26" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D26" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1152295703]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, -0.46091, 0.270164)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.47)
 
-[node name="CSGBox3D23" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D23" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=204432044]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0.419334, -0.379835)
 use_collision = true
 size = Vector3(1, 2, 1)
 
-[node name="CSGBox3D28" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D28" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1716248204]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, -0.06091, -0.389835)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D31" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=401109497]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 1.18909, -0.389835)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D32" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D32" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=481091859]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0.98909, -0.389835)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D15" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D15" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=277795482]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.419334, -0.379835)
 use_collision = true
 size = Vector3(1, 2, 1)
 
-[node name="CSGBox3D22" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D22" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=743441654]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.25, -0.330666, 0.620165)
 use_collision = true
 size = Vector3(5.5, 0.5, 1)
 
-[node name="CSGBox3D29" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D29" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1834946316]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.75, -0.330666, 0.620165)
 use_collision = true
 size = Vector3(5.5, 0.5, 1)
 
-[node name="CSGBox3D16" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D16" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1799489373]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.87328, 0.270164)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.47)
 
-[node name="CSGBox3D17" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D17" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1729058010]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 3.07328, 0.270164)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.47)
 
-[node name="CSGBox3D18" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D18" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=517251771]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, -0.46091, 0.270164)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.47)
 
-[node name="CSGBox3D19" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D19" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1476261332]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.46091, -0.389835)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D20" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D20" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1816260071]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.0609102, -0.389835)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D27" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D27" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1227425880]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, -0.46091, -0.389835)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D21" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D"]
+[node name="CSGBox3D21" type="CSGBox3D" parent="Cannon_Launcher/Launcher_zone_mesh/CSGCombiner3D" unique_id=1055518840]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.28909, -0.389835)
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="Zoom_in_sequence" type="Node3D" parent="."]
+[node name="Zoom_in_sequence" type="Node3D" parent="." unique_id=1151468301]
 script = SubResource("GDScript_fcjij")
 
-[node name="Zoom_out_sequence" type="Node3D" parent="." groups=["camera_zoom_out_node"]]
+[node name="Zoom_out_sequence" type="Node3D" parent="." unique_id=1178536956 groups=["camera_zoom_out_node"]]
 script = ExtResource("9_vihtr")
 
-[node name="Smoke_player_wins" type="Node3D" parent="Zoom_out_sequence"]
+[node name="Smoke_player_wins" type="Node3D" parent="Zoom_out_sequence" unique_id=1307580849]
 script = SubResource("GDScript_y8nxn")
 
-[node name="Smoke_player_loses" type="Node3D" parent="Zoom_out_sequence"]
+[node name="Smoke_player_loses" type="Node3D" parent="Zoom_out_sequence" unique_id=1820031351]
 script = SubResource("GDScript_opdol")
 
-[node name="TV_hud" type="TextureRect" parent="." groups=["TV_CRT_Filter"]]
+[node name="TV_hud" type="TextureRect" parent="." unique_id=493408704 groups=["TV_CRT_Filter"]]
 z_index = 1
 material = SubResource("ShaderMaterial_414ap")
 anchors_preset = 15
@@ -1221,27 +1219,27 @@ texture = SubResource("CanvasTexture_q3tws")
 script = ExtResource("11_fxan6")
 start_up = true
 
-[node name="GameLoopManager" type="Node" parent="." groups=["game_loop_manager"]]
+[node name="GameLoopManager" type="Node" parent="." unique_id=172387675 groups=["game_loop_manager"]]
 script = ExtResource("12_aietf")
 phases = Array[PackedScene]([ExtResource("13_my0x1"), ExtResource("14_2fb6x"), ExtResource("15_2hy3y"), ExtResource("16_rcehh"), ExtResource("17_qo36q")])
 
-[node name="Level_transitions" type="Node" parent="."]
+[node name="Level_transitions" type="Node" parent="." unique_id=427522127]
 
-[node name="Opening_sequence" type="Node" parent="Level_transitions"]
+[node name="Opening_sequence" type="Node" parent="Level_transitions" unique_id=347472644]
 script = ExtResource("18_gmm7r")
 play_opening_sequence = false
 
-[node name="Intro_sequence" type="Node" parent="Level_transitions/Opening_sequence"]
+[node name="Intro_sequence" type="Node" parent="Level_transitions/Opening_sequence" unique_id=2039741675]
 unique_name_in_owner = true
 script = SubResource("GDScript_bxqlr")
 
-[node name="April 14" parent="Level_transitions/Opening_sequence" instance=ExtResource("19_rp72c")]
+[node name="April 14" parent="Level_transitions/Opening_sequence" unique_id=1596939664 instance=ExtResource("19_rp72c")]
 unique_name_in_owner = true
 z_index = 0
 _volume = -80.0
 metadata/_edit_use_anchors_ = true
 
-[node name="Start_birds" type="Node3D" parent="Level_transitions/Opening_sequence"]
+[node name="Start_birds" type="Node3D" parent="Level_transitions/Opening_sequence" unique_id=953465510]
 unique_name_in_owner = true
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -4.5, 8.5, -7)
 visible = false
@@ -1249,20 +1247,20 @@ script = SubResource("GDScript_smxn7")
 start_bird = true
 target_pos = Vector3(-152, 20, 706)
 
-[node name="level_completed_sequence" parent="Level_transitions" groups=["level_completed_sequence"] instance=ExtResource("20_5f4i7")]
+[node name="level_completed_sequence" parent="Level_transitions" unique_id=698497758 groups=["level_completed_sequence"] instance=ExtResource("20_5f4i7")]
 unique_name_in_owner = true
 
-[node name="continue_sequence" type="CanvasLayer" parent="Level_transitions" groups=["continue_screen"]]
+[node name="continue_sequence" type="CanvasLayer" parent="Level_transitions" unique_id=890409372 groups=["continue_screen"]]
 script = SubResource("GDScript_rrw3i")
 
-[node name="Dynamic_intro_sequence" type="Node" parent="."]
+[node name="Dynamic_intro_sequence" type="Node" parent="." unique_id=1876584272]
 script = SubResource("GDScript_jptyy")
 screen_fade_in = true
 screen_fade_in_time = 1.0
 birds = true
 delay_until_launchers_start = 1.0
 
-[node name="black_fade_in" type="ColorRect" parent="Dynamic_intro_sequence"]
+[node name="black_fade_in" type="ColorRect" parent="Dynamic_intro_sequence" unique_id=1524979243]
 visible = false
 z_index = 4095
 anchors_preset = 15
@@ -1272,7 +1270,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.168627, 0.168627, 0.168627, 1)
 
-[node name="Godot_screen_fade_in" type="TextureRect" parent="Dynamic_intro_sequence"]
+[node name="Godot_screen_fade_in" type="TextureRect" parent="Dynamic_intro_sequence" unique_id=173783048]
 visible = false
 z_index = 4096
 anchors_preset = 15
@@ -1285,215 +1283,212 @@ grow_vertical = 2
 pivot_offset = Vector2(960, 540)
 texture = ExtResource("21_bya4j")
 
-[node name="Intro_sequence" type="Node" parent="Dynamic_intro_sequence"]
+[node name="Intro_sequence" type="Node" parent="Dynamic_intro_sequence" unique_id=1945830536]
 script = SubResource("GDScript_bxqlr")
 
-[node name="Player" parent="." instance=ExtResource("22_b2550")]
+[node name="Player" parent="." unique_id=1630124245 instance=ExtResource("22_b2550")]
 unique_name_in_owner = true
 process_mode = 3
 transform = Transform3D(0.969016, -0.0672529, 0.237667, 0, 0.962218, 0.27228, -0.246999, -0.263844, 0.932404, 2.351, 2.333, 29.623)
-light_colour = Color(1, 0.5725, 0.05, 1)
-light_intensity = 0.0
 
-[node name="Marker3D" type="Marker3D" parent="Player"]
+[node name="Marker3D" type="Marker3D" parent="Player" unique_id=1742338253]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104982, 0)
 
-[node name="HUD_feedback_corner" parent="Player" instance=ExtResource("23_eqtmj")]
+[node name="HUD_feedback_corner" parent="Player" unique_id=1372725068 instance=ExtResource("23_eqtmj")]
 
-[node name="Player_gun" type="Node3D" parent="." groups=["player_gun"]]
+[node name="Player_gun" type="Node3D" parent="." unique_id=1216066154 groups=["player_gun"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, -1.67262, -2.44093)
 script = SubResource("GDScript_r08bu")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Player_gun"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Player_gun" unique_id=1826701329]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.972502, 0)
 visible = false
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Player_gun/CSGBox3D"]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Player_gun/CSGBox3D" unique_id=966615426]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, -0.28481)
 visible = false
 radius = 0.11
 height = 1.7
 sides = 4
 
-[node name="mockGun" parent="Player_gun" instance=ExtResource("24_c5kql")]
+[node name="mockGun" parent="Player_gun" unique_id=1245578012 instance=ExtResource("24_c5kql")]
 transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 0, 0.376402, 0.102528)
 visible = false
 
-[node name="Marker3D" type="Marker3D" parent="Player_gun"]
+[node name="Marker3D" type="Marker3D" parent="Player_gun" unique_id=1577090918]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.385595, 1.89964)
 
-[node name="Bonus_round" parent="." instance=ExtResource("25_6jdn0")]
+[node name="Bonus_round" parent="." unique_id=1837538997 instance=ExtResource("25_6jdn0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 3.5, 18.6)
 visible = false
 
-[node name="Parachute_position_marker" type="Node3D" parent="." groups=["Parachute_position_marker"]]
+[node name="Parachute_position_marker" type="Node3D" parent="." unique_id=979314224 groups=["Parachute_position_marker"]]
 transform = Transform3D(-8.74226e-08, 0, 2, 0, 2, 0, -2, 0, -8.74226e-08, -0.5, -2.35668, 7.886)
 
-[node name="Marker3D" type="Marker3D" parent="Parachute_position_marker"]
+[node name="Marker3D" type="Marker3D" parent="Parachute_position_marker" unique_id=1904648975]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.07501, 1.075, -5.75001)
 
-[node name="Marker3D2" type="Marker3D" parent="Parachute_position_marker"]
+[node name="Marker3D2" type="Marker3D" parent="Parachute_position_marker" unique_id=1079574802]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.375, 1.975, -5.25)
 
-[node name="Marker3D3" type="Marker3D" parent="Parachute_position_marker"]
+[node name="Marker3D3" type="Marker3D" parent="Parachute_position_marker" unique_id=1636841011]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.125, 1.225, 3.25)
 
-[node name="Marker3D4" type="Marker3D" parent="Parachute_position_marker"]
+[node name="Marker3D4" type="Marker3D" parent="Parachute_position_marker" unique_id=1146476650]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.125, 1.225, -2.75)
 
-[node name="Marker3D5" type="Marker3D" parent="Parachute_position_marker"]
+[node name="Marker3D5" type="Marker3D" parent="Parachute_position_marker" unique_id=284178439]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.125, 1.225, 2.25)
 
-[node name="Bonus_markers" type="Node3D" parent="." groups=["Bonus_round_markers"]]
+[node name="Bonus_markers" type="Node3D" parent="." unique_id=709228387 groups=["Bonus_round_markers"]]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.5, -2.35668, 1.386)
 
-[node name="Marker3D" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D" type="Marker3D" parent="Bonus_markers" unique_id=1647027677]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
 
-[node name="Marker3D2" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D2" type="Marker3D" parent="Bonus_markers" unique_id=584859520]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
 
-[node name="Marker3D3" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D3" type="Marker3D" parent="Bonus_markers" unique_id=873464742]
 
-[node name="Marker3D4" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D4" type="Marker3D" parent="Bonus_markers" unique_id=1728074183]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
 
-[node name="Marker3D5" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D5" type="Marker3D" parent="Bonus_markers" unique_id=1506901000]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
 
-[node name="Marker3D6" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D6" type="Marker3D" parent="Bonus_markers" unique_id=1987455241]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -0.5)
 
-[node name="Marker3D7" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D7" type="Marker3D" parent="Bonus_markers" unique_id=1078838446]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, -0.5)
 
-[node name="Marker3D8" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D8" type="Marker3D" parent="Bonus_markers" unique_id=356198948]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -0.5)
 
-[node name="Marker3D9" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D9" type="Marker3D" parent="Bonus_markers" unique_id=729519036]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -0.5)
 
-[node name="Marker3D10" type="Marker3D" parent="Bonus_markers"]
+[node name="Marker3D10" type="Marker3D" parent="Bonus_markers" unique_id=2035002546]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -0.5)
 
-[node name="Target_markers" type="Node3D" parent="." groups=["Target_Markers_manager"]]
+[node name="Target_markers" type="Node3D" parent="." unique_id=1313210827 groups=["Target_Markers_manager"]]
 unique_name_in_owner = true
 transform = Transform3D(-8.74226e-08, 0, 2, 0, 2, 0, -2, 0, -8.74226e-08, -0.5, -2.35668, 6.886)
 script = SubResource("GDScript_l7ic3")
 
-[node name="Marker3D" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D" type="Marker3D" parent="Target_markers" unique_id=1521091621]
 script = SubResource("GDScript_ctn7f")
 is_in_cage = true
 
-[node name="Marker3D2" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D2" type="Marker3D" parent="Target_markers" unique_id=1522676028]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.206095, 0.152249, 0.182514)
 script = SubResource("GDScript_ctn7f")
 is_in_cage = true
 
-[node name="Marker3D3" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D3" type="Marker3D" parent="Target_markers" unique_id=492590075]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.160542, 0, -0.169121)
 script = SubResource("GDScript_ctn7f")
 is_in_cage = true
 
-[node name="Marker3D4" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D4" type="Marker3D" parent="Target_markers" unique_id=352577372]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.152803, 0, -0.156249)
 script = SubResource("GDScript_ctn7f")
 is_in_cage = true
 
-[node name="Marker3D5" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D5" type="Marker3D" parent="Target_markers" unique_id=1823590280]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.171325, 0, 0.14154)
 script = SubResource("GDScript_ctn7f")
 is_in_cage = true
 
-[node name="Marker3D6" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D6" type="Marker3D" parent="Target_markers" unique_id=31781635]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0.25)
 script = SubResource("GDScript_ctn7f")
 is_near_cage = true
 
-[node name="Marker3D7" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D7" type="Marker3D" parent="Target_markers" unique_id=1818911728]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.025, 0, -0.25)
 script = SubResource("GDScript_ctn7f")
 is_near_cage = true
 
-[node name="Marker3D8" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D8" type="Marker3D" parent="Target_markers" unique_id=1834514940]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, -1)
 script = SubResource("GDScript_ctn7f")
 is_near_cage = true
 
-[node name="Marker3D9" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D9" type="Marker3D" parent="Target_markers" unique_id=1531215454]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 script = SubResource("GDScript_ctn7f")
 is_near_cage = true
 
-[node name="Marker3D10" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D10" type="Marker3D" parent="Target_markers" unique_id=46331318]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.25)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D11" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D11" type="Marker3D" parent="Target_markers" unique_id=1799789247]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0, -1.25)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D12" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D12" type="Marker3D" parent="Target_markers" unique_id=53682943]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0, -0.75)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D13" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D13" type="Marker3D" parent="Target_markers" unique_id=543231219]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0, 0)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D14" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D14" type="Marker3D" parent="Target_markers" unique_id=1572338625]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0, 0.75)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D15" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D15" type="Marker3D" parent="Target_markers" unique_id=708072942]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 1.25)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D16" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D16" type="Marker3D" parent="Target_markers" unique_id=1596202777]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0, 1.25)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D17" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D17" type="Marker3D" parent="Target_markers" unique_id=703126140]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1.25)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D18" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D18" type="Marker3D" parent="Target_markers" unique_id=1722686832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.25)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D19" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D19" type="Marker3D" parent="Target_markers" unique_id=140457838]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -1.5)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Marker3D20" type="Marker3D" parent="Target_markers"]
+[node name="Marker3D20" type="Marker3D" parent="Target_markers" unique_id=2106679903]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1.5)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Egg_cage" parent="." instance=ExtResource("26_wkgk6")]
+[node name="Egg_cage" parent="." unique_id=979092152 instance=ExtResource("26_wkgk6")]
 transform = Transform3D(-4.37113e-08, 0, 0.999998, 0, 1, 0, -0.999998, 0, -4.37113e-08, -0.500019, -1.79908, 6.886)
 
-[node name="Hostage_side_panel" parent="." instance=ExtResource("27_wjnh8")]
+[node name="Hostage_side_panel" parent="." unique_id=1336383935 instance=ExtResource("27_wjnh8")]
 unique_name_in_owner = true
 offset_left = 55.0
 offset_top = 37.0
 offset_right = 55.0
 offset_bottom = 33.0
 
-[node name="Radar_view_panel" parent="." instance=ExtResource("28_jp1ay")]
-layer = -1
+[node name="Radar_view_panel" parent="." unique_id=520087666 instance=ExtResource("28_jp1ay")]
 
 [node name="Radar_view_panel" parent="Radar_view_panel" index="0"]
 offset_left = -31.0
@@ -1501,21 +1496,9 @@ offset_top = 9.0
 offset_right = -31.0
 offset_bottom = 9.0
 
-[node name="Sub_root_control" parent="Radar_view_panel/Radar_view_panel" index="1"]
-metadata/_edit_use_anchors_ = true
-
 [node name="Radar" parent="Radar_view_panel/Radar_view_panel/Sub_root_control" index="1" node_paths=PackedStringArray("tower_reference")]
-tower_reference = NodePath("../../../../Egg_cage")
 detection_radius = 12.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Inner" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="0"]
-metadata/_edit_use_anchors_ = true
-
-[node name="Inner2" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar/Inner" index="0"]
-metadata/_edit_use_anchors_ = true
-
-[node name="Middle" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="1"]
+tower_reference = NodePath("../../../../Egg_cage")
 metadata/_edit_use_anchors_ = true
 
 [node name="Outer" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="2"]
@@ -1527,31 +1510,31 @@ metadata/_edit_use_anchors_ = true
 [node name="Radar_dots" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="4"]
 metadata/_edit_use_anchors_ = true
 
-[node name="Radar_marker" type="Marker3D" parent="Radar_view_panel" groups=["radar_marker_pos"]]
+[node name="Radar_marker" type="Marker3D" parent="Radar_view_panel" unique_id=112821812 groups=["radar_marker_pos"]]
 transform = Transform3D(1, 0, 1.67038e-22, -2.5411e-21, 1, 0, 1.67037e-22, 0, 1, 1.49368e-14, 2.33607, 7.482)
 
-[node name="End_birds" type="Node3D" parent="."]
+[node name="End_birds" type="Node3D" parent="." unique_id=1868071905]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -4.5, 8.5, 88)
 visible = false
 script = SubResource("GDScript_smxn7")
 target_pos = Vector3(-152, 20, 0)
 
-[node name="birds" parent="End_birds" instance=ExtResource("29_koyg5")]
+[node name="birds" parent="End_birds" unique_id=867490732 instance=ExtResource("29_koyg5")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 4.4, 3.4)
 motion_mode = 1
 script = null
 
-[node name="birds2" parent="End_birds" instance=ExtResource("29_koyg5")]
+[node name="birds2" parent="End_birds" unique_id=957716943 instance=ExtResource("29_koyg5")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -6, 8, -10)
 motion_mode = 1
 script = null
 
-[node name="Lighting" type="Node" parent="."]
+[node name="Lighting" type="Node" parent="." unique_id=2081608527]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting" groups=["world_env"]]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting" unique_id=296451476 groups=["world_env"]]
 environment = ExtResource("30_xv505")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting" groups=["directional_light"]]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting" unique_id=1713962688 groups=["directional_light"]]
 transform = Transform3D(0.936672, 0.312037, -0.158991, 0, 0.453991, 0.891006, 0.350207, -0.834581, 0.42524, 0, 20, 19)
 light_color = Color(1, 0.662745, 0.305882, 1)
 light_energy = 0.152
@@ -1560,7 +1543,7 @@ shadow_opacity = 0.5
 directional_shadow_max_distance = 63.0
 sky_mode = 1
 
-[node name="Direction_light_retry" type="DirectionalLight3D" parent="Lighting" groups=["directional_light"]]
+[node name="Direction_light_retry" type="DirectionalLight3D" parent="Lighting" unique_id=1470572295 groups=["directional_light"]]
 transform = Transform3D(0.936672, 0.312037, -0.158991, 0, 0.453991, 0.891006, 0.350207, -0.834581, 0.42524, 0, 20, 19)
 light_energy = 0.75
 shadow_enabled = true
@@ -1568,126 +1551,121 @@ shadow_opacity = 0.5
 directional_shadow_max_distance = 63.0
 sky_mode = 1
 
-[node name="SFX" type="Node" parent="."]
+[node name="SFX" type="Node" parent="." unique_id=1742350218]
 
-[node name="Blue_danude" type="AudioStreamPlayer" parent="SFX" groups=["level_song"]]
-stream = ExtResource("31_qhsw5")
-volume_db = -30.0
-bus = &"Music Bus"
-
-[node name="OasisSong" type="AudioStreamPlayer" parent="SFX" groups=["level_song"]]
+[node name="OasisSong" type="AudioStreamPlayer" parent="SFX" unique_id=1531820829 groups=["level_song"]]
 stream = ExtResource("32_fxeoi")
 volume_db = -20.0
 bus = &"Music Bus"
 
-[node name="orig" type="CSGBox3D" parent="."]
+[node name="orig" type="CSGBox3D" parent="." unique_id=1839911846]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.725, -1.8)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(15, 3.45, 4)
 
-[node name="orig2" type="CSGBox3D" parent="."]
+[node name="orig2" type="CSGBox3D" parent="." unique_id=1695368659]
 transform = Transform3D(1, 0, -4.47035e-08, 0, 1, 0, 4.47035e-08, 0, 1, -0.44007, -2.44, 6.76187)
 material_override = ExtResource("7_5wsma")
 use_collision = true
 size = Vector3(15, 0.15, 4)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="."]
+[node name="CSGBox3D9" type="CSGBox3D" parent="." unique_id=1579124505]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -4.225, 24.165)
 material_override = SubResource("StandardMaterial3D_awb7n")
 use_collision = true
 size = Vector3(905, 3.45, 830)
 
-[node name="Mesh7" type="Node3D" parent="."]
+[node name="Mesh7" type="Node3D" parent="." unique_id=1427705529]
 transform = Transform3D(4.15072, 0, 4.15072, 0, 2.21, 0, -4.15072, 0, 4.15072, 59.335, -18.085, 338.5)
 
-[node name="Edges_container" type="Node3D" parent="Mesh7"]
+[node name="Edges_container" type="Node3D" parent="Mesh7" unique_id=333824342]
 
-[node name="Edges" type="MeshInstance3D" parent="Mesh7/Edges_container"]
+[node name="Edges" type="MeshInstance3D" parent="Mesh7/Edges_container" unique_id=1949287148]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.75, 6.75, -6.75)
 visible = false
 mesh = SubResource("ArrayMesh_awb7n")
 
-[node name="Bolts" type="MeshInstance3D" parent="Mesh7"]
+[node name="Bolts" type="MeshInstance3D" parent="Mesh7" unique_id=122152606]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 5, 5)
 mesh = SubResource("ArrayMesh_0e1jt")
 
-[node name="MeshMeshInstance3D" type="MeshInstance3D" parent="Mesh7"]
+[node name="MeshMeshInstance3D" type="MeshInstance3D" parent="Mesh7" unique_id=760098168]
 material_override = SubResource("StandardMaterial3D_rrw3i")
 mesh = SubResource("ArrayMesh_epet4")
 
-[node name="Clouds" type="Node3D" parent="."]
+[node name="Clouds" type="Node3D" parent="." unique_id=1548377711]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 13)
 
-[node name="Cloud" type="MeshInstance3D" parent="Clouds"]
+[node name="Cloud" type="MeshInstance3D" parent="Clouds" unique_id=516921396]
 transform = Transform3D(-1.41, -1.23266e-07, 5.38813e-15, 0, -6.16331e-08, -1.41, 1.23266e-07, -1.41, 6.16331e-08, 9, 10, 16.5)
 mesh = SubResource("PlaneMesh_awb7n")
 
-[node name="Cloud3" type="MeshInstance3D" parent="Clouds"]
+[node name="Cloud3" type="MeshInstance3D" parent="Clouds" unique_id=146510820]
 transform = Transform3D(-3.715, -5.60949e-07, 2.45199e-14, 0, -1.62388e-07, -3.715, 5.60949e-07, -3.715, 1.62388e-07, 15, 8, 23.5)
 mesh = SubResource("PlaneMesh_awb7n")
 
-[node name="Cloud4" type="MeshInstance3D" parent="Clouds"]
+[node name="Cloud4" type="MeshInstance3D" parent="Clouds" unique_id=688401591]
 transform = Transform3D(-6.795, -5.60949e-07, 4.65317e-14, 0, -1.62388e-07, -7.05, 1.02602e-06, -3.715, 3.08165e-07, -20.5, 8.5, 23.5)
 mesh = SubResource("PlaneMesh_awb7n")
 
-[node name="Cloud7" type="MeshInstance3D" parent="Clouds"]
+[node name="Cloud7" type="MeshInstance3D" parent="Clouds" unique_id=1286546106]
 transform = Transform3D(-6.795, -5.60949e-07, 4.65317e-14, 0, -1.62388e-07, -7.05, 1.02602e-06, -3.715, 3.08165e-07, 18, 15.5, 23.5)
 mesh = SubResource("PlaneMesh_awb7n")
 
-[node name="Cloud8" type="MeshInstance3D" parent="Clouds"]
+[node name="Cloud8" type="MeshInstance3D" parent="Clouds" unique_id=925998810]
 transform = Transform3D(-6.795, -5.60949e-07, 4.65317e-14, 0, -1.62388e-07, -7.05, 1.02602e-06, -3.715, 3.08165e-07, 19.5, 11.5, 19.5)
 mesh = SubResource("PlaneMesh_awb7n")
 
-[node name="Cloud5" type="MeshInstance3D" parent="Clouds"]
+[node name="Cloud5" type="MeshInstance3D" parent="Clouds" unique_id=852676549]
 transform = Transform3D(-3.715, -5.60949e-07, 2.45199e-14, 0, -1.62388e-07, -3.715, 5.60949e-07, -3.715, 1.62388e-07, 30, 5.5, 37.5)
 mesh = SubResource("PlaneMesh_awb7n")
 
-[node name="Cloud6" type="MeshInstance3D" parent="Clouds"]
+[node name="Cloud6" type="MeshInstance3D" parent="Clouds" unique_id=1054957074]
 transform = Transform3D(-3.715, -5.60949e-07, 2.45199e-14, 0, -1.62388e-07, -3.715, 5.60949e-07, -3.715, 1.62388e-07, 26, 15.5, 37.5)
 mesh = SubResource("PlaneMesh_awb7n")
 
-[node name="buildings" type="CSGBox3D" parent="."]
+[node name="buildings" type="CSGBox3D" parent="." unique_id=573784051]
 transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 209.95, -3.76816, 275.279)
 material_override = SubResource("StandardMaterial3D_bxqlr")
 size = Vector3(2, 10, 2)
 
-[node name="buildings2" type="CSGBox3D" parent="."]
+[node name="buildings2" type="CSGBox3D" parent="." unique_id=1876146119]
 transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 213.839, -5.26049, 279.168)
 material_override = SubResource("StandardMaterial3D_bxqlr")
 size = Vector3(2, 10, 2)
 
-[node name="buildings3" type="CSGBox3D" parent="."]
+[node name="buildings3" type="CSGBox3D" parent="." unique_id=1248794709]
 transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 203.586, -3.51049, 268.915)
 material_override = SubResource("StandardMaterial3D_bxqlr")
 size = Vector3(2, 13.5, 2)
 
-[node name="buildings7" type="CSGBox3D" parent="."]
+[node name="buildings7" type="CSGBox3D" parent="." unique_id=908594251]
 transform = Transform3D(0.726527, 0, -0.687138, 0, 1, 0, 0.687138, 0, 0.726527, -210.869, -3.76816, 310.566)
 material_override = SubResource("StandardMaterial3D_bxqlr")
 size = Vector3(2, 10, 2)
 
-[node name="buildings8" type="CSGBox3D" parent="."]
+[node name="buildings8" type="CSGBox3D" parent="." unique_id=1578685979]
 transform = Transform3D(0.726527, 0, -0.687138, 0, 1, 0, 0.687138, 0, 0.726527, -215.553, -5.26049, 313.447)
 material_override = SubResource("StandardMaterial3D_bxqlr")
 size = Vector3(2, 10, 2)
 
-[node name="buildings9" type="CSGBox3D" parent="."]
+[node name="buildings9" type="CSGBox3D" parent="." unique_id=1869908564]
 transform = Transform3D(0.726527, 0, -0.687138, 0, 1, 0, 0.687138, 0, 0.726527, -203.203, -3.51049, 305.85)
 material_override = SubResource("StandardMaterial3D_bxqlr")
 size = Vector3(2, 13.5, 2)
 
-[node name="buildings10" type="CSGBox3D" parent="."]
+[node name="buildings10" type="CSGBox3D" parent="." unique_id=850030267]
 transform = Transform3D(0.726527, 0, -0.687138, 0, 1, 0, 0.687138, 0, 0.726527, 179.797, -3.51049, 305.85)
 material_override = SubResource("StandardMaterial3D_bxqlr")
 size = Vector3(2, 13.5, 2)
 
-[node name="buildings11" type="CSGBox3D" parent="."]
+[node name="buildings11" type="CSGBox3D" parent="." unique_id=1053749389]
 transform = Transform3D(0.726527, 0, -0.687138, 0, 1, 0, 0.687138, 0, 0.726527, 175.786, -3.51049, 305.85)
 material_override = SubResource("StandardMaterial3D_bxqlr")
 size = Vector3(2, 13.5, 2)
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=439295422]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -1696,7 +1674,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 0, 0, 0.176471)
 
-[node name="ColorRect2" type="ColorRect" parent="."]
+[node name="ColorRect2" type="ColorRect" parent="." unique_id=663115604]
 visible = false
 z_index = 4096
 anchors_preset = 15
@@ -1706,642 +1684,641 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.43, 0.2838, 0.2838, 0.215686)
 
-[node name="Level_Decoration" type="Node3D" parent="."]
+[node name="Level_Decoration" type="Node3D" parent="." unique_id=60131762]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.45, 0)
 
-[node name="level1_proto" type="Node3D" parent="Level_Decoration"]
+[node name="level1_proto" type="Node3D" parent="Level_Decoration" unique_id=1539059834]
 
-[node name="targetRolling" parent="Level_Decoration/level1_proto" instance=ExtResource("35_0h4o5")]
+[node name="targetRolling" parent="Level_Decoration/level1_proto" unique_id=1250382208 instance=ExtResource("35_0h4o5")]
 transform = Transform3D(-3.35432e-08, 0.767378, 0.641195, -1, -4.37114e-08, -5.66887e-15, 2.80275e-08, -0.641195, 0.767378, 24.0224, 3.78702, 20.7694)
 axis_lock_linear_x = true
 axis_lock_angular_z = true
 script = null
 
-[node name="WireFrame" parent="Level_Decoration/level1_proto" instance=ExtResource("36_1c13p")]
+[node name="WireFrame" parent="Level_Decoration/level1_proto" unique_id=658469812 instance=ExtResource("36_1c13p")]
 transform = Transform3D(0.776772, 0, 0.629781, 0, 1, 0, -0.629781, 0, 0.776772, 23.7119, 2.40732, 20.8911)
 
-[node name="WireFrame2" parent="Level_Decoration/level1_proto" instance=ExtResource("36_1c13p")]
+[node name="WireFrame2" parent="Level_Decoration/level1_proto" unique_id=1165598009 instance=ExtResource("36_1c13p")]
 transform = Transform3D(-3.34849e-08, 0.766044, 0.642788, -1, -4.37114e-08, 0, 2.80971e-08, -0.642788, 0.766044, 22.0653, 2.40732, 22.2666)
 
-[node name="WireFrame3" parent="Level_Decoration/level1_proto" instance=ExtResource("36_1c13p")]
+[node name="WireFrame3" parent="Level_Decoration/level1_proto" unique_id=1849822639 instance=ExtResource("36_1c13p")]
 transform = Transform3D(-3.19049e-08, 0.7299, 0.683554, -1, -4.37114e-08, -3.89875e-15, 2.98791e-08, -0.683554, 0.7299, 25.6711, 2.40732, 19.2891)
 
-[node name="spinning_pole" parent="Level_Decoration/level1_proto" instance=ExtResource("37_xwt3e")]
+[node name="spinning_pole" parent="Level_Decoration/level1_proto" unique_id=996171727 instance=ExtResource("37_xwt3e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.5067, 1.77772, 18.899)
 
-[node name="structureContainerLeft" type="Node3D" parent="Level_Decoration/level1_proto"]
+[node name="structureContainerLeft" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=199320105]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 53.1724)
 
-[node name="structure" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("38_nrkak")]
+[node name="structure" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=50789769 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1737, 0.0275618, 1.63469)
 
-[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("38_nrkak")]
+[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1921048112 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 7.41057, 1.635)
 
-[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("38_nrkak")]
+[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=253648943 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 15.1667, 1.635)
 
-[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("38_nrkak")]
+[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1652649186 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 22.5428, 1.635)
 
-[node name="bucket" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("39_5fifw")]
+[node name="bucket" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=72607921 instance=ExtResource("39_5fifw")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 10.1576, 1.76725, 63.3162)
 visible = false
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Level_Decoration/level1_proto/structureContainerLeft/bucket"]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Level_Decoration/level1_proto/structureContainerLeft/bucket" unique_id=155883029]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 4.53564, 7.68461, -15.449)
 shape = SubResource("BoxShape3D_ncack")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="Level_Decoration/level1_proto/structureContainerLeft/bucket"]
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Level_Decoration/level1_proto/structureContainerLeft/bucket" unique_id=1767891422]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -9.59484, 7.68461, -15.449)
 shape = SubResource("BoxShape3D_ncack")
 
-[node name="target_creator" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("40_v52l6")]
+[node name="target_creator" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=673911022 instance=ExtResource("40_v52l6")]
 transform = Transform3D(-2.18557e-07, 0, -5, 0, 5, 0, 5, 0, -2.18557e-07, 26.1445, 36.5164, 1.70975)
 
-[node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerLeft"]
+[node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=2015094354]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.2268, 32.4642, 1.70975)
 
-[node name="PoleShape" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("41_5jy7k")]
+[node name="PoleShape" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1061028692 instance=ExtResource("41_5jy7k")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5455, 0.5, 59.1893)
 visible = false
 
-[node name="WireFrame" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("36_1c13p")]
+[node name="WireFrame" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=415988319 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, -24.3543, 16, 1.61061)
 
-[node name="WireFrame2" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("36_1c13p")]
+[node name="WireFrame2" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1314283002 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, 23.3677, 23.7535, 1.61061)
 
-[node name="WireFrame3" parent="Level_Decoration/level1_proto/structureContainerLeft" instance=ExtResource("36_1c13p")]
+[node name="WireFrame3" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=977301773 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, 23.3677, 8.61265, 1.61061)
 
-[node name="structureContainerRight" type="Node3D" parent="Level_Decoration/level1_proto"]
+[node name="structureContainerRight" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=1342759013]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 56.4594)
 
-[node name="structure" parent="Level_Decoration/level1_proto/structureContainerRight" instance=ExtResource("38_nrkak")]
+[node name="structure" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=988440738 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1737, 0.0275618, 1.63469)
 
-[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerRight" instance=ExtResource("38_nrkak")]
+[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=1114798710 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 7.41057, 1.635)
 
-[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerRight" instance=ExtResource("38_nrkak")]
+[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=170942184 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 15.1667, 1.635)
 
-[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerRight" instance=ExtResource("38_nrkak")]
+[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=2067052349 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 22.5428, 1.635)
 
-[node name="target_creator2" parent="Level_Decoration/level1_proto/structureContainerRight" instance=ExtResource("40_v52l6")]
+[node name="target_creator2" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=2001854642 instance=ExtResource("40_v52l6")]
 transform = Transform3D(8.54346e-07, 0, -5, 0, 5, 0, 5, 0, 8.54346e-07, 26.1439, 36.475, 1.70976)
 
-[node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerRight"]
+[node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=1099367452]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1232, 32.4228, 1.70975)
 
-[node name="structureContainerLeft2" type="Node3D" parent="Level_Decoration/level1_proto"]
+[node name="structureContainerLeft2" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=1750036457]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 784.239)
 
-[node name="structure" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("38_nrkak")]
+[node name="structure" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1373928204 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1737, 0.0275618, 1.63469)
 
-[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("38_nrkak")]
+[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=620057172 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 7.41057, 1.635)
 
-[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("38_nrkak")]
+[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=433186389 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 15.1667, 1.635)
 
-[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("38_nrkak")]
+[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1165422099 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 22.5428, 1.635)
 
-[node name="bucket" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("39_5fifw")]
+[node name="bucket" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=2073386874 instance=ExtResource("39_5fifw")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 10.1576, 1.76725, 63.3162)
 visible = false
 
-[node name="target_creator" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("40_v52l6")]
+[node name="target_creator" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1170671275 instance=ExtResource("40_v52l6")]
 transform = Transform3D(-2.18557e-07, 0, -5, 0, 5, 0, 5, 0, -2.18557e-07, 26.1445, 36.8164, 1.70978)
 
-[node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerLeft2"]
+[node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1054053358]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.2268, 32.4642, 1.70975)
 
-[node name="WireFrame" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("36_1c13p")]
+[node name="WireFrame" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1448733088 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, -10.5595, 6.4395, 1.48979)
 
-[node name="WireFrame5" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("36_1c13p")]
+[node name="WireFrame5" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1543928106 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, -10.5595, 21.2395, 1.48979)
 
-[node name="WireFrame2" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("36_1c13p")]
+[node name="WireFrame2" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=2013007250 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, 10.5405, 13.8395, 1.48979)
 
-[node name="WireFrame4" parent="Level_Decoration/level1_proto/structureContainerLeft2" instance=ExtResource("36_1c13p")]
+[node name="WireFrame4" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=518812264 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, 10.5405, 28.6395, 1.48979)
 
-[node name="structureContainerRight2" type="Node3D" parent="Level_Decoration/level1_proto"]
+[node name="structureContainerRight2" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=1877942092]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 787.526)
 
-[node name="structure" parent="Level_Decoration/level1_proto/structureContainerRight2" instance=ExtResource("38_nrkak")]
+[node name="structure" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1679313112 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1737, 0.0275618, 1.63469)
 
-[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerRight2" instance=ExtResource("38_nrkak")]
+[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1095804988 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 7.41057, 1.635)
 
-[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerRight2" instance=ExtResource("38_nrkak")]
+[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1172760824 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 15.1667, 1.635)
 
-[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerRight2" instance=ExtResource("38_nrkak")]
+[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1182679092 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 22.5428, 1.635)
 
-[node name="target_creator2" parent="Level_Decoration/level1_proto/structureContainerRight2" instance=ExtResource("40_v52l6")]
+[node name="target_creator2" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1543986261 instance=ExtResource("40_v52l6")]
 transform = Transform3D(8.54346e-07, 0, -5, 0, 5, 0, 5, 0, 8.54346e-07, 26.1439, 36.575, 1.70978)
 
-[node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerRight2"]
+[node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1241428878]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1232, 32.4228, 1.70975)
 
-[node name="decoration" type="Node3D" parent="Level_Decoration/level1_proto"]
+[node name="decoration" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=1852024306]
 
-[node name="post" parent="Level_Decoration/level1_proto/decoration" instance=ExtResource("42_dcunn")]
+[node name="post" parent="Level_Decoration/level1_proto/decoration" unique_id=812804336 instance=ExtResource("42_dcunn")]
 transform = Transform3D(0.181721, 0, 0.571819, 0, 0.6, 0, -0.571819, 0, 0.181721, 72.1747, 1.00336, 175.567)
 
-[node name="post2" parent="Level_Decoration/level1_proto/decoration" instance=ExtResource("42_dcunn")]
+[node name="post2" parent="Level_Decoration/level1_proto/decoration" unique_id=832381744 instance=ExtResource("42_dcunn")]
 transform = Transform3D(0.181721, 0, 0.571819, 0, 0.6, 0, -0.571819, 0, 0.181721, 74.7861, 2.20336, 250.449)
 
-[node name="trees" type="Node3D" parent="Level_Decoration/level1_proto/decoration"]
+[node name="trees" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=1230291318]
 
-[node name="fore1" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="fore1" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=288299442 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 12.447, 1.978, 32.816)
 visible = false
 
-[node name="foreRight" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="foreRight" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1836006793 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 5.90153, 1.978, 3.79423)
 
-[node name="foreRight3" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="foreRight3" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=590891487 instance=ExtResource("43_qprsx")]
 transform = Transform3D(0.755, 0, 0, 0, 1.12, 0, 0, 0, 1.12, -0.59847, 1.978, -0.70577)
 
-[node name="foreRight2" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="foreRight2" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=216276053 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -7.59847, 1.978, 0.79423)
 
-[node name="fore9" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="fore9" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1940813537 instance=ExtResource("43_qprsx")]
 transform = Transform3D(0.44, 0, 0, 0, 0.44, 0, 0, 0, 0.44, -9.3058, 1.34738, 10.6597)
 
-[node name="fore11" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="fore11" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1334739815 instance=ExtResource("43_qprsx")]
 transform = Transform3D(0.195, 0, 0, 0, 0.195, 0, 0, 0, 0.195, -12.6058, 0.427802, 17.538)
 
-[node name="fore2" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="fore2" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=2134852893 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 85.1927, 1.94344, 77.3876)
 visible = false
 
-[node name="fore6" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="fore6" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=241868730 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 69.6994, 1.69931, 46.3125)
 
-[node name="fore8" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="fore8" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=75259035 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -40.3006, 1.69931, 85.8125)
 
-[node name="fore4" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="fore4" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1998543536 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 178.05, 1.10494, 209.143)
 
-[node name="fore10" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="fore10" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=462971843 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -185.95, 1.10494, 209.143)
 
-[node name="fore3" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="fore3" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1615187462 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 52.8949, 1.64223, 32.185)
 
-[node name="midground3" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="midground3" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1319035690 instance=ExtResource("43_qprsx")]
 transform = Transform3D(0.37, 0, 0, 0, 0.37, 0, 0, 0, 0.37, -35.243, 1.187, 90)
 
-[node name="weakTree" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="weakTree" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=770229517 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.459, 2.008, 276.234)
 
-[node name="bgTree" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="bgTree" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1982604369 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.563, 2.008, 276.234)
 
-[node name="bgTree2" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="bgTree2" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1177762024 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -280.864, -3.20362, 627.113)
 
-[node name="bgTree3" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="bgTree3" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=225306151 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -285.094, -1.9108, 630.07)
 
-[node name="bgTree5" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="bgTree5" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=412579438 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -284.268, -3.04855, 624.41)
 
-[node name="bgTree6" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="bgTree6" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=640911563 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 0.999855, 0.0170336, 0, -0.0170336, 0.999855, -288.128, -3.09746, 626.937)
 
-[node name="bgTree4" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="bgTree4" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=899602352 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -277.882, -3.20362, 632.018)
 
-[node name="bgTree7" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="bgTree7" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=256740606 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -282.112, -1.9108, 634.975)
 
-[node name="bgTree8" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="bgTree8" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=908327055 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -281.286, -3.04855, 629.315)
 
-[node name="bgTree9" parent="Level_Decoration/level1_proto/decoration/trees" instance=ExtResource("43_qprsx")]
+[node name="bgTree9" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1653479259 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 0.999855, 0.0170336, 0, -0.0170336, 0.999855, -285.146, -3.09746, 631.842)
 
-[node name="balconyForeground" type="Node3D" parent="Level_Decoration/level1_proto/decoration"]
+[node name="balconyForeground" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=1858369666]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 1.77636e-14, 0, 0.1, 10.639, -0.57293, 3.191)
 
-[node name="topRail" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground"]
+[node name="topRail" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground" unique_id=1281853434]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.766, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(5, 0.05, 1)
 
-[node name="leftPole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground"]
+[node name="leftPole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground" unique_id=378746913]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.995, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="middlePole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground"]
+[node name="middlePole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground" unique_id=538612375]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.799, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="rightPole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground"]
+[node name="rightPole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground" unique_id=1190967088]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 1, -0.604, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground" unique_id=1389777722]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground" unique_id=619157781]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground" unique_id=1081341070]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(5, 0.2, 1)
 
-[node name="balconyForeground3" type="Node3D" parent="Level_Decoration/level1_proto/decoration"]
+[node name="balconyForeground3" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=2064719021]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 1.77636e-14, 0, 0.1, 6.7551, -0.57293, 3.191)
 
-[node name="topRail" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3"]
+[node name="topRail" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3" unique_id=1119520589]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.766, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(5, 0.05, 1)
 
-[node name="leftPole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3"]
+[node name="leftPole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3" unique_id=783327717]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.995, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="middlePole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3"]
+[node name="middlePole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3" unique_id=43811582]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.799, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="rightPole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3"]
+[node name="rightPole" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3" unique_id=2110121129]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 1, -0.604, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3" unique_id=205226930]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3" unique_id=792333293]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/balconyForeground3" unique_id=89490751]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(5, 0.2, 1)
 
-[node name="mountain" parent="Level_Decoration/level1_proto/decoration" instance=ExtResource("44_uteki")]
+[node name="mountain" parent="Level_Decoration/level1_proto/decoration" unique_id=1287285026 instance=ExtResource("44_uteki")]
 transform = Transform3D(1.105, 0, 0, 0, 1.105, 0, 0, 0, 1.105, 660.638, -1.157, 706.552)
 
-[node name="mountain2" parent="Level_Decoration/level1_proto/decoration/mountain" instance=ExtResource("44_uteki")]
+[node name="mountain2" parent="Level_Decoration/level1_proto/decoration/mountain" unique_id=1425318632 instance=ExtResource("44_uteki")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -108, 0, 0)
 
-[node name="mountain3" parent="Level_Decoration/level1_proto/decoration/mountain" instance=ExtResource("44_uteki")]
+[node name="mountain3" parent="Level_Decoration/level1_proto/decoration/mountain" unique_id=223273907 instance=ExtResource("44_uteki")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -143.192, -4.47378, 0)
 
-[node name="building" type="Node3D" parent="Level_Decoration/level1_proto/decoration"]
+[node name="building" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=267244072]
 transform = Transform3D(0.181721, 0, 0.571819, 0, 0.6, 0, -0.571819, 0, 0.181721, 87.24, -0.294436, 191.45)
 visible = false
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=1593186237]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.52588e-05, 3, 4.41892)
 material_override = SubResource("StandardMaterial3D_frjbo")
 size = Vector3(3, 5, 3)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/CSGBox3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/CSGBox3D" unique_id=1528733637]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.558988, -0.776339)
 material_override = SubResource("StandardMaterial3D_654ar")
 operation = 2
 size = Vector3(1, 1, 2)
 
-[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=1529542238]
 transform = Transform3D(4, 0, 0, 0, -1.74846e-07, -4, 0, 4, -1.74846e-07, 1.51676, 0.599169, 2.8677)
 material_override = SubResource("StandardMaterial3D_rfu0l")
 polygon = PackedVector2Array(0, 0, -0.023124, 0.735265, 1, 1)
 
-[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=1078148632]
 transform = Transform3D(-0.285767, 3.98971, -0.0229428, 0.31398, -0.000441829, -3.98766, -3.97741, -0.286687, -0.313141, -5.25959, 0.227809, 7.14831)
 polygon = PackedVector2Array(0, 0, 0, 1, 1, 1)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=1541110460]
 transform = Transform3D(0.999985, 0.00545492, -4.68194e-05, -0.00545492, 0.999838, -0.0171649, -4.68194e-05, 0.0171649, 0.999853, 0, 5.57368, 3.02597)
 material_override = SubResource("StandardMaterial3D_qyouh")
 size = Vector3(8, 0.2, 1)
 
-[node name="CSGPolygon3D3" type="CSGPolygon3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="CSGPolygon3D3" type="CSGPolygon3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=869188670]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -0.2, 0, 1, -8.74228e-09, 4.0032, 5.46824, 2.53115)
 material_override = SubResource("StandardMaterial3D_qyouh")
 polygon = PackedVector2Array(0, 0, 0, 1, 1, 1)
 
-[node name="CSGPolygon3D4" type="CSGPolygon3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="CSGPolygon3D4" type="CSGPolygon3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=714039031]
 transform = Transform3D(1.31134e-07, 1, 8.74228e-09, 3.82137e-15, 4.37114e-08, -0.2, -1, 1.31134e-07, -3.28406e-16, -4.98102, 5.46824, 3.51594)
 material_override = SubResource("StandardMaterial3D_qyouh")
 polygon = PackedVector2Array(0, 0, 0, 1, 1, 1)
 
-[node name="balcony" type="Node3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="balcony" type="Node3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=883963295]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.23958)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony"]
+[node name="CSGBox3D4" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony" unique_id=1153525127]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.91983, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(5, 0.05, 1)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony" unique_id=1297324256]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony" unique_id=1145745943]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony" unique_id=1906119103]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony" unique_id=364912472]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony" unique_id=890816427]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony" unique_id=331708475]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(5, 0.2, 1)
 
-[node name="balcony2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="balcony2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=1937492690]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 1.23958)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2"]
+[node name="CSGBox3D4" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2" unique_id=1681952358]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.91983, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(5, 0.05, 1)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2" unique_id=1454636259]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2" unique_id=738613228]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2" unique_id=1730255]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2" unique_id=945921297]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2" unique_id=1863063256]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony2" unique_id=908299639]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(5, 0.2, 1)
 
-[node name="balcony3" type="Node3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="balcony3" type="Node3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=209973656]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 1.23958)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3"]
+[node name="CSGBox3D4" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3" unique_id=1956664886]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.91983, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(5, 0.05, 1)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3" unique_id=811350615]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3" unique_id=199331610]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3" unique_id=1891850199]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3" unique_id=1809370989]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3" unique_id=1533663107]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Level_Decoration/level1_proto/decoration/building/balcony3" unique_id=1676824633]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
 material_override = SubResource("StandardMaterial3D_4yc12")
 size = Vector3(5, 0.2, 1)
 
-[node name="windows" type="Node3D" parent="Level_Decoration/level1_proto/decoration/building"]
+[node name="windows" type="Node3D" parent="Level_Decoration/level1_proto/decoration/building" unique_id=2095562239]
 
-[node name="helicopter" parent="Level_Decoration/level1_proto/decoration" instance=ExtResource("47_1f1py")]
+[node name="helicopter" parent="Level_Decoration/level1_proto/decoration" unique_id=287464091 instance=ExtResource("47_1f1py")]
 transform = Transform3D(0.962651, 2.39877e-06, -2.45716, 1.56598, 2.03362, 0.613514, 1.89349, -1.68187, 0.741821, -69.2817, 0, 217.811)
 
-[node name="wallContainer1" type="Node3D" parent="Level_Decoration/level1_proto/decoration"]
+[node name="wallContainer1" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=129011211]
 
-[node name="leftWall" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1"]
+[node name="leftWall" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1" unique_id=340920857]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1955, 2.5, 31)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/leftWall"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/leftWall" unique_id=1383828932]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_qnd66")
 skeleton = NodePath("")
 
-[node name="leftPillar" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1"]
+[node name="leftPillar" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1" unique_id=447614856]
 transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 26.1955, 2.83696, 10.5)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/leftPillar"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/leftPillar" unique_id=1345461769]
 transform = Transform3D(0.999998, 0, 0, 0, 0.999999, 0, 7.10543e-14, 0, 1, 0, -1.67443, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_vu7sk")
 skeleton = NodePath("")
 
-[node name="leftPillar2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1"]
+[node name="leftPillar2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1" unique_id=1955624724]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 26.1955, 2.7, 51.4318)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/leftPillar2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/leftPillar2" unique_id=2085427890]
 transform = Transform3D(0.999999, 0, 7.10543e-15, 0, 1, 0, -2.84217e-14, 0, 1, 0, -1.52989, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_vu7sk")
 skeleton = NodePath("")
 
-[node name="rightWall" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1"]
+[node name="rightWall" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1" unique_id=1686066029]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.1877, 2.5, 31)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/rightWall"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/rightWall" unique_id=1189950470]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_qnd66")
 skeleton = NodePath("")
 
-[node name="rightPillar" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1"]
+[node name="rightPillar" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1" unique_id=210147786]
 transform = Transform3D(-1, 0, 1.50996e-07, 0, 1.461, 0, -1.50996e-07, 0, -1, -26.1877, 3.43885, 10.5)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/rightPillar"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/rightPillar" unique_id=528197459]
 transform = Transform3D(0.999999, 0, 2.84217e-14, 0, 0.999999, 0, -1.42109e-14, 0, 1, 0, -1.16359, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_vu7sk")
 skeleton = NodePath("")
 
-[node name="rightPillar2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1"]
+[node name="rightPillar2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1" unique_id=798860346]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -26.1877, 2.5, 51.5284)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/rightPillar2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1/rightPillar2" unique_id=272625528]
 transform = Transform3D(0.999999, 0, 3.55271e-14, 0, 0.999999, 0, -2.13163e-14, 0, 1, 0, -1.3, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_vu7sk")
 skeleton = NodePath("")
 
-[node name="wallContainer2" type="Node3D" parent="Level_Decoration/level1_proto/decoration"]
+[node name="wallContainer2" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=1597098120]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 166.024)
 
-[node name="leftWall" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2"]
+[node name="leftWall" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2" unique_id=818400101]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 8.7, 26.1955, 2.5, 67.0691)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/leftWall"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/leftWall" unique_id=1517843096]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_qnd66")
 skeleton = NodePath("")
 
-[node name="leftPillar" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2"]
+[node name="leftPillar" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2" unique_id=689260178]
 transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 26.1955, 2.7, -107.38)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/leftPillar"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/leftPillar" unique_id=762042169]
 transform = Transform3D(0.999999, 0, 0, 0, 1, 0, -2.84217e-14, 0, 1, 0, -1.6, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_vu7sk")
 skeleton = NodePath("")
 
-[node name="leftPillar2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2"]
+[node name="leftPillar2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2" unique_id=116741160]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 26.1955, 2.3, 171.764)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/leftPillar2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/leftPillar2" unique_id=1102084039]
 transform = Transform3D(0.999999, 0, 7.10543e-15, 0, 1, 0, -7.10543e-15, 0, 1, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_vu7sk")
 skeleton = NodePath("")
 
-[node name="rightWall" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2"]
+[node name="rightWall" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2" unique_id=1174030115]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 8.7, -26.1877, 2.5, 67.0691)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/rightWall"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/rightWall" unique_id=1508280687]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_qnd66")
 skeleton = NodePath("")
 
-[node name="rightPillar" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2"]
+[node name="rightPillar" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2" unique_id=415114859]
 transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, -26.1877, 2.5, -107.38)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/rightPillar"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/rightPillar" unique_id=672989593]
 transform = Transform3D(0.999999, 0, 4.26326e-14, 0, 0.999999, 0, -1.42109e-14, 0, 1, 0, -1.3, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_vu7sk")
 skeleton = NodePath("")
 
-[node name="rightPillar2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2"]
+[node name="rightPillar2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2" unique_id=1395504118]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -26.1877, 2.5, 171.764)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/rightPillar2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/wallContainer2/rightPillar2" unique_id=2014448726]
 transform = Transform3D(0.999999, 0, 2.84217e-14, 0, 0.999999, 0, -1.42109e-14, 0, 1, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_slqst")
 mesh = SubResource("BoxMesh_vu7sk")
 skeleton = NodePath("")
 
-[node name="floor" type="Node3D" parent="Level_Decoration/level1_proto/decoration"]
+[node name="floor" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=39663250]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/floor"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/floor" unique_id=586807779]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 4.805)
 material_override = SubResource("StandardMaterial3D_fcjij")
 mesh = SubResource("BoxMesh_s0woj")
 
-[node name="midground" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/floor"]
+[node name="midground" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/floor" unique_id=1137669236]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 214)
 material_override = SubResource("StandardMaterial3D_ux1ru")
 mesh = SubResource("BoxMesh_lm4he")
 
-[node name="midground2" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/floor"]
+[node name="midground2" type="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/floor" unique_id=1217509854]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, -204)
 material_override = SubResource("StandardMaterial3D_ux1ru")
 mesh = SubResource("BoxMesh_lm4he")
 
-[node name="Fuji" type="Sprite3D" parent="."]
+[node name="Fuji" type="Sprite3D" parent="." unique_id=609156626]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -632.25, -0.95, 1834.3)
 modulate = Color(0, 0, 0, 0.235294)
 pixel_size = 0.8
 texture = ExtResource("50_kqim3")
 
-[node name="Fuji2" type="Sprite3D" parent="."]
+[node name="Fuji2" type="Sprite3D" parent="." unique_id=1947835617]
 transform = Transform3D(5.34, 0, 0, 0, 1, 0, 0, 0, 1, 682.25, -0.95, 1834.3)
 modulate = Color(0, 0, 0, 0.235294)
 pixel_size = 0.4
 texture = ExtResource("50_kqim3")
 
-[node name="Fuji3" type="Sprite3D" parent="."]
+[node name="Fuji3" type="Sprite3D" parent="." unique_id=180723361]
 transform = Transform3D(5.34, 0, 0, 0, 1.445, 0, 0, 0, 1, 1610.07, 53.05, 2249.3)
 modulate = Color(0, 0, 0, 0.235294)
 pixel_size = 0.4
 texture = ExtResource("50_kqim3")
 
-[node name="Path3D" type="Path3D" parent="."]
+[node name="Path3D" type="Path3D" parent="." unique_id=1088881067]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
 curve = SubResource("Curve3D_fcjij")
 
-[node name="PathFollow3D" type="PathFollow3D" parent="Path3D"]
-transform = Transform3D(-0.931905, 0.0202307, -0.362043, 0, 0.99835, 0.0557918, 0.362615, 0.051992, -0.930437, -5.77, 1.5, 0)
+[node name="PathFollow3D" type="PathFollow3D" parent="Path3D" unique_id=1100831562]
+transform = Transform3D(-0.93190503, 0.020230683, -0.36204335, 0, 0.99834996, 0.055791754, 0.36261463, 0.05199204, -0.9304369, -5.77, 1.5, 0)
 rotation_mode = 4
 cubic_interp = false
 loop = false
 tilt_enabled = false
 
-[node name="Bird_fly_by_helpers" parent="Path3D/PathFollow3D" instance=ExtResource("51_k4xim")]
+[node name="Bird_fly_by_helpers" parent="Path3D/PathFollow3D" unique_id=1779861816 instance=ExtResource("51_k4xim")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-flight_duration = 25.0
 
-[node name="Moon_sprite" type="Sprite3D" parent="."]
+[node name="Moon_sprite" type="Sprite3D" parent="." unique_id=1981331525]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -117.297, 431.812, 1245)
 material_override = SubResource("StandardMaterial3D_h6ckc")
 pixel_size = 0.0089

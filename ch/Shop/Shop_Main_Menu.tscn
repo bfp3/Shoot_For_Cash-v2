@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://xsxnipt33uuq" path="res://res/time_increase_upgrade_icon.png" id="5_xp4fp"]
 [ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="6_cl1nj"]
 [ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="6_mitwi"]
+[ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://unfiled/Photos/ROCKS - title_rock_centered_large.png" id="7_cn8lj"]
 [ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="7_o0rit"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://unfiled/Ammo_display/bullet_texture_plain.png" id="8_7j408"]
 [ext_resource type="AudioStream" uid="uid://c5he7tw0onue" path="res://sfx/shop_reroll_sfx_01.wav" id="8_hfe6c"]
@@ -27,7 +28,6 @@
 [ext_resource type="Script" uid="uid://k67b4ujxorb3" path="res://ch/Shop/upgrade_progress_component.gd" id="14_r6l2h"]
 [ext_resource type="Texture2D" uid="uid://bf8o6gnj6g1nc" path="res://res/time_upgrade_icon.png" id="14_xklyy"]
 [ext_resource type="Texture2D" uid="uid://gbka4yjc0p4k" path="res://unfiled/Ammo_display/bullet_texture.png" id="15_htvy6"]
-[ext_resource type="Texture2D" uid="uid://be6l0g803akyn" path="res://unfiled/Photos/shop guns.png" id="15_ohn7f"]
 [ext_resource type="Texture2D" uid="uid://cdibh2x081m8m" path="res://res/auto_fire_icon.png" id="16_cn8lj"]
 [ext_resource type="Script" uid="uid://up6jew6r4kdm" path="res://ch/Shop/transport_tickets.gd" id="16_vom4t"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="17_cn8lj"]
@@ -225,7 +225,6 @@ current_total_money = 5000.0
 position = Vector2(962, 551)
 amount = 10
 lifetime = 5.0
-fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_yuebc")
 
@@ -281,7 +280,7 @@ offset_left = 830.0
 offset_top = 204.0
 offset_right = 1040.0
 offset_bottom = 454.0
-upgrade_icon = ExtResource("15_ohn7f")
+upgrade_icon = ExtResource("7_cn8lj")
 shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "max_items_in_shop"
@@ -878,7 +877,6 @@ position = Vector2(962, 551)
 emitting = false
 amount = 600
 lifetime = 5.0
-fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_cn8lj")
 
@@ -932,7 +930,6 @@ lifetime = 0.8
 one_shot = true
 explosiveness = 0.95
 randomness = 0.4
-fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_hi3s5")
 
@@ -946,7 +943,6 @@ lifetime = 0.8
 one_shot = true
 explosiveness = 0.95
 randomness = 0.4
-fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_hi3s5")
 
@@ -960,7 +956,6 @@ lifetime = 0.8
 one_shot = true
 explosiveness = 0.95
 randomness = 0.4
-fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_hi3s5")
 
@@ -974,7 +969,6 @@ lifetime = 0.8
 one_shot = true
 explosiveness = 0.95
 randomness = 0.4
-fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_hi3s5")
 

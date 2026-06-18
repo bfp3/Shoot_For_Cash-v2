@@ -504,12 +504,13 @@ func _update_visual_state() -> void:
 	
 	
 func purchase_particles() -> void:
-
+	
+	
 	await get_tree().create_timer(0.1).timeout
 	$PurchaseParticles.emitting = true
-	if cost == 0:
+	if cost == 0 && !gun:
 		await get_tree().create_timer(0.1).timeout
-		$Free_sfx.play()
+		#$Free_sfx.play()
 		$FreeParticles.emitting = true
 	
 #func _physics_process(delta: float) -> void:
