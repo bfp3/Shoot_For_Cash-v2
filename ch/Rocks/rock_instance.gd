@@ -1,6 +1,8 @@
 extends RigidBody3D
 class_name RockInstance
 
+@export var freeze_mine := false
+
 const ON_TARGET_SFX = preload('res://sfx/opt_3_fade_shortened.wav')
 var pitch_adjustment := 0.02
 
@@ -401,7 +403,9 @@ func setup_rock_type() -> void:
 func reset_stats() -> void:
 	$Mesh.scale = Vector3.ONE
 	$Marked.hide()
+	$Freeze.hide()
 	$Mesh.show()
+	
 	
 	pitch_adjustment = 0.02
 	
@@ -455,8 +459,17 @@ func apply_marked_ability() -> void:
 	
 	player_has_marked_rock = true
 	freeze = true
-	$Marked.show()
-	$marked_embers.emitting = true
+	
+	if freeze_mine:
+		$Freeze.show()
+		$freeze_embers.emitting = true
+	
+	else:
+		$Marked.show()
+		$marked_embers.emitting = true
+	
+	
+	
 	
 	var player = get_tree().get_first_node_in_group("Player")
 	if player:
@@ -564,6 +577,8 @@ func display_health_counter() -> void:
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:	
 	
+	#freeze_mine = true
+	
 	if rock_type_name.contains("hazard_type"):
 		health -= 1
 		
@@ -574,7 +589,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	update_health_icon() 
 	display_damage_counter(damage)
 	
-	%explosion_radius_mesh.hide()
+	
 	
 	#Rock Takes Damage But Is Not Destroyed Process
 	if gl_PlayerState.dataset.power_sky_mine > 0:
@@ -603,7 +618,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		play_hit_sfx()
 		apply_hit_reaction(screen_offset)
 		has_been_marked = false
-
+		#%explosion_radius_mesh.hide()
 		return
 	
 	
@@ -663,6 +678,7 @@ func add_to_rocks_round() -> void:
 
 func bounce_rocks() -> void:
 	update_gravity(0.04)
+	apply_torque_impulse(Vector3.LEFT * 3000.0)
 	#global_position = start_pos
 	#global_position.x += randi_range(-16,16)
 	#global_position.x = clamp(global_position.x, -2,2)
@@ -763,12 +779,24 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			return
 	
 	if body.name.contains('Rock_Instance'):
-		#body.start_destroyed_process()
-		body.hit_by_player(1, Vector2.ZERO)
-		await get_tree().create_timer(0.5).timeout
-		body.freeze = true
 		
+		if freeze_mine:
+			body.hit_by_player(0, Vector2.ZERO)
+			body.get_node('Freeze').show()
+			await get_tree().create_timer(0.25).timeout
+			body.freeze = true
+			await get_tree().create_timer(3.5).timeout
+			if body != null:
+				body.freeze = false
+				body.get_node('Freeze').hide()
+				
+		else:
+			body.start_destroyed_process()
+			body.hit_by_player(1, Vector2.ZERO)
+				
 	if body.name.contains('Balloon'):
+		if freeze_mine:
+			return
 		if player_has_marked_rock == false:
 			return
 		body.start_destroyed_process()
@@ -780,26 +808,26 @@ func expand_blast_radius() -> void:
 		return
 	
 	%explosion_radius_mesh.show()
-	$Explosion_area.show()
-	print('called insdie expand blast radius')
+	%explosion_radius_mesh.transparency = 0.4	
+
 	var blast_node : Area3D = $Explosion_area
+	blast_node.scale = Vector3.ONE
 	blast_node.show()
 	blast_node.monitoring = true
 	$Explosion_area/CollisionShape3D.disabled = false
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
 	tween.tween_property(blast_node, "scale", Vector3.ONE * 15.0, 0.3)
-	tween.tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.25)
-	
+	tween.tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.35)
+	#tween.tween_interval(0.1)
 	await tween.finished
 	$Explosion_area/CollisionShape3D.disabled = true
 	blast_node.scale = Vector3.ONE
-	%explosion_radius_mesh.transparency = 0.0
+	%explosion_radius_mesh.transparency = 0.4
 	blast_node.hide()
 	blast_node.monitoring = false
 	
 func standard_blast() -> void:
-
 	var blast_node : Area3D = $Explosion_area
 	blast_node.show()
 	%explosion_radius_mesh.show()

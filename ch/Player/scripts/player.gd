@@ -263,7 +263,7 @@ func _process(delta: float) -> void:
 	#handle_pan_left_and_right(delta)
 	
 	
-	#handle_pan_keyboard(delta)
+	handle_pan_keyboard(delta)
 	
 func update_gun_look() -> void:
 

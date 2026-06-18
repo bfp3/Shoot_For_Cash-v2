@@ -43,7 +43,6 @@ func _ready() -> void:
 	self.ticket_purchased.connect(_update_tickets)
 	
 	EventBus.instance.open_shop.connect(check_tickets)
-
 	
 	self.pressed.connect(_on_pressed)
 	
@@ -68,7 +67,21 @@ func _ready() -> void:
 
 func check_tickets() -> void:
 	
-
+	if text == 'MOSS':
+		if gl_PlayerState.dataset.stage_name == 'redd':
+			self.disabled = true
+			current_state = TicketState.UNAVAILABLE
+			modulate = Color.DARK_GREEN
+			modulate.a = 0.5
+			
+	if text == 'REDD':
+		if gl_PlayerState.dataset.stage_name == 'end game':
+			self.disabled = true
+			current_state = TicketState.UNAVAILABLE
+			modulate = Color.DARK_GREEN
+			modulate.a = 0.5
+	
+	
 	var tickets_bought : int = gl_PlayerState.dataset.tickets
 
 	# Already purchased
@@ -130,6 +143,7 @@ func enter_state(new_state : TicketState) -> void:
 
 		TicketState.PURCHASED:
 			update_purchased()
+		
 
 	_update_visual_state()
 			
@@ -206,9 +220,8 @@ func _on_pressed() -> void:
 			if gl_PlayerState.log_buy('power_ticket_moss', ticket_price):
 				gl_PlayerState.dataset.tickets += 1
 				purchase_ticket_special_effects()
+				shop_main_menu.purchase_made()
 				return
-				
-			
 
 		TicketState.PURCHASED:
 			#ticket_travel_requested.emit(self)
@@ -339,6 +352,9 @@ func cannot_purchase() -> void:
 func _on_focus_entered() -> void:
 	if current_state == TicketState.UNAVAILABLE:
 		return
+		
+	if disabled:
+		return
 	
 	var bbcode_des : String = "[pulse freq=2.0 color=#ffc70099 ease=-2.0]" + tooltip_description + "[/pulse]"
 	
@@ -358,6 +374,10 @@ func _on_focus_exited() -> void:
 	if current_state == TicketState.UNAVAILABLE:
 		return
 	
+	if disabled:
+		return
+	
+	print(disabled)
 	
 	if tooltip:
 		tooltip._toggle_tooltip(false, tooltip_description)

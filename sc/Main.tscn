@@ -35,6 +35,7 @@
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="34_v17ib"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="35_8ip8c"]
 [ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="36_pshta"]
+[ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="37_nn6vd"]
 [ext_resource type="AudioStream" uid="uid://mbyekv7f3n1p" path="res://sfx/opt_3_fade_shortened.wav" id="37_xbuap"]
 [ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="38_x7bet"]
 [ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="39_lysu5"]
@@ -239,7 +240,7 @@ _data = {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_taal3"]
 shader = ExtResource("28_ld44m")
 shader_parameter/overlay = false
-shader_parameter/aberration = 0.01000004797499998
+shader_parameter/aberration = 4.7499999933364734e-08
 shader_parameter/brightness = 1.0
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.0
@@ -579,7 +580,7 @@ main_game_canvas = NodePath("MainGameCanvasLayer")
 [node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("level_layout", "scene_transition_screen", "upgrade_menu", "tally_menu", "round_timer", "place_name", "player", "ending_song", "rocks_container", "music_manager", "hud_system", "birds") groups=["round_manager"]]
 script = ExtResource("2_wtxnc")
 level_layout = NodePath("../Level_Visual")
-scene_transition_screen = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Background_transition")
+scene_transition_screen = NodePath("../Background_transition")
 upgrade_menu = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Shop_Main_Menu")
 tally_menu = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/TallyCard")
 round_timer = NodePath("../MainGameCanvasLayer/SubViewportContainer/SubViewport/Timer")
@@ -1233,83 +1234,6 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
-[node name="SFX" type="Node" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=818937010]
-
-[node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1075327639]
-stream = ExtResource("36_pshta")
-volume_db = -40.0
-
-[node name="start_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=2098260800]
-stream = ExtResource("37_xbuap")
-volume_db = -30.0
-pitch_scale = 0.7
-
-[node name="shop_purchase_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=921652107]
-stream = ExtResource("38_x7bet")
-volume_db = -40.0
-
-[node name="shop_purchase_02" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1901638632]
-stream = ExtResource("22_r5akd")
-volume_db = -15.0
-pitch_scale = 1.2
-
-[node name="shop_purchase_03" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1452359778]
-stream = ExtResource("39_lysu5")
-volume_db = -40.0
-
-[node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=334161139]
-stream = ExtResource("40_0pe5t")
-volume_db = -40.0
-
-[node name="shop_mystery_box_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=733293965]
-stream = ExtResource("41_trdld")
-volume_db = -40.0
-
-[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=618503378]
-stream = ExtResource("42_1i2h1")
-volume_db = -32.0
-
-[node name="focus_exit" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=475387272]
-stream = ExtResource("42_1i2h1")
-volume_db = -50.0
-
-[node name="purchase" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1148902315]
-stream = ExtResource("43_jj2qr")
-volume_db = -40.0
-pitch_scale = 3.0
-
-[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=759328512]
-stream = ExtResource("44_nq3ni")
-volume_db = -40.0
-pitch_scale = 2.0
-
-[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1492928252]
-stream = ExtResource("45_q3aq7")
-volume_db = -40.0
-pitch_scale = 1.5
-
-[node name="hud_click_1" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1251476345]
-stream = ExtResource("46_0tmy3")
-volume_db = -34.0
-
-[node name="hud_click_2" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1631394354]
-stream = ExtResource("47_vavbc")
-volume_db = -20.0
-
-[node name="hud_click_3" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=389034069]
-stream = ExtResource("48_s3ss1")
-volume_db = -21.0
-autoplay = true
-
-[node name="low_humming" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=815406511]
-stream = ExtResource("49_dqcwm")
-pitch_scale = 0.4
-
-[node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1199956550]
-stream = ExtResource("50_nl2qx")
-volume_db = -40.0
-pitch_scale = 2.0
-
 [node name="BlackScreen" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=992935780]
 layout_mode = 1
 anchors_preset = 15
@@ -1630,7 +1554,8 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=704275748]
+[node name="Giuseppes" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=704275748]
+visible = false
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -1672,9 +1597,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
+theme_override_fonts/bold_font = ExtResource("37_nn6vd")
+theme_override_fonts/bold_italics_font = ExtResource("37_nn6vd")
+theme_override_font_sizes/bold_font_size = 110
+theme_override_font_sizes/bold_italics_font_size = 110
 theme_override_font_sizes/italics_font_size = 110
 bbcode_enabled = true
-text = "[i] [color=#ffc700]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]!"
+text = "[i][color=#ffc700]Shoot[/color] for [wave][color=#42d100][b]CASH[/b][/color][/wave]!"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -1698,9 +1627,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
+theme_override_fonts/bold_font = ExtResource("37_nn6vd")
+theme_override_fonts/bold_italics_font = ExtResource("37_nn6vd")
+theme_override_font_sizes/bold_font_size = 110
+theme_override_font_sizes/bold_italics_font_size = 110
 theme_override_font_sizes/italics_font_size = 110
 bbcode_enabled = true
-text = "[i] [color=#ffc700]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]!"
+text = "[i][color=#ffc700]Shoot[/color] for [wave][color=#42d100][b]CASH[/b][/color][/wave]!"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -1708,7 +1641,6 @@ vertical_alignment = 1
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=302123878]
 clip_contents = false
-custom_minimum_size = Vector2(500, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1723,11 +1655,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
+theme_override_fonts/bold_italics_font = ExtResource("37_nn6vd")
 theme_override_font_sizes/bold_font_size = 110
 theme_override_font_sizes/bold_italics_font_size = 110
 theme_override_font_sizes/italics_font_size = 110
 bbcode_enabled = true
-text = "[i] [color=#ffc700]Shoot[/color] for [wave][color=#42d100][b]CASH[/b][/color][/wave]!"
+text = "[i][color=#ffc700]Shoot[/color] for [wave][color=#42d100][b]CASH[/b][/color][/wave]!"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -1748,7 +1681,85 @@ offset_bottom = -30.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="SFX" type="Node" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=818937010]
+
+[node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1075327639]
+stream = ExtResource("36_pshta")
+volume_db = -40.0
+
+[node name="start_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=2098260800]
+stream = ExtResource("37_xbuap")
+volume_db = -30.0
+pitch_scale = 0.7
+
+[node name="shop_purchase_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=921652107]
+stream = ExtResource("38_x7bet")
+volume_db = -40.0
+
+[node name="shop_purchase_02" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1901638632]
+stream = ExtResource("22_r5akd")
+volume_db = -15.0
+pitch_scale = 1.2
+
+[node name="shop_purchase_03" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1452359778]
+stream = ExtResource("39_lysu5")
+volume_db = -40.0
+
+[node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=334161139]
+stream = ExtResource("40_0pe5t")
+volume_db = -40.0
+
+[node name="shop_mystery_box_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=733293965]
+stream = ExtResource("41_trdld")
+volume_db = -40.0
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=618503378]
+stream = ExtResource("42_1i2h1")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=475387272]
+stream = ExtResource("42_1i2h1")
+volume_db = -50.0
+
+[node name="purchase" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1148902315]
+stream = ExtResource("43_jj2qr")
+volume_db = -40.0
+pitch_scale = 3.0
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=759328512]
+stream = ExtResource("44_nq3ni")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1492928252]
+stream = ExtResource("45_q3aq7")
+volume_db = -40.0
+pitch_scale = 1.5
+
+[node name="hud_click_1" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1251476345]
+stream = ExtResource("46_0tmy3")
+volume_db = -34.0
+
+[node name="hud_click_2" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1631394354]
+stream = ExtResource("47_vavbc")
+volume_db = -20.0
+
+[node name="hud_click_3" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=389034069]
+stream = ExtResource("48_s3ss1")
+volume_db = -21.0
+autoplay = true
+
+[node name="low_humming" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=815406511]
+stream = ExtResource("49_dqcwm")
+pitch_scale = 0.4
+
+[node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1199956550]
+stream = ExtResource("50_nl2qx")
+volume_db = -40.0
+pitch_scale = 2.0
+
 [node name="MainGameCanvasLayer" type="CanvasLayer" parent="." unique_id=778582470]
+layer = -1
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="MainGameCanvasLayer" unique_id=477368348]
 anchors_preset = 15
@@ -1831,32 +1842,6 @@ round_manager = NodePath("../../../../Round_manager")
 money_control = NodePath("../Money_labels")
 test_mode = false
 
-[node name="Background_transition" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=605168212]
-unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0)
-z_index = 4096
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2, 2)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("65_fjk4d")
-
-[node name="ColorRect" type="ColorRect" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport/Background_transition" unique_id=1109783148]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
-
 [node name="Frame_rate" type="Control" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=439145462]
 visible = false
 custom_minimum_size = Vector2(250, 50)
@@ -1886,6 +1871,33 @@ autostart = true
 
 [node name="V2_Pineapple_ending_sequence2" parent="MainGameCanvasLayer/SubViewportContainer/SubViewport" unique_id=448524514 instance=ExtResource("63_nn6vd")]
 script = SubResource("GDScript_ec2we")
+
+[node name="Background_transition" type="Control" parent="." unique_id=605168212]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+z_index = 4096
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2.395, 2.395)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("65_fjk4d")
+
+[node name="ColorRect" type="ColorRect" parent="Background_transition" unique_id=1109783148]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="floor2" type="MeshInstance3D" parent="." unique_id=1359241023]
 transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 30, 0, -3.39, 50)
@@ -2027,7 +2039,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 24)
 
 [node name="Balloon_container" type="Node3D" parent="." unique_id=906093422]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 22)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 5.1099997, 2.2999992)

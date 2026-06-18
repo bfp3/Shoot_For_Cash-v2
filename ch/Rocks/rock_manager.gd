@@ -98,6 +98,7 @@ func get_rock_limit() -> int:
 func bounce_rocks() -> void:
 	
 	var bodies = $Container_1.get_children()
+	#$Container_1.global_position.x = clamp($Container_1.global_position.x + randi_range(-8,8), -10.0, 10.0)
 	
 	var counter := 0
 	
@@ -132,7 +133,7 @@ func bounce_rocks() -> void:
 		if counter >= rocks_limit:
 			break
 
-	spin_rocks()
+	#spin_rocks()
 	
 
 

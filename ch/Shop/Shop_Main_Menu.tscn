@@ -18,7 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://unfiled/Ammo_display/bullet_texture_plain.png" id="8_7j408"]
 [ext_resource type="AudioStream" uid="uid://c5he7tw0onue" path="res://sfx/shop_reroll_sfx_01.wav" id="8_hfe6c"]
 [ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="8_kosrb"]
-[ext_resource type="AudioStream" uid="uid://xh6kpfpcl3mh" path="res://sfx/ shop_mystery_box_sfx_01.wav" id="9_kosrb"]
+[ext_resource type="AudioStream" uid="uid://xh6kpfpcl3mh" path="res://sfx/shop_mystery_box_sfx_01.wav" id="9_kosrb"]
 [ext_resource type="Texture2D" uid="uid://bcvk6h5k84n3h" path="res://res/moss_shop.png" id="11_babqt"]
 [ext_resource type="Texture2D" uid="uid://hy4w24j6p2er" path="res://res/red_shop.png" id="12_kvqbn"]
 [ext_resource type="Texture2D" uid="uid://cuw4sgs22s23" path="res://res/sky_mine_icon_2.png" id="13_cn8lj"]
@@ -319,7 +319,7 @@ offset_bottom = 414.0
 upgrade_icon = ExtResource("4_dq200")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "bullet_damage"
-upgrade_name = "Bullet Damage"
+upgrade_name = "Rock Damage"
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
 [node name="BulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1833548560 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
@@ -618,7 +618,7 @@ theme_override_constants/separation = 214
 layout_mode = 2
 theme_override_constants/separation = 88
 
-[node name="Bullet Damage" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=170932053 instance=ExtResource("13_onfim")]
+[node name="Rock Damage" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=170932053 instance=ExtResource("13_onfim")]
 layout_mode = 2
 upgrade_type = "bullet_damage"
 
@@ -886,6 +886,7 @@ vertical_alignment = 1
 
 [node name="AddMoney" type="Button" parent="." unique_id=225417206 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 0
 offset_left = 727.0
 offset_top = 916.0
@@ -921,6 +922,7 @@ vertical_alignment = 1
 
 [node name="MaxOutPowers" type="Button" parent="." unique_id=605003613 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 0
 offset_left = 1049.0
 offset_top = 916.0
