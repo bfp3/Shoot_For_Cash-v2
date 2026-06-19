@@ -537,13 +537,16 @@ transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0, 0)
 keep_aspect = 0
 fov = 60.0
 size = 0.05
-far = 1500.0
+far = 200.0
 script = ExtResource("10_n6ds6")
 move_speed = 0.05
 shoot_shake_amount = 0.2
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Cam_pivot/Camera3D" unique_id=585521769]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -5.02986e-07, 1.3371801, -6.82349)
+process_mode = 4
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 101.337, -6.823)
+visible = false
+layers = 0
 spot_range = 75.0
 spot_attenuation = 0.22
 spot_angle = 25.0
@@ -1784,7 +1787,6 @@ size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("29_mxtxj")
 on_tally_sheet = true
-temp_disabled = null
 
 [node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/TotalRocks" unique_id=1489176079]
 unique_name_in_owner = true

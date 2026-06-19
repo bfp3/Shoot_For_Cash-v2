@@ -319,7 +319,7 @@ func setup_rock_type() -> void:
 			assign_random_mesh(current_mesh)
 			current_mesh.scale  = Vector3.ONE * 0.625
 			max_health = health
-			rock_type_gravity_scale = 0.3
+			rock_type_gravity_scale = 0.15
 			update_health_icon()
 			linear_damp = 0.5
 			force_mult.clear()
@@ -853,25 +853,25 @@ func smoke_particles() -> void:
 
 
 func smoke_particles_duplicates() -> void:
-	var _new_particles : GPUParticles3D = $Smoke_quick.duplicate()
+	var _new_particles : GPUParticles3D = $Smoke_quick #.duplicate()
 
 	if !_new_particles:
 		return
 		
-	_new_particles.add_to_group("smoke_particles")
+	#_new_particles.add_to_group("smoke_particles")
 	_new_particles.emitting = true
-	_new_particles.duplicate_particles = true
+	#_new_particles.duplicate_particles = true
 	_new_particles.show()
-	add_child(_new_particles)
+	#add_child(_new_particles)
 	#get_tree().get_current_scene().add_child(_new_particles)
 	_new_particles.global_position = global_position
 	
-	var _new_sparks : GPUParticles3D = $Sparks01.duplicate()
+	var _new_sparks : GPUParticles3D = $Sparks01 #.duplicate()
 	if !_new_sparks:
 		return
 	_new_sparks.show()
-	_new_sparks.finished.connect(_new_sparks.queue_free)
-	get_tree().get_current_scene().add_child(_new_sparks)
+	#_new_sparks.finished.connect(_new_sparks.queue_free)
+	#get_tree().get_current_scene().add_child(_new_sparks)
 	_new_sparks.global_position = global_position
 	_new_sparks.emitting = true
 	

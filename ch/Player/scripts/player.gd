@@ -504,7 +504,7 @@ func _input(event: InputEvent) -> void:
 			get_viewport().debug_draw = Viewport.DebugDraw.DEBUG_DRAW_UNSHADED
 		
 	if event is InputEventMouseMotion:
-		target_crosshair_position += event.relative * _mouse_sensitivity
+		target_crosshair_position += event.relative * _mouse_sensitivity * 5.0
 		
 		
 func flip_around() -> void:

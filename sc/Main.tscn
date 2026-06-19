@@ -60,9 +60,7 @@
 [ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="63_err0d"]
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
 [ext_resource type="Script" uid="uid://3le0jpjo3qtu" path="res://ch/background_transition.gd" id="65_fjk4d"]
-[ext_resource type="PackedScene" uid="uid://b5wang725r8ve" path="res://lib/Pineapple_ending_sequence/UponShootingPineapple.tscn" id="65_ymbdo"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
-[ext_resource type="Script" uid="uid://c2wf8p85uv1ui" path="res://lib/Pineapple_ending_sequence/Scripts/upon_shooting_pineapple.gd" id="66_wv0tc"]
 [ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
 
@@ -1971,107 +1969,23 @@ script = SubResource("GDScript_84tyu")
 
 [node name="Pineapple" parent="Pineapple" unique_id=1539472592 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 24.3)
+collision_layer = 5
+collision_mask = 4
 force_multiplier = 1.2
 
 [node name="Pineapple2" parent="Pineapple" unique_id=1349360149 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 24.3)
+collision_layer = 5
+collision_mask = 4
 cash_value = 20
 force_multiplier = 1.6
 
 [node name="Pineapple3" parent="Pineapple" unique_id=1506732277 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 24.3)
+collision_layer = 5
+collision_mask = 4
 cash_value = 40
 force_multiplier = 2.0
-
-[node name="Player_shoot_pineapple" parent="Pineapple" unique_id=1726413319 instance=ExtResource("65_ymbdo")]
-offset_top = -236.0
-offset_bottom = 252.0
-script = ExtResource("66_wv0tc")
-
-[node name="Dots_phase" parent="Pineapple/Player_shoot_pineapple" index="2" unique_id=1589052821]
-modulate = Color(0.96, 0.8832, 0.0384, 0.509804)
-z_index = 0
-
-[node name="Dot" parent="Pineapple/Player_shoot_pineapple/Dots_phase" index="0" unique_id=689964280]
-custom_minimum_size = Vector2(0, 0)
-scale = Vector2(1, 1)
-pivot_offset = Vector2(20, 20)
-
-[node name="Circle" parent="Pineapple/Player_shoot_pineapple/Dots_phase/Dot" index="2" unique_id=888577442]
-modulate = Color(1, 1, 1, 0.117647)
-scale = Vector2(1, 1)
-stretch_mode = 0
-
-[node name="Outline" parent="Pineapple/Player_shoot_pineapple/Dots_phase/Dot" index="3" unique_id=996613593]
-modulate = Color(0.5, 0.5, 0.5, 1)
-custom_minimum_size = Vector2(45, 45)
-
-[node name="Dot2" parent="Pineapple/Player_shoot_pineapple/Dots_phase" index="1" unique_id=570644849]
-custom_minimum_size = Vector2(0, 0)
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-scale = Vector2(1, 1)
-pivot_offset = Vector2(20, 20)
-
-[node name="Circle" parent="Pineapple/Player_shoot_pineapple/Dots_phase/Dot2" index="2" unique_id=1848054316]
-modulate = Color(1, 1, 1, 0.117647)
-scale = Vector2(1, 1)
-stretch_mode = 0
-
-[node name="Outline" parent="Pineapple/Player_shoot_pineapple/Dots_phase/Dot2" index="3" unique_id=2093909175]
-modulate = Color(0.5, 0.5, 0.5, 1)
-custom_minimum_size = Vector2(45, 45)
-
-[node name="Dot3" parent="Pineapple/Player_shoot_pineapple/Dots_phase" index="2" unique_id=195506311]
-custom_minimum_size = Vector2(0, 0)
-offset_left = 60.0
-offset_top = -20.0
-offset_right = 100.0
-offset_bottom = 20.0
-scale = Vector2(1, 1)
-pivot_offset = Vector2(20, 20)
-
-[node name="Background_glow" parent="Pineapple/Player_shoot_pineapple/Dots_phase/Dot3" index="0" unique_id=1430784769]
-visible = false
-modulate = Color(1, 1, 1, 1)
-scale = Vector2(2.485, 2.485)
-
-[node name="Background_glow2" parent="Pineapple/Player_shoot_pineapple/Dots_phase/Dot3" index="1" unique_id=1477391652]
-visible = false
-modulate = Color(1, 1, 1, 1)
-scale = Vector2(2.485, 2.485)
-
-[node name="Circle" parent="Pineapple/Player_shoot_pineapple/Dots_phase/Dot3" index="2" unique_id=511385297]
-modulate = Color(1, 1, 1, 0.117647)
-scale = Vector2(1, 1)
-stretch_mode = 0
-
-[node name="Outline" parent="Pineapple/Player_shoot_pineapple/Dots_phase/Dot3" index="3" unique_id=1268510576]
-modulate = Color(0.5, 0.5, 0.5, 1)
-custom_minimum_size = Vector2(45, 45)
-offset_left = -22.5
-offset_top = -22.1667
-offset_right = 22.5
-offset_bottom = 22.8333
-
-[node name="PanelContainer" parent="Pineapple/Player_shoot_pineapple/PanelContainer/MarginContainer/HBoxContainer/Pineapple" parent_id_path=PackedInt32Array(1726413319, 15145191) index="0" unique_id=9739201]
-offset_left = 0.0
-offset_right = -37.0
-offset_bottom = -80.963
-
-[node name="TextureRect" parent="Pineapple/Player_shoot_pineapple/PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer/MarginContainer" parent_id_path=PackedInt32Array(1726413319, 1360632421) index="0" unique_id=263248309]
-visible = false
-
-[node name="Smoke_sprite" parent="Pineapple/Player_shoot_pineapple" index="8" unique_id=1881547744]
-visible = false
-
-[node name="Smoke_sprite2" parent="Pineapple/Player_shoot_pineapple" index="9" unique_id=2044203504]
-visible = false
-
-[node name="Smoke_sprite3" parent="Pineapple/Player_shoot_pineapple" index="10" unique_id=447769274]
-visible = false
 
 [node name="LeftMarker" type="Marker3D" parent="Pineapple" unique_id=1406020988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
@@ -2103,4 +2017,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.900001, 0.3571559, 2.299999
 [editable path="MainGameCanvasLayer/Shop_Main_Menu"]
 [editable path="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]
 [editable path="MainGameCanvasLayer/Shop_Main_Menu/TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket"]
-[editable path="Pineapple/Player_shoot_pineapple"]

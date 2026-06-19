@@ -12,6 +12,7 @@
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="10_x41y2"]
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="11_ftnal"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="12_xgkue"]
+[ext_resource type="PackedScene" uid="uid://b1ifm0554gtdb" path="res://addons/boujie_water_shader/prefabs/outset_ocean.tscn" id="13_3iai2"]
 
 [sub_resource type="GDScript" id="GDScript_ec2we"]
 script/source = "extends Node
@@ -107,15 +108,13 @@ text = "[b]MOSS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TallyCard" parent="SubViewportContainer/SubViewport" unique_id=1212322380 node_paths=PackedStringArray("round_manager") instance=ExtResource("5_6rdep")]
+[node name="TallyCard" parent="SubViewportContainer/SubViewport" unique_id=1212322380 instance=ExtResource("5_6rdep")]
 unique_name_in_owner = true
 visible = false
 mouse_filter = 2
-round_manager = NodePath("")
 
-[node name="Shop_Main_Menu" parent="SubViewportContainer/SubViewport" unique_id=973405492 node_paths=PackedStringArray("round_manager", "money_control") instance=ExtResource("6_b6nkt")]
+[node name="Shop_Main_Menu" parent="SubViewportContainer/SubViewport" unique_id=973405492 node_paths=PackedStringArray("money_control") instance=ExtResource("6_b6nkt")]
 unique_name_in_owner = true
-round_manager = NodePath("")
 money_control = NodePath("../Money_labels")
 test_mode = false
 
@@ -148,9 +147,8 @@ autostart = true
 [node name="V2_Pineapple_ending_sequence2" parent="SubViewportContainer/SubViewport" unique_id=475251545 instance=ExtResource("8_qqxcg")]
 script = SubResource("GDScript_ec2we")
 
-[node name="DemoEndScreen" parent="SubViewportContainer/SubViewport" unique_id=1176497219 node_paths=PackedStringArray("round_manager") instance=ExtResource("9_l1q7p")]
+[node name="DemoEndScreen" parent="SubViewportContainer/SubViewport" unique_id=1176497219 instance=ExtResource("9_l1q7p")]
 visible = false
-round_manager = NodePath("")
 
 [node name="QuitMenu" type="PanelContainer" parent="." unique_id=1964515022]
 unique_name_in_owner = true
@@ -225,10 +223,14 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
 
+[node name="OutsetOcean" parent="." unique_id=1987805756 instance=ExtResource("13_3iai2")]
+transform = Transform3D(1, 0, 0, 0, 0.99945015, 0.033155177, 0, -0.033155177, 0.99945015, 3.36, -5.35, 333.782)
+far_edge = 4000
+
 [connection signal="timeout" from="SubViewportContainer/SubViewport/Frame_rate/Timer" to="SubViewportContainer/SubViewport/Frame_rate" method="_on_timer_timeout"]
 [connection signal="pressed" from="QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="QuitMenu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="QuitMenu" method="_on_cancel_menu_pressed"]
 
 [editable path="SubViewportContainer/SubViewport/Shop_Main_Menu"]
 [editable path="SubViewportContainer/SubViewport/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]
-[editable path="SubViewportContainer/SubViewport/Shop_Main_Menu/TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket"]
+[editable path="SubViewportContainer/SubViewport/Shop_Main_Menu/TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket"]
