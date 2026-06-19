@@ -40,7 +40,7 @@ func _process(delta: float) -> void:
 		
 	flight_timer += delta
 	var t = clamp(flight_timer / flight_duration, 0.0, 1.0)
-	path_follow_3d.progress += flight_speed_curve.sample(t) * speed_multiplier
+	path_follow_3d.progress += flight_speed_curve.sample(t) * speed_multiplier * delta
 	
 	if path_follow_3d.progress_ratio >= 1.0:
 
