@@ -14,7 +14,6 @@ extends Node3D
 var moving_camera := false
 
 func _ready() -> void:
-	
 	set_process(false)
 	main_game_canvas.hide()
 	if intro_title_screen:

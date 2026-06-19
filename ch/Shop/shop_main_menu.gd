@@ -82,36 +82,10 @@ func ticket_purchased() -> void:
 		reroll_unlocked = true
 		
 	update_shop()
-	$TicketPurchasedPopUp.modulate.a = 0.0
-	$TicketPurchasedPopUp.show()
-	$TicketPurchasedPopUp.mouse_filter = 0
-	$TicketPurchasedPopUp/BackgroundParticles.emitting = true
-	$TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket.disabled = true
-	var tween = create_tween()
-	tween.tween_property($TicketPurchasedPopUp, "modulate:a", 1.0, 0.5)
-	await tween.finished
-	
-	%ticket_particles.emitting = true
-	await %ticket_particles.finished
+	$TicketPurchasedPopUp.display_ticket()
 
+	
 
-	%ticket_particles2.emitting = true
-	await %ticket_particles2.finished
-
-	%ticket_particles3.emitting = true
-	await %ticket_particles3.finished
-	
-	%ticket_particles4.emitting = true
-	await %ticket_particles4.finished
-	
-	await get_tree().create_timer(5.0).timeout
-	
-	var tween2 = create_tween()
-	tween2.tween_property($TicketPurchasedPopUp, "modulate:a", 0.0, 0.25)
-	await  tween2.finished
-	$TicketPurchasedPopUp.mouse_filter = 2
-	$TicketPurchasedPopUp/BackgroundParticles.emitting = false
-	$TicketPurchasedPopUp.hide()
 
 func purchase_made(_upgrade_type:String = '') -> void:
 	sfx_purchase_made()

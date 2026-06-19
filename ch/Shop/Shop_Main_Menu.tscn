@@ -37,6 +37,7 @@
 [ext_resource type="AudioStream" uid="uid://bde0632jwh1jq" path="res://sfx/Egg_pulse_sfx_reverse.wav" id="20_wqa6l"]
 [ext_resource type="PackedScene" uid="uid://dcuml06w7i3km" path="res://ch/Shop/ticket_button.tscn" id="20_xklyy"]
 [ext_resource type="PackedScene" uid="uid://cjcdqa3pipb3j" path="res://ch/close_menu.tscn" id="21_tnodp"]
+[ext_resource type="Script" uid="uid://bia8r4n1kfwrp" path="res://ch/Shop/ticket_purchased_pop_up.gd" id="26_ei2sf"]
 [ext_resource type="AudioStream" uid="uid://dmjy34fgs3ny8" path="res://sfx/HUD on click.wav" id="27_fl2u5"]
 [ext_resource type="AudioStream" uid="uid://jmf0o5ogd3uv" path="res://sfx/HUD on_v2.wav" id="28_htvy6"]
 [ext_resource type="AudioStream" uid="uid://dold0eft66v4p" path="res://sfx/HUD on.wav" id="29_0v40x"]
@@ -317,7 +318,6 @@ offset_right = 561.6667
 offset_bottom = -734.5093
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = ExtResource("5_vom4t")
-metadata/_edit_use_anchors_ = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/QuitControl/QuitMenu" unique_id=1223709064]
 layout_mode = 2
@@ -582,6 +582,23 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=560640138]
+modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_top = 8.0
+offset_right = 100.0
+offset_bottom = 129.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vrkmk")
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
+
+[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1388172073]
 modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
 show_behind_parent = true
 layout_mode = 0
@@ -936,7 +953,6 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="TicketPurchasedPopUp" type="CenterContainer" parent="." unique_id=344167720]
-visible = false
 z_index = 1
 layout_mode = 1
 anchors_preset = 15
@@ -946,6 +962,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
+script = ExtResource("26_ei2sf")
 
 [node name="ColorRect" type="ColorRect" parent="TicketPurchasedPopUp" unique_id=1759319141]
 custom_minimum_size = Vector2(1920, 1080)
@@ -973,7 +990,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="ReddTicket" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=957449504 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="PurchasedTicket" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=957449504 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -995,10 +1012,25 @@ upgrade_type = "ticket_redd"
 upgrade_name = "Ticket To Redd"
 purchase_sfx = NodePath("../../../../SFX/purchase")
 
-[node name="HBoxContainer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket/VBoxContainer" parent_id_path=PackedInt32Array(957449504, 493506063) index="2" unique_id=129271411]
+[node name="Upgrade_Icon_shadow3" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer/UpgradePanel/Upgrade_Icon" parent_id_path=PackedInt32Array(957449504, 270279238) index="0" unique_id=857439871]
 visible = false
 
-[node name="CostLabel" parent="TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket/VBoxContainer" parent_id_path=PackedInt32Array(957449504, 493506063) index="3" unique_id=1697108673]
+[node name="Upgrade_Icon_shadow4" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer/UpgradePanel/Upgrade_Icon" parent_id_path=PackedInt32Array(957449504, 270279238) index="1" unique_id=513301031]
+visible = false
+
+[node name="Upgrade_Icon_shadow5" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer/UpgradePanel/Upgrade_Icon" parent_id_path=PackedInt32Array(957449504, 270279238) index="2" unique_id=868101063]
+visible = false
+
+[node name="Upgrade_Icon_shadow" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer/UpgradePanel/Upgrade_Icon" parent_id_path=PackedInt32Array(957449504, 270279238) index="3" unique_id=39294221]
+visible = false
+
+[node name="Upgrade_Icon_shadow2" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer/UpgradePanel/Upgrade_Icon" parent_id_path=PackedInt32Array(957449504, 270279238) index="4" unique_id=1516292458]
+visible = false
+
+[node name="HBoxContainer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer" parent_id_path=PackedInt32Array(957449504, 493506063) index="2" unique_id=129271411]
+visible = false
+
+[node name="CostLabel" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer" parent_id_path=PackedInt32Array(957449504, 493506063) index="3" unique_id=1697108673]
 visible = false
 
 [node name="ticket_particles" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=1618108805]
@@ -1056,6 +1088,82 @@ randomness = 0.4
 fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_hi3s5")
+
+[node name="Control" type="Control" parent="TicketPurchasedPopUp" unique_id=1191033289]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NextRound" type="Button" parent="TicketPurchasedPopUp/Control" unique_id=452825858 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+layout_mode = 0
+offset_left = 143.0
+offset_top = 8.0
+offset_right = 243.0
+offset_bottom = 129.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
+script = ExtResource("3_y3o4g")
+border_outline_colour = Color(0.46799996, 0.46799996, 0.52, 1)
+editable = true
+focus_enter_sfx = NodePath("../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../SFX/purchase")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TicketPurchasedPopUp/Control/NextRound" unique_id=2107366732]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "[i][wave][color=]DONE
+"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextRound" type="Button" parent="TicketPurchasedPopUp/Control/NextRound" unique_id=2078152162]
+modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_top = 8.0
+offset_right = 100.0
+offset_bottom = 129.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vrkmk")
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
+
+[node name="NextRound2" type="Button" parent="TicketPurchasedPopUp/Control/NextRound" unique_id=181569061]
+modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_top = 8.0
+offset_right = 100.0
+offset_bottom = 129.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vrkmk")
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
 
 [node name="NextRound" type="Button" parent="." unique_id=185981390 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 visible = false
@@ -1323,9 +1431,10 @@ pitch_scale = 0.4
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="update_close_menu"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
+[connection signal="pressed" from="TicketPurchasedPopUp/Control/NextRound" to="TicketPurchasedPopUp" method="_on_next_round_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]
 [connection signal="pressed" from="MaxOutPowers" to="." method="_on_max_out_powers_pressed"]
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]
 
 [editable path="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]
-[editable path="TicketPurchasedPopUp/MainPanel/TreePanel/ReddTicket"]
+[editable path="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket"]
