@@ -683,6 +683,23 @@ func bounce_rocks() -> void:
 	#global_position.x += randi_range(-16,16)
 	#global_position.x = clamp(global_position.x, -2,2)
 
+func tween_rocks() -> void:
+	update_gravity(0.04)
+	apply_torque_impulse(Vector3.LEFT * 3000.0)
+	
+	var x_variation 	:= randf_range(-2.0, 2.0)
+	var up_force 	:= randf_range(5.0, 7.0)
+	var _dur 		:= randf_range(0.8,1.2)
+	
+	var _target_position : Vector3 = Vector3(global_position.x + x_variation, up_force, global_position.z)
+	
+	#self.freeze = true
+	
+	var tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_property(self, "global_position", _target_position, _dur)
+	await tween.finished
+	self.freeze = false
+
 func start_destroyed_process() -> void:
 
 	if !rock_activated:

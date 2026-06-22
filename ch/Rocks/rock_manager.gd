@@ -67,6 +67,30 @@ func update_pulse_rocks() -> void:
 	#
 	#else:
 	bounce_rocks()
+	#tween_rocks()
+	
+func tween_rocks() -> void:
+	var bodies = $Container_1.get_children()
+	var counter := 0
+	
+	for body in bodies:
+		if counter >= bodies.size():
+			break
+		body.enter_state(body.State.ACTIVE)
+	
+	counter = 0
+	
+	for body in bodies:
+		if counter >= bodies.size():
+			break
+		
+		body.tween_rocks()
+
+		counter += 1
+		await get_tree().create_timer(0.1).timeout
+		
+		if counter >= rocks_limit:
+			break
 
 func update_round_end() -> void:
 	update_gravity(1.0)
@@ -98,8 +122,7 @@ func get_rock_limit() -> int:
 func bounce_rocks() -> void:
 	
 	var bodies = $Container_1.get_children()
-	#$Container_1.global_position.x = clamp($Container_1.global_position.x + randi_range(-8,8), -10.0, 10.0)
-	
+
 	var counter := 0
 	
 	for body in bodies:
