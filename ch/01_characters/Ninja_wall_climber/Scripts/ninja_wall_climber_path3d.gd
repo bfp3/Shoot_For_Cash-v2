@@ -132,7 +132,6 @@ func move_along_path() -> void:
 		return
 
 	if distance >= total_length:
-		print("Reached end of path.")
 		return
 
 	if follower.progress_ratio >= 0.0755 and !waited:
@@ -169,7 +168,6 @@ func _stop_moving() -> void:
 		#return
 #
 	#if distance >= total_length:
-		#print("Reached end of path.")
 		#return
 #
 	#if follower.progress_ratio >= 0.098 and !waited:

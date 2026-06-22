@@ -266,7 +266,7 @@ func update_round_end() -> void:
 
 func update_tally_start() -> void:
 	EventBus.instance.open_tally_card.emit()
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func update_tally_end() -> void:
 	#await get_tree().create_timer(0.5).timeout
@@ -275,7 +275,7 @@ func update_tally_end() -> void:
 	
 func update_shop_start() -> void:
 	EventBus.instance.open_shop.emit()
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	
 
 func update_shop_end() -> void:

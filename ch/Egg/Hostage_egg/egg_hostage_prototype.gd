@@ -175,7 +175,6 @@ func escape_tween() -> void:
 	
 func release_eggs() -> void:
 	if dying:
-		print('this egg hostage is already dead')
 		return
 		
 	else:

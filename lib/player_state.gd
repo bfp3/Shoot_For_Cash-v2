@@ -1,5 +1,7 @@
 extends Node
 
+var mouse_sensitivity := 1.0
+
 const DEFAULT_DATASET := {
 	"cash": 109,
 	"stage": 0,

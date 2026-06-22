@@ -263,7 +263,7 @@ func power_ring_tween() -> void:
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	if area.is_in_group('spotter_projectile') && !taking_damage:
-		print('took a hit from spotter projectile')
+
 		
 		#if dev_mode:
 			#return
@@ -275,7 +275,6 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 		took_a_hit()
 		
 	if area.is_in_group('bullet') && !taking_damage && secondary_bonus_egg:
-		print('took a hit from spotter projectile')
 		
 		#if dev_mode:
 			#return

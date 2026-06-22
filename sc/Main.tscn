@@ -59,6 +59,7 @@
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
 [ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="63_err0d"]
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
+[ext_resource type="PackedScene" uid="uid://ownxjc3mlmfd" path="res://ch/HUD_components/pause_and_exit_menu.tscn" id="64_tnw34"]
 [ext_resource type="Script" uid="uid://3le0jpjo3qtu" path="res://ch/background_transition.gd" id="65_fjk4d"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
 [ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
@@ -1748,7 +1749,7 @@ layer = -1
 
 [node name="QuitMenu" type="PanelContainer" parent="MainGameCanvasLayer" unique_id=2079405395]
 unique_name_in_owner = true
-process_mode = 3
+visible = false
 custom_minimum_size = Vector2(205, 205)
 anchors_preset = -1
 anchor_left = -0.18333334
@@ -2008,6 +2009,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.999999, 5.8671556, 2.29999
 
 [node name="Balloon4" parent="Balloon_container" unique_id=2070994326 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.900001, 0.3571559, 2.2999992)
+
+[node name="Settings_pause_menu" parent="." unique_id=1950114573 instance=ExtResource("64_tnw34")]
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" to="SplashScreenCanvasLayer/SplashScreen_v2" method="_on_start_game_pressed"]

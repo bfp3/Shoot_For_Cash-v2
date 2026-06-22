@@ -1,0 +1,236 @@
+[gd_scene format=3 uid="uid://ownxjc3mlmfd"]
+
+[ext_resource type="Script" uid="uid://cvbg43fdc614e" path="res://ch/HUD_components/pause_and_exit_menu.gd" id="1_qf3f5"]
+[ext_resource type="Script" uid="uid://cnrw3nvos435" path="res://ch/HUD_components/resolution_dropdown.gd" id="6_233fj"]
+[ext_resource type="Script" uid="uid://ojo2q2ehpwcj" path="res://ch/HUD_components/mouse_sensitivity.gd" id="7_qf3f5"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="8_68q17"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="9_uy4i6"]
+[ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="35_ym64n"]
+[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="36_274hf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cn8lj"]
+
+[node name="Settings_pause_menu" type="CanvasLayer" unique_id=1950114573 groups=["pause_menu"]]
+process_mode = 3
+layer = 100
+script = ExtResource("1_qf3f5")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1832678188]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="QuitControl" type="Control" parent="CenterContainer" unique_id=623695201]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="QuitMenu" type="PanelContainer" parent="CenterContainer/QuitControl" unique_id=652711176]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(205, 205)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -1.6413333
+anchor_top = 0.18251856
+anchor_right = -1.6413333
+anchor_bottom = 2.7450185
+offset_left = 356.6667
+offset_top = 293.74072
+offset_right = 561.6667
+offset_bottom = -781.5093
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = ExtResource("8_68q17")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/QuitControl/QuitMenu" unique_id=1223709064]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=473970147]
+custom_minimum_size = Vector2(19.4, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=1734679969]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1006108101]
+custom_minimum_size = Vector2(50, 12.18)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=107992642]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 19
+bbcode_enabled = true
+text = "Are You Sure?"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="HSeparator4" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=722915459]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="CancelMenu" type="Button" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=348898124]
+layout_mode = 2
+text = "Keep Playing"
+script = ExtResource("9_uy4i6")
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=225086530]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="Settings" type="Button" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1795236582 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+layout_mode = 2
+text = "Settings"
+script = ExtResource("9_uy4i6")
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="HSeparator5" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1821199093]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="CloseGame" type="Button" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1842338374 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+layout_mode = 2
+text = "Quit"
+script = ExtResource("9_uy4i6")
+focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../SFX/purchase")
+
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1304174969]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="VSeparator2" type="VSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=1039230397]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
+
+[node name="SFX" type="Node" parent="." unique_id=192443435]
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1984414687]
+stream = ExtResource("35_ym64n")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=832910576]
+stream = ExtResource("35_ym64n")
+volume_db = -50.0
+
+[node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1684804554]
+stream = ExtResource("36_274hf")
+volume_db = -40.0
+pitch_scale = 3.0
+
+[node name="Settings_menu" type="Control" parent="." unique_id=749276397]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 710.0
+offset_top = 290.0
+offset_right = 1210.0
+offset_bottom = 790.0
+mouse_filter = 2
+
+[node name="QuitMenu" type="PanelContainer" parent="Settings_menu" unique_id=957181042]
+custom_minimum_size = Vector2(205, 205)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -1.6413333
+anchor_top = 0.18251856
+anchor_right = -1.6413333
+anchor_bottom = 2.7450185
+offset_left = 140.66669
+offset_top = 293.74072
+offset_right = 345.6667
+offset_bottom = -746.5093
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = ExtResource("8_68q17")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Settings_menu/QuitMenu" unique_id=1992940439]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="Settings_menu/QuitMenu/HBoxContainer" unique_id=1074441951]
+custom_minimum_size = Vector2(19.4, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Settings_menu/QuitMenu/HBoxContainer" unique_id=1529187391]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=124930051]
+custom_minimum_size = Vector2(50, 12.18)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=327694641]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 19
+bbcode_enabled = true
+text = "Settings"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=476257174]
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "Screen Resolution"
+popup/item_0/id = 0
+script = ExtResource("6_233fj")
+
+[node name="HSeparator4" type="HSeparator" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=668327291]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="MouseSensitivity" type="RichTextLabel" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=150539156]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "Mouse Sensitivity"
+fit_content = true
+autowrap_mode = 0
+
+[node name="MouseSensitivity2" type="HSlider" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=167003109]
+layout_mode = 2
+script = ExtResource("7_qf3f5")
+
+[node name="HSeparator2" type="HSeparator" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=2026368304]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="HSeparator5" type="HSeparator" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1810064872]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="HSeparator3" type="HSeparator" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1788681171]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="VSeparator2" type="VSeparator" parent="Settings_menu/QuitMenu/HBoxContainer" unique_id=838949205]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
+
+[connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="." method="_on_cancel_menu_pressed"]
+[connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="." method="_on_close_game_pressed"]

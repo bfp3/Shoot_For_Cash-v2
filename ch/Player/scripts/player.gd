@@ -197,7 +197,6 @@ func _process(delta: float) -> void:
 		Engine.time_scale = 1.0
 	
 	if current_state == State.IN_SHOP:
-		print('in shop')
 		return 
 		
 	
@@ -504,7 +503,7 @@ func _input(event: InputEvent) -> void:
 			get_viewport().debug_draw = Viewport.DebugDraw.DEBUG_DRAW_UNSHADED
 		
 	if event is InputEventMouseMotion:
-		target_crosshair_position += event.relative * _mouse_sensitivity * 5.0
+		target_crosshair_position += event.relative * _mouse_sensitivity * gl_PlayerState.mouse_sensitivity
 		
 		
 func flip_around() -> void:

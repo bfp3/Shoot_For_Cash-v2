@@ -61,7 +61,6 @@ func pineapple_collected() -> void:
 func dim_the_lights() -> void:
 	#var light : DirectionalLight3D = get_tree().get_first_node_in_group('directional_light')
 	var world_env : WorldEnvironment = get_tree().get_first_node_in_group('world_env')
-	print('called')
 	var tween = create_tween()
 	tween.tween_property(world_env, "environment:background_energy_multiplier", 0.25, 3.0).set_delay(0.5)
 	tween.parallel().tween_property(world_env, "environment:glow_bloom", 1.0, 3.0).set_delay(0.5)

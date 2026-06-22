@@ -21,15 +21,6 @@ var can_afford := false
 var wiggle_tween: Tween
 
 
-#func _process(delta: float) -> void:
-	#
-	#if editable:
-		#base_colour = base_colour
-		#border_outline_colour = border_outline_colour
-		#_update_visual_state()
-	#else:
-		#set_process(false)
-
 func _ready() -> void:
 	randomize()
 
@@ -175,13 +166,16 @@ func _input(event: InputEvent) -> void:
 	
 	
 func _on_pressed() -> void:
-	if %QuitMenu.visible:
-		%QuitMenu.hide()
+	var pause_menu = get_tree().get_first_node_in_group('pause_menu')
+	if pause_menu:
+		pause_menu.start()
+		
 	else:
-		%QuitMenu.show()
-	
-	#get_tree().quit()
-
+		if %QuitMenu.visible:
+			%QuitMenu.hide()
+		else:
+			%QuitMenu.show()
+		
 
 
 func _on_close_game_pressed() -> void:

@@ -9,8 +9,7 @@ extends Node3D
 
 const BULLET_VISUAL_1 = preload('uid://0qrt4gvskifx')
 const BULLET_STAGE_1 = preload('uid://0qrt4gvskifx')
-const BULLET_STAGE_3 = preload('uid://co0gda8g1n2cm')
-const BULLET_STAGE_5 = preload("uid://dmh72f4kn5elo")
+
 const ON_TARGET_SFX = preload('res://sfx/opt_3_fade_shortened.wav')
 
 var time_ran_out := false
@@ -49,8 +48,7 @@ func apply_upgrades() -> void:
 	if gl_PlayerState.dataset.power_auto_fire > 0:
 		auto_fire = true
 	
-	
-	check_bullet_strength()
+	current_bullet = BULLET_STAGE_1
 	
 
 
@@ -332,14 +330,16 @@ func Xshoot_target() -> void:
 		if target_data.scope_hit == "left":
 			damage *= 2
 
-		if target.has_method("marking_myself_as_target"):
+		if target.has_m4ethod("marking_myself_as_target"):
 			target.marking_myself_as_target()
 
 		%Crosshair.crosshair_shake()
 		player_gun.get_barrel_position(target.global_position.x)
 		$'../Cam_pivot/Camera3D'.shake_camera_shooting()
+
 		#play_accurate_sounds()
 		target.play_accurate_sounds()
+
 		spawn_projectile(target, power_bullet_speed)
 
 		var rock_screen_pos = player_camera.unproject_position(target.global_position)
@@ -354,8 +354,7 @@ func Xshoot_target() -> void:
 
 		await get_tree().create_timer(power_bullet_delay).timeout
 
-		if current_bullet == BULLET_STAGE_5:
-			break
+	
 
 		if time_ran_out:
 			break
@@ -419,30 +418,6 @@ func play_missed_sounds() -> void:
 	pitch_adjustment = 0.02
 	%Crosshair.crosshair_nothing_to_shoot()
 	
-func check_bullet_strength() -> void:
-	
-	#var bullet_power_level : int = gl_PlayerState.dataset.power_bullet_damage
-	current_bullet = BULLET_STAGE_1
-	#match bullet_power_level:
-		#0:
-			#current_bullet = BULLET_STAGE_1
-			#
-		#1:
-			#current_bullet = BULLET_STAGE_1
-			#
-		#2:
-			#current_bullet = BULLET_STAGE_3
-			#
-		#3:
-			#current_bullet = BULLET_STAGE_3
-		#
-		#5:
-			#current_bullet = BULLET_STAGE_5
-			#
-		#_:
-			#current_bullet = BULLET_STAGE_1
-		#
-	#print(current_bullet)
 
 	
 func shoot_bullet_without_target() -> void:
@@ -514,10 +489,9 @@ func shoot_bullet_without_target() -> void:
 				#randf_range(-radius, radius),
 				#0
 			#)
-		#print("BODY, ", body.global_position)
 		#var destination = Vector3(pinch_center.x, pinch_center.y, body.global_position.z) + random_offset
 		#destination.z = body.global_position.z
-		#print(destination)
+
 		#var tween = create_tween()
 #
 		#tween.tween_property(

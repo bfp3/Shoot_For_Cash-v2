@@ -37,20 +37,16 @@ func decide_next_action() -> void:
 
 	if climbing:
 		if ray_forward.is_colliding():
-			print("Climbing up...")
 			start_climb()
 		else:
-			print("Reached top.")
 			climbing = false
 			on_top = true
 			ray_down.enabled = true
 			decide_next_action()
 	elif descending:
 		if not ray_down.is_colliding():
-			print("Descending...")
 			start_descend()
 		else:
-			print("Reached bottom.")
 			descending = false
 			on_top = false
 			ray_down.enabled = false
@@ -58,22 +54,18 @@ func decide_next_action() -> void:
 			move_forward()
 	elif on_top:
 		if not ray_forward.is_colliding() and not ray_down.is_colliding():
-			print("Edge detected. Start descending.")
 			ray_forward.enabled = false
 			descending = true
 			start_descend()
 		else:
-			print("On top. Rolling forward.")
 			move_forward()
 	else:
 		if ray_forward.is_colliding():
-			print("Wall ahead. Start climbing.")
 			climbing = true
 			ray_forward.enabled = true
 			ray_down.enabled = false
 			start_climb()
 		else:
-			print("Flat ground. Rolling forward.")
 			move_forward()
 
 func update_rays() -> void:

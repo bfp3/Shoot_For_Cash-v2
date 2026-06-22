@@ -154,7 +154,7 @@ func cleanUp() -> void:
 	$Mesh.hide()
 	$Trails.emitting = false
 	return
-	#print('bullet collided with something')
+
 	
 	#trails_reparent()
 	

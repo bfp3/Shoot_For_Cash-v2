@@ -51,10 +51,6 @@ func _on_rock_destroyed() -> void:
 	perfect_score_particles.emitting = true
 	scale_tween()
 
-func move_to_corner():
-	print('moving back')
-	#position = orig_pos
-	#hide()
 	
 func shake_label() -> void:
 	var tween = create_tween().set_trans(Tween.TRANS_SINE)
@@ -90,7 +86,7 @@ func display_round_counter() -> void:
 			#tween.tween_property($"../../../../../SFX/focus_enter_sfx", "playing", true, 0.01)
 			tween.tween_property(rocks_hit_label, "modulate:a", 0.0, 0.05)
 			tween.tween_property(rocks_hit_label, "modulate:a", 1.0, 0.05)
-			tween.tween_interval(1.0)
+			tween.tween_interval(1.5)
 	
 			tween.parallel().tween_property(self, "scale", Vector2.ONE * 0.46, 0.15)
 			
@@ -139,12 +135,6 @@ func calculate_score() -> void:
 		
 	if total_rocks_destroyed > 1 && total_rocks_remaining == 0:
 		score_result = ScoreResult.PERFECT_SCORE
-		print('perfect round ', total_rocks_remaining)
 		
 	else:
 		score_result = ScoreResult.PARTIAL_SCORE
-		print(total_rocks_destroyed, " destroyed")
-		print(total_rocks_remaining, " remanining")
-
-		
-		

@@ -58,7 +58,7 @@ func start_intro_process() -> void:
 	
 	await get_tree().create_timer(1.75).timeout
 
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	
 
 func start_game() -> void:
