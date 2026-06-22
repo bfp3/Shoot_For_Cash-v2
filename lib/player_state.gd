@@ -100,7 +100,7 @@ func log_hit(item:String, item_type:String, value:int):
 	
 	if item.contains('hazard'):
 		dataset.total_hazards += 1
-		print('hit a hazard')
+
 		
 	elif item.contains('pineapple'):
 		dataset.total_pineapples_destroyed += 1
@@ -146,13 +146,7 @@ func check_all_rocks_cleared() -> void:
 			
 
 
-func check_score() -> void:
-
-	#if (dataset.total_rocks_destroyed + 1) < dataset.total_rocks_in_round:
-		#dataset.rock_limit -= 1
-		#print("Decrease Rock Limit")
-		#return
-	
+func check_score() -> void:	
 	if dataset.total_rocks_missed == 0:
 		if dataset.total_rocks_destroyed >= dataset.total_rocks_in_round && dataset.total_rocks_missed == 0:
 			if dataset.total_hazards > 0:
@@ -161,11 +155,7 @@ func check_score() -> void:
 				dataset.rock_limit += 1
 				print("Increase Rock Limit")
 		return
-	
-	#if dataset.total_rocks_missed > 1:
-		#print("Decrease Rock Limit from Splash Zone Rocks")
-		#dataset.rock_limit = clamp(dataset.rock_limit - 1, 1, 999)
-		
+			
 
 func log_buy(power_name:String, price:float, unit:int=1) -> bool:
 	
@@ -175,7 +165,7 @@ func log_buy(power_name:String, price:float, unit:int=1) -> bool:
 	
 	dataset[power_name] += unit
 	dataset.cash = dataset.cash - price
-	print(dataset.cash, " Cash, ", price, " Price")
+
 	EventBus.instance.purchase_made.emit(power_name)
 	
 	var d: Dictionary = {
