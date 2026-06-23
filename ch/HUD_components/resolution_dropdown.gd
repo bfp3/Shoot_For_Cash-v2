@@ -6,7 +6,8 @@ var resolution_modes := [
 	Vector2i(1600, 900),
 	Vector2i(1920, 1080),
 	Vector2i(2560, 1440),
-	Vector2i(3840, 2160)
+	Vector2i(3840, 2160),
+	Vector2i(3440, 1440)
 ]
 
 func _ready() -> void:

@@ -68,15 +68,19 @@ func _ready() -> void:
 func check_tickets() -> void:
 	
 	if text == 'MOSS':
-		if gl_PlayerState.dataset.stage_name == 'redd':
-			self.disabled = true
+		#if gl_PlayerState.dataset.stage_name == 'redd':
+		if gl_PlayerState.dataset.stage_name == 'moss':
 			current_state = TicketState.UNAVAILABLE
+			self.disabled = true
+			self.mouse_filter = 2
 			modulate = Color.DARK_GREEN
 			modulate.a = 0.5
 			
 	if text == 'REDD':
-		if gl_PlayerState.dataset.stage_name == 'end game':
+		#if gl_PlayerState.dataset.stage_name == 'end game':
+		if gl_PlayerState.dataset.stage_name == 'redd':
 			self.disabled = true
+			self.mouse_filter = 2
 			current_state = TicketState.UNAVAILABLE
 			modulate = Color.DARK_GREEN
 			modulate.a = 0.5
@@ -158,7 +162,7 @@ func update_unavailable() -> void:
 	self_modulate = Color('696969')
 	
 func update_on_sale() -> void:
-
+	
 	disabled = false
 
 	text = "to " + location_name.to_upper()
@@ -220,13 +224,17 @@ func _on_pressed() -> void:
 			if gl_PlayerState.log_buy('power_ticket_moss', ticket_price):
 				gl_PlayerState.dataset.tickets += 1
 				purchase_ticket_special_effects()
+				
+				await get_tree().create_timer(0.5).timeout
+				
 				shop_main_menu.purchase_made()
 				return
 
 		TicketState.PURCHASED:
 			#ticket_travel_requested.emit(self)
-			if gl_PlayerState.change_location(location_name) == true:
-				shop_main_menu.enter_state(shop_main_menu.SkillState.CLOSE_MENU)
+			
+			%TicketPurchasedPopUp.display_ticket()
+			
 			
 func purchase_ticket_special_effects() -> void:
 	shop_main_menu.sfx_purchase_made()
@@ -376,8 +384,6 @@ func _on_focus_exited() -> void:
 	
 	if disabled:
 		return
-	
-	print(disabled)
 	
 	if tooltip:
 		tooltip._toggle_tooltip(false, tooltip_description)

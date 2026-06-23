@@ -8,7 +8,7 @@ var dataset_float : Dictionary = {
 	#,"power_bullet_delay" 	: [0.40,0.32,0.25,0.18,0.12,0.08,0.05,0.02,0.01]
 	"power_max_items_in_shop" 		: [1,2,3]
 	
-	,"power_bonus_round_pineapples" : [0, 1]
+	,"power_bonus_round_pineapples" 	: [0, 1]
 	,"power_auto_fire" 				: [0, 1]
 	,"power_sky_mine" 				: [0, 1]
 	
@@ -18,7 +18,7 @@ var dataset_float : Dictionary = {
 	,"power_bullet_delay" 	: [0.1,0.08,0.05,0.02,0.01]
 	,"power_bullet_speed" 	: [1.0, 0.8, 0.5, 0.4, 0.2, 0.15, 0.1, 0.05,0.02, 0.01, 0.005]
 	
-	,"power_gun"			: [0]
+	,"power_gun"				: [0]
 	
 	,'power_time_upgrade' 	: [6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]	
 	
@@ -30,7 +30,7 @@ var dataset_float : Dictionary = {
 	,"price_bullet_damage" 	: [0,4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
 	,"price_bullet_speed" 	: [0,2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
 	,"price_bullet_delay" 	: [0,2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
-	,"price_gun"			: [0,0,0]
+	,"price_gun"				: [0,0,0]
 	,"price_sky_mine" 		: [10]
 	,"price_max_items_in_shop" : [2,10,30]
 	,'price_time_upgrade' 	: [0, 22, 24, 26, 30, 220, 180, 160, 140, 1000]
@@ -40,7 +40,7 @@ var dataset_float : Dictionary = {
 	
 	,'price_ticket_moss' 	: [100]
 	,'price_ticket_redd' 	: [180]
-	,'price_ticket_glory' 	: [2200]
+	,'price_ticket_glory' 	: [1800]
 	,'price_ticket_backwater' : [5000]
 	,'price_ticket_sodomi' 	: [5000]
 	
@@ -59,7 +59,7 @@ var dataset_float : Dictionary = {
 	,"rock_type_3"			: [20,		15]
 	,"rock_type_4"			: [120,		30]
 	
-	,"pineapple"			: [10,		1]
+	,"pineapple"				: [10,		1]
 	
 	# Hazards
 	# item name, 			$value, 	health
