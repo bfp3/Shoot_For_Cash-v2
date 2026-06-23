@@ -125,7 +125,7 @@ func calculate_score() -> void:
 	#var current_round 	= settings.round
 	#var items_hit 		= gl_PlayerState.get_item_hits(current_round)
 	
-	var total_rocks_in_round = settings.total_rocks_in_round
+	var _total_rocks_in_round = settings.total_rocks_in_round
 	var total_rocks_destroyed = settings.total_rocks_destroyed
 	var total_rocks_remaining = settings.total_rocks_in_round_remaining
 	#rocks_hit_label.text = 	str(total_rocks_in_round).pad_zeros(2)

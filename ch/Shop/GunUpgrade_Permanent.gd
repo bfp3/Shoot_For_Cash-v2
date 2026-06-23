@@ -58,7 +58,7 @@ func update_power() -> void:
 	print('gl_PlayerState.dataset.upgrade_type_string ', gl_PlayerState.dataset[upgrade_type_string])
 	
 	#var settings : Dictionary = gl_PlayerState.get_all()
-	var new_level : int = gl_DataSet.get_value(price_power, gl_PlayerState.dataset[upgrade_type_string])
+	var new_level := gl_DataSet.get_value(price_power, gl_PlayerState.dataset[upgrade_type_string])
 
 	var power_level_label : Label = $Upgrade_Permanent_button/Control/UpgradePanel/PowerLevel_label
 	power_level_label.text = "$" + str(new_level)

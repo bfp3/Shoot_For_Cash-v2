@@ -39,7 +39,7 @@ func display_ticket() -> void:
 	
 	modulate.a = 0.0
 	show()
-	self.mouse_filter = 0
+	self.mouse_filter = Control.MOUSE_FILTER_STOP
 	$MainPanel/TreePanel/PurchasedTicket.disabled = false
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 1.0, 0.5)
@@ -63,7 +63,7 @@ func _on_next_round_pressed() -> void:
 	var tween2 = create_tween()
 	tween2.tween_property(self, "modulate:a", 0.0, 0.25)
 	await  tween2.finished
-	mouse_filter = 2
+	self.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hide()
 
 func ticket_used() -> void:

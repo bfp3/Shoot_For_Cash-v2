@@ -72,7 +72,7 @@ func check_tickets() -> void:
 		if gl_PlayerState.dataset.stage_name == 'moss':
 			current_state = TicketState.UNAVAILABLE
 			self.disabled = true
-			self.mouse_filter = 2
+			self.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			modulate = Color.DARK_GREEN
 			modulate.a = 0.5
 			
@@ -80,7 +80,7 @@ func check_tickets() -> void:
 		#if gl_PlayerState.dataset.stage_name == 'end game':
 		if gl_PlayerState.dataset.stage_name == 'redd':
 			self.disabled = true
-			self.mouse_filter = 2
+			self.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			current_state = TicketState.UNAVAILABLE
 			modulate = Color.DARK_GREEN
 			modulate.a = 0.5

@@ -7,14 +7,24 @@
 [ext_resource type="AudioStream" uid="uid://cydvvxw2pq66a" path="res://sfx/pineapple_shake_1.wav" id="5_rov52"]
 [ext_resource type="AudioStream" uid="uid://dw8m2vyhfcrhu" path="res://sfx/pineapple_sound_2.wav" id="6_hl3ol"]
 [ext_resource type="AudioStream" uid="uid://dtr0oa4sjad2k" path="res://sfx/sfx-click.wav" id="7_caafk"]
-[ext_resource type="AudioStream" uid="uid://dvmkfwmyhweyr" path="res://sfx/ES_sound_effects/ES_Bell Ding - SFX Producer.wav" id="8_y73li"]
+[ext_resource type="AudioStream" uid="uid://cldhfn8eapt28" path="res://sfx/ES_Bell Ding - SFX Producer.wav" id="8_y73li"]
 
 [sub_resource type="Curve" id="Curve_y73li"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0]
 point_count = 1
 
+[sub_resource type="Curve" id="Curve_l7mi1"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_rov52"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
 [sub_resource type="CurveXYZTexture" id="CurveXYZTexture_l7mi1"]
 curve_x = SubResource("Curve_y73li")
+curve_y = SubResource("Curve_l7mi1")
+curve_z = SubResource("Curve_rov52")
 
 [sub_resource type="Curve" id="Curve_od5kt"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]

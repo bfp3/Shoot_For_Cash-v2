@@ -43,7 +43,6 @@ func _player_has_reached_winning_score() -> void:
 
 func reset_score() -> void:
 	player_has_winning_score = false
-	score_to_beat_for_the_level = ScoreGl.winning_score
 	current_score_displayed = 0
 	current_score_not_displayed = 0
 	shots_missed_during_round = 0
@@ -68,7 +67,6 @@ func apply_retry_environment_if_needed():
 	
 func reset_score_retry() -> void:
 	player_has_winning_score = false
-	score_to_beat_for_the_level = ScoreGl.winning_score
 	current_score_displayed = 0
 	current_score_not_displayed = 0
 	shots_missed_during_round = 0
