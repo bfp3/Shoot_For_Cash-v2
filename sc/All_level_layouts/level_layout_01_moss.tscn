@@ -12,6 +12,7 @@
 [ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="16_1thcr"]
 [ext_resource type="Texture2D" uid="uid://x5tjmkxr3qll" path="res://res/dirt_texture_01.png" id="16_k7lvh"]
 [ext_resource type="Material" uid="uid://dnf6h6nys5ggr" path="res://res/mountain_material.tres" id="16_r0nke"]
+[ext_resource type="PackedScene" uid="uid://b1ifm0554gtdb" path="res://addons/boujie_water_shader/prefabs/outset_ocean.tscn" id="17_1thcr"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="17_fwjsh"]
 [ext_resource type="Texture2D" uid="uid://bhst5en4f2e3b" path="res://res/mountain_image.png" id="17_p87rn"]
 [ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="17_snbl5"]
@@ -900,7 +901,6 @@ speed_scale = 0.05
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true
 transform = Transform3D(-0.9848077, -0.006060238, -0.17354251, 0, 0.99939084, -0.034899496, 0.1736483, -0.034369294, -0.9842078, 0, 0, 0)
-visible = false
 light_color = Color(1, 0.7647059, 0.56078434, 1)
 light_indirect_energy = 0.0
 light_volumetric_fog_energy = 0.0
@@ -924,14 +924,14 @@ skeleton = NodePath("../Boatmesh")
 [node name="brick_fountain_2" parent="Boatmesh" unique_id=2052265067 instance=ExtResource("4_1vd3e")]
 transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, 4.73, -2.505, 11.775)
 
-[node name="Cube_001" parent="Boatmesh/brick_fountain_2" index="0" unique_id=563318589]
+[node name="Cube_001" parent="Boatmesh/brick_fountain_2" index="0" unique_id=1174922097]
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 
 [node name="brick_fountain_4" parent="Boatmesh" unique_id=754689571 instance=ExtResource("4_1vd3e")]
 transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, -6.27, -2.505, 11.775)
 
-[node name="Cube_001" parent="Boatmesh/brick_fountain_4" index="0" unique_id=563318589]
+[node name="Cube_001" parent="Boatmesh/brick_fountain_4" index="0" unique_id=1174922097]
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 
@@ -1338,7 +1338,7 @@ skeleton = NodePath("")
 [node name="brick_fountain_3" parent="Boatmesh" unique_id=142482850 instance=ExtResource("4_1vd3e")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.70000064, -2.505, -6.675)
 
-[node name="Cube_001" parent="Boatmesh/brick_fountain_3" index="0" unique_id=563318589]
+[node name="Cube_001" parent="Boatmesh/brick_fountain_3" index="0" unique_id=1174922097]
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 cast_shadow = 0
@@ -1361,7 +1361,6 @@ transform = Transform3D(-0.46, 0, -6.945807e-08, 0, 0.46, 0, 6.945807e-08, 0, -0
 start_flag = true
 
 [node name="BackgroundMesh" type="Node3D" parent="." unique_id=1382970896]
-visible = false
 
 [node name="Stars" type="MeshInstance3D" parent="BackgroundMesh" unique_id=1126608368]
 transform = Transform3D(-0.07, 0, -1.0569706e-08, 0, 0.07, 0, 1.0569706e-08, 0, -0.07, 87, 119.41831, 654.487)
@@ -1805,7 +1804,6 @@ script = ExtResource("17_fwjsh")
 
 [node name="DirtDecal" type="Decal" parent="." unique_id=351365736]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.825, -3, 15.850001)
-visible = false
 size = Vector3(15, 5, 10)
 texture_albedo = ExtResource("16_k7lvh")
 texture_normal = ExtResource("16_k7lvh")
@@ -1815,7 +1813,6 @@ normal_fade = 0.5
 
 [node name="DirtDecal2" type="Decal" parent="." unique_id=1268265515]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.175, -3, 15.850001)
-visible = false
 size = Vector3(15, 5, 10)
 texture_albedo = ExtResource("16_k7lvh")
 texture_normal = ExtResource("16_k7lvh")
@@ -1825,7 +1822,6 @@ normal_fade = 0.5
 
 [node name="DirtDecal3" type="Decal" parent="." unique_id=999983740]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.175, -3, 9.850001)
-visible = false
 size = Vector3(15, 5, 10)
 texture_albedo = ExtResource("16_k7lvh")
 texture_normal = ExtResource("16_k7lvh")
@@ -1835,7 +1831,6 @@ normal_fade = 0.5
 
 [node name="DirtDecal4" type="Decal" parent="." unique_id=896342778]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.825, -3, 9.850001)
-visible = false
 size = Vector3(15, 5, 10)
 texture_albedo = ExtResource("16_k7lvh")
 texture_normal = ExtResource("16_k7lvh")
@@ -1845,7 +1840,6 @@ normal_fade = 0.5
 
 [node name="CrackedDecal" type="Decal" parent="." unique_id=1227188590]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -1.4, 13.282236)
-visible = false
 size = Vector3(5, 5, 5)
 texture_albedo = ExtResource("17_snbl5")
 texture_normal = ExtResource("17_snbl5")
@@ -1854,7 +1848,6 @@ modulate = Color(0.49, 0.49, 0.49, 0.5647059)
 
 [node name="CrackedDecal2" type="Decal" parent="." unique_id=1451928163]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -1.4, 18.282236)
-visible = false
 size = Vector3(20, 1.26, 20)
 texture_albedo = ExtResource("17_snbl5")
 modulate = Color(0.49, 0.49, 0.49, 0.5647059)
@@ -1862,7 +1855,6 @@ normal_fade = 0.999
 
 [node name="CrackedDecal3" type="Decal" parent="." unique_id=198586058]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -1.4, 13.282236)
-visible = false
 size = Vector3(5, 5, 5)
 texture_albedo = ExtResource("17_snbl5")
 texture_normal = ExtResource("17_snbl5")
@@ -1871,7 +1863,6 @@ modulate = Color(0.49, 0.49, 0.49, 0.5647059)
 
 [node name="CrackedDecal4" type="Decal" parent="." unique_id=1305340188]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 7.665, -0.5, 20.282)
-visible = false
 size = Vector3(5, 5, 6)
 texture_albedo = ExtResource("17_snbl5")
 texture_normal = ExtResource("17_snbl5")
@@ -1880,7 +1871,6 @@ modulate = Color(0.49, 0.49, 0.49, 0.5647059)
 
 [node name="CrackedDecal5" type="Decal" parent="." unique_id=847724840]
 transform = Transform3D(-4.371139e-08, 4.371139e-08, -1, 1, 1.9106855e-15, -4.371139e-08, 0, -1, -4.371139e-08, -7.64, -0.5, 20.282)
-visible = false
 size = Vector3(5, 5, 5)
 texture_albedo = ExtResource("17_snbl5")
 texture_normal = ExtResource("17_snbl5")
@@ -1889,7 +1879,6 @@ modulate = Color(0.49, 0.49, 0.49, 0.5647059)
 
 [node name="CrackedDecal6" type="Decal" parent="." unique_id=1821152922]
 transform = Transform3D(-4.371139e-08, 4.371139e-08, -1, 1, 1.9106855e-15, -4.371139e-08, 0, -1, -4.371139e-08, -1.93, -3.15, 19.782)
-visible = false
 size = Vector3(5, 1, 5)
 texture_albedo = ExtResource("17_snbl5")
 texture_normal = ExtResource("17_snbl5")
@@ -1898,7 +1887,6 @@ modulate = Color(0.49, 0.49, 0.49, 0.5647059)
 
 [node name="CrackedDecal7" type="Decal" parent="." unique_id=41454309]
 transform = Transform3D(-4.371139e-08, 4.371139e-08, -1, 1, 1.9106855e-15, -4.371139e-08, 0, -1, -4.371139e-08, 3.36, -3.105, 19.782)
-visible = false
 size = Vector3(5, 1, 5)
 texture_albedo = ExtResource("17_snbl5")
 texture_normal = ExtResource("17_snbl5")
@@ -2720,6 +2708,10 @@ transform = Transform3D(-18.354967, -2.9358864, -7.3808193, 6.1654124, 6.451724,
 material_override = ExtResource("6_u0cw1")
 mesh = SubResource("ArrayMesh_2svof")
 skeleton = NodePath("")
+
+[node name="OutsetOcean" parent="." unique_id=1139313968 instance=ExtResource("17_1thcr")]
+transform = Transform3D(1, 0, 0, 0, 0.99945015, 0.033155177, 0, -0.033155177, 0.99945015, 3.36, -5.35, 333.782)
+far_edge = 4000
 
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]
