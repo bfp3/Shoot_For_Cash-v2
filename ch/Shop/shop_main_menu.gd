@@ -12,14 +12,14 @@ extends Control
 
 @export var can_appear_when_maxed := false
 
-var reroll_unlocked := false
 
 var default_scale := Vector2.ONE
 var default_position := Vector2.ZERO
 var default_pivot_offset := Vector2.ZERO
 
 var price_reroll := 0
-var rerolls_this_round := 1
+var reroll_unlocked := false
+var reroll_index := 0
 var is_rerolling := false
 
 var all_skills : Array
@@ -126,12 +126,7 @@ func update_shop() -> void:
 	player_cash = settings.cash
 	current_round = settings.round
 	
-	
-	price_reroll = gl_DataSet.dataset_float.price_reroll
-	if rerolls_this_round == 1:
-		price_reroll = gl_DataSet.dataset_float.price_reroll
-	else:
-		price_reroll = price_reroll * rerolls_this_round
+	price_reroll = gl_DataSet.get_value('price_reroll', reroll_index)	
 	
 	update_shop_labels()
 	
@@ -192,7 +187,7 @@ func update_close_menu() -> void:
 	clear_available_skills()
 
 	shop_music_lower_volume()
-	rerolls_this_round = 1
+	reroll_index = 0
 	
 	# ENSURE PIVOT IS CORRECT
 	pivot_offset = default_pivot_offset
@@ -366,13 +361,15 @@ func _on_re_roll_pressed() -> void:
 		
 	if is_rerolling:
 		return
+	
+	var reroll_current_price = gl_DataSet.get_value('price_reroll', reroll_index)
 		
 	var button_down := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	button_down.tween_property(reroll_button, "position:y", 5.0, 0.1).as_relative()
 	button_down.tween_property(reroll_button, "position:y", -5.0, 0.1).as_relative()
 	# Not enough money
 
-	if player_cash < price_reroll:
+	if player_cash < reroll_current_price:
 		purchase_denied_tween()
 		return
 	
@@ -383,12 +380,9 @@ func _on_re_roll_pressed() -> void:
 	
 	sfx_reroll_purchased()
 	# Remove money
-	var reroll_current_price = gl_DataSet.dataset_float.price_reroll * rerolls_this_round
-	if reroll_current_price == 0 && rerolls_this_round > 0:
-		reroll_current_price = rerolls_this_round * 2
-		price_reroll = reroll_current_price
+	
 	gl_PlayerState.log_buy("reroll", reroll_current_price)
-	rerolls_this_round += 1
+	reroll_index += 1
 	await get_tree().create_timer(0.1).timeout
 	#EventBus.instance.update_money.emit()
 	
@@ -452,7 +446,12 @@ func update_shop_labels() -> void:
 	
 	cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$" + str(player_cash)
 	update_cost_label()
-	reroll_button.get_child(0).text = "[rainbow]Reroll[/rainbow]\n[color=#42d100]$" + str(price_reroll) + "[/color]"
+	
+	if price_reroll == 0:
+		reroll_button.get_child(0).text = "[rainbow]Reroll[/rainbow]\n[wave][color=#ffc700]FREE[/color]"
+
+	else:
+		reroll_button.get_child(0).text = "[rainbow]Reroll[/rainbow]\n[color=#42d100]$" + str(price_reroll) + "[/color]"
 
 func sfx_purchase_made() -> void:
 	$SFX/shop_purchase_01.play()

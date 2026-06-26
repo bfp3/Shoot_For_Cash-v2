@@ -25,11 +25,11 @@ var dataset_float : Dictionary = {
 	
 	,"price_bonus_round_pineapples" 	: [20]
 	,"price_auto_fire" 				: [135]
-	,"price_target_circle"			: [0,7, 20, 40, 260, 320, 440, 550, 1000, 1500]
-	,"price_gun_fire_rate"			: [0, 2, 4, 8, 32, 99, 204, 350, 550, 998]
-	,"price_bullet_damage" 			: [0,4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
-	,"price_bullet_speed" 			: [0,2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
-	,"price_bullet_delay" 			: [0,2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
+	,"price_target_circle"			: [7, 20, 40, 260, 320, 440, 550, 1000, 1500]
+	,"price_gun_fire_rate"			: [2, 4, 8, 32, 99, 204, 350, 550, 998]
+	,"price_bullet_damage" 			: [4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
+	,"price_bullet_speed" 			: [2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
+	,"price_bullet_delay" 			: [2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
 	,"price_gun"						: [0,0,0]
 	,"price_sky_mine" 				: [10]
 	,"price_max_items_in_shop" 		: [2,10,30]
@@ -45,7 +45,7 @@ var dataset_float : Dictionary = {
 	,'price_ticket_sodomi' 		: [5000]
 	
 	
-	,"price_reroll" 		: 2
+	,"price_reroll" 		: [0,2,4,8,16,32,64,128,256,512,1024]
 	
 	
 	# ONE OFFS

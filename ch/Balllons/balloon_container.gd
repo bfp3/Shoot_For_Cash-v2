@@ -24,7 +24,7 @@ func _physics_process(delta: float) -> void:
 	
 	
 func move_ballons() -> void:
-	var chosen_balloon = [balloon,balloon_2,balloon_3,balloon_4].pick_random()
+	var chosen_balloon = [balloon,balloon_2,balloon_3,balloon_4, $Trio_balloon, $Trio_balloon2,$Trio_balloon3].pick_random()
 	
 	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	tween.tween_property(chosen_balloon, "global_position:x", -12.0, 20.0)

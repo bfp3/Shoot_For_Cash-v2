@@ -551,6 +551,116 @@ func pineapple_round_3() -> void:
 	launch_pineapple(pineapple_3)
 "
 
+[sub_resource type="Animation" id="Animation_ec2we"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Balloon:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-1, -0.70000005, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Balloon2:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Balloon3:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ymbdo"]
+resource_name = "trio_rotate"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 6.2831855)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Balloon:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -6.2831855)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Balloon2:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -6.2831855)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Balloon3:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -6.2831855)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wv0tc"]
+_data = {
+&"RESET": SubResource("Animation_ec2we"),
+&"trio_rotate": SubResource("Animation_ymbdo")
+}
+
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
 intro_title_screen = true
@@ -1796,7 +1906,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
 
 [node name="CloseGame" type="Button" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1448034943]
 layout_mode = 2
-text = "Quit"
+text = "Quit Game"
 script = ExtResource("34_v17ib")
 
 [node name="HSeparator2" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=445130285]
@@ -1806,7 +1916,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
 
 [node name="CancelMenu" type="Button" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=2054175066]
 layout_mode = 2
-text = "Keep Playing"
+text = "Close Menu"
 script = ExtResource("34_v17ib")
 
 [node name="HSeparator3" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1389113148]
@@ -2009,6 +2119,54 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.999999, 5.8671556, 2.29999
 
 [node name="Balloon4" parent="Balloon_container" unique_id=2070994326 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.900001, 0.3571559, 2.2999992)
+
+[node name="Trio_balloon" type="Node3D" parent="Balloon_container" unique_id=404120275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, 0)
+
+[node name="Balloon" parent="Balloon_container/Trio_balloon" unique_id=1519654178 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.70000005, 0)
+
+[node name="Balloon2" parent="Balloon_container/Trio_balloon" unique_id=1859990555 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.70000005, 0)
+
+[node name="Balloon3" parent="Balloon_container/Trio_balloon" unique_id=198442655 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Balloon_container/Trio_balloon" unique_id=177264242]
+libraries/ = SubResource("AnimationLibrary_wv0tc")
+autoplay = &"trio_rotate"
+
+[node name="Trio_balloon2" type="Node3D" parent="Balloon_container" unique_id=1110628490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3, 0)
+
+[node name="Balloon" parent="Balloon_container/Trio_balloon2" unique_id=1240530235 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.70000005, 0)
+
+[node name="Balloon2" parent="Balloon_container/Trio_balloon2" unique_id=1823439259 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.70000005, 0)
+
+[node name="Balloon3" parent="Balloon_container/Trio_balloon2" unique_id=1734731542 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Balloon_container/Trio_balloon2" unique_id=860618312]
+libraries/ = SubResource("AnimationLibrary_wv0tc")
+autoplay = &"trio_rotate"
+
+[node name="Trio_balloon3" type="Node3D" parent="Balloon_container" unique_id=788783926]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 6, 0)
+
+[node name="Balloon" parent="Balloon_container/Trio_balloon3" unique_id=1628792992 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.70000005, 0)
+
+[node name="Balloon2" parent="Balloon_container/Trio_balloon3" unique_id=1980923630 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.70000005, 0)
+
+[node name="Balloon3" parent="Balloon_container/Trio_balloon3" unique_id=514091505 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Balloon_container/Trio_balloon3" unique_id=1387581482]
+libraries/ = SubResource("AnimationLibrary_wv0tc")
+autoplay = &"trio_rotate"
 
 [node name="Settings_pause_menu" parent="." unique_id=1950114573 instance=ExtResource("64_tnw34")]
 
