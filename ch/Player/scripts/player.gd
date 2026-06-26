@@ -29,7 +29,8 @@ var _is_currently_shooting := false
 @export var max_targeting_circle := 60.0
 @export var scroll_step := 25.0
 
-@onready var _mouse_sensitivity = 0.3
+@onready var _mouse_sensitivity := 0.3
+@export var keyboard_crosshair_speed := 800.0
 
 @export_group('Player Upgradeable Stats')
 @export var power_target_circle := 0.0
@@ -264,7 +265,7 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
-	
+	handle_keyboard_crosshair(delta)
 	update_gun_look()
 	#handle_pan_keyboard(delta)
 	
@@ -383,6 +384,17 @@ func handle_joystick(delta : float) -> void:
 
 	var joystick_motion := direction * strength * joystick_sensitivity * delta
 	target_crosshair_position += joystick_motion
+
+func handle_keyboard_crosshair(delta: float) -> void:
+	var direction := Vector2(
+		Input.get_axis("left", "right"),
+		Input.get_axis("forward", "backward")
+	)
+
+	if direction == Vector2.ZERO:
+		return
+
+	target_crosshair_position += direction.normalized() * keyboard_crosshair_speed * delta
 
 func set_power(settings:Dictionary, setting_name:String)-> float:
 	return gl_DataSet.get_value(setting_name, settings[setting_name])

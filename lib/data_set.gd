@@ -23,26 +23,26 @@ var dataset_float : Dictionary = {
 	,'power_time_upgrade' 	: [6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]	
 	
 	
-	,"price_bonus_round_pineapples" : [20]
-	,"price_auto_fire" 		: [135]
-	,"price_target_circle"	: [0,7, 20, 40, 260, 320, 440, 550, 1000, 1500]
-	,"price_gun_fire_rate"	: [0, 2, 4, 8, 32, 99, 204, 350, 550, 998]
-	,"price_bullet_damage" 	: [0,4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
-	,"price_bullet_speed" 	: [0,2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
-	,"price_bullet_delay" 	: [0,2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
-	,"price_gun"				: [0,0,0]
-	,"price_sky_mine" 		: [10]
-	,"price_max_items_in_shop" : [2,10,30]
-	,'price_time_upgrade' 	: [0, 22, 24, 26, 30, 220, 180, 160, 140, 1000]
+	,"price_bonus_round_pineapples" 	: [20]
+	,"price_auto_fire" 				: [135]
+	,"price_target_circle"			: [0,7, 20, 40, 260, 320, 440, 550, 1000, 1500]
+	,"price_gun_fire_rate"			: [0, 2, 4, 8, 32, 99, 204, 350, 550, 998]
+	,"price_bullet_damage" 			: [0,4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
+	,"price_bullet_speed" 			: [0,2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
+	,"price_bullet_delay" 			: [0,2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
+	,"price_gun"						: [0,0,0]
+	,"price_sky_mine" 				: [10]
+	,"price_max_items_in_shop" 		: [2,10,30]
+	,'price_time_upgrade' 			: [0, 22, 24, 26, 30, 220, 180, 160, 140, 1000]
 	
-	,'power_ticket_moss' : [0]
-	,'power_ticket_redd' : [0]
+	,'power_ticket_moss' 			: [0]
+	,'power_ticket_redd' 			: [0]
 	
-	,'price_ticket_moss' 	: [100]
-	,'price_ticket_redd' 	: [180]
-	,'price_ticket_glory' 	: [1800]
-	,'price_ticket_backwater' : [5000]
-	,'price_ticket_sodomi' 	: [5000]
+	,'price_ticket_moss' 		: [100]
+	,'price_ticket_redd' 		: [180]
+	,'price_ticket_glory' 		: [1800]
+	,'price_ticket_backwater' 	: [5000]
+	,'price_ticket_sodomi' 		: [5000]
 	
 	
 	,"price_reroll" 		: 2
@@ -88,25 +88,26 @@ var dataset_string : Dictionary = {
 	 "place_name" 				: ['moss','redd','end game','blackwaters', 'sodomi', 'start']
 	
 	
-	,"tooltip_bonus_round_pineapples" : ['Activated By A Perfect Round: Launches Three Pineapples, Each Worth More Cash Than The Last.']
-	,"tooltip_auto_fire" 		: ['Press And Hold Fire To Shoot Automatically.']
-	,"tooltip_sky_mine" 		: ["First Shot Only: Destroys The Targeted Rock, Then Explodes And Destroys Nearby Rocks."]
-	,"tooltip_target_circle" 	: ['Double Target Circle Size To Shoot More At Once.']
-	,"tooltip_gun_fire_rate"	: ['Wait Less, Shoot More.']
-	,"tooltip_bullet_damage" 	: ['Improve bullet quality to fracture rocks faster.']
-	,"tooltip_bullet_speed" 	: ['Bullets Travel Faster.']
-	,"tooltip_bullet_delay"		: ['Reduce the delay between bullets for faster multi-shot bursts.']
-	,"tooltip_gun"				: ['Free Gun']
-	,"tooltip_time_upgrade"		: ['Add +1 Second To The Round Timer Permanently']
-	,"tooltip_max_items_in_shop": ['Add +1 Item To The Shop Permanently']
+	,"tooltip_gun"						: ["You'll probably need this."]
+	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']
+	,"tooltip_auto_fire" 				: ['Just point, no click.']
+	,"tooltip_sky_mine" 					: ["Rock Go BOOM"]
+	,"tooltip_target_circle" 			: [""]
+	,"tooltip_gun_fire_rate"				: ["Less cooldown time"]
+	,"tooltip_bullet_damage" 			: ["Break Rocks Easier."]
+	,"tooltip_bullet_speed" 				: ["Bullets Travel Faster."]
+	,"tooltip_time_upgrade"				: ["+1 sec to the timer"]
+	
+	#,"tooltip_max_items_in_shop": ['Add +1 Item To The Shop Permanently']
+	#,"tooltip_bullet_delay"				: ["Bullet Delay * NOT USED"]
 	
 	,"tooltip_ticket_moss"		: ['Ticket To Moss, Where It All Begins']
 	,"tooltip_ticket_redd"		: ['Ticket To Redd, No More Of This Chump Change']
 	
-	,"wall_quote_start"			: ['Good Luck']
-	,"wall_quote_moss"			: ['Good Habits\nSave Lives']
+	,"wall_quote_start"			: ["Good Luck."]
+	,"wall_quote_moss"			: ["Good Habits\nSave Lives"]
 	,"wall_quote_redd"			: ["Don't Get In\nThe Way Of\nLove"]
-	,"wall_quote_glory"			: ['Good Morning\nGlory Lives']
+	,"wall_quote_glory"			: ["Morning\nGlory"]
 	}
 	
 # DATASET.get_value('bullet_speed',4)

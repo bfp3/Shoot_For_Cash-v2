@@ -58,6 +58,7 @@
 [ext_resource type="PackedScene" uid="uid://dpbgyfs2kgdtr" path="res://ch/demo_end_screen/Demo_end_screen.tscn" id="61_ec2we"]
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
 [ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="63_err0d"]
+[ext_resource type="Script" uid="uid://dv0lm0lx1nico" path="res://ch/Balllons/balloon_container.gd" id="63_nn6vd"]
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
 [ext_resource type="PackedScene" uid="uid://ownxjc3mlmfd" path="res://ch/HUD_components/pause_and_exit_menu.tscn" id="64_tnw34"]
 [ext_resource type="Script" uid="uid://3le0jpjo3qtu" path="res://ch/background_transition.gd" id="65_fjk4d"]
@@ -934,7 +935,6 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 script = ExtResource("32_42kox")
-tooltip_dataset = "tooltip_total_score"
 
 [node name="Tooltip" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel" unique_id=1416415398]
 layout_mode = 1
@@ -995,7 +995,6 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 script = ExtResource("32_42kox")
-tooltip_dataset = "tooltip_total_earnings"
 
 [node name="Tooltip" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/NumberLabel" unique_id=1905369223]
 layout_mode = 1
@@ -1057,7 +1056,6 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 script = ExtResource("32_42kox")
-tooltip_dataset = "tooltip_total_fines"
 
 [node name="Tooltip" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel" unique_id=1781084112]
 layout_mode = 1
@@ -1998,6 +1996,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 24)
 
 [node name="Balloon_container" type="Node3D" parent="." unique_id=906093422]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+script = ExtResource("63_nn6vd")
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 5.1099997, 2.2999992)

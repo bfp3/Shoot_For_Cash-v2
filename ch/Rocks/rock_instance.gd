@@ -2,6 +2,7 @@ extends RigidBody3D
 class_name RockInstance
 
 @export var freeze_mine := false
+var sky_mine_blast_radius := 5.0 #15.0
 
 const ON_TARGET_SFX = preload('res://sfx/opt_3_fade_shortened.wav')
 var pitch_adjustment := 0.02
@@ -834,7 +835,7 @@ func expand_blast_radius() -> void:
 	$Explosion_area/CollisionShape3D.disabled = false
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 15.0, 0.3)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 10.0, 0.3)
 	tween.tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.35)
 	#tween.tween_interval(0.1)
 	await tween.finished
