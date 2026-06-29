@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://dth8aeb528x78" path="res://ch/Shop/shop_main_menu.gd" id="1_wlak1"]
 [ext_resource type="PackedScene" uid="uid://cu0bay1llw7ua" path="res://unfiled/upgrade_tree/UpgradeNode.tscn" id="2_nn31g"]
 [ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://unfiled/Themes/ammo_manager_theme.tres" id="2_s82uk"]
-[ext_resource type="Texture2D" uid="uid://b0wkkkrw5e3if" path="res://res/cooldown_reduction_upgrade_icon.png" id="3_qji87"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_y3o4g"]
 [ext_resource type="Texture2D" uid="uid://c80b1qtaj2dvn" path="res://res/bullet_damage_upgrade_icon.png" id="4_dq200"]
 [ext_resource type="Texture2D" uid="uid://dc5ya1y3jy2xw" path="res://res/bullet_speed_upgrade_icon.png" id="4_lwcj2"]
@@ -11,9 +10,9 @@
 [ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="5_mitwi"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="5_vom4t"]
 [ext_resource type="AudioStream" uid="uid://cqfuywy300at4" path="res://sfx/opt_2.wav" id="5_wvnns"]
-[ext_resource type="Texture2D" uid="uid://xsxnipt33uuq" path="res://res/time_increase_upgrade_icon.png" id="5_xp4fp"]
 [ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="6_cl1nj"]
 [ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="6_mitwi"]
+[ext_resource type="Texture2D" uid="uid://bhst5en4f2e3b" path="res://res/mountain_image.png" id="6_pwib5"]
 [ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://res/ROCKS - title_rock_centered_large.png" id="7_cn8lj"]
 [ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="7_o0rit"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_7j408"]
@@ -22,6 +21,7 @@
 [ext_resource type="AudioStream" uid="uid://xh6kpfpcl3mh" path="res://sfx/shop_mystery_box_sfx_01.wav" id="9_kosrb"]
 [ext_resource type="Texture2D" uid="uid://bcvk6h5k84n3h" path="res://res/moss_shop.png" id="11_babqt"]
 [ext_resource type="Texture2D" uid="uid://hy4w24j6p2er" path="res://res/red_shop.png" id="12_kvqbn"]
+[ext_resource type="Texture2D" uid="uid://dk2p6y27c64hs" path="res://res/cooldown_reduction_upgrade_icon_128x128.png" id="12_pwib5"]
 [ext_resource type="Texture2D" uid="uid://cuw4sgs22s23" path="res://res/sky_mine_icon_2.png" id="13_cn8lj"]
 [ext_resource type="PackedScene" uid="uid://ck6lfy3kh3eqy" path="res://ch/Shop/Upgrade_progress_component.tscn" id="13_onfim"]
 [ext_resource type="Texture2D" uid="uid://icyevci50hge" path="res://res/gun_icon_shop.png" id="13_xklyy"]
@@ -341,7 +341,7 @@ offset_left = 830.0
 offset_top = 204.0
 offset_right = 1040.0
 offset_bottom = 454.0
-upgrade_icon = ExtResource("5_xp4fp")
+upgrade_icon = ExtResource("6_pwib5")
 shop_main_menu = NodePath("..")
 upgrade_type = "bullet_delay"
 upgrade_name = "Bullet Fire Rate"
@@ -519,7 +519,7 @@ offset_left = 128.0
 offset_top = 28.0
 offset_right = 338.0
 offset_bottom = 124.0
-upgrade_icon = ExtResource("3_qji87")
+upgrade_icon = ExtResource("12_pwib5")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "gun_fire_rate"
 upgrade_name = "Fire Rate"

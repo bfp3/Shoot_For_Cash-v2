@@ -2,7 +2,7 @@ extends CenterContainer
 @onready var purchased_ticket:= $MainPanel/TreePanel/PurchasedTicket
 const RED_SHOP = preload('uid://hy4w24j6p2er')
 const MOSS_SHOP = preload('uid://bcvk6h5k84n3h')
-const END_CARD = preload('uid://di3u081qrsqpy')
+const END_CARD = preload('uid://hy4w24j6p2er')
 
 var ticket_location := ''
 
