@@ -1,7 +1,6 @@
 [gd_scene format=4 uid="uid://bbpjw4jqdvt5g"]
 
 [ext_resource type="PackedScene" uid="uid://ceab3modrlhg5" path="res://res/Shaders/water_mesh.tscn" id="1_edvip"]
-[ext_resource type="Environment" uid="uid://cn7vbgpdmib5i" path="res://res/world_env_redd.tres" id="1_h8207"]
 [ext_resource type="Texture2D" uid="uid://ceadr1qr2d0pq" path="res://res/gradients/big-mountain.tres" id="2_7nwxj"]
 [ext_resource type="Texture2D" uid="uid://dat2kb6hdn6xj" path="res://res/gradients/red-mountain.tres" id="3_aslpn"]
 [ext_resource type="PackedScene" uid="uid://c3mxy8tvyd34a" path="res://unfiled/Blender_custom_assets/brick_fountain_2.glb" id="4_cuk85"]
@@ -17,7 +16,6 @@
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="13_1me0y"]
 [ext_resource type="PackedScene" uid="uid://dee8qfh0jrlf1" path="res://lib/Flag_rollout_Scene/FlagRollout.tscn" id="14_bsjrf"]
 [ext_resource type="PackedScene" uid="uid://bynwchnbyxiue" path="res://ch/environment_decoration/T_pileon.tscn" id="20_56nw2"]
-[ext_resource type="PackedScene" uid="uid://b1ifm0554gtdb" path="res://addons/boujie_water_shader/prefabs/outset_ocean.tscn" id="20_edvip"]
 [ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="22_cuk85"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="23_08twk"]
 
@@ -1487,7 +1485,6 @@ points = PackedVector3Array(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1010122707 groups=["world_env"]]
 unique_name_in_owner = true
-environment = ExtResource("1_h8207")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1725409465 groups=["directional_light"]]
 unique_name_in_owner = true
@@ -5009,10 +5006,6 @@ skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Left_tall_pillar11/StaticBody3D" unique_id=841266742]
 shape = SubResource("ConvexPolygonShape3D_1me0y")
-
-[node name="OutsetOcean" parent="." unique_id=446834917 instance=ExtResource("20_edvip")]
-transform = Transform3D(1, 0, 0, 0, 0.99945015, 0.033155177, 0, -0.033155177, 0.99945015, 3.36, -5.35, 333.782)
-far_edge = 4000
 
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

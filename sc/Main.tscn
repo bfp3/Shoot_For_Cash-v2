@@ -14,7 +14,7 @@
 [ext_resource type="AudioStream" uid="uid://bp1yceg657hqq" path="res://sfx/windFull.WAV" id="12_ufvrt"]
 [ext_resource type="AudioStream" uid="uid://cc2iigb6x8nqm" path="res://sfx/night-noises.wav" id="13_vycyu"]
 [ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://sfx/BP_tunes/oasisWorld.wav" id="14_85u0j"]
-[ext_resource type="AudioStream" uid="uid://deq5brrn7c28" path="res://sfx/Windmill Sprint.wav" id="15_lwcfe"]
+[ext_resource type="AudioStream" uid="uid://deq5brrn7c28" path="res://sfx/Windmill_Sprint.wav" id="15_lwcfe"]
 [ext_resource type="AudioStream" uid="uid://bjhic4kqet7dw" path="res://sfx/MC_tunes/USERSONG164.WAV" id="16_tnw34"]
 [ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="19_gu7ia"]
 [ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="20_l8wgb"]
@@ -25,6 +25,7 @@
 [ext_resource type="Script" uid="uid://cbcv8383lu5sl" path="res://ch/splash_zone.gd" id="24_dse8t"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="25_ibr3v"]
 [ext_resource type="AudioStream" uid="uid://byflv4pbw8mdn" path="res://sfx/water_splash_sfx_01.wav" id="26_on3ew"]
+[ext_resource type="Material" uid="uid://c5lrichw3wfce" path="res://res/Kenney_prototype_textures/Material_override/Red_texture.tres" id="27_ec2we"]
 [ext_resource type="AudioStream" uid="uid://b4oqw265ffpdr" path="res://sfx/water_splash_sfx_02.wav" id="27_x7fgc"]
 [ext_resource type="Shader" uid="uid://d3ak3drqp32j5" path="res://res/Shaders/simplified_TV_shader.gdshader" id="28_ld44m"]
 [ext_resource type="Script" uid="uid://d2hbdu3aenrpl" path="res://lib/tv_hud_shader.gd" id="29_f1f1n"]
@@ -198,6 +199,9 @@ albedo_texture = ExtResource("25_ibr3v")
 [sub_resource type="QuadMesh" id="QuadMesh_k3oa0"]
 material = SubResource("StandardMaterial3D_u26ts")
 size = Vector2(0.15, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ymbdo"]
+size = Vector3(40, 0.1, 0.1)
 
 [sub_resource type="Animation" id="Animation_uuy6g"]
 length = 0.001
@@ -931,6 +935,11 @@ volume_db = -18.0
 [node name="splash_sfx_02" type="AudioStreamPlayer" parent="Splash_zone" unique_id=911794202]
 stream = ExtResource("27_x7fgc")
 volume_db = -18.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Splash_zone" unique_id=1358077586]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -15)
+material_override = ExtResource("27_ec2we")
+mesh = SubResource("BoxMesh_ymbdo")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=391338382]
 root_node = NodePath("../Player")
