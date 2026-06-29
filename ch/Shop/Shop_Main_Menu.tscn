@@ -32,7 +32,6 @@
 [ext_resource type="Script" uid="uid://up6jew6r4kdm" path="res://ch/Shop/transport_tickets.gd" id="16_vom4t"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="17_cn8lj"]
 [ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="18_d3p6f"]
-[ext_resource type="AudioStream" uid="uid://bffajeppjr08u" path="res://sfx/greyscale_compressed.wav" id="18_vom4t"]
 [ext_resource type="AudioStream" uid="uid://ecijroapobxk" path="res://sfx/Egg_pulse_sfx.wav" id="20_lwcj2"]
 [ext_resource type="AudioStream" uid="uid://bde0632jwh1jq" path="res://sfx/Egg_pulse_sfx_reverse.wav" id="20_wqa6l"]
 [ext_resource type="PackedScene" uid="uid://dcuml06w7i3km" path="res://ch/Shop/ticket_button.tscn" id="20_xklyy"]
@@ -47,6 +46,7 @@
 [ext_resource type="AudioStream" uid="uid://fossjjbbmh7" path="res://sfx/low_pitch_humming.wav" id="30_vom4t"]
 [ext_resource type="AudioStream" uid="uid://dgooigvs82ygq" path="res://sfx/shop_free_sfx_01.wav" id="31_4udcl"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="32_b6naw"]
+[ext_resource type="AudioStream" uid="uid://lwsko2pn8i6r" path="res://sfx/greyscale_compressed.ogg" id="33_pwib5"]
 
 [sub_resource type="GDScript" id="GDScript_mitwi"]
 script/source = "extends Node
@@ -1583,7 +1583,7 @@ vertical_alignment = 1
 [node name="SFX" type="Node" parent="." unique_id=192443435]
 
 [node name="BG_Music" type="AudioStreamPlayer" parent="SFX" unique_id=583917528]
-stream = ExtResource("18_vom4t")
+stream = ExtResource("33_pwib5")
 
 [node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=611630980]
 stream = ExtResource("5_wvnns")

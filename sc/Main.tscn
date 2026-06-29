@@ -4,18 +4,18 @@
 [ext_resource type="Script" uid="uid://cxq1gyi7m7b7q" path="res://ch/round_manager.gd" id="2_wtxnc"]
 [ext_resource type="Script" uid="uid://dl73eie0p7fwm" path="res://lib/level_music_control.gd" id="3_r5w5l"]
 [ext_resource type="Texture2D" uid="uid://cxk0yxen5f6sp" path="res://unfiled/Decal_placeholders/pineapple_1024x1024.png" id="3_wv0tc"]
-[ext_resource type="AudioStream" uid="uid://duqg3ux67t4tf" path="res://sfx/Sonoma_birds.wav" id="4_8twtg"]
-[ext_resource type="AudioStream" uid="uid://vwd54i0bx1ys" path="res://sfx/ocean_gulls_sfx_01.wav" id="5_3ga0b"]
-[ext_resource type="AudioStream" uid="uid://db33f0w5kew1x" path="res://sfx/ocean_waves_sfx_01.wav" id="6_vwwt2"]
-[ext_resource type="AudioStream" uid="uid://drvarhxuygv0r" path="res://sfx/birds_noises.wav" id="8_qmj5w"]
+[ext_resource type="AudioStream" uid="uid://g3fthjw2h1wx" path="res://sfx/Sonoma_birds.ogg" id="5_ec2we"]
+[ext_resource type="AudioStream" uid="uid://b3uwdb4qsj4re" path="res://sfx/ocean_gulls_sfx_01.ogg" id="6_ec2we"]
+[ext_resource type="AudioStream" uid="uid://cusu7ug8dcx4l" path="res://sfx/ocean_waves_sfx_01.ogg" id="7_ec2we"]
+[ext_resource type="AudioStream" uid="uid://crky844wplkq5" path="res://sfx/birds_noises.ogg" id="8_ec2we"]
 [ext_resource type="AudioStream" uid="uid://kcrsa5k3eq7l" path="res://sfx/Seagull - Sound Effect.wav" id="9_swp41"]
 [ext_resource type="AudioStream" uid="uid://dkv7laql8xotx" path="res://sfx/Flag Flap.wav" id="10_heewt"]
 [ext_resource type="AudioStream" uid="uid://ctog6xv23361y" path="res://sfx/AMB_Dark_Castle_Loop_01.wav" id="11_fjxa8"]
-[ext_resource type="AudioStream" uid="uid://bp1yceg657hqq" path="res://sfx/windFull.WAV" id="12_ufvrt"]
-[ext_resource type="AudioStream" uid="uid://cc2iigb6x8nqm" path="res://sfx/night-noises.wav" id="13_vycyu"]
-[ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://sfx/BP_tunes/oasisWorld.wav" id="14_85u0j"]
-[ext_resource type="AudioStream" uid="uid://deq5brrn7c28" path="res://sfx/Windmill_Sprint.wav" id="15_lwcfe"]
-[ext_resource type="AudioStream" uid="uid://bjhic4kqet7dw" path="res://sfx/MC_tunes/USERSONG164.WAV" id="16_tnw34"]
+[ext_resource type="AudioStream" uid="uid://cvdum33r7hjht" path="res://sfx/windFull.ogg" id="12_ec2we"]
+[ext_resource type="AudioStream" uid="uid://d0ryd40pvidc8" path="res://sfx/night-noises.ogg" id="13_ec2we"]
+[ext_resource type="AudioStream" uid="uid://b4sd7nfufjpua" path="res://sfx/oasisWorld.ogg" id="14_ec2we"]
+[ext_resource type="AudioStream" uid="uid://dddofnf4g32gi" path="res://sfx/Windmill_Sprint.ogg" id="15_ymbdo"]
+[ext_resource type="AudioStream" uid="uid://bapu7v4tm2kbn" path="res://sfx/USERSONG164.ogg" id="16_ec2we"]
 [ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="19_gu7ia"]
 [ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="20_l8wgb"]
 [ext_resource type="AudioStream" uid="uid://due6g7wbw8x21" path="res://sfx/one_hundred_percent.wav" id="20_tnw34"]
@@ -721,22 +721,22 @@ script = ExtResource("3_r5w5l")
 opening_song = NodePath("Opening_song")
 
 [node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
-stream = ExtResource("4_8twtg")
+stream = ExtResource("5_ec2we")
 volume_db = -45.0
 autoplay = true
 
 [node name="Birds4" type="AudioStreamPlayer" parent="Music" unique_id=1693840937]
-stream = ExtResource("5_3ga0b")
+stream = ExtResource("6_ec2we")
 volume_db = -35.0
 autoplay = true
 
 [node name="Birds5" type="AudioStreamPlayer" parent="Music" unique_id=348778646]
-stream = ExtResource("6_vwwt2")
+stream = ExtResource("7_ec2we")
 volume_db = -38.0
 autoplay = true
 
 [node name="Birds2" type="AudioStreamPlayer" parent="Music" unique_id=1520904327]
-stream = ExtResource("8_qmj5w")
+stream = ExtResource("8_ec2we")
 volume_db = -35.0
 autoplay = true
 
@@ -756,23 +756,23 @@ volume_db = -40.0
 pitch_scale = 0.7
 
 [node name="WindNoises" type="AudioStreamPlayer" parent="Music" unique_id=1363719912]
-stream = ExtResource("12_ufvrt")
+stream = ExtResource("12_ec2we")
 volume_db = -23.0
 
 [node name="NightNoises" type="AudioStreamPlayer" parent="Music" unique_id=1949811683]
-stream = ExtResource("13_vycyu")
+stream = ExtResource("13_ec2we")
 volume_db = -54.0
 
 [node name="Oasis" type="AudioStreamPlayer" parent="Music" unique_id=230623079]
-stream = ExtResource("14_85u0j")
+stream = ExtResource("14_ec2we")
 volume_db = -30.0
 
 [node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
-stream = ExtResource("15_lwcfe")
+stream = ExtResource("15_ymbdo")
 volume_db = -30.0
 
 [node name="EndingSong" type="AudioStreamPlayer" parent="Music" unique_id=468679081]
-stream = ExtResource("16_tnw34")
+stream = ExtResource("16_ec2we")
 volume_db = -20.0
 
 [node name="PerfectPineappleRound" type="AudioStreamPlayer" parent="Music" unique_id=1838793762]
