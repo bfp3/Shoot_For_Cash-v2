@@ -40,6 +40,8 @@ enum State {
 
 var current_state : State
 
+var rock_has_been_logged := false
+
 @onready var money_label_3d: Label3D = $Money_Label3D
 @onready var gold_label_3d: Label3D = $Gold_label3D
 @onready var damage_label_3d: Label3D = %Damage_Label3D
@@ -417,6 +419,7 @@ func reset_stats() -> void:
 	health = 0
 	cash_value = 0
 	
+	rock_has_been_logged = false
 	
 	freeze = false
 	linear_velocity = Vector3.ZERO
@@ -487,6 +490,7 @@ func apply_marked_ability() -> void:
 	
 func apply_hit_reaction(screen_offset : Vector2) -> void:
 	#if gravity_scale >= 1.0:
+	
 	gravity_scale = 0.1
 	linear_damp = 0.3
 	linear_velocity = Vector3.ZERO
@@ -523,7 +527,7 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	torque_dir = torque_dir * force_mult[force_mult_index]
 
 	apply_torque_impulse(torque_dir * hit_torque_strength)
-
+	
 	smoke_particles_duplicates()
 
 	# Quick squash/stretch feedback
@@ -599,6 +603,8 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		return
 	
 	
+	
+	tween_balloon()
 		
 	if rock_type_name == 'rock_type_3':
 		health -= 1
@@ -679,7 +685,7 @@ func add_to_rocks_round() -> void:
 
 func bounce_rocks() -> void:
 	update_gravity(0.04)
-	apply_torque_impulse(Vector3.LEFT * 3000.0)
+	#apply_torque_impulse(Vector3.LEFT * 3000.0)
 	#global_position = start_pos
 	#global_position.x += randi_range(-16,16)
 	#global_position.x = clamp(global_position.x, -2,2)
@@ -712,7 +718,10 @@ func start_destroyed_process() -> void:
 		expand_blast_radius()
 	
 	enter_state(State.HIT)
-	gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
+	if !rock_has_been_logged:
+		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
+		rock_has_been_logged = true
+	
 	#if !destroyed_by_marked:
 	
 	if rock_type_name.contains('Hazard'):
@@ -960,3 +969,8 @@ func update_health_icon() -> void:
 	#else:
 		#icon.modulate = health_red
 		#icon.scale = Vector3.ONE * 0.35
+func tween_balloon() -> void:
+	$Trio_balloon.top_level = true
+	var tween = create_tween().set_ease(Tween.EASE_IN)
+	tween.tween_property($Trio_balloon, "global_position:y", 10.0, 3.0).as_relative()
+	await tween.finished

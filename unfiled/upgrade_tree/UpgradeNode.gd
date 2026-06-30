@@ -70,8 +70,7 @@ func _ready() -> void:
 		
 	if upgrade_type.contains('sky') || upgrade_type.contains('pineapple') || upgrade_type.contains('auto_fire'):
 		%Upgrade_Icon.self_modulate = Color.WHITE
-		
-	print("My Upgrade Type Is: ", upgrade_type)
+	
 	
 	shop_main_menu = get_tree().get_first_node_in_group('shop_main_menu')
 
@@ -210,11 +209,11 @@ func update_capped() -> void:
 	
 	
 func _process(delta: float) -> void:
-	if current_state != State.AVAILABLE:
+	if current_state != State.AVAILABLE && cost > 0:
 		set_process(false)
 		return
 	
-	if player_money < cost:
+	if player_money < cost && cost > 0:
 		enter_state(State.UNAVAILABLE)
 		return
 
@@ -292,7 +291,7 @@ func configure(config: Dictionary) -> void:
 
 func _on_button_down() -> void:
 	
-	if current_state != State.AVAILABLE:
+	if current_state != State.AVAILABLE && cost > 0:
 		shop_main_menu.purchase_denied_tween()
 		
 		var _orig_modulate : Color = self.modulate
@@ -304,8 +303,8 @@ func _on_button_down() -> void:
 		tween.tween_property(self, "modulate", _orig_modulate, 0.1)
 		return
 
+	set_process(true)
 	is_holding = true
-	
 	
 
 

@@ -368,10 +368,11 @@ func _on_re_roll_pressed() -> void:
 	button_down.tween_property(reroll_button, "position:y", 5.0, 0.1).as_relative()
 	button_down.tween_property(reroll_button, "position:y", -5.0, 0.1).as_relative()
 	# Not enough money
-
-	if player_cash < reroll_current_price:
-		purchase_denied_tween()
-		return
+	
+	if reroll_current_price != 0:
+		if player_cash < reroll_current_price:
+			purchase_denied_tween()
+			return
 	
 	is_rerolling = true
 	

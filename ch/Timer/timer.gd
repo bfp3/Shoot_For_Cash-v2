@@ -125,7 +125,9 @@ func update_finished() -> void:
 func update_restarting() -> void:
 	#start_time = gl_PlayerState.dataset.power_time_upgrade
 	sent_signal = false
-	start_time = gl_DataSet.get_value('power_time_upgrade', gl_PlayerState.dataset.power_time_upgrade)
+	#start_time = gl_DataSet.get_value('power_time_upgrade', gl_PlayerState.dataset.power_time_upgrade)
+	
+	start_time = 50.0
 	time_left = start_time
 	await timer_rollup_sequence()
 	$ReloadSound.pitch_scale = 1.0

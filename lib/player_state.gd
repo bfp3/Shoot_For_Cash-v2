@@ -128,24 +128,19 @@ func log_rock_missed() -> void:
 
 
 func check_all_rocks_cleared() -> void:
-	if dataset.total_rocks_destroyed >= dataset.total_rocks_in_round && dataset.total_rocks_missed == 0:
-		if round_finished:
-			return
-		round_finished = true
-		EventBus.instance.all_rocks_destroyed.emit()	
-		return
-		
+	#if round_finished:
+		#return
 	
-	if dataset.total_rocks_missed > 0:
-		if dataset.total_rocks_in_round_remaining == 0:
-			if round_finished:
-				return
-			
-			round_finished = true
-			EventBus.instance.end_round_rock_missed.emit()
-			return
+	print(dataset.total_rocks_in_round_remaining, " Rocks Remaining")
+	if dataset.total_rocks_in_round_remaining > 0:
+		return
 
-			
+	round_finished = true
+
+	if dataset.total_rocks_missed == 0:
+		EventBus.instance.all_rocks_destroyed.emit()
+	else:
+		EventBus.instance.end_round_rock_missed.emit()
 
 
 func check_score() -> void:	

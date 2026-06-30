@@ -57,6 +57,7 @@
 [ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="55_3u5oq"]
 [ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="56_4ta1g"]
 [ext_resource type="PackedScene" uid="uid://dpbgyfs2kgdtr" path="res://ch/demo_end_screen/Demo_end_screen.tscn" id="61_ec2we"]
+[ext_resource type="Script" uid="uid://dgbe74bgrkg4j" path="res://ch/Player/HUD/player_health.gd" id="62_wv0tc"]
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
 [ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="63_err0d"]
 [ext_resource type="Script" uid="uid://dv0lm0lx1nico" path="res://ch/Balllons/balloon_container.gd" id="63_nn6vd"]
@@ -487,6 +488,56 @@ scale_curve = SubResource("CurveXYZTexture_b5kcl")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ymbdo"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3gdew"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lf8qf"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_11n43"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_wtxnc"]
+Button/styles/normal = SubResource("StyleBoxFlat_3gdew")
+Panel/styles/panel = SubResource("StyleBoxFlat_lf8qf")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_11n43")
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_an2hp"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_43pd7"]
@@ -905,17 +956,23 @@ rotation_speed = 0.8
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 38.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.265, 38.15)
 collision_layer = 2
 collision_mask = 2
-monitoring = false
 monitorable = false
 script = ExtResource("24_dse8t")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Splash_zone" unique_id=915563512]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.23500001, 10.400002)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10.4)
 shape = SubResource("BoxShape3D_nh3e2")
-disabled = true
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Splash_zone" unique_id=1224875857]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 4.5, 20, 10.4)
+shape = SubResource("BoxShape3D_nh3e2")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Splash_zone" unique_id=788809730]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -11.5, 20, 10.400002)
+shape = SubResource("BoxShape3D_nh3e2")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Splash_zone" unique_id=1142810847]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.2624941, 0.4667511)
@@ -936,10 +993,25 @@ volume_db = -18.0
 stream = ExtResource("27_x7fgc")
 volume_db = -18.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Splash_zone" unique_id=1358077586]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -15)
+[node name="Visual" type="MeshInstance3D" parent="Splash_zone" unique_id=1883425194]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=1358077586]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
 material_override = ExtResource("27_ec2we")
 mesh = SubResource("BoxMesh_ymbdo")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=263928747]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 4.5, 20, -15)
+material_override = ExtResource("27_ec2we")
+mesh = SubResource("BoxMesh_ymbdo")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=490030576]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -11.5, 20, -15)
+material_override = ExtResource("27_ec2we")
+mesh = SubResource("BoxMesh_ymbdo")
+skeleton = NodePath("../..")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=391338382]
 root_node = NodePath("../Player")
@@ -1941,7 +2013,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
 
 [node name="Timer" parent="MainGameCanvasLayer" unique_id=779418741 instance=ExtResource("55_3u5oq")]
 mouse_filter = 2
-start_time = 5.0
+start_time = 50.0
 
 [node name="Place_name" type="Control" parent="MainGameCanvasLayer" unique_id=877796412]
 layout_mode = 3
@@ -2030,6 +2102,82 @@ autostart = true
 [node name="DemoEndScreen" parent="MainGameCanvasLayer" unique_id=1212322380 node_paths=PackedStringArray("round_manager") instance=ExtResource("61_ec2we")]
 visible = false
 round_manager = NodePath("../../Round_manager")
+
+[node name="Player_health" type="Control" parent="MainGameCanvasLayer" unique_id=983915033]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("62_wv0tc")
+
+[node name="Control" type="Control" parent="MainGameCanvasLayer/Player_health" unique_id=1375216936]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -130.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.46, 0.46)
+pivot_offset_ratio = Vector2(1, 1)
+size_flags_horizontal = 4
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="MainGameCanvasLayer/Player_health/Control" unique_id=79189667]
+custom_minimum_size = Vector2(180, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -298.6958
+offset_top = -110.65173
+offset_right = -118.6958
+offset_bottom = 19.348267
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_wtxnc")
+theme_override_styles/panel = ExtResource("31_hwubp")
+
+[node name="Health_remaining" type="RichTextLabel" parent="MainGameCanvasLayer/Player_health/Control" unique_id=2125358688]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -272.28284
+offset_top = -95.65173
+offset_right = -145.10876
+offset_bottom = 4.3482666
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 1
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/normal_font_size = 70
+theme_override_font_sizes/bold_font_size = 50
+theme_override_font_sizes/bold_italics_font_size = 50
+theme_override_font_sizes/italics_font_size = 71
+bbcode_enabled = true
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
 unique_name_in_owner = true
@@ -2140,6 +2288,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.70000005, 0)
 
 [node name="Balloon3" parent="Balloon_container/Trio_balloon" unique_id=198442655 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+
+[node name="Balloon4" parent="Balloon_container/Trio_balloon" unique_id=481134330 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.99, 0, 0, 0, 1.99, 0, 0, 0, 1.99, 0, -0.307, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Balloon_container/Trio_balloon" unique_id=177264242]
 libraries/ = SubResource("AnimationLibrary_wv0tc")

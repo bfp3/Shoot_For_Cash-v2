@@ -2,7 +2,6 @@ extends StaticBody3D
 
 const ON_TARGET_SFX = preload('res://sfx/opt_3_fade_shortened.wav')
 
-
 var pitch_adjustment := 0.02
 
 enum State {
@@ -224,6 +223,9 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
+	if !visible:
+		return
+		
 	health -= damage
 	
 	if health > 0:

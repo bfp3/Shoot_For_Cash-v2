@@ -75,6 +75,7 @@ func successful_round() -> void:
 
 func unsuccessful_round() -> void:
 	print('unsuccessful round')
+	enter_state(RoundState.ROUND_END)
 	pass
 
 func enter_state(new_state : RoundState) -> void:

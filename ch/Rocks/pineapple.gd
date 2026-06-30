@@ -168,10 +168,11 @@ func update_disabled() -> void:
 
 func disable_collision() -> void:
 	set_collision_layer_value(1, false)
+	set_collision_layer_value(3, false)
 
 func enable_collision() -> void:
-	return
-	#set_collision_layer_value(1, true)
+	set_collision_layer_value(3, true)
+	#return
 
 
 func update_gravity(_gravity_scale : float) -> void:
@@ -348,6 +349,7 @@ func start_destroyed_process() -> void:
 	money_label_3d.money_is_money(global_position, cash_value)
 	
 	set_collision_layer_value(1, false)
+	set_collision_layer_value(3, false)
 	is_deactivated = true
 	#$Mesh.hide()
 	#freeze = true

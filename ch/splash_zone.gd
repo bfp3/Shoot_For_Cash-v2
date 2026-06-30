@@ -9,35 +9,32 @@ var detected_bodies: Array[Node3D] = []
 #func _ready() -> void:
 	#await get_tree().create_timer(1.0).timeout
 	#monitoring = true
-	#monitorable = true
+	#monitorable = true 
 
 
 func _on_body_entered(body: Node3D) -> void:
-	# Check if we've already seen this body
-	
-	if !body is RockInstance:
+
+	if !(body is RockInstance):
 		return
-	
-	if body.current_state == body.State.DISABLED:
+
+	if body.current_state != RockInstance.State.ACTIVE:
 		return
-		
-	if body in detected_bodies:
-		if body.current_state == body.State.ACTIVE:
-			splash_particles(body)
-			splash_sfx()
-			gl_PlayerState.log_rock_missed()
-			#body.reset_rock_back_on()
-			body.enter_state(body.State.MISSED)
-			print('happenning')
-			return
-		
-	if body.current_state == body.State.ACTIVE:
-		if !detected_bodies.has(body):
-			detected_bodies.append(body)
-			splash_sfx()
+
+	if body.linear_velocity.y > 0.0:
+		splash_sfx()
+		return
+
+	splash_particles(body)
+	splash_sfx()
+	gl_PlayerState.log_rock_missed()
+	body.enter_state(RockInstance.State.MISSED)
+	
+	%Player_health.take_damage()
+
 
 func reset_detected_bodies() -> void:
-
+	var tween = create_tween()
+	tween.tween_property($Visual, 'transparency', 1.0, 2.0)
 	monitoring = false
 	monitorable = false
 	detected_bodies.clear()
@@ -46,6 +43,8 @@ func reset_detected_bodies() -> void:
 func activate_splash_zone() -> void:
 	monitoring = true
 	monitorable = true
+	var tween = create_tween()
+	tween.tween_property($Visual, 'transparency', 0.0,1.0)
 
 func splash_sfx() -> void:
 	var _sfx = sfx_array.pick_random()

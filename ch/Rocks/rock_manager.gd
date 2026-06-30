@@ -151,7 +151,9 @@ func bounce_rocks() -> void:
 		body.apply_central_impulse(impulse)
 
 		counter += 1
+		
 		await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.2).timeout
 		
 		if counter >= rocks_limit:
 			break

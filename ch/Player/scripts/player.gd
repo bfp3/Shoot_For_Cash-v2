@@ -190,8 +190,6 @@ func handle_pan_left_and_right(delta) -> void:
 
 func _process(delta: float) -> void:
 	
-	
-	
 	if Input.is_action_pressed('middle_mouse'):
 		Engine.time_scale = 6.0
 	else:
@@ -209,7 +207,6 @@ func _process(delta: float) -> void:
 		
 		#	%Cooldown_progressBar.rotation += (2.0 * delta)
 	
-		
 		%Cooldown_progressBar3.value = (1.0 - (current_gun_fire_rate_cooldown / power_gun_fire_rate)) * 100.0
 		%Bullet_icon.value = (1.0 - (current_gun_fire_rate_cooldown / power_gun_fire_rate)) * 100.0
 		
@@ -254,11 +251,9 @@ func _process(delta: float) -> void:
 	
 	if Input.is_action_pressed("shootWeapon") && gl_PlayerState.dataset.power_auto_fire > 0:
 		fire_weapon()
-		
+	
 	if Input.is_action_just_pressed("shootWeapon") && gl_PlayerState.dataset.power_auto_fire == 0:
 		fire_weapon()
-	
-	
 	
 	crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
 	%Crosshair.global_position = crosshair_position
@@ -477,20 +472,24 @@ func fire_weapon() -> void:
 	
 	if current_state != State.ACTIVE:
 		return
-	
+		
 	if _is_currently_shooting:
+		
+		player_did_not_miss()
+		weapon_shooting.play_missed_sounds()
 		return
 		
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 	
 	weapon_shooting.shoot_target()
-	
+	player_did_not_miss()
 	
 	
 	
 func player_did_not_miss() -> void:
-
+	print('restart the cooldown')
+	
 	_is_currently_shooting = true
 	current_gun_fire_rate_cooldown = power_gun_fire_rate
 	await get_tree().create_timer(power_gun_fire_rate).timeout
@@ -501,12 +500,6 @@ func _input(event: InputEvent) -> void:
 	
 	if current_state != State.ACTIVE:
 		return
-		#
-	#if Input.is_action_just_pressed('ctrl'):
-		#flip_around()
-	#
-	#if Input.is_action_just_pressed("shootWeapon"):
-		#fire_weapon()
 
 	if Input.is_action_just_pressed("switch_viewport"):
 		if get_viewport().debug_draw == Viewport.DebugDraw.DEBUG_DRAW_UNSHADED:

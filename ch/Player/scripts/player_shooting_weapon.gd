@@ -414,7 +414,7 @@ func create_shot_instance(sound_file : AudioStreamWAV, volume_db : float, pitch_
 		sound_instance.queue_free()
 
 
-func play_missed_sounds() -> void:
+func play_missed_sounds() -> void:	
 	pitch_adjustment = 0.02
 	%Crosshair.crosshair_nothing_to_shoot()
 	
@@ -424,6 +424,7 @@ func shoot_bullet_without_target() -> void:
 	if auto_fire:
 		return
 	%cannot_shoot_sfx.play(0.91)
+	
 	return
 	#play_accurate_sounds()
 #

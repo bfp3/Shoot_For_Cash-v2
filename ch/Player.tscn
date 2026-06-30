@@ -346,14 +346,14 @@ _data = {
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_txfio"]
+[sub_resource type="CurveTexture" id="CurveTexture_g6ubq"]
 curve = SubResource("Curve_fuvvr")
 
 [sub_resource type="Curve" id="Curve_3gdew"]
 _data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_1tjj5"]
+[sub_resource type="CurveTexture" id="CurveTexture_bpx2c"]
 curve = SubResource("Curve_3gdew")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_11n43"]
@@ -370,11 +370,11 @@ tangential_accel_min = -2.2351742e-06
 tangential_accel_max = -2.2351742e-06
 scale_min = 5.0
 scale_max = 10.0
-scale_curve = SubResource("CurveTexture_1tjj5")
+scale_curve = SubResource("CurveTexture_bpx2c")
 color = Color(1, 0.78039217, 0, 1)
-alpha_curve = SubResource("CurveTexture_txfio")
+alpha_curve = SubResource("CurveTexture_g6ubq")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3gdew"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txfio"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
 border_width_left = 1
 border_width_top = 1
@@ -389,7 +389,7 @@ corner_radius_bottom_left = 5
 corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lf8qf"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fuvvr"]
 bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
 border_width_left = 3
 border_width_top = 3
@@ -404,7 +404,7 @@ corner_radius_bottom_left = 5
 corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_11n43"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1tjj5"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
 border_width_left = 1
 border_width_top = 1
@@ -420,9 +420,9 @@ corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
 [sub_resource type="Theme" id="Theme_pivo4"]
-Button/styles/normal = SubResource("StyleBoxFlat_3gdew")
-Panel/styles/panel = SubResource("StyleBoxFlat_lf8qf")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_11n43")
+Button/styles/normal = SubResource("StyleBoxFlat_txfio")
+Panel/styles/panel = SubResource("StyleBoxFlat_fuvvr")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_1tjj5")
 
 [sub_resource type="Curve" id="Curve_pivo4"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -493,14 +493,14 @@ _data = {
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_purchase_alpha"]
+[sub_resource type="CurveTexture" id="CurveTexture_lf8qf"]
 curve = SubResource("Curve_g6ubq")
 
 [sub_resource type="Curve" id="Curve_bpx2c"]
 _data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CurveTexture" id="CurveTexture_purchase_scale"]
+[sub_resource type="CurveTexture" id="CurveTexture_11n43"]
 curve = SubResource("Curve_bpx2c")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_txfio"]
@@ -513,9 +513,9 @@ angular_velocity_max = 180.0
 gravity = Vector3(0, 0, 0)
 scale_min = 10.0
 scale_max = 20.0
-scale_curve = SubResource("CurveTexture_purchase_scale")
+scale_curve = SubResource("CurveTexture_11n43")
 color = Color(0.81960785, 0, 0, 1)
-alpha_curve = SubResource("CurveTexture_purchase_alpha")
+alpha_curve = SubResource("CurveTexture_lf8qf")
 hue_variation_min = -0.050000023
 hue_variation_max = 0.049999975
 
