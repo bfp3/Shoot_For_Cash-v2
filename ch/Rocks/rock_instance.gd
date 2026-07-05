@@ -12,6 +12,7 @@ const ROCK_02 = preload('uid://84ianb3xwjp7')
 const ROCK_03 = preload('uid://lxbrgqaovv68')
 #const ROCK_04 = preload('uid://g2r7kpvm47k0')
 
+
 const ROCK_MESHES = [
 	ROCK_01,
 	ROCK_02,
@@ -176,7 +177,6 @@ func round_end_check_rock_status() -> void:
 		State.MISSED:
 			pass
 			
-		
 		State.INACTIVE:
 			pass
 			
@@ -189,6 +189,7 @@ func round_end_check_rock_status() -> void:
 
 func update_disabled() -> void:
 	update_gravity(1.0)
+	await get_tree().create_timer(2.0).timeout
 	disable_collision()
 	remove_from_group('Target')
 
@@ -831,8 +832,19 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 
 func expand_blast_radius() -> void:
 	if !player_has_marked_rock:
+		gl_PlayerState.dataset.power_sky_mine = 0
 		standard_blast()
 		return
+	
+	var blast_radius := 7.5
+	if gl_PlayerState.dataset.power_sky_mine == 2:
+		blast_radius = 15.0
+		
+	if gl_PlayerState.dataset.power_sky_mine >= 3:
+		blast_radius = 25.0
+
+	
+	gl_PlayerState.dataset.power_sky_mine = 0
 	
 	%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.4	
@@ -842,9 +854,10 @@ func expand_blast_radius() -> void:
 	blast_node.show()
 	blast_node.monitoring = true
 	$Explosion_area/CollisionShape3D.disabled = false
+	
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 10.0, 0.3)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * blast_radius, 0.3)
 	tween.tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.35)
 	#tween.tween_interval(0.1)
 	await tween.finished

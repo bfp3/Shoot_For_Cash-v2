@@ -61,6 +61,7 @@
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
 [ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="63_err0d"]
 [ext_resource type="Script" uid="uid://dv0lm0lx1nico" path="res://ch/Balllons/balloon_container.gd" id="63_nn6vd"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="63_wv0tc"]
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
 [ext_resource type="PackedScene" uid="uid://ownxjc3mlmfd" path="res://ch/HUD_components/pause_and_exit_menu.tscn" id="64_tnw34"]
 [ext_resource type="Script" uid="uid://3le0jpjo3qtu" path="res://ch/background_transition.gd" id="65_fjk4d"]
@@ -718,7 +719,6 @@ _data = {
 
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
-intro_title_screen = true
 player = NodePath("Player")
 round_manager = NodePath("Round_manager")
 start_cam = NodePath("Camera3D")
@@ -956,7 +956,7 @@ rotation_speed = 0.8
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.265, 38.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.265, 38.15)
 collision_layer = 2
 collision_mask = 2
 monitorable = false
@@ -966,12 +966,12 @@ script = ExtResource("24_dse8t")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10.4)
 shape = SubResource("BoxShape3D_nh3e2")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Splash_zone" unique_id=1224875857]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 4.5, 20, 10.4)
+[node name="LeftCollision" type="CollisionShape3D" parent="Splash_zone" unique_id=1224875857]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 7.5, -25, 10.400002)
 shape = SubResource("BoxShape3D_nh3e2")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="Splash_zone" unique_id=788809730]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -11.5, 20, 10.400002)
+[node name="RightCollision" type="CollisionShape3D" parent="Splash_zone" unique_id=788809730]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -8.5, -25, 10.400002)
 shape = SubResource("BoxShape3D_nh3e2")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Splash_zone" unique_id=1142810847]
@@ -1001,14 +1001,14 @@ material_override = ExtResource("27_ec2we")
 mesh = SubResource("BoxMesh_ymbdo")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=263928747]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 4.5, 20, -15)
+[node name="LeftVisual" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=263928747]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 7.5, -25, -15)
 material_override = ExtResource("27_ec2we")
 mesh = SubResource("BoxMesh_ymbdo")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=490030576]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -11.5, 20, -15)
+[node name="RightVisual" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=490030576]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -8.5, -25, -15)
 material_override = ExtResource("27_ec2we")
 mesh = SubResource("BoxMesh_ymbdo")
 skeleton = NodePath("../..")
@@ -2141,9 +2141,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -298.6958
-offset_top = -110.65173
+offset_top = -382.3905
 offset_right = -118.6958
-offset_bottom = 19.348267
+offset_bottom = -252.3905
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -2151,7 +2151,26 @@ mouse_filter = 2
 theme = SubResource("Theme_wtxnc")
 theme_override_styles/panel = ExtResource("31_hwubp")
 
+[node name="TextureRect" type="TextureRect" parent="MainGameCanvasLayer/Player_health/Control/Panel" unique_id=906908435]
+modulate = Color(0.4, 0.4, 0.4, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -293.5
+offset_top = -293.0
+offset_right = 293.5
+offset_bottom = 293.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.2, 0.2)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("63_wv0tc")
+
 [node name="Health_remaining" type="RichTextLabel" parent="MainGameCanvasLayer/Player_health/Control" unique_id=2125358688]
+modulate = Color(1, 0.78039217, 0, 1)
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -2160,9 +2179,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -272.28284
-offset_top = -95.65173
+offset_top = -367.3905
 offset_right = -145.10876
-offset_bottom = 4.3482666
+offset_bottom = -267.3905
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)

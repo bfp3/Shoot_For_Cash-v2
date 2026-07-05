@@ -206,7 +206,7 @@ func _process(delta: float) -> void:
 			current_gun_fire_rate_cooldown = max(current_gun_fire_rate_cooldown, 0.0)
 		
 		#	%Cooldown_progressBar.rotation += (2.0 * delta)
-	
+
 		%Cooldown_progressBar3.value = (1.0 - (current_gun_fire_rate_cooldown / power_gun_fire_rate)) * 100.0
 		%Bullet_icon.value = (1.0 - (current_gun_fire_rate_cooldown / power_gun_fire_rate)) * 100.0
 		
@@ -454,7 +454,7 @@ func apply_sky_mine() -> void:
 	
 func remove_sky_mine() -> void:
 	#await get_tree().create_timer(0.25).timeout
-	gl_PlayerState.dataset.power_sky_mine = 0
+	#gl_PlayerState.dataset.power_sky_mine = 0
 	$CanvasLayer/HUD_bottom_corner/SkyMine.stop()
 	%Cooldown_progressBar3.self_modulate = Color('FFFFFF')
 	$CanvasLayer/Crosshair/Inner_scope/center_container.modulate = Color('FFFFFF')
@@ -467,16 +467,15 @@ func tween_scope(_scale_multiplier : float, _dur : float = 0.75) -> void:
 	var increase_scope_tween : Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	increase_scope_tween.tween_property(%Inner_scope, "scale", Vector2.ONE * _scale_multiplier, _dur)
 	
-	
+
 func fire_weapon() -> void:
 	
 	if current_state != State.ACTIVE:
 		return
 		
 	if _is_currently_shooting:
-		
-		player_did_not_miss()
 		weapon_shooting.play_missed_sounds()
+		penalize_early_fire()
 		return
 		
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
@@ -484,15 +483,23 @@ func fire_weapon() -> void:
 	
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
+
+
+func penalize_early_fire() -> void:
+	current_gun_fire_rate_cooldown = power_gun_fire_rate
+	%Bullet_icon.value = 0.0
+	%Cooldown_progressBar3.value = 0.0
+	weapon_shooting.play_missed_sounds()
 	
 	
 	
 func player_did_not_miss() -> void:
-	print('restart the cooldown')
-	
+	%Bullet_icon.value = 0.0
 	_is_currently_shooting = true
 	current_gun_fire_rate_cooldown = power_gun_fire_rate
-	await get_tree().create_timer(power_gun_fire_rate).timeout
+	#await get_tree().create_timer(power_gun_fire_rate).timeout
+	while %Bullet_icon.value != 100.0:
+		await get_tree().process_frame
 	_is_currently_shooting = false
 
 
@@ -556,7 +563,8 @@ func start_player() -> void:
 	if gl_PlayerState.dataset.power_gun == 0:
 		return
 		
-		
+	%Cooldown_progressBar3.value = 100.0
+	%Bullet_icon.value  = 100.0
 	
 	#await get_tree().create_timer(0.5).timeout
 	player_gun.start_position()

@@ -251,7 +251,7 @@ func shoot_target() -> void:
 
 	if targets.is_empty():
 		shoot_bullet_without_target()
-		play_missed_sounds()
+		
 		shooting_sky_mine = false
 		return
 
@@ -360,9 +360,29 @@ func Xshoot_target() -> void:
 			break
 	
 	
-
-
 func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO) -> void:
+
+	var new_bullet = BULLET_VISUAL_1.instantiate()
+
+	if _target != null:
+		new_bullet.target_node = _target
+	else:
+		new_bullet.target_node = null
+
+	new_bullet.power_bullet_speed = power_bullet_speed
+
+	get_tree().get_current_scene().add_child(new_bullet)
+
+	new_bullet.global_transform = player_gun.get_barrel_position()
+
+	if _target != null:
+		new_bullet.bullet_setup(_target, _power_bullet_speed)
+	else:
+		# No target — fly toward the raycast hit point / horizon instead
+		new_bullet.bullet_setup_no_target(result_pos, _power_bullet_speed)
+
+
+func Xspawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO) -> void:
 
 			
 	#var new_bullet = current_bullet.instantiate()
@@ -417,10 +437,45 @@ func create_shot_instance(sound_file : AudioStreamWAV, volume_db : float, pitch_
 func play_missed_sounds() -> void:	
 	pitch_adjustment = 0.02
 	%Crosshair.crosshair_nothing_to_shoot()
-	
+	%cannot_shoot_sfx.play(0.91)
+
+func shoot_bullet_without_target() -> void:
+	if auto_fire:
+		return
+
+	#%cannot_shoot_sfx.play(0.91)
+	#$"../SFX/Flicker_sound".play()
+	play_missed_sounds()
+	await get_tree().create_timer(0.1).timeout
+	create_shot_instance(ON_TARGET_SFX, -35.0, 0.65 + pitch_adjustment)
+	%Crosshair.crosshair_shake()
+	player_camera.shake_camera_shooting()
+
+	# Raycast from the crosshair center out into the world to find
+	# where the "missed" bullet should fly toward.
+	var screen_pos = crosshair.global_position
+	var origin = player_camera.project_ray_origin(screen_pos)
+	var direction = player_camera.project_ray_normal(screen_pos)
+	var end = origin + direction * view_limit
+
+	var space_state = get_world_3d().direct_space_state
+	var result = space_state.intersect_ray(
+		PhysicsRayQueryParameters3D.create(origin, end)
+	)
+
+	var aim_point : Vector3
+	if result.has("position"):
+		aim_point = result.position
+	else:
+		aim_point = end
+
+	if player_gun:
+		player_gun.get_barrel_position(aim_point.x)
+
+	spawn_projectile(null, power_bullet_speed, aim_point)
 
 	
-func shoot_bullet_without_target() -> void:
+func Xshoot_bullet_without_target() -> void:
 	if auto_fire:
 		return
 	%cannot_shoot_sfx.play(0.91)

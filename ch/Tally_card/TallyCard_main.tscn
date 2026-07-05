@@ -24,7 +24,6 @@
 [ext_resource type="AudioStream" uid="uid://dold0eft66v4p" path="res://sfx/HUD on.wav" id="29_slobm"]
 [ext_resource type="AudioStream" uid="uid://fossjjbbmh7" path="res://sfx/low_pitch_humming.wav" id="30_38x7i"]
 
-
 [sub_resource type="Curve" id="Curve_onfim"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
@@ -402,12 +401,31 @@ autowrap_mode = 0
 visible = false
 self_modulate = Color(1, 1, 1, 0.57254905)
 show_behind_parent = true
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.21731035
 anchor_top = 0.21588317
 anchor_right = 0.80382043
 anchor_bottom = 0.8139071
 metadata/_edit_use_anchors_ = true
+
+[node name="BonusCashLabel" type="RichTextLabel" parent="CenterContainer/100_percent" unique_id=1098716925]
+layout_mode = 0
+offset_left = -25.308838
+offset_top = -98.84262
+offset_right = 175.69116
+offset_bottom = -0.84262085
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 30
+theme_override_font_sizes/bold_italics_font_size = 30
+theme_override_font_sizes/italics_font_size = 31
+bbcode_enabled = true
+text = "+$100"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=785012210]
 custom_minimum_size = Vector2(250, 250)
@@ -469,7 +487,6 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 script = ExtResource("5_7r173")
-tooltip_dataset = "tooltip_total_score"
 
 [node name="VSeparator4" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=141557445]
 custom_minimum_size = Vector2(20, 0)

@@ -10,7 +10,7 @@ var dataset_float : Dictionary = {
 	
 	,"power_bonus_round_pineapples" 	: [0, 1]
 	,"power_auto_fire" 				: [0, 1]
-	,"power_sky_mine" 				: [0, 1]
+	,"power_sky_mine" 				: [0, 1, 2, 3]
 	
 	,"power_target_circle"	: [20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,120.0,200.0]
 	,"power_gun_fire_rate"	: [1.25, 1.0, 0.9,0.8,0.65,0.50,0.35,0.20,0.15,0.10, 0.05]
@@ -31,7 +31,7 @@ var dataset_float : Dictionary = {
 	,"price_bullet_speed" 			: [2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
 	,"price_bullet_delay" 			: [2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
 	,"price_gun"						: [0,0,0]
-	,"price_sky_mine" 				: [10]
+	,"price_sky_mine" 				: [10,40,150]
 	,"price_max_items_in_shop" 		: [2,10,30]
 	,'price_time_upgrade' 			: [0, 22, 24, 26, 30, 220, 180, 160, 140, 1000]
 	

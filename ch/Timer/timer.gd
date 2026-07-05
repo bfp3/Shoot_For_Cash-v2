@@ -15,6 +15,7 @@ var current_state : State = State.INACTIVE
 
 var sent_signal := false
 
+@export var timer_disabled := false
 
 @onready var timer_label: Label = $TimeLabel
 @export var start_time: float = 11.0 #14.0
@@ -45,6 +46,9 @@ func _ready() -> void:
 	fade_out_timer()
 	
 func _process(delta: float) -> void:
+	if timer_disabled:
+		return
+	
 	if current_state != State.RUNNING:
 		set_process(false)
 		return
@@ -123,11 +127,13 @@ func update_finished() -> void:
 
 
 func update_restarting() -> void:
+	if timer_disabled:
+		return
 	#start_time = gl_PlayerState.dataset.power_time_upgrade
 	sent_signal = false
-	#start_time = gl_DataSet.get_value('power_time_upgrade', gl_PlayerState.dataset.power_time_upgrade)
+	start_time = gl_DataSet.get_value('power_time_upgrade', gl_PlayerState.dataset.power_time_upgrade)
+	#start_time = 50.0
 	
-	start_time = 50.0
 	time_left = start_time
 	await timer_rollup_sequence()
 	$ReloadSound.pitch_scale = 1.0
@@ -189,6 +195,18 @@ func timer_rollup_sequence() -> void:
 	move_back_tween.parallel().tween_property(timer_label, "scale", Vector2.ONE, 0.15)
 	move_back_tween.parallel().tween_callback($TimeRanOut3.play.bind(0.02)).set_delay(0.14)
 	await move_back_tween.finished
+
+func _input(event: InputEvent) -> void:
+	if Input.is_key_label_pressed(KEY_U):
+		update_pause_timer()
+		
+	if Input.is_key_label_pressed(KEY_Y):
+		update_resume_timer()
+		
+	if Input.is_key_label_pressed(KEY_T):
+		timer_disabled = !timer_disabled
+		visible = !visible
+		#update_resume_timer()
 
 func update_pause_timer() -> void:
 	_timer_paused = true

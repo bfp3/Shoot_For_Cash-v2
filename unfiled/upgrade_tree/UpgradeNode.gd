@@ -241,7 +241,10 @@ func reset_buttons_settings() -> void:
 		print('CAPPED OUT ITEM')
 		$Capped.show()
 		return
-		
+	
+	if sky_mine:
+		_update_sky_mine_name()
+	
 	$FreeParticles.emitting = false
 	
 	enter_state(State.UNAVAILABLE)
@@ -323,34 +326,44 @@ func complete_purchase() -> void:
 		var get_player = get_tree().get_first_node_in_group('Player')
 		if get_player:
 			get_player.apply_sky_mine()
-			
-		
-			
-	if upgrade_type.contains('auto_fire'):
+
+		var _upgrade_name : String = "power_" + upgrade_type
+		gl_PlayerState.log_buy(_upgrade_name, cost)
+
+		power_level = gl_PlayerState.get_power_level(_upgrade_name)
+		_update_sky_mine_name()
+
+		shop_main_menu.purchase_made(upgrade_type)
+
+		var max_level : int = gl_DataSet.dataset_float[_upgrade_name].size() - 1
+
+		if power_level < max_level:
+			# Not maxed yet — stays in shop, ready to buy again
+			await get_tree().create_timer(0.1).timeout
+			reset_buttons_settings()
+			return
+		# else: fall through to normal "purchased" behaviour below
+
+	elif upgrade_type.contains('auto_fire'):
 		var get_player = get_tree().get_first_node_in_group('Player')
 		if get_player:
 			get_player.apply_auto_fire()
 			
-	if upgrade_type.contains('pineapple'):
+	elif upgrade_type.contains('pineapple'):
 		EventBus.instance.pineapple_round_bought.emit()
 		
-		
-	
 	if gun:
 		remove_gun()
 		
-	else:
+	elif !sky_mine:
 		var _upgrade_name : String = "power_" + upgrade_type
 		gl_PlayerState.log_buy(_upgrade_name, cost)
 		
 	shop_main_menu.purchase_made(upgrade_type)
 	
-	#hold_duration *= 1.25
-	
 	hold_duration = 0.15
 	
 	var unpurchased_cont: VBoxContainer = $VBoxContainer
-	#purchase_sfx.play()
 	disabled = true
 	await get_tree().create_timer(0.1).timeout
 	$Purchased.show()
@@ -364,6 +377,19 @@ func complete_purchase() -> void:
 	tween.tween_property(unpurchased_cont, "scale", _orig_scale, 0.1)
 	tween.parallel().tween_property(unpurchased_cont, "modulate", Color("80808050"), 0.1)
 	await tween.finished
+
+
+func _update_sky_mine_name() -> void:
+	match power_level:
+		0:
+			upgrade_name = "Sky Mine"
+		1:
+			upgrade_name = "Sky Mine+"
+		2:
+			upgrade_name = "Sky Mine++"
+		_:
+			upgrade_name = "Sky Mine++"
+	_refresh_text()
 
 func remove_gun() -> void:
 	var _upgrade_name : String = "power_" + upgrade_type

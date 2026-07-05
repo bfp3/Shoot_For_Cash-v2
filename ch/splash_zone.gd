@@ -17,11 +17,19 @@ func _on_body_entered(body: Node3D) -> void:
 	if !(body is RockInstance):
 		return
 
-	if body.current_state != RockInstance.State.ACTIVE:
-		return
-
 	if body.linear_velocity.y > 0.0:
 		splash_sfx()
+		return
+	
+	if body.current_state != RockInstance.State.DISABLED:
+		gl_PlayerState.log_rock_missed()
+		print('rock is disabled and should take damage')
+		return
+		
+	if body.current_state != RockInstance.State.ACTIVE || body.current_state != RockInstance.State.DISABLED:
+		#splash_sfx()
+		#body.hide()
+		gl_PlayerState.log_rock_missed()
 		return
 
 	splash_particles(body)
