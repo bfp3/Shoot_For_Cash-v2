@@ -2,10 +2,9 @@
 
 [ext_resource type="Script" uid="uid://s5de2dy82pf3" path="res://unfiled/RigidBodies/tile_rigid_body.gd" id="1_e47gd"]
 [ext_resource type="Texture2D" uid="uid://j5xwk5mja6ur" path="res://unfiled/Decal_placeholders/motif_sign.png" id="1_o7b1c"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="2_sj5qu"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="3_35obo"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="3_e47gd"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="4_mcuqq"]
-
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_tkgcx"]
 noise_type = 3
@@ -176,42 +175,42 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_mqgk1")
 size = Vector2(2, 2)
 
-[node name="Tile_rigid_body" type="RigidBody3D" groups=["Target", "cannonball", "rock_rigid_body"]]
+[node name="Tile_rigid_body" type="RigidBody3D" unique_id=1876995631 groups=["Target", "cannonball", "rock_rigid_body"]]
 linear_damp = 0.5
 script = ExtResource("1_e47gd")
 
-[node name="Tile_mesh" type="MeshInstance3D" parent="."]
+[node name="Tile_mesh" type="MeshInstance3D" parent="." unique_id=2037521379]
 unique_name_in_owner = true
 transform = Transform3D(0.95, 0, 0, 0, 0.1, 0, 0, 0, 0.95, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_p7c66")
 mesh = SubResource("ArrayMesh_g6n35")
 skeleton = NodePath("")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Tile_mesh"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Tile_mesh" unique_id=563905534]
 transform = Transform3D(1.05263, 0, 0, 0, 10, 0, 0, 0, 1.05263, 0, 0.190098, 0.500708)
 material_override = SubResource("StandardMaterial3D_p7c66")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_o7b1c")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Tile_mesh"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Tile_mesh" unique_id=187755197]
 transform = Transform3D(1.05263, 0, 0, 0, 10, 0, 0, 0, 1.05263, -0.157895, 0.190098, 0.500708)
 material_override = SubResource("StandardMaterial3D_p7c66")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_o7b1c")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Tile_mesh"]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Tile_mesh" unique_id=1467594312]
 transform = Transform3D(1.05263, 0, 0, 0, 10, 0, 0, 0, 1.05263, 0.157895, 0.190098, 0.500708)
 material_override = SubResource("StandardMaterial3D_p7c66")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_o7b1c")
 skeleton = NodePath("../..")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=709619732]
 shape = SubResource("BoxShape3D_7b5f3")
 
-[node name="Decal3" type="Decal" parent="."]
+[node name="Decal3" type="Decal" parent="." unique_id=731054386]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -0.25)
 size = Vector3(1.19, 0.131, 0.5)
 texture_albedo = ExtResource("1_o7b1c")
@@ -224,7 +223,7 @@ distance_fade_enabled = true
 distance_fade_begin = 5.0
 distance_fade_length = 6.0
 
-[node name="Decal2" type="Decal" parent="."]
+[node name="Decal2" type="Decal" parent="." unique_id=1841069664]
 transform = Transform3D(1, 0, 1.78814e-07, 0, 1, 0, -1.78814e-07, 0, 1, 0, 0, 0.25)
 size = Vector3(1.19, 0.131, 0.5)
 texture_albedo = ExtResource("1_o7b1c")
@@ -237,20 +236,20 @@ distance_fade_enabled = true
 distance_fade_begin = 5.0
 distance_fade_length = 18.0
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=2013959322]
 visible = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=926582118]
 shape = SubResource("BoxShape3D_u4xnt")
 
-[node name="hitSound" type="AudioStreamPlayer" parent="."]
+[node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=1779741053]
 unique_name_in_owner = true
-stream = ExtResource("2_sj5qu")
+stream = ExtResource("3_35obo")
 volume_db = -30.0
 pitch_scale = 0.1
 script = SubResource("GDScript_mqgk1")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="."]
+[node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=1504935281]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -0.5)
 top_level = true
 visible = false
@@ -266,7 +265,7 @@ process_material = SubResource("ParticleProcessMaterial_j432d")
 draw_pass_1 = SubResource("QuadMesh_4ekew")
 script = ExtResource("4_mcuqq")
 
-[node name="Special_smoke" type="GPUParticles3D" parent="."]
+[node name="Special_smoke" type="GPUParticles3D" parent="." unique_id=572469419]
 transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 top_level = true
 visible = false

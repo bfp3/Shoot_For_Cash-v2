@@ -2,26 +2,38 @@
 
 [ext_resource type="Script" uid="uid://dc0q6wp4dswnf" path="res://sc/2025_Levels/Scripts/level_1.gd" id="1_hucnp"]
 [ext_resource type="PackedScene" uid="uid://dbowvbnltfw4y" path="res://lib/Health_manager/HealthManager.tscn" id="2_728id"]
+[ext_resource type="Script" uid="uid://b6e28eq4ajs5p" path="res://lib/Health_manager/Scripts/health_manager.gd" id="3_l0rit"]
 [ext_resource type="PackedScene" uid="uid://bnd1ifkp64c8q" path="res://lib/Cannonball_System/CMS/CMS.tscn" id="3_rh4rn"]
 [ext_resource type="PackedScene" uid="uid://dee8qfh0jrlf1" path="res://lib/Flag_rollout_Scene/FlagRollout.tscn" id="4_8it3a"]
 [ext_resource type="PackedScene" uid="uid://kethagfebo03" path="res://lib/Cannonball_System/Launchers/Cannon_Launcher.tscn" id="5_23381"]
-[ext_resource type="Texture2D" uid="uid://cvojn6pgc5l2r" path="res://res/Kenney_prototype_textures/Light/texture_06.png" id="6_irara"]
+[ext_resource type="Script" uid="uid://brd1an8161gkw" path="res://lib/Cannonball_System/CMS/cms.gd" id="5_qr7ox"]
+[ext_resource type="Script" uid="uid://f65tu6smfqsf" path="res://lib/Flag_rollout_Scene/flag_rollout.gd" id="7_1kb6n"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="7_5wsma"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="8_gtacw"]
+[ext_resource type="Script" uid="uid://m72ft3v8fxiu" path="res://lib/Cannonball_System/Launchers/Scripts/cannon_launcher.gd" id="9_3qvbb"]
 [ext_resource type="Script" uid="uid://d3ntxm07kmoua" path="res://lib/Level_Transition_Sequence/Scripts/zoom_out_sequence.gd" id="9_vihtr"]
+[ext_resource type="PackedScene" uid="uid://qbblgconr2jy" path="res://lib/Cannonball_System/Cannonballs/Standard_cannonball.tscn" id="10_c7emh"]
 [ext_resource type="Shader" uid="uid://bojpbk76w7ift" path="res://unfiled/HUD_filters/Tv_shader.gdshader" id="10_rvmu5"]
+[ext_resource type="Script" uid="uid://dxshdy1855u5y" path="res://lib/Cannonball_System/Launchers/Scripts/cannonball_launcher_unit.gd" id="11_a5ljl"]
 [ext_resource type="Script" uid="uid://d2hbdu3aenrpl" path="res://lib/tv_hud_shader.gd" id="11_fxan6"]
 [ext_resource type="Script" uid="uid://kl6e1br1d4p7" path="res://lib/Game Loop Manager_v2/Scripts/game_loop_manager.gd" id="12_aietf"]
+[ext_resource type="Script" uid="uid://d3lep4f27df8x" path="res://lib/Cannonball_System/Pineapple_launcher/Scripts/pineapple_manager.gd" id="12_e24k7"]
+[ext_resource type="Script" uid="uid://dyrsmcifq6qar" path="res://lib/Cannonball_System/Pineapple_launcher/Scripts/pineapple_launcher_.gd" id="13_lcxd6"]
 [ext_resource type="PackedScene" uid="uid://cxpw8bcbisupb" path="res://lib/Game Loop Manager_v2/silence_phase.tscn" id="13_my0x1"]
 [ext_resource type="PackedScene" uid="uid://3ihgqw8d5wdi" path="res://lib/Game Loop Manager_v2/hud_light_on.tscn" id="14_2fb6x"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="14_x5knw"]
 [ext_resource type="PackedScene" uid="uid://bnmano2xjdcvj" path="res://lib/Game Loop Manager_v2/hud_light_off.tscn" id="15_2hy3y"]
+[ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="16_anwvi"]
 [ext_resource type="PackedScene" uid="uid://cidqu4icsqrjo" path="res://lib/Game Loop Manager_v2/launching_wave_phase.tscn" id="16_rcehh"]
+[ext_resource type="Script" uid="uid://dy4vdys8hdaxb" path="res://lib/Cannonball_System/Smokescreen_Cannonballs/Scripts/smokescreen_launcher_manager.gd" id="17_fevbk"]
 [ext_resource type="PackedScene" uid="uid://b27flnj7w5210" path="res://lib/Game Loop Manager_v2/settle_phase.tscn" id="17_qo36q"]
+[ext_resource type="Script" uid="uid://bsrif2bhjw4r7" path="res://lib/Cannonball_System/Launchers/smokescreen_launcher_single.gd" id="18_3vndg"]
 [ext_resource type="Script" uid="uid://cocw3p0y4wrb4" path="res://lib/opening_sequence.gd" id="18_gmm7r"]
-[ext_resource type="PackedScene" uid="uid://ch3h80qrvx5cx" path="res://unfiled/02_level_card_transitions/Intro_card_v2.tscn" id="19_rp72c"]
-[ext_resource type="PackedScene" uid="uid://csdxcukfry3s" path="res://unfiled/Win_and_lose_scripts/level_completed_win.tscn" id="20_5f4i7"]
-[ext_resource type="Texture2D" uid="uid://b1deqghyhs2jp" path="res://unfiled/Decal_placeholders/Godot_load_screen.png" id="21_bya4j"]
+[ext_resource type="Script" uid="uid://bi2gwik8gxp3k" path="res://lib/Cannonball_System/Bonus_round_launchers/Scripts/bonus_round_launcher_manager.gd" id="19_4qhcp"]
+[ext_resource type="Script" uid="uid://bad65c7gduj6k" path="res://lib/Cannonball_System/Bonus_round_launchers/Scripts/bonus_cannon_unit.gd" id="20_pbdn3"]
+[ext_resource type="Script" uid="uid://dymirmr3f755y" path="res://lib/Cannonball_System/Launchers/Scripts/launcher_vfx.gd" id="21_juggq"]
 [ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://ch/Player.tscn" id="22_b2550"]
+[ext_resource type="Script" uid="uid://8yukefq1287d" path="res://lib/Cannonball_System/Launchers/Scripts/launcher_sfx.gd" id="22_q73mq"]
 [ext_resource type="PackedScene" uid="uid://cj3hlihw2uspw" path="res://lib/HUD_Feedback_Corner_Folder/HUD_feedback_corner.tscn" id="23_eqtmj"]
 [ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="24_c5kql"]
 [ext_resource type="PackedScene" uid="uid://dvidweobk7f5d" path="res://lib/Bonus_Round/Bonus_round_scene.tscn" id="25_6jdn0"]
@@ -30,27 +42,397 @@
 [ext_resource type="PackedScene" uid="uid://b4b5m4iiqsxfk" path="res://unfiled/Hostage_sub_viewport/Radar_viewport.tscn" id="28_jp1ay"]
 [ext_resource type="PackedScene" uid="uid://cxqry0burrjjd" path="res://ch/02_enemies/birdsAnimated.tscn" id="29_koyg5"]
 [ext_resource type="Environment" uid="uid://cq3pswbma6of4" path="res://res/area_2_world_env.tres" id="30_xv505"]
-[ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://sfx/BP_tunes/oasisWorld.wav" id="32_fxeoi"]
 [ext_resource type="Texture2D" uid="uid://b830br7pig61j" path="res://res/Kenney_prototype_textures/Dark/texture_08.png" id="33_ew0fq"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="34_m8bcq"]
 [ext_resource type="PackedScene" uid="uid://cgiw0h63ygje" path="res://ch/targets/target_rolling.tscn" id="35_0h4o5"]
 [ext_resource type="PackedScene" uid="uid://cju41swvx7pgc" path="res://ch/environment_decoration/structure_parts/wire_frame.tscn" id="36_1c13p"]
+[ext_resource type="Script" uid="uid://da45gubie1h3t" path="res://ch/Player/scripts/player.gd" id="36_hr3pl"]
 [ext_resource type="PackedScene" uid="uid://c0ud5qdh0l7bt" path="res://ch/targets/target_spinning_pole.tscn" id="37_xwt3e"]
+[ext_resource type="Script" uid="uid://b8pym47cccjcg" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/hud_feedback_corner.gd" id="38_04sh2"]
 [ext_resource type="PackedScene" uid="uid://dhox5eivkdyjx" path="res://ch/environment_decoration/structure_parts/structure.tscn" id="38_nrkak"]
 [ext_resource type="PackedScene" uid="uid://cknldsn4o1637" path="res://ch/environment_decoration/structure_parts/bucket.tscn" id="39_5fifw"]
 [ext_resource type="PackedScene" uid="uid://khv1h2fbb8h6" path="res://ch/targets/target_creator.tscn" id="40_v52l6"]
 [ext_resource type="PackedScene" uid="uid://yeyxckfh1y0s" path="res://ch/targets/PoleShape.tscn" id="41_5jy7k"]
+[ext_resource type="Script" uid="uid://n2bo8vdqmuac" path="res://lib/Bonus_Round/Scripts/bonus_round_target.gd" id="41_r8kak"]
 [ext_resource type="PackedScene" uid="uid://4pw25o0qn7a5" path="res://ch/environment_decoration/post.tscn" id="42_dcunn"]
+[ext_resource type="Script" uid="uid://b0tgbssjhl82l" path="res://ch/Egg/Scripts/egg_cage.gd" id="43_23vk4"]
 [ext_resource type="PackedScene" uid="uid://bwwqs8ytry7wo" path="res://ch/environment_decoration/trees.tscn" id="43_qprsx"]
 [ext_resource type="PackedScene" uid="uid://djq7nljg07i1b" path="res://ch/environment_decoration/mountain.tscn" id="44_uteki"]
 [ext_resource type="Texture2D" uid="uid://kdva080m52at" path="res://res/gradients/mountain-distant.tres" id="45_setqa"]
+[ext_resource type="Shader" uid="uid://bw8qs3lm42cvq" path="res://unfiled/Hostage_sub_viewport/Radar_viewport.gdshader" id="46_mhqpi"]
 [ext_resource type="Texture2D" uid="uid://brm4tvdptq4gf" path="res://res/gradients/sky-gradient.tres" id="46_nlrqe"]
 [ext_resource type="PackedScene" uid="uid://bbnwa3i4ksui2" path="res://ch/environment_decoration/helicopter.tscn" id="47_1f1py"]
-[ext_resource type="Texture2D" uid="uid://dsmre3g6oaxny" path="res://res/textures_2D/texture_materials/park_sand_diff_2k.png" id="48_fysq7"]
-[ext_resource type="Texture2D" uid="uid://bgp368qd14nd3" path="res://res/textures_2D/texture_materials/park_sand_nor_gl_2k.png" id="49_s2vwd"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="47_vjwf6"]
+[ext_resource type="Texture2D" uid="uid://ddgqm3060ieft" path="res://unfiled/Decal_placeholders/Egg_emoji.png" id="48_dbc85"]
 [ext_resource type="Texture2D" uid="uid://b8wgnqghjdkhj" path="res://res/textures_2D/Fuji_mountain.png" id="50_kqim3"]
 [ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="51_k4xim"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="52_mm7j7"]
+[ext_resource type="Texture2D" uid="uid://ikpnffkolpqk" path="res://res/gradients/water-gradient.tres" id="66_rd2ou"]
+[ext_resource type="Script" uid="uid://5jbebbngccek" path="res://ch/01_characters/Scripts/birds_flying_script.gd" id="69_rwl4m"]
+
+[sub_resource type="GDScript" id="GDScript_7nk6u"]
+script/source = "extends Node3D
+
+signal all_bombs_empty
+
+var checking_for_empty := false
+
+func start_checking_empty() -> void:
+	if not checking_for_empty:
+		checking_for_empty = true
+
+func remove_everything() -> void:
+	if get_children().size() > 0:
+		for i in get_children():
+			if i != null:
+				if i.has_method('was_hit_tween'):
+					i.was_hit_tween()
+			
+			#await get_tree().create_timer(0.1).timeout
+
+func manually_check_if_empty() -> void:
+	all_bombs_empty.emit()
+	#print(get_child_count(), \" How many balls are left in bomb container\")
+	#if checking_for_empty and get_child_count() == 0:
+		#checking_for_empty = false
+	#all_bombs_empty.emit()
+#
+	#if get_children().size() > 0:
+		#for i in get_children():
+			#if i != null:
+				#i.queue_free()
+
+
+func turn_off_checking() -> void:
+	if checking_for_empty:
+		checking_for_empty = false
+		set_process(false)
+	
+"
+
+[sub_resource type="GDScript" id="GDScript_uqeah"]
+script/source = "extends Node
+
+const STANDARD_CANNONBALL_STANDARD = preload(\"res://lib/Cannonball_System/Cannonballs/Standard_cannonball.tscn\")
+const LEVEL_3_CANNONBALLS = preload('res://lib/Cannonball_System/Cannonballs/Inherited_Scenes/level_3_cannonballs.tscn')
+
+@export var standard_cannonball := false
+@export var level_3_cannonball := false
+
+func _ready() -> void:
+	if standard_cannonball:
+		$'../Launcher_container'.STANDARD_CANNONBALL = STANDARD_CANNONBALL_STANDARD
+		
+	if level_3_cannonball:
+		$'../Launcher_container'.STANDARD_CANNONBALL = LEVEL_3_CANNONBALLS
+
+	else:
+		$'../Launcher_container'.STANDARD_CANNONBALL = STANDARD_CANNONBALL_STANDARD
+"
+
+[sub_resource type="GDScript" id="GDScript_s7c0w"]
+resource_name = "Launcher_container"
+script/source = "extends Node3D
+
+
+@export var STANDARD_CANNONBALL : PackedScene
+@onready var list_of_cannonballs: Node = $'../List_of_cannonballs'
+
+var total_of_cannons_in_level := 0
+
+func _ready() -> void:
+	
+	if STANDARD_CANNONBALL == null:
+		print('didnt set a cannonball')
+	
+	var children = get_children()
+	total_of_cannons_in_level = get_parent().total_of_cannons_in_level
+	
+	
+	while children.size() > total_of_cannons_in_level:
+		var to_remove = children.back()
+		children.pop_back()  # Remove from our local array
+		to_remove.queue_free()
+	
+	
+#func reduce_arc_trajectory() -> void:
+	#var children = get_children()
+	#for i in children:
+		#i.arc_strength = i.arc_strength / 2
+		#i.launch_speed = 1.0#i.launch_speed / 2
+		#print('it worked')
+"
+
+[sub_resource type="GDScript" id="GDScript_lpwer"]
+script/source = "extends AudioStreamPlayer
+
+@onready var parent = get_parent()
+@export var max_distance = 15.0
+@export var max_volume_db = -24.0
+@export var min_volume_db = -40.0
+
+func play_sound() -> void:
+	distance_from_player()
+	if not playing:
+		play()
+
+func distance_from_player() -> void:
+	var player = get_tree().get_first_node_in_group('Player')
+	var distance = parent.global_position.distance_to(player.global_position)
+	#print_debug(\"DISTANCE\", distance)
+	distance = clamp(distance, 1.0, max_distance)
+	var _vol = max_volume_db + (min_volume_db - max_volume_db) * (distance - 1) / (max_distance - 1)
+	_vol = clamp(_vol, min_volume_db, max_volume_db)
+	self.volume_db = _vol
+"
+
+[sub_resource type="Curve" id="Curve_70s4d"]
+_data = [Vector2(0, 0.94382), 0.0, 0.0, 0, 0, Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.275676, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_ihgre"]
+curve = SubResource("Curve_70s4d")
+
+[sub_resource type="Curve" id="Curve_tda87"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_gpwjl"]
+curve = SubResource("Curve_tda87")
+
+[sub_resource type="Gradient" id="Gradient_asir6"]
+offsets = PackedFloat32Array(0.0145349, 1)
+colors = PackedColorArray(0.22, 0.22, 0.22, 1, 0.45, 0.45, 0.45, 0.286275)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_dx3k6"]
+gradient = SubResource("Gradient_asir6")
+
+[sub_resource type="Curve" id="Curve_uqeah"]
+_data = [Vector2(0, 0.0226277), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_j0su1"]
+curve = SubResource("Curve_uqeah")
+
+[sub_resource type="Curve" id="Curve_ihgre"]
+_data = [Vector2(0, 0.29781), 0.0, 0.0, 0, 0, Vector2(0.0425532, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_2671q"]
+curve = SubResource("Curve_ihgre")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7fhab"]
+lifetime_randomness = 0.8
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 0.0
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+direction = Vector3(0, 1, 0)
+spread = 5.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+angular_velocity_curve = SubResource("CurveTexture_gpwjl")
+radial_velocity_min = 0.0999776
+radial_velocity_max = 0.199978
+radial_velocity_curve = SubResource("CurveTexture_j0su1")
+gravity = Vector3(0, 0.01, 0)
+scale_min = 0.1
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_2671q")
+color_ramp = SubResource("GradientTexture1D_dx3k6")
+alpha_curve = SubResource("CurveTexture_ihgre")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_umkrl"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("34_m8bcq")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_3rpal"]
+material = SubResource("StandardMaterial3D_umkrl")
+
+[sub_resource type="Curve" id="Curve_7fhab"]
+_data = [Vector2(0, 0.94382), 0.0, 0.0, 0, 0, Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.275676, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_dx3k6"]
+curve = SubResource("Curve_7fhab")
+
+[sub_resource type="Curve" id="Curve_j0su1"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_8d4lw"]
+curve = SubResource("Curve_j0su1")
+
+[sub_resource type="Gradient" id="Gradient_umkrl"]
+offsets = PackedFloat32Array(0.0145349, 1)
+colors = PackedColorArray(0.22, 0.22, 0.22, 1, 0.45, 0.45, 0.45, 0.286275)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_a3y2m"]
+gradient = SubResource("Gradient_umkrl")
+
+[sub_resource type="Curve" id="Curve_mc0tm"]
+_data = [Vector2(0, 0.0226277), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_rafxd"]
+curve = SubResource("Curve_mc0tm")
+
+[sub_resource type="Curve" id="Curve_hqmlk"]
+_data = [Vector2(0, 0.29781), 0.0, 0.0, 0, 0, Vector2(0.0425532, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_v3w55"]
+curve = SubResource("Curve_hqmlk")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_a8tx1"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 0.0
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+direction = Vector3(0, 1, 0)
+spread = 5.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+angular_velocity_curve = SubResource("CurveTexture_8d4lw")
+radial_velocity_min = 0.0999776
+radial_velocity_max = 0.199978
+radial_velocity_curve = SubResource("CurveTexture_rafxd")
+gravity = Vector3(0, 1.01, 0)
+scale_min = 0.1
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_v3w55")
+color_ramp = SubResource("GradientTexture1D_a3y2m")
+alpha_curve = SubResource("CurveTexture_dx3k6")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8d4lw"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("34_m8bcq")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_optq4"]
+material = SubResource("StandardMaterial3D_8d4lw")
+size = Vector2(5, 5)
+
+[sub_resource type="GDScript" id="GDScript_umkrl"]
+script/source = "extends AudioStreamPlayer
+
+@onready var parent = get_parent()
+@export var max_distance = 15.0
+@export var max_volume_db = -24.0
+@export var min_volume_db = -40.0
+
+func play_sound() -> void:
+	distance_from_player()
+	if not playing:
+		play()
+
+func distance_from_player() -> void:
+	var player = get_tree().get_first_node_in_group('Player')
+	var distance = parent.global_position.distance_to(player.global_position)
+	#print_debug(\"DISTANCE\", distance)
+	distance = clamp(distance, 1.0, max_distance)
+	var _vol = max_volume_db + (min_volume_db - max_volume_db) * (distance - 1) / (max_distance - 1)
+	_vol = clamp(_vol, min_volume_db, max_volume_db)
+	self.volume_db = _vol
+"
+
+[sub_resource type="Curve" id="Curve_a3y2m"]
+_data = [Vector2(0, 0.94382), 0.0, 0.0, 0, 0, Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.275676, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_asir6"]
+curve = SubResource("Curve_a3y2m")
+
+[sub_resource type="Curve" id="Curve_3517d"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_uqeah"]
+curve = SubResource("Curve_3517d")
+
+[sub_resource type="Gradient" id="Gradient_mc0tm"]
+offsets = PackedFloat32Array(0.0145349, 1)
+colors = PackedColorArray(0.22, 0.22, 0.22, 1, 0.45, 0.45, 0.45, 0.286275)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ihgre"]
+gradient = SubResource("Gradient_mc0tm")
+
+[sub_resource type="Curve" id="Curve_rafxd"]
+_data = [Vector2(0, 0.0226277), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_7fhab"]
+curve = SubResource("Curve_rafxd")
+
+[sub_resource type="Curve" id="Curve_fdq1d"]
+_data = [Vector2(0, 0.29781), 0.0, 0.0, 0, 0, Vector2(0.0425532, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_3rpal"]
+curve = SubResource("Curve_fdq1d")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hqmlk"]
+lifetime_randomness = 0.8
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 0.0
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+direction = Vector3(0, 1, 0)
+spread = 5.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+angular_velocity_curve = SubResource("CurveTexture_uqeah")
+radial_velocity_min = 0.0999776
+radial_velocity_max = 0.199978
+radial_velocity_curve = SubResource("CurveTexture_7fhab")
+gravity = Vector3(0, 0.01, 0)
+scale_min = 0.1
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_3rpal")
+color_ramp = SubResource("GradientTexture1D_ihgre")
+alpha_curve = SubResource("CurveTexture_asir6")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gpwjl"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("34_m8bcq")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_v3w55"]
+material = SubResource("StandardMaterial3D_gpwjl")
 
 [sub_resource type="GDScript" id="GDScript_j63gk"]
 script/source = "extends Node3D
@@ -76,7 +458,6 @@ func rumble_effect_tween() -> void:
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y8nxn"]
 albedo_color = Color(0.96, 0.7224, 0.528, 1)
-albedo_texture = ExtResource("6_irara")
 metallic = 1.0
 uv1_scale = Vector3(0.69, 0.69, 0.69)
 uv1_triplanar = true
@@ -728,6 +1109,390 @@ func _ready() -> void:
 		#new_arrow.look_at($Unique_marker.global_position, Vector3.UP, true)
 "
 
+[sub_resource type="GDScript" id="GDScript_4hj2f"]
+script/source = "extends Control
+@onready var egg_health_points: Control = %egg_health_points
+@onready var king_eggs_face: Control = $King_eggs_face
+
+@export var starting_health : int = 5
+
+@export var await_time := 2.5
+@export var fade_in_dur := 1.0
+
+func _ready() -> void:
+	EventBus.instance.main_egg_destroyed.connect(_hostage_killed)
+	
+	fade_in_tween()
+	king_eggs_face.hide()
+
+func _hostage_killed() -> void:
+	var tween = create_tween()
+	tween.tween_property(%Hostage_face, \"modulate\", Color.TRANSPARENT, 0.25).set_trans(Tween.TRANS_LINEAR)
+	await tween.finished
+	%Hostage_face.hide()
+
+func fade_in_tween() -> void:
+	modulate = Color.TRANSPARENT
+	await get_tree().create_timer(await_time).timeout
+	
+	var tween = create_tween()
+	tween.tween_property(self, \"modulate\", Color.WHITE, fade_in_dur)
+	await tween.finished
+	egg_health_points.start_up_tween()
+	await get_tree().create_timer(2.5).timeout
+	king_eggs_face.fade_in_king_egg_face()
+
+
+
+	
+	
+func init_sequence_intro() -> void:
+	await get_tree().create_timer(6.0).timeout
+	%hostage_health_bar.initialise_health_bar()
+	await get_tree().create_timer(2.0).timeout
+	%Hostage_timer.initialise_timer()
+
+func init_sequence_no_intro() -> void:
+	%hostage_health_bar.initialise_health_bar()
+	%Hostage_timer.initialise_timer()
+"
+
+[sub_resource type="GDScript" id="GDScript_cub2u"]
+script/source = "extends Control
+
+@onready var sub_control: Control = $Sub_root_control
+@export var scale_amount := 5
+
+var expanding := false
+var orig_scale : Vector2
+var orig_pos : Vector2
+
+var radar_off := false
+
+var radar_power_meter := 0.0
+
+
+@export var await_time := 2.5
+@export var fade_in_dur := 1.0
+
+
+func fade_in_tween() -> void:
+	modulate = Color.TRANSPARENT
+	await get_tree().create_timer(await_time).timeout
+	
+	var tween = create_tween()
+	tween.tween_property(self, \"modulate\", Color.WHITE, fade_in_dur)
+	#tween.tween_property(self, \"modulate\", Color('ffffff77'), fade_in_dur)
+	
+
+func _ready() -> void:
+	fade_in_tween()
+	
+	orig_scale = sub_control.scale
+	orig_pos = sub_control.global_position
+
+func expand_shrink() -> void:
+	if radar_off:
+		turn_on()
+	else:
+		turn_off()
+	#
+	#if expanding:
+		#var dur : float = 0.25
+		#var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_LINEAR)
+		#tween.tween_property(sub_control, \"scale\", Vector2.ONE, dur)
+		#await tween.finished
+		#expanding = false
+	#
+	#else:
+		#var dur : float = 0.25
+		#var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_LINEAR)
+		#tween.tween_property(sub_control, \"scale\", sub_control.scale * scale_amount, dur)
+		#expanding = true 
+
+func turn_off() -> void:
+	var dur : float = 0.2
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, \"modulate\", Color('80808080'), dur)
+	await tween.finished
+	radar_off = true
+	#%Radar_power_system.set_process(false)
+	$Sub_root_control/Radar.set_process(false)
+	
+func turn_on() -> void:
+	var dur : float = 0.2
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, \"modulate\", Color('FFFFFF'), dur)
+	await tween.finished
+	radar_off = false
+	#%Radar_power_system.set_process(true)
+	$Sub_root_control/Radar.set_process(true)
+	
+#func _on_button_pressed() -> void:
+	#if expanding:
+		#return
+	#expanding = true
+	#
+	#var dur : float = 0.5
+	#var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_LINEAR)
+	#tween.tween_property(sub_control, \"scale\", sub_control.scale * scale_amount, dur)
+	#tween.tween_interval(1.0)
+	#tween.tween_property(sub_control, \"scale\", Vector2.ONE, dur)
+	#await tween.finished
+	#expanding = false
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nnybo"]
+shader = ExtResource("46_mhqpi")
+shader_parameter/ellipse_a = 1.0
+shader_parameter/ellipse_b = 1.035
+shader_parameter/sweep_thickness = 0.005
+shader_parameter/sweep_angle_range = 0.195
+shader_parameter/sweep_speed = 0.5
+shader_parameter/trail_fade_speed = 10.0
+shader_parameter/pulse_speed = 0.1
+shader_parameter/pulse_thickness = 0.23
+shader_parameter/pulse_color = Color(0.721885, 0.662532, 0.503374, 0.113725)
+shader_parameter/bg_color = Color(0, 0.2, 0, 0)
+shader_parameter/arm_color = Color(0.7, 0.548333, 0, 0.137255)
+shader_parameter/jam_chance_speed = 0.1
+shader_parameter/jam_duration = 0.1
+shader_parameter/min_time_between_jams = 0.5
+shader_parameter/jam_oscillation_amplitude = 0.3
+shader_parameter/jam_oscillation_speed = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bynbe"]
+bg_color = Color(0.35, 0.35, 0.35, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 10
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 6.0
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_drble"]
+Panel/styles/panel = SubResource("StyleBoxFlat_bynbe")
+
+[sub_resource type="GDScript" id="GDScript_av1no"]
+script/source = "extends Control
+
+const DOT_SCENE = preload(\"res://700_2D_nodes_UI/Hostage_sub_viewport/radar_dot.tscn\")
+const SMILEY_CAT = preload(\"res://700_2D_nodes_UI/Decal_placeholders/Smiley_cat.png\")
+@onready var radar_dots: Control = $Radar_dots
+
+@export var tower_reference: Node3D
+@export var detection_radius := 5.0  # world units
+@export var radar_radius := 90.0  # pixels
+@export var tower_color := Color(1, 1, 1)
+@export var tower_size := Vector2(20, 20)
+@export var tower_texture: Texture2D
+
+
+var dot_size := Vector2(12,12)
+var active_dots: Dictionary = {}
+var tower_icon: TextureRect
+
+var t : float = 0.0
+var time_threshold : float = 1.0
+
+@export_node_path(\"ProgressBar\") var battery_bar_path: NodePath
+var battery_bar: ProgressBar
+
+var faded_in := false
+
+func _ready() -> void:
+	battery_bar = get_node(battery_bar_path)
+	
+	var hostage = get_tree().get_first_node_in_group(\"Egg_Cage\")
+	if hostage:
+		hostage.taken_a_hit_from_a_target.connect(shake_hostage)
+		
+
+	tower_icon = TextureRect.new()
+	tower_icon.texture = tower_texture
+	tower_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tower_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	tower_icon.modulate = tower_color
+	tower_icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	tower_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	tower_icon.size = tower_size
+	tower_icon.position = get_center_pos() - tower_size / 2
+	add_child(tower_icon)
+
+	self.modulate = Color('FFFFFF30')
+	
+	EventBus.instance.cannonball_fired.connect(_on_cannonball_fired)
+	EventBus.instance.settle_phase_started.connect(_on_settle_phase)
+	EventBus.instance.egg_taken_damage.connect(_on_egg_taken_damage)
+
+func _on_cannonball_fired() -> void:
+	if faded_in:
+		return
+	faded_in = true
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, \"scale\", Vector2.ONE * 1.01, 0.25)
+	tween.tween_property(self, \"scale\", Vector2.ONE, 0.25)
+	tween.parallel().tween_property(self, \"modulate\", Color.WHITE, 0.5)
+	tween.parallel().tween_property($'../Radar_arm/TextureRect', \"modulate\", Color.WHITE,  0.25)
+	await tween.finished
+	
+func _on_settle_phase() -> void:
+	var tween = create_tween()
+	tween.tween_interval(0.25)
+	tween.tween_property($'../Radar_arm/TextureRect', \"modulate\", Color('FFFFFF00'), 0.5)
+	tween.tween_property(self, \"modulate\", Color('FFFFFF50'), 0.25)
+	
+	await tween.finished
+	faded_in = false
+
+func _process(delta):
+	#if battery_bar:
+		#var battery_value = clamp(battery_bar.value, 0, 100)
+		## Map battery 0–100 to time_threshold 3.0–0.1
+		#time_threshold = lerp(3.0, 0.1, battery_value / 100.0)
+	time_threshold = 0.05
+	t += delta
+	if t > time_threshold:
+		t = 0.0
+		# Continue with radar dot updates
+	else:
+		return
+	
+	var current_targets := []
+
+	for target in get_tree().get_nodes_in_group(\"Moving_target\"):
+		if target.moving:
+			current_targets.append(target)
+			update_or_add_dot(target)
+
+	# Remove any stale dots for targets no longer active
+	for tracked_target in active_dots.keys():
+		if tracked_target not in current_targets:
+			var dot = active_dots[tracked_target]
+			if is_instance_valid(dot):
+				dot.start_fade_out()
+			active_dots.erase(tracked_target)
+
+
+func update_or_add_dot(target: Node3D):
+	var world_offset = target.global_transform.origin - tower_reference.global_transform.origin
+	var dist = world_offset.length()
+
+	if dist > detection_radius:
+		if target in active_dots:
+			active_dots[target].queue_free()
+			active_dots.erase(target)
+		return
+
+	var screen_pos = Vector2(
+	clamp(-world_offset.x / detection_radius, -1.0, 1.0),
+	clamp(-world_offset.z / detection_radius, -1.0, 1.0)
+) * radar_radius
+
+	var dot_pos = get_center_pos() + screen_pos
+
+	if not active_dots.has(target):
+		var dot = DOT_SCENE.instantiate()
+		dot.position = dot_pos - dot_size / 2
+
+		var color := get_confidence_color(target)
+		dot.setup(target, color)
+		
+		radar_dots.add_child(dot)
+		target.target_destroyed.connect(dot.on_target_destroyed)
+		active_dots[target] = dot
+	else:
+		var dot = active_dots[target]
+		if is_instance_valid(dot):
+			dot.position = dot_pos - dot_size / 2
+
+
+func get_center_pos() -> Vector2:
+	return Vector2(size.x, size.y) / 2
+
+#func clear_dots():
+	#for child in radar_dots.get_children():
+		#child.queue_free()
+
+func get_confidence_color(target: Node3D) -> Color:
+	if not target.has_meta(\"type\"):
+		return Color(0.5, 0.5, 0.5)  # fallback grey if shot type is unknown
+
+	var shot_type: String = target.get_meta(\"type\")
+
+	match shot_type:
+		\"RED\":
+			return Color(\"ad3636\")  # Threat
+		\"ORANGE\":
+			return Color(\"bd4520\")  # Maybe
+		\"GREY\":
+			return Color(0.5, 0.5, 0.5)  # Not a threat
+		_:
+			return Color(0.25, 0.25, 0.25)  # Unknown shot type (dark grey)
+#
+#
+	#var is_close_call = target.target_is_going_to_hit_cage or dist <= 5.0
+#
+	#if is_close_call and randi() % 5 == 0:
+		#target.set_meta(\"intended_color\", intended_color)
+		##return Color.ORANGE_RED
+		#return Color('bd4520')
+#
+	#return intended_color
+
+
+#func get_confidence_color(target: Node3D) -> Color:
+	#
+	#if target.target_is_going_to_hit_cage:
+		#return Color(1.0, 0.0, 0.0)  # red = high risk
+	#
+	#var hostage_cage = get_tree().get_first_node_in_group(\"Bunny_Cage_physical\")
+	#var dist = target.target_position.distance_to(hostage_cage.global_position)
+#
+	#if dist < 2.0:
+		#return Color.ORANGE_RED  # red = high risk
+	#elif dist < 4.0:
+		#return Color.YELLOW  # yellow = maybe
+		#
+	##elif dist < 5.0:
+		##return Color.ORANGEc_RED
+	#else:
+		#return Color(0.0, 1.0, 0.0)  # fallback green
+
+func _on_egg_taken_damage() -> void:
+	increase_red_modulation()
+	
+func increase_red_modulation() -> void:
+	var inner : TextureRect = $Inner/Inner2
+	var inner_2 : TextureRect = $Middle/Inner2
+	var dur : float = 0.5
+	
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(inner, \"modulate\", Color(0,0,0,0.2), dur).as_relative()
+	tween.parallel().tween_property(inner_2, \"modulate\", Color(0,0,0,0.2), dur).as_relative()
+
+func shake_hostage() -> void:
+	var dur : float = 0.15
+	var intensity : float = 0.04
+
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_interval(0.25)
+	tween.tween_property(get_parent(), \"rotation\", -0.06, 0.1)
+	tween.tween_property(get_parent(), \"rotation\", intensity, dur)
+	tween.tween_interval(0.25)
+	tween.tween_property(get_parent(), \"rotation\", 0.0, 0.35)
+	await tween.finished
+"
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awb7n"]
 albedo_color = Color(0.56, 0.56, 0.56, 1)
 albedo_texture = ExtResource("33_ew0fq")
@@ -799,8 +1564,62 @@ size = Vector2(3.295, 1.37)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bxqlr"]
 albedo_color = Color(0.4, 0.4, 0.4, 1)
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jhvjd"]
+bounce = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8h3t4"]
+albedo_color = Color(0.670588, 0.517647, 0.403922, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_gkc0x"]
+_surfaces = [{
+"aabb": AABB(-2.4, -0.12, -0.4, 4.8, 0.24, 0.8),
+"attribute_data": PackedByteArray("AAAAAAAAgD8AAIA/AACAP6uqCj+amTk/q6oKP83MjD4AAAAAAAAAAAAAAADNzIw+zcyMPgAAAAAAAAAAAAAAAM3MjD4AAIA/AAAAAAAAgD+rqgo/mpk5PwAAAACamTk/AACAPwAAAACamTk/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/q6oKP83MjD4AAIA/AAAAAAAAAAAAAAAAq6oKP83MjD4AAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/q6oKP5qZOT8AAIA/AACAP6uqCj/NzIw+q6oKP83MjD4AAIA/AACAPwAAgD8AAAAAAAAAAAAAgD/NzIw+AACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAgD+rqgo/mpk5PwAAAACamTk/mpk5PwAAgD8AAIA/AACAP5qZOT8AAAAAq6oKP83MjD4AAAAAAAAAAAAAAADNzIw+AAAAAAAAgD8AAIA/AACAP6uqCj+amTk/q6oKP5qZOT8AAIA/AACAP6uqCj/NzIw+AAAAAAAAAAAAAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAIA/AACAPwAAgD8AAAAAq6oKP83MjD4AAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/5DiOPgAAgD8AAIA/AACAPwAAAAAAAIA/juM4PwAAAACO4zg/AACAPwAAgD8AAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAjuM4PwAAAAAAAAAAAACAPwAAAAAAAIA/AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAA5DiOPgAAgD/kOI4+"),
+"format": 34359738391,
+"material": SubResource("StandardMaterial3D_8h3t4"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 84,
+"vertex_data": PackedByteArray("mpkZQI/C9T3NzMy+mpkZQI/C9b3NzMy+mpkZQBDXI7zsUTi+mpkZQBDXI7zsUTg+mpkZQI/C9T3NzMw+mpkZQI/C9T3sUTg+mpkZQI/C9T3sUTg+mpkZQI/C9T3NzMw+mpkZwI/C9T3sUTg+mpkZQI/C9T3NzMy+mpkZQBDXI7zsUTi+mpkZQI/C9T3sUTi+mpkZQI/C9T3NzMy+mpkZQI/C9T3sUTi+mpkZwI/C9T3NzMy+mpkZQI/C9b3NzMy+mpkZQI/C9T3NzMy+mpkZwI/C9T3NzMy+mpkZQBDXI7zsUTg+mpkZQI/C9b3NzMw+mpkZQI/C9T3NzMw+mpkZQBDXI7zsUTg+mpkZQI/C9b3NzMy+mpkZQI/C9b3NzMw+mpkZQI/C9T3NzMw+mpkZQI/C9b3NzMw+mpkZwI/C9b3NzMw+mpkZwI/C9b3NzMw+mpkZQI/C9b3NzMw+mpkZQI/C9b3NzMy+mpkZQBDXI7zsUTi+mpkZQI/C9b3NzMy+mpkZQBDXI7zsUTg+mpkZwBDXI7zsUTi+mpkZwI/C9b3NzMw+mpkZwI/C9b3NzMy+mpkZwI/C9T3NzMw+mpkZwI/C9T3sUTg+mpkZQI/C9T3NzMw+mpkZwI/C9T3NzMw+mpkZQI/C9T3NzMw+mpkZwI/C9b3NzMw+mpkZwI/C9T3NzMw+mpkZwBDXI7zsUTg+mpkZwI/C9T3sUTg+mpkZwI/C9T3sUTi+mpkZwI/C9T3NzMy+mpkZQI/C9T3sUTi+mpkZwBDXI7zsUTi+mpkZwI/C9T3NzMy+mpkZwI/C9T3sUTi+mpkZwI/C9T3NzMw+mpkZwI/C9b3NzMw+mpkZwBDXI7zsUTg+mpkZwBDXI7zsUTg+mpkZwI/C9b3NzMw+mpkZwBDXI7zsUTi+mpkZQI/C9b3NzMy+mpkZwI/C9T3NzMy+mpkZwI/C9b3NzMy+mpkZwI/C9b3NzMw+mpkZQI/C9b3NzMy+mpkZwI/C9b3NzMy+mpkZwBDXI7zsUTi+mpkZwI/C9b3NzMy+mpkZwI/C9T3NzMy+mpkZQBDXI7zsUTg+mpkZwI/C9T3sUTg+mpkZwBDXI7zsUTg+mpkZwBDXI7zsUTi+mpkZwI/C9T3sUTi+mpkZQI/C9T3sUTi+mpkZQBDXI7zsUTi+mpkZQBDXI7zsUTg+mpkZwBDXI7zsUTg+mpkZwBDXI7zsUTi+mpkZQI/C9T3sUTi+mpkZQBDXI7zsUTi+mpkZwBDXI7zsUTi+mpkZQBDXI7zsUTi+mpkZwBDXI7zsUTg+mpkZQBDXI7zsUTg+mpkZQI/C9T3sUTg+mpkZwI/C9T3sUTg+////f/9//n////9//3/+f////3//f/5/////f/9//n////9//3/+f////3//f/5//3//////AAD/f/////8AAP9//////wAA////f/9//n////9//3/+f////3//f/5//3//////AAD/f/////8AAP9//////wAA/////wAA/z//////AAD/P/////8AAP8/////f/9//n////9//3/+f////3//f/5/////f/9//n////9//3/+f////3//f/5//3//fwAA/z//f/9/AAD/P/9//38AAP8//38AAP//AAD/fwAA//8AAP9/AAD//wAA////f/9//n////9//3/+f////3//f/5/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//3//////AAD/f/////8AAP9//////wAA/3//fwAA/z//f/9/AAD/P/9//38AAP8/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//3//////AAD/f/////8AAP9//////wAAAAD/f/9//n8AAP9//3/+fwAA/3//f/5/AAD/f/9//n8AAP9//3/+fwAA/3//f/5/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//////wAA/z//////AAD/P/////8AAP8//38AAP//AAD/fwAA//8AAP9/AAD//wAAAAD/f/9//n8AAP9//3/+fwAA/3//f/5//////wAA/7//////AAD/v/////8AAP+//3//fwAA/7//f/9/AAD/v/9//38AAP+//3//////////f/////////9//////////3//fwAA/7//f/9/AAD/v/9//38AAP+//3//////////f/////////9//////////////wAA/7//////AAD/v/////8AAP+/")
+}]
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_ncack"]
 size = Vector3(0.239625, 4.03137, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mrr0h"]
+albedo_color = Color(0.45098, 0.360784, 0, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_cg8mt"]
+_surfaces = [{
+"aabb": AABB(-3.6, -1.2, -3.6, 7.2, 2.4, 7.2),
+"attribute_data": PackedByteArray("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"),
+"format": 34359738391,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 210,
+"vertex_data": PackedByteArray("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f7Ewvv9///+2tP+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//b224+O/xcH9vUnejrw5vv9/////v/+/Ab2q6eHKzsH9vbbjdsc0vv9///9Iy/+/+bpC8JjW5sEBvarp4NIhvv9///9K1/+//38AAP///7//fwAA////v/9/AAD///+/rKb9wn9OzsG0oQDCDEs0vv9///9IS/+/PKsExWda5sGspv3CnVYhvv9///9KV/+/aq84yBFoEcI8qwTFnmP8vf9////yZP+/MrPLzPR4WMJqrzjITnO/vf9///+zdf+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/xrei9+3jEcL5ukLwmN/8vf9////y5P+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/SJwAwog4ysFUlv3CHTUwvv9///+2NP+/VJb9wh4t3cG8jwTFZikYvv9///+0KP+/vI8ExWYgAcJbiDjIERztvf9///8MG/+/W4g4yC8RPsL/f8vMvAumvf9///9MCv+/tKEAwnBDxcFInADCG0A5vv9/////P/+//38AAP///7//fwAA////v/9/AAD///+/Uln9wrsDTevCVATFzgPLkv9///8AAFmUwlQExQQEzvGUUDjIJAT2i/9///8AAIWNlFA4yH4EpvnMTMzMsQSEg/9///8AACWFAUJJ3nL8t+EBQrbjcvzxn/9////////fOEii94D7l8gys///Tfsguv9//////yXFBUVC8Pr7MtA4SKL32vv2sf9//////4XN/UKq6UP8jtYFRULwMPxMq/9//////1nUAUK242n8Q9z9QqrpYPxwpf9//////1raSl4AwpUDheVSWf3CngO/mP9///8AAFqa/38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/zEzMzE37efw4SJTQgPtYhv9//////yWFOEiU0Nr7CPQFRcHU+vswjv9//////4WNBUXB1DD8M+39QlHZQ/ywlP9//////1mUqmn9wp4Djtq2YwDClQO7o/9///8AAKOlMrP//0L0WMLGt6L3z+6/vf9///+y9f+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//3/LzLEE3cWjdzjIfgRnt/9///8AANm6o3c4yCQECM5CcATFBATMr/9///8AAHiyQnAExc4DstSqaf3CuwNwqf9///8AAKSr/UJR2WD8P+cBQkneafx4mv9//////6PltmMAwowDDOBKXgDCjANHnv9///8AAP+f/38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/")
+}]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_nafv1"]
+_surfaces = [{
+"aabb": AABB(-0.2, -2.4, -0.194986, 0.4, 4.8, 0.389971),
+"attribute_data": PackedByteArray("bts2PwAAAACSJEk/AAAAAJIkST8AAIA/JUmSPQAAAAAlSRI+AAAAACVJEj4AAIA/AAAAAAAAAAAlSZI9AAAAACVJkj0AAIA/kHscPwAAAACDzk8/AAAAAAAAgD8AAAAAg85PPwAAAADyUnM/AAAAAAAAgD8AAAAAJUkSPgAAAAC3bVs+AAAAALdtWz4AAIA/3AjHPgAAAACQexw/AAAAAAAAgD8AAAAA8sVAPgAAAADcCMc+AAAAAAAAgD8AAAAA27ZtPwAAAAAAAAAAAAAAAAAAAAAAAIA/t21bPwAAAADbtm0/AAAAANu2bT8AAIA/8lJzPwAAAACGzk8/AAAAAAAAgD8AAAAAhs5PPwAAAACSexw/AAAAAAAAgD8AAAAAkiRJPwAAAAC3bVs/AAAAALdtWz8AAIA/JUkSPwAAAABJkiQ/AAAAAEmSJD8AAIA/knscPwAAAADdCMc+AAAAAAAAgD8AAAAA3QjHPgAAAADqxUA+AAAAAAAAgD8AAAAAt21bPgAAAAAlSZI+AAAAACVJkj4AAIA/JUmSPgAAAABu27Y+AAAAAG7btj4AAIA/0NBKPQAAAADyxUA+AAAAAAAAgD8AAAAAAAAAAAAAAADQ0Eo9AAAAAAAAgD8AAAAAbtu2PgAAAAC3bds+AAAAALdt2z4AAIA/t23bPgAAAAAAAAA/AAAAAAAAAD8AAIA/SZIkPwAAAABu2zY/AAAAAG7bNj8AAIA/6sVAPgAAAADo0Eo9AAAAAAAAgD8AAAAA6NBKPQAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAPwAAAAAlSRI/AAAAACVJEj8AAIA/"),
+"format": 34359738391,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 78,
+"vertex_data": PackedByteArray("Cko2vZqZGcBNqke+C0o2PZqZGcBNqke+AAAAAJqZGUAAAAAAt4Q4PpqZGcADuLE9o2H/PZqZGcB9HiA+AAAAAJqZGUAAAAAAzcxMPpqZGcAAAAAAt4Q4PpqZGcADuLE9AAAAAJqZGUAAAAAAAko2PZqZGcBNqkc+o2H/PZqZGcB9HiA+zcxMPpqZGcAAAAAAo2H/PZqZGcB9HiA+t4Q4PpqZGcADuLE9zcxMPpqZGcAAAAAAo2H/PZqZGcB9HiA+Ako2PZqZGcBNqkc+AAAAAJqZGUAAAAAADUo2vZqZGcBNqkc+Ako2PZqZGcBNqkc+zcxMPpqZGcAAAAAApWH/vZqZGcB9HiA+DUo2vZqZGcBNqkc+zcxMPpqZGcAAAAAAt4Q4PpqZGcADuLG9zcxMPpqZGcAAAAAAAAAAAJqZGUAAAAAAq2H/PZqZGcB7HiC+t4Q4PpqZGcADuLG9AAAAAJqZGUAAAAAAt4Q4PpqZGcADuLG9q2H/PZqZGcB7HiC+zcxMPpqZGcAAAAAAq2H/PZqZGcB7HiC+C0o2PZqZGcBNqke+zcxMPpqZGcAAAAAAC0o2PZqZGcBNqke+q2H/PZqZGcB7HiC+AAAAAJqZGUAAAAAAtoQ4vpqZGcAJuLG9q2H/vZqZGcB7HiC+AAAAAJqZGUAAAAAAC0o2PZqZGcBNqke+Cko2vZqZGcBNqke+zcxMPpqZGcAAAAAACko2vZqZGcBNqke+q2H/vZqZGcB7HiC+zcxMPpqZGcAAAAAAAko2PZqZGcBNqkc+DUo2vZqZGcBNqkc+AAAAAJqZGUAAAAAADUo2vZqZGcBNqkc+pWH/vZqZGcB9HiA+AAAAAJqZGUAAAAAAuIQ4vpqZGcD/t7E9pWH/vZqZGcB9HiA+zcxMPpqZGcAAAAAAzcxMvpqZGcDyMJayuIQ4vpqZGcD/t7E9zcxMPpqZGcAAAAAApWH/vZqZGcB9HiA+uIQ4vpqZGcD/t7E9AAAAAJqZGUAAAAAAuIQ4vpqZGcD/t7E9zcxMvpqZGcDyMJayAAAAAJqZGUAAAAAAq2H/vZqZGcB7HiC+Cko2vZqZGcBNqke+AAAAAJqZGUAAAAAAq2H/vZqZGcB7HiC+toQ4vpqZGcAJuLG9zcxMPpqZGcAAAAAAtoQ4vpqZGcAJuLG9zcxMvpqZGcDyMJayzcxMPpqZGcAAAAAAzcxMvpqZGcDyMJaytoQ4vpqZGcAJuLG9AAAAAJqZGUAAAAAATQQC6f3+SMyx+wLpbOd+v/9//v////+/xtPfg6hWcsAmt6+DSjmRv/9//v81R/+/4PoehfJ/mcDG09+Dt1aLv/9//v82aP+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/Jrevgz05bcD7lk2Eoxh+v/9//v+aKf+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/H/w3rOcAW2vg+h6FNAEGAP9//v8AAOQLT/zXyLTGbcAf/DesVqmLv/9//v/JuP+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/sfsC6VvngMBP/NfIwcaRv/9//v9k1v+/3wM3rBf/U+uvA9fII/9Zo/9//v///5rj/38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/+5ZNhJIYgMADaU2EAQG2s/9//v8AAP+/A2lNhAEBUczYSK+D2wBgo/9//v8AAMzU/38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/2Eivg9sApNw4LN+D5wCqlP9//v8AAJrjOCzfg+cAWuseBR6FNAEFgP9//v8AABr0rwPXyCP/ntxNBALp/f6ts/9//v///8zU/38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/HgUehcr++P/fAzesF/+jlP9//v///xr0")
+}]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_qk4ih"]
+_surfaces = [{
+"aabb": AABB(-0.2, -2.3975, -0.194986, 0.4, 4.795, 0.389971),
+"attribute_data": PackedByteArray("bts2PwAAAACSJEk/AAAAAJIkST8AAIA/JUmSPQAAAAAlSRI+AAAAACVJEj4AAIA/AAAAAAAAAAAlSZI9AAAAACVJkj0AAIA/kHscPwAAAACDzk8/AAAAAAAAgD8AAAAAg85PPwAAAADyUnM/AAAAAAAAgD8AAAAAJUkSPgAAAAC3bVs+AAAAALdtWz4AAIA/3AjHPgAAAACQexw/AAAAAAAAgD8AAAAA8sVAPgAAAADcCMc+AAAAAAAAgD8AAAAA27ZtPwAAAAAAAAAAAAAAAAAAAAAAAIA/t21bPwAAAADbtm0/AAAAANu2bT8AAIA/8lJzPwAAAACGzk8/AAAAAAAAgD8AAAAAhs5PPwAAAACSexw/AAAAAAAAgD8AAAAAkiRJPwAAAAC3bVs/AAAAALdtWz8AAIA/JUkSPwAAAABJkiQ/AAAAAEmSJD8AAIA/knscPwAAAADdCMc+AAAAAAAAgD8AAAAA3QjHPgAAAADqxUA+AAAAAAAAgD8AAAAAt21bPgAAAAAlSZI+AAAAACVJkj4AAIA/JUmSPgAAAABu27Y+AAAAAG7btj4AAIA/0NBKPQAAAADyxUA+AAAAAAAAgD8AAAAAAAAAAAAAAADQ0Eo9AAAAAAAAgD8AAAAAbtu2PgAAAAC3bds+AAAAALdt2z4AAIA/t23bPgAAAAAAAAA/AAAAAAAAAD8AAIA/SZIkPwAAAABu2zY/AAAAAG7bNj8AAIA/6sVAPgAAAADo0Eo9AAAAAAAAgD8AAAAA6NBKPQAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAPwAAAAAlSRI/AAAAACVJEj8AAIA/"),
+"format": 34359738391,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 78,
+"vertex_data": PackedByteArray("Cko2vaRwGcBNqke+C0o2PaRwGcBNqke+AAAAAKRwGUAAAAAAt4Q4PqRwGcADuLE9o2H/PaRwGcB9HiA+AAAAAKRwGUAAAAAAzcxMPqRwGcAAAAAAt4Q4PqRwGcADuLE9AAAAAKRwGUAAAAAAAko2PaRwGcBNqkc+o2H/PaRwGcB9HiA+zcxMPqRwGcAAAAAAo2H/PaRwGcB9HiA+t4Q4PqRwGcADuLE9zcxMPqRwGcAAAAAAo2H/PaRwGcB9HiA+Ako2PaRwGcBNqkc+AAAAAKRwGUAAAAAADUo2vaRwGcBNqkc+Ako2PaRwGcBNqkc+zcxMPqRwGcAAAAAApWH/vaRwGcB9HiA+DUo2vaRwGcBNqkc+zcxMPqRwGcAAAAAAt4Q4PqRwGcADuLG9zcxMPqRwGcAAAAAAAAAAAKRwGUAAAAAAq2H/PaRwGcB7HiC+t4Q4PqRwGcADuLG9AAAAAKRwGUAAAAAAt4Q4PqRwGcADuLG9q2H/PaRwGcB7HiC+zcxMPqRwGcAAAAAAq2H/PaRwGcB7HiC+C0o2PaRwGcBNqke+zcxMPqRwGcAAAAAAC0o2PaRwGcBNqke+q2H/PaRwGcB7HiC+AAAAAKRwGUAAAAAAtoQ4vqRwGcAJuLG9q2H/vaRwGcB7HiC+AAAAAKRwGUAAAAAAC0o2PaRwGcBNqke+Cko2vaRwGcBNqke+zcxMPqRwGcAAAAAACko2vaRwGcBNqke+q2H/vaRwGcB7HiC+zcxMPqRwGcAAAAAAAko2PaRwGcBNqkc+DUo2vaRwGcBNqkc+AAAAAKRwGUAAAAAADUo2vaRwGcBNqkc+pWH/vaRwGcB9HiA+AAAAAKRwGUAAAAAAuIQ4vqRwGcD/t7E9pWH/vaRwGcB9HiA+zcxMPqRwGcAAAAAAzcxMvqRwGcDyMJayuIQ4vqRwGcD/t7E9zcxMPqRwGcAAAAAApWH/vaRwGcB9HiA+uIQ4vqRwGcD/t7E9AAAAAKRwGUAAAAAAuIQ4vqRwGcD/t7E9zcxMvqRwGcDyMJayAAAAAKRwGUAAAAAAq2H/vaRwGcB7HiC+Cko2vaRwGcBNqke+AAAAAKRwGUAAAAAAq2H/vaRwGcB7HiC+toQ4vqRwGcAJuLG9zcxMPqRwGcAAAAAAtoQ4vqRwGcAJuLG9zcxMvqRwGcDyMJayzcxMPqRwGcAAAAAAzcxMvqRwGcDyMJaytoQ4vqRwGcAJuLG9AAAAAKRwGUAAAAAATgQC6fz+SMyw+wLpbOd+v/9//v/+//+/xtPgg6hWc8Amt7CDSjmRv/9//v81R/+/3vofhfJ/mcDG0+CDt1aLv/9//v82aP+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/Jrewgz05bcD7lk6EpBh+v/9//v+aKf+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/Hvw4rOcAW2ve+h+FNAEGAP9//v8AAOQLTvzYyLTGbcAe/DisVqmLv/9//v/JuP+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/sPsC6VrngMBO/NjIwcaRv/9//v9k1v+/4AM4rBf/U+uwA9jIIv9Zo/9//v///5rj/38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/+5ZOhJIYgMADaU6EAgG2s/9//v8AAP+/A2lOhAEBUczYSLCD3ABgo/9//v8AADGr/38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/2Eiwg9wApNw4LOCD5wCqlP9//v8AAGScOCzgg+cAWusgBR+FNAEFgP9//v8AABr0sAPYyCL/ntxOBALp/f6ts/9//v///8zU/38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+/IAUfhcr++P/gAzisF/+jlP9//v///xr0")
+}]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x7ptu"]
 albedo_color = Color(0.45098, 0.360784, 0, 1)
@@ -822,6 +1641,38 @@ albedo_color = Color(1, 0.607843, 0.121569, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4yc12"]
 albedo_color = Color(0.588235, 0.478431, 0, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1byup"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4bprl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tsja2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_5ol3q"]
+size = Vector3(0.7, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bruhj"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nsbob"]
+radius = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8vyf7"]
+albedo_texture = ExtResource("66_rd2ou")
+
+[sub_resource type="BoxMesh" id="BoxMesh_nllpg"]
+size = Vector3(2, 0.05, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qwwra"]
+size = Vector3(1, 0.05, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v5j1r"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lhqvq"]
+top_radius = 0.05
+bottom_radius = 0.25
+
+[sub_resource type="PrismMesh" id="PrismMesh_ec334"]
+size = Vector3(0.2, 1, 0.1)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slqst"]
 diffuse_mode = 3
 specular_mode = 1
@@ -834,10 +1685,8 @@ size = Vector3(1, 2.4, 40)
 size = Vector3(1, 2.4, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fcjij"]
-albedo_texture = ExtResource("48_fysq7")
 normal_enabled = true
 normal_scale = 2.0
-normal_texture = ExtResource("49_s2vwd")
 uv1_scale = Vector3(0.1, 0.1, 0.1)
 uv1_triplanar = true
 
@@ -845,7 +1694,6 @@ uv1_triplanar = true
 size = Vector3(400, 20.06, 29.28)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ux1ru"]
-albedo_texture = ExtResource("48_fysq7")
 normal_enabled = true
 uv1_scale = Vector3(120, 120, 0)
 
@@ -859,6 +1707,10 @@ _data = {
 }
 point_count = 2
 
+[sub_resource type="Curve" id="Curve_7gshx"]
+_data = [Vector2(0, 0.846895), 0.0, -0.154856, 0, 0, Vector2(0.773371, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h6ckc"]
 transparency = 1
 cull_mode = 1
@@ -869,42 +1721,316 @@ albedo_texture = ExtResource("52_mm7j7")
 [node name="Level_2" type="Node3D" unique_id=1953497985 groups=["level_root"]]
 script = ExtResource("1_hucnp")
 
-[node name="HealthManager" parent="." unique_id=2064636904 instance=ExtResource("2_728id")]
+[node name="HealthManager" type="Node" parent="." unique_id=2064636904 groups=["HealthManager"] instance=ExtResource("2_728id")]
+script = ExtResource("3_l0rit")
 
-[node name="CMS" parent="." unique_id=1877949287 instance=ExtResource("3_rh4rn")]
+[node name="CMS" type="Node" parent="." unique_id=1877949287 groups=["CMS"] instance=ExtResource("3_rh4rn")]
+script = ExtResource("5_qr7ox")
 
-[node name="FlagRollout" parent="." unique_id=881887602 instance=ExtResource("4_8it3a")]
+[node name="FlagRollout" type="Node3D" parent="." unique_id=881887602 instance=ExtResource("4_8it3a")]
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, -7.609, -1.38252, 19.582)
+script = ExtResource("7_1kb6n")
 
-[node name="Cannon_Launcher" parent="." unique_id=1152910388 instance=ExtResource("5_23381")]
+[node name="Cannon_Launcher" parent="." unique_id=1152910388 groups=["launcher_manager"] instance=ExtResource("5_23381")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 21.5)
+script = ExtResource("9_3qvbb")
+total_of_cannons_in_level = 8
+
+[node name="Cannonball_container" parent="Cannon_Launcher" index="0" unique_id=1669124035 groups=["cannonball_container"]]
+script = SubResource("GDScript_7nk6u")
+
+[node name="List_of_cannonballs" parent="Cannon_Launcher" index="1" unique_id=1155804944]
+script = SubResource("GDScript_uqeah")
 
 [node name="Launcher_container" parent="Cannon_Launcher" index="2" unique_id=129265720]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0.950001)
+script = SubResource("GDScript_s7c0w")
+STANDARD_CANNONBALL = ExtResource("10_c7emh")
+
+[node name="Target_cannon" parent="Cannon_Launcher/Launcher_container" index="0" unique_id=390317987]
+script = ExtResource("11_a5ljl")
+arc_strength = 0.2
+
+[node name="Target_cannon2" parent="Cannon_Launcher/Launcher_container" index="1" unique_id=1344229511]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0)
+script = ExtResource("11_a5ljl")
+arc_strength = 0.2
+
+[node name="Target_cannon3" parent="Cannon_Launcher/Launcher_container" index="2" unique_id=1185648768]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0)
+script = ExtResource("11_a5ljl")
+arc_strength = 0.2
 
 [node name="Target_cannon4" parent="Cannon_Launcher/Launcher_container" index="3" unique_id=1358307688]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 9.5)
+script = ExtResource("11_a5ljl")
+arc_strength = 0.2
 
 [node name="Target_cannon5" parent="Cannon_Launcher/Launcher_container" index="4" unique_id=2029843475]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.1, 11)
+script = ExtResource("11_a5ljl")
 arc_strength = 0.15
 
 [node name="Target_cannon6" parent="Cannon_Launcher/Launcher_container" index="5" unique_id=1377164433]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.1, 11)
+script = ExtResource("11_a5ljl")
 arc_strength = 0.15
+
+[node name="Target_cannon7" parent="Cannon_Launcher/Launcher_container" index="6" unique_id=144054996]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+script = ExtResource("11_a5ljl")
+arc_strength = 0.2
 
 [node name="Target_cannon8" parent="Cannon_Launcher/Launcher_container" index="7" unique_id=134031522]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 10, 8.45, 31.7257)
+script = ExtResource("11_a5ljl")
 arc_strength = 0.1
 
-[node name="Pineapple_launcher" parent="Cannon_Launcher/Pineapple_launcher" parent_id_path=PackedInt32Array(1152910388, 998180776) index="0" unique_id=1306895522]
+[node name="Target_cannon9" parent="Cannon_Launcher/Launcher_container" index="8" unique_id=248253412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 0)
+script = ExtResource("11_a5ljl")
+arc_strength = 0.2
+
+[node name="Pineapple_launcher" parent="Cannon_Launcher" index="3" unique_id=998180776]
+script = ExtResource("12_e24k7")
+
+[node name="Pineapple_launcher" parent="Cannon_Launcher/Pineapple_launcher" index="0" unique_id=1306895522]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+script = ExtResource("13_lcxd6")
+arc_strength = 0.3
 
-[node name="Pineapple_launcher2" parent="Cannon_Launcher/Pineapple_launcher" parent_id_path=PackedInt32Array(1152910388, 998180776) index="1" unique_id=930804783]
+[node name="launch_sound" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher" index="0" unique_id=1443616667]
+stream = ExtResource("14_x5knw")
+volume_db = -27.0
+pitch_scale = 0.08
+script = SubResource("GDScript_lpwer")
+
+[node name="Smoke_quick2" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher" index="1" unique_id=699103711]
+transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.379668, 0)
+top_level = true
+emitting = false
+amount = 40
+lifetime = 110.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_7fhab")
+draw_pass_1 = SubResource("QuadMesh_3rpal")
+script = ExtResource("16_anwvi")
+
+[node name="Smoke_quick4" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher" index="2" unique_id=929451752]
+transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.979668, 0)
+top_level = true
+emitting = false
+amount = 6
+lifetime = 5.0
+one_shot = true
+explosiveness = 0.9
+fixed_fps = 60
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_a8tx1")
+draw_pass_1 = SubResource("QuadMesh_optq4")
+script = ExtResource("16_anwvi")
+
+[node name="Smoke_quick3" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher" index="3" unique_id=1421072033]
+transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
+top_level = true
+emitting = false
+amount = 40
+lifetime = 20.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+local_coords = true
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_7fhab")
+draw_pass_1 = SubResource("QuadMesh_3rpal")
+script = ExtResource("16_anwvi")
+
+[node name="Marker3D" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher" index="4" unique_id=2009878871]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104982, 0)
+
+[node name="Pineapple_launcher2" parent="Cannon_Launcher/Pineapple_launcher" index="1" unique_id=930804783]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.4, 0.950001)
+script = ExtResource("13_lcxd6")
+arc_strength = 0.3
 
-[node name="Pineapple_launcher3" parent="Cannon_Launcher/Pineapple_launcher" parent_id_path=PackedInt32Array(1152910388, 998180776) index="2" unique_id=397858265]
+[node name="launch_sound" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher2" index="0" unique_id=1219027772]
+stream = ExtResource("14_x5knw")
+volume_db = -27.0
+pitch_scale = 0.08
+script = SubResource("GDScript_lpwer")
+
+[node name="Marker3D" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher2" index="1" unique_id=776436978]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104982, 0)
+
+[node name="Smoke_quick2" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher2" index="2" unique_id=368675619]
+transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.379668, 0)
+top_level = true
+visible = false
+emitting = false
+amount = 40
+lifetime = 110.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_7fhab")
+draw_pass_1 = SubResource("QuadMesh_3rpal")
+script = ExtResource("16_anwvi")
+
+[node name="Smoke_quick3" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher2" index="3" unique_id=386851971]
+transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
+top_level = true
+visible = false
+emitting = false
+amount = 40
+lifetime = 20.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+local_coords = true
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_7fhab")
+draw_pass_1 = SubResource("QuadMesh_3rpal")
+script = ExtResource("16_anwvi")
+
+[node name="Smoke_quick4" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher2" index="4" unique_id=973452663]
+transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.979668, 0)
+top_level = true
+emitting = false
+amount = 6
+lifetime = 5.0
+one_shot = true
+explosiveness = 0.9
+fixed_fps = 60
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_a8tx1")
+draw_pass_1 = SubResource("QuadMesh_optq4")
+script = ExtResource("16_anwvi")
+
+[node name="Pineapple_launcher3" parent="Cannon_Launcher/Pineapple_launcher" index="2" unique_id=397858265]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.55, -0.2, 0.949999)
+script = ExtResource("13_lcxd6")
+arc_strength = 0.3
+
+[node name="launch_sound" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher3" index="0" unique_id=2059178790]
+stream = ExtResource("14_x5knw")
+volume_db = -27.0
+pitch_scale = 0.08
+script = SubResource("GDScript_lpwer")
+
+[node name="Marker3D" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher3" index="1" unique_id=2001519076]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104982, 0)
+
+[node name="Smoke_quick2" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher3" index="2" unique_id=815349500]
+transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.379668, 0)
+top_level = true
+visible = false
+emitting = false
+amount = 40
+lifetime = 110.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_7fhab")
+draw_pass_1 = SubResource("QuadMesh_3rpal")
+script = ExtResource("16_anwvi")
+
+[node name="Smoke_quick3" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher3" index="3" unique_id=466760882]
+transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
+top_level = true
+visible = false
+emitting = false
+amount = 40
+lifetime = 20.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+local_coords = true
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_7fhab")
+draw_pass_1 = SubResource("QuadMesh_3rpal")
+script = ExtResource("16_anwvi")
+
+[node name="Smoke_quick4" parent="Cannon_Launcher/Pineapple_launcher/Pineapple_launcher3" index="4" unique_id=1570533296]
+transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.979668, 0)
+top_level = true
+emitting = false
+amount = 6
+lifetime = 5.0
+one_shot = true
+explosiveness = 0.9
+fixed_fps = 60
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_a8tx1")
+draw_pass_1 = SubResource("QuadMesh_optq4")
+script = ExtResource("16_anwvi")
+
+[node name="Smokescreen_launcher" parent="Cannon_Launcher" index="4" unique_id=803162692]
+script = ExtResource("17_fevbk")
+
+[node name="Smokescreen_launcher" parent="Cannon_Launcher/Smokescreen_launcher" index="0" unique_id=1931802291]
+script = ExtResource("18_3vndg")
+
+[node name="launch_sound" parent="Cannon_Launcher/Smokescreen_launcher/Smokescreen_launcher" index="0" unique_id=1283169018]
+stream = ExtResource("14_x5knw")
+volume_db = -27.0
+pitch_scale = 0.08
+script = SubResource("GDScript_umkrl")
+
+[node name="Smoke_quick2" parent="Cannon_Launcher/Smokescreen_launcher/Smokescreen_launcher" index="1" unique_id=540833786]
+transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.379668, 0)
+top_level = true
+visible = false
+emitting = false
+amount = 40
+lifetime = 110.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_hqmlk")
+draw_pass_1 = SubResource("QuadMesh_v3w55")
+script = ExtResource("16_anwvi")
+
+[node name="Smoke_quick3" parent="Cannon_Launcher/Smokescreen_launcher/Smokescreen_launcher" index="2" unique_id=1171859275]
+transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
+top_level = true
+visible = false
+emitting = false
+amount = 40
+lifetime = 20.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
+local_coords = true
+draw_order = 3
+process_material = SubResource("ParticleProcessMaterial_hqmlk")
+draw_pass_1 = SubResource("QuadMesh_v3w55")
+script = ExtResource("16_anwvi")
+
+[node name="Marker3D" parent="Cannon_Launcher/Smokescreen_launcher/Smokescreen_launcher" index="3" unique_id=1615741898]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104982, 0)
+
+[node name="Bonus_round_launcher" parent="Cannon_Launcher" index="5" unique_id=667877938]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+script = ExtResource("19_4qhcp")
+
+[node name="Bonus_cannon_unit" parent="Cannon_Launcher/Bonus_round_launcher" index="0" unique_id=55360335]
+script = ExtResource("20_pbdn3")
+
+[node name="LauncherVFX" parent="Cannon_Launcher" index="6" unique_id=1306904787]
+script = ExtResource("21_juggq")
+
+[node name="SFX" parent="Cannon_Launcher" index="7" unique_id=1589839126]
+script = ExtResource("22_q73mq")
 
 [node name="Launcher_zone_mesh" type="Node3D" parent="Cannon_Launcher" unique_id=1963168426 groups=["Launcher_zone_mesh"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.6)
@@ -1233,7 +2359,7 @@ play_opening_sequence = false
 unique_name_in_owner = true
 script = SubResource("GDScript_bxqlr")
 
-[node name="April 14" parent="Level_transitions/Opening_sequence" unique_id=1596939664 instance=ExtResource("19_rp72c")]
+[node name="April 14" parent="Level_transitions/Opening_sequence" unique_id=1596939664]
 unique_name_in_owner = true
 z_index = 0
 _volume = -80.0
@@ -1247,7 +2373,7 @@ script = SubResource("GDScript_smxn7")
 start_bird = true
 target_pos = Vector3(-152, 20, 706)
 
-[node name="level_completed_sequence" parent="Level_transitions" unique_id=698497758 groups=["level_completed_sequence"] instance=ExtResource("20_5f4i7")]
+[node name="level_completed_sequence" parent="Level_transitions" unique_id=698497758 groups=["level_completed_sequence"]]
 unique_name_in_owner = true
 
 [node name="continue_sequence" type="CanvasLayer" parent="Level_transitions" unique_id=890409372 groups=["continue_screen"]]
@@ -1281,21 +2407,32 @@ offset_right = -2.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(960, 540)
-texture = ExtResource("21_bya4j")
 
 [node name="Intro_sequence" type="Node" parent="Dynamic_intro_sequence" unique_id=1945830536]
 script = SubResource("GDScript_bxqlr")
 
-[node name="Player" parent="." unique_id=1630124245 instance=ExtResource("22_b2550")]
+[node name="Player" type="Node3D" parent="." unique_id=1630124245 node_paths=PackedStringArray("weapon_shooting", "player_gun") groups=["Player"] instance=ExtResource("22_b2550")]
 unique_name_in_owner = true
 process_mode = 3
 transform = Transform3D(0.969016, -0.0672529, 0.237667, 0, 0.962218, 0.27228, -0.246999, -0.263844, 0.932404, 2.351, 2.333, 29.623)
+script = ExtResource("36_hr3pl")
+weapon_shooting = NodePath("Weapon_shooting")
+player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
+scroll_step = 50.0
 
 [node name="Marker3D" type="Marker3D" parent="Player" unique_id=1742338253]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104982, 0)
 
-[node name="HUD_feedback_corner" parent="Player" unique_id=1372725068 instance=ExtResource("23_eqtmj")]
+[node name="HUD_feedback_corner" type="Control" parent="Player" unique_id=1372725068 groups=["HUD_feedback_corner"] instance=ExtResource("23_eqtmj")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 540)
+script = ExtResource("38_04sh2")
 
 [node name="Player_gun" type="Node3D" parent="." unique_id=1216066154 groups=["player_gun"]]
 unique_name_in_owner = true
@@ -1313,16 +2450,17 @@ radius = 0.11
 height = 1.7
 sides = 4
 
-[node name="mockGun" parent="Player_gun" unique_id=1245578012 instance=ExtResource("24_c5kql")]
+[node name="mockGun" type="Node3D" parent="Player_gun" unique_id=1245578012 instance=ExtResource("24_c5kql")]
 transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 0, 0.376402, 0.102528)
 visible = false
 
 [node name="Marker3D" type="Marker3D" parent="Player_gun" unique_id=1577090918]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.385595, 1.89964)
 
-[node name="Bonus_round" parent="." unique_id=1837538997 instance=ExtResource("25_6jdn0")]
+[node name="Bonus_round" type="CharacterBody3D" parent="." unique_id=1837538997 groups=["Target"] instance=ExtResource("25_6jdn0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 3.5, 18.6)
 visible = false
+script = ExtResource("41_r8kak")
 
 [node name="Parachute_position_marker" type="Node3D" parent="." unique_id=979314224 groups=["Parachute_position_marker"]]
 transform = Transform3D(-8.74226e-08, 0, 2, 0, 2, 0, -2, 0, -8.74226e-08, -0.5, -2.35668, 7.886)
@@ -1478,36 +2616,300 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1.5)
 script = SubResource("GDScript_ctn7f")
 is_grey_dot = true
 
-[node name="Egg_cage" parent="." unique_id=979092152 instance=ExtResource("26_wkgk6")]
+[node name="Egg_cage" type="Node3D" parent="." unique_id=979092152 groups=["Egg_Cage"] instance=ExtResource("26_wkgk6")]
 transform = Transform3D(-4.37113e-08, 0, 0.999998, 0, 1, 0, -0.999998, 0, -4.37113e-08, -0.500019, -1.79908, 6.886)
+script = ExtResource("43_23vk4")
 
-[node name="Hostage_side_panel" parent="." unique_id=1336383935 instance=ExtResource("27_wjnh8")]
+[node name="Hostage_side_panel" type="Control" parent="." unique_id=1336383935 instance=ExtResource("27_wjnh8")]
 unique_name_in_owner = true
+layout_mode = 3
+anchor_right = 0.133333
+anchor_bottom = 0.17037
 offset_left = 55.0
 offset_top = 37.0
 offset_right = 55.0
 offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 92)
+script = SubResource("GDScript_4hj2f")
+metadata/_edit_use_anchors_ = true
 
 [node name="Radar_view_panel" parent="." unique_id=520087666 instance=ExtResource("28_jp1ay")]
+layer = -1
+visible = false
 
-[node name="Radar_view_panel" parent="Radar_view_panel" index="0"]
+[node name="Radar_view_panel" parent="Radar_view_panel" index="0" groups=["radar_subviewport"]]
+z_index = -1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = -31.0
 offset_top = 9.0
 offset_right = -31.0
 offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 540)
+mouse_filter = 2
+script = SubResource("GDScript_cub2u")
+scale_amount = 2
+
+[node name="Radar_arm" parent="Radar_view_panel/Radar_view_panel" index="0"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -883.0
+offset_top = -521.0
+offset_right = -611.0
+offset_bottom = -321.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(136, 100)
+
+[node name="TextureRect" parent="Radar_view_panel/Radar_view_panel/Radar_arm" index="0"]
+z_index = 4
+material = SubResource("ShaderMaterial_nnybo")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -173.0
+offset_top = -126.0
+offset_right = 173.0
+offset_bottom = 127.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.69, 0.69)
+pivot_offset = Vector2(173, 126)
+texture = ExtResource("47_vjwf6")
+expand_mode = 1
+
+[node name="Sub_root_control" parent="Radar_view_panel/Radar_view_panel" index="1"]
+custom_minimum_size = Vector2(258, 178)
+layout_mode = 1
+anchor_left = 0.856771
+anchor_top = 0.0277778
+anchor_right = 0.991146
+anchor_bottom = 0.192593
+offset_left = -1561.0
+offset_right = -1561.0
+grow_horizontal = 0
+pivot_offset = Vector2(127, 91)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" parent="Radar_view_panel/Radar_view_panel/Sub_root_control" index="0"]
+modulate = Color(1, 1, 1, 0.588235)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 92)
+mouse_filter = 2
+theme = SubResource("Theme_drble")
 
 [node name="Radar" parent="Radar_view_panel/Radar_view_panel/Sub_root_control" index="1" node_paths=PackedStringArray("tower_reference")]
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -0.99939
+offset_bottom = -0.000457764
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(127, 90)
+script = SubResource("GDScript_av1no")
 detection_radius = 12.0
+radar_radius = 120.0
+tower_color = Color(0, 0, 0, 0.0784314)
+tower_size = Vector2(40, 40)
+tower_texture = ExtResource("48_dbc85")
 tower_reference = NodePath("../../../../Egg_cage")
 metadata/_edit_use_anchors_ = true
 
-[node name="Outer" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="2"]
+[node name="Inner" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="0"]
+modulate = Color(1, 1, 1, 0.156863)
+z_index = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.308437
+anchor_top = 0.300743
+anchor_right = 0.684016
+anchor_bottom = 0.705942
+offset_left = -42.2685
+offset_top = -53.5321
+offset_right = 43.2081
+offset_bottom = 52.3422
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.53035, 0.405199)
+pivot_offset = Vector2(90, 90)
+texture = ExtResource("47_vjwf6")
+expand_mode = 1
+stretch_mode = 4
 metadata/_edit_use_anchors_ = true
 
+[node name="Inner2" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar/Inner" index="0"]
+modulate = Color(1, 0.21, 0.21, 0.0705882)
+z_index = -3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0234065
+anchor_top = -0.00235955
+anchor_right = 0.987579
+anchor_bottom = 0.974272
+offset_left = 34.24
+offset_top = 33.92
+offset_right = -34.24
+offset_bottom = -33.92
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.64, 1.64)
+pivot_offset = Vector2(53.5, 53)
+texture = ExtResource("52_mm7j7")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Inner3" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar/Inner" index="1"]
+visible = false
+modulate = Color(1, 0.21, 0.21, 0.45098)
+z_index = -3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 5.0
+offset_right = -71.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.64, 1.64)
+texture = ExtResource("52_mm7j7")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Middle" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="1"]
+modulate = Color(1, 1, 1, 0.117647)
+z_index = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.179628
+anchor_top = 0.158651
+anchor_right = 0.815689
+anchor_bottom = 0.844876
+offset_left = -9.16443
+offset_top = -28.2397
+offset_right = 9.36815
+offset_bottom = 27.6121
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.898173, 0.686225)
+pivot_offset = Vector2(90, 90)
+texture = ExtResource("47_vjwf6")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Inner2" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar/Middle" index="0"]
+modulate = Color(1, 0.21, 0.21, 0.0705882)
+z_index = -3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 5.0
+offset_right = -71.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.64, 1.64)
+texture = ExtResource("52_mm7j7")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Outer" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="2"]
+modulate = Color(1, 1, 1, 0.0784314)
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = 1.0
+offset_right = -37.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.35154, 1.03261)
+pivot_offset = Vector2(90, 90)
+texture = ExtResource("47_vjwf6")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="Inner2" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar/Outer" index="0"]
+modulate = Color(0.82, 0.82, 0.82, 1)
+z_index = -3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 35.0
+offset_top = 36.0
+offset_right = -40.0006
+offset_bottom = -36.9995
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.64, 1.64)
+pivot_offset = Vector2(52, 52)
+texture = ExtResource("52_mm7j7")
+expand_mode = 1
+stretch_mode = 4
+
 [node name="TextureRect3" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="3"]
+self_modulate = Color(1, 1, 1, 0.545098)
+z_index = -1
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -610.0
+offset_top = -424.0
+offset_right = 610.999
+offset_bottom = 422.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.18, 0.18)
+pivot_offset = Vector2(739, 512)
+texture = ExtResource("33_ew0fq")
+stretch_mode = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="Radar_dots" parent="Radar_view_panel/Radar_view_panel/Sub_root_control/Radar" index="4"]
+top_level = true
+z_index = 147
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(127, 90)
 metadata/_edit_use_anchors_ = true
 
 [node name="Radar_marker" type="Marker3D" parent="Radar_view_panel" unique_id=112821812 groups=["radar_marker_pos"]]
@@ -1519,15 +2921,15 @@ visible = false
 script = SubResource("GDScript_smxn7")
 target_pos = Vector3(-152, 20, 0)
 
-[node name="birds" parent="End_birds" unique_id=867490732 instance=ExtResource("29_koyg5")]
+[node name="birds" type="CharacterBody3D" parent="End_birds" unique_id=867490732 instance=ExtResource("29_koyg5")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 4.4, 3.4)
 motion_mode = 1
-script = null
+safe_margin = 1.0
 
-[node name="birds2" parent="End_birds" unique_id=957716943 instance=ExtResource("29_koyg5")]
+[node name="birds2" type="CharacterBody3D" parent="End_birds" unique_id=957716943 instance=ExtResource("29_koyg5")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -6, 8, -10)
 motion_mode = 1
-script = null
+safe_margin = 1.0
 
 [node name="Lighting" type="Node" parent="." unique_id=2081608527]
 
@@ -1554,7 +2956,6 @@ sky_mode = 1
 [node name="SFX" type="Node" parent="." unique_id=1742350218]
 
 [node name="OasisSong" type="AudioStreamPlayer" parent="SFX" unique_id=1531820829 groups=["level_song"]]
-stream = ExtResource("32_fxeoi")
 volume_db = -20.0
 bus = &"Music Bus"
 
@@ -1689,40 +3090,45 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.45, 0)
 
 [node name="level1_proto" type="Node3D" parent="Level_Decoration" unique_id=1539059834]
 
-[node name="targetRolling" parent="Level_Decoration/level1_proto" unique_id=1250382208 instance=ExtResource("35_0h4o5")]
+[node name="targetRolling" type="RigidBody3D" parent="Level_Decoration/level1_proto" unique_id=1250382208 instance=ExtResource("35_0h4o5")]
 transform = Transform3D(-3.35432e-08, 0.767378, 0.641195, -1, -4.37114e-08, -5.66887e-15, 2.80275e-08, -0.641195, 0.767378, 24.0224, 3.78702, 20.7694)
 axis_lock_linear_x = true
 axis_lock_angular_z = true
-script = null
+physics_material_override = SubResource("PhysicsMaterial_jhvjd")
+contact_monitor = true
+max_contacts_reported = 5
 
-[node name="WireFrame" parent="Level_Decoration/level1_proto" unique_id=658469812 instance=ExtResource("36_1c13p")]
+[node name="WireFrame" type="MeshInstance3D" parent="Level_Decoration/level1_proto" unique_id=658469812 instance=ExtResource("36_1c13p")]
 transform = Transform3D(0.776772, 0, 0.629781, 0, 1, 0, -0.629781, 0, 0.776772, 23.7119, 2.40732, 20.8911)
+mesh = SubResource("ArrayMesh_gkc0x")
 
-[node name="WireFrame2" parent="Level_Decoration/level1_proto" unique_id=1165598009 instance=ExtResource("36_1c13p")]
+[node name="WireFrame2" type="MeshInstance3D" parent="Level_Decoration/level1_proto" unique_id=1165598009 instance=ExtResource("36_1c13p")]
 transform = Transform3D(-3.34849e-08, 0.766044, 0.642788, -1, -4.37114e-08, 0, 2.80971e-08, -0.642788, 0.766044, 22.0653, 2.40732, 22.2666)
+mesh = SubResource("ArrayMesh_gkc0x")
 
-[node name="WireFrame3" parent="Level_Decoration/level1_proto" unique_id=1849822639 instance=ExtResource("36_1c13p")]
+[node name="WireFrame3" type="MeshInstance3D" parent="Level_Decoration/level1_proto" unique_id=1849822639 instance=ExtResource("36_1c13p")]
 transform = Transform3D(-3.19049e-08, 0.7299, 0.683554, -1, -4.37114e-08, -3.89875e-15, 2.98791e-08, -0.683554, 0.7299, 25.6711, 2.40732, 19.2891)
+mesh = SubResource("ArrayMesh_gkc0x")
 
-[node name="spinning_pole" parent="Level_Decoration/level1_proto" unique_id=996171727 instance=ExtResource("37_xwt3e")]
+[node name="spinning_pole" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=996171727 instance=ExtResource("37_xwt3e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.5067, 1.77772, 18.899)
 
 [node name="structureContainerLeft" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=199320105]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 53.1724)
 
-[node name="structure" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=50789769 instance=ExtResource("38_nrkak")]
+[node name="structure" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=50789769 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1737, 0.0275618, 1.63469)
 
-[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1921048112 instance=ExtResource("38_nrkak")]
+[node name="structure2" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1921048112 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 7.41057, 1.635)
 
-[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=253648943 instance=ExtResource("38_nrkak")]
+[node name="structure3" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=253648943 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 15.1667, 1.635)
 
-[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1652649186 instance=ExtResource("38_nrkak")]
+[node name="structure4" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1652649186 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 22.5428, 1.635)
 
-[node name="bucket" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=72607921 instance=ExtResource("39_5fifw")]
+[node name="bucket" type="StaticBody3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=72607921 instance=ExtResource("39_5fifw")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 10.1576, 1.76725, 63.3162)
 visible = false
 
@@ -1734,41 +3140,44 @@ shape = SubResource("BoxShape3D_ncack")
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -9.59484, 7.68461, -15.449)
 shape = SubResource("BoxShape3D_ncack")
 
-[node name="target_creator" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=673911022 instance=ExtResource("40_v52l6")]
+[node name="target_creator" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=673911022 instance=ExtResource("40_v52l6")]
 transform = Transform3D(-2.18557e-07, 0, -5, 0, 5, 0, 5, 0, -2.18557e-07, 26.1445, 36.5164, 1.70975)
 
 [node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=2015094354]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.2268, 32.4642, 1.70975)
 
-[node name="PoleShape" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1061028692 instance=ExtResource("41_5jy7k")]
+[node name="PoleShape" type="RigidBody3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1061028692 instance=ExtResource("41_5jy7k")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5455, 0.5, 59.1893)
 visible = false
 
-[node name="WireFrame" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=415988319 instance=ExtResource("36_1c13p")]
+[node name="WireFrame" type="MeshInstance3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=415988319 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, -24.3543, 16, 1.61061)
+mesh = SubResource("ArrayMesh_gkc0x")
 
-[node name="WireFrame2" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1314283002 instance=ExtResource("36_1c13p")]
+[node name="WireFrame2" type="MeshInstance3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=1314283002 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, 23.3677, 23.7535, 1.61061)
+mesh = SubResource("ArrayMesh_gkc0x")
 
-[node name="WireFrame3" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=977301773 instance=ExtResource("36_1c13p")]
+[node name="WireFrame3" type="MeshInstance3D" parent="Level_Decoration/level1_proto/structureContainerLeft" unique_id=977301773 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, 23.3677, 8.61265, 1.61061)
+mesh = SubResource("ArrayMesh_gkc0x")
 
 [node name="structureContainerRight" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=1342759013]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 56.4594)
 
-[node name="structure" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=988440738 instance=ExtResource("38_nrkak")]
+[node name="structure" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=988440738 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1737, 0.0275618, 1.63469)
 
-[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=1114798710 instance=ExtResource("38_nrkak")]
+[node name="structure2" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=1114798710 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 7.41057, 1.635)
 
-[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=170942184 instance=ExtResource("38_nrkak")]
+[node name="structure3" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=170942184 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 15.1667, 1.635)
 
-[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=2067052349 instance=ExtResource("38_nrkak")]
+[node name="structure4" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=2067052349 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 22.5428, 1.635)
 
-[node name="target_creator2" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=2001854642 instance=ExtResource("40_v52l6")]
+[node name="target_creator2" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=2001854642 instance=ExtResource("40_v52l6")]
 transform = Transform3D(8.54346e-07, 0, -5, 0, 5, 0, 5, 0, 8.54346e-07, 26.1439, 36.475, 1.70976)
 
 [node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerRight" unique_id=1099367452]
@@ -1777,56 +3186,60 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1232, 32.4228, 1.70975)
 [node name="structureContainerLeft2" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=1750036457]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 784.239)
 
-[node name="structure" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1373928204 instance=ExtResource("38_nrkak")]
+[node name="structure" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1373928204 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1737, 0.0275618, 1.63469)
 
-[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=620057172 instance=ExtResource("38_nrkak")]
+[node name="structure2" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=620057172 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 7.41057, 1.635)
 
-[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=433186389 instance=ExtResource("38_nrkak")]
+[node name="structure3" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=433186389 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 15.1667, 1.635)
 
-[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1165422099 instance=ExtResource("38_nrkak")]
+[node name="structure4" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1165422099 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 22.5428, 1.635)
 
-[node name="bucket" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=2073386874 instance=ExtResource("39_5fifw")]
+[node name="bucket" type="StaticBody3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=2073386874 instance=ExtResource("39_5fifw")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 10.1576, 1.76725, 63.3162)
 visible = false
 
-[node name="target_creator" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1170671275 instance=ExtResource("40_v52l6")]
+[node name="target_creator" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1170671275 instance=ExtResource("40_v52l6")]
 transform = Transform3D(-2.18557e-07, 0, -5, 0, 5, 0, 5, 0, -2.18557e-07, 26.1445, 36.8164, 1.70978)
 
 [node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1054053358]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.2268, 32.4642, 1.70975)
 
-[node name="WireFrame" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1448733088 instance=ExtResource("36_1c13p")]
+[node name="WireFrame" type="MeshInstance3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1448733088 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, -10.5595, 6.4395, 1.48979)
+mesh = SubResource("ArrayMesh_gkc0x")
 
-[node name="WireFrame5" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1543928106 instance=ExtResource("36_1c13p")]
+[node name="WireFrame5" type="MeshInstance3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=1543928106 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, -10.5595, 21.2395, 1.48979)
+mesh = SubResource("ArrayMesh_gkc0x")
 
-[node name="WireFrame2" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=2013007250 instance=ExtResource("36_1c13p")]
+[node name="WireFrame2" type="MeshInstance3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=2013007250 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, 10.5405, 13.8395, 1.48979)
+mesh = SubResource("ArrayMesh_gkc0x")
 
-[node name="WireFrame4" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=518812264 instance=ExtResource("36_1c13p")]
+[node name="WireFrame4" type="MeshInstance3D" parent="Level_Decoration/level1_proto/structureContainerLeft2" unique_id=518812264 instance=ExtResource("36_1c13p")]
 transform = Transform3D(6.02, 0, 0, 0, 2.338, 0, 0, 0, 1, 10.5405, 28.6395, 1.48979)
+mesh = SubResource("ArrayMesh_gkc0x")
 
 [node name="structureContainerRight2" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=1877942092]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 787.526)
 
-[node name="structure" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1679313112 instance=ExtResource("38_nrkak")]
+[node name="structure" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1679313112 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1737, 0.0275618, 1.63469)
 
-[node name="structure2" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1095804988 instance=ExtResource("38_nrkak")]
+[node name="structure2" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1095804988 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 7.41057, 1.635)
 
-[node name="structure3" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1172760824 instance=ExtResource("38_nrkak")]
+[node name="structure3" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1172760824 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 15.1667, 1.635)
 
-[node name="structure4" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1182679092 instance=ExtResource("38_nrkak")]
+[node name="structure4" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1182679092 instance=ExtResource("38_nrkak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.174, 22.5428, 1.635)
 
-[node name="target_creator2" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1543986261 instance=ExtResource("40_v52l6")]
+[node name="target_creator2" type="Node3D" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1543986261 instance=ExtResource("40_v52l6")]
 transform = Transform3D(8.54346e-07, 0, -5, 0, 5, 0, 5, 0, 8.54346e-07, 26.1439, 36.575, 1.70978)
 
 [node name="targetLoadPoint" type="Marker3D" parent="Level_Decoration/level1_proto/structureContainerRight2" unique_id=1241428878]
@@ -1834,83 +3247,97 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1232, 32.4228, 1.70975)
 
 [node name="decoration" type="Node3D" parent="Level_Decoration/level1_proto" unique_id=1852024306]
 
-[node name="post" parent="Level_Decoration/level1_proto/decoration" unique_id=812804336 instance=ExtResource("42_dcunn")]
+[node name="post" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=812804336 instance=ExtResource("42_dcunn")]
 transform = Transform3D(0.181721, 0, 0.571819, 0, 0.6, 0, -0.571819, 0, 0.181721, 72.1747, 1.00336, 175.567)
 
-[node name="post2" parent="Level_Decoration/level1_proto/decoration" unique_id=832381744 instance=ExtResource("42_dcunn")]
+[node name="post2" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=832381744 instance=ExtResource("42_dcunn")]
 transform = Transform3D(0.181721, 0, 0.571819, 0, 0.6, 0, -0.571819, 0, 0.181721, 74.7861, 2.20336, 250.449)
 
 [node name="trees" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=1230291318]
 
-[node name="fore1" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=288299442 instance=ExtResource("43_qprsx")]
+[node name="fore1" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=288299442 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 12.447, 1.978, 32.816)
 visible = false
 
-[node name="foreRight" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1836006793 instance=ExtResource("43_qprsx")]
+[node name="foreRight" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1836006793 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 5.90153, 1.978, 3.79423)
 
-[node name="foreRight3" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=590891487 instance=ExtResource("43_qprsx")]
+[node name="foreRight3" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=590891487 instance=ExtResource("43_qprsx")]
 transform = Transform3D(0.755, 0, 0, 0, 1.12, 0, 0, 0, 1.12, -0.59847, 1.978, -0.70577)
 
-[node name="foreRight2" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=216276053 instance=ExtResource("43_qprsx")]
+[node name="foreRight2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=216276053 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -7.59847, 1.978, 0.79423)
 
-[node name="fore9" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1940813537 instance=ExtResource("43_qprsx")]
+[node name="fore9" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1940813537 instance=ExtResource("43_qprsx")]
 transform = Transform3D(0.44, 0, 0, 0, 0.44, 0, 0, 0, 0.44, -9.3058, 1.34738, 10.6597)
 
-[node name="fore11" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1334739815 instance=ExtResource("43_qprsx")]
+[node name="fore11" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1334739815 instance=ExtResource("43_qprsx")]
 transform = Transform3D(0.195, 0, 0, 0, 0.195, 0, 0, 0, 0.195, -12.6058, 0.427802, 17.538)
 
-[node name="fore2" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=2134852893 instance=ExtResource("43_qprsx")]
+[node name="fore2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=2134852893 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 85.1927, 1.94344, 77.3876)
 visible = false
 
-[node name="fore6" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=241868730 instance=ExtResource("43_qprsx")]
+[node name="fore6" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=241868730 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 69.6994, 1.69931, 46.3125)
 
-[node name="fore8" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=75259035 instance=ExtResource("43_qprsx")]
+[node name="fore8" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=75259035 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -40.3006, 1.69931, 85.8125)
 
-[node name="fore4" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1998543536 instance=ExtResource("43_qprsx")]
+[node name="fore4" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1998543536 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 178.05, 1.10494, 209.143)
 
-[node name="fore10" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=462971843 instance=ExtResource("43_qprsx")]
+[node name="fore10" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=462971843 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -185.95, 1.10494, 209.143)
 
 [node name="fore3" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1615187462 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 52.8949, 1.64223, 32.185)
 
-[node name="midground3" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1319035690 instance=ExtResource("43_qprsx")]
+[node name="CSGBakedMeshInstance3D" parent="Level_Decoration/level1_proto/decoration/trees/fore3" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
+material_override = SubResource("StandardMaterial3D_mrr0h")
+mesh = SubResource("ArrayMesh_cg8mt")
+
+[node name="CSGBakedMeshInstance3D3" parent="Level_Decoration/level1_proto/decoration/trees/fore3" index="1"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_mrr0h")
+mesh = SubResource("ArrayMesh_nafv1")
+
+[node name="CSGBakedMeshInstance3D2" parent="Level_Decoration/level1_proto/decoration/trees/fore3" index="2"]
+material_override = SubResource("StandardMaterial3D_mrr0h")
+mesh = SubResource("ArrayMesh_qk4ih")
+
+[node name="midground3" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1319035690 instance=ExtResource("43_qprsx")]
 transform = Transform3D(0.37, 0, 0, 0, 0.37, 0, 0, 0, 0.37, -35.243, 1.187, 90)
 
-[node name="weakTree" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=770229517 instance=ExtResource("43_qprsx")]
+[node name="weakTree" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=770229517 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.459, 2.008, 276.234)
 
-[node name="bgTree" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1982604369 instance=ExtResource("43_qprsx")]
+[node name="bgTree" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1982604369 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.563, 2.008, 276.234)
 
-[node name="bgTree2" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1177762024 instance=ExtResource("43_qprsx")]
+[node name="bgTree2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1177762024 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -280.864, -3.20362, 627.113)
 
-[node name="bgTree3" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=225306151 instance=ExtResource("43_qprsx")]
+[node name="bgTree3" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=225306151 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -285.094, -1.9108, 630.07)
 
-[node name="bgTree5" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=412579438 instance=ExtResource("43_qprsx")]
+[node name="bgTree5" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=412579438 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -284.268, -3.04855, 624.41)
 
-[node name="bgTree6" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=640911563 instance=ExtResource("43_qprsx")]
+[node name="bgTree6" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=640911563 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 0.999855, 0.0170336, 0, -0.0170336, 0.999855, -288.128, -3.09746, 626.937)
 
-[node name="bgTree4" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=899602352 instance=ExtResource("43_qprsx")]
+[node name="bgTree4" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=899602352 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -277.882, -3.20362, 632.018)
 
-[node name="bgTree7" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=256740606 instance=ExtResource("43_qprsx")]
+[node name="bgTree7" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=256740606 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -282.112, -1.9108, 634.975)
 
-[node name="bgTree8" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=908327055 instance=ExtResource("43_qprsx")]
+[node name="bgTree8" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=908327055 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -281.286, -3.04855, 629.315)
 
-[node name="bgTree9" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1653479259 instance=ExtResource("43_qprsx")]
+[node name="bgTree9" type="Node3D" parent="Level_Decoration/level1_proto/decoration/trees" unique_id=1653479259 instance=ExtResource("43_qprsx")]
 transform = Transform3D(1, 0, 0, 0, 0.999855, 0.0170336, 0, -0.0170336, 0.999855, -285.146, -3.09746, 631.842)
 
 [node name="balconyForeground" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=1858369666]
@@ -1989,13 +3416,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919834, 0)
 material_override = SubResource("StandardMaterial3D_x7ptu")
 size = Vector3(5, 0.2, 1)
 
-[node name="mountain" parent="Level_Decoration/level1_proto/decoration" unique_id=1287285026 instance=ExtResource("44_uteki")]
+[node name="mountain" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=1287285026 instance=ExtResource("44_uteki")]
 transform = Transform3D(1.105, 0, 0, 0, 1.105, 0, 0, 0, 1.105, 660.638, -1.157, 706.552)
 
-[node name="mountain2" parent="Level_Decoration/level1_proto/decoration/mountain" unique_id=1425318632 instance=ExtResource("44_uteki")]
+[node name="mountain2" type="Node3D" parent="Level_Decoration/level1_proto/decoration/mountain" unique_id=1425318632 instance=ExtResource("44_uteki")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -108, 0, 0)
 
-[node name="mountain3" parent="Level_Decoration/level1_proto/decoration/mountain" unique_id=223273907 instance=ExtResource("44_uteki")]
+[node name="mountain3" type="Node3D" parent="Level_Decoration/level1_proto/decoration/mountain" unique_id=223273907 instance=ExtResource("44_uteki")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -143.192, -4.47378, 0)
 
 [node name="building" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=267244072]
@@ -2156,6 +3583,75 @@ size = Vector3(5, 0.2, 1)
 [node name="helicopter" parent="Level_Decoration/level1_proto/decoration" unique_id=287464091 instance=ExtResource("47_1f1py")]
 transform = Transform3D(0.962651, 2.39877e-06, -2.45716, 1.56598, 2.03362, 0.613514, 1.89349, -1.68187, 0.741821, -69.2817, 0, 217.811)
 
+[node name="frontCockpit" parent="Level_Decoration/level1_proto/decoration/helicopter/base" index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_1byup")
+mesh = SubResource("CapsuleMesh_4bprl")
+skeleton = NodePath("../..")
+
+[node name="squareBase" parent="Level_Decoration/level1_proto/decoration/helicopter/base" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.862206, -0.336124)
+material_override = SubResource("StandardMaterial3D_tsja2")
+mesh = SubResource("BoxMesh_5ol3q")
+skeleton = NodePath("../..")
+
+[node name="top" parent="Level_Decoration/level1_proto/decoration/helicopter/base" index="2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.13531, -0.938486)
+material_override = SubResource("StandardMaterial3D_bruhj")
+mesh = SubResource("CapsuleMesh_nsbob")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" parent="Level_Decoration/level1_proto/decoration/helicopter/base" index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04992, 1.40377, -0.323159)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" parent="Level_Decoration/level1_proto/decoration/helicopter/base" index="4"]
+transform = Transform3D(-0.623197, 0, -0.782065, 0, 1, 0, 0.782065, 0, -0.623197, 0.643181, 1.40377, -1.05237)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" parent="Level_Decoration/level1_proto/decoration/helicopter/base" index="5"]
+transform = Transform3D(-0.623197, 0, -0.782065, 0, 1, 0, 0.782065, 0, -0.623197, -0.576411, 1.40377, 0.478119)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" parent="Level_Decoration/level1_proto/decoration/helicopter/base" index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.07467, 1.40377, -0.323159)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" parent="Level_Decoration/level1_proto/decoration/helicopter/base" index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0160673, 1.44448, -0.323159)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_qwwra")
+skeleton = NodePath("../..")
+
+[node name="tailNode" parent="Level_Decoration/level1_proto/decoration/helicopter" index="1"]
+transform = Transform3D(1, -0.000429533, -0.000851338, -0.000398041, 0.623272, -0.782005, 0.000866509, 0.782005, 0.623271, 0, -1.0064, -1.43036)
+
+[node name="tail4" parent="Level_Decoration/level1_proto/decoration/helicopter/tailNode" index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.01, 1.15, -2.769)
+material_override = SubResource("StandardMaterial3D_v5j1r")
+mesh = SubResource("CylinderMesh_lhqvq")
+skeleton = NodePath("../..")
+
+[node name="tail5" parent="Level_Decoration/level1_proto/decoration/helicopter/tailNode" index="1"]
+transform = Transform3D(2.98023e-08, 0, 1, 0, 1, 0, -1, 0, 2.98023e-08, -0.0804748, 1.47647, -3.71742)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("PrismMesh_ec334")
+skeleton = NodePath("../..")
+
+[node name="tail6" parent="Level_Decoration/level1_proto/decoration/helicopter/tailNode" index="2"]
+transform = Transform3D(2.98023e-08, 0, 1, 0, 1, 0, -1, 0, 2.98023e-08, 0.0964563, 1.47647, -3.71742)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("PrismMesh_ec334")
+skeleton = NodePath("../..")
+
 [node name="wallContainer1" type="Node3D" parent="Level_Decoration/level1_proto/decoration" unique_id=129011211]
 
 [node name="leftWall" type="Node3D" parent="Level_Decoration/level1_proto/decoration/wallContainer1" unique_id=340920857]
@@ -2315,14 +3811,17 @@ cubic_interp = false
 loop = false
 tilt_enabled = false
 
-[node name="Bird_fly_by_helpers" parent="Path3D/PathFollow3D" unique_id=1779861816 instance=ExtResource("51_k4xim")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+[node name="Bird_fly_by_helpers" type="Node3D" parent="Path3D/PathFollow3D" unique_id=1779861816 groups=["fly_by_birds"] instance=ExtResource("51_k4xim")]
+script = ExtResource("69_rwl4m")
+flight_speed_curve = SubResource("Curve_7gshx")
 
 [node name="Moon_sprite" type="Sprite3D" parent="." unique_id=1981331525]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -117.297, 431.812, 1245)
 material_override = SubResource("StandardMaterial3D_h6ckc")
 pixel_size = 0.0089
 texture = ExtResource("52_mm7j7")
+
+[connection signal="body_entered" from="Level_Decoration/level1_proto/targetRolling" to="Level_Decoration/level1_proto/targetRolling" method="_on_body_entered"]
 
 [editable path="Cannon_Launcher"]
 [editable path="Radar_view_panel"]

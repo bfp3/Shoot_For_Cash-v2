@@ -1,25 +1,40 @@
 [gd_scene format=4 uid="uid://d0e5uynws11et"]
 
-[ext_resource type="Script" uid="uid://uxnvxnke3pvq" path="res://unfiled/level1-proto.gd" id="1_nbs8u"]
 [ext_resource type="PackedScene" uid="uid://c0ud5qdh0l7bt" path="res://ch/targets/target_spinning_pole.tscn" id="2_h2lpu"]
 [ext_resource type="PackedScene" uid="uid://cju41swvx7pgc" path="res://ch/environment_decoration/structure_parts/wire_frame.tscn" id="3_1oxf5"]
+[ext_resource type="Script" uid="uid://2bx65217tfip" path="res://unfiled/environment_assets/tallBase.gd" id="4_5agjn"]
 [ext_resource type="PackedScene" uid="uid://bwexwu4pd7ote" path="res://ch/environment_decoration/exported_Mesh/tallBase.tscn" id="4_gpcpc"]
 [ext_resource type="PackedScene" uid="uid://khv1h2fbb8h6" path="res://ch/targets/target_creator.tscn" id="5_1xoty"]
 [ext_resource type="PackedScene" uid="uid://cxqry0burrjjd" path="res://ch/02_enemies/birdsAnimated.tscn" id="6_fboy8"]
 [ext_resource type="PackedScene" uid="uid://bwwqs8ytry7wo" path="res://ch/environment_decoration/trees.tscn" id="7_njq78"]
 [ext_resource type="PackedScene" uid="uid://djq7nljg07i1b" path="res://ch/environment_decoration/mountain.tscn" id="8_15t3p"]
+[ext_resource type="Texture2D" uid="uid://ikpnffkolpqk" path="res://res/gradients/water-gradient.tres" id="10_c17n0"]
 [ext_resource type="PackedScene" uid="uid://bbnwa3i4ksui2" path="res://ch/environment_decoration/helicopter.tscn" id="12_fvjlv"]
-[ext_resource type="Texture2D" uid="uid://dsmre3g6oaxny" path="res://res/textures_2D/texture_materials/park_sand_diff_2k.png" id="13_yw2jr"]
 [ext_resource type="Environment" uid="uid://bchxsokc33ru8" path="res://res/skyEnvironments/early_morning.tres" id="14_323mv"]
+[ext_resource type="Script" uid="uid://da45gubie1h3t" path="res://ch/Player/scripts/player.gd" id="14_sldt0"]
 [ext_resource type="PackedScene" uid="uid://cgiw0h63ygje" path="res://ch/targets/target_rolling.tscn" id="15_57x3o"]
 [ext_resource type="Texture2D" uid="uid://dpiqjoxdk4vu6" path="res://res/gradients/moon.tres" id="15_fmkad"]
 [ext_resource type="PackedScene" uid="uid://csgbwh5xf1c0r" path="res://ch/weapons/bullet_rigid.tscn" id="15_h2lpu"]
-[ext_resource type="AudioStream" uid="uid://bexhjoakqqjdp" path="res://sfx/BP_tunes/oasisWorld.wav" id="16_d47u1"]
 [ext_resource type="PackedScene" uid="uid://cvtdumxlmhmbo" path="res://ch/targets/target_lightup.tscn" id="16_nbs8u"]
 [ext_resource type="Script" uid="uid://0ewuknr8g84j" path="res://unfiled/targets/target_lightup.gd" id="17_h2lpu"]
+[ext_resource type="Script" uid="uid://bt0bw5ofpkcsd" path="res://unfiled/targets/target_rolling.gd" id="17_kiye5"]
 [ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://ch/Player.tscn" id="17_tk8dy"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="19_1oxf5"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="20_3rwdn"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8h3t4"]
+albedo_color = Color(0.670588, 0.517647, 0.403922, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_gkc0x"]
+_surfaces = [{
+"aabb": AABB(-2.4, -0.12, -0.4, 4.8, 0.24, 0.8),
+"attribute_data": PackedByteArray("AAAAAAAAgD8AAIA/AACAP6uqCj+amTk/q6oKP83MjD4AAAAAAAAAAAAAAADNzIw+zcyMPgAAAAAAAAAAAAAAAM3MjD4AAIA/AAAAAAAAgD+rqgo/mpk5PwAAAACamTk/AACAPwAAAACamTk/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/q6oKP83MjD4AAIA/AAAAAAAAAAAAAAAAq6oKP83MjD4AAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/q6oKP5qZOT8AAIA/AACAP6uqCj/NzIw+q6oKP83MjD4AAIA/AACAPwAAgD8AAAAAAAAAAAAAgD/NzIw+AACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAgD+rqgo/mpk5PwAAAACamTk/mpk5PwAAgD8AAIA/AACAP5qZOT8AAAAAq6oKP83MjD4AAAAAAAAAAAAAAADNzIw+AAAAAAAAgD8AAIA/AACAP6uqCj+amTk/q6oKP5qZOT8AAIA/AACAP6uqCj/NzIw+AAAAAAAAAAAAAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAIA/AACAPwAAgD8AAAAAq6oKP83MjD4AAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/5DiOPgAAgD8AAIA/AACAPwAAAAAAAIA/juM4PwAAAACO4zg/AACAPwAAgD8AAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAjuM4PwAAAAAAAAAAAACAPwAAAAAAAIA/AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAA5DiOPgAAgD/kOI4+"),
+"format": 34359738391,
+"material": SubResource("StandardMaterial3D_8h3t4"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 84,
+"vertex_data": PackedByteArray("mpkZQI/C9T3NzMy+mpkZQI/C9b3NzMy+mpkZQBDXI7zsUTi+mpkZQBDXI7zsUTg+mpkZQI/C9T3NzMw+mpkZQI/C9T3sUTg+mpkZQI/C9T3sUTg+mpkZQI/C9T3NzMw+mpkZwI/C9T3sUTg+mpkZQI/C9T3NzMy+mpkZQBDXI7zsUTi+mpkZQI/C9T3sUTi+mpkZQI/C9T3NzMy+mpkZQI/C9T3sUTi+mpkZwI/C9T3NzMy+mpkZQI/C9b3NzMy+mpkZQI/C9T3NzMy+mpkZwI/C9T3NzMy+mpkZQBDXI7zsUTg+mpkZQI/C9b3NzMw+mpkZQI/C9T3NzMw+mpkZQBDXI7zsUTg+mpkZQI/C9b3NzMy+mpkZQI/C9b3NzMw+mpkZQI/C9T3NzMw+mpkZQI/C9b3NzMw+mpkZwI/C9b3NzMw+mpkZwI/C9b3NzMw+mpkZQI/C9b3NzMw+mpkZQI/C9b3NzMy+mpkZQBDXI7zsUTi+mpkZQI/C9b3NzMy+mpkZQBDXI7zsUTg+mpkZwBDXI7zsUTi+mpkZwI/C9b3NzMw+mpkZwI/C9b3NzMy+mpkZwI/C9T3NzMw+mpkZwI/C9T3sUTg+mpkZQI/C9T3NzMw+mpkZwI/C9T3NzMw+mpkZQI/C9T3NzMw+mpkZwI/C9b3NzMw+mpkZwI/C9T3NzMw+mpkZwBDXI7zsUTg+mpkZwI/C9T3sUTg+mpkZwI/C9T3sUTi+mpkZwI/C9T3NzMy+mpkZQI/C9T3sUTi+mpkZwBDXI7zsUTi+mpkZwI/C9T3NzMy+mpkZwI/C9T3sUTi+mpkZwI/C9T3NzMw+mpkZwI/C9b3NzMw+mpkZwBDXI7zsUTg+mpkZwBDXI7zsUTg+mpkZwI/C9b3NzMw+mpkZwBDXI7zsUTi+mpkZQI/C9b3NzMy+mpkZwI/C9T3NzMy+mpkZwI/C9b3NzMy+mpkZwI/C9b3NzMw+mpkZQI/C9b3NzMy+mpkZwI/C9b3NzMy+mpkZwBDXI7zsUTi+mpkZwI/C9b3NzMy+mpkZwI/C9T3NzMy+mpkZQBDXI7zsUTg+mpkZwI/C9T3sUTg+mpkZwBDXI7zsUTg+mpkZwBDXI7zsUTi+mpkZwI/C9T3sUTi+mpkZQI/C9T3sUTi+mpkZQBDXI7zsUTi+mpkZQBDXI7zsUTg+mpkZwBDXI7zsUTg+mpkZwBDXI7zsUTi+mpkZQI/C9T3sUTi+mpkZQBDXI7zsUTi+mpkZwBDXI7zsUTi+mpkZQBDXI7zsUTi+mpkZwBDXI7zsUTg+mpkZQBDXI7zsUTg+mpkZQI/C9T3sUTg+mpkZwI/C9T3sUTg+////f/9//n////9//3/+f////3//f/5/////f/9//n////9//3/+f////3//f/5//3//////AAD/f/////8AAP9//////wAA////f/9//n////9//3/+f////3//f/5//3//////AAD/f/////8AAP9//////wAA/////wAA/z//////AAD/P/////8AAP8/////f/9//n////9//3/+f////3//f/5/////f/9//n////9//3/+f////3//f/5//3//fwAA/z//f/9/AAD/P/9//38AAP8//38AAP//AAD/fwAA//8AAP9/AAD//wAA////f/9//n////9//3/+f////3//f/5/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//3//////AAD/f/////8AAP9//////wAA/3//fwAA/z//f/9/AAD/P/9//38AAP8/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//3//////AAD/f/////8AAP9//////wAAAAD/f/9//n8AAP9//3/+fwAA/3//f/5/AAD/f/9//n8AAP9//3/+fwAA/3//f/5/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//////wAA/z//////AAD/P/////8AAP8//38AAP//AAD/fwAA//8AAP9/AAD//wAAAAD/f/9//n8AAP9//3/+fwAA/3//f/5//////wAA/7//////AAD/v/////8AAP+//3//fwAA/7//f/9/AAD/v/9//38AAP+//3//////////f/////////9//////////3//fwAA/7//f/9/AAD/v/9//38AAP+//3//////////f/////////9//////////////wAA/7//////AAD/v/////8AAP+/")
+}]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u04cc"]
 albedo_color = Color(0.121569, 0.121569, 0.121569, 1)
@@ -77,11 +92,42 @@ _data = {
 albedo_color = Color(0.45098, 0.360784, 0, 1)
 emission = Color(0.172549, 0.172549, 0.172549, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1byup"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4bprl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tsja2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_5ol3q"]
+size = Vector3(0.7, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bruhj"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nsbob"]
+radius = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8vyf7"]
+albedo_texture = ExtResource("10_c17n0")
+
+[sub_resource type="BoxMesh" id="BoxMesh_nllpg"]
+size = Vector3(2, 0.05, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qwwra"]
+size = Vector3(1, 0.05, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v5j1r"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lhqvq"]
+top_radius = 0.05
+bottom_radius = 0.25
+
+[sub_resource type="PrismMesh" id="PrismMesh_ec334"]
+size = Vector3(0.2, 1, 0.1)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_vpplx"]
 size = Vector3(2400, 24, 2400)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yb0oy"]
-albedo_texture = ExtResource("13_yw2jr")
 normal_enabled = true
 uv1_scale = Vector3(120, 120, 0)
 
@@ -103,6 +149,9 @@ _surfaces = [{
 "vertex_count": 360,
 "vertex_data": PackedByteArray("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4/x7l2O48Vlq/6SX/3//f////7/Zrv9///9s1zagwVlp/7aoNqDBWWn/tqjwfmZRuvI6tv9//3////+/8H5mUbryOrY2oMFZaf+2qHKTfzvb/DaocpN/O9v8Nqh+fHg07/BPsPB+ZlG68jq2NaS4POP8e5dyk3872/w2qDagwVlp/7aoNaS4POP8e5f2sHg02Pslgf9/AAD//4WNfnx4NO/wT7Byk3872/w2qP9/AAD//4XNwNnH35UAtqiZLvD+/QGav/////8AAP+/////f////////9muAACS6MDZiTmVAP2WwNmJOZUA/ZZX0GZRNf+ZgP///3/////////ZrgAAkuj//9kuAABs1/HZjSGUAA+o8dmNIZQAD6jA2Yk5lQD9lv//2a4AAJLoV9BmUTX/mYDA2Yk5lQD9ln+7DCgjAzaWf7sMKCMDNpb2sHg02PslgVfQZlE1/5mAZdEOAckAAL/x2Y0hlAAPqP//2S4AAGzX///ZLgAAbNf/////AAD/v2XRDgHJAAC/uLyCGBsD9aZ/uwwoIwM2lsDZiTmVAP2W9rB4NNj7JYF/uwwoIwM2lv9/AAAAAIWNf7sMKCMDNpa4vIIYGwP1pv9/AAAAAP+fuLyCGBsD9aZ3tIEDJgTFvP9/AAAAAHiywNmJOZUA/Zbx2Y0hlAAPqLi8ghgbA/Wm8dmNIZQAD6hl0Q4ByQAAv3e0gQMmBMW82a7/f///bNf/f/9/////vw6BmK4b9BnKZdGnr8kAmYCJuT2maf/9lguof8Tb/DaWC6h/xNv8NpZ3tAfPJgQlgWXRp6/JAJmAjaENpmr/D6iJuT2maf/9liXR/3///5LoJdH/f///kujZrv9///9s142hDaZq/w+oibk9pmn//ZZl0aevyQCZgP///3//////////f/////8l0f9///+S6Im5PaZp//2Wibk9pmn//ZaNoQ2mav8PqIKYRsPj/PWmgIOGyzX3ss6CmEbD4/z1po2hDaZq/w+ojaENpmr/D6gOgZiuG/QZyoCDhss197LOd7QHzyYEJYELqH/E2/w2lv9//////3jygphGw+P89aYLqH/E2/w2lom5PaZp//2WgphGw+P89aaAg4bLNfeyzv9//////3iyC6h/xNv8NpaCmEbD4/z1pv9///////+fDoGYrhv0GcqNoQ2mav8PqNmu/3///2zXd7SBAyYExby4vIIYGwP1pvHZjSGUAA+o8dmbx5QApJdl0aevyQCZgHe0B88mBCWBd7QHzyYEJYG4vMnbGwN7l/HZm8eUAKSXwNnH35UAtqjx2ZvHlACkl7i8ydsbA3uXZdGnr8kAmYDx2ZvHlACkl///2a4AAJLo///ZrgAAkuj///9//////2XRp6/JAJmA8dmbx5QApJfA2cfflQC2qP//2S4AAGzX///ZLgAAbNf//9muAACS6PHZm8eUAKSXuLzJ2xsDe5d3tAfPJgQlgf9///8AAHjyuLzJ2xsDe5d/u4vsIwM2qMDZx9+VALaof7uL7CMDNqi4vMnbGwN7l/9///8AAP/fh0t9/HIG671/u4vsIwM2qP9///8AAIXNmS7w/v0Bmr/A2cfflQC2qH+7i+wjAzaof7uL7CMDNqiHS338cgbrvZku8P79AZq//////wAA/7///9kuAABs18DZx9+VALaomS5XUMt+mr91RsFZ+620v/NXfzttrG2+JVH/fyXR/7//f/9/////v/B+ZlHL6/DF8H5mUcvr8MVxXvFZINC0vyVR/38l0f+/cV7xWSDQtL/wfmZRy+vwxX58eDSY4mTEfnx4NJjiZMR8Z7g86s1xvnFe8Vkg0LS/dUbBWfuttL9xXvFZINC0v3xnuDzqzXG+fGe4POrNcb5+fHg0mOJkxP9/AADy5P+/81d/O22sbb58Z7g86s1xvv9/AAD/v/+/fGe4POrNcb7zV387baxtvnVGwVn7rbS/h0v3MLN9673zV387baxtvv9/AAAMm/+/2S7/f9mu/78lUf9/JdH/v3Fe8Vkg0LS/cV7xWSDQtL91RsFZ+620v9ku/3/Zrv+/AAD/f/9//7/ZLv9/2a7/v3VGwVn7rbS/dUbBWfuttL+ZLldQy36avwAA/3//f/+/81d/O22sbb6HS/cws33rvZkuV1DLfpq/AAAlUSVR/78AACXR2S7/vw0mcd7eL7S/PiY3IJEutL9l0Q4ByQAAv/////8AAP+//////wAA/78AACXR2S7/vz4mNyCRLrS/f0RzE5Evbb5GQzUkBlFxvv9/AAD/P/+/d7SBAyYExbx/RHMTkS9tvv9/AAAMG/+/RkM1JAZRcb5/RHMTkS9tvj4mNyCRLrS/RkM1JAZRcb6HS/cws33rvf9/AADyZP+/f0RzE5Evbb53tIEDJgTFvGXRDgHJAAC/ZdEOAckAAL8+JjcgkS60v39EcxORL22+AAAlUSVR/78AAP9//3//v5kuV1DLfpq/mS5XUMt+mr8NJmM4tVC0vwAAJVElUf+/AAAl0dku/78AACVRJVH/vw0mYzi1ULS/DSZjOLVQtL8+JjcgkS60vwAAJdHZLv+/h0v3MLN9671GQzUkBlFxvg0mYzi1ULS/DSZjOLVQtL+ZLldQy36av4dL9zCzfeu92S7/f9mu/78AAP9//3//v6cvmK4zgZq/jGx/xG3Qbb6Ag4bLn+B3uA6BmK527Fy5DoGYrnbsXLnIXz2mbdG0v4xsf8Rt0G2+gIOGy5/gd7iMbH/EbdBtvv9////y5P+/jGx/xG3Qbb7JW0bD+K5xvv9/////v/+/yVtGw/iucb4IT4bLS4Lrvf9///8Mm/+/yVtGw/iucb6MbH/EbdBtvshfPaZt0bS/yF89pm3RtL8OgZiuduxcuf9//3////+//3//f////78lUf9/JdH/v8hfPaZt0bS/yF89pm3RtL+bRw2mSa+0v8lbRsP4rnG+CE+Gy0uC673JW0bD+K5xvptHDaZJr7S/m0cNpkmvtL+nL5iuM4GavwhPhstLguu9m0cNpkmvtL/IXz2mbdG0vyVR/38l0f+/JVH/fyXR/7/ZLv9/2a7/v5tHDaZJr7S/py+YrjOBmr+bRw2mSa+0v9ku/3/Zrv+/PiY3IJEutL8NJmM4tVC0v0ZDNSQGUXG+f0Ty15FTbb5GQ3znFDJxvv9/////P/+/RkN85xQycb6HS338cgbrvf9///8MG/+/CE+Gy0uC671/RPLXkVNtvv9////yZP+/RkN85xQycb5/RPLXkVNtvj4mdcYDUrS/h0t9/HIG671GQ3znFDJxvg0mcd7eL7S/DSZx3t4vtL+ZLvD+/QGav4dLffxyBuu9PiZ1xgNStL8NJnHe3i+0v0ZDfOcUMnG+AAAl0dku/7//////AAD/v5ku8P79AZq/mS7w/v0Bmr8NJnHe3i+0vwAAJdHZLv+/f0Ty15FTbb4IT4bLS4LrvacvmK4zgZq/py+YrjOBmr8+JnXGA1K0v39E8teRU22+PiZ1xgNStL+nL5iuM4GavwAA/3//f/+/AAD/f/9//78AACVRJVH/vz4mdcYDUrS/DSZx3t4vtL8+JnXGA1K0vwAAJVElUf+/")
 }]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jhvjd"]
+bounce = 0.5
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_57x3o"]
 albedo_color = Color(0.45098, 0.360784, 0, 1)
@@ -134,6 +183,14 @@ func start_hit_tween() -> void:
 	await tween_2.finished
 	target_hit = false
 "
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6ma5"]
+emission_energy_multiplier = 5.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_axbo7"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1oxf5"]
 albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
@@ -324,553 +381,626 @@ func _process(delta):
 height = 0.07
 radius = 0.325
 
-[node name="level1_proto" type="Node3D"]
-script = ExtResource("1_nbs8u")
+[node name="level1_proto" type="Node3D" unique_id=651825369]
 
-[node name="spinning_pole" parent="." instance=ExtResource("2_h2lpu")]
+[node name="spinning_pole" type="Node3D" parent="." unique_id=2058037012 instance=ExtResource("2_h2lpu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.2099, 1.77772, 19.0528)
 
-[node name="spinning_pole2" parent="." instance=ExtResource("2_h2lpu")]
+[node name="spinning_pole2" type="Node3D" parent="." unique_id=854466155 instance=ExtResource("2_h2lpu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.2099, 1.77772, 15.0528)
 
-[node name="spinning_pole3" parent="." instance=ExtResource("2_h2lpu")]
+[node name="spinning_pole3" type="Node3D" parent="." unique_id=2122889983 instance=ExtResource("2_h2lpu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.2099, 1.77772, 15.0528)
 
-[node name="spinning_pole4" parent="." instance=ExtResource("2_h2lpu")]
+[node name="spinning_pole4" type="Node3D" parent="." unique_id=165338069 instance=ExtResource("2_h2lpu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.2099, 1.77772, 19.0528)
 
-[node name="wireFrames" type="Node3D" parent="."]
+[node name="wireFrames" type="Node3D" parent="." unique_id=1093669265]
 
-[node name="wireFrame" parent="wireFrames" instance=ExtResource("3_1oxf5")]
+[node name="wireFrame" type="MeshInstance3D" parent="wireFrames" unique_id=460967800 instance=ExtResource("3_1oxf5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.1, -0.123169)
+mesh = SubResource("ArrayMesh_gkc0x")
 
-[node name="tallBaseContainer" type="Node3D" parent="."]
+[node name="tallBaseContainer" type="Node3D" parent="." unique_id=2018894122]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 35)
 
-[node name="tallBase" parent="tallBaseContainer" instance=ExtResource("4_gpcpc")]
+[node name="tallBase" type="RigidBody3D" parent="tallBaseContainer" unique_id=1181808209 groups=["breakable"] instance=ExtResource("4_gpcpc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 12.35, 12)
+mass = 100.0
+inertia = Vector3(1000, 50, 1000)
+lock_rotation = true
+script = ExtResource("4_5agjn")
 
-[node name="targetCreator" type="Node3D" parent="."]
+[node name="targetCreator" type="Node3D" parent="." unique_id=1338015384]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1200)
 
-[node name="target_creator" parent="targetCreator" instance=ExtResource("5_1xoty")]
+[node name="target_creator" type="Node3D" parent="targetCreator" unique_id=1778014955 instance=ExtResource("5_1xoty")]
 transform = Transform3D(5.96244e-08, 0, -5, 0, 5, 0, 5, 0, 5.96244e-08, 38, 51.5, -1136.5)
 
-[node name="target_creator2" parent="targetCreator" instance=ExtResource("5_1xoty")]
+[node name="target_creator2" type="Node3D" parent="targetCreator" unique_id=1016702756 instance=ExtResource("5_1xoty")]
 transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, 0, 51.5, -1136.5)
 
-[node name="targetLoadPoint" type="Marker3D" parent="targetCreator"]
+[node name="targetLoadPoint" type="Marker3D" parent="targetCreator" unique_id=420459133]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38, 51.5, -1136)
 
-[node name="decoration" type="Node3D" parent="."]
+[node name="decoration" type="Node3D" parent="." unique_id=67063141]
 
-[node name="birds" parent="decoration" instance=ExtResource("6_fboy8")]
+[node name="birds" type="CharacterBody3D" parent="decoration" unique_id=356776278 instance=ExtResource("6_fboy8")]
 transform = Transform3D(-0.351275, 0, -0.355817, 0, 0.5, 0, 0.355817, 0, -0.351275, 156, 10, 198.949)
 motion_mode = 1
+safe_margin = 1.0
 
-[node name="body2" type="Node3D" parent="decoration/birds"]
+[node name="body2" type="Node3D" parent="decoration/birds" unique_id=602624354]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.8016, 10.0032, -27.244)
 
-[node name="head" type="CSGSphere3D" parent="decoration/birds/body2"]
+[node name="head" type="CSGSphere3D" parent="decoration/birds/body2" unique_id=273747755]
 transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_u04cc")
 
-[node name="beak" type="CSGPolygon3D" parent="decoration/birds/body2/head"]
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds/body2/head" unique_id=1673683836]
 transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
 material_override = SubResource("StandardMaterial3D_sss5j")
 polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds/body2"]
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds/body2" unique_id=1754388709]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
 material_override = SubResource("StandardMaterial3D_h5xh0")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds/body2"]
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds/body2" unique_id=681470787]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
 material_override = SubResource("StandardMaterial3D_omcjr")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds/body2"]
-libraries = {
-&"": SubResource("AnimationLibrary_htrv4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds/body2" unique_id=92856880]
+libraries/ = SubResource("AnimationLibrary_htrv4")
 
-[node name="body3" type="Node3D" parent="decoration/birds"]
+[node name="body3" type="Node3D" parent="decoration/birds" unique_id=1336412445]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.28308, 0.200062, -5.88916)
 visible = false
 
-[node name="head" type="CSGSphere3D" parent="decoration/birds/body3"]
+[node name="head" type="CSGSphere3D" parent="decoration/birds/body3" unique_id=2044285185]
 transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_u04cc")
 
-[node name="beak" type="CSGPolygon3D" parent="decoration/birds/body3/head"]
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds/body3/head" unique_id=1544196097]
 transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
 material_override = SubResource("StandardMaterial3D_sss5j")
 polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds/body3"]
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds/body3" unique_id=1741790011]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
 material_override = SubResource("StandardMaterial3D_h5xh0")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds/body3"]
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds/body3" unique_id=1796177146]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
 material_override = SubResource("StandardMaterial3D_omcjr")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds/body3"]
-libraries = {
-&"": SubResource("AnimationLibrary_htrv4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds/body3" unique_id=1589161403]
+libraries/ = SubResource("AnimationLibrary_htrv4")
 
-[node name="body4" type="Node3D" parent="decoration/birds"]
+[node name="body4" type="Node3D" parent="decoration/birds" unique_id=1292349717]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.88034, -0.0983906, -6.07811)
 visible = false
 
-[node name="head" type="CSGSphere3D" parent="decoration/birds/body4"]
+[node name="head" type="CSGSphere3D" parent="decoration/birds/body4" unique_id=1201556452]
 transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_u04cc")
 
-[node name="beak" type="CSGPolygon3D" parent="decoration/birds/body4/head"]
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds/body4/head" unique_id=1805980870]
 transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
 material_override = SubResource("StandardMaterial3D_sss5j")
 polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds/body4"]
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds/body4" unique_id=1939588385]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
 material_override = SubResource("StandardMaterial3D_h5xh0")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds/body4"]
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds/body4" unique_id=1035107066]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46767, -0.00892258, -0.00012207)
 material_override = SubResource("StandardMaterial3D_omcjr")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds/body4"]
-libraries = {
-&"": SubResource("AnimationLibrary_htrv4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds/body4" unique_id=182764377]
+libraries/ = SubResource("AnimationLibrary_htrv4")
 
-[node name="body5" type="Node3D" parent="decoration/birds"]
+[node name="body5" type="Node3D" parent="decoration/birds" unique_id=289790471]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.84302, 0.762184, -1.37595)
 visible = false
 
-[node name="head" type="CSGSphere3D" parent="decoration/birds/body5"]
+[node name="head" type="CSGSphere3D" parent="decoration/birds/body5" unique_id=950868044]
 transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_u04cc")
 
-[node name="beak" type="CSGPolygon3D" parent="decoration/birds/body5/head"]
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds/body5/head" unique_id=76706366]
 transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
 material_override = SubResource("StandardMaterial3D_sss5j")
 polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds/body5"]
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds/body5" unique_id=1728132266]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
 material_override = SubResource("StandardMaterial3D_h5xh0")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds/body5"]
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds/body5" unique_id=196756156]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
 material_override = SubResource("StandardMaterial3D_omcjr")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds/body5"]
-libraries = {
-&"": SubResource("AnimationLibrary_htrv4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds/body5" unique_id=260340451]
+libraries/ = SubResource("AnimationLibrary_htrv4")
 
-[node name="birds2" parent="decoration" instance=ExtResource("6_fboy8")]
+[node name="birds2" type="CharacterBody3D" parent="decoration" unique_id=1875184562 instance=ExtResource("6_fboy8")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 2.48, 51.233, -320)
 motion_mode = 1
+safe_margin = 1.0
 
-[node name="body2" type="Node3D" parent="decoration/birds2"]
+[node name="body2" type="Node3D" parent="decoration/birds2" unique_id=1208844417]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.8016, 10.0032, -27.244)
 
-[node name="head" type="CSGSphere3D" parent="decoration/birds2/body2"]
+[node name="head" type="CSGSphere3D" parent="decoration/birds2/body2" unique_id=445608968]
 transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_u04cc")
 
-[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body2/head"]
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body2/head" unique_id=1029747140]
 transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
 material_override = SubResource("StandardMaterial3D_sss5j")
 polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body2"]
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body2" unique_id=464271471]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
 material_override = SubResource("StandardMaterial3D_h5xh0")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body2"]
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body2" unique_id=2112406572]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
 material_override = SubResource("StandardMaterial3D_omcjr")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body2"]
-libraries = {
-&"": SubResource("AnimationLibrary_htrv4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body2" unique_id=638610767]
+libraries/ = SubResource("AnimationLibrary_htrv4")
 
-[node name="body3" type="Node3D" parent="decoration/birds2"]
+[node name="body3" type="Node3D" parent="decoration/birds2" unique_id=1271851102]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.28308, 0.200062, -5.88916)
 visible = false
 
-[node name="head" type="CSGSphere3D" parent="decoration/birds2/body3"]
+[node name="head" type="CSGSphere3D" parent="decoration/birds2/body3" unique_id=628994029]
 transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_u04cc")
 
-[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body3/head"]
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body3/head" unique_id=1654140835]
 transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
 material_override = SubResource("StandardMaterial3D_sss5j")
 polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body3"]
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body3" unique_id=1930866011]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
 material_override = SubResource("StandardMaterial3D_h5xh0")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body3"]
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body3" unique_id=1667565447]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
 material_override = SubResource("StandardMaterial3D_omcjr")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body3"]
-libraries = {
-&"": SubResource("AnimationLibrary_htrv4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body3" unique_id=1519887239]
+libraries/ = SubResource("AnimationLibrary_htrv4")
 
-[node name="body4" type="Node3D" parent="decoration/birds2"]
+[node name="body4" type="Node3D" parent="decoration/birds2" unique_id=1545824098]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.88034, -0.0983906, -6.07811)
 visible = false
 
-[node name="head" type="CSGSphere3D" parent="decoration/birds2/body4"]
+[node name="head" type="CSGSphere3D" parent="decoration/birds2/body4" unique_id=954118469]
 transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_u04cc")
 
-[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body4/head"]
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body4/head" unique_id=1049457185]
 transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
 material_override = SubResource("StandardMaterial3D_sss5j")
 polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body4"]
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body4" unique_id=1620378220]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
 material_override = SubResource("StandardMaterial3D_h5xh0")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body4"]
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body4" unique_id=108869813]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46767, -0.00892258, -0.00012207)
 material_override = SubResource("StandardMaterial3D_omcjr")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body4"]
-libraries = {
-&"": SubResource("AnimationLibrary_htrv4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body4" unique_id=88846532]
+libraries/ = SubResource("AnimationLibrary_htrv4")
 
-[node name="body5" type="Node3D" parent="decoration/birds2"]
+[node name="body5" type="Node3D" parent="decoration/birds2" unique_id=1201323817]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.84302, 0.762184, -1.37595)
 visible = false
 
-[node name="head" type="CSGSphere3D" parent="decoration/birds2/body5"]
+[node name="head" type="CSGSphere3D" parent="decoration/birds2/body5" unique_id=1700771212]
 transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_u04cc")
 
-[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body5/head"]
+[node name="beak" type="CSGPolygon3D" parent="decoration/birds2/body5/head" unique_id=1421525977]
 transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
 material_override = SubResource("StandardMaterial3D_sss5j")
 polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body5"]
+[node name="leftWing" type="CSGPolygon3D" parent="decoration/birds2/body5" unique_id=1210784260]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
 material_override = SubResource("StandardMaterial3D_h5xh0")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body5"]
+[node name="rightWing" type="CSGPolygon3D" parent="decoration/birds2/body5" unique_id=2136548515]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
 material_override = SubResource("StandardMaterial3D_omcjr")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body5"]
-libraries = {
-&"": SubResource("AnimationLibrary_htrv4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="decoration/birds2/body5" unique_id=1011027198]
+libraries/ = SubResource("AnimationLibrary_htrv4")
 
-[node name="trees" type="Node3D" parent="decoration"]
+[node name="trees" type="Node3D" parent="decoration" unique_id=1136452135]
 
-[node name="fore1" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="fore1" type="Node3D" parent="decoration/trees" unique_id=1971062788 instance=ExtResource("7_njq78")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.447, 1.8764, 28.816)
 
-[node name="foreLeft" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="foreLeft" type="Node3D" parent="decoration/trees" unique_id=1439537830 instance=ExtResource("7_njq78")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.0548, 2.34837, 1.31448)
 
-[node name="foreRight" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="foreRight" type="Node3D" parent="decoration/trees" unique_id=1722234089 instance=ExtResource("7_njq78")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.7304, 2.14944, 0.933655)
 
-[node name="fore9" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="fore9" type="Node3D" parent="decoration/trees" unique_id=502123007 instance=ExtResource("7_njq78")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.5824, 1.68678, 5.69512)
 
-[node name="fore2" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="fore2" type="Node3D" parent="decoration/trees" unique_id=131496140 instance=ExtResource("7_njq78")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 75.1927, 2.41481, 77.3876)
 
-[node name="fore6" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="fore6" type="Node3D" parent="decoration/trees" unique_id=857903362 instance=ExtResource("7_njq78")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 59.6994, 2.83838, 46.3125)
 
-[node name="fore8" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="fore8" type="Node3D" parent="decoration/trees" unique_id=869374794 instance=ExtResource("7_njq78")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -81.3006, 2.89009, 46.3125)
 
-[node name="fore4" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="fore4" type="Node3D" parent="decoration/trees" unique_id=1236315928 instance=ExtResource("7_njq78")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 178.05, 2.79488, 209.143)
 
-[node name="fore10" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="fore10" type="Node3D" parent="decoration/trees" unique_id=1940484892 instance=ExtResource("7_njq78")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -185.95, 2.97715, 209.143)
 
-[node name="midground3" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="midground3" type="Node3D" parent="decoration/trees" unique_id=676456869 instance=ExtResource("7_njq78")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.507, 2.33223, 90)
 
-[node name="weakTree" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="weakTree" type="Node3D" parent="decoration/trees" unique_id=117595301 instance=ExtResource("7_njq78")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56.259, 2.008, 276.234)
 
-[node name="bgTree" parent="decoration/trees" instance=ExtResource("7_njq78")]
+[node name="bgTree" type="Node3D" parent="decoration/trees" unique_id=37781307 instance=ExtResource("7_njq78")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.563, 2.008, 276.234)
 
-[node name="balconyForeground" type="Node3D" parent="decoration"]
+[node name="balconyForeground" type="Node3D" parent="decoration" unique_id=1256420122]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 1.77636e-14, 0, 0.1, 10.639, -0.57293, 2.191)
 
-[node name="topRail" type="CSGBox3D" parent="decoration/balconyForeground"]
+[node name="topRail" type="CSGBox3D" parent="decoration/balconyForeground" unique_id=1366799067]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 1.766, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(5, 0.05, 1)
 
-[node name="leftPole" type="CSGBox3D" parent="decoration/balconyForeground"]
+[node name="leftPole" type="CSGBox3D" parent="decoration/balconyForeground" unique_id=1245318383]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -11.505, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="middlePole" type="CSGBox3D" parent="decoration/balconyForeground"]
+[node name="middlePole" type="CSGBox3D" parent="decoration/balconyForeground" unique_id=137906536]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -11.701, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="rightPole" type="CSGBox3D" parent="decoration/balconyForeground"]
+[node name="rightPole" type="CSGBox3D" parent="decoration/balconyForeground" unique_id=934308510]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 2.03288e-20, 0, 1, -13.104, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/balconyForeground"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/balconyForeground" unique_id=1913256985]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -14.5, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/balconyForeground"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/balconyForeground" unique_id=869452398]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/balconyForeground"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/balconyForeground" unique_id=1635666504]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 0.919834, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(5, 0.2, 1)
 
-[node name="balconyForeground2" type="Node3D" parent="decoration"]
+[node name="balconyForeground2" type="Node3D" parent="decoration" unique_id=369991063]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 1.77636e-14, 0, 0.1, 6.7551, -0.57293, 2.191)
 
-[node name="topRail" type="CSGBox3D" parent="decoration/balconyForeground2"]
+[node name="topRail" type="CSGBox3D" parent="decoration/balconyForeground2" unique_id=104030161]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 1.766, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(5, 0.05, 1)
 
-[node name="leftPole" type="CSGBox3D" parent="decoration/balconyForeground2"]
+[node name="leftPole" type="CSGBox3D" parent="decoration/balconyForeground2" unique_id=1268318573]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -11.505, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="middlePole" type="CSGBox3D" parent="decoration/balconyForeground2"]
+[node name="middlePole" type="CSGBox3D" parent="decoration/balconyForeground2" unique_id=50827888]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -11.701, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="rightPole" type="CSGBox3D" parent="decoration/balconyForeground2"]
+[node name="rightPole" type="CSGBox3D" parent="decoration/balconyForeground2" unique_id=1360810019]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 2.03288e-20, 0, 1, -13.104, 1.436, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/balconyForeground2"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="decoration/balconyForeground2" unique_id=987489600]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -14.5, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/balconyForeground2"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="decoration/balconyForeground2" unique_id=2037756040]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 1.43614, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(0.1, 0.9, 0.5)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/balconyForeground2"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="decoration/balconyForeground2" unique_id=1987110866]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 4.06576e-20, 0, 1, -12.5, 0.919834, 0)
 material_override = SubResource("StandardMaterial3D_2nnby")
 size = Vector3(5, 0.2, 1)
 
-[node name="mountain" parent="decoration" instance=ExtResource("8_15t3p")]
+[node name="mountain" type="Node3D" parent="decoration" unique_id=1636023578 instance=ExtResource("8_15t3p")]
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -152.362, -6.157, 706.552)
 
-[node name="mountain2" parent="decoration/mountain" instance=ExtResource("8_15t3p")]
+[node name="mountain2" type="Node3D" parent="decoration/mountain" unique_id=403906877 instance=ExtResource("8_15t3p")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -108, 0, 0)
 
-[node name="mountain3" parent="decoration/mountain" instance=ExtResource("8_15t3p")]
+[node name="mountain3" type="Node3D" parent="decoration/mountain" unique_id=1042605836 instance=ExtResource("8_15t3p")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -143.192, -4.47378, 0)
 
-[node name="helicopter" parent="decoration" instance=ExtResource("12_fvjlv")]
+[node name="helicopter" parent="decoration" unique_id=1425264992 instance=ExtResource("12_fvjlv")]
 transform = Transform3D(0.962651, 2.39877e-06, -2.45716, 1.56598, 2.03362, 0.613514, 1.89349, -1.68187, 0.741821, -69.2817, 0, 217.811)
 
-[node name="floor" type="Node3D" parent="decoration"]
+[node name="frontCockpit" parent="decoration/helicopter/base" index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_1byup")
+mesh = SubResource("CapsuleMesh_4bprl")
+skeleton = NodePath("../..")
 
-[node name="foreground" type="StaticBody3D" parent="decoration/floor"]
+[node name="squareBase" parent="decoration/helicopter/base" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.862206, -0.336124)
+material_override = SubResource("StandardMaterial3D_tsja2")
+mesh = SubResource("BoxMesh_5ol3q")
+skeleton = NodePath("../..")
+
+[node name="top" parent="decoration/helicopter/base" index="2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.13531, -0.938486)
+material_override = SubResource("StandardMaterial3D_bruhj")
+mesh = SubResource("CapsuleMesh_nsbob")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" parent="decoration/helicopter/base" index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04992, 1.40377, -0.323159)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" parent="decoration/helicopter/base" index="4"]
+transform = Transform3D(-0.623197, 0, -0.782065, 0, 1, 0, 0.782065, 0, -0.623197, 0.643181, 1.40377, -1.05237)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" parent="decoration/helicopter/base" index="5"]
+transform = Transform3D(-0.623197, 0, -0.782065, 0, 1, 0, 0.782065, 0, -0.623197, -0.576411, 1.40377, 0.478119)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" parent="decoration/helicopter/base" index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.07467, 1.40377, -0.323159)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_nllpg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" parent="decoration/helicopter/base" index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0160673, 1.44448, -0.323159)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("BoxMesh_qwwra")
+skeleton = NodePath("../..")
+
+[node name="tailNode" parent="decoration/helicopter" index="1"]
+transform = Transform3D(1, -0.000429533, -0.000851338, -0.000398041, 0.623272, -0.782005, 0.000866509, 0.782005, 0.623271, 0, -1.0064, -1.43036)
+
+[node name="tail4" parent="decoration/helicopter/tailNode" index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.01, 1.15, -2.769)
+material_override = SubResource("StandardMaterial3D_v5j1r")
+mesh = SubResource("CylinderMesh_lhqvq")
+skeleton = NodePath("../..")
+
+[node name="tail5" parent="decoration/helicopter/tailNode" index="1"]
+transform = Transform3D(2.98023e-08, 0, 1, 0, 1, 0, -1, 0, 2.98023e-08, -0.0804748, 1.47647, -3.71742)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("PrismMesh_ec334")
+skeleton = NodePath("../..")
+
+[node name="tail6" parent="decoration/helicopter/tailNode" index="2"]
+transform = Transform3D(2.98023e-08, 0, 1, 0, 1, 0, -1, 0, 2.98023e-08, 0.0964563, 1.47647, -3.71742)
+material_override = SubResource("StandardMaterial3D_8vyf7")
+mesh = SubResource("PrismMesh_ec334")
+skeleton = NodePath("../..")
+
+[node name="floor" type="Node3D" parent="decoration" unique_id=1882727910]
+
+[node name="foreground" type="StaticBody3D" parent="decoration/floor" unique_id=1843218083]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 27.5)
 collision_layer = 7
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="decoration/floor/foreground"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="decoration/floor/foreground" unique_id=689733068]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 1200)
 shape = SubResource("BoxShape3D_vpplx")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="decoration/floor/foreground"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="decoration/floor/foreground" unique_id=147640675]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 1200)
 material_override = SubResource("StandardMaterial3D_yb0oy")
 mesh = SubResource("BoxMesh_ci7ok")
 skeleton = NodePath("../..")
 
-[node name="floor2" type="Node3D" parent="decoration"]
+[node name="floor2" type="Node3D" parent="decoration" unique_id=1515362970]
 
-[node name="foreground" type="StaticBody3D" parent="decoration/floor2"]
+[node name="foreground" type="StaticBody3D" parent="decoration/floor2" unique_id=358147254]
 collision_layer = 7
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="decoration/floor2/foreground"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="decoration/floor2/foreground" unique_id=2076722421]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, -1200)
 shape = SubResource("BoxShape3D_vpplx")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="decoration/floor2/foreground"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="decoration/floor2/foreground" unique_id=1874876531]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, -1200)
 material_override = SubResource("StandardMaterial3D_yb0oy")
 mesh = SubResource("BoxMesh_ci7ok")
 skeleton = NodePath("../..")
 
-[node name="Lighting" type="Node" parent="."]
+[node name="Lighting" type="Node" parent="." unique_id=105982294]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting" unique_id=2032397805]
 environment = ExtResource("14_323mv")
 
-[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Lighting"]
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Lighting" unique_id=296894078]
 transform = Transform3D(1, -1.49012e-08, 2.98023e-08, 1.49012e-08, 1, 2.98023e-08, 0, 0, 1, 0, 15, 340.237)
 material_override = SubResource("StandardMaterial3D_vyyjy")
 mesh = SubResource("ArrayMesh_nbs8u")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting" unique_id=2091316876]
 transform = Transform3D(1, 0, 0, 0, -0.998259, 0.0589754, 0, -0.0589754, -0.998259, -10, 8.8, 0)
 light_color = Color(0.992157, 0.627451, 0.27451, 1)
 shadow_enabled = true
 shadow_opacity = 0.2
 directional_shadow_max_distance = 63.0
 
-[node name="SFX" type="Node" parent="."]
+[node name="SFX" type="Node" parent="." unique_id=345377498]
 
-[node name="OasisSong" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("16_d47u1")
+[node name="OasisSong" type="AudioStreamPlayer" parent="SFX" unique_id=1433688837]
 volume_db = -20.0
 autoplay = true
 
-[node name="targetTimer" type="Timer" parent="."]
+[node name="targetTimer" type="Timer" parent="." unique_id=1432950625]
 wait_time = 3.0
 
-[node name="Player" parent="." instance=ExtResource("17_tk8dy")]
+[node name="Player" type="Node3D" parent="." unique_id=1430879160 node_paths=PackedStringArray("weapon_shooting", "player_gun") groups=["Player"] instance=ExtResource("17_tk8dy")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.321, 1.148, 0)
+script = ExtResource("14_sldt0")
+weapon_shooting = NodePath("Weapon_shooting")
+player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
+scroll_step = 50.0
 
-[node name="bullet" parent="Player" instance=ExtResource("15_h2lpu")]
+[node name="bullet" type="RigidBody3D" parent="Player" unique_id=868062730 groups=["bullet"] instance=ExtResource("15_h2lpu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.06937)
 top_level = true
+collision_layer = 7
+collision_mask = 7
 axis_lock_angular_x = true
 axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 50.0
 gravity_scale = 0.0
-speed = 20.0
-gravity = 0.0
-arc_strength = 0.0
+center_of_mass_mode = 1
+can_sleep = false
+continuous_cd = true
 
-[node name="targetRolling" parent="." instance=ExtResource("15_57x3o")]
+[node name="targetRolling" type="RigidBody3D" parent="." unique_id=873285279 instance=ExtResource("15_57x3o")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 10.5)
+physics_material_override = SubResource("PhysicsMaterial_jhvjd")
+contact_monitor = true
+max_contacts_reported = 5
+script = ExtResource("17_kiye5")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1835062267]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, -13.65, 13.5)
 material_override = SubResource("StandardMaterial3D_yb0oy")
 use_collision = true
 size = Vector3(34, 27.3, 28)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D" unique_id=443951582]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 11, -4)
 operation = 2
 size = Vector3(2, 6, 0.5)
 
-[node name="Frame" type="Node3D" parent="."]
+[node name="Frame" type="Node3D" parent="." unique_id=520710292]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Frame"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Frame" unique_id=1989812538]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4953, 1.51338, -2.125)
 material_override = SubResource("StandardMaterial3D_57x3o")
 use_collision = true
 size = Vector3(1, 3, 16)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Frame"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Frame" unique_id=475641800]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.4953, 1.51338, 26.875)
 material_override = SubResource("StandardMaterial3D_57x3o")
 use_collision = true
 size = Vector3(1, 3, 42)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="Frame"]
+[node name="CSGBox3D4" type="CSGBox3D" parent="Frame" unique_id=914375439]
 transform = Transform3D(2.98023e-08, 0, 1, 0, 1, 0, -1, 0, 2.98023e-08, 7.7453, 1.51338, 25.875)
 material_override = SubResource("StandardMaterial3D_57x3o")
 use_collision = true
 size = Vector3(1, 3, 20.5)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="Frame"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="Frame" unique_id=1379134445]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.51338, 1.5)
 material_override = SubResource("StandardMaterial3D_57x3o")
 use_collision = true
 size = Vector3(1, 3, 23.25)
 
-[node name="Target" type="Node3D" parent="."]
+[node name="Target" type="Node3D" parent="." unique_id=1344682959]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 6)
 script = SubResource("GDScript_nbs8u")
 
-[node name="Mesh" type="Node3D" parent="Target"]
+[node name="Mesh" type="Node3D" parent="Target" unique_id=1599632756]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
 
-[node name="target_lightup" parent="Target/Mesh" instance=ExtResource("16_nbs8u")]
+[node name="target_lightup" type="MeshInstance3D" parent="Target/Mesh" unique_id=1746515501 instance=ExtResource("16_nbs8u")]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, -0.098)
 visible = false
+material_override = SubResource("StandardMaterial3D_x6ma5")
+mesh = SubResource("CylinderMesh_axbo7")
+skeleton = NodePath("")
 script = ExtResource("17_h2lpu")
 
-[node name="innerRing" type="MeshInstance3D" parent="Target/Mesh"]
+[node name="innerRing" type="MeshInstance3D" parent="Target/Mesh" unique_id=28895555]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, -0.0354862)
 material_override = SubResource("StandardMaterial3D_1oxf5")
 mesh = SubResource("CylinderMesh_gpcpc")
 skeleton = NodePath("")
 
-[node name="middleRing" type="MeshInstance3D" parent="Target/Mesh"]
+[node name="middleRing" type="MeshInstance3D" parent="Target/Mesh" unique_id=748030385]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, -0.0736217)
 material_override = SubResource("StandardMaterial3D_1xoty")
 mesh = SubResource("TorusMesh_fboy8")
 skeleton = NodePath("")
 
-[node name="outRing2" type="MeshInstance3D" parent="Target/Mesh"]
+[node name="outRing2" type="MeshInstance3D" parent="Target/Mesh" unique_id=1778078366]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, -0.0972576)
 material_override = SubResource("StandardMaterial3D_njq78")
 mesh = SubResource("TorusMesh_15t3p")
 skeleton = NodePath("")
 
-[node name="yellow" type="MeshInstance3D" parent="Target/Mesh"]
+[node name="yellow" type="MeshInstance3D" parent="Target/Mesh" unique_id=1577082100]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_w7xfh")
 mesh = SubResource("CylinderMesh_llcrv")
 skeleton = NodePath("")
 script = SubResource("GDScript_f2du0")
 
-[node name="green" type="MeshInstance3D" parent="Target/Mesh"]
+[node name="green" type="MeshInstance3D" parent="Target/Mesh" unique_id=19196184]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_fvjlv")
@@ -878,7 +1008,7 @@ mesh = SubResource("CylinderMesh_yw2jr")
 skeleton = NodePath("")
 script = SubResource("GDScript_323mv")
 
-[node name="blue" type="MeshInstance3D" parent="Target/Mesh"]
+[node name="blue" type="MeshInstance3D" parent="Target/Mesh" unique_id=661856496]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_fmkad")
@@ -886,7 +1016,7 @@ mesh = SubResource("CylinderMesh_d47u1")
 skeleton = NodePath("")
 script = SubResource("GDScript_tk8dy")
 
-[node name="red" type="MeshInstance3D" parent="Target/Mesh"]
+[node name="red" type="MeshInstance3D" parent="Target/Mesh" unique_id=1518669565]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_85pso")
@@ -894,17 +1024,19 @@ mesh = SubResource("CylinderMesh_giwrl")
 skeleton = NodePath("")
 script = SubResource("GDScript_8iopa")
 
-[node name="Area3D" type="Area3D" parent="Target"]
+[node name="Area3D" type="Area3D" parent="Target" unique_id=1722509013]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Target/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Target/Area3D" unique_id=928597170]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("CylinderShape3D_h2lpu")
 
-[node name="hitSound" type="AudioStreamPlayer3D" parent="Target"]
-stream = ExtResource("19_1oxf5")
+[node name="hitSound" type="AudioStreamPlayer3D" parent="Target" unique_id=1085509176]
+stream = ExtResource("20_3rwdn")
 volume_db = -10.0
 
 [connection signal="timeout" from="targetTimer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="Player/bullet" to="Player/bullet" method="_on_body_entered"]
+[connection signal="body_entered" from="targetRolling" to="targetRolling" method="_on_body_entered"]
 [connection signal="body_entered" from="Target/Area3D" to="Target" method="_on_area_3d_body_entered"]
 
 [editable path="decoration/helicopter"]

@@ -6,18 +6,12 @@
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_y3o4g"]
 [ext_resource type="Texture2D" uid="uid://c80b1qtaj2dvn" path="res://res/bullet_damage_upgrade_icon.png" id="4_dq200"]
 [ext_resource type="Texture2D" uid="uid://dc5ya1y3jy2xw" path="res://res/bullet_speed_upgrade_icon.png" id="4_lwcj2"]
+[ext_resource type="Script" uid="uid://duf1g3ikghtgp" path="res://unfiled/upgrade_tree/UpgradeNode.gd" id="4_xdrl6"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="5_lwcj2"]
-[ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="5_mitwi"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="5_vom4t"]
-[ext_resource type="AudioStream" uid="uid://cqfuywy300at4" path="res://sfx/opt_2.wav" id="5_wvnns"]
-[ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="6_cl1nj"]
-[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="6_mitwi"]
 [ext_resource type="Texture2D" uid="uid://bhst5en4f2e3b" path="res://res/mountain_image.png" id="6_pwib5"]
 [ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://res/ROCKS - title_rock_centered_large.png" id="7_cn8lj"]
-[ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="7_o0rit"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_7j408"]
-[ext_resource type="AudioStream" uid="uid://c5he7tw0onue" path="res://sfx/shop_reroll_sfx_01.wav" id="8_hfe6c"]
-[ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="8_kosrb"]
 [ext_resource type="Texture2D" uid="uid://bcvk6h5k84n3h" path="res://res/moss_shop.png" id="11_babqt"]
 [ext_resource type="Texture2D" uid="uid://hy4w24j6p2er" path="res://res/red_shop.png" id="12_kvqbn"]
 [ext_resource type="Texture2D" uid="uid://dk2p6y27c64hs" path="res://res/cooldown_reduction_upgrade_icon_128x128.png" id="12_pwib5"]
@@ -30,22 +24,34 @@
 [ext_resource type="Texture2D" uid="uid://cdibh2x081m8m" path="res://res/auto_fire_icon.png" id="16_cn8lj"]
 [ext_resource type="Script" uid="uid://up6jew6r4kdm" path="res://ch/Shop/transport_tickets.gd" id="16_vom4t"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="17_cn8lj"]
-[ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="18_d3p6f"]
-[ext_resource type="AudioStream" uid="uid://ecijroapobxk" path="res://sfx/Egg_pulse_sfx.wav" id="20_lwcj2"]
-[ext_resource type="AudioStream" uid="uid://bde0632jwh1jq" path="res://sfx/Egg_pulse_sfx_reverse.wav" id="20_wqa6l"]
 [ext_resource type="PackedScene" uid="uid://dcuml06w7i3km" path="res://ch/Shop/ticket_button.tscn" id="20_xklyy"]
+[ext_resource type="Script" uid="uid://i51mtvivb3yr" path="res://ch/Shop/GunUpgrade_Permanent.gd" id="21_213qx"]
 [ext_resource type="PackedScene" uid="uid://cjcdqa3pipb3j" path="res://ch/close_menu.tscn" id="21_tnodp"]
+[ext_resource type="StyleBox" uid="uid://c4p7ad54klwn" path="res://res/progress_bar_no_progress.tres" id="22_bmwyh"]
+[ext_resource type="Script" uid="uid://drmqfnbqyvmps" path="res://ch/Shop/tooltip.gd" id="25_erfbp"]
+[ext_resource type="AudioStream" uid="uid://dd6lxfxuvdkbh" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
 [ext_resource type="Script" uid="uid://bia8r4n1kfwrp" path="res://ch/Shop/ticket_purchased_pop_up.gd" id="26_ei2sf"]
-[ext_resource type="AudioStream" uid="uid://dmjy34fgs3ny8" path="res://sfx/HUD on click.wav" id="27_fl2u5"]
 [ext_resource type="Script" uid="uid://ducuh8laqrpgh" path="res://ch/Shop/popup_ticket_purchase.gd" id="27_pwib5"]
-[ext_resource type="AudioStream" uid="uid://jmf0o5ogd3uv" path="res://sfx/HUD on_v2.wav" id="28_htvy6"]
 [ext_resource type="StyleBox" uid="uid://eu6ax7sn7s7" path="res://res/card_icon_border_stylebox.tres" id="28_ppp57"]
-[ext_resource type="AudioStream" uid="uid://dold0eft66v4p" path="res://sfx/HUD on.wav" id="29_0v40x"]
 [ext_resource type="StyleBox" uid="uid://b0ho0ncfb085s" path="res://res/progress_bar_green.tres" id="29_vhtnt"]
-[ext_resource type="AudioStream" uid="uid://fossjjbbmh7" path="res://sfx/low_pitch_humming.wav" id="30_vom4t"]
-[ext_resource type="AudioStream" uid="uid://dgooigvs82ygq" path="res://sfx/shop_free_sfx_01.wav" id="31_4udcl"]
+[ext_resource type="Script" uid="uid://dsj426novoyhd" path="res://ch/close_game_menu.gd" id="31_pxhld"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="32_b6naw"]
+[ext_resource type="Script" uid="uid://bbylhfyfpmwl6" path="res://ch/Shop/ticket_button_behaviour.gd" id="33_pg3oi"]
 [ext_resource type="AudioStream" uid="uid://lwsko2pn8i6r" path="res://sfx/greyscale_compressed.ogg" id="33_pwib5"]
+[ext_resource type="AudioStream" uid="uid://bqo8tmq42cgvj" path="res://sfx/shop_free_sfx_01.ogg" id="37_eophr"]
+[ext_resource type="AudioStream" uid="uid://bwgy4o20vvair" path="res://sfx/opt_2.ogg" id="40_8mk8u"]
+[ext_resource type="AudioStream" uid="uid://tkggaklg1j7" path="res://sfx/shop_money_coin_sfx_01.ogg" id="41_5w0u1"]
+[ext_resource type="AudioStream" uid="uid://caqlwl7b7q82k" path="res://sfx/shop_purchase_sfx_01.ogg" id="42_hfqf8"]
+[ext_resource type="AudioStream" uid="uid://b7fekk7djc5ur" path="res://sfx/ninja_flicker.ogg" id="43_n5el2"]
+[ext_resource type="AudioStream" uid="uid://crq05kwfa0x1y" path="res://sfx/shop_purchase_sfx_02.ogg" id="44_nc3xs"]
+[ext_resource type="AudioStream" uid="uid://ch1f6jpf220s7" path="res://sfx/shop_reroll_sfx_01.ogg" id="45_teea5"]
+[ext_resource type="AudioStream" uid="uid://bo1la26whipbs" path="res://sfx/misc-001.ogg" id="46_i821l"]
+[ext_resource type="AudioStream" uid="uid://hpk8sd7oqbfk" path="res://sfx/Egg_pulse_sfx.ogg" id="47_gqw4q"]
+[ext_resource type="AudioStream" uid="uid://07n6coje3514" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="48_a8n1b"]
+[ext_resource type="AudioStream" uid="uid://fppeah0mpv8u" path="res://sfx/HUD on click.ogg" id="49_s4ol2"]
+[ext_resource type="AudioStream" uid="uid://qhnr7yjsajbx" path="res://sfx/HUD on_v2.ogg" id="50_poyra"]
+[ext_resource type="AudioStream" uid="uid://b8lns1w3ujtti" path="res://sfx/HUD on.ogg" id="51_mxp20"]
+[ext_resource type="AudioStream" uid="uid://bqpvt1i70bpm2" path="res://sfx/low_pitch_humming.ogg" id="52_55hkm"]
 
 [sub_resource type="GDScript" id="GDScript_mitwi"]
 script/source = "extends Node
@@ -134,6 +140,14 @@ corner_detail = 10
 [sub_resource type="Theme" id="Theme_vrkmk"]
 Button/styles/hover = null
 Button/styles/normal = SubResource("StyleBoxFlat_cn8lj")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbtj3"]
+bg_color = Color(0.32, 0.32, 0.32, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.32, 0.2976, 0.22399999, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vrkmk"]
 
@@ -302,78 +316,113 @@ fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_yuebc")
 
-[node name="MossTicket" parent="." unique_id=834535786 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="MossTicket" type="Button" parent="." unique_id=834535786 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 830.0
 offset_top = 160.0
 offset_right = 1040.0
 offset_bottom = 410.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("11_babqt")
 shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "ticket_moss"
 upgrade_name = "Ticket To Moss"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../SFX/purchase")
 
-[node name="ReddTicket" parent="." unique_id=1019016337 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="ReddTicket" type="Button" parent="." unique_id=1019016337 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 830.0
 offset_top = 160.0
 offset_right = 1040.0
 offset_bottom = 410.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("12_kvqbn")
 shop_main_menu = NodePath("..")
 hold_duration = 0.8
 upgrade_type = "ticket_redd"
 upgrade_name = "Ticket To Redd"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../SFX/purchase")
 
-[node name="BulletDelay" parent="." unique_id=1403874933 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="BulletDelay" type="Button" parent="." unique_id=1403874933 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 830.0
 offset_top = 204.0
 offset_right = 1040.0
 offset_bottom = 454.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("6_pwib5")
 shop_main_menu = NodePath("..")
 upgrade_type = "bullet_delay"
 upgrade_name = "Bullet Fire Rate"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../SFX/purchase")
 
-[node name="AddShopCapacity" parent="." unique_id=81097742 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="AddShopCapacity" type="Button" parent="." unique_id=81097742 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 830.0
 offset_top = 204.0
 offset_right = 1040.0
 offset_bottom = 454.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("7_cn8lj")
 shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "max_items_in_shop"
 upgrade_name = "Increase Shop Stock"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../SFX/purchase")
 
-[node name="AutoFire" parent="." unique_id=835766290 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="AutoFire" type="Button" parent="." unique_id=835766290 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 830.0
 offset_top = 204.0
 offset_right = 1040.0
 offset_bottom = 454.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("16_cn8lj")
 shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "auto_fire"
 upgrade_name = "Auto Fire"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../SFX/purchase")
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1832678188]
@@ -498,92 +547,139 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TargetCircle" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=2131731495 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="TargetCircle" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=2131731495 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 360.0
 offset_top = 190.0
 offset_right = 570.0
 offset_bottom = 286.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("5_lwcj2")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "target_circle"
 upgrade_name = "Target Circle"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="GunFireRate" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1287420994 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="GunFireRate" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1287420994 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 128.0
 offset_top = 28.0
 offset_right = 338.0
 offset_bottom = 124.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("12_pwib5")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "gun_fire_rate"
 upgrade_name = "Fire Rate"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="BulletDamage" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=918058313 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="BulletDamage" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=918058313 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 590.0
 offset_top = 318.0
 offset_right = 800.0
 offset_bottom = 414.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("4_dq200")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "bullet_damage"
 upgrade_name = "Rock Damage"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="BulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1833548560 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="BulletSpeed" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1833548560 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 130.0
 offset_top = 190.0
 offset_right = 340.0
 offset_bottom = 286.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("4_lwcj2")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "bullet_speed"
 upgrade_name = "Bullet Speed"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="SkyMine" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=475193945 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="SkyMine" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=475193945 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 358.0
 offset_top = 30.0
 offset_right = 568.0
 offset_bottom = 126.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("13_cn8lj")
 sky_mine = true
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "sky_mine"
 upgrade_name = "Sky Mine"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="TimeUpgrade" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1155153027 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="TimeUpgrade" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1155153027 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 358.0
 offset_top = 30.0
 offset_right = 568.0
 offset_bottom = 126.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("14_xklyy")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "time_upgrade"
 upgrade_name = "Add Time"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="AddGun" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1770080767 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="AddGun" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1770080767 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 358.0
 offset_top = 30.0
 offset_right = 568.0
 offset_bottom = 126.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("13_xklyy")
 guaranteed_until_purchased = true
 gun = true
@@ -591,20 +687,29 @@ shop_main_menu = NodePath("../../../../../../..")
 hold_duration = 0.1
 upgrade_type = "gun"
 upgrade_name = "New Gun"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="PineappleRound" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=497395272 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="PineappleRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=497395272 node_paths=PackedStringArray("tooltip", "shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 250)
 layout_mode = 0
 offset_left = 358.0
 offset_top = 30.0
 offset_right = 568.0
 offset_bottom = 126.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+clip_text = true
+script = ExtResource("4_xdrl6")
+tooltip = NodePath("Tooltip")
 upgrade_icon = ExtResource("17_cn8lj")
 shop_main_menu = NodePath("../../../../../../..")
 hold_duration = 0.1
 upgrade_type = "bonus_round_pineapples"
 upgrade_name = "Pineapples"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
 [node name="AvailableUpgrades" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=499030465]
@@ -813,18 +918,286 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 88
 
-[node name="Target Circle" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=1277739787 instance=ExtResource("13_onfim")]
+[node name="Target Circle" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=1277739787 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx") instance=ExtResource("13_onfim")]
+custom_minimum_size = Vector2(120.715, 0)
 layout_mode = 2
+disabled = true
+script = ExtResource("21_213qx")
+upgrade_name_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/Label")
+progress_bar_container = NodePath("Upgrade_Permanent_button/Control/ProgressBar_container")
+purchase_progress_bar = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/PurchaseHoldProgressBar")
 upgrade_type = "target_circle"
+tooltip = NodePath("Upgrade_Permanent_button/TolltipControl/Tooltip")
+description = "Test Description"
+focus_enter_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+focus_exit_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+cost_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/CostLabel")
+purchase_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
 
-[node name="Fire Rate" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=1708239948 instance=ExtResource("13_onfim")]
+[node name="Fire Rate" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=1708239948 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx") instance=ExtResource("13_onfim")]
+custom_minimum_size = Vector2(120.715, 0)
 layout_mode = 2
+disabled = true
+script = ExtResource("21_213qx")
+upgrade_name_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/Label")
+progress_bar_container = NodePath("Upgrade_Permanent_button/Control/ProgressBar_container")
+purchase_progress_bar = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/PurchaseHoldProgressBar")
 upgrade_type = "gun_fire_rate"
+tooltip = NodePath("Upgrade_Permanent_button/TolltipControl/Tooltip")
+description = "Test Description"
+focus_enter_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+focus_exit_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+cost_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/CostLabel")
+purchase_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
 
-[node name="Sky Mine" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=831104298 instance=ExtResource("13_onfim")]
+[node name="Sky Mine" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=831104298 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx") instance=ExtResource("13_onfim")]
 visible = false
+custom_minimum_size = Vector2(120.715, 0)
 layout_mode = 2
+disabled = true
+script = ExtResource("21_213qx")
+upgrade_name_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/Label")
+progress_bar_container = NodePath("Upgrade_Permanent_button/Control/ProgressBar_container")
+purchase_progress_bar = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/PurchaseHoldProgressBar")
 upgrade_type = "marked_to_die"
+tooltip = NodePath("Upgrade_Permanent_button/TolltipControl/Tooltip")
+description = "Test Description"
+focus_enter_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+focus_exit_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+cost_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/CostLabel")
+purchase_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+
+[node name="Upgrade_Permanent_button" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine" index="0" unique_id=1277739787]
+custom_minimum_size = Vector2(50, 94.405)
+layout_mode = 0
+offset_right = 350.0
+offset_bottom = 100.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Control" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button" index="0" unique_id=1349711160]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ProgressBar_container" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control" index="0" unique_id=583839821]
+layout_mode = 0
+offset_top = 61.0
+offset_right = 316.0
+offset_bottom = 70.0
+mouse_filter = 2
+
+[node name="ProgressBar" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="0" unique_id=805487862]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="ProgressBar2" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="1" unique_id=1801626517]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="ProgressBar3" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="2" unique_id=561342716]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="ProgressBar4" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="3" unique_id=1985430430]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="ProgressBar5" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="4" unique_id=371260171]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="ProgressBar6" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="5" unique_id=45759874]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="ProgressBar7" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="6" unique_id=174953450]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="ProgressBar8" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="7" unique_id=1305759628]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="ProgressBar9" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="8" unique_id=632271123]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="ProgressBar10" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/ProgressBar_container" index="9" unique_id=146464698]
+custom_minimum_size = Vector2(28.03, 9)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = ExtResource("22_bmwyh")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+show_percentage = false
+
+[node name="UpgradePanel" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control" index="1" unique_id=696861470]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 28.0
+offset_right = 314.0
+offset_bottom = 53.07
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+mouse_filter = 2
+theme = ExtResource("2_s82uk")
+
+[node name="PurchaseHoldProgressBar" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/UpgradePanel" index="0" unique_id=380143476]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 1.0
+offset_right = 312.0
+offset_bottom = 25.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_nbtj3")
+theme_override_styles/fill = ExtResource("29_vhtnt")
+step = 1.0
+show_percentage = false
+
+[node name="Label" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/UpgradePanel" index="1" unique_id=963885621]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0370961
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+theme = ExtResource("2_s82uk")
+bbcode_enabled = true
+text = "[i] Scope Radius [/i]"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CostLabel" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/UpgradePanel" index="2" unique_id=1188717592]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="PowerLevel_label" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/UpgradePanel" index="3" unique_id=1782013562]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 44.0
+offset_right = 130.0
+offset_bottom = 72.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TolltipControl" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button" index="1" unique_id=957901245]
+visible = false
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Tooltip" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/TolltipControl" index="0" unique_id=2083996572]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -53.0
+offset_right = 272.0
+offset_bottom = -77.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("25_erfbp")
+
+[node name="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/TolltipControl/Tooltip" index="0" unique_id=1661605874]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "Testing Tooltip"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control2" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button" index="2" unique_id=1293651331]
+z_index = 339
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Tooltip" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control2" index="0" unique_id=1726632803]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.015, 1.015)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Icon" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control2/Tooltip" index="0" unique_id=2132094383]
+modulate = Color(1, 0.78039217, 0, 1)
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="focus_enter_sfx" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button" index="3" unique_id=248242240]
+stream = ExtResource("26_bovdg")
+volume_db = -37.0
+
+[node name="focus_exit" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button" index="4" unique_id=992727905]
+stream = ExtResource("26_bovdg")
+volume_db = -50.0
+pitch_scale = 0.9
 
 [node name="HSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer" unique_id=10792476]
 self_modulate = Color(1, 1, 1, 0)
@@ -836,18 +1209,54 @@ theme_override_constants/separation = 214
 layout_mode = 2
 theme_override_constants/separation = 88
 
-[node name="Rock Damage" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=170932053 instance=ExtResource("13_onfim")]
+[node name="Rock Damage" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=170932053 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx") instance=ExtResource("13_onfim")]
+custom_minimum_size = Vector2(120.715, 0)
 layout_mode = 2
+disabled = true
+script = ExtResource("21_213qx")
+upgrade_name_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/Label")
+progress_bar_container = NodePath("Upgrade_Permanent_button/Control/ProgressBar_container")
+purchase_progress_bar = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/PurchaseHoldProgressBar")
 upgrade_type = "bullet_damage"
+tooltip = NodePath("Upgrade_Permanent_button/TolltipControl/Tooltip")
+description = "Test Description"
+focus_enter_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+focus_exit_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+cost_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/CostLabel")
+purchase_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
 
-[node name="Bullet Speed" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=1166499484 instance=ExtResource("13_onfim")]
+[node name="Bullet Speed" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=1166499484 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx") instance=ExtResource("13_onfim")]
+custom_minimum_size = Vector2(120.715, 0)
 layout_mode = 2
+disabled = true
+script = ExtResource("21_213qx")
+upgrade_name_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/Label")
+progress_bar_container = NodePath("Upgrade_Permanent_button/Control/ProgressBar_container")
+purchase_progress_bar = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/PurchaseHoldProgressBar")
 upgrade_type = "bullet_speed"
+tooltip = NodePath("Upgrade_Permanent_button/TolltipControl/Tooltip")
+description = "Test Description"
+focus_enter_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+focus_exit_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+cost_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/CostLabel")
+purchase_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
 
-[node name="Bullet Fire Rate" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=978555315 instance=ExtResource("13_onfim")]
+[node name="Bullet Fire Rate" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=978555315 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx") instance=ExtResource("13_onfim")]
 visible = false
+custom_minimum_size = Vector2(120.715, 0)
 layout_mode = 2
+disabled = true
+script = ExtResource("21_213qx")
+upgrade_name_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/Label")
+progress_bar_container = NodePath("Upgrade_Permanent_button/Control/ProgressBar_container")
+purchase_progress_bar = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/PurchaseHoldProgressBar")
 upgrade_type = "bullet_delay"
+tooltip = NodePath("Upgrade_Permanent_button/TolltipControl/Tooltip")
+description = "Test Description"
+focus_enter_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+focus_exit_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
+cost_label = NodePath("Upgrade_Permanent_button/Control/UpgradePanel/CostLabel")
+purchase_sfx = NodePath("Upgrade_Permanent_button/focus_enter_sfx")
 
 [node name="Bullets_per_round_Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=1805250448]
 visible = false
@@ -909,7 +1318,7 @@ tooltip_text = "Does nothing?!!"
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2/Bullets_per_round_Control/PanelContainer/Bullets" unique_id=2132094383]
+[node name="Icon" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2/Bullets_per_round_Control/PanelContainer/Bullets" unique_id=830491403]
 custom_minimum_size = Vector2(10, 25)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -944,13 +1353,20 @@ script = ExtResource("16_vom4t")
 [node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=3046836]
 layout_mode = 2
 
-[node name="Close_menu" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control" unique_id=1783714691 instance=ExtResource("21_tnodp")]
+[node name="Close_menu" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control" unique_id=1783714691 instance=ExtResource("21_tnodp")]
+self_modulate = Color(0.48, 0.48, 0.48, 1)
 custom_minimum_size = Vector2(65, 0)
 layout_mode = 0
 offset_left = -52.0
 offset_right = -2.0
 offset_bottom = 80.0
+scale = Vector2(0.5, 0.5)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 44
+text = "x"
+script = ExtResource("31_pxhld")
+wiggle_amount = 0.5
 
 [node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=2018742998]
 visible = false
@@ -969,18 +1385,35 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Ticket" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=2058490507 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+[node name="Ticket" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=2058490507 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+custom_minimum_size = Vector2(80, 40)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+text = "Moss"
+script = ExtResource("33_pg3oi")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+ticket_id = 1
 
 [node name="VSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1459209934]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
-[node name="Ticket2" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1976905100 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+[node name="Ticket2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1976905100 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+custom_minimum_size = Vector2(80, 40)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+text = "Moss"
+script = ExtResource("33_pg3oi")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
@@ -990,8 +1423,16 @@ ticket_id = 2
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
-[node name="Ticket3" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=953294936 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+[node name="Ticket3" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=953294936 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+custom_minimum_size = Vector2(80, 40)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+text = "Moss"
+script = ExtResource("33_pg3oi")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
@@ -1001,8 +1442,16 @@ ticket_id = 3
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
-[node name="Ticket4" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=514221593 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+[node name="Ticket4" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=514221593 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+custom_minimum_size = Vector2(80, 40)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+text = "Moss"
+script = ExtResource("33_pg3oi")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
@@ -1012,8 +1461,16 @@ ticket_id = 4
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
-[node name="Ticket5" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=657145580 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+[node name="Ticket5" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=657145580 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+custom_minimum_size = Vector2(80, 40)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+text = "Moss"
+script = ExtResource("33_pg3oi")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
@@ -1215,15 +1672,15 @@ text = "CAPPED"
 horizontal_alignment = 1
 
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=1674690240]
-stream = ExtResource("18_d3p6f")
+stream = ExtResource("26_bovdg")
 volume_db = -34.0
 
 [node name="Free_sfx" type="AudioStreamPlayer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=1901564952]
-stream = ExtResource("31_4udcl")
+stream = ExtResource("37_eophr")
 volume_db = -52.0
 
 [node name="focus_exit" type="AudioStreamPlayer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=2031807403]
-stream = ExtResource("18_d3p6f")
+stream = ExtResource("26_bovdg")
 volume_db = -49.0
 pitch_scale = 0.9
 
@@ -1585,82 +2042,83 @@ vertical_alignment = 1
 stream = ExtResource("33_pwib5")
 
 [node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=611630980]
-stream = ExtResource("5_wvnns")
+stream = ExtResource("40_8mk8u")
 volume_db = -40.0
 pitch_scale = 2.0
 
 [node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=174877287]
-stream = ExtResource("5_mitwi")
+stream = ExtResource("41_5w0u1")
 volume_db = -40.0
 
 [node name="shop_purchase_01" type="AudioStreamPlayer" parent="SFX" unique_id=1841748240]
-stream = ExtResource("6_cl1nj")
+stream = ExtResource("42_hfqf8")
 volume_db = -40.0
 
 [node name="shop_purchase_02" type="AudioStreamPlayer" parent="SFX" unique_id=145245494]
-stream = ExtResource("8_kosrb")
+stream = ExtResource("43_n5el2")
 volume_db = -22.0
 pitch_scale = 1.2
 
 [node name="reveal_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1096377877]
-stream = ExtResource("8_kosrb")
+stream = ExtResource("43_n5el2")
 volume_db = -29.0
 pitch_scale = 0.8
 
 [node name="shop_purchase_03" type="AudioStreamPlayer" parent="SFX" unique_id=248866503]
-stream = ExtResource("7_o0rit")
+stream = ExtResource("44_nc3xs")
 volume_db = -40.0
 
 [node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1170054835]
-stream = ExtResource("8_hfe6c")
+stream = ExtResource("45_teea5")
 volume_db = -40.0
 
 [node name="shop_mystery_box_01" type="AudioStreamPlayer" parent="SFX" unique_id=1264595121]
 volume_db = -40.0
 
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1984414687]
-stream = ExtResource("18_d3p6f")
+stream = ExtResource("26_bovdg")
 volume_db = -32.0
 
 [node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=832910576]
-stream = ExtResource("18_d3p6f")
+stream = ExtResource("26_bovdg")
 volume_db = -50.0
 
 [node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1684804554]
-stream = ExtResource("6_mitwi")
+stream = ExtResource("46_i821l")
 volume_db = -40.0
 pitch_scale = 3.0
 
 [node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=384220318]
-stream = ExtResource("20_lwcj2")
+stream = ExtResource("47_gqw4q")
 volume_db = -40.0
 pitch_scale = 2.0
 
 [node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1399336696]
-stream = ExtResource("20_wqa6l")
+stream = ExtResource("48_a8n1b")
 volume_db = -40.0
 pitch_scale = 1.5
 
 [node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=752051897]
-stream = ExtResource("27_fl2u5")
+stream = ExtResource("49_s4ol2")
 volume_db = -34.0
 
 [node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=695125760]
-stream = ExtResource("28_htvy6")
+stream = ExtResource("50_poyra")
 volume_db = -20.0
 
 [node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=109771287]
-stream = ExtResource("29_0v40x")
+stream = ExtResource("51_mxp20")
 volume_db = -21.0
 
 [node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=1218133753]
-stream = ExtResource("30_vom4t")
+stream = ExtResource("52_55hkm")
 pitch_scale = 0.4
 
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="update_close_menu"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_pressed"]
 [connection signal="pressed" from="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" to="TicketPurchasedPopUp" method="_on_purchased_ticket_pressed"]
 [connection signal="pressed" from="TicketPurchasedPopUp/Control/NextRound" to="TicketPurchasedPopUp" method="_on_next_round_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]

@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://ownxjc3mlmfd"]
 
 [ext_resource type="Script" uid="uid://cvbg43fdc614e" path="res://ch/HUD_components/pause_and_exit_menu.gd" id="1_qf3f5"]
+[ext_resource type="AudioStream" uid="uid://dd6lxfxuvdkbh" path="res://sfx/stepwood_1_short.ogg" id="4_qf3f5"]
+[ext_resource type="AudioStream" uid="uid://bo1la26whipbs" path="res://sfx/misc-001.ogg" id="5_863vg"]
 [ext_resource type="Script" uid="uid://cnrw3nvos435" path="res://ch/HUD_components/resolution_dropdown.gd" id="6_233fj"]
 [ext_resource type="Script" uid="uid://ojo2q2ehpwcj" path="res://ch/HUD_components/mouse_sensitivity.gd" id="7_qf3f5"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="8_68q17"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="9_uy4i6"]
-[ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="35_ym64n"]
-[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="36_274hf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
 
@@ -122,15 +122,15 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
 [node name="SFX" type="Node" parent="." unique_id=192443435]
 
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1984414687]
-stream = ExtResource("35_ym64n")
+stream = ExtResource("4_qf3f5")
 volume_db = -32.0
 
 [node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=832910576]
-stream = ExtResource("35_ym64n")
+stream = ExtResource("4_qf3f5")
 volume_db = -50.0
 
 [node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1684804554]
-stream = ExtResource("36_274hf")
+stream = ExtResource("5_863vg")
 volume_db = -40.0
 pitch_scale = 3.0
 

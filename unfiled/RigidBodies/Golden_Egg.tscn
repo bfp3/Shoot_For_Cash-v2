@@ -1,11 +1,10 @@
 [gd_scene format=4 uid="uid://bp55dh248jbap"]
 
 [ext_resource type="Script" uid="uid://cui6iwpjiyx4h" path="res://ch/Rocks/rock_instance.gd" id="1_6ahqe"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="2_mmwms"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="2_o8a55"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="3_nqms6"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="4_82r47"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="5_5heo1"]
-
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_w143a"]
 radius = 0.179
@@ -236,30 +235,28 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_6ahqe")
 
-[node name="Golden_egg" type="RigidBody3D" node_paths=PackedStringArray("golden_egg_mesh") groups=["Target", "cannonball", "rock_rigid_body"]]
+[node name="Golden_egg" type="RigidBody3D" unique_id=1423962315 groups=["Target", "cannonball", "rock_rigid_body"]]
 gravity_scale = 0.8
 script = ExtResource("1_6ahqe")
-golden_egg = true
-golden_egg_mesh = NodePath("Egg_shape")
 metadata/_edit_group_ = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=496501193]
 shape = SubResource("CapsuleShape3D_w143a")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=1636442886]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2011881243]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("SphereShape3D_pq40i")
 
-[node name="hitSound" type="AudioStreamPlayer" parent="."]
+[node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=1268595816]
 unique_name_in_owner = true
-stream = ExtResource("2_mmwms")
+stream = ExtResource("2_o8a55")
 volume_db = -30.0
 pitch_scale = 0.1
 script = SubResource("GDScript_e67sp")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="."]
+[node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=1829923338]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -0.5)
 top_level = true
 visible = false
@@ -275,7 +272,7 @@ process_material = SubResource("ParticleProcessMaterial_js5s8")
 draw_pass_1 = SubResource("QuadMesh_c7jqr")
 script = ExtResource("4_82r47")
 
-[node name="Special_smoke" type="GPUParticles3D" parent="."]
+[node name="Special_smoke" type="GPUParticles3D" parent="." unique_id=783350203]
 transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 top_level = true
 visible = false
@@ -292,52 +289,52 @@ process_material = SubResource("ParticleProcessMaterial_js5s8")
 draw_pass_1 = SubResource("QuadMesh_5duup")
 script = ExtResource("4_82r47")
 
-[node name="Mesh" type="Node3D" parent="."]
+[node name="Mesh" type="Node3D" parent="." unique_id=1650996571]
 unique_name_in_owner = true
 
-[node name="Rock" type="MeshInstance3D" parent="Mesh"]
+[node name="Rock" type="MeshInstance3D" parent="Mesh" unique_id=912610111]
 unique_name_in_owner = true
 transform = Transform3D(0.0759287, -0.208612, 0, 0.208612, 0.0759287, 0, 0, 0, 0.222, 0, 0, 0)
 material_override = ExtResource("5_5heo1")
 mesh = SubResource("ArrayMesh_g5cjo")
 skeleton = NodePath("")
 
-[node name="Rock5" type="MeshInstance3D" parent="Mesh"]
+[node name="Rock5" type="MeshInstance3D" parent="Mesh" unique_id=1272813025]
 unique_name_in_owner = true
 transform = Transform3D(0.0759287, -0.208612, 0, 0.208612, 0.0759287, 0, 0, 0, 0.222, 0, 0, 0)
 material_override = ExtResource("5_5heo1")
 mesh = SubResource("ArrayMesh_e23ys")
 skeleton = NodePath("")
 
-[node name="Rock6" type="MeshInstance3D" parent="Mesh"]
+[node name="Rock6" type="MeshInstance3D" parent="Mesh" unique_id=1809521136]
 unique_name_in_owner = true
 transform = Transform3D(0.0448047, -0.1231, 0, 0.1231, 0.0448047, 0, 0, 0, 0.131, 0, 0, 0)
 material_override = ExtResource("5_5heo1")
 mesh = SubResource("ArrayMesh_e23ys")
 skeleton = NodePath("")
 
-[node name="Rock9" type="MeshInstance3D" parent="Mesh"]
+[node name="Rock9" type="MeshInstance3D" parent="Mesh" unique_id=704235023]
 unique_name_in_owner = true
 transform = Transform3D(0.081059, -0.222707, 0, 0.222707, 0.081059, 0, 0, 0, 0.237, 0, 0, 0)
 material_override = ExtResource("5_5heo1")
 mesh = SubResource("ArrayMesh_e23ys")
 skeleton = NodePath("")
 
-[node name="Rock7" type="MeshInstance3D" parent="Mesh"]
+[node name="Rock7" type="MeshInstance3D" parent="Mesh" unique_id=281168881]
 unique_name_in_owner = true
 transform = Transform3D(0.136466, -0.374937, 0, 0.374937, 0.136466, 0, 0, 0, 0.399, 0, 0, 0)
 material_override = ExtResource("5_5heo1")
 mesh = SubResource("ArrayMesh_e23ys")
 skeleton = NodePath("")
 
-[node name="Rock8" type="MeshInstance3D" parent="Mesh"]
+[node name="Rock8" type="MeshInstance3D" parent="Mesh" unique_id=397415757]
 unique_name_in_owner = true
 transform = Transform3D(0.176825, -0.485821, 0, 0.485821, 0.176825, 0, 0, 0, 0.517, 0, 0, 0)
 material_override = ExtResource("5_5heo1")
 mesh = SubResource("ArrayMesh_e23ys")
 skeleton = NodePath("")
 
-[node name="Egg_shape" type="MeshInstance3D" parent="."]
+[node name="Egg_shape" type="MeshInstance3D" parent="." unique_id=1385004889]
 unique_name_in_owner = true
 transform = Transform3D(0.187, 0, 0, 0, 0.187, 0, 0, 0, 0.187, 0, -0.0883107, 0)
 layers = 2

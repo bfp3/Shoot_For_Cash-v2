@@ -3,16 +3,14 @@
 [ext_resource type="Script" uid="uid://dve4bh8144837" path="res://lib/Cannonball_System/Cannonballs/standard_cannonball.gd" id="1_pamjq"]
 [ext_resource type="Material" uid="uid://c5lrichw3wfce" path="res://res/Kenney_prototype_textures/Material_override/Red_texture.tres" id="4_gqx88"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="4_pamjq"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="5_o554b"]
+[ext_resource type="AudioStream" uid="uid://bb4jv0qikr0qi" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.ogg" id="6_q66dc"]
 [ext_resource type="Texture2D" uid="uid://bd7tvronoubjm" path="res://res/Materials/cannonball_bronze_material.png" id="6_u2coo"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="7_pxrm1"]
-[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.wav" id="8_npe2o"]
 [ext_resource type="Material" uid="uid://8t45gdd0jrre" path="res://res/Particles/Trails_particles_materials/standard_white.tres" id="9_jlaee"]
 [ext_resource type="Script" uid="uid://s3cmnx5lr8nh" path="res://res/Particles/trail_particles_script.gd" id="10_kgrf8"]
 [ext_resource type="Script" uid="uid://cncf1an52x66e" path="res://res/Particles/points_particles.gd" id="11_b0pvb"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="12_ojibt"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="13_udx8u"]
-
-
 
 [sub_resource type="Curve" id="Curve_pamjq"]
 _data = [Vector2(0, 0.819025), 0.0, 0.0, 0, 0, Vector2(0.25, 0.5), 0.0, 0.0, 0, 0, Vector2(0.75, 0.55), 0.0, 0.0, 0, 0, Vector2(1, 0.85), 0.0, 0.0, 0, 0]
@@ -279,7 +277,7 @@ particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 particles_anim_loop = false
 
-[node name="Spotter_projectile" type="CharacterBody3D" groups=["Moving_target", "Target", "cannonball"]]
+[node name="Spotter_projectile" type="CharacterBody3D" unique_id=71869990 groups=["Moving_target", "Target", "cannonball"]]
 transform = Transform3D(1, 0, 8.74226e-08, 0, 0.999998, 0, -8.74228e-08, 0, 0.999998, 0, 0, 0)
 safe_margin = 0.005
 script = ExtResource("1_pamjq")
@@ -290,60 +288,60 @@ lateral_curve = SubResource("Curve_mafn0")
 scale_curve = SubResource("Curve_0qp3r")
 metadata/intended_color = Color(0, 0, 0, 1)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1538532691]
 shape = SubResource("SphereShape3D_ws4ab")
 
-[node name="Mesh" type="Node3D" parent="."]
+[node name="Mesh" type="Node3D" parent="." unique_id=1815166179]
 
-[node name="Bomb_mesh" type="Node3D" parent="Mesh"]
+[node name="Bomb_mesh" type="Node3D" parent="Mesh" unique_id=561344935]
 
-[node name="Cube" type="MeshInstance3D" parent="Mesh/Bomb_mesh"]
+[node name="Cube" type="MeshInstance3D" parent="Mesh/Bomb_mesh" unique_id=1013749483]
 transform = Transform3D(0.23835, 0, 0, 0, 0.23835, 0, 0, 0, 0.23835, 0, 0, 0)
 mesh = SubResource("ArrayMesh_0qp3r")
 skeleton = NodePath("")
 
-[node name="Bomb_mesh_2" type="MeshInstance3D" parent="Mesh"]
+[node name="Bomb_mesh_2" type="MeshInstance3D" parent="Mesh" unique_id=133115234]
 transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0, 0)
 visible = false
 mesh = SubResource("ArrayMesh_eabh5")
 
-[node name="Bomb_mesh_yellow" type="MeshInstance3D" parent="Mesh"]
+[node name="Bomb_mesh_yellow" type="MeshInstance3D" parent="Mesh" unique_id=1891438180]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
 visible = false
 mesh = SubResource("ArrayMesh_31hv1")
 skeleton = NodePath("../..")
 
-[node name="Special_mesh" type="Node3D" parent="Mesh"]
+[node name="Special_mesh" type="Node3D" parent="Mesh" unique_id=2050839690]
 transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 0, 0)
 visible = false
 
-[node name="bomb_mesh2" type="MeshInstance3D" parent="Mesh/Special_mesh"]
+[node name="bomb_mesh2" type="MeshInstance3D" parent="Mesh/Special_mesh" unique_id=1738169179]
 transform = Transform3D(1, 0, -8.52651e-15, 0, 1, 0, 8.52651e-15, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_31hv1")
 skeleton = NodePath("../../..")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=666213791]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=397224593]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("SphereShape3D_0yc4n")
 
-[node name="hitSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("7_pxrm1")
+[node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=2121055746]
+stream = ExtResource("5_o554b")
 volume_db = -30.0
 pitch_scale = 0.1
 script = SubResource("GDScript_m44j2")
 
-[node name="reloading_sfx" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("8_npe2o")
+[node name="reloading_sfx" type="AudioStreamPlayer" parent="." unique_id=1064609611]
+stream = ExtResource("6_q66dc")
 volume_db = -51.0
 pitch_scale = 3.0
 
-[node name="Unique_marker" type="Marker3D" parent="."]
+[node name="Unique_marker" type="Marker3D" parent="." unique_id=1512086959]
 transform = Transform3D(0.999998, 0.000871057, -0.00152377, 0.0015253, -0.00177375, 0.999997, 0.000868365, -0.999998, -0.00177507, 0, 0, 0)
 visible = false
 
-[node name="Trails" type="GPUParticles3D" parent="."]
+[node name="Trails" type="GPUParticles3D" parent="." unique_id=1027383865]
 amount = 400
 lifetime = 7.0
 speed_scale = 2.5
@@ -353,7 +351,7 @@ process_material = SubResource("ParticleProcessMaterial_0yc4n")
 draw_pass_1 = SubResource("SphereMesh_pamjq")
 script = ExtResource("10_kgrf8")
 
-[node name="Points_particles" type="GPUParticles3D" parent="."]
+[node name="Points_particles" type="GPUParticles3D" parent="." unique_id=1342826882]
 emitting = false
 amount = 100
 lifetime = 2.0
@@ -365,7 +363,7 @@ process_material = SubResource("ParticleProcessMaterial_0yc4n")
 draw_pass_1 = SubResource("SphereMesh_6hb27")
 script = ExtResource("11_b0pvb")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="."]
+[node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=2070945994]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -0.5)
 top_level = true
 visible = false
@@ -381,7 +379,7 @@ process_material = SubResource("ParticleProcessMaterial_ukdqb")
 draw_pass_1 = SubResource("QuadMesh_pkc0q")
 script = ExtResource("13_udx8u")
 
-[node name="Special_smoke" type="GPUParticles3D" parent="."]
+[node name="Special_smoke" type="GPUParticles3D" parent="." unique_id=1077663054]
 transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 top_level = true
 visible = false
@@ -398,7 +396,7 @@ process_material = SubResource("ParticleProcessMaterial_ukdqb")
 draw_pass_1 = SubResource("QuadMesh_31hv1")
 script = ExtResource("13_udx8u")
 
-[node name="Special_particles" type="GPUParticles3D" parent="."]
+[node name="Special_particles" type="GPUParticles3D" parent="." unique_id=970825591]
 material_override = SubResource("StandardMaterial3D_mafn0")
 emitting = false
 amount = 50
@@ -412,7 +410,7 @@ process_material = SubResource("ParticleProcessMaterial_qhbtx")
 draw_pass_1 = SubResource("SphereMesh_mafn0")
 script = ExtResource("13_udx8u")
 
-[node name="Red_particles" type="GPUParticles3D" parent="."]
+[node name="Red_particles" type="GPUParticles3D" parent="." unique_id=1419745852]
 visible = false
 material_override = SubResource("StandardMaterial3D_eabh5")
 emitting = false

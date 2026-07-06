@@ -1,12 +1,7 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bbslog4lh0q2m"]
 
-[ext_resource type="Script" path="res://environmentAssets/redTarget.gd" id="1_harm0"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="2_a0t1j"]
-[ext_resource type="Script" path="res://environmentAssets/redTargetMesh.gd" id="2_wuy4w"]
-[ext_resource type="AudioStream" uid="uid://douwgwjwt0hl1" path="res://sfx/ES_sound_effects/ES_Bomb Timer Beeps Count 1 - SFX Producer.wav" id="4_aah10"]
-[ext_resource type="AudioStream" uid="uid://cps8uhp6h2r3" path="res://sfx/bomb_countdown_single.wav" id="5_yu3sv"]
-[ext_resource type="AudioStream" uid="uid://cfi15vbqm0igf" path="res://sfx/metalSound shortened.wav" id="6_d2wk4"]
-
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="1_kvum2"]
+[ext_resource type="AudioStream" uid="uid://cqpwtf5fw8cgv" path="res://sfx/metalSound shortened.ogg" id="2_df7ci"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_te0lg"]
 rough = true
@@ -45,61 +40,57 @@ top_radius = 0.8
 bottom_radius = 0.8
 height = 0.2
 
-[node name="redTarget" type="RigidBody3D"]
+[node name="redTarget" type="RigidBody3D" unique_id=1563874603]
 collision_layer = 5
 physics_material_override = SubResource("PhysicsMaterial_te0lg")
-continuous_cd = true
-max_contacts_reported = 4
-contact_monitor = true
 lock_rotation = true
-script = ExtResource("1_harm0")
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 4
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=36173607]
 process_priority = 10
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("CylinderShape3D_k1uwx")
 
-[node name="innerRing" type="MeshInstance3D" parent="."]
+[node name="innerRing" type="MeshInstance3D" parent="." unique_id=1396824212]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -1.55114e-09, -0.0354859)
 material_override = SubResource("StandardMaterial3D_3ibbo")
 mesh = SubResource("CylinderMesh_rvm72")
 skeleton = NodePath("")
 
-[node name="middleRing" type="MeshInstance3D" parent="."]
+[node name="middleRing" type="MeshInstance3D" parent="." unique_id=168859867]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -3.21807e-09, -0.073621)
 material_override = SubResource("StandardMaterial3D_3ibbo")
 mesh = SubResource("TorusMesh_h31jf")
 skeleton = NodePath("")
 
-[node name="outRing2" type="MeshInstance3D" parent="."]
+[node name="outRing2" type="MeshInstance3D" parent="." unique_id=1157588574]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -4.25129e-09, -0.0972582)
 material_override = SubResource("StandardMaterial3D_wni5p")
 mesh = SubResource("TorusMesh_r072a")
 skeleton = NodePath("")
 
-[node name="red" type="MeshInstance3D" parent="."]
+[node name="red" type="MeshInstance3D" parent="." unique_id=1033327605]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_pxng8")
 mesh = SubResource("CylinderMesh_21tm5")
 skeleton = NodePath("")
-script = ExtResource("2_wuy4w")
 
-[node name="hitSound" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("2_a0t1j")
+[node name="hitSound" type="AudioStreamPlayer3D" parent="." unique_id=764518017]
+stream = ExtResource("1_kvum2")
 
-[node name="selfDestructTimer" type="Timer" parent="."]
+[node name="selfDestructTimer" type="Timer" parent="." unique_id=692509925]
 wait_time = 4.5
 one_shot = true
 
-[node name="selfDestructNoise" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("4_aah10")
+[node name="selfDestructNoise" type="AudioStreamPlayer3D" parent="." unique_id=416887381]
 unit_size = 15.0
 
-[node name="countdownSFX" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("5_yu3sv")
+[node name="countdownSFX" type="AudioStreamPlayer3D" parent="." unique_id=434935491]
 
-[node name="popSFX" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("6_d2wk4")
+[node name="popSFX" type="AudioStreamPlayer3D" parent="." unique_id=45035169]
+stream = ExtResource("2_df7ci")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="selfDestructTimer" to="." method="_on_self_destruct_timer_timeout"]

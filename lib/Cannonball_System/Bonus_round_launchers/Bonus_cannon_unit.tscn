@@ -4,7 +4,7 @@
 [ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="2_g7kck"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="3_uwgdn"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="4_g7kck"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="4_ld6ue"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="5_omwfc"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g7kck"]
 albedo_color = Color(1, 0.41, 0.41, 1)
@@ -189,7 +189,7 @@ draw_pass_1 = SubResource("QuadMesh_f2m8g")
 script = ExtResource("4_g7kck")
 
 [node name="launch_sound" type="AudioStreamPlayer" parent="." unique_id=1044524970]
-stream = ExtResource("4_ld6ue")
+stream = ExtResource("5_omwfc")
 volume_db = -27.0
 pitch_scale = 0.08
 script = SubResource("GDScript_oowog")

@@ -12,38 +12,41 @@
 [ext_resource type="Script" uid="uid://dw5vq7th8i07" path="res://lib/Cannonball_System/CMS/player_lost_the_game_sequence.gd" id="10_odjl5"]
 [ext_resource type="PackedScene" uid="uid://uaid8r4y647e" path="res://lib/Pineapple_ending_sequence/PineappleEndingSequence.tscn" id="11_0levp"]
 [ext_resource type="PackedScene" uid="uid://cxmirbvecyqjt" path="res://lib/Pineapple_ending_sequence/V2_pineapple_ending_sequence_2.tscn" id="11_ibi5x"]
+[ext_resource type="Script" uid="uid://e7x0h6y5k3lm" path="res://lib/Pineapple_ending_sequence/Scripts/v2_pineapple_ending_sequence.gd" id="12_gr3sb"]
+[ext_resource type="Script" uid="uid://cbgkhtn83m884" path="res://lib/Pineapple_ending_sequence/Scripts/pineapple_ending_sequence.gd" id="14_dp73w"]
 
-
-[node name="CMS" type="Node" groups=["CMS"]]
+[node name="CMS" type="Node" unique_id=1034983673 groups=["CMS"]]
 script = ExtResource("1_tmp8x")
 
-[node name="BatchCreator" type="Node" parent="."]
+[node name="BatchCreator" type="Node" parent="." unique_id=652968336]
 script = ExtResource("2_pgouo")
 
-[node name="BatchProbabilityHandler" type="Node" parent="BatchCreator"]
+[node name="BatchProbabilityHandler" type="Node" parent="BatchCreator" unique_id=842448952]
 script = ExtResource("3_odjl5")
 
-[node name="BonusShotHandler" type="Node" parent="BatchCreator"]
+[node name="BonusShotHandler" type="Node" parent="BatchCreator" unique_id=1636789869]
 script = ExtResource("4_0levp")
 
-[node name="DotRevealProbability" type="Node" parent="BatchCreator"]
+[node name="DotRevealProbability" type="Node" parent="BatchCreator" unique_id=1735710882]
 script = ExtResource("5_ibi5x")
 
-[node name="SmokescreenOdds" type="Node" parent="."]
+[node name="SmokescreenOdds" type="Node" parent="." unique_id=1217598869]
 script = ExtResource("6_odjl5")
 
-[node name="CheckIfPlayerWon" type="Node" parent="."]
+[node name="CheckIfPlayerWon" type="Node" parent="." unique_id=1163756178]
 script = ExtResource("6_hx1pn")
 
-[node name="CMSDataTracking" type="Node" parent="."]
+[node name="CMSDataTracking" type="Node" parent="." unique_id=1955025931]
 script = ExtResource("2_m2c8o")
 
-[node name="Player_won_the_game_seqeunce" type="Node" parent="."]
+[node name="Player_won_the_game_seqeunce" type="Node" parent="." unique_id=1285996534]
 script = ExtResource("9_umuhw")
 
-[node name="Player_lost_the_game_sequence" type="Node" parent="."]
+[node name="Player_lost_the_game_sequence" type="Node" parent="." unique_id=137966789]
 script = ExtResource("10_odjl5")
 
-[node name="V2_Pineapple_ending_sequence2" parent="." instance=ExtResource("11_ibi5x")]
+[node name="V2_Pineapple_ending_sequence2" type="Node" parent="." unique_id=138603318 groups=["pineapple_ending_seqeunce_manager"] instance=ExtResource("11_ibi5x")]
+script = ExtResource("12_gr3sb")
 
-[node name="Pineapple_ending_sequence" parent="." instance=ExtResource("11_0levp")]
+[node name="Pineapple_ending_sequence" type="Node" parent="." unique_id=192253225 groups=["pineapple_ending_seqeunce_manager"] instance=ExtResource("11_0levp")]
+script = ExtResource("14_dp73w")

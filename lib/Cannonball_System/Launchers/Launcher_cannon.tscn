@@ -1,10 +1,10 @@
 [gd_scene format=4 uid="uid://cktjxtcndplo4"]
 
 [ext_resource type="Script" uid="uid://dxshdy1855u5y" path="res://lib/Cannonball_System/Launchers/Scripts/cannonball_launcher_unit.gd" id="1_a1xth"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="1_bh03g"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="3_oowog"]
 [ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="4_ixjm1"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="4_jsfhm"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="5_8njl1"]
 
 [sub_resource type="Gradient" id="Gradient_ps5wi"]
 interpolation_mode = 1
@@ -197,7 +197,6 @@ anim_speed_min = 1.0
 anim_speed_max = 1.0
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_bxpqi"]
-load_path = "res://.godot/imported/particle_sprite_smoke.webp-94067ca765f9db23717d2d11ab74a1f8.s3tc.ctex"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ub8bp"]
 transparency = 1
@@ -298,7 +297,7 @@ draw_pass_1 = SubResource("QuadMesh_vlyji")
 script = ExtResource("4_jsfhm")
 
 [node name="launch_sound" type="AudioStreamPlayer" parent="." unique_id=431161309]
-stream = ExtResource("1_bh03g")
+stream = ExtResource("5_8njl1")
 volume_db = -27.0
 pitch_scale = 0.08
 script = SubResource("GDScript_oowog")

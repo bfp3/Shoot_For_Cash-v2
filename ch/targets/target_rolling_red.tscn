@@ -4,14 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://cvtdumxlmhmbo" path="res://ch/targets/target_lightup.tscn" id="2_wr3gm"]
 [ext_resource type="PackedScene" uid="uid://5pl0m2fff38e" path="res://res/Target.blend" id="2_yogb7"]
 [ext_resource type="Script" uid="uid://0ewuknr8g84j" path="res://unfiled/targets/target_lightup.gd" id="3_15csy"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="4_i7ln4"]
-[ext_resource type="AudioStream" uid="uid://cps8uhp6h2r3" path="res://sfx/bomb_countdown_single.wav" id="5_7npvq"]
-[ext_resource type="AudioStream" uid="uid://cfi15vbqm0igf" path="res://sfx/metalSound shortened.wav" id="6_omilx"]
-[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.wav" id="7_cwa2r"]
-[ext_resource type="Texture2D" uid="uid://c32ixyuon6b25" path="res://res/textures_2D/blackCircle.png" id="8_a6c2t"]
-[ext_resource type="AudioStream" path="res://sfx/ES_sound_effects/ES_Bounce Tympani - SFX Producer.wav" id="9_ho3b7"]
-
-
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="5_p0273"]
+[ext_resource type="AudioStream" uid="uid://cqpwtf5fw8cgv" path="res://sfx/metalSound shortened.ogg" id="6_5v238"]
+[ext_resource type="AudioStream" uid="uid://bb4jv0qikr0qi" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.ogg" id="7_5pjlj"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jhvjd"]
 bounce = 0.2
@@ -20,6 +15,14 @@ bounce = 0.2
 margin = 0.0
 height = 0.365
 radius = 1.387
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6ma5"]
+emission_energy_multiplier = 5.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_axbo7"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ibbo"]
 albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
@@ -209,57 +212,59 @@ func _process(delta):
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8celr"]
 transparency = 1
 albedo_color = Color(0, 0, 0, 1)
-albedo_texture = ExtResource("8_a6c2t")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_il16q"]
 size = Vector2(0.1, 0.1)
 
-[node name="targetRollingRed" type="RigidBody3D"]
+[node name="targetRollingRed" type="RigidBody3D" unique_id=1196103425]
 axis_lock_linear_z = true
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 physics_material_override = SubResource("PhysicsMaterial_jhvjd")
-max_contacts_reported = 5
 contact_monitor = true
+max_contacts_reported = 5
 linear_velocity = Vector3(10, 0, 0)
 linear_damp = 1.0
 angular_damp = 1.0
 script = ExtResource("1_yikjl")
 
-[node name="red" parent="." instance=ExtResource("2_yogb7")]
+[node name="red" type="Node3D" parent="." unique_id=210364482 instance=ExtResource("2_yogb7")]
 transform = Transform3D(1.7, 0, 0, 0, -7.43094e-08, 1.7, 0, -1.7, -7.43094e-08, 0, 0, 0)
 
-[node name="coin" type="CollisionShape3D" parent="."]
+[node name="coin" type="CollisionShape3D" parent="." unique_id=1322215230]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("CylinderShape3D_k1uwx")
 
-[node name="target_lightup" parent="." instance=ExtResource("2_wr3gm")]
+[node name="target_lightup" type="MeshInstance3D" parent="." unique_id=802102876 instance=ExtResource("2_wr3gm")]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, -0.098)
 visible = false
+material_override = SubResource("StandardMaterial3D_x6ma5")
+mesh = SubResource("CylinderMesh_axbo7")
+skeleton = NodePath("")
 script = ExtResource("3_15csy")
 
-[node name="innerRing" type="MeshInstance3D" parent="."]
+[node name="innerRing" type="MeshInstance3D" parent="." unique_id=1278097573]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, -1.55114e-09, -0.0354859)
 visible = false
 material_override = SubResource("StandardMaterial3D_3ibbo")
 mesh = SubResource("CylinderMesh_rvm72")
 skeleton = NodePath("")
 
-[node name="middleRing" type="MeshInstance3D" parent="."]
+[node name="middleRing" type="MeshInstance3D" parent="." unique_id=1585642668]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, -3.21807e-09, -0.073621)
 visible = false
 material_override = SubResource("StandardMaterial3D_lwweu")
 mesh = SubResource("TorusMesh_ds8rl")
 skeleton = NodePath("")
 
-[node name="outRing2" type="MeshInstance3D" parent="."]
+[node name="outRing2" type="MeshInstance3D" parent="." unique_id=2088026895]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, -4.25129e-09, -0.0972582)
 visible = false
 material_override = SubResource("StandardMaterial3D_wni5p")
 mesh = SubResource("TorusMesh_r072a")
 skeleton = NodePath("")
 
-[node name="yellow" type="MeshInstance3D" parent="."]
+[node name="yellow" type="MeshInstance3D" parent="." unique_id=1119921302]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_r2sqn")
@@ -267,7 +272,7 @@ mesh = SubResource("CylinderMesh_0xr4e")
 skeleton = NodePath("")
 script = SubResource("GDScript_6ehoh")
 
-[node name="green" type="MeshInstance3D" parent="."]
+[node name="green" type="MeshInstance3D" parent="." unique_id=20104176]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_h7bgg")
@@ -275,7 +280,7 @@ mesh = SubResource("CylinderMesh_krqws")
 skeleton = NodePath("")
 script = SubResource("GDScript_s2xxd")
 
-[node name="blue" type="MeshInstance3D" parent="."]
+[node name="blue" type="MeshInstance3D" parent="." unique_id=136822456]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_t31sf")
@@ -283,7 +288,7 @@ mesh = SubResource("CylinderMesh_isbdf")
 skeleton = NodePath("")
 script = SubResource("GDScript_8jc1l")
 
-[node name="red2" type="MeshInstance3D" parent="."]
+[node name="red2" type="MeshInstance3D" parent="." unique_id=160597475]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_den0y")
@@ -291,30 +296,28 @@ mesh = SubResource("CylinderMesh_lg77e")
 skeleton = NodePath("")
 script = SubResource("GDScript_ga316")
 
-[node name="bulletHole" type="MeshInstance3D" parent="."]
+[node name="bulletHole" type="MeshInstance3D" parent="." unique_id=528442797]
 transform = Transform3D(1.6, 0, 0, 0, -6.99382e-08, 1.6, 0, -1.6, -6.99382e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_8celr")
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_il16q")
 
-[node name="SFX" type="Node" parent="."]
+[node name="SFX" type="Node" parent="." unique_id=1238541106]
 
-[node name="hitSound" type="AudioStreamPlayer3D" parent="SFX"]
-stream = ExtResource("4_i7ln4")
+[node name="hitSound" type="AudioStreamPlayer3D" parent="SFX" unique_id=517232095]
+stream = ExtResource("5_p0273")
 
-[node name="countdownSFX" type="AudioStreamPlayer3D" parent="SFX"]
-stream = ExtResource("5_7npvq")
+[node name="countdownSFX" type="AudioStreamPlayer3D" parent="SFX" unique_id=1217187516]
 
-[node name="popSFX" type="AudioStreamPlayer3D" parent="SFX"]
-stream = ExtResource("6_omilx")
+[node name="popSFX" type="AudioStreamPlayer3D" parent="SFX" unique_id=1335384172]
+stream = ExtResource("6_5v238")
 
-[node name="exitSound" type="AudioStreamPlayer3D" parent="SFX"]
-stream = ExtResource("7_cwa2r")
+[node name="exitSound" type="AudioStreamPlayer3D" parent="SFX" unique_id=1852562780]
+stream = ExtResource("7_5pjlj")
 pitch_scale = 2.0
 
-[node name="BounceSFX" type="AudioStreamPlayer3D" parent="SFX"]
-stream = ExtResource("9_ho3b7")
+[node name="BounceSFX" type="AudioStreamPlayer3D" parent="SFX" unique_id=1801039222]
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="finished" from="SFX/exitSound" to="." method="_on_exit_sound_finished"]

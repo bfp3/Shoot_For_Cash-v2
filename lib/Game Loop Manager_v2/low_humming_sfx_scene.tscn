@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://onxq6jr5i4to"]
 
-[ext_resource type="AudioStream" uid="uid://fossjjbbmh7" path="res://sfx/low_pitch_humming.wav" id="1_gdkyt"]
+[ext_resource type="AudioStream" uid="uid://bqpvt1i70bpm2" path="res://sfx/low_pitch_humming.ogg" id="1_fw65j"]
 [ext_resource type="Script" uid="uid://5ym8x7uub7tw" path="res://lib/Game Loop Manager_v2/Scripts/low_humming_sfx_scene.gd" id="2_37gft"]
 
-
-[node name="low_humming" type="AudioStreamPlayer" groups=["Temporary_low_humming"]]
-stream = ExtResource("1_gdkyt")
+[node name="low_humming" type="AudioStreamPlayer" unique_id=699708563 groups=["Temporary_low_humming"]]
+stream = ExtResource("1_fw65j")
 volume_db = -20.0
 pitch_scale = 0.6
 autoplay = true

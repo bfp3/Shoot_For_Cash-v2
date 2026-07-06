@@ -9,11 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="7_ectt7"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="7_vj588"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="8_2a8gg"]
-[ext_resource type="AudioStream" uid="uid://bmmratmawbv6y" path="res://sfx/sfx_dot_1.wav" id="9_5yctc"]
-[ext_resource type="AudioStream" uid="uid://cflwuwauqncrs" path="res://sfx/popper-grr-002.wav" id="10_rjf51"]
-[ext_resource type="AudioStream" uid="uid://dw8m2vyhfcrhu" path="res://sfx/pineapple_sound_2.wav" id="11_368ic"]
-[ext_resource type="AudioStream" uid="uid://c7xko6f6va2gy" path="res://sfx/popper-angry-001.wav" id="12_dil30"]
-[ext_resource type="AudioStream" uid="uid://cydvvxw2pq66a" path="res://sfx/pineapple_shake_1.wav" id="13_04uaw"]
+[ext_resource type="AudioStream" uid="uid://dq5d4xw7x58hs" path="res://sfx/sfx_dot_1.ogg" id="8_cl8c5"]
+[ext_resource type="AudioStream" uid="uid://h8nm8b2y84hf" path="res://sfx/popper-grr-002.ogg" id="9_2v2ls"]
+[ext_resource type="AudioStream" uid="uid://c2ekmc3f5h3t2" path="res://sfx/pineapple_sound_2.ogg" id="10_dpise"]
+[ext_resource type="AudioStream" uid="uid://bg5nwosdum7t0" path="res://sfx/popper-angry-001.ogg" id="11_bwjg4"]
+[ext_resource type="AudioStream" uid="uid://cm3v65xb2u10i" path="res://sfx/pineapple_shake_1.ogg" id="12_yel2a"]
 
 [sub_resource type="GDScript" id="GDScript_sr0ha"]
 script/source = "extends Control
@@ -1179,33 +1179,33 @@ speed_scale = 0.5
 script = SubResource("GDScript_smwuq")
 
 [node name="Telegraph_sound" type="AudioStreamPlayer" parent="SFX" unique_id=454850863]
-stream = ExtResource("9_5yctc")
+stream = ExtResource("8_cl8c5")
 volume_db = -30.0
 
 [node name="Panel_fade_in2" type="AudioStreamPlayer" parent="SFX" unique_id=920128350]
-stream = ExtResource("9_5yctc")
+stream = ExtResource("8_cl8c5")
 volume_db = -40.0
 pitch_scale = 0.5
 
 [node name="Pineapple_1" type="AudioStreamPlayer" parent="SFX" unique_id=1560226111]
-stream = ExtResource("10_rjf51")
+stream = ExtResource("9_2v2ls")
 volume_db = -30.0
 
 [node name="Pineapple_2" type="AudioStreamPlayer" parent="SFX" unique_id=166427919]
-stream = ExtResource("11_368ic")
+stream = ExtResource("10_dpise")
 volume_db = -30.0
 
 [node name="Pineapple_3" type="AudioStreamPlayer" parent="SFX" unique_id=1903447033]
-stream = ExtResource("12_dil30")
+stream = ExtResource("11_bwjg4")
 volume_db = -30.0
 
 [node name="Pineapple_4" type="AudioStreamPlayer" parent="SFX" unique_id=323000449]
-stream = ExtResource("12_dil30")
+stream = ExtResource("11_bwjg4")
 volume_db = -28.0
 pitch_scale = 0.8
 
 [node name="Pine_shake_1" type="AudioStreamPlayer" parent="SFX" unique_id=43148825]
-stream = ExtResource("13_04uaw")
+stream = ExtResource("12_yel2a")
 volume_db = -44.0
 pitch_scale = 0.8
 
@@ -1258,12 +1258,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SFX" type="AudioStreamPlayer" parent="Text_box/PanelContainer/MarginContainer/Control" unique_id=349088668]
-stream = ExtResource("9_5yctc")
+stream = ExtResource("8_cl8c5")
 volume_db = -30.0
 pitch_scale = 2.0
 
 [node name="SFX2" type="AudioStreamPlayer" parent="Text_box/PanelContainer/MarginContainer/Control" unique_id=15976331]
-stream = ExtResource("9_5yctc")
+stream = ExtResource("8_cl8c5")
 volume_db = -42.0
 pitch_scale = 1.5
 

@@ -62,9 +62,7 @@ func silence_everything_sequence() -> void:
 
 	
 
-func pineapple_collected() -> void:
-	
-	$Pineapple_telegraph_same_as_intro.show_next_pineapple(GameManager.pineapples_hit)
+
 	
 	#$Player_shoot_pineapple.show()
 	#$Player_shoot_pineapple.show_next_pineapple(GameManager.pineapples_hit)

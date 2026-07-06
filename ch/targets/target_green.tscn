@@ -1,10 +1,8 @@
 [gd_scene format=3 uid="uid://dblkeop0vtk8s"]
 
 [ext_resource type="Script" uid="uid://t58umkmh3t7k" path="res://unfiled/targets/target_rotating_mine.gd" id="1_vvgtt"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="2_4cdll"]
-[ext_resource type="AudioStream" uid="uid://cps8uhp6h2r3" path="res://sfx/bomb_countdown_single.wav" id="3_20aw4"]
-[ext_resource type="AudioStream" uid="uid://cfi15vbqm0igf" path="res://sfx/metalSound shortened.wav" id="4_ejqsy"]
-
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="2_r6mny"]
+[ext_resource type="AudioStream" uid="uid://cqpwtf5fw8cgv" path="res://sfx/metalSound shortened.ogg" id="3_r11iy"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_te0lg"]
 rough = true
@@ -43,58 +41,57 @@ height = 0.2
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fd6fd"]
 transparency = 1
 
-[node name="greenTarget" type="RigidBody3D"]
+[node name="greenTarget" type="RigidBody3D" unique_id=1505054838]
 collision_layer = 5
 physics_material_override = SubResource("PhysicsMaterial_te0lg")
 gravity_scale = 0.0
 continuous_cd = true
-max_contacts_reported = 4
 contact_monitor = true
+max_contacts_reported = 4
 script = ExtResource("1_vvgtt")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=541550777]
 process_priority = 10
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("CylinderShape3D_k1uwx")
 
-[node name="innerRing" type="MeshInstance3D" parent="."]
+[node name="innerRing" type="MeshInstance3D" parent="." unique_id=427033587]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -1.55114e-09, -0.0354859)
 material_override = SubResource("StandardMaterial3D_3ibbo")
 mesh = SubResource("CylinderMesh_rvm72")
 skeleton = NodePath("")
 
-[node name="middleRing" type="MeshInstance3D" parent="."]
+[node name="middleRing" type="MeshInstance3D" parent="." unique_id=191286139]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -3.21807e-09, -0.073621)
 material_override = SubResource("StandardMaterial3D_3ibbo")
 mesh = SubResource("TorusMesh_h31jf")
 skeleton = NodePath("")
 
-[node name="outRing2" type="MeshInstance3D" parent="."]
+[node name="outRing2" type="MeshInstance3D" parent="." unique_id=1790567950]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -4.25129e-09, -0.0972582)
 material_override = SubResource("StandardMaterial3D_wni5p")
 mesh = SubResource("TorusMesh_r072a")
 skeleton = NodePath("")
 
-[node name="green" type="MeshInstance3D" parent="."]
+[node name="green" type="MeshInstance3D" parent="." unique_id=1252582724]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_pxng8")
 mesh = SubResource("CylinderMesh_21tm5")
 skeleton = NodePath("")
 
-[node name="green2" type="MeshInstance3D" parent="."]
+[node name="green2" type="MeshInstance3D" parent="." unique_id=1454391831]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_fd6fd")
 mesh = SubResource("CylinderMesh_21tm5")
 skeleton = NodePath("")
 
-[node name="hitSound" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("2_4cdll")
+[node name="hitSound" type="AudioStreamPlayer3D" parent="." unique_id=80040863]
+stream = ExtResource("2_r6mny")
 
-[node name="countdownSFX" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("3_20aw4")
+[node name="countdownSFX" type="AudioStreamPlayer3D" parent="." unique_id=1993537087]
 
-[node name="popSFX" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("4_ejqsy")
+[node name="popSFX" type="AudioStreamPlayer3D" parent="." unique_id=1935358132]
+stream = ExtResource("3_r11iy")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

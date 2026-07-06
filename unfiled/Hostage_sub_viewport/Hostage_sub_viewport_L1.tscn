@@ -2,15 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://dylgoijv5vwqs" path="res://unfiled/Decal_placeholders/Egg_2D_sprites/egg_grey.png" id="1_bolqw"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="2_glfcm"]
-[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="2_hofsv"]
-[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.wav" id="3_53ro4"]
-[ext_resource type="Texture2D" uid="uid://dt3ige5xp4l4c" path="res://unfiled/Hostage_sub_viewport/Hostage_expressions/Hostage_parts/Eyes.png" id="6_sn2bn"]
-[ext_resource type="Texture2D" uid="uid://bwa0ksghjxse5" path="res://unfiled/Hostage_sub_viewport/Hostage_expressions/Hostage_parts/eyebrow_right.png" id="7_lgvvv"]
-[ext_resource type="Texture2D" uid="uid://cjlmxyip3qjs5" path="res://unfiled/Hostage_sub_viewport/Hostage_expressions/Hostage_parts/eyebrow_left.png" id="8_osxch"]
-[ext_resource type="PackedScene" uid="uid://csfwmpvafvdcs" path="res://unfiled/stars_for_cage.tscn" id="11_lgvvv"]
-[ext_resource type="PackedScene" uid="uid://sqa5wyfrj3k8" path="res://unfiled/hostage_health_manager.tscn" id="12_osxch"]
-
-
+[ext_resource type="AudioStream" uid="uid://bo1la26whipbs" path="res://sfx/misc-001.ogg" id="3_s71db"]
+[ext_resource type="AudioStream" uid="uid://bb4jv0qikr0qi" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.ogg" id="4_wpepm"]
 
 [sub_resource type="GDScript" id="GDScript_4hj2f"]
 script/source = "extends Control
@@ -695,7 +688,7 @@ func hostage_low_on_health() -> void:
 	CommonCode.play_sound_instance(LOW_HEALTH, -5.0)
 "
 
-[node name="Side_panel" type="Control"]
+[node name="Side_panel" type="Control" unique_id=400482023]
 layout_mode = 3
 anchor_right = 0.133333
 anchor_bottom = 0.17037
@@ -707,7 +700,7 @@ pivot_offset = Vector2(128, 92)
 script = SubResource("GDScript_4hj2f")
 metadata/_edit_use_anchors_ = true
 
-[node name="Damage_rect" type="TextureRect" parent="."]
+[node name="Damage_rect" type="TextureRect" parent="." unique_id=2121132293]
 visible = false
 z_index = -2
 layout_mode = 1
@@ -718,12 +711,10 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_sn2bn")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Damage_rect"]
-libraries = {
-&"": SubResource("AnimationLibrary_two27")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Damage_rect" unique_id=312158196]
+libraries/ = SubResource("AnimationLibrary_two27")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=582218734]
 modulate = Color(1, 1, 1, 0.588235)
 layout_mode = 1
 anchors_preset = -1
@@ -732,7 +723,7 @@ anchor_bottom = 1.0
 pivot_offset = Vector2(128, 92)
 theme = SubResource("Theme_glfcm")
 
-[node name="King_eggs_face" type="Control" parent="."]
+[node name="King_eggs_face" type="Control" parent="." unique_id=1372723297]
 z_index = -1
 layout_mode = 1
 anchor_top = -0.0434783
@@ -743,7 +734,7 @@ grow_vertical = 2
 pivot_offset = Vector2(128, 92)
 script = SubResource("GDScript_fp0th")
 
-[node name="Hostage_face" type="Control" parent="King_eggs_face"]
+[node name="Hostage_face" type="Control" parent="King_eggs_face" unique_id=1325164899]
 unique_name_in_owner = true
 layout_mode = 1
 anchor_top = 0.130435
@@ -755,7 +746,7 @@ pivot_offset = Vector2(128, 92)
 script = SubResource("GDScript_sn2bn")
 metadata/_edit_use_anchors_ = true
 
-[node name="Eyes_cage" type="TextureRect" parent="King_eggs_face/Hostage_face"]
+[node name="Eyes_cage" type="TextureRect" parent="King_eggs_face/Hostage_face" unique_id=658948629]
 modulate = Color(1, 1, 1, 0.164706)
 layout_mode = 1
 anchors_preset = 15
@@ -772,7 +763,7 @@ texture = ExtResource("1_bolqw")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Eyes" type="TextureRect" parent="King_eggs_face/Hostage_face"]
+[node name="Eyes" type="TextureRect" parent="King_eggs_face/Hostage_face" unique_id=169692241]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -780,11 +771,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(128, 92)
-texture = ExtResource("6_sn2bn")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="left_eye" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes"]
+[node name="left_eye" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes" unique_id=1442072834]
 modulate = Color(0.45, 0.45, 0.45, 1)
 layout_mode = 1
 anchors_preset = -1
@@ -799,7 +789,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("2_glfcm")
 expand_mode = 1
 
-[node name="right_eye" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes"]
+[node name="right_eye" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes" unique_id=147693331]
 modulate = Color(0.45, 0.45, 0.45, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -816,7 +806,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("2_glfcm")
 expand_mode = 1
 
-[node name="left_eyebrow" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes"]
+[node name="left_eyebrow" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes" unique_id=1643544245]
 modulate = Color(0.55, 0.55, 0.55, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -829,12 +819,11 @@ offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(128, 92)
-texture = ExtResource("7_lgvvv")
 expand_mode = 1
 stretch_mode = 4
 flip_h = true
 
-[node name="right_eyebrow" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes"]
+[node name="right_eyebrow" type="TextureRect" parent="King_eggs_face/Hostage_face/Eyes" unique_id=1696584008]
 modulate = Color(0.55, 0.55, 0.55, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -847,12 +836,11 @@ offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(128, 92)
-texture = ExtResource("8_osxch")
 expand_mode = 1
 stretch_mode = 4
 flip_h = true
 
-[node name="Jail" type="Control" parent="King_eggs_face"]
+[node name="Jail" type="Control" parent="King_eggs_face" unique_id=580792773]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -864,18 +852,18 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(128, 92)
 
-[node name="Top_cell" type="Panel" parent="King_eggs_face/Jail"]
+[node name="Top_cell" type="Panel" parent="King_eggs_face/Jail" unique_id=214488035]
 modulate = Color(1, 1, 1, 0.235294)
-layout_mode = 2
+layout_mode = 0
 anchor_top = -0.0333333
 anchor_right = 1.0
 offset_top = 63.1333
 offset_right = -16.0
 offset_bottom = 63.0
 
-[node name="Bottom_cell" type="Panel" parent="King_eggs_face/Jail"]
+[node name="Bottom_cell" type="Panel" parent="King_eggs_face/Jail" unique_id=1408725695]
 modulate = Color(1, 1, 1, 0.235294)
-layout_mode = 2
+layout_mode = 0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.03333
@@ -883,7 +871,7 @@ offset_top = -26.0
 offset_right = -16.0
 offset_bottom = -26.1327
 
-[node name="HBoxContainer" type="HBoxContainer" parent="King_eggs_face/Jail"]
+[node name="HBoxContainer" type="HBoxContainer" parent="King_eggs_face/Jail" unique_id=1273053543]
 clip_contents = true
 layout_direction = 2
 layout_mode = 1
@@ -898,32 +886,32 @@ scale = Vector2(1, 0.5)
 pivot_offset = Vector2(128, 92)
 theme = SubResource("Theme_lgvvv")
 
-[node name="Panel" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+[node name="Panel" type="Panel" parent="King_eggs_face/Jail/HBoxContainer" unique_id=1622750296]
 modulate = Color(1, 1, 1, 0.235294)
 custom_minimum_size = Vector2(20, 90)
 layout_mode = 2
 
-[node name="Panel2" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+[node name="Panel2" type="Panel" parent="King_eggs_face/Jail/HBoxContainer" unique_id=1151143934]
 modulate = Color(1, 1, 1, 0.235294)
 custom_minimum_size = Vector2(20, 90)
 layout_mode = 2
 
-[node name="Panel3" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+[node name="Panel3" type="Panel" parent="King_eggs_face/Jail/HBoxContainer" unique_id=1032000171]
 modulate = Color(1, 1, 1, 0.235294)
 custom_minimum_size = Vector2(20, 90)
 layout_mode = 2
 
-[node name="Panel4" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+[node name="Panel4" type="Panel" parent="King_eggs_face/Jail/HBoxContainer" unique_id=1976679924]
 modulate = Color(1, 1, 1, 0.235294)
 custom_minimum_size = Vector2(20, 90)
 layout_mode = 2
 
-[node name="Panel5" type="Panel" parent="King_eggs_face/Jail/HBoxContainer"]
+[node name="Panel5" type="Panel" parent="King_eggs_face/Jail/HBoxContainer" unique_id=1537570772]
 modulate = Color(1, 1, 1, 0.235294)
 custom_minimum_size = Vector2(20, 90)
 layout_mode = 2
 
-[node name="Sub_root_control" type="Control" parent="."]
+[node name="Sub_root_control" type="Control" parent="." unique_id=1308346791]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -932,7 +920,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(240, 240)
 
-[node name="Hostage_timer" type="Control" parent="Sub_root_control" groups=["level_timer"]]
+[node name="Hostage_timer" type="Control" parent="Sub_root_control" unique_id=1461442266 groups=["level_timer"]]
 unique_name_in_owner = true
 z_index = 1
 layout_mode = 1
@@ -945,7 +933,7 @@ script = SubResource("GDScript_hcy87")
 activated = false
 metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="Sub_root_control/Hostage_timer"]
+[node name="Label" type="Label" parent="Sub_root_control/Hostage_timer" unique_id=1475864082]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.133333
@@ -960,7 +948,7 @@ horizontal_alignment = 1
 script = SubResource("GDScript_lgvvv")
 metadata/_edit_use_anchors_ = true
 
-[node name="Panel" type="Panel" parent="Sub_root_control/Hostage_timer"]
+[node name="Panel" type="Panel" parent="Sub_root_control/Hostage_timer" unique_id=1156594218]
 modulate = Color(1, 1, 1, 0.588235)
 z_index = -1
 layout_mode = 1
@@ -978,7 +966,7 @@ pivot_offset = Vector2(37, 25)
 theme = SubResource("Theme_two27")
 metadata/_edit_use_anchors_ = true
 
-[node name="Sub_view_border" type="ColorRect" parent="Sub_root_control"]
+[node name="Sub_view_border" type="ColorRect" parent="Sub_root_control" unique_id=1512208015]
 visible = false
 z_index = -1
 layout_mode = 1
@@ -994,7 +982,7 @@ grow_vertical = 2
 pivot_offset = Vector2(134, 97)
 color = Color(0.42, 0.42, 0.42, 0.392157)
 
-[node name="hostage_health_bar" type="Control" parent="Sub_root_control" groups=["Side_panel_of_hostage"]]
+[node name="hostage_health_bar" type="Control" parent="Sub_root_control" unique_id=1345818078 groups=["Side_panel_of_hostage"]]
 unique_name_in_owner = true
 process_mode = 4
 visible = false
@@ -1011,7 +999,7 @@ pivot_offset = Vector2(134, 5)
 script = SubResource("GDScript_a6bu3")
 metadata/_edit_use_anchors_ = true
 
-[node name="Extra_border" type="ColorRect" parent="Sub_root_control/hostage_health_bar"]
+[node name="Extra_border" type="ColorRect" parent="Sub_root_control/hostage_health_bar" unique_id=961353178]
 visible = false
 z_index = -1
 layout_mode = 1
@@ -1023,7 +1011,7 @@ grow_vertical = 2
 pivot_offset = Vector2(125, 5)
 color = Color(0.42, 0.42, 0.42, 0.392157)
 
-[node name="Panel" type="Panel" parent="Sub_root_control/hostage_health_bar"]
+[node name="Panel" type="Panel" parent="Sub_root_control/hostage_health_bar" unique_id=1917860745]
 visible = false
 modulate = Color(1, 1, 1, 0.588235)
 layout_mode = 1
@@ -1038,7 +1026,7 @@ pivot_offset = Vector2(128, 4)
 theme = SubResource("Theme_bolqw")
 metadata/_edit_use_anchors_ = true
 
-[node name="health_unit_color" type="ColorRect" parent="Sub_root_control/hostage_health_bar"]
+[node name="health_unit_color" type="ColorRect" parent="Sub_root_control/hostage_health_bar" unique_id=1720858621]
 visible = false
 z_index = 2
 custom_minimum_size = Vector2(20, 5)
@@ -1054,7 +1042,7 @@ pivot_offset = Vector2(10, 2.5)
 color = Color(0.878431, 0.878431, 0.878431, 0.431373)
 metadata/_edit_use_anchors_ = true
 
-[node name="ColorRect" type="ColorRect" parent="Sub_root_control/hostage_health_bar/health_unit_color"]
+[node name="ColorRect" type="ColorRect" parent="Sub_root_control/hostage_health_bar/health_unit_color" unique_id=1805836161]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -1069,7 +1057,7 @@ grow_vertical = 2
 pivot_offset = Vector2(20, 7.5)
 color = Color(0.42, 0.42, 0.42, 0.392157)
 
-[node name="health_unit" type="Panel" parent="Sub_root_control/hostage_health_bar"]
+[node name="health_unit" type="Panel" parent="Sub_root_control/hostage_health_bar" unique_id=1772306861]
 visible = false
 z_index = 2
 custom_minimum_size = Vector2(20, 5)
@@ -1085,7 +1073,7 @@ pivot_offset = Vector2(10, 2.5)
 theme = SubResource("Theme_osxch")
 metadata/_edit_use_anchors_ = true
 
-[node name="ColorRect" type="Panel" parent="Sub_root_control/hostage_health_bar/health_unit"]
+[node name="ColorRect" type="Panel" parent="Sub_root_control/hostage_health_bar/health_unit" unique_id=836317626]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -1099,7 +1087,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 7.5)
 
-[node name="health_remaining_label" type="Label" parent="Sub_root_control/hostage_health_bar"]
+[node name="health_remaining_label" type="Label" parent="Sub_root_control/hostage_health_bar" unique_id=1956909799]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -1117,7 +1105,7 @@ label_settings = SubResource("LabelSettings_si3we")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Health_hbox_container" type="HBoxContainer" parent="Sub_root_control/hostage_health_bar"]
+[node name="Health_hbox_container" type="HBoxContainer" parent="Sub_root_control/hostage_health_bar" unique_id=1897723887]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -1128,21 +1116,21 @@ offset_right = 9.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="2D_marker_pos" type="Marker2D" parent="Sub_root_control/hostage_health_bar"]
+[node name="2D_marker_pos" type="Marker2D" parent="Sub_root_control/hostage_health_bar" unique_id=1044271054]
 visible = false
 position = Vector2(16, 27)
 
-[node name="health_loading_sound" type="AudioStreamPlayer" parent="Sub_root_control/hostage_health_bar"]
-stream = ExtResource("2_hofsv")
+[node name="health_loading_sound" type="AudioStreamPlayer" parent="Sub_root_control/hostage_health_bar" unique_id=150412296]
+stream = ExtResource("3_s71db")
 volume_db = -80.0
 pitch_scale = 1.5
 
-[node name="take_damage_sound" type="AudioStreamPlayer" parent="Sub_root_control/hostage_health_bar"]
-stream = ExtResource("3_53ro4")
+[node name="take_damage_sound" type="AudioStreamPlayer" parent="Sub_root_control/hostage_health_bar" unique_id=710833843]
+stream = ExtResource("4_wpepm")
 volume_db = -31.0
 pitch_scale = 0.22
 
-[node name="Panel2" type="Panel" parent="Sub_root_control/hostage_health_bar"]
+[node name="Panel2" type="Panel" parent="Sub_root_control/hostage_health_bar" unique_id=2140607641]
 modulate = Color(1, 1, 1, 0.588235)
 layout_mode = 1
 anchors_preset = -1
@@ -1159,7 +1147,7 @@ pivot_offset = Vector2(125, 7)
 theme = SubResource("Theme_xxlmk")
 metadata/_edit_use_anchors_ = true
 
-[node name="Stars" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+[node name="Stars" parent="Sub_root_control/hostage_health_bar" unique_id=429113330]
 layout_mode = 1
 anchor_left = 0.0519999
 anchor_top = -2.375
@@ -1169,7 +1157,7 @@ offset_right = 0.0
 scale = Vector2(1.13, 1.13)
 star_acquired = true
 
-[node name="Stars2" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+[node name="Stars2" parent="Sub_root_control/hostage_health_bar" unique_id=1865288132]
 layout_mode = 1
 anchor_left = 0.244
 anchor_top = -2.375
@@ -1179,7 +1167,7 @@ offset_right = 0.0
 scale = Vector2(1.13, 1.13)
 star_acquired = true
 
-[node name="Stars3" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+[node name="Stars3" parent="Sub_root_control/hostage_health_bar" unique_id=1047331794]
 layout_mode = 1
 anchor_left = 0.436
 anchor_top = -2.375
@@ -1189,7 +1177,7 @@ offset_right = 0.0
 scale = Vector2(1.13, 1.13)
 star_acquired = true
 
-[node name="Stars4" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+[node name="Stars4" parent="Sub_root_control/hostage_health_bar" unique_id=960304787]
 layout_mode = 1
 anchor_left = 0.627999
 anchor_top = -2.375
@@ -1199,7 +1187,7 @@ offset_right = 0.0
 scale = Vector2(1.13, 1.13)
 star_acquired = true
 
-[node name="Stars5" parent="Sub_root_control/hostage_health_bar" instance=ExtResource("11_lgvvv")]
+[node name="Stars5" parent="Sub_root_control/hostage_health_bar" unique_id=1735269865]
 layout_mode = 1
 anchor_left = 0.819999
 anchor_top = -2.375
@@ -1209,7 +1197,7 @@ offset_right = 0.0
 scale = Vector2(1.13, 1.13)
 star_acquired = true
 
-[node name="egg_health_points" parent="Sub_root_control" instance=ExtResource("12_osxch")]
+[node name="egg_health_points" parent="Sub_root_control" unique_id=1364413847]
 unique_name_in_owner = true
 layout_mode = 1
 anchor_top = 0.940217
@@ -1219,5 +1207,5 @@ offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
 
-[node name="SFX" type="Node" parent="."]
+[node name="SFX" type="Node" parent="." unique_id=2105070556]
 script = SubResource("GDScript_glfcm")

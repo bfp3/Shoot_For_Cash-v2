@@ -9,13 +9,17 @@
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="4_p4xhn"]
 [ext_resource type="Script" uid="uid://or737o6rwcyt" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/game_won_special_yellow.gd" id="5_5e6ml"]
 [ext_resource type="PackedScene" uid="uid://c4u3c1u1bfao" path="res://lib/HUD_Feedback_Corner_Folder/cage_damage_feedback.tscn" id="5_fkevw"]
-[ext_resource type="AudioStream" uid="uid://bb7eb5q4ybfql" path="res://sfx/Camera_waking_up_3.wav" id="5_jw10o"]
+[ext_resource type="Script" uid="uid://5gy2t63mg6p" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/main_score_tally.gd" id="5_ijnej"]
 [ext_resource type="Script" uid="uid://ddffnuu6dc0bl" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/points_particles_receptor.gd" id="5_y7crx"]
 [ext_resource type="PackedScene" uid="uid://bn61uifa163wl" path="res://unfiled/Circle_polygon/Circle_Polygon.tscn" id="6_tuqr4"]
 [ext_resource type="Shader" uid="uid://65e33jg1ql4e" path="res://res/Shaders/goggles_shader.gdshader" id="7_uywbt"]
+[ext_resource type="Texture2D" uid="uid://dqf4legc6lkbl" path="res://unfiled/Circle_polygon/Circle_Polygon.tres" id="8_mdnpb"]
+[ext_resource type="Script" uid="uid://ch1flsh23we5l" path="res://unfiled/Circle_polygon/circle_polygon.gd" id="9_aasaq"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="9_tuqr4"]
-[ext_resource type="Texture2D" uid="uid://clyuw55mgmybq" path="res://res/textures_2D/HUD_center_piece.png" id="15_tuqr4"]
+[ext_resource type="Script" uid="uid://b27ixawd3mqxl" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/enemy_shots_astray_feedback.gd" id="14_ewke0"]
+[ext_resource type="Script" uid="uid://ca4mo7ytjev5m" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/cage_damage_feedback.gd" id="16_2nun0"]
 [ext_resource type="Script" uid="uid://b85qgj0avk04j" path="res://lib/HUD_Feedback_Corner_Folder/Scripts/score_mult.gd" id="16_tuqr4"]
+[ext_resource type="AudioStream" uid="uid://bu61ewsyj12hi" path="res://sfx/Camera_waking_up_3.ogg" id="17_ybsav"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_av1no"]
 bg_color = Color(0.35, 0.35, 0.35, 1)
@@ -502,13 +506,18 @@ expand_mode = 1
 stretch_mode = 4
 metadata/_edit_use_anchors_ = true
 
-[node name="Main_score_Tally" parent="Corner_Container" unique_id=763683831 instance=ExtResource("1_qylpp")]
+[node name="Main_score_Tally" type="Control" parent="Corner_Container" unique_id=763683831 instance=ExtResource("1_qylpp")]
+z_index = 1
 layout_mode = 1
 anchor_left = 0.429685
 anchor_top = 0.250001
 anchor_right = 0.820309
 anchor_bottom = 0.79348
-offset_right = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+script = ExtResource("5_ijnej")
+metadata/_edit_use_anchors_ = true
 
 [node name="Points_particles_receptor" type="Control" parent="Corner_Container" unique_id=735749905 groups=["points_receptor_ui"]]
 visible = false
@@ -526,13 +535,18 @@ script = ExtResource("5_y7crx")
 circle_radius = 56.1
 metadata/_edit_use_anchors_ = true
 
-[node name="Circle_polygon" parent="Corner_Container/Points_particles_receptor" unique_id=960981802 instance=ExtResource("6_tuqr4")]
+[node name="Circle_polygon" type="Polygon2D" parent="Corner_Container/Points_particles_receptor" unique_id=960981802 instance=ExtResource("6_tuqr4")]
 visible = false
 position = Vector2(49.5, 49.5)
 rotation = 2.67908
 color = Color(0.3, 0.3, 0.3, 0.286275)
+antialiased = true
+texture = ExtResource("8_mdnpb")
+invert_border = 5.0
 polygon = PackedVector2Array(4.3473526e-15, -71, 11.106847, -70.12588, 21.940207, -67.52502, 32.233326, -63.261463, 41.732754, -57.44021, 50.204582, -50.204582, 57.44021, -41.732754, 63.261463, -32.233326, 67.52502, -21.940207, 70.12588, -11.106847, 71, 0, 70.12588, 11.106847, 67.52502, 21.940207, 63.261463, 32.233326, 57.44021, 41.732754, 50.204582, 50.204582, 41.732754, 57.44021, 32.233326, 63.261463, 21.940207, 67.52502, 11.106847, 70.12588, 4.3473526e-15, 71, -11.106847, 70.12588, -21.940207, 67.52502, -32.233326, 63.261463, -41.732754, 57.44021, -50.204582, 50.204582, -57.44021, 41.732754, -63.261463, 32.233326, -67.52502, 21.940207, -70.12588, 11.106847, -71, 8.694705e-15, -70.12588, -11.106847, -67.52502, -21.940207, -63.261463, -32.233326, -57.44021, -41.732754, -50.204582, -50.204582, -41.732754, -57.44021, -32.233326, -63.261463, -21.940207, -67.52502, -11.106847, -70.12588, -1.3042058e-14, -71)
 uv = PackedVector2Array(61.2808, -3.80103, 71.9183, -2.96384, 82.294, -0.472832, 92.1522, 3.61057, 101.25, 9.18577, 109.364, 16.1157, 116.294, 24.2296, 121.869, 33.3276, 125.953, 43.1858, 128.444, 53.5615, 129.281, 64.199, 128.444, 74.8365, 125.953, 85.2122, 121.869, 95.0704, 116.294, 104.168, 109.364, 112.282, 101.25, 119.212, 92.1522, 124.787, 82.294, 128.871, 71.9183, 131.362, 61.2808, 132.199, 50.6433, 131.362, 40.2676, 128.871, 30.4094, 124.787, 21.3114, 119.212, 13.1975, 112.282, 6.26764, 104.168, 0.692432, 95.0704, -3.39096, 85.2122, -5.88197, 74.8365, -6.71917, 64.199, -5.88197, 53.5615, -3.39096, 43.1858, 0.692432, 33.3276, 6.26764, 24.2296, 13.1975, 16.1157, 21.3114, 9.18577, 30.4094, 3.61057, 40.2676, -0.472832, 50.6433, -2.96384, 61.2808, -3.80103)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("9_aasaq")
 radius = 71
 thickness = 4
 ring_shape = false
@@ -542,12 +556,18 @@ libraries/ = SubResource("AnimationLibrary_y227k")
 autoplay = &"rot"
 speed_scale = 0.25
 
-[node name="Ring_polygon" parent="Corner_Container/Points_particles_receptor" unique_id=39128530 instance=ExtResource("6_tuqr4")]
+[node name="Ring_polygon" type="Polygon2D" parent="Corner_Container/Points_particles_receptor" unique_id=39128530 instance=ExtResource("6_tuqr4")]
 visible = false
 position = Vector2(49.5, 49.5)
 rotation = 2.67908
+color = Color(0.72, 0.72, 0.72, 1)
+antialiased = true
+texture = ExtResource("8_mdnpb")
+invert_border = 5.0
 polygon = PackedVector2Array(4.3473526e-15, -71, 11.106847, -70.12588, 21.940207, -67.52502, 32.233326, -63.261463, 41.732754, -57.44021, 50.204582, -50.204582, 57.44021, -41.732754, 63.261463, -32.233326, 67.52502, -21.940207, 70.12588, -11.106847, 71, 0, 70.12588, 11.106847, 67.52502, 21.940207, 63.261463, 32.233326, 57.44021, 41.732754, 50.204582, 50.204582, 41.732754, 57.44021, 32.233326, 63.261463, 21.940207, 67.52502, 11.106847, 70.12588, 4.3473526e-15, 71, -11.106847, 70.12588, -21.940207, 67.52502, -32.233326, 63.261463, -41.732754, 57.44021, -50.204582, 50.204582, -57.44021, 41.732754, -63.261463, 32.233326, -67.52502, 21.940207, -70.12588, 11.106847, -71, 8.694705e-15, -70.12588, -11.106847, -67.52502, -21.940207, -63.261463, -32.233326, -57.44021, -41.732754, -50.204582, -50.204582, -41.732754, -57.44021, -32.233326, -63.261463, -21.940207, -67.52502, -11.106847, -70.12588, -1.3042058e-14, -71, -1.2307294e-14, -67, -10.481109, -66.17512, -20.70414, -63.720787, -30.417362, -59.697437, -39.38161, -54.20414, -47.376152, -47.376152, -54.20414, -39.38161, -59.697437, -30.417362, -63.720787, -20.70414, -66.17512, -10.481109, -67, 8.2048626e-15, -66.17512, 10.481109, -63.720787, 20.70414, -59.697437, 30.417362, -54.20414, 39.38161, -47.376152, 47.376152, -39.38161, 54.20414, -30.417362, 59.697437, -20.70414, 63.720787, -10.481109, 66.17512, 4.1024313e-15, 67, 10.481109, 66.17512, 20.70414, 63.720787, 30.417362, 59.697437, 39.38161, 54.20414, 47.376152, 47.376152, 54.20414, 39.38161, 59.697437, 30.417362, 63.720787, 20.70414, 66.17512, 10.481109, 67, 0, 66.17512, -10.481109, 63.720787, -20.70414, 59.697437, -30.417362, 54.20414, -39.38161, 47.376152, -47.376152, 39.38161, -54.20414, 30.417362, -59.697437, 20.70414, -63.720787, 10.481109, -66.17512, 4.1024313e-15, -67)
 uv = PackedVector2Array(61.2808, -3.80103, 71.9183, -2.96384, 82.294, -0.472832, 92.1522, 3.61057, 101.25, 9.18577, 109.364, 16.1157, 116.294, 24.2296, 121.869, 33.3276, 125.953, 43.1858, 128.444, 53.5615, 129.281, 64.199, 128.444, 74.8365, 125.953, 85.2122, 121.869, 95.0704, 116.294, 104.168, 109.364, 112.282, 101.25, 119.212, 92.1522, 124.787, 82.294, 128.871, 71.9183, 131.362, 61.2808, 132.199, 50.6433, 131.362, 40.2676, 128.871, 30.4094, 124.787, 21.3114, 119.212, 13.1975, 112.282, 6.26764, 104.168, 0.692432, 95.0704, -3.39096, 85.2122, -5.88197, 74.8365, -6.71917, 64.199, -5.88197, 53.5615, -3.39096, 43.1858, 0.692432, 33.3276, 6.26764, 24.2296, 13.1975, 16.1157, 21.3114, 9.18577, 30.4094, 3.61057, 40.2676, -0.472832, 50.6433, -2.96384, 61.2808, -3.80103)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("9_aasaq")
 radius = 71
 thickness = 4
 
@@ -635,16 +655,28 @@ expand_mode = 1
 stretch_mode = 4
 metadata/_edit_use_anchors_ = true
 
-[node name="Enemy_shots_astray_feedback" parent="Corner_Container" unique_id=637099083 instance=ExtResource("2_jw10o")]
+[node name="Enemy_shots_astray_feedback" type="Control" parent="Corner_Container" unique_id=637099083 instance=ExtResource("2_jw10o")]
 visible = false
+custom_minimum_size = Vector2(400, 400)
 layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 offset_left = -265.001
 offset_top = -157.0
 offset_right = 134.999
 offset_bottom = 243.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(200, 200)
+script = ExtResource("14_ewke0")
 
-[node name="Cage_damage_feedback" parent="Corner_Container" unique_id=1874324482 instance=ExtResource("5_fkevw")]
+[node name="Cage_damage_feedback" type="Control" parent="Corner_Container" unique_id=1874324482 instance=ExtResource("5_fkevw")]
 visible = false
+z_index = 1
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 1
 anchor_left = 0.21289
 anchor_top = 0.247283
@@ -654,7 +686,12 @@ offset_left = -30.5
 offset_top = -30.5
 offset_right = 30.5
 offset_bottom = 30.5
+grow_horizontal = 2
+grow_vertical = 2
 scale = Vector2(0.39, 0.39)
+pivot_offset = Vector2(50, 50)
+script = ExtResource("16_2nun0")
+metadata/_edit_use_anchors_ = true
 
 [node name="Current_total_score_tally" type="Control" parent="Corner_Container" unique_id=1274018041]
 z_index = 1
@@ -721,7 +758,7 @@ grow_vertical = 2
 texture = SubResource("GradientTexture2D_tuqr4")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Corner_Container/Current_total_score_tally/Coins_tracker" unique_id=2100593331]
-stream = ExtResource("5_jw10o")
+stream = ExtResource("17_ybsav")
 volume_db = -40.0
 pitch_scale = 5.0
 
@@ -791,7 +828,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("15_tuqr4")
 expand_mode = 1
 stretch_mode = 5
 

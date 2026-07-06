@@ -1,25 +1,15 @@
 [gd_scene format=3 uid="uid://vjlpdhwap075"]
 
-[ext_resource type="Script" uid="uid://ch5j2bf4qmm3l" path="res://unfiled/screenTitle.gd" id="1_o1sm1"]
-[ext_resource type="PackedScene" uid="uid://d0eikmcssy503" path="res://unfiled/hood_logo.tscn" id="2_7oky7"]
-[ext_resource type="Script" uid="uid://q6731cvwgpvd" path="res://unfiled/playerTitleScreen.gd" id="2_dsxel"]
 [ext_resource type="Texture2D" uid="uid://b2pvo8rcwcme0" path="res://res/gradients/sunset.tres" id="2_nsjrg"]
-[ext_resource type="PackedScene" path="res://ch/01_characters/van.tscn" id="3_4eeul"]
 [ext_resource type="PackedScene" uid="uid://bbnwa3i4ksui2" path="res://ch/environment_decoration/helicopter.tscn" id="3_5kpux"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="4_h6y0y"]
 [ext_resource type="Texture2D" uid="uid://ceadr1qr2d0pq" path="res://res/gradients/big-mountain.tres" id="5_4op45"]
-[ext_resource type="PackedScene" path="res://ch/01_characters/magpie.tscn" id="5_6rbtp"]
 [ext_resource type="Texture2D" uid="uid://dat2kb6hdn6xj" path="res://res/gradients/red-mountain.tres" id="6_e0pf6"]
-[ext_resource type="PackedScene" path="res://ch/01_characters/barbie.tscn" id="6_khcos"]
 [ext_resource type="Texture2D" uid="uid://dpiqjoxdk4vu6" path="res://res/gradients/moon.tres" id="7_oxbal"]
 [ext_resource type="Texture2D" uid="uid://ikpnffkolpqk" path="res://res/gradients/water-gradient.tres" id="8_y6wx7"]
 [ext_resource type="PackedScene" uid="uid://uopyn41ixdbd" path="res://ch/02_enemies/birds.tscn" id="10_3s3q7"]
-[ext_resource type="AudioStream" uid="uid://kcrsa5k3eq7l" path="res://sfx/Seagull - Sound Effect.wav" id="11_ngu8o"]
+[ext_resource type="AudioStream" uid="uid://drax4apripua2" path="res://sfx/windSnippet.ogg" id="10_r2ufe"]
 [ext_resource type="PackedScene" uid="uid://bwwqs8ytry7wo" path="res://ch/environment_decoration/trees.tscn" id="13_pyeub"]
-[ext_resource type="AudioStream" uid="uid://d1ucv04bvsq64" path="res://sfx/windSnippet.wav" id="16_ldsmi"]
-[ext_resource type="AudioStream" uid="uid://bw1ujhmle6q0c" path="res://sfx/MC_tunes/USERSONG162.WAV" id="18_3sfwt"]
-[ext_resource type="AudioStream" uid="uid://dn6u1geggr60j" path="res://sfx/02_dialogue/Van MoveIntoTheHeatSFX.wav" id="21_xi4qu"]
-
 
 [sub_resource type="Curve" id="Curve_phq7g"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.156757, 1), 0.0, 0.0, 0, 0, Vector2(0.275676, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -154,19 +144,17 @@ emission = Color(1, 0.827451, 0, 1)
 emission_energy_multiplier = 59.0
 ao_light_affect = 1.0
 
-[node name="ScreenTitle" type="Node3D"]
-script = ExtResource("1_o1sm1")
+[node name="ScreenTitle" type="Node3D" unique_id=1090472918]
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=525561122]
 transform = Transform3D(0.977416, -0.0475378, -0.205909, 0, 0.97437, -0.224951, 0.211325, 0.219871, 0.952365, -564.81, 291.887, -800)
 
-[node name="playerControl" type="CharacterBody3D" parent="."]
-script = ExtResource("2_dsxel")
+[node name="playerControl" type="CharacterBody3D" parent="." unique_id=12731250]
 
-[node name="helicopter" parent="." instance=ExtResource("3_5kpux")]
+[node name="helicopter" type="Node3D" parent="." unique_id=791683231 instance=ExtResource("3_5kpux")]
 transform = Transform3D(-7.15292, -47.7545, 86.4253, 79.336, 48.8078, 33.535, -58.7847, 71.6819, 34.7428, -952.092, 55.421, -4326.91)
 
-[node name="Smoke_destroyed_outwards" type="GPUParticles3D" parent="helicopter"]
+[node name="Smoke_destroyed_outwards" type="GPUParticles3D" parent="helicopter" unique_id=1331760318]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1047.09, 59.421, -4318.91)
 top_level = true
 amount = 1000
@@ -179,35 +167,35 @@ process_material = SubResource("ParticleProcessMaterial_lgmol")
 draw_pass_1 = SubResource("QuadMesh_gipln")
 script = SubResource("GDScript_nahdr")
 
-[node name="HoodLogo" parent="." instance=ExtResource("2_7oky7")]
+[node name="HoodLogo" parent="." unique_id=1003666037]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=983900561]
 environment = SubResource("Environment_hdlek")
 
-[node name="characters" type="Node3D" parent="."]
+[node name="characters" type="Node3D" parent="." unique_id=673808268]
 transform = Transform3D(-2.13842, -0.292169, -0.576418, -0.231291, 2.48168, -0.127082, 0.660426, -0.0769075, -1.91091, -589.859, 291.763, -848.994)
 
-[node name="Van" parent="characters" instance=ExtResource("3_4eeul")]
+[node name="Van" parent="characters" unique_id=1012702079]
 transform = Transform3D(0.376717, -0.0210178, -0.234891, 0.0200225, 0.399482, -0.00363356, 0.264126, -0.00937749, 0.424441, 3.91981, 0.0957489, 6.854)
 
-[node name="Magpie" parent="characters" instance=ExtResource("5_6rbtp")]
+[node name="Magpie" parent="characters" unique_id=1917522890]
 transform = Transform3D(0.37857, -0.0386769, -0.229608, 0.0510112, 0.396354, 0.0173403, 0.25407, -0.0514043, 0.42756, 4.77421, 0.324173, 7.83975)
 
-[node name="Barbie" parent="characters" instance=ExtResource("6_khcos")]
+[node name="Barbie" parent="characters" unique_id=256278630]
 transform = Transform3D(0.501465, -0.0549506, -0.207933, 0.0676969, 0.548619, 0.0362143, 0.255352, -0.0906815, 0.501808, 2.9676, 0.0336151, 5.4928)
 
-[node name="Barbie2" parent="characters" instance=ExtResource("6_khcos")]
+[node name="Barbie2" parent="characters" unique_id=1617088507]
 transform = Transform3D(1, 1.95578e-08, 2.98023e-08, -8.3819e-09, 1, -1.86265e-09, 0, 0, 1, 0, 0, 0)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=416019954]
 transform = Transform3D(-0.89716, 0.37789, 0.2287, 0.358908, 0.925466, -0.121234, -0.257467, -0.0266843, -0.965919, -595.135, 292.352, -841.191)
 light_color = Color(0.686275, 0.396078, 0.0862745, 1)
 light_energy = 0.8
 omni_range = 19.0
 
-[node name="background" type="Node3D" parent="."]
+[node name="background" type="Node3D" parent="." unique_id=1411376050]
 
-[node name="topMountain" type="CSGPolygon3D" parent="background"]
+[node name="topMountain" type="CSGPolygon3D" parent="background" unique_id=1178317159]
 transform = Transform3D(66.9675, 0, 0, 0, 55.04, 0, 0, 0, 35.471, 1977.83, 263.63, -2839.53)
 material_override = SubResource("StandardMaterial3D_htc0d")
 polygon = PackedVector2Array(0, 0, -2.3, 0, -0.972406, 2.86437, 3.93425, -0.85473)
@@ -216,12 +204,12 @@ spin_degrees = 360.0
 spin_sides = 8
 smooth_faces = true
 
-[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="background/topMountain"]
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="background/topMountain" unique_id=1381222986]
 transform = Transform3D(0.315629, 0.856288, -0.408838, -0.525644, 0.516496, 0.675966, 0.789985, 0.00154857, 0.613124, -0.593922, -2.60197, 6.92796)
 visible = false
 polygon = PackedVector2Array(-2.95393, -1.42703, -1.265, 1.22853, 5.14409, 1.7382, 1.35433, 0.656469)
 
-[node name="bigMountain" type="CSGPolygon3D" parent="background"]
+[node name="bigMountain" type="CSGPolygon3D" parent="background" unique_id=1870055624]
 transform = Transform3D(33.8588, 0, 0, 0, 73.911, 0, 0, 0, 25.4309, 1979.04, -33.1957, -2844.77)
 material_override = SubResource("StandardMaterial3D_srj5q")
 polygon = PackedVector2Array(-5, 0, 3.73702, 4.20982, 20.9708, -0.117311)
@@ -230,7 +218,7 @@ spin_degrees = 360.0
 spin_sides = 8
 smooth_faces = true
 
-[node name="smallMountain" type="CSGPolygon3D" parent="background"]
+[node name="smallMountain" type="CSGPolygon3D" parent="background" unique_id=821301114]
 transform = Transform3D(114.396, 0, 0, 0, 160.498, 0, 0, 0, 88.199, 2419.3, 115.965, -2867.87)
 material_override = SubResource("StandardMaterial3D_ky6xs")
 use_collision = true
@@ -240,7 +228,7 @@ spin_degrees = 360.0
 spin_sides = 15
 smooth_faces = true
 
-[node name="pillar_left" type="CSGPolygon3D" parent="background"]
+[node name="pillar_left" type="CSGPolygon3D" parent="background" unique_id=782158268]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -600.132, 280.681, -845.688)
 material_override = SubResource("StandardMaterial3D_srj5q")
 polygon = PackedVector2Array(-5, 0, 4.6, 1.7, 10.0279, -55.4469)
@@ -249,101 +237,97 @@ spin_degrees = 360.0
 spin_sides = 8
 smooth_faces = true
 
-[node name="floor" type="CSGBox3D" parent="background"]
+[node name="floor" type="CSGBox3D" parent="background" unique_id=1634781701]
 transform = Transform3D(1, 0, 0, 0, 1, -4.47035e-08, 0, 4.47035e-08, 1, 0, 6.08316, -1.838)
 material_override = SubResource("StandardMaterial3D_01lj4")
 size = Vector3(10000, 1, 10000)
 
-[node name="moon" type="CSGSphere3D" parent="background"]
+[node name="moon" type="CSGSphere3D" parent="background" unique_id=2005785436]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 3725.17, 597, -3989)
 flip_faces = true
 radius = 13.682
 material = SubResource("StandardMaterial3D_5dnfj")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="background"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="background" unique_id=586908846]
 transform = Transform3D(-0.130132, 0.0607263, 0.989635, 0.354552, -0.929274, 0.103644, 0.925937, 0.364365, 0.0993976, -666.509, 291.273, -842.032)
 visible = false
 light_energy = 0.0
 
-[node name="Trees" type="Node3D" parent="."]
+[node name="Trees" type="Node3D" parent="." unique_id=1227342536]
 transform = Transform3D(1.45842, -0.113044, 0.332005, 0.130609, 1.49287, -0.0654289, -0.325497, 0.0925241, 1.46133, -606.244, 288.683, -847.943)
 
-[node name="oldTrees" parent="Trees" instance=ExtResource("13_pyeub")]
+[node name="oldTrees" type="Node3D" parent="Trees" unique_id=2032653237 instance=ExtResource("13_pyeub")]
 transform = Transform3D(1, 1.11759e-09, 2.98023e-08, -9.31323e-10, 1.2, 7.45058e-09, -2.98023e-08, -8.9407e-09, 1, 1.164, 2.465, -3.637)
 
-[node name="oldTrees2" parent="Trees" instance=ExtResource("13_pyeub")]
+[node name="oldTrees2" type="Node3D" parent="Trees" unique_id=1889007905 instance=ExtResource("13_pyeub")]
 transform = Transform3D(1, -3.72529e-09, -2.98023e-08, -9.31323e-10, 1, -3.72529e-09, -2.98023e-08, -7.45058e-09, 1, 0.518, 0.543, -7.97)
 
-[node name="oldTrees3" parent="Trees" instance=ExtResource("13_pyeub")]
+[node name="oldTrees3" type="Node3D" parent="Trees" unique_id=2101818182 instance=ExtResource("13_pyeub")]
 transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 1.148, 1.575, 0)
 
-[node name="birdContainer" type="Node3D" parent="."]
+[node name="birdContainer" type="Node3D" parent="." unique_id=1287755196]
 transform = Transform3D(-1.27861, 0, 2.71387, 0, 2.99999, 0, -2.71387, 0, -1.27861, -900.112, 251.152, -688.84)
 
-[node name="Camera3D" type="Camera3D" parent="birdContainer"]
+[node name="Camera3D" type="Camera3D" parent="birdContainer" unique_id=2012137525]
 transform = Transform3D(-0.333132, 0, 0.0116332, 0, 0.333334, 0, -0.0116332, 0, -0.333131, -8.457, 0, -23.276)
 current = true
 
-[node name="birds" parent="birdContainer" instance=ExtResource("10_3s3q7")]
+[node name="birds" type="Node3D" parent="birdContainer" unique_id=880870862 instance=ExtResource("10_3s3q7")]
 transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
 
-[node name="birds2" parent="birdContainer" instance=ExtResource("10_3s3q7")]
+[node name="birds2" type="Node3D" parent="birdContainer" unique_id=611778090 instance=ExtResource("10_3s3q7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.09, -8.23207, -7.62939e-06)
 
-[node name="birds3" parent="birdContainer" instance=ExtResource("10_3s3q7")]
+[node name="birds3" type="Node3D" parent="birdContainer" unique_id=581250913 instance=ExtResource("10_3s3q7")]
 transform = Transform3D(1, -3.72529e-09, 0, 7.45058e-09, 1, 0, 0, 2.23517e-08, 1, -7.98756, 11.6208, 1.10049)
 
-[node name="birds4" parent="birdContainer" instance=ExtResource("10_3s3q7")]
+[node name="birds4" type="Node3D" parent="birdContainer" unique_id=747300012 instance=ExtResource("10_3s3q7")]
 transform = Transform3D(0.677167, 0.177237, 0.00568455, -0.177325, 0.676671, 0.0259685, 0.00108002, -0.0265613, 0.699495, -22.0597, 4.78249, 2.98952)
 
-[node name="birdSFX" type="AudioStreamPlayer3D" parent="birdContainer"]
-stream = ExtResource("11_ngu8o")
+[node name="birdSFX" type="AudioStreamPlayer3D" parent="birdContainer" unique_id=68861975]
 unit_size = 100.0
 max_distance = 3258.18
 
-[node name="birdWindNoise" type="AudioStreamPlayer" parent="birdContainer"]
-stream = ExtResource("16_ldsmi")
+[node name="birdWindNoise" type="AudioStreamPlayer" parent="birdContainer" unique_id=1737035181]
+stream = ExtResource("10_r2ufe")
 volume_db = 8.0
 pitch_scale = 1.5
 bus = &"Radio"
 
-[node name="Timer" type="Timer" parent="birdContainer"]
+[node name="Timer" type="Timer" parent="birdContainer" unique_id=1681418346]
 process_callback = 0
 wait_time = 1.5
 one_shot = true
 autostart = true
 
-[node name="birdContainer2" type="Node3D" parent="."]
+[node name="birdContainer2" type="Node3D" parent="." unique_id=429905920]
 transform = Transform3D(0.829982, 0, 2.8829, 0, 3, 0, -2.8829, 0, 0.829982, -1431.04, 331.859, -1137.5)
 
-[node name="birds" parent="birdContainer2" instance=ExtResource("10_3s3q7")]
+[node name="birds" type="Node3D" parent="birdContainer2" unique_id=1379672982 instance=ExtResource("10_3s3q7")]
 transform = Transform3D(0.7, 0, -2.98023e-08, 0, 0.7, 0, 2.98023e-08, 0, 0.7, 8.5253, 0, 0)
 
-[node name="birds2" parent="birdContainer2" instance=ExtResource("10_3s3q7")]
+[node name="birds2" type="Node3D" parent="birdContainer2" unique_id=1539906673 instance=ExtResource("10_3s3q7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.09, -8.23207, -7.62939e-06)
 
-[node name="birds3" parent="birdContainer2" instance=ExtResource("10_3s3q7")]
+[node name="birds3" type="Node3D" parent="birdContainer2" unique_id=227778257 instance=ExtResource("10_3s3q7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.236511, 9.71935, 0)
 
-[node name="birds4" parent="birdContainer2" instance=ExtResource("10_3s3q7")]
+[node name="birds4" type="Node3D" parent="birdContainer2" unique_id=937504183 instance=ExtResource("10_3s3q7")]
 transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 2.98023e-08, 0, 1, -22.5949, 5.79615, 0)
 
-[node name="birdSFX" type="AudioStreamPlayer3D" parent="birdContainer2"]
-stream = ExtResource("11_ngu8o")
+[node name="birdSFX" type="AudioStreamPlayer3D" parent="birdContainer2" unique_id=1665885514]
 unit_size = 100.0
 max_db = 2.659
 max_distance = 3258.18
 
-[node name="titleMusic" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("18_3sfwt")
+[node name="titleMusic" type="AudioStreamPlayer" parent="." unique_id=1066068716]
 autoplay = true
 
-[node name="voices" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("21_xi4qu")
+[node name="voices" type="AudioStreamPlayer3D" parent="." unique_id=1215580376]
 volume_db = 10.0
 unit_size = 30.0
 
-[node name="voiceTimer" type="Timer" parent="voices"]
+[node name="voiceTimer" type="Timer" parent="voices" unique_id=32077226]
 process_callback = 0
 wait_time = 20.0
 one_shot = true

@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" uid="uid://bxjmk0cn2o5bb" path="res://ch/Rocks/balloon.gd" id="1_6ube6"]
 [ext_resource type="Material" uid="uid://c5lrichw3wfce" path="res://res/Kenney_prototype_textures/Material_override/Red_texture.tres" id="2_q6jln"]
+[ext_resource type="AudioStream" uid="uid://cuyce238yo3ke" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="3_824l8"]
 [ext_resource type="AudioStream" uid="uid://djac77r74xqdt" path="res://sfx/rock_hit_sfx_01.ogg" id="4_824l8"]
-[ext_resource type="AudioStream" uid="uid://dlukrpnf4tfb1" path="res://sfx/rocks_destroyed_sfx_02.wav" id="4_aljlg"]
-[ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="6_y7hsg"]
-[ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="7_vojle"]
-[ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="8_rrayk"]
-[ext_resource type="AudioStream" uid="uid://cetr5cs0rp1jo" path="res://sfx/explosion_sfx_01.wav" id="9_p682v"]
-[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.wav" id="9_q6jln"]
+[ext_resource type="AudioStream" uid="uid://b7fekk7djc5ur" path="res://sfx/ninja_flicker.ogg" id="5_gfu80"]
+[ext_resource type="AudioStream" uid="uid://tkggaklg1j7" path="res://sfx/shop_money_coin_sfx_01.ogg" id="6_6ube6"]
+[ext_resource type="AudioStream" uid="uid://crq05kwfa0x1y" path="res://sfx/shop_purchase_sfx_02.ogg" id="7_q6jln"]
+[ext_resource type="AudioStream" uid="uid://ca8wjvwkfwtci" path="res://sfx/explosion_sfx_01.ogg" id="8_cqen7"]
+[ext_resource type="AudioStream" uid="uid://bb4jv0qikr0qi" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.ogg" id="9_jjdpg"]
 [ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="10_bqgy6"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="11_kesly"]
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="13_1ioma"]
@@ -477,7 +477,7 @@ skeleton = NodePath("")
 
 [node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=868234986]
 unique_name_in_owner = true
-stream = ExtResource("4_aljlg")
+stream = ExtResource("3_824l8")
 volume_db = -35.0
 max_polyphony = 2
 
@@ -489,28 +489,28 @@ max_polyphony = 2
 
 [node name="marked_sfx" type="AudioStreamPlayer" parent="." unique_id=541998142]
 unique_name_in_owner = true
-stream = ExtResource("6_y7hsg")
+stream = ExtResource("5_gfu80")
 volume_db = -25.0
 pitch_scale = 1.2
 
 [node name="gold_sfx" type="AudioStreamPlayer" parent="." unique_id=1688684731]
 unique_name_in_owner = true
-stream = ExtResource("7_vojle")
+stream = ExtResource("6_6ube6")
 volume_db = -25.0
 pitch_scale = 1.2
 
 [node name="shop_purchase_03" type="AudioStreamPlayer" parent="." unique_id=584192565]
 unique_name_in_owner = true
-stream = ExtResource("8_rrayk")
+stream = ExtResource("7_q6jln")
 volume_db = -30.0
 
 [node name="explosion_sfx" type="AudioStreamPlayer" parent="." unique_id=649670830]
-stream = ExtResource("9_p682v")
+stream = ExtResource("8_cqen7")
 volume_db = -30.0
 max_polyphony = 2
 
 [node name="pop_balloon" type="AudioStreamPlayer" parent="." unique_id=886344247]
-stream = ExtResource("9_q6jln")
+stream = ExtResource("9_jjdpg")
 volume_db = -35.0
 
 [node name="AoE" type="Node3D" parent="." unique_id=2099865106]

@@ -4,14 +4,13 @@
 [ext_resource type="Curve" uid="uid://doytbxowmtnut" path="res://lib/Cannonball_System/Cannonballs/Cannonball_flight_curves/curve_standard_cannonball.tres" id="2_mafn0"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="2_sjylj"]
 [ext_resource type="Texture2D" uid="uid://bd7tvronoubjm" path="res://res/Materials/cannonball_bronze_material.png" id="3_1b5l2"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="4_qxte6"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="5_6w0hi"]
 [ext_resource type="Script" uid="uid://s3cmnx5lr8nh" path="res://res/Particles/trail_particles_script.gd" id="5_mafn0"]
-[ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.wav" id="5_qhbtx"]
 [ext_resource type="Script" uid="uid://cncf1an52x66e" path="res://res/Particles/points_particles.gd" id="6_6hb27"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="6_31hv1"]
 [ext_resource type="Material" uid="uid://8t45gdd0jrre" path="res://res/Particles/Trails_particles_materials/standard_white.tres" id="6_gkcsh"]
+[ext_resource type="AudioStream" uid="uid://bb4jv0qikr0qi" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.ogg" id="6_k7ncx"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="7_p3ma1"]
-
 
 [sub_resource type="Curve" id="Curve_mafn0"]
 _data = [Vector2(0, 0.5), 0.0, 0.0, 0, 1, Vector2(1, 0.5), 0.0, 0.0, 1, 0]
@@ -286,13 +285,13 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 
 shape = SubResource("SphereShape3D_0yc4n")
 
 [node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=1445864058]
-stream = ExtResource("4_qxte6")
+stream = ExtResource("5_6w0hi")
 volume_db = -30.0
 pitch_scale = 0.1
 script = SubResource("GDScript_m44j2")
 
 [node name="reloading_sfx" type="AudioStreamPlayer" parent="." unique_id=1095306687]
-stream = ExtResource("5_qhbtx")
+stream = ExtResource("6_k7ncx")
 volume_db = -51.0
 pitch_scale = 3.0
 

@@ -1,8 +1,8 @@
 [gd_scene format=4 uid="uid://m8g1y06opup8"]
 
 [ext_resource type="Script" uid="uid://pyn831x8m3ql" path="res://lib/Cannonball_System/Bonus_round_launchers/Scripts/bonus_round_cannonball.gd" id="1_xl3q4"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="2_rhcyq"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="3_gc22y"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="3_jbcp3"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ws4ab"]
 radius = 0.424502
@@ -280,7 +280,7 @@ draw_pass_1 = SubResource("QuadMesh_7qyxb")
 script = SubResource("GDScript_q7tw8")
 
 [node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=1586726094]
-stream = ExtResource("2_rhcyq")
+stream = ExtResource("3_jbcp3")
 volume_db = -30.0
 pitch_scale = 0.1
 script = SubResource("GDScript_m44j2")

@@ -2,8 +2,7 @@
 
 [ext_resource type="Script" uid="uid://n2bo8vdqmuac" path="res://lib/Bonus_Round/Scripts/bonus_round_target.gd" id="1_n64sm"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="2_6yecc"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="2_nk8ue"]
-
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="3_r0kdk"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_nk8ue"]
 height = 0.165
@@ -108,7 +107,6 @@ anim_speed_min = 1.0
 anim_speed_max = 1.0
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_mcok3"]
-load_path = "res://.godot/imported/particle_sprite_smoke.webp-94067ca765f9db23717d2d11ab74a1f8.s3tc.ctex"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_an2ri"]
 transparency = 1
@@ -164,45 +162,45 @@ func distance_from_player() -> void:
 	self.volume_db = volume_db
 "
 
-[node name="Bonus_round_starter" type="CharacterBody3D" groups=["Target"]]
+[node name="Bonus_round_starter" type="CharacterBody3D" unique_id=1346569209 groups=["Target"]]
 script = ExtResource("1_n64sm")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=1777630778]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2032823561]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 visible = false
 shape = SubResource("CylinderShape3D_nk8ue")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=97904880]
 visible = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=896917099]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("CylinderShape3D_6yecc")
 
-[node name="Mesh" type="Node3D" parent="."]
+[node name="Mesh" type="Node3D" parent="." unique_id=1842023644]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 
-[node name="target_mesh" type="MeshInstance3D" parent="Mesh"]
+[node name="target_mesh" type="MeshInstance3D" parent="Mesh" unique_id=1208588716]
 mesh = SubResource("ArrayMesh_i8rmi")
 
-[node name="Parachute_mesh" type="Node3D" parent="Mesh"]
+[node name="Parachute_mesh" type="Node3D" parent="Mesh" unique_id=556694310]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 visible = false
 
-[node name="Parachute" type="MeshInstance3D" parent="Mesh/Parachute_mesh"]
+[node name="Parachute" type="MeshInstance3D" parent="Mesh/Parachute_mesh" unique_id=1577902804]
 transform = Transform3D(1.12, 0, 0, 0, 1.355, 0, 0, 0, 0.845, 0, 2.53691, 0)
 mesh = SubResource("ArrayMesh_nk8ue")
 
-[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Mesh/Parachute_mesh/Parachute"]
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Mesh/Parachute_mesh/Parachute" unique_id=81413577]
 mesh = SubResource("ArrayMesh_3tqdj")
 
-[node name="Unique_marker" type="Marker3D" parent="."]
+[node name="Unique_marker" type="Marker3D" parent="." unique_id=705997050]
 transform = Transform3D(0.999998, 0.000871057, -0.00152377, 0.0015253, -0.00177375, 0.999997, 0.000868365, -0.999998, -0.00177507, 0, 0, 0)
 visible = false
 
-[node name="Smoke_particles" type="GPUParticles3D" parent="."]
+[node name="Smoke_particles" type="GPUParticles3D" parent="." unique_id=1837857248]
 transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
 top_level = true
 emitting = false
@@ -219,8 +217,8 @@ process_material = SubResource("ParticleProcessMaterial_r7wcx")
 draw_pass_1 = SubResource("QuadMesh_nk8ue")
 script = SubResource("GDScript_h46b1")
 
-[node name="hitSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_nk8ue")
+[node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=1771166270]
+stream = ExtResource("3_r0kdk")
 volume_db = -30.0
 pitch_scale = 0.1
 script = SubResource("GDScript_6yecc")

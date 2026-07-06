@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://3ihgqw8d5wdi"]
 
 [ext_resource type="Script" uid="uid://bfokgua3l50ec" path="res://lib/Game Loop Manager_v2/Scripts/hud_light_on_SHORT.gd" id="1_gavel"]
-[ext_resource type="AudioStream" uid="uid://fossjjbbmh7" path="res://sfx/low_pitch_humming.wav" id="4_cs5jd"]
+[ext_resource type="AudioStream" uid="uid://bqpvt1i70bpm2" path="res://sfx/low_pitch_humming.ogg" id="2_gb7r5"]
 
 [node name="HUD Light On" type="Control" unique_id=1853166879 groups=["HUD_light_on_phase"]]
 layout_mode = 3
@@ -13,5 +13,5 @@ grow_vertical = 2
 script = ExtResource("1_gavel")
 
 [node name="low_humming" type="AudioStreamPlayer" parent="." unique_id=698737366]
-stream = ExtResource("4_cs5jd")
+stream = ExtResource("2_gb7r5")
 pitch_scale = 0.4

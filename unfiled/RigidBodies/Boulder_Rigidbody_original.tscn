@@ -4,16 +4,10 @@
 [ext_resource type="Material" uid="uid://n8a0es2a4juo" path="res://res/Materials/Coal_material.tres" id="3_sxync"]
 [ext_resource type="Material" uid="uid://bwt1wtym017gd" path="res://res/gold_rock_mat.tres" id="4_l2qko"]
 [ext_resource type="Material" uid="uid://c5lrichw3wfce" path="res://res/Kenney_prototype_textures/Material_override/Red_texture.tres" id="5_4ry08"]
-[ext_resource type="Texture2D" uid="uid://dxyjdgh6frhru" path="res://unfiled/Enemy_bird/finger_hand.png" id="6_g3srh"]
-[ext_resource type="Texture2D" uid="uid://d2ve7a72hey40" path="res://unfiled/Enemy_bird/Kiwi_face.png" id="7_2ss0y"]
-[ext_resource type="Texture2D" uid="uid://cap8h2kyaln3m" path="res://unfiled/Enemy_bird/Kiwi_face_blink.png" id="8_prcnm"]
-[ext_resource type="Texture2D" uid="uid://dkdsr4wt21a3s" path="res://unfiled/Enemy_bird/scared_expression.png" id="9_t0ips"]
+[ext_resource type="AudioStream" uid="uid://cuyce238yo3ke" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="7_6f5a0"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="10_3fw7d"]
 [ext_resource type="Texture2D" uid="uid://us2a4qy6dnd" path="res://unfiled/Decal_placeholders/Egg_2D_sprites/egg_colour.png" id="11_hlgho"]
-[ext_resource type="Texture2D" uid="uid://nkdq0fww0n7r" path="res://unfiled/Decal_placeholders/Egg_2D_sprites/egg_cartoon.png" id="12_m3j5j"]
-[ext_resource type="AudioStream" uid="uid://dlukrpnf4tfb1" path="res://sfx/rocks_destroyed_sfx_02.wav" id="13_2347l"]
-[ext_resource type="AudioStream" uid="uid://dpi523s5wv3r7" path="res://sfx/rock_hit_sfx_01.wav" id="14_2yv1s"]
-[ext_resource type="Script" uid="uid://cv8o3bjiw86aq" path="res://sfx/hitsound_distance_check.gd" id="15_iq8h1"]
+[ext_resource type="Script" uid="uid://cv8o3bjiw86aq" path="res://lib/hitsound_distance_check.gd" id="15_iq8h1"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="16_0u61r"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="17_emhml"]
 [ext_resource type="PackedScene" uid="uid://bh211snc0txl4" path="res://res/Particles/Smoke_coloured.tscn" id="18_xosgs"]
@@ -291,6 +285,73 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_5v6vj")
 size = Vector2(2, 2)
 
+[sub_resource type="Curve" id="Curve_vhbws"]
+_data = [Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.8034189, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.55551094), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_k8nhe"]
+curve = SubResource("Curve_vhbws")
+
+[sub_resource type="Curve" id="Curve_ywl8v"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_picib"]
+curve = SubResource("Curve_ywl8v")
+
+[sub_resource type="Gradient" id="Gradient_ipf0s"]
+offsets = PackedFloat32Array(0.022624435, 0.10633484, 0.17420815, 0.29185522, 1)
+colors = PackedColorArray(0, 0.05490196, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0.22, 0.22, 0.22, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ae47m"]
+gradient = SubResource("Gradient_ipf0s")
+
+[sub_resource type="Curve" id="Curve_k7ipu"]
+_data = [Vector2(0, 0.775281), 0.0, 0.0, 0, 0, Vector2(0.0234742, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_cs8a4"]
+curve = SubResource("Curve_k7ipu")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ae1ab"]
+lifetime_randomness = 1.0
+emission_shape_scale = Vector3(0.6, 0.6, 0.6)
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.0
+emission_ring_radius = 0.0
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+direction = Vector3(0, 1, 0)
+spread = 5.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+angular_velocity_curve = SubResource("CurveTexture_picib")
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_cs8a4")
+color_ramp = SubResource("GradientTexture1D_ae47m")
+alpha_curve = SubResource("CurveTexture_k8nhe")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_814jx"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("16_0u61r")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_x8mw5"]
+material = SubResource("StandardMaterial3D_814jx")
+size = Vector2(5, 5)
+
 [node name="Shootable_object" type="RigidBody3D" unique_id=641614515]
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.5
@@ -494,7 +555,6 @@ mesh = SubResource("ArrayMesh_2jk7i")
 transform = Transform3D(0.998379, -0.0569192, -8.72811e-08, -0.0569192, -0.998379, 4.97604e-09, -8.74228e-08, 0, -1, -0.113491, -0.387554, 0)
 modulate = Color(0.22, 0.22, 0.22, 1)
 pixel_size = 0.001
-texture = ExtResource("6_g3srh")
 
 [node name="beak" type="MeshInstance3D" parent="Mesh/Hazard_large/Mesh" unique_id=220120366]
 transform = Transform3D(1, 0, 0, 0, -0.5, 0.866025, 0, -0.866025, -0.5, 0, -0.103646, -0.373415)
@@ -516,14 +576,12 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 8.88178e-16, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.0496685, -0.252151)
 visible = false
 size = Vector3(0.537, 0.217, 0.524)
-texture_albedo = ExtResource("7_2ss0y")
 modulate = Color(0.61, 0.61, 0.61, 1)
 cull_mask = 1048573
 
 [node name="Blinking_face" type="Decal" parent="Mesh/Hazard_large/Mesh" unique_id=352021610]
 transform = Transform3D(1, 8.88178e-16, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 4.65661e-10, -0.0309477, -0.252151)
 size = Vector3(0.537, 0.5, 0.524)
-texture_albedo = ExtResource("8_prcnm")
 modulate = Color(0.61, 0.61, 0.61, 1)
 cull_mask = 1048573
 
@@ -531,7 +589,6 @@ cull_mask = 1048573
 transform = Transform3D(1, 8.88178e-16, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 4.65661e-10, -0.0309477, -0.252151)
 visible = false
 size = Vector3(0.537, 0.5, 0.641)
-texture_albedo = ExtResource("9_t0ips")
 modulate = Color(0.61, 0.61, 0.61, 1)
 cull_mask = 1048573
 
@@ -556,7 +613,6 @@ texture_albedo = ExtResource("11_hlgho")
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.235, 0)
 visible = false
 size = Vector3(0.621, 0.57, 0.339)
-texture_albedo = ExtResource("12_m3j5j")
 
 [node name="CSGBox3D" type="CSGCylinder3D" parent="Mesh/Hazard_large/Mesh" unique_id=2048619597]
 transform = Transform3D(0.974264, 0.22541, -4.37114e-08, 0.22541, -0.974264, 7.57104e-08, -2.55205e-08, -8.36149e-08, -1, 0.06257, -0.30994, 0)
@@ -599,13 +655,12 @@ mesh = SubResource("ArrayMesh_w8aba")
 
 [node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=506567940]
 unique_name_in_owner = true
-stream = ExtResource("13_2347l")
+stream = ExtResource("7_6f5a0")
 volume_db = -35.0
 max_polyphony = 2
 
 [node name="take_damage_sfx" type="AudioStreamPlayer" parent="." unique_id=1867904270]
 unique_name_in_owner = true
-stream = ExtResource("14_2yv1s")
 volume_db = -25.0
 script = ExtResource("15_iq8h1")
 
@@ -623,8 +678,18 @@ process_material = SubResource("ParticleProcessMaterial_js5s8")
 draw_pass_1 = SubResource("QuadMesh_c7jqr")
 script = ExtResource("17_emhml")
 
-[node name="Smoke_quick2" parent="." unique_id=1910998751 instance=ExtResource("18_xosgs")]
+[node name="Smoke_quick2" type="GPUParticles3D" parent="." unique_id=1910998751 instance=ExtResource("18_xosgs")]
+transform = Transform3D(1, -3.8040824e-13, -1.6628172e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
+top_level = true
 cast_shadow = 0
+emitting = false
+amount = 1
+one_shot = true
+explosiveness = 0.75
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_ae1ab")
+draw_pass_1 = SubResource("QuadMesh_x8mw5")
+script = ExtResource("17_emhml")
 
 [node name="Damage_Label3D" type="Label3D" parent="." unique_id=2034742437]
 unique_name_in_owner = true

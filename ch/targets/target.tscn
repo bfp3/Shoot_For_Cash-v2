@@ -2,11 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bf4r30gs7swwp" path="res://unfiled/targets/target.gd" id="1_krd1q"]
 [ext_resource type="Script" uid="uid://dfb5lst7quc8b" path="res://unfiled/targets/target_yellow_glow_mesh.gd" id="2_4l62c"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="2_nexhf"]
-[ext_resource type="AudioStream" uid="uid://cps8uhp6h2r3" path="res://sfx/bomb_countdown_single.wav" id="4_vb1qa"]
-[ext_resource type="AudioStream" uid="uid://cfi15vbqm0igf" path="res://sfx/metalSound shortened.wav" id="5_p7xyc"]
-[ext_resource type="Texture2D" uid="uid://c32ixyuon6b25" path="res://res/textures_2D/blackCircle.png" id="6_mui66"]
-
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="3_fcdjm"]
+[ext_resource type="AudioStream" uid="uid://cqpwtf5fw8cgv" path="res://sfx/metalSound shortened.ogg" id="4_6f065"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pqox5"]
 
@@ -56,65 +53,63 @@ height = 0.2
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y0ctr"]
 transparency = 1
 albedo_color = Color(0, 0, 0, 1)
-albedo_texture = ExtResource("6_mui66")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_86aip"]
 size = Vector2(0.1, 0.1)
 
-[node name="target" type="RigidBody3D" groups=["group"]]
+[node name="target" type="RigidBody3D" unique_id=159122282 groups=["group"]]
 collision_layer = 5
 physics_material_override = SubResource("PhysicsMaterial_pqox5")
-max_contacts_reported = 5
 contact_monitor = true
+max_contacts_reported = 5
 script = ExtResource("1_krd1q")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=346514057]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("CylinderShape3D_k1uwx")
 
-[node name="innerRing" type="MeshInstance3D" parent="."]
+[node name="innerRing" type="MeshInstance3D" parent="." unique_id=1296317939]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -1.55114e-09, -0.0354859)
 material_override = SubResource("StandardMaterial3D_3ibbo")
 mesh = SubResource("CylinderMesh_rvm72")
 skeleton = NodePath("")
 
-[node name="northIndicator" type="MeshInstance3D" parent="."]
+[node name="northIndicator" type="MeshInstance3D" parent="." unique_id=649998430]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.682457, -0.0976179)
 visible = false
 material_override = SubResource("StandardMaterial3D_r5bdv")
 mesh = SubResource("CylinderMesh_5rao0")
 skeleton = NodePath("")
 
-[node name="middleRing" type="MeshInstance3D" parent="."]
+[node name="middleRing" type="MeshInstance3D" parent="." unique_id=778158633]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -3.21807e-09, -0.073621)
 material_override = SubResource("StandardMaterial3D_3ibbo")
 mesh = SubResource("TorusMesh_h31jf")
 skeleton = NodePath("")
 
-[node name="outRing2" type="MeshInstance3D" parent="."]
+[node name="outRing2" type="MeshInstance3D" parent="." unique_id=757674762]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -4.25129e-09, -0.0972582)
 material_override = SubResource("StandardMaterial3D_wni5p")
 mesh = SubResource("TorusMesh_r072a")
 skeleton = NodePath("")
 
-[node name="yellow" type="MeshInstance3D" parent="."]
+[node name="yellow" type="MeshInstance3D" parent="." unique_id=1266972517]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_pxng8")
 mesh = SubResource("CylinderMesh_21tm5")
 skeleton = NodePath("")
 script = ExtResource("2_4l62c")
 
-[node name="hitSound" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("2_nexhf")
+[node name="hitSound" type="AudioStreamPlayer3D" parent="." unique_id=1989869099]
+stream = ExtResource("3_fcdjm")
 volume_db = 10.0
 
-[node name="countdownSFX" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("4_vb1qa")
+[node name="countdownSFX" type="AudioStreamPlayer3D" parent="." unique_id=450740181]
 
-[node name="popSFX" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("5_p7xyc")
+[node name="popSFX" type="AudioStreamPlayer3D" parent="." unique_id=692437195]
+stream = ExtResource("4_6f065")
 
-[node name="bulletHole" type="MeshInstance3D" parent="."]
+[node name="bulletHole" type="MeshInstance3D" parent="." unique_id=1193182948]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_y0ctr")

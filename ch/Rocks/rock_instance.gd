@@ -531,7 +531,7 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	
 	smoke_particles_duplicates()
 
-	# Quick squash/stretch feedback
+
 	if current_mesh.scale <= Vector3.ONE * 0.3:
 		current_mesh.get_node('damage_mesh').show()
 		await get_tree().create_timer(0.08).timeout

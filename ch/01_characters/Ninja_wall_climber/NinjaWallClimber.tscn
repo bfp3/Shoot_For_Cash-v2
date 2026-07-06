@@ -1,13 +1,12 @@
 [gd_scene format=4 uid="uid://dvgquqj7hbtqw"]
 
 [ext_resource type="Script" uid="uid://novw0g7t16rs" path="res://ch/01_characters/Ninja_wall_climber/Scripts/ninja_wall_climber_path3d.gd" id="1_2v84t"]
-[ext_resource type="AudioStream" uid="uid://bp6yet35va3xi" path="res://sfx/stepdirt_1.wav" id="2_dxi16"]
-[ext_resource type="AudioStream" uid="uid://bo2icts40bvrw" path="res://sfx/bump_sfx.wav" id="3_2v84t"]
-[ext_resource type="AudioStream" uid="uid://cwxodypqd3hvm" path="res://sfx/stepstone_1.wav" id="4_dxi16"]
+[ext_resource type="AudioStream" uid="uid://df6xfqlg48yoj" path="res://sfx/stepdirt_1.ogg" id="2_b5utd"]
+[ext_resource type="AudioStream" uid="uid://c0xmlf8ed2uhp" path="res://sfx/bump_sfx.ogg" id="3_tm0pe"]
+[ext_resource type="AudioStream" uid="uid://dislpdyduvudk" path="res://sfx/stepstone_1.ogg" id="4_cwngd"]
 [ext_resource type="Script" uid="uid://dum5bvrassimi" path="res://ch/01_characters/Ninja_wall_climber/Scripts/ninja_target.gd" id="5_dm8su"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="6_xx5ho"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="7_ktg01"]
-
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="7_46p7e"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2v84t"]
 size = Vector3(0.99, 0.25, 0.305)
@@ -24,9 +23,9 @@ domain_warp_enabled = true
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_18pek"]
 width = 500
 height = 500
-seamless = true
-color_ramp = SubResource("Gradient_6lpsw")
 noise = SubResource("FastNoiseLite_6lpsw")
+color_ramp = SubResource("Gradient_6lpsw")
+seamless = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47y4r"]
 diffuse_mode = 3
@@ -135,7 +134,6 @@ anim_speed_min = 1.0
 anim_speed_max = 1.0
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_mcok3"]
-load_path = "res://.godot/imported/particle_sprite_smoke.webp-94067ca765f9db23717d2d11ab74a1f8.s3tc.ctex"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_an2ri"]
 transparency = 1
@@ -287,105 +285,105 @@ size = Vector3(0.08, 0.281, 0.075)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4d6h4"]
 albedo_color = Color(0.231373, 0.231373, 0.231373, 1)
 
-[node name="Ninja_wall_climber" type="Node3D"]
+[node name="Ninja_wall_climber" type="Node3D" unique_id=1193377916]
 script = ExtResource("1_2v84t")
 trans_ease = 2
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=1736708890]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=472859766]
 shape = SubResource("BoxShape3D_2v84t")
 
-[node name="door_switch" type="AudioStreamPlayer3D" parent="."]
+[node name="door_switch" type="AudioStreamPlayer3D" parent="." unique_id=1733627562]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.35, 0)
-stream = ExtResource("2_dxi16")
+stream = ExtResource("2_b5utd")
 volume_db = -30.0
 pitch_scale = 3.0
 emission_angle_enabled = true
 emission_angle_degrees = 25.0
 
-[node name="door_switch2" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_dxi16")
+[node name="door_switch2" type="AudioStreamPlayer" parent="." unique_id=1763422171]
+stream = ExtResource("2_b5utd")
 volume_db = -37.0
 pitch_scale = 4.0
 
-[node name="Bump_soft" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_2v84t")
+[node name="Bump_soft" type="AudioStreamPlayer" parent="." unique_id=1939200161]
+stream = ExtResource("3_tm0pe")
 volume_db = -30.0
 
-[node name="climb_walls_sfx" type="AudioStreamPlayer3D" parent="."]
+[node name="climb_walls_sfx" type="AudioStreamPlayer3D" parent="." unique_id=123784515]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.35, 0)
-stream = ExtResource("4_dxi16")
+stream = ExtResource("4_cwngd")
 volume_db = -30.0
 pitch_scale = 2.0
 emission_angle_enabled = true
 emission_angle_degrees = 23.0
 
-[node name="Wall_mesh" type="Node3D" parent="."]
+[node name="Wall_mesh" type="Node3D" parent="." unique_id=1687655775]
 transform = Transform3D(0.75, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.261, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Wall_mesh"]
+[node name="Mesh" type="MeshInstance3D" parent="Wall_mesh" unique_id=1763548313]
 material_override = SubResource("StandardMaterial3D_47y4r")
 mesh = SubResource("ArrayMesh_dm8su")
 
-[node name="MeshCSGCylinder3D9" type="MeshInstance3D" parent="Wall_mesh"]
+[node name="MeshCSGCylinder3D9" type="MeshInstance3D" parent="Wall_mesh" unique_id=1731058360]
 transform = Transform3D(0.025, 0, 0, 0, -2.18557e-09, -0.025, 0, 0.05, -1.09278e-09, 0.5, 0, 0.136494)
 material_override = SubResource("StandardMaterial3D_xx5ho")
 mesh = SubResource("ArrayMesh_e05bh")
 skeleton = NodePath("")
 
-[node name="MeshCSGCylinder3D10" type="MeshInstance3D" parent="Wall_mesh"]
+[node name="MeshCSGCylinder3D10" type="MeshInstance3D" parent="Wall_mesh" unique_id=2145762586]
 transform = Transform3D(0.025, 0, 0, 0, -2.18557e-09, 0.025, 0, -0.05, -1.09278e-09, 0.5, 0, -0.142958)
 material_override = SubResource("StandardMaterial3D_xx5ho")
 mesh = SubResource("ArrayMesh_e05bh")
 skeleton = NodePath("")
 
-[node name="MeshCSGCylinder3D11" type="MeshInstance3D" parent="Wall_mesh"]
+[node name="MeshCSGCylinder3D11" type="MeshInstance3D" parent="Wall_mesh" unique_id=1287896672]
 transform = Transform3D(0.025, 0, 0, 0, -0.05, 3.7749e-09, 0, -7.5498e-09, -0.025, 0.5, -0.139726, -0.00323217)
 material_override = SubResource("StandardMaterial3D_xx5ho")
 mesh = SubResource("ArrayMesh_e05bh")
 skeleton = NodePath("")
 
-[node name="MeshCSGCylinder3D12" type="MeshInstance3D" parent="Wall_mesh"]
+[node name="MeshCSGCylinder3D12" type="MeshInstance3D" parent="Wall_mesh" unique_id=1482408896]
 transform = Transform3D(0.025, 0, 0, 0, 0.05, -4.37114e-09, 0, 8.7423e-09, 0.025, 0.5, 0.139726, -0.00323215)
 material_override = SubResource("StandardMaterial3D_xx5ho")
 mesh = SubResource("ArrayMesh_e05bh")
 skeleton = NodePath("")
 
-[node name="MeshCSGCylinder3D13" type="MeshInstance3D" parent="Wall_mesh"]
+[node name="MeshCSGCylinder3D13" type="MeshInstance3D" parent="Wall_mesh" unique_id=1150309026]
 transform = Transform3D(0.025, 0, 0, 0, -2.18557e-09, -0.025, 0, 0.05, -1.09278e-09, -0.5, 0, 0.136494)
 material_override = SubResource("StandardMaterial3D_xx5ho")
 mesh = SubResource("ArrayMesh_e05bh")
 skeleton = NodePath("")
 
-[node name="MeshCSGCylinder3D14" type="MeshInstance3D" parent="Wall_mesh"]
+[node name="MeshCSGCylinder3D14" type="MeshInstance3D" parent="Wall_mesh" unique_id=1947839198]
 transform = Transform3D(0.025, 0, 0, 0, -2.18557e-09, 0.025, 0, -0.05, -1.09278e-09, -0.5, 0, -0.142958)
 material_override = SubResource("StandardMaterial3D_xx5ho")
 mesh = SubResource("ArrayMesh_e05bh")
 skeleton = NodePath("")
 
-[node name="MeshCSGCylinder3D15" type="MeshInstance3D" parent="Wall_mesh"]
+[node name="MeshCSGCylinder3D15" type="MeshInstance3D" parent="Wall_mesh" unique_id=162415901]
 transform = Transform3D(0.025, 0, 0, 0, -0.05, 3.7749e-09, 0, -7.5498e-09, -0.025, -0.5, -0.139726, -0.00323217)
 material_override = SubResource("StandardMaterial3D_xx5ho")
 mesh = SubResource("ArrayMesh_e05bh")
 skeleton = NodePath("")
 
-[node name="MeshCSGCylinder3D16" type="MeshInstance3D" parent="Wall_mesh"]
+[node name="MeshCSGCylinder3D16" type="MeshInstance3D" parent="Wall_mesh" unique_id=1547840106]
 transform = Transform3D(0.025, 0, 0, 0, 0.05, 0, 0, 0, 0.025, -0.5, 0.139726, -0.00323215)
 material_override = SubResource("StandardMaterial3D_xx5ho")
 mesh = SubResource("ArrayMesh_e05bh")
 skeleton = NodePath("")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=636351598]
 one_shot = true
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=2023345023]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.01, 0.95, -0.087)
 visible = false
 omni_range = 0.0
 omni_attenuation = 0.5
 
-[node name="Smoke_particles" type="GPUParticles3D" parent="."]
+[node name="Smoke_particles" type="GPUParticles3D" parent="." unique_id=265492940]
 transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
 top_level = true
 visible = false
@@ -403,31 +401,31 @@ process_material = SubResource("ParticleProcessMaterial_r7wcx")
 draw_pass_1 = SubResource("QuadMesh_nk8ue")
 script = SubResource("GDScript_h46b1")
 
-[node name="Bonus_round_starter" type="CharacterBody3D" parent="." groups=["Target"]]
+[node name="Bonus_round_starter" type="CharacterBody3D" parent="." unique_id=1454009837 groups=["Target"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 script = ExtResource("5_dm8su")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Bonus_round_starter"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bonus_round_starter" unique_id=1495958523]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("CylinderShape3D_nk8ue")
 
-[node name="Mesh" type="Node3D" parent="Bonus_round_starter"]
+[node name="Mesh" type="Node3D" parent="Bonus_round_starter" unique_id=5614394]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Bonus_round_starter/Mesh"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Bonus_round_starter/Mesh" unique_id=1364078966]
 transform = Transform3D(3.33333, 0, 0, 0, 3.33333, 0, 0, 0, 3.33333, 0, -1.33333, 0)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("CapsuleMesh_47y4r")
 skeleton = NodePath("../../..")
 
-[node name="target_mesh" type="MeshInstance3D" parent="Bonus_round_starter/Mesh"]
+[node name="target_mesh" type="MeshInstance3D" parent="Bonus_round_starter/Mesh" unique_id=880255322]
 mesh = SubResource("ArrayMesh_i8rmi")
 
-[node name="Unique_marker" type="Marker3D" parent="Bonus_round_starter"]
+[node name="Unique_marker" type="Marker3D" parent="Bonus_round_starter" unique_id=1838582536]
 transform = Transform3D(0.999998, 0.000871057, -0.00152377, 0.0015253, -0.00177375, 0.999997, 0.000868365, -0.999998, -0.00177507, 0, 0, 0)
 visible = false
 
-[node name="Smoke_particles" type="GPUParticles3D" parent="Bonus_round_starter"]
+[node name="Smoke_particles" type="GPUParticles3D" parent="Bonus_round_starter" unique_id=407383149]
 transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
 top_level = true
 emitting = false
@@ -444,204 +442,204 @@ process_material = SubResource("ParticleProcessMaterial_r7wcx")
 draw_pass_1 = SubResource("QuadMesh_nk8ue")
 script = SubResource("GDScript_h46b1")
 
-[node name="hitSound" type="AudioStreamPlayer" parent="Bonus_round_starter"]
-stream = ExtResource("7_ktg01")
+[node name="hitSound" type="AudioStreamPlayer" parent="Bonus_round_starter" unique_id=1855026265]
+stream = ExtResource("7_46p7e")
 volume_db = -30.0
 pitch_scale = 0.1
 script = SubResource("GDScript_6yecc")
 
-[node name="Area3D" type="Area3D" parent="Bonus_round_starter"]
+[node name="Area3D" type="Area3D" parent="Bonus_round_starter" unique_id=1513029329]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Bonus_round_starter/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bonus_round_starter/Area3D" unique_id=1842783217]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("CylinderShape3D_dm8su")
 
-[node name="Ninja_gun" type="Node3D" parent="."]
+[node name="Ninja_gun" type="Node3D" parent="." unique_id=34375000]
 transform = Transform3D(-0.425, 0, 2.71792e-08, 0, 0.425, 0, -6.41732e-08, 0, -0.18, -0.35, 0.5, 0)
 
-[node name="base" type="Node3D" parent="Ninja_gun"]
+[node name="base" type="Node3D" parent="Ninja_gun" unique_id=210591487]
 visible = false
 
-[node name="barrel" type="MeshInstance3D" parent="Ninja_gun/base"]
+[node name="barrel" type="MeshInstance3D" parent="Ninja_gun/base" unique_id=1252925967]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("CylinderMesh_iej41")
 skeleton = NodePath("../..")
 
-[node name="barrel2" type="MeshInstance3D" parent="Ninja_gun/base"]
+[node name="barrel2" type="MeshInstance3D" parent="Ninja_gun/base" unique_id=443400008]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 9.75291e-08, -2.2312)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("CylinderMesh_ndlpe")
 skeleton = NodePath("../..")
 
-[node name="square3" type="MeshInstance3D" parent="Ninja_gun/base"]
+[node name="square3" type="MeshInstance3D" parent="Ninja_gun/base" unique_id=1076688111]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.172, -1.74875)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("BoxMesh_tga3w")
 skeleton = NodePath("../..")
 
-[node name="endbarrel" type="MeshInstance3D" parent="Ninja_gun/base"]
+[node name="endbarrel" type="MeshInstance3D" parent="Ninja_gun/base" unique_id=1902014398]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -1.31134e-07, 3)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("CylinderMesh_t5ps2")
 skeleton = NodePath("../..")
 
-[node name="tipofbarrel" type="MeshInstance3D" parent="Ninja_gun/base"]
+[node name="tipofbarrel" type="MeshInstance3D" parent="Ninja_gun/base" unique_id=1916610123]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -1.79552e-07, 4.10767)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("CylinderMesh_eumxl")
 skeleton = NodePath("../..")
 
-[node name="square" type="MeshInstance3D" parent="Ninja_gun/base"]
+[node name="square" type="MeshInstance3D" parent="Ninja_gun/base" unique_id=328504929]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -1)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("BoxMesh_dq7ex")
 skeleton = NodePath("../..")
 
-[node name="square2" type="MeshInstance3D" parent="Ninja_gun/base"]
+[node name="square2" type="MeshInstance3D" parent="Ninja_gun/base" unique_id=1808260939]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.351, 0.511362)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("BoxMesh_mtey5")
 skeleton = NodePath("../..")
 
-[node name="top" type="Node3D" parent="Ninja_gun"]
+[node name="top" type="Node3D" parent="Ninja_gun" unique_id=1401411366]
 transform = Transform3D(0.8, 0, 1.42109e-14, 0, 0.8, 0, -1.13687e-13, 0, 0.8, 1.78814e-07, -0.261, 0.472778)
 
-[node name="scope" type="MeshInstance3D" parent="Ninja_gun/top"]
+[node name="scope" type="MeshInstance3D" parent="Ninja_gun/top" unique_id=871402137]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1, 0)
 material_override = SubResource("StandardMaterial3D_ebno1")
 mesh = SubResource("CylinderMesh_8xld4")
 skeleton = NodePath("../..")
 
-[node name="glass" type="MeshInstance3D" parent="Ninja_gun/top"]
+[node name="glass" type="MeshInstance3D" parent="Ninja_gun/top" unique_id=1840496346]
 transform = Transform3D(1.333, 0, 0, 0, -0.0234734, 1.33279, 0, -1.33279, -0.0234734, 0, 0.998, -1.944)
 visible = false
 material_override = SubResource("StandardMaterial3D_cfto5")
 mesh = SubResource("CylinderMesh_yk86m")
 skeleton = NodePath("../..")
 
-[node name="bump" type="MeshInstance3D" parent="Ninja_gun/top"]
+[node name="bump" type="MeshInstance3D" parent="Ninja_gun/top" unique_id=1031256257]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35292, -0.87785)
 material_override = SubResource("StandardMaterial3D_yudew")
 mesh = SubResource("CylinderMesh_hjpow")
 skeleton = NodePath("../..")
 
-[node name="notch" type="MeshInstance3D" parent="Ninja_gun/top"]
+[node name="notch" type="MeshInstance3D" parent="Ninja_gun/top" unique_id=685430614]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2264, -0.874655)
 material_override = SubResource("StandardMaterial3D_jkoex")
 mesh = SubResource("CylinderMesh_eumxl")
 skeleton = NodePath("../..")
 
-[node name="eyeRubber" type="MeshInstance3D" parent="Ninja_gun/top"]
+[node name="eyeRubber" type="MeshInstance3D" parent="Ninja_gun/top" unique_id=1876070890]
 transform = Transform3D(1, 0, 0, 0, -1.31134e-07, -1, 0, 3, -4.37114e-08, 0, 1, -2)
 material_override = SubResource("StandardMaterial3D_r5uma")
 mesh = SubResource("TorusMesh_nxho2")
 skeleton = NodePath("../..")
 
-[node name="connection" type="Node3D" parent="Ninja_gun"]
+[node name="connection" type="Node3D" parent="Ninja_gun" unique_id=1002979673]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -1.42109e-13, 0, 1, -5.96046e-08, 0, 0.277778)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ninja_gun/connection"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ninja_gun/connection" unique_id=1172167971]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0.298649, 0)
 material_override = SubResource("StandardMaterial3D_0srj3")
 mesh = SubResource("BoxMesh_gootc")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Ninja_gun/connection"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Ninja_gun/connection" unique_id=725842062]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0.298649, -0.549)
 material_override = SubResource("StandardMaterial3D_4d6h4")
 mesh = SubResource("BoxMesh_gootc")
 
-[node name="Ninja_gun2" type="Node3D" parent="."]
+[node name="Ninja_gun2" type="Node3D" parent="." unique_id=1820119864]
 transform = Transform3D(-0.425, 0, 2.71792e-08, 0, 0.425, 0, -6.41732e-08, 0, -0.18, 0.4, 0.5, -7.45058e-09)
 
-[node name="base" type="Node3D" parent="Ninja_gun2"]
+[node name="base" type="Node3D" parent="Ninja_gun2" unique_id=1709362432]
 visible = false
 
-[node name="barrel" type="MeshInstance3D" parent="Ninja_gun2/base"]
+[node name="barrel" type="MeshInstance3D" parent="Ninja_gun2/base" unique_id=1671015103]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("CylinderMesh_iej41")
 skeleton = NodePath("../..")
 
-[node name="barrel2" type="MeshInstance3D" parent="Ninja_gun2/base"]
+[node name="barrel2" type="MeshInstance3D" parent="Ninja_gun2/base" unique_id=1184744069]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 9.75291e-08, -2.2312)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("CylinderMesh_ndlpe")
 skeleton = NodePath("../..")
 
-[node name="square3" type="MeshInstance3D" parent="Ninja_gun2/base"]
+[node name="square3" type="MeshInstance3D" parent="Ninja_gun2/base" unique_id=1941364905]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.172, -1.74875)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("BoxMesh_tga3w")
 skeleton = NodePath("../..")
 
-[node name="endbarrel" type="MeshInstance3D" parent="Ninja_gun2/base"]
+[node name="endbarrel" type="MeshInstance3D" parent="Ninja_gun2/base" unique_id=691556927]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -1.31134e-07, 3)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("CylinderMesh_t5ps2")
 skeleton = NodePath("../..")
 
-[node name="tipofbarrel" type="MeshInstance3D" parent="Ninja_gun2/base"]
+[node name="tipofbarrel" type="MeshInstance3D" parent="Ninja_gun2/base" unique_id=1841127240]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -1.79552e-07, 4.10767)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("CylinderMesh_eumxl")
 skeleton = NodePath("../..")
 
-[node name="square" type="MeshInstance3D" parent="Ninja_gun2/base"]
+[node name="square" type="MeshInstance3D" parent="Ninja_gun2/base" unique_id=1006907195]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -1)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("BoxMesh_dq7ex")
 skeleton = NodePath("../..")
 
-[node name="square2" type="MeshInstance3D" parent="Ninja_gun2/base"]
+[node name="square2" type="MeshInstance3D" parent="Ninja_gun2/base" unique_id=956532535]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.351, 0.511362)
 material_override = ExtResource("6_xx5ho")
 mesh = SubResource("BoxMesh_mtey5")
 skeleton = NodePath("../..")
 
-[node name="top" type="Node3D" parent="Ninja_gun2"]
+[node name="top" type="Node3D" parent="Ninja_gun2" unique_id=1846678414]
 transform = Transform3D(0.8, 0, 1.42109e-14, 0, 0.8, 0, -1.13687e-13, 0, 0.8, 5.96046e-08, -0.261, 0.472778)
 
-[node name="scope" type="MeshInstance3D" parent="Ninja_gun2/top"]
+[node name="scope" type="MeshInstance3D" parent="Ninja_gun2/top" unique_id=1668893030]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1, 0)
 material_override = SubResource("StandardMaterial3D_ebno1")
 mesh = SubResource("CylinderMesh_8xld4")
 skeleton = NodePath("../..")
 
-[node name="glass" type="MeshInstance3D" parent="Ninja_gun2/top"]
+[node name="glass" type="MeshInstance3D" parent="Ninja_gun2/top" unique_id=1089550327]
 transform = Transform3D(1.333, 0, 0, 0, -0.0234734, 1.33279, 0, -1.33279, -0.0234734, 0, 0.998, -1.944)
 visible = false
 material_override = SubResource("StandardMaterial3D_cfto5")
 mesh = SubResource("CylinderMesh_yk86m")
 skeleton = NodePath("../..")
 
-[node name="bump" type="MeshInstance3D" parent="Ninja_gun2/top"]
+[node name="bump" type="MeshInstance3D" parent="Ninja_gun2/top" unique_id=2108646900]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35292, -0.87785)
 material_override = SubResource("StandardMaterial3D_yudew")
 mesh = SubResource("CylinderMesh_hjpow")
 skeleton = NodePath("../..")
 
-[node name="notch" type="MeshInstance3D" parent="Ninja_gun2/top"]
+[node name="notch" type="MeshInstance3D" parent="Ninja_gun2/top" unique_id=1651364533]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2264, -0.874655)
 material_override = SubResource("StandardMaterial3D_jkoex")
 mesh = SubResource("CylinderMesh_eumxl")
 skeleton = NodePath("../..")
 
-[node name="eyeRubber" type="MeshInstance3D" parent="Ninja_gun2/top"]
+[node name="eyeRubber" type="MeshInstance3D" parent="Ninja_gun2/top" unique_id=1409411512]
 transform = Transform3D(1, 0, 0, 0, -1.31134e-07, -1, 0, 3, -4.37114e-08, 0, 1, -2)
 material_override = SubResource("StandardMaterial3D_r5uma")
 mesh = SubResource("TorusMesh_nxho2")
 skeleton = NodePath("../..")
 
-[node name="connection" type="Node3D" parent="Ninja_gun2"]
+[node name="connection" type="Node3D" parent="Ninja_gun2" unique_id=1758484696]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -1.42109e-13, 0, 1, -1.19209e-07, 0, 0.277778)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ninja_gun2/connection"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ninja_gun2/connection" unique_id=469225893]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0.298649, 0)
 material_override = SubResource("StandardMaterial3D_0srj3")
 mesh = SubResource("BoxMesh_gootc")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Ninja_gun2/connection"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Ninja_gun2/connection" unique_id=1214530610]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0.298649, -0.549)
 material_override = SubResource("StandardMaterial3D_4d6h4")
 mesh = SubResource("BoxMesh_gootc")

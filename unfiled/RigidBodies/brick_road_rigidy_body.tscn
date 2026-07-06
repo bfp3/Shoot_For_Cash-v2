@@ -1,9 +1,8 @@
 [gd_scene format=4 uid="uid://d3ysv2pqjspj0"]
 
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="1_si07u"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="1_jqc3y"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="2_c0m76"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="3_g3j5s"]
-
 
 [sub_resource type="GDScript" id="GDScript_rooqs"]
 script/source = "extends RigidBody3D
@@ -73,11 +72,11 @@ frequency = 0.005
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ul8jd"]
 width = 540
 height = 200
-seamless = true
-seamless_blend_skirt = 1.0
-as_normal_map = true
-bump_strength = 24.0
 noise = SubResource("FastNoiseLite_cqowu")
+seamless = true
+as_normal_map = true
+seamless_blend_skirt = 1.0
+bump_strength = 24.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w5nie"]
 diffuse_mode = 1
@@ -219,32 +218,32 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_laj2o")
 size = Vector2(2, 2)
 
-[node name="RigidBody3D" type="RigidBody3D" groups=["Target", "cannonball", "rock_rigid_body"]]
+[node name="RigidBody3D" type="RigidBody3D" unique_id=1111928517 groups=["Target", "cannonball", "rock_rigid_body"]]
 mass = 4.0
 script = SubResource("GDScript_rooqs")
 
-[node name="Single_brick" type="MeshInstance3D" parent="."]
+[node name="Single_brick" type="MeshInstance3D" parent="." unique_id=982832894]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_w5nie")
 mesh = SubResource("ArrayMesh_kgf3r")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=945854515]
 shape = SubResource("BoxShape3D_ul8jd")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=1076674290]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2005025811]
 shape = SubResource("BoxShape3D_h2lx6")
 
-[node name="hitSound" type="AudioStreamPlayer" parent="."]
+[node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=1316915420]
 unique_name_in_owner = true
-stream = ExtResource("1_si07u")
+stream = ExtResource("1_jqc3y")
 volume_db = -30.0
 pitch_scale = 0.1
 script = SubResource("GDScript_qujpg")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="."]
+[node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=1972902814]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -0.5)
 top_level = true
 visible = false
@@ -260,7 +259,7 @@ process_material = SubResource("ParticleProcessMaterial_5krel")
 draw_pass_1 = SubResource("QuadMesh_wehiw")
 script = ExtResource("3_g3j5s")
 
-[node name="Special_smoke" type="GPUParticles3D" parent="."]
+[node name="Special_smoke" type="GPUParticles3D" parent="." unique_id=651288016]
 transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 top_level = true
 visible = false

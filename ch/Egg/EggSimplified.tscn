@@ -1,8 +1,8 @@
 [gd_scene format=4 uid="uid://gc08gcnmga6d"]
 
 [ext_resource type="Script" uid="uid://dq0oaab4ga43f" path="res://ch/Egg/egg_simplified.gd" id="1_sx8tb"]
-[ext_resource type="AudioStream" uid="uid://ecijroapobxk" path="res://sfx/Egg_pulse_sfx.wav" id="3_13obs"]
-[ext_resource type="AudioStream" uid="uid://bde0632jwh1jq" path="res://sfx/Egg_pulse_sfx_reverse.wav" id="4_opl35"]
+[ext_resource type="AudioStream" uid="uid://hpk8sd7oqbfk" path="res://sfx/Egg_pulse_sfx.ogg" id="2_8t0ik"]
+[ext_resource type="AudioStream" uid="uid://07n6coje3514" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="3_g4rdu"]
 [ext_resource type="Material" uid="uid://b1iy0q3013sms" path="res://res/Kenney_prototype_textures/Material_override/Light_texture.tres" id="7_sx8tb"]
 [ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="8_8t0ik"]
 [ext_resource type="Material" uid="uid://bl3gllx7weywe" path="res://ch/Egg/Materials/Egg_cage_orange.tres" id="16_mxqkt"]
@@ -824,20 +824,20 @@ transform = Transform3D(0.999998, 0, 0, 0, 1, 0, 0, 0, 0.999998, 0, 0, 0)
 script = ExtResource("1_sx8tb")
 
 [node name="EggPulseSfx" type="AudioStreamPlayer" parent="." unique_id=296958010]
-stream = ExtResource("3_13obs")
+stream = ExtResource("2_8t0ik")
 volume_db = -28.0
 
 [node name="EggPulseSfxReverse" type="AudioStreamPlayer" parent="." unique_id=2080674677]
-stream = ExtResource("4_opl35")
+stream = ExtResource("3_g4rdu")
 volume_db = -30.0
 
 [node name="EggPulseSfx_telegraphing" type="AudioStreamPlayer" parent="." unique_id=1093131446]
-stream = ExtResource("3_13obs")
+stream = ExtResource("2_8t0ik")
 volume_db = -35.0
 pitch_scale = 1.5
 
 [node name="Start_SFX" type="AudioStreamPlayer" parent="." unique_id=1565039204]
-stream = ExtResource("3_13obs")
+stream = ExtResource("2_8t0ik")
 volume_db = -34.0
 pitch_scale = 6.0
 

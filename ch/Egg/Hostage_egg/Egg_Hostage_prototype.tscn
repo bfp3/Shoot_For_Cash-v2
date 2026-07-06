@@ -2,19 +2,18 @@
 
 [ext_resource type="Script" uid="uid://doxyyai8vwk07" path="res://ch/Egg/Hostage_egg/egg_hostage_prototype.gd" id="1_fhp6c"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="2_0m1ry"]
-[ext_resource type="AudioStream" uid="uid://b81wwrw103aw8" path="res://sfx/Egg_Damaged_1.wav" id="5_303kr"]
-[ext_resource type="AudioStream" uid="uid://cm52bxoxqj16r" path="res://sfx/Egg_Damaged_2.wav" id="6_bhgcj"]
-[ext_resource type="AudioStream" uid="uid://bw1pbgc0bhsq0" path="res://sfx/Egg_Damaged_3.wav" id="7_cjvc0"]
-[ext_resource type="AudioStream" uid="uid://ciacarvd350d7" path="res://sfx/Egg_Damaged_4.wav" id="8_ojary"]
-[ext_resource type="AudioStream" uid="uid://ckcsgsev1yab0" path="res://sfx/Egg_Damaged_5.wav" id="9_ciovj"]
-[ext_resource type="AudioStream" uid="uid://uqwjxsuh3844" path="res://sfx/Egg_Damaged_6.wav" id="10_ejekh"]
-[ext_resource type="AudioStream" uid="uid://ds0dc2bntv0r1" path="res://sfx/Egg_Damaged_7.wav" id="11_4w3xl"]
-[ext_resource type="AudioStream" uid="uid://wdxsi4hxhj20" path="res://sfx/Egg_Damaged_8_crack_at_end.wav" id="12_sb60w"]
-[ext_resource type="AudioStream" uid="uid://cll8yr17q1rsi" path="res://sfx/Egg_Damaged_9_crack_at_end.wav" id="13_r7rbg"]
-[ext_resource type="AudioStream" uid="uid://mbyekv7f3n1p" path="res://sfx/opt_3_fade_shortened.wav" id="14_d65ib"]
+[ext_resource type="AudioStream" uid="uid://chu1706shxrvj" path="res://sfx/Egg_Damaged_1.ogg" id="4_px44q"]
+[ext_resource type="AudioStream" uid="uid://7y0ux2232w8n" path="res://sfx/Egg_Damaged_2.ogg" id="5_yxwsy"]
+[ext_resource type="AudioStream" uid="uid://bvng5qqdan52g" path="res://sfx/Egg_Damaged_3.ogg" id="6_ptunc"]
+[ext_resource type="AudioStream" uid="uid://d1odr7qhymm4c" path="res://sfx/Egg_Damaged_4.ogg" id="7_ev0m6"]
+[ext_resource type="AudioStream" uid="uid://uo63nncegrot" path="res://sfx/Egg_Damaged_5.ogg" id="8_wj2u0"]
+[ext_resource type="AudioStream" uid="uid://bs7k11bmlj2mq" path="res://sfx/Egg_Damaged_6.ogg" id="9_bwvqy"]
+[ext_resource type="AudioStream" uid="uid://bupsnr24dr160" path="res://sfx/Egg_Damaged_7.ogg" id="10_uxxu8"]
+[ext_resource type="AudioStream" uid="uid://dp2qebbk1e72" path="res://sfx/Egg_Damaged_8_crack_at_end.ogg" id="11_rspf2"]
+[ext_resource type="AudioStream" uid="uid://d3wfhtsswkn5j" path="res://sfx/Egg_Damaged_9_crack_at_end.ogg" id="12_e2oxq"]
+[ext_resource type="AudioStream" uid="uid://b1pp83rxe32el" path="res://sfx/opt_3_fade_shortened.ogg" id="13_t7r6p"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="19_ndidm"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="20_l5vur"]
-
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fyp4c"]
 emission_enabled = true
@@ -391,9 +390,9 @@ domain_warp_enabled = true
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_18pek"]
 width = 500
 height = 500
-seamless = true
-color_ramp = SubResource("Gradient_bkgok")
 noise = SubResource("FastNoiseLite_my16u")
+color_ramp = SubResource("Gradient_bkgok")
+seamless = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ouwtp"]
 diffuse_mode = 1
@@ -654,11 +653,11 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_cuvec")
 
-[node name="Egg_Hostage" type="Node3D" groups=["Egg_Cage"]]
+[node name="Egg_Hostage" type="Node3D" unique_id=1200593187 groups=["Egg_Cage"]]
 transform = Transform3D(0.685, 0, 0, 0, 0.685, 0, 0, 0, 0.685, 0, 0, 0)
 script = ExtResource("1_fhp6c")
 
-[node name="Egg_shape" type="MeshInstance3D" parent="."]
+[node name="Egg_shape" type="MeshInstance3D" parent="." unique_id=1199243625]
 unique_name_in_owner = true
 transform = Transform3D(0.39, 0, 0, 0, 0.39, 0, 0, 0, 0.39, 0, 0, 0)
 layers = 2
@@ -666,42 +665,40 @@ material_override = SubResource("StandardMaterial3D_fyp4c")
 mesh = SubResource("ArrayMesh_w5fo5")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Egg_shape" groups=["Egg_Cage"]]
+[node name="StaticBody3D" type="StaticBody3D" parent="Egg_shape" unique_id=911244420 groups=["Egg_Cage"]]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Egg_shape/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Egg_shape/StaticBody3D" unique_id=104674090]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.270687, 0)
 shape = SubResource("CapsuleShape3D_fhp6c")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Egg_shape"]
-libraries = {
-&"": SubResource("AnimationLibrary_52sro")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Egg_shape" unique_id=1376406706]
+libraries/ = SubResource("AnimationLibrary_52sro")
 
-[node name="Rope" type="Node3D" parent="Egg_shape"]
+[node name="Rope" type="Node3D" parent="Egg_shape" unique_id=1004539818]
 transform = Transform3D(2.5641, 5.57783e-08, 0, 0, 2.5641, 0, 0, 0, 2.5641, 0, -2.78891e-08, 0)
 
-[node name="Circle" type="MeshInstance3D" parent="Egg_shape/Rope"]
+[node name="Circle" type="MeshInstance3D" parent="Egg_shape/Rope" unique_id=836787113]
 transform = Transform3D(0.033, 5.55112e-17, 0, 0, 0.018, 0, 0, 0, 0.033, 1.28391e-09, 0.098, 0)
 material_override = SubResource("StandardMaterial3D_ouwtp")
 mesh = SubResource("ArrayMesh_0ftvn")
 
-[node name="Circle3" type="MeshInstance3D" parent="Egg_shape/Rope"]
+[node name="Circle3" type="MeshInstance3D" parent="Egg_shape/Rope" unique_id=1934626136]
 transform = Transform3D(0.0299081, 0.00760713, 0, -0.0139464, 0.0163135, 0, 0, 0, 0.033, -4.57865e-10, 0.098, 0)
 material_override = SubResource("StandardMaterial3D_ouwtp")
 mesh = SubResource("ArrayMesh_0ftvn")
 
-[node name="Circle4" type="MeshInstance3D" parent="Egg_shape/Rope"]
+[node name="Circle4" type="MeshInstance3D" parent="Egg_shape/Rope" unique_id=1474056019]
 transform = Transform3D(0.0299081, -0.00760712, 0, 0.0139464, 0.0163135, 0, 0, 0, 0.033, -8.14659e-10, 0.098, 0)
 material_override = SubResource("StandardMaterial3D_ouwtp")
 mesh = SubResource("ArrayMesh_0ftvn")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=1472385706]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2023552781]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 shape = SubResource("SphereShape3D_uhut7")
 
-[node name="Special_particles" type="GPUParticles3D" parent="."]
+[node name="Special_particles" type="GPUParticles3D" parent="." unique_id=631170946]
 material_override = SubResource("StandardMaterial3D_bvie8")
 emitting = false
 amount = 200
@@ -715,7 +712,7 @@ process_material = SubResource("ParticleProcessMaterial_w5fo5")
 draw_pass_1 = SubResource("SphereMesh_xadgt")
 script = ExtResource("19_ndidm")
 
-[node name="Smoke_quick2" type="GPUParticles3D" parent="."]
+[node name="Smoke_quick2" type="GPUParticles3D" parent="." unique_id=502361195]
 transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.379668, 0)
 top_level = true
 visible = false
@@ -731,7 +728,7 @@ process_material = SubResource("ParticleProcessMaterial_4xafn")
 draw_pass_1 = SubResource("QuadMesh_upjtt")
 script = ExtResource("19_ndidm")
 
-[node name="Smoke_blast_radius" type="GPUParticles3D" parent="."]
+[node name="Smoke_blast_radius" type="GPUParticles3D" parent="." unique_id=1802976168]
 transform = Transform3D(1, 0, 8.74226e-08, 3.80409e-13, 0.999998, 0, -8.74224e-08, 0, 0.999998, 0, -0.125488, 0)
 emitting = false
 amount = 50
@@ -747,59 +744,59 @@ process_material = SubResource("ParticleProcessMaterial_xx20d")
 draw_pass_1 = SubResource("QuadMesh_upjtt")
 script = ExtResource("19_ndidm")
 
-[node name="SFX" type="Node" parent="."]
+[node name="SFX" type="Node" parent="." unique_id=1769961914]
 
-[node name="Egg_damage" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("5_303kr")
+[node name="Egg_damage" type="AudioStreamPlayer" parent="SFX" unique_id=1876078933]
+stream = ExtResource("4_px44q")
 volume_db = -20.0
 
-[node name="EggDamaged2" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("6_bhgcj")
+[node name="EggDamaged2" type="AudioStreamPlayer" parent="SFX" unique_id=1536220781]
+stream = ExtResource("5_yxwsy")
 volume_db = -20.0
 
-[node name="EggDamaged3" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("7_cjvc0")
+[node name="EggDamaged3" type="AudioStreamPlayer" parent="SFX" unique_id=679542967]
+stream = ExtResource("6_ptunc")
 volume_db = -20.0
 
-[node name="EggDamaged4" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("8_ojary")
-volume_db = -20.0
-pitch_scale = 0.5
-
-[node name="EggDamaged5" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("9_ciovj")
-volume_db = -20.0
-
-[node name="EggDamaged6" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("10_ejekh")
-volume_db = -20.0
-
-[node name="EggDamaged7" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("11_4w3xl")
-volume_db = -20.0
-
-[node name="EggDamaged8CrackAtEnd" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("12_sb60w")
+[node name="EggDamaged4" type="AudioStreamPlayer" parent="SFX" unique_id=1095290182]
+stream = ExtResource("7_ev0m6")
 volume_db = -20.0
 pitch_scale = 0.5
 
-[node name="EggDamaged9CrackAtEnd" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("13_r7rbg")
+[node name="EggDamaged5" type="AudioStreamPlayer" parent="SFX" unique_id=23727371]
+stream = ExtResource("8_wj2u0")
+volume_db = -20.0
 
-[node name="took_damage" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("14_d65ib")
+[node name="EggDamaged6" type="AudioStreamPlayer" parent="SFX" unique_id=1872266013]
+stream = ExtResource("9_bwvqy")
+volume_db = -20.0
+
+[node name="EggDamaged7" type="AudioStreamPlayer" parent="SFX" unique_id=435345977]
+stream = ExtResource("10_uxxu8")
+volume_db = -20.0
+
+[node name="EggDamaged8CrackAtEnd" type="AudioStreamPlayer" parent="SFX" unique_id=1641782440]
+stream = ExtResource("11_rspf2")
+volume_db = -20.0
+pitch_scale = 0.5
+
+[node name="EggDamaged9CrackAtEnd" type="AudioStreamPlayer" parent="SFX" unique_id=1270781447]
+stream = ExtResource("12_e2oxq")
+
+[node name="took_damage" type="AudioStreamPlayer" parent="SFX" unique_id=191743289]
+stream = ExtResource("13_t7r6p")
 volume_db = -32.0
 pitch_scale = 2.0
 
-[node name="Pole_mesh" type="MeshInstance3D" parent="."]
+[node name="Pole_mesh" type="MeshInstance3D" parent="." unique_id=2102713204]
 transform = Transform3D(0.135712, 0, -0.376274, 0, 1.284, 0, 0.376274, 0, 0.135712, 0, -1.149, 0.510949)
 visible = false
 material_override = ExtResource("2_0m1ry")
 mesh = SubResource("ArrayMesh_fhp6c")
 
-[node name="Rope_straight" type="Node3D" parent="."]
+[node name="Rope_straight" type="Node3D" parent="." unique_id=883064048]
 
-[node name="Circle" type="MeshInstance3D" parent="Rope_straight"]
+[node name="Circle" type="MeshInstance3D" parent="Rope_straight" unique_id=426716661]
 transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04, 0, 0, 0.364964)
 material_override = SubResource("StandardMaterial3D_ouwtp")
 mesh = SubResource("ArrayMesh_25l8g")

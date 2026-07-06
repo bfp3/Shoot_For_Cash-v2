@@ -1,17 +1,16 @@
 [gd_scene format=3 uid="uid://cdptrskq6sjtk"]
 
 [ext_resource type="Script" uid="uid://d3ntxm07kmoua" path="res://lib/Level_Transition_Sequence/Scripts/zoom_out_sequence.gd" id="1_byip2"]
-[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="2_8indy"]
+[ext_resource type="AudioStream" uid="uid://bo1la26whipbs" path="res://sfx/misc-001.ogg" id="2_foxlp"]
 
-
-[node name="Zoom_out_sequence" type="Node3D" groups=["camera_zoom_out_node"]]
+[node name="Zoom_out_sequence" type="Node3D" unique_id=78240314 groups=["camera_zoom_out_node"]]
 script = ExtResource("1_byip2")
 
-[node name="Smoke_player_wins" type="Node3D" parent="."]
+[node name="Smoke_player_wins" type="Node3D" parent="." unique_id=2078869191]
 
-[node name="Smoke_player_loses" type="Node3D" parent="."]
+[node name="Smoke_player_loses" type="Node3D" parent="." unique_id=1368875731]
 
-[node name="reload_sound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_8indy")
+[node name="reload_sound" type="AudioStreamPlayer" parent="." unique_id=1440895543]
+stream = ExtResource("2_foxlp")
 volume_db = -40.0
 pitch_scale = 2.0

@@ -5,15 +5,17 @@
 [ext_resource type="PackedScene" uid="uid://qbblgconr2jy" path="res://lib/Cannonball_System/Cannonballs/Standard_cannonball.tscn" id="2_uqeah"]
 [ext_resource type="Script" uid="uid://d3lep4f27df8x" path="res://lib/Cannonball_System/Pineapple_launcher/Scripts/pineapple_manager.gd" id="3_n3ldv"]
 [ext_resource type="Script" uid="uid://8yukefq1287d" path="res://lib/Cannonball_System/Launchers/Scripts/launcher_sfx.gd" id="3_q3r74"]
+[ext_resource type="Script" uid="uid://dxshdy1855u5y" path="res://lib/Cannonball_System/Launchers/Scripts/cannonball_launcher_unit.gd" id="4_s0cqy"]
 [ext_resource type="Script" uid="uid://dyrsmcifq6qar" path="res://lib/Cannonball_System/Pineapple_launcher/Scripts/pineapple_launcher_.gd" id="5_60bbs"]
 [ext_resource type="Script" uid="uid://dy4vdys8hdaxb" path="res://lib/Cannonball_System/Smokescreen_Cannonballs/Scripts/smokescreen_launcher_manager.gd" id="5_ps5wi"]
 [ext_resource type="PackedScene" uid="uid://cktjxtcndplo4" path="res://lib/Cannonball_System/Launchers/Launcher_cannon.tscn" id="5_s7c0w"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="5_v2o6p"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="6_lpwer"]
 [ext_resource type="Script" uid="uid://bsrif2bhjw4r7" path="res://lib/Cannonball_System/Launchers/smokescreen_launcher_single.gd" id="6_ps5wi"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="7_6k6ak"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="7_asir6"]
 [ext_resource type="PackedScene" uid="uid://jrknuqf4i7wq" path="res://lib/Cannonball_System/Bonus_round_launchers/Bonus_cannon_unit.tscn" id="11_70s4d"]
 [ext_resource type="Script" uid="uid://bi2gwik8gxp3k" path="res://lib/Cannonball_System/Bonus_round_launchers/Scripts/bonus_round_launcher_manager.gd" id="11_tda87"]
+[ext_resource type="Script" uid="uid://bad65c7gduj6k" path="res://lib/Cannonball_System/Bonus_round_launchers/Scripts/bonus_cannon_unit.gd" id="14_bhdif"]
 
 [sub_resource type="GDScript" id="GDScript_7nk6u"]
 script/source = "extends Node3D
@@ -393,31 +395,49 @@ script = SubResource("GDScript_uqeah")
 script = SubResource("GDScript_s7c0w")
 STANDARD_CANNONBALL = ExtResource("2_uqeah")
 
-[node name="Target_cannon" parent="Launcher_container" unique_id=390317987 instance=ExtResource("5_s7c0w")]
+[node name="Target_cannon" type="Node3D" parent="Launcher_container" unique_id=390317987 instance=ExtResource("5_s7c0w")]
+script = ExtResource("4_s0cqy")
+arc_strength = 0.2
 
-[node name="Target_cannon2" parent="Launcher_container" unique_id=1344229511 instance=ExtResource("5_s7c0w")]
+[node name="Target_cannon2" type="Node3D" parent="Launcher_container" unique_id=1344229511 instance=ExtResource("5_s7c0w")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0)
+script = ExtResource("4_s0cqy")
+arc_strength = 0.2
 
-[node name="Target_cannon3" parent="Launcher_container" unique_id=1185648768 instance=ExtResource("5_s7c0w")]
+[node name="Target_cannon3" type="Node3D" parent="Launcher_container" unique_id=1185648768 instance=ExtResource("5_s7c0w")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0)
+script = ExtResource("4_s0cqy")
+arc_strength = 0.2
 
-[node name="Target_cannon4" parent="Launcher_container" unique_id=1358307688 instance=ExtResource("5_s7c0w")]
+[node name="Target_cannon4" type="Node3D" parent="Launcher_container" unique_id=1358307688 instance=ExtResource("5_s7c0w")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+script = ExtResource("4_s0cqy")
+arc_strength = 0.2
 
-[node name="Target_cannon5" parent="Launcher_container" unique_id=2029843475 instance=ExtResource("5_s7c0w")]
+[node name="Target_cannon5" type="Node3D" parent="Launcher_container" unique_id=2029843475 instance=ExtResource("5_s7c0w")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+script = ExtResource("4_s0cqy")
+arc_strength = 0.2
 
-[node name="Target_cannon6" parent="Launcher_container" unique_id=1377164433 instance=ExtResource("5_s7c0w")]
+[node name="Target_cannon6" type="Node3D" parent="Launcher_container" unique_id=1377164433 instance=ExtResource("5_s7c0w")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 0)
+script = ExtResource("4_s0cqy")
+arc_strength = 0.2
 
-[node name="Target_cannon7" parent="Launcher_container" unique_id=144054996 instance=ExtResource("5_s7c0w")]
+[node name="Target_cannon7" type="Node3D" parent="Launcher_container" unique_id=144054996 instance=ExtResource("5_s7c0w")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+script = ExtResource("4_s0cqy")
+arc_strength = 0.2
 
-[node name="Target_cannon8" parent="Launcher_container" unique_id=134031522 instance=ExtResource("5_s7c0w")]
+[node name="Target_cannon8" type="Node3D" parent="Launcher_container" unique_id=134031522 instance=ExtResource("5_s7c0w")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+script = ExtResource("4_s0cqy")
+arc_strength = 0.2
 
-[node name="Target_cannon9" parent="Launcher_container" unique_id=248253412 instance=ExtResource("5_s7c0w")]
+[node name="Target_cannon9" type="Node3D" parent="Launcher_container" unique_id=248253412 instance=ExtResource("5_s7c0w")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 0)
+script = ExtResource("4_s0cqy")
+arc_strength = 0.2
 
 [node name="Pineapple_launcher" type="Node3D" parent="." unique_id=998180776]
 script = ExtResource("3_n3ldv")
@@ -427,7 +447,7 @@ script = ExtResource("5_60bbs")
 arc_strength = 0.3
 
 [node name="launch_sound" type="AudioStreamPlayer" parent="Pineapple_launcher/Pineapple_launcher" unique_id=1443616667]
-stream = ExtResource("5_v2o6p")
+stream = ExtResource("7_6k6ak")
 volume_db = -27.0
 pitch_scale = 0.08
 script = SubResource("GDScript_lpwer")
@@ -484,7 +504,7 @@ script = ExtResource("5_60bbs")
 arc_strength = 0.3
 
 [node name="launch_sound" type="AudioStreamPlayer" parent="Pineapple_launcher/Pineapple_launcher2" unique_id=1219027772]
-stream = ExtResource("5_v2o6p")
+stream = ExtResource("7_6k6ak")
 volume_db = -27.0
 pitch_scale = 0.08
 script = SubResource("GDScript_lpwer")
@@ -543,7 +563,7 @@ script = ExtResource("5_60bbs")
 arc_strength = 0.3
 
 [node name="launch_sound" type="AudioStreamPlayer" parent="Pineapple_launcher/Pineapple_launcher3" unique_id=2059178790]
-stream = ExtResource("5_v2o6p")
+stream = ExtResource("7_6k6ak")
 volume_db = -27.0
 pitch_scale = 0.08
 script = SubResource("GDScript_lpwer")
@@ -605,7 +625,7 @@ script = ExtResource("5_ps5wi")
 script = ExtResource("6_ps5wi")
 
 [node name="launch_sound" type="AudioStreamPlayer" parent="Smokescreen_launcher/Smokescreen_launcher" unique_id=1283169018]
-stream = ExtResource("5_v2o6p")
+stream = ExtResource("7_6k6ak")
 volume_db = -27.0
 pitch_scale = 0.08
 script = SubResource("GDScript_umkrl")
@@ -648,7 +668,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104982, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
 script = ExtResource("11_tda87")
 
-[node name="Bonus_cannon_unit" parent="Bonus_round_launcher" unique_id=55360335 instance=ExtResource("11_70s4d")]
+[node name="Bonus_cannon_unit" type="Node3D" parent="Bonus_round_launcher" unique_id=55360335 instance=ExtResource("11_70s4d")]
+script = ExtResource("14_bhdif")
 
 [node name="LauncherVFX" type="Node" parent="." unique_id=1306904787]
 script = ExtResource("2_7nk6u")

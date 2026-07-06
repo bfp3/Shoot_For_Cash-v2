@@ -1,9 +1,8 @@
 [gd_scene format=3 uid="uid://dk6glag3eftnt"]
 
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="1_bgu48"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="1_f2t68"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="2_yhdxt"]
 [ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="3_xgcbq"]
-
 
 [sub_resource type="GDScript" id="GDScript_nhn7o"]
 script/source = "extends Node3D
@@ -342,7 +341,6 @@ anim_speed_min = 1.0
 anim_speed_max = 1.0
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_bxpqi"]
-load_path = "res://.godot/imported/particle_sprite_smoke.webp-94067ca765f9db23717d2d11ab74a1f8.s3tc.ctex"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pyjor"]
 transparency = 1
@@ -388,9 +386,9 @@ domain_warp_frequency = 1.665
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_omqjg"]
 width = 200
 height = 200
-seamless = true
-color_ramp = SubResource("Gradient_ojjcr")
 noise = SubResource("FastNoiseLite_82n6n")
+color_ramp = SubResource("Gradient_ojjcr")
+seamless = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nhn7o"]
 diffuse_mode = 3
@@ -413,21 +411,21 @@ height = 0.75
 [sub_resource type="BoxMesh" id="BoxMesh_oowog"]
 size = Vector3(0.05, 0.05, 0.02)
 
-[node name="Target_cannon" type="Node3D"]
+[node name="Target_cannon" type="Node3D" unique_id=79898648]
 script = SubResource("GDScript_nhn7o")
 arc_strength = 0.2
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=2012444657]
 wait_time = 2.0
 one_shot = true
 
-[node name="launch_sound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("1_bgu48")
+[node name="launch_sound" type="AudioStreamPlayer" parent="." unique_id=1250031406]
+stream = ExtResource("1_f2t68")
 volume_db = -27.0
 pitch_scale = 0.08
 script = SubResource("GDScript_oowog")
 
-[node name="Smoke_quick2" type="GPUParticles3D" parent="."]
+[node name="Smoke_quick2" type="GPUParticles3D" parent="." unique_id=480773630]
 transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0.379668, 0)
 top_level = true
 visible = false
@@ -441,7 +439,7 @@ process_material = SubResource("ParticleProcessMaterial_vbv87")
 draw_pass_1 = SubResource("QuadMesh_f2m8g")
 script = SubResource("GDScript_w5d4t")
 
-[node name="Smoke_quick3" type="GPUParticles3D" parent="."]
+[node name="Smoke_quick3" type="GPUParticles3D" parent="." unique_id=309500728]
 transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
 top_level = true
 visible = false
@@ -457,7 +455,7 @@ process_material = SubResource("ParticleProcessMaterial_vbv87")
 draw_pass_1 = SubResource("QuadMesh_f2m8g")
 script = SubResource("GDScript_w5d4t")
 
-[node name="Smoke_quick4" type="GPUParticles3D" parent="."]
+[node name="Smoke_quick4" type="GPUParticles3D" parent="." unique_id=586165245]
 transform = Transform3D(1, 0, 8.74226e-08, -3.72767e-13, -0.999998, -8.74226e-08, 8.74224e-08, 8.74226e-08, -0.999998, 0, 0.18679, 0)
 top_level = true
 visible = false
@@ -474,65 +472,65 @@ process_material = SubResource("ParticleProcessMaterial_kiyn4")
 draw_pass_1 = SubResource("QuadMesh_vlyji")
 script = SubResource("GDScript_ehlva")
 
-[node name="mesh" type="Node3D" parent="."]
+[node name="mesh" type="Node3D" parent="." unique_id=783265503]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="mesh"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="mesh" unique_id=513152298]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.265, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_nhn7o")
 mesh = SubResource("CylinderMesh_tulqe")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D6" type="MeshInstance3D" parent="mesh"]
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="mesh" unique_id=309971014]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.515, 0)
 material_override = SubResource("StandardMaterial3D_nhn7o")
 mesh = SubResource("CylinderMesh_tulqe")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="mesh"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="mesh" unique_id=1367226422]
 transform = Transform3D(0.993572, -0.113203, 0, 0.113203, 0.993572, 0, 0, 0, 1, 0.236422, 0.0976839, -0.00177176)
 material_override = ExtResource("3_xgcbq")
 mesh = SubResource("BoxMesh_oowog")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="mesh"]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="mesh" unique_id=1402679036]
 transform = Transform3D(0.993572, 0.113203, 0, -0.113203, 0.993572, 0, 0, 0, 1, -0.236, 0.098, -0.002)
 material_override = ExtResource("3_xgcbq")
 mesh = SubResource("BoxMesh_oowog")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="mesh"]
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="mesh" unique_id=249192677]
 transform = Transform3D(-4.34304e-08, 4.94827e-09, 1, 0.113203, 0.993572, 0, -0.993572, 0.113203, -4.37114e-08, 0.000325208, 0.0976839, -0.238097)
 material_override = ExtResource("3_xgcbq")
 mesh = SubResource("BoxMesh_oowog")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="mesh"]
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="mesh" unique_id=2076966338]
 transform = Transform3D(-4.34304e-08, -4.94827e-09, 1, -0.113203, 0.993572, 0, -0.993572, -0.113203, -4.37114e-08, 9.69866e-05, 0.098, 0.234325)
 material_override = ExtResource("3_xgcbq")
 mesh = SubResource("BoxMesh_oowog")
 skeleton = NodePath("../..")
 
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="mesh"]
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="mesh" unique_id=270588293]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0180176, 0)
 material_override = SubResource("StandardMaterial3D_nhn7o")
 radius = 0.255
 height = 0.43
 sides = 18
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="mesh/CSGCylinder3D2"]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="mesh/CSGCylinder3D2" unique_id=567503310]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0395264, 0)
 operation = 2
 radius = 0.2
 height = 0.415088
 sides = 18
 
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="mesh/CSGCylinder3D2/CSGCylinder3D"]
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="mesh/CSGCylinder3D2/CSGCylinder3D" unique_id=789653273]
 radius = 0.18
 height = 0.336035
 sides = 18
 
-[node name="Marker3D" type="Marker3D" parent="mesh"]
+[node name="Marker3D" type="Marker3D" parent="mesh" unique_id=824767634]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104982, 0)
 

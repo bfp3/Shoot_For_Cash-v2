@@ -2,8 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="1_qvgsl"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="2_x5u0v"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="3_pwxsc"]
-
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="3_4nxqc"]
 
 [sub_resource type="GDScript" id="GDScript_qvgsl"]
 script/source = "extends Node3D
@@ -172,10 +171,10 @@ func distance_from_player() -> void:
 	self.volume_db = volume_db
 "
 
-[node name="smokemine" type="Node3D"]
+[node name="smokemine" type="Node3D" unique_id=763710216]
 script = SubResource("GDScript_qvgsl")
 
-[node name="thick_smoke" type="GPUParticles3D" parent="."]
+[node name="thick_smoke" type="GPUParticles3D" parent="." unique_id=758319828]
 unique_name_in_owner = true
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 visible = false
@@ -192,7 +191,7 @@ process_material = SubResource("ParticleProcessMaterial_f87mu")
 draw_pass_1 = SubResource("QuadMesh_3iudx")
 script = ExtResource("2_x5u0v")
 
-[node name="light_mist" type="GPUParticles3D" parent="."]
+[node name="light_mist" type="GPUParticles3D" parent="." unique_id=2102191445]
 unique_name_in_owner = true
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 visible = false
@@ -210,7 +209,7 @@ process_material = SubResource("ParticleProcessMaterial_pwxsc")
 draw_pass_1 = SubResource("QuadMesh_3iudx")
 script = ExtResource("2_x5u0v")
 
-[node name="Smoke_quick2" type="GPUParticles3D" parent="."]
+[node name="Smoke_quick2" type="GPUParticles3D" parent="." unique_id=673257804]
 unique_name_in_owner = true
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 visible = false
@@ -227,9 +226,9 @@ process_material = SubResource("ParticleProcessMaterial_1dw46")
 draw_pass_1 = SubResource("QuadMesh_fjd6t")
 script = ExtResource("2_x5u0v")
 
-[node name="hitSound" type="AudioStreamPlayer" parent="."]
+[node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=1592380794]
 unique_name_in_owner = true
-stream = ExtResource("3_pwxsc")
+stream = ExtResource("3_4nxqc")
 volume_db = -30.0
 pitch_scale = 0.1
 script = SubResource("GDScript_c46fr")

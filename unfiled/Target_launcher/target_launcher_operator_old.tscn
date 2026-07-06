@@ -1,10 +1,9 @@
 [gd_scene format=3 uid="uid://s5b1004ufvmg"]
 
 [ext_resource type="PackedScene" uid="uid://cktjxtcndplo4" path="res://lib/Cannonball_System/Launchers/Launcher_cannon.tscn" id="1_0p6mu"]
-[ext_resource type="Texture2D" uid="uid://dwlpx7g1iy3r" path="res://res/textures_2D/texture_materials/corrugated_iron_02_4k/textures/corrugated_iron_02_diff_4k.png" id="2_xgdft"]
+[ext_resource type="Script" uid="uid://dxshdy1855u5y" path="res://lib/Cannonball_System/Launchers/Scripts/cannonball_launcher_unit.gd" id="2_evfa6"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="3_v783a"]
-[ext_resource type="AudioStream" uid="uid://dobaial7kjn2a" path="res://sfx/Rumble_sound_1.wav" id="4_ojpwu"]
-
+[ext_resource type="AudioStream" uid="uid://dc8au2f68bc5h" path="res://sfx/Rumble_sound_1.ogg" id="4_0ol6b"]
 
 [sub_resource type="GDScript" id="GDScript_awb7n"]
 resource_name = "target_launcher_container"
@@ -268,7 +267,6 @@ func rumble_effect_tween() -> void:
 "
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0e1jt"]
-albedo_texture = ExtResource("2_xgdft")
 metallic_specular = 0.0
 uv1_triplanar = true
 uv1_world_triplanar = true
@@ -291,124 +289,144 @@ func fade_in_graffiti() -> void:
 	tween.parallel().tween_property($Decal3, \"modulate\", Color.WHITE, 20.0)
 "
 
-[node name="Target_launcher_operator" type="Node3D" groups=["target_launcher_operator"]]
+[node name="Target_launcher_operator" type="Node3D" unique_id=1425236862 groups=["target_launcher_operator"]]
 script = SubResource("GDScript_awb7n")
 smokescreen_mode = true
 
-[node name="Bomb_container_array" type="Node3D" parent="." groups=["bomb_container_array"]]
+[node name="Bomb_container_array" type="Node3D" parent="." unique_id=1969435877 groups=["bomb_container_array"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -7.5)
 script = SubResource("GDScript_0e1jt")
 
-[node name="Pineapple_launcher" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Pineapple_launcher" type="Node3D" parent="." unique_id=840611888 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -5.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Target_launcher" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Target_launcher" type="Node3D" parent="." unique_id=1007778907 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -6.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Target_launcher3" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Target_launcher3" type="Node3D" parent="." unique_id=1494190078 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -6.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Target_launcher2" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Target_launcher2" type="Node3D" parent="." unique_id=1115040143 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -6.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Target_launcher4" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Target_launcher4" type="Node3D" parent="." unique_id=62780533 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -6.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Target_launcher5" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Target_launcher5" type="Node3D" parent="." unique_id=104976280 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -6.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Target_launcher6" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Target_launcher6" type="Node3D" parent="." unique_id=1071623665 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -5.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Target_launcher7" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Target_launcher7" type="Node3D" parent="." unique_id=1985452195 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Target_launcher8" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Target_launcher8" type="Node3D" parent="." unique_id=1079370271 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -5.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Target_launcher9" parent="." groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
+[node name="Target_launcher9" type="Node3D" parent="." unique_id=1497680575 groups=["Target_launcher"] instance=ExtResource("1_0p6mu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -5.5)
 visible = false
+script = ExtResource("2_evfa6")
+arc_strength = 0.2
 is_active = true
 
-[node name="Launcher_zone_mesh" type="Node3D" parent="." groups=["Launcher_zone_mesh"]]
+[node name="Launcher_zone_mesh" type="Node3D" parent="." unique_id=619288689 groups=["Launcher_zone_mesh"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.6)
 script = SubResource("GDScript_cp8s7")
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=1150937944]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 1.75)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(15, 0.5, 4)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=981769670]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.253)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(15, 0.5, 1)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=1268044187]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, 0.253)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=1790777854]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 0.253)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=79067781]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 0.253)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 
-[node name="CSGBox3D10" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D10" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=550976629]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.53674e-07, 1, 0.253)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 
-[node name="CSGBox3D11" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D11" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=2053755492]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, 0.253)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 
-[node name="CSGBox3D12" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D12" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=546920281]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 0.253)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 
-[node name="CSGBox3D13" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D13" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=439824114]
 transform = Transform3D(0.999614, 0, 0.0277821, 0, 1, 0, -0.0277821, 0, 0.999614, -6, 1, 0.253)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 
-[node name="CSGBox3D14" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D14" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=346483204]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 1.25, 0.253)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(1, 3.5, 1)
 script = SubResource("GDScript_toisq")
 
-[node name="Decal" type="Decal" parent="Launcher_zone_mesh/CSGBox3D14"]
+[node name="Decal" type="Decal" parent="Launcher_zone_mesh/CSGBox3D14" unique_id=394076213]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.348, -1, 0.047)
 size = Vector3(1, 0.369, 1)
 texture_albedo = ExtResource("3_v783a")
@@ -416,7 +434,7 @@ modulate = Color(1, 1, 1, 0)
 upper_fade = 0.00502394
 lower_fade = 0.00520111
 
-[node name="Decal2" type="Decal" parent="Launcher_zone_mesh/CSGBox3D14"]
+[node name="Decal2" type="Decal" parent="Launcher_zone_mesh/CSGBox3D14" unique_id=1108304930]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.348, 0, 0.047)
 size = Vector3(1, 0.369, 1)
 texture_albedo = ExtResource("3_v783a")
@@ -424,7 +442,7 @@ modulate = Color(1, 1, 1, 0)
 upper_fade = 0.00502394
 lower_fade = 0.00520111
 
-[node name="Decal3" type="Decal" parent="Launcher_zone_mesh/CSGBox3D14"]
+[node name="Decal3" type="Decal" parent="Launcher_zone_mesh/CSGBox3D14" unique_id=1682608653]
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0.348, 1, 0.047)
 size = Vector3(1, 0.369, 1)
 texture_albedo = ExtResource("3_v783a")
@@ -432,54 +450,54 @@ modulate = Color(1, 1, 1, 0)
 upper_fade = 0.00502394
 lower_fade = 0.00520111
 
-[node name="CSGBox3D15" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D15" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=425614755]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.419334, -0.379835)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(1, 2, 1)
 
-[node name="CSGBox3D16" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D16" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=848948558]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.87328, 0.270164)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.47)
 
-[node name="CSGBox3D17" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D17" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=1357976855]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 3.07328, 0.270164)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.47)
 
-[node name="CSGBox3D18" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D18" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=2143786987]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, -0.46091, 0.270164)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.47)
 
-[node name="CSGBox3D19" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D19" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=1547076951]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.46091, -0.389835)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D20" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D20" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=35105790]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.0609102, -0.389835)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="CSGBox3D21" type="CSGBox3D" parent="Launcher_zone_mesh"]
+[node name="CSGBox3D21" type="CSGBox3D" parent="Launcher_zone_mesh" unique_id=1974949531]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.28909, -0.389835)
 material_override = SubResource("StandardMaterial3D_0e1jt")
 use_collision = true
 size = Vector3(1.115, 0.12, 1.25)
 
-[node name="Rumble_sound" type="AudioStreamPlayer" parent="Launcher_zone_mesh"]
-stream = ExtResource("4_ojpwu")
+[node name="Rumble_sound" type="AudioStreamPlayer" parent="Launcher_zone_mesh" unique_id=2023581412]
+stream = ExtResource("4_0ol6b")
 volume_db = -10.0
 pitch_scale = 1.2
 
-[node name="Rumble_sound2" type="AudioStreamPlayer" parent="Launcher_zone_mesh"]
-stream = ExtResource("4_ojpwu")
+[node name="Rumble_sound2" type="AudioStreamPlayer" parent="Launcher_zone_mesh" unique_id=1549625090]
+stream = ExtResource("4_0ol6b")
 volume_db = -10.0
 pitch_scale = 0.8

@@ -5,7 +5,7 @@
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="2_g4jf7"]
 [ext_resource type="Texture2D" uid="uid://c0ckenxa3gjk5" path="res://unfiled/Lover_boys_flag/Lover Boys Flag.png" id="2_nmeqs"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="5_clmyw"]
-[ext_resource type="AudioStream" uid="uid://dmq5qflsmfsnf" path="res://sfx/Arrow_release.wav" id="7_3ytks"]
+[ext_resource type="AudioStream" uid="uid://ddhfk6in0iu2m" path="res://sfx/Arrow_release.ogg" id="6_hpt2k"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nmeqs"]
 render_priority = 0
@@ -154,6 +154,6 @@ draw_pass_1 = SubResource("QuadMesh_xe7oc")
 script = SubResource("GDScript_3ytks")
 
 [node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=134469253]
-stream = ExtResource("7_3ytks")
+stream = ExtResource("6_hpt2k")
 volume_db = -30.0
 pitch_scale = 0.1

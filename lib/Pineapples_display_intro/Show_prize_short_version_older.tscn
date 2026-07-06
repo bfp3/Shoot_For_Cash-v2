@@ -7,12 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="5_xwmel"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="6_tee84"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="7_pwuj8"]
-[ext_resource type="AudioStream" uid="uid://bmmratmawbv6y" path="res://sfx/sfx_dot_1.wav" id="8_fxk0r"]
-[ext_resource type="AudioStream" uid="uid://cflwuwauqncrs" path="res://sfx/popper-grr-002.wav" id="9_8c14f"]
-[ext_resource type="AudioStream" uid="uid://dw8m2vyhfcrhu" path="res://sfx/pineapple_sound_2.wav" id="10_jphf2"]
-[ext_resource type="AudioStream" uid="uid://c7xko6f6va2gy" path="res://sfx/popper-angry-001.wav" id="11_5myao"]
-[ext_resource type="AudioStream" uid="uid://cydvvxw2pq66a" path="res://sfx/pineapple_shake_1.wav" id="12_t833c"]
-
+[ext_resource type="AudioStream" uid="uid://dq5d4xw7x58hs" path="res://sfx/sfx_dot_1.ogg" id="8_s1pik"]
+[ext_resource type="AudioStream" uid="uid://h8nm8b2y84hf" path="res://sfx/popper-grr-002.ogg" id="9_jd3r3"]
+[ext_resource type="AudioStream" uid="uid://c2ekmc3f5h3t2" path="res://sfx/pineapple_sound_2.ogg" id="10_fffad"]
+[ext_resource type="AudioStream" uid="uid://bg5nwosdum7t0" path="res://sfx/popper-angry-001.ogg" id="11_3fa8s"]
+[ext_resource type="AudioStream" uid="uid://cm3v65xb2u10i" path="res://sfx/pineapple_shake_1.ogg" id="12_08v2i"]
 
 [sub_resource type="GDScript" id="GDScript_7rylr"]
 script/source = "extends Control
@@ -842,7 +841,7 @@ func smoke_particles() -> void:
 		self.queue_free()
 "
 
-[node name="Show_prize_short_version" type="Control"]
+[node name="Show_prize_short_version" type="Control" unique_id=644639715]
 z_index = 2
 layout_mode = 3
 anchor_left = 0.85
@@ -859,7 +858,7 @@ scale = Vector2(0.5, 0.5)
 pivot_offset = Vector2(960, 540)
 script = SubResource("GDScript_7rylr")
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=745570684]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -873,7 +872,7 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=500850970]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -883,7 +882,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=2019443932]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -900,23 +899,23 @@ scale = Vector2(3, 3)
 pivot_offset = Vector2(120, 41)
 theme = ExtResource("1_c1a6s")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1201070064]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer" unique_id=1354764977]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="Pineapple" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Pineapple" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=1247255050]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple" unique_id=1231950197]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
@@ -927,14 +926,14 @@ offset_bottom = -80.963
 pivot_offset = Vector2(21, 21)
 theme = ExtResource("1_c1a6s")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer" unique_id=447502476]
 layout_mode = 2
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer/MarginContainer"]
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple/PanelContainer/MarginContainer" unique_id=1721431696]
 z_index = 1
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -943,11 +942,11 @@ expand_mode = 1
 stretch_mode = 4
 metadata/_edit_use_anchors_ = true
 
-[node name="Pineapple2" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Pineapple2" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=1049942520]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2" unique_id=1986789838]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
@@ -958,14 +957,14 @@ offset_bottom = -80.963
 pivot_offset = Vector2(21, 21)
 theme = ExtResource("1_c1a6s")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer" unique_id=1340743865]
 layout_mode = 2
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer/MarginContainer"]
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple2/PanelContainer/MarginContainer" unique_id=643502876]
 z_index = 1
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -974,11 +973,11 @@ expand_mode = 1
 stretch_mode = 4
 metadata/_edit_use_anchors_ = true
 
-[node name="Pineapple3" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Pineapple3" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=1360268533]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3" unique_id=470511495]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = -1
@@ -990,14 +989,14 @@ pivot_offset = Vector2(20, 20)
 theme = ExtResource("1_c1a6s")
 metadata/_edit_use_anchors_ = true
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer" unique_id=1016263988]
 layout_mode = 2
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer/MarginContainer"]
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Pineapple3/PanelContainer/MarginContainer" unique_id=1900995474]
 z_index = 1
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -1006,7 +1005,7 @@ expand_mode = 1
 stretch_mode = 4
 metadata/_edit_use_anchors_ = true
 
-[node name="Dots_phase" type="Control" parent="."]
+[node name="Dots_phase" type="Control" parent="." unique_id=1971115698]
 modulate = Color(0.96, 0.8832, 0.0384, 0.509804)
 custom_minimum_size = Vector2(210, 40)
 layout_mode = 1
@@ -1028,7 +1027,7 @@ colour_bronze = Color(0.52, 0.2704, 0.0208, 0.901961)
 colour_silver = Color(0.74, 0.74, 0.74, 1)
 colour_gold = Color(0.96, 0.83712, 0.0384, 1)
 
-[node name="Dot" type="Control" parent="Dots_phase"]
+[node name="Dot" type="Control" parent="Dots_phase" unique_id=1852347822]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1043,7 +1042,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 
-[node name="Circle" type="TextureRect" parent="Dots_phase/Dot"]
+[node name="Circle" type="TextureRect" parent="Dots_phase/Dot" unique_id=522607631]
 modulate = Color(1, 1, 1, 0.117647)
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 1
@@ -1062,7 +1061,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("4_m8lfi")
 expand_mode = 1
 
-[node name="Outline" type="TextureRect" parent="Dots_phase/Dot"]
+[node name="Outline" type="TextureRect" parent="Dots_phase/Dot" unique_id=1539032735]
 modulate = Color(0.5, 0.5, 0.5, 1)
 custom_minimum_size = Vector2(45, 45)
 layout_mode = 1
@@ -1081,7 +1080,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Outline2" type="TextureRect" parent="Dots_phase/Dot"]
+[node name="Outline2" type="TextureRect" parent="Dots_phase/Dot" unique_id=1234381884]
 modulate = Color(0.3, 0.3, 0.3, 0.368627)
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 1
@@ -1100,7 +1099,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Dot2" type="Control" parent="Dots_phase"]
+[node name="Dot2" type="Control" parent="Dots_phase" unique_id=1187235464]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1115,7 +1114,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 
-[node name="Circle" type="TextureRect" parent="Dots_phase/Dot2"]
+[node name="Circle" type="TextureRect" parent="Dots_phase/Dot2" unique_id=1397569644]
 modulate = Color(1, 1, 1, 0.117647)
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 1
@@ -1134,7 +1133,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("4_m8lfi")
 expand_mode = 1
 
-[node name="Outline" type="TextureRect" parent="Dots_phase/Dot2"]
+[node name="Outline" type="TextureRect" parent="Dots_phase/Dot2" unique_id=812031017]
 modulate = Color(0.5, 0.5, 0.5, 1)
 custom_minimum_size = Vector2(45, 45)
 layout_mode = 1
@@ -1153,7 +1152,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Outline2" type="TextureRect" parent="Dots_phase/Dot2"]
+[node name="Outline2" type="TextureRect" parent="Dots_phase/Dot2" unique_id=361955831]
 modulate = Color(0.3, 0.3, 0.3, 0.368627)
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 1
@@ -1172,7 +1171,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Dot3" type="Control" parent="Dots_phase"]
+[node name="Dot3" type="Control" parent="Dots_phase" unique_id=72761167]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1187,7 +1186,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 
-[node name="Background_glow" type="TextureRect" parent="Dots_phase/Dot3"]
+[node name="Background_glow" type="TextureRect" parent="Dots_phase/Dot3" unique_id=1725817309]
 visible = false
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
@@ -1207,7 +1206,7 @@ pivot_offset = Vector2(25, 25)
 texture = ExtResource("6_tee84")
 expand_mode = 1
 
-[node name="Background_glow2" type="TextureRect" parent="Dots_phase/Dot3"]
+[node name="Background_glow2" type="TextureRect" parent="Dots_phase/Dot3" unique_id=1007082570]
 visible = false
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
@@ -1228,7 +1227,7 @@ pivot_offset = Vector2(25, 25)
 texture = ExtResource("6_tee84")
 expand_mode = 1
 
-[node name="Circle" type="TextureRect" parent="Dots_phase/Dot3"]
+[node name="Circle" type="TextureRect" parent="Dots_phase/Dot3" unique_id=1290689856]
 modulate = Color(1, 1, 1, 0.117647)
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 1
@@ -1247,7 +1246,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("4_m8lfi")
 expand_mode = 1
 
-[node name="Outline" type="TextureRect" parent="Dots_phase/Dot3"]
+[node name="Outline" type="TextureRect" parent="Dots_phase/Dot3" unique_id=1056851941]
 modulate = Color(0.5, 0.5, 0.5, 1)
 custom_minimum_size = Vector2(45, 45)
 layout_mode = 1
@@ -1266,7 +1265,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Outline2" type="TextureRect" parent="Dots_phase/Dot3"]
+[node name="Outline2" type="TextureRect" parent="Dots_phase/Dot3" unique_id=1471743087]
 modulate = Color(0.3, 0.3, 0.3, 0.368627)
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 1
@@ -1285,7 +1284,7 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Dots_phase2" type="Control" parent="."]
+[node name="Dots_phase2" type="Control" parent="." unique_id=427066928]
 modulate = Color(0.96, 0.8832, 0.0384, 0.509804)
 custom_minimum_size = Vector2(210, 40)
 layout_mode = 1
@@ -1304,7 +1303,7 @@ scale = Vector2(3, 3)
 pivot_offset = Vector2(100, 20)
 script = SubResource("GDScript_sr0ha")
 
-[node name="Dot" type="Control" parent="Dots_phase2"]
+[node name="Dot" type="Control" parent="Dots_phase2" unique_id=2138519861]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1319,7 +1318,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 
-[node name="Outline" type="TextureRect" parent="Dots_phase2/Dot"]
+[node name="Outline" type="TextureRect" parent="Dots_phase2/Dot" unique_id=910784091]
 modulate = Color(0.5, 0.5, 0.5, 1)
 custom_minimum_size = Vector2(45, 45)
 layout_mode = 1
@@ -1337,7 +1336,7 @@ grow_vertical = 2
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Dot2" type="Control" parent="Dots_phase2"]
+[node name="Dot2" type="Control" parent="Dots_phase2" unique_id=532707171]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1352,7 +1351,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 
-[node name="Outline" type="TextureRect" parent="Dots_phase2/Dot2"]
+[node name="Outline" type="TextureRect" parent="Dots_phase2/Dot2" unique_id=68027641]
 modulate = Color(0.5, 0.5, 0.5, 1)
 custom_minimum_size = Vector2(45, 45)
 layout_mode = 1
@@ -1370,7 +1369,7 @@ grow_vertical = 2
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Dot3" type="Control" parent="Dots_phase2"]
+[node name="Dot3" type="Control" parent="Dots_phase2" unique_id=173094245]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1385,7 +1384,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 
-[node name="Outline" type="TextureRect" parent="Dots_phase2/Dot3"]
+[node name="Outline" type="TextureRect" parent="Dots_phase2/Dot3" unique_id=391152520]
 modulate = Color(0.5, 0.5, 0.5, 1)
 custom_minimum_size = Vector2(45, 45)
 layout_mode = 1
@@ -1403,62 +1402,62 @@ grow_vertical = 2
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Smoke_sprite" type="AnimatedSprite2D" parent="Dots_phase2"]
+[node name="Smoke_sprite" type="AnimatedSprite2D" parent="Dots_phase2" unique_id=2086296694]
 visible = false
 position = Vector2(104.667, 21.3333)
 scale = Vector2(0.72, 0.72)
 sprite_frames = SubResource("SpriteFrames_w5jrr")
 speed_scale = 0.5
 
-[node name="Smoke_sprite2" type="AnimatedSprite2D" parent="Dots_phase2"]
+[node name="Smoke_sprite2" type="AnimatedSprite2D" parent="Dots_phase2" unique_id=801289317]
 visible = false
 position = Vector2(24.6666, 21.3333)
 scale = Vector2(0.72, 0.72)
 sprite_frames = SubResource("SpriteFrames_w5jrr")
 speed_scale = 0.5
 
-[node name="Smoke_sprite3" type="AnimatedSprite2D" parent="Dots_phase2"]
+[node name="Smoke_sprite3" type="AnimatedSprite2D" parent="Dots_phase2" unique_id=492480721]
 visible = false
 position = Vector2(185.333, 21.3333)
 scale = Vector2(0.72, 0.72)
 sprite_frames = SubResource("SpriteFrames_w5jrr")
 speed_scale = 0.5
 
-[node name="SFX" type="Node" parent="."]
+[node name="SFX" type="Node" parent="." unique_id=72193062]
 script = SubResource("GDScript_smwuq")
 
-[node name="Telegraph_sound" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("8_fxk0r")
+[node name="Telegraph_sound" type="AudioStreamPlayer" parent="SFX" unique_id=147977274]
+stream = ExtResource("8_s1pik")
 volume_db = -30.0
 
-[node name="Panel_fade_in2" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("8_fxk0r")
+[node name="Panel_fade_in2" type="AudioStreamPlayer" parent="SFX" unique_id=1166447788]
+stream = ExtResource("8_s1pik")
 volume_db = -40.0
 pitch_scale = 0.5
 
-[node name="Pineapple_1" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("9_8c14f")
+[node name="Pineapple_1" type="AudioStreamPlayer" parent="SFX" unique_id=149388032]
+stream = ExtResource("9_jd3r3")
 volume_db = -30.0
 
-[node name="Pineapple_2" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("10_jphf2")
+[node name="Pineapple_2" type="AudioStreamPlayer" parent="SFX" unique_id=2092502858]
+stream = ExtResource("10_fffad")
 volume_db = -30.0
 
-[node name="Pineapple_3" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("11_5myao")
+[node name="Pineapple_3" type="AudioStreamPlayer" parent="SFX" unique_id=1416552217]
+stream = ExtResource("11_3fa8s")
 volume_db = -30.0
 
-[node name="Pineapple_4" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("11_5myao")
+[node name="Pineapple_4" type="AudioStreamPlayer" parent="SFX" unique_id=1018411583]
+stream = ExtResource("11_3fa8s")
 volume_db = -28.0
 pitch_scale = 0.8
 
-[node name="Pine_shake_1" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("12_t833c")
+[node name="Pine_shake_1" type="AudioStreamPlayer" parent="SFX" unique_id=322364614]
+stream = ExtResource("12_08v2i")
 volume_db = -44.0
 pitch_scale = 0.8
 
-[node name="Text_box" type="Control" parent="."]
+[node name="Text_box" type="Control" parent="." unique_id=1765249979]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 1
 anchors_preset = 8
@@ -1475,7 +1474,7 @@ grow_vertical = 2
 pivot_offset = Vector2(100, 20)
 script = SubResource("GDScript_qq3yi")
 
-[node name="PanelContainer" type="PanelContainer" parent="Text_box"]
+[node name="PanelContainer" type="PanelContainer" parent="Text_box" unique_id=2120747221]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1485,14 +1484,14 @@ grow_vertical = 2
 pivot_offset = Vector2(100, 20)
 theme = ExtResource("1_c1a6s")
 
-[node name="MarginContainer" type="MarginContainer" parent="Text_box/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Text_box/PanelContainer" unique_id=921221828]
 layout_mode = 2
 theme_override_constants/margin_left = 0
 
-[node name="Control" type="Control" parent="Text_box/PanelContainer/MarginContainer"]
+[node name="Control" type="Control" parent="Text_box/PanelContainer/MarginContainer" unique_id=1574472440]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Text_box/PanelContainer/MarginContainer/Control"]
+[node name="Label" type="Label" parent="Text_box/PanelContainer/MarginContainer/Control" unique_id=1282490377]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1506,23 +1505,23 @@ text = "Good luck."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SFX" type="AudioStreamPlayer" parent="Text_box/PanelContainer/MarginContainer/Control"]
-stream = ExtResource("8_fxk0r")
+[node name="SFX" type="AudioStreamPlayer" parent="Text_box/PanelContainer/MarginContainer/Control" unique_id=961088495]
+stream = ExtResource("8_s1pik")
 volume_db = -30.0
 pitch_scale = 2.0
 
-[node name="SFX2" type="AudioStreamPlayer" parent="Text_box/PanelContainer/MarginContainer/Control"]
-stream = ExtResource("8_fxk0r")
+[node name="SFX2" type="AudioStreamPlayer" parent="Text_box/PanelContainer/MarginContainer/Control" unique_id=1429174844]
+stream = ExtResource("8_s1pik")
 volume_db = -42.0
 pitch_scale = 1.5
 
-[node name="Smoke_sprite" type="AnimatedSprite2D" parent="Text_box"]
+[node name="Smoke_sprite" type="AnimatedSprite2D" parent="Text_box" unique_id=1965613099]
 visible = false
 position = Vector2(96, 22)
 sprite_frames = SubResource("SpriteFrames_w5jrr")
 speed_scale = 0.5
 
-[node name="Ring_duplicate" type="Control" parent="."]
+[node name="Ring_duplicate" type="Control" parent="." unique_id=1149337816]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -1538,7 +1537,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 
-[node name="Outline_ring" type="TextureRect" parent="Ring_duplicate"]
+[node name="Outline_ring" type="TextureRect" parent="Ring_duplicate" unique_id=167342145]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 1
 anchors_preset = 8
@@ -1556,17 +1555,17 @@ pivot_offset = Vector2(20, 20)
 texture = ExtResource("5_xwmel")
 expand_mode = 1
 
-[node name="Smoke_sprite" type="AnimatedSprite2D" parent="."]
+[node name="Smoke_sprite" type="AnimatedSprite2D" parent="." unique_id=1203820743]
 visible = false
 position = Vector2(947.16, 530.16)
 sprite_frames = SubResource("SpriteFrames_w5jrr")
 
-[node name="Smoke_sprite2" type="AnimatedSprite2D" parent="."]
+[node name="Smoke_sprite2" type="AnimatedSprite2D" parent="." unique_id=1128405918]
 visible = false
 position = Vector2(707.16, 530.16)
 sprite_frames = SubResource("SpriteFrames_w5jrr")
 
-[node name="Smoke_sprite3" type="AnimatedSprite2D" parent="."]
+[node name="Smoke_sprite3" type="AnimatedSprite2D" parent="." unique_id=472177893]
 visible = false
 position = Vector2(1187.83, 530.16)
 sprite_frames = SubResource("SpriteFrames_w5jrr")

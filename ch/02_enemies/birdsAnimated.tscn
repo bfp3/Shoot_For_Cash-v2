@@ -1,10 +1,7 @@
 [gd_scene format=3 uid="uid://cxqry0burrjjd"]
 
-[ext_resource type="Script" uid="uid://dhr1ngi3s3ti5" path="res://unfiled/birds.gd" id="1_7atob"]
-[ext_resource type="AudioStream" uid="uid://kcrsa5k3eq7l" path="res://sfx/Seagull - Sound Effect.wav" id="2_fhdt0"]
-[ext_resource type="AudioStream" uid="uid://d1ucv04bvsq64" path="res://sfx/windSnippet.wav" id="3_c1rx4"]
+[ext_resource type="AudioStream" uid="uid://drax4apripua2" path="res://sfx/windSnippet.ogg" id="1_x4nul"]
 [ext_resource type="PackedScene" uid="uid://crflenc26g7jw" path="res://res/Trails_scene.tscn" id="4_726um"]
-
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oi6o2"]
 radius = 1.5
@@ -61,6 +58,13 @@ _data = {
 &"beakWobble": SubResource("Animation_xb0hs"),
 &"flying": SubResource("Animation_facun")
 }
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqw67"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
 
 [sub_resource type="GDScript" id="GDScript_q7kt8"]
 resource_name = "trails_built_in"
@@ -231,63 +235,63 @@ func fade_out_and_destroy_self() -> void:
 		self.queue_free()
 "
 
-[node name="birds" type="CharacterBody3D"]
+[node name="birds" type="CharacterBody3D" unique_id=1473952192]
 safe_margin = 1.0
-script = ExtResource("1_7atob")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=474871958]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -0.102804)
 shape = SubResource("CapsuleShape3D_oi6o2")
 
-[node name="body" type="Node3D" parent="."]
+[node name="body" type="Node3D" parent="." unique_id=744558277]
 
-[node name="head" type="CSGSphere3D" parent="body"]
+[node name="head" type="CSGSphere3D" parent="body" unique_id=221444737]
 transform = Transform3D(1, 0, 0, 0, 0.96281, -0.27018, 0, 0.27018, 0.96281, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_p115v")
 
-[node name="beak" type="CSGPolygon3D" parent="body/head"]
+[node name="beak" type="CSGPolygon3D" parent="body/head" unique_id=59340183]
 transform = Transform3D(-8.46763e-09, -1.08706e-09, -0.2, -0.049738, 0.0968583, 0, 0.193717, 0.024869, -8.74228e-09, -0.097, 0, 0.629)
 material_override = SubResource("StandardMaterial3D_c4rsd")
 polygon = PackedVector2Array(-1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="leftWing" type="CSGPolygon3D" parent="body"]
+[node name="leftWing" type="CSGPolygon3D" parent="body" unique_id=1595873056]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, 0.953295, 0, 0)
 material_override = SubResource("StandardMaterial3D_fln0i")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="rightWing" type="CSGPolygon3D" parent="body"]
+[node name="rightWing" type="CSGPolygon3D" parent="body" unique_id=963875599]
 transform = Transform3D(0.96, 0, 0, 0, 0.48, 0, 0, 0, 0.96, -2.46766, -0.00892113, 0)
 material_override = SubResource("StandardMaterial3D_l84tw")
 polygon = PackedVector2Array(0, 0, -1, 0, 1, 1, 2.547, 0.0201148)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="body"]
-libraries = {
-&"": SubResource("AnimationLibrary_htrv4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body" unique_id=749237282]
+libraries/ = SubResource("AnimationLibrary_htrv4")
 
-[node name="birdSFX" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("2_fhdt0")
+[node name="birdSFX" type="AudioStreamPlayer3D" parent="." unique_id=1336643886]
 volume_db = -20.0
 unit_size = 1.0
 max_db = -5.0
 
-[node name="windSFX2" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("3_c1rx4")
+[node name="windSFX2" type="AudioStreamPlayer3D" parent="." unique_id=274499891]
+stream = ExtResource("1_x4nul")
 volume_db = 2.0
 unit_size = 92.0
 
-[node name="Trails_built_in" parent="." instance=ExtResource("4_726um")]
+[node name="Trails_built_in" type="MeshInstance3D" parent="." unique_id=1831068063 instance=ExtResource("4_726um")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9, 0.195225, 0.0253683)
+material_override = SubResource("StandardMaterial3D_dqw67")
 script = SubResource("GDScript_q7kt8")
 _fromWidth = 0.15
 _motionDelta = 0.001
 _lifespan = 32.065
 _startColor = Color(0.35, 0.35, 0.35, 1)
+_endColor = Color(1, 1, 1, 0)
 
-[node name="Trails_built_in2" parent="." instance=ExtResource("4_726um")]
+[node name="Trails_built_in2" type="MeshInstance3D" parent="." unique_id=2136365595 instance=ExtResource("4_726um")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.195225, 0.0253683)
+material_override = SubResource("StandardMaterial3D_dqw67")
 script = SubResource("GDScript_q7kt8")
 _fromWidth = 0.15
 _motionDelta = 0.001
 _lifespan = 32.065
 _startColor = Color(0.35, 0.35, 0.35, 1)
+_endColor = Color(1, 1, 1, 0)

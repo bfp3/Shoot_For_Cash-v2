@@ -4,24 +4,26 @@
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="2_yvcyi"]
 [ext_resource type="PackedScene" uid="uid://b04e2sb5337vo" path="res://ch/Tally_card/TallyComponent_v3.tscn" id="3_sfhak"]
 [ext_resource type="Texture2D" uid="uid://bl6g8v8djrlds" path="res://unfiled/Decal_placeholders/counter_clock_arrow_2.png" id="4_858g4"]
+[ext_resource type="Script" uid="uid://c6igmckaresdh" path="res://ch/Tally_card/tally_component_v3.gd" id="5_ff4up"]
 [ext_resource type="StyleBox" uid="uid://c4p7ad54klwn" path="res://res/progress_bar_no_progress.tres" id="6_hq1g1"]
+[ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://res/ROCKS - title_rock_centered_large.png" id="7_bxur6"]
 [ext_resource type="StyleBox" uid="uid://b0ho0ncfb085s" path="res://res/progress_bar_green.tres" id="7_ve44s"]
 [ext_resource type="AudioStream" uid="uid://bapu7v4tm2kbn" path="res://sfx/USERSONG164.ogg" id="8_c5dla"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="8_p2noj"]
-[ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="9_f1cis"]
-[ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="10_qvtko"]
-[ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="11_4uil5"]
-[ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="12_i00hl"]
-[ext_resource type="AudioStream" uid="uid://c5he7tw0onue" path="res://sfx/shop_reroll_sfx_01.wav" id="13_eusbm"]
-[ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="15_c16qu"]
-[ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="16_h4xss"]
-[ext_resource type="AudioStream" uid="uid://ecijroapobxk" path="res://sfx/Egg_pulse_sfx.wav" id="17_4itw5"]
-[ext_resource type="AudioStream" uid="uid://bde0632jwh1jq" path="res://sfx/Egg_pulse_sfx_reverse.wav" id="18_r5ban"]
-[ext_resource type="AudioStream" uid="uid://dmjy34fgs3ny8" path="res://sfx/HUD on click.wav" id="19_osh0g"]
-[ext_resource type="AudioStream" uid="uid://jmf0o5ogd3uv" path="res://sfx/HUD on_v2.wav" id="20_jfifo"]
-[ext_resource type="AudioStream" uid="uid://dold0eft66v4p" path="res://sfx/HUD on.wav" id="21_o5lhc"]
-[ext_resource type="AudioStream" uid="uid://fossjjbbmh7" path="res://sfx/low_pitch_humming.wav" id="22_203xe"]
-[ext_resource type="AudioStream" uid="uid://cqfuywy300at4" path="res://sfx/opt_2.wav" id="23_7p2oe"]
+[ext_resource type="AudioStream" uid="uid://tkggaklg1j7" path="res://sfx/shop_money_coin_sfx_01.ogg" id="11_bqs52"]
+[ext_resource type="AudioStream" uid="uid://caqlwl7b7q82k" path="res://sfx/shop_purchase_sfx_01.ogg" id="12_txyg3"]
+[ext_resource type="AudioStream" uid="uid://b7fekk7djc5ur" path="res://sfx/ninja_flicker.ogg" id="13_3petg"]
+[ext_resource type="AudioStream" uid="uid://crq05kwfa0x1y" path="res://sfx/shop_purchase_sfx_02.ogg" id="14_qcmux"]
+[ext_resource type="AudioStream" uid="uid://ch1f6jpf220s7" path="res://sfx/shop_reroll_sfx_01.ogg" id="15_qdw3f"]
+[ext_resource type="AudioStream" uid="uid://dd6lxfxuvdkbh" path="res://sfx/stepwood_1_short.ogg" id="16_x15os"]
+[ext_resource type="AudioStream" uid="uid://bo1la26whipbs" path="res://sfx/misc-001.ogg" id="17_l4ega"]
+[ext_resource type="AudioStream" uid="uid://hpk8sd7oqbfk" path="res://sfx/Egg_pulse_sfx.ogg" id="18_po3o2"]
+[ext_resource type="AudioStream" uid="uid://07n6coje3514" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="19_pr74a"]
+[ext_resource type="AudioStream" uid="uid://fppeah0mpv8u" path="res://sfx/HUD on click.ogg" id="20_mdyoj"]
+[ext_resource type="AudioStream" uid="uid://qhnr7yjsajbx" path="res://sfx/HUD on_v2.ogg" id="21_nwom5"]
+[ext_resource type="AudioStream" uid="uid://b8lns1w3ujtti" path="res://sfx/HUD on.ogg" id="22_a4cr2"]
+[ext_resource type="AudioStream" uid="uid://bqpvt1i70bpm2" path="res://sfx/low_pitch_humming.ogg" id="23_p0hrw"]
+[ext_resource type="AudioStream" uid="uid://bwgy4o20vvair" path="res://sfx/opt_2.ogg" id="24_scrnb"]
 
 [sub_resource type="Curve" id="Curve_onfim"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -507,29 +509,77 @@ visible = false
 layout_mode = 2
 alignment = 1
 
-[node name="Nothing" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=834535786 instance=ExtResource("3_sfhak")]
+[node name="Nothing" type="Button" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=834535786 node_paths=PackedStringArray("tooltip", "focus_enter_sfx", "focus_exit_sfx", "item_destroyed", "item_cash_reward") instance=ExtResource("3_sfhak")]
+custom_minimum_size = Vector2(190, 190)
 layout_mode = 2
+script = ExtResource("5_ff4up")
+tooltip = NodePath("Tooltip")
 description = "Nothing..."
 rock_type = ""
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
 icon_texture = ExtResource("4_858g4")
+item_destroyed = NodePath("DestroyedLabel")
+item_cash_reward = NodePath("Panel/VBoxContainer/CashEarned")
+metadata/_edit_use_anchors_ = true
 
-[node name="Rocks" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1096068837 instance=ExtResource("3_sfhak")]
+[node name="Rocks" type="Button" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1096068837 node_paths=PackedStringArray("tooltip", "focus_enter_sfx", "focus_exit_sfx", "item_destroyed", "item_cash_reward") instance=ExtResource("3_sfhak")]
+custom_minimum_size = Vector2(190, 190)
 layout_mode = 2
+script = ExtResource("5_ff4up")
+tooltip = NodePath("Tooltip")
+description = "Rocks"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
+icon_texture = ExtResource("7_bxur6")
+item_destroyed = NodePath("DestroyedLabel")
+item_cash_reward = NodePath("Panel/VBoxContainer/CashEarned")
+metadata/_edit_use_anchors_ = true
 
-[node name="Coal" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=216271256 instance=ExtResource("3_sfhak")]
+[node name="Coal" type="Button" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=216271256 node_paths=PackedStringArray("tooltip", "focus_enter_sfx", "focus_exit_sfx", "item_destroyed", "item_cash_reward") instance=ExtResource("3_sfhak")]
+custom_minimum_size = Vector2(190, 190)
 layout_mode = 2
+script = ExtResource("5_ff4up")
+tooltip = NodePath("Tooltip")
+description = "Rocks"
 rock_type = "rock_type_2"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
+icon_texture = ExtResource("7_bxur6")
+item_destroyed = NodePath("DestroyedLabel")
+item_cash_reward = NodePath("Panel/VBoxContainer/CashEarned")
 icon_modulate = Color(0.24, 0.24, 0.24, 1)
+metadata/_edit_use_anchors_ = true
 
-[node name="Gold" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=113580913 instance=ExtResource("3_sfhak")]
+[node name="Gold" type="Button" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=113580913 node_paths=PackedStringArray("tooltip", "focus_enter_sfx", "focus_exit_sfx", "item_destroyed", "item_cash_reward") instance=ExtResource("3_sfhak")]
+custom_minimum_size = Vector2(190, 190)
 layout_mode = 2
+script = ExtResource("5_ff4up")
+tooltip = NodePath("Tooltip")
+description = "Rocks"
 rock_type = "rock_type_3"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
+icon_texture = ExtResource("7_bxur6")
+item_destroyed = NodePath("DestroyedLabel")
+item_cash_reward = NodePath("Panel/VBoxContainer/CashEarned")
 icon_modulate = Color(1, 0.78039217, 0, 1)
+metadata/_edit_use_anchors_ = true
 
-[node name="Clay Rocks" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=233664546 instance=ExtResource("3_sfhak")]
+[node name="Clay Rocks" type="Button" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=233664546 node_paths=PackedStringArray("tooltip", "focus_enter_sfx", "focus_exit_sfx", "item_destroyed", "item_cash_reward") instance=ExtResource("3_sfhak")]
+custom_minimum_size = Vector2(190, 190)
 layout_mode = 2
+script = ExtResource("5_ff4up")
+tooltip = NodePath("Tooltip")
+description = "Rocks"
 rock_type = "rock_type_4"
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
+icon_texture = ExtResource("7_bxur6")
+item_destroyed = NodePath("DestroyedLabel")
+item_cash_reward = NodePath("Panel/VBoxContainer/CashEarned")
 icon_modulate = Color(0.81960785, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
 
 [node name="HSeparator4" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=912371730]
 visible = false
@@ -853,67 +903,67 @@ stream = ExtResource("8_c5dla")
 volume_db = -30.0
 
 [node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1075327639]
-stream = ExtResource("9_f1cis")
+stream = ExtResource("11_bqs52")
 volume_db = -40.0
 
 [node name="shop_purchase_01" type="AudioStreamPlayer" parent="SFX" unique_id=921652107]
-stream = ExtResource("10_qvtko")
+stream = ExtResource("12_txyg3")
 volume_db = -40.0
 
 [node name="shop_purchase_02" type="AudioStreamPlayer" parent="SFX" unique_id=1901638632]
-stream = ExtResource("11_4uil5")
+stream = ExtResource("13_3petg")
 volume_db = -15.0
 pitch_scale = 1.2
 
 [node name="shop_purchase_03" type="AudioStreamPlayer" parent="SFX" unique_id=1452359778]
-stream = ExtResource("12_i00hl")
+stream = ExtResource("14_qcmux")
 volume_db = -40.0
 
 [node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=334161139]
-stream = ExtResource("13_eusbm")
+stream = ExtResource("15_qdw3f")
 volume_db = -40.0
 
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=618503378]
-stream = ExtResource("15_c16qu")
+stream = ExtResource("16_x15os")
 volume_db = -32.0
 
 [node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=475387272]
-stream = ExtResource("15_c16qu")
+stream = ExtResource("16_x15os")
 volume_db = -50.0
 
 [node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1148902315]
-stream = ExtResource("16_h4xss")
+stream = ExtResource("17_l4ega")
 volume_db = -40.0
 pitch_scale = 3.0
 
 [node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=759328512]
-stream = ExtResource("17_4itw5")
+stream = ExtResource("18_po3o2")
 volume_db = -40.0
 pitch_scale = 2.0
 
 [node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1492928252]
-stream = ExtResource("18_r5ban")
+stream = ExtResource("19_pr74a")
 volume_db = -40.0
 pitch_scale = 1.5
 
 [node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=1251476345]
-stream = ExtResource("19_osh0g")
+stream = ExtResource("20_mdyoj")
 volume_db = -34.0
 
 [node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=1631394354]
-stream = ExtResource("20_jfifo")
+stream = ExtResource("21_nwom5")
 volume_db = -20.0
 
 [node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=389034069]
-stream = ExtResource("21_o5lhc")
+stream = ExtResource("22_a4cr2")
 volume_db = -21.0
 
 [node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=815406511]
-stream = ExtResource("22_203xe")
+stream = ExtResource("23_p0hrw")
 pitch_scale = 0.4
 
 [node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1199956550]
-stream = ExtResource("23_7p2oe")
+stream = ExtResource("24_scrnb")
 volume_db = -40.0
 pitch_scale = 2.0
 

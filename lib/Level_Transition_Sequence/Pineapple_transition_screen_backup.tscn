@@ -1,20 +1,20 @@
 [gd_scene format=3 uid="uid://clkvt5u0ifd86"]
 
-[ext_resource type="AudioStream" uid="uid://bmmratmawbv6y" path="res://sfx/sfx_dot_1.wav" id="3_pgkd0"]
+[ext_resource type="AudioStream" uid="uid://dq5d4xw7x58hs" path="res://sfx/sfx_dot_1.ogg" id="1_nfnm2"]
+[ext_resource type="Texture2D" uid="uid://dqf4legc6lkbl" path="res://unfiled/Circle_polygon/Circle_Polygon.tres" id="4_eu73f"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="4_qicn3"]
+[ext_resource type="Script" uid="uid://ch1flsh23we5l" path="res://unfiled/Circle_polygon/circle_polygon.gd" id="5_jmsoy"]
 [ext_resource type="PackedScene" uid="uid://bn61uifa163wl" path="res://unfiled/Circle_polygon/Circle_Polygon.tscn" id="5_v4bl3"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="6_251sa"]
-[ext_resource type="AudioStream" uid="uid://cflwuwauqncrs" path="res://sfx/popper-grr-002.wav" id="7_tgbha"]
-[ext_resource type="AudioStream" uid="uid://dw8m2vyhfcrhu" path="res://sfx/pineapple_sound_2.wav" id="8_b4od5"]
-[ext_resource type="AudioStream" uid="uid://c7xko6f6va2gy" path="res://sfx/popper-angry-001.wav" id="9_s0uo5"]
-[ext_resource type="AudioStream" uid="uid://cydvvxw2pq66a" path="res://sfx/pineapple_shake_1.wav" id="10_fjm5e"]
-[ext_resource type="Texture2D" uid="uid://csl74rswr2smp" path="res://res/textures_2D/Fuji_mountain_3.png" id="11_kjgmj"]
+[ext_resource type="AudioStream" uid="uid://h8nm8b2y84hf" path="res://sfx/popper-grr-002.ogg" id="7_xgsua"]
+[ext_resource type="AudioStream" uid="uid://c2ekmc3f5h3t2" path="res://sfx/pineapple_sound_2.ogg" id="8_gs6yl"]
+[ext_resource type="AudioStream" uid="uid://bg5nwosdum7t0" path="res://sfx/popper-angry-001.ogg" id="9_51kwt"]
+[ext_resource type="AudioStream" uid="uid://cm3v65xb2u10i" path="res://sfx/pineapple_shake_1.ogg" id="10_sdor6"]
 [ext_resource type="Texture2D" uid="uid://b8wgnqghjdkhj" path="res://res/textures_2D/Fuji_mountain.png" id="12_qkrpm"]
 [ext_resource type="Texture2D" uid="uid://dpaxj2x45retb" path="res://res/textures_2D/Cloud_1.png" id="13_64ck7"]
 [ext_resource type="Texture2D" uid="uid://b0a31br53s8w" path="res://res/textures_2D/Cloud_2.png" id="14_jq6l1"]
 [ext_resource type="Texture2D" uid="uid://c7unvcfoulwxr" path="res://res/textures_2D/Cloud_3.png" id="15_ran8e"]
 [ext_resource type="Texture2D" uid="uid://c80krktofac25" path="res://res/textures_2D/Cloud_4.png" id="16_y8v78"]
-
 
 [sub_resource type="GDScript" id="GDScript_608u3"]
 script/source = "extends Control
@@ -873,7 +873,7 @@ func _process(delta: float) -> void:
 				rect.position.y = restart_marker.position.y
 "
 
-[node name="Pineapple_transition" type="Control"]
+[node name="Pineapple_transition" type="Control" unique_id=569925003]
 z_index = 6
 layout_mode = 3
 anchors_preset = 15
@@ -884,7 +884,7 @@ grow_vertical = 2
 pivot_offset = Vector2(960, 540)
 script = SubResource("GDScript_608u3")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=515575196]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -893,7 +893,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Pineapples_collected" type="Control" parent="."]
+[node name="Pineapples_collected" type="Control" parent="." unique_id=1358944870]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 1
 anchor_left = 0.473958
@@ -907,16 +907,16 @@ pivot_offset = Vector2(50, 50)
 script = SubResource("GDScript_4obph")
 metadata/_edit_use_anchors_ = true
 
-[node name="Not_collected" type="AudioStreamPlayer" parent="Pineapples_collected"]
-stream = ExtResource("3_pgkd0")
+[node name="Not_collected" type="AudioStreamPlayer" parent="Pineapples_collected" unique_id=1031049719]
+stream = ExtResource("1_nfnm2")
 volume_db = -41.0
 pitch_scale = 0.3
 
-[node name="Smoke_sound" type="AudioStreamPlayer" parent="Pineapples_collected"]
-stream = ExtResource("3_pgkd0")
+[node name="Smoke_sound" type="AudioStreamPlayer" parent="Pineapples_collected" unique_id=732484048]
+stream = ExtResource("1_nfnm2")
 volume_db = -41.0
 
-[node name="PineappleTemplate" type="Control" parent="Pineapples_collected"]
+[node name="PineappleTemplate" type="Control" parent="Pineapples_collected" unique_id=2117852186]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -932,7 +932,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 
-[node name="pineapple_texture" type="TextureRect" parent="Pineapples_collected/PineappleTemplate"]
+[node name="pineapple_texture" type="TextureRect" parent="Pineapples_collected/PineappleTemplate" unique_id=1870986085]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 1
 anchors_preset = 8
@@ -953,13 +953,19 @@ expand_mode = 1
 stretch_mode = 4
 script = SubResource("GDScript_cdrd4")
 
-[node name="Circle_polygon" parent="Pineapples_collected/PineappleTemplate/pineapple_texture" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon" type="Polygon2D" parent="Pineapples_collected/PineappleTemplate/pineapple_texture" unique_id=935067322 instance=ExtResource("5_v4bl3")]
 position = Vector2(100, 100)
 color = Color(1, 0.72549, 0, 1)
+antialiased = true
+texture = ExtResource("4_eu73f")
+invert_border = 5.0
 polygon = PackedVector2Array(7.65379e-15, -125, 19.5543, -123.461, 38.6271, -118.882, 56.7488, -111.376, 73.4732, -101.127, 88.3883, -88.3883, 101.127, -73.4732, 111.376, -56.7488, 118.882, -38.6271, 123.461, -19.5543, 125, 0, 123.461, 19.5543, 118.882, 38.6271, 111.376, 56.7488, 101.127, 73.4732, 88.3883, 88.3883, 73.4732, 101.127, 56.7488, 111.376, 38.6271, 118.882, 19.5543, 123.461, 7.65379e-15, 125, -19.5543, 123.461, -38.6271, 118.882, -56.7488, 111.376, -73.4732, 101.127, -88.3883, 88.3883, -101.127, 73.4732, -111.376, 56.7488, -118.882, 38.6271, -123.461, 19.5543, -125, 1.53076e-14, -123.461, -19.5543, -118.882, -38.6271, -111.376, -56.7488, -101.127, -73.4732, -88.3883, -88.3883, -73.4732, -101.127, -56.7488, -111.376, -38.6271, -118.882, -19.5543, -123.461, -2.29614e-14, -125, -2.11245e-14, -115, -17.99, -113.584, -35.537, -109.372, -52.2089, -102.466, -67.5953, -93.037, -81.3173, -81.3173, -93.037, -67.5953, -102.466, -52.2089, -109.372, -35.537, -113.584, -17.99, -115, 1.4083e-14, -113.584, 17.99, -109.372, 35.537, -102.466, 52.2089, -93.037, 67.5953, -81.3173, 81.3173, -67.5953, 93.037, -52.2089, 102.466, -35.537, 109.372, -17.99, 113.584, 7.04149e-15, 115, 17.99, 113.584, 35.537, 109.372, 52.2089, 102.466, 67.5953, 93.037, 81.3173, 81.3173, 93.037, 67.5953, 102.466, 52.2089, 109.372, 35.537, 113.584, 17.99, 115, 0, 113.584, -17.99, 109.372, -35.537, 102.466, -52.2089, 93.037, -67.5953, 81.3173, -81.3173, 67.5953, -93.037, 52.2089, -102.466, 35.537, -109.372, 17.99, -113.584, 7.04149e-15, -115)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 125
 
-[node name="New_container" type="Control" parent="Pineapples_collected"]
+[node name="New_container" type="Control" parent="Pineapples_collected" unique_id=1662802586]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 1
 anchors_preset = 8
@@ -976,7 +982,7 @@ grow_vertical = 2
 pivot_offset = Vector2(50, 50)
 metadata/_edit_use_anchors_ = true
 
-[node name="Pineapple_container" type="Control" parent="."]
+[node name="Pineapple_container" type="Control" parent="." unique_id=386581625]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -992,7 +998,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
 
-[node name="Circles" type="Control" parent="."]
+[node name="Circles" type="Control" parent="." unique_id=201512307]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1002,7 +1008,7 @@ grow_vertical = 2
 pivot_offset = Vector2(960, 540)
 script = SubResource("GDScript_ksx3h")
 
-[node name="Control" type="Control" parent="Circles"]
+[node name="Control" type="Control" parent="Circles" unique_id=1995205193]
 layout_mode = 1
 anchor_left = 0.02
 anchor_top = 0.02
@@ -1012,13 +1018,21 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(960, 540)
 
-[node name="Circle_polygon" parent="Circles/Control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon" type="Polygon2D" parent="Circles/Control" unique_id=2041643873 instance=ExtResource("5_v4bl3")]
 self_modulate = Color(0.72, 0.72, 0.72, 0)
 position = Vector2(257.6, 250.4)
+color = Color(0.72, 0.72, 0.72, 1)
+antialiased = true
+texture = ExtResource("4_eu73f")
+invert_border = 5.0
 polygon = PackedVector2Array(6.12303e-15, -100, 15.6434, -98.7688, 30.9017, -95.1057, 45.399, -89.1007, 58.7785, -80.9017, 70.7107, -70.7107, 80.9017, -58.7785, 89.1007, -45.399, 95.1057, -30.9017, 98.7688, -15.6434, 100, 0, 98.7688, 15.6434, 95.1057, 30.9017, 89.1007, 45.399, 80.9017, 58.7785, 70.7107, 70.7107, 58.7785, 80.9017, 45.399, 89.1007, 30.9017, 95.1057, 15.6434, 98.7688, 6.12303e-15, 100, -15.6434, 98.7688, -30.9017, 95.1057, -45.399, 89.1007, -58.7785, 80.9017, -70.7107, 70.7107, -80.9017, 58.7785, -89.1007, 45.399, -95.1057, 30.9017, -98.7688, 15.6434, -100, 1.22461e-14, -98.7688, -15.6434, -95.1057, -30.9017, -89.1007, -45.399, -80.9017, -58.7785, -70.7107, -70.7107, -58.7785, -80.9017, -45.399, -89.1007, -30.9017, -95.1057, -15.6434, -98.7688, -1.83691e-14, -100, -9.18455e-15, -50, -7.82172, -49.3844, -15.4509, -47.5528, -22.6995, -44.5503, -29.3893, -40.4509, -35.3553, -35.3553, -40.4509, -29.3893, -44.5503, -22.6995, -47.5528, -15.4509, -49.3844, -7.82172, -50, 6.12303e-15, -49.3844, 7.82172, -47.5528, 15.4509, -44.5503, 22.6995, -40.4509, 29.3893, -35.3553, 35.3553, -29.3893, 40.4509, -22.6995, 44.5503, -15.4509, 47.5528, -7.82172, 49.3844, 3.06152e-15, 50, 7.82172, 49.3844, 15.4509, 47.5528, 22.6995, 44.5503, 29.3893, 40.4509, 35.3553, 35.3553, 40.4509, 29.3893, 44.5503, 22.6995, 47.5528, 15.4509, 49.3844, 7.82172, 50, 0, 49.3844, -7.82172, 47.5528, -15.4509, 44.5503, -22.6995, 40.4509, -29.3893, 35.3553, -35.3553, 29.3893, -40.4509, 22.6995, -44.5503, 15.4509, -47.5528, 7.82172, -49.3844, 3.06152e-15, -50)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
+radius = 100
 thickness = 50
 
-[node name="Pineapple_texture" type="TextureRect" parent="Circles/Control/Circle_polygon"]
+[node name="Pineapple_texture" type="TextureRect" parent="Circles/Control/Circle_polygon" unique_id=700063452]
 modulate = Color(0.72, 0.648, 0, 0.0196078)
 custom_minimum_size = Vector2(200, 200)
 anchors_preset = 8
@@ -1038,7 +1052,7 @@ texture = ExtResource("4_qicn3")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="Pineapple_control" type="Control" parent="."]
+[node name="Pineapple_control" type="Control" parent="." unique_id=482331170]
 visible = false
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 1
@@ -1056,20 +1070,24 @@ grow_vertical = 2
 scale = Vector2(0.75, 0.75)
 pivot_offset = Vector2(100, 100)
 
-[node name="Circle_polygon" parent="Pineapple_control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon" type="Polygon2D" parent="Pineapple_control" unique_id=126307244 instance=ExtResource("5_v4bl3")]
 position = Vector2(98.6667, 110.667)
 color = Color(0.95, 0.601667, 0, 1)
+antialiased = true
+texture = ExtResource("4_eu73f")
+invert_border = 5.0
 polygon = PackedVector2Array(1.22461e-14, -200, 31.2869, -197.538, 61.8034, -190.211, 90.7981, -178.201, 117.557, -161.803, 141.421, -141.421, 161.803, -117.557, 178.201, -90.7981, 190.211, -61.8034, 197.538, -31.2869, 200, 0, 197.538, 31.2869, 190.211, 61.8034, 178.201, 90.7981, 161.803, 117.557, 141.421, 141.421, 117.557, 161.803, 90.7981, 178.201, 61.8034, 190.211, 31.2869, 197.538, 1.22461e-14, 200, -31.2869, 197.538, -61.8034, 190.211, -90.7981, 178.201, -117.557, 161.803, -141.421, 141.421, -161.803, 117.557, -178.201, 90.7981, -190.211, 61.8034, -197.538, 31.2869, -200, 2.44921e-14, -197.538, -31.2869, -190.211, -61.8034, -178.201, -90.7981, -161.803, -117.557, -141.421, -141.421, -117.557, -161.803, -90.7981, -178.201, -61.8034, -190.211, -31.2869, -197.538, -3.67382e-14, -200, -3.30644e-14, -180, -28.1582, -177.784, -55.6231, -171.19, -81.7183, -160.381, -105.801, -145.623, -127.279, -127.279, -145.623, -105.801, -160.381, -81.7183, -171.19, -55.6231, -177.784, -28.1582, -180, 2.20429e-14, -177.784, 28.1582, -171.19, 55.6231, -160.381, 81.7183, -145.623, 105.801, -127.279, 127.279, -105.801, 145.623, -81.7183, 160.381, -55.6231, 171.19, -28.1582, 177.784, 1.10215e-14, 180, 28.1582, 177.784, 55.6231, 171.19, 81.7183, 160.381, 105.801, 145.623, 127.279, 127.279, 145.623, 105.801, 160.381, 81.7183, 171.19, 55.6231, 177.784, 28.1582, 180, 0, 177.784, -28.1582, 171.19, -55.6231, 160.381, -81.7183, 145.623, -105.801, 127.279, -127.279, 105.801, -145.623, 81.7183, -160.381, 55.6231, -171.19, 28.1582, -177.784, 1.10215e-14, -180)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 200
 thickness = 20
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Pineapple_control/Circle_polygon"]
-libraries = {
-&"": SubResource("AnimationLibrary_y180j")
-}
-autoplay = "texture_offset_anim"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Pineapple_control/Circle_polygon" unique_id=1174428473]
+libraries/ = SubResource("AnimationLibrary_y180j")
+autoplay = &"texture_offset_anim"
 
-[node name="pineapple_texture" type="TextureRect" parent="Pineapple_control"]
+[node name="pineapple_texture" type="TextureRect" parent="Pineapple_control" unique_id=1496084081]
 visible = false
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 1
@@ -1091,47 +1109,47 @@ expand_mode = 1
 stretch_mode = 4
 script = SubResource("GDScript_pgkd0")
 
-[node name="Smoke_sprite" type="AnimatedSprite2D" parent="Pineapple_control"]
+[node name="Smoke_sprite" type="AnimatedSprite2D" parent="Pineapple_control" unique_id=847648714]
 visible = false
 position = Vector2(108, 120)
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_puhxt")
 speed_scale = 0.25
 
-[node name="SFX" type="Node" parent="."]
+[node name="SFX" type="Node" parent="." unique_id=1960749364]
 
-[node name="Smoke_sound" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("3_pgkd0")
+[node name="Smoke_sound" type="AudioStreamPlayer" parent="SFX" unique_id=443572413]
+stream = ExtResource("1_nfnm2")
 volume_db = -30.0
 
-[node name="Panel_fade_in2" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("3_pgkd0")
+[node name="Panel_fade_in2" type="AudioStreamPlayer" parent="SFX" unique_id=1020989443]
+stream = ExtResource("1_nfnm2")
 volume_db = -40.0
 pitch_scale = 0.3
 
-[node name="Pineapple_1" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("7_tgbha")
+[node name="Pineapple_1" type="AudioStreamPlayer" parent="SFX" unique_id=2125150395]
+stream = ExtResource("7_xgsua")
 volume_db = -30.0
 
-[node name="Cherry_heart" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("8_b4od5")
+[node name="Cherry_heart" type="AudioStreamPlayer" parent="SFX" unique_id=1272886619]
+stream = ExtResource("8_gs6yl")
 volume_db = -50.0
 
-[node name="Cherry_heart2" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("9_s0uo5")
+[node name="Cherry_heart2" type="AudioStreamPlayer" parent="SFX" unique_id=1260350565]
+stream = ExtResource("9_51kwt")
 volume_db = -30.0
 
-[node name="Pineapple_4" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("9_s0uo5")
+[node name="Pineapple_4" type="AudioStreamPlayer" parent="SFX" unique_id=134944118]
+stream = ExtResource("9_51kwt")
 volume_db = -28.0
 pitch_scale = 0.8
 
-[node name="Pine_shake_1" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("10_fjm5e")
+[node name="Pine_shake_1" type="AudioStreamPlayer" parent="SFX" unique_id=1857331778]
+stream = ExtResource("10_sdor6")
 volume_db = -44.0
 pitch_scale = 0.8
 
-[node name="Fuji_control" type="Control" parent="."]
+[node name="Fuji_control" type="Control" parent="." unique_id=681581204]
 layout_mode = 1
 anchor_left = 0.5
 anchor_top = 0.514
@@ -1146,63 +1164,79 @@ grow_vertical = 2
 pivot_offset = Vector2(250, 250)
 script = SubResource("GDScript_qicn3")
 
-[node name="Circle_polygon5" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon5" type="Polygon2D" parent="Fuji_control" unique_id=99177265 instance=ExtResource("5_v4bl3")]
 z_index = 1
 position = Vector2(260, 236)
 scale = Vector2(0.68, 0.68)
 color = Color(0.72, 0.72, 0.72, 0.0941176)
-texture = null
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(1.51239e-14, -247, 38.6393, -243.959, 76.3272, -234.911, 112.136, -220.079, 145.183, -199.827, 174.655, -174.655, 199.827, -145.183, 220.079, -112.136, 234.911, -76.3272, 243.959, -38.6393, 247, 0, 243.959, 38.6393, 234.911, 76.3272, 220.079, 112.136, 199.827, 145.183, 174.655, 174.655, 145.183, 199.827, 112.136, 220.079, 76.3272, 234.911, 38.6393, 243.959, 1.51239e-14, 247, -38.6393, 243.959, -76.3272, 234.911, -112.136, 220.079, -145.183, 199.827, -174.655, 174.655, -199.827, 145.183, -220.079, 112.136, -234.911, 76.3272, -243.959, 38.6393, -247, 3.02478e-14, -243.959, -38.6393, -234.911, -76.3272, -220.079, -112.136, -199.827, -145.183, -174.655, -174.655, -145.183, -199.827, -112.136, -220.079, -76.3272, -234.911, -38.6393, -243.959, -4.53717e-14, -247)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 247
 thickness = 186
 ring_shape = false
 
-[node name="Circle_polygon6" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon6" type="Polygon2D" parent="Fuji_control" unique_id=614414359 instance=ExtResource("5_v4bl3")]
 z_index = 1
 position = Vector2(260, 236)
 scale = Vector2(0.68, 0.68)
 color = Color(0.72, 0.72, 0.72, 0.0196078)
-texture = null
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(3.31868e-14, -542, 84.7875, -535.327, 167.487, -515.473, 246.063, -482.926, 318.58, -438.487, 383.252, -383.252, 438.487, -318.58, 482.926, -246.063, 515.473, -167.487, 535.327, -84.7875, 542, 0, 535.327, 84.7875, 515.473, 167.487, 482.926, 246.063, 438.487, 318.58, 383.252, 383.252, 318.58, 438.487, 246.063, 482.926, 167.487, 515.473, 84.7875, 535.327, 3.31868e-14, 542, -84.7875, 535.327, -167.487, 515.473, -246.063, 482.926, -318.58, 438.487, -383.252, 383.252, -438.487, 318.58, -482.926, 246.063, -515.473, 167.487, -535.327, 84.7875, -542, 6.63737e-14, -535.327, -84.7875, -515.473, -167.487, -482.926, -246.063, -438.487, -318.58, -383.252, -383.252, -318.58, -438.487, -246.063, -482.926, -167.487, -515.473, -84.7875, -535.327, -9.95605e-14, -542, -4.44532e-14, -242, -37.8571, -239.021, -74.7821, -230.156, -109.866, -215.624, -142.244, -195.782, -171.12, -171.12, -195.782, -142.244, -215.624, -109.866, -230.156, -74.7821, -239.021, -37.8571, -242, 2.96355e-14, -239.021, 37.8571, -230.156, 74.7821, -215.624, 109.866, -195.782, 142.244, -171.12, 171.12, -142.244, 195.782, -109.866, 215.624, -74.7821, 230.156, -37.8571, 239.021, 1.48177e-14, 242, 37.8571, 239.021, 74.7821, 230.156, 109.866, 215.624, 142.244, 195.782, 171.12, 171.12, 195.782, 142.244, 215.624, 109.866, 230.156, 74.7821, 239.021, 37.8571, 242, 0, 239.021, -37.8571, 230.156, -74.7821, 215.624, -109.866, 195.782, -142.244, 171.12, -171.12, 142.244, -195.782, 109.866, -215.624, 74.7821, -230.156, 37.8571, -239.021, 1.48177e-14, -242)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 542
 thickness = 300
 
-[node name="Circle_polygon7" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon7" type="Polygon2D" parent="Fuji_control" unique_id=64699813 instance=ExtResource("5_v4bl3")]
 z_index = 1
 position = Vector2(260, 236)
 scale = Vector2(0.68, 0.68)
 color = Color(0.72, 0.72, 0.72, 0.0196078)
-texture = null
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(3.44114e-14, -562, 87.9162, -555.081, 173.668, -534.494, 255.143, -500.746, 330.335, -454.668, 397.394, -397.394, 454.668, -330.335, 500.746, -255.143, 534.494, -173.668, 555.081, -87.9162, 562, 0, 555.081, 87.9162, 534.494, 173.668, 500.746, 255.143, 454.668, 330.335, 397.394, 397.394, 330.335, 454.668, 255.143, 500.746, 173.668, 534.494, 87.9162, 555.081, 3.44114e-14, 562, -87.9162, 555.081, -173.668, 534.494, -255.143, 500.746, -330.335, 454.668, -397.394, 397.394, -454.668, 330.335, -500.746, 255.143, -534.494, 173.668, -555.081, 87.9162, -562, 6.88229e-14, -555.081, -87.9162, -534.494, -173.668, -500.746, -255.143, -454.668, -330.335, -397.394, -397.394, -330.335, -454.668, -255.143, -500.746, -173.668, -534.494, -87.9162, -555.081, -1.03234e-13, -562, -1.01397e-13, -552, -86.3518, -545.204, -170.577, -524.983, -250.603, -491.836, -324.457, -446.577, -390.323, -390.323, -446.577, -324.457, -491.836, -250.603, -524.983, -170.577, -545.204, -86.3518, -552, 6.75983e-14, -545.204, 86.3518, -524.983, 170.577, -491.836, 250.603, -446.577, 324.457, -390.323, 390.323, -324.457, 446.577, -250.603, 491.836, -170.577, 524.983, -86.3518, 545.204, 3.37991e-14, 552, 86.3518, 545.204, 170.577, 524.983, 250.603, 491.836, 324.457, 446.577, 390.323, 390.323, 446.577, 324.457, 491.836, 250.603, 524.983, 170.577, 545.204, 86.3518, 552, 0, 545.204, -86.3518, 524.983, -170.577, 491.836, -250.603, 446.577, -324.457, 390.323, -390.323, 324.457, -446.577, 250.603, -491.836, 170.577, -524.983, 86.3518, -545.204, 3.37991e-14, -552)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 562
 
-[node name="Circle_polygon8" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon8" type="Polygon2D" parent="Fuji_control" unique_id=191925683 instance=ExtResource("5_v4bl3")]
 z_index = 1
 position = Vector2(260, 236)
 scale = Vector2(0.68, 0.68)
 color = Color(0.72, 0.72, 0.72, 0.0117647)
-texture = null
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(2.339e-14, -382, 59.758, -377.297, 118.044, -363.304, 173.424, -340.365, 224.534, -309.044, 270.115, -270.115, 309.044, -224.534, 340.365, -173.424, 363.304, -118.044, 377.297, -59.758, 382, 0, 377.297, 59.758, 363.304, 118.044, 340.365, 173.424, 309.044, 224.534, 270.115, 270.115, 224.534, 309.044, 173.424, 340.365, 118.044, 363.304, 59.758, 377.297, 2.339e-14, 382, -59.758, 377.297, -118.044, 363.304, -173.424, 340.365, -224.534, 309.044, -270.115, 270.115, -309.044, 224.534, -340.365, 173.424, -363.304, 118.044, -377.297, 59.758, -382, 4.678e-14, -377.297, -59.758, -363.304, -118.044, -340.365, -173.424, -309.044, -224.534, -270.115, -270.115, -224.534, -309.044, -173.424, -340.365, -118.044, -363.304, -59.758, -377.297, -7.01699e-14, -382, -6.8333e-14, -372, -58.1936, -367.42, -114.954, -353.793, -168.884, -331.454, -218.656, -300.954, -263.044, -263.044, -300.954, -218.656, -331.454, -168.884, -353.793, -114.954, -367.42, -58.1936, -372, 4.55554e-14, -367.42, 58.1936, -353.793, 114.954, -331.454, 168.884, -300.954, 218.656, -263.044, 263.044, -218.656, 300.954, -168.884, 331.454, -114.954, 353.793, -58.1936, 367.42, 2.27777e-14, 372, 58.1936, 367.42, 114.954, 353.793, 168.884, 331.454, 218.656, 300.954, 263.044, 263.044, 300.954, 218.656, 331.454, 168.884, 353.793, 114.954, 367.42, 58.1936, 372, 0, 367.42, -58.1936, 353.793, -114.954, 331.454, -168.884, 300.954, -218.656, 263.044, -263.044, 218.656, -300.954, 168.884, -331.454, 114.954, -353.793, 58.1936, -367.42, 2.27777e-14, -372)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 382
 
-[node name="Circle_polygon" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon" type="Polygon2D" parent="Fuji_control" unique_id=1507663313 instance=ExtResource("5_v4bl3")]
 self_modulate = Color(1, 0.6, 0, 1)
 clip_children = 1
 z_index = 1
 position = Vector2(260, 236)
 scale = Vector2(0.68, 0.68)
-texture = null
+color = Color(0.72, 0.72, 0.72, 1)
+antialiased = true
 invert_enabled = true
 invert_border = 0.1
 polygon = PackedVector2Array(1.41442e-14, -231, 36.1364, -228.156, 71.3829, -219.694, 104.872, -205.823, 135.778, -186.883, 163.342, -163.342, 186.883, -135.778, 205.823, -104.872, 219.694, -71.3829, 228.156, -36.1364, 231, 0, 228.156, 36.1364, 219.694, 71.3829, 205.823, 104.872, 186.883, 135.778, 163.342, 163.342, 135.778, 186.883, 104.872, 205.823, 71.3829, 219.694, 36.1364, 228.156, 1.41442e-14, 231, -36.1364, 228.156, -71.3829, 219.694, -104.872, 205.823, -135.778, 186.883, -163.342, 163.342, -186.883, 135.778, -205.823, 104.872, -219.694, 71.3829, -228.156, 36.1364, -231, 2.82884e-14, -228.156, -36.1364, -219.694, -71.3829, -205.823, -104.872, -186.883, -135.778, -163.342, -163.342, -135.778, -186.883, -104.872, -205.823, -71.3829, -219.694, -36.1364, -228.156, -4.24326e-14, -231, -6.99863e-14, -381, -59.6015, -376.309, -117.735, -362.353, -172.97, -339.473, -223.946, -308.235, -269.408, -269.408, -308.235, -223.946, -339.473, -172.97, -362.353, -117.735, -376.309, -59.6015, -381, 4.66575e-14, -376.309, 59.6015, -362.353, 117.735, -339.473, 172.97, -308.235, 223.946, -269.408, 269.408, -223.946, 308.235, -172.97, 339.473, -117.735, 362.353, -59.6015, 376.309, 2.33288e-14, 381, 59.6015, 376.309, 117.735, 362.353, 172.97, 339.473, 223.946, 308.235, 269.408, 269.408, 308.235, 223.946, 339.473, 172.97, 362.353, 117.735, 376.309, 59.6015, 381, 0, 376.309, -59.6015, 362.353, -117.735, 339.473, -172.97, 308.235, -223.946, 269.408, -269.408, 223.946, -308.235, 172.97, -339.473, 117.735, -362.353, 59.6015, -376.309, 2.33288e-14, -381)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 231
 thickness = -150
 
-[node name="TextureRect" type="TextureRect" parent="Fuji_control/Circle_polygon"]
+[node name="TextureRect" type="TextureRect" parent="Fuji_control/Circle_polygon" unique_id=2112416892]
 self_modulate = Color(1, 1, 1, 0.0117647)
 anchors_preset = 8
 anchor_left = 0.5
@@ -1216,74 +1250,90 @@ offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(250, 250)
-texture = ExtResource("11_kjgmj")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="Circle_polygon3" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon3" type="Polygon2D" parent="Fuji_control" unique_id=609748550 instance=ExtResource("5_v4bl3")]
 self_modulate = Color(1, 0.6, 0, 1)
 clip_children = 1
 z_index = 1
 position = Vector2(260, 236)
 scale = Vector2(0.68, 0.68)
-texture = null
+color = Color(0.72, 0.72, 0.72, 1)
+antialiased = true
 invert_enabled = true
+invert_border = 5.0
 polygon = PackedVector2Array(1.29196e-14, -211, 33.0077, -208.402, 65.2026, -200.673, 95.792, -188.002, 124.023, -170.703, 149.2, -149.2, 170.703, -124.023, 188.002, -95.792, 200.673, -65.2026, 208.402, -33.0077, 211, 0, 208.402, 33.0077, 200.673, 65.2026, 188.002, 95.792, 170.703, 124.023, 149.2, 149.2, 124.023, 170.703, 95.792, 188.002, 65.2026, 200.673, 33.0077, 208.402, 1.29196e-14, 211, -33.0077, 208.402, -65.2026, 200.673, -95.792, 188.002, -124.023, 170.703, -149.2, 149.2, -170.703, 124.023, -188.002, 95.792, -200.673, 65.2026, -208.402, 33.0077, -211, 2.58392e-14, -208.402, -33.0077, -200.673, -65.2026, -188.002, -95.792, -170.703, -124.023, -149.2, -149.2, -124.023, -170.703, -95.792, -188.002, -65.2026, -200.673, -33.0077, -208.402, -3.87588e-14, -211, -2.35308e-13, -1281, -200.393, -1265.23, -395.851, -1218.3, -581.562, -1141.38, -752.953, -1036.35, -905.804, -905.804, -1036.35, -752.953, -1141.38, -581.562, -1218.3, -395.851, -1265.23, -200.393, -1281, 1.56872e-13, -1265.23, 200.393, -1218.3, 395.851, -1141.38, 581.562, -1036.35, 752.953, -905.804, 905.804, -752.953, 1036.35, -581.562, 1141.38, -395.851, 1218.3, -200.393, 1265.23, 7.8436e-14, 1281, 200.393, 1265.23, 395.851, 1218.3, 581.562, 1141.38, 752.953, 1036.35, 905.804, 905.804, 1036.35, 752.953, 1141.38, 581.562, 1218.3, 395.851, 1265.23, 200.393, 1281, 0, 1265.23, -200.393, 1218.3, -395.851, 1141.38, -581.562, 1036.35, -752.953, 905.804, -905.804, 752.953, -1036.35, 581.562, -1141.38, 395.851, -1218.3, 200.393, -1265.23, 7.8436e-14, -1281)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 211
 thickness = -1070
 
-[node name="Moon" parent="Fuji_control/Circle_polygon3" instance=ExtResource("5_v4bl3")]
+[node name="Moon" type="Polygon2D" parent="Fuji_control/Circle_polygon3" unique_id=1808711132 instance=ExtResource("5_v4bl3")]
 z_index = 1
 position = Vector2(105.882, -82.3528)
 color = Color(1, 0.983833, 0.03, 0.447059)
-texture = null
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(6.12303e-16, -10, 3.09017, -9.51057, 5.87785, -8.09017, 8.09017, -5.87785, 9.51057, -3.09017, 10, 0, 9.51057, 3.09017, 8.09017, 5.87785, 5.87785, 8.09017, 3.09017, 9.51057, 6.12303e-16, 10, -3.09017, 9.51057, -5.87785, 8.09017, -8.09017, 5.87785, -9.51057, 3.09017, -10, 1.22461e-15, -9.51057, -3.09017, -8.09017, -5.87785, -5.87785, -8.09017, -3.09017, -9.51057, -1.83691e-15, -10)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 10
 segments = 20
 ring_shape = false
 
-[node name="Moon2" parent="Fuji_control/Circle_polygon3/Moon" instance=ExtResource("5_v4bl3")]
+[node name="Moon2" type="Polygon2D" parent="Fuji_control/Circle_polygon3/Moon" unique_id=1452417665 instance=ExtResource("5_v4bl3")]
 z_index = 1
 scale = Vector2(1.845, 1.845)
 color = Color(1, 0.7575, 0.03, 0.447059)
-texture = null
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(7.34764e-16, -12, 3.7082, -11.4127, 7.05342, -9.7082, 9.7082, -7.05342, 11.4127, -3.7082, 12, 0, 11.4127, 3.7082, 9.7082, 7.05342, 7.05342, 9.7082, 3.7082, 11.4127, 7.34764e-16, 12, -3.7082, 11.4127, -7.05342, 9.7082, -9.7082, 7.05342, -11.4127, 3.7082, -12, 1.46953e-15, -11.4127, -3.7082, -9.7082, -7.05342, -7.05342, -9.7082, -3.7082, -11.4127, -2.20429e-15, -12, -1.83691e-15, -10, -3.09017, -9.51057, -5.87785, -8.09017, -8.09017, -5.87785, -9.51057, -3.09017, -10, 1.22461e-15, -9.51057, 3.09017, -8.09017, 5.87785, -5.87785, 8.09017, -3.09017, 9.51057, 6.12303e-16, 10, 3.09017, 9.51057, 5.87785, 8.09017, 8.09017, 5.87785, 9.51057, 3.09017, 10, 0, 9.51057, -3.09017, 8.09017, -5.87785, 5.87785, -8.09017, 3.09017, -9.51057, 6.12303e-16, -10)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 12
 thickness = 2
 segments = 20
 
-[node name="Moon3" parent="Fuji_control/Circle_polygon3/Moon" instance=ExtResource("5_v4bl3")]
+[node name="Moon3" type="Polygon2D" parent="Fuji_control/Circle_polygon3/Moon" unique_id=280347994 instance=ExtResource("5_v4bl3")]
 z_index = 1
 scale = Vector2(1.355, 1.355)
 color = Color(1, 0.7575, 0.03, 0.447059)
-texture = null
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(7.34764e-16, -12, 3.7082, -11.4127, 7.05342, -9.7082, 9.7082, -7.05342, 11.4127, -3.7082, 12, 0, 11.4127, 3.7082, 9.7082, 7.05342, 7.05342, 9.7082, 3.7082, 11.4127, 7.34764e-16, 12, -3.7082, 11.4127, -7.05342, 9.7082, -9.7082, 7.05342, -11.4127, 3.7082, -12, 1.46953e-15, -11.4127, -3.7082, -9.7082, -7.05342, -7.05342, -9.7082, -3.7082, -11.4127, -2.20429e-15, -12, -1.83691e-15, -10, -3.09017, -9.51057, -5.87785, -8.09017, -8.09017, -5.87785, -9.51057, -3.09017, -10, 1.22461e-15, -9.51057, 3.09017, -8.09017, 5.87785, -5.87785, 8.09017, -3.09017, 9.51057, 6.12303e-16, 10, 3.09017, 9.51057, 5.87785, 8.09017, 8.09017, 5.87785, 9.51057, 3.09017, 10, 0, 9.51057, -3.09017, 8.09017, -5.87785, 5.87785, -8.09017, 3.09017, -9.51057, 6.12303e-16, -10)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 12
 thickness = 2
 segments = 20
 
-[node name="Moon4" parent="Fuji_control/Circle_polygon3/Moon" instance=ExtResource("5_v4bl3")]
+[node name="Moon4" type="Polygon2D" parent="Fuji_control/Circle_polygon3/Moon" unique_id=618126251 instance=ExtResource("5_v4bl3")]
 z_index = 1
 scale = Vector2(0.53, 0.53)
 color = Color(1, 0.7575, 0.03, 0.447059)
-texture = null
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(7.34764e-16, -12, 6, -10.3923, 10.3923, -6, 12, 0, 10.3923, 6, 6, 10.3923, 7.34764e-16, 12, -6, 10.3923, -10.3923, 6, -12, 1.46953e-15, -10.3923, -6, -6, -10.3923, -2.20429e-15, -12, -1.83691e-15, -10, -5, -8.66025, -8.66025, -5, -10, 1.22461e-15, -8.66025, 5, -5, 8.66025, 6.12303e-16, 10, 5, 8.66025, 8.66025, 5, 10, 0, 8.66025, -5, 5, -8.66025, 6.12303e-16, -10)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 12
 thickness = 2
 segments = 12
 
-[node name="ColorRect" type="Polygon2D" parent="Fuji_control/Circle_polygon3"]
+[node name="ColorRect" type="Polygon2D" parent="Fuji_control/Circle_polygon3" unique_id=2122801853]
 position = Vector2(127.222, -219.269)
 scale = Vector2(1.09623, 1.46587)
 texture = SubResource("GradientTexture2D_tvqle")
 polygon = PackedVector2Array(-321.5, -29.5, 96, -32, 112, 280, -344, 264)
 uv = PackedVector2Array(-321.5, -29.5, 96, -32, 112, 280, -344, 264)
 
-[node name="Silhouette_fuji" type="TextureRect" parent="Fuji_control/Circle_polygon3"]
+[node name="Silhouette_fuji" type="TextureRect" parent="Fuji_control/Circle_polygon3" unique_id=406230926]
 modulate = Color(0, 0, 0, 0.772549)
 anchors_preset = 8
 anchor_left = 0.5
@@ -1302,7 +1352,7 @@ texture = ExtResource("12_qkrpm")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="Control" type="Control" parent="Fuji_control/Circle_polygon3/Silhouette_fuji"]
+[node name="Control" type="Control" parent="Fuji_control/Circle_polygon3/Silhouette_fuji" unique_id=541129379]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1318,7 +1368,7 @@ grow_vertical = 2
 scale = Vector2(1.17, 1.17)
 pivot_offset = Vector2(150, 150)
 
-[node name="TextureRect" type="TextureRect" parent="Fuji_control/Circle_polygon3"]
+[node name="TextureRect" type="TextureRect" parent="Fuji_control/Circle_polygon3" unique_id=694310433]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1336,7 +1386,7 @@ texture = ExtResource("12_qkrpm")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="Control" type="Control" parent="Fuji_control/Circle_polygon3/TextureRect"]
+[node name="Control" type="Control" parent="Fuji_control/Circle_polygon3/TextureRect" unique_id=269975284]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1353,7 +1403,7 @@ scale = Vector2(1.17, 1.17)
 pivot_offset = Vector2(150, 150)
 script = SubResource("GDScript_v4bl3")
 
-[node name="TextureRect" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=421214430]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
 offset_left = 276.311
@@ -1367,7 +1417,7 @@ expand_mode = 1
 stretch_mode = 4
 flip_h = true
 
-[node name="TextureRect2" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect2" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=911278833]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
 offset_left = 341.88
@@ -1380,7 +1430,7 @@ texture = ExtResource("14_jq6l1")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="TextureRect3" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect3" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=1435660342]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
 offset_left = 7.02148
@@ -1393,7 +1443,7 @@ texture = ExtResource("15_ran8e")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="TextureRect4" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect4" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=1028437061]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
 offset_left = 73.6129
@@ -1407,7 +1457,7 @@ expand_mode = 1
 stretch_mode = 4
 flip_h = true
 
-[node name="TextureRect5" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect5" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=556697554]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
 offset_left = -59.6038
@@ -1420,7 +1470,7 @@ texture = ExtResource("15_ran8e")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="TextureRect6" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect6" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=1604264271]
 self_modulate = Color(0, 0, 0, 0.513726)
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
@@ -1435,7 +1485,7 @@ expand_mode = 1
 stretch_mode = 4
 flip_h = true
 
-[node name="TextureRect7" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect7" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=1667677946]
 self_modulate = Color(0, 0, 0, 0.513726)
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
@@ -1449,7 +1499,7 @@ texture = ExtResource("14_jq6l1")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="TextureRect8" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect8" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=984713631]
 self_modulate = Color(0, 0, 0, 0.513726)
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
@@ -1463,7 +1513,7 @@ texture = ExtResource("15_ran8e")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="TextureRect9" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect9" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=2059209009]
 self_modulate = Color(0, 0, 0, 0.513726)
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
@@ -1477,7 +1527,7 @@ texture = ExtResource("15_ran8e")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="TextureRect10" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="TextureRect10" type="TextureRect" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=583750671]
 self_modulate = Color(0, 0, 0, 0.513726)
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
@@ -1492,32 +1542,40 @@ expand_mode = 1
 stretch_mode = 4
 flip_h = true
 
-[node name="Cut_off_marker" type="Marker2D" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="Cut_off_marker" type="Marker2D" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=1148381534]
 position = Vector2(-180.995, 120.664)
 
-[node name="Restart_marker" type="Marker2D" parent="Fuji_control/Circle_polygon3/TextureRect/Control"]
+[node name="Restart_marker" type="Marker2D" parent="Fuji_control/Circle_polygon3/TextureRect/Control" unique_id=498861838]
 position = Vector2(432.378, 120.664)
 
-[node name="Circle_polygon2" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon2" type="Polygon2D" parent="Fuji_control" unique_id=688596064 instance=ExtResource("5_v4bl3")]
 visible = false
 self_modulate = Color(1, 0.6, 0, 1)
 z_index = 1
 position = Vector2(260, 236)
 scale = Vector2(0.68, 0.68)
-texture = null
+color = Color(0.72, 0.72, 0.72, 1)
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(1.41442e-14, -231, 36.1364, -228.156, 71.3829, -219.694, 104.872, -205.823, 135.778, -186.883, 163.342, -163.342, 186.883, -135.778, 205.823, -104.872, 219.694, -71.3829, 228.156, -36.1364, 231, 0, 228.156, 36.1364, 219.694, 71.3829, 205.823, 104.872, 186.883, 135.778, 163.342, 163.342, 135.778, 186.883, 104.872, 205.823, 71.3829, 219.694, 36.1364, 228.156, 1.41442e-14, 231, -36.1364, 228.156, -71.3829, 219.694, -104.872, 205.823, -135.778, 186.883, -163.342, 163.342, -186.883, 135.778, -205.823, 104.872, -219.694, 71.3829, -228.156, 36.1364, -231, 2.82884e-14, -228.156, -36.1364, -219.694, -71.3829, -205.823, -104.872, -186.883, -135.778, -163.342, -163.342, -135.778, -186.883, -104.872, -205.823, -71.3829, -219.694, -36.1364, -228.156, -4.24326e-14, -231, -3.87588e-14, -211, -33.0077, -208.402, -65.2026, -200.673, -95.792, -188.002, -124.023, -170.703, -149.2, -149.2, -170.703, -124.023, -188.002, -95.792, -200.673, -65.2026, -208.402, -33.0077, -211, 2.58392e-14, -208.402, 33.0077, -200.673, 65.2026, -188.002, 95.792, -170.703, 124.023, -149.2, 149.2, -124.023, 170.703, -95.792, 188.002, -65.2026, 200.673, -33.0077, 208.402, 1.29196e-14, 211, 33.0077, 208.402, 65.2026, 200.673, 95.792, 188.002, 124.023, 170.703, 149.2, 149.2, 170.703, 124.023, 188.002, 95.792, 200.673, 65.2026, 208.402, 33.0077, 211, 0, 208.402, -33.0077, 200.673, -65.2026, 188.002, -95.792, 170.703, -124.023, 149.2, -149.2, 124.023, -170.703, 95.792, -188.002, 65.2026, -200.673, 33.0077, -208.402, 1.29196e-14, -211)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 231
 thickness = 20
 
-[node name="Circle_polygon4" parent="Fuji_control" instance=ExtResource("5_v4bl3")]
+[node name="Circle_polygon4" type="Polygon2D" parent="Fuji_control" unique_id=922419666 instance=ExtResource("5_v4bl3")]
 self_modulate = Color(1, 0.6, 0, 1)
 clip_children = 2
 z_index = 1
 position = Vector2(260, 236)
 scale = Vector2(0.68, 0.68)
-texture = null
+color = Color(0.72, 0.72, 0.72, 1)
+antialiased = true
 invert_border = 0.1
 polygon = PackedVector2Array(1.45728e-14, -238, 37.2314, -235.07, 73.546, -226.351, 108.05, -212.06, 139.893, -192.546, 168.291, -168.291, 192.546, -139.893, 212.06, -108.05, 226.351, -73.546, 235.07, -37.2314, 238, 0, 235.07, 37.2314, 226.351, 73.546, 212.06, 108.05, 192.546, 139.893, 168.291, 168.291, 139.893, 192.546, 108.05, 212.06, 73.546, 226.351, 37.2314, 235.07, 1.45728e-14, 238, -37.2314, 235.07, -73.546, 226.351, -108.05, 212.06, -139.893, 192.546, -168.291, 168.291, -192.546, 139.893, -212.06, 108.05, -226.351, 73.546, -235.07, 37.2314, -238, 2.91456e-14, -235.07, -37.2314, -226.351, -73.546, -212.06, -108.05, -192.546, -139.893, -168.291, -168.291, -139.893, -192.546, -108.05, -212.06, -73.546, -226.351, -37.2314, -235.07, -4.37184e-14, -238, -4.35348e-14, -237, -37.075, -234.082, -73.237, -225.4, -107.596, -211.169, -139.305, -191.737, -167.584, -167.584, -191.737, -139.305, -211.169, -107.596, -225.4, -73.237, -234.082, -37.075, -237, 2.90232e-14, -234.082, 37.075, -225.4, 73.237, -211.169, 107.596, -191.737, 139.305, -167.584, 167.584, -139.305, 191.737, -107.596, 211.169, -73.237, 225.4, -37.075, 234.082, 1.45116e-14, 237, 37.075, 234.082, 73.237, 225.4, 107.596, 211.169, 139.305, 191.737, 167.584, 167.584, 191.737, 139.305, 211.169, 107.596, 225.4, 73.237, 234.082, 37.075, 237, 0, 234.082, -37.075, 225.4, -73.237, 211.169, -107.596, 191.737, -139.305, 167.584, -167.584, 139.305, -191.737, 107.596, -211.169, 73.237, -225.4, 37.075, -234.082, 1.45116e-14, -237)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("5_jmsoy")
 radius = 238
 thickness = 1
