@@ -15,8 +15,8 @@
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="7_hrkv6"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_bc0l2"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="8_tnjxo"]
-[ext_resource type="AudioStream" uid="uid://dpi523s5wv3r7" path="res://sfx/rock_hit_sfx_01.wav" id="8_w8aba"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="11_fao6x"]
+[ext_resource type="AudioStream" uid="uid://djac77r74xqdt" path="res://sfx/rock_hit_sfx_01.ogg" id="14_gxoxp"]
 [ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="16_agbw7"]
 [ext_resource type="AudioStream" uid="uid://cetr5cs0rp1jo" path="res://sfx/explosion_sfx_01.wav" id="17_s08hf"]
 [ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="17_ua6l2"]
@@ -30,7 +30,6 @@
 [ext_resource type="AudioStream" uid="uid://qfrmhg6v637p" path="res://sfx/unsorted/opt_4.wav" id="21_eq13p"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="21_y4gyo"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="22_63gdt"]
-[ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="31_eq13p"]
 [ext_resource type="Script" uid="uid://bxjmk0cn2o5bb" path="res://ch/Rocks/balloon.gd" id="31_nxkf2"]
 [ext_resource type="Material" uid="uid://dgrbglmgp2fad" path="res://res/balloon_mat_grey.tres" id="32_s0kjy"]
 [ext_resource type="AudioStream" uid="uid://b6wvnsr6n83l4" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.wav" id="33_p78v0"]
@@ -1437,7 +1436,7 @@ max_polyphony = 2
 
 [node name="take_damage_sfx" type="AudioStreamPlayer" parent="." unique_id=1867904270]
 unique_name_in_owner = true
-stream = ExtResource("8_w8aba")
+stream = ExtResource("14_gxoxp")
 volume_db = -20.0
 max_polyphony = 2
 
@@ -1734,6 +1733,7 @@ collision_layer = 3
 collision_mask = 3
 axis_lock_linear_z = true
 script = ExtResource("31_nxkf2")
+balloon_carrier = true
 
 [node name="main_col" type="CollisionShape3D" parent="Trio_balloon/Balloon4" unique_id=809893561]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.06935346, 0)
@@ -1772,7 +1772,7 @@ volume_db = -35.0
 max_polyphony = 2
 
 [node name="take_damage_sfx" type="AudioStreamPlayer" parent="Trio_balloon/Balloon4" unique_id=1015462301]
-stream = ExtResource("8_w8aba")
+stream = ExtResource("14_gxoxp")
 volume_db = -20.0
 max_polyphony = 2
 
@@ -1864,18 +1864,6 @@ script = ExtResource("8_bc0l2")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Trio_balloon/Balloon4" unique_id=750985537]
 libraries/ = SubResource("AnimationLibrary_imq00")
 autoplay = &"idle"
-
-[node name="Balloon" parent="Trio_balloon" unique_id=1045390682 instance=ExtResource("31_eq13p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
-visible = false
-
-[node name="Balloon2" parent="Trio_balloon" unique_id=665536244 instance=ExtResource("31_eq13p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
-visible = false
-
-[node name="Balloon3" parent="Trio_balloon" unique_id=335011336 instance=ExtResource("31_eq13p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Trio_balloon" unique_id=754608796]
 libraries/ = SubResource("AnimationLibrary_nxkf2")

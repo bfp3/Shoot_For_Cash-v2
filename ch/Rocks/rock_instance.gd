@@ -3,8 +3,8 @@ class_name RockInstance
 
 @export var freeze_mine := false
 var sky_mine_blast_radius := 5.0 #15.0
+const ON_TARGET_SFX = preload('uid://mbyekv7f3n1p')
 
-const ON_TARGET_SFX = preload('res://sfx/opt_3_fade_shortened.wav')
 var pitch_adjustment := 0.02
 
 const ROCK_01 = preload('uid://c2pmyrm3e4ty5')

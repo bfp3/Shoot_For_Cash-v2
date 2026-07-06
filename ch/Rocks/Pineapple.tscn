@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" uid="uid://xpcuwls78k5g" path="res://ch/Rocks/pineapple.gd" id="1_tw3hu"]
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="4_ipf0s"]
+[ext_resource type="AudioStream" uid="uid://djac77r74xqdt" path="res://sfx/rock_hit_sfx_01.ogg" id="5_nul74"]
 [ext_resource type="ArrayMesh" uid="uid://lxbrgqaovv68" path="res://res/Rocks/rock_mesh_03.tres" id="7_x8mw5"]
 [ext_resource type="AudioStream" uid="uid://bwmeochytcteg" path="res://sfx/missileWhoosh.wav" id="10_w2u5q"]
 [ext_resource type="AudioStream" uid="uid://cbpbxn3t0vely" path="res://sfx/pineapple_sound_3.wav" id="11_nul74"]
 [ext_resource type="AudioStream" uid="uid://uvrv4nf0v6yu" path="res://sfx/score_tally_sfx.wav" id="12_nm51q"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="12_tw3hu"]
 [ext_resource type="AudioStream" uid="uid://dlukrpnf4tfb1" path="res://sfx/rocks_destroyed_sfx_02.wav" id="13_tbjrb"]
-[ext_resource type="AudioStream" uid="uid://dpi523s5wv3r7" path="res://sfx/rock_hit_sfx_01.wav" id="14_crph0"]
 [ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="15_dy141"]
 [ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="16_jy6j4"]
 [ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="17_gibyq"]
@@ -739,7 +739,7 @@ max_polyphony = 2
 
 [node name="take_damage_sfx" type="AudioStreamPlayer" parent="." unique_id=1565205019]
 unique_name_in_owner = true
-stream = ExtResource("14_crph0")
+stream = ExtResource("5_nul74")
 volume_db = -20.0
 max_polyphony = 2
 

@@ -126,7 +126,7 @@ func update_shop() -> void:
 	player_cash = settings.cash
 	current_round = settings.round
 	
-	price_reroll = gl_DataSet.get_value('price_reroll', reroll_index)	
+	price_reroll = int(gl_DataSet.get_value('price_reroll', reroll_index))
 	
 	update_shop_labels()
 	

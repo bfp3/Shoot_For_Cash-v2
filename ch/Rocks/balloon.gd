@@ -16,6 +16,8 @@ enum State {
 
 var current_state : State
 
+@export var balloon_carrier := false
+@export var balloon_carrier_penalty := 0
 
 var	force_mult : Array = [3,4]
 var force_mult_index := 0
@@ -112,7 +114,10 @@ func update_active() -> void:
 func update_hit() -> void:
 	$pop_balloon.pitch_scale = randf_range(0.95,1.1)
 	$pop_balloon.play()
-	gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
+	if !balloon_carrier:
+		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
+		
+	
 	
 	
 func update_missed() -> void:
@@ -254,7 +259,11 @@ func start_destroyed_process() -> void:
 		remove_from_group('Target')
 		
 	
-	money_label_3d.money_is_money(global_position, cash_value)
+	if balloon_carrier:
+		cash_value = balloon_carrier_penalty
+	
+	if !balloon_carrier:
+		money_label_3d.money_is_money(global_position, cash_value)
 	
 	set_collision_layer_value(1, false)
 	is_deactivated = true

@@ -232,8 +232,16 @@ func stop_timer() -> void:
 	set_process(false)
 
 
-func _add_additional_time() -> void:
+func _add_additional_time(additional_time : float = 0.0) -> void:
 	#time_left += 5.0
+	
+	if additional_time > 0.0:
+		time_left += additional_time
+		timer_label.modulate = GlobalColorPalet.Global_color_orange
+		await get_tree().create_timer(0.2).timeout
+		timer_label.modulate = GlobalColorPalet.Global_color_white
+		return
+	
 	var _rand_chance : int  = randi_range(0,2)
 	if _rand_chance == 0:
 		time_left += additional_increment

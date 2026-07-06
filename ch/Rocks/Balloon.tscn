@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bxjmk0cn2o5bb" path="res://ch/Rocks/balloon.gd" id="1_6ube6"]
 [ext_resource type="Material" uid="uid://c5lrichw3wfce" path="res://res/Kenney_prototype_textures/Material_override/Red_texture.tres" id="2_q6jln"]
+[ext_resource type="AudioStream" uid="uid://djac77r74xqdt" path="res://sfx/rock_hit_sfx_01.ogg" id="4_824l8"]
 [ext_resource type="AudioStream" uid="uid://dlukrpnf4tfb1" path="res://sfx/rocks_destroyed_sfx_02.wav" id="4_aljlg"]
-[ext_resource type="AudioStream" uid="uid://dpi523s5wv3r7" path="res://sfx/rock_hit_sfx_01.wav" id="5_imq00"]
 [ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="6_y7hsg"]
 [ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="7_vojle"]
 [ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="8_rrayk"]
@@ -447,6 +447,7 @@ collision_layer = 3
 collision_mask = 3
 axis_lock_linear_z = true
 script = ExtResource("1_6ube6")
+balloon_carrier = true
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=809893561]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.06935346, 0)
@@ -482,7 +483,7 @@ max_polyphony = 2
 
 [node name="take_damage_sfx" type="AudioStreamPlayer" parent="." unique_id=1015462301]
 unique_name_in_owner = true
-stream = ExtResource("5_imq00")
+stream = ExtResource("4_824l8")
 volume_db = -20.0
 max_polyphony = 2
 
