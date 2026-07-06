@@ -74,6 +74,7 @@ func _ready() -> void:
 
 	if !money_control:
 		print("using test money control")
+		
 	
 
 
@@ -99,7 +100,7 @@ func purchase_made(_upgrade_type:String = '') -> void:
 	
 func enter_state(new_state: SkillState) -> void:
 	current_state = new_state
-	
+
 	match new_state:
 		SkillState.INACTIVE:
 			update_inactive()

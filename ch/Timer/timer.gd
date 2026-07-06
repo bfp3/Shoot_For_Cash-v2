@@ -122,9 +122,17 @@ func update_finished() -> void:
 	$TimeRanOut2.play()
 	update_text()
 	update_round_manager()
+	update_bonus_times()
 	set_process(false)
 	enter_state(State.INACTIVE)
 
+
+func update_bonus_times() -> void:
+	var bonus_time_item = get_tree().get_first_node_in_group('bonus_time_item')
+	if !bonus_time_item:
+		return
+
+	bonus_time_item.time_ran_out()
 
 func update_restarting() -> void:
 	if timer_disabled:

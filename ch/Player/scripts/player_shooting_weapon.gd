@@ -10,9 +10,10 @@ extends Node3D
 const BULLET_VISUAL_1 = preload('uid://0qrt4gvskifx')
 const BULLET_STAGE_1 = preload('uid://0qrt4gvskifx')
 
-const ON_TARGET_SFX = preload('res://sfx/opt_3_fade_shortened.wav')
-
+const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 var time_ran_out := false
+
+var can_fire_weapon := true
 
 @onready var player: Player = $'..'
 @export var player_gun : Node3D
@@ -30,6 +31,16 @@ var current_xray_targets : Array = []
 var pitch_adjustment := 0.02
 
 var shooting_sky_mine := false
+var round_manager : RoundManager
+
+
+func _ready() -> void:
+	await get_tree().process_frame
+	
+	round_manager = get_tree().get_first_node_in_group('round_manager')
+	if round_manager != null:
+		#round_manager == RoundManager && 
+		print('found the round_manager')
 
 #func _process(delta: float) -> void:
 	#if player.current_state != player.State.ACTIVE:
@@ -235,8 +246,13 @@ func process_target_hit(target, damage, screen_offset) -> void:
 		
 func shoot_target() -> void:
 	
+	if !can_fire_weapon:
+		return
+	
 	if shooting_sky_mine:
 		return
+	
+	round_manager.bullet_active = true
 	
 	_reset_pitch_adjustment()
 
@@ -302,9 +318,10 @@ func shoot_target() -> void:
 		await get_tree().create_timer(delay).timeout
 		
 		shooting_sky_mine = false
-		
 	
-	
+func can_shoot(_can_shoot : bool) -> void:
+	can_fire_weapon = _can_shoot
+
 func Xshoot_target() -> void:
 	_reset_pitch_adjustment()
 	
@@ -418,7 +435,7 @@ func play_accurate_sounds() -> void:
 	#pitch_adjustment += 0.05
 	
 
-func create_shot_instance(sound_file : AudioStreamWAV, volume_db : float, pitch_scale : float) -> void:
+func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_scale : float = 0.02) -> void:
 	var sound_instance = AudioStreamPlayer.new()
 	sound_instance.name = str(sound_file)
 	add_child(sound_instance)
@@ -450,6 +467,8 @@ func shoot_bullet_without_target() -> void:
 	create_shot_instance(ON_TARGET_SFX, -35.0, 0.65 + pitch_adjustment)
 	%Crosshair.crosshair_shake()
 	player_camera.shake_camera_shooting()
+	round_manager.bullet_active = false
+
 
 	# Raycast from the crosshair center out into the world to find
 	# where the "missed" bullet should fly toward.

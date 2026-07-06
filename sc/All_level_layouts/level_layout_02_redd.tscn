@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://bbpjw4jqdvt5g"]
 
+[ext_resource type="Environment" uid="uid://cn7vbgpdmib5i" path="res://res/world_env_redd.tres" id="1_7nwxj"]
 [ext_resource type="PackedScene" uid="uid://ceab3modrlhg5" path="res://res/Shaders/water_mesh.tscn" id="1_edvip"]
 [ext_resource type="Texture2D" uid="uid://ceadr1qr2d0pq" path="res://res/gradients/big-mountain.tres" id="2_7nwxj"]
 [ext_resource type="Texture2D" uid="uid://dat2kb6hdn6xj" path="res://res/gradients/red-mountain.tres" id="3_aslpn"]
@@ -11,13 +12,12 @@
 [ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="9_2gv54"]
 [ext_resource type="Material" uid="uid://cveh5nihfpulr" path="res://res/pileon_clay_material.tres" id="9_08twk"]
 [ext_resource type="Script" uid="uid://l43d7658uy6c" path="res://ch/confetti.gd" id="10_wlidg"]
-[ext_resource type="Script" uid="uid://dq0oaab4ga43f" path="res://ch/Egg/egg_simplified.gd" id="11_edvip"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="13_1me0y"]
-[ext_resource type="AudioStream" uid="uid://b8mynf81qsopq" path="res://sfx/Random_sound_1.ogg" id="13_7nwxj"]
-[ext_resource type="AudioStream" uid="uid://r8sguof0kuob" path="res://sfx/Random_sound_11.ogg" id="14_aslpn"]
+[ext_resource type="AudioStream" uid="uid://ckdsaljox4iwt" path="res://sfx/Random_sound_1.ogg" id="13_7nwxj"]
+[ext_resource type="AudioStream" uid="uid://bj4qvxdj25txv" path="res://sfx/Random_sound_11.ogg" id="14_aslpn"]
 [ext_resource type="PackedScene" uid="uid://dee8qfh0jrlf1" path="res://lib/Flag_rollout_Scene/FlagRollout.tscn" id="14_bsjrf"]
-[ext_resource type="Script" uid="uid://f65tu6smfqsf" path="res://lib/Flag_rollout_Scene/flag_rollout.gd" id="17_cuk85"]
 [ext_resource type="PackedScene" uid="uid://bynwchnbyxiue" path="res://ch/environment_decoration/T_pileon.tscn" id="20_56nw2"]
+[ext_resource type="PackedScene" uid="uid://b5i0347dtybjp" path="res://ch/spare_parts_removed_to_optimise/outset_ocean.tscn" id="20_aslpn"]
 [ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="22_cuk85"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="23_08twk"]
 
@@ -1575,6 +1575,7 @@ points = PackedVector3Array(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1010122707 groups=["world_env"]]
 unique_name_in_owner = true
+environment = ExtResource("1_7nwxj")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1725409465 groups=["directional_light"]]
 unique_name_in_owner = true
@@ -1595,14 +1596,14 @@ omni_attenuation = 0.0
 
 [node name="Boatmesh" type="Node3D" parent="." unique_id=2030877919]
 
-[node name="WaterMesh2" type="MeshInstance3D" parent="Boatmesh" unique_id=1036662146 instance=ExtResource("1_edvip")]
+[node name="WaterMesh2" parent="Boatmesh" unique_id=1036662146 instance=ExtResource("1_edvip")]
 transform = Transform3D(5, 0, 0, 0, 4.9998097, 0.04363268, 0, -0.04363268, 4.9998097, 0, -0.63, 234.555)
 visible = false
 mesh = SubResource("QuadMesh_8ttoe")
 skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("ShaderMaterial_70at5")
 
-[node name="WaterMesh" type="MeshInstance3D" parent="Boatmesh" unique_id=30900988 instance=ExtResource("1_edvip")]
+[node name="WaterMesh" parent="Boatmesh" unique_id=30900988 instance=ExtResource("1_edvip")]
 transform = Transform3D(-5, 3.81449e-09, -4.3709724e-07, 0, 4.9998097, 0.04363268, 4.371139e-07, 0.04363268, -4.9998097, -1.2000206, -0.63, -234.555)
 visible = false
 mesh = SubResource("QuadMesh_8ttoe")
@@ -1639,7 +1640,6 @@ transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, 4.73, -2.505, 11.775)
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 mesh = SubResource("ArrayMesh_ogtj0")
-skeleton = NodePath("")
 
 [node name="Pool_of_water" type="Node3D" parent="Boatmesh" unique_id=409058316]
 transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 0.3, 4.73, -4.14, 11.775)
@@ -1657,7 +1657,6 @@ transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, -6.27, -2.505, 11.775
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 mesh = SubResource("ArrayMesh_ogtj0")
-skeleton = NodePath("")
 
 [node name="Pool_of_water3" type="Node3D" parent="Boatmesh" unique_id=1936281935]
 transform = Transform3D(0.3, 0, 0, 0, 1, 0, 0, 0, 0.3, -6.27, -4.14, 11.775)
@@ -1795,37 +1794,37 @@ material_override = ExtResource("6_h8207")
 mesh = SubResource("ArrayMesh_bmmqp")
 skeleton = NodePath("")
 
-[node name="Barricade" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1961766027 instance=ExtResource("7_qmvxk")]
+[node name="Barricade" parent="Boatmesh/Brick_wall_2" unique_id=1961766027 instance=ExtResource("7_qmvxk")]
 transform = Transform3D(1.27985, -0.342935, 0, 0.342935, 1.27985, 0, 0, 0, 1.325, 3.9165802, -0.3486346, -0.14999962)
 material_override = SubResource("StandardMaterial3D_6s5l0")
 mesh = SubResource("BoxMesh_tijj2")
 
-[node name="Barricade2" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1221460664 instance=ExtResource("7_qmvxk")]
+[node name="Barricade2" parent="Boatmesh/Brick_wall_2" unique_id=1221460664 instance=ExtResource("7_qmvxk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9970036, -0.20000005, -0.14999962)
 material_override = SubResource("StandardMaterial3D_6s5l0")
 mesh = SubResource("BoxMesh_tijj2")
 
-[node name="Barricade3" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1550656634 instance=ExtResource("7_qmvxk")]
+[node name="Barricade3" parent="Boatmesh/Brick_wall_2" unique_id=1550656634 instance=ExtResource("7_qmvxk")]
 transform = Transform3D(1.325, -5.96046e-08, 0, 5.96046e-08, 1.325, 0, 0, 0, 1.325, 2.1, -0.20000005, -0.42147446)
 material_override = SubResource("StandardMaterial3D_6s5l0")
 mesh = SubResource("BoxMesh_tijj2")
 
-[node name="Barricade5" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1197556365 instance=ExtResource("7_qmvxk")]
+[node name="Barricade5" parent="Boatmesh/Brick_wall_2" unique_id=1197556365 instance=ExtResource("7_qmvxk")]
 transform = Transform3D(0.9359821, 0.25079602, 0, -0.25079602, 0.9359821, 0, 0, 0, 0.969, 10.1, -0.415, 0.44)
 material_override = SubResource("StandardMaterial3D_6s5l0")
 mesh = SubResource("BoxMesh_tijj2")
 
-[node name="Barricade6" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=175521384 instance=ExtResource("7_qmvxk")]
+[node name="Barricade6" parent="Boatmesh/Brick_wall_2" unique_id=175521384 instance=ExtResource("7_qmvxk")]
 transform = Transform3D(0.96900004, 0, 0, 0, 0.96900004, 0, 0, 0, 0.969, 12.1, -0.265, 0.085)
 material_override = SubResource("StandardMaterial3D_6s5l0")
 mesh = SubResource("BoxMesh_tijj2")
 
-[node name="Barricade7" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=689178708 instance=ExtResource("7_qmvxk")]
+[node name="Barricade7" parent="Boatmesh/Brick_wall_2" unique_id=689178708 instance=ExtResource("7_qmvxk")]
 transform = Transform3D(1.424, 0, 0, 0, 1.024, 0, 0, 0, 1.424, 8.047, -0.265, 0.44)
 material_override = SubResource("StandardMaterial3D_6s5l0")
 mesh = SubResource("BoxMesh_tijj2")
 
-[node name="Barricade4" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1197024685 instance=ExtResource("7_qmvxk")]
+[node name="Barricade4" parent="Boatmesh/Brick_wall_2" unique_id=1197024685 instance=ExtResource("7_qmvxk")]
 transform = Transform3D(1.1117848, 0.23321436, 0.006454481, -0.23321673, 1.111803, -0.00025228225, -0.0063687917, -0.0010781771, 1.1359817, 0.009694576, -0.27534103, -0.1355381)
 material_override = SubResource("StandardMaterial3D_6s5l0")
 mesh = SubResource("BoxMesh_tijj2")
@@ -1972,14 +1971,12 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.7
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 mesh = SubResource("ArrayMesh_ogtj0")
-skeleton = NodePath("")
 
-[node name="Egg" type="Node3D" parent="Boatmesh" unique_id=2127545510 groups=["Egg_Cage"] instance=ExtResource("9_2gv54")]
+[node name="Egg" parent="Boatmesh" unique_id=2127545510 instance=ExtResource("9_2gv54")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -11.014841, 0.811255, 20.154352)
 visible = false
-script = ExtResource("11_edvip")
 
-[node name="Egg2" type="Node3D" parent="Boatmesh" unique_id=1021616403 groups=["Egg_Cage"] instance=ExtResource("9_2gv54")]
+[node name="Egg2" parent="Boatmesh" unique_id=1021616403 instance=ExtResource("9_2gv54")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, 9.985159, 0.811255, 20.154352)
 
 [node name="Confetti" type="Node3D" parent="Boatmesh" unique_id=1332317294]
@@ -2043,15 +2040,13 @@ process_material = SubResource("ParticleProcessMaterial_vyb6i")
 draw_pass_1 = SubResource("SphereMesh_xmejw")
 script = ExtResource("13_1me0y")
 
-[node name="Boat_Flag" type="Node3D" parent="Boatmesh" unique_id=1149056858 instance=ExtResource("14_bsjrf")]
+[node name="Boat_Flag" parent="Boatmesh" unique_id=1149056858 instance=ExtResource("14_bsjrf")]
 unique_name_in_owner = true
 transform = Transform3D(-0.46, 0, -6.945807e-08, 0, 0.46, 0, 6.945807e-08, 0, -0.46, 10.151, 1.942, 20.271)
-script = ExtResource("17_cuk85")
 
-[node name="Boat_Flag2" type="Node3D" parent="Boatmesh" unique_id=950646453 instance=ExtResource("14_bsjrf")]
+[node name="Boat_Flag2" parent="Boatmesh" unique_id=950646453 instance=ExtResource("14_bsjrf")]
 unique_name_in_owner = true
 transform = Transform3D(-0.46, 0, -6.945807e-08, 0, 0.46, 0, 6.945807e-08, 0, -0.46, -10.949, 1.942, 20.271)
-script = ExtResource("17_cuk85")
 
 [node name="Target_markers" type="Node3D" parent="Boatmesh" unique_id=1938421788 groups=["Target_Markers_manager"]]
 unique_name_in_owner = true
@@ -5071,13 +5066,13 @@ skeleton = NodePath("")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -1.3000001, 0)
 
-[node name="T_Pileon2" type="Node3D" parent="tallBaseContainer" unique_id=2118793577 instance=ExtResource("20_56nw2")]
+[node name="T_Pileon2" parent="tallBaseContainer" unique_id=2118793577 instance=ExtResource("20_56nw2")]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -11.400001, -3.7397199, 11.7)
 
-[node name="T_Pileon3" type="Node3D" parent="tallBaseContainer" unique_id=27188474 instance=ExtResource("20_56nw2")]
+[node name="T_Pileon3" parent="tallBaseContainer" unique_id=27188474 instance=ExtResource("20_56nw2")]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -15.757999, 0.26, 19.949999)
 
-[node name="T_Pileon6" type="Node3D" parent="tallBaseContainer" unique_id=119070699 instance=ExtResource("20_56nw2")]
+[node name="T_Pileon6" parent="tallBaseContainer" unique_id=119070699 instance=ExtResource("20_56nw2")]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 3.617, 2.46, 19.02)
 
 [node name="Quotes" type="MeshInstance3D" parent="." unique_id=158341983]
@@ -5120,6 +5115,9 @@ skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Left_tall_pillar11/StaticBody3D" unique_id=841266742]
 shape = SubResource("ConvexPolygonShape3D_1me0y")
+
+[node name="OutsetOcean" parent="." unique_id=658307306 instance=ExtResource("20_aslpn")]
+transform = Transform3D(1, 0, 0, 0, 0.99945015, 0.033155177, 0, -0.033155177, 0.99945015, 3.36, 3.65, 333.782)
 
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

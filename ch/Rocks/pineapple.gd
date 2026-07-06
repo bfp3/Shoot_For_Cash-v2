@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-const ON_TARGET_SFX = preload('res://sfx/opt_3_fade_shortened.wav')
+const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
 @export var cash_value := 10
 @export var force_multiplier := 1.5
@@ -8,6 +8,13 @@ var pitch_adjustment := 0.02
 
 @onready var main_col: CollisionShape3D = $main_col
 
+enum ExitSide {
+	LEFT,
+	RIGHT,
+	TOP
+}
+
+var exit_side : ExitSide
 
 enum State {
 	INACTIVE,
@@ -101,7 +108,6 @@ func update_active() -> void:
 	reset_rock_back_on()
 	add_to_group('Target')
 	update_gravity(0.04)
-	rock_activated = true
 	global_position = start_pos
 	global_position.x = randi_range(-8,8)
 	health = 1
@@ -188,7 +194,7 @@ func reset_rock_back_on() -> void:
 	var base_scale  := Vector3.ONE * 0.35
 
 	# Random subtype: 1x / 2x / 3x
-
+	$hit_wall_timer.stop()
 	$Mesh.scale = Vector3.ONE
 	health = base_health
 	#cash_value = base_cash # * size_multiplier
@@ -203,7 +209,7 @@ func reset_rock_back_on() -> void:
 func reset_stats() -> void:
 	$Mesh.scale = Vector3.ONE
 	$Mesh.show()
-	
+	$hit_wall_timer.stop()
 	pitch_adjustment = 0.02
 	
 	rock_activated = false
@@ -280,7 +286,7 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 		await get_tree().create_timer(0.08).timeout
 		current_mesh.get_node('damage_mesh').hide()
 		gravity_scale = rock_type_gravity_scale
-		print('true')
+
 		return
 		
 	if current_mesh:
@@ -355,7 +361,6 @@ func start_destroyed_process() -> void:
 	#freeze = true
 	
 	was_hit_tween()
-	print("or not")
 	
 
 	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
@@ -363,8 +368,6 @@ func start_destroyed_process() -> void:
 	await tween.finished
 
 	shake_camera()
-
-	print("all the way")
 	
 
 func play_hit_sfx() -> void:
@@ -428,7 +431,7 @@ func play_accurate_sounds() -> void:
 	pitch_adjustment += 0.05
 	
 
-func create_shot_instance(sound_file : AudioStreamWAV, volume_db : float, pitch_scale : float) -> void:
+func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_scale : float = 0.02) -> void:
 	var sound_instance = AudioStreamPlayer.new()
 	sound_instance.name = str(sound_file)
 	add_child(sound_instance)
@@ -442,3 +445,66 @@ func create_shot_instance(sound_file : AudioStreamWAV, volume_db : float, pitch_
 	if sound_instance != null:
 		remove_child(sound_instance)
 		sound_instance.queue_free()
+		
+func hit_out_of_bounds() -> void:
+	if !rock_activated:
+		return
+
+	rock_activated = false
+	freeze = true
+
+	remove_from_group('Target')
+
+	# Same explosion feedback as a normal destroy
+	play_destroy_sfx()
+	$Pineapple_sound_hit.play()
+	#$Pineapple_shot_explode.play()
+
+	# Penalize instead of reward
+	gl_PlayerState.log_hit('pineapple', 'pineapple', 0)
+	money_label_3d.money_is_money(global_position, 0)
+
+	set_collision_layer_value(1, false)
+	set_collision_layer_value(3, false)
+	is_deactivated = true
+
+	was_hit_tween()
+
+	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
+	await tween.finished
+
+	shake_camera()
+
+	#await get_tree().create_timer(0.3).timeout
+	#$Pineapple_destroyed.play()
+
+	enter_state(State.MISSED)
+
+func check_position_for_wall() -> void:
+
+	match exit_side:
+		ExitSide.LEFT:
+			if global_position.x > 9.5:
+				hit_out_of_bounds()
+
+		ExitSide.RIGHT:
+			if global_position.x < -11.5:
+				hit_out_of_bounds()
+
+		ExitSide.TOP:
+			if global_position.y > 9.0:
+				hit_out_of_bounds()
+
+func start_timer() -> void:
+	$hit_wall_timer.start()
+
+func _on_hit_wall_timer_timeout() -> void:
+	check_position_for_wall()
+
+	if is_deactivated:
+		$hit_wall_timer.stop()
+		return
+		
+	else:
+		$hit_wall_timer.start()

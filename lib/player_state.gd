@@ -116,7 +116,6 @@ func log_hit(item:String, item_type:String, value:int):
 
 
 func log_rocks(_total_rocks : int) -> void:
-	
 	dataset.total_rocks_in_round = _total_rocks
 	dataset.total_rocks_in_round_remaining = _total_rocks
 	
@@ -130,8 +129,7 @@ func log_rock_missed() -> void:
 func check_all_rocks_cleared() -> void:
 	#if round_finished:
 		#return
-	
-	print(dataset.total_rocks_in_round_remaining, " Rocks Remaining")
+
 	if dataset.total_rocks_in_round_remaining > 0:
 		return
 
@@ -144,14 +142,28 @@ func check_all_rocks_cleared() -> void:
 
 
 func check_score() -> void:	
-	if dataset.total_rocks_missed == 0:
-		if dataset.total_rocks_destroyed >= dataset.total_rocks_in_round && dataset.total_rocks_missed == 0:
-			if dataset.total_hazards > 0:
-				print("Rock Limit Stays The Same")
-			else:
-				dataset.rock_limit += 1
-				print("Increase Rock Limit")
-		return
+	if dataset.total_rocks_in_round_remaining <= 0:
+		if dataset.total_hazards == 0:
+			dataset.rock_limit += 1
+			print("Increase Rock Limit")
+			return
+			#
+	#if dataset.total_rocks_missed == 0:
+		#if dataset.rocks_remaining <= 0 && dataset.total_hazards == 0:
+			#dataset.rock_limit += 1
+			#print("Increase Rock Limit")
+			#return
+			#
+		#if dataset.total_rocks_destroyed >= dataset.total_rocks_in_round && dataset.total_rocks_missed == 0:
+			#if dataset.total_hazards > 0:
+				#print("Rock Limit Stays The Same")
+			#else:
+				#dataset.rock_limit += 1
+				#print("Increase Rock Limit")
+		#return
+		
+	else:
+		print("rocks missed ", dataset.total_rocks_missed)
 			
 
 func log_buy(power_name:String, price:float, unit:int=1) -> bool:

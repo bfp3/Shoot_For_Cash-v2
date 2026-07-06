@@ -15,24 +15,24 @@
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_bc0l2"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="8_tnjxo"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="11_fao6x"]
-[ext_resource type="AudioStream" uid="uid://cuyce238yo3ke" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="13_gxoxp"]
-[ext_resource type="AudioStream" uid="uid://djac77r74xqdt" path="res://sfx/rock_hit_sfx_01.ogg" id="14_gxoxp"]
-[ext_resource type="AudioStream" uid="uid://tkggaklg1j7" path="res://sfx/shop_money_coin_sfx_01.ogg" id="15_nxkf2"]
-[ext_resource type="AudioStream" uid="uid://crq05kwfa0x1y" path="res://sfx/shop_purchase_sfx_02.ogg" id="16_s0kjy"]
-[ext_resource type="AudioStream" uid="uid://ca8wjvwkfwtci" path="res://sfx/explosion_sfx_01.ogg" id="17_p78v0"]
-[ext_resource type="AudioStream" uid="uid://dnirapokcbwmq" path="res://sfx/Random_sound_7.ogg" id="18_herjc"]
+[ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="13_gxoxp"]
+[ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="14_gxoxp"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="15_nxkf2"]
+[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="16_s0kjy"]
+[ext_resource type="AudioStream" uid="uid://m75w4o7bl00c" path="res://sfx/explosion_sfx_01.ogg" id="17_p78v0"]
+[ext_resource type="AudioStream" uid="uid://chk7co4n661tj" path="res://sfx/Random_sound_7.ogg" id="18_herjc"]
 [ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="18_sjja1"]
 [ext_resource type="PackedScene" uid="uid://bh211snc0txl4" path="res://res/Particles/Smoke_coloured.tscn" id="18_yskhd"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="19_mj3mj"]
-[ext_resource type="AudioStream" uid="uid://51djw4sntr7r" path="res://sfx/opt_5.ogg" id="19_pqbxg"]
-[ext_resource type="AudioStream" uid="uid://7op7ub515s1h" path="res://sfx/opt_4.ogg" id="20_ltsxa"]
+[ext_resource type="AudioStream" uid="uid://b3wehdx2vkaob" path="res://sfx/opt_5.ogg" id="19_pqbxg"]
+[ext_resource type="AudioStream" uid="uid://b6adyjr237ckn" path="res://sfx/opt_4.ogg" id="20_ltsxa"]
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="21_27dlh"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="21_y4gyo"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="22_63gdt"]
-[ext_resource type="AudioStream" uid="uid://b7fekk7djc5ur" path="res://sfx/ninja_flicker.ogg" id="30_8mu68"]
+[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="30_8mu68"]
 [ext_resource type="Script" uid="uid://bxjmk0cn2o5bb" path="res://ch/Rocks/balloon.gd" id="31_nxkf2"]
 [ext_resource type="Material" uid="uid://dgrbglmgp2fad" path="res://res/balloon_mat_grey.tres" id="32_s0kjy"]
-[ext_resource type="AudioStream" uid="uid://bb4jv0qikr0qi" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.ogg" id="33_q8tld"]
+[ext_resource type="AudioStream" uid="uid://cpvfg5fpp3w1g" path="res://sfx/ES_Balloon Pop 2 - SFX Producer.ogg" id="33_q8tld"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 friction = 0.0
@@ -1552,6 +1552,7 @@ max_polyphony = 2
 
 [node name="marked_sfx" type="AudioStreamPlayer" parent="." unique_id=454048543]
 unique_name_in_owner = true
+stream = ExtResource("14_gxoxp")
 volume_db = -25.0
 pitch_scale = 1.2
 
@@ -1661,19 +1662,11 @@ process_material = SubResource("ParticleProcessMaterial_js5s8")
 draw_pass_1 = SubResource("QuadMesh_c7jqr")
 script = ExtResource("8_tnjxo")
 
-[node name="Smoke_quick2" type="GPUParticles3D" parent="." unique_id=1910998751 instance=ExtResource("18_yskhd")]
-transform = Transform3D(1, -3.8040824e-13, -1.6628172e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
-top_level = true
+[node name="Smoke_quick2" parent="." unique_id=1910998751 instance=ExtResource("18_yskhd")]
 visible = false
 cast_shadow = 0
-emitting = false
-amount = 1
-one_shot = true
-explosiveness = 0.75
-local_coords = true
 process_material = SubResource("ParticleProcessMaterial_ae1ab")
 draw_pass_1 = SubResource("QuadMesh_x8mw5")
-script = ExtResource("8_tnjxo")
 
 [node name="XSparks01" type="GPUParticles3D" parent="." unique_id=528791716]
 top_level = true

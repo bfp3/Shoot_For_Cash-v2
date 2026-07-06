@@ -77,13 +77,14 @@ func display_round_counter() -> void:
 	match score_result:
 		ScoreResult.PERFECT_SCORE:
 			#old_method()
+
 			var tween = create_tween()
 			#tween.tween_property(self, "modulate:a", 0.0, 0.01)
 			tween.tween_interval(2.0)
-			tween.tween_property(self, "scale", Vector2.ONE * 0.6, 0.15)
+			tween.tween_property(self, "scale", Vector2.ONE * 1.0, 0.15)
 			tween.parallel().tween_property(rocks_hit_label, "self_modulate", Color("00ff4c"), 0.15)
 			tween.parallel().tween_callback(_update_for_new_round).set_delay(0.5)
-			#tween.tween_property($"../../../../../SFX/focus_enter_sfx", "playing", true, 0.01)
+
 			tween.tween_property(rocks_hit_label, "modulate:a", 0.0, 0.05)
 			tween.tween_property(rocks_hit_label, "modulate:a", 1.0, 0.05)
 			tween.tween_interval(1.5)
@@ -133,7 +134,7 @@ func calculate_score() -> void:
 	if total_rocks_destroyed == 0:
 		score_result = ScoreResult.ZERO_SCORE
 		
-	if total_rocks_destroyed > 1 && total_rocks_remaining == 0:
+	if total_rocks_destroyed > 1 && total_rocks_remaining <= 0:
 		score_result = ScoreResult.PERFECT_SCORE
 		
 	else:

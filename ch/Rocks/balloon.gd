@@ -1,6 +1,6 @@
 extends StaticBody3D
 
-const ON_TARGET_SFX = preload('res://sfx/opt_3_fade_shortened.wav')
+const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
 var pitch_adjustment := 0.02
 
@@ -333,7 +333,7 @@ func play_accurate_sounds() -> void:
 	pitch_adjustment += 0.05
 	
 
-func create_shot_instance(sound_file : AudioStreamWAV, volume_db : float, pitch_scale : float) -> void:
+func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_scale : float = 0.02) -> void:
 	var sound_instance = AudioStreamPlayer.new()
 	sound_instance.name = str(sound_file)
 	add_child(sound_instance)

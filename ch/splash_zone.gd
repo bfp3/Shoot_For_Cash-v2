@@ -13,7 +13,10 @@ var detected_bodies: Array[Node3D] = []
 
 
 func _on_body_entered(body: Node3D) -> void:
-
+	
+	if body.is_in_group('pineapple'):
+		return
+	
 	if !(body is RockInstance):
 		return
 

@@ -1,9 +1,12 @@
 extends RigidBody3D
 class_name RockInstance
 
+@onready var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
+
 @export var freeze_mine := false
 var sky_mine_blast_radius := 5.0 #15.0
-const ON_TARGET_SFX = preload('uid://mbyekv7f3n1p')
+
+const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
 var pitch_adjustment := 0.02
 
@@ -759,6 +762,9 @@ func start_destroyed_process() -> void:
 	
 	
 
+	round_manager.bullet_active = false
+	
+
 func play_hit_sfx() -> void:
 	$take_damage_sfx.volume_db = randf_range(-25.0, -20.0)
 	$take_damage_sfx.pitch_scale = randf_range(0.9, 1.2)
@@ -932,7 +938,7 @@ func play_accurate_sounds() -> void:
 	pitch_adjustment += 0.05
 	
 
-func create_shot_instance(sound_file : AudioStreamWAV, volume_db : float, pitch_scale : float) -> void:
+func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_scale : float = 0.02) -> void:
 	var sound_instance = AudioStreamPlayer.new()
 	sound_instance.name = str(sound_file)
 	add_child(sound_instance)

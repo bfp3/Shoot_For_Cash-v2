@@ -25,7 +25,7 @@ func set_all_particles_blow_away(direction : Vector3, dur : float) -> void:
 	var active_smoke : Array = get_tree().get_nodes_in_group("smoke_particles")
 		
 	blowing_away_particles = true
-	var wind_snippet = preload("res://sfx/windSnippet.wav")
+	var wind_snippet = preload("res://sfx/windSnippet.ogg")
 	CommonCode.play_sound_instance_pitch_adjusted(wind_snippet, -10.0, 0.0)
 	#CommonCode.set_all_particles_transparency(1.0, 1.0, 5.0)
 	for child in active_smoke:
@@ -154,7 +154,7 @@ func play_sound_instance_delay_time(sound_file : AudioStreamWAV, volume_db : flo
 		remove_child(sound_instance)
 		sound_instance.queue_free()
 
-func play_sound_instance_pitch_adjusted(sound_file : AudioStreamWAV, volume_db : float, pitch_scale : float) -> void:
+func play_sound_instance_pitch_adjusted(sound_file : AudioStream, volume_db : float, pitch_scale : float = 0.02) -> void:
 	var sound_instance = AudioStreamPlayer.new()
 	sound_instance.name = str(sound_file)
 	add_child(sound_instance)

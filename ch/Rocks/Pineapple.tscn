@@ -2,16 +2,16 @@
 
 [ext_resource type="Script" uid="uid://xpcuwls78k5g" path="res://ch/Rocks/pineapple.gd" id="1_tw3hu"]
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="4_ipf0s"]
-[ext_resource type="AudioStream" uid="uid://cuyce238yo3ke" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="4_nul74"]
-[ext_resource type="AudioStream" uid="uid://djac77r74xqdt" path="res://sfx/rock_hit_sfx_01.ogg" id="5_nul74"]
-[ext_resource type="AudioStream" uid="uid://b7fekk7djc5ur" path="res://sfx/ninja_flicker.ogg" id="6_nm51q"]
-[ext_resource type="AudioStream" uid="uid://tkggaklg1j7" path="res://sfx/shop_money_coin_sfx_01.ogg" id="7_jq8lj"]
+[ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="4_nul74"]
+[ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="5_nul74"]
+[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="6_nm51q"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="7_jq8lj"]
 [ext_resource type="ArrayMesh" uid="uid://lxbrgqaovv68" path="res://res/Rocks/rock_mesh_03.tres" id="7_x8mw5"]
-[ext_resource type="AudioStream" uid="uid://crq05kwfa0x1y" path="res://sfx/shop_purchase_sfx_02.ogg" id="8_c4njd"]
-[ext_resource type="AudioStream" uid="uid://ca8wjvwkfwtci" path="res://sfx/explosion_sfx_01.ogg" id="9_x7djv"]
-[ext_resource type="AudioStream" uid="uid://by2lseoy348cp" path="res://sfx/missileWhoosh.ogg" id="10_be75m"]
-[ext_resource type="AudioStream" uid="uid://bwld4udrxwuiq" path="res://sfx/pineapple_sound_3.ogg" id="11_rjvc6"]
-[ext_resource type="AudioStream" uid="uid://863o2iood3b0" path="res://sfx/score_tally_sfx.ogg" id="12_arplm"]
+[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="8_c4njd"]
+[ext_resource type="AudioStream" uid="uid://m75w4o7bl00c" path="res://sfx/explosion_sfx_01.ogg" id="9_x7djv"]
+[ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="10_be75m"]
+[ext_resource type="AudioStream" uid="uid://cgmf5xub0ewvx" path="res://sfx/pineapple_sound_3.ogg" id="11_rjvc6"]
+[ext_resource type="AudioStream" uid="uid://w5iohymmpptg" path="res://sfx/score_tally_sfx.ogg" id="12_arplm"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="12_tw3hu"]
 [ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="19_c7iug"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="20_w4k75"]
@@ -724,7 +724,7 @@ albedo_texture = SubResource("GradientTexture2D_x736i")
 material = SubResource("StandardMaterial3D_2dco4")
 size = Vector2(0.2, 0.2)
 
-[node name="Pineapple" type="RigidBody3D" unique_id=1539472592]
+[node name="Pineapple" type="RigidBody3D" unique_id=1539472592 groups=["pineapple"]]
 collision_mask = 0
 axis_lock_linear_z = true
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
@@ -937,19 +937,11 @@ process_material = SubResource("ParticleProcessMaterial_tw3hu")
 draw_pass_1 = SubResource("QuadMesh_c7jqr")
 script = ExtResource("25_khs04")
 
-[node name="Smoke_quick2" type="GPUParticles3D" parent="." unique_id=1910998751 instance=ExtResource("26_874ha")]
-transform = Transform3D(1, -3.8040824e-13, -1.6628172e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
-top_level = true
+[node name="Smoke_quick2" parent="." unique_id=1910998751 instance=ExtResource("26_874ha")]
 visible = false
 cast_shadow = 0
-emitting = false
-amount = 1
-one_shot = true
-explosiveness = 0.75
-local_coords = true
 process_material = SubResource("ParticleProcessMaterial_ae1ab")
 draw_pass_1 = SubResource("QuadMesh_x8mw5")
-script = ExtResource("25_khs04")
 
 [node name="XSparks01" type="GPUParticles3D" parent="." unique_id=63975764]
 top_level = true
@@ -1025,5 +1017,10 @@ volume_db = -10.0
 pitch_scale = 0.7
 max_polyphony = 2
 
+[node name="hit_wall_timer" type="Timer" parent="." unique_id=926593352]
+wait_time = 0.1
+one_shot = true
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="Start_falling_timer" to="." method="_on_start_falling_timer_timeout"]
+[connection signal="timeout" from="hit_wall_timer" to="." method="_on_hit_wall_timer_timeout"]

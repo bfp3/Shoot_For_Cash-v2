@@ -554,6 +554,7 @@ func title_screen_end() -> void:
 func stop_player() -> void:
 	player_gun.end_position()
 	enter_state(State.ROUND_FINISHED)
+	weapon_shooting.can_shoot(false)
 	
 
 
@@ -562,7 +563,9 @@ func start_player() -> void:
 	
 	if gl_PlayerState.dataset.power_gun == 0:
 		return
-		
+	
+	weapon_shooting.can_shoot(true)
+
 	%Cooldown_progressBar3.value = 100.0
 	%Bullet_icon.value  = 100.0
 	
@@ -614,4 +617,9 @@ func play_perfect_sfx() -> void:
 
 	
 	
-	
+func round_finished(_round_finished : bool) -> void:
+	if _round_finished == true:
+		weapon_shooting.can_shoot(false)
+		
+	if _round_finished == false:
+		weapon_shooting.can_shoot(true)

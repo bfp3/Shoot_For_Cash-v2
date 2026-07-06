@@ -1,4 +1,4 @@
-@tool
+#@tool
 extends EditorScript
 
 var updated_scenes := 0

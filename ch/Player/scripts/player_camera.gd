@@ -1,6 +1,6 @@
 extends Camera3D
 
-const CAMERA_WAKING_UP = preload("res://sfx/Camera_waking_up.wav")
+const CAMERA_WAKING_UP = preload('uid://y7vecy4v88lt')
 
 @export var amount_of_shakes := 1
 @export var shake_amount := 0.01

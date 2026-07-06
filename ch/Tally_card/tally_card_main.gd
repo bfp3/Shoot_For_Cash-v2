@@ -423,7 +423,7 @@ func animate_money_counter(label: RichTextLabel, start_value: float,
 
 		label.text = text_callback.call(value)
 
-		sfx.pitch_scale += pitch_step
+		sfx.pitch_scale = clamp(sfx.pitch_scale, 0.01, 100.0)
 		sfx.play()
 
 

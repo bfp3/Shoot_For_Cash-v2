@@ -21,7 +21,7 @@ func rollout_flag() -> void:
 	if flag_raised:
 		return
 	flag_raised = true
-	var flag_sfx : AudioStreamWAV = preload('res://sfx/pineapple_shake_1.wav')
+	var flag_sfx : AudioStreamOggVorbis = preload('res://sfx/pineapple_shake_1.ogg')
 	CommonCode.play_sound_instance_pitch_adjusted(flag_sfx, -35.0, 1.0)
 	
 	show()

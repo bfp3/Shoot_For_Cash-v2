@@ -1,7 +1,6 @@
 extends Node
 
 @onready var birds: AudioStreamPlayer = $Birds
-@onready var ambient_background_noise: AudioStreamPlayer = $Ambient_background_noise
 @onready var night_noises: AudioStreamPlayer = $NightNoises
 @onready var oasis: AudioStreamPlayer = $Oasis
 @onready var ending_song: AudioStreamPlayer = $EndingSong
@@ -22,7 +21,6 @@ func _ready() -> void:
 
 func start_bg_noise() -> void:
 	tween_item(birds)
-	tween_item(ambient_background_noise)
 	tween_item(night_noises)
 	await get_tree().create_timer(1.0).timeout
 	tween_item(wind_noises)
@@ -31,7 +29,6 @@ func default_volumes() -> void:
 	# Get all AudioStreamPlayers inside this node
 	var songs : Array[AudioStreamPlayer] = [
 		birds,
-		ambient_background_noise,
 		night_noises,
 		oasis,
 
@@ -123,7 +120,7 @@ func _on_start_button_pressed() -> void:
 
 	var tween = create_tween().set_ease(Tween.EASE_IN).set_parallel()
 	#tween.tween_interval(0.75)
-	#tween.tween_property(curr_song, "pitch_scale", 0.0, 1.5)
+	#tween.tween_property(curr_song, "pitch_scale", 0.01, 1.5)
 	tween.tween_property(curr_song, "volume_db", -7.0, 1.0).as_relative()
 	await tween.finished
 
@@ -135,7 +132,7 @@ func stop_opening_song() -> void:
 
 	var tween = create_tween().set_ease(Tween.EASE_IN).set_parallel()
 	#tween.tween_interval(0.75)
-	tween.tween_property(curr_song, "pitch_scale", 0.0, 1.5)
+	tween.tween_property(curr_song, "pitch_scale", 0.01, 1.5)
 	tween.tween_property(curr_song, "volume_db", -80.0, 1.5)
 	await tween.finished
 	curr_song.stop()

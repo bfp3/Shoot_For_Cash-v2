@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://bc6weh2tp6rox"]
 
-[ext_resource type="Environment" uid="uid://dl2a0x18s665r" path="res://res/world_env_moss.tres" id="1_snbl5"]
+[ext_resource type="Environment" uid="uid://kw5c7bat248e" path="res://example/boujie_water_shader/MapEnvironment.tres" id="1_snbl5"]
 [ext_resource type="PackedScene" uid="uid://c3mxy8tvyd34a" path="res://unfiled/Blender_custom_assets/brick_fountain_2.glb" id="4_1vd3e"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="6_u0cw1"]
 [ext_resource type="PackedScene" uid="uid://povuqcr3mqfi" path="res://unfiled/Barricades/Standard_barricade.tscn" id="7_qy441"]
@@ -1759,6 +1759,7 @@ skeleton = NodePath("")
 
 [node name="Clouds" type="Node3D" parent="BackgroundMesh" unique_id=165862447]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 170, 13)
+visible = false
 
 [node name="Cloud31" type="MeshInstance3D" parent="BackgroundMesh/Clouds" unique_id=1417259871]
 transform = Transform3D(-1, 1.4870183e-07, 2.6220116e-08, 0, 0.17364797, -0.9848077, -1.509958e-07, -0.9848077, -0.17364797, 445.52, -108.161, 1562.785)

@@ -11,6 +11,8 @@ const DEMO_END_SCREEN = preload('uid://dpbgyfs2kgdtr')
 
 var game_has_been_beaten := false
 
+var bullet_active := false
+var bullet_active_counter := 0.0
 var round_finished := false
 var transitioning_worlds := false
 @export var pineapple_mode := false
@@ -31,6 +33,7 @@ var transitioning_worlds := false
 @export var music_manager : Node
 @export var hud_system : TextureRect
 @export var birds : Node3D
+
 var egg_pulse : Egg
 
 
@@ -159,6 +162,7 @@ func update_round_start() -> void:
 		music_manager.first_round()
 		
 	gl_PlayerState.next_round()
+
 	current_round = gl_PlayerState.dataset.round
 	rocks_container.enter_state(rocks_container.State.PREPARE_ROCKS)
 	
@@ -169,6 +173,7 @@ func update_round_start() -> void:
 	round_timer.enter_state(round_timer.State.RESTARTING)
 	
 	player.start_player()
+	
 
 	music_manager.shop_music_raise_volume()
 	
@@ -212,7 +217,9 @@ func update_round_in_progress() -> void:
 func update_round_end() -> void:
 	if round_finished:
 		return
-		
+	
+	player.round_finished(true)
+	
 	round_finished = true
 	birds.start_birds()
 	
@@ -228,13 +235,22 @@ func update_round_end() -> void:
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
 
-	
+	while bullet_active == true:
+		await get_tree().process_frame
+		bullet_active_counter += 1.0
+		print("bullet still active")
+		if bullet_active_counter > 60.0:
+			bullet_active = false
 
+	bullet_active_counter = 0.0
 	
 	if success:
+		
 		success = false
 		#perfect_score_feedback()
 		if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
+			
+			player.round_finished(false)
 			#rocks_container.enter_state(rocks_container.State.INACTIVE)
 			#await get_tree().create_timer(0.1).timeout
 			#rocks_container.enter_state(rocks_container.State.PREPARE_ROCKS)
@@ -481,6 +497,8 @@ func perfect_score_feedback() -> void:
 	player.perfect_score()
 
 func pineapple_round() -> void:
+
+	
 	%PerfectParticles.emitting = true
 	%PerfectParticles2.emitting = true
 
@@ -495,7 +513,9 @@ func pineapple_round() -> void:
 	await get_tree().create_timer(2.0).timeout
 	
 	$'../Pineapple'.pineapple_round_3()
-	await get_tree().create_timer(2.0).timeout
+	
+
+	await get_tree().create_timer(2.5).timeout
 		
 	if gl_PlayerState.dataset.total_pineapples_destroyed >= 3:
 		%PerfectPineappleRound.play(0.5)
@@ -504,6 +524,5 @@ func pineapple_round() -> void:
 		
 	else:
 		pineapple_mode = false
-	
+	$'../Pineapple'.stop_pineapples()
 	EventBus.instance.pineapple_round_used.emit()
-		

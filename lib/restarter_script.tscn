@@ -1,25 +1,7 @@
 [gd_scene format=3 uid="uid://cw3g5y447jhiw"]
 
-[sub_resource type="GDScript" id="GDScript_yy4wn"]
-script/source = "extends Node
-
-var last_escape_time := 0.0
-const DOUBLE_TAP_WINDOW := 0.4 # seconds
-
-func _input(event) -> void:
-	#if event.is_action_pressed(\"escape\"):
-		#var current_time = Time.get_ticks_msec() / 1000.0
-		#
-		#if current_time - last_escape_time <= DOUBLE_TAP_WINDOW:
-			#get_tree().quit()
-		#
-		#last_escape_time = current_time
-
-	if event.is_action_pressed(\"restart\"):
-		gl_PlayerState.reset_all()
-		get_tree().reload_current_scene()
-"
+[ext_resource type="Script" uid="uid://b0rhkjddbbrs1" path="res://lib/restarter_script.gd" id="1_ewnck"]
 
 [node name="Restarter_script" type="Node" unique_id=1462982946]
 process_mode = 3
-script = SubResource("GDScript_yy4wn")
+script = ExtResource("1_ewnck")

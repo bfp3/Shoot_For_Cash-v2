@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://vwro4n21k7vk" path="res://ch/targets/bonus_time.gd" id="1_n6ryt"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="2_3unry"]
 [ext_resource type="Material" uid="uid://dbv3cp0pmavlb" path="res://res/hidden_mesh_standard.tres" id="2_3083y"]
-[ext_resource type="AudioStream" uid="uid://djac77r74xqdt" path="res://sfx/rock_hit_sfx_01.ogg" id="3_3unry"]
+[ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="3_3unry"]
 [ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="5_8ve6x"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="6_rbwa6"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="7_8aq7x"]
@@ -483,40 +483,37 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_q6305")
 size = Vector2(2, 2)
 
-[node name="BonusTime" type="StaticBody3D" unique_id=1060338467 groups=["Target"]]
+[node name="BonusTime" type="StaticBody3D" unique_id=1060338467 groups=["Target", "bonus_time_item"]]
 script = ExtResource("1_n6ryt")
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=1135784391]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.747, 0)
 shape = SubResource("CylinderShape3D_l082r")
 
 [node name="damage_mesh" type="MeshInstance3D" parent="." unique_id=133451823]
-transform = Transform3D(1.15, 0, 0, 0, -5.0268095e-08, -1.15, 0, 1.15, -5.0268095e-08, 0, 0, 0)
+transform = Transform3D(1.1, 0, 0, 0, -4.8082526e-08, -1.1, 0, 1.1, -4.8082526e-08, 0, 0.7473336, 0)
 visible = false
 material_override = ExtResource("2_3083y")
 mesh = SubResource("CylinderMesh_ymbdo")
 skeleton = NodePath("../..")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1552095622]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.7473336, 0)
 mesh = SubResource("CylinderMesh_ymbdo")
 skeleton = NodePath("../..")
 
-[node name="Label3D2" type="Label3D" parent="MeshInstance3D" unique_id=6762471]
-transform = Transform3D(-1, 0, -8.742278e-08, 8.742278e-08, -4.371139e-08, -1, -3.821371e-15, -1, 4.371139e-08, 0, -0.08693123, 0)
+[node name="Label3D" type="Label3D" parent="MeshInstance3D" unique_id=372220835]
+transform = Transform3D(-1, 0, -8.742278e-08, 8.742278e-08, -4.371139e-08, -1, -3.821371e-15, -1, 4.371139e-08, 0, -0.052, 0)
 pixel_size = 0.01
 modulate = Color(0.5, 0.5, 0.5, 1)
 text = "+5"
 font_size = 40
 outline_size = 3
 
-[node name="Label3D" type="Label3D" parent="MeshInstance3D" unique_id=372220835]
-transform = Transform3D(-1, 0, -8.742278e-08, 8.742278e-08, -4.371139e-08, -1, -3.821371e-15, -1, 4.371139e-08, 0, -0.08693123, 0)
-pixel_size = 0.01
-modulate = Color(0.5, 0.5, 0.5, 1)
-text = "+5"
-font_size = 40
-outline_size = 3
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MeshInstance3D" unique_id=1696420436]
+transform = Transform3D(0.755, 0, 0, 0, -3.30021e-08, 0.755, 0, -0.755, -3.30021e-08, 0, 0.04077568, 0.5450001)
+mesh = SubResource("CylinderMesh_wv0tc")
+skeleton = NodePath("../../..")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=185401492]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.86, 0)
@@ -532,11 +529,6 @@ text = "+10"
 font_size = 40
 outline_size = 3
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1696420436]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5450001, 0)
-mesh = SubResource("CylinderMesh_wv0tc")
-skeleton = NodePath("../..")
-
 [node name="take_damage_sfx" type="AudioStreamPlayer" parent="." unique_id=1654528794]
 unique_name_in_owner = true
 stream = ExtResource("3_3unry")
@@ -544,6 +536,7 @@ volume_db = -20.0
 max_polyphony = 2
 
 [node name="AoE" type="Node3D" parent="." unique_id=1810612647]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7473336, 0)
 top_level = true
 script = ExtResource("5_8ve6x")
 delays = {
@@ -567,6 +560,7 @@ process_material = SubResource("ParticleProcessMaterial_j65eg")
 draw_pass_1 = SubResource("QuadMesh_efpc7")
 
 [node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE" unique_id=651710930]
+visible = false
 material_override = SubResource("ShaderMaterial_82qc2")
 cast_shadow = 0
 emitting = false
@@ -593,7 +587,7 @@ process_material = SubResource("ParticleProcessMaterial_8pep6")
 draw_pass_1 = SubResource("QuadMesh_efpc7")
 
 [node name="Smoke_quick" type="GPUParticles3D" parent="AoE" unique_id=747363861]
-transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -0.5)
+transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -7.450581e-09)
 cast_shadow = 0
 emitting = false
 amount = 1
