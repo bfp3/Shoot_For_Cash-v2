@@ -41,7 +41,6 @@
 [ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="38_x7bet"]
 [ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="39_lysu5"]
 [ext_resource type="AudioStream" uid="uid://c5he7tw0onue" path="res://sfx/shop_reroll_sfx_01.wav" id="40_0pe5t"]
-[ext_resource type="AudioStream" uid="uid://xh6kpfpcl3mh" path="res://sfx/shop_mystery_box_sfx_01.wav" id="41_trdld"]
 [ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="42_1i2h1"]
 [ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="43_jj2qr"]
 [ext_resource type="AudioStream" uid="uid://ecijroapobxk" path="res://sfx/Egg_pulse_sfx.wav" id="44_nq3ni"]
@@ -201,6 +200,13 @@ albedo_texture = ExtResource("25_ibr3v")
 [sub_resource type="QuadMesh" id="QuadMesh_k3oa0"]
 material = SubResource("StandardMaterial3D_u26ts")
 size = Vector2(0.15, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wv0tc"]
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_offset = Vector3(0.25, 0.25, 0.25)
+uv1_triplanar = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_ymbdo"]
 size = Vector3(40, 0.1, 0.1)
@@ -719,6 +725,7 @@ _data = {
 
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
+intro_title_screen = true
 player = NodePath("Player")
 round_manager = NodePath("Round_manager")
 start_cam = NodePath("Camera3D")
@@ -997,7 +1004,7 @@ volume_db = -18.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=1358077586]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
-material_override = ExtResource("27_ec2we")
+material_override = SubResource("StandardMaterial3D_wv0tc")
 mesh = SubResource("BoxMesh_ymbdo")
 skeleton = NodePath("../..")
 
@@ -1884,10 +1891,6 @@ volume_db = -40.0
 stream = ExtResource("40_0pe5t")
 volume_db = -40.0
 
-[node name="shop_mystery_box_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=733293965]
-stream = ExtResource("41_trdld")
-volume_db = -40.0
-
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=618503378]
 stream = ExtResource("42_1i2h1")
 volume_db = -32.0
@@ -1922,7 +1925,6 @@ volume_db = -20.0
 [node name="hud_click_3" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=389034069]
 stream = ExtResource("48_s3ss1")
 volume_db = -21.0
-autoplay = true
 
 [node name="low_humming" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=815406511]
 stream = ExtResource("49_dqcwm")
@@ -2294,7 +2296,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7469215, 1.5, 2.2999992)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.999999, 5.8671556, 2.2999992)
 
 [node name="Balloon4" parent="Balloon_container" unique_id=2070994326 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.900001, 0.3571559, 2.2999992)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.9000006, 0.3571559, 2.2999992)
 
 [node name="Trio_balloon" type="Node3D" parent="Balloon_container" unique_id=404120275]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, 0)

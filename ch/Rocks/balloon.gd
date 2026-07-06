@@ -22,9 +22,9 @@ var force_mult_index := 0
 
 @onready var money_label_3d: Label3D = $Money_Label3D
 
-@onready var pineapple_mesh:= $Mesh/small_rock
+#@onready var pineapple_mesh:= $Mesh/small_rock
 @onready var main_col: CollisionShape3D = $main_col
-@onready var current_mesh : MeshInstance3D= pineapple_mesh
+@onready var current_mesh : MeshInstance3D=  $Mesh/small_rock2
 
 var max_health : int = 0
 var cash_value := 0
@@ -163,7 +163,7 @@ func reset_rock_back_on() -> void:
 	var base_health := int(gl_DataSet.get_value("hazard_type_1", 1))
 	#var base_cash   := int(gl_DataSet.get_value("hazard_type_1", 0))
 	var base_cash 	:= int(gl_PlayerState.dataset.cash / 8)
-	var base_scale  := Vector3.ONE * 0.35
+	var base_scale  := Vector3.ONE * 1.0 #0.35
 
 	# Random subtype: 1x / 2x / 3x
 	
@@ -174,9 +174,9 @@ func reset_rock_back_on() -> void:
 	health = base_health
 	cash_value = base_cash # * size_multiplier
 	max_health = health
-	pineapple_mesh.visible = true
+	
 	#main_col.scale = Vector3.ONE * 0.125
-	current_mesh = pineapple_mesh
+	current_mesh = $Mesh/small_rock2
 	current_mesh.scale = base_scale
 
 
@@ -187,7 +187,7 @@ func reset_stats() -> void:
 	pitch_adjustment = 0.02
 	
 	rock_activated = false
-	current_mesh = pineapple_mesh
+	current_mesh = $Mesh/small_rock2
 	current_rock_type = ""
 	rock_type_name = ""
 	health = 0

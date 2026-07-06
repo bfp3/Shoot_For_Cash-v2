@@ -6,14 +6,13 @@
 [ext_resource type="Texture2D" uid="uid://bl6g8v8djrlds" path="res://unfiled/Decal_placeholders/counter_clock_arrow_2.png" id="4_858g4"]
 [ext_resource type="StyleBox" uid="uid://c4p7ad54klwn" path="res://res/progress_bar_no_progress.tres" id="6_hq1g1"]
 [ext_resource type="StyleBox" uid="uid://b0ho0ncfb085s" path="res://res/progress_bar_green.tres" id="7_ve44s"]
-[ext_resource type="AudioStream" uid="uid://bjhic4kqet7dw" path="res://sfx/MC_tunes/USERSONG164.WAV" id="8_c5dla"]
+[ext_resource type="AudioStream" uid="uid://bapu7v4tm2kbn" path="res://sfx/USERSONG164.ogg" id="8_c5dla"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="8_p2noj"]
 [ext_resource type="AudioStream" uid="uid://cpp38q635ve5k" path="res://sfx/shop_money_coin_sfx_01.wav" id="9_f1cis"]
 [ext_resource type="AudioStream" uid="uid://d1pu763qnnagm" path="res://sfx/shop_purchase_sfx_01.wav" id="10_qvtko"]
 [ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="11_4uil5"]
 [ext_resource type="AudioStream" uid="uid://c2ngyiryenus2" path="res://sfx/shop_purchase_sfx_02.wav" id="12_i00hl"]
 [ext_resource type="AudioStream" uid="uid://c5he7tw0onue" path="res://sfx/shop_reroll_sfx_01.wav" id="13_eusbm"]
-[ext_resource type="AudioStream" uid="uid://xh6kpfpcl3mh" path="res://sfx/shop_mystery_box_sfx_01.wav" id="14_jj5pr"]
 [ext_resource type="AudioStream" uid="uid://imyoryakreog" path="res://sfx/stepwood_1_short.wav" id="15_c16qu"]
 [ext_resource type="AudioStream" uid="uid://3nuo2i6wbxte" path="res://sfx/misc-001.wav" id="16_h4xss"]
 [ext_resource type="AudioStream" uid="uid://ecijroapobxk" path="res://sfx/Egg_pulse_sfx.wav" id="17_4itw5"]
@@ -250,7 +249,7 @@ custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
 
-[node name="DoneButton" type="Button" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1566860871 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="DoneButton" type="Button" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1566860871]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 120)
 layout_mode = 2
@@ -263,9 +262,6 @@ text = "DONE"
 script = ExtResource("8_p2noj")
 border_outline_colour = Color(0.46799996, 0.46799996, 0.52, 1)
 editable = true
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/DoneButton" unique_id=6153412]
 layout_mode = 1
@@ -878,7 +874,6 @@ stream = ExtResource("13_eusbm")
 volume_db = -40.0
 
 [node name="shop_mystery_box_01" type="AudioStreamPlayer" parent="SFX" unique_id=733293965]
-stream = ExtResource("14_jj5pr")
 volume_db = -40.0
 
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=618503378]

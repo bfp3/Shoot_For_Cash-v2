@@ -11,9 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://cc13w4ilb1uvk" path="res://sfx/Gun_SFX_attempt_2.wav" id="10_dpvnf"]
 [ext_resource type="Script" uid="uid://bh2xro2ru0ok0" path="res://ch/Player/scripts/crosshair.gd" id="10_hwyif"]
 [ext_resource type="Script" uid="uid://lqvwdyu058t8" path="res://ch/Player/scripts/cam_pivot.gd" id="10_kkix3"]
-[ext_resource type="AudioStream" uid="uid://byhtcxrbwtssh" path="res://sfx/Hovercraft_turning_SFX_left_v3.wav" id="10_kqwld"]
 [ext_resource type="Script" uid="uid://snu7cq0wsbqk" path="res://ch/Player/scripts/player_camera.gd" id="10_n6ds6"]
-[ext_resource type="AudioStream" uid="uid://cjjll1huuw6r0" path="res://sfx/Hovercraft_turning_SFX_right_v3.wav" id="11_f3vr7"]
 [ext_resource type="AudioStream" uid="uid://mbyekv7f3n1p" path="res://sfx/opt_3_fade_shortened.wav" id="12_j58se"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="13_isobx"]
 [ext_resource type="Script" uid="uid://1uqdupt170u1" path="res://ch/Player/scripts/player_gun.gd" id="13_mxtxj"]
@@ -26,6 +24,8 @@
 [ext_resource type="AudioStream" uid="uid://cy2pdgnkfa4hd" path="res://sfx/Random_sound_1.wav" id="19_hv0dl"]
 [ext_resource type="FontFile" uid="uid://hwtrvtud8cr4" path="res://unfiled/Fonts/kenney_kenney-fonts/Fonts/Kenney Mini Square Mono.ttf" id="19_iph0b"]
 [ext_resource type="AudioStream" uid="uid://due6g7wbw8x21" path="res://sfx/one_hundred_percent.wav" id="20_8wrod"]
+[ext_resource type="AudioStream" uid="uid://45sqplfe2lrx" path="res://sfx/Hovercraft_turning_SFX_left_v3.ogg" id="20_g6ubq"]
+[ext_resource type="AudioStream" uid="uid://bjwef8mxi4edf" path="res://sfx/Hovercraft_turning_SFX_right_v3.ogg" id="21_bpx2c"]
 [ext_resource type="AudioStream" uid="uid://ccvfyjrlnn64c" path="res://sfx/ninja_flicker.wav" id="21_iph0b"]
 [ext_resource type="Script" uid="uid://bmye3h6jry1bf" path="res://ch/Player/scripts/mouse_turning_sfx_script.gd" id="24_b1tng"]
 [ext_resource type="Script" uid="uid://c4ks6vo5kbwh5" path="res://ch/Player/sky_mine_hud.gd" id="29_f75d4"]
@@ -665,20 +665,20 @@ unique_name_in_owner = true
 script = ExtResource("24_b1tng")
 
 [node name="Turn_left" type="AudioStreamPlayer" parent="Mouse_turning_SFX" unique_id=903944783]
-stream = ExtResource("10_kqwld")
+stream = ExtResource("20_g6ubq")
 volume_db = -44.0
 
 [node name="Turn_right" type="AudioStreamPlayer" parent="Mouse_turning_SFX" unique_id=1593587119]
-stream = ExtResource("11_f3vr7")
+stream = ExtResource("21_bpx2c")
 volume_db = -44.0
 
 [node name="Turn_up" type="AudioStreamPlayer" parent="Mouse_turning_SFX" unique_id=2086884424]
-stream = ExtResource("10_kqwld")
+stream = ExtResource("20_g6ubq")
 volume_db = -44.0
 pitch_scale = 1.05
 
 [node name="Turn_down" type="AudioStreamPlayer" parent="Mouse_turning_SFX" unique_id=1491761300]
-stream = ExtResource("11_f3vr7")
+stream = ExtResource("21_bpx2c")
 volume_db = -44.0
 pitch_scale = 1.05
 

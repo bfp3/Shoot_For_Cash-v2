@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://bc6weh2tp6rox"]
 
+[ext_resource type="Environment" uid="uid://dl2a0x18s665r" path="res://res/world_env_moss.tres" id="1_snbl5"]
 [ext_resource type="PackedScene" uid="uid://c3mxy8tvyd34a" path="res://unfiled/Blender_custom_assets/brick_fountain_2.glb" id="4_1vd3e"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="6_u0cw1"]
 [ext_resource type="PackedScene" uid="uid://povuqcr3mqfi" path="res://unfiled/Barricades/Standard_barricade.tscn" id="7_qy441"]
@@ -11,6 +12,7 @@
 [ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="16_1thcr"]
 [ext_resource type="Texture2D" uid="uid://x5tjmkxr3qll" path="res://res/dirt_texture_01.png" id="16_k7lvh"]
 [ext_resource type="Material" uid="uid://dnf6h6nys5ggr" path="res://res/mountain_material.tres" id="16_r0nke"]
+[ext_resource type="PackedScene" uid="uid://b5i0347dtybjp" path="res://ch/spare_parts_removed_to_optimise/outset_ocean.tscn" id="17_1thcr"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="17_fwjsh"]
 [ext_resource type="Texture2D" uid="uid://bhst5en4f2e3b" path="res://res/mountain_image.png" id="17_p87rn"]
 [ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="17_snbl5"]
@@ -894,6 +896,7 @@ shadow_mesh = SubResource("ArrayMesh_pnf6a")
 
 [node name="Weather_animation" type="AnimationPlayer" parent="." unique_id=142603363]
 libraries/ = SubResource("AnimationLibrary_1thcr")
+autoplay = &"weather_anim"
 speed_scale = 0.05
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
@@ -903,14 +906,16 @@ light_color = Color(1, 0.7647059, 0.56078434, 1)
 light_indirect_energy = 0.0
 light_volumetric_fog_energy = 0.0
 light_bake_mode = 0
+shadow_enabled = true
 shadow_opacity = 0.85
 directional_shadow_mode = 0
 directional_shadow_blend_splits = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2106927033 groups=["world_env"]]
 unique_name_in_owner = true
+environment = ExtResource("1_snbl5")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=580761885]
+[node name="ShadowBlocker" type="MeshInstance3D" parent="." unique_id=580761885]
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, -2, -3.015, -18)
 lod_bias = 10.0
 mesh = SubResource("QuadMesh_k7lvh")
@@ -1798,24 +1803,6 @@ material_override = ExtResource("16_1thcr")
 mesh = SubResource("TextMesh_snbl5")
 skeleton = NodePath("")
 script = ExtResource("17_fwjsh")
-
-[node name="DirtDecal" type="Decal" parent="." unique_id=351365736]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.825, -3, 15.850001)
-size = Vector3(15, 5, 10)
-texture_albedo = ExtResource("16_k7lvh")
-texture_normal = ExtResource("16_k7lvh")
-texture_orm = ExtResource("16_k7lvh")
-modulate = Color(1, 1, 1, 0.4627451)
-normal_fade = 0.5
-
-[node name="DirtDecal2" type="Decal" parent="." unique_id=1268265515]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.175, -3, 15.850001)
-size = Vector3(15, 5, 10)
-texture_albedo = ExtResource("16_k7lvh")
-texture_normal = ExtResource("16_k7lvh")
-texture_orm = ExtResource("16_k7lvh")
-modulate = Color(1, 1, 1, 0.4627451)
-normal_fade = 0.5
 
 [node name="DirtDecal3" type="Decal" parent="." unique_id=999983740]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.175, -3, 9.850001)
@@ -2705,6 +2692,8 @@ transform = Transform3D(-18.354967, -2.9358864, -7.3808193, 6.1654124, 6.451724,
 material_override = ExtResource("6_u0cw1")
 mesh = SubResource("ArrayMesh_2svof")
 skeleton = NodePath("")
+
+[node name="OutsetOcean" parent="." unique_id=658307306 instance=ExtResource("17_1thcr")]
 
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]
