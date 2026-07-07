@@ -1969,6 +1969,7 @@ mesh = SubResource("BoxMesh_tijj2")
 
 [node name="Boat" parent="BackgroundMesh/Moving_nodes" unique_id=1251092716 instance=ExtResource("15_x8ffe")]
 transform = Transform3D(1.135, 0, 0, 0, 1.135, 0, 0, 0, 1.135, 271.545, 13.465, 502.65)
+visible = false
 
 [node name="Brick_wall_other_parts" type="Node3D" parent="BackgroundMesh/Moving_nodes" unique_id=1469444206]
 transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 189.7, 1.955, 164.75)
@@ -3217,6 +3218,10 @@ skeleton = NodePath("")
 [node name="OutsetOcean" parent="." unique_id=658307306 instance=ExtResource("17_1thcr")]
 transform = Transform3D(1, 0, 0, 0, 0.99945015, 0.033155177, 0, -0.033155177, 0.99945015, 3.36, 3.65, 333.782)
 
+[node name="WaterMaterialDesigner" parent="OutsetOcean" index="0" unique_id=1811003880]
+wave_fade_softness = 1.0
+
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]
 [editable path="Boatmesh/brick_fountain_3"]
+[editable path="OutsetOcean"]

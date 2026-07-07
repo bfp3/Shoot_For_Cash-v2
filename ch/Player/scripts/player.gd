@@ -566,7 +566,7 @@ func fire_weapon() -> void:
 		
 	if _is_currently_shooting:
 		weapon_shooting.play_missed_sounds()
-		penalize_early_fire()
+		#penalize_early_fire()
 		return
 		
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:

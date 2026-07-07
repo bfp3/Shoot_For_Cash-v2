@@ -22,17 +22,17 @@ func move_all_ballons_back() -> void:
 	
 func add_balloon() -> void:
 	
-	
-	for i in get_children():
-		if i is StaticBody3D:
-			if i.behind_player:
-				i.move_balloon_in_front_of_player()
-				var tween = create_tween()
-				tween.set_ease(Tween.EASE_IN_OUT)
-				tween.set_trans(Tween.TRANS_SINE)
-				tween.tween_property(i, "global_position:z", 27.0, 5.0).as_relative()
+	for l in range(2):
+		for i in get_children():
+			if i is StaticBody3D:
+				if i.behind_player:
+					i.move_balloon_in_front_of_player()
+					var tween = create_tween()
+					tween.set_ease(Tween.EASE_IN_OUT)
+					tween.set_trans(Tween.TRANS_SINE)
+					tween.tween_property(i, "global_position:z", 27.0, 5.0).as_relative()
 
-				break
+					break
 
 func _physics_process(delta: float) -> void:
 	

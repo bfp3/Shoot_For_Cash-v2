@@ -1,8 +1,11 @@
 extends StaticBody3D
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
+const BALLOON_MAT_GREY = preload('uid://dgrbglmgp2fad')
 
 var pitch_adjustment := 0.02
+
+@export var hazard_mode := true
 
 enum State {
 	INACTIVE,
@@ -112,8 +115,12 @@ func update_active() -> void:
 	$Mesh.show()
 	
 func update_hit() -> void:
-	$pop_balloon.pitch_scale = randf_range(0.95,1.1)
-	$pop_balloon.play()
+	
+	
+	if hazard_mode:
+		$pop_balloon.pitch_scale = randf_range(0.95,1.1)
+		$pop_balloon.play()
+	
 	if !balloon_carrier:
 		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
 		
@@ -216,29 +223,41 @@ func shake_camera() -> void:
 	if player_cam:
 		player_cam.shake_camera_rock_destroyed()
 
-func apply_hit_reaction(screen_offset : Vector2) -> void:
-
-	smoke_particles_duplicates()
+func destroyed_by_shratnel() -> void:
+	print('destroyed by shratnel')
+	hazard_mode = false
+	$pop_balloon_soft.play()
+	$Mesh.hide()
+	gl_PlayerState.log_hit(rock_type_name, current_rock_type, 3)
+	smoke_particles()
+	await get_tree().create_timer(2.0).timeout
+	queue_free()
+	#hide()
+	#global_position = start_pos
 	
-	current_mesh.get_node('damage_mesh').show()
-	await get_tree().create_timer(0.08).timeout
-	current_mesh.get_node('damage_mesh').hide()
-	
-	
-
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
 	if !visible:
 		return
-		
+	
 	health -= damage
 	
-	if health > 0:
-		play_hit_sfx()
-		apply_hit_reaction(screen_offset)
-		return
-	
-	start_destroyed_process()
+	#if health > 0:
+		#play_hit_sfx()
+		#smoke_particles_duplicates()
+		#current_mesh.get_node('damage_mesh').show()
+		#await get_tree().create_timer(0.08).timeout
+		#current_mesh.get_node('damage_mesh').hide()
+		#return
+		#return
+	#else:
+	if !hazard_mode:
+		$pop_balloon_soft.play()
+		global_position = start_pos
+		hide()
+		
+	else:
+		start_destroyed_process()
 	
 
 func start_destroyed_process() -> void:
@@ -251,13 +270,11 @@ func start_destroyed_process() -> void:
 	
 	#if !destroyed_by_marked:
 	disable_collision()
-	remove_from_group('Target')
 
 	play_destroy_sfx()
 	
 	if is_in_group('Target'):
 		remove_from_group('Target')
-		
 	
 	if balloon_carrier:
 		cash_value = balloon_carrier_penalty
@@ -274,13 +291,27 @@ func start_destroyed_process() -> void:
 	
 
 	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
+	tween.tween_property(self, "scale", scale * 1.5, 0.33)
 	await tween.finished
-
+	scale = clamp(scale, Vector3.ONE, Vector3.ONE * 2.5)
 	shake_camera()
-
 	
-
+	var current_pos := global_position
+	 
+	global_position.y -= 20.0
+	
+	show()
+	#current_mesh.scale = Vector3.ONE * 0.5
+	$Mesh.scale = Vector3.ONE
+	var tween_balloon = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween_balloon.tween_property(self, "global_position", current_pos, 2.5)
+	#await tween_balloon.finished
+	rock_activated = true
+	enable_collision()
+	is_deactivated = false
+	add_to_group('Target')
+	print('coming bakc up')
+	
 func play_hit_sfx() -> void:
 	$take_damage_sfx.volume_db = randf_range(-25.0, -20.0)
 	$take_damage_sfx.pitch_scale = randf_range(0.9, 1.2)

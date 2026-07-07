@@ -724,6 +724,208 @@ albedo_texture = SubResource("GradientTexture2D_x736i")
 material = SubResource("StandardMaterial3D_2dco4")
 size = Vector2(0.2, 0.2)
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_jq8lj"]
+radius = 0.304
+
+[sub_resource type="Shader" id="Shader_nul74"]
+code = "shader_type spatial;
+render_mode blend_mix,
+		depth_draw_opaque,
+		cull_back,
+		diffuse_toon,
+		specular_disabled,
+		ambient_light_disabled,
+		alpha_to_coverage;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,
+		filter_linear_mipmap,
+		repeat_enable;
+uniform float alpha_scissor_threshold;
+uniform float alpha_antialiasing_edge;
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+
+uniform sampler2D depth_texture : hint_depth_texture, 
+		repeat_disable, 
+		filter_nearest;
+uniform float fade_distance = 0.5;
+
+uniform sampler2D erosion_tex;
+uniform vec2 erosion_tiling = vec2(1.0, 1.0);
+
+uniform sampler2D erosion_curve;
+uniform float erosion_threshold_offset = 0.2;
+
+uniform sampler2D erosion_offset_y_curve;
+
+uniform sampler2D dark_side : hint_default_black;
+uniform sampler2D bright_side : hint_default_black;
+
+uniform float threshold = -0.25;
+uniform float threshold_offset = 0.25;
+
+varying float lifetime;
+
+void vertex() {
+	lifetime = INSTANCE_CUSTOM.y;
+	
+	if (!OUTPUT_IS_SRGB) {
+		COLOR.rgb = mix(
+			pow((COLOR.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)), vec3(2.4)), 
+			COLOR.rgb * (1.0 / 12.92), 
+			lessThan(COLOR.rgb, vec3(0.04045))
+			);
+	}
+	
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+float fresnel(float amount, vec3 normal, vec3 view)
+{
+	return pow(
+		(1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0 )), 
+		amount
+		);
+}
+
+float depth_fade(vec2 screen_uv, vec4 world_pos, vec3 vertex) {
+	float depth_tex = textureLod(depth_texture, screen_uv, 0.0).r;
+	world_pos.xyz /= world_pos.w;
+	
+	float fade = clamp(
+		1.0-smoothstep(world_pos.z+fade_distance,world_pos.z,vertex.z),
+		0.0,
+		1.0
+		);
+	return fade;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	albedo_tex.rgb = mix(
+		pow((albedo_tex.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)),vec3(2.4)),
+		albedo_tex.rgb.rgb * (1.0 / 12.92),
+		lessThan(albedo_tex.rgb,vec3(0.04045))
+		);
+	albedo_tex *= COLOR;
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	
+	ALPHA *= albedo.a * albedo_tex.a;
+	
+	float erosion_offset_y = texture(
+		erosion_offset_y_curve, 
+		vec2(lifetime)
+		).r;
+		
+	float erosion = texture(
+		erosion_tex, 
+		UV * erosion_tiling + vec2(0.0, erosion_offset_y)
+		).r;
+	
+	float smoothstep_min = texture(erosion_curve, vec2(lifetime)).r;
+	float smoothstep_max = smoothstep_min + erosion_threshold_offset;
+	
+	float erosion_smooth = smoothstep(
+		smoothstep_min,
+		smoothstep_max,
+		erosion
+	);
+	
+	ALPHA *= erosion_smooth;
+	
+	float depth_tex = textureLod(depth_texture, SCREEN_UV, 0.0).r;
+	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0-1.0, depth_tex, 1.0);
+	float fade = depth_fade(SCREEN_UV, world_pos, VERTEX);
+	
+	ALPHA *= fade;
+}
+
+void light() {
+	// standard
+	DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) 
+			* ATTENUATION 
+			* ALBEDO;
+	
+	vec3 dark_color = texture(dark_side, vec2(0.0)).rgb;
+	vec3 bright_color = texture(bright_side, vec2(0.0)).rgb;
+	
+	vec3 custom = mix(
+		dark_color, 
+		bright_color, 
+		smoothstep(
+			threshold, 
+			threshold + threshold_offset, 
+			dot(NORMAL, LIGHT)
+			)
+		);
+	
+	float fres = fresnel(2.0, NORMAL, VIEW);
+	
+	DIFFUSE_LIGHT = (
+		ALBEDO + 
+		(fres * clamp(ATTENUATION - 0.75, 0.0, 1.0))
+		) * custom;
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_708uo"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.99558, 0.99558, 0.99558, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_nm51q"]
+gradient = SubResource("Gradient_708uo")
+
+[sub_resource type="Gradient" id="Gradient_a3iqv"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.288519, 0.288518, 0.288518, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_jq8lj"]
+gradient = SubResource("Gradient_a3iqv")
+
+[sub_resource type="Curve" id="Curve_n367x"]
+_limits = [0.0, 1.1, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 3.25, 0, 0, Vector2(1, 1.1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_c4njd"]
+curve = SubResource("Curve_n367x")
+
+[sub_resource type="Curve" id="Curve_37inu"]
+_data = [Vector2(0, 0), 0.0, 2.5, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_x7djv"]
+curve = SubResource("Curve_37inu")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_be75m"]
+render_priority = 0
+shader = SubResource("Shader_nul74")
+shader_parameter/albedo = Color(1.825, 1.825, 0, 1)
+shader_parameter/alpha_scissor_threshold = 0.125
+shader_parameter/alpha_antialiasing_edge = 0.25
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/fade_distance = 0.75
+shader_parameter/erosion_tex = ExtResource("22_iynwb")
+shader_parameter/erosion_tiling = Vector2(2, 4.355)
+shader_parameter/erosion_curve = SubResource("CurveTexture_c4njd")
+shader_parameter/erosion_threshold_offset = 0.045
+shader_parameter/erosion_offset_y_curve = SubResource("CurveTexture_x7djv")
+shader_parameter/dark_side = SubResource("GradientTexture1D_jq8lj")
+shader_parameter/bright_side = SubResource("GradientTexture1D_nm51q")
+shader_parameter/threshold = 0.0
+shader_parameter/threshold_offset = 0.075
+
+[sub_resource type="SphereMesh" id="SphereMesh_x7djv"]
+material = SubResource("ShaderMaterial_be75m")
+radius = 0.304
+height = 0.608
+radial_segments = 18
+rings = 6
+
 [node name="Pineapple" type="RigidBody3D" unique_id=1539472592 groups=["pineapple"]]
 collision_mask = 0
 axis_lock_linear_z = true
@@ -856,8 +1058,8 @@ script = ExtResource("19_c7iug")
 delays = {
 &"Smoke_quick": 0.0,
 &"Sparks01": 0.0,
-&"embers": 0.5,
-&"pineapple_embers": 0.5,
+&"embers": 1.0,
+&"pineapple_embers": 0.0,
 &"upward_smoke_glow": 0.0
 }
 
@@ -918,10 +1120,90 @@ script = ExtResource("25_khs04")
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false
+amount = 80
+lifetime = 4.0
+one_shot = true
+explosiveness = 0.95
+fixed_fps = 60
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_sjja1")
+draw_pass_1 = SubResource("QuadMesh_bymj0")
+
+[node name="AoE2Fail" type="Node3D" parent="." unique_id=1119795136]
+top_level = true
+script = ExtResource("19_c7iug")
+delays = {
+&"Smoke_quick": 0.0,
+&"Sparks01": 0.0,
+&"embers": 1.0,
+&"pineapple_embers": 0.0,
+&"upward_smoke_glow": 0.0
+}
+
+[node name="embers" type="GPUParticles3D" parent="AoE2Fail" unique_id=114288092]
+visible = false
+material_override = SubResource("StandardMaterial3D_xb1fg")
+cast_shadow = 0
+emitting = false
 amount = 50
 lifetime = 4.0
 one_shot = true
 explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_65uxc")
+draw_pass_1 = SubResource("QuadMesh_bymj0")
+
+[node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE2Fail" unique_id=902334562]
+visible = false
+material_override = SubResource("ShaderMaterial_fw7wv")
+cast_shadow = 0
+emitting = false
+amount = 1
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+draw_order = 3
+transform_align = 1
+process_material = SubResource("ParticleProcessMaterial_2vt30")
+draw_pass_1 = ExtResource("23_nqahw")
+
+[node name="Sparks01" type="GPUParticles3D" parent="AoE2Fail" unique_id=1112008638]
+material_override = SubResource("StandardMaterial3D_xb1fg")
+cast_shadow = 0
+emitting = false
+amount = 20
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_beb3h")
+draw_pass_1 = SubResource("QuadMesh_bymj0")
+
+[node name="Smoke_quick" type="GPUParticles3D" parent="AoE2Fail" unique_id=410846378]
+transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
+cast_shadow = 0
+emitting = false
+amount = 1
+lifetime = 5.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 12
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_js5s8")
+draw_pass_1 = SubResource("QuadMesh_c7jqr")
+script = ExtResource("25_khs04")
+
+[node name="pineapple_embers" type="GPUParticles3D" parent="AoE2Fail" unique_id=2099963402]
+visible = false
+material_override = SubResource("StandardMaterial3D_xb1fg")
+cast_shadow = 0
+emitting = false
+amount = 80
+lifetime = 4.0
+one_shot = true
+explosiveness = 0.95
 fixed_fps = 60
 visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_sjja1")
@@ -1021,6 +1303,24 @@ max_polyphony = 2
 wait_time = 0.1
 one_shot = true
 
+[node name="Explosion_area" type="Area3D" parent="." unique_id=1324813825]
+unique_name_in_owner = true
+collision_layer = 3
+collision_mask = 3
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Explosion_area" unique_id=1351168760]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("SphereShape3D_jq8lj")
+disabled = true
+
+[node name="explosion_radius_mesh" type="MeshInstance3D" parent="Explosion_area" unique_id=1525320380]
+unique_name_in_owner = true
+cast_shadow = 0
+mesh = SubResource("SphereMesh_x7djv")
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="Start_falling_timer" to="." method="_on_start_falling_timer_timeout"]
 [connection signal="timeout" from="hit_wall_timer" to="." method="_on_hit_wall_timer_timeout"]
+[connection signal="body_entered" from="Explosion_area" to="." method="_on_explosion_area_body_entered"]

@@ -718,8 +718,8 @@ func start_destroyed_process() -> void:
 		
 	rock_activated = false
 	
-	if player_has_marked_rock == false:
-		expand_blast_radius()
+	#if player_has_marked_rock == false:
+	expand_blast_radius()
 	
 	enter_state(State.HIT)
 	if !rock_has_been_logged:
@@ -829,11 +829,12 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			body.hit_by_player(1, Vector2.ZERO)
 				
 	if body.name.contains('Balloon'):
-		if freeze_mine:
-			return
-		if player_has_marked_rock == false:
-			return
-		body.start_destroyed_process()
+		#if freeze_mine:
+			#return
+		#if player_has_marked_rock == false:
+			#return
+		body.destroyed_by_shratnel()
+		#body.start_destroyed_process()
 
 
 func expand_blast_radius() -> void:
@@ -881,7 +882,7 @@ func standard_blast() -> void:
 	$Explosion_area/CollisionShape3D.disabled = false
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 5.0, 0.25)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 15.0, 0.35) #0.25
 	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.25)
 	tween.tween_interval(0.1)
 	await tween.finished

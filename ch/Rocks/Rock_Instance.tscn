@@ -1845,6 +1845,7 @@ collision_layer = 3
 collision_mask = 3
 axis_lock_linear_z = true
 script = ExtResource("31_nxkf2")
+hazard_mode = false
 balloon_carrier = true
 
 [node name="main_col" type="CollisionShape3D" parent="Trio_balloon/Balloon4" unique_id=809893561]
@@ -1910,6 +1911,11 @@ max_polyphony = 2
 [node name="pop_balloon" type="AudioStreamPlayer" parent="Trio_balloon/Balloon4" unique_id=886344247]
 stream = ExtResource("33_q8tld")
 volume_db = -35.0
+
+[node name="pop_balloon_soft" type="AudioStreamPlayer" parent="Trio_balloon/Balloon4" unique_id=1493032698]
+stream = ExtResource("33_q8tld")
+volume_db = -42.0
+pitch_scale = 1.8
 
 [node name="AoE" type="Node3D" parent="Trio_balloon/Balloon4" unique_id=2099865106]
 top_level = true

@@ -336,7 +336,8 @@ func start_destroyed_process() -> void:
 
 	if !rock_activated:
 		return
-		
+	expand_blast_radius()
+	
 	#$Mesh/Yellow_particles.emitting = true
 	rock_activated = false
 	freeze = true
@@ -468,8 +469,9 @@ func hit_out_of_bounds() -> void:
 	set_collision_layer_value(3, false)
 	is_deactivated = true
 
-	was_hit_tween()
 
+	hit_wall_effects()
+	
 	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
 	await tween.finished
@@ -481,6 +483,12 @@ func hit_out_of_bounds() -> void:
 
 	enter_state(State.MISSED)
 
+func hit_wall_effects() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_OUT)
+	tween.tween_property($AoE2Fail, "play_particles", true, 0.10)
+	tween.tween_property($Mesh, "scale", Vector3.ZERO, 0.10)
+	await tween.finished
+
 func check_position_for_wall() -> void:
 
 	match exit_side:
@@ -489,7 +497,7 @@ func check_position_for_wall() -> void:
 				hit_out_of_bounds()
 
 		ExitSide.RIGHT:
-			if global_position.x < -11.5:
+			if global_position.x < -15.5:
 				hit_out_of_bounds()
 
 		ExitSide.TOP:
@@ -508,3 +516,31 @@ func _on_hit_wall_timer_timeout() -> void:
 		
 	else:
 		$hit_wall_timer.start()
+
+
+func _on_explosion_area_body_entered(body: Node3D) -> void:
+
+	if body.name.contains('Balloon'):
+		body.destroyed_by_shratnel()
+		
+func expand_blast_radius() -> void:
+	%explosion_radius_mesh.show()
+	%explosion_radius_mesh.transparency = 0.4	
+
+	var blast_node : Area3D = %Explosion_area
+	blast_node.scale = Vector3.ONE
+	blast_node.show()
+	blast_node.monitoring = true
+	$Explosion_area/CollisionShape3D.disabled = false
+	
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_interval(0.1)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 20.0, 0.3)
+	tween.tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.35)
+	#tween.tween_interval(0.1)
+	await tween.finished
+	$Explosion_area/CollisionShape3D.disabled = true
+	blast_node.scale = Vector3.ONE
+	%explosion_radius_mesh.transparency = 0.4
+	blast_node.hide()
+	blast_node.monitoring = false

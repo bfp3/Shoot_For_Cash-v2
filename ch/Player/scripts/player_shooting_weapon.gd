@@ -138,7 +138,7 @@ func has_line_of_sight(target: Node3D) -> bool:
 		return true
 
 	var collider = result.collider
-	print(collider.name)
+
 	# Hit the target directly
 	if collider == target:
 		return true
@@ -234,7 +234,6 @@ func _cannot_shoot() -> void:
 	
 func process_target_hit(target, damage, screen_offset) -> void:
 	await get_tree().create_timer(power_bullet_speed).timeout
-	print('target name ,', target.name)
 	if is_instance_valid(target):
 		target.hit_by_player(
 			damage,
@@ -265,7 +264,6 @@ func shoot_target() -> void:
 			targets = [targets[0]] # Only the closest target
 
 	if targets.is_empty():
-		print("empty")
 		var shootable_hit = get_shootable_hit()
 
 		if !shootable_hit.is_empty():
@@ -463,7 +461,6 @@ func get_shootable_hit() -> Dictionary:
 	var collider = result.collider
 
 	if collider is StaticBody3D and !collider.is_in_group('Target') || collider is StaticBody3D && !collider.is_in_group('bonus_time_item'):
-		print("is this happening?")
 		return result
 
 	return {}
