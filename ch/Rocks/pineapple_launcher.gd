@@ -64,6 +64,7 @@ func pineapple_round_3() -> void:
 	launch_pineapple(pineapple_3)
 	
 func stop_pineapples() -> void:
+	await get_tree().create_timer(2.0).timeout
 	pineapple.reset_stats()
 	pineapple_2.reset_stats()
 	pineapple_3.reset_stats()

@@ -111,7 +111,9 @@ func update_shop(_power_name : String = "") -> void:
 
 
 func update_cost() -> void:
-	
+	if cost == 0:
+		cost_label.text = "[i][wave]FREE"
+		return
 	var settings = gl_PlayerState.get_all()
 	%upgrade_icon_anim.play('idle')
 	player_money = settings.cash
@@ -123,8 +125,9 @@ func update_cost() -> void:
 				#cost += randi_range(1,5)
 			
 	if new_round: # && visible:
+		
 		var rand_chance_for_free = randi_range(0, 22)
-		if rand_chance_for_free >= 22:
+		if rand_chance_for_free > 21:#22:
 			cost = 0
 			
 	

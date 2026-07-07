@@ -32,6 +32,7 @@
 [ext_resource type="Script" uid="uid://c4ks6vo5kbwh5" path="res://ch/Player/sky_mine_hud.gd" id="29_f75d4"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="29_fuvvr"]
 [ext_resource type="Script" uid="uid://c66tdaw8j27r3" path="res://ch/HUD_components/total_rocks.gd" id="29_mxtxj"]
+[ext_resource type="Texture2D" uid="uid://co5kt5dx3ohnd" path="res://res/arrow_texture.png" id="30_pivo4"]
 [ext_resource type="Script" uid="uid://lbyemwcvc6j3" path="res://ch/Player/auto_fire.gd" id="32_hv0dl"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="33_1tjj5"]
 [ext_resource type="Script" uid="uid://dkgy3x0fuv70v" path="res://ch/Player/pineapple_round_hud.gd" id="33_lf8qf"]
@@ -239,6 +240,44 @@ shadow_size = 3
 
 [sub_resource type="Gradient" id="Gradient_dpvnf"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_pivo4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Arrow_control:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_k5tjv"]
+resource_name = "rotate_arrow"
+length = 3.0333333
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Arrow_control:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3.0333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.283185307179586]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ms1v2"]
+_data = {
+&"RESET": SubResource("Animation_pivo4"),
+&"rotate_arrow": SubResource("Animation_k5tjv")
+}
 
 [sub_resource type="Animation" id="Animation_8wrod"]
 length = 0.001
@@ -1479,6 +1518,55 @@ text = "ROUND END"
 label_settings = SubResource("LabelSettings_hv0dl")
 horizontal_alignment = 1
 
+[node name="Arrow_control" type="Control" parent="CanvasLayer/Crosshair" unique_id=81441767]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.999973
+offset_top = -20.000004
+offset_right = 20.000027
+offset_bottom = 19.999996
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Arrow_height" type="TextureRect" parent="CanvasLayer/Crosshair/Arrow_control" unique_id=1371760284]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.000027
+offset_top = -80.000015
+offset_right = 31.999973
+offset_bottom = -16.000011
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.37, 0.37)
+pivot_offset_ratio = Vector2(0.5, 0.93)
+texture = ExtResource("30_pivo4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Shadow" type="TextureRect" parent="CanvasLayer/Crosshair/Arrow_control/Arrow_height" unique_id=689984914]
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.08, 1.08)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("30_pivo4")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Large_outer_scope" type="Control" parent="CanvasLayer/Crosshair" unique_id=60949367]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.137255)
@@ -1548,6 +1636,10 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=37314294]
+libraries/ = SubResource("AnimationLibrary_ms1v2")
+autoplay = &"rotate_arrow"
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=1715470668]
 layout_mode = 1

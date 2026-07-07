@@ -535,8 +535,8 @@ func expand_blast_radius() -> void:
 	
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 20.0, 0.3)
-	tween.tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.35)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 20.0, 0.5)
+	tween.tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.95)
 	#tween.tween_interval(0.1)
 	await tween.finished
 	$Explosion_area/CollisionShape3D.disabled = true

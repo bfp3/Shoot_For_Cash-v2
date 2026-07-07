@@ -224,6 +224,8 @@ func shake_camera() -> void:
 		player_cam.shake_camera_rock_destroyed()
 
 func destroyed_by_shratnel() -> void:
+	if !visible:
+		return
 	print('destroyed by shratnel')
 	hazard_mode = false
 	$pop_balloon_soft.play()

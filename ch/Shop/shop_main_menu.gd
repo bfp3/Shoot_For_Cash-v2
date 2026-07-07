@@ -378,6 +378,7 @@ func _on_re_roll_pressed() -> void:
 	is_rerolling = true
 	
 	for i in all_skills:
+		i.cost = -1
 		i.new_round = true
 	
 	sfx_reroll_purchased()
@@ -450,10 +451,10 @@ func update_shop_labels() -> void:
 	update_cost_label()
 	
 	if price_reroll == 0:
-		reroll_button.get_child(0).text = "[rainbow]Reroll[/rainbow]\n[wave][color=#ffc700]FREE[/color]"
+		reroll_button.get_child(0).text = "[i][rainbow]REROLL[/rainbow]\n[wave][color=#ffc700]FREE[/color]"
 
 	else:
-		reroll_button.get_child(0).text = "[rainbow]Reroll[/rainbow]\n[color=#42d100]$" + str(price_reroll) + "[/color]"
+		reroll_button.get_child(0).text = "[i][rainbow freq=0.5 sat=0.8 val=0.8 speed=1.0]REROLL[/rainbow]\n[color=#42d100]$" + str(price_reroll) + "[/color]"
 
 func sfx_purchase_made() -> void:
 	$SFX/shop_purchase_01.play()
