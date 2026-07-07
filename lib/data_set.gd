@@ -88,15 +88,15 @@ var dataset_string : Dictionary = {
 	 "place_name" 				: ['moss','redd','end game','blackwaters', 'sodomi', 'start']
 	
 	
-	,"tooltip_gun"						: ["You'll probably need this."]
+	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']
-	,"tooltip_auto_fire" 				: ['Just point, no click.']
+	,"tooltip_auto_fire" 				: ['Just Point, No Click']
 	,"tooltip_sky_mine" 					: ["Rock Go BOOM"]
-	,"tooltip_target_circle" 			: [""]
-	,"tooltip_gun_fire_rate"				: ["Less cooldown time"]
-	,"tooltip_bullet_damage" 			: ["Break Rocks Easier."]
-	,"tooltip_bullet_speed" 				: ["Bullets Travel Faster."]
-	,"tooltip_time_upgrade"				: ["+1 sec to the timer"]
+	,"tooltip_target_circle" 			: ["Bigger Scope"]
+	,"tooltip_gun_fire_rate"				: ["Decrease Cooldown"]
+	,"tooltip_bullet_damage" 			: ["Break Rocks Easier"]
+	,"tooltip_bullet_speed" 				: ["Bullets Fly Faster"]
+	,"tooltip_time_upgrade"				: ["+1 Sec To The Timer"]
 	
 	#,"tooltip_max_items_in_shop": ['Add +1 Item To The Shop Permanently']
 	#,"tooltip_bullet_delay"				: ["Bullet Delay * NOT USED"]

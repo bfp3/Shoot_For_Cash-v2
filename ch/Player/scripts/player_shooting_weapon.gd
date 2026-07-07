@@ -138,7 +138,7 @@ func has_line_of_sight(target: Node3D) -> bool:
 		return true
 
 	var collider = result.collider
-
+	print(collider.name)
 	# Hit the target directly
 	if collider == target:
 		return true
@@ -234,13 +234,12 @@ func _cannot_shoot() -> void:
 	
 func process_target_hit(target, damage, screen_offset) -> void:
 	await get_tree().create_timer(power_bullet_speed).timeout
-
+	print('target name ,', target.name)
 	if is_instance_valid(target):
 		target.hit_by_player(
 			damage,
 			screen_offset
 		)
-		
 		
 		
 		
@@ -266,8 +265,14 @@ func shoot_target() -> void:
 			targets = [targets[0]] # Only the closest target
 
 	if targets.is_empty():
-		shoot_bullet_without_target()
-		
+		print("empty")
+		var shootable_hit = get_shootable_hit()
+
+		if !shootable_hit.is_empty():
+			shoot_shootable_object(shootable_hit)
+		else:
+			shoot_bullet_without_target()
+
 		shooting_sky_mine = false
 		return
 
@@ -286,8 +291,8 @@ func shoot_target() -> void:
 		#if target_data.scope_hit == "left":
 			#damage *= 2
 
-		if target.has_method("marking_myself_as_target"):
-			target.marking_myself_as_target()
+		#if target.has_method("marking_myself_as_target"):
+			#target.marking_myself_as_target()
 
 		%Crosshair.crosshair_shake()
 		player_gun.get_barrel_position(target.global_position.x)
@@ -321,60 +326,6 @@ func shoot_target() -> void:
 	
 func can_shoot(_can_shoot : bool) -> void:
 	can_fire_weapon = _can_shoot
-
-func Xshoot_target() -> void:
-	_reset_pitch_adjustment()
-	
-	var targets = get_targets_in_scope()
-
-	if targets.is_empty():
-		shoot_bullet_without_target()
-		play_missed_sounds()
-		return
-	else:
-		$"../SFX/Flicker_sound".play()
-		get_parent().player_did_not_miss()
-
-	for target_data in targets:
-
-		var target = target_data.target
-
-		if !is_instance_valid(target):
-			continue
-
-		var damage = power_bullet_damage
-
-		if target_data.scope_hit == "left":
-			damage *= 2
-
-		if target.has_m4ethod("marking_myself_as_target"):
-			target.marking_myself_as_target()
-
-		%Crosshair.crosshair_shake()
-		player_gun.get_barrel_position(target.global_position.x)
-		$'../Cam_pivot/Camera3D'.shake_camera_shooting()
-
-		#play_accurate_sounds()
-		target.play_accurate_sounds()
-
-		spawn_projectile(target, power_bullet_speed)
-
-		var rock_screen_pos = player_camera.unproject_position(target.global_position)
-		var screen_offset = rock_screen_pos - crosshair.global_position
-
-		await get_tree().create_timer(power_bullet_speed).timeout
-
-		target.hit_by_player(
-			damage,
-			screen_offset
-		)
-
-		await get_tree().create_timer(power_bullet_delay).timeout
-
-	
-
-		if time_ran_out:
-			break
 	
 	
 func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO) -> void:
@@ -494,6 +445,65 @@ func shoot_bullet_without_target() -> void:
 	spawn_projectile(null, power_bullet_speed, aim_point)
 
 	
+func get_shootable_hit() -> Dictionary:
+	
+	var screen_pos = crosshair.global_position
+	var origin = player_camera.project_ray_origin(screen_pos)
+	var direction = player_camera.project_ray_normal(screen_pos)
+	var end = origin + direction * view_limit
+
+	var space_state = get_world_3d().direct_space_state
+	var result = space_state.intersect_ray(
+		PhysicsRayQueryParameters3D.create(origin, end)
+	)
+
+	if result.is_empty():
+		return {}
+
+	var collider = result.collider
+
+	if collider is StaticBody3D and !collider.is_in_group('Target') || collider is StaticBody3D && !collider.is_in_group('bonus_time_item'):
+		print("is this happening?")
+		return result
+
+	return {}
+	
+
+
+func shoot_shootable_object(hit: Dictionary) -> void:
+	var hit_position: Vector3 = hit.position
+	var hit_normal: Vector3 = hit.normal
+	
+	$"../SFX/Flicker_sound".play()
+
+	if player_gun:
+		player_gun.get_barrel_position(hit_position.x)
+
+	player_camera.shake_camera_shooting()
+	%Crosshair.crosshair_shake()
+
+	spawn_projectile(null, power_bullet_speed, hit_position)
+
+	process_shootable_hit.call_deferred(hit_position, hit_normal)
+
+
+func process_shootable_hit(hit_position: Vector3, hit_normal: Vector3) -> void:
+	await get_tree().create_timer(power_bullet_speed).timeout
+	explode_at_point(hit_position, hit_normal)
+
+
+func explode_at_point(explosion_position: Vector3, normal: Vector3) -> void:
+	var explosion = %ShootWallVFX #.duplicate()
+	#get_tree().get_current_scene().add_child(explosion)
+	explosion.global_position = explosion_position
+
+	#if explosion.has_method("orient_to_normal"):
+		#explosion.orient_to_normal(normal)
+
+	round_manager.bullet_active = false
+	explosion.play_particles = true
+	%take_damage_sfx.play()
+	
 func Xshoot_bullet_without_target() -> void:
 	if auto_fire:
 		return
@@ -571,3 +581,57 @@ func Xshoot_bullet_without_target() -> void:
 #
 		#tween.tween_property(
 			#body, "global_position", destination, 0.2)
+
+
+#func Xshoot_target() -> void:
+	#_reset_pitch_adjustment()
+	#
+	#var targets = get_targets_in_scope()
+#
+	#if targets.is_empty():
+		#shoot_bullet_without_target()
+		#play_missed_sounds()
+		#return
+	#else:
+		#$"../SFX/Flicker_sound".play()
+		#get_parent().player_did_not_miss()
+#
+	#for target_data in targets:
+#
+		#var target = target_data.target
+#
+		#if !is_instance_valid(target):
+			#continue
+#
+		#var damage = power_bullet_damage
+#
+		#if target_data.scope_hit == "left":
+			#damage *= 2
+#
+		#if target.has_m4ethod("marking_myself_as_target"):
+			#target.marking_myself_as_target()
+#
+		#%Crosshair.crosshair_shake()
+		#player_gun.get_barrel_position(target.global_position.x)
+		#$'../Cam_pivot/Camera3D'.shake_camera_shooting()
+#
+		##play_accurate_sounds()
+		#target.play_accurate_sounds()
+#
+		#spawn_projectile(target, power_bullet_speed)
+#
+		#var rock_screen_pos = player_camera.unproject_position(target.global_position)
+		#var screen_offset = rock_screen_pos - crosshair.global_position
+#
+		#await get_tree().create_timer(power_bullet_speed).timeout
+#
+		#target.hit_by_player(
+			#damage,
+			#screen_offset
+		#)
+#
+		#await get_tree().create_timer(power_bullet_delay).timeout
+#
+		#if time_ran_out:
+			#break
+			

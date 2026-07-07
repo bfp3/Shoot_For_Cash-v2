@@ -1,4 +1,4 @@
-extends Node3D
+extends RigidBody3D
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
@@ -8,7 +8,11 @@ var activated := true
 @export var additional_time := 5.0
 
 func _ready() -> void:
+	self.queue_free()
+	return
 	EventBus.instance.egg_pulsed.connect(start_round)
+	time_ran_out()
+
 
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:	
 	play_hit_sfx()
@@ -23,7 +27,7 @@ func apply_bonus_time() -> void:
 		round_timer._add_additional_time(additional_time)
 	
 func start_destroyed_process() -> void:
-
+	print('is this called')
 	if !activated:
 		return
 		
@@ -43,8 +47,6 @@ func start_destroyed_process() -> void:
 	
 	shake_camera()
 	
-
-
 func shake_camera() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
 	if player_cam:
@@ -113,7 +115,8 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 		sound_instance.queue_free()
 
 func start_round() -> void:
-	activated = true
+	#activated = true
+	add_to_group('Target')
 	#smoke_particles()
 	await get_tree().process_frame
 	current_mesh.show()
@@ -121,5 +124,6 @@ func start_round() -> void:
 func time_ran_out() -> void:
 	activated = false
 	smoke_particles()
+	add_to_group('Target')
 	await get_tree().process_frame
 	current_mesh.hide()

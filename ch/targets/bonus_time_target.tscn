@@ -483,7 +483,8 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_q6305")
 size = Vector2(2, 2)
 
-[node name="BonusTime" type="StaticBody3D" unique_id=1060338467 groups=["Target", "bonus_time_item"]]
+[node name="BonusTime" type="RigidBody3D" unique_id=1173555539 groups=["Target", "bonus_time_item"]]
+freeze = true
 script = ExtResource("1_n6ryt")
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=1135784391]

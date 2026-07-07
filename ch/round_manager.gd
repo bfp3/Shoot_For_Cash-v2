@@ -33,7 +33,7 @@ var transitioning_worlds := false
 @export var music_manager : Node
 @export var hud_system : TextureRect
 @export var birds : Node3D
-
+@export var balloon_container : Node3D
 var egg_pulse : Egg
 
 
@@ -150,6 +150,8 @@ func update_round_first_round() -> void:
 func update_round_start() -> void:
 	
 	success = false
+	
+	
 	
 	while game_has_been_beaten:
 		await get_tree().process_frame
@@ -287,6 +289,7 @@ func update_tally_start() -> void:
 
 func update_tally_end() -> void:
 	#await get_tree().create_timer(0.5).timeout
+	balloon_container.add_balloon()
 	enter_state(RoundState.SHOP_START)
 
 	
@@ -526,3 +529,10 @@ func pineapple_round() -> void:
 		pineapple_mode = false
 	$'../Pineapple'.stop_pineapples()
 	EventBus.instance.pineapple_round_used.emit()
+
+
+
+	
+	
+	
+	

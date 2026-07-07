@@ -1,5 +1,22 @@
 class_name Player extends Node3D
 
+@export_group('Scope Shrink While Holding')
+@onready var scope_shrink_sfx : AudioStreamPlayer = $SFX/ScopeShrink
+@export var scope_shrink_sfx_min_pitch := 1.0
+@export var scope_shrink_sfx_max_pitch := 1.5
+
+@export var scope_shrink_speed := 80.0
+@export var scope_min_target_circle := 20.0
+@export var scope_return_duration := 0.3
+@export var scope_shrink_delay_dur := 0.4
+
+var _scope_at_min := false
+var scope_base_scale := 1.0              # resting visual scale set by tween_scope()
+var scope_base_target_circle := 60.0     # resting real hit-radius, captured on press
+var scope_hold_time := 0.0
+var _is_holding_shoot := false
+var _shrink_return_tween : Tween
+
 enum State {
 	INACTIVE,
 	ACTIVE,
@@ -27,7 +44,6 @@ var current_gun_fire_rate_cooldown := 0.0
 var _is_currently_shooting := false
 
 @export var max_targeting_circle := 60.0
-@export var scroll_step := 25.0
 
 @onready var _mouse_sensitivity := 0.3
 @export var keyboard_crosshair_speed := 800.0
@@ -55,11 +71,9 @@ const light_intensity := 2.0
 
 var start_rotation : Vector3
 
-
 var target_crosshair_position: Vector2 = Vector2(980, 540)
 var crosshair_position := Vector2.ZERO
 var crosshair_lag_speed := 11.0  # Higher = faster catch-up
-
 
 var crosshair_move_left_limit := 660
 var crosshair_move_right_limit := 1260
@@ -74,7 +88,7 @@ var camera_pan_able := false
 
 
 func _ready() -> void:
-	
+	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)
 	#EventBus.instance.pineapple_round_bought.connect(pineapples_start)
 	
@@ -249,11 +263,17 @@ func _process(delta: float) -> void:
 	
 	crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
 	
-	if Input.is_action_pressed("shootWeapon") && gl_PlayerState.dataset.power_auto_fire > 0:
-		fire_weapon()
+	#if Input.is_action_pressed("shootWeapon") && gl_PlayerState.dataset.power_auto_fire > 0:
+		#fire_weapon()
 	
-	if Input.is_action_just_pressed("shootWeapon") && gl_PlayerState.dataset.power_auto_fire == 0:
+	#if Input.is_action_just_pressed("shootWeapon") && gl_PlayerState.dataset.power_auto_fire == 0:
+		#fire_weapon()
+		
+	if Input.is_action_just_released("shootWeapon"):
 		fire_weapon()
+		
+
+	
 	
 	crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
 	%Crosshair.global_position = crosshair_position
@@ -262,6 +282,7 @@ func _process(delta: float) -> void:
 	#handle_pan_left_and_right(delta)
 	handle_keyboard_crosshair(delta)
 	update_gun_look()
+	handle_scope_shrink(delta)
 	#handle_pan_keyboard(delta)
 	
 func update_gun_look() -> void:
@@ -464,9 +485,79 @@ func apply_auto_fire() -> void:
 	%Auto_fire.start()
 
 func tween_scope(_scale_multiplier : float, _dur : float = 0.75) -> void:
+	scope_base_scale = _scale_multiplier
 	var increase_scope_tween : Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	increase_scope_tween.tween_property(%Inner_scope, "scale", Vector2.ONE * _scale_multiplier, _dur)
-	
+
+func _on_scope_shrink_sfx_finished() -> void:
+	if _scope_at_min:
+		return
+		
+	if _is_holding_shoot and scope_hold_time >= scope_shrink_delay_dur:
+		scope_shrink_sfx.play()
+		
+		
+func handle_scope_shrink(delta: float) -> void:
+	if Input.is_action_pressed("shootWeapon"):
+		if not _is_holding_shoot:
+			_is_holding_shoot = true
+			scope_hold_time = 0.0
+			scope_base_target_circle = weapon_shooting.power_target_circle
+			_scope_at_min = false
+			if _shrink_return_tween:
+				_shrink_return_tween.kill()
+
+		scope_hold_time += delta
+
+		if scope_hold_time < scope_shrink_delay_dur:
+			return
+
+		if _scope_at_min:
+			return
+
+		if not scope_shrink_sfx.playing && scope_hold_time < (scope_shrink_delay_dur + 0.2):
+			scope_shrink_sfx.play()
+
+		var new_target_circle : float = clamp(
+			scope_base_target_circle - ((scope_hold_time - scope_shrink_delay_dur) * scope_shrink_speed),
+			scope_min_target_circle,
+			scope_base_target_circle
+		)
+
+		var shrink_ratio := new_target_circle / scope_base_target_circle
+
+		scope_shrink_sfx.pitch_scale += lerp(
+			scope_shrink_sfx_min_pitch,
+			scope_shrink_sfx_max_pitch,
+			0.005
+		)
+
+		weapon_shooting.power_target_circle = new_target_circle
+		%Inner_scope.scale = Vector2.ONE * (scope_base_scale * shrink_ratio)
+		# %Target_circle.scale = Vector2.ONE * (scope_base_scale * shrink_ratio)
+
+		if new_target_circle <= scope_min_target_circle:
+			_scope_at_min = true
+
+	elif _is_holding_shoot:
+		_is_holding_shoot = false
+		_scope_at_min = false
+		scope_shrink_sfx.stop()
+		scope_shrink_sfx.pitch_scale = scope_shrink_sfx_min_pitch
+		_tween_scope_back_to_base()
+
+
+func _tween_scope_back_to_base() -> void:
+	if _shrink_return_tween:
+		_shrink_return_tween.kill()
+
+	_shrink_return_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	_shrink_return_tween.tween_interval(0.1)
+	_shrink_return_tween.tween_property(%Inner_scope, "scale", Vector2.ONE * scope_base_scale, scope_return_duration)
+	_shrink_return_tween.parallel().tween_property(weapon_shooting, "power_target_circle", scope_base_target_circle, scope_return_duration)
+	# _shrink_return_tween.parallel().tween_property(%Target_circle, "scale", Vector2.ONE * scope_base_scale, scope_return_duration)
+
+
 
 func fire_weapon() -> void:
 	

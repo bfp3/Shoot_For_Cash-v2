@@ -13,7 +13,7 @@ enum State {
 	DISABLED
 }
 @export var pulse_magnitude := 0.8
-
+var behind_player := true
 var current_state : State
 
 @export var balloon_carrier := false
@@ -107,7 +107,7 @@ func update_active() -> void:
 	reset_rock_back_on()
 	add_to_group('Target')
 	rock_activated = true
-	global_position = start_pos
+	#global_position = start_pos
 	health = 1
 	$Mesh.show()
 	
@@ -201,7 +201,7 @@ func reset_stats() -> void:
 	falling = false
 	rock_destroyed = false
 	is_deactivated = false
-	global_position = start_pos
+	#global_position = start_pos
 
 
 func was_hit_tween() -> void:
@@ -296,7 +296,12 @@ func play_destroy_sfx() -> void:
 	#$hitSound.play()
 	#await get_tree().create_timer(0.1).timeout
 	#$explosion_sfx.play()
-	
+
+func move_balloon_in_front_of_player() -> void:
+	behind_player = false
+	show()
+	await get_tree().create_timer(3.0).timeout
+	$move_balloon.play()
 	
 func smoke_particles() -> void:
 	
