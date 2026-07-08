@@ -1840,7 +1840,7 @@ draw_pass_1 = SubResource("QuadMesh_p78v0")
 [node name="Trio_balloon" type="Node3D" parent="." unique_id=1329170905]
 
 [node name="Balloon4" type="StaticBody3D" parent="Trio_balloon" unique_id=121622778]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.875, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 collision_layer = 3
 collision_mask = 3
 axis_lock_linear_z = true
@@ -1853,29 +1853,36 @@ transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.06935346, 0)
 shape = SubResource("SphereShape3D_herjc")
 
 [node name="Mesh" type="Node3D" parent="Trio_balloon/Balloon4" unique_id=950426368]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 
 [node name="small_rock" type="MeshInstance3D" parent="Trio_balloon/Balloon4/Mesh" unique_id=1231137826]
-transform = Transform3D(2.11, 0, 0, 0, 2.11, 0, 0, 0, 2.11, 0, 0, 0.04)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.04)
+visible = false
+layers = 16
 material_override = ExtResource("32_s0kjy")
 mesh = SubResource("CapsuleMesh_w2u5q")
 
 [node name="small_rock2" type="MeshInstance3D" parent="Trio_balloon/Balloon4/Mesh" unique_id=2102516094]
-transform = Transform3D(1, 0, 0, 0, 0.99904823, 0.043619387, 0, -0.043619387, 0.99904823, 0, 0.085, -0.019869238)
+transform = Transform3D(0.4, 0, 0, 0, 0.3996193, 0.017447755, 0, -0.017447755, 0.3996193, 0, -0.035, -0.02)
+layers = 16
 material_override = ExtResource("32_s0kjy")
 mesh = SubResource("ArrayMesh_nxkf2")
 
 [node name="string" type="MeshInstance3D" parent="Trio_balloon/Balloon4/Mesh/small_rock2" unique_id=2071839589]
 transform = Transform3D(0.32164863, -0.018046306, 0, 0.07936132, 0.15403882, -0.020672696, 0.0029012416, 0.0056312545, 0.39644772, 0.0047197156, -0.18665825, 0.0010683946)
+layers = 16
 mesh = SubResource("CylinderMesh_cqen7")
 skeleton = NodePath("")
 
 [node name="string2" type="MeshInstance3D" parent="Trio_balloon/Balloon4/Mesh/small_rock2" unique_id=1080372080]
 transform = Transform3D(0.32393625, 0.012838287, 0.0003984289, -0.056434795, 0.15513891, -0.020429874, -0.0025204185, 0.005585648, 0.3964562, 0.0047197156, -0.28031173, -0.002355331)
+layers = 16
 mesh = SubResource("CylinderMesh_cqen7")
 skeleton = NodePath("")
 
 [node name="string3" type="MeshInstance3D" parent="Trio_balloon/Balloon4/Mesh/small_rock2" unique_id=527435349]
 transform = Transform3D(0.32603437, -0.004038708, 0.00036735882, 0.017784264, 0.1561437, -0.020342426, 0.00019283546, 0.0056223804, 0.39645934, 0.0024932341, -0.36741152, -0.00553947)
+layers = 16
 mesh = SubResource("CylinderMesh_cqen7")
 skeleton = NodePath("")
 

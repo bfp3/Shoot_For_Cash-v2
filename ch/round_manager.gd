@@ -133,7 +133,7 @@ func update_round_inactive() -> void:
 		rocks_container.enter_state(rocks_container.State.INACTIVE)
 	
 func update_round_first_round() -> void:
-	
+
 	#red_circle.display_circle()
 	#birds.start_birds()
 	#music_manager.first_round()
@@ -284,6 +284,7 @@ func update_round_end() -> void:
 	
 
 func update_tally_start() -> void:
+	#$'../PlayerBalloon'.reposition_balloon()
 	EventBus.instance.open_tally_card.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -304,7 +305,7 @@ func update_shop_end() -> void:
 	#await get_tree().create_timer(0.5).timeout
 	
 	enter_state(RoundState.ROUND_START)
-	
+	$'../PlayerBalloon'.check_balloons_status()
 	
 
 func update_pause() -> void:
@@ -380,8 +381,12 @@ func move_to_moss() -> void:
 	scene_transition_screen.next_level_finish()
 	place_name.update_place_name()
 	
+	if current_round == 0:
+		#await get_tree().create_timer(0.5).timeout
+		$'../PlayerBalloon'.add_balloon()
+	
 	#rocks_container.reset_rock_back_on()
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(3.0).timeout
 	transitioning_worlds = false
 	enter_state(RoundState.SHOP_END)
 	

@@ -61,3 +61,8 @@ func _physics_process(delta: float) -> void:
 func cleanUp() -> void:
 	target_node = null
 	self.queue_free()
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if body.name.contains('Balloon'):
+		body.start_destroyed_process()

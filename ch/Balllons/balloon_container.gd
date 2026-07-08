@@ -9,40 +9,70 @@ var new_round_checker := 0
 @onready var balloon_4: StaticBody3D = $Balloon4
 
 func _ready() -> void:
-	move_all_ballons_back()
+	#move_all_ballons_back()
+	move_all_ballons_below()
 	set_physics_process(false)
 
-
+func move_all_ballons_below() -> void:
+	for i in get_children():
+		i.global_position.y -= 11.0
+		i.hide()
 	
 func move_all_ballons_back() -> void:
-	print("move balloons back")
 	for i in get_children():
 		i.global_position.z -= 27.0
 		i.hide()
 	
 func add_balloon() -> void:
-	
-	for l in range(2):
+	for l in range(1):
 		for i in get_children():
-			if i is StaticBody3D:
-				if i.behind_player:
-					i.move_balloon_in_front_of_player()
-					var tween = create_tween()
-					tween.set_ease(Tween.EASE_IN_OUT)
-					tween.set_trans(Tween.TRANS_SINE)
-					tween.tween_property(i, "global_position:z", 27.0, 5.0).as_relative()
+			if i is StaticBody3D and i.behind_player:
+				i.move_balloon_in_front_of_player()
 
-					break
+				var tween = create_tween()
+				tween.set_ease(Tween.EASE_IN_OUT)
+				tween.set_trans(Tween.TRANS_SINE)
+				tween.tween_interval(1.0)
+				tween.tween_property(i, "global_position:y", 11.0, 5.0).as_relative()
+				break
 
-func _physics_process(delta: float) -> void:
-	
-	if Engine.get_physics_frames() % 60 == 0:
-		current_round = gl_PlayerState.dataset.round
-		if new_round_checker != current_round:
-			print("Current Round: ", current_round)
-			new_round_checker = current_round
-			move_ballons()
-			move_ballons_2()	
+		await get_tree().create_timer(1.5).timeout
+
+	## Check if every balloon has been added
+	#var all_added := true
+	#for i in get_children():
+		#if i is StaticBody3D and i.behind_player:
+			#all_added = false
+			#break
+#
+	## Grow one balloon at a time in child order
+	#if all_added:
+		#for i in get_children():
+			#if i is StaticBody3D and i.scale.x < 3.0:
+				#var tween = create_tween()
+				#tween.set_trans(Tween.TRANS_BACK)
+				#tween.set_ease(Tween.EASE_OUT)
+				#tween.tween_property(
+					#i,
+					#"scale",
+					#Vector3(
+						#min(i.scale.x + 1.0, 3.0),
+						#min(i.scale.y + 1.0, 3.0),
+						#min(i.scale.z + 1.0, 3.0)
+					#),
+					#0.3
+				#)
+				#break
+
+#func _physics_process(delta: float) -> void:
+	#
+	#if Engine.get_physics_frames() % 60 == 0:
+		#current_round = gl_PlayerState.dataset.round
+		#if new_round_checker != current_round:
+			#print("Current Round: ", current_round)
+			#new_round_checker = current_round
+			#move_ballons()
+			#move_ballons_2()	
 	
 
 func move_ballons() -> void:

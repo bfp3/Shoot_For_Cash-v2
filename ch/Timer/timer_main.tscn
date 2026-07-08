@@ -2,12 +2,63 @@
 
 [ext_resource type="Script" uid="uid://bj6vqqcmj70lv" path="res://ch/Timer/timer.gd" id="1_5lc31"]
 [ext_resource type="LabelSettings" uid="uid://b80p3fi2salg0" path="res://unfiled/Fonts/Themes/Basic theme.tres" id="2_y73li"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="3_l7mi1"]
 [ext_resource type="AudioStream" uid="uid://bywfw3hl3lt6o" path="res://sfx/reload_sound_01.ogg" id="3_y73li"]
 [ext_resource type="AudioStream" uid="uid://deypwoaiih1g2" path="res://sfx/Clock_ticking.ogg" id="4_y73li"]
 [ext_resource type="AudioStream" uid="uid://cm8btuv4pdotl" path="res://sfx/pineapple_shake_1.ogg" id="5_l7mi1"]
 [ext_resource type="AudioStream" uid="uid://cbsq8ls3cuach" path="res://sfx/pineapple_sound_2.ogg" id="6_od5kt"]
 [ext_resource type="AudioStream" uid="uid://ub17xcey7moy" path="res://sfx/sfx-click.ogg" id="7_rov52"]
 [ext_resource type="AudioStream" uid="uid://bjptduj0m7nwu" path="res://sfx/ES_Bell Ding - SFX Producer.ogg" id="8_hl3ol"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txfio"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fuvvr"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1tjj5"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_od5kt"]
+Button/styles/normal = SubResource("StyleBoxFlat_txfio")
+Panel/styles/panel = SubResource("StyleBoxFlat_fuvvr")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_1tjj5")
 
 [sub_resource type="Curve" id="Curve_y73li"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0]
@@ -73,15 +124,35 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -112.5
-offset_top = 32.0
+offset_top = 40.0
 offset_right = 112.5
-offset_bottom = 143.66669
+offset_bottom = 151.66669
 grow_horizontal = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 text = "Timer"
 label_settings = ExtResource("2_y73li")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Panel2" type="Panel" parent="TimeLabel" unique_id=490771576]
+modulate = Color(1, 1, 1, 0.32941177)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -37.833344
+offset_right = 90.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_od5kt")
+theme_override_styles/panel = ExtResource("3_l7mi1")
 
 [node name="ReloadSound" type="AudioStreamPlayer" parent="." unique_id=928440455]
 stream = ExtResource("3_y73li")

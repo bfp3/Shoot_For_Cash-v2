@@ -66,6 +66,8 @@
 [ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="65_wtxnc"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
 [ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
+[ext_resource type="Script" uid="uid://byuybau4gp23h" path="res://ch/Balllons/player_balloon_container.gd" id="68_r5w5l"]
+[ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="68_wtxnc"]
 [ext_resource type="PackedScene" uid="uid://gmq0002obs0u" path="res://ch/targets/bonus_time_target.tscn" id="68_wv0tc"]
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
 [ext_resource type="StyleBox" uid="uid://eu6ax7sn7s7" path="res://res/card_icon_border_stylebox.tres" id="89_ecu2c"]
@@ -261,13 +263,20 @@ _data = {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_taal3"]
 shader = ExtResource("28_ld44m")
 shader_parameter/overlay = false
-shader_parameter/aberration = 4.7499999933364734e-08
+shader_parameter/aberration = 0.00300004764250005
 shader_parameter/brightness = 1.0
 shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.0
+shader_parameter/warp_amount = 0.34000001615
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.105
+shader_parameter/vignette_intensity = 0.0
 shader_parameter/vignette_opacity = 0.800000038
+shader_parameter/scanlines_enabled = true
+shader_parameter/scanline_count = 600.0
+shader_parameter/scanline_opacity = 0.22000001045
+shader_parameter/scanline_speed = 100.0
+shader_parameter/mask_enabled = false
+shader_parameter/mask_opacity = 0.10000000475
+shader_parameter/flicker_amount = 0.0
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_67uld"]
 
@@ -503,6 +512,56 @@ scale_curve = SubResource("CurveXYZTexture_b5kcl")
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ec2we"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ymbdo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r5w5l"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8twtg"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ga0b"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_r5w5l"]
+Button/styles/normal = SubResource("StyleBoxFlat_r5w5l")
+Panel/styles/panel = SubResource("StyleBoxFlat_8twtg")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_3ga0b")
 
 [sub_resource type="GDScript" id="GDScript_mitwi"]
 script/source = "extends Node
@@ -2220,13 +2279,59 @@ metadata/_edit_use_anchors_ = true
 
 [node name="PlaceLabel" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=422115750]
 layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -9.0
+offset_top = -101.66675
+offset_right = 216.0
+offset_bottom = 10.0
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.49, 0.49, 0.49, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 19
+theme_override_font_sizes/bold_font_size = 40
+bbcode_enabled = true
+text = "[b]MOSS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="MainGameCanvasLayer/Place_name/PlaceLabel" unique_id=1893096777]
+modulate = Color(1, 1, 1, 0.8627451)
+show_behind_parent = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -89.0
+offset_top = -38.597412
+offset_right = 91.0
+offset_bottom = 34.805176
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 3.1415927
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_r5w5l")
+theme_override_styles/panel = ExtResource("31_hwubp")
+
+[node name="PlaceLabel2" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=1940403555]
+visible = false
+layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -112.5
-offset_top = -24.0
+offset_top = -29.0
 offset_right = 112.5
-offset_bottom = 87.66669
+offset_bottom = 82.66669
 grow_horizontal = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(1, 1, 1, 1)
@@ -2240,6 +2345,27 @@ bbcode_enabled = true
 text = "[b]MOSS"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="MainGameCanvasLayer/Place_name/PlaceLabel2" unique_id=586945002]
+modulate = Color(1, 1, 1, 0.8627451)
+show_behind_parent = true
+custom_minimum_size = Vector2(180, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -100.0
+offset_right = 90.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_r5w5l")
+theme_override_styles/panel = ExtResource("31_hwubp")
 
 [node name="TallyCard" parent="MainGameCanvasLayer" unique_id=813632953 node_paths=PackedStringArray("round_manager") instance=ExtResource("63_err0d")]
 unique_name_in_owner = true
@@ -2575,7 +2701,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 24)
 
 [node name="Balloon_container" type="Node3D" parent="." unique_id=906093422]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19)
 script = ExtResource("63_nn6vd")
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
@@ -2673,6 +2799,30 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Balloon_container/Trio_balloon3" unique_id=1387581482]
 libraries/ = SubResource("AnimationLibrary_wv0tc")
 autoplay = &"trio_rotate"
+
+[node name="Balloon_wait_positions" type="Node3D" parent="." unique_id=242094308]
+
+[node name="Balloon_pos_1" type="Marker3D" parent="Balloon_wait_positions" unique_id=796756762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6000004, -1.3, 11.799999)
+
+[node name="Balloon_pos_2" type="Marker3D" parent="Balloon_wait_positions" unique_id=2050038771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9000003, -1.1999999, 11.799999)
+
+[node name="Balloon_pos_3" type="Marker3D" parent="Balloon_wait_positions" unique_id=1107266971]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2000003, -1.3, 11.799999)
+
+[node name="PlayerBalloon" type="Node3D" parent="." unique_id=375306820]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
+script = ExtResource("68_r5w5l")
+
+[node name="PlayerBalloon" parent="PlayerBalloon" unique_id=966203961 instance=ExtResource("68_wtxnc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 4, 5.2250004)
+
+[node name="PlayerBalloon2" parent="PlayerBalloon" unique_id=91413864 instance=ExtResource("68_wtxnc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 3, 5.225)
+
+[node name="PlayerBalloon3" parent="PlayerBalloon" unique_id=739864791 instance=ExtResource("68_wtxnc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4, 4.3, 5.225)
 
 [node name="Settings_pause_menu" parent="." unique_id=1950114573 instance=ExtResource("64_tnw34")]
 

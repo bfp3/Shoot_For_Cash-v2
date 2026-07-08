@@ -32,10 +32,10 @@ var hold_progress := 0.0
 var tooltip_description := ""
 
 var player_money := 0
-var cost := 0
+var cost := 1
 var power_level := 0
 
-@onready var name_label: Label = %NameLabel
+@onready var name_label: RichTextLabel = %NameLabel
 @onready var cost_label: RichTextLabel = %CostLabel
 @onready var description_label: Label = %DescriptionLabel
 
@@ -111,9 +111,18 @@ func update_shop(_power_name : String = "") -> void:
 
 
 func update_cost() -> void:
+	
 	if cost == 0:
-		cost_label.text = "[i][wave]FREE"
+		if sky_mine and gl_PlayerState.dataset.power_sky_mine > 0:
+			if cost == 0:
+				cost = int(gl_DataSet.get_value('price_sky_mine', gl_PlayerState.dataset.power_sky_mine))
+				cost_label.text = "[i][wave]" + str(cost)
+			pass
+		else:
+			cost_label.text = "[i][wave]FREE"
 		return
+		
+	
 	var settings = gl_PlayerState.get_all()
 	%upgrade_icon_anim.play('idle')
 	player_money = settings.cash
@@ -123,11 +132,12 @@ func update_cost() -> void:
 		#if upgrade_type == "sky_mine":
 			#if new_round:
 				#cost += randi_range(1,5)
-			
-	if new_round: # && visible:
+	
+	
+	if new_round && shop_main_menu.reroll_index > 0: # && visible:
 		
 		var rand_chance_for_free = randi_range(0, 22)
-		if rand_chance_for_free > 21:#22:
+		if rand_chance_for_free > 21: #22:
 			cost = 0
 			
 	

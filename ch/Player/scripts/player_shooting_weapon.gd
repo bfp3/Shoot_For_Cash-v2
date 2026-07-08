@@ -74,6 +74,9 @@ func get_targets_in_scope() -> Array:
 
 		if !is_instance_valid(target):
 			continue
+			
+		if target.visible == false:
+			continue
 
 		if player_camera.is_position_behind(target.global_position):
 			continue
@@ -97,8 +100,8 @@ func get_targets_in_scope() -> Array:
 		var closest_dist = center_dist
 
 		# Calculate the rock's radius on screen
-		var world_radius : float = target.main_col.scale.x
-		world_radius = world_radius / 2
+		var world_scale: Vector3 = target.main_col.global_transform.basis.get_scale()
+		var world_radius: float = world_scale.x * 0.5
 
 		var edge_screen_pos = player_camera.unproject_position(
 			target.global_position + player_camera.global_basis.x * world_radius

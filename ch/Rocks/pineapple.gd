@@ -114,7 +114,8 @@ func update_active() -> void:
 
 	pineapple_mesh.show()
 	rock_activated = true
-	pineapple_mesh.scale = Vector3.ONE * 2
+	pineapple_mesh.scale.x = 2.0
+	pineapple_mesh.scale.z = 2.0
 	$Mesh.show()
 	$Start_falling_timer.start(2.2)
 
@@ -202,7 +203,11 @@ func reset_rock_back_on() -> void:
 	pineapple_mesh.visible = true
 
 	current_mesh = pineapple_mesh
-	current_mesh.scale = base_scale
+	
+	current_mesh.scale.x = base_scale.x
+	current_mesh.scale.y = 1.471
+	current_mesh.scale.z = base_scale.z
+	
 	rock_type_gravity_scale = 0.2
 			
 
@@ -535,7 +540,7 @@ func expand_blast_radius() -> void:
 	
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 20.0, 0.5)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 10.0, 0.5)
 	tween.tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.95)
 	#tween.tween_interval(0.1)
 	await tween.finished

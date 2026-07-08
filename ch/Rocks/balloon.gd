@@ -48,6 +48,7 @@ var start_pos : Vector3
 var current_rock_type : String = ""
 var rock_type_name : String = ""
 var falling := false
+@export var player_balloon := false
 
 
 func _ready() -> void:
@@ -55,8 +56,11 @@ func _ready() -> void:
 	start_pos = global_position
 	
 	await get_tree().create_timer(0.2).timeout
-	
+
 	enter_state(State.ACTIVE)
+	
+	if balloon_carrier:
+		remove_from_group('Target')
 	#EventBus.instance.egg_pulsed.connect(enter_state.bind(State.ACTIVE))
 
 
@@ -108,7 +112,8 @@ func update_active() -> void:
 	reset_stats()
 	#quick_pan()
 	reset_rock_back_on()
-	add_to_group('Target')
+	if !balloon_carrier:
+		add_to_group('Target')
 	rock_activated = true
 	#global_position = start_pos
 	health = 1
@@ -120,13 +125,7 @@ func update_hit() -> void:
 	if hazard_mode:
 		$pop_balloon.pitch_scale = randf_range(0.95,1.1)
 		$pop_balloon.play()
-	
-	if !balloon_carrier:
-		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
 		
-	
-	
-	
 func update_missed() -> void:
 	reset_stats()
 
@@ -182,7 +181,8 @@ func reset_rock_back_on() -> void:
 	if base_cash >= 0:
 		base_cash = -3
 	
-	$Mesh.scale = Vector3.ONE
+	if !balloon_carrier:
+		$Mesh.scale = Vector3.ONE
 	health = base_health
 	cash_value = base_cash # * size_multiplier
 	max_health = health
@@ -193,7 +193,9 @@ func reset_rock_back_on() -> void:
 
 
 func reset_stats() -> void:
-	$Mesh.scale = Vector3.ONE
+	if !balloon_carrier:
+		$Mesh.scale = Vector3.ONE
+
 	$Mesh.show()
 	
 	pitch_adjustment = 0.02
@@ -224,11 +226,15 @@ func shake_camera() -> void:
 		player_cam.shake_camera_rock_destroyed()
 
 func destroyed_by_shratnel() -> void:
+
 	if !visible:
 		return
-	print('destroyed by shratnel')
+	
 	hazard_mode = false
 	$pop_balloon_soft.play()
+	start_destroyed_process()
+	return
+	print('destroyed by shratnel')
 	$Mesh.hide()
 	gl_PlayerState.log_hit(rock_type_name, current_rock_type, 3)
 	smoke_particles()
@@ -239,7 +245,7 @@ func destroyed_by_shratnel() -> void:
 	
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
-	if !visible:
+	if !visible && $Mesh.visible == false:
 		return
 	
 	health -= damage
@@ -253,12 +259,25 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		#return
 		#return
 	#else:
+	
+	if player_balloon:
+		rock_pop_balloon()
+		play_destroy_sfx()
+		$AoE.play_particles = true
+		return
+	
 	if !hazard_mode:
 		$pop_balloon_soft.play()
-		global_position = start_pos
+		#global_position = start_pos
+		$AoE.play_particles = true
+		get_parent().get_parent().carrier_balloon_popped()
 		hide()
+		disable_collision()
 		
 	else:
+		
+		if !balloon_carrier && !player_balloon:
+			gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
 		start_destroyed_process()
 	
 
@@ -270,6 +289,7 @@ func start_destroyed_process() -> void:
 	rock_activated = false
 	enter_state(State.HIT)
 	
+	
 	#if !destroyed_by_marked:
 	disable_collision()
 
@@ -280,8 +300,9 @@ func start_destroyed_process() -> void:
 	
 	if balloon_carrier:
 		cash_value = balloon_carrier_penalty
+		
 	
-	if !balloon_carrier:
+	if !balloon_carrier && hazard_mode:
 		money_label_3d.money_is_money(global_position, cash_value)
 	
 	set_collision_layer_value(1, false)
@@ -293,26 +314,30 @@ func start_destroyed_process() -> void:
 	
 
 	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(self, "scale", scale * 1.5, 0.33)
+	tween.tween_property(self, "scale", scale * 1.0, 0.33)
 	await tween.finished
-	scale = clamp(scale, Vector3.ONE, Vector3.ONE * 2.5)
+	#scale = clamp(scale, Vector3.ONE, Vector3.ONE * 2.5)
 	shake_camera()
 	
 	var current_pos := global_position
-	 
+	
 	global_position.y -= 20.0
 	
 	show()
 	#current_mesh.scale = Vector3.ONE * 0.5
-	$Mesh.scale = Vector3.ONE
+	if !balloon_carrier:
+		$Mesh.scale = Vector3.ONE
+	
 	var tween_balloon = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween_balloon.tween_property(self, "global_position", current_pos, 2.5)
 	#await tween_balloon.finished
 	rock_activated = true
 	enable_collision()
 	is_deactivated = false
-	add_to_group('Target')
-	print('coming bakc up')
+	
+	if !balloon_carrier:
+		add_to_group('Target')
+
 	
 func play_hit_sfx() -> void:
 	$take_damage_sfx.volume_db = randf_range(-25.0, -20.0)
@@ -331,11 +356,18 @@ func play_destroy_sfx() -> void:
 	#$explosion_sfx.play()
 
 func move_balloon_in_front_of_player() -> void:
-	behind_player = false
-	show()
-	await get_tree().create_timer(3.0).timeout
-	$move_balloon.play()
+	if !player_balloon:
+		behind_player = false
+		show()
+		await get_tree().create_timer(3.0).timeout
+		$move_balloon.play()
 	
+	else:
+		behind_player = false
+		show()
+		await get_tree().create_timer(1.0).timeout
+		$move_balloon.play()	
+
 func smoke_particles() -> void:
 	
 	$AoE.global_position = global_position
@@ -385,3 +417,53 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 	if sound_instance != null:
 		remove_child(sound_instance)
 		sound_instance.queue_free()
+
+
+func rock_pop_balloon() -> void:
+	if !rock_activated:
+		return
+	
+	if player_balloon:
+		get_parent().current_balloon = null
+		play_destroy_sfx()
+		var crt = get_tree().get_first_node_in_group('TV_CRT_Filter')
+		if crt:
+			crt.taking_damage_tween()
+	
+	rock_activated = false
+	enter_state(State.HIT)
+	
+	disable_collision()
+
+	play_destroy_sfx()
+	
+	if is_in_group('Target'):
+		remove_from_group('Target')
+	
+	#if balloon_carrier:
+		#cash_value = balloon_carrier_penalty
+	
+	#if !balloon_carrier:
+		#money_label_3d.money_is_money(global_position, cash_value)
+	is_deactivated = true
+	
+	was_hit_tween()
+	
+	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, "scale", scale * 1.5, 0.33)
+	await tween.finished
+
+	shake_camera()
+	
+		
+	await get_tree().create_timer(0.1).timeout
+	
+	queue_free()
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if body.name.contains('Rock'):
+		if player_balloon:
+			rock_pop_balloon()
+		else:
+			start_destroyed_process()

@@ -98,11 +98,13 @@ var rock_type_name : String = ""
 var falling := false
 
 
+
 func _ready() -> void:
 	
 	start_pos = global_position
 	
 	await get_tree().create_timer(0.2).timeout
+	
 	
 	enter_state(State.INACTIVE)
 
@@ -149,13 +151,17 @@ func update_prepare_rock() -> void:
 	await get_tree().process_frame
 	setup_rock_type()
 	await get_tree().create_timer(0.2).timeout
-	global_position = start_pos
+	global_position.x = start_pos.x + get_parent().global_position.x
 	#global_position.x += randi_range(-16,16)
 	#global_position.x = clamp(global_position.x, -2,2)
 	
 func update_active() -> void:
 	enable_collision()
 	add_to_rocks_round()
+	$Trio_balloon/Balloon4.show()
+	if $Trio_balloon.visible:
+		$Trio_balloon/Balloon4.add_to_group('Target')
+
 
 func update_hit() -> void:
 	update_gravity(1.0)
@@ -229,17 +235,17 @@ func choose_rock_type() -> int:
 	match area_name:
 		"moss":
 	
-			if current_rock_limit >= 10:
+			if current_rock_limit >= 20:
 				allowed_rocks.append(RockSize.MEDIUM)
 
 			else:
 				allowed_rocks.append(RockSize.SMALL)
 
-				if current_rock_limit > 7:
-					var rand_chance := randi_range(0, 3)
-
-					if rand_chance > 1:
-						allowed_rocks.append(RockSize.MEDIUM)
+				#if current_rock_limit > 7:
+					#var rand_chance := randi_range(0, 3)
+#
+					#if rand_chance > 1:
+						#allowed_rocks.append(RockSize.MEDIUM)
 						
 					
 					
@@ -298,7 +304,8 @@ func setup_rock_type() -> void:
 			var base_scale  := Vector3.ONE * 0.35
 
 			# Random subtype: 1x / 2x / 3x
-			var size_multiplier : int = [1, 2, 3].pick_random()
+			#var size_multiplier : int = [1, 2, 3].pick_random()
+			var size_multiplier : int = 1
 			$Mesh.scale = Vector3.ONE
 			health = base_health * size_multiplier
 			cash_value = base_cash # * size_multiplier
@@ -412,7 +419,12 @@ func reset_stats() -> void:
 	$Marked.hide()
 	$Freeze.hide()
 	$Mesh.show()
-	
+	#if $Trio_balloon:
+	$Trio_balloon.top_level = false
+	await get_tree().process_frame
+	$Trio_balloon.position = Vector3.ZERO
+	$Trio_balloon/Balloon4.get_node('Mesh').visible = true
+	#$Trio_balloon/Balloon4.show()
 	
 	pitch_adjustment = 0.02
 	
@@ -723,8 +735,8 @@ func start_destroyed_process() -> void:
 	
 	enter_state(State.HIT)
 	if !rock_has_been_logged:
-		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
 		rock_has_been_logged = true
+		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
 	
 	#if !destroyed_by_marked:
 	
@@ -827,14 +839,16 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		else:
 			body.start_destroyed_process()
 			body.hit_by_player(1, Vector2.ZERO)
-				
+	
 	if body.name.contains('Balloon'):
+		return
 		#if freeze_mine:
 			#return
 		#if player_has_marked_rock == false:
 			#return
 		body.destroyed_by_shratnel()
 		#body.start_destroyed_process()
+
 
 
 func expand_blast_radius() -> void:
@@ -882,7 +896,7 @@ func standard_blast() -> void:
 	$Explosion_area/CollisionShape3D.disabled = false
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 15.0, 0.35) #0.25
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 5.0, 0.35) #0.25
 	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.25)
 	tween.tween_interval(0.1)
 	await tween.finished
@@ -992,5 +1006,14 @@ func update_health_icon() -> void:
 func tween_balloon() -> void:
 	$Trio_balloon.top_level = true
 	var tween = create_tween().set_ease(Tween.EASE_IN)
-	tween.tween_property($Trio_balloon, "global_position:y", 10.0, 3.0).as_relative()
+	tween.tween_property($Trio_balloon, "global_position:y", 13.0, 4.0).as_relative()
 	await tween.finished
+	$Trio_balloon.hide()
+	$Trio_balloon.top_level = false
+	$Trio_balloon.position = Vector3.ZERO
+	
+	
+func carrier_balloon_popped() -> void:
+	gravity_scale = rock_type_gravity_scale + 0.5
+	cash_value += 5
+	$Trio_balloon/Balloon4.remove_from_group('Target')

@@ -10,6 +10,9 @@ class_name Player extends Node3D
 @export var scope_return_duration := 0.3
 @export var scope_shrink_delay_dur := 0.4
 
+@export var shot_count := 4
+@onready var original_shot_count := 4
+
 var _scope_at_min := false
 var scope_base_scale := 1.0              # resting visual scale set by tween_scope()
 var scope_base_target_circle := 60.0     # resting real hit-radius, captured on press
@@ -571,10 +574,16 @@ func fire_weapon() -> void:
 		
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
-	
+		
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
 
+	shot_count = clamp(shot_count - 1, 0, 100)
+	%ShotRemaining.text = str(shot_count).pad_zeros(2)
+	if shot_count <= 0:
+		await get_tree().create_timer(0.5).timeout
+		EventBus.instance.end_round_rock_missed.emit()
+	
 
 func penalize_early_fire() -> void:
 	current_gun_fire_rate_cooldown = power_gun_fire_rate
@@ -585,6 +594,8 @@ func penalize_early_fire() -> void:
 	
 	
 func player_did_not_miss() -> void:
+	
+		
 	%Bullet_icon.value = 0.0
 	_is_currently_shooting = true
 	current_gun_fire_rate_cooldown = power_gun_fire_rate
@@ -592,7 +603,8 @@ func player_did_not_miss() -> void:
 	while %Bullet_icon.value != 100.0:
 		await get_tree().process_frame
 	_is_currently_shooting = false
-
+	
+	
 
 func _input(event: InputEvent) -> void:
 	
@@ -646,6 +658,10 @@ func stop_player() -> void:
 	player_gun.end_position()
 	enter_state(State.ROUND_FINISHED)
 	weapon_shooting.can_shoot(false)
+	_scope_at_min = true
+	await get_tree().create_timer(0.5).timeout
+	_scope_at_min = false
+	
 	
 
 
@@ -655,6 +671,8 @@ func start_player() -> void:
 	if gl_PlayerState.dataset.power_gun == 0:
 		return
 	
+	shot_count = original_shot_count
+	%ShotRemaining.text = str(shot_count).pad_zeros(2)
 	weapon_shooting.can_shoot(true)
 
 	%Cooldown_progressBar3.value = 100.0

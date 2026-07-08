@@ -34,9 +34,11 @@ func fade_modulate_tween() -> void:
 	var tween = create_tween()
 	tween.tween_property(%SkyMineLabel, 'modulate', Color('666666'), 0.5)
 	tween.parallel().tween_property($Panel, 'modulate', Color.WHITE, 0.5)
-
+	await tween.finished
+	hide()
 	
 func stop() -> void:
 	active = false
-	show()
-	%SkyMineLabel.show()
+	#show()
+	#%SkyMineLabel.show()
+	hide()

@@ -34,7 +34,32 @@ func _ready():
 	shader_mat.set_shader_parameter("crack_count", 0)
 	shader_mat.set_shader_parameter("aberration", 0.000)
 
+func taking_damage_tween() -> void:
+	if shader_mat == null:
+		return
 
+	var tween = create_tween()
+	show()
+	shader_mat.set_shader_parameter("warp_amount", 0.0)
+	# Flash in
+	tween.tween_method(
+		func(val):
+			shader_mat.set_shader_parameter("vignette_intensity", val),
+		shader_mat.get_shader_parameter("vignette_intensity"),
+		0.8,
+		0.2
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(0.15)
+	# Flash back out
+	tween.tween_method(
+		func(val):
+			shader_mat.set_shader_parameter("vignette_intensity", val),
+		0.8,
+		0.0,
+		0.5
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	await tween.finished
+	hide()
 #func _input(event: InputEvent) -> void:
 	#if Input.is_key_label_pressed(KEY_2):
 		#round_over_fade_in()

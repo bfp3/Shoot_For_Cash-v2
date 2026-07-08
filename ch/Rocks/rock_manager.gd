@@ -59,6 +59,10 @@ func update_prepare_rocks() -> void:
 		counter += 1
 		if counter >= rocks_limit:
 			break
+			
+			
+		
+	$Container_1.global_position.x = [10.0,7.0,3.0,0.0,-2.0].pick_random()
 	
 func update_pulse_rocks() -> void:
 	splash_zone.activate_splash_zone()
@@ -96,6 +100,8 @@ func update_round_end() -> void:
 	update_gravity(1.0)
 	for body in $Container_1.get_children():
 		body.round_end_check_rock_status()
+		
+	
 
 
 func all_rocks_destroyed() -> void:
