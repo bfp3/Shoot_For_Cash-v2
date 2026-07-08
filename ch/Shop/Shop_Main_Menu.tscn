@@ -260,7 +260,7 @@ scale_curve = SubResource("CurveTexture_scjtr")
 color = Color(1, 0.78, 0, 1)
 alpha_curve = SubResource("CurveTexture_8o1tj")
 
-[node name="Shop_Main_Menu" type="Control" unique_id=973405492 node_paths=PackedStringArray("money_control", "reveal_skill_sfx") groups=["shop_main_menu"]]
+[node name="Shop_Main_Menu" type="Control" unique_id=973405492 node_paths=PackedStringArray("money_control", "reveal_skill_sfx") groups=["restartable", "shop_main_menu"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -834,7 +834,7 @@ upgrade_type = "gun_fire_rate"
 [node name="Sky Mine" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=831104298 instance=ExtResource("13_onfim")]
 visible = false
 layout_mode = 2
-upgrade_type = "marked_to_die"
+upgrade_type = "sky_mine"
 
 [node name="PurchaseHoldProgressBar" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/UpgradePanel" parent_id_path=PackedInt32Array(831104298, 696861470) index="0" unique_id=380143476]
 theme_override_styles/background = SubResource("StyleBoxFlat_nbtj3")
@@ -992,7 +992,8 @@ purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
-[node name="Ticket2" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1976905100 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+[node name="Ticket2" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1976905100 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") groups=["restartable"] instance=ExtResource("20_xklyy")]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
@@ -1004,6 +1005,7 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
 [node name="Ticket3" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=953294936 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
@@ -1015,6 +1017,7 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
 [node name="Ticket4" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=514221593 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
@@ -1026,6 +1029,7 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
 [node name="Ticket5" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=657145580 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
@@ -1604,6 +1608,7 @@ vertical_alignment = 1
 
 [node name="BG_Music" type="AudioStreamPlayer" parent="SFX" unique_id=583917528]
 stream = ExtResource("33_pwib5")
+volume_db = -80.0
 
 [node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=611630980]
 stream = ExtResource("40_8mk8u")

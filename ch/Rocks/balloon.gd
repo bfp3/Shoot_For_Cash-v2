@@ -5,7 +5,15 @@ const BALLOON_MAT_GREY = preload('uid://dgrbglmgp2fad')
 
 var pitch_adjustment := 0.02
 
+var default_balloon_carrier := false
+var default_player_balloon := false
+var default_hazard_mode := true
+
 @export var hazard_mode := true
+@export var balloon_carrier := false
+@export var balloon_carrier_penalty := 0
+@export var player_balloon := false
+
 
 enum State {
 	INACTIVE,
@@ -19,8 +27,7 @@ enum State {
 var behind_player := true
 var current_state : State
 
-@export var balloon_carrier := false
-@export var balloon_carrier_penalty := 0
+
 
 var	force_mult : Array = [3,4]
 var force_mult_index := 0
@@ -48,21 +55,22 @@ var start_pos : Vector3
 var current_rock_type : String = ""
 var rock_type_name : String = ""
 var falling := false
-@export var player_balloon := false
+
 
 
 func _ready() -> void:
-	
 	start_pos = global_position
-	
+
+	default_balloon_carrier = balloon_carrier
+	default_player_balloon = player_balloon
+	default_hazard_mode = hazard_mode
+
 	await get_tree().create_timer(0.2).timeout
 
 	enter_state(State.ACTIVE)
-	
-	if balloon_carrier:
-		remove_from_group('Target')
-	#EventBus.instance.egg_pulsed.connect(enter_state.bind(State.ACTIVE))
 
+	if balloon_carrier:
+		remove_from_group("Target")
 
 func enter_state(new_state : State) -> void:
 
@@ -146,7 +154,7 @@ func round_end_check_rock_status() -> void:
 			enter_state(State.DISABLED)
 			
 		_:
-			print("We are in some other state ", current_state)
+			print("We are in some other state balloon ", current_state)
 
 func update_disabled() -> void:
 	disable_collision()
@@ -158,13 +166,17 @@ func disable_collision() -> void:
 	set_collision_layer_value(1, false)
 	set_collision_layer_value(2, false)
 	$main_col.disabled = true
+	if %balloon_area:
+		%balloon_area.monitoring = false
 
 func enable_collision() -> void:
 	$main_col.disabled = false
+	
 	set_collision_layer_value(1, true)
 	set_collision_layer_value(2, true)
 
-
+	if %balloon_area:
+		%balloon_area.monitoring = true
 
 func reset_rock_back_on() -> void:
 	#enter_state(State.MISSED)
@@ -236,11 +248,12 @@ func destroyed_by_shratnel() -> void:
 	return
 	print('destroyed by shratnel')
 	$Mesh.hide()
-	gl_PlayerState.log_hit(rock_type_name, current_rock_type, 3)
+	#gl_PlayerState.log_hit(rock_type_name, current_rock_type, 3)
 	smoke_particles()
-	await get_tree().create_timer(2.0).timeout
-	queue_free()
-	#hide()
+	#await get_tree().create_timer(2.0).timeout
+	#queue_free()
+	hide()
+	
 	#global_position = start_pos
 	
 		
@@ -250,33 +263,31 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	
 	health -= damage
 	
-	#if health > 0:
-		#play_hit_sfx()
-		#smoke_particles_duplicates()
-		#current_mesh.get_node('damage_mesh').show()
-		#await get_tree().create_timer(0.08).timeout
-		#current_mesh.get_node('damage_mesh').hide()
-		#return
-		#return
-	#else:
-	
 	if player_balloon:
 		rock_pop_balloon()
 		play_destroy_sfx()
-		$AoE.play_particles = true
-		return
-	
-	if !hazard_mode:
+		smoke_particles()
 		$pop_balloon_soft.play()
 		#global_position = start_pos
-		$AoE.play_particles = true
-		get_parent().get_parent().carrier_balloon_popped()
-		hide()
+		#$Mesh.hide()
 		disable_collision()
+		return
+	
+	if balloon_carrier:
+		play_destroy_sfx()
+		smoke_particles()
+		$pop_balloon_soft.play()
+		#global_position = start_pos
+		get_parent().get_parent().carrier_balloon_popped()
+		$Mesh.hide()
+		disable_collision()
+		
+
 		
 	else:
 		
-		if !balloon_carrier && !player_balloon:
+		if !balloon_carrier || !player_balloon:
+			print('should not be called')
 			gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
 		start_destroyed_process()
 	
@@ -319,23 +330,24 @@ func start_destroyed_process() -> void:
 	#scale = clamp(scale, Vector3.ONE, Vector3.ONE * 2.5)
 	shake_camera()
 	
-	var current_pos := global_position
-	
-	global_position.y -= 20.0
-	
-	show()
-	#current_mesh.scale = Vector3.ONE * 0.5
-	if !balloon_carrier:
-		$Mesh.scale = Vector3.ONE
-	
-	var tween_balloon = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tween_balloon.tween_property(self, "global_position", current_pos, 2.5)
-	#await tween_balloon.finished
-	rock_activated = true
-	enable_collision()
-	is_deactivated = false
-	
-	if !balloon_carrier:
+	if hazard_mode:
+		var current_pos := global_position
+		
+		global_position.y -= 20.0
+		
+		show()
+		#current_mesh.scale = Vector3.ONE * 0.5
+		if !balloon_carrier:
+			$Mesh.scale = Vector3.ONE
+		
+		var tween_balloon = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		tween_balloon.tween_property(self, "global_position", current_pos, 2.5)
+		#await tween_balloon.finished
+		rock_activated = true
+		enable_collision()
+		is_deactivated = false
+		
+		
 		add_to_group('Target')
 
 	
@@ -424,7 +436,7 @@ func rock_pop_balloon() -> void:
 		return
 	
 	if player_balloon:
-		get_parent().current_balloon = null
+		get_parent().player_balloon_was_popped()
 		play_destroy_sfx()
 		var crt = get_tree().get_first_node_in_group('TV_CRT_Filter')
 		if crt:
@@ -457,8 +469,8 @@ func rock_pop_balloon() -> void:
 	
 		
 	await get_tree().create_timer(0.1).timeout
-	
-	queue_free()
+	print('at some point this was called')
+	#queue_free()
 
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
@@ -467,3 +479,31 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 			rock_pop_balloon()
 		else:
 			start_destroyed_process()
+
+
+func restart() -> void:
+	# Restore exported flags to their original values.
+	balloon_carrier = default_balloon_carrier
+	player_balloon = default_player_balloon
+	hazard_mode = default_hazard_mode
+
+	behind_player = true
+
+	reset_stats()
+	reset_rock_back_on()
+
+	if balloon_carrier:
+		remove_from_group("Target")
+	else:
+		add_to_group("Target")
+
+	enter_state(State.ACTIVE)
+	
+	await get_tree().create_timer(2.0).timeout
+	scale = Vector3.ONE
+
+	show()
+	$Mesh.show()
+	$Mesh.scale = Vector3.ONE
+	if balloon_carrier:
+		$Mesh.scale = Vector3.ONE / 2

@@ -6,7 +6,7 @@
 [ext_resource type="StyleBox" uid="uid://c4p7ad54klwn" path="res://res/progress_bar_no_progress.tres" id="4_ivrgr"]
 [ext_resource type="Script" uid="uid://i51mtvivb3yr" path="res://ch/Shop/GunUpgrade_Permanent.gd" id="5_nbtj3"]
 [ext_resource type="Script" uid="uid://drmqfnbqyvmps" path="res://ch/Shop/tooltip.gd" id="6_tcien"]
-[ext_resource type="AudioStream" uid="uid://dd6lxfxuvdkbh" path="res://sfx/stepwood_1_short.ogg" id="7_b3it5"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="7_b3it5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbtj3"]
 bg_color = Color(0.32, 0.32, 0.32, 1)
@@ -16,8 +16,9 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.32, 0.2976, 0.22399999, 1)
 
-[node name="Button" type="Button" unique_id=173612620 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx")]
+[node name="Button" type="Button" unique_id=173612620 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx") groups=["restartable"]]
 custom_minimum_size = Vector2(120.715, 0)
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1604.0

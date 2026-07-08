@@ -139,8 +139,8 @@ func update_restarting() -> void:
 		return
 	#start_time = gl_PlayerState.dataset.power_time_upgrade
 	sent_signal = false
-	#start_time = gl_DataSet.get_value('power_time_upgrade', gl_PlayerState.dataset.power_time_upgrade)
-	start_time = 12.0
+	start_time = gl_DataSet.get_value('power_time_upgrade', gl_PlayerState.dataset.power_time_upgrade)
+	#start_time = 12.0
 	
 	time_left = start_time
 	await timer_rollup_sequence()

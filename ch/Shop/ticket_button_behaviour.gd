@@ -73,8 +73,11 @@ func check_tickets() -> void:
 			current_state = TicketState.UNAVAILABLE
 			self.disabled = true
 			self.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			modulate = Color.DARK_GREEN
-			modulate.a = 0.5
+			#await get_tree().create_timer(1.0).timeout
+			#modulate = Color.DARK_GREEN
+			#modulate.a = 0.5
+			modulate = Color.TRANSPARENT
+			#self.hide()
 			
 	if text == 'REDD':
 		#if gl_PlayerState.dataset.stage_name == 'end game':
@@ -82,7 +85,8 @@ func check_tickets() -> void:
 			self.disabled = true
 			self.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			current_state = TicketState.UNAVAILABLE
-			modulate = Color.DARK_GREEN
+			#modulate = Color.DARK_GREEN
+			modulate = Color.TRANSPARENT
 			modulate.a = 0.5
 	
 	
@@ -160,6 +164,7 @@ func update_unavailable() -> void:
 		blink_tween.kill()
 
 	self_modulate = Color('696969')
+	modulate = Color.TRANSPARENT
 	
 func update_on_sale() -> void:
 	
@@ -428,6 +433,7 @@ func _update_visual_state() -> void:
 
 		TicketState.ON_SALE:
 			$Button.show()
+			self.modulate = Color.WHITE
 			base = Color("19191dff")
 			border = Color("404047ff")
 			border = Color("858585ff")

@@ -13,6 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://bdu3n1kaotsbp" path="res://sfx/windFull.ogg" id="12_ec2we"]
 [ext_resource type="AudioStream" uid="uid://bxdiqr7ros2p" path="res://sfx/night-noises.ogg" id="13_ec2we"]
 [ext_resource type="AudioStream" uid="uid://v7p2bicypxo7" path="res://sfx/oasisWorld.ogg" id="14_ec2we"]
+[ext_resource type="AudioStream" uid="uid://bne6g3faj2y0m" path="res://sfx/Windmill_YokoKanno.ogg" id="14_mdemw"]
 [ext_resource type="AudioStream" uid="uid://bblf41t53etln" path="res://sfx/Windmill_Sprint.ogg" id="15_ymbdo"]
 [ext_resource type="AudioStream" uid="uid://bk6dsl4ownky8" path="res://sfx/USERSONG164.ogg" id="16_ec2we"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="17_lysu5"]
@@ -35,6 +36,7 @@
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="34_v17ib"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="35_8ip8c"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="37_nn6vd"]
+[ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="38_8twtg"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="42_0tmy3"]
 [ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="43_vavbc"]
 [ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="44_s3ss1"]
@@ -63,8 +65,10 @@
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
 [ext_resource type="PackedScene" uid="uid://ownxjc3mlmfd" path="res://ch/HUD_components/pause_and_exit_menu.tscn" id="64_tnw34"]
 [ext_resource type="Script" uid="uid://3le0jpjo3qtu" path="res://ch/background_transition.gd" id="65_fjk4d"]
+[ext_resource type="PackedScene" uid="uid://cmrkldyt0ctt1" path="res://ch/demo_end_screen/Game_over_screen.tscn" id="65_vwwt2"]
 [ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="65_wtxnc"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
+[ext_resource type="PackedScene" uid="uid://bkeli6dyx0ytw" path="res://ch/demo_end_screen/Intro_prompt.tscn" id="66_mdemw"]
 [ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
 [ext_resource type="Script" uid="uid://byuybau4gp23h" path="res://ch/Balllons/player_balloon_container.gd" id="68_r5w5l"]
 [ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="68_wtxnc"]
@@ -392,6 +396,32 @@ colors = PackedColorArray(0, 0, 0, 1, 0.1, 0.1, 0.1, 1)
 gradient = SubResource("Gradient_hsuqi")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="GDScript" id="GDScript_3ga0b"]
+script/source = "extends TextureRect
+
+@export var balloon_1_speed: float = 150.0
+@export var balloon_2_speed: float = 120.0
+@export var balloon_3_speed: float = 180.0
+
+@export var loop_top_y: float = -200.0
+@export var loop_bottom_offset: float = 500.0
+
+@onready var balloons: TextureRect = $\".\"
+@onready var balloons_2: TextureRect = $\"../Balloons2\"
+@onready var balloons_3: TextureRect = $\"../Balloons3\"
+
+func _process(delta: float) -> void:
+	move_balloon(balloons, balloon_1_speed, delta)
+	move_balloon(balloons_2, balloon_2_speed, delta)
+	move_balloon(balloons_3, balloon_3_speed, delta)
+
+func move_balloon(balloon: TextureRect, speed: float, delta: float) -> void:
+	balloon.position.y -= speed * delta
+
+	if balloon.position.y < loop_top_y:
+		balloon.position.y = get_viewport_rect().size.y + loop_bottom_offset
+"
 
 [sub_resource type="Animation" id="Animation_le04b"]
 length = 0.001
@@ -834,116 +864,6 @@ points = PackedVector3Array(-1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, 1)
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 bounce = 0.5
 
-[sub_resource type="Animation" id="Animation_ec2we"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Balloon:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-1, -0.70000005, 0)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Balloon2:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Balloon3:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_ymbdo"]
-resource_name = "trio_rotate"
-length = 5.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 0, 6.2831855)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Balloon:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 0, -6.2831855)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Balloon2:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 0, -6.2831855)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Balloon3:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 0, -6.2831855)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_wv0tc"]
-_data = {
-&"RESET": SubResource("Animation_ec2we"),
-&"trio_rotate": SubResource("Animation_ymbdo")
-}
-
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
 intro_title_screen = true
@@ -956,7 +876,7 @@ splash_screen = NodePath("SplashScreenCanvasLayer/SplashScreen_v2")
 music_manager = NodePath("Music")
 main_game_canvas = NodePath("MainGameCanvasLayer")
 
-[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("level_layout", "scene_transition_screen", "upgrade_menu", "tally_menu", "round_timer", "place_name", "player", "ending_song", "rocks_container", "music_manager", "hud_system", "birds", "balloon_container") groups=["round_manager"]]
+[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("level_layout", "scene_transition_screen", "upgrade_menu", "tally_menu", "round_timer", "place_name", "player", "ending_song", "rocks_container", "music_manager", "hud_system", "birds", "balloon_container") groups=["restartable", "round_manager"]]
 script = ExtResource("2_wtxnc")
 level_layout = NodePath("../Level_Visual")
 scene_transition_screen = NodePath("../Background_transition")
@@ -996,8 +916,9 @@ explosiveness = 0.8
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_wtxnc")
 
-[node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("opening_song")]
+[node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("current_song", "opening_song")]
 script = ExtResource("3_r5w5l")
+current_song = NodePath("Oasis2")
 opening_song = NodePath("Opening_song")
 
 [node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
@@ -1042,9 +963,13 @@ volume_db = -54.0
 stream = ExtResource("14_ec2we")
 volume_db = -30.0
 
+[node name="Oasis2" type="AudioStreamPlayer" parent="Music" unique_id=1383563011]
+stream = ExtResource("14_mdemw")
+volume_db = -30.0
+
 [node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
 stream = ExtResource("15_ymbdo")
-volume_db = -30.0
+volume_db = -35.0
 
 [node name="EndingSong" type="AudioStreamPlayer" parent="Music" unique_id=468679081]
 stream = ExtResource("16_ec2we")
@@ -1088,84 +1013,104 @@ speed_scale = 0.2
 [node name="Container_1" type="Node3D" parent="Rocks" unique_id=189760907]
 
 [node name="Rock_Instance" parent="Rocks/Container_1" unique_id=1089661090 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4728577, -0.08000016, 0.42300034)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4728577, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance2" parent="Rocks/Container_1" unique_id=641614515 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8336112, -0.08000016, 1.3238792)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8336112, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance3" parent="Rocks/Container_1" unique_id=977217555 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.658868, -0.08000016, 1.2910194)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.658868, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance4" parent="Rocks/Container_1" unique_id=614925084 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.798102, -0.08000016, 0.42300034)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.798102, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance5" parent="Rocks/Container_1" unique_id=1804095401 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5083055, -0.08000016, 0.31597328)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5083055, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance6" parent="Rocks/Container_1" unique_id=1648636095 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.63919, -0.08000016, 1.9668274)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.63919, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance7" parent="Rocks/Container_1" unique_id=1588486015 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.451482, -0.08000016, 2.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.451482, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance8" parent="Rocks/Container_1" unique_id=2122944651 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5166283, -0.08000016, 2.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5166283, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance9" parent="Rocks/Container_1" unique_id=1306876008 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.997283, -0.08000016, 2.9794903)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.997283, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance10" parent="Rocks/Container_1" unique_id=702490276 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4127793, -0.08000016, 2.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4127793, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance11" parent="Rocks/Container_1" unique_id=1826283916 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6957083, -0.08000016, 3.249998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6957083, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance12" parent="Rocks/Container_1" unique_id=1936738185 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4926226, -0.08000016, 3.249998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4926226, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance13" parent="Rocks/Container_1" unique_id=511030969 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.390077, -0.08000016, 3.249998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.390077, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance14" parent="Rocks/Container_1" unique_id=869067105 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.036045, -0.08000016, 3.249998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.036045, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance15" parent="Rocks/Container_1" unique_id=221535877 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3772593, -0.08000016, 1.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3772593, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance16" parent="Rocks/Container_1" unique_id=559020077 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 2.2553158)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance17" parent="Rocks/Container_1" unique_id=1641853172 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7047248, -0.08000016, 1.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7047248, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance18" parent="Rocks/Container_1" unique_id=931775137 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6097546, -0.08000016, 1.3499985)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6097546, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance19" parent="Rocks/Container_1" unique_id=202729113 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 1.2710171)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Rock_Instance20" parent="Rocks/Container_1" unique_id=1000269966 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4504056, -0.08000016, 0.2516575)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4504056, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+freeze_mine = true
 
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="Rocks" unique_id=951137588]
 stream = ExtResource("23_1i2h1")
@@ -1691,6 +1636,65 @@ scale = Vector2(1.305, 1.305)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("51_e85oc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Balloons" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=1407436492]
+z_index = -2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 137.16473
+offset_top = -347.12646
+offset_right = 393.16495
+offset_bottom = -91.12639
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("38_8twtg")
+expand_mode = 1
+stretch_mode = 5
+script = SubResource("GDScript_3ga0b")
+loop_top_y = -800.0
+
+[node name="Balloons2" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=633172788]
+z_index = -2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -380.07663
+offset_top = -353.25687
+offset_right = -124.07663
+offset_bottom = -97.256805
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("38_8twtg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Balloons3" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=526043893]
+z_index = -2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 226.81995
+offset_top = -353.25687
+offset_right = 482.81998
+offset_bottom = -97.256805
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("38_8twtg")
 expand_mode = 1
 stretch_mode = 5
 
@@ -2517,9 +2521,8 @@ text = "FPS"
 [node name="Timer" type="Timer" parent="MainGameCanvasLayer/Frame_rate" unique_id=1710339876]
 autostart = true
 
-[node name="DemoEndScreen" parent="MainGameCanvasLayer" unique_id=1212322380 node_paths=PackedStringArray("round_manager") instance=ExtResource("61_ec2we")]
+[node name="DemoEndScreen" parent="MainGameCanvasLayer" unique_id=1212322380 instance=ExtResource("61_ec2we")]
 visible = false
-round_manager = NodePath("../../Round_manager")
 
 [node name="Player_health" type="Control" parent="MainGameCanvasLayer" unique_id=983915033]
 unique_name_in_owner = true
@@ -2617,6 +2620,12 @@ bbcode_enabled = true
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Game_over_screen" parent="MainGameCanvasLayer" unique_id=513862048 groups=["game_over_screen"] instance=ExtResource("65_vwwt2")]
+visible = false
+
+[node name="Intro_Prompt" parent="MainGameCanvasLayer" unique_id=1127572240 instance=ExtResource("66_mdemw")]
+visible = false
+
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
@@ -2676,23 +2685,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 24.3)
 collision_layer = 5
 collision_mask = 4
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-force_multiplier = 1.2
+force_multiplier = 1.1
 
 [node name="Pineapple2" parent="Pineapple" unique_id=1349360149 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 24.3)
 collision_layer = 5
 collision_mask = 4
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 20
-force_multiplier = 1.4
+force_multiplier = 1.2
 
 [node name="Pineapple3" parent="Pineapple" unique_id=1506732277 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 24.3)
 collision_layer = 5
 collision_mask = 4
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 40
-force_multiplier = 1.7
+force_multiplier = 1.3
 
 [node name="LeftMarker" type="Marker3D" parent="Pineapple" unique_id=1406020988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
@@ -2700,7 +2707,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
 [node name="RightMarker" type="Marker3D" parent="Pineapple" unique_id=1172610009]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 24)
 
-[node name="Balloon_container" type="Node3D" parent="." unique_id=906093422]
+[node name="Balloon_container" type="Node3D" parent="." unique_id=906093422 groups=["restartable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19)
 script = ExtResource("63_nn6vd")
 
@@ -2752,68 +2759,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.99999905, 2.8671556, 2.299
 [node name="Balloon16" parent="Balloon_container" unique_id=1425468038 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9000006, 6.357156, 2.2999992)
 
-[node name="Trio_balloon" type="Node3D" parent="Balloon_container" unique_id=404120275]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, 0)
-
-[node name="Balloon" parent="Balloon_container/Trio_balloon" unique_id=1519654178 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.70000005, 0)
-
-[node name="Balloon2" parent="Balloon_container/Trio_balloon" unique_id=1859990555 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.70000005, 0)
-
-[node name="Balloon3" parent="Balloon_container/Trio_balloon" unique_id=198442655 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Balloon_container/Trio_balloon" unique_id=177264242]
-libraries/ = SubResource("AnimationLibrary_wv0tc")
-autoplay = &"trio_rotate"
-
-[node name="Trio_balloon2" type="Node3D" parent="Balloon_container" unique_id=1110628490]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3, 0)
-
-[node name="Balloon" parent="Balloon_container/Trio_balloon2" unique_id=1240530235 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.70000005, 0)
-
-[node name="Balloon2" parent="Balloon_container/Trio_balloon2" unique_id=1823439259 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.70000005, 0)
-
-[node name="Balloon3" parent="Balloon_container/Trio_balloon2" unique_id=1734731542 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Balloon_container/Trio_balloon2" unique_id=860618312]
-libraries/ = SubResource("AnimationLibrary_wv0tc")
-autoplay = &"trio_rotate"
-
-[node name="Trio_balloon3" type="Node3D" parent="Balloon_container" unique_id=788783926]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 6, 0)
-
-[node name="Balloon" parent="Balloon_container/Trio_balloon3" unique_id=1628792992 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.70000005, 0)
-
-[node name="Balloon2" parent="Balloon_container/Trio_balloon3" unique_id=1980923630 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.70000005, 0)
-
-[node name="Balloon3" parent="Balloon_container/Trio_balloon3" unique_id=514091505 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Balloon_container/Trio_balloon3" unique_id=1387581482]
-libraries/ = SubResource("AnimationLibrary_wv0tc")
-autoplay = &"trio_rotate"
-
 [node name="Balloon_wait_positions" type="Node3D" parent="." unique_id=242094308]
 
 [node name="Balloon_pos_1" type="Marker3D" parent="Balloon_wait_positions" unique_id=796756762]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6000004, -1.3, 11.799999)
-
-[node name="Balloon_pos_2" type="Marker3D" parent="Balloon_wait_positions" unique_id=2050038771]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9000003, -1.1999999, 11.799999)
 
-[node name="Balloon_pos_3" type="Marker3D" parent="Balloon_wait_positions" unique_id=1107266971]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2000003, -1.3, 11.799999)
+[node name="Balloon_pos_2" type="Marker3D" parent="Balloon_wait_positions" unique_id=2050038771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5000005, -1.3, 11.799999)
 
-[node name="PlayerBalloon" type="Node3D" parent="." unique_id=375306820]
+[node name="Balloon_pos_3" type="Marker3D" parent="Balloon_wait_positions" unique_id=1107266971]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2000003, -1.4, 11.799999)
+
+[node name="PlayerBalloon" type="Node3D" parent="." unique_id=375306820 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
 script = ExtResource("68_r5w5l")
+starting_balloons = 1
+round_manager = NodePath("../Round_manager")
 
 [node name="PlayerBalloon" parent="PlayerBalloon" unique_id=966203961 instance=ExtResource("68_wtxnc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 4, 5.2250004)

@@ -39,7 +39,7 @@ var dataset_float : Dictionary = {
 	,'power_ticket_redd' 			: [0]
 	
 	,'price_ticket_moss' 		: [100]
-	,'price_ticket_redd' 		: [180]
+	,'price_ticket_redd' 		: [110] #180
 	,'price_ticket_glory' 		: [1800]
 	,'price_ticket_backwater' 	: [5000]
 	,'price_ticket_sodomi' 		: [5000]
@@ -55,7 +55,8 @@ var dataset_float : Dictionary = {
 	# Targets / Rocks
 	# item name, 			$value, 	health
 	,"rock_type_1"			: [1,		1]
-	,"rock_type_2"			: [12,		9]
+	,"rock_type_2"			: [4,		3]
+	#,"rock_type_2"			: [12,		9]
 	,"rock_type_3"			: [20,		15]
 	,"rock_type_4"			: [120,		30]
 	

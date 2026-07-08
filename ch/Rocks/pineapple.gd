@@ -164,7 +164,7 @@ func round_end_check_rock_status() -> void:
 			enter_state(State.DISABLED)
 			
 		_:
-			print("We are in some other state ", current_state)
+			print("We are in some other state pineapple", current_state)
 
 func update_disabled() -> void:
 	update_gravity(1.0)
@@ -526,12 +526,14 @@ func _on_hit_wall_timer_timeout() -> void:
 func _on_explosion_area_body_entered(body: Node3D) -> void:
 
 	if body.name.contains('Balloon'):
+		if body.player_balloon:
+			return
 		body.destroyed_by_shratnel()
 		
 func expand_blast_radius() -> void:
 	%explosion_radius_mesh.show()
-	%explosion_radius_mesh.transparency = 0.4	
-
+	#%explosion_radius_mesh.transparency = 0.4	
+	%explosion_radius_mesh.transparency = 1.0
 	var blast_node : Area3D = %Explosion_area
 	blast_node.scale = Vector3.ONE
 	blast_node.show()
@@ -540,7 +542,7 @@ func expand_blast_radius() -> void:
 	
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 10.0, 0.5)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 13.0, 0.5)
 	tween.tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.95)
 	#tween.tween_interval(0.1)
 	await tween.finished

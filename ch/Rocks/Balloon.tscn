@@ -20,6 +20,9 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_lrylr"]
 radius = 0.57746214
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_gfu80"]
+size = Vector3(0.46, 0.65, 7.08)
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_vv0ti"]
 _surfaces = [{
 "aabb": AABB(-0.31000012, -0.58958495, -0.31000012, 0.62000024, 0.89958495, 0.62000024),
@@ -443,10 +446,7 @@ _data = {
 &"idle": SubResource("Animation_aljlg")
 }
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_gfu80"]
-size = Vector3(0.46, 0.65, 7.08)
-
-[node name="Balloon" type="StaticBody3D" unique_id=121622778]
+[node name="Balloon" type="StaticBody3D" unique_id=121622778 groups=["restartable"]]
 collision_layer = 3
 collision_mask = 3
 axis_lock_linear_z = true
@@ -455,6 +455,15 @@ script = ExtResource("1_6ube6")
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=809893561]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.06935346, 0)
 shape = SubResource("SphereShape3D_lrylr")
+
+[node name="balloon_area" type="Area3D" parent="." unique_id=1103426067]
+unique_name_in_owner = true
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="balloon_area" unique_id=1874700128]
+transform = Transform3D(1.19, 0, 0, 0, 1.19, 0, 0, 0, 1.19, 0, 0, 0)
+shape = SubResource("BoxShape3D_gfu80")
+disabled = true
 
 [node name="Mesh" type="Node3D" parent="." unique_id=950426368]
 unique_name_in_owner = true
@@ -596,12 +605,4 @@ script = ExtResource("18_nbk4g")
 libraries/ = SubResource("AnimationLibrary_imq00")
 autoplay = &"idle"
 
-[node name="Area3D" type="Area3D" parent="." unique_id=1103426067]
-monitorable = false
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1874700128]
-transform = Transform3D(1.19, 0, 0, 0, 1.19, 0, 0, 0, 1.19, 0, 0, 0)
-shape = SubResource("BoxShape3D_gfu80")
-disabled = true
-
-[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_entered" from="balloon_area" to="." method="_on_area_3d_body_entered"]

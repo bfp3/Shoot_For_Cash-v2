@@ -10,8 +10,8 @@ class_name Player extends Node3D
 @export var scope_return_duration := 0.3
 @export var scope_shrink_delay_dur := 0.4
 
-@export var shot_count := 4
-@onready var original_shot_count := 4
+@export var shot_count := 4000
+var original_shot_count := 0
 
 var _scope_at_min := false
 var scope_base_scale := 1.0              # resting visual scale set by tween_scope()
@@ -95,7 +95,7 @@ func _ready() -> void:
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)
 	#EventBus.instance.pineapple_round_bought.connect(pineapples_start)
 	
-	
+	original_shot_count = shot_count
 	
 	%Bullet_icon.hide()
 	%Auto_fire.hide()

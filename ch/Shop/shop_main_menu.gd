@@ -474,9 +474,10 @@ func sfx_reroll_purchased() -> void:
 	
 func shop_music_raise_volume() -> void:
 	var tween := create_tween()
+	tween.tween_property(bg_music, "volume_db", -80.0, 0.25)
 	
-	tween.tween_property(bg_music, "volume_db", -20.0, 0.25)
-	tween.tween_property(bg_music, "volume_db", 4.0, 1.0)
+	#tween.tween_property(bg_music, "volume_db", -20.0, 0.25)
+	#tween.tween_property(bg_music, "volume_db", 4.0, 1.0)
 	
 	# Original song was played at this level
 	#tween.tween_property(bg_music, "volume_db", -60.0, 0.25)
@@ -541,3 +542,45 @@ func _input(event: InputEvent) -> void:
 	if Input.is_key_label_pressed(KEY_KP_0):
 		%AddMoney.visible = !%AddMoney.visible
 		%MaxOutPowers.visible = !%MaxOutPowers.visible
+
+func restart() -> void:
+	current_state = SkillState.INACTIVE
+
+	current_round = 0
+	player_cash = gl_PlayerState.dataset.cash
+
+	price_reroll = 0
+	reroll_unlocked = true
+	reroll_index = 0
+	is_rerolling = false
+
+	clear_available_skills()
+
+	hide()
+	modulate.a = 1.0
+	scale = default_scale
+	position = default_position
+	pivot_offset = default_pivot_offset
+
+	cash_label.modulate.a = 0.0
+	cash_label.text = "$0"
+
+	#transport_tickets.hide()
+	#transport_tickets.modulate.a = 0.0
+	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
+
+	#%QuitMenu.hide()
+	#%Reroll.hide()
+	#%NextRound.hide()
+
+	#bg_music.stop()
+	#bg_music.volume_db = -80.0
+
+	for skill in all_skills:
+		skill.new_round = true
+		skill.reset_buttons_settings()
+
+	update_shop()
+	update_shop_labels()
+	update_cost_label()
+	enter_state(SkillState.CLOSE_MENU)

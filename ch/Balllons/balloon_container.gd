@@ -14,9 +14,12 @@ func _ready() -> void:
 	set_physics_process(false)
 
 func move_all_ballons_below() -> void:
+	print('how many times did this get called?')
 	for i in get_children():
-		i.global_position.y -= 11.0
-		i.hide()
+		if i is StaticBody3D:
+			i.global_position = i.start_pos
+			i.global_position.y -= 11.0
+			i.hide()
 	
 func move_all_ballons_back() -> void:
 	for i in get_children():
@@ -24,6 +27,7 @@ func move_all_ballons_back() -> void:
 		i.hide()
 	
 func add_balloon() -> void:
+	print('adding balloon')
 	for l in range(1):
 		for i in get_children():
 			if i is StaticBody3D and i.behind_player:
@@ -35,7 +39,7 @@ func add_balloon() -> void:
 				tween.tween_interval(1.0)
 				tween.tween_property(i, "global_position:y", 11.0, 5.0).as_relative()
 				break
-
+		print('balloon ADDED')
 		await get_tree().create_timer(1.5).timeout
 
 	## Check if every balloon has been added
@@ -92,3 +96,18 @@ func move_ballons_2() -> void:
 	tween.tween_interval(randi_range(2,6))
 	tween.tween_property(chosen_balloon, "global_position:z", 20.0, 10.0)
 	await tween.finished
+	
+func restart() -> void:
+	current_round = 0
+	new_round_checker = 0
+
+	for child in get_children():
+		if child is StaticBody3D:
+			child.show()
+			child.behind_player = true
+
+
+
+	# Return all balloons to their starting hidden position.
+	move_all_ballons_below()
+	

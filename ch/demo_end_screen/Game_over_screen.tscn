@@ -21,9 +21,9 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1teaa"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1teaa"]
 
 [sub_resource type="Animation" id="Animation_3q72g"]
 length = 0.001
@@ -143,16 +143,6 @@ layout_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = ExtResource("2_npx21")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel" unique_id=1353853436]
-layout_mode = 2
-theme_override_font_sizes/normal_font_size = 70
-bbcode_enabled = true
-text = "Game Over"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="MainPanel" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=461386074]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
@@ -174,24 +164,54 @@ theme_override_constants/separation = 4
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1637319920]
+custom_minimum_size = Vector2(592.975, 23.65)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1353853436]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/italics_font_size = 46
+bbcode_enabled = true
+text = "[color=#45dec2][wave]Giuseppe[/wave][/color] Popped!
+[i][pulse][color=#ffc700]Game Over!"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=5093305]
+custom_minimum_size = Vector2(592.975, 23.65)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=628323630]
 layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=132084556]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
 
 [node name="Retry" type="Button" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1519659985 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Return To Title Screen"
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 23
+text = "Retry"
 script = ExtResource("3_oy0ks")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1637319920]
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=955168107]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
+
+[node name="SpacePanel3" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1390965522]
 custom_minimum_size = Vector2(592.975, 23.65)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
@@ -271,4 +291,4 @@ pitch_scale = 2.0
 libraries/ = SubResource("AnimationLibrary_cuwcq")
 autoplay = &"light_wobble"
 
-[connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/Retry" to="." method="_on_next_round_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/Retry" to="." method="_on_retry_pressed"]

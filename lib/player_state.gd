@@ -2,6 +2,46 @@ extends Node
 
 var mouse_sensitivity := 1.0
 
+const RESTART_DATASET := {
+	"cash": 11,
+	"stage": 1,
+	"stage_name": "moss",
+	"tickets": 1,
+	"debug_add_cash": 1000,
+
+	"round": 1,
+	"earnings": 0,
+	"fines": 0,
+	"reroll": 0,
+	"reroll_unlocked": 0,
+	
+	"rock_limit" : 1,
+
+	"total_rocks_in_round": 0,
+	"total_rocks_in_round_remaining": 0,
+	"total_rocks_destroyed" : 0,
+	"total_rocks_missed" : 0,
+	"total_hazards": 0,
+	"total_pineapples_destroyed": 0,
+	
+	"power_bonus_round_pineapples": 0,
+	
+	"power_auto_fire" : 0,
+	"power_max_items_in_shop" : 3,
+	"power_time_upgrade" : 6,
+	"power_target_circle": 0,
+	"power_gun_fire_rate": 0,
+	"power_bullet_damage": 0,
+	"power_bullet_speed": 0,
+	"power_bullet_delay": 0,
+	"power_gun": 1,
+	"power_sky_mine" : 0,
+
+	"power_ticket_moss": 0,
+	"power_ticket_redd": 0,
+}
+
+
 const DEFAULT_DATASET := {
 	"cash": 109,
 	"stage": 0,
@@ -29,7 +69,7 @@ const DEFAULT_DATASET := {
 	
 	"power_auto_fire" : 0,
 	"power_max_items_in_shop" : 3,
-	"power_time_upgrade" : 0,
+	"power_time_upgrade" : 6,
 	"power_target_circle": 0,
 	"power_gun_fire_rate": 0,
 	"power_bullet_damage": 0,
@@ -302,6 +342,12 @@ func buy_all_upgrades() -> void:
 
 func reset_all() -> void:
 	dataset = DEFAULT_DATASET.duplicate(true)
+	
+	_log.clear()
+	_current_round_log.clear()
 
+func reset_level() -> void:
+	dataset = RESTART_DATASET.duplicate(true)
+	
 	_log.clear()
 	_current_round_log.clear()

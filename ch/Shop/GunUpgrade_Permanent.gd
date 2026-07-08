@@ -227,3 +227,28 @@ func update_power_label_position() -> void:
 		bar_center.x - power_level_label.size.x * 0.5,
 		bar_center.y - power_level_label.size.y * -1.3
 	)
+
+func restart() -> void:
+	print('should be restarting the progress bars')
+	current_upgrade_level = 0
+	current_bullet_amount = 1
+
+	upgrade_value = 0
+	cost = 0
+
+	if wiggle_tween:
+		wiggle_tween.kill()
+		wiggle_tween = null
+
+	scale = Vector2.ONE
+	modulate = Color.WHITE
+	
+	purchase_progress_bar.value = 0
+	purchase_hold_progress_bar.value = 0
+
+	reset_progress_bars()
+	reset_buttons_settings()
+	print('should be restarting the progress bars 2')
+	await get_tree().process_frame
+	update_shop("power_" + upgrade_type)
+	await update_power_label_position()

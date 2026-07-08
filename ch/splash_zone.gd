@@ -13,6 +13,10 @@ var detected_bodies: Array[Node3D] = []
 
 
 func _on_body_entered(body: Node3D) -> void:
+
+	if body.name.contains('Balloon'):
+		
+		return
 	
 	if body.is_in_group('pineapple'):
 		return
@@ -23,11 +27,13 @@ func _on_body_entered(body: Node3D) -> void:
 	if body.linear_velocity.y > 0.0:
 		splash_sfx()
 		return
+		
+	print('all the bodies ', body.name)
 	
-	if body.current_state != RockInstance.State.DISABLED:
-		gl_PlayerState.log_rock_missed()
-		print('rock is disabled and should take damage')
-		return
+	#if body.current_state != RockInstance.State.DISABLED:
+		#gl_PlayerState.log_rock_missed()
+		#print('rock is disabled and should take damage')
+		#return
 		
 	if body.current_state != RockInstance.State.ACTIVE || body.current_state != RockInstance.State.DISABLED:
 		#splash_sfx()

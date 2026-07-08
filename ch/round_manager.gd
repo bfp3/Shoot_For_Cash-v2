@@ -158,6 +158,7 @@ func update_round_start() -> void:
 	
 	if gl_PlayerState.dataset.stage_name == 'start':
 		go_to_fake_round()
+
 		return
 		
 	if gl_PlayerState.dataset.round == 0:
@@ -240,7 +241,7 @@ func update_round_end() -> void:
 	while bullet_active == true:
 		await get_tree().process_frame
 		bullet_active_counter += 1.0
-		print("bullet still active")
+
 		if bullet_active_counter > 60.0:
 			bullet_active = false
 
@@ -366,7 +367,7 @@ func move_to_moss() -> void:
 	#var current_level_layout = level_layout.get_node_or_null('current_level_layout')
 	#if current_level_layout:
 		#current_level_layout.queue_free()
-	
+	rocks_container.show()
 	var level_scenery = LEVEL_LAYOUT_01_MOSS.instantiate()
 	level_layout.add_child(level_scenery)
 	
@@ -388,7 +389,8 @@ func move_to_moss() -> void:
 	#rocks_container.reset_rock_back_on()
 	await get_tree().create_timer(3.0).timeout
 	transitioning_worlds = false
-	enter_state(RoundState.SHOP_END)
+	#enter_state(RoundState.SHOP_END)
+	$"../MainGameCanvasLayer/Intro_Prompt".start()
 	
 	
 func move_to_redd() -> void:
@@ -541,3 +543,62 @@ func pineapple_round() -> void:
 	
 	
 	
+func restart() -> void:
+	# Runtime state
+	game_has_been_beaten = false
+	bullet_active = false
+	bullet_active_counter = 0.0
+	round_finished = false
+	transitioning_worlds = false
+	pineapple_mode = false
+	success = false
+	current_round = 0
+
+	# Reset state machine
+	current_round_state = RoundState.INACTIVE
+
+	# Reset music/timer/player
+	stop_timer()
+	stop_player()
+
+	if current_song:
+		current_song.stop()
+	if ending_song:
+		ending_song.stop()
+
+	# Reset world
+	#move_to_start()
+	move_to_moss()
+	#find_egg()
+
+	# Reset player
+	player.round_finished(false)
+	player.display_hud()
+	player.update_player_stats()
+
+	# Reset UI
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	hud_system.reset_hud()
+
+	# Reset scenery
+	rocks_container.hide()
+	birds.start_birds()
+
+	# Return to the beginning
+	await get_tree().process_frame
+
+	#enter_state(RoundState.ROUND_START)
+func game_over() -> void:
+	player.stop_player()
+	stop_timer()
+	enter_state(RoundState.INACTIVE)
+
+func start_game_over() -> void:
+	var game_over_menu = get_tree().get_first_node_in_group('game_over_screen')
+	if game_over_menu:
+		game_over_menu.update_open_menu()
+	else:
+		print('cannot find game over')
+		
+	player.stop_player()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

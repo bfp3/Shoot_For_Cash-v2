@@ -161,6 +161,11 @@ func update_active() -> void:
 	$Trio_balloon/Balloon4.show()
 	if $Trio_balloon.visible:
 		$Trio_balloon/Balloon4.add_to_group('Target')
+		$Trio_balloon/Balloon4.show()
+		$Trio_balloon/Balloon4/Mesh.show()
+		$Trio_balloon/Balloon4/Mesh.scale = Vector3.ONE / 2
+		$Trio_balloon/Balloon4.scale = Vector3.ONE
+		$Trio_balloon/Balloon4/main_col.disabled = false
 
 
 func update_hit() -> void:
@@ -193,7 +198,7 @@ func round_end_check_rock_status() -> void:
 			enter_state(State.DISABLED)
 			
 		_:
-			print("We are in some other state ", current_state)
+			print("We are in some other state rock instance ", current_state)
 
 
 func update_disabled() -> void:
@@ -235,17 +240,18 @@ func choose_rock_type() -> int:
 	match area_name:
 		"moss":
 	
-			if current_rock_limit >= 20:
-				allowed_rocks.append(RockSize.MEDIUM)
+			if current_rock_limit >= 7:
+				pass
+				#allowed_rocks.append(RockSize.MEDIUM)
 
 			else:
 				allowed_rocks.append(RockSize.SMALL)
 
-				#if current_rock_limit > 7:
-					#var rand_chance := randi_range(0, 3)
-#
-					#if rand_chance > 1:
-						#allowed_rocks.append(RockSize.MEDIUM)
+				if current_rock_limit > 7:
+					var rand_chance := randi_range(0, 3)
+
+					if rand_chance > 1:
+						allowed_rocks.append(RockSize.MEDIUM)
 						
 					
 					
@@ -304,7 +310,7 @@ func setup_rock_type() -> void:
 			var base_scale  := Vector3.ONE * 0.35
 
 			# Random subtype: 1x / 2x / 3x
-			#var size_multiplier : int = [1, 2, 3].pick_random()
+			#var size_multiplier : int = [1, 2].pick_random() #, 3].pick_random()
 			var size_multiplier : int = 1
 			$Mesh.scale = Vector3.ONE
 			health = base_health * size_multiplier
@@ -312,10 +318,10 @@ func setup_rock_type() -> void:
 			max_health = health
 			update_health_icon()
 			small_rock.visible = true
-			main_col.scale = Vector3.ONE * 0.125 * size_multiplier
+			main_col.scale = Vector3.ONE * 0.125  * size_multiplier
 			current_mesh = small_rock
 			assign_random_mesh(current_mesh)
-			current_mesh.scale = base_scale * size_multiplier
+			current_mesh.scale = base_scale #* size_multiplier
 			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
 			linear_damp = 0.5
 			force_mult.clear()
@@ -412,7 +418,6 @@ func setup_rock_type() -> void:
 			gl_PlayerState.log_hazard()
 			linear_damp = 1.0
 			force_mult = [1,2]
-			
 
 func reset_stats() -> void:
 	$Mesh.scale = Vector3.ONE
@@ -422,8 +427,10 @@ func reset_stats() -> void:
 	#if $Trio_balloon:
 	$Trio_balloon.top_level = false
 	await get_tree().process_frame
-	$Trio_balloon.position = Vector3.ZERO
-	$Trio_balloon/Balloon4.get_node('Mesh').visible = true
+	if $Trio_balloon:
+		$Trio_balloon.position = Vector3.ZERO
+	if $Trio_balloon/Balloon4/Mesh:
+		$Trio_balloon/Balloon4/Mesh.show()
 	#$Trio_balloon/Balloon4.show()
 	
 	pitch_adjustment = 0.02
@@ -1017,3 +1024,4 @@ func carrier_balloon_popped() -> void:
 	gravity_scale = rock_type_gravity_scale + 0.5
 	cash_value += 5
 	$Trio_balloon/Balloon4.remove_from_group('Target')
+	$Trio_balloon/Balloon4/main_col.disabled = true
