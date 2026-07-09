@@ -271,7 +271,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("1_wlak1")
 money_control = NodePath("TEST_MONEY_CONTROL")
-reveal_skill_sfx = NodePath("SFX/reveal_sfx")
+reveal_skill_sfx = NodePath("SFX/shop_purchase_02")
 
 [node name="TextureRect2" type="TextureRect" parent="." unique_id=1174213666]
 self_modulate = Color(1, 1, 1, 0.7058824)
@@ -322,7 +322,7 @@ shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "ticket_moss"
 upgrade_name = "Ticket To Moss"
-purchase_sfx = NodePath("../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="ReddTicket" parent="." unique_id=1019016337 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -337,7 +337,7 @@ shop_main_menu = NodePath("..")
 hold_duration = 0.8
 upgrade_type = "ticket_redd"
 upgrade_name = "Ticket To Redd"
-purchase_sfx = NodePath("../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="BulletDelay" parent="." unique_id=1403874933 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -351,7 +351,7 @@ upgrade_icon = ExtResource("6_pwib5")
 shop_main_menu = NodePath("..")
 upgrade_type = "bullet_delay"
 upgrade_name = "Bullet Fire Rate"
-purchase_sfx = NodePath("../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="AddShopCapacity" parent="." unique_id=81097742 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -366,7 +366,7 @@ shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "max_items_in_shop"
 upgrade_name = "Increase Shop Stock"
-purchase_sfx = NodePath("../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="AutoFire" parent="." unique_id=835766290 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -381,7 +381,7 @@ shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "auto_fire"
 upgrade_name = "Auto Fire"
-purchase_sfx = NodePath("../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1832678188]
 layout_mode = 1
@@ -450,9 +450,9 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 layout_mode = 2
 text = "Quit"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 
 [node name="HSeparator2" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=225086530]
 custom_minimum_size = Vector2(50, 0)
@@ -516,7 +516,7 @@ upgrade_icon = ExtResource("5_lwcj2")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "target_circle"
 upgrade_name = "Target Circle"
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="GunFireRate" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1287420994 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -529,7 +529,7 @@ upgrade_icon = ExtResource("12_pwib5")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "gun_fire_rate"
 upgrade_name = "Fire Rate"
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="BulletDamage" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=918058313 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -542,7 +542,7 @@ upgrade_icon = ExtResource("4_dq200")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "bullet_damage"
 upgrade_name = "Rock Damage"
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="BulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1833548560 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -555,7 +555,7 @@ upgrade_icon = ExtResource("4_lwcj2")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "bullet_speed"
 upgrade_name = "Bullet Speed"
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="SkyMine" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=475193945 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -569,7 +569,7 @@ sky_mine = true
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "sky_mine"
 upgrade_name = "Sky Mine"
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="TimeUpgrade" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1155153027 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -582,7 +582,7 @@ upgrade_icon = ExtResource("14_xklyy")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "time_upgrade"
 upgrade_name = "Add Time"
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="AddGun" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1770080767 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -598,7 +598,7 @@ shop_main_menu = NodePath("../../../../../../..")
 hold_duration = 0.1
 upgrade_type = "gun"
 upgrade_name = "New Gun"
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="PineappleRound" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=497395272 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -612,7 +612,7 @@ shop_main_menu = NodePath("../../../../../../..")
 hold_duration = 0.1
 upgrade_type = "bonus_round_pineapples"
 upgrade_name = "Pineapples"
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+purchase_sfx = NodePath("")
 
 [node name="AvailableUpgrades" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=499030465]
 layout_mode = 1
@@ -641,9 +641,9 @@ text = "DONE"
 script = ExtResource("3_y3o4g")
 border_outline_colour = Color(0.46799996, 0.46799996, 0.52, 1)
 editable = true
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1411659262]
 layout_mode = 1
@@ -712,9 +712,9 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Reroll(500)"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 
 [node name="Reroll_label" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" unique_id=875627575]
 layout_mode = 1
@@ -995,9 +995,9 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 [node name="Ticket2" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1976905100 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") groups=["restartable"] instance=ExtResource("20_xklyy")]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 ticket_id = 2
 
 [node name="VSeparator3" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1474129767]
@@ -1007,9 +1007,9 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 [node name="Ticket3" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=953294936 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 ticket_id = 3
 
 [node name="VSeparator4" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=297611364]
@@ -1019,9 +1019,9 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 [node name="Ticket4" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=514221593 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 ticket_id = 4
 
 [node name="VSeparator5" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1688227533]
@@ -1031,9 +1031,9 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 [node name="Ticket5" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=657145580 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 ticket_id = 5
 
 [node name="VSeparator6" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=105381239]
@@ -1357,9 +1357,9 @@ theme_override_font_sizes/font_size = 26
 text = "DONE"
 script = ExtResource("3_y3o4g")
 border_outline_colour = Color(0.19780001, 0.19780001, 0.23, 1)
-focus_enter_sfx = NodePath("../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="TicketPurchasedPopUp/Control/NextRound" unique_id=2107366732]
 modulate = Color(0.7, 0.7, 0.7, 1)
@@ -1430,9 +1430,9 @@ text = "DONE"
 script = ExtResource("3_y3o4g")
 border_outline_colour = Color(0.46799996, 0.46799996, 0.52, 1)
 editable = true
-focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../SFX/focus_exit")
-purchase_sfx = NodePath("../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="NextRound" unique_id=240907803]
 layout_mode = 1
@@ -1467,9 +1467,9 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Reroll(500)"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../SFX/focus_exit")
-purchase_sfx = NodePath("../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 
 [node name="Reroll_label" type="RichTextLabel" parent="Reroll" unique_id=2110889887]
 layout_mode = 1
@@ -1507,9 +1507,9 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Add Money($1000)"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../SFX/focus_exit")
-purchase_sfx = NodePath("../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 
 [node name="AddMoney_label" type="RichTextLabel" parent="AddMoney" unique_id=461025793]
 layout_mode = 1
@@ -1543,9 +1543,9 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Add Money($1000)"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../SFX/focus_exit")
-purchase_sfx = NodePath("../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 
 [node name="MaxOutEverything" type="RichTextLabel" parent="MaxOutPowers" unique_id=623591568]
 layout_mode = 1
@@ -1579,9 +1579,9 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Reset Cash($0) "
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../SFX/focus_exit")
-purchase_sfx = NodePath("../SFX/purchase")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
 
 [node name="Reroll_label" type="RichTextLabel" parent="ResetMoney" unique_id=705173432]
 layout_mode = 1
@@ -1604,84 +1604,76 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SFX" type="Node" parent="." unique_id=192443435]
+[node name="SFX" type="Node" parent="." unique_id=645241627]
 
-[node name="BG_Music" type="AudioStreamPlayer" parent="SFX" unique_id=583917528]
+[node name="BG_Music" type="AudioStreamPlayer" parent="SFX" unique_id=1859295132]
 stream = ExtResource("33_pwib5")
 volume_db = -80.0
 
-[node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=611630980]
-stream = ExtResource("40_8mk8u")
-volume_db = -40.0
-pitch_scale = 2.0
-
-[node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=174877287]
+[node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=428842167]
 stream = ExtResource("41_5w0u1")
 volume_db = -40.0
 
-[node name="shop_purchase_01" type="AudioStreamPlayer" parent="SFX" unique_id=1841748240]
+[node name="shop_purchase_01" type="AudioStreamPlayer" parent="SFX" unique_id=1428341894]
 stream = ExtResource("42_hfqf8")
 volume_db = -40.0
 
-[node name="shop_purchase_02" type="AudioStreamPlayer" parent="SFX" unique_id=145245494]
+[node name="shop_purchase_02" type="AudioStreamPlayer" parent="SFX" unique_id=1913163755]
 stream = ExtResource("43_n5el2")
-volume_db = -22.0
+volume_db = -15.0
 pitch_scale = 1.2
 
-[node name="reveal_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1096377877]
-stream = ExtResource("43_n5el2")
-volume_db = -29.0
-pitch_scale = 0.8
-
-[node name="shop_purchase_03" type="AudioStreamPlayer" parent="SFX" unique_id=248866503]
+[node name="shop_purchase_03" type="AudioStreamPlayer" parent="SFX" unique_id=974335390]
 stream = ExtResource("44_nc3xs")
 volume_db = -40.0
 
-[node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1170054835]
+[node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=955723134]
 stream = ExtResource("45_teea5")
 volume_db = -40.0
 
-[node name="shop_mystery_box_01" type="AudioStreamPlayer" parent="SFX" unique_id=1264595121]
-volume_db = -40.0
-
-[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1984414687]
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1183352834]
 stream = ExtResource("26_bovdg")
 volume_db = -32.0
 
-[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=832910576]
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=555882391]
 stream = ExtResource("26_bovdg")
 volume_db = -50.0
 
-[node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1684804554]
+[node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1188785749]
 stream = ExtResource("46_i821l")
 volume_db = -40.0
 pitch_scale = 3.0
 
-[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=384220318]
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1586433548]
 stream = ExtResource("47_gqw4q")
 volume_db = -40.0
 pitch_scale = 2.0
 
-[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1399336696]
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=242350300]
 stream = ExtResource("48_a8n1b")
 volume_db = -40.0
 pitch_scale = 1.5
 
-[node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=752051897]
+[node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=759842711]
 stream = ExtResource("49_s4ol2")
 volume_db = -34.0
 
-[node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=695125760]
+[node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=785608222]
 stream = ExtResource("50_poyra")
 volume_db = -20.0
 
-[node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=109771287]
+[node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=18719049]
 stream = ExtResource("51_mxp20")
 volume_db = -21.0
 
-[node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=1218133753]
+[node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=422613373]
 stream = ExtResource("52_55hkm")
 pitch_scale = 0.4
+
+[node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1274334369]
+stream = ExtResource("40_8mk8u")
+volume_db = -40.0
+pitch_scale = 2.0
 
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]

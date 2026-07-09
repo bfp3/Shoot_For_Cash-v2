@@ -11,13 +11,13 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node3D) -> void:
 	return
-	if body.is_in_group('pineapple'):
-		print('yes that is a pineapple')
-		body.hit_out_of_bounds()
-		splash_particles(body)
-		splash_sfx()
-		gl_PlayerState.log_rock_missed()
-		body.enter_state(RockInstance.State.MISSED)
+	#if body.is_in_group('pineapple'):
+		#print('yes that is a pineapple')
+		#body.hit_out_of_bounds()
+		#splash_particles(body)
+		#splash_sfx()
+		#gl_PlayerState.log_rock_missed()
+		#body.enter_state(RockInstance.State.MISSED)
 	
 	#%Player_health.take_damage()
 

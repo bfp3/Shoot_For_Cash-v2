@@ -498,7 +498,7 @@ func check_position_for_wall() -> void:
 
 	match exit_side:
 		ExitSide.LEFT:
-			if global_position.x > 9.5:
+			if global_position.x > 10.5:
 				hit_out_of_bounds()
 
 		ExitSide.RIGHT:
@@ -526,7 +526,7 @@ func _on_hit_wall_timer_timeout() -> void:
 func _on_explosion_area_body_entered(body: Node3D) -> void:
 
 	if body.name.contains('Balloon'):
-		if body.player_balloon:
+		if body.balloon_type == body.BalloonType.BLUE:
 			return
 		body.destroyed_by_shratnel()
 		

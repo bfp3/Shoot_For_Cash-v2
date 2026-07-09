@@ -158,14 +158,7 @@ func update_prepare_rock() -> void:
 func update_active() -> void:
 	enable_collision()
 	add_to_rocks_round()
-	$Trio_balloon/Balloon4.show()
-	if $Trio_balloon.visible:
-		$Trio_balloon/Balloon4.add_to_group('Target')
-		$Trio_balloon/Balloon4.show()
-		$Trio_balloon/Balloon4/Mesh.show()
-		$Trio_balloon/Balloon4/Mesh.scale = Vector3.ONE / 2
-		$Trio_balloon/Balloon4.scale = Vector3.ONE
-		$Trio_balloon/Balloon4/main_col.disabled = false
+	
 
 
 func update_hit() -> void:
@@ -219,7 +212,11 @@ func enable_collision() -> void:
 
 
 func update_gravity(_gravity_scale : float) -> void:
-	gravity_scale = _gravity_scale
+	for i in range(3):
+		gravity_scale = _gravity_scale
+		#gravity_scale = 0.15
+		await get_tree().create_timer(0.1).timeout
+		
 
 
 func hide_all_meshes() -> void:
@@ -289,6 +286,7 @@ func choose_rock_type() -> int:
 
 func reset_rock_back_on() -> void:
 	enter_state(State.MISSED)
+
 
 func setup_rock_type() -> void:
 	current_mesh.scale = Vector3.ONE
@@ -424,15 +422,11 @@ func reset_stats() -> void:
 	$Marked.hide()
 	$Freeze.hide()
 	$Mesh.show()
-	#if $Trio_balloon:
-	$Trio_balloon.top_level = false
-	await get_tree().process_frame
-	if $Trio_balloon:
-		$Trio_balloon.position = Vector3.ZERO
-	if $Trio_balloon/Balloon4/Mesh:
-		$Trio_balloon/Balloon4/Mesh.show()
-	#$Trio_balloon/Balloon4.show()
+
 	
+	await get_tree().process_frame
+	
+
 	pitch_adjustment = 0.02
 	
 	rock_activated = false
@@ -626,8 +620,6 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		return
 	
 	
-	
-	tween_balloon()
 		
 	if rock_type_name == 'rock_type_3':
 		health -= 1
@@ -853,8 +845,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			#return
 		#if player_has_marked_rock == false:
 			#return
-		body.destroyed_by_shratnel()
-		#body.start_destroyed_process()
+		#body.destroyed_by_shratnel()
 
 
 
@@ -1010,18 +1001,6 @@ func update_health_icon() -> void:
 	#else:
 		#icon.modulate = health_red
 		#icon.scale = Vector3.ONE * 0.35
-func tween_balloon() -> void:
-	$Trio_balloon.top_level = true
-	var tween = create_tween().set_ease(Tween.EASE_IN)
-	tween.tween_property($Trio_balloon, "global_position:y", 13.0, 4.0).as_relative()
-	await tween.finished
-	$Trio_balloon.hide()
-	$Trio_balloon.top_level = false
-	$Trio_balloon.position = Vector3.ZERO
+
 	
 	
-func carrier_balloon_popped() -> void:
-	gravity_scale = rock_type_gravity_scale + 0.5
-	cash_value += 5
-	$Trio_balloon/Balloon4.remove_from_group('Target')
-	$Trio_balloon/Balloon4/main_col.disabled = true

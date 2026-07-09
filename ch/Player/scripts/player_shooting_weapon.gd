@@ -54,8 +54,8 @@ func apply_upgrades() -> void:
 	power_target_circle = player.power_target_circle
 	power_bullet_speed = player.power_bullet_speed
 	power_bullet_damage = player.power_bullet_damage
-	power_bullet_delay = player.power_bullet_delay
-	
+	#power_bullet_delay = player.power_bullet_delay
+	power_bullet_delay = 0.05
 	if gl_PlayerState.dataset.power_auto_fire > 0:
 		auto_fire = true
 	

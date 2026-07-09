@@ -4,6 +4,8 @@ extends Node3D
 var current_round := 0
 var new_round_checker := 0
 
+var blue_offset_y := 0
+
 @export var round_manager : RoundManager 
 
 @onready var balloon: StaticBody3D = $PlayerBalloon
@@ -84,10 +86,11 @@ func reposition_balloon() -> void:
 	var target_pos: Vector3
 	var distance := 0.0
 	
-	
 	while true:
 		var rand_x = randf_range(-13.0, 10.0)
-		var rand_y = randf_range(4.0, 6.0)
+		#var rand_y = randf_range(4.0, 6.0)
+		var rand_y = current_balloon.start_pos.y - blue_offset_y
+		
 		target_pos = Vector3(rand_x, rand_y, current_balloon.global_position.z)
 		
 		distance = current_balloon.global_position.distance_to(target_pos)
@@ -97,15 +100,45 @@ func reposition_balloon() -> void:
 	
 	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	#tween.tween_interval(3.0)
-	tween.tween_property(current_balloon, "global_position", target_pos, 6.0)
+	tween.tween_property(current_balloon, "global_position:x", target_pos.x, 6.0)
+	tween.parallel().tween_property(current_balloon, "global_position:y", target_pos.y, 6.0)
+	tween.parallel().tween_property(current_balloon, "global_position:z", 23.225, 6.0)
+
+func red_penalty() -> void:
+	blue_offset_y =  clamp(blue_offset_y + 2, 0, 12)
+	#reposition_balloon()
+	current_balloon.money_label_3d.print_text(current_balloon.global_position, 'BLUE DOWN')
+	
+	if current_balloon == null:
+		return
+		
+	var rand_y = current_balloon.start_pos.y - blue_offset_y
+
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(current_balloon, "global_position:y", rand_y, 3.0)
+	
+func white_reward() -> void:
+	blue_offset_y =  clamp(blue_offset_y - 2, 0, 100)
+	#reposition_balloon()
+	current_balloon.money_label_3d.print_text(current_balloon.global_position, 'BLUE UP!')
+
+	if current_balloon == null:
+		return
+		
+	var rand_y = current_balloon.start_pos.y - blue_offset_y
+
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(current_balloon, "global_position:y", rand_y, 3.0)
+
 
 func add_balloon() -> void:
 	
 	#for l in range(1):
-		#await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(2.0).timeout
 	for i in get_children():
 		if i is StaticBody3D:
 			if i.behind_player:
+				
 				i.move_balloon_in_front_of_player()
 				current_balloon = i
 				var tween = create_tween()
@@ -161,8 +194,10 @@ func move_ballons_2() -> void:
 	
 	
 func restart() -> void:
+	await get_tree().create_timer(1.0).timeout
 	current_balloon = null
 	balloons_popped = 0
+	blue_offset_y = 0
 	total_balloons_remaining = starting_balloons
 	
 	var balloon_list = [balloon] #, balloon_2, balloon_3]

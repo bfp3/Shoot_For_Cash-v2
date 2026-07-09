@@ -1,19 +1,34 @@
 extends StaticBody3D
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
-const BALLOON_MAT_GREY = preload('uid://dgrbglmgp2fad')
+
+const BALLOON_BLUE_MAT = preload('uid://hn35w2qwra5g')
+const BALLOON_WHITE_MAT = preload('uid://bwa2khv4jv2fv')
+const BALLOON_ORANGE_MAT = preload('uid://bg5auabbq8fo8')
+const BALLOON_RED_MAT = preload('uid://c5lrichw3wfce')
+const BALLOON_GREY_MAT = preload('uid://dgrbglmgp2fad')
 
 var pitch_adjustment := 0.02
 
-var default_balloon_carrier := false
-var default_player_balloon := false
-var default_hazard_mode := true
+@onready var balloon_blowing_up: AudioStreamPlayer = $balloon_blowing_up
 
-@export var hazard_mode := true
-@export var balloon_carrier := false
+enum BalloonType {
+	WHITE,
+	BLUE,
+	ORANGE,
+	RED,
+	GREY
+}
+
+@export var balloon_type : BalloonType = BalloonType.WHITE
 @export var balloon_carrier_penalty := 0
-@export var player_balloon := false
+@export var penalty_amount := 0
 
+var default_balloon_type : BalloonType
+
+
+var hazard_active := true
+var default_hazard_active := true
 
 enum State {
 	INACTIVE,
@@ -34,7 +49,6 @@ var force_mult_index := 0
 
 @onready var money_label_3d: Label3D = $Money_Label3D
 
-#@onready var pineapple_mesh:= $Mesh/small_rock
 @onready var main_col: CollisionShape3D = $main_col
 @onready var current_mesh : MeshInstance3D=  $Mesh/small_rock2
 
@@ -51,26 +65,55 @@ var rock_destroyed := true
 var is_deactivated := false
 var health := 0
 var start_pos : Vector3
-
+var orig_start_pos : Vector3
 var current_rock_type : String = ""
 var rock_type_name : String = ""
 var falling := false
 
 
-
 func _ready() -> void:
 	start_pos = global_position
-
-	default_balloon_carrier = balloon_carrier
-	default_player_balloon = player_balloon
-	default_hazard_mode = hazard_mode
+	orig_start_pos = start_pos
+	default_balloon_type = balloon_type
+	default_hazard_active = hazard_active
 
 	await get_tree().create_timer(0.2).timeout
 
 	enter_state(State.ACTIVE)
 
-	if balloon_carrier:
+	if balloon_type == BalloonType.GREY:
 		remove_from_group("Target")
+		
+	configure_balloon_colour()
+
+
+
+func configure_balloon_colour() -> void:
+	var balloon_mesh : MeshInstance3D = $Mesh/small_rock2
+	match balloon_type:
+		BalloonType.WHITE:
+			balloon_mesh.material_override = BALLOON_WHITE_MAT
+			#$Decal_Container.show()
+			
+		BalloonType.RED:
+			balloon_mesh.material_override = BALLOON_RED_MAT
+			penalty_amount = 0
+			
+		BalloonType.ORANGE:
+			balloon_mesh.material_override = BALLOON_ORANGE_MAT
+			penalty_amount = -3
+			
+		BalloonType.BLUE:
+			balloon_mesh.material_override = BALLOON_BLUE_MAT
+			penalty_amount = 0
+			
+		BalloonType.GREY:
+			balloon_mesh.material_override = BALLOON_GREY_MAT
+			penalty_amount = 0
+			
+		_:
+			push_warning("Unhandled BalloonType: %s" % BalloonType)
+
 
 func enter_state(new_state : State) -> void:
 
@@ -120,7 +163,7 @@ func update_active() -> void:
 	reset_stats()
 	#quick_pan()
 	reset_rock_back_on()
-	if !balloon_carrier:
+	if balloon_type != BalloonType.GREY:
 		add_to_group('Target')
 	rock_activated = true
 	#global_position = start_pos
@@ -129,8 +172,9 @@ func update_active() -> void:
 	
 func update_hit() -> void:
 	
-	
-	if hazard_mode:
+	if balloon_type == BalloonType.ORANGE || balloon_type == BalloonType.RED:
+		if !hazard_active:
+			return
 		$pop_balloon.pitch_scale = randf_range(0.95,1.1)
 		$pop_balloon.play()
 		
@@ -190,10 +234,10 @@ func reset_rock_back_on() -> void:
 
 	# Random subtype: 1x / 2x / 3x
 	
-	if base_cash >= 0:
-		base_cash = -3
+	#if base_cash >= 0:
+	base_cash = penalty_amount
 	
-	if !balloon_carrier:
+	if balloon_type != BalloonType.GREY:
 		$Mesh.scale = Vector3.ONE
 	health = base_health
 	cash_value = base_cash # * size_multiplier
@@ -205,7 +249,7 @@ func reset_rock_back_on() -> void:
 
 
 func reset_stats() -> void:
-	if !balloon_carrier:
+	if balloon_type != BalloonType.GREY:
 		$Mesh.scale = Vector3.ONE
 
 	$Mesh.show()
@@ -238,23 +282,12 @@ func shake_camera() -> void:
 		player_cam.shake_camera_rock_destroyed()
 
 func destroyed_by_shratnel() -> void:
-
 	if !visible:
 		return
 	
-	hazard_mode = false
+	hazard_active = false
 	$pop_balloon_soft.play()
 	start_destroyed_process()
-	return
-	print('destroyed by shratnel')
-	$Mesh.hide()
-	#gl_PlayerState.log_hit(rock_type_name, current_rock_type, 3)
-	smoke_particles()
-	#await get_tree().create_timer(2.0).timeout
-	#queue_free()
-	hide()
-	
-	#global_position = start_pos
 	
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
@@ -262,34 +295,42 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		return
 	
 	health -= damage
-	
-	if player_balloon:
-		rock_pop_balloon()
-		play_destroy_sfx()
-		smoke_particles()
-		$pop_balloon_soft.play()
-		#global_position = start_pos
-		#$Mesh.hide()
-		disable_collision()
-		return
-	
-	if balloon_carrier:
-		play_destroy_sfx()
-		smoke_particles()
-		$pop_balloon_soft.play()
-		#global_position = start_pos
-		get_parent().get_parent().carrier_balloon_popped()
-		$Mesh.hide()
-		disable_collision()
-		
 
-		
-	else:
-		
-		if !balloon_carrier || !player_balloon:
-			print('should not be called')
+	match balloon_type:
+		BalloonType.BLUE:
+			get_tree().get_first_node_in_group('Player').game_lost = true
+			await get_tree().process_frame
+			temp_slow_down()
+			rock_pop_balloon()
+			play_destroy_sfx()
+			smoke_particles()
+			$pop_balloon_soft.play()
+			#global_position = start_pos
+			#$Mesh.hide()
+			disable_collision()
+			
+		BalloonType.WHITE:
+			gl_PlayerState.log_hit(rock_type_name, current_rock_type, 0)
+			start_destroyed_process()
+
+		BalloonType.RED:
 			gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
-		start_destroyed_process()
+			start_destroyed_process()
+			
+		BalloonType.ORANGE:
+			gl_PlayerState.log_hit(rock_type_name, current_rock_type, 0)
+			start_destroyed_process()
+			
+		BalloonType.GREY:
+			play_destroy_sfx()
+			smoke_particles()
+			$pop_balloon_soft.play()
+			#global_position = start_pos
+			get_parent().get_parent().carrier_balloon_popped()
+			$Mesh.hide()
+			disable_collision()
+
+
 	
 
 func start_destroyed_process() -> void:
@@ -309,13 +350,16 @@ func start_destroyed_process() -> void:
 	if is_in_group('Target'):
 		remove_from_group('Target')
 	
-	if balloon_carrier:
+	if balloon_type == BalloonType.GREY:
 		cash_value = balloon_carrier_penalty
 		
-	
-	if !balloon_carrier && hazard_mode:
-		money_label_3d.money_is_money(global_position, cash_value)
-	
+	#if balloon_type == BalloonType.WHITE and hazard_active:
+	if balloon_type != BalloonType.RED:
+		money_label_3d.money_is_money(global_position, penalty_amount)
+		
+	#else:
+		#money_label_3d.print_text(global_position, 'BLUE DOWN')
+		
 	set_collision_layer_value(1, false)
 	is_deactivated = true
 	#$Mesh.hide()
@@ -330,14 +374,14 @@ func start_destroyed_process() -> void:
 	#scale = clamp(scale, Vector3.ONE, Vector3.ONE * 2.5)
 	shake_camera()
 	
-	if hazard_mode:
+
+	if balloon_type == BalloonType.ORANGE:
 		var current_pos := global_position
 		
 		global_position.y -= 20.0
-		
 		show()
 		#current_mesh.scale = Vector3.ONE * 0.5
-		if !balloon_carrier:
+		if balloon_type != BalloonType.GREY:
 			$Mesh.scale = Vector3.ONE
 		
 		var tween_balloon = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
@@ -349,7 +393,21 @@ func start_destroyed_process() -> void:
 		
 		
 		add_to_group('Target')
+		
+	elif balloon_type == BalloonType.WHITE:
+		get_parent().add_white_balloon_back_into_list(self)
+		var player_balloon_container = get_tree().get_first_node_in_group('player_balloon_container')
+		if player_balloon_container:
+			player_balloon_container.white_reward()
+		
+	elif balloon_type == BalloonType.RED:
+		var player_balloon_container = get_tree().get_first_node_in_group('player_balloon_container')
+		if player_balloon_container:
+			player_balloon_container.red_penalty()
+			#player_balloon_container.player_balloon_was_popped()
 
+		
+	
 	
 func play_hit_sfx() -> void:
 	$take_damage_sfx.volume_db = randf_range(-25.0, -20.0)
@@ -368,17 +426,21 @@ func play_destroy_sfx() -> void:
 	#$explosion_sfx.play()
 
 func move_balloon_in_front_of_player() -> void:
-	if !player_balloon:
+	if balloon_type != BalloonType.BLUE:
+		start_pos = orig_start_pos
 		behind_player = false
 		show()
-		await get_tree().create_timer(3.0).timeout
+		await get_tree().create_timer(1.5).timeout
+		$balloon_blowing_up.play()
+		await get_tree().create_timer(1.5).timeout
 		$move_balloon.play()
 	
 	else:
 		behind_player = false
 		show()
-		await get_tree().create_timer(1.0).timeout
-		$move_balloon.play()	
+		#await get_tree().create_timer(1.0).timeout
+		$move_balloon.play()
+		$balloon_blowing_up.play()
 
 func smoke_particles() -> void:
 	
@@ -435,27 +497,25 @@ func rock_pop_balloon() -> void:
 	if !rock_activated:
 		return
 	
-	if player_balloon:
+	if balloon_type == BalloonType.BLUE ||balloon_type == BalloonType.RED:
 		get_parent().player_balloon_was_popped()
-		play_destroy_sfx()
+
 		var crt = get_tree().get_first_node_in_group('TV_CRT_Filter')
 		if crt:
 			crt.taking_damage_tween()
 	
 	rock_activated = false
 	enter_state(State.HIT)
-	
+	$pop_balloon.play()
 	disable_collision()
-
-	play_destroy_sfx()
 	
 	if is_in_group('Target'):
 		remove_from_group('Target')
 	
-	#if balloon_carrier:
+	#if balloon_type == BalloonType.GREY:
 		#cash_value = balloon_carrier_penalty
 	
-	#if !balloon_carrier:
+	#if balloon_type != BalloonType.GREY:
 		#money_label_3d.money_is_money(global_position, cash_value)
 	is_deactivated = true
 	
@@ -475,7 +535,7 @@ func rock_pop_balloon() -> void:
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.name.contains('Rock'):
-		if player_balloon:
+		if balloon_type == BalloonType.BLUE:
 			rock_pop_balloon()
 		else:
 			start_destroyed_process()
@@ -483,16 +543,15 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 
 func restart() -> void:
 	# Restore exported flags to their original values.
-	balloon_carrier = default_balloon_carrier
-	player_balloon = default_player_balloon
-	hazard_mode = default_hazard_mode
+	balloon_type = default_balloon_type
+	hazard_active = default_hazard_active
 
 	behind_player = true
 
 	reset_stats()
 	reset_rock_back_on()
 
-	if balloon_carrier:
+	if balloon_type == BalloonType.GREY:
 		remove_from_group("Target")
 	else:
 		add_to_group("Target")
@@ -505,5 +564,28 @@ func restart() -> void:
 	show()
 	$Mesh.show()
 	$Mesh.scale = Vector3.ONE
-	if balloon_carrier:
+	if balloon_type == BalloonType.GREY:
 		$Mesh.scale = Vector3.ONE / 2
+		
+func temp_slow_down() -> void:
+	#if has_meta("slowmo_tween"):
+		#var old_tween: Tween = get_meta("slowmo_tween")
+		#if is_instance_valid(old_tween):
+			#old_tween.kill()
+#
+	var tween := create_tween()
+	#set_meta("slowmo_tween", tween)
+
+	# Instantly slow the game down.
+	Engine.time_scale = 0.2
+	print('slow mo actiavtae')
+	# Hold the slow motion briefly.
+	tween.tween_interval(0.2)
+
+	# Smoothly return to normal speed.
+	tween.tween_property(Engine, "time_scale", 1.0, 0.5)\
+		.set_trans(Tween.TRANS_SINE)\
+		.set_ease(Tween.EASE_OUT)
+
+	await tween.finished
+	Engine.time_scale = 1.0

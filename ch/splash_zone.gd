@@ -28,25 +28,24 @@ func _on_body_entered(body: Node3D) -> void:
 		splash_sfx()
 		return
 		
-	print('all the bodies ', body.name)
-	
-	#if body.current_state != RockInstance.State.DISABLED:
-		#gl_PlayerState.log_rock_missed()
-		#print('rock is disabled and should take damage')
-		#return
 		
-	if body.current_state != RockInstance.State.ACTIVE || body.current_state != RockInstance.State.DISABLED:
-		#splash_sfx()
-		#body.hide()
+	if body.current_state == RockInstance.State.ACTIVE:
+		print('all the bodies ', body.name)
+		splash_particles(body)
+		splash_sfx()
 		gl_PlayerState.log_rock_missed()
-		return
-
-	splash_particles(body)
-	splash_sfx()
-	gl_PlayerState.log_rock_missed()
-	body.enter_state(RockInstance.State.MISSED)
+		body.enter_state(RockInstance.State.MISSED)
+		
+	#if body.current_state == RockInstance.State.HIT:
+		#print('all the bodies ', body.name)
+		#splash_particles(body)
+		#splash_sfx()
+		##gl_PlayerState.log_rock_missed()
+		#body.enter_state(RockInstance.State.MISSED)
+		#return
 	
-	%Player_health.take_damage()
+	
+	#%Player_health.take_damage()
 
 
 func reset_detected_bodies() -> void:

@@ -15,7 +15,7 @@ const RESTART_DATASET := {
 	"reroll": 0,
 	"reroll_unlocked": 0,
 	
-	"rock_limit" : 1,
+	"rock_limit" : 3,
 
 	"total_rocks_in_round": 0,
 	"total_rocks_in_round_remaining": 0,
@@ -28,7 +28,7 @@ const RESTART_DATASET := {
 	
 	"power_auto_fire" : 0,
 	"power_max_items_in_shop" : 3,
-	"power_time_upgrade" : 6,
+	"power_time_upgrade" : 0,
 	"power_target_circle": 0,
 	"power_gun_fire_rate": 0,
 	"power_bullet_damage": 0,
@@ -55,7 +55,7 @@ const DEFAULT_DATASET := {
 	"reroll": 0,
 	"reroll_unlocked": 0,
 	
-	"rock_limit" : 1,
+	"rock_limit" : 3,
 
 	"total_rocks_in_round": 0,
 	"total_rocks_in_round_remaining": 0,
@@ -69,7 +69,7 @@ const DEFAULT_DATASET := {
 	
 	"power_auto_fire" : 0,
 	"power_max_items_in_shop" : 3,
-	"power_time_upgrade" : 6,
+	"power_time_upgrade" : 0,
 	"power_target_circle": 0,
 	"power_gun_fire_rate": 0,
 	"power_bullet_damage": 0,
@@ -160,6 +160,7 @@ func log_rocks(_total_rocks : int) -> void:
 	dataset.total_rocks_in_round_remaining = _total_rocks
 	
 func log_rock_missed() -> void:
+	print('Missed a rock')
 	dataset.total_rocks_missed += 1
 	dataset.total_rocks_in_round_remaining -= 1
 	check_all_rocks_cleared()
@@ -179,11 +180,12 @@ func check_all_rocks_cleared() -> void:
 		EventBus.instance.all_rocks_destroyed.emit()
 	else:
 		EventBus.instance.end_round_rock_missed.emit()
+		
 
 
 func check_score() -> void:	
 	if dataset.total_rocks_in_round_remaining <= 0:
-		dataset.rock_limit += 1
+		#dataset.rock_limit += 1
 		return
 		#if dataset.total_hazards == 0:
 			#dataset.rock_limit += 1

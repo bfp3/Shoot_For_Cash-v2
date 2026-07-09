@@ -2,6 +2,17 @@ extends Label3D
 
 var damage_tween : Tween = null
 
+func print_text(_display_pos : Vector3, money_yield : String) -> void:
+	var new_money_label : Label3D = self #.duplicate()
+	#if money_container:
+	#get_tree().get_current_scene().add_child(new_money_label)
+	new_money_label.top_level = true
+	new_money_label.text = money_yield
+	new_money_label.global_position = _display_pos
+
+	new_money_label.tween_down()
+	new_money_label.tween_fade(Color("45dec2ff"), 1.5)
+
 func money_is_money(_display_pos : Vector3, money_yield : int) -> void:	
 	var new_money_label : Label3D = self #.duplicate()
 	#if money_container:
@@ -80,6 +91,15 @@ func tween_up(_height_start_point : float = 0.5) -> void:
 	var _rand_height : float = randf_range(0.8,1.0)
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, 'global_position:y', _height_start_point, 0.01).as_relative()
+	#tween.tween_interval(0.25)
+	tween.tween_property(self, 'global_position:y', 0.5, _rand_height).as_relative()
+	await tween.finished
+	
+func tween_down(_height_start_point : float = 0.5) -> void:
+	var _rand_height : float = -2.0
+	var tween = create_tween().set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, 'global_position:y', _height_start_point, 0.01).as_relative()
+	tween.tween_interval(0.75)
 	#tween.tween_interval(0.25)
 	tween.tween_property(self, 'global_position:y', 0.5, _rand_height).as_relative()
 	await tween.finished

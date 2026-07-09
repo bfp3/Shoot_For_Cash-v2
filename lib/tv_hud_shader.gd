@@ -38,34 +38,31 @@ func taking_damage_tween() -> void:
 	if shader_mat == null:
 		return
 
-	var tween = create_tween()
+	var tween_damage = create_tween()
 	show()
 	shader_mat.set_shader_parameter("warp_amount", 0.0)
 	# Flash in
-	tween.tween_method(
+	tween_damage.tween_method(
 		func(val):
 			shader_mat.set_shader_parameter("vignette_intensity", val),
 		shader_mat.get_shader_parameter("vignette_intensity"),
 		0.8,
 		0.2
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.15)
+	tween_damage.tween_interval(1.5)
 	# Flash back out
-	tween.tween_method(
+	tween_damage.tween_method(
 		func(val):
 			shader_mat.set_shader_parameter("vignette_intensity", val),
 		0.8,
 		0.0,
-		0.5
+		3.5
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	await tween.finished
+	await tween_damage.finished
 	hide()
-#func _input(event: InputEvent) -> void:
-	#if Input.is_key_label_pressed(KEY_2):
-		#round_over_fade_in()
-	#
-	#if Input.is_key_label_pressed(KEY_3):
-		#reset_hud()
+	
+	
+
 func egg_pulsed() -> void:
 	if shader_mat == null:
 		return

@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://ch/Player.tscn" id="23_ellt3"]
 [ext_resource type="Script" uid="uid://cbcv8383lu5sl" path="res://ch/splash_zone.gd" id="24_dse8t"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="25_ibr3v"]
-[ext_resource type="Material" uid="uid://c5lrichw3wfce" path="res://res/Kenney_prototype_textures/Material_override/Red_texture.tres" id="27_ec2we"]
+[ext_resource type="Material" uid="uid://c5lrichw3wfce" path="res://res/Kenney_prototype_textures/Material_override/balloon_red_mat.tres" id="27_ec2we"]
 [ext_resource type="Shader" uid="uid://d3ak3drqp32j5" path="res://res/Shaders/simplified_TV_shader.gdshader" id="28_ld44m"]
 [ext_resource type="AudioStream" uid="uid://b80q15yp4lvhc" path="res://sfx/water_splash_sfx_01.ogg" id="28_nq3ni"]
 [ext_resource type="Script" uid="uid://d2hbdu3aenrpl" path="res://lib/tv_hud_shader.gd" id="29_f1f1n"]
@@ -57,11 +57,9 @@
 [ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="55_s4335"]
 [ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="56_4ta1g"]
 [ext_resource type="PackedScene" uid="uid://dpbgyfs2kgdtr" path="res://ch/demo_end_screen/Demo_end_screen.tscn" id="61_ec2we"]
-[ext_resource type="Script" uid="uid://dgbe74bgrkg4j" path="res://ch/Player/HUD/player_health.gd" id="62_wv0tc"]
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
 [ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="63_err0d"]
 [ext_resource type="Script" uid="uid://dv0lm0lx1nico" path="res://ch/Balllons/balloon_container.gd" id="63_nn6vd"]
-[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="63_wv0tc"]
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
 [ext_resource type="PackedScene" uid="uid://ownxjc3mlmfd" path="res://ch/HUD_components/pause_and_exit_menu.tscn" id="64_tnw34"]
 [ext_resource type="Script" uid="uid://3le0jpjo3qtu" path="res://ch/background_transition.gd" id="65_fjk4d"]
@@ -69,6 +67,7 @@
 [ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="65_wtxnc"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
 [ext_resource type="PackedScene" uid="uid://bkeli6dyx0ytw" path="res://ch/demo_end_screen/Intro_prompt.tscn" id="66_mdemw"]
+[ext_resource type="PackedScene" uid="uid://dqvfwdvbr3hgi" path="res://ch/demo_end_screen/game_won_prompt.tscn" id="67_qmj5w"]
 [ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
 [ext_resource type="Script" uid="uid://byuybau4gp23h" path="res://ch/Balllons/player_balloon_container.gd" id="68_r5w5l"]
 [ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="68_wtxnc"]
@@ -806,56 +805,6 @@ scale_curve = SubResource("CurveTexture_scjtr")
 color = Color(1, 0.78, 0, 1)
 alpha_curve = SubResource("CurveTexture_8o1tj")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3gdew"]
-bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lf8qf"]
-bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.15, 0.15, 1)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_11n43"]
-bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="Theme" id="Theme_wtxnc"]
-Button/styles/normal = SubResource("StyleBoxFlat_3gdew")
-Panel/styles/panel = SubResource("StyleBoxFlat_lf8qf")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_11n43")
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_an2hp"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_43pd7"]
@@ -880,6 +829,7 @@ main_game_canvas = NodePath("MainGameCanvasLayer")
 script = ExtResource("2_wtxnc")
 level_layout = NodePath("../Level_Visual")
 scene_transition_screen = NodePath("../Background_transition")
+rounds_to_complete = 21
 upgrade_menu = NodePath("../MainGameCanvasLayer/Shop_Main_Menu")
 tally_menu = NodePath("../MainGameCanvasLayer/TallyCard")
 round_timer = NodePath("../MainGameCanvasLayer/Timer")
@@ -988,7 +938,7 @@ fov = 60.0
 far = 2000.0
 
 [node name="BirdsFlightPath" type="Path3D" parent="." unique_id=659428985]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
 curve = SubResource("Curve3D_gr7pb")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BirdsFlightPath" unique_id=1230755136]
@@ -1003,7 +953,7 @@ speed_multiplier = 60.0
 [node name="Rocks" type="Node3D" parent="." unique_id=859468523]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
-pulse_magnitude = 0.8
+pulse_magnitude = 0.885
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
 root_node = NodePath("../Shover")
@@ -1015,102 +965,82 @@ speed_scale = 0.2
 [node name="Rock_Instance" parent="Rocks/Container_1" unique_id=1089661090 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4728577, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance2" parent="Rocks/Container_1" unique_id=641614515 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8336112, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance3" parent="Rocks/Container_1" unique_id=977217555 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.658868, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance4" parent="Rocks/Container_1" unique_id=614925084 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.798102, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance5" parent="Rocks/Container_1" unique_id=1804095401 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5083055, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance6" parent="Rocks/Container_1" unique_id=1648636095 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.63919, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance7" parent="Rocks/Container_1" unique_id=1588486015 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.451482, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance8" parent="Rocks/Container_1" unique_id=2122944651 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5166283, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance9" parent="Rocks/Container_1" unique_id=1306876008 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.997283, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance10" parent="Rocks/Container_1" unique_id=702490276 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4127793, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance11" parent="Rocks/Container_1" unique_id=1826283916 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6957083, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance12" parent="Rocks/Container_1" unique_id=1936738185 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4926226, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance13" parent="Rocks/Container_1" unique_id=511030969 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.390077, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance14" parent="Rocks/Container_1" unique_id=869067105 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.036045, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance15" parent="Rocks/Container_1" unique_id=221535877 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3772593, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance16" parent="Rocks/Container_1" unique_id=559020077 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance17" parent="Rocks/Container_1" unique_id=1641853172 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7047248, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance18" parent="Rocks/Container_1" unique_id=931775137 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6097546, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance19" parent="Rocks/Container_1" unique_id=202729113 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance20" parent="Rocks/Container_1" unique_id=1000269966 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4504056, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="Rocks" unique_id=951137588]
 stream = ExtResource("23_1i2h1")
@@ -1658,7 +1588,11 @@ texture = ExtResource("38_8twtg")
 expand_mode = 1
 stretch_mode = 5
 script = SubResource("GDScript_3ga0b")
-loop_top_y = -800.0
+balloon_1_speed = 180.0
+balloon_2_speed = 150.0
+balloon_3_speed = 220.0
+loop_top_y = -540.0
+loop_bottom_offset = -300.0
 
 [node name="Balloons2" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=633172788]
 z_index = -2
@@ -2524,106 +2458,15 @@ autostart = true
 [node name="DemoEndScreen" parent="MainGameCanvasLayer" unique_id=1212322380 instance=ExtResource("61_ec2we")]
 visible = false
 
-[node name="Player_health" type="Control" parent="MainGameCanvasLayer" unique_id=983915033]
-unique_name_in_owner = true
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("62_wv0tc")
-
-[node name="Control" type="Control" parent="MainGameCanvasLayer/Player_health" unique_id=1375216936]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -180.0
-offset_top = -130.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.46, 0.46)
-pivot_offset_ratio = Vector2(1, 1)
-size_flags_horizontal = 4
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="Panel" type="Panel" parent="MainGameCanvasLayer/Player_health/Control" unique_id=79189667]
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -298.6958
-offset_top = -382.3905
-offset_right = -118.6958
-offset_bottom = -252.3905
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_wtxnc")
-theme_override_styles/panel = ExtResource("31_hwubp")
-
-[node name="TextureRect" type="TextureRect" parent="MainGameCanvasLayer/Player_health/Control/Panel" unique_id=906908435]
-modulate = Color(0.4, 0.4, 0.4, 1)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -293.5
-offset_top = -293.0
-offset_right = 293.5
-offset_bottom = 293.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.2, 0.2)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("63_wv0tc")
-
-[node name="Health_remaining" type="RichTextLabel" parent="MainGameCanvasLayer/Player_health/Control" unique_id=2125358688]
-modulate = Color(1, 0.78039217, 0, 1)
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -272.28284
-offset_top = -367.3905
-offset_right = -145.10876
-offset_bottom = -267.3905
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_outline_size = 1
-theme_override_constants/outline_size = 0
-theme_override_font_sizes/normal_font_size = 70
-theme_override_font_sizes/bold_font_size = 50
-theme_override_font_sizes/bold_italics_font_size = 50
-theme_override_font_sizes/italics_font_size = 71
-bbcode_enabled = true
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Game_over_screen" parent="MainGameCanvasLayer" unique_id=513862048 groups=["game_over_screen"] instance=ExtResource("65_vwwt2")]
 visible = false
 
-[node name="Intro_Prompt" parent="MainGameCanvasLayer" unique_id=1127572240 instance=ExtResource("66_mdemw")]
+[node name="Intro_Prompt" parent="MainGameCanvasLayer" unique_id=1127572240 node_paths=PackedStringArray("round_manager") instance=ExtResource("66_mdemw")]
+visible = false
+round_manager = NodePath("../../Round_manager")
+
+[node name="Game_Won" parent="MainGameCanvasLayer" unique_id=2139621818 instance=ExtResource("67_qmj5w")]
+unique_name_in_owner = true
 visible = false
 
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
@@ -2712,52 +2555,138 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19)
 script = ExtResource("63_nn6vd")
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.1099997, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 5.1099997, 2.2999992)
+balloon_type = 2
 
 [node name="Balloon2" parent="Balloon_container" unique_id=121622778 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7469215, 1.5, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 2.7469215, 1.5, 2.2999992)
+balloon_type = 2
 
 [node name="Balloon3" parent="Balloon_container" unique_id=852852036 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.999999, 5.8671556, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -2.999999, 5.8671556, 2.2999992)
+balloon_type = 2
 
 [node name="Balloon4" parent="Balloon_container" unique_id=2070994326 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.099999, 3.3571558, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 4.0000005, 5.357156, 2.2999992)
+balloon_type = 2
 
 [node name="Balloon5" parent="Balloon_container" unique_id=29611764 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 6.1099997, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 2, 6.1099997, 2.2999992)
+balloon_type = 2
 
 [node name="Balloon6" parent="Balloon_container" unique_id=1851979639 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2530785, 2.5, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -5.2530785, 2.5, 2.2999992)
+balloon_type = 2
 
 [node name="Balloon7" parent="Balloon_container" unique_id=343873882 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.000001, 1.8671556, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 1.000001, 3.8671556, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon8" parent="Balloon_container" unique_id=693066991 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5999994, 4.357156, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -1.9999994, 4.357156, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon9" parent="Balloon_container" unique_id=258440654 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.1099997, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -6, 5.1099997, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon10" parent="Balloon_container" unique_id=1647404699 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.7469215, 3.5, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 3.7469215, 3.5, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon11" parent="Balloon_container" unique_id=1138589707 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.199999, 4.1671553, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -4.199999, 4.1671553, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon12" parent="Balloon_container" unique_id=826579076 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9000006, 3.3571558, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 5.9000006, 2.9571557, 2.2999992)
 
 [node name="Balloon13" parent="Balloon_container" unique_id=849159317 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.1099997, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -3, 2.1099997, 2.2999992)
 
 [node name="Balloon14" parent="Balloon_container" unique_id=168189456 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7469215, 4.5, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 7.7469215, 4.5, 2.2999992)
+
+[node name="Balloon33" parent="Balloon_container" unique_id=2099772513 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 8.946921, 5.5, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon34" parent="Balloon_container" unique_id=372279064 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 7.8469214, 5.9, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon35" parent="Balloon_container" unique_id=961133245 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 6.7469215, 6.3, 2.2999992)
+balloon_type = 2
 
 [node name="Balloon15" parent="Balloon_container" unique_id=780922425 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.99999905, 2.8671556, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -0.99999905, 2.8671556, 2.2999992)
+balloon_type = 2
 
 [node name="Balloon16" parent="Balloon_container" unique_id=1425468038 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9000006, 6.357156, 2.2999992)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -8.099999, 3.3571558, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon17" parent="Balloon_container" unique_id=1137737040 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -8.099999, 6.357156, 2.2999992)
+balloon_type = 3
+
+[node name="Balloon31" parent="Balloon_container" unique_id=1838313961 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -6.8999996, 6.357156, 2.2999992)
+balloon_type = 3
+
+[node name="Balloon32" parent="Balloon_container" unique_id=1867216046 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -7.4999995, 5.357156, 2.2999992)
+balloon_type = 3
+
+[node name="Balloon18" parent="Balloon_container" unique_id=780263799 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -5.0999994, 6.357156, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon19" parent="Balloon_container" unique_id=1016396030 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -1.0999994, 6.157156, 2.2999992)
+
+[node name="Balloon20" parent="Balloon_container" unique_id=824068981 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -1.0999994, 4.657156, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon21" parent="Balloon_container" unique_id=984542234 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -2.1999993, 5.357156, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon22" parent="Balloon_container" unique_id=1977874605 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 1.0000007, 5.357156, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon23" parent="Balloon_container" unique_id=480122687 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 2.5000007, 4.4571557, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon24" parent="Balloon_container" unique_id=889025487 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 2.5000007, 3.2571557, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon25" parent="Balloon_container" unique_id=1828565435 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 4.9000006, 3.2571557, 2.2999992)
+balloon_type = 2
+
+[node name="Balloon26" parent="Balloon_container" unique_id=1800955701 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0.4000007, 6.357156, 2.2999992)
+balloon_type = 3
+
+[node name="Balloon27" parent="Balloon_container" unique_id=476651360 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 5.000001, 5.9571557, 2.2999992)
+balloon_type = 3
+
+[node name="Balloon28" parent="Balloon_container" unique_id=233807279 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 6.500001, 5.0571556, 2.2999992)
+balloon_type = 3
+
+[node name="Balloon29" parent="Balloon_container" unique_id=1075390985 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 6.500001, 3.8571558, 2.2999992)
+
+[node name="Balloon30" parent="Balloon_container" unique_id=1342645120 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 8.900001, 3.8571558, 2.2999992)
 
 [node name="Balloon_wait_positions" type="Node3D" parent="." unique_id=242094308]
 
@@ -2770,14 +2699,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5000005, -1.3, 11.799999)
 [node name="Balloon_pos_3" type="Marker3D" parent="Balloon_wait_positions" unique_id=1107266971]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2000003, -1.4, 11.799999)
 
-[node name="PlayerBalloon" type="Node3D" parent="." unique_id=375306820 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
+[node name="PlayerBalloon" type="Node3D" parent="." unique_id=375306820 node_paths=PackedStringArray("round_manager") groups=["player_balloon_container", "restartable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
 script = ExtResource("68_r5w5l")
 starting_balloons = 1
 round_manager = NodePath("../Round_manager")
 
 [node name="PlayerBalloon" parent="PlayerBalloon" unique_id=966203961 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 4, 5.2250004)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 8, 5.2250004)
 
 [node name="PlayerBalloon2" parent="PlayerBalloon" unique_id=91413864 instance=ExtResource("68_wtxnc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 3, 5.225)

@@ -159,6 +159,7 @@ func bounce_rocks() -> void:
 		counter += 1
 		
 		await get_tree().create_timer(0.1).timeout
+		spin_rocks()
 		await get_tree().create_timer(0.2).timeout
 		
 		if counter >= rocks_limit:
@@ -214,7 +215,7 @@ func reset_rock_back_on() -> void:
 
 
 func start_first_round_rock_sequence() -> void:
-	rocks_limit = 1
+	rocks_limit = 3
 	var first_rock = $Container_1/Shootable_object
 	first_rock.first_rock()
 
@@ -225,3 +226,4 @@ func start_first_round_rock_sequence() -> void:
 	first_rock.apply_central_impulse(impulse)
 
 	spin_rocks()
+	

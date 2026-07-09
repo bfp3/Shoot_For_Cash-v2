@@ -6,7 +6,6 @@ const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
 const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
 const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
 
-
 const DEMO_END_SCREEN = preload('uid://dpbgyfs2kgdtr')
 
 var game_has_been_beaten := false
@@ -20,6 +19,7 @@ var transitioning_worlds := false
 @export var level_layout : Node3D
 @export var scene_transition_screen : Control 
 @export var current_round := 0
+@export var rounds_to_complete := 5
 @export var switched_on := true
 @export var confetti_cannon : Node3D
 @export var upgrade_menu : Control
@@ -286,6 +286,8 @@ func update_round_end() -> void:
 
 func update_tally_start() -> void:
 	#$'../PlayerBalloon'.reposition_balloon()
+	check_how_many_rounds_left()
+	
 	EventBus.instance.open_tally_card.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -306,7 +308,8 @@ func update_shop_end() -> void:
 	#await get_tree().create_timer(0.5).timeout
 	
 	enter_state(RoundState.ROUND_START)
-	$'../PlayerBalloon'.check_balloons_status()
+	if current_round > 2:
+		$'../PlayerBalloon'.check_balloons_status()
 	
 
 func update_pause() -> void:
@@ -319,18 +322,22 @@ func update_resume() -> void:
 		round_timer.enter_state(round_timer.State.RESUME_TIMER)
 
 func update_game_won() -> void:
-	$'../Cannon_Launcher'.send_in_the_pineapples()
+	#$'../Cannon_Launcher'.send_in_the_pineapples()
 	stop_timer()
-	
+	game_has_been_beaten = true
 	music_manager.game_won()
 	ending_song.play()
 	
+	%Shop_Main_Menu.enter_state(%Shop_Main_Menu.SkillState.CLOSE_MENU)
+	%TallyCard.enter_state(%TallyCard.State.CLOSE_MENU)
+	stop_player()
+	
 	await get_tree().create_timer(1.0).timeout
+	enter_state(RoundState.INACTIVE)
 	
 	await get_tree().create_timer(60.0).timeout
 	
-	enter_state(RoundState.INACTIVE)
-	stop_player()
+	
 	
 	
 	#BackgroundForTransition.fade_out()
@@ -355,7 +362,7 @@ func move_to_moss() -> void:
 	transitioning_worlds = true
 	player.display_hud()
 	gl_PlayerState.dataset["stage"] = 1
-	gl_PlayerState.dataset["rock_limit"] = 1
+	#gl_PlayerState.dataset["rock_limit"] = 1
 	gl_PlayerState.dataset["reroll_unlocked"] = 1
 	print('dont know how to make gl_playerState handle this internally')
 		
@@ -602,3 +609,26 @@ func start_game_over() -> void:
 		
 	player.stop_player()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+func check_how_many_rounds_left() -> void:
+	#print('Current Round = ', current_round)
+	increase_rock_limit()
+	if current_round > rounds_to_complete:
+		%Game_Won.show()
+		update_game_won()
+
+func increase_rock_limit() -> void:
+	
+	if current_round == 6:
+		gl_PlayerState.dataset.rock_limit = 5
+		return
+		
+	if current_round == 13:
+		gl_PlayerState.dataset.rock_limit = 7
+		return
+		
+	if current_round == 20:
+		gl_PlayerState.dataset.rock_limit = 9
+		return
+#func _process(delta: float) -> void:
+	#print(gl_PlayerState.dataset.rock_limit)

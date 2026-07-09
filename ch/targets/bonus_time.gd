@@ -9,9 +9,9 @@ var activated := true
 
 func _ready() -> void:
 	self.queue_free()
-	return
-	EventBus.instance.egg_pulsed.connect(start_round)
-	time_ran_out()
+	#return
+	#EventBus.instance.egg_pulsed.connect(start_round)
+	#time_ran_out()
 
 
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:	

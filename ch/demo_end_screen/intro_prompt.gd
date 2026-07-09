@@ -14,7 +14,7 @@ var default_pivot_offset := Vector2.ZERO
 
 var tween_giuseppe : Tween = null
 @onready var prompt: RichTextLabel = $CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/RichTextLabel
-
+@export var round_manager : RoundManager 
 
 func _ready() -> void:
 
@@ -28,11 +28,13 @@ func _ready() -> void:
 	pivot_offset = default_pivot_offset
 
 	#enter_state(State.OPEN_MENU)
-	var price_redd = gl_DataSet.get_value('price_ticket_redd', 0)
-	prompt.text = (
-		"Earn [color=#42d100]$" + str(int(price_redd)) + "[/color] to [color=#ffc700][wave] WIN[/wave][/color]\n" +
-	"but don't pop [color=#45dec2][wave]Giuseppe[/wave][/color]"
-)
+	#var price_redd = gl_DataSet.get_value('price_ticket_redd', 0)
+	
+	#prompt.text = (
+		#"Earn [color=#42d100]$" + str(int(price_redd)) + "[/color] to [color=#ffc700][wave] WIN[/wave][/color]\n" +
+	#"but don't pop [color=#45dec2][wave]Giuseppe[/wave][/color]"
+#)
+	
 
 
 
@@ -59,6 +61,15 @@ func update_inactive() -> void:
 
 
 func update_open_menu() -> void:
+	
+	var round_count := round_manager.rounds_to_complete
+	
+	prompt.text = (
+		"Survive [color=#ffc700]" + str(round_count) + "[/color] Rounds to [color=#ffc700][wave]WIN[/wave][/color]\n" +
+		"Shoot Rocks to Earn [color=#42d100]CASH[/color]\n" +
+	"Protect [color=#45dec200][wave]Bluey[/wave][/color]"
+)
+	
 	sfx_open_tally()
 	show()
 
@@ -143,7 +154,7 @@ func start() -> void:
 	update_open_menu()
 
 func _on_retry_pressed() -> void:
-	var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
+	
 	if round_manager:
 		round_manager.enter_state(round_manager.RoundState.SHOP_END)
 		

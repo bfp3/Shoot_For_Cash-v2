@@ -231,7 +231,6 @@ func update_resume_timer() -> void:
 	
 
 func stop_timer() -> void:
-	print('tell timer to stop')
 	enter_state(State.INACTIVE)
 	timer_ticking_sfx.stop()
 	update_text()

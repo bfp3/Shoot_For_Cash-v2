@@ -229,7 +229,6 @@ func update_power_label_position() -> void:
 	)
 
 func restart() -> void:
-	print('should be restarting the progress bars')
 	current_upgrade_level = 0
 	current_bullet_amount = 1
 
@@ -248,7 +247,7 @@ func restart() -> void:
 
 	reset_progress_bars()
 	reset_buttons_settings()
-	print('should be restarting the progress bars 2')
+
 	await get_tree().process_frame
 	update_shop("power_" + upgrade_type)
 	await update_power_label_position()

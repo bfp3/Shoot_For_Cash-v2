@@ -9,26 +9,38 @@ var new_round_checker := 0
 @onready var balloon_4: StaticBody3D = $Balloon4
 
 func _ready() -> void:
-	#move_all_ballons_back()
-	move_all_ballons_below()
+	move_all_ballons_back()
+	#move_all_ballons_below()
 	set_physics_process(false)
 
 func move_all_ballons_below() -> void:
-	print('how many times did this get called?')
 	for i in get_children():
 		if i is StaticBody3D:
-			i.global_position = i.start_pos
-			i.global_position.y -= 11.0
+			#i.global_position = i.start_pos
+			i.global_position.z = i.start_pos.z - 11.0
 			i.hide()
 	
 func move_all_ballons_back() -> void:
 	for i in get_children():
-		i.global_position.z -= 27.0
-		i.hide()
+		if i is StaticBody3D:
+			i.global_position.z = i.start_pos.z - 27.0
+			i.hide()
+	
+func add_white_balloon_back_into_list(_balloon: StaticBody3D) -> void:
+	if !is_instance_valid(balloon):
+		return
+
+	# Return to initial state
+	_balloon.behind_player = true
+	_balloon.hide()
+	_balloon.global_position.z = _balloon.start_pos.z - 27.0
+
+	# Move to the end of the child list
+	move_child(_balloon, get_child_count() - 1)
 	
 func add_balloon() -> void:
-	print('adding balloon')
-	for l in range(1):
+
+	for l in range(2):
 		for i in get_children():
 			if i is StaticBody3D and i.behind_player:
 				i.move_balloon_in_front_of_player()
@@ -36,10 +48,11 @@ func add_balloon() -> void:
 				var tween = create_tween()
 				tween.set_ease(Tween.EASE_IN_OUT)
 				tween.set_trans(Tween.TRANS_SINE)
-				tween.tween_interval(1.0)
-				tween.tween_property(i, "global_position:y", 11.0, 5.0).as_relative()
+				tween.tween_interval(0.2)
+				#tween.tween_property(i, "global_position:y", -11.0, 5.0).as_relative()
+				tween.tween_property(i, "global_position:z", 27.0, 5.0).as_relative()
 				break
-		print('balloon ADDED')
+
 		await get_tree().create_timer(1.5).timeout
 
 	## Check if every balloon has been added
@@ -96,8 +109,11 @@ func move_ballons_2() -> void:
 	tween.tween_interval(randi_range(2,6))
 	tween.tween_property(chosen_balloon, "global_position:z", 20.0, 10.0)
 	await tween.finished
-	
+
+
+
 func restart() -> void:
+	await get_tree().create_timer(1.0).timeout
 	current_round = 0
 	new_round_checker = 0
 
@@ -109,5 +125,6 @@ func restart() -> void:
 
 
 	# Return all balloons to their starting hidden position.
-	move_all_ballons_below()
+	#move_all_ballons_below()
+	move_all_ballons_back()
 	

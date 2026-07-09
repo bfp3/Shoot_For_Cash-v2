@@ -1,0 +1,310 @@
+[gd_scene format=3 uid="uid://dqvfwdvbr3hgi"]
+
+[ext_resource type="Script" uid="uid://dqmpomm66rwlg" path="res://ch/demo_end_screen/game_won_prompt.gd" id="1_au0ke"]
+[ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="2_n47wp"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="3_7fgf4"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="4_mblb8"]
+[ext_resource type="AudioStream" uid="uid://bk6dsl4ownky8" path="res://sfx/USERSONG164.ogg" id="5_ueql3"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="6_8nc61"]
+[ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="7_qkp2m"]
+[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="8_35pj1"]
+[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="9_jk6st"]
+[ext_resource type="AudioStream" uid="uid://bixius52c3n2s" path="res://sfx/shop_reroll_sfx_01.ogg" id="10_72vv7"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="11_e3472"]
+[ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="12_b6elu"]
+[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="13_urkp2"]
+[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="14_wlcqf"]
+[ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="15_2n4ss"]
+[ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="16_y5ieb"]
+[ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="17_4l01s"]
+[ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="18_qoidv"]
+[ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="19_3id5f"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1teaa"]
+
+[sub_resource type="Animation" id="Animation_3q72g"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_4k5lx"]
+resource_name = "light_wobble"
+length = 5.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CenterContainer:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.5333333, 5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CenterContainer:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.2333333, 3.74, 5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.00174532925199472, -0.00174532925199472, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CenterContainer:scale")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2.52, 5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.99, 0.99), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cuwcq"]
+_data = {
+&"RESET": SubResource("Animation_3q72g"),
+&"light_wobble": SubResource("Animation_4k5lx")
+}
+
+[node name="Game_Won" type="Control" unique_id=2139621818]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1_au0ke")
+
+[node name="giuseppeballoon" type="TextureRect" parent="." unique_id=435374020]
+unique_name_in_owner = true
+z_index = 1
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 0
+offset_left = 943.65295
+offset_top = 410.65283
+offset_right = 1199.653
+offset_bottom = 666.65283
+scale = Vector2(0.4, 0.4)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("2_n47wp")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1196952769]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9948992, 0.9948992)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="CenterContainer" unique_id=1338724466]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 2
+color = Color(0.5689725, 0.5689729, 0.5689725, 0.8901961)
+
+[node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=1520668716]
+custom_minimum_size = Vector2(250, 250)
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = ExtResource("3_7fgf4")
+
+[node name="MainPanel" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=1308104056]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HSeparator6" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=1989591326]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
+
+[node name="ButtonsHBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=403382710]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer" unique_id=1885962520]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=122762286]
+custom_minimum_size = Vector2(592.975, 23.65)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=434208075]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/italics_font_size = 46
+bbcode_enabled = true
+text = "Save $110 CASH to Win.
+And don't pop [color=#45dec2][wave]Giuseppe[/wave][/color]"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=412034429]
+custom_minimum_size = Vector2(592.975, 23.65)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=2004321215]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1860735607]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
+
+[node name="Retry" type="Button" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1492770628 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 23
+text = "Play"
+script = ExtResource("4_mblb8")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1559410427]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
+
+[node name="SpacePanel3" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1917219061]
+custom_minimum_size = Vector2(592.975, 23.65)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=29362120]
+libraries/ = SubResource("AnimationLibrary_cuwcq")
+autoplay = &"light_wobble"
+
+[node name="SFX" type="Node" parent="." unique_id=136947381]
+
+[node name="Demo_finished_music" type="AudioStreamPlayer" parent="SFX" unique_id=1100744156]
+stream = ExtResource("5_ueql3")
+volume_db = -30.0
+
+[node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=469110859]
+stream = ExtResource("6_8nc61")
+volume_db = -40.0
+
+[node name="shop_purchase_01" type="AudioStreamPlayer" parent="SFX" unique_id=1601267957]
+stream = ExtResource("7_qkp2m")
+volume_db = -40.0
+
+[node name="shop_purchase_02" type="AudioStreamPlayer" parent="SFX" unique_id=779991644]
+stream = ExtResource("8_35pj1")
+volume_db = -15.0
+pitch_scale = 1.2
+
+[node name="shop_purchase_03" type="AudioStreamPlayer" parent="SFX" unique_id=823577214]
+stream = ExtResource("9_jk6st")
+volume_db = -40.0
+
+[node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1143132540]
+stream = ExtResource("10_72vv7")
+volume_db = -40.0
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=781546087]
+stream = ExtResource("11_e3472")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=992258522]
+stream = ExtResource("11_e3472")
+volume_db = -50.0
+
+[node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1172427221]
+stream = ExtResource("12_b6elu")
+volume_db = -40.0
+pitch_scale = 3.0
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1547859559]
+stream = ExtResource("13_urkp2")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1678407369]
+stream = ExtResource("14_wlcqf")
+volume_db = -40.0
+pitch_scale = 1.5
+
+[node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=463231547]
+stream = ExtResource("15_2n4ss")
+volume_db = -34.0
+
+[node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=847237089]
+stream = ExtResource("16_y5ieb")
+volume_db = -20.0
+
+[node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=1875892836]
+stream = ExtResource("17_4l01s")
+volume_db = -21.0
+
+[node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=1840374951]
+stream = ExtResource("18_qoidv")
+pitch_scale = 0.4
+
+[node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=2137897121]
+stream = ExtResource("19_3id5f")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/Retry" to="." method="_on_retry_pressed"]

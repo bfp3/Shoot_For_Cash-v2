@@ -65,4 +65,8 @@ func cleanUp() -> void:
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.name.contains('Balloon'):
-		body.start_destroyed_process()
+		if body.balloon_type == body.BalloonType.BLUE:
+			body.rock_pop_balloon()
+			return
+		else:
+			body.start_destroyed_process()

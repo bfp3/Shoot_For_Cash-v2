@@ -2272,6 +2272,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("29_mxtxj")
+use_incrementing_counter = true
 on_tally_sheet = true
 
 [node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/TotalRocks" unique_id=1489176079]
@@ -2287,7 +2288,6 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_11n43")
 
 [node name="Panel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/TotalRocks" unique_id=1809673453]
-visible = false
 custom_minimum_size = Vector2(180, 130)
 layout_mode = 1
 anchors_preset = 8
@@ -2306,7 +2306,6 @@ theme = SubResource("Theme_pivo4")
 theme_override_styles/panel = ExtResource("29_fuvvr")
 
 [node name="NumberLabel" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/TotalRocks" unique_id=1943427424]
-visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -2322,7 +2321,8 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 70
+theme_override_font_sizes/normal_font_size = 92
+theme_override_font_sizes/italics_font_size = 42
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0

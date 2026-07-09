@@ -13,6 +13,8 @@ class_name Player extends Node3D
 @export var shot_count := 4000
 var original_shot_count := 0
 
+var game_lost := false
+
 var _scope_at_min := false
 var scope_base_scale := 1.0              # resting visual scale set by tween_scope()
 var scope_base_target_circle := 60.0     # resting real hit-radius, captured on press
@@ -207,10 +209,12 @@ func handle_pan_left_and_right(delta) -> void:
 
 func _process(delta: float) -> void:
 	
-	if Input.is_action_pressed('middle_mouse'):
-		Engine.time_scale = 6.0
-	else:
-		Engine.time_scale = 1.0
+
+	if OS.has_feature("editor") && !game_lost:
+		if Input.is_action_pressed("middle_mouse"):
+			Engine.time_scale = 6.0
+		elif Engine.time_scale != 1.0:
+			Engine.time_scale = 1.0
 	
 	if current_state == State.IN_SHOP:
 		return 
@@ -582,6 +586,7 @@ func fire_weapon() -> void:
 	%ShotRemaining.text = str(shot_count).pad_zeros(2)
 	if shot_count <= 0:
 		await get_tree().create_timer(0.5).timeout
+		print("shot count reached")
 		EventBus.instance.end_round_rock_missed.emit()
 	
 
@@ -670,7 +675,7 @@ func start_player() -> void:
 	
 	if gl_PlayerState.dataset.power_gun == 0:
 		return
-	
+	game_lost = false
 	shot_count = original_shot_count
 	%ShotRemaining.text = str(shot_count).pad_zeros(2)
 	weapon_shooting.can_shoot(true)

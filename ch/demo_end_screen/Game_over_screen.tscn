@@ -13,6 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="17_28tve"]
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="18_641y2"]
 [ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="19_3l0c5"]
+[ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="19_6m6o7"]
 [ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="20_65su1"]
 [ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="21_0ddxm"]
 [ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="22_n4vm3"]
@@ -169,22 +170,25 @@ custom_minimum_size = Vector2(592.975, 23.65)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1353853436]
+[node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=5093305]
+custom_minimum_size = Vector2(592.975, 23.65)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/SpacePanel4" unique_id=1353853436]
+layout_mode = 0
+offset_top = -110.99997
+offset_right = 592.0
+offset_bottom = -3.9999695
 theme_override_font_sizes/normal_font_size = 30
 theme_override_font_sizes/italics_font_size = 46
 bbcode_enabled = true
-text = "[color=#45dec2][wave]Giuseppe[/wave][/color] Popped!
+text = "[color=#45dec2][wave]Nooooooo![/wave][/color] You let        Pop!
 [i][pulse][color=#ffc700]Game Over!"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=5093305]
-custom_minimum_size = Vector2(592.975, 23.65)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=628323630]
 layout_mode = 2
@@ -290,5 +294,42 @@ pitch_scale = 2.0
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1059437881]
 libraries/ = SubResource("AnimationLibrary_cuwcq")
 autoplay = &"light_wobble"
+
+[node name="giuseppeballoon" type="TextureRect" parent="." unique_id=1122839491]
+unique_name_in_owner = true
+z_index = 1
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 0
+offset_left = 931.65295
+offset_top = 361.65283
+offset_right = 1187.653
+offset_bottom = 617.65283
+scale = Vector2(0.4, 0.4)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("19_6m6o7")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="giuseppeballoon2" type="TextureRect" parent="giuseppeballoon" unique_id=1043613886]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.5
+offset_top = -120.5
+offset_right = 135.5
+offset_bottom = 135.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("19_6m6o7")
+expand_mode = 1
+stretch_mode = 5
 
 [connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/Retry" to="." method="_on_retry_pressed"]
