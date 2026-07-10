@@ -91,6 +91,7 @@ var is_deactivated := false
 var rock_destroyed := true
 var player_has_marked_rock := false
 var start_pos : Vector3
+var target_x_position : float = 0.0
 
 
 var current_rock_type : String = ""
@@ -102,6 +103,7 @@ var falling := false
 func _ready() -> void:
 	
 	start_pos = global_position
+	target_x_position = start_pos.x
 	
 	await get_tree().create_timer(0.2).timeout
 	
@@ -151,9 +153,7 @@ func update_prepare_rock() -> void:
 	await get_tree().process_frame
 	setup_rock_type()
 	await get_tree().create_timer(0.2).timeout
-	global_position.x = start_pos.x + get_parent().global_position.x
-	#global_position.x += randi_range(-16,16)
-	#global_position.x = clamp(global_position.x, -2,2)
+	global_position.x = target_x_position
 	
 func update_active() -> void:
 	enable_collision()
@@ -213,8 +213,8 @@ func enable_collision() -> void:
 
 func update_gravity(_gravity_scale : float) -> void:
 	for i in range(3):
-		gravity_scale = _gravity_scale
-		#gravity_scale = 0.15
+		#gravity_scale = _gravity_scale
+		gravity_scale = 0.15
 		await get_tree().create_timer(0.1).timeout
 		
 
@@ -314,12 +314,11 @@ func setup_rock_type() -> void:
 			health = base_health * size_multiplier
 			cash_value = base_cash # * size_multiplier
 			max_health = health
-			update_health_icon()
 			small_rock.visible = true
 			main_col.scale = Vector3.ONE * 0.125  * size_multiplier
 			current_mesh = small_rock
 			assign_random_mesh(current_mesh)
-			current_mesh.scale = base_scale #* size_multiplier
+			current_mesh.scale = base_scale * size_multiplier
 			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
 			linear_damp = 0.5
 			force_mult.clear()
@@ -338,7 +337,6 @@ func setup_rock_type() -> void:
 			current_mesh.scale  = Vector3.ONE * 0.625
 			max_health = health
 			rock_type_gravity_scale = 0.15
-			update_health_icon()
 			linear_damp = 0.5
 			force_mult.clear()
 			force_mult = [2,3]
@@ -358,7 +356,6 @@ func setup_rock_type() -> void:
 			current_mesh.scale  = Vector3.ONE * 0.625
 			max_health = health
 			rock_type_gravity_scale = 0.3
-			update_health_icon()
 			linear_damp = 0.5
 			force_mult.clear()
 			force_mult = [4,6,7]
@@ -376,7 +373,6 @@ func setup_rock_type() -> void:
 			current_mesh.scale  = Vector3.ONE * 0.7
 			max_health = health
 			rock_type_gravity_scale = 0.4
-			update_health_icon()
 			linear_damp = 0.5
 			force_mult.clear()
 			force_mult = [3,4]
@@ -394,7 +390,6 @@ func setup_rock_type() -> void:
 			current_mesh.scale  = Vector3.ONE * 0.7
 			max_health = health
 			rock_type_gravity_scale = 0.8
-			update_health_icon()
 			linear_damp = 0.5
 			force_mult = [2,3]
 			force_mult_index = 0
@@ -412,7 +407,6 @@ func setup_rock_type() -> void:
 			current_mesh.scale  = Vector3.ONE * 1.5 #* 0.399
 			max_health = health
 			rock_type_gravity_scale = 0.1
-			update_health_icon()
 			gl_PlayerState.log_hazard()
 			linear_damp = 1.0
 			force_mult = [1,2]
@@ -521,14 +515,29 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	var right = camera.global_transform.basis.x
 	var up = camera.global_transform.basis.y
 	
+	#var force_dir = (right * screen_offset.x) + (up * -screen_offset.y)
+#
+	#force_dir = force_dir.normalized()
+	#
+	#if force_mult_index >= force_mult.size() - 1:
+		#force_mult_index = 0
+	#else:
+		#force_mult_index += 1
+		
+		
 	var force_dir = (right * screen_offset.x) + (up * -screen_offset.y)
 
+	# Remove any downward component and replace it with a slight upward push.
+	var vertical_amount = force_dir.dot(up)
+
+	if vertical_amount < 0.0:
+		# Remove the downward portion.
+		force_dir -= up * vertical_amount
+
+		# Add a very small upward bias.
+		force_dir += up * 0.15
+
 	force_dir = force_dir.normalized()
-	
-	if force_mult_index >= force_mult.size() - 1:
-		force_mult_index = 0
-	else:
-		force_mult_index += 1
 	
 	apply_central_impulse(force_dir * force_mult[force_mult_index])
 	
@@ -608,7 +617,6 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		health -= damage
 		
 	display_health_counter()
-	update_health_icon() 
 	display_damage_counter(damage)
 	
 	
@@ -821,6 +829,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			var force_dir = (body.global_position - global_position)
 			force_dir = force_dir.normalized()	
 			body.apply_central_impulse(force_dir * 2)
+			body.apply_torque_impulse(force_dir * 500.0)
 			return
 	
 	if body.name.contains('Rock_Instance'):
@@ -943,7 +952,8 @@ func smoke_particles_duplicates() -> void:
 	#_new_sparks.global_position = global_position
 	#_new_sparks.emitting = true
 
-		
+func start_bullet_to_target() -> void:
+	play_accurate_sounds()
 		
 func play_accurate_sounds() -> void:
 	#await get_tree().create_timer(0.05).timeout
@@ -984,23 +994,3 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 		#$'2d_3d_icon/AnimationPlayer'.pause()
 		
 		
-func update_health_icon() -> void:
-	return
-	#if max_health <= 0:
-		#return
-#
-	#var health_percent : float = float(health) / float(max_health)
-	#
-	#
-	#if health_percent > 0.80:
-		#icon.modulate = health_green
-		#icon.scale = Vector3.ONE * 0.52
-	#elif health_percent > 0.50:
-		#icon.modulate = health_orange
-		#icon.scale = Vector3.ONE * 0.4
-	#else:
-		#icon.modulate = health_red
-		#icon.scale = Vector3.ONE * 0.35
-
-	
-	

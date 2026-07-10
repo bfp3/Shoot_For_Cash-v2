@@ -29,8 +29,7 @@ func _ready() -> void:
 
 
 func shake_camera_sky_mines() -> void:
-
-	var _shake_amount : float = 1.1
+	var _shake_amount :float= clamp(1.1, -2.0, 2.0)
 	var _dur : float = 0.1
 	if cam_shake_tween:
 		cam_shake_tween.kill()
@@ -42,6 +41,8 @@ func shake_camera_sky_mines() -> void:
 	await cam_shake_tween.finished
 
 func shake_camera_shooting() -> void:
+	
+	
 	if cam_shake_tween:
 		cam_shake_tween.kill()
 
@@ -49,8 +50,8 @@ func shake_camera_shooting() -> void:
 	var max_recoil := shoot_shake_amount * 2.0
 
 	# Clamp the target position before tweening
-	var target_z : float = max(position.z + shoot_shake_amount, max_recoil)
-
+	#var target_z : float = max(position.z + shoot_shake_amount, max_recoil)
+	var target_z = min(position.z + shoot_shake_amount, max_recoil)
 	cam_shake_tween = create_tween() #.set_trans(Tween.TRANS_CUBIC)
 
 	cam_shake_tween.tween_property(self, "position:z", target_z, move_speed)
@@ -71,20 +72,26 @@ func pulse_shake_camera() -> void:
 	
 
 func shake_camera_rock_destroyed() -> void:
-	
-	var _shake_amount: float = 0.5 #0.25
+	var _shake_amount := 0.5
+	var _max_shake := _shake_amount * 2.0
 
 	if cam_shake_tween:
 		cam_shake_tween.kill()
 
-	#orig_rot = rotation_degrees
+	# Prevent the camera from drifting too far.
+	rotation_degrees.x = clamp(rotation_degrees.x, -_max_shake, _max_shake)
+	rotation_degrees.z = clamp(rotation_degrees.z, -_max_shake, _max_shake)
 
 	cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
 	cam_shake_tween.tween_property(self, "rotation_degrees:x", -_shake_amount, temp_dur).as_relative()
 	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", -_shake_amount, temp_dur).as_relative()
+
 	cam_shake_tween.tween_property(self, "rotation_degrees:x", _shake_amount, temp_dur * 1.5).as_relative()
 	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", _shake_amount, temp_dur * 1.5).as_relative()
+
 	cam_shake_tween.tween_property(self, "rotation_degrees", Vector3.ZERO, 0.75)
+
 	await cam_shake_tween.finished
 	camera_shaking_bomb = false
 

@@ -431,6 +431,10 @@ func smoke_particles_duplicates() -> void:
 	_new_sparks.emitting = true
 	
 
+func start_bullet_to_target() -> void:
+	play_accurate_sounds()
+	
+	
 func play_accurate_sounds() -> void:
 	#await get_tree().create_timer(0.05).timeout
 	create_shot_instance(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
@@ -531,6 +535,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		body.destroyed_by_shratnel()
 		
 func expand_blast_radius() -> void:
+	return
 	%explosion_radius_mesh.show()
 	#%explosion_radius_mesh.transparency = 0.4	
 	%explosion_radius_mesh.transparency = 1.0

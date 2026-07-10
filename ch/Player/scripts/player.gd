@@ -96,7 +96,9 @@ func _ready() -> void:
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)
 	#EventBus.instance.pineapple_round_bought.connect(pineapples_start)
-	
+	var scale_multiplier = power_target_circle / gl_DataSet.dataset_float.power_target_circle[0]
+	tween_scope(scale_multiplier, 0.33)
+
 	original_shot_count = shot_count
 	
 	%Bullet_icon.hide()
@@ -277,6 +279,11 @@ func _process(delta: float) -> void:
 		#fire_weapon()
 		
 	if Input.is_action_just_released("shootWeapon"):
+		weapon_shooting.shot_with_right_click = false
+		fire_weapon()
+		
+	if Input.is_action_just_released("shoot_weapon_2"):
+		weapon_shooting.shot_with_right_click = true
 		fire_weapon()
 		
 
@@ -676,6 +683,7 @@ func start_player() -> void:
 	if gl_PlayerState.dataset.power_gun == 0:
 		return
 	game_lost = false
+	weapon_shooting.shot_with_right_click = false
 	shot_count = original_shot_count
 	%ShotRemaining.text = str(shot_count).pad_zeros(2)
 	weapon_shooting.can_shoot(true)

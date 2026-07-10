@@ -562,7 +562,7 @@ func restart() -> void:
 	position = default_position
 	pivot_offset = default_pivot_offset
 
-	cash_label.modulate.a = 0.0
+	#cash_label.modulate.a = 0.0
 	cash_label.text = "$0"
 
 	#transport_tickets.hide()

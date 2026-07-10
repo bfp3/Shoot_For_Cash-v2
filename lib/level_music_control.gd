@@ -59,7 +59,7 @@ func shop_music_raise_volume() -> void:
 	if current_song == null:
 		return
 		
-	var targ_volume := -30.0
+	var targ_volume := -42.0
 		
 	var tween := create_tween()
 	tween.tween_property(current_song, "volume_db", targ_volume, 3.0)

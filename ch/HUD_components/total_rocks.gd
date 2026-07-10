@@ -2,7 +2,7 @@ extends Control
 
 @export var use_incrementing_counter := false
 
-
+var rocks_counter := 0
 
 @onready var rocks_hit_label: RichTextLabel = $NumberLabel
 @onready var perfect_score_particles: GPUParticles2D = %perfectScoreParticles
@@ -28,7 +28,7 @@ func _ready() -> void:
 		return
 	#orig_pos = position
 	target_pos = global_position
-	EventBus.instance.open_tally_card.connect(display_round_counter)
+	#EventBus.instance.open_tally_card.connect(display_round_counter)
 	EventBus.instance.open_shop.connect(_update_for_new_round)
 
 	EventBus.instance.rock_destroyed.connect(_on_rock_destroyed)
@@ -53,7 +53,11 @@ func _update_for_new_round() -> void:
 func update_label() -> void:
 	var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
 	var total_rounds := round_manager.rounds_to_complete
-	rocks_hit_label.text = str(gl_PlayerState.dataset.round) + "[i][color=DDDDDD]/[/color][color=ffc700]" + str(total_rounds) +"[/color]"
+	#rocks_hit_label.text = str(gl_PlayerState.dataset.round) + "[i][color=DDDDDD]/[/color][color=ffc700]" + str(total_rounds) +"[/color]"
+
+	
+	rocks_hit_label.text = str(rocks_counter) + "[i][color=DDDDDD]/[/color][color=ffc700]" + str(total_rounds) +"[/color]"
+	
 
 func display_round_counter() -> void:
 
@@ -126,6 +130,8 @@ func _on_rock_destroyed() -> void:
 	perfect_score_particles.amount += 1
 	perfect_score_particles.emitting = true
 	scale_tween()
+	rocks_counter += 1
+	update_label()
 
 	
 func shake_label() -> void:

@@ -309,7 +309,7 @@ fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_yuebc")
 
-[node name="MossTicket" parent="." unique_id=834535786 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="MossTicket" parent="." unique_id=834535786 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -322,9 +322,8 @@ shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "ticket_moss"
 upgrade_name = "Ticket To Moss"
-purchase_sfx = NodePath("")
 
-[node name="ReddTicket" parent="." unique_id=1019016337 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="ReddTicket" parent="." unique_id=1019016337 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -337,9 +336,8 @@ shop_main_menu = NodePath("..")
 hold_duration = 0.8
 upgrade_type = "ticket_redd"
 upgrade_name = "Ticket To Redd"
-purchase_sfx = NodePath("")
 
-[node name="BulletDelay" parent="." unique_id=1403874933 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="BulletDelay" parent="." unique_id=1403874933 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -351,9 +349,8 @@ upgrade_icon = ExtResource("6_pwib5")
 shop_main_menu = NodePath("..")
 upgrade_type = "bullet_delay"
 upgrade_name = "Bullet Fire Rate"
-purchase_sfx = NodePath("")
 
-[node name="AddShopCapacity" parent="." unique_id=81097742 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="AddShopCapacity" parent="." unique_id=81097742 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -366,9 +363,8 @@ shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "max_items_in_shop"
 upgrade_name = "Increase Shop Stock"
-purchase_sfx = NodePath("")
 
-[node name="AutoFire" parent="." unique_id=835766290 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="AutoFire" parent="." unique_id=835766290 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -381,7 +377,6 @@ shop_main_menu = NodePath("..")
 hold_duration = 0.1
 upgrade_type = "auto_fire"
 upgrade_name = "Auto Fire"
-purchase_sfx = NodePath("")
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1832678188]
 layout_mode = 1
@@ -446,13 +441,10 @@ custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 
-[node name="CloseGame" type="Button" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1842338374 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="CloseGame" type="Button" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1842338374]
 layout_mode = 2
 text = "Quit"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="HSeparator2" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=225086530]
 custom_minimum_size = Vector2(50, 0)
@@ -505,7 +497,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TargetCircle" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=2131731495 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="TargetCircle" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=2131731495 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 360.0
@@ -516,9 +508,8 @@ upgrade_icon = ExtResource("5_lwcj2")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "target_circle"
 upgrade_name = "Target Circle"
-purchase_sfx = NodePath("")
 
-[node name="GunFireRate" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1287420994 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="GunFireRate" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1287420994 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 128.0
@@ -529,9 +520,8 @@ upgrade_icon = ExtResource("12_pwib5")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "gun_fire_rate"
 upgrade_name = "Fire Rate"
-purchase_sfx = NodePath("")
 
-[node name="BulletDamage" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=918058313 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="BulletDamage" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=918058313 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 590.0
@@ -542,9 +532,8 @@ upgrade_icon = ExtResource("4_dq200")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "bullet_damage"
 upgrade_name = "Rock Damage"
-purchase_sfx = NodePath("")
 
-[node name="BulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1833548560 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="BulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1833548560 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 130.0
@@ -555,9 +544,8 @@ upgrade_icon = ExtResource("4_lwcj2")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "bullet_speed"
 upgrade_name = "Bullet Speed"
-purchase_sfx = NodePath("")
 
-[node name="SkyMine" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=475193945 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="SkyMine" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=475193945 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 358.0
@@ -569,9 +557,8 @@ sky_mine = true
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "sky_mine"
 upgrade_name = "Sky Mine"
-purchase_sfx = NodePath("")
 
-[node name="TimeUpgrade" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1155153027 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="TimeUpgrade" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1155153027 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 358.0
@@ -582,9 +569,8 @@ upgrade_icon = ExtResource("14_xklyy")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "time_upgrade"
 upgrade_name = "Add Time"
-purchase_sfx = NodePath("")
 
-[node name="AddGun" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1770080767 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="AddGun" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1770080767 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 358.0
@@ -598,9 +584,8 @@ shop_main_menu = NodePath("../../../../../../..")
 hold_duration = 0.1
 upgrade_type = "gun"
 upgrade_name = "New Gun"
-purchase_sfx = NodePath("")
 
-[node name="PineappleRound" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=497395272 node_paths=PackedStringArray("shop_main_menu", "purchase_sfx") instance=ExtResource("2_nn31g")]
+[node name="PineappleRound" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=497395272 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 358.0
@@ -612,7 +597,6 @@ shop_main_menu = NodePath("../../../../../../..")
 hold_duration = 0.1
 upgrade_type = "bonus_round_pineapples"
 upgrade_name = "Pineapples"
-purchase_sfx = NodePath("")
 
 [node name="AvailableUpgrades" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=499030465]
 layout_mode = 1
@@ -624,7 +608,7 @@ theme_override_constants/separation = 50
 alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=2043088047 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=2043088047]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 863.0
@@ -641,9 +625,6 @@ text = "DONE"
 script = ExtResource("3_y3o4g")
 border_outline_colour = Color(0.46799996, 0.46799996, 0.52, 1)
 editable = true
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1411659262]
 layout_mode = 1
@@ -697,7 +678,7 @@ theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
 text = "DONE"
 
-[node name="Reroll" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=118877002 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="Reroll" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=118877002]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 863.0
@@ -712,9 +693,6 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Reroll(500)"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="Reroll_label" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" unique_id=875627575]
 layout_mode = 1
@@ -992,48 +970,36 @@ purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
-[node name="Ticket2" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1976905100 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") groups=["restartable"] instance=ExtResource("20_xklyy")]
+[node name="Ticket2" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1976905100 groups=["restartable"] instance=ExtResource("20_xklyy")]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 ticket_id = 2
 
 [node name="VSeparator3" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1474129767]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
-[node name="Ticket3" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=953294936 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+[node name="Ticket3" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=953294936 instance=ExtResource("20_xklyy")]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 ticket_id = 3
 
 [node name="VSeparator4" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=297611364]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
-[node name="Ticket4" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=514221593 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+[node name="Ticket4" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=514221593 instance=ExtResource("20_xklyy")]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 ticket_id = 4
 
 [node name="VSeparator5" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1688227533]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
-[node name="Ticket5" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=657145580 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
+[node name="Ticket5" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=657145580 instance=ExtResource("20_xklyy")]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 ticket_id = 5
 
 [node name="VSeparator6" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=105381239]
@@ -1342,7 +1308,7 @@ process_material = SubResource("ParticleProcessMaterial_hi3s5")
 layout_mode = 2
 mouse_filter = 2
 
-[node name="NextRound" type="Button" parent="TicketPurchasedPopUp/Control" unique_id=452825858 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="NextRound" type="Button" parent="TicketPurchasedPopUp/Control" unique_id=452825858]
 layout_mode = 0
 offset_left = -226.0
 offset_top = 78.0
@@ -1357,9 +1323,6 @@ theme_override_font_sizes/font_size = 26
 text = "DONE"
 script = ExtResource("3_y3o4g")
 border_outline_colour = Color(0.19780001, 0.19780001, 0.23, 1)
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="TicketPurchasedPopUp/Control/NextRound" unique_id=2107366732]
 modulate = Color(0.7, 0.7, 0.7, 1)
@@ -1413,7 +1376,7 @@ theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
 text = "Not Yet"
 
-[node name="NextRound" type="Button" parent="." unique_id=185981390 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="NextRound" type="Button" parent="." unique_id=185981390]
 visible = false
 layout_mode = 0
 offset_left = 1335.0
@@ -1430,9 +1393,6 @@ text = "DONE"
 script = ExtResource("3_y3o4g")
 border_outline_colour = Color(0.46799996, 0.46799996, 0.52, 1)
 editable = true
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="NextRound" unique_id=240907803]
 layout_mode = 1
@@ -1452,7 +1412,7 @@ fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Reroll" type="Button" parent="." unique_id=1776584902 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="Reroll" type="Button" parent="." unique_id=1776584902]
 visible = false
 layout_mode = 0
 offset_left = 1335.0
@@ -1467,9 +1427,6 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Reroll(500)"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="Reroll_label" type="RichTextLabel" parent="Reroll" unique_id=2110889887]
 layout_mode = 1
@@ -1492,7 +1449,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AddMoney" type="Button" parent="." unique_id=225417206 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="AddMoney" type="Button" parent="." unique_id=225417206]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -1507,9 +1464,6 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Add Money($1000)"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="AddMoney_label" type="RichTextLabel" parent="AddMoney" unique_id=461025793]
 layout_mode = 1
@@ -1528,7 +1482,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MaxOutPowers" type="Button" parent="." unique_id=605003613 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="MaxOutPowers" type="Button" parent="." unique_id=605003613]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -1543,9 +1497,6 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Add Money($1000)"
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="MaxOutEverything" type="RichTextLabel" parent="MaxOutPowers" unique_id=623591568]
 layout_mode = 1
@@ -1564,7 +1515,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ResetMoney" type="Button" parent="." unique_id=120031225 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="ResetMoney" type="Button" parent="." unique_id=120031225]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -1579,9 +1530,6 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 text = "Reset Cash($0) "
 script = ExtResource("3_y3o4g")
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="Reroll_label" type="RichTextLabel" parent="ResetMoney" unique_id=705173432]
 layout_mode = 1

@@ -46,7 +46,6 @@ func check_balloons_status() -> void:
 			reposition_balloon()
 	
 func move_all_ballons_back() -> void:
-	print("move balloons back")
 
 	var wait_positions = [
 		balloon_pos_1,
@@ -80,6 +79,7 @@ func add_balloon_replacement() -> void:
 				break
 
 func reposition_balloon() -> void:
+	return
 	if current_balloon == null:
 		return
 		
@@ -132,7 +132,8 @@ func white_reward() -> void:
 
 
 func add_balloon() -> void:
-	
+	into_the_distance()
+	return
 	#for l in range(1):
 	await get_tree().create_timer(2.0).timeout
 	for i in get_children():
@@ -145,6 +146,25 @@ func add_balloon() -> void:
 				tween.set_ease(Tween.EASE_IN_OUT)
 				tween.set_trans(Tween.TRANS_SINE)
 				tween.tween_property(i, "global_position", i.start_pos, 4.0)
+
+				break
+				
+func into_the_distance() -> void:
+	
+	#for l in range(1):
+	await get_tree().create_timer(2.0).timeout
+	for i in get_children():
+		if i is StaticBody3D:
+			if i.behind_player:
+				
+				i.move_balloon_in_front_of_player()
+				current_balloon = i
+				var tween = create_tween()
+				tween.set_ease(Tween.EASE_IN_OUT)
+				tween.set_trans(Tween.TRANS_SINE)
+				tween.tween_property(i, "global_position:y", i.start_pos.x, 5.0)
+				tween.parallel().tween_property(i, "global_position:y", i.start_pos.y, 7.0)
+				tween.parallel().tween_property(i, "global_position:z", 90.0, 120.0).as_relative()
 
 				break
 					
@@ -161,15 +181,15 @@ func add_balloon() -> void:
 			#move_ballons_2()	
 			
 func player_balloon_was_popped() -> void:
-	print('player balloon popped')
+
 	current_balloon = null
+	return
 	balloons_popped += 1
 	if total_balloons_remaining == balloons_popped:
 		round_manager.game_over()
 		await get_tree().create_timer(1.5).timeout
 		start_game_over()
-	else:
-		print('not enough popped')
+
 		
 func start_game_over() -> void:
 	round_manager.start_game_over()

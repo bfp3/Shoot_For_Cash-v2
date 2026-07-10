@@ -29,7 +29,8 @@ func move_all_ballons_back() -> void:
 func add_white_balloon_back_into_list(_balloon: StaticBody3D) -> void:
 	if !is_instance_valid(balloon):
 		return
-
+	
+	await get_tree().create_timer(4.0).timeout
 	# Return to initial state
 	_balloon.behind_player = true
 	_balloon.hide()

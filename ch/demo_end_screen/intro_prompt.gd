@@ -64,11 +64,25 @@ func update_open_menu() -> void:
 	
 	var round_count := round_manager.rounds_to_complete
 	
+	# BALLOON PROMPT
+	#prompt.text = (
+		#"Survive [color=#ffc700]" + str(round_count) + "[/color] Rounds to [color=#ffc700][wave]WIN[/wave][/color]\n" +
+		#"Shoot Rocks to Earn [color=#42d100]CASH[/color]\n" +
+	#"Protect [color=#45dec200][wave]Bluey[/wave][/color]"
+#)
 	prompt.text = (
-		"Survive [color=#ffc700]" + str(round_count) + "[/color] Rounds to [color=#ffc700][wave]WIN[/wave][/color]\n" +
-		"Shoot Rocks to Earn [color=#42d100]CASH[/color]\n" +
-	"Protect [color=#45dec200][wave]Bluey[/wave][/color]"
-)
+		"Destroy [color=#ffc700]" + str(round_count) + "[/color][i] Rocks[/i] to [color=#ffc700][wave]ADVANCE[/wave][/color].\n" +
+		"Destroyed[i] Rocks[/i] Earn [color=#42d100]CASH[/color].\n" 
+	#"Protect [color=#45dec200][wave]Bluey[/wave][/color]"
+	)
+	
+	prompt.text = (
+		""
+	)
+	
+
+	
+	
 	
 	sfx_open_tally()
 	show()

@@ -13,8 +13,24 @@ enum State {
 }
 
 var current_state : State = State.INACTIVE
-@export var pulse_magnitude := 0.9
+@export var pulse_magnitude := 0.885
 var rocks_limit := 3
+
+# --- Rock X-axis placement tuning ---------------------------------------
+const X_MAX := 10.0          # left-most bound
+const X_MIN := -10.0         # right-most bound
+const MIN_ROCK_SPACING := 0.5    # no two rocks closer than this
+const CLUSTER_MIN_DIST := 0.5    # the clustered pair's minimum gap
+const CLUSTER_MAX_DIST := 1.5    # the clustered pair's maximum gap
+const ANGLE_BIAS_STRENGTH := 2.5 # how hard rocks get angled back toward the opposite side
+# --------------------------------------------------------------------------
+
+# --- Out-of-bounds monitoring (during PULSE_ROCKS only) -------------------
+const OUT_OF_BOUNDS_X := 17.0       # abs(x) beyond this is considered out of bounds
+const BOUNDS_CHECK_INTERVAL := 0.1  # how often (seconds) to scan active rocks
+var _bounds_check_active := false
+var _bounds_check_accum := 0.0
+# --------------------------------------------------------------------------
 
 @onready var splash_zone: Area3D = %Splash_zone
 
@@ -26,6 +42,17 @@ func _ready() -> void:
 	EventBus.instance.all_rocks_destroyed.connect(all_rocks_destroyed)
 	EventBus.instance.detonate_sky_mines.connect(detonate_sky_mines)
 	enter_state(current_state)
+
+func _process(delta: float) -> void:
+	if not _bounds_check_active:
+		return
+	
+	_bounds_check_accum += delta
+	if _bounds_check_accum < BOUNDS_CHECK_INTERVAL:
+		return
+	_bounds_check_accum = 0.0
+	
+	check_rocks_out_of_bounds()
 
 func enter_state(new_state : State) -> void:
 	current_state = new_state
@@ -44,6 +71,7 @@ func enter_state(new_state : State) -> void:
 			update_round_end()
 			
 func update_inactive() -> void:
+	_bounds_check_active = false
 	for i in $Container_1.get_children():
 		i.enter_state(i.State.INACTIVE)
 	
@@ -54,15 +82,22 @@ func update_prepare_rocks() -> void:
 	gl_PlayerState.log_rocks(rocks_limit)
 	
 	var counter := 0
+	var active_bodies : Array = []
+	
 	for i in $Container_1.get_children():
-		i.enter_state(i.State.PREPARE_ROCK)
+		active_bodies.append(i)
 		counter += 1
 		if counter >= rocks_limit:
 			break
-			
-			
-		
-	$Container_1.global_position.x = [10.0,7.0,3.0,0.0,-2.0].pick_random()
+	
+	# Compute and hand off target X positions BEFORE the rocks enter
+	# PREPARE_ROCK. RockInstance.update_prepare_rock() applies
+	# target_x_position itself after its own internal awaits, which avoids a
+	# race where our positioning gets overwritten by its reset logic.
+	assign_rock_positions(active_bodies)
+	
+	for body in active_bodies:
+		body.enter_state(body.State.PREPARE_ROCK)
 	
 func update_pulse_rocks() -> void:
 	splash_zone.activate_splash_zone()
@@ -70,8 +105,129 @@ func update_pulse_rocks() -> void:
 		#start_first_round_rock_sequence()
 	#
 	#else:
+	
+	# Start watching for rocks that fly past the play area once the pulse
+	# has launched them. This gets switched off again in update_round_end().
+	_bounds_check_accum = 0.0
+	_bounds_check_active = true
+	
 	bounce_rocks()
 	#tween_rocks()
+
+
+func check_rocks_out_of_bounds() -> void:
+	for body in $Container_1.get_children():
+		# Only rocks currently in active play can go "out of bounds" —
+		# this also naturally prevents re-triggering on a rock we've
+		# already deactivated (its state won't be ACTIVE anymore).
+		if body.current_state != body.State.ACTIVE:
+			continue
+			
+		if !body.name.contains('Rock_Instance'):
+			continue
+		if absf(body.global_position.x) > OUT_OF_BOUNDS_X:
+			deactivate_out_of_bounds_rock(body)
+
+
+func deactivate_out_of_bounds_rock(body) -> void:
+	if body.current_state == RockInstance.State.ACTIVE:
+		body.enter_state(body.State.MISSED)
+		print('OUT OF BOUNDS ', body.name)
+		gl_PlayerState.log_rock_missed()
+		#body.enter_state(RockInstance.State.MISSED)
+
+
+func log_hit_missed() -> void:
+	# TODO: replace this with the real implementation you'll provide.
+	pass
+
+
+func assign_rock_positions(bodies: Array) -> void:
+	# Assigns each active rock an X position in [X_MIN, X_MAX] such that:
+	#  - no two rocks share (or nearly share) a spot (MIN_ROCK_SPACING)
+	#  - exactly one pair of rocks ends up clustered close together
+	#    (between CLUSTER_MIN_DIST and CLUSTER_MAX_DIST apart)
+	if bodies.is_empty():
+		return
+	
+	var positions : Array[float] = []
+	
+	# 1. Pick the cluster anchor + partner first so there's always room for them.
+	var cluster_anchor := randf_range(X_MIN, X_MAX)
+	var cluster_offset := randf_range(CLUSTER_MIN_DIST, CLUSTER_MAX_DIST)
+	if randf() < 0.5:
+		cluster_offset = -cluster_offset
+	
+	var cluster_partner := cluster_anchor + cluster_offset
+	if cluster_partner > X_MAX or cluster_partner < X_MIN:
+		# Went off the edge — try the opposite direction instead.
+		cluster_partner = cluster_anchor - cluster_offset
+	cluster_partner = clamp(cluster_partner, X_MIN, X_MAX)
+	
+	positions.append(cluster_anchor)
+	if bodies.size() > 1:
+		positions.append(cluster_partner)
+	
+	# 2. Fill remaining rocks via rejection sampling, keeping MIN_ROCK_SPACING
+	#    away from every position already chosen.
+	var max_attempts := 50
+	for i in range(positions.size(), bodies.size()):
+		var placed := false
+		for attempt in range(max_attempts):
+			var candidate := randf_range(X_MIN, X_MAX)
+			if _is_far_enough(candidate, positions):
+				positions.append(candidate)
+				placed = true
+				break
+		if not placed:
+			# Range is crowded — fall back to whatever spot has the largest
+			# gap to its nearest neighbor, so we never leave a rock unplaced.
+			positions.append(_best_effort_position(positions))
+	
+	# 3. Shuffle so the "cluster pair" isn't always assigned to the first two
+	#    rocks in the container (keeps which physical rocks cluster random too).
+	positions.shuffle()
+	
+	for idx in range(bodies.size()):
+		var body = bodies[idx]
+		body.target_x_position = positions[idx]
+
+
+func _is_far_enough(candidate: float, positions: Array[float]) -> bool:
+	for p in positions:
+		if abs(candidate - p) < MIN_ROCK_SPACING:
+			return false
+	return true
+
+
+func _best_effort_position(positions: Array[float]) -> float:
+	# Scans the range in small steps and returns the x with the greatest
+	# distance to its nearest neighbor. Guarantees a usable fallback even
+	# when the range is too crowded for clean rejection sampling.
+	var best_x := X_MIN
+	var best_gap := -1.0
+	var x := X_MIN
+	while x <= X_MAX:
+		var nearest_gap := INF
+		for p in positions:
+			nearest_gap = min(nearest_gap, abs(x - p))
+		if nearest_gap > best_gap:
+			best_gap = nearest_gap
+			best_x = x
+		x += 0.25
+	return best_x
+
+
+func _get_position_angle_bias(x_position: float) -> float:
+	# Rocks near X_MAX (left side, closer to 10) get angled toward the
+	# opposite side (negative bias, toward -13).
+	# Rocks near X_MIN (right side, closer to -13) get angled the other way
+	# (positive bias, toward 10).
+	var center := (X_MAX + X_MIN) * 0.5
+	var half_range := (X_MAX - X_MIN) * 0.5
+	var normalized = clamp((x_position - center) / half_range, -1.0, 1.0)
+	return -normalized * ANGLE_BIAS_STRENGTH
+
 	
 func tween_rocks() -> void:
 	var bodies = $Container_1.get_children()
@@ -97,6 +253,7 @@ func tween_rocks() -> void:
 			break
 
 func update_round_end() -> void:
+	_bounds_check_active = false
 	update_gravity(1.0)
 	for body in $Container_1.get_children():
 		body.round_end_check_rock_status()
@@ -151,6 +308,10 @@ func bounce_rocks() -> void:
 		const z_variation = 0.0
 		#var upward_force = randf_range(9.5, 10.0)
 		var upward_force = randf_range(9.5, 10.0)
+		
+		# Angle the impulse back toward the opposite side based on where
+		# this rock currently sits along the X axis.
+		x_variation += _get_position_angle_bias(body.global_position.x)
 		
 		var impulse = Vector3(x_variation, upward_force, z_variation) * pulse_magnitude
 		
@@ -226,4 +387,3 @@ func start_first_round_rock_sequence() -> void:
 	first_rock.apply_central_impulse(impulse)
 
 	spin_rocks()
-	

@@ -24,6 +24,8 @@ var power_bullet_speed = 30.0
 var power_bullet_damage : int = 1
 var power_bullet_delay := 0.5
 
+var shot_with_right_click := false
+
 @onready var player_camera := $"../Cam_pivot/Camera3D"
 
 var auto_fire := false
@@ -243,7 +245,7 @@ func process_target_hit(target, damage, screen_offset) -> void:
 			screen_offset
 		)
 		
-		
+
 		
 func shoot_target() -> void:
 	
@@ -256,11 +258,13 @@ func shoot_target() -> void:
 	round_manager.bullet_active = true
 	
 	_reset_pitch_adjustment()
-
+	
+	
+	var double_power :bool= get_parent()._scope_at_min
 	var targets = get_targets_in_scope()
 
 
-	if gl_PlayerState.dataset.power_sky_mine > 0:
+	if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
 		shooting_sky_mine = true
 
 		if !targets.is_empty():
@@ -288,7 +292,11 @@ func shoot_target() -> void:
 			continue
 
 		var damage := power_bullet_damage
-
+		
+		if double_power:
+			damage += 1
+			power_bullet_speed /= 4
+		
 		#if target_data.scope_hit == "left":
 			#damage *= 2
 
@@ -298,11 +306,21 @@ func shoot_target() -> void:
 		%Crosshair.crosshair_shake()
 		player_gun.get_barrel_position(target.global_position.x)
 		player_camera.shake_camera_shooting()
-
-		target.play_accurate_sounds()
-
+		
+		if shot_with_right_click:
+			if target.has_method('apply_marked_ability') && target is not RockInstance:
+				target.apply_marked_ability()
+			
+		target.start_bullet_to_target()
+		
+		if shot_with_right_click:
+			damage = 0
+			power_bullet_speed /= 4
+		
 		spawn_projectile(target, power_bullet_speed)
-
+		
+		shot_with_right_click = false
+		
 		var rock_screen_pos = player_camera.unproject_position(target.global_position)
 		var screen_offset = rock_screen_pos - crosshair.global_position
 
@@ -321,8 +339,8 @@ func shoot_target() -> void:
 		if shooting_sky_mine:
 			delay += 0.5
 
-		await get_tree().create_timer(delay).timeout
 		
+		await get_tree().create_timer(delay).timeout
 		shooting_sky_mine = false
 	
 func can_shoot(_can_shoot : bool) -> void:
@@ -411,7 +429,7 @@ func play_missed_sounds() -> void:
 func shoot_bullet_without_target() -> void:
 	if auto_fire:
 		return
-
+	
 	#%cannot_shoot_sfx.play(0.91)
 	#$"../SFX/Flicker_sound".play()
 	play_missed_sounds()
@@ -444,7 +462,7 @@ func shoot_bullet_without_target() -> void:
 		player_gun.get_barrel_position(aim_point.x)
 
 	spawn_projectile(null, power_bullet_speed, aim_point)
-
+	shot_with_right_click = false
 	
 func get_shootable_hit() -> Dictionary:
 	
@@ -485,7 +503,7 @@ func shoot_shootable_object(hit: Dictionary) -> void:
 	spawn_projectile(null, power_bullet_speed, hit_position)
 
 	process_shootable_hit.call_deferred(hit_position, hit_normal)
-
+	shot_with_right_click = false
 
 func process_shootable_hit(hit_position: Vector3, hit_normal: Vector3) -> void:
 	await get_tree().create_timer(power_bullet_speed).timeout

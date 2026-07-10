@@ -73,6 +73,7 @@
 [ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="68_wtxnc"]
 [ext_resource type="PackedScene" uid="uid://gmq0002obs0u" path="res://ch/targets/bonus_time_target.tscn" id="68_wv0tc"]
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
+[ext_resource type="Script" uid="uid://dn76e05h17t31" path="res://scripts/multiplier_zones.gd" id="75_mdemw"]
 [ext_resource type="StyleBox" uid="uid://eu6ax7sn7s7" path="res://res/card_icon_border_stylebox.tres" id="89_ecu2c"]
 
 [sub_resource type="Curve" id="Curve_ymbdo"]
@@ -813,6 +814,9 @@ points = PackedVector3Array(-1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, 1)
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 bounce = 0.5
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_vwwt2"]
+size = Vector3(5, 25, 50)
+
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
 intro_title_screen = true
@@ -829,7 +833,7 @@ main_game_canvas = NodePath("MainGameCanvasLayer")
 script = ExtResource("2_wtxnc")
 level_layout = NodePath("../Level_Visual")
 scene_transition_screen = NodePath("../Background_transition")
-rounds_to_complete = 21
+rounds_to_complete = 100
 upgrade_menu = NodePath("../MainGameCanvasLayer/Shop_Main_Menu")
 tally_menu = NodePath("../MainGameCanvasLayer/TallyCard")
 round_timer = NodePath("../MainGameCanvasLayer/Timer")
@@ -915,7 +919,7 @@ volume_db = -30.0
 
 [node name="Oasis2" type="AudioStreamPlayer" parent="Music" unique_id=1383563011]
 stream = ExtResource("14_mdemw")
-volume_db = -30.0
+volume_db = -40.0
 
 [node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
 stream = ExtResource("15_ymbdo")
@@ -953,7 +957,7 @@ speed_multiplier = 60.0
 [node name="Rocks" type="Node3D" parent="." unique_id=859468523]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
-pulse_magnitude = 0.885
+pulse_magnitude = 1.1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
 root_node = NodePath("../Shover")
@@ -1031,7 +1035,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7047248, -0.08000016, 0.42
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance18" parent="Rocks/Container_1" unique_id=931775137 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6097546, -0.08000016, 0.42000008)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6097546, -2.89, 23.17)
+top_level = true
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance19" parent="Rocks/Container_1" unique_id=202729113 instance=ExtResource("21_e0u1b")]
@@ -2551,32 +2556,32 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 24)
 
 [node name="Balloon_container" type="Node3D" parent="." unique_id=906093422 groups=["restartable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 18)
 script = ExtResource("63_nn6vd")
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 5.1099997, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon2" parent="Balloon_container" unique_id=121622778 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 2.7469215, 1.5, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon3" parent="Balloon_container" unique_id=852852036 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -2.999999, 5.8671556, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon4" parent="Balloon_container" unique_id=2070994326 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 4.0000005, 5.357156, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon5" parent="Balloon_container" unique_id=29611764 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 2, 6.1099997, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon6" parent="Balloon_container" unique_id=1851979639 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -5.2530785, 2.5, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon7" parent="Balloon_container" unique_id=343873882 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 1.000001, 3.8671556, 2.2999992)
@@ -2588,44 +2593,50 @@ balloon_type = 3
 
 [node name="Balloon9" parent="Balloon_container" unique_id=258440654 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -6, 5.1099997, 2.2999992)
+pan_axis = 1
 balloon_type = 3
 
 [node name="Balloon10" parent="Balloon_container" unique_id=1647404699 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 3.7469215, 3.5, 2.2999992)
+pan_axis = 1
 balloon_type = 3
 
 [node name="Balloon11" parent="Balloon_container" unique_id=1138589707 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -4.199999, 4.1671553, 2.2999992)
+pan_axis = 1
 balloon_type = 3
 
 [node name="Balloon12" parent="Balloon_container" unique_id=826579076 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 5.9000006, 2.9571557, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon13" parent="Balloon_container" unique_id=849159317 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -3, 2.1099997, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon14" parent="Balloon_container" unique_id=168189456 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 7.7469215, 4.5, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon33" parent="Balloon_container" unique_id=2099772513 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 8.946921, 5.5, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon34" parent="Balloon_container" unique_id=372279064 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 7.8469214, 5.9, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon35" parent="Balloon_container" unique_id=961133245 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 6.7469215, 6.3, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon15" parent="Balloon_container" unique_id=780922425 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -0.99999905, 2.8671556, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon16" parent="Balloon_container" unique_id=1425468038 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -8.099999, 3.3571558, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon17" parent="Balloon_container" unique_id=1137737040 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -8.099999, 6.357156, 2.2999992)
@@ -2641,34 +2652,35 @@ balloon_type = 3
 
 [node name="Balloon18" parent="Balloon_container" unique_id=780263799 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -5.0999994, 6.357156, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon19" parent="Balloon_container" unique_id=1016396030 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -1.0999994, 6.157156, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon20" parent="Balloon_container" unique_id=824068981 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -1.0999994, 4.657156, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon21" parent="Balloon_container" unique_id=984542234 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -2.1999993, 5.357156, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon22" parent="Balloon_container" unique_id=1977874605 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 1.0000007, 5.357156, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon23" parent="Balloon_container" unique_id=480122687 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 2.5000007, 4.4571557, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon24" parent="Balloon_container" unique_id=889025487 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 2.5000007, 3.2571557, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon25" parent="Balloon_container" unique_id=1828565435 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 4.9000006, 3.2571557, 2.2999992)
-balloon_type = 2
+balloon_type = 3
 
 [node name="Balloon26" parent="Balloon_container" unique_id=1800955701 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0.4000007, 6.357156, 2.2999992)
@@ -2684,9 +2696,11 @@ balloon_type = 3
 
 [node name="Balloon29" parent="Balloon_container" unique_id=1075390985 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 6.500001, 3.8571558, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon30" parent="Balloon_container" unique_id=1342645120 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 8.900001, 3.8571558, 2.2999992)
+balloon_type = 3
 
 [node name="Balloon_wait_positions" type="Node3D" parent="." unique_id=242094308]
 
@@ -2723,6 +2737,44 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.76, 19.86)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.146, 0)
 collision_layer = 3
 collision_mask = 3
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1559609402]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 15)
+script = ExtResource("75_mdemw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1211976948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 16)
+shape = SubResource("BoxShape3D_vwwt2")
+
+[node name="Money_Label3D" type="Label3D" parent="Area3D" unique_id=817670572]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 8)
+pixel_size = 0.0009
+billboard = 1
+no_depth_test = true
+fixed_size = true
+modulate = Color(0.2596667, 0.82, 0, 1)
+outline_modulate = Color(0.15, 0.15, 0.15, 1)
+text = "2"
+outline_size = 4
+
+[node name="Area3D2" type="Area3D" parent="." unique_id=258656149]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 15)
+script = ExtResource("75_mdemw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D2" unique_id=605768313]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 16)
+shape = SubResource("BoxShape3D_vwwt2")
+
+[node name="Money_Label3D" type="Label3D" parent="Area3D2" unique_id=100959020]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 8)
+pixel_size = 0.0009
+billboard = 1
+no_depth_test = true
+fixed_size = true
+modulate = Color(0.2596667, 0.82, 0, 1)
+outline_modulate = Color(0.15, 0.15, 0.15, 1)
+text = "4"
+outline_size = 4
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" to="SplashScreenCanvasLayer/SplashScreen_v2" method="_on_start_game_pressed"]

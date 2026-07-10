@@ -618,17 +618,19 @@ func check_how_many_rounds_left() -> void:
 		update_game_won()
 
 func increase_rock_limit() -> void:
-	
-	if current_round == 6:
-		gl_PlayerState.dataset.rock_limit = 5
-		return
+	gl_PlayerState.dataset.rock_limit = 3
+	pass
+	#if current_round == 6:
+		#gl_PlayerState.dataset.rock_limit = 5
+		#return
+		#
+	#if current_round == 13:
+		#gl_PlayerState.dataset.rock_limit = 7
+		#return
+		#
+	#if current_round == 20:
+		#gl_PlayerState.dataset.rock_limit = 9
+		#return
 		
-	if current_round == 13:
-		gl_PlayerState.dataset.rock_limit = 7
-		return
-		
-	if current_round == 20:
-		gl_PlayerState.dataset.rock_limit = 9
-		return
 #func _process(delta: float) -> void:
 	#print(gl_PlayerState.dataset.rock_limit)
