@@ -132,64 +132,49 @@ func update_round_inactive() -> void:
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.INACTIVE)
 	
+	
 func update_round_first_round() -> void:
-
-	#red_circle.display_circle()
-	#birds.start_birds()
-	#music_manager.first_round()
 	player.stop_player()
-	#await get_tree().create_timer(1.0).timeout
-	
-	#await get_tree().create_timer(0.5).timeout
-	
-	#enter_state(RoundState.ROUND_START)
 	await get_tree().create_timer(0.5).timeout
 	enter_state(RoundState.SHOP_START)
 
 
 func update_round_start() -> void:
-	
 	success = false
-	
-	
 	
 	while game_has_been_beaten:
 		await get_tree().process_frame
 	
 	if gl_PlayerState.dataset.stage_name == 'start':
 		go_to_fake_round()
-
+		print('Check if this is even being hit, it it does not appear, delete fake round')
 		return
 		
 	if gl_PlayerState.dataset.round == 0:
 		music_manager.first_round()
-		
-	gl_PlayerState.next_round()
-
-	current_round = gl_PlayerState.dataset.round
-	rocks_container.enter_state(rocks_container.State.PREPARE_ROCKS)
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
-	player.update_player_stats()
+	if gl_PlayerState.dataset.power_balloon_buster > 0:
+		player.start_player()
+		
+	while gl_PlayerState.dataset.power_balloon_buster > 0:
+		await get_tree().process_frame
+		
+	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
+
+	current_round = gl_PlayerState.dataset.round
 	
+	rocks_container.enter_state(rocks_container.State.PREPARE_ROCKS)
 	round_timer.enter_state(round_timer.State.RESTARTING)
-	
+	player.update_player_stats()
 	player.start_player()
-	
-
 	music_manager.shop_music_raise_volume()
-	
-
 	await get_tree().create_timer(0.75).timeout
-	
 	egg_pulse.activate_pulse_wave()
 	
 	await get_tree().create_timer(2.0).timeout
-	if confetti_cannon:
-		confetti_cannon.start_confetti()
 	enter_state(RoundState.ROUND_IN_PROGRESS)
-
 
 
 func go_to_fake_round() -> void:
@@ -264,9 +249,10 @@ func update_round_end() -> void:
 			pineapple_round()
 			while pineapple_mode:
 				await get_tree().process_frame
-				
-			
+					
 			stop_player()
+		
+			await get_tree().create_timer(1.0).timeout
 			enter_state(RoundState.TALLY_START)
 		
 		else:
@@ -531,8 +517,9 @@ func pineapple_round() -> void:
 	
 	$'../Pineapple'.pineapple_round_3()
 	
-
-	await get_tree().create_timer(2.5).timeout
+	while gl_PlayerState.dataset.total_pineapples_destroyed < 3:
+		await get_tree().process_frame
+	#await get_tree().create_timer(2.5).timeout
 		
 	if gl_PlayerState.dataset.total_pineapples_destroyed >= 3:
 		%PerfectPineappleRound.play(0.5)
@@ -618,7 +605,8 @@ func check_how_many_rounds_left() -> void:
 		update_game_won()
 
 func increase_rock_limit() -> void:
-	gl_PlayerState.dataset.rock_limit = 3
+	#gl_PlayerState.dataset.rock_limit += 3
+	gl_PlayerState.dataset.rock_limit = 9
 	pass
 	#if current_round == 6:
 		#gl_PlayerState.dataset.rock_limit = 5

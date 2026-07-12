@@ -10,6 +10,7 @@ const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
 var pitch_adjustment := 0.02
 
+
 const ROCK_01 = preload('uid://c2pmyrm3e4ty5')
 const ROCK_02 = preload('uid://84ianb3xwjp7')
 const ROCK_03 = preload('uid://lxbrgqaovv68')
@@ -76,7 +77,7 @@ var max_health : int = 0
 var tween_sight_icon : Tween = null 
 
 var cash_value := 0
-
+var current_cash_multiplier := 1
 var rock_activated := false
 
 var force_mult : Array = [3,4]
@@ -556,7 +557,7 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	
 	smoke_particles_duplicates()
 
-
+func shrink_current_mesh() -> void:
 	if current_mesh.scale <= Vector3.ONE * 0.3:
 		current_mesh.get_node('damage_mesh').show()
 		await get_tree().create_timer(0.08).timeout
@@ -615,6 +616,12 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		
 	else:
 		health -= damage
+		if damage == 0:
+			cash_value += 10
+			health += 10
+			var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			tween.tween_property(
+				current_mesh, "scale", current_mesh.scale * 1.1, 0.08)
 		
 	display_health_counter()
 	display_damage_counter(damage)
@@ -638,7 +645,9 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 			%gold_sfx.play()
 			play_hit_sfx()
 			apply_hit_reaction(screen_offset)
-		
+			if damage > 0:
+				shrink_current_mesh()
+			
 			gl_PlayerState.add_cash(1)
 		return
 	
@@ -739,10 +748,11 @@ func start_destroyed_process() -> void:
 	
 	#if player_has_marked_rock == false:
 	expand_blast_radius()
-	
+	cash_value = cash_value * current_cash_multiplier
 	enter_state(State.HIT)
 	if !rock_has_been_logged:
 		rock_has_been_logged = true
+		
 		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
 	
 	#if !destroyed_by_marked:
@@ -958,6 +968,7 @@ func start_bullet_to_target() -> void:
 func play_accurate_sounds() -> void:
 	#await get_tree().create_timer(0.05).timeout
 	create_shot_instance(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
+	pitch_adjustment += 0.05
 	pitch_adjustment += 0.05
 	
 

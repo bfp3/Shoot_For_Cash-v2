@@ -430,16 +430,17 @@ func set_power(settings:Dictionary, setting_name:String)-> float:
 	return gl_DataSet.get_value(setting_name, settings[setting_name])
 
 func update_player_stats() -> void:
-	
 	var settings : Dictionary = gl_PlayerState.get_all()
 	
 	#power_gun_fire_rate = 0.15
 	#power_bullet_delay = 0.1
+	
 	power_target_circle = set_power(settings, 'power_target_circle')
 	power_bullet_speed = set_power(settings, 'power_bullet_speed')
 	power_bullet_damage = int(set_power(settings, 'power_bullet_damage'))
-	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
 	power_bullet_delay = set_power(settings, 'power_bullet_delay')
+	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
+	power_gun_fire_rate = 0.05
 	
 	player_gun.update_guns()
 	
@@ -448,7 +449,7 @@ func update_player_stats() -> void:
 	
 	weapon_shooting.apply_upgrades()
 	update_stats_visually()
-	
+
 
 func update_stats_visually() -> void:
 	await get_tree().create_timer(0.5).timeout

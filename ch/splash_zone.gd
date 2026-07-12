@@ -13,12 +13,17 @@ var detected_bodies: Array[Node3D] = []
 
 
 func _on_body_entered(body: Node3D) -> void:
-
 	if body.name.contains('Balloon'):
 		
 		return
 	
 	if body.is_in_group('pineapple'):
+		if body.taken_hit == false:
+			return
+			
+		gl_PlayerState.log_hit('pineapple', 'pineapple', 0)
+		splash_particles(body)
+		splash_sfx()
 		return
 	
 	if !(body is RockInstance):
@@ -49,6 +54,7 @@ func _on_body_entered(body: Node3D) -> void:
 
 
 func reset_detected_bodies() -> void:
+	return
 	var tween = create_tween()
 	tween.tween_property($Visual, 'transparency', 1.0, 2.0)
 	monitoring = false

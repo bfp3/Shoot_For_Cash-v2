@@ -13,6 +13,7 @@
 [ext_resource type="Material" uid="uid://c66mc200y264r" path="res://res/Explosion_paid_patreon/shaders/toon_smoke.tres" id="5_mj3mj"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="7_hrkv6"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_bc0l2"]
+[ext_resource type="Material" uid="uid://bg8ypxqsno1nc" path="res://res/damage_mesh_mat.tres" id="8_eq13p"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="8_tnjxo"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="11_fao6x"]
 [ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="13_gxoxp"]
@@ -89,10 +90,6 @@ radius = 0.304
 height = 0.608
 radial_segments = 18
 rings = 6
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrkv6"]
-no_depth_test = true
-shading_mode = 0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_g5cjo"]
 resource_name = "basic_rock_Cube"
@@ -951,7 +948,7 @@ mesh = ExtResource("5_27dlh")
 transform = Transform3D(0.34201992, -0.9396927, 0, 0.9396927, 0.34201992, 0, 0, 0, 1, 0, 0, 0)
 visible = false
 layers = 524289
-material_override = SubResource("StandardMaterial3D_hrkv6")
+material_override = ExtResource("8_eq13p")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_g5cjo")
 
@@ -967,7 +964,7 @@ mesh = ExtResource("5_27dlh")
 transform = Transform3D(0.34201992, -0.9396927, 0, 0.9396927, 0.34201992, 0, 0, 0, 1, 0, 0, 0)
 visible = false
 layers = 524289
-material_override = SubResource("StandardMaterial3D_hrkv6")
+material_override = ExtResource("8_eq13p")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_g5cjo")
 
@@ -983,7 +980,7 @@ mesh = ExtResource("5_27dlh")
 transform = Transform3D(0.34201992, -0.9396927, 0, 0.9396927, 0.34201992, 0, 0, 0, 1, 0, 0, 0)
 visible = false
 layers = 524289
-material_override = SubResource("StandardMaterial3D_hrkv6")
+material_override = ExtResource("8_eq13p")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_g5cjo")
 
@@ -998,7 +995,7 @@ mesh = ExtResource("5_27dlh")
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 visible = false
 layers = 524289
-material_override = SubResource("StandardMaterial3D_hrkv6")
+material_override = ExtResource("8_eq13p")
 cast_shadow = 0
 mesh = ExtResource("5_27dlh")
 
@@ -1013,7 +1010,7 @@ mesh = ExtResource("5_27dlh")
 transform = Transform3D(0.661, 0, 0, 0, 0.661, 0, 0, 0, 0.661, 0, 0, 0)
 visible = false
 layers = 524289
-material_override = SubResource("StandardMaterial3D_hrkv6")
+material_override = ExtResource("8_eq13p")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_g5cjo")
 
@@ -1027,7 +1024,7 @@ mesh = ExtResource("5_27dlh")
 [node name="damage_mesh" type="MeshInstance3D" parent="Mesh/Red_rock" unique_id=1595577467]
 visible = false
 layers = 524289
-material_override = SubResource("StandardMaterial3D_hrkv6")
+material_override = ExtResource("8_eq13p")
 cast_shadow = 0
 mesh = ExtResource("5_27dlh")
 
@@ -1042,7 +1039,7 @@ mesh = SubResource("ArrayMesh_w8aba")
 [node name="damage_mesh" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=1147881699]
 visible = false
 layers = 524289
-material_override = SubResource("StandardMaterial3D_hrkv6")
+material_override = ExtResource("8_eq13p")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_w8aba")
 

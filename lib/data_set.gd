@@ -11,7 +11,7 @@ var dataset_float : Dictionary = {
 	,"power_bonus_round_pineapples" 	: [0, 1]
 	,"power_auto_fire" 				: [0, 1]
 	,"power_sky_mine" 				: [0, 1, 2, 3]
-	
+	,"power_balloon_buster"			: [0, 1]
 	,"power_target_circle"	: [20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,120.0,200.0]
 	,"power_gun_fire_rate"	: [1.25, 1.0, 0.9,0.8,0.65,0.50,0.35,0.20,0.15,0.10, 0.05]
 	,"power_bullet_damage" 	: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
@@ -26,6 +26,7 @@ var dataset_float : Dictionary = {
 	,"price_bonus_round_pineapples" 	: [20]
 	,"price_auto_fire" 				: [135]
 	,"price_target_circle"			: [7, 20, 40, 260, 320, 440, 550, 1000, 1500]
+	,"price_balloon_buster"			: [1]
 	,"price_gun_fire_rate"			: [2, 4, 8, 32, 99, 204, 350, 550, 998]
 	,"price_bullet_damage" 			: [4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
 	,"price_bullet_speed" 			: [2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
@@ -46,11 +47,6 @@ var dataset_float : Dictionary = {
 	
 	
 	,"price_reroll" 		: [0,2,4,8,16,32,64,128,256,512,1024]
-	
-	
-	# ONE OFFS
-	,"ONE_OFF" 				: [13]
-	
 	
 	# Targets / Rocks
 	# item name, 			$value, 	health
@@ -98,7 +94,7 @@ var dataset_string : Dictionary = {
 	,"tooltip_bullet_damage" 			: ["Break Rocks Easier"]
 	,"tooltip_bullet_speed" 				: ["Bullets Fly Faster"]
 	,"tooltip_time_upgrade"				: ["+1 Sec To The Timer"]
-	
+	,"tooltip_balloon_buster"				: ["Pop Balloons For Free"]
 	#,"tooltip_max_items_in_shop": ['Add +1 Item To The Shop Permanently']
 	#,"tooltip_bullet_delay"				: ["Bullet Delay * NOT USED"]
 	

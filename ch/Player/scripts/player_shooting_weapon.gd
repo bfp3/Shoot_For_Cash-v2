@@ -262,7 +262,18 @@ func shoot_target() -> void:
 	
 	var double_power :bool= get_parent()._scope_at_min
 	var targets = get_targets_in_scope()
+	
+	var rock_count := 0
 
+	for target_data in targets:
+		var target = target_data.target
+
+		if target is RockInstance:
+			rock_count += 1
+
+	if rock_count >= 2 && !shot_with_right_click:
+		activate_multishot_bonus(rock_count)
+	
 
 	if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
 		shooting_sky_mine = true
@@ -307,7 +318,7 @@ func shoot_target() -> void:
 		player_gun.get_barrel_position(target.global_position.x)
 		player_camera.shake_camera_shooting()
 		
-		if shot_with_right_click:
+		if gl_PlayerState.dataset.power_balloon_buster > 0:
 			if target.has_method('apply_marked_ability') && target is not RockInstance:
 				target.apply_marked_ability()
 			
@@ -318,9 +329,7 @@ func shoot_target() -> void:
 			power_bullet_speed /= 4
 		
 		spawn_projectile(target, power_bullet_speed)
-		
-		shot_with_right_click = false
-		
+				
 		var rock_screen_pos = player_camera.unproject_position(target.global_position)
 		var screen_offset = rock_screen_pos - crosshair.global_position
 
@@ -462,7 +471,6 @@ func shoot_bullet_without_target() -> void:
 		player_gun.get_barrel_position(aim_point.x)
 
 	spawn_projectile(null, power_bullet_speed, aim_point)
-	shot_with_right_click = false
 	
 func get_shootable_hit() -> Dictionary:
 	
@@ -503,7 +511,6 @@ func shoot_shootable_object(hit: Dictionary) -> void:
 	spawn_projectile(null, power_bullet_speed, hit_position)
 
 	process_shootable_hit.call_deferred(hit_position, hit_normal)
-	shot_with_right_click = false
 
 func process_shootable_hit(hit_position: Vector3, hit_normal: Vector3) -> void:
 	await get_tree().create_timer(power_bullet_speed).timeout
@@ -522,6 +529,14 @@ func explode_at_point(explosion_position: Vector3, normal: Vector3) -> void:
 	explosion.play_particles = true
 	%take_damage_sfx.play()
 	
+	
+	
+func activate_multishot_bonus(rock_count: int) -> void:
+	var multi_shot := get_tree().get_first_node_in_group('multi_shot')
+	multi_shot.multi_shot(rock_count)
+
+			
+			
 func Xshoot_bullet_without_target() -> void:
 	if auto_fire:
 		return

@@ -5,7 +5,7 @@ const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 @export var cash_value := 10
 @export var force_multiplier := 1.5
 var pitch_adjustment := 0.02
-
+var taken_hit = false
 @onready var main_col: CollisionShape3D = $main_col
 
 enum ExitSide {
@@ -175,10 +175,10 @@ func update_disabled() -> void:
 
 func disable_collision() -> void:
 	set_collision_layer_value(1, false)
-	set_collision_layer_value(3, false)
+	set_collision_layer_value(9, false)
 
 func enable_collision() -> void:
-	set_collision_layer_value(3, true)
+	set_collision_layer_value(9, true)
 	#return
 
 
@@ -216,7 +216,7 @@ func reset_stats() -> void:
 	$Mesh.show()
 	$hit_wall_timer.stop()
 	pitch_adjustment = 0.02
-	
+	taken_hit = false
 	rock_activated = false
 	current_mesh = pineapple_mesh
 	current_rock_type = ""
@@ -257,20 +257,18 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	if camera == null:
 		return
 
-	# Convert screen offset into camera-space directions
 	var right = camera.global_transform.basis.x
 	var up = camera.global_transform.basis.y
 	
 	var force_dir = (right * screen_offset.x) + (up * -screen_offset.y)
+	var vertical_amount = force_dir.dot(up)
+
+	if vertical_amount < 0.0:
+		force_dir -= up * vertical_amount
+		force_dir += up * 0.15
 
 	force_dir = force_dir.normalized()
-	
-	if force_mult_index >= force_mult.size() - 1:
-		force_mult_index = 0
-	else:
-		force_mult_index += 1
-	
-	apply_central_impulse(force_dir * force_mult[force_mult_index])	
+	apply_central_impulse(force_dir * force_mult[force_mult_index])
 
 	# spin a bit too
 	var torque_dir = Vector3(
@@ -280,7 +278,6 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	).normalized()
 	
 	torque_dir = torque_dir * force_mult[force_mult_index]
-
 	apply_torque_impulse(torque_dir * hit_torque_strength)
 
 	smoke_particles_duplicates()
@@ -322,7 +319,10 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
 	health -= damage
+	if damage == 0:
+		cash_value += 10
 	
+	taken_hit = true
 	if health > 0:
 		play_hit_sfx()
 		apply_hit_reaction(screen_offset)
@@ -360,8 +360,7 @@ func start_destroyed_process() -> void:
 	
 	money_label_3d.money_is_money(global_position, cash_value)
 	
-	set_collision_layer_value(1, false)
-	set_collision_layer_value(3, false)
+
 	is_deactivated = true
 	#$Mesh.hide()
 	#freeze = true
@@ -504,10 +503,14 @@ func check_position_for_wall() -> void:
 		ExitSide.LEFT:
 			if global_position.x > 10.5:
 				hit_out_of_bounds()
+			#if global_position.x > -18.5:
+				#hit_out_of_bounds()
 
 		ExitSide.RIGHT:
 			if global_position.x < -15.5:
 				hit_out_of_bounds()
+			#if global_position.x > 15.5:
+				#hit_out_of_bounds()
 
 		ExitSide.TOP:
 			if global_position.y > 9.0:
@@ -518,7 +521,7 @@ func start_timer() -> void:
 
 func _on_hit_wall_timer_timeout() -> void:
 	check_position_for_wall()
-
+	print('global ', global_position.x)
 	if is_deactivated:
 		$hit_wall_timer.stop()
 		return

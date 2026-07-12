@@ -41,7 +41,6 @@ const RESTART_DATASET := {
 	"power_ticket_redd": 0,
 }
 
-
 const DEFAULT_DATASET := {
 	"cash": 109,
 	"stage": 0,
@@ -68,6 +67,7 @@ const DEFAULT_DATASET := {
 	"power_bonus_round_pineapples": 0,
 	
 	"power_auto_fire" : 0,
+	"power_balloon_buster" : 0,
 	"power_max_items_in_shop" : 3,
 	"power_time_upgrade" : 0,
 	"power_target_circle": 0,

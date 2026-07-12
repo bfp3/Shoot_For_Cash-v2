@@ -23,6 +23,7 @@
 [ext_resource type="Texture2D" uid="uid://cdibh2x081m8m" path="res://res/auto_fire_icon.png" id="16_cn8lj"]
 [ext_resource type="Script" uid="uid://up6jew6r4kdm" path="res://ch/Shop/transport_tickets.gd" id="16_vom4t"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="17_cn8lj"]
+[ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="19_pwib5"]
 [ext_resource type="PackedScene" uid="uid://dcuml06w7i3km" path="res://ch/Shop/ticket_button.tscn" id="20_xklyy"]
 [ext_resource type="PackedScene" uid="uid://cjcdqa3pipb3j" path="res://ch/close_menu.tscn" id="21_tnodp"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
@@ -597,6 +598,19 @@ shop_main_menu = NodePath("../../../../../../..")
 hold_duration = 0.1
 upgrade_type = "bonus_round_pineapples"
 upgrade_name = "Pineapples"
+
+[node name="BalloonBuster" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1782515006 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 358.0
+offset_top = 30.0
+offset_right = 568.0
+offset_bottom = 126.0
+upgrade_icon = ExtResource("19_pwib5")
+shop_main_menu = NodePath("../../../../../../..")
+hold_duration = 0.1
+upgrade_type = "balloon_buster"
+upgrade_name = "Balloon Buster"
 
 [node name="AvailableUpgrades" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=499030465]
 layout_mode = 1

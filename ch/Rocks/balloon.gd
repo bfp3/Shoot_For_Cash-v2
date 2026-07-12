@@ -551,7 +551,7 @@ func smoke_particles_duplicates() -> void:
 
 func start_bullet_to_target() -> void:
 	if balloon_type == BalloonType.RED:
-		if gl_PlayerState.dataset.power_sky_mine > 0:
+		if gl_PlayerState.dataset.power_balloon_buster > 0:
 			player_has_marked_balloon = true
 		
 	play_accurate_sounds()
@@ -731,11 +731,11 @@ func sky_mine_blast() -> void:
 	
 	
 	if being_chained:
-		await get_tree().create_timer(0.2).timeout
+		await get_tree().create_timer(0.02).timeout
 	
 	else:
+		#await get_tree().create_timer(1.0).timeout
 		penalty_amount = 0
-		await get_tree().create_timer(1.0).timeout
 		
 	
 	%AoE2.play_particles = true
@@ -748,9 +748,9 @@ func sky_mine_blast() -> void:
 	
 	var _blast_radius := 5.0
 
-	gl_PlayerState.dataset.power_sky_mine = 0
+	gl_PlayerState.dataset.power_balloon_buster = 0
 	
-	#return
+	return
 
 	for target in get_tree().get_nodes_in_group("Target"):
 		if target == self:
@@ -776,6 +776,7 @@ func sky_mine_blast() -> void:
 				(distance / _blast_radius) * 0.2,
 				penalty
 		)
+		break
 		
 
 		
