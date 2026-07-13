@@ -7,6 +7,7 @@ extends Button
 @export var guaranteed_until_purchased := false
 @export var gun := false
 @export var sky_mine := false
+@export var balloon_buster := false
 var new_round := true
 var remove_from_shop := false
 
@@ -29,6 +30,7 @@ var hold_progress := 0.0
 @export_group('Upgrade Costs')
 @export var upgrade_type := ""
 @export var upgrade_name := "Upgrade"
+var original_upgrade_name := ""
 var tooltip_description := ""
 
 var player_money := 0
@@ -57,7 +59,7 @@ var array_particles : Array = []
 
 func _ready() -> void:
 	#randomize()
-	
+	original_upgrade_name = upgrade_name
 	array_particles = [particles_1, particles_2, particles_3]
 	#EventBus.instance.purchase_made.connect(update_shop)
 	EventBus.instance.open_shop.connect(reset_buttons_settings)
@@ -87,7 +89,8 @@ func _ready() -> void:
 
 	focus_entered.connect(_on_focus_entered)
 	focus_exited.connect(_on_focus_exited)
-
+	original_upgrade_name = upgrade_name
+	
 	_refresh_text()
 	_update_visual_state()
 	
@@ -255,8 +258,8 @@ func reset_buttons_settings() -> void:
 		$Capped.show()
 		return
 	
-	if sky_mine:
-		_update_sky_mine_name()
+	if sky_mine || balloon_buster:
+		_update_power_name()
 	
 	$FreeParticles.emitting = false
 	
@@ -335,7 +338,7 @@ func complete_purchase() -> void:
 	
 	guaranteed_until_purchased = false
 	
-	if sky_mine:
+	if sky_mine || balloon_buster:
 		var get_player = get_tree().get_first_node_in_group('Player')
 		if get_player:
 			get_player.apply_sky_mine()
@@ -344,7 +347,7 @@ func complete_purchase() -> void:
 		gl_PlayerState.log_buy(_upgrade_name, cost)
 
 		power_level = gl_PlayerState.get_power_level(_upgrade_name)
-		_update_sky_mine_name()
+		_update_power_name()
 
 		shop_main_menu.purchase_made(upgrade_type)
 
@@ -392,16 +395,23 @@ func complete_purchase() -> void:
 	await tween.finished
 
 
-func _update_sky_mine_name() -> void:
+func _update_power_name() -> void:
+	upgrade_name = original_upgrade_name
 	match power_level:
 		0:
-			upgrade_name = "Sky Mine"
+			upgrade_name = original_upgrade_name
 		1:
-			upgrade_name = "Sky Mine+"
+			upgrade_name = upgrade_name + "+"
 		2:
-			upgrade_name = "Sky Mine++"
+			upgrade_name = upgrade_name + "++"
+			
+		3:
+			upgrade_name = upgrade_name + "+++"
+			
+		4:
+			upgrade_name = upgrade_name + "++++"
 		_:
-			upgrade_name = "Sky Mine++"
+			upgrade_name = upgrade_name + "+++++"
 	_refresh_text()
 
 func remove_gun() -> void:

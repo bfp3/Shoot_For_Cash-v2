@@ -1,10 +1,6 @@
 class_name RockManager
 extends Node3D
 
-# I would like you to check which place we are in, and then that will determine the rock limit
-# Can you help me?	
-
-
 enum State {
 	INACTIVE,
 	PREPARE_ROCKS,
@@ -19,20 +15,30 @@ var rocks_limit := 3
 # --- Rock X-axis placement tuning ---------------------------------------
 const X_MAX := 10.0          # left-most bound
 const X_MIN := -10.0         # right-most bound
-const MIN_ROCK_SPACING := 0.5    # no two rocks closer than this
-const CLUSTER_MIN_DIST := 0.5    # the clustered pair's minimum gap
-const CLUSTER_MAX_DIST := 1.5    # the clustered pair's maximum gap
-const ANGLE_BIAS_STRENGTH := 0.1 # how hard rocks get angled back toward the opposite side
+const MIN_ROCK_SPACING := 0.0 # 0.5    # no two rocks closer than this
+const CLUSTER_MIN_DIST := 0.0 #0.5    # the clustered pair's minimum gap
+const CLUSTER_MAX_DIST := 0.0 #1.5    # the clustered pair's maximum gap
+const ANGLE_BIAS_STRENGTH := 0.0 # 0.1 # how hard rocks get angled back toward the opposite side
+# --------------------------------------------------------------------------
+
+# Columns run left to right along the X-axis: column 1 = 7, column 2 = 5... column 8 = -7
+# (step of -2 per column).
+var manual_rock_sequence : Array = [4]
+
+const COLUMN_1_X := 7.0
+const COLUMN_STEP := 2.0
+const COLUMN_COUNT := 8
+const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a column
 # --------------------------------------------------------------------------
 
 # --- Out-of-bounds monitoring (during PULSE_ROCKS only) -------------------
+@onready var splash_zone: Area3D = %Splash_zone
 const OUT_OF_BOUNDS_X := 17.0       # abs(x) beyond this is considered out of bounds
 const BOUNDS_CHECK_INTERVAL := 0.1  # how often (seconds) to scan active rocks
 var _bounds_check_active := false
 var _bounds_check_accum := 0.0
 # --------------------------------------------------------------------------
 
-@onready var splash_zone: Area3D = %Splash_zone
 
 func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(enter_state.bind(State.PULSE_ROCKS))
@@ -72,26 +78,34 @@ func update_inactive() -> void:
 	for i in $Container_1.get_children():
 		i.enter_state(i.State.INACTIVE)
 	
+
+# This is the start of arranging the rocks.
+func start_manual_rock_round(sequence: Array = [8,8]) -> void:
+	
+	manual_rock_sequence = sequence
+	enter_state(State.PREPARE_ROCKS)
+	
+	
 func update_prepare_rocks() -> void:
 	splash_zone.reset_detected_bodies()
-	rocks_limit = get_rock_limit()
-	#rocks_limit = 10
+	
+	var active_bodies : Array = []
+	rocks_limit = manual_rock_sequence.size()
 	gl_PlayerState.log_rocks(rocks_limit)
 	
-	var counter := 0
-	var active_bodies : Array = []
+	var container_children := $Container_1.get_children()
+	if rocks_limit > container_children.size():
+		printt("Exceeding the number of rocks in the scene." % [rocks_limit, container_children.size()])
+		rocks_limit = container_children.size()
 	
-	for i in $Container_1.get_children():
+	var counter := 0
+	for i in container_children:
 		active_bodies.append(i)
 		counter += 1
 		if counter >= rocks_limit:
 			break
 	
-	# Compute and hand off target X positions BEFORE the rocks enter
-	# PREPARE_ROCK. RockInstance.update_prepare_rock() applies
-	# target_x_position itself after its own internal awaits, which avoids a
-	# race where our positioning gets overwritten by its reset logic.
-	assign_rock_positions(active_bodies)
+	assign_manual_rock_positions(active_bodies)
 	
 	for body in active_bodies:
 		body.enter_state(body.State.PREPARE_ROCK)
@@ -109,14 +123,10 @@ func update_pulse_rocks() -> void:
 	_bounds_check_active = true
 	
 	bounce_rocks()
-	#tween_rocks()
 
 
 func check_rocks_out_of_bounds() -> void:
 	for body in $Container_1.get_children():
-		# Only rocks currently in active play can go "out of bounds" —
-		# this also naturally prevents re-triggering on a rock we've
-		# already deactivated (its state won't be ACTIVE anymore).
 		if body.current_state != body.State.ACTIVE:
 			continue
 			
@@ -132,11 +142,6 @@ func deactivate_out_of_bounds_rock(body) -> void:
 		print('OUT OF BOUNDS ', body.name)
 		gl_PlayerState.log_rock_missed()
 		#body.enter_state(RockInstance.State.MISSED)
-
-
-func log_hit_missed() -> void:
-	# TODO: replace this with the real implementation you'll provide.
-	pass
 
 
 func assign_rock_positions(bodies: Array) -> void:
@@ -190,6 +195,41 @@ func assign_rock_positions(bodies: Array) -> void:
 		body.target_x_position = positions[idx]
 
 
+func column_to_x(column: int) -> float:
+	# Column 1 -> 7, column 2 -> 5, ... column 8 -> -7.
+	var clamped_column := clampi(column, 1, COLUMN_COUNT)
+	if clamped_column != column:
+		push_warning("RockManager: column %d out of range [1, %d], clamped to %d." % [column, COLUMN_COUNT, clamped_column])
+	return COLUMN_1_X - float(clamped_column - 1) * COLUMN_STEP
+
+
+func assign_manual_rock_positions(bodies: Array) -> void:
+	if bodies.is_empty():
+		return
+	
+	var column_counts := {}
+	var positions : Array[float] = []
+	
+	for column in manual_rock_sequence:
+		var base_x := column_to_x(column)
+		var occurrence : int = column_counts.get(column, 0)
+		column_counts[column] = occurrence + 1
+		
+		var offset := 0.0
+		if occurrence > 0:
+			var direction := 1.0 if occurrence % 2 == 1 else -1.0
+			var step := ceili(occurrence / 2.0)
+			offset = direction * step * SAME_COLUMN_OFFSET
+
+		
+		positions.append(base_x + offset)
+	
+	for idx in range(bodies.size()):
+		var body = bodies[idx]
+		body.target_x_position = positions[idx]
+
+
+
 func _is_far_enough(candidate: float, positions: Array[float]) -> bool:
 	for p in positions:
 		if abs(candidate - p) < MIN_ROCK_SPACING:
@@ -226,28 +266,7 @@ func _get_position_angle_bias(x_position: float) -> float:
 	return -normalized * ANGLE_BIAS_STRENGTH
 
 	
-func tween_rocks() -> void:
-	var bodies = $Container_1.get_children()
-	var counter := 0
-	
-	for body in bodies:
-		if counter >= bodies.size():
-			break
-		body.enter_state(body.State.ACTIVE)
-	
-	counter = 0
-	
-	for body in bodies:
-		if counter >= bodies.size():
-			break
-		
-		body.tween_rocks()
 
-		counter += 1
-		await get_tree().create_timer(0.1).timeout
-		
-		if counter >= rocks_limit:
-			break
 
 func update_round_end() -> void:
 	_bounds_check_active = false
@@ -285,23 +304,24 @@ func bounce_rocks() -> void:
 
 	var counter := 0
 	
-	for body in bodies:
-		if counter >= bodies.size():
-			break
-		
-		body.enter_state(body.State.ACTIVE)
+	#for body in bodies:
+		#if counter >= bodies.size():
+			#break
+		#print(body.name)
+		#body.enter_state(body.State.ACTIVE)
 	
 	counter = 0
 	
 	for body in bodies:
 		if counter >= bodies.size():
 			break
-		
+		body.enter_state(body.State.ACTIVE)
 		body.bounce_rocks()
 		
 		#$AnimationPlayer.play('push_up')
 		
-		var x_variation = randf_range(-2.0, 2.0)
+		#var x_variation = randf_range(-2.0, 2.0)
+		var x_variation = 0.0
 		const z_variation = 0.0
 		#var upward_force = randf_range(9.5, 10.0)
 		var upward_force = randf_range(9.5, 10.0)
@@ -369,18 +389,3 @@ func reset_rock_back_on() -> void:
 	
 	await get_tree().create_timer(0.2).timeout
 	splash_zone.reset_detected_bodies()
-
-
-
-func start_first_round_rock_sequence() -> void:
-	rocks_limit = 3
-	var first_rock = $Container_1/Shootable_object
-	first_rock.first_rock()
-
-	var x_variation = randf_range(-2.0, 2.0)
-	var z_variation = 0.0
-	var upward_force = randf_range(9.5, 10.0)
-	var impulse = Vector3(x_variation, upward_force, z_variation) * pulse_magnitude
-	first_rock.apply_central_impulse(impulse)
-
-	spin_rocks()

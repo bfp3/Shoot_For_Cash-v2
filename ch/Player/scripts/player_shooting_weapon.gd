@@ -25,6 +25,7 @@ var power_bullet_damage : int = 1
 var power_bullet_delay := 0.5
 
 var shot_with_right_click := false
+var temp_label_pos := Vector3.ZERO
 
 @onready var player_camera := $"../Cam_pivot/Camera3D"
 
@@ -248,32 +249,29 @@ func process_target_hit(target, damage, screen_offset) -> void:
 
 		
 func shoot_target() -> void:
-	
+
 	if !can_fire_weapon:
 		return
-	
+
 	if shooting_sky_mine:
 		return
-	
+
 	round_manager.bullet_active = true
-	
+
 	_reset_pitch_adjustment()
-	
-	
-	var double_power :bool= get_parent()._scope_at_min
+
+	var double_power: bool = get_parent()._scope_at_min
 	var targets = get_targets_in_scope()
-	
+
 	var rock_count := 0
+	var rocks_to_destroy := []
 
 	for target_data in targets:
 		var target = target_data.target
 
 		if target is RockInstance:
 			rock_count += 1
-
-	if rock_count >= 2 && !shot_with_right_click:
-		activate_multishot_bonus(rock_count)
-	
+			rocks_to_destroy.append(target)
 
 	if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
 		shooting_sky_mine = true
@@ -303,37 +301,30 @@ func shoot_target() -> void:
 			continue
 
 		var damage := power_bullet_damage
-		
+
 		if double_power:
 			damage += 1
 			power_bullet_speed /= 4
-		
-		#if target_data.scope_hit == "left":
-			#damage *= 2
-
-		#if target.has_method("marking_myself_as_target"):
-			#target.marking_myself_as_target()
 
 		%Crosshair.crosshair_shake()
 		player_gun.get_barrel_position(target.global_position.x)
 		player_camera.shake_camera_shooting()
-		
+
 		if gl_PlayerState.dataset.power_balloon_buster > 0:
-			if target.has_method('apply_marked_ability') && target is not RockInstance:
+			if target.has_method("apply_marked_ability") && target is not RockInstance:
 				target.apply_marked_ability()
-			
+
 		target.start_bullet_to_target()
-		
+
 		if shot_with_right_click:
 			damage = 0
 			power_bullet_speed /= 4
-		
+
 		spawn_projectile(target, power_bullet_speed)
-				
+
 		var rock_screen_pos = player_camera.unproject_position(target.global_position)
 		var screen_offset = rock_screen_pos - crosshair.global_position
 
-		# Start the hit timer independently
 		process_target_hit.call_deferred(
 			target,
 			damage,
@@ -348,9 +339,13 @@ func shoot_target() -> void:
 		if shooting_sky_mine:
 			delay += 0.5
 
-		
 		await get_tree().create_timer(delay).timeout
 		shooting_sky_mine = false
+
+	if rocks_to_destroy.size() >= 2 && !shot_with_right_click:
+		await wait_for_all_rocks_destroyed(rocks_to_destroy)
+		activate_multishot_bonus(rock_count)
+		
 	
 func can_shoot(_can_shoot : bool) -> void:
 	can_fire_weapon = _can_shoot
@@ -529,11 +524,24 @@ func explode_at_point(explosion_position: Vector3, normal: Vector3) -> void:
 	explosion.play_particles = true
 	%take_damage_sfx.play()
 	
-	
+func wait_for_all_rocks_destroyed(rocks: Array) -> void:
+	while true:
+		var remaining := 0
+
+		for rock in rocks:
+			if rock.rock_activated:
+				remaining += 1
+		
+			temp_label_pos = rock.global_position
+			
+		if remaining == 0:
+			return
+
+		await get_tree().process_frame
 	
 func activate_multishot_bonus(rock_count: int) -> void:
 	var multi_shot := get_tree().get_first_node_in_group('multi_shot')
-	multi_shot.multi_shot(rock_count)
+	multi_shot.multi_shot(rock_count, temp_label_pos)
 
 			
 			

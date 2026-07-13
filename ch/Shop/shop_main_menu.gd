@@ -239,9 +239,7 @@ func is_skill_maxed(skill) -> bool:
 	
 	if can_appear_when_maxed:
 		return false
-	# Always allow Sky Mine to appear
-	#if skill.upgrade_type == "sky_mine":
-		#return false
+
 
 	var power_name : String = "power_" + skill.upgrade_type
 

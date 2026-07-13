@@ -40,7 +40,6 @@ func add_white_balloon_back_into_list(_balloon: StaticBody3D) -> void:
 	move_child(_balloon, get_child_count() - 1)
 	
 func add_balloon() -> void:
-	return
 	for l in range(2):
 		for i in get_children():
 			if i is StaticBody3D and i.behind_player:
@@ -129,3 +128,17 @@ func restart() -> void:
 	#move_all_ballons_below()
 	move_all_ballons_back()
 	
+	
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed('backward'):
+		for i in get_children():
+			if i is StaticBody3D and i.behind_player:
+				i.move_balloon_in_front_of_player()
+
+				var tween = create_tween()
+				tween.set_ease(Tween.EASE_IN_OUT)
+				tween.set_trans(Tween.TRANS_SINE)
+				tween.tween_interval(0.2)
+				#tween.tween_property(i, "global_position:y", -11.0, 5.0).as_relative()
+				tween.tween_property(i, "global_position:z", 27.0, 5.0).as_relative()
+				break

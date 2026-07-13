@@ -117,7 +117,8 @@ func configure_balloon_colour() -> void:
 			
 		BalloonType.RED:
 			balloon_mesh.material_override = BALLOON_RED_MAT
-			penalty_amount = -3
+			penalty_amount = -10
+			#penalty_amount = 0
 			original_penalty_amount = penalty_amount
 			#var rand_chan := randi_range(0,3)
 			#if rand_chan > 2:
@@ -393,7 +394,8 @@ func start_destroyed_process() -> void:
 	
 	
 	if balloon_type == BalloonType.RED:
-		money_label_3d.money_is_money(global_position, penalty_amount)
+		if abs(cash_value) > 0:
+			money_label_3d.money_is_money(global_position, penalty_amount)
 		
 	#else:
 		#money_label_3d.print_text(global_position, 'BLUE DOWN')
@@ -675,20 +677,29 @@ func temp_slow_down() -> void:
 	Engine.time_scale = 1.0
 	
 	
+	
 func blast_radius() -> void:
 	await get_tree().create_timer(0.1).timeout
 
-	const BLAST_RADIUS := 5.0
+	const BLAST_RADIUS := 500.0
 	const MAX_DELAY := 0.2
 
-	for target in get_tree().get_nodes_in_group("Target"):
-		if target is RockInstance:
-			var distance := Vector2(global_position.x, global_position.y).distance_to(
-				Vector2(target.global_position.x, target.global_position.y)
-			)
+	var all_targets: Array[RockInstance] = []
 
-			if distance <= BLAST_RADIUS:
-				_push_rock_after_delay(target, distance / BLAST_RADIUS * MAX_DELAY)
+	for target in get_tree().get_nodes_in_group("Target"):
+		if target is RockInstance and target.current_state == target.State.ACTIVE:
+			all_targets.append(target)
+
+	for target in all_targets:
+		print(target.name)
+
+		var distance := Vector2(global_position.x, global_position.y).distance_to(
+			Vector2(target.global_position.x, target.global_position.y)
+		)
+
+		if distance <= BLAST_RADIUS:
+			_push_rock_after_delay(target, distance / BLAST_RADIUS * MAX_DELAY)
+
 
 
 func _push_rock_after_delay(target: RockInstance, delay: float) -> void:
@@ -701,7 +712,7 @@ func _push_rock_after_delay(target: RockInstance, delay: float) -> void:
 	force_dir.z = 0.0
 	force_dir = force_dir.normalized()
 
-	target.apply_central_impulse(force_dir * 2)
+	target.apply_central_impulse(force_dir * 20)
 	target.apply_torque_impulse(force_dir * 500.0)
 	
 func apply_marked_ability() -> void:
@@ -748,7 +759,7 @@ func sky_mine_blast() -> void:
 	
 	var _blast_radius := 5.0
 
-	gl_PlayerState.dataset.power_balloon_buster = 0
+	gl_PlayerState.dataset.power_balloon_buster = clamp(gl_PlayerState.dataset.power_balloon_buster - 1, 0, 10)
 	
 	return
 

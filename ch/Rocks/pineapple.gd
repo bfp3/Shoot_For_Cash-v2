@@ -3,6 +3,7 @@ extends RigidBody3D
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
 @export var cash_value := 10
+var original_cash_value := 10
 @export var force_multiplier := 1.5
 var pitch_adjustment := 0.02
 var taken_hit = false
@@ -65,7 +66,8 @@ func _ready() -> void:
 	await get_tree().create_timer(0.2).timeout
 	
 	enter_state(State.INACTIVE)
-
+	
+	original_cash_value = cash_value
 
 
 func enter_state(new_state : State) -> void:
@@ -222,7 +224,7 @@ func reset_stats() -> void:
 	current_rock_type = ""
 	rock_type_name = ""
 	health = 0
-
+	cash_value = original_cash_value
 	
 	freeze = false
 	linear_velocity = Vector3.ZERO
@@ -324,6 +326,11 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	
 	taken_hit = true
 	if health > 0:
+		set_collision_layer_value(9, false)
+		set_collision_mask_value(9, false)
+		set_collision_layer_value(1, false)
+		set_collision_mask_value(1, false)
+		
 		play_hit_sfx()
 		apply_hit_reaction(screen_offset)
 		return

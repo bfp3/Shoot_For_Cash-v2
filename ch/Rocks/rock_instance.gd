@@ -43,7 +43,7 @@ enum State {
 	DISABLED
 }
 
-var current_state : State
+var current_state : State = State.INACTIVE
 
 var rock_has_been_logged := false
 
@@ -139,6 +139,7 @@ func enter_state(new_state : State) -> void:
 
 		
 			
+
 func update_inactive() -> void:
 	hide_all_meshes()
 	force_mult.shuffle()
@@ -291,9 +292,7 @@ func reset_rock_back_on() -> void:
 
 func setup_rock_type() -> void:
 	current_mesh.scale = Vector3.ONE
-	if gl_PlayerState.dataset.rock_limit == 1 && gl_PlayerState.dataset.stage_name == 'moss':
-		first_rock()
-		return
+
 		
 	var rock_size = choose_rock_type()
 	
@@ -616,12 +615,12 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		
 	else:
 		health -= damage
-		if damage == 0:
-			cash_value += 10
-			health += 10
-			var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-			tween.tween_property(
-				current_mesh, "scale", current_mesh.scale * 1.1, 0.08)
+		#if damage == 0:
+			#cash_value += 10
+			#health += 10
+			#var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			#tween.tween_property(
+				#current_mesh, "scale", current_mesh.scale * 1.1, 0.08)
 		
 	display_health_counter()
 	display_damage_counter(damage)
@@ -664,44 +663,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	#Rock Destroyed Process
 	start_destroyed_process()
 	
-func first_rock() -> void:
-	# Base values
-	#hide_all_meshes()
-	current_rock_type 	= "Small Rock"
-	rock_type_name 		= "rock_type_1"
-
-	var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
-	var base_cash   := int(gl_DataSet.get_value("rock_type_1", 0))
-	var base_scale  := Vector3.ONE * 0.3
-
-	# Random subtype: 1x / 2x / 3x
-	var size_multiplier : int = 1
-
-	health = base_health * size_multiplier
-	cash_value = base_cash
-	max_health = health
-	#update_health_icon()
-	small_rock.visible = true
-	main_col.scale = Vector3.ONE * 0.125 * size_multiplier
-	current_mesh = small_rock
-	assign_random_mesh(current_mesh)
-	current_mesh.scale = base_scale * size_multiplier
 	
-	rock_type_gravity_scale = 0.05 # + (size_multiplier / 10)
-	linear_damp = 0.5
-	force_mult.clear()
-	force_mult = [1,2]
-	force_mult_index = 0
-	
-	add_to_group('Target')
-	force_mult.shuffle()
-	icon.show()
-	icon.modulate.a = 0.0
-
-	$Start_falling_timer.start(2.2)
-	current_state = State.ACTIVE
-	enable_collision()
-
 func add_to_rocks_round() -> void:
 	
 	add_to_group('Target')
@@ -913,7 +875,7 @@ func standard_blast() -> void:
 	$Explosion_area/CollisionShape3D.disabled = false
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 5.0, 0.35) #0.25
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 4.0, 0.35) #0.25
 	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.25)
 	tween.tween_interval(0.1)
 	await tween.finished

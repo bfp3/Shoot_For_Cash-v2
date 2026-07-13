@@ -10,6 +10,9 @@ const DEMO_END_SCREEN = preload('uid://dpbgyfs2kgdtr')
 
 var game_has_been_beaten := false
 
+var current_rock_sequence : Array = []
+var seq_rock_pointer := -1
+
 var bullet_active := false
 var bullet_active_counter := 0.0
 var round_finished := false
@@ -142,12 +145,13 @@ func update_round_first_round() -> void:
 func update_round_start() -> void:
 	success = false
 	
+
+	
 	while game_has_been_beaten:
 		await get_tree().process_frame
 	
 	if gl_PlayerState.dataset.stage_name == 'start':
 		go_to_fake_round()
-		print('Check if this is even being hit, it it does not appear, delete fake round')
 		return
 		
 	if gl_PlayerState.dataset.round == 0:
@@ -159,13 +163,21 @@ func update_round_start() -> void:
 		player.start_player()
 		
 	while gl_PlayerState.dataset.power_balloon_buster > 0:
+		#gl_PlayerState.dataset.power_balloon_buster = 0
+		#print('true')
+		#if bullet_active:
+			#bullet_active = false
+			#await get_tree().create_timer(1.0).timeout
 		await get_tree().process_frame
 		
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
 
 	current_round = gl_PlayerState.dataset.round
 	
-	rocks_container.enter_state(rocks_container.State.PREPARE_ROCKS)
+	var rock_seq := update_rock_sequence()
+	print('Next Rock Seq ', rock_seq)
+	rocks_container.start_manual_rock_round(rock_seq)
+	
 	round_timer.enter_state(round_timer.State.RESTARTING)
 	player.update_player_stats()
 	player.start_player()
@@ -176,21 +188,24 @@ func update_round_start() -> void:
 	await get_tree().create_timer(2.0).timeout
 	enter_state(RoundState.ROUND_IN_PROGRESS)
 
+func update_rock_sequence() -> Array:
+	seq_rock_pointer += 1
+	if seq_rock_pointer > current_rock_sequence.size() - 1:
+		seq_rock_pointer = 0
+		return current_rock_sequence[seq_rock_pointer]
+		
+	else:
+		return current_rock_sequence[seq_rock_pointer]
+
 
 func go_to_fake_round() -> void:
-	#gl_PlayerState.next_round()
-	#current_round = gl_PlayerState.dataset.round
-	#player.update_player_stats()
 	round_timer.enter_state(round_timer.State.RESTARTING)
 	if gl_PlayerState.dataset.power_gun > 0:
 		player.start_player()
 	await get_tree().create_timer(1.0).timeout
 	music_manager.shop_music_raise_volume()
-	#rocks_container.update_gravity(0.03)
 	await get_tree().create_timer(0.25).timeout
-	#egg_pulse.activate_pulse_wave()
 	await get_tree().create_timer(2.0).timeout
-	#confetti_cannon.start_confetti()
 	enter_state(RoundState.ROUND_IN_PROGRESS)
 	round_timer.enter_state(round_timer.State.RUNNING)
 	#check_round_events()
@@ -345,12 +360,16 @@ func move_to_start() -> void:
 	level_mesh.name = 'current_level_layout'
 
 func move_to_moss() -> void:
+	current_rock_sequence = gl_DataSet.get_array('seq_rocks_moss')
+	
+	printt('I have updated the rock waves in Moss ', current_rock_sequence)
+	
 	transitioning_worlds = true
 	player.display_hud()
 	gl_PlayerState.dataset["stage"] = 1
 	#gl_PlayerState.dataset["rock_limit"] = 1
 	gl_PlayerState.dataset["reroll_unlocked"] = 1
-	print('dont know how to make gl_playerState handle this internally')
+
 		
 	music_manager.stop_opening_song()
 	
@@ -365,7 +384,6 @@ func move_to_moss() -> void:
 	level_layout.add_child(level_scenery)
 	
 	level_scenery.name = 'current_level_layout'
-	
 	
 	await get_tree().create_timer(1.0).timeout
 	
@@ -382,8 +400,8 @@ func move_to_moss() -> void:
 	#rocks_container.reset_rock_back_on()
 	await get_tree().create_timer(3.0).timeout
 	transitioning_worlds = false
-	#enter_state(RoundState.SHOP_END)
-	$"../MainGameCanvasLayer/Intro_Prompt".start()
+	enter_state(RoundState.SHOP_END)
+	#$"../MainGameCanvasLayer/Intro_Prompt".start()
 	
 	
 func move_to_redd() -> void:

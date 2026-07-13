@@ -163,8 +163,9 @@ func into_the_distance() -> void:
 				tween.set_ease(Tween.EASE_IN_OUT)
 				tween.set_trans(Tween.TRANS_SINE)
 				tween.tween_property(i, "global_position:y", i.start_pos.x, 5.0)
-				tween.parallel().tween_property(i, "global_position:y", i.start_pos.y, 7.0)
-				tween.parallel().tween_property(i, "global_position:z", 90.0, 120.0).as_relative()
+				#tween.parallel().tween_property(i, "global_position:y", i.start_pos.y, 7.0)
+				tween.parallel().tween_property(i, "global_position:y", i.start_pos.y + 20.0, 7.0)
+				#tween.parallel().tween_property(i, "global_position:z", 90.0, 120.0).as_relative()
 
 				break
 					

@@ -160,7 +160,7 @@ func log_rocks(_total_rocks : int) -> void:
 	dataset.total_rocks_in_round_remaining = _total_rocks
 	
 func log_rock_missed() -> void:
-	print('Missed a rock')
+	#print('Missed a rock')
 	dataset.total_rocks_missed += 1
 	dataset.total_rocks_in_round_remaining -= 1
 	check_all_rocks_cleared()

@@ -34,6 +34,7 @@ var target_pos : Vector2 = Vector2(1606.0,918.0)
 	
 	
 func _update_for_new_round() -> void:
+	return
 	if !on_tally_sheet:
 		var tween = create_tween().set_trans(Tween.TRANS_SINE)
 		tween.tween_property(self, "modulate:a", 1.0, 0.1)
