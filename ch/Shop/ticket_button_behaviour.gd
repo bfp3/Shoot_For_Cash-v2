@@ -249,7 +249,8 @@ func purchase_ticket_special_effects() -> void:
 	enter_state(TicketState.PURCHASED)
 	
 	await get_tree().create_timer(1.0).timeout
-	purchase_sfx.play()
+	if purchase_sfx != null:
+		purchase_sfx.play()
 	transport_tickets.update_tickets()
 	
 

@@ -31,6 +31,14 @@
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="21_y4gyo"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="22_63gdt"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="30_8mu68"]
+[ext_resource type="AudioStream" uid="uid://cp1bi14xcue2e" path="res://sfx/a#_startInt.ogg" id="32_ltsxa"]
+[ext_resource type="AudioStream" uid="uid://cwd4ue861klyx" path="res://sfx/2ndInt.ogg" id="33_8mu68"]
+[ext_resource type="AudioStream" uid="uid://b8jsfrc6gqwd" path="res://sfx/3rdInt.ogg" id="34_q8tld"]
+[ext_resource type="AudioStream" uid="uid://byhyspj0ng0gr" path="res://sfx/4thInt.ogg" id="35_0cvxb"]
+[ext_resource type="AudioStream" uid="uid://bfg27yk2v8wom" path="res://sfx/5thInt.ogg" id="36_gsivy"]
+[ext_resource type="AudioStream" uid="uid://dua25tojybkiv" path="res://sfx/6thInt.ogg" id="37_pbe1n"]
+[ext_resource type="AudioStream" uid="uid://c87df1ylycoq2" path="res://sfx/7thInt.ogg" id="38_qfsx3"]
+[ext_resource type="AudioStream" uid="uid://bqqq2qfwp0uw8" path="res://sfx/8thInt.ogg" id="39_20bhc"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 friction = 0.0
@@ -1358,6 +1366,56 @@ fixed_fps = 60
 visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_s0kjy")
 draw_pass_1 = SubResource("QuadMesh_p78v0")
+
+[node name="PianoNotes" type="Node" parent="." unique_id=1296907689]
+
+[node name="1" type="AudioStreamPlayer" parent="PianoNotes" unique_id=858664464]
+stream = ExtResource("32_ltsxa")
+volume_db = -40.0
+pitch_scale = 1.5
+bus = &"ReverbBus"
+
+[node name="2" type="AudioStreamPlayer" parent="PianoNotes" unique_id=2107288870]
+stream = ExtResource("33_8mu68")
+volume_db = -40.0
+pitch_scale = 1.5
+bus = &"ReverbBus"
+
+[node name="3" type="AudioStreamPlayer" parent="PianoNotes" unique_id=267659503]
+stream = ExtResource("34_q8tld")
+volume_db = -40.0
+pitch_scale = 1.5
+bus = &"ReverbBus"
+
+[node name="4" type="AudioStreamPlayer" parent="PianoNotes" unique_id=257489984]
+stream = ExtResource("35_0cvxb")
+volume_db = -40.0
+pitch_scale = 1.5
+bus = &"ReverbBus"
+
+[node name="5" type="AudioStreamPlayer" parent="PianoNotes" unique_id=1657133887]
+stream = ExtResource("36_gsivy")
+volume_db = -40.0
+pitch_scale = 1.5
+bus = &"ReverbBus"
+
+[node name="6" type="AudioStreamPlayer" parent="PianoNotes" unique_id=1458442543]
+stream = ExtResource("37_pbe1n")
+volume_db = -40.0
+pitch_scale = 1.5
+bus = &"ReverbBus"
+
+[node name="7" type="AudioStreamPlayer" parent="PianoNotes" unique_id=139895595]
+stream = ExtResource("38_qfsx3")
+volume_db = -40.0
+pitch_scale = 1.5
+bus = &"ReverbBus"
+
+[node name="8" type="AudioStreamPlayer" parent="PianoNotes" unique_id=1400746164]
+stream = ExtResource("39_20bhc")
+volume_db = -40.0
+pitch_scale = 1.5
+bus = &"ReverbBus"
 
 [connection signal="body_entered" from="Explosion_area" to="." method="_on_explosion_area_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -508,20 +508,23 @@ func check_position_for_wall() -> void:
 
 	match exit_side:
 		ExitSide.LEFT:
-			if global_position.x > 10.5:
+			
+			if global_position.x > 10.5 || global_position.y <= -5.0:
 				hit_out_of_bounds()
 			#if global_position.x > -18.5:
 				#hit_out_of_bounds()
 
 		ExitSide.RIGHT:
-			if global_position.x < -15.5:
+			if global_position.x < -15.5 || global_position.y <= -5.0:
 				hit_out_of_bounds()
 			#if global_position.x > 15.5:
 				#hit_out_of_bounds()
 
 		ExitSide.TOP:
-			if global_position.y > 9.0:
+			if global_position.y > 9.0 || global_position.y <= -5.0:
 				hit_out_of_bounds()
+				
+		
 
 func start_timer() -> void:
 	$hit_wall_timer.start()

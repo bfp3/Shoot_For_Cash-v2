@@ -442,8 +442,8 @@ func update_player_stats() -> void:
 	power_bullet_damage = int(set_power(settings, 'power_bullet_damage'))
 	power_bullet_delay = set_power(settings, 'power_bullet_delay')
 	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
-	power_gun_fire_rate = 0.05
-	
+	#power_gun_fire_rate = 0.05
+	#
 	player_gun.update_guns()
 	
 	player_cash 		= settings.cash

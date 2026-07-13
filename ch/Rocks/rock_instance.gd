@@ -665,7 +665,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	
 	
 func add_to_rocks_round() -> void:
-	
+	play_piano_note()
 	add_to_group('Target')
 	%explosion_radius_mesh.hide()
 	icon.show()
@@ -727,12 +727,6 @@ func start_destroyed_process() -> void:
 	play_destroy_sfx()
 	$Marked.hide()
 	icon.hide()
-
-	
-	if is_in_group('Target'):
-		remove_from_group('Target')
-		
-
 	money_label_3d.money_is_money(global_position, cash_value)
 	
 	set_collision_layer_value(1, false)
@@ -949,7 +943,35 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 		remove_child(sound_instance)
 		sound_instance.queue_free()
 
-
+func play_piano_note() -> void:
+	match global_position.x:
+		-7.0:
+			$"PianoNotes/1".play()
+			
+		-5.0:
+			$"PianoNotes/2".play()
+			
+		-3.0:
+			$"PianoNotes/3".play()
+			
+		-1.0:
+			$"PianoNotes/4".play()
+		
+		1.0:
+			$"PianoNotes/5".play()
+			
+		3.0:
+			$"PianoNotes/6".play()
+			
+		5.0:
+			$"PianoNotes/7".play()
+			
+		7.0:
+			$"PianoNotes/8".play()
+		
+		
+		
+		
 #func set_xray_visible(value : bool) -> void:
 	#tween_2d_icon(value)
 
