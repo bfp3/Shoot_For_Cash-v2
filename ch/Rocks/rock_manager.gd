@@ -22,7 +22,7 @@ const X_MIN := -10.0         # right-most bound
 const MIN_ROCK_SPACING := 0.5    # no two rocks closer than this
 const CLUSTER_MIN_DIST := 0.5    # the clustered pair's minimum gap
 const CLUSTER_MAX_DIST := 1.5    # the clustered pair's maximum gap
-const ANGLE_BIAS_STRENGTH := 2.5 # how hard rocks get angled back toward the opposite side
+const ANGLE_BIAS_STRENGTH := 0.1 # how hard rocks get angled back toward the opposite side
 # --------------------------------------------------------------------------
 
 # --- Out-of-bounds monitoring (during PULSE_ROCKS only) -------------------
@@ -33,9 +33,6 @@ var _bounds_check_accum := 0.0
 # --------------------------------------------------------------------------
 
 @onready var splash_zone: Area3D = %Splash_zone
-
-
-
 
 func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(enter_state.bind(State.PULSE_ROCKS))

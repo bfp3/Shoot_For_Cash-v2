@@ -26,7 +26,7 @@ var dataset_float : Dictionary = {
 	,"price_bonus_round_pineapples" 	: [20]
 	,"price_auto_fire" 				: [135]
 	,"price_target_circle"			: [7, 20, 40, 260, 320, 440, 550, 1000, 1500]
-	,"price_balloon_buster"			: [1]
+	,"price_balloon_buster"			: [3]
 	,"price_gun_fire_rate"			: [2, 4, 8, 32, 99, 204, 350, 550, 998]
 	,"price_bullet_damage" 			: [4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
 	,"price_bullet_speed" 			: [2, 3, 6, 8, 12, 16, 20, 30, 40, 50]

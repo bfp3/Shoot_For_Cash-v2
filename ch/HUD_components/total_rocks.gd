@@ -22,16 +22,15 @@ var score_result : ScoreResult = ScoreResult.PARTIAL_SCORE
 var target_pos : Vector2 = Vector2(1606.0,918.0)
 
 
-func _ready() -> void:
-	if temp_disabled:
-		modulate.a = 0.0
-		return
-	#orig_pos = position
-	target_pos = global_position
-	#EventBus.instance.open_tally_card.connect(display_round_counter)
-	EventBus.instance.open_shop.connect(_update_for_new_round)
-
-	EventBus.instance.rock_destroyed.connect(_on_rock_destroyed)
+#func _ready() -> void:
+	#if temp_disabled:
+		#modulate.a = 0.0
+		#return
+	#target_pos = global_position
+#
+	#
+	#EventBus.instance.open_shop.connect(_update_for_new_round)
+	#EventBus.instance.rock_destroyed.connect(_on_rock_destroyed)
 	
 	
 func _update_for_new_round() -> void:

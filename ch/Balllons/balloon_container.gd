@@ -40,7 +40,7 @@ func add_white_balloon_back_into_list(_balloon: StaticBody3D) -> void:
 	move_child(_balloon, get_child_count() - 1)
 	
 func add_balloon() -> void:
-
+	return
 	for l in range(2):
 		for i in get_children():
 			if i is StaticBody3D and i.behind_player:

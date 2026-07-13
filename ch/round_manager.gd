@@ -606,7 +606,7 @@ func check_how_many_rounds_left() -> void:
 
 func increase_rock_limit() -> void:
 	#gl_PlayerState.dataset.rock_limit += 3
-	gl_PlayerState.dataset.rock_limit = 9
+	#gl_PlayerState.dataset.rock_limit = 9
 	pass
 	#if current_round == 6:
 		#gl_PlayerState.dataset.rock_limit = 5

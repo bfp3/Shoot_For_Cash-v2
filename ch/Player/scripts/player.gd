@@ -10,6 +10,8 @@ class_name Player extends Node3D
 @export var scope_return_duration := 0.3
 @export var scope_shrink_delay_dur := 0.4
 
+@export var can_right_click_shoot := false
+
 @export var shot_count := 4000
 var original_shot_count := 0
 
@@ -282,7 +284,7 @@ func _process(delta: float) -> void:
 		weapon_shooting.shot_with_right_click = false
 		fire_weapon()
 		
-	if Input.is_action_just_released("shoot_weapon_2"):
+	if Input.is_action_just_released("shoot_weapon_2") && can_right_click_shoot:
 		weapon_shooting.shot_with_right_click = true
 		fire_weapon()
 		
