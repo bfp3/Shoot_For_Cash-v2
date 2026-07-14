@@ -434,6 +434,15 @@ func set_power(settings:Dictionary, setting_name:String)-> float:
 func update_player_stats() -> void:
 	var settings : Dictionary = gl_PlayerState.get_all()
 	
+	#if settings['round'] % 2 == 0:
+		#power_target_circle = 200.0
+		#power_bullet_speed = 0.5
+		#power_bullet_damage = 2
+		##power_bullet_delay = 
+		#power_gun_fire_rate = 0.5
+#
+	#else:
+	
 	#power_gun_fire_rate = 0.15
 	#power_bullet_delay = 0.1
 	
@@ -442,7 +451,7 @@ func update_player_stats() -> void:
 	power_bullet_damage = int(set_power(settings, 'power_bullet_damage'))
 	power_bullet_delay = set_power(settings, 'power_bullet_delay')
 	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
-	#power_gun_fire_rate = 0.05
+
 	#
 	player_gun.update_guns()
 	
