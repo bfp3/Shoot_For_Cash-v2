@@ -20,7 +20,7 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 	if !MULTI_SHOT_DATA.has(multiplier):
 		return
 		
-	start_oranges(multiplier)
+	start_oranges(multiplier, pos)
 		
 	var data = MULTI_SHOT_DATA[multiplier]
 
@@ -51,8 +51,9 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 
 
 
-func start_oranges(multiplier : int= 2) -> void:
-	var _pineapple_container := get_tree().get_first_node_in_group('orange_container')
+func start_oranges(multiplier : int, _pos : Vector3) -> void:
+	var orange_container := get_tree().get_first_node_in_group('orange_container')
 	for i in range(multiplier - 1):
-		_pineapple_container.launch_pineapple(_pineapple_container.get_children().pick_random())
+		
+		orange_container.launch_orange(_pos)
 		await get_tree().create_timer(0.5).timeout

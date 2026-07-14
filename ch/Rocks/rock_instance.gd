@@ -221,8 +221,10 @@ func update_gravity(_gravity_scale : float) -> void:
 		gravity_scale = 0.15
 		#linear_damp = 0.0
 		await get_tree().create_timer(0.1).timeout
-		
-
+	
+	if rock_activated:
+		await get_tree().create_timer(1.5).timeout
+		linear_damp = 0.0
 
 func hide_all_meshes() -> void:
 	small_rock.visible			= false
@@ -433,7 +435,7 @@ func reset_stats() -> void:
 	rock_type_name = ""
 	health = 0
 	cash_value = 0
-	
+	linear_damp = 0.5
 	rock_has_been_logged = false
 	
 	freeze = false

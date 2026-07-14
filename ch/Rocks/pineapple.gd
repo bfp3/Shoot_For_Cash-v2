@@ -73,7 +73,7 @@ func _ready() -> void:
 
 
 func enter_state(new_state : State) -> void:
-
+	
 	current_state = new_state
 	
 	match new_state:
@@ -98,7 +98,7 @@ func update_inactive() -> void:
 	force_mult.shuffle()
 	disable_collision()
 	reset_stats()
-	# EventBus.instance.rock_created.emit()
+	# EventBus.instanceda.rock_created.emit()
 	
 func update_prepare_rock() -> void:
 	reset_stats()
@@ -122,12 +122,6 @@ func update_active() -> void:
 	pineapple_mesh.scale.z = 2.0
 	$Mesh.show()
 	$Start_falling_timer.start(2.2)
-
-	#var x_variation = randf_range(-1.0, 1.0)
-	#const z_variation = 0.0
-	#var upward_force = randf_range(9.5, 10.0)
-	#var impulse = Vector3(x_variation, upward_force * force_multiplier, z_variation) * pulse_magnitude
-	#apply_central_impulse(impulse)
 
 	$explosion_sfx.play()
 	$Smoke_quick.emitting = true
@@ -217,9 +211,10 @@ func reset_rock_back_on() -> void:
 	current_mesh.scale.z = base_scale.z
 	
 	rock_type_gravity_scale = 0.2
-			
+	show()
 
 func reset_stats() -> void:
+	hide()
 	$Mesh.scale = Vector3.ONE
 	$Mesh.show()
 	$hit_wall_timer.stop()
@@ -350,6 +345,7 @@ func start_destroyed_process() -> void:
 	if !rock_activated:
 		return
 	expand_blast_radius()
+
 	
 	#$Mesh/Yellow_particles.emitting = true
 	rock_activated = false
@@ -468,6 +464,11 @@ func hit_out_of_bounds() -> void:
 		return
 
 	rock_activated = false
+	gl_PlayerState.log_hit('pineapple', 'pineapple', 0)
+	current_mesh.get_node('damage_mesh').show()
+	await get_tree().create_timer(0.28).timeout
+	current_mesh.get_node('damage_mesh').hide()
+	
 	freeze = true
 
 	remove_from_group('Target')
@@ -478,7 +479,7 @@ func hit_out_of_bounds() -> void:
 	#$Pineapple_shot_explode.play()
 
 	# Penalize instead of reward
-	gl_PlayerState.log_hit('pineapple', 'pineapple', 0)
+	
 	money_label_3d.money_is_money(global_position, 0)
 
 	set_collision_layer_value(1, false)
@@ -542,7 +543,7 @@ func _on_hit_wall_timer_timeout() -> void:
 
 
 func _on_explosion_area_body_entered(body: Node3D) -> void:
-
+	print('is this hit?')
 	if body.name.contains('Balloon'):
 		if body.balloon_type == body.BalloonType.BLUE:
 			return
@@ -553,7 +554,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		body.hit_by_player(100, Vector2.ZERO)
 	
 func expand_blast_radius() -> void:
-	#return
+	return
 	%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.2
 	#%explosion_radius_mesh.transparency = 1.0

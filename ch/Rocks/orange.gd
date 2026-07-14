@@ -37,9 +37,9 @@ var rock_type_gravity_scale := 0.4
 
 @onready var money_label_3d: Label3D = $Money_Label3D
 @onready var gold_label_3d: Label3D = $Gold_label3D
-@onready var pineapple_mesh:= $Mesh/small_rock
+@onready var orange_mesh := $Mesh/small_rock
 
-@onready var current_mesh : MeshInstance3D= pineapple_mesh
+@onready var current_mesh : MeshInstance3D= orange_mesh
 
 var max_health : int = 0
 
@@ -116,10 +116,9 @@ func update_active() -> void:
 	global_position.x = randi_range(-8,8)
 	health = 1
 
-	pineapple_mesh.show()
+	orange_mesh.show()
 	rock_activated = true
-	pineapple_mesh.scale.x = 2.0
-	pineapple_mesh.scale.z = 2.0
+
 	$Mesh.show()
 	$Start_falling_timer.start(2.2)
 
@@ -140,12 +139,12 @@ func update_active() -> void:
 func update_hit() -> void:
 	update_gravity(1.0)
 	$Pineapple_sound_hit.play()
-	set_collision_layer_value(9, false)
-	set_collision_mask_value(9, false)
+	set_collision_layer_value(8, false)
+	set_collision_mask_value(8, false)
 	set_collision_layer_value(1, false)
 	set_collision_mask_value(1, false)
 	#disable_collision()
-	gl_PlayerState.log_hit('pineapple', 'pineapple', cash_value)
+	gl_PlayerState.log_hit('orange', 'orange', cash_value)
 	#gl_PlayerState.add_cash(cash_value)
 	$Pineapple_shot_explode.play()
 	
@@ -183,10 +182,10 @@ func update_disabled() -> void:
 
 func disable_collision() -> void:
 	set_collision_layer_value(1, false)
-	set_collision_layer_value(9, false)
+	set_collision_layer_value(8, false)
 
 func enable_collision() -> void:
-	set_collision_layer_value(9, true)
+	set_collision_layer_value(8, true)
 	#return
 
 
@@ -200,7 +199,7 @@ func reset_rock_back_on() -> void:
 
 	var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 
-	var base_scale  := Vector3.ONE * 0.35
+	var base_scale  := Vector3.ONE * 2 #* 0.35
 
 	# Random subtype: 1x / 2x / 3x
 	$hit_wall_timer.stop()
@@ -208,25 +207,26 @@ func reset_rock_back_on() -> void:
 	health = base_health
 	#cash_value = base_cash # * size_multiplier
 	max_health = health
-	pineapple_mesh.visible = true
-
-	current_mesh = pineapple_mesh
-	
-	current_mesh.scale.x = base_scale.x
-	current_mesh.scale.y = 1.471
-	current_mesh.scale.z = base_scale.z
+	orange_mesh.visible = true
+	main_col.scale = base_scale
+	current_mesh = orange_mesh
+	current_mesh.scale = base_scale
+	#current_mesh.scale.x = base_scale.x
+	#current_mesh.scale.y = 1.471
+	#current_mesh.scale.z = base_scale.z
 	
 	rock_type_gravity_scale = 0.2
-			
+	show()
 
 func reset_stats() -> void:
+	hide()
 	$Mesh.scale = Vector3.ONE
 	$Mesh.show()
 	$hit_wall_timer.stop()
 	pitch_adjustment = 0.02
 	taken_hit = false
 	rock_activated = false
-	current_mesh = pineapple_mesh
+	current_mesh = orange_mesh
 	current_rock_type = ""
 	rock_type_name = ""
 	health = 0
@@ -260,7 +260,11 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	gravity_scale = 0.1
 	linear_velocity = Vector3.ZERO
 	
+	
+	
 	var camera = get_viewport().get_camera_3d()
+
+	screen_offset = Vector2.UP
 
 	if camera == null:
 		return
@@ -466,8 +470,13 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 func hit_out_of_bounds() -> void:
 	if !rock_activated:
 		return
-
 	rock_activated = false
+	set_collision_layer_value(1, false)
+	set_collision_layer_value(8, false)
+	current_mesh.get_node('damage_mesh').show()
+	await get_tree().create_timer(0.28).timeout
+	current_mesh.get_node('damage_mesh').hide()
+	
 	freeze = true
 
 	remove_from_group('Target')
@@ -478,11 +487,10 @@ func hit_out_of_bounds() -> void:
 	#$Pineapple_shot_explode.play()
 
 	# Penalize instead of reward
-	gl_PlayerState.log_hit('pineapple', 'pineapple', 0)
+	gl_PlayerState.log_hit('orange', 'orange', 0)
 	money_label_3d.money_is_money(global_position, 0)
 
-	set_collision_layer_value(1, false)
-	set_collision_layer_value(3, false)
+
 	is_deactivated = true
 
 
@@ -547,9 +555,9 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			return
 		body.destroyed_by_shratnel()
 		
-	#if body is RockInstance:
-		#body.cash_value += 2
-		#body.hit_by_player(100, Vector2.ZERO)
+	if body is RockInstance:
+		body.cash_value += 2
+		body.hit_by_player(100, Vector2.ZERO)
 	
 func expand_blast_radius() -> void:
 	#return
@@ -564,7 +572,7 @@ func expand_blast_radius() -> void:
 	
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 13.0, 0.75)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 7.0, 0.75)
 	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.75)
 	#tween.tween_interval(0.1)
 	await tween.finished

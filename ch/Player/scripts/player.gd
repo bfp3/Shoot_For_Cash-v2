@@ -299,7 +299,7 @@ func _process(delta: float) -> void:
 	#handle_keyboard_crosshair(delta)
 	update_gun_look()
 	handle_scope_shrink(delta)
-	handle_pan_keyboard(delta)
+	#handle_pan_keyboard(delta)
 	
 func update_gun_look() -> void:
 

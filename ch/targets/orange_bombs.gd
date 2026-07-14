@@ -15,18 +15,22 @@ extends Node3D
 
 @export var round_manager : RoundManager
 
-func launch_pineapple(body) -> void:
-	return
-	round_manager.pineapple_mode = true
+func launch_orange(pos : Vector3) -> void:
+	#round_manager.pineapple_mode = true
+	var body : Node3D
+	for i in get_children():
+		if i.rock_activated == false:
+			body = i
+			break
+			
+	if body == null:
+		return
 	body.update_active()
 	
-	# 50% chance sideways, 50% chance horizontal launch
-	var sideways := randf() < 0.5
-
 	#if sideways:
 	body.exit_side = body.ExitSide.TOP
 	# Original vertical/sideways launch
-	body.global_position.x = randi_range(-8, 8)
+	body.global_position.x = pos.x
 
 	var x_variation = randf_range(-1.0, 1.0)
 	var upward_force = randf_range(9.5, 10.0)
@@ -40,40 +44,8 @@ func launch_pineapple(body) -> void:
 	body.apply_central_impulse(impulse)
 	body.start_timer()
 
-	#else:
-		## 50/50 chance of left->right or right->left
-		#var shoot_from_left := randf() < 0.5
-#
-		#var force = (
-			#randf_range(9.5, 10.0)
-			#* body.force_multiplier
-			#* 1.5
-			#* body.pulse_magnitude
-		#)
-#
-		#if shoot_from_left:
-			#body.exit_side = body.ExitSide.RIGHT
-			#body.global_position = left_marker.global_position
-			#body.apply_central_impulse(Vector3(-force, 0.0, 0.0))
-			#body.start_timer()
-		#else:
-			#body.exit_side = body.ExitSide.LEFT
-			#body.global_position = right_marker.global_position
-			#body.apply_central_impulse(Vector3(force, 0.0, 0.0))
-			#body.start_timer()
 
 
-
-func pineapple_round_1() -> void:
-	launch_pineapple(orange)
-
-
-func pineapple_round_2() -> void:
-	launch_pineapple(orange_2)
-
-
-func pineapple_round_3() -> void:
-	launch_pineapple(orange_3)
 	
 func stop_pineapples() -> void:
 	await get_tree().create_timer(2.0).timeout

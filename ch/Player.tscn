@@ -787,8 +787,8 @@ angular_velocity_min = -1.6093254e-05
 angular_velocity_max = -1.6093254e-05
 angular_velocity_curve = SubResource("CurveTexture_jhyh6")
 gravity = Vector3(0, 0, 0)
-scale_min = 0.19999999
-scale_max = 0.29999998
+scale_min = 0.39999998
+scale_max = 0.5
 scale_curve = SubResource("CurveTexture_fkfg0")
 color_ramp = ExtResource("39_11n43")
 emission_curve = SubResource("CurveTexture_daqgf")
@@ -2806,7 +2806,7 @@ material_override = SubResource("ShaderMaterial_gbs8w")
 cast_shadow = 0
 emitting = false
 amount = 1
-lifetime = 0.5
+lifetime = 0.9
 one_shot = true
 explosiveness = 1.0
 fixed_fps = 60
@@ -2829,6 +2829,7 @@ draw_pass_1 = SubResource("QuadMesh_rui0b")
 
 [node name="Smoke_quick" type="GPUParticles3D" parent="ShootWallVFX" unique_id=391529345]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -0.5)
+visible = false
 cast_shadow = 0
 emitting = false
 amount = 1

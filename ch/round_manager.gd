@@ -1,6 +1,8 @@
 extends Node
 class_name RoundManager
 
+@export var rounds_until_shop := 3
+
 const LEVEL_LAYOUT_00_OPENING_SCENE = preload('uid://88s7u86w4lfr')
 const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
 const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
@@ -46,6 +48,7 @@ enum RoundState {
 	ROUND_START,
 	ROUND_IN_PROGRESS,
 	ROUND_END,
+	CHECK_ROUNDS,
 	TALLY_START,
 	TALLY_END,
 	SHOP_START,
@@ -108,6 +111,9 @@ func enter_state(new_state : RoundState) -> void:
 		RoundState.ROUND_END:
 			update_round_end()
 			
+		RoundState.CHECK_ROUNDS:
+			update_check_rounds()
+			
 		RoundState.TALLY_START:
 			update_tally_start()
 			
@@ -157,7 +163,7 @@ func update_round_start() -> void:
 	if gl_PlayerState.dataset.round == 0:
 		music_manager.first_round()
 	
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
 	
 	if gl_PlayerState.dataset.power_balloon_buster > 0:
 		player.start_player()
@@ -207,10 +213,8 @@ func update_round_start() -> void:
 
 	
 	
-	
-	
-	
-	round_timer.enter_state(round_timer.State.RESTARTING)
+	if rounds_until_shop == 3:
+		round_timer.enter_state(round_timer.State.RESTARTING)
 	player.update_player_stats()
 	player.start_player()
 	music_manager.shop_music_raise_volume()
@@ -250,36 +254,33 @@ func update_round_in_progress() -> void:
 
 
 func update_round_end() -> void:
+
 	if round_finished:
 		return
-	
-	
-	
-	if pineapple_mode:
-		pineapple_mode = false
-		await get_tree().process_frame
+	pineapple_mode = false
+	#if pineapple_mode:
+	#
+		#await get_tree().process_frame
 		
-		
-	$'../Pineapple'.stop_pineapples()
-	player.round_finished(true)
+	
+	#$'../Pineapple'.stop_pineapples()
+	#player.round_finished(true)
 	
 	round_finished = true
 	birds.start_birds()
 	
 	await get_tree().create_timer(0.25).timeout
 
-	stop_timer()
+	#stop_timer()
 	
 	music_manager.shop_music_lower_volume()
-	
-	if confetti_cannon:
-		confetti_cannon.start_confetti()
 		
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
 
 	while bullet_active == true:
 		await get_tree().process_frame
+
 		bullet_active_counter += 1.0
 
 		if bullet_active_counter > 60.0:
@@ -292,7 +293,6 @@ func update_round_end() -> void:
 		success = false
 		#perfect_score_feedback()
 		if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
-			
 			player.round_finished(false)
 			#rocks_container.enter_state(rocks_container.State.INACTIVE)
 			#await get_tree().create_timer(0.1).timeout
@@ -303,33 +303,43 @@ func update_round_end() -> void:
 			pineapple_mode = true
 			pineapple_round()
 			while pineapple_mode:
-				
 				await get_tree().process_frame
 					
-			stop_player()
+			#stop_player()
 		
 			await get_tree().create_timer(1.0).timeout
-			enter_state(RoundState.TALLY_START)
+			enter_state(RoundState.CHECK_ROUNDS)
 		
 		else:
-			stop_player()
+			#stop_player()
 			await get_tree().create_timer(1.0).timeout
-			enter_state(RoundState.TALLY_START)
+			enter_state(RoundState.CHECK_ROUNDS)
 		
 	else:
-		stop_player()
-		await get_tree().create_timer(1.0).timeout
-		enter_state(RoundState.TALLY_START)
+		
+		enter_state(RoundState.CHECK_ROUNDS)
 	
 	if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
 		EventBus.instance.pineapple_round_used.emit()
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
+
+func update_check_rounds() -> void:
+	rounds_until_shop = clamp(rounds_until_shop - 1, 0, 100)
 	
+	if round_timer.time_left <= 0.0: #rounds_until_shop == 0 || 
+		rounds_until_shop = 3
+		player.round_finished(true)
+		stop_player()
+		await get_tree().create_timer(1.0).timeout
+		enter_state(RoundState.TALLY_START)
+	else:
+		enter_state(RoundState.ROUND_START)
+		
+
 
 func update_tally_start() -> void:
 	#$'../PlayerBalloon'.reposition_balloon()
 	check_how_many_rounds_left()
-	
 	EventBus.instance.open_tally_card.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -348,7 +358,7 @@ func update_shop_end() -> void:
 	#red_circle.display_circle()
 	hud_system.reset_hud()
 	#await get_tree().create_timer(0.5).timeout
-	
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	enter_state(RoundState.ROUND_START)
 	if current_round > 2:
 		$'../PlayerBalloon'.check_balloons_status()
@@ -560,7 +570,6 @@ func perfect_score_feedback() -> void:
 	player.perfect_score()
 
 func pineapple_round() -> void:
-
 	
 	%PerfectParticles.emitting = true
 	%PerfectParticles2.emitting = true
@@ -579,18 +588,22 @@ func pineapple_round() -> void:
 	
 	while gl_PlayerState.dataset.total_pineapples_destroyed < 3:
 		await get_tree().process_frame
+		
 	#await get_tree().create_timer(2.5).timeout
 		
-	if gl_PlayerState.dataset.total_pineapples_destroyed >= 3:
+	if gl_PlayerState.dataset.total_pineapples_destroyed > 2:
+
 		%PerfectPineappleRound.play(0.5)
 		pineapple_mode = false
 	
 		
 	else:
 		pineapple_mode = false
+	
+	
 	$'../Pineapple'.stop_pineapples()
 	EventBus.instance.pineapple_round_used.emit()
-
+	
 
 
 	
@@ -686,3 +699,6 @@ func increase_rock_limit() -> void:
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed('backward'):
 		seq_rock_pointer = -1
+		print(pineapple_mode)
+		pineapple_mode = false
+		#enter_state(RoundState.TALLY_START)

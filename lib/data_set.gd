@@ -56,6 +56,7 @@ var dataset_float : Dictionary = {
 	,"rock_type_4"			: [120,		30]
 	
 	,"pineapple"				: [10,		1]
+	,"orange"					: [3,		1]
 	
 	# Hazards
 	# item name, 			$value, 	health

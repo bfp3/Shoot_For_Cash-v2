@@ -114,7 +114,6 @@ func update_prepare_rocks() -> void:
 		
 		#type = 0
 		type = int(column / 10)
-		print(type, " TYPE")
 		active_bodies[pointer].rock_type = type
 		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
 		pointer +=1
@@ -351,7 +350,7 @@ func bounce_rocks() -> void:
 		
 		await get_tree().create_timer(0.1).timeout
 		spin_rocks()
-		await get_tree().create_timer(0.2).timeout
+		#await get_tree().create_timer(0.2).timeout
 		
 		if counter >= rocks_limit:
 			break
