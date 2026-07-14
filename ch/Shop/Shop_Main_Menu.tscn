@@ -394,6 +394,20 @@ hold_duration = 0.1
 upgrade_type = "balloon_buster"
 upgrade_name = "Balloon Buster"
 
+[node name="PineappleRound" parent="." unique_id=497395272 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 830.0
+offset_top = 204.0
+offset_right = 1040.0
+offset_bottom = 454.0
+upgrade_icon = ExtResource("17_cn8lj")
+shop_main_menu = NodePath("..")
+hold_duration = 0.1
+upgrade_type = "bonus_round_pineapples"
+upgrade_name = "Pineapples"
+
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1832678188]
 layout_mode = 1
 anchors_preset = 15
@@ -600,19 +614,6 @@ shop_main_menu = NodePath("../../../../../../..")
 hold_duration = 0.1
 upgrade_type = "gun"
 upgrade_name = "New Gun"
-
-[node name="PineappleRound" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=497395272 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 358.0
-offset_top = 30.0
-offset_right = 568.0
-offset_bottom = 126.0
-upgrade_icon = ExtResource("17_cn8lj")
-shop_main_menu = NodePath("../../../../../../..")
-hold_duration = 0.1
-upgrade_type = "bonus_round_pineapples"
-upgrade_name = "Pineapples"
 
 [node name="AvailableUpgrades" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=499030465]
 layout_mode = 1

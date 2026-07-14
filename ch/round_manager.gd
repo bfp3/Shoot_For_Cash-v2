@@ -186,17 +186,20 @@ func update_round_start() -> void:
 	
 	
 	current_rock_sequence = [
-		[3,3,1]
-		,[2,2,6]
-		,[3,3,1]
-
-		,[2,2,14,4]
-		,[2,2,14,4]
-		,[3,3,1,1,8]
+		[3,33,31]
+		,[3,33,31]
+		,[3,33,31]
 		
-		,[3,3,1,1,18]
-		,[3,3,1,1,18, 18]
-		,[3,3,1,1,18, 18]
+		#,[2,2,6]
+		#,[3,3,1]
+#
+		#,[2,2,14,4]
+		#,[2,2,14,4]
+		#,[3,3,1,1,8]
+		#
+		#,[3,3,1,1,18]
+		#,[3,3,1,1,18, 18]
+		#,[3,3,1,1,18, 18]
 		#,[3,13,1,1]
 		#,[2,2,14,4]
 		#,[3,13,1,13]
@@ -326,7 +329,8 @@ func update_round_end() -> void:
 func update_check_rounds() -> void:
 	rounds_until_shop = clamp(rounds_until_shop - 1, 0, 100)
 	
-	if round_timer.time_left <= 0.0: #rounds_until_shop == 0 || 
+	if rounds_until_shop == 0:
+	#if round_timer.time_left <= 0.0: #rounds_until_shop == 0 ||
 		rounds_until_shop = 3
 		player.round_finished(true)
 		stop_player()

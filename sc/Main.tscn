@@ -14,6 +14,7 @@
 [ext_resource type="AudioStream" uid="uid://bxdiqr7ros2p" path="res://sfx/night-noises.ogg" id="13_ec2we"]
 [ext_resource type="AudioStream" uid="uid://v7p2bicypxo7" path="res://sfx/oasisWorld.ogg" id="14_ec2we"]
 [ext_resource type="AudioStream" uid="uid://bne6g3faj2y0m" path="res://sfx/Windmill_YokoKanno.ogg" id="14_mdemw"]
+[ext_resource type="AudioStream" uid="uid://deuc7baq17txl" path="res://sfx/Windmill_Sunburst_Your_name.ogg" id="15_heewt"]
 [ext_resource type="AudioStream" uid="uid://bblf41t53etln" path="res://sfx/Windmill_Sprint.ogg" id="15_ymbdo"]
 [ext_resource type="AudioStream" uid="uid://bk6dsl4ownky8" path="res://sfx/USERSONG164.ogg" id="16_ec2we"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="17_lysu5"]
@@ -971,7 +972,7 @@ process_material = SubResource("ParticleProcessMaterial_wtxnc")
 
 [node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("current_song", "opening_song")]
 script = ExtResource("3_r5w5l")
-current_song = NodePath("YokoKanno")
+current_song = NodePath("Windmill")
 opening_song = NodePath("Opening_song")
 background_music_vol = -60.0
 
@@ -1019,6 +1020,10 @@ volume_db = -30.0
 
 [node name="YokoKanno" type="AudioStreamPlayer" parent="Music" unique_id=1383563011]
 stream = ExtResource("14_mdemw")
+volume_db = -40.0
+
+[node name="Windmill" type="AudioStreamPlayer" parent="Music" unique_id=109703835]
+stream = ExtResource("15_heewt")
 volume_db = -40.0
 
 [node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
@@ -1379,7 +1384,6 @@ debug_color = Color(0, 1, 0, 1)
 unique_name_in_owner = true
 transform = Transform3D(-1, 8.379102e-09, 8.70203e-08, 0, 0.9953962, -0.09584575, -8.742278e-08, -0.09584575, -0.9953962, -0.74, -0.875, 0.5)
 scope_min_target_circle = 15.0
-can_right_click_shoot = true
 roundManager = NodePath("../Round_manager")
 rotation_speed = 0.8
 
@@ -2717,7 +2721,7 @@ theme = SubResource("Theme_vrkmk")
 [node name="NextRound2" parent="MainGameCanvasLayer/Shop_Main_Menu/TicketPurchasedPopUp/Control/NextRound" parent_id_path=PackedInt32Array(973405492, 452825858) index="2" unique_id=181569061]
 theme = SubResource("Theme_vrkmk")
 
-[node name="Reroll" parent="MainGameCanvasLayer/Shop_Main_Menu" index="13" unique_id=1776584902]
+[node name="Reroll" parent="MainGameCanvasLayer/Shop_Main_Menu" index="14" unique_id=1776584902]
 theme = SubResource("Theme_vrkmk")
 
 [node name="Reroll_label" parent="MainGameCanvasLayer/Shop_Main_Menu/Reroll" index="0" unique_id=2110889887]
@@ -2891,10 +2895,12 @@ script = ExtResource("63_nn6vd")
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 7, 6.5, 0)
+visible = false
 balloon_type = 3
 
 [node name="Balloon36" parent="Balloon_container" unique_id=121622778 instance=ExtResource("69_6j2wd")]
 transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 5, 6.5, 0)
+visible = false
 balloon_type = 3
 
 [node name="Balloon37" parent="Balloon_container" unique_id=446367018 instance=ExtResource("69_6j2wd")]
@@ -3005,12 +3011,6 @@ round_manager = NodePath("../Round_manager")
 [node name="PlayerBalloon" parent="PlayerBalloon" unique_id=966203961 instance=ExtResource("68_wtxnc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 8, 5.2250004)
 
-[node name="PlayerBalloon2" parent="PlayerBalloon" unique_id=91413864 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 3, 5.225)
-
-[node name="PlayerBalloon3" parent="PlayerBalloon" unique_id=739864791 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4, 4.3, 5.225)
-
 [node name="Settings_pause_menu" parent="." unique_id=1950114573 instance=ExtResource("64_tnw34")]
 
 [node name="BonusTimeContainer" type="Node3D" parent="." unique_id=650695620]
@@ -3023,6 +3023,8 @@ collision_mask = 3
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1559609402]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14, 23)
+visible = false
+monitoring = false
 monitorable = false
 script = ExtResource("75_mdemw")
 current_multiplier = 3
@@ -3044,6 +3046,8 @@ outline_size = 2
 
 [node name="Area3D2" type="Area3D" parent="." unique_id=258656149]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 6.6, 23)
+visible = false
+monitoring = false
 monitorable = false
 script = ExtResource("75_mdemw")
 current_multiplier = 1
@@ -3065,6 +3069,8 @@ outline_size = 2
 
 [node name="Area3D3" type="Area3D" parent="." unique_id=1786278470]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 1.6, 23)
+visible = false
+monitoring = false
 monitorable = false
 script = ExtResource("75_mdemw")
 current_multiplier = 3
@@ -3086,6 +3092,7 @@ outline_size = 2
 
 [node name="Seperator" type="MeshInstance3D" parent="." unique_id=937202211]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.1, 26)
+visible = false
 mesh = SubResource("BoxMesh_mdemw")
 skeleton = NodePath("../BonusCash")
 

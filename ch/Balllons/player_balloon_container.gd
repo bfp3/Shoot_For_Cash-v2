@@ -9,12 +9,7 @@ var blue_offset_y := 0
 @export var round_manager : RoundManager 
 
 @onready var balloon: StaticBody3D = $PlayerBalloon
-@onready var balloon_2: StaticBody3D = $PlayerBalloon2
-@onready var balloon_3: StaticBody3D = $PlayerBalloon3
-
 @onready var balloon_pos_1: Marker3D = $'../Balloon_wait_positions/Balloon_pos_1'
-@onready var balloon_pos_2: Marker3D = $'../Balloon_wait_positions/Balloon_pos_2'
-@onready var balloon_pos_3: Marker3D = $'../Balloon_wait_positions/Balloon_pos_3'
 
 var current_balloon = null
 var balloons_popped := 0
@@ -28,7 +23,7 @@ func _ready() -> void:
 	configure_starting_balloons()
 	
 func configure_starting_balloons() -> void:
-	var balloon_list := [balloon, balloon_2, balloon_3]
+	var balloon_list := [balloon]
 
 	for i in range(balloon_list.size()):
 		if i >= starting_balloons:
@@ -49,8 +44,6 @@ func move_all_ballons_back() -> void:
 
 	var wait_positions = [
 		balloon_pos_1,
-		balloon_pos_2,
-		balloon_pos_3
 	]
 
 	var index := 0
@@ -196,7 +189,7 @@ func start_game_over() -> void:
 	round_manager.start_game_over()
 	
 func move_ballons() -> void:
-	var chosen_balloon = [balloon,balloon_2,balloon_3].pick_random()
+	var chosen_balloon = [balloon].pick_random()
 	
 	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	tween.tween_property(chosen_balloon, "global_position:x", -12.0, 20.0)
@@ -205,7 +198,7 @@ func move_ballons() -> void:
 	await tween.finished
 	
 func move_ballons_2() -> void:
-	var chosen_balloon = [balloon,balloon_2,balloon_3].pick_random()
+	var chosen_balloon = [balloon].pick_random()
 	
 	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	tween.tween_property(chosen_balloon, "global_position:z", -1.0, 3.0)
@@ -223,9 +216,7 @@ func restart() -> void:
 	
 	var balloon_list = [balloon] #, balloon_2, balloon_3]
 	var wait_positions = [
-		balloon_pos_1,
-		balloon_pos_2,
-		balloon_pos_3
+		balloon_pos_1
 	]
 	
 	for i in range(balloon_list.size()):

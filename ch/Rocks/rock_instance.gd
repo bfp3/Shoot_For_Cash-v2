@@ -308,12 +308,12 @@ func setup_rock_type() -> void:
 			rock_type_name 		= "rock_type_1"
 
 			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
-			var base_cash   := int(gl_DataSet.get_value("rock_type_1", 0))
+			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
 			var base_scale  := Vector3.ONE * 0.35
 
 			# Random subtype: 1x / 2x / 3x
 			#var size_multiplier : int = [1, 2].pick_random() #, 3].pick_random()
-			var size_multiplier_float : float = 1.35
+			var size_multiplier_float : float = randf_range (1.2, 1.35)
 			var size_multiplier_int : int = 1
 			$Mesh.scale = Vector3.ONE
 			health = base_health * size_multiplier_int
@@ -366,23 +366,50 @@ func setup_rock_type() -> void:
 			force_mult.clear()
 			force_mult = [4,6,7]
 			force_mult_index = 0
-
+		
+		
+		# Rock Type 3
 		RockSize.LARGE:
+
+			var base_scale  := Vector3.ONE * 0.35
+			var size_multiplier_float : float = randf_range (1.2, 1.35)
+			var size_multiplier_int : int = 1
 			current_rock_type 	= "Gold"
 			rock_type_name 		= "rock_type_3"
-			health 				= int(gl_DataSet.get_value("rock_type_3", 1))
-			cash_value 			= int(gl_DataSet.get_value("rock_type_3", 0))
-			large_rock.visible 	= true
-			main_col.scale 		= Vector3.ONE * 0.3
-			current_mesh 		= large_rock
-			assign_random_mesh(current_mesh)
-			current_mesh.scale  = Vector3.ONE * 0.7
+			health 				= 1
 			max_health = health
-			rock_type_gravity_scale = 0.4
+			cash_value 			= 2
+			large_rock.visible 	= true
+			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
+			current_mesh 		= large_rock
+			current_mesh.scale = base_scale * size_multiplier_float
+			assign_random_mesh(current_mesh)
+			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
+			$Mesh.scale = Vector3.ONE
 			linear_damp = 0.5
 			force_mult.clear()
 			force_mult = [3,4]
 			force_mult_index = 0
+
+
+
+#
+		#RockSize.LARGE:
+			#current_rock_type 	= "Gold"
+			#rock_type_name 		= "rock_type_3"
+			#health 				= int(gl_DataSet.get_value("rock_type_3", 1))
+			#cash_value 			= int(gl_DataSet.get_value("rock_type_3", 0))
+			#large_rock.visible 	= true
+			#main_col.scale 		= Vector3.ONE * 0.3
+			#current_mesh 		= large_rock
+			#assign_random_mesh(current_mesh)
+			#current_mesh.scale  = Vector3.ONE * 0.7
+			#max_health = health
+			#rock_type_gravity_scale = 0.4
+			#linear_damp = 0.5
+			#force_mult.clear()
+			#force_mult = [3,4]
+			#force_mult_index = 0
 			
 		RockSize.HUGE:
 			current_rock_type 	= "Red Rock"
@@ -720,7 +747,7 @@ func start_destroyed_process() -> void:
 	enter_state(State.HIT)
 	if !rock_has_been_logged:
 		rock_has_been_logged = true
-		
+
 		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
 	
 	#if !destroyed_by_marked:
@@ -733,7 +760,8 @@ func start_destroyed_process() -> void:
 	play_destroy_sfx()
 	$Marked.hide()
 	icon.hide()
-	money_label_3d.money_is_money(global_position, cash_value)
+	if cash_value > 0:
+		money_label_3d.money_is_money(global_position, cash_value)
 	
 	set_collision_layer_value(1, false)
 
