@@ -481,7 +481,7 @@ func shop_music_raise_volume() -> void:
 	#tween.tween_property(bg_music, "volume_db", -60.0, 0.25)
 	#tween.tween_property(bg_music, "volume_db", -54.0, 1.0)
 	
-	
+
 	
 	
 func shop_music_lower_volume() -> void:
@@ -582,3 +582,13 @@ func restart() -> void:
 	update_shop_labels()
 	update_cost_label()
 	enter_state(SkillState.CLOSE_MENU)
+	
+	
+func check_the_amount_of_balloons_in_play() -> int:
+	var balloon_container := get_tree().get_first_node_in_group('balloon_container')
+	if balloon_container:
+		return balloon_container.balloons_in_play
+		
+	else:
+		return 0
+	

@@ -114,6 +114,7 @@ func get_cash() -> Dictionary:
 func add_cash(value : int) -> void:
 	dataset.cash = dataset.cash + value
 	dataset.earnings = dataset.earnings + value
+	reset_cash_debug_tool()
 	
 func log_hit(item:String, item_type:String, value:int):
 	var rock_data : Dictionary = gl_DataSet.dataset_float

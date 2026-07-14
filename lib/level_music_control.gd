@@ -11,6 +11,8 @@ var default_volume_map : Dictionary = {}
 @export var current_song : AudioStreamPlayer
 @export var opening_song : AudioStreamPlayer
 
+@export var background_music_vol := -40.0
+
 func _ready() -> void:
 	default_volumes()
 	
@@ -59,7 +61,7 @@ func shop_music_raise_volume() -> void:
 	if current_song == null:
 		return
 		
-	var targ_volume := -42.0
+	var targ_volume := background_music_vol
 		
 	var tween := create_tween()
 	tween.tween_property(current_song, "volume_db", targ_volume, 3.0)

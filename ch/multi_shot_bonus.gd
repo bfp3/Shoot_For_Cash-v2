@@ -19,7 +19,9 @@ const MULTI_SHOT_DATA := {
 func multi_shot(multiplier: int, pos : Vector3) -> void:
 	if !MULTI_SHOT_DATA.has(multiplier):
 		return
-
+		
+	start_oranges(multiplier)
+		
 	var data = MULTI_SHOT_DATA[multiplier]
 
 	gl_PlayerState.add_cash(data.reward)
@@ -46,3 +48,11 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 
 	tween.tween_property(multi_label, "modulate:a", 0.0, 0.2)
 	tween.parallel().tween_property(multi_label, "outline_modulate:a", 0.0, 0.2)
+
+
+
+func start_oranges(multiplier : int= 2) -> void:
+	var _pineapple_container := get_tree().get_first_node_in_group('orange_container')
+	for i in range(multiplier - 1):
+		_pineapple_container.launch_pineapple(_pineapple_container.get_children().pick_random())
+		await get_tree().create_timer(0.5).timeout

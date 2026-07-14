@@ -106,9 +106,20 @@ func update_prepare_rocks() -> void:
 			break
 	
 	assign_manual_rock_positions(active_bodies)
+
+	var type : int
+	var pointer : int = 0
 	
-	for body in active_bodies:
-		body.enter_state(body.State.PREPARE_ROCK)
+	for column in manual_rock_sequence:
+		
+		#type = 0
+		type = int(column / 10)
+		print(type, " TYPE")
+		active_bodies[pointer].rock_type = type
+		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
+		pointer +=1
+
+		
 	
 func update_pulse_rocks() -> void:
 	splash_zone.activate_splash_zone()
@@ -197,6 +208,8 @@ func assign_rock_positions(bodies: Array) -> void:
 
 func column_to_x(column: int) -> float:
 	# Column 1 -> 7, column 2 -> 5, ... column 8 -> -7.
+	column = column % 10
+	
 	var clamped_column := clampi(column, 1, COLUMN_COUNT)
 	if clamped_column != column:
 		push_warning("RockManager: column %d out of range [1, %d], clamped to %d." % [column, COLUMN_COUNT, clamped_column])

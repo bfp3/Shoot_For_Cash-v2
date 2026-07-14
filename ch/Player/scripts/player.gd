@@ -296,10 +296,10 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
-	handle_keyboard_crosshair(delta)
+	#handle_keyboard_crosshair(delta)
 	update_gun_look()
 	handle_scope_shrink(delta)
-	#handle_pan_keyboard(delta)
+	handle_pan_keyboard(delta)
 	
 func update_gun_look() -> void:
 
@@ -591,7 +591,9 @@ func fire_weapon() -> void:
 		
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
-
+	
+	
+	
 	shot_count = clamp(shot_count - 1, 0, 100)
 	%ShotRemaining.text = str(shot_count).pad_zeros(2)
 	if shot_count <= 0:
@@ -599,6 +601,7 @@ func fire_weapon() -> void:
 		print("shot count reached")
 		EventBus.instance.end_round_rock_missed.emit()
 	
+
 
 func penalize_early_fire() -> void:
 	current_gun_fire_rate_cooldown = power_gun_fire_rate

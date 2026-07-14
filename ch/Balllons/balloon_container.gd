@@ -8,6 +8,9 @@ var new_round_checker := 0
 @onready var balloon_3: StaticBody3D = $Balloon3
 @onready var balloon_4: StaticBody3D = $Balloon4
 
+
+var balloons_in_play := 0
+
 func _ready() -> void:
 	move_all_ballons_back()
 	#move_all_ballons_below()
@@ -30,6 +33,8 @@ func add_white_balloon_back_into_list(_balloon: StaticBody3D) -> void:
 	if !is_instance_valid(balloon):
 		return
 	
+	balloons_in_play = clamp(balloons_in_play - 1, 0, get_children().size())
+	
 	await get_tree().create_timer(4.0).timeout
 	# Return to initial state
 	_balloon.behind_player = true
@@ -40,7 +45,14 @@ func add_white_balloon_back_into_list(_balloon: StaticBody3D) -> void:
 	move_child(_balloon, get_child_count() - 1)
 	
 func add_balloon() -> void:
-	for l in range(2):
+	return
+	var _counter := 2
+	for l in range(_counter):
+		for i in get_children():
+			if i is StaticBody3D and i.behind_player:
+				balloons_in_play = clamp(balloons_in_play + 1, 0, get_children().size())
+	
+	for l in range(_counter):
 		for i in get_children():
 			if i is StaticBody3D and i.behind_player:
 				i.move_balloon_in_front_of_player()
@@ -130,6 +142,7 @@ func restart() -> void:
 	
 	
 func _input(event: InputEvent) -> void:
+	return
 	if Input.is_action_just_pressed('backward'):
 		for i in get_children():
 			if i is StaticBody3D and i.behind_player:

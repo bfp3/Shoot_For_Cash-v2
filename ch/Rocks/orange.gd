@@ -532,7 +532,6 @@ func start_timer() -> void:
 
 func _on_hit_wall_timer_timeout() -> void:
 	check_position_for_wall()
-
 	if is_deactivated:
 		$hit_wall_timer.stop()
 		return
@@ -548,9 +547,9 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			return
 		body.destroyed_by_shratnel()
 		
-	if body is RockInstance:
-		body.cash_value += 2
-		body.hit_by_player(100, Vector2.ZERO)
+	#if body is RockInstance:
+		#body.cash_value += 2
+		#body.hit_by_player(100, Vector2.ZERO)
 	
 func expand_blast_radius() -> void:
 	#return

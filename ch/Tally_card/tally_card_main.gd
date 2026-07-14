@@ -373,8 +373,8 @@ func feedback_effects() -> void:
 		var bonus_cash = int(gl_PlayerState.dataset.cash * 0.5)
 		if bonus_cash <= 1:
 			bonus_cash = 2
-		gl_PlayerState.add_cash(bonus_cash)
-		$"CenterContainer/100_percent/BonusCashLabel".text = "[color=#ffc700]+[/color][color=#42d100]$" + str(bonus_cash)
+		gl_PlayerState.add_cash(10)
+		$"CenterContainer/100_percent/BonusCashLabel".text = "[color=#ffc700]+[/color][color=#42d100]$" + str(10)
 		%perfectScoreParticles.emitting = true
 		await get_tree().create_timer(0.25).timeout
 		

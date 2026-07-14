@@ -68,10 +68,12 @@
 [ext_resource type="PackedScene" uid="uid://bkeli6dyx0ytw" path="res://ch/demo_end_screen/Intro_prompt.tscn" id="66_mdemw"]
 [ext_resource type="PackedScene" uid="uid://dqvfwdvbr3hgi" path="res://ch/demo_end_screen/game_won_prompt.tscn" id="67_qmj5w"]
 [ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
+[ext_resource type="Script" uid="uid://bns2a7l7rdc41" path="res://ch/targets/orange_bombs.gd" id="68_qmj5w"]
 [ext_resource type="Script" uid="uid://byuybau4gp23h" path="res://ch/Balllons/player_balloon_container.gd" id="68_r5w5l"]
 [ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="68_wtxnc"]
 [ext_resource type="PackedScene" uid="uid://gmq0002obs0u" path="res://ch/targets/bonus_time_target.tscn" id="68_wv0tc"]
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
+[ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
 [ext_resource type="Script" uid="uid://dn76e05h17t31" path="res://scripts/multiplier_zones.gd" id="75_mdemw"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="StyleBox" uid="uid://eu6ax7sn7s7" path="res://res/card_icon_border_stylebox.tres" id="89_ecu2c"]
@@ -967,9 +969,11 @@ explosiveness = 0.8
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_wtxnc")
 
-[node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("opening_song")]
+[node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("current_song", "opening_song")]
 script = ExtResource("3_r5w5l")
+current_song = NodePath("YokoKanno")
 opening_song = NodePath("Opening_song")
+background_music_vol = -60.0
 
 [node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
 stream = ExtResource("5_ec2we")
@@ -1187,204 +1191,164 @@ outline_size = 3
 [node name="Rock_Instance" parent="Rocks/Container_1" unique_id=1089661090 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4728577, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance2" parent="Rocks/Container_1" unique_id=641614515 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8336112, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance3" parent="Rocks/Container_1" unique_id=977217555 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.658868, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance4" parent="Rocks/Container_1" unique_id=614925084 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.798102, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance5" parent="Rocks/Container_1" unique_id=1804095401 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5083055, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance6" parent="Rocks/Container_1" unique_id=1648636095 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.63919, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance7" parent="Rocks/Container_1" unique_id=1588486015 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.451482, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance8" parent="Rocks/Container_1" unique_id=2122944651 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5166283, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance9" parent="Rocks/Container_1" unique_id=1306876008 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.997283, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance10" parent="Rocks/Container_1" unique_id=702490276 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4127793, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance11" parent="Rocks/Container_1" unique_id=1826283916 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6957083, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance12" parent="Rocks/Container_1" unique_id=1936738185 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4926226, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance13" parent="Rocks/Container_1" unique_id=511030969 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.390077, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance14" parent="Rocks/Container_1" unique_id=869067105 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.036045, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance15" parent="Rocks/Container_1" unique_id=221535877 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3772593, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance16" parent="Rocks/Container_1" unique_id=559020077 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance17" parent="Rocks/Container_1" unique_id=1641853172 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7047248, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance18" parent="Rocks/Container_1" unique_id=931775137 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6097546, -2.89, 23.17)
 top_level = true
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance19" parent="Rocks/Container_1" unique_id=202729113 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance20" parent="Rocks/Container_1" unique_id=1000269966 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4504056, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance21" parent="Rocks/Container_1" unique_id=2125508842 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5271425, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance22" parent="Rocks/Container_1" unique_id=1578322430 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1663885, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance23" parent="Rocks/Container_1" unique_id=1625184715 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3411322, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance24" parent="Rocks/Container_1" unique_id=350188603 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2018981, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance25" parent="Rocks/Container_1" unique_id=1474058678 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4916945, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance26" parent="Rocks/Container_1" unique_id=752305719 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3608098, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance27" parent="Rocks/Container_1" unique_id=917312404 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5485182, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance28" parent="Rocks/Container_1" unique_id=207221846 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4833717, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance29" parent="Rocks/Container_1" unique_id=1378354028 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.002717, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance30" parent="Rocks/Container_1" unique_id=1390232069 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5872207, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance31" parent="Rocks/Container_1" unique_id=1517070973 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3042917, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance32" parent="Rocks/Container_1" unique_id=827979456 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5073776, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance33" parent="Rocks/Container_1" unique_id=1527090848 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.609923, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance34" parent="Rocks/Container_1" unique_id=324006732 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9639549, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance35" parent="Rocks/Container_1" unique_id=1820558471 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.62274075, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance36" parent="Rocks/Container_1" unique_id=628520885 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3602629, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance37" parent="Rocks/Container_1" unique_id=1237167454 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.295275, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance38" parent="Rocks/Container_1" unique_id=1582972785 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3902454, -2.89, 23.17)
 top_level = true
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance39" parent="Rocks/Container_1" unique_id=400853383 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3602629, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Rock_Instance40" parent="Rocks/Container_1" unique_id=632268749 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5495944, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-freeze_mine = true
 
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="Rocks" unique_id=951137588]
 stream = ExtResource("23_1i2h1")
@@ -2753,7 +2717,7 @@ theme = SubResource("Theme_vrkmk")
 [node name="NextRound2" parent="MainGameCanvasLayer/Shop_Main_Menu/TicketPurchasedPopUp/Control/NextRound" parent_id_path=PackedInt32Array(973405492, 452825858) index="2" unique_id=181569061]
 theme = SubResource("Theme_vrkmk")
 
-[node name="Reroll" parent="MainGameCanvasLayer/Shop_Main_Menu" index="12" unique_id=1776584902]
+[node name="Reroll" parent="MainGameCanvasLayer/Shop_Main_Menu" index="13" unique_id=1776584902]
 theme = SubResource("Theme_vrkmk")
 
 [node name="Reroll_label" parent="MainGameCanvasLayer/Shop_Main_Menu/Reroll" index="0" unique_id=2110889887]
@@ -2854,31 +2818,104 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="floor5/StaticBody3D" unique_id=908553122]
 shape = SubResource("ConvexPolygonShape3D_43pd7")
 
-[node name="Pineapple" type="Node3D" parent="." unique_id=859325861]
+[node name="Pineapple" type="Node3D" parent="." unique_id=859325861 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["pineapple_container"]]
 script = ExtResource("65_wtxnc")
+left_marker = NodePath("../Pineapple_markers/LeftMarker")
+right_marker = NodePath("../Pineapple_markers/RightMarker")
+round_manager = NodePath("../Round_manager")
 
 [node name="Pineapple" parent="Pineapple" unique_id=1539472592 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 24.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 force_multiplier = 1.1
 
 [node name="Pineapple2" parent="Pineapple" unique_id=1349360149 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 24.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 force_multiplier = 1.2
 
 [node name="Pineapple3" parent="Pineapple" unique_id=1506732277 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 24.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-force_multiplier = 1.3
+force_multiplier = 1.25
 
-[node name="LeftMarker" type="Marker3D" parent="Pineapple" unique_id=1406020988]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 24)
+[node name="Pineapple4" parent="Pineapple" unique_id=1660278769 instance=ExtResource("68_14r73")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
+physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+force_multiplier = 1.1
 
-[node name="RightMarker" type="Marker3D" parent="Pineapple" unique_id=1172610009]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 24)
+[node name="Pineapple5" parent="Pineapple" unique_id=1196451544 instance=ExtResource("68_14r73")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
+physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+force_multiplier = 1.2
 
-[node name="Balloon_container" type="Node3D" parent="." unique_id=906093422 groups=["restartable"]]
+[node name="Pineapple6" parent="Pineapple" unique_id=1502331167 instance=ExtResource("68_14r73")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
+physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+force_multiplier = 1.25
+
+[node name="Pineapple7" parent="Pineapple" unique_id=534356923 instance=ExtResource("68_14r73")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
+physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+force_multiplier = 1.1
+
+[node name="Pineapple8" parent="Pineapple" unique_id=402694434 instance=ExtResource("68_14r73")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
+physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+force_multiplier = 1.2
+
+[node name="Pineapple9" parent="Pineapple" unique_id=311037575 instance=ExtResource("68_14r73")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
+physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+force_multiplier = 1.25
+
+[node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["orange_container"]]
+script = ExtResource("68_qmj5w")
+left_marker = NodePath("../OrangeBombsMarkers/LeftMarker")
+right_marker = NodePath("../OrangeBombsMarkers/RightMarker")
+round_manager = NodePath("../Round_manager")
+
+[node name="Orange" parent="OrangeBombs" unique_id=1226943477 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange2" parent="OrangeBombs" unique_id=1044980419 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange3" parent="OrangeBombs" unique_id=63026475 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange4" parent="OrangeBombs" unique_id=1337323973 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange5" parent="OrangeBombs" unique_id=170169503 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange6" parent="OrangeBombs" unique_id=587617743 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="OrangeBombsMarkers" type="Node3D" parent="." unique_id=104155927 groups=["pineapple_container"]]
+
+[node name="LeftMarker" type="Marker3D" parent="OrangeBombsMarkers" unique_id=637739805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 23)
+
+[node name="RightMarker" type="Marker3D" parent="OrangeBombsMarkers" unique_id=751508645]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 23)
+
+[node name="Pineapple_markers" type="Node3D" parent="." unique_id=253776400 groups=["pineapple_container"]]
+
+[node name="LeftMarker" type="Marker3D" parent="Pineapple_markers" unique_id=784347114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 23)
+
+[node name="RightMarker" type="Marker3D" parent="Pineapple_markers" unique_id=2133183574]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 23)
+
+[node name="Balloon_container" type="Node3D" parent="." unique_id=906093422 groups=["balloon_container", "restartable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 22.5)
 script = ExtResource("63_nn6vd")
 
@@ -3018,7 +3055,7 @@ collision_mask = 3
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14, 23)
 monitorable = false
 script = ExtResource("75_mdemw")
-current_multiplier = 1
+current_multiplier = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1211976948]
 shape = SubResource("BoxShape3D_mdemw")
@@ -3039,6 +3076,7 @@ outline_size = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 6.6, 23)
 monitorable = false
 script = ExtResource("75_mdemw")
+current_multiplier = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D2" unique_id=605768313]
 shape = SubResource("BoxShape3D_qmj5w")
@@ -3059,7 +3097,7 @@ outline_size = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 1.6, 23)
 monitorable = false
 script = ExtResource("75_mdemw")
-current_multiplier = 4
+current_multiplier = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D3" unique_id=1491050159]
 shape = SubResource("BoxShape3D_swp41")

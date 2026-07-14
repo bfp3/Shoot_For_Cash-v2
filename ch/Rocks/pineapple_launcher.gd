@@ -3,13 +3,25 @@ extends Node3D
 @onready var pineapple = $Pineapple
 @onready var pineapple_2: RigidBody3D = $Pineapple2
 @onready var pineapple_3: RigidBody3D = $Pineapple3
-@onready var left_marker: Marker3D = $LeftMarker
-@onready var right_marker: Marker3D = $RightMarker
+
+@onready var pineapple_4: RigidBody3D = $Pineapple4
+@onready var pineapple_5: RigidBody3D = $Pineapple5
+@onready var pineapple_6: RigidBody3D = $Pineapple6
+@onready var pineapple_7: RigidBody3D = $Pineapple7
+@onready var pineapple_8: RigidBody3D = $Pineapple8
+@onready var pineapple_9: RigidBody3D = $Pineapple9
+
+
+@export var left_marker: Marker3D
+@export var right_marker: Marker3D
+
+@export var round_manager : RoundManager
 
 func launch_pineapple(body) -> void:
 	
+	round_manager.pineapple_mode = true
 	body.update_active()
-
+	
 	# 50% chance sideways, 50% chance horizontal launch
 	var sideways := randf() < 0.5
 
@@ -52,6 +64,8 @@ func launch_pineapple(body) -> void:
 			body.apply_central_impulse(Vector3(force, 0.0, 0.0))
 			body.start_timer()
 
+
+
 func pineapple_round_1() -> void:
 	launch_pineapple(pineapple)
 
@@ -68,3 +82,9 @@ func stop_pineapples() -> void:
 	pineapple.reset_stats()
 	pineapple_2.reset_stats()
 	pineapple_3.reset_stats()
+	pineapple_4.reset_stats()
+	pineapple_5.reset_stats()
+	pineapple_6.reset_stats()
+	pineapple_7.reset_stats()
+	pineapple_8.reset_stats()
+	pineapple_9.reset_stats()

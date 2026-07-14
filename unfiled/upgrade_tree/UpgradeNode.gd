@@ -338,7 +338,13 @@ func complete_purchase() -> void:
 	
 	guaranteed_until_purchased = false
 	
-	if sky_mine || balloon_buster:
+	if balloon_buster:
+		var _upgrade_name : String = "power_" + upgrade_type
+		var _power_level = gl_PlayerState.get_power_level(_upgrade_name)
+		if _power_level < shop_main_menu.check_the_amount_of_balloons_in_play():
+			pass
+	
+	if sky_mine:
 		var get_player = get_tree().get_first_node_in_group('Player')
 		if get_player:
 			get_player.apply_sky_mine()

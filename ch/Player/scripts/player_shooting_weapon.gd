@@ -258,6 +258,7 @@ func shoot_target() -> void:
 
 	round_manager.bullet_active = true
 
+	
 	_reset_pitch_adjustment()
 
 	var double_power: bool = get_parent()._scope_at_min
@@ -542,8 +543,11 @@ func wait_for_all_rocks_destroyed(rocks: Array) -> void:
 func activate_multishot_bonus(rock_count: int) -> void:
 	var multi_shot := get_tree().get_first_node_in_group('multi_shot')
 	multi_shot.multi_shot(rock_count, temp_label_pos)
-
-			
+	
+	#%ComboMode.start()
+	
+	
+	
 			
 func Xshoot_bullet_without_target() -> void:
 	if auto_fire:

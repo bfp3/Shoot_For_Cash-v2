@@ -10,6 +10,7 @@ const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
 var pitch_adjustment := 0.02
 
+var rock_type := 0
 
 const ROCK_01 = preload('uid://c2pmyrm3e4ty5')
 const ROCK_02 = preload('uid://84ianb3xwjp7')
@@ -214,9 +215,11 @@ func enable_collision() -> void:
 
 
 func update_gravity(_gravity_scale : float) -> void:
+	#print("hit this")
 	for i in range(3):
 		#gravity_scale = _gravity_scale
 		gravity_scale = 0.15
+		#linear_damp = 0.0
 		await get_tree().create_timer(0.1).timeout
 		
 
@@ -293,10 +296,9 @@ func reset_rock_back_on() -> void:
 func setup_rock_type() -> void:
 	current_mesh.scale = Vector3.ONE
 
-		
-	var rock_size = choose_rock_type()
+	#rock_type = choose_rock_type()
 	
-	match rock_size:
+	match rock_type:
 		RockSize.SMALL:
 			# Base values
 
@@ -309,16 +311,17 @@ func setup_rock_type() -> void:
 
 			# Random subtype: 1x / 2x / 3x
 			#var size_multiplier : int = [1, 2].pick_random() #, 3].pick_random()
-			var size_multiplier : int = 1
+			var size_multiplier_float : float = 1.35
+			var size_multiplier_int : int = 1
 			$Mesh.scale = Vector3.ONE
-			health = base_health * size_multiplier
+			health = base_health * size_multiplier_int
 			cash_value = base_cash # * size_multiplier
 			max_health = health
 			small_rock.visible = true
-			main_col.scale = Vector3.ONE * 0.125  * size_multiplier
+			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
 			current_mesh = small_rock
 			assign_random_mesh(current_mesh)
-			current_mesh.scale = base_scale * size_multiplier
+			current_mesh.scale = base_scale * size_multiplier_float
 			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
 			linear_damp = 0.5
 			force_mult.clear()
@@ -328,8 +331,9 @@ func setup_rock_type() -> void:
 		RockSize.MEDIUM:
 			current_rock_type 	= "Coal"
 			rock_type_name 		= "rock_type_2"
-			health 				= int(gl_DataSet.get_value("rock_type_2", 1))
-			cash_value 			= int(gl_DataSet.get_value("rock_type_2", 0))
+			#health 				= int(gl_DataSet.get_value("rock_type_2", 1))
+			health 				= 2
+			cash_value 			= 1 #int(gl_DataSet.get_value("rock_type_2", 0))
 			medium_rock.visible = true
 			main_col.scale = Vector3.ONE * 0.225
 			current_mesh 		= medium_rock
@@ -792,10 +796,10 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		#return
 	if player_has_marked_rock == false:
 		if body is RigidBody3D:
-			var force_dir = (body.global_position - global_position)
-			force_dir = force_dir.normalized()	
-			body.apply_central_impulse(force_dir * 2)
-			body.apply_torque_impulse(force_dir * 500.0)
+			#var force_dir = (body.global_position - global_position)
+			#force_dir = force_dir.normalized()	
+			#body.apply_central_impulse(force_dir * 2)
+			#body.apply_torque_impulse(force_dir * 500.0)
 			return
 	
 	if body.name.contains('Rock_Instance'):

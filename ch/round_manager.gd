@@ -72,6 +72,7 @@ func _ready() -> void:
 	enter_state(current_round_state)
 	
 func successful_round() -> void:
+
 	success = true
 	print('successful round')
 	perfect_score_feedback()
@@ -143,9 +144,8 @@ func update_round_first_round() -> void:
 
 
 func update_round_start() -> void:
-	success = false
-	
 
+	success = false
 	
 	while game_has_been_beaten:
 		await get_tree().process_frame
@@ -174,9 +174,41 @@ func update_round_start() -> void:
 
 	current_round = gl_PlayerState.dataset.round
 	
+	
+	
+	#seq_rock_pointer = 0
+	
+	
+	current_rock_sequence = [
+		[3,3,1]
+		,[2,2,6]
+		,[3,3,1]
+
+		,[2,2,14,4]
+		,[2,2,14,4]
+		,[3,3,1,1,8]
+		
+		,[3,3,1,1,18]
+		,[3,3,1,1,18, 18]
+		,[3,3,1,1,18, 18]
+		#,[3,13,1,1]
+		#,[2,2,14,4]
+		#,[3,13,1,13]
+		]
+	
+	
 	var rock_seq := update_rock_sequence()
+	#rock_seq = [5,5,1,1,6,6]
+	
+	
+	
 	print('Next Rock Seq ', rock_seq)
 	rocks_container.start_manual_rock_round(rock_seq)
+
+	
+	
+	
+	
 	
 	round_timer.enter_state(round_timer.State.RESTARTING)
 	player.update_player_stats()
@@ -221,6 +253,14 @@ func update_round_end() -> void:
 	if round_finished:
 		return
 	
+	
+	
+	if pineapple_mode:
+		pineapple_mode = false
+		await get_tree().process_frame
+		
+		
+	$'../Pineapple'.stop_pineapples()
 	player.round_finished(true)
 	
 	round_finished = true
@@ -263,6 +303,7 @@ func update_round_end() -> void:
 			pineapple_mode = true
 			pineapple_round()
 			while pineapple_mode:
+				
 				await get_tree().process_frame
 					
 			stop_player()
@@ -360,6 +401,7 @@ func move_to_start() -> void:
 	level_mesh.name = 'current_level_layout'
 
 func move_to_moss() -> void:
+	
 	current_rock_sequence = gl_DataSet.get_array('seq_rocks_moss')
 	
 	printt('I have updated the rock waves in Moss ', current_rock_sequence)
@@ -640,3 +682,7 @@ func increase_rock_limit() -> void:
 		
 #func _process(delta: float) -> void:
 	#print(gl_PlayerState.dataset.rock_limit)
+	
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed('backward'):
+		seq_rock_pointer = -1
