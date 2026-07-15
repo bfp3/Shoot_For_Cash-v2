@@ -11,6 +11,7 @@ signal level_restarted()
 signal next_round()
 
 signal all_rocks_destroyed()
+signal rocks_cleared_end_wave()
 signal end_round_rock_missed()
 signal open_tally_card()
 signal close_tally_card()
@@ -112,7 +113,7 @@ func XXemit_all_signals() -> void:
 	pineapple_round_bought.emit()
 	
 	player_update_stats_visually.emit()
-	
+	rocks_cleared_end_wave.emit()
 	all_rocks_destroyed.emit()
 	end_round_rock_missed.emit()
 	open_tally_card.emit()

@@ -91,7 +91,7 @@ func update_prepare_rocks() -> void:
 	
 	var active_bodies : Array = []
 	rocks_limit = manual_rock_sequence.size()
-	gl_PlayerState.log_rocks(rocks_limit)
+	#gl_PlayerState.log_rocks(rocks_limit)
 	
 	var container_children := $Container_1.get_children()
 	if rocks_limit > container_children.size():

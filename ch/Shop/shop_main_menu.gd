@@ -185,10 +185,15 @@ func play_round_button_pressed() -> void:
 	reroll_button.hide()
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
 	$%Transport_Tickets.modulate.a = 0.0
+	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
 	
-	await get_tree().create_timer(0.2).timeout
 	gl_PlayerState.log_buy('debug_add_cash', 10)
+	var tween := create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
+
+	tween.tween_property(%NextRound, "modulate:a", 0.0, 0.15)
+	await tween.finished
 	purchase_made('debug_add_cash')
+	
 	
 	await get_tree().create_timer(1.0).timeout
 	update_close_menu()
@@ -231,6 +236,9 @@ func update_close_menu() -> void:
 	reroll_button.show()
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 1.0
 	$%Transport_Tickets.modulate.a = 1.0
+	
+	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 1.0
+	%NextRound.modulate.a = 1.0
 	
 	if round_manager:
 		round_manager.enter_state(round_manager.RoundState.SHOP_END)

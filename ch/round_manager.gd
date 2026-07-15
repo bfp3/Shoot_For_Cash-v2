@@ -70,6 +70,7 @@ func _ready() -> void:
 	#EventBus.instance.close_shop.connect(enter_state.bind(RoundState.SHOP_END))
 	#EventBus.instance.game_won.connect(enter_state.bind(RoundState.GAME_WON))
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
+	EventBus.instance.rocks_cleared_end_wave.connect(next_wave)
 	EventBus.instance.end_round_rock_missed.connect(unsuccessful_round)
 	
 	await get_tree().process_frame
@@ -86,6 +87,16 @@ func successful_round() -> void:
 
 func unsuccessful_round() -> void:
 	print('unsuccessful round')
+	stop_timer()
+	rounds_until_shop = 0
+	enter_state(RoundState.CHECK_ROUNDS)
+	%Splash_zone.deactivate_splash_zone()
+	pass
+	
+	
+func next_wave() -> void:
+	print('Next Wave Called')
+	stop_timer()
 	enter_state(RoundState.ROUND_END)
 	pass
 
@@ -176,9 +187,13 @@ func update_round_start() -> void:
 			#bullet_active = false
 			#await get_tree().create_timer(1.0).timeout
 		await get_tree().process_frame
-		
-	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
 	
+	if rounds_until_shop == 3:
+		gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
+	
+	else:
+		gl_PlayerState.next_wave()
+
 	current_round = gl_PlayerState.dataset.round
 	
 	if rocks_container:
@@ -191,8 +206,10 @@ func update_round_start() -> void:
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	
 	current_rock_sequence = [
-		
-		[1,33,33]
+		[41,43,5]
+		#[2,2,4,36,36,38,38,38,4,36]
+		#[1,33,33]
+		#,[2,2,4,36,36,38,38,38,4,36]
 		#,[13,1,1,13,31,31]
 		
 		#,[2,2,6]
@@ -236,7 +253,7 @@ func update_round_start() -> void:
 	await get_tree().create_timer(2.0).timeout
 	enter_state(RoundState.ROUND_IN_PROGRESS)
 
-func update_rock_sequence() -> Array:
+func Xupdate_rock_sequence() -> Array:
 	seq_rock_pointer += 1
 	if seq_rock_pointer > current_rock_sequence.size() - 1:
 		seq_rock_pointer = 0
@@ -245,6 +262,35 @@ func update_rock_sequence() -> Array:
 	else:
 		return current_rock_sequence[seq_rock_pointer]
 
+
+func update_rock_sequence() -> Array:
+	seq_rock_pointer += 1
+
+	var plan := build_round_plan(current_rock_sequence)
+
+	if plan.is_empty():
+		push_warning('current_rock_sequence has no sub-arrays to play')
+		return []
+
+	if seq_rock_pointer > plan.size() - 1:
+		seq_rock_pointer = 0
+
+	return plan[seq_rock_pointer]
+
+
+func build_round_plan(sequence : Array) -> Array:
+	var count := sequence.size()
+
+	match count:
+		0:
+			return []
+		1:
+			return [sequence[0], sequence[0], sequence[0]]
+		2:
+			return [sequence[0], sequence[1], sequence[1]]
+		_:
+			# Covers 3, and 4+ (ignoring anything beyond the first 3)
+			return [sequence[0], sequence[1], sequence[2]]
 
 func go_to_fake_round() -> void:
 	round_timer.enter_state(round_timer.State.RESTARTING)
@@ -339,7 +385,7 @@ func update_check_rounds() -> void:
 	rounds_until_shop = clamp(rounds_until_shop - 1, 0, 100)
 	
 	#if round_timer.time_left <= 0.0: #rounds_until_shop == 0 ||
-	if rounds_until_shop == 0:
+	if rounds_until_shop <= 0:
 		stop_timer()
 		rounds_until_shop = 3
 		player.round_finished(true)
@@ -435,7 +481,8 @@ func move_to_moss() -> void:
 	gl_PlayerState.dataset["stage"] = 1
 	#gl_PlayerState.dataset["rock_limit"] = 1
 	gl_PlayerState.dataset["reroll_unlocked"] = 1
-
+	
+	gl_PlayerState.dataset.round += 1
 		
 	music_manager.stop_opening_song()
 	
@@ -469,8 +516,8 @@ func move_to_moss() -> void:
 	await get_tree().create_timer(3.0).timeout
 	transitioning_worlds = false
 	#enter_state(RoundState.SHOP_END)
-	enter_state(RoundState.SHOP_START)
-	#$"../MainGameCanvasLayer/Intro_Prompt".start()
+	#enter_state(RoundState.SHOP_START)
+	$"../MainGameCanvasLayer/Intro_Prompt".start()
 	
 	
 func move_to_redd() -> void:

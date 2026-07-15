@@ -75,7 +75,6 @@
 [ext_resource type="PackedScene" uid="uid://gmq0002obs0u" path="res://ch/targets/bonus_time_target.tscn" id="68_wv0tc"]
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
 [ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
-[ext_resource type="Script" uid="uid://dn76e05h17t31" path="res://scripts/multiplier_zones.gd" id="75_mdemw"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="StyleBox" uid="uid://eu6ax7sn7s7" path="res://res/card_icon_border_stylebox.tres" id="89_ecu2c"]
 
@@ -906,18 +905,6 @@ points = PackedVector3Array(-1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, 1)
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 bounce = 0.5
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_mdemw"]
-size = Vector3(45, 5, 5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_qmj5w"]
-size = Vector3(45, 5, 5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_swp41"]
-size = Vector3(45, 5, 5)
-
-[sub_resource type="BoxMesh" id="BoxMesh_mdemw"]
-size = Vector3(50, 0.05, 0.05)
-
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
 player = NodePath("Player")
@@ -974,7 +961,7 @@ process_material = SubResource("ParticleProcessMaterial_wtxnc")
 script = ExtResource("3_r5w5l")
 current_song = NodePath("Windmill")
 opening_song = NodePath("Opening_song")
-background_music_vol = -70.0
+background_music_vol = -60.0
 
 [node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
 stream = ExtResource("5_ec2we")
@@ -3022,85 +3009,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.146, 0)
 collision_layer = 3
 collision_mask = 3
 
-[node name="Area3D" type="Area3D" parent="." unique_id=1559609402]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14, 23)
-visible = false
-monitoring = false
-monitorable = false
-script = ExtResource("75_mdemw")
-current_multiplier = 3
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1211976948]
-shape = SubResource("BoxShape3D_mdemw")
-debug_color = Color(0.07999998, 0.64733326, 1, 1)
-
-[node name="Money_Label3D" type="Label3D" parent="Area3D" unique_id=817670572]
-transform = Transform3D(3, 0, 0, 0, 6.745, 0, 0, 0, 3, 0, 0, 2.500002)
-layers = 16
-pixel_size = 0.0154
-billboard = 1
-modulate = Color(1, 0.78039217, 0, 1)
-outline_modulate = Color(0.15, 0.15, 0.15, 1)
-text = "2"
-font_size = 45
-outline_size = 2
-
-[node name="Area3D2" type="Area3D" parent="." unique_id=258656149]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 6.6, 23)
-monitorable = false
-script = ExtResource("75_mdemw")
-current_multiplier = 4
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D2" unique_id=605768313]
-visible = false
-shape = SubResource("BoxShape3D_qmj5w")
-debug_color = Color(0, 0.32666668, 0.7, 1)
-
-[node name="Money_Label3D" type="Label3D" parent="Area3D2" unique_id=107181789]
-transform = Transform3D(-1.757, 0, -1.5360182e-07, 0, 3.514, 0, 1.5360182e-07, 0, -1.757, -2.237, -7.483, 0)
-layers = 16
-pixel_size = 0.008
-no_depth_test = true
-modulate = Color(1, 1, 1, 0.25882354)
-text = "4"
-font_size = 45
-outline_size = 0
-
-[node name="Area3D3" type="Area3D" parent="." unique_id=1786278470]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 2.41, 23)
-monitorable = false
-script = ExtResource("75_mdemw")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D3" unique_id=1491050159]
-shape = SubResource("BoxShape3D_swp41")
-debug_color = Color(0.6166668, 0, 1, 1)
-
-[node name="Money_Label3D" type="Label3D" parent="Area3D3" unique_id=1113124294]
-transform = Transform3D(-1.757, 0, -1.5360182e-07, 0, 3.514, 0, 1.5360182e-07, 0, -1.757, 20.011, 1.253, 0)
-layers = 16
-pixel_size = 0.008
-no_depth_test = true
-modulate = Color(1, 1, 1, 0.25882354)
-text = "4"
-font_size = 37
-outline_size = 0
-
-[node name="Money_Label3D2" type="Label3D" parent="Area3D3" unique_id=458132347]
-transform = Transform3D(3, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 2.500002)
-visible = false
-layers = 16
-pixel_size = 0.0154
-billboard = 1
-modulate = Color(1, 1, 1, 0.25882354)
-text = "4"
-font_size = 45
-outline_size = 0
-
-[node name="Seperator" type="MeshInstance3D" parent="." unique_id=937202211]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.6, 4.955, 26)
-mesh = SubResource("BoxMesh_mdemw")
-skeleton = NodePath("../BonusCash")
-
 [node name="BonusCash" type="Node3D" parent="." unique_id=836260086 groups=["multi_shot"]]
 script = ExtResource("76_qmj5w")
 
@@ -3115,6 +3023,7 @@ fixed_size = true
 modulate = Color(1, 0.51666665, 0, 1)
 outline_modulate = Color(0.15, 0.15, 0.15, 1)
 text = "2"
+outline_size = 6
 
 [node name="MultiShotSFX" type="AudioStreamPlayer" parent="BonusCash" unique_id=807368738]
 stream = ExtResource("17_lysu5")

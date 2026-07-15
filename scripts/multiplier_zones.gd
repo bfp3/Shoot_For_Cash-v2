@@ -5,7 +5,7 @@ extends Area3D
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
-	EventBus.instance.egg_pulsed.connect(update_text)
+	#EventBus.instance.egg_pulsed.connect(update_text)
 
 func _on_body_entered(body: Node3D) -> void:
 	if not body is RockInstance:

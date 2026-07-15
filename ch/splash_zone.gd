@@ -14,13 +14,11 @@ var detected_bodies: Array[Node3D] = []
 
 func _on_body_entered(body: Node3D) -> void:
 	if body.name.contains('Balloon'):
-		
 		return
 	
 	if body.is_in_group('pineapple'):
 		if body.taken_hit == false:
 			return
-			
 		gl_PlayerState.log_hit('pineapple', 'pineapple', 0)
 		splash_particles(body)
 		splash_sfx()
@@ -38,7 +36,7 @@ func _on_body_entered(body: Node3D) -> void:
 		#print('all the bodies ', body.name)
 		splash_particles(body)
 		splash_sfx()
-		gl_PlayerState.log_rock_missed()
+		gl_PlayerState.log_rock_missed(body.rock_type_name)
 		body.enter_state(RockInstance.State.MISSED)
 
 
@@ -50,7 +48,10 @@ func reset_detected_bodies() -> void:
 	monitorable = false
 	detected_bodies.clear()
 	
-	
+func deactivate_splash_zone() -> void:
+	monitoring = false
+	monitorable = false
+
 func activate_splash_zone() -> void:
 	monitoring = true
 	monitorable = true

@@ -19,28 +19,46 @@ var dataset_float : Dictionary = {
 	
 	,"power_gun"				: [0]
 	
-	#,'power_time_upgrade' 	: [6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]	
-	,'power_time_upgrade' 	: [12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]	
+	#,'power_time_upgrade' 	: [6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+	,'power_time_upgrade' 	: [7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]		
+	#,'power_time_upgrade' 	: [12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]	
 	#,'power_time_upgrade' 	: [40]	
 		
-	,"price_bonus_round_pineapples" 	: [20]
-	,"price_auto_fire" 				: [135]
-	,"price_target_circle"			: [7, 20, 40, 260, 320, 440, 550, 1000, 1500]
-	,"price_gun_fire_rate"			: [2, 4, 8, 32, 99, 204, 350, 550, 998]
-	,"price_bullet_damage" 			: [4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
-	,"price_bullet_speed" 			: [2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
+	,"price_target_circle"			: [70, 70, 70, 70, 70, 70, 550, 1000, 1500]
+	,"price_gun_fire_rate"			: [50, 50, 50, 50, 50, 50, 350, 550, 998]
+	,"price_bullet_damage" 			: [40, 40, 40, 40, 40, 40, 350, 500, 680, 801]
+	,"price_bullet_speed" 			: [40, 40, 40, 40, 40, 40, 20, 30, 40, 50]
 	,"price_bullet_delay" 			: [2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
 	,"price_gun"					: [0,0,0]
-	,"price_sky_mine" 				: [10,40,150]
+	,"price_sky_mine" 				: [10]
 	,"price_balloon_buster"			: [3, 6, 12, 56,125,400,800.1200,2400]
+	,'price_time_upgrade' 			: [0, 52, 24, 26, 30, 220, 180, 160, 140, 1000]
+	,"price_bonus_round_pineapples" : [200]
+	,"price_auto_fire" 				: [135]
 	,"price_max_items_in_shop" 		: [2,10,30]
-	,'price_time_upgrade' 			: [0, 22, 24, 26, 30, 220, 180, 160, 140, 1000]
+	
+	
+	
+	
+	#"price_bonus_round_pineapples" 	: [20]
+	#,"price_auto_fire" 				: [135]
+	#,"price_target_circle"			: [7, 20, 40, 260, 320, 440, 550, 1000, 1500]
+	#,"price_gun_fire_rate"			: [2, 4, 8, 32, 99, 204, 350, 550, 998]
+	#,"price_bullet_damage" 			: [4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
+	#,"price_bullet_speed" 			: [2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
+	#,"price_bullet_delay" 			: [2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
+	#,"price_gun"					: [0,0,0]
+	#,"price_sky_mine" 				: [10,40,150]
+	#,"price_balloon_buster"			: [3, 6, 12, 56,125,400,800.1200,2400]
+	#,"price_max_items_in_shop" 		: [2,10,30]
+	#,'price_time_upgrade' 			: [0, 22, 24, 26, 30, 220, 180, 160, 140, 1000]
+	
 	
 	,'power_ticket_moss' 			: [0]
 	,'power_ticket_redd' 			: [0]
 	
 	,'price_ticket_moss' 		: [0]
-	,'price_ticket_redd' 		: [110] #180
+	,'price_ticket_redd' 		: [1000] #180
 	,'price_ticket_glory' 		: [1800]
 	,'price_ticket_backwater' 	: [5000]
 	,'price_ticket_sodomi' 		: [5000]

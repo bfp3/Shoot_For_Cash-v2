@@ -68,7 +68,10 @@ func _process(delta: float) -> void:
 	_update_ticking_volume(time_left, delta)
 
 func ran_out_of_time() -> void:
-	gl_PlayerState.check_all_rocks_cleared()
+	
+	
+	
+	
 	$TimeRanOut.play()
 	$TimeRanOut4.play()
 		#%timeOutParticles.emitting = true
@@ -261,7 +264,11 @@ func _add_additional_time(additional_time : float = 0.0) -> void:
 func update_round_manager() -> void:
 	if !round_manager:
 		return
-
+	
+	if gl_PlayerState.dataset.total_white_rocks > 0:
+		EventBus.instance.end_round_rock_missed.emit()
+		return
+	
 	round_manager.enter_state(round_manager.RoundState.ROUND_END)
 	
 	
@@ -275,6 +282,7 @@ func format_time(time: float) -> String:
 	return "%d:%02d" % [seconds, hundredths]
 	
 func fade_out_timer() -> void:
+	return
 	var _label : Label = timer_label
 	#_label.text = "0:00"
 	_label.show()

@@ -1,18 +1,13 @@
 class_name TallyCard extends Control
 
+@onready var grade_label: RichTextLabel = %GradeLabel
+@onready var grade_cash_label : RichTextLabel = %GradeCashLabel
 
-@onready var nothing: Button = $CenterContainer/MainPanel/MainPanel/Item_List/Nothing
-@onready var rocks: Button = $CenterContainer/MainPanel/MainPanel/Item_List/Rocks
-@onready var coal: Button = $CenterContainer/MainPanel/MainPanel/Item_List/Coal
-@onready var gold: Button = $CenterContainer/MainPanel/MainPanel/Item_List/Gold
-@onready var clay_rocks: Button = $'CenterContainer/MainPanel/MainPanel/Item_List/Clay Rocks'
-#@onready var plastic_bottles: Button = $'CenterContainer/MainPanel/MainPanel/Item_List/Plastic Bottles'
-#@onready var tires: Button = $CenterContainer/MainPanel/MainPanel/Item_List/Tires
-#@onready var scrap_metal: Button = $'CenterContainer/MainPanel/MainPanel/Item_List/Scrap Metal'
-#@onready var oil_drums: Button = $'CenterContainer/MainPanel/MainPanel/Item_List/Oil Drums'
-#@onready var cargo_crates: Button = $'CenterContainer/MainPanel/MainPanel/Item_List/Cargo Crates'
-#@onready var rare_goodies: Button = $'CenterContainer/MainPanel/MainPanel/Item_List/Rare Goodies'
-#@onready var crackers: Button = $CenterContainer/MainPanel/MainPanel/Item_List/Crackers
+@onready var bonuses_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/BonusesLabel
+@onready var bonuses_cash_label: RichTextLabel = %BonusesCashLabel
+
+@onready var total_label: RichTextLabel = %TotalLabel
+@onready var total_cash_cash_label: RichTextLabel = %TotalCashCashLabel
 
 enum ScoreResult {
 	ZERO_SCORE,
@@ -20,12 +15,12 @@ enum ScoreResult {
 	PERFECT_SCORE
 }
 
+var start_sequence := false
 var score_result : ScoreResult = ScoreResult.PARTIAL_SCORE
 
 #@onready var hazard_mine: HBoxContainer = $CenterContainer/MainPanel/MainPanel/Item_List2/Panel/ScrollContainer/SalvageTable/Mine
 
 @onready var score_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/NumberLabel #$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel
-@onready var earnings_number_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/NumberLabel
 @onready var penalties_number_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel
 @onready var cash_number_label: RichTextLabel = $'CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel'
 
@@ -103,91 +98,158 @@ func update_inactive() -> void:
 	pass
 
 
-func update_all() -> void:
-	gl_PlayerState.check_score()
-	var settings 		= gl_PlayerState.get_all()
-	var current_round 	= settings.round
-	var items_hit 		= gl_PlayerState.get_item_hits(current_round)
-
-	current_cash 		= settings.cash
-	current_earnings 	= settings.earnings
-	current_fines 		= settings.fines
-
-	cash_number_label.text 		= "$" + str(0)
-	earnings_number_label.text 	= "$" + str(0)
-	#penalties_number_label.text = "$" + str(0)
+func start_fail_sequence() -> void:
+	print('FAIL')
+	grade_cash_label.text = '$0'
+	grade_cash_label.modulate = Color('FF0000')
+	grade_label.text = "FAIL"
+	grade_label.modulate = Color('FF0000')
+	grade_cash_label.text = ""
+	grade_cash_label.modulate = Color('FF0000')
+	bonuses_cash_label.modulate.a = 0.0
+	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 1.0
+	total_cash_cash_label.modulate = Color('FF0000')
+	#$'CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel'.text = "$" + str(0)
+	return
 	
-	var total_rocks_in_round = settings.total_rocks_in_round
-	var total_rocks_destroyed = settings.total_rocks_destroyed
-	score_label.text = 	str(total_rocks_destroyed) + "/" + str(total_rocks_in_round)
-
-	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/TitleLabel.text = '[i]SCORE'
 	
-	if total_rocks_destroyed == 0:
-		score_result = ScoreResult.ZERO_SCORE
-	elif total_rocks_destroyed == total_rocks_in_round:
-		score_result = ScoreResult.PERFECT_SCORE
-		$CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/TitleLabel.text = ''
-		score_label.text = "[rainbow][wave]" + str(total_rocks_destroyed) + "/" + str(total_rocks_in_round)
+	
+func start_perfect_sequence() -> void:
+	print('PERFECT')
+	await get_tree().create_timer(0.5).timeout
+	var dur := 1.0
+
+	# 1. GRADE LABEL
+	grade_label.modulate = Color("ffc700ff")
+	grade_label.text = "PERFECT"
+
+	# 2. GRADE CASH LABEL
+	grade_cash_label.text = '$50'
+	grade_cash_label.modulate = Color("42d100")
+	gl_PlayerState.add_cash(50)
+
+	# decorative particle flourish, fires in the background (non-blocking)
+	perfect_particles()
+	total_cash_cash_label.modulate = Color("42d100")
+	# PAUSE
+	await get_tree().create_timer(dur).timeout
+
+	# 3. BONUSES
+	$SFX/shop_purchase_02.play()
+	apply_bonus_cash()
+	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned.modulate.a = 1.0
+	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 0.0
+
+	# PAUSE
+	await get_tree().create_timer(dur).timeout
+	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = true
+	$SFX/shop_purchase_02.play()
+	total_cash_cash_label.text = "$" + str(int(gl_PlayerState.dataset.cash))
+	await get_tree().create_timer(dur).timeout
+	return
+
+
+func start_pass_sequence() -> void:
+	print('PASS')
+	var dur := 1.0
+
+	# 1. GRADE LABEL
+	grade_label.modulate = Color("cccccc")
+	grade_label.text = "PASS"
+
+	# 2. GRADE CASH LABEL
+	grade_cash_label.text = '$20'
+	gl_PlayerState.add_cash(20)
+
+	# PAUSE
+	await get_tree().create_timer(dur).timeout
+
+	# 3. BONUSES
+	$SFX/shop_purchase_02.play()
+	apply_bonus_cash()
+	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned.modulate.a = 1.0
+	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 1.0
+
+	# PAUSE
+	await get_tree().create_timer(dur).timeout
+
+	# 4. TOTAL CASH EARNED
+	$SFX/shop_purchase_02.play()
+	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = true
+	total_cash_cash_label.text = "$" + str(int(gl_PlayerState.dataset.cash))
+	total_cash_cash_label.modulate = Color("42d100")
+	await get_tree().create_timer(dur).timeout
+	return
+	
+func check_white_rocks() -> void:
+	
+	var white_rocks = gl_PlayerState.dataset.total_white_rocks
+	
+	grade_label.text = ""
+	grade_cash_label.text = ""
+	grade_cash_label.modulate = Color("42d100")
+	
+	bonuses_label.text = 'BONUSES'
+	bonuses_cash_label.text = ""
+	
+	total_label.text = 'CASH'
+	total_cash_cash_label.text = ""
+	
+	start_sequence = true
+	
+	if white_rocks > 0:
+		await start_fail_sequence()
+		start_sequence = false
+		return
+		
+	elif white_rocks == 0 && gl_PlayerState.dataset.total_rocks_in_round == 0:
+		await start_perfect_sequence()
+		start_sequence = false
+		return
+		
+	elif white_rocks == 0:
+		await start_pass_sequence()
+		start_sequence = false
+		
+		return
+		
 	else:
-		score_result = ScoreResult.PARTIAL_SCORE
-
-	var has_hits := false
-
-	for item in items_hit:
-		if items_hit[item] > 0:
-			has_hits = true
-			object_destroyed(item, items_hit[item])
-			
+		%GradeLabel.text = ""
+		print('Some other condition was met')
 
 
-	nothing.update_nothing()
-	nothing.visible = !has_hits
+func perfect_particles() -> void:
+	play_cash_sfx()
+	%perfectScoreParticles.emitting = true
+	#await get_tree().create_timer(0.25).timeout
+	
+	$SFX/perfect_score.play()
+	
+	var tween = create_tween()
+	tween.tween_property(%'100_percent', "modulate:a", 1.0, 0.1)
+	tween.tween_interval(0.35)
+	tween.tween_property(cash_number_label, "text", "$" + str(int(gl_PlayerState.dataset.cash)), 0.0001)
+	tween.tween_interval(2.0)
+	tween.tween_property(%'100_percent', "modulate:a", 0.0, 0.15)
+	await tween.finished
+	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.amount += 1
+	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = false
 	
 
-func object_destroyed(rock_type : String, amount_hit : int = 0) -> void:
-	match rock_type:
-		"Small Rock":
-			rocks.temporary_count += amount_hit
-			rocks.permanent_count += amount_hit
-			rocks.update_name()
-			gl_DataSet.update_rocks(amount_hit)
+func apply_bonus_cash() -> void:
+	var bonus_cash = gl_PlayerState.dataset.earnings
+	gl_PlayerState.add_cash(bonus_cash)
+	bonuses_cash_label.show()
+	bonuses_cash_label.modulate.a = 1.0
+	bonuses_cash_label.modulate = Color("42d100ff")
+	bonuses_cash_label.text = "$" + str(bonus_cash)
 
-		"Coal":
-			coal.temporary_count += amount_hit
-			coal.permanent_count += amount_hit
-			coal.update_name()
-			gl_DataSet.update_rocks(amount_hit)
-		
-		"Gold":
-			gold.temporary_count += amount_hit
-			gold.permanent_count += amount_hit
-			gold.update_name()
-			gl_DataSet.update_rocks(amount_hit)
-		
-		"Red Rock":
-			clay_rocks.temporary_count += amount_hit
-			clay_rocks.permanent_count += amount_hit
-			clay_rocks.update_name()
-			gl_DataSet.update_rocks(amount_hit)
-			
-		#"Hazard Large":
-			#hazard_mine = $CenterContainer/MainPanel/MainPanel/Item_List2/Panel/ScrollContainer/SalvageTable/Mine
-			#hazard_mine.temporary_count += amount_hit
-			#hazard_mine.permanent_count += amount_hit
-			#hazard_mine.update_name()
-
-	
-	
-	
 func update_open_menu() -> void:
 	if menu_in_display:
 		return
 	
-	update_all()
-	
+	check_white_rocks()
 	menu_in_display = true
-	#game_progress.update_game_progress()
 	sfx_open_tally()
 
 	modulate.a = 0.0
@@ -209,17 +271,19 @@ func update_open_menu() -> void:
 	await reveal_stats()
 	
 	enter_state(State.IN_MENU)
+
 	
-	if score_result == ScoreResult.PERFECT_SCORE:
-		await get_tree().create_timer(0.5).timeout
-		await get_tree().create_timer(2.0).timeout
-		_on_shop_pressed()
-	else:
-		await get_tree().create_timer(2.0).timeout
-		_on_shop_pressed()
+	await get_tree().create_timer(2.0).timeout
+	
+	while start_sequence:
+		await get_tree().process_frame
+	
+	await get_tree().create_timer(1.0).timeout
+	
+	_on_shop_pressed()
 		
 func update_close_menu() -> void:
-	#sfx_close_tally()
+	
 	total_cash_earned = 0
 	total_penalties_earned = 0
 
@@ -243,191 +307,24 @@ func update_close_menu() -> void:
 	menu_in_display = false
 	updating_stats = false
 	
-	#earnings_number_label.text = "$"
-	##penalties_number_label.text = "$"
-	#cash_number_label.text = "$"
 	
 	hide()
 
 
-func notify_round_manager() -> void:
-	if !round_manager:
-		var _round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
-		if _round_manager:
-			_round_manager.enter_state(_round_manager.RoundState.TALLY_END)
-			
-	else:
-		round_manager.enter_state(round_manager.RoundState.TALLY_END)
 
 
 func update_in_menu() -> void:
 	update_stats_visual()
+	
+	await get_tree().create_timer(2.0).timeout
+	
+	
 
 func update_stats_visual() -> void:
 	if updating_stats:
 		return
 	
 	updating_stats = true
-
-	
-	#cash_number_label.text = "$" + str(GlobalPlayerMoney.gl_player_money + total_cash_earned)
-
-	await get_tree().create_timer(0.1).timeout
-	
-	if score_result != ScoreResult.ZERO_SCORE:
-		reset_cash_earned()
-		reset_penalties_earned()
-		add_earned_cash_to_total_cash()
-	
-	else:
-		earnings_number_label.text = "$" + str(0)
-		cash_number_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=3 color=#42d100 ease=-2.0][color=#42d100]$" + str(current_cash) + "[/color][/pulse][/wave]"
-		penalties_number_label.text = "--"
-
-	
-		
-func reset_cash_earned() -> void:
-
-	if current_earnings > 0:
-
-		earnings_number_label.self_modulate = Color("42d100")
-
-		await animate_money_counter(
-			earnings_number_label,
-			0,
-			current_earnings,
-			0.25,
-			func(v): return "$" + str(int(v))
-		)
-
-		earnings_number_label.text = "$" + str(current_earnings)
-
-	else:
-
-		earnings_number_label.self_modulate = Color.WHITE
-		earnings_number_label.text = "$" + str(current_earnings)
-
-
-
-func reset_penalties_earned() -> void:
-
-	if abs(current_fines) > 0:
-
-		penalties_number_label.self_modulate = Color("d10000")
-		blink_penalty_red()
-		await animate_money_counter(
-			penalties_number_label,
-			0,
-			current_fines,
-			0.25,
-			func(v): return "$" + str(int(v)),
-			false
-		)
-
-		penalties_number_label.text = "-$" + str(abs(current_fines))
-		
-	else:
-
-		penalties_number_label.self_modulate = Color.WHITE
-		penalties_number_label.text = "--"
-
-		
-func add_earned_cash_to_total_cash() -> void:
-
-	#await get_tree().create_timer(0.2).timeout
-
-	await animate_money_counter(
-		cash_number_label,
-		0,
-		current_cash,
-		0.2,
-		func(v): return "$" + str(int(v)),
-		true,
-		0.05
-	)
-
-	if current_cash > 0:
-		cash_number_label.self_modulate = Color("42d100")
-	else:
-		cash_number_label.self_modulate = Color.GRAY
-
-	cash_number_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=3 color=#42d100 ease=-2.0][color=#42d100]$" + str(current_cash) + "[/color][/pulse][/wave]"
-	
-	
-	
-	feedback_effects()
-	
-func feedback_effects() -> void:
-	
-	if score_result == ScoreResult.ZERO_SCORE:
-		print("hit here")
-		return
-		
-	#if score_result != ScoreResult.ZERO_SCORE:
-	play_cash_sfx()
-		
-	
-	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = true
-	
-	if score_result == ScoreResult.PERFECT_SCORE:
-		#var bonus_cash = int(gl_PlayerState.dataset.cash * 0.5)
-		#if bonus_cash <= 1:
-			#bonus_cash = 2
-		#gl_PlayerState.add_cash(20)
-		var bonus_cash = gl_PlayerState.dataset.bonus_cash_this_round
-		$"CenterContainer/100_percent/BonusCashLabel".text = "[color=#ffc700]+[/color][color=#42d100]$" + str(bonus_cash)
-		%perfectScoreParticles.emitting = true
-		await get_tree().create_timer(0.25).timeout
-		
-		$SFX/perfect_score.play()
-		
-		var tween = create_tween()
-		tween.tween_property(%'100_percent', "modulate:a", 1.0, 0.1)
-		tween.tween_interval(0.35)
-		tween.tween_property(cash_number_label, "text", "$" + str(int(gl_PlayerState.dataset.cash)), 0.0001)
-		tween.tween_interval(2.0)
-		tween.tween_property(%'100_percent', "modulate:a", 0.0, 0.15)
-		await tween.finished
-		$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.amount += 1
-		$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = false
-		
-func animate_money_counter(label: RichTextLabel, start_value: float,
-	end_value: float,
-	duration: float,
-	text_callback: Callable,
-	ease_out := true,
-	pitch_step := 0.1
-) -> void:
-
-	var sfx := $SFX/shop_purchase_01
-
-	var elapsed := 0.0
-	var dt := 1.0 / 60.0
-
-	sfx.pitch_scale = 1.0
-	sfx.play()
-
-	while elapsed < 0.05:
-		await get_tree().create_timer(dt).timeout
-
-		elapsed += dt
-
-		var t : float = clamp(elapsed / duration, 0.0, 1.0)
-
-		var eased : float
-		if ease_out:
-			eased = 1.0 - pow(1.0 - t, 3.0)
-		else:
-			eased = 1.0 - pow(1.0 + t, 3.0)
-
-		var value : float = lerp(start_value, end_value, eased)
-
-		label.text = text_callback.call(value)
-
-		sfx.pitch_scale = clamp(sfx.pitch_scale, 0.01, 100.0)
-		sfx.play()
-
-
 
 
 func play_cash_sfx() -> void:
@@ -500,25 +397,3 @@ func _on_shop_pressed() -> void:
 	enter_state(State.CLOSE_MENU)
 	round_manager.enter_state(round_manager.RoundState.TALLY_END)
 	
-func _on_next_round_pressed() -> void:
-	enter_state(State.CLOSE_MENU)
-	round_manager.enter_state(round_manager.RoundState.SHOP_END)
-	
-
-func _on_area_completed() -> void:
-	if gl_PlayerState.dataset.stage_name == gl_DataSet.get_string("place_name",0):
-		print('COMPLETED')
-	else:
-		%EndDemo.show() 
-	
-	
-	
-	
-
-func _on_go_to_next_place_pressed() -> void:
-	#var main_scene = get_tree().get_first_node_in_group('scene_manager')
-	#if main_scene:
-		#main_scene.load_next_level()
-	%GoToNextPlace.hide()
-	enter_state(State.CLOSE_MENU)
-	round_manager.enter_state(round_manager.RoundState.NEXT_LEVEL)

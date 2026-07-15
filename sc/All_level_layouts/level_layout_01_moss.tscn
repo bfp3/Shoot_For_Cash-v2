@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="17_snbl5"]
 [ext_resource type="PackedScene" uid="uid://ignpdv10rx52" path="res://addons/boujie_water_shader/prefabs/deep_ocean.tscn" id="18_1thcr"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="18_v0xb0"]
+[ext_resource type="Script" uid="uid://dn76e05h17t31" path="res://scripts/multiplier_zones.gd" id="19_md1in"]
 
 [sub_resource type="Animation" id="Animation_k7lvh"]
 length = 0.001
@@ -1086,6 +1087,15 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_pnf6a")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_md1in"]
+size = Vector3(29.4, 1.315, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x8ffe"]
+size = Vector3(45, 5, 5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1vd3e"]
+size = Vector3(50, 0.05, 0.05)
+
 [node name="Moss" type="Node3D" unique_id=229302118]
 
 [node name="Weather_animation" type="AnimationPlayer" parent="." unique_id=142603363]
@@ -1195,7 +1205,7 @@ skeleton = NodePath("")
 shape = SubResource("ConcavePolygonShape3D_x8ffe")
 
 [node name="Right_tall_pillar9" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1838090387]
-transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, -3.5, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, -3.5, 3.8, 0)
 material_override = ExtResource("6_u0cw1")
 mesh = SubResource("ArrayMesh_fyjqt")
 skeleton = NodePath("")
@@ -1203,6 +1213,17 @@ skeleton = NodePath("")
 [node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar9" unique_id=1680079103]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar9/StaticBody3D" unique_id=106019612]
+shape = SubResource("ConcavePolygonShape3D_1vd3e")
+
+[node name="Right_tall_pillar10" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1326025588]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, -3.5, 0.79999995, 0)
+material_override = ExtResource("6_u0cw1")
+mesh = SubResource("ArrayMesh_fyjqt")
+skeleton = NodePath("")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar10" unique_id=379021759]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar10/StaticBody3D" unique_id=1050862038]
 shape = SubResource("ConcavePolygonShape3D_1vd3e")
 
 [node name="Right_tall_pillar2" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1516982083]
@@ -1272,7 +1293,7 @@ skeleton = NodePath("")
 shape = SubResource("ConcavePolygonShape3D_sc1d7")
 
 [node name="Right_tall_pillar_caps" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=879694892]
-transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, -3.5, 2.7, 0)
+transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, -3.5, 5, 0)
 material_override = ExtResource("6_u0cw1")
 mesh = SubResource("ArrayMesh_4d5kf")
 skeleton = NodePath("")
@@ -1731,7 +1752,7 @@ material_override = SubResource("StandardMaterial3D_qt5sv")
 cast_shadow = 0
 
 [node name="Egg" parent="Boatmesh" unique_id=2127545510 instance=ExtResource("9_74xva")]
-transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -9.514841, 1.511255, 20.154352)
+transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -9.514841, 3.811255, 20.154352)
 
 [node name="Egg2" parent="Boatmesh" unique_id=1021616403 instance=ExtResource("9_74xva")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, 9.385158, 3.811255, 20.154352)
@@ -1744,7 +1765,7 @@ start_flag = true
 
 [node name="Boat_Flag2" parent="Boatmesh" unique_id=950646453 instance=ExtResource("14_6qhn0")]
 unique_name_in_owner = true
-transform = Transform3D(-0.46, 0, -6.945807e-08, 0, 0.46, 0, 6.945807e-08, 0, -0.46, -9.449, 2.642, 20.271)
+transform = Transform3D(-0.46, 0, -6.945807e-08, 0, 0.46, 0, 6.945807e-08, 0, -0.46, -9.449, 4.942, 20.271)
 start_flag = true
 
 [node name="BackgroundMesh" type="Node3D" parent="." unique_id=1382970896]
@@ -2823,7 +2844,7 @@ material_override = SubResource("StandardMaterial3D_w5nie")
 mesh = SubResource("ArrayMesh_kgf3r")
 
 [node name="Road_Block_Brick_Mesh14" type="Node3D" parent="." unique_id=390741152]
-transform = Transform3D(1.6785169e-08, -0.48299998, -3.9252825e-08, -0.38399997, -2.1112598e-08, 6.972702e-23, 1.2610776e-15, 4.2225203e-08, -0.449, 8.933, 2.231, 20.189)
+transform = Transform3D(1.6785169e-08, -0.48299998, -3.9252825e-08, -0.38399997, -2.1112598e-08, 6.972702e-23, 1.2610776e-15, 4.2225203e-08, -0.449, 8.933, 3, 20.189)
 metadata/_edit_group_ = true
 
 [node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh14" unique_id=799356045]
@@ -2892,7 +2913,7 @@ material_override = SubResource("StandardMaterial3D_w5nie")
 mesh = SubResource("ArrayMesh_kgf3r")
 
 [node name="Road_Block_Brick_Mesh15" type="Node3D" parent="." unique_id=1215416216]
-transform = Transform3D(7.337032e-16, -2.1112601e-08, 0.449, -0.384, -2.1112601e-08, 0, 1.6785172e-08, -0.483, -1.9626412e-08, 9.398, 1.406, 19.689)
+transform = Transform3D(7.337032e-16, -2.1112601e-08, 0.449, -0.384, -2.1112601e-08, 0, 1.6785172e-08, -0.483, -1.9626412e-08, 9.398, 0.606, 19.689)
 metadata/_edit_group_ = true
 
 [node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh15" unique_id=1744700206]
@@ -3030,7 +3051,7 @@ material_override = SubResource("StandardMaterial3D_w5nie")
 mesh = SubResource("ArrayMesh_kgf3r")
 
 [node name="Road_Block_Brick_Mesh17" type="Node3D" parent="." unique_id=346740952]
-transform = Transform3D(7.337032e-16, -2.1112601e-08, 0.449, -0.384, -2.1112601e-08, 0, 1.6785172e-08, -0.483, -1.9626412e-08, -9.502, 0.7060001, 19.689)
+transform = Transform3D(7.337032e-16, -2.1112601e-08, 0.449, -0.384, -2.1112601e-08, 0, 1.6785172e-08, -0.483, -1.9626412e-08, -9.502, 3.006, 19.689)
 metadata/_edit_group_ = true
 
 [node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh17" unique_id=2126888367]
@@ -3099,7 +3120,7 @@ material_override = SubResource("StandardMaterial3D_w5nie")
 mesh = SubResource("ArrayMesh_kgf3r")
 
 [node name="Road_Block_Brick_Mesh18" type="Node3D" parent="." unique_id=1470299079]
-transform = Transform3D(1.6785169e-08, -0.48299998, -3.9252825e-08, -0.38399997, -2.1112598e-08, 6.972702e-23, 1.2610776e-15, 4.2225203e-08, -0.449, -9.037, -0.069, 20.189)
+transform = Transform3D(1.6785169e-08, -0.48299998, -3.9252825e-08, -0.38399997, -2.1112598e-08, 6.972702e-23, 1.2610776e-15, 4.2225203e-08, -0.449, -9.037, 3, 20.189)
 metadata/_edit_group_ = true
 
 [node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh18" unique_id=1359023959]
@@ -3180,6 +3201,157 @@ material_override = SubResource("StandardMaterial3D_w5nie")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_kgf3r")
 
+[node name="Road_Block_Brick_Mesh19" type="Node3D" parent="." unique_id=480085392]
+transform = Transform3D(7.337032e-16, -2.1112601e-08, 0.449, -0.384, -2.1112601e-08, 0, 1.6785172e-08, -0.483, -1.9626412e-08, -9.502, 0.627, 19.689)
+metadata/_edit_group_ = true
+
+[node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=1870826034]
+transform = Transform3D(1, 0, 0, 0, 0.19, 0, 0, 0, 0.4, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick2" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=206824748]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0, 0, 0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick3" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=2054427104]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.5, 0, -0.400002)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick4" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=170085725]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.5, 0, 0.400002)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick5" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=315760103]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.5, 0, -0.400002)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick6" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=1780056633]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.5, 0, 0.400002)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick7" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=768209123]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0, 0, -0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick8" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=1488881054]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.75, 0, -0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick9" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=493380080]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.75, 0, 0)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick10" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=685131455]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.75, 0, 0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick11" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=298925921]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.75, 0, -0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick12" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=327450634]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.75, 0, 0)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick13" type="MeshInstance3D" parent="Road_Block_Brick_Mesh19" unique_id=1864855169]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.75, 0, 0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Road_Block_Brick_Mesh20" type="Node3D" parent="." unique_id=976306245]
+transform = Transform3D(1.6785169e-08, -0.48299998, -3.9252825e-08, -0.38399997, -2.1112598e-08, 6.972702e-23, 1.2610776e-15, 4.2225203e-08, -0.449, -9.037, 0.627, 20.189)
+metadata/_edit_group_ = true
+
+[node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=1335914771]
+transform = Transform3D(1, 0, 0, 0, 0.19, 0, 0, 0, 0.4, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick2" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=1549302957]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0, 0, 0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick3" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=550483833]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.5, 0, -0.400002)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick4" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=1844789406]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.5, 0, 0.400002)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick5" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=1645012733]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.5, 0, -0.400002)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick6" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=209180449]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.5, 0, 0.400002)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick7" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=1510028347]
+transform = Transform3D(1, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0, 0, -0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick8" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=1219476476]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.75, 0, -0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick9" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=119550909]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.75, 0, 0)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick10" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=1728020245]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, -0.75, 0, 0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick11" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=965851978]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.75, 0, -0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick12" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=385477704]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.75, 0, 0)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
+[node name="Single_brick13" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=421162757]
+transform = Transform3D(0.5, 0, 0, 0, 0.165, 0, 0, 0, 0.4, 0.75, 0, 0.799999)
+material_override = SubResource("StandardMaterial3D_w5nie")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_kgf3r")
+
 [node name="Motto" type="MeshInstance3D" parent="." unique_id=1360886807]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 4.565, -3.597, 11.82)
 material_override = ExtResource("6_u0cw1")
@@ -3224,16 +3396,94 @@ material_override = ExtResource("6_u0cw1")
 mesh = SubResource("ArrayMesh_2svof")
 skeleton = NodePath("")
 
+[node name="floor5" type="MeshInstance3D" parent="." unique_id=1782690611]
+transform = Transform3D(200, 0, 0, 0, 0.99965733, 2.617695, 0, -0.02617695, 99.96574, 3.36, 3.65, 333.782)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_3vvr1")
+skeleton = NodePath("../Boatmesh")
+
 [node name="OutsetOcean" parent="." unique_id=658307306 instance=ExtResource("17_1thcr")]
 transform = Transform3D(1, 0, 0, 0, 0.99945015, 0.033155177, 0, -0.033155177, 0.99945015, 3.36, 3.65, 333.782)
-visible = false
 
 [node name="WaterMaterialDesigner" parent="OutsetOcean" index="0" unique_id=1811003880]
 wave_fade_softness = 1.0
 
 [node name="DeepOcean" parent="." unique_id=114394147 instance=ExtResource("18_1thcr")]
 transform = Transform3D(1, 0, 0, 0, 0.9994502, 0.03315518, 0, -0.03315518, 0.9994502, 3.36, -13.355, 333.782)
+visible = false
 far_edge = 4000
+
+[node name="ZoneA" type="Area3D" parent="." unique_id=1838933963]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 2.345, 23)
+monitoring = false
+monitorable = false
+script = ExtResource("19_md1in")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ZoneA" unique_id=135088438]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7999997, 0, 0)
+shape = SubResource("BoxShape3D_md1in")
+debug_color = Color(0.6166668, 0, 1, 1)
+
+[node name="Money_Label3D" type="Label3D" parent="ZoneA" unique_id=1928644867]
+transform = Transform3D(-1.757, 0, -1.5360182e-07, 0, 3.514, 0, 1.5360182e-07, 0, -1.757, 20.011, 1.253, 0)
+layers = 16
+pixel_size = 0.008
+no_depth_test = true
+modulate = Color(1, 1, 1, 0.25882354)
+text = "$10"
+font_size = 29
+outline_size = 0
+
+[node name="Money_Label3D2" type="Label3D" parent="ZoneA" unique_id=1441830607]
+transform = Transform3D(-1.757, 0, -1.5360182e-07, 0, 3.514, 0, 1.5360182e-07, 0, -1.757, -2.251, 1.253, 0)
+layers = 16
+pixel_size = 0.008
+no_depth_test = true
+modulate = Color(1, 1, 1, 0.25882354)
+text = "$10"
+font_size = 29
+outline_size = 0
+
+[node name="ZoneB" type="Area3D" parent="." unique_id=1017343580]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, -0.5899999, 23)
+monitoring = false
+monitorable = false
+script = ExtResource("19_md1in")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ZoneB" unique_id=6963047]
+shape = SubResource("BoxShape3D_x8ffe")
+debug_color = Color(0.6166668, 0, 1, 1)
+
+[node name="Money_Label3D" type="Label3D" parent="ZoneB" unique_id=592729967]
+transform = Transform3D(-1.757, 0, -1.5360182e-07, 0, 3.514, 0, 1.5360182e-07, 0, -1.757, 20.011, 1.473, 0)
+layers = 16
+pixel_size = 0.008
+no_depth_test = true
+modulate = Color(1, 1, 1, 0.25882354)
+text = "$20"
+font_size = 29
+outline_size = 0
+
+[node name="Money_Label3D2" type="Label3D" parent="ZoneB" unique_id=1856601653]
+transform = Transform3D(-1.757, 0, -1.5360182e-07, 0, 3.514, 0, 1.5360182e-07, 0, -1.757, -2.251, 1.473, 0)
+layers = 16
+pixel_size = 0.008
+no_depth_test = true
+modulate = Color(1, 1, 1, 0.25882354)
+text = "$20"
+font_size = 29
+outline_size = 0
+
+[node name="Seperator2" type="MeshInstance3D" parent="." unique_id=1626375877]
+transform = Transform3D(0.367, 0, 0, 0, 1, 0, 0, 0, 1, -0.078, 3, 20.132)
+top_level = true
+mesh = SubResource("BoxMesh_1vd3e")
+skeleton = NodePath("../BonusCash")
+
+[node name="Seperator3" type="MeshInstance3D" parent="." unique_id=1594966983]
+transform = Transform3D(0.367, 0, 0, 0, 1, 0, 0, 0, 1, -0.078, 0.65, 20.132)
+mesh = SubResource("BoxMesh_1vd3e")
+skeleton = NodePath("../BonusCash")
 
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

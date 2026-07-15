@@ -70,15 +70,19 @@ func update_open_menu() -> void:
 		#"Shoot Rocks to Earn [color=#42d100]CASH[/color]\n" +
 	#"Protect [color=#45dec200][wave]Bluey[/wave][/color]"
 #)
-	prompt.text = (
-		"Destroy [color=#ffc700]" + str(round_count) + "[/color][i] Rocks[/i] to [color=#ffc700][wave]ADVANCE[/wave][/color].\n" +
-		"Destroyed[i] Rocks[/i] Earn [color=#42d100]CASH[/color].\n" 
-	#"Protect [color=#45dec200][wave]Bluey[/wave][/color]"
-	)
-	
-	prompt.text = (
-		""
-	)
+	#prompt.text = (
+		#"Destroy [color=#ffc700]" + str(round_count) + "[/color][i] Rocks[/i] to [color=#ffc700][wave]ADVANCE[/wave][/color].\n" +
+		
+	#
+	#prompt.text = (
+		#"Shoot every WHITE ROCK or FAIL.
+#
+		#Pass: +$20. Perfect Score: +$50.
+#
+		#Pay $10 to PLAY.
+#
+		#$1000 = WIN."
+	#)
 	
 
 	
@@ -170,6 +174,6 @@ func start() -> void:
 func _on_retry_pressed() -> void:
 	
 	if round_manager:
-		round_manager.enter_state(round_manager.RoundState.SHOP_END)
+		round_manager.enter_state(round_manager.RoundState.SHOP_START)
 		
 	update_close_menu()
