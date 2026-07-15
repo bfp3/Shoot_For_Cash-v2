@@ -172,7 +172,7 @@ func update_round_start() -> void:
 		go_to_fake_round()
 		return
 		
-	if gl_PlayerState.dataset.round == 0:
+	if gl_PlayerState.dataset.round == 1:
 		music_manager.first_round()
 	
 	
@@ -206,9 +206,9 @@ func update_round_start() -> void:
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	
 	current_rock_sequence = [
-		[41,43,5]
+		#[45,45,5,8]
 		#[2,2,4,36,36,38,38,38,4,36]
-		#[1,33,33]
+		[1,33,33]
 		#,[2,2,4,36,36,38,38,38,4,36]
 		#,[13,1,1,13,31,31]
 		

@@ -1,5 +1,8 @@
 extends Node3D
 
+var last_swipe_mouse_pos := Vector2.ZERO
+var swipe_initialized := false
+var swipe_hit_targets : Array[Node] = []
 
 @onready var crosshair: TextureRect = $'../CanvasLayer/Crosshair/Inner_scope/TextureRect'
 @onready var crosshair_left: TextureRect = $'../CanvasLayer/Multiscopes/Inner_scope2/TextureRect'
@@ -36,6 +39,81 @@ var pitch_adjustment := 0.02
 var shooting_sky_mine := false
 var round_manager : RoundManager
 
+#func _physics_process(delta: float) -> void:
+	#if shot_with_right_click:
+		##if Engine.get_physics_frames() % 6 == 0:
+		#handle_right_click_swipe(delta)
+		#
+	#else:
+		#swipe_initialized = false
+		##last_swipe_mouse_pos = Vector2.ZERO
+		#swipe_hit_targets.clear()
+
+func handle_right_click_swipe(delta : float) -> void:
+
+	if !shot_with_right_click:
+		swipe_initialized = false
+		swipe_hit_targets.clear()
+		return
+
+	var mouse_pos := get_viewport().get_mouse_position()
+
+	# First frame only
+	if !swipe_initialized:
+		last_swipe_mouse_pos = mouse_pos
+		swipe_initialized = true
+		return
+
+	var swipe_vector := mouse_pos - last_swipe_mouse_pos
+	last_swipe_mouse_pos = mouse_pos
+
+	var swipe_velocity := swipe_vector.length() / delta
+
+	## Ignore tiny movements
+	#if swipe_vector.length() < 8.0:
+		#return
+	var impulse_strength : float = clamp(
+		swipe_velocity * 0.01,
+		5.0,
+		10.0
+)
+	var targets := get_targets_in_scope()
+
+	for target_data in targets:
+
+		var target = target_data.target
+
+		#if !(target is RockInstance):
+			#continue
+
+		if swipe_hit_targets.has(target):
+			continue
+
+		swipe_hit_targets.append(target)
+
+		# Convert the screen swipe into a world direction
+		#var world_direction = (
+			#-player_camera.global_basis.x * swipe_vector.x -
+			#player_camera.global_basis.y * swipe_vector.y
+		#)
+		#world_direction = world_direction.normalized()
+#
+		## Push the rock
+		#if target is RigidBody3D:
+			#target.apply_central_impulse(world_direction * impulse_strength )
+			#print('DO THIS ', world_direction * impulse_strength)
+		# Optional visual effects
+		%Crosshair.crosshair_shake()
+		player_camera.shake_camera_shooting()
+
+		# Reuse your existing hit function
+		var rock_screen_pos = player_camera.unproject_position(target.global_position)
+		var screen_offset = rock_screen_pos - crosshair.global_position
+
+		target.hit_by_player(
+			0,
+			screen_offset
+		)
 
 func _ready() -> void:
 	await get_tree().process_frame

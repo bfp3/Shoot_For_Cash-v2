@@ -288,7 +288,11 @@ func _process(delta: float) -> void:
 		weapon_shooting.shot_with_right_click = true
 		fire_weapon()
 		
-
+	#if Input.is_action_pressed("shoot_weapon_2"):
+		#weapon_shooting.shot_with_right_click = true
+		#
+	#if Input.is_action_just_released("shoot_weapon_2"):
+		#weapon_shooting.shot_with_right_click = false
 	
 	
 	crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))

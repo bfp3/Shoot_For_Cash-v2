@@ -417,8 +417,8 @@ func setup_rock_type() -> void:
 			assign_random_mesh(current_mesh)
 			current_mesh.scale  = Vector3.ONE * 0.625
 			max_health = health
-			rock_type_gravity_scale = 5.0
-			linear_damp = 1.0
+			rock_type_gravity_scale = 0.1
+			linear_damp = 0.5
 			force_mult.clear()
 			force_mult = [4,6,7]
 			force_mult_index = 0
@@ -566,62 +566,63 @@ func apply_marked_ability() -> void:
 	await get_tree().create_timer(0.5).timeout
 	detonate_rock()
 	
-func apply_hit_reaction(screen_offset : Vector2) -> void:
-	#if gravity_scale >= 1.0:
+func apply_hit_reaction(screen_offset: Vector2, accurate_direction := true) -> void:
 	
 	gravity_scale = 0.1
 	linear_damp = 0.3
 	linear_velocity = Vector3.ZERO
-		
-	var camera = get_viewport().get_camera_3d()
-
+	
+	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		return
 
-	# Convert screen offset into camera-space directions
-	var right = camera.global_transform.basis.x
-	var up = camera.global_transform.basis.y
-	
-	#var force_dir = (right * screen_offset.x) + (up * -screen_offset.y)
-#
-	#force_dir = force_dir.normalized()
-	#
-	#if force_mult_index >= force_mult.size() - 1:
-		#force_mult_index = 0
-	#else:
-		#force_mult_index += 1
-		
-		
-	var force_dir = (right * screen_offset.x) + (up * -screen_offset.y)
+	var force_dir := get_hit_force_direction(
+		camera,
+		screen_offset,
+		accurate_direction
+	)
 
-	# Remove any downward component and replace it with a slight upward push.
-	var vertical_amount = force_dir.dot(up)
+	if force_mult_index >= force_mult.size() - 1:
+		force_mult_index = 0
+	else:
+		force_mult_index += 1
 
-	if vertical_amount < 0.0:
-		# Remove the downward portion.
-		force_dir -= up * vertical_amount
-
-		# Add a very small upward bias.
-		force_dir += up * 0.15
-
-	force_dir = force_dir.normalized()
-	
 	apply_central_impulse(force_dir * force_mult[force_mult_index])
-	
-	
 
-	# spin a bit too
-	var torque_dir = Vector3(
+	# Spin the rock
+	var torque_dir := Vector3(
 		force_dir.z,
 		1.0,
 		-force_dir.x
 	).normalized()
-	
-	torque_dir = torque_dir * force_mult[force_mult_index]
 
-	apply_torque_impulse(torque_dir * hit_torque_strength)
-	
+	apply_torque_impulse(
+		torque_dir * force_mult[force_mult_index] * hit_torque_strength
+	)
+
 	smoke_particles_duplicates()
+
+
+func get_hit_force_direction(
+	camera: Camera3D,
+	screen_offset: Vector2,
+	accurate_direction: bool
+) -> Vector3:
+
+	var right := camera.global_transform.basis.x
+	var up := camera.global_transform.basis.y
+
+	var force_dir := right * screen_offset.x
+	force_dir += up * -screen_offset.y
+
+	if !accurate_direction:
+		# Remove downward movement while still allowing upward movement.
+		var vertical := force_dir.dot(up)
+
+		if vertical < 0.0:
+			force_dir -= up * vertical
+
+	return force_dir.normalized()
 
 func shrink_current_mesh() -> void:
 	if current_mesh.scale <= Vector3.ONE * 0.3:

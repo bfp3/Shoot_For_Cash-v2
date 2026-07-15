@@ -1094,7 +1094,7 @@ size = Vector3(29.4, 1.315, 5)
 size = Vector3(45, 5, 5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_1vd3e"]
-size = Vector3(50, 0.05, 0.05)
+size = Vector3(50, 0.001, 0.05)
 
 [node name="Moss" type="Node3D" unique_id=229302118]
 
@@ -3422,6 +3422,7 @@ script = ExtResource("19_md1in")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ZoneA" unique_id=135088438]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7999997, 0, 0)
 shape = SubResource("BoxShape3D_md1in")
+disabled = true
 debug_color = Color(0.6166668, 0, 1, 1)
 
 [node name="Money_Label3D" type="Label3D" parent="ZoneA" unique_id=1928644867]
@@ -3452,6 +3453,7 @@ script = ExtResource("19_md1in")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ZoneB" unique_id=6963047]
 shape = SubResource("BoxShape3D_x8ffe")
+disabled = true
 debug_color = Color(0.6166668, 0, 1, 1)
 
 [node name="Money_Label3D" type="Label3D" parent="ZoneB" unique_id=592729967]

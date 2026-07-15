@@ -208,9 +208,9 @@ func reset_rock_back_on() -> void:
 	#cash_value = base_cash # * size_multiplier
 	max_health = health
 	orange_mesh.visible = true
-	main_col.scale = base_scale
+	main_col.scale = Vector3.ONE #base_scale
 	current_mesh = orange_mesh
-	current_mesh.scale = base_scale
+	current_mesh.scale = Vector3.ONE * 2#base_scale
 	#current_mesh.scale.x = base_scale.x
 	#current_mesh.scale.y = 1.471
 	#current_mesh.scale.z = base_scale.z
@@ -264,7 +264,7 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	
 	var camera = get_viewport().get_camera_3d()
 
-	screen_offset = Vector2.UP
+	#screen_offset = Vector2.UP
 
 	if camera == null:
 		return
@@ -379,10 +379,10 @@ func start_destroyed_process() -> void:
 	
 	was_hit_tween()
 	
-
-	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
-	await tween.finished
+#
+	#var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
+	#tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
+	#await tween.finished
 
 	shake_camera()
 	
