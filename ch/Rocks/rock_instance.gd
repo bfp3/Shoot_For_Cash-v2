@@ -27,9 +27,10 @@ const ROCK_MESHES = [
 
 enum RockSize {
 	SMALL,
+	SMALL_2,
 	MEDIUM,
-	MEDIUM_REDD,
 	LARGE,
+	MEDIUM_REDD,
 	HUGE,
 	HAZARD_SMALL,
 	MONEY_ROCK
@@ -301,6 +302,7 @@ func setup_rock_type() -> void:
 	#rock_type = choose_rock_type()
 	
 	match rock_type:
+		# 0
 		RockSize.SMALL:
 			# Base values
 
@@ -330,6 +332,34 @@ func setup_rock_type() -> void:
 			force_mult = [3,4]
 			force_mult_index = 0
 		
+		
+		# 1
+		RockSize.SMALL_2:
+			current_rock_type 	= "Small Rock"
+			rock_type_name 		= "rock_type_1"
+
+			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
+			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
+			var base_scale  := Vector3.ONE * 0.35
+
+			var size_multiplier_float : float = randf_range (1.2, 1.35) * 2
+			var size_multiplier_int : int = 2
+			$Mesh.scale = Vector3.ONE
+			health = base_health * size_multiplier_int
+			cash_value = base_cash # * size_multiplier
+			max_health = health
+			small_rock.visible = true
+			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
+			current_mesh = small_rock
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = base_scale * size_multiplier_float
+			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
+			linear_damp = 0.5
+			force_mult.clear()
+			force_mult = [3,4]
+			force_mult_index = 0
+		
+		# 2
 		RockSize.MEDIUM:
 			current_rock_type 	= "Coal"
 			rock_type_name 		= "rock_type_2"
@@ -347,6 +377,32 @@ func setup_rock_type() -> void:
 			force_mult.clear()
 			force_mult = [2,3]
 			force_mult_index = 0
+			
+		# Rock Type 3
+		RockSize.LARGE:
+
+			var base_scale  := Vector3.ONE * 0.35
+			var size_multiplier_float : float = randf_range (1.2, 1.35)
+			var size_multiplier_int : int = 1
+			current_rock_type 	= "Gold"
+			rock_type_name 		= "rock_type_1"
+			health 				= 1
+			max_health = health
+			cash_value 			= 2
+			large_rock.visible 	= true
+			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
+			current_mesh 		= large_rock
+			current_mesh.scale = base_scale * size_multiplier_float
+			assign_random_mesh(current_mesh)
+			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
+			$Mesh.scale = Vector3.ONE
+			linear_damp = 0.5
+			force_mult.clear()
+			force_mult = [3,4]
+			force_mult_index = 0
+	
+		
+		
 			
 		RockSize.MEDIUM_REDD:
 			current_rock_type 	= "Coal"
@@ -368,29 +424,7 @@ func setup_rock_type() -> void:
 			force_mult_index = 0
 		
 		
-		# Rock Type 3
-		RockSize.LARGE:
-
-			var base_scale  := Vector3.ONE * 0.35
-			var size_multiplier_float : float = randf_range (1.2, 1.35)
-			var size_multiplier_int : int = 1
-			current_rock_type 	= "Gold"
-			rock_type_name 		= "rock_type_3"
-			health 				= 1
-			max_health = health
-			cash_value 			= 2
-			large_rock.visible 	= true
-			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
-			current_mesh 		= large_rock
-			current_mesh.scale = base_scale * size_multiplier_float
-			assign_random_mesh(current_mesh)
-			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
-			$Mesh.scale = Vector3.ONE
-			linear_damp = 0.5
-			force_mult.clear()
-			force_mult = [3,4]
-			force_mult_index = 0
-
+		
 
 
 #
@@ -1004,7 +1038,17 @@ func play_piano_note() -> void:
 			$"PianoNotes/8".play()
 		
 		
-		
+func went_through_cash_multi_zone() -> void:
+	return
+	if current_state != State.ACTIVE:
+		return
+	$gold_sfx.play(0.01)
+	apply_torque_impulse(Vector3.UP * 1000)
+	#$Mesh.scale += Vector3.ONE * 0.4
+	current_mesh.get_node('damage_mesh').show()
+	await get_tree().create_timer(0.08).timeout
+	current_mesh.get_node('damage_mesh').hide()
+
 		
 #func set_xray_visible(value : bool) -> void:
 	#tween_2d_icon(value)

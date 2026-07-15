@@ -974,7 +974,7 @@ process_material = SubResource("ParticleProcessMaterial_wtxnc")
 script = ExtResource("3_r5w5l")
 current_song = NodePath("Windmill")
 opening_song = NodePath("Opening_song")
-background_music_vol = -60.0
+background_music_vol = -70.0
 
 [node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
 stream = ExtResource("5_ec2we")
@@ -1384,6 +1384,7 @@ debug_color = Color(0, 1, 0, 1)
 unique_name_in_owner = true
 transform = Transform3D(-1, 8.379102e-09, 8.70203e-08, 0, 0.9953962, -0.09584575, -8.742278e-08, -0.09584575, -0.9953962, -0.74, -0.875, 0.5)
 scope_min_target_circle = 15.0
+can_right_click_shoot = true
 roundManager = NodePath("../Round_manager")
 rotation_speed = 0.8
 
@@ -3046,53 +3047,57 @@ outline_size = 2
 
 [node name="Area3D2" type="Area3D" parent="." unique_id=258656149]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 6.6, 23)
-visible = false
-monitoring = false
 monitorable = false
 script = ExtResource("75_mdemw")
-current_multiplier = 1
+current_multiplier = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D2" unique_id=605768313]
+visible = false
 shape = SubResource("BoxShape3D_qmj5w")
 debug_color = Color(0, 0.32666668, 0.7, 1)
 
-[node name="Money_Label3D" type="Label3D" parent="Area3D2" unique_id=100959020]
-transform = Transform3D(3, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 2.500002)
+[node name="Money_Label3D" type="Label3D" parent="Area3D2" unique_id=107181789]
+transform = Transform3D(-1.757, 0, -1.5360182e-07, 0, 3.514, 0, 1.5360182e-07, 0, -1.757, -2.237, -7.483, 0)
 layers = 16
-pixel_size = 0.0154
-billboard = 1
-modulate = Color(1, 0.78039217, 0, 1)
-outline_modulate = Color(0.15, 0.15, 0.15, 1)
+pixel_size = 0.008
+no_depth_test = true
+modulate = Color(1, 1, 1, 0.25882354)
 text = "4"
 font_size = 45
-outline_size = 2
+outline_size = 0
 
 [node name="Area3D3" type="Area3D" parent="." unique_id=1786278470]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 1.6, 23)
-visible = false
-monitoring = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 2.41, 23)
 monitorable = false
 script = ExtResource("75_mdemw")
-current_multiplier = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D3" unique_id=1491050159]
 shape = SubResource("BoxShape3D_swp41")
 debug_color = Color(0.6166668, 0, 1, 1)
 
 [node name="Money_Label3D" type="Label3D" parent="Area3D3" unique_id=1113124294]
+transform = Transform3D(-1.757, 0, -1.5360182e-07, 0, 3.514, 0, 1.5360182e-07, 0, -1.757, 20.011, 1.253, 0)
+layers = 16
+pixel_size = 0.008
+no_depth_test = true
+modulate = Color(1, 1, 1, 0.25882354)
+text = "4"
+font_size = 37
+outline_size = 0
+
+[node name="Money_Label3D2" type="Label3D" parent="Area3D3" unique_id=458132347]
 transform = Transform3D(3, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 2.500002)
+visible = false
 layers = 16
 pixel_size = 0.0154
 billboard = 1
-modulate = Color(1, 0.78039217, 0, 1)
-outline_modulate = Color(0.15, 0.15, 0.15, 1)
+modulate = Color(1, 1, 1, 0.25882354)
 text = "4"
 font_size = 45
-outline_size = 2
+outline_size = 0
 
 [node name="Seperator" type="MeshInstance3D" parent="." unique_id=937202211]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.1, 26)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.6, 4.955, 26)
 mesh = SubResource("BoxMesh_mdemw")
 skeleton = NodePath("../BonusCash")
 

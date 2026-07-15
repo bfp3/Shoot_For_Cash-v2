@@ -89,6 +89,10 @@ func ticket_purchased() -> void:
 
 
 func purchase_made(_upgrade_type:String = '') -> void:
+	var reroll_colour_tween := create_tween().set_trans(Tween.TRANS_SINE)
+	reroll_colour_tween.tween_property(cash_label, "modulate", Color('FF0000'), 0.1)
+	reroll_colour_tween.tween_callback(update_shop)
+	reroll_colour_tween.tween_property(cash_label, "modulate", Color('42d100'), 0.2)
 	sfx_purchase_made()
 	update_shop()
 	transport_tickets.check_tickets()
@@ -177,10 +181,14 @@ func update_open_menu() -> void:
 
 	enter_state(SkillState.IN_MENU)
 	
-
-func update_close_menu() -> void:
+func play_round_button_pressed() -> void:
+	gl_PlayerState.log_buy('debug_add_cash', 10)
+	purchase_made('debug_add_cash')
 	
-	EventBus.instance.close_shop.emit()
+	await get_tree().create_timer(1.0).timeout
+	update_close_menu()
+	
+func update_close_menu() -> void:
 	sfx_close_shop()
 	
 	%QuitMenu.hide()
@@ -192,7 +200,10 @@ func update_close_menu() -> void:
 	
 	# ENSURE PIVOT IS CORRECT
 	pivot_offset = default_pivot_offset
-
+	player_cash = gl_PlayerState.dataset.cash
+	update_cost_label()
+	
+	
 	var tween := create_tween()
 
 	tween.set_trans(Tween.TRANS_LINEAR)
@@ -207,8 +218,10 @@ func update_close_menu() -> void:
 	scale = default_scale
 	modulate.a = 1.0
 	position = default_position
-
+	
 	hide()
+	
+	EventBus.instance.close_shop.emit()
 
 	
 	if round_manager:
@@ -218,22 +231,22 @@ func update_close_menu() -> void:
 		i.new_round = true
 	
 func roll_up_cash_first_round() -> void:
-	
-	var duration :float = clamp(player_cash / 1000.0, 0.5, 3.0)
-	cash_label.text = "$0"
 	update_cost_label()
+	#var duration :float = clamp(player_cash / 1000.0, 0.5, 3.0)
+	#cash_label.text = "$0"
+	#update_cost_label()
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_CUBIC)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(cash_label, "modulate:a", 1.0, 0.2)
-	tween.tween_method(
-		func(value: float):
-			cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$" + str(int(value)),
-		0.0,
-		float(player_cash),
-		duration
-	)
-	update_cost_label()
+	#tween.tween_method(
+		#func(value: float):
+			#cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$" + str(int(value)),
+		#0.0,
+		#float(player_cash),
+		#duration
+	#)
+	#update_cost_label()
 	 
 func is_skill_maxed(skill) -> bool:
 	
@@ -385,12 +398,10 @@ func _on_re_roll_pressed() -> void:
 	gl_PlayerState.log_buy("reroll", reroll_current_price)
 	reroll_index += 1
 	await get_tree().create_timer(0.1).timeout
+	update_shop()
 	#EventBus.instance.update_money.emit()
 	
-	var reroll_colour_tween := create_tween().set_trans(Tween.TRANS_SINE)
-	reroll_colour_tween.tween_property(cash_label, "modulate", Color('FF0000'), 0.1)
-	reroll_colour_tween.tween_callback(update_shop)
-	reroll_colour_tween.tween_property(cash_label, "modulate", Color('42d100'), 0.2)
+	
 	
 
 	

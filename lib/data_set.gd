@@ -39,7 +39,7 @@ var dataset_float : Dictionary = {
 	,'power_ticket_moss' 			: [0]
 	,'power_ticket_redd' 			: [0]
 	
-	,'price_ticket_moss' 		: [100]
+	,'price_ticket_moss' 		: [0]
 	,'price_ticket_redd' 		: [110] #180
 	,'price_ticket_glory' 		: [1800]
 	,'price_ticket_backwater' 	: [5000]

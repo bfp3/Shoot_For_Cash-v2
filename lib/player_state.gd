@@ -3,7 +3,7 @@ extends Node
 var mouse_sensitivity := 1.0
 
 const RESTART_DATASET := {
-	"cash": 11,
+	"cash": 50,
 	"stage": 1,
 	"stage_name": "moss",
 	"tickets": 1,
@@ -14,6 +14,7 @@ const RESTART_DATASET := {
 	"fines": 0,
 	"reroll": 0,
 	"reroll_unlocked": 0,
+	"bonus_cash_this_round": 0,
 	
 	"rock_limit" : 3,
 
@@ -42,7 +43,7 @@ const RESTART_DATASET := {
 }
 
 const DEFAULT_DATASET := {
-	"cash": 109,
+	"cash": 50,
 	"stage": 0,
 	"stage_name": "start",
 	"tickets": 0,
@@ -53,6 +54,7 @@ const DEFAULT_DATASET := {
 	"fines": 0,
 	"reroll": 0,
 	"reroll_unlocked": 0,
+	"bonus_cash_this_round": 0,
 	
 	"rock_limit" : 3,
 
@@ -62,8 +64,7 @@ const DEFAULT_DATASET := {
 	"total_rocks_missed" : 0,
 	"total_hazards": 0,
 	"total_pineapples_destroyed": 0,
-	
-	
+		
 	"power_bonus_round_pineapples": 0,
 	
 	"power_auto_fire" : 0,
@@ -97,6 +98,7 @@ func next_round() -> void:
 	dataset.total_rocks_missed = 0
 	dataset.total_hazards = 0
 	dataset.total_pineapples_destroyed = 0
+	dataset.bonus_cash_this_round = 0
 	round_finished = false
 	_current_round_log.clear()
 

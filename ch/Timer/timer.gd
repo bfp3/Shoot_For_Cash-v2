@@ -143,22 +143,30 @@ func update_restarting() -> void:
 	#start_time = 12.0
 	
 	time_left = start_time
-	await timer_rollup_sequence()
-	$ReloadSound.pitch_scale = 1.0
-	
-
-func timer_rollup_sequence() -> void:
 	var _orig_pos : Vector2 = timer_label.position 
 	var center_position : Vector2 = $Timer_centerPOS.position - (timer_label.size / 2)
 	timer_label.position = center_position
 	
 	await get_tree().create_timer(0.25).timeout
-	
 	var move_to_center_tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	move_to_center_tween.tween_property(timer_label, "horizontal_alignment", 1, 0.01)
 	move_to_center_tween.parallel().tween_property(timer_label, "scale", Vector2.ONE * 3, 0.01)
 	await move_to_center_tween.finished
 	
+	await timer_rollup_sequence()
+	$ReloadSound.pitch_scale = 1.0
+	await get_tree().create_timer(0.20).timeout
+
+	var move_back_tween := create_tween().set_trans(Tween.TRANS_CUBIC) #.set_ease(Tween.EASE_OUT)
+	move_back_tween.tween_property($TimeLabel, "position", _orig_pos, 0.15)
+	move_back_tween.parallel().tween_property(timer_label, "horizontal_alignment", 1, 0.1).set_delay(0.1)
+	move_back_tween.parallel().tween_property(timer_label, "scale", Vector2.ONE, 0.15)
+	move_back_tween.parallel().tween_callback($TimeRanOut3.play.bind(0.02)).set_delay(0.14)
+	await move_back_tween.finished
+
+func timer_rollup_sequence() -> void:
+
+
 	timer_label.modulate = Color.WHITE
 	var duration := 0.5
 	var elapsed := 0.0
@@ -195,14 +203,7 @@ func timer_rollup_sequence() -> void:
 	update_text()
 
 	
-	await get_tree().create_timer(0.20).timeout
 
-	var move_back_tween := create_tween().set_trans(Tween.TRANS_CUBIC) #.set_ease(Tween.EASE_OUT)
-	move_back_tween.tween_property($TimeLabel, "position", _orig_pos, 0.15)
-	move_back_tween.parallel().tween_property(timer_label, "horizontal_alignment", 1, 0.1).set_delay(0.1)
-	move_back_tween.parallel().tween_property(timer_label, "scale", Vector2.ONE, 0.15)
-	move_back_tween.parallel().tween_callback($TimeRanOut3.play.bind(0.02)).set_delay(0.14)
-	await move_back_tween.finished
 
 func _input(event: InputEvent) -> void:
 	if Input.is_key_label_pressed(KEY_U):

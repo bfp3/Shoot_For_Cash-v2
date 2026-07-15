@@ -66,6 +66,7 @@ var success := false
 
 func _ready() -> void:
 	move_to_start()
+	#move_to_moss()
 	#EventBus.instance.close_shop.connect(enter_state.bind(RoundState.SHOP_END))
 	#EventBus.instance.game_won.connect(enter_state.bind(RoundState.GAME_WON))
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
@@ -177,18 +178,22 @@ func update_round_start() -> void:
 		await get_tree().process_frame
 		
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
-
+	
 	current_round = gl_PlayerState.dataset.round
+	
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
 	
 	
 	
 	#seq_rock_pointer = 0
 	
+	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	
 	current_rock_sequence = [
-		[3,33,31]
-		,[3,33,31]
-		,[3,33,31]
+		
+		[1,33,33]
+		#,[13,1,1,13,31,31]
 		
 		#,[2,2,6]
 		#,[3,3,1]
@@ -204,7 +209,7 @@ func update_round_start() -> void:
 		#,[2,2,14,4]
 		#,[3,13,1,13]
 		]
-	
+		#[1,12,23,34,45,56]
 	
 	var rock_seq := update_rock_sequence()
 	#rock_seq = [5,5,1,1,6,6]
@@ -218,6 +223,10 @@ func update_round_start() -> void:
 	
 	if rounds_until_shop == 3:
 		round_timer.enter_state(round_timer.State.RESTARTING)
+		
+	else:
+		round_timer.timer_rollup_sequence()
+		
 	player.update_player_stats()
 	player.start_player()
 	music_manager.shop_music_raise_volume()
@@ -329,8 +338,9 @@ func update_round_end() -> void:
 func update_check_rounds() -> void:
 	rounds_until_shop = clamp(rounds_until_shop - 1, 0, 100)
 	
-	if rounds_until_shop == 0:
 	#if round_timer.time_left <= 0.0: #rounds_until_shop == 0 ||
+	if rounds_until_shop == 0:
+		stop_timer()
 		rounds_until_shop = 3
 		player.round_finished(true)
 		stop_player()
@@ -431,7 +441,9 @@ func move_to_moss() -> void:
 	
 	scene_transition_screen.next_level_start()
 	await get_tree().create_timer(1.0).timeout
-	level_layout.get_child(0).queue_free()
+	
+	if level_layout.get_child(0) != null:
+		level_layout.get_child(0).queue_free()
 	#var current_level_layout = level_layout.get_node_or_null('current_level_layout')
 	#if current_level_layout:
 		#current_level_layout.queue_free()
@@ -456,7 +468,8 @@ func move_to_moss() -> void:
 	#rocks_container.reset_rock_back_on()
 	await get_tree().create_timer(3.0).timeout
 	transitioning_worlds = false
-	enter_state(RoundState.SHOP_END)
+	#enter_state(RoundState.SHOP_END)
+	enter_state(RoundState.SHOP_START)
 	#$"../MainGameCanvasLayer/Intro_Prompt".start()
 	
 	
