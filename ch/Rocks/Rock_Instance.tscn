@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cui6iwpjiyx4h" path="res://ch/Rocks/rock_instance.gd" id="1_bc0l2"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="1_sc6lp"]
-[ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="2_7ohxg"]
-[ext_resource type="Material" uid="uid://dbv3cp0pmavlb" path="res://res/hidden_mesh_standard.tres" id="2_luarq"]
-[ext_resource type="Texture2D" uid="uid://dehy2ivq1vmr2" path="res://res/aim_2d_to_3d_icon.png" id="3_lrylr"]
 [ext_resource type="Material" uid="uid://dnxuldiy8408d" path="res://res/small_rock_material.tres" id="4_beb3h"]
 [ext_resource type="Material" uid="uid://bwt1wtym017gd" path="res://res/gold_rock_mat.tres" id="4_w8aba"]
 [ext_resource type="ArrayMesh" uid="uid://lxbrgqaovv68" path="res://res/Rocks/rock_mesh_03.tres" id="5_27dlh"]
@@ -42,49 +39,6 @@
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 friction = 0.0
-
-[sub_resource type="Animation" id="Animation_lrylr"]
-resource_name = "2d_3d_icon"
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:pixel_size")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.53, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.0001, 0.00019999999999999, 0.0001]
-}
-
-[sub_resource type="Animation" id="Animation_x736i"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:pixel_size")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0002]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_sjja1"]
-_data = {
-&"2d_3d_icon": SubResource("Animation_lrylr"),
-&"RESET": SubResource("Animation_x736i")
-}
-
-[sub_resource type="BoxMesh" id="BoxMesh_fao6x"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_beb3h"]
-height = 0.2
-radial_segments = 8
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lrylr"]
 radius = 1.0
@@ -884,40 +838,6 @@ linear_damp = 0.5
 angular_damp = 1.0
 constant_torque = Vector3(0.01, 0, 0)
 script = ExtResource("1_bc0l2")
-
-[node name="2d_3d_icon" type="Sprite3D" parent="." unique_id=697518663]
-unique_name_in_owner = true
-transform = Transform3D(0.8200001, -2.4437904e-08, 0, 2.4437904e-08, 0.8200001, 0, 0, 0, 0.82, 0, 0, 0)
-cast_shadow = 0
-modulate = Color(1, 0.7833333, 0, 0)
-pixel_size = 0.0002
-billboard = 1
-fixed_size = true
-texture = ExtResource("3_lrylr")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="2d_3d_icon" unique_id=105768417]
-process_mode = 3
-libraries/ = SubResource("AnimationLibrary_sjja1")
-
-[node name="HiddenMeshCont" type="Node3D" parent="." unique_id=1340921044]
-transform = Transform3D(1.0000001, -2.9802322e-08, 0, 2.9802322e-08, 1.0000001, 0, 0, 0, 1, 0, 0, 0)
-visible = false
-
-[node name="hidden_mesh" type="MeshInstance3D" parent="HiddenMeshCont" unique_id=2152892]
-unique_name_in_owner = true
-transform = Transform3D(0.0759287, -0.20861197, 0, 0.20861197, 0.0759287, 0, 0, 0, 0.222, 0, 0, 0)
-visible = false
-material_override = ExtResource("2_luarq")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fao6x")
-skeleton = NodePath("../../Mesh")
-
-[node name="hidden_mesh_gold" type="MeshInstance3D" parent="HiddenMeshCont" unique_id=1749006]
-unique_name_in_owner = true
-transform = Transform3D(0.112, 0, 0, 0, 0.023286106, -0.10955254, 0, 0.10955254, 0.023286106, 0, 0, 0)
-material_override = ExtResource("2_7ohxg")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_beb3h")
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=291819753]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)

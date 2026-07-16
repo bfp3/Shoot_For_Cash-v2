@@ -22,7 +22,7 @@ var chain_penalty := 2
 var being_chained := false
 
 @export_group("Red Balloon Pan")
-@export var pan_axis : PanAxis = PanAxis.X_AXIS
+@export var pan_axis : PanAxis = PanAxis.Y_AXIS
 @export var pan_distance := 0.5
 @export var pan_duration := 3.5
 @export var pan_start_delay := 3.0     ## Delay after move_balloon_in_front_of_player() before panning starts.
@@ -170,8 +170,6 @@ func update_inactive() -> void:
 	disable_collision()
 	reset_stats()
 	
-	# EventBus.instance.rock_created.emit()
-
 
 func quick_pan() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_loops()
@@ -252,8 +250,9 @@ func enable_collision() -> void:
 
 func reset_rock_back_on() -> void:
 	#enter_state(State.MISSED)
-	current_rock_type 	= "Hazard Large"
-	rock_type_name 		= "hazard_type_1"
+	current_rock_type 	= "Balloon Large"
+	#rock_type_name 		= "hazard_type_1"
+	rock_type_name = ""
 
 	var base_health := int(gl_DataSet.get_value("hazard_type_1", 1))
 	#var base_cash   := int(gl_DataSet.get_value("hazard_type_1", 0))
@@ -418,7 +417,7 @@ func start_destroyed_process() -> void:
 	
 
 	if balloon_type == BalloonType.RED:
-		get_parent().add_white_balloon_back_into_list(self)
+		get_parent().add_balloon_back_into_list(self)
 		return
 		var current_pos := global_position
 		
@@ -438,8 +437,7 @@ func start_destroyed_process() -> void:
 		
 		add_to_group('Target')
 		
-	elif balloon_type == BalloonType.WHITE:
-		get_parent().add_white_balloon_back_into_list(self)
+
 		#var player_balloon_container = get_tree().get_first_node_in_group('player_balloon_container')
 		#if player_balloon_container:
 			#player_balloon_container.white_reward()
@@ -464,10 +462,6 @@ func play_hit_sfx() -> void:
 
 func play_destroy_sfx() -> void:
 	$take_damage_sfx.play(0.02)
-	#await get_tree().create_timer(0.1).timeout
-	#$hitSound.play()f
-	#await get_tree().create_timer(0.1).timeout
-	#$explosion_sfx.play()
 
 func move_balloon_in_front_of_player() -> void:
 	start_gentle_pan()
@@ -679,6 +673,7 @@ func temp_slow_down() -> void:
 	
 	
 func blast_radius() -> void:
+	#return
 	await get_tree().create_timer(0.1).timeout
 
 	const BLAST_RADIUS := 500.0
@@ -790,7 +785,9 @@ func sky_mine_blast() -> void:
 		break
 		
 
-		
+
+
+
 	
 func _sky_mine_hit_after_delay(target: Node, delay: float, chain_penalty: int) -> void:
 	await get_tree().create_timer(delay).timeout
@@ -815,3 +812,44 @@ func _sky_mine_hit_after_delay(target: Node, delay: float, chain_penalty: int) -
 			target.being_chained = true
 			#target.start_destroyed_process()
 			target.sky_mine_blast()
+
+func end_of_the_round_pop_balloon(_added_cash : int) -> void:
+	# Only pop balloons that are actually still in play.
+	if !rock_activated or current_state != State.ACTIVE:
+		return
+
+	rock_activated = false
+	enter_state(State.HIT)
+	stop_gentle_pan()
+	disable_collision()
+
+	# Same pop feedback as a player hit.
+	$pop_balloon.pitch_scale = randf_range(0.95, 1.1)
+	$pop_balloon.play()
+	#play_destroy_sfx()
+	smoke_particles()
+
+	if is_in_group('Target'):
+		remove_from_group('Target')
+
+	set_collision_layer_value(1, false)
+	is_deactivated = true
+
+	# Reward instead of penalize: always +$1 regardless of balloon_type/penalty_amount.
+	cash_value = _added_cash
+	#gl_PlayerState.log_hit(rock_type_name, current_rock_type, 1)
+	
+	#money_label_3d.money_is_money(global_position, cash_value)
+	
+	cash_value = 0
+	was_hit_tween()
+
+	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, "scale", scale * 1.0, 0.33)
+	await tween.finished
+
+	# Return the balloon to its pool the same way a normal hit would.
+	if balloon_type == BalloonType.RED:
+		get_parent().add_balloon_back_into_list(self)
+	else:
+		get_parent().add_balloon_back_into_list(self)

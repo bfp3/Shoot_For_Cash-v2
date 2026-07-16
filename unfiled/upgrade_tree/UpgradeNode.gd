@@ -121,8 +121,15 @@ func update_cost() -> void:
 				cost = int(gl_DataSet.get_value('price_sky_mine', gl_PlayerState.dataset.power_sky_mine))
 				cost_label.text = "[i][wave]" + str(cost)
 			pass
-		else:
+		
+		
+		else:	
 			cost_label.text = "[i][wave]FREE"
+		
+		if gun:
+			cost_label.text = "[i][wave]EQUIP"
+		
+		
 		return
 		
 	
@@ -153,7 +160,7 @@ func update_cost() -> void:
 	if cost == 0:
 		cost_label.text = "[i][wave]FREE"
 		if gun:
-			cost_label.text = ""#"[i][wave]TAKE"
+			cost_label.text = "[i][wave]EQUIP"
 
 	else:
 		cost_label.text = "[i][wave]$" + str(cost)

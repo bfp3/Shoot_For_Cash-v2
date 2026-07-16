@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://ignpdv10rx52" path="res://addons/boujie_water_shader/prefabs/deep_ocean.tscn" id="18_1thcr"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="18_v0xb0"]
 [ext_resource type="Script" uid="uid://dn76e05h17t31" path="res://scripts/multiplier_zones.gd" id="19_md1in"]
+[ext_resource type="Material" uid="uid://dnxuldiy8408d" path="res://res/small_rock_material.tres" id="20_s470r"]
 
 [sub_resource type="Animation" id="Animation_k7lvh"]
 length = 0.001
@@ -1095,6 +1096,16 @@ size = Vector3(45, 5, 5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_1vd3e"]
 size = Vector3(50, 0.001, 0.05)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_md1in"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.501
+radial_segments = 4
+
+[sub_resource type="BoxMesh" id="BoxMesh_s470r"]
+material = ExtResource("20_s470r")
+size = Vector3(0.108, 0.502, 0.007)
 
 [node name="Moss" type="Node3D" unique_id=229302118]
 
@@ -2300,7 +2311,6 @@ shape = SubResource("ConvexPolygonShape3D_p0x6b")
 
 [node name="Clouds" type="Node3D" parent="BackgroundMesh" unique_id=165862447]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 170, 13)
-visible = false
 
 [node name="Cloud31" type="MeshInstance3D" parent="BackgroundMesh/Clouds" unique_id=1417259871]
 transform = Transform3D(-1, 1.4870183e-07, 2.6220116e-08, 0, 0.17364797, -0.9848077, -1.509958e-07, -0.9848077, -0.17364797, 445.52, -108.161, 1562.785)
@@ -2845,6 +2855,7 @@ mesh = SubResource("ArrayMesh_kgf3r")
 
 [node name="Road_Block_Brick_Mesh14" type="Node3D" parent="." unique_id=390741152]
 transform = Transform3D(1.6785169e-08, -0.48299998, -3.9252825e-08, -0.38399997, -2.1112598e-08, 6.972702e-23, 1.2610776e-15, 4.2225203e-08, -0.449, 8.933, 3, 20.189)
+visible = false
 metadata/_edit_group_ = true
 
 [node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh14" unique_id=799356045]
@@ -2983,6 +2994,7 @@ mesh = SubResource("ArrayMesh_kgf3r")
 
 [node name="Road_Block_Brick_Mesh16" type="Node3D" parent="." unique_id=632580451]
 transform = Transform3D(1.6785169e-08, -0.48299998, -3.9252825e-08, -0.38399997, -2.1112598e-08, 6.972702e-23, 1.2610776e-15, 4.2225203e-08, -0.449, 8.933, 0.6309999, 20.189)
+visible = false
 metadata/_edit_group_ = true
 
 [node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh16" unique_id=645494672]
@@ -3121,6 +3133,7 @@ mesh = SubResource("ArrayMesh_kgf3r")
 
 [node name="Road_Block_Brick_Mesh18" type="Node3D" parent="." unique_id=1470299079]
 transform = Transform3D(1.6785169e-08, -0.48299998, -3.9252825e-08, -0.38399997, -2.1112598e-08, 6.972702e-23, 1.2610776e-15, 4.2225203e-08, -0.449, -9.037, 3, 20.189)
+visible = false
 metadata/_edit_group_ = true
 
 [node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh18" unique_id=1359023959]
@@ -3272,6 +3285,7 @@ mesh = SubResource("ArrayMesh_kgf3r")
 
 [node name="Road_Block_Brick_Mesh20" type="Node3D" parent="." unique_id=976306245]
 transform = Transform3D(1.6785169e-08, -0.48299998, -3.9252825e-08, -0.38399997, -2.1112598e-08, 6.972702e-23, 1.2610776e-15, 4.2225203e-08, -0.449, -9.037, 0.627, 20.189)
+visible = false
 metadata/_edit_group_ = true
 
 [node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh20" unique_id=1335914771]
@@ -3476,16 +3490,62 @@ text = "$20"
 font_size = 29
 outline_size = 0
 
-[node name="Seperator2" type="MeshInstance3D" parent="." unique_id=1626375877]
+[node name="Wire_A" type="MeshInstance3D" parent="." unique_id=1626375877]
 transform = Transform3D(0.367, 0, 0, 0, 1, 0, 0, 0, 1, -0.078, 3, 20.132)
-top_level = true
 mesh = SubResource("BoxMesh_1vd3e")
 skeleton = NodePath("../BonusCash")
 
-[node name="Seperator3" type="MeshInstance3D" parent="." unique_id=1594966983]
+[node name="Notch" type="MeshInstance3D" parent="Wire_A" unique_id=1039335884]
+transform = Transform3D(-4.480319e-08, 0.275, 0, -0.275, -4.480319e-08, 0, 0, 0, 0.275, -24.272482, 0, 0)
+mesh = SubResource("CylinderMesh_md1in")
+
+[node name="Notch2" type="MeshInstance3D" parent="Wire_A" unique_id=1199459257]
+transform = Transform3D(-4.480319e-08, 0.275, 0, -0.275, -4.480319e-08, 0, 0, 0, 0.275, 24.355, 0, 0)
+mesh = SubResource("CylinderMesh_md1in")
+
+[node name="Wire_B" type="MeshInstance3D" parent="." unique_id=741637617]
 transform = Transform3D(0.367, 0, 0, 0, 1, 0, 0, 0, 1, -0.078, 0.65, 20.132)
 mesh = SubResource("BoxMesh_1vd3e")
-skeleton = NodePath("../BonusCash")
+
+[node name="Notch" type="MeshInstance3D" parent="Wire_B" unique_id=315638872]
+transform = Transform3D(-4.480319e-08, 0.275, 0, -0.275, -4.480319e-08, 0, 0, 0, 0.275, -24.272482, 0, 0)
+mesh = SubResource("CylinderMesh_md1in")
+
+[node name="Notch2" type="MeshInstance3D" parent="Wire_B" unique_id=1446835571]
+transform = Transform3D(-4.480319e-08, 0.275, 0, -0.275, -4.480319e-08, 0, 0, 0, 0.275, 24.355, 0, 0)
+mesh = SubResource("CylinderMesh_md1in")
+
+[node name="Column1" type="MeshInstance3D" parent="." unique_id=1925895366]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.769, -2.614, 19.556)
+mesh = SubResource("BoxMesh_s470r")
+
+[node name="Column2" type="MeshInstance3D" parent="." unique_id=1906403061]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.115, -2.614, 19.556)
+mesh = SubResource("BoxMesh_s470r")
+
+[node name="Column3" type="MeshInstance3D" parent="." unique_id=261050208]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.413, -2.614, 19.556)
+mesh = SubResource("BoxMesh_s470r")
+
+[node name="Column4" type="MeshInstance3D" parent="." unique_id=1929982561]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.722, -2.614, 19.556)
+mesh = SubResource("BoxMesh_s470r")
+
+[node name="Column5" type="MeshInstance3D" parent="." unique_id=927015456]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.939, -2.614, 19.556)
+mesh = SubResource("BoxMesh_s470r")
+
+[node name="Column6" type="MeshInstance3D" parent="." unique_id=904575327]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.636, -2.614, 19.556)
+mesh = SubResource("BoxMesh_s470r")
+
+[node name="Column7" type="MeshInstance3D" parent="." unique_id=1750789358]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.317, -2.614, 19.556)
+mesh = SubResource("BoxMesh_s470r")
+
+[node name="Column8" type="MeshInstance3D" parent="." unique_id=1604281670]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.957, -2.614, 19.556)
+mesh = SubResource("BoxMesh_s470r")
 
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

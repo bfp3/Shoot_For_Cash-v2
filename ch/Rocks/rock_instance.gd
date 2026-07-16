@@ -54,12 +54,6 @@ var rock_has_been_logged := false
 @onready var damage_label_3d: Label3D = %Damage_Label3D
 @onready var health_remaining_label: Label3D = %Health_remaining_label
 
-@export_group('Health Display')
-@onready var icon: Sprite3D = %'2d_3d_icon'
-var health_green : Color = Color("d3d6cf")
-var health_orange : Color = Color(1.0, 0.6, 0.0)
-var health_red : Color = Color('870000')
-
 @onready var main_col: CollisionShape3D = $main_col
 @onready var mesh_container: Node3D = %Mesh
 
@@ -510,8 +504,6 @@ func reset_stats() -> void:
 	is_deactivated = false
 	global_position = start_pos
 
-	icon.modulate.a = 0.0
-
 
 
 func was_hit_tween() -> void:
@@ -736,8 +728,7 @@ func add_to_rocks_round() -> void:
 	play_piano_note()
 	add_to_group('Target')
 	%explosion_radius_mesh.hide()
-	icon.show()
-	icon.modulate.a = 0.0
+
 	# Hazards can never be gold
 
 	rock_activated = true
@@ -781,10 +772,10 @@ func start_destroyed_process() -> void:
 	enter_state(State.HIT)
 	
 	
-	if global_position.y > 3.0:
+	if global_position.y > 3.3:
 		cash_value = cash_value * current_cash_multiplier
 	
-	if global_position.y <= 3.0 && global_position.y > 0.65:
+	if global_position.y <= 3.3 && global_position.y > 0.65:
 		cash_value += 10
 		print('shot within zone A')
 		
@@ -801,12 +792,15 @@ func start_destroyed_process() -> void:
 	
 	if rock_type_name.contains('Hazard'):
 		$Hazard_sfx.play()
+		cash_value = 0
+	
+	
 	
 	remove_from_group('Target')
 	
 	play_destroy_sfx()
 	$Marked.hide()
-	icon.hide()
+
 	if cash_value > 0:
 		money_label_3d.money_is_money(global_position, cash_value)
 	
@@ -1063,20 +1057,6 @@ func went_through_cash_multi_zone() -> void:
 	current_mesh.get_node('damage_mesh').hide()
 
 		
-#func set_xray_visible(value : bool) -> void:
-	#tween_2d_icon(value)
 
-#func tween_2d_icon(value : bool) -> void:
-#
-	#if value:
-		#if tween_sight_icon:
-			#tween_sight_icon.kill()
-		#$'2d_3d_icon/AnimationPlayer'.play('2d_3d_icon')
-		#tween_sight_icon = create_tween()
-		#tween_sight_icon.tween_property(%'2d_3d_icon', 'modulate:a', 1.0, 0.1)
-	#
-	#else:
-#
-		#$'2d_3d_icon/AnimationPlayer'.pause()
 		
 		

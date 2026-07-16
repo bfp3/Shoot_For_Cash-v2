@@ -15,7 +15,9 @@ var dataset_float : Dictionary = {
 	,"power_gun_fire_rate"	: [1.25, 1.0, 0.9,0.8,0.65,0.50,0.35,0.20,0.15,0.10, 0.05]
 	,"power_bullet_damage" 	: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 	,"power_bullet_delay" 	: [0.1,0.08,0.05,0.02,0.01]
-	,"power_bullet_speed" 	: [1.0, 0.8, 0.5, 0.4, 0.2, 0.15, 0.1, 0.05,0.02, 0.01, 0.005]
+	
+	,"power_bullet_speed" 	: [0.4, 0.2, 0.15, 0.1, 0.05,0.02, 0.01, 0.005, 0.001]
+	#,"power_bullet_speed" 	: [1.0, 0.8, 0.5, 0.4, 0.2, 0.15, 0.1, 0.05,0.02, 0.01, 0.005]
 	
 	,"power_gun"				: [0]
 	
@@ -30,9 +32,9 @@ var dataset_float : Dictionary = {
 	,"price_bullet_speed" 			: [40, 40, 40, 40, 40, 40, 20, 30, 40, 50]
 	,"price_bullet_delay" 			: [2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
 	,"price_gun"					: [0,0,0]
-	,"price_sky_mine" 				: [10]
+	,"price_sky_mine" 				: [20]
 	,"price_balloon_buster"			: [3, 6, 12, 56,125,400,800.1200,2400]
-	,'price_time_upgrade' 			: [0, 52, 24, 26, 30, 220, 180, 160, 140, 1000]
+	,'price_time_upgrade' 			: [0, 50, 50, 50, 50, 50, 50, 50, 50, 50]
 	,"price_bonus_round_pineapples" : [200]
 	,"price_auto_fire" 				: [135]
 	,"price_max_items_in_shop" 		: [2,10,30]

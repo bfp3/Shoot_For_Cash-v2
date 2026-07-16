@@ -59,16 +59,17 @@ func _ready() -> void:
 	pivot_offset_ratio = Vector2(0.5,1.0)
 	cash_label.modulate.a = 0.0
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
+	
 	hide()
 
 	all_skills = all_skills_container.get_children()
 
 	EventBus.instance.open_shop.connect(enter_state.bind(SkillState.OPEN_MENU))
 	#$NextRound.pressed.connect(enter_state.bind(SkillState.CLOSE_MENU))
-	
-	update_shop_labels()
+	cash_label.hide()
+	#update_shop_labels()
 	cash_label.text = "$0"
-	update_cost_label()
+	#update_cost_label()
 	if test_mode:
 		EventBus.instance.open_shop.emit()
 

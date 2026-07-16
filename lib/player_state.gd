@@ -10,7 +10,7 @@ const RESTART_DATASET := {
 	"debug_add_cash": 1000,
 
 	"round": 1,
-	"earnings": 0,
+	"bonus_cash": 0,
 	"fines": 0,
 	"reroll": 0,
 	"reroll_unlocked": 0,
@@ -48,9 +48,9 @@ const DEFAULT_DATASET := {
 	"stage_name": "start",
 	"tickets": 0,
 	"debug_add_cash": 1000,
-
+	
 	"round": 0,
-	"earnings": 0,
+	"bonus_cash": 0,
 	"fines": 0,
 	"reroll": 0,
 	"reroll_unlocked": 0,
@@ -92,7 +92,7 @@ var _current_round_log: Array = []
 
 func next_round() -> void:
 	dataset.round += 1
-	dataset.earnings = 0
+	dataset.bonus_cash = 0
 	dataset.fines = 0
 	dataset.total_white_rocks = 0
 	dataset.total_rocks_in_round = 0
@@ -122,14 +122,16 @@ func get_cash() -> Dictionary:
 	
 	return {
 		"cash": dataset.cash
-		,"earnings": dataset.earnings
+		,"bonus_cash": dataset.bonus_cash
 		,"fines": dataset.fines
 	}
 	
 func add_cash(value : int) -> void:
 	dataset.cash = dataset.cash + value
-	#dataset.earnings = dataset.earnings + value
-	#reset_cash_debug_tool()
+	
+func add_bonus(value : int) -> void:
+	dataset.bonus_cash = dataset.bonus_cash + value
+
 	
 func log_hit(item:String, item_type:String, value:int):
 	var rock_data : Dictionary = gl_DataSet.dataset_float
@@ -142,7 +144,7 @@ func log_hit(item:String, item_type:String, value:int):
 	if value < 0:
 		dataset.fines = dataset.fines + value
 	else:
-		dataset.earnings = dataset.earnings + value
+		dataset.bonus_cash = dataset.bonus_cash + value
 		
 	var d: Dictionary = {
 		"round": dataset.round
@@ -282,7 +284,11 @@ func get_item_hits(_round:int) -> Dictionary:
 	return d
 	
 func get_power_level(power_name:String) -> int:
-	return dataset[power_name]
+	if dataset.has(power_name):
+		return dataset[power_name]
+		
+	else:
+		return -1
 	
 func get_demo_stats() -> Dictionary:
 
@@ -313,7 +319,6 @@ func get_demo_stats() -> Dictionary:
 func change_location(_new_location : String) -> bool:
 	var old_location = dataset.stage_name
 	_new_location = _new_location.to_lower()
-	print(_new_location)
 	if _new_location == dataset.stage_name:
 		print('we are already here do not move')
 		return false
@@ -332,7 +337,6 @@ func change_location(_new_location : String) -> bool:
 	if old_location == gl_DataSet.get_string('place_name', 5) && _new_location == gl_DataSet.get_string('place_name', 0):
 		round_manager.move_to_moss()
 		dataset.stage_name = _new_location
-		print('moving to moss')
 		return true
 		
 	if old_location == gl_DataSet.get_string('place_name', 0) && _new_location == gl_DataSet.get_string('place_name', 1):

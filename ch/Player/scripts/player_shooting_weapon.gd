@@ -119,9 +119,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	
 	round_manager = get_tree().get_first_node_in_group('round_manager')
-	if round_manager != null:
-		#round_manager == RoundManager && 
-		print('found the round_manager')
+
 
 #func _process(delta: float) -> void:
 	#if player.current_state != player.State.ACTIVE:

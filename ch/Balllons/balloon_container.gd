@@ -1,157 +1,160 @@
 extends Node3D
-
 @export var move_speed := 2.0
-var current_round := 0
-var new_round_checker := 0
-@onready var balloon: StaticBody3D = $Balloon
-@onready var balloon_2: StaticBody3D = $Balloon2
-@onready var balloon_3: StaticBody3D = $Balloon3
-@onready var balloon_4: StaticBody3D = $Balloon4
-
-
 var balloons_in_play := 0
+var started := false
+const BALLOON_Z_FRONT := 22.5
+
+# Column 1 -> -7, column 2 -> -5, ... column 8 -> 7 (mirrored vs RockManager)
+const BALLOON_COLUMN_1_X := 7.0
+const BALLOON_COLUMN_STEP := -2.0
+const BALLOON_COLUMN_COUNT := 8
+
+const LANE_Y := {
+	1: 0.5,
+	2: 3.5,
+	3: 6.5,
+}
 
 func _ready() -> void:
 	move_all_ballons_back()
-	#move_all_ballons_below()
 	set_physics_process(false)
 
-func move_all_ballons_below() -> void:
-	for i in get_children():
-		if i is StaticBody3D:
-			#i.global_position = i.start_pos
-			i.global_position.z = i.start_pos.z - 11.0
-			i.hide()
-	
 func move_all_ballons_back() -> void:
 	for i in get_children():
 		if i is StaticBody3D:
 			i.global_position.z = i.start_pos.z - 27.0
 			i.hide()
+
+func balloon_column_to_x(column: int) -> float:
+	var clamped_column := clampi(column, 1, BALLOON_COLUMN_COUNT)
+	if clamped_column != column:
+		push_warning("BalloonManager: column %d out of range [1, %d], clamped to %d." % [column, BALLOON_COLUMN_COUNT, clamped_column])
+	return BALLOON_COLUMN_1_X + float(clamped_column - 1) * BALLOON_COLUMN_STEP
+
+func balloon_lane_to_y(lane: int) -> float:
+	if not LANE_Y.has(lane):
+		push_warning("BalloonManager: lane %d out of range [1,3], defaulting to lane 1." % lane)
+		return LANE_Y[1]
+	return LANE_Y[lane]
+
+func add_balloon(balloon_array : Array) -> void:
+	#print('Add Balloon Called ', balloon_array)
 	
-func add_white_balloon_back_into_list(_balloon: StaticBody3D) -> void:
-	if !is_instance_valid(balloon):
+	if started:
+		return
+		
+	started = true
+
+	
+	if 399 in balloon_array:
+		await add_all_balloons()
 		return
 	
-	balloons_in_play = clamp(balloons_in_play - 1, 0, get_children().size())
-	
-	await get_tree().create_timer(4.0).timeout
-	# Return to initial state
-	_balloon.behind_player = true
-	_balloon.hide()
-	_balloon.global_position.z = _balloon.start_pos.z - 27.0
+	for i in balloon_array:
+		if i <= 300 || i > 400:
+			print('erasing ', i)
+			balloon_array.erase(i)
+		#else:
+			#i -= 300
 
-	# Move to the end of the child list
-	move_child(_balloon, get_child_count() - 1)
+	if balloon_array.is_empty():
+		return
 	
-func add_balloon() -> void:
-	return
-	var _counter := 1
-	for l in range(_counter):
-		for i in get_children():
-			if i is StaticBody3D and i.behind_player:
-				balloons_in_play = clamp(balloons_in_play + 1, 0, get_children().size())
+	print('Balloon Codes --- ', balloon_array )
 	
-	for l in range(_counter):
-		for i in get_children():
-			if i is StaticBody3D and i.behind_player:
-				i.move_balloon_in_front_of_player()
+	for code in balloon_array:
+		if code < 300:
+			continue
+		
+		print('adding ballooon')
+		var _offset : int = code - 300
+		var column : int = int(_offset / 10)
+		var lane : int = _offset % 10
 
-				var tween = create_tween()
-				tween.set_ease(Tween.EASE_IN_OUT)
-				tween.set_trans(Tween.TRANS_SINE)
-				tween.tween_interval(0.2)
-				#tween.tween_property(i, "global_position:y", -11.0, 5.0).as_relative()
-				tween.tween_property(i, "global_position:z", 27.0, 5.0).as_relative()
-				break
+		var target_x := balloon_column_to_x(column)
+		var target_y := balloon_lane_to_y(lane)
+
+		var balloon := _get_next_available_balloon()
+		if balloon == null:
+			push_warning("BalloonManager: no available balloon for code %d" % code)
+			continue
+
+		balloons_in_play = clamp(balloons_in_play + 1, 0, get_children().size())
+
+		balloon.behind_player = false
+		balloon.show()
+		balloon.global_position.x = target_x
+		balloon.global_position.y = target_y
+		balloon.move_balloon_in_front_of_player()
+
+		var tween = create_tween()
+		tween.set_ease(Tween.EASE_IN_OUT)
+		tween.set_trans(Tween.TRANS_SINE)
+		tween.tween_interval(0.2)
+		tween.tween_property(balloon, "global_position:z", BALLOON_Z_FRONT, 5.0)
 
 		await get_tree().create_timer(1.5).timeout
 
-	## Check if every balloon has been added
-	#var all_added := true
-	#for i in get_children():
-		#if i is StaticBody3D and i.behind_player:
-			#all_added = false
-			#break
-#
-	## Grow one balloon at a time in child order
-	#if all_added:
-		#for i in get_children():
-			#if i is StaticBody3D and i.scale.x < 3.0:
-				#var tween = create_tween()
-				#tween.set_trans(Tween.TRANS_BACK)
-				#tween.set_ease(Tween.EASE_OUT)
-				#tween.tween_property(
-					#i,
-					#"scale",
-					#Vector3(
-						#min(i.scale.x + 1.0, 3.0),
-						#min(i.scale.y + 1.0, 3.0),
-						#min(i.scale.z + 1.0, 3.0)
-					#),
-					#0.3
-				#)
-				#break
-
-#func _physics_process(delta: float) -> void:
-	#
-	#if Engine.get_physics_frames() % 60 == 0:
-		#current_round = gl_PlayerState.dataset.round
-		#if new_round_checker != current_round:
-			#print("Current Round: ", current_round)
-			#new_round_checker = current_round
-			#move_ballons()
-			#move_ballons_2()	
-	
-
-func move_ballons() -> void:
-	var chosen_balloon = [balloon,balloon_2,balloon_3,balloon_4, $Trio_balloon, $Trio_balloon2,$Trio_balloon3].pick_random()
-	
-	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(chosen_balloon, "global_position:x", -12.0, 20.0)
-	tween.tween_interval(randi_range(2,6))
-	tween.tween_property(chosen_balloon, "global_position:x", 12.0, 20.0)
-	await tween.finished
-	
-func move_ballons_2() -> void:
-	var chosen_balloon = [balloon,balloon_2,balloon_3,balloon_4].pick_random()
-	
-	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(chosen_balloon, "global_position:z", -1.0, 3.0)
-	tween.tween_interval(randi_range(2,6))
-	tween.tween_property(chosen_balloon, "global_position:z", 20.0, 10.0)
-	await tween.finished
-
+func _get_next_available_balloon() -> StaticBody3D:
+	for i in get_children():
+		if i is StaticBody3D and i.behind_player:
+			return i
+	return null
 
 
 func restart() -> void:
 	await get_tree().create_timer(1.0).timeout
-	current_round = 0
-	new_round_checker = 0
-
 	for child in get_children():
 		if child is StaticBody3D:
 			child.show()
 			child.behind_player = true
-
-
-
-	# Return all balloons to their starting hidden position.
-	#move_all_ballons_below()
 	move_all_ballons_back()
-	
-	
-func _input(event: InputEvent) -> void:
-	return
-	if Input.is_action_just_pressed('backward'):
-		for i in get_children():
-			if i is StaticBody3D and i.behind_player:
-				i.move_balloon_in_front_of_player()
 
-				var tween = create_tween()
-				tween.set_ease(Tween.EASE_IN_OUT)
-				tween.set_trans(Tween.TRANS_SINE)
-				tween.tween_interval(0.2)
-				#tween.tween_property(i, "global_position:y", -11.0, 5.0).as_relative()
-				tween.tween_property(i, "global_position:z", 27.0, 5.0).as_relative()
-				break
+
+func add_all_balloons() -> void:
+	var full_array : Array = []
+	for column in range(1, BALLOON_COLUMN_COUNT + 1):
+		for lane in LANE_Y.keys():
+			full_array.append(300 + (column * 10) + lane)
+	
+	await add_balloon(full_array)
+
+func add_bonuses() -> void:
+	var bonus_counter := 0
+	for i in get_children():
+		if i is StaticBody3D and not i.behind_player:
+			bonus_counter += 1
+			gl_PlayerState.add_bonus(bonus_counter)
+
+			
+			
+	await get_tree().create_timer(0.05).timeout
+	return
+
+
+
+func end_round() -> void:
+	#await add_bonuses()
+	started = false
+	var counter := 0
+	var dur := 0.3
+	var dur_increment := 0.05
+	for i in get_children():
+		if i is StaticBody3D and not i.behind_player:
+			counter += 1
+			i.end_of_the_round_pop_balloon(counter)
+			await get_tree().create_timer(dur).timeout
+			dur = clamp(dur - dur_increment, 0.05,dur)
+
+
+func add_balloon_back_into_list(_balloon: StaticBody3D) -> void:
+	if !is_instance_valid(_balloon):
+		return
+
+	balloons_in_play = clamp(balloons_in_play - 1, 0, get_children().size())
+
+	await get_tree().create_timer(4.0).timeout
+	_balloon.behind_player = true
+	_balloon.hide()
+	_balloon.global_position.z = _balloon.start_pos.z - 27.0
+	move_child(_balloon, get_child_count() - 1)

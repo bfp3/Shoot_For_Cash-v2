@@ -1,13 +1,16 @@
 class_name TallyCard extends Control
 
+@export var perfect_bonus := 50
+@export var pass_bonus := 20
+
 @onready var grade_label: RichTextLabel = %GradeLabel
 @onready var grade_cash_label : RichTextLabel = %GradeCashLabel
 
 @onready var bonuses_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/BonusesLabel
 @onready var bonuses_cash_label: RichTextLabel = %BonusesCashLabel
 
-@onready var total_label: RichTextLabel = %TotalLabel
-@onready var total_cash_cash_label: RichTextLabel = %TotalCashCashLabel
+@onready var grand_total_label: RichTextLabel = %TotalLabel
+@onready var grand_total_cash_label: RichTextLabel = %TotalCashCashLabel
 
 enum ScoreResult {
 	ZERO_SCORE,
@@ -41,7 +44,7 @@ enum State {
 }
 
 var current_cash : int = 0
-var current_earnings : int = 0
+var current_bonuses : int = 0
 var current_fines : int = 0
 
 var current_state : State = State.INACTIVE
@@ -102,13 +105,13 @@ func start_fail_sequence() -> void:
 	print('FAIL')
 	grade_cash_label.text = '$0'
 	grade_cash_label.modulate = Color('FF0000')
-	grade_label.text = "FAIL"
+	grade_label.text = "$0"
 	grade_label.modulate = Color('FF0000')
 	grade_cash_label.text = ""
 	grade_cash_label.modulate = Color('FF0000')
 	bonuses_cash_label.modulate.a = 0.0
 	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 1.0
-	total_cash_cash_label.modulate = Color('FF0000')
+	grand_total_cash_label.modulate = Color('FF0000')
 	#$'CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel'.text = "$" + str(0)
 	return
 	
@@ -126,11 +129,11 @@ func start_perfect_sequence() -> void:
 	# 2. GRADE CASH LABEL
 	grade_cash_label.text = '$50'
 	grade_cash_label.modulate = Color("42d100")
-	gl_PlayerState.add_cash(50)
+	gl_PlayerState.add_cash(perfect_bonus)
 
 	# decorative particle flourish, fires in the background (non-blocking)
 	perfect_particles()
-	total_cash_cash_label.modulate = Color("42d100")
+	grand_total_cash_label.modulate = Color("42d100")
 	# PAUSE
 	await get_tree().create_timer(dur).timeout
 
@@ -144,7 +147,7 @@ func start_perfect_sequence() -> void:
 	await get_tree().create_timer(dur).timeout
 	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = true
 	$SFX/shop_purchase_02.play()
-	total_cash_cash_label.text = "$" + str(int(gl_PlayerState.dataset.cash))
+	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus))
 	await get_tree().create_timer(dur).timeout
 	return
 
@@ -159,7 +162,7 @@ func start_pass_sequence() -> void:
 
 	# 2. GRADE CASH LABEL
 	grade_cash_label.text = '$20'
-	gl_PlayerState.add_cash(20)
+	gl_PlayerState.add_cash(pass_bonus)
 
 	# PAUSE
 	await get_tree().create_timer(dur).timeout
@@ -176,8 +179,8 @@ func start_pass_sequence() -> void:
 	# 4. TOTAL CASH EARNED
 	$SFX/shop_purchase_02.play()
 	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = true
-	total_cash_cash_label.text = "$" + str(int(gl_PlayerState.dataset.cash))
-	total_cash_cash_label.modulate = Color("42d100")
+	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + pass_bonus))
+	grand_total_cash_label.modulate = Color("42d100")
 	await get_tree().create_timer(dur).timeout
 	return
 	
@@ -192,8 +195,8 @@ func check_white_rocks() -> void:
 	bonuses_label.text = 'BONUSES'
 	bonuses_cash_label.text = ""
 	
-	total_label.text = 'CASH'
-	total_cash_cash_label.text = ""
+	grand_total_label.text = 'TOTAL WINNINGS'
+	grand_total_cash_label.text = ""
 	
 	start_sequence = true
 	
@@ -237,8 +240,8 @@ func perfect_particles() -> void:
 	
 
 func apply_bonus_cash() -> void:
-	var bonus_cash = gl_PlayerState.dataset.earnings
-	gl_PlayerState.add_cash(bonus_cash)
+	var bonus_cash = gl_PlayerState.dataset.bonus_cash
+	#gl_PlayerState.add_bonus(bonus_cash)
 	bonuses_cash_label.show()
 	bonuses_cash_label.modulate.a = 1.0
 	bonuses_cash_label.modulate = Color("42d100ff")

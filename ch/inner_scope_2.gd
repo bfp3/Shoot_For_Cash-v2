@@ -9,7 +9,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if !visible:
-		print("turned off second crosshair")
 		set_process(false)
 		return
 	

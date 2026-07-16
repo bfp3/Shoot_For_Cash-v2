@@ -20,14 +20,12 @@ func display_ticket() -> void:
 			purchased_ticket.upgrade_icon = MOSS_SHOP
 			purchased_ticket.upgrade_icon_textureRect.texture = purchased_ticket.upgrade_icon
 			ticket_location = "moss"
-			print('headed to moss')
 			
 		"moss":
 			purchased_ticket.name_label.text = "Ticket to Redd"
 			purchased_ticket.upgrade_icon = RED_SHOP
 			purchased_ticket.upgrade_icon_textureRect.texture = purchased_ticket.upgrade_icon
 			ticket_location = "redd"
-			print('headed to moss')
 			
 		"redd":
 			purchased_ticket.name_label.text = "To end the demo"

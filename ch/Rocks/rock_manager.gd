@@ -82,12 +82,19 @@ func update_inactive() -> void:
 # This is the start of arranging the rocks.
 func start_manual_rock_round(sequence: Array = [8,8]) -> void:
 	
+	
+	
 	manual_rock_sequence = sequence
 	enter_state(State.PREPARE_ROCKS)
 	
 	
 func update_prepare_rocks() -> void:
 	splash_zone.reset_detected_bodies()
+	
+	for i in manual_rock_sequence:
+		if i >= 300 && i < 400:
+			manual_rock_sequence.erase(i)
+			
 	
 	var active_bodies : Array = []
 	rocks_limit = manual_rock_sequence.size()
@@ -348,7 +355,7 @@ func bounce_rocks() -> void:
 
 		counter += 1
 		
-		await get_tree().create_timer(0.1).timeout
+		#await get_tree().create_timer(0.1).timeout
 		spin_rocks()
 		#await get_tree().create_timer(0.2).timeout
 		

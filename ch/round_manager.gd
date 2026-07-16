@@ -3,6 +3,27 @@ class_name RoundManager
 
 @export var rounds_until_shop := 3
 
+var force_shop_open := false
+
+const current_rock_sequence : Array = [
+	# First
+	[1,2,3,4,5,6,7,8]
+	,[1,33,33]
+	,[41,1,33,33]
+	,[321,313  ,41,1,33,33]
+	
+	# Second
+	#,[2,2,32 ,34,34,34]
+	#,[42,2,2,32 ,34,44,34,34]
+	#,[312,332,324,  42,2,2,32 ,34,44,34,34]
+	#
+	
+	]
+
+var current_sequence_index := 0
+var wave_in_round := 0
+
+
 const LEVEL_LAYOUT_00_OPENING_SCENE = preload('uid://88s7u86w4lfr')
 const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
 const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
@@ -12,8 +33,6 @@ const DEMO_END_SCREEN = preload('uid://dpbgyfs2kgdtr')
 
 var game_has_been_beaten := false
 
-var current_rock_sequence : Array = []
-var seq_rock_pointer := -1
 
 var bullet_active := false
 var bullet_active_counter := 0.0
@@ -65,6 +84,10 @@ enum RoundState {
 var success := false
 
 func _ready() -> void:
+	current_sequence_index = 0
+	wave_in_round = 0
+	force_shop_open = false
+	
 	move_to_start()
 	#move_to_moss()
 	#EventBus.instance.close_shop.connect(enter_state.bind(RoundState.SHOP_END))
@@ -84,14 +107,13 @@ func successful_round() -> void:
 	enter_state(RoundState.ROUND_END)
 	
 	
-
 func unsuccessful_round() -> void:
 	print('unsuccessful round')
 	stop_timer()
 	rounds_until_shop = 0
-	enter_state(RoundState.CHECK_ROUNDS)
+	force_shop_open = true
 	%Splash_zone.deactivate_splash_zone()
-	pass
+	enter_state(RoundState.ROUND_END)
 	
 	
 func next_wave() -> void:
@@ -205,31 +227,11 @@ func update_round_start() -> void:
 	
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	
-	current_rock_sequence = [
-		#[45,45,5,8]
-		#[2,2,4,36,36,38,38,38,4,36]
-		[1,33,33]
-		#,[2,2,4,36,36,38,38,38,4,36]
-		#,[13,1,1,13,31,31]
-		
-		#,[2,2,6]
-		#,[3,3,1]
-#
-		#,[2,2,14,4]
-		#,[2,2,14,4]
-		#,[3,3,1,1,8]
-		#
-		#,[3,3,1,1,18]
-		#,[3,3,1,1,18, 18]
-		#,[3,3,1,1,18, 18]
-		#,[3,13,1,1]
-		#,[2,2,14,4]
-		#,[3,13,1,13]
-		]
-		#[1,12,23,34,45,56]
+
+
 	
 	var rock_seq := update_rock_sequence()
-	#rock_seq = [5,5,1,1,6,6]
+
 	
 	
 	
@@ -253,44 +255,15 @@ func update_round_start() -> void:
 	await get_tree().create_timer(2.0).timeout
 	enter_state(RoundState.ROUND_IN_PROGRESS)
 
-func Xupdate_rock_sequence() -> Array:
-	seq_rock_pointer += 1
-	if seq_rock_pointer > current_rock_sequence.size() - 1:
-		seq_rock_pointer = 0
-		return current_rock_sequence[seq_rock_pointer]
-		
-	else:
-		return current_rock_sequence[seq_rock_pointer]
 
 
 func update_rock_sequence() -> Array:
-	seq_rock_pointer += 1
-
-	var plan := build_round_plan(current_rock_sequence)
-
-	if plan.is_empty():
-		push_warning('current_rock_sequence has no sub-arrays to play')
+	if current_rock_sequence.is_empty():
 		return []
 
-	if seq_rock_pointer > plan.size() - 1:
-		seq_rock_pointer = 0
-
-	return plan[seq_rock_pointer]
+	return current_rock_sequence[current_sequence_index]
 
 
-func build_round_plan(sequence : Array) -> Array:
-	var count := sequence.size()
-
-	match count:
-		0:
-			return []
-		1:
-			return [sequence[0], sequence[0], sequence[0]]
-		2:
-			return [sequence[0], sequence[1], sequence[1]]
-		_:
-			# Covers 3, and 4+ (ignoring anything beyond the first 3)
-			return [sequence[0], sequence[1], sequence[2]]
 
 func go_to_fake_round() -> void:
 	round_timer.enter_state(round_timer.State.RESTARTING)
@@ -382,38 +355,51 @@ func update_round_end() -> void:
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
 
 func update_check_rounds() -> void:
-	rounds_until_shop = clamp(rounds_until_shop - 1, 0, 100)
 	
-	#if round_timer.time_left <= 0.0: #rounds_until_shop == 0 ||
-	if rounds_until_shop <= 0:
-		stop_timer()
-		rounds_until_shop = 3
-		player.round_finished(true)
+	print('Current Round ', gl_PlayerState.dataset.round)
+	
+	wave_in_round += 1
+
+	if wave_in_round >= 3 or force_shop_open:
+		wave_in_round = 0
+		force_shop_open = false
+
+		current_sequence_index += 1
+		if current_sequence_index >= current_rock_sequence.size():
+			current_sequence_index = 0
 		stop_player()
+		rounds_until_shop = 3
 		await get_tree().create_timer(1.0).timeout
+		balloon_container.end_round()
 		enter_state(RoundState.TALLY_START)
 	else:
+		rounds_until_shop -= 1
 		enter_state(RoundState.ROUND_START)
 		
 
 
 func update_tally_start() -> void:
 	#$'../PlayerBalloon'.reposition_balloon()
-	check_how_many_rounds_left()
 	EventBus.instance.open_tally_card.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func update_tally_end() -> void:
 	#await get_tree().create_timer(0.5).timeout
-	balloon_container.add_balloon()
+	
+	gl_PlayerState.add_cash(gl_PlayerState.dataset.bonus_cash)
+	
+	# Check whether to add balloons
 	enter_state(RoundState.SHOP_START)
 
 	
 func update_shop_start() -> void:
 	EventBus.instance.open_shop.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	
 
+	if current_round > 0:
+		var rock_seq := update_rock_sequence()
+		balloon_container.add_balloon(rock_seq)
+	
 func update_shop_end() -> void:
 	#red_circle.display_circle()
 	hud_system.reset_hud()
@@ -472,9 +458,8 @@ func move_to_start() -> void:
 
 func move_to_moss() -> void:
 	
-	current_rock_sequence = gl_DataSet.get_array('seq_rocks_moss')
-	
-	printt('I have updated the rock waves in Moss ', current_rock_sequence)
+	#current_rock_sequence = gl_DataSet.get_array('seq_rocks_moss')
+
 	
 	transitioning_worlds = true
 	player.display_hud()
@@ -623,12 +608,6 @@ func stop_timer() -> void:
 func find_egg() -> void:
 	egg_pulse = get_tree().get_first_node_in_group('Egg_Cage')
 
-func check_round_events() -> void:
-	pass
-	#if current_round % 3 == 0:
-		#await get_tree().create_timer(3.0).timeout
-		#egg_pulse.activate_pulse_wave()
-
 
 func perfect_score_feedback() -> void:
 	player.perfect_score()
@@ -675,6 +654,10 @@ func pineapple_round() -> void:
 	
 	
 func restart() -> void:
+	current_sequence_index = 0
+	wave_in_round = 0
+	force_shop_open = false
+	
 	# Runtime state
 	game_has_been_beaten = false
 	bullet_active = false
@@ -733,36 +716,3 @@ func start_game_over() -> void:
 		
 	player.stop_player()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
-func check_how_many_rounds_left() -> void:
-	#print('Current Round = ', current_round)
-	increase_rock_limit()
-	if current_round > rounds_to_complete:
-		%Game_Won.show()
-		update_game_won()
-
-func increase_rock_limit() -> void:
-	#gl_PlayerState.dataset.rock_limit += 3
-	#gl_PlayerState.dataset.rock_limit = 9
-	pass
-	#if current_round == 6:
-		#gl_PlayerState.dataset.rock_limit = 5
-		#return
-		#
-	#if current_round == 13:
-		#gl_PlayerState.dataset.rock_limit = 7
-		#return
-		#
-	#if current_round == 20:
-		#gl_PlayerState.dataset.rock_limit = 9
-		#return
-		
-#func _process(delta: float) -> void:
-	#print(gl_PlayerState.dataset.rock_limit)
-	
-func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed('backward'):
-		seq_rock_pointer = -1
-		print(pineapple_mode)
-		pineapple_mode = false
-		#enter_state(RoundState.TALLY_START)
