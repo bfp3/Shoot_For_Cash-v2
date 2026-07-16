@@ -2,6 +2,7 @@ class_name TallyCard extends Control
 
 @export var perfect_bonus := 50
 @export var pass_bonus := 20
+@onready var fail_label: RichTextLabel = %Fail_Label
 
 @onready var grade_label: RichTextLabel = %GradeLabel
 @onready var grade_cash_label : RichTextLabel = %GradeCashLabel
@@ -103,15 +104,20 @@ func update_inactive() -> void:
 
 func start_fail_sequence() -> void:
 	print('FAIL')
-	grade_cash_label.text = '$0'
-	grade_cash_label.modulate = Color('FF0000')
-	grade_label.text = "$0"
-	grade_label.modulate = Color('FF0000')
-	grade_cash_label.text = ""
-	grade_cash_label.modulate = Color('FF0000')
+	#grade_cash_label.text = ""
+	#grade_cash_label.text = "$0"
+	fail_label.show()
+	grade_cash_label.modulate = Color('a6a6a6ff')
+	#grade_label.text = "[i]Try Again"
+	grade_label.text = ""
+	grade_label.modulate = Color("a6a6a6ff")
+	grade_cash_label.modulate = Color('a6a6a6ff')
 	bonuses_cash_label.modulate.a = 0.0
+	
+	grand_total_label.hide()
+	bonuses_label.hide()
 	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 1.0
-	grand_total_cash_label.modulate = Color('FF0000')
+	grand_total_cash_label.modulate = Color('a6a6a6ff')
 	#$'CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel'.text = "$" + str(0)
 	return
 	
@@ -158,7 +164,7 @@ func start_pass_sequence() -> void:
 
 	# 1. GRADE LABEL
 	grade_label.modulate = Color("cccccc")
-	grade_label.text = "PASS"
+	grade_label.text = "Nice!"
 
 	# 2. GRADE CASH LABEL
 	grade_cash_label.text = '$20'
@@ -188,6 +194,9 @@ func check_white_rocks() -> void:
 	
 	var white_rocks = gl_PlayerState.dataset.total_white_rocks
 	
+	grand_total_label.show()
+	bonuses_label.show()
+	fail_label.hide()
 	grade_label.text = ""
 	grade_cash_label.text = ""
 	grade_cash_label.modulate = Color("42d100")
@@ -200,6 +209,11 @@ func check_white_rocks() -> void:
 	
 	start_sequence = true
 	
+	if gl_PlayerState.dataset.total_hazards > 0:
+		await start_fail_sequence()
+		start_sequence = false
+		return
+		
 	if white_rocks > 0:
 		await start_fail_sequence()
 		start_sequence = false

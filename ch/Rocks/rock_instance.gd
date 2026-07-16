@@ -150,7 +150,11 @@ func update_prepare_rock() -> void:
 	force_mult.shuffle()
 	await get_tree().process_frame
 	setup_rock_type()
-	gl_PlayerState.log_rocks(1, rock_type_name)
+	if rock_type_name == 'hazard_type_1':
+		print("one hazard")
+	else:
+		gl_PlayerState.log_rocks(1, rock_type_name)
+		
 	await get_tree().create_timer(0.2).timeout
 	global_position.x = target_x_position
 	
@@ -399,15 +403,18 @@ func setup_rock_type() -> void:
 		
 		# Rock Type 4
 		RockSize.MEDIUM_REDD:
+			var size_multiplier_float : float = randf_range (1.2, 1.35)
+			var base_scale  := Vector3.ONE * 0.35
 			current_rock_type 	= "Coal"
 			rock_type_name 		= "hazard_type_1"
 			health 				= 1#int(gl_DataSet.get_value("rock_type_2", 1))
 			cash_value 			= 0 #int(gl_DataSet.get_value("rock_type_2", 0))
 			cash_value = 0	#cash_value * 2
-			huge_rock.visible = true
-			main_col.scale = Vector3.ONE * 0.225
-			main_col.scale *= 1.5
-			current_mesh 		= huge_rock
+		
+			hazard_large.visible = true
+			current_mesh.scale = base_scale * size_multiplier_float
+			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
+			current_mesh 		= hazard_large
 			assign_random_mesh(current_mesh)
 			current_mesh.scale  = Vector3.ONE * 0.625
 			max_health = health
@@ -509,7 +516,7 @@ func reset_stats() -> void:
 func was_hit_tween() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_callback(smoke_particles)
-	tween.tween_property($Mesh, "scale", Vector3.ZERO, 0.10)
+	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
 	await tween.finished
 
 	
@@ -772,22 +779,22 @@ func start_destroyed_process() -> void:
 	enter_state(State.HIT)
 	
 	
-	if global_position.y > 3.3:
-		cash_value = cash_value * current_cash_multiplier
-	
-	if global_position.y <= 3.3 && global_position.y > 0.65:
-		cash_value += 10
-		print('shot within zone A')
+	if rock_type_name == 'hazard_type_1':
+		print("Hazard, do not award bonuses")
 		
-	if global_position.y <= 0.65:
-		cash_value += 20
-		print('shot within zone B')
-	
+	else:
+		var bonus_cash_reward := 0
+		var bonus_zones := get_tree().get_first_node_in_group('multi_shot')
+		if bonus_zones:
+			bonus_cash_reward = bonus_zones.check_if_within_zone(global_position.y)
+			
+		cash_value += bonus_cash_reward
+			
 	
 	if !rock_has_been_logged:
 		rock_has_been_logged = true
 		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
-	
+		
 	#if !destroyed_by_marked:
 	
 	if rock_type_name.contains('Hazard'):
@@ -957,8 +964,13 @@ func standard_blast() -> void:
 	
 
 func smoke_particles() -> void:
-	$AoE.global_position = global_position
-	$AoE.play_particles = true
+	if rock_type_name.contains('hazard'):
+		$Hazard_AoE2.global_position = global_position
+		$Hazard_AoE2.play_particles = true
+		
+	else:
+		$AoE.global_position = global_position
+		$AoE.play_particles = true
 
 
 func smoke_particles_duplicates() -> void:
@@ -995,6 +1007,9 @@ func smoke_particles_duplicates() -> void:
 
 func start_bullet_to_target() -> void:
 	play_accurate_sounds()
+	if rock_type_name.contains('hazard'):
+		gl_PlayerState.dataset.total_hazards += 1
+		print("hazard")
 		
 func play_accurate_sounds() -> void:
 	#await get_tree().create_timer(0.05).timeout

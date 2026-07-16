@@ -88,42 +88,53 @@ func start_manual_rock_round(sequence: Array = [8,8]) -> void:
 	enter_state(State.PREPARE_ROCKS)
 	
 	
+	
 func update_prepare_rocks() -> void:
+
 	splash_zone.reset_detected_bodies()
-	
-	for i in manual_rock_sequence:
-		if i >= 300 && i < 400:
-			manual_rock_sequence.erase(i)
-			
-	
-	var active_bodies : Array = []
+
+	for idx in range(manual_rock_sequence.size() - 1, -1, -1):
+		var value = manual_rock_sequence[idx]
+
+		if value >= 300 && value < 400:
+			print("REMOVING")
+			manual_rock_sequence.remove_at(idx)
+
+			print("Size:", manual_rock_sequence.size())
+			print(manual_rock_sequence)
+
+	print("After:", manual_rock_sequence)
+
+
 	rocks_limit = manual_rock_sequence.size()
-	#gl_PlayerState.log_rocks(rocks_limit)
-	
+	print("man size ", manual_rock_sequence.size())
+	var active_bodies : Array = []
+
 	var container_children := $Container_1.get_children()
 	if rocks_limit > container_children.size():
 		printt("Exceeding the number of rocks in the scene." % [rocks_limit, container_children.size()])
 		rocks_limit = container_children.size()
-	
+
 	var counter := 0
 	for i in container_children:
-		active_bodies.append(i)
+		if counter < rocks_limit:
+			active_bodies.append(i)
+		else:
+			# Make sure any rock left over from a previous round with a
+			# larger sequence doesn't stay active/visible this round.
+			i.enter_state(i.State.INACTIVE)
 		counter += 1
-		if counter >= rocks_limit:
-			break
-	
+
 	assign_manual_rock_positions(active_bodies)
 
 	var type : int
 	var pointer : int = 0
-	
+
 	for column in manual_rock_sequence:
-		
-		#type = 0
 		type = int(column / 10)
 		active_bodies[pointer].rock_type = type
 		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
-		pointer +=1
+		pointer += 1
 
 		
 	
@@ -355,7 +366,7 @@ func bounce_rocks() -> void:
 
 		counter += 1
 		
-		#await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.1).timeout
 		spin_rocks()
 		#await get_tree().create_timer(0.2).timeout
 		

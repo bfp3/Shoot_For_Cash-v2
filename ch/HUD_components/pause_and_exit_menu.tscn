@@ -40,10 +40,10 @@ anchor_left = -1.6413333
 anchor_top = 0.18251856
 anchor_right = -1.6413333
 anchor_bottom = 2.7450185
-offset_left = 356.6667
-offset_top = 293.74072
-offset_right = 561.6667
-offset_bottom = -781.5093
+offset_left = 1569.6667
+offset_top = 337.74072
+offset_right = 1774.6667
+offset_bottom = -737.5093
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = ExtResource("8_68q17")
 
@@ -152,10 +152,10 @@ anchor_left = -1.6413333
 anchor_top = 0.18251856
 anchor_right = -1.6413333
 anchor_bottom = 2.7450185
-offset_left = 140.66669
-offset_top = 293.74072
-offset_right = 345.6667
-offset_bottom = -746.5093
+offset_left = 1569.6667
+offset_top = 89.74072
+offset_right = 1774.6667
+offset_bottom = -950.5093
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = ExtResource("8_68q17")
 
@@ -209,7 +209,21 @@ autowrap_mode = 0
 
 [node name="MouseSensitivity2" type="HSlider" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=167003109]
 layout_mode = 2
+tick_count = 10
+ticks_on_borders = true
+ticks_position = 3
 script = ExtResource("7_qf3f5")
+
+[node name="Panel" type="Panel" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer/MouseSensitivity2" unique_id=2110522457]
+modulate = Color(0.3, 0.3, 0.3, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="HSeparator2" type="HSeparator" parent="Settings_menu/QuitMenu/HBoxContainer/VBoxContainer" unique_id=2026368304]
 custom_minimum_size = Vector2(50, 0)

@@ -36,7 +36,7 @@ func _on_body_entered(body: Node3D) -> void:
 		#print('all the bodies ', body.name)
 		splash_particles(body)
 		splash_sfx()
-		gl_PlayerState.log_rock_missed(body.rock_type_name)
+		#gl_PlayerState.log_rock_missed(body.rock_type_name)
 		body.enter_state(RockInstance.State.MISSED)
 
 

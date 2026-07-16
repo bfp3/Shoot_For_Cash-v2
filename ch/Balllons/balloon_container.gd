@@ -10,9 +10,9 @@ const BALLOON_COLUMN_STEP := -2.0
 const BALLOON_COLUMN_COUNT := 8
 
 const LANE_Y := {
-	1: 0.5,
+	1: 6.5,
 	2: 3.5,
-	3: 6.5,
+	3: 0.5,
 }
 
 func _ready() -> void:
@@ -39,6 +39,9 @@ func balloon_lane_to_y(lane: int) -> float:
 
 func add_balloon(balloon_array : Array) -> void:
 	#print('Add Balloon Called ', balloon_array)
+	
+	if balloon_array.is_empty():
+		return
 	
 	if started:
 		return
@@ -71,8 +74,8 @@ func add_balloon(balloon_array : Array) -> void:
 		var column : int = int(_offset / 10)
 		var lane : int = _offset % 10
 
-		var target_x := balloon_column_to_x(column)
-		var target_y := balloon_lane_to_y(lane)
+		var target_x := balloon_column_to_x(lane)
+		var target_y := balloon_lane_to_y(column)
 
 		var balloon := _get_next_available_balloon()
 		if balloon == null:

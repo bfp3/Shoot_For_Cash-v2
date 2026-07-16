@@ -90,18 +90,58 @@ func ticket_purchased() -> void:
 
 
 func purchase_made(_upgrade_type:String = '') -> void:
+	
+	update_cash_label_color()
+	var current_color = cash_label.modulate
+	var old_cash := player_cash
+	
 	var reroll_colour_tween := create_tween().set_trans(Tween.TRANS_SINE)
 	reroll_colour_tween.tween_property(cash_label, "modulate", Color('FF0000'), 0.1)
 	reroll_colour_tween.tween_callback(update_shop)
-	reroll_colour_tween.tween_property(cash_label, "modulate", Color('42d100'), 0.2)
+	reroll_colour_tween.tween_property(cash_label, "modulate", current_color, 0.2)
 	sfx_purchase_made()
 	update_shop()
+	
+	var spent := old_cash - player_cash
+	if spent > 0:
+		spawn_spent_cash_label(spent)
+	
 	transport_tickets.check_tickets()
 	EventBus.instance.player_update_stats_visually.emit()
 	
 	for i in all_skills:
 		if i.has_method("update_cost"):
 			i.update_cost()
+			
+	update_cash_label_color()
+	
+func spawn_spent_cash_label(amount: int) -> void:
+	var floating_label := cash_label.duplicate() as RichTextLabel
+
+	# Detach from layout so it can float freely over everything
+	floating_label.top_level = true
+	floating_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	floating_label.z_index = 100
+
+	add_child(floating_label)
+
+	floating_label.global_position = cash_label.global_position
+	floating_label.size = cash_label.size
+	floating_label.text = "[color=#ff4444]-$" + str(amount) + "[/color]"
+	floating_label.modulate = Color(1, 1, 1, 1)
+	floating_label.show()
+
+	var start_pos := floating_label.global_position
+
+	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.set_parallel(true)
+	tween.tween_property(floating_label, "global_position:y", start_pos.y - 150.0, 1.0)
+	tween.tween_property(floating_label, "modulate:a", 0.0, 2.0)
+	tween.set_parallel(false)
+
+	await tween.finished
+	floating_label.queue_free()
+	
 	
 func enter_state(new_state: SkillState) -> void:
 	current_state = new_state
@@ -231,7 +271,8 @@ func update_close_menu() -> void:
 	position = default_position
 	
 	hide()
-	
+	cash_label.hide()
+	cash_label.text = ''
 	EventBus.instance.close_shop.emit()
 
 	reroll_button.show()
@@ -246,24 +287,68 @@ func update_close_menu() -> void:
 				
 	for i in all_skills:
 		i.new_round = true
-	
+		
+		
+		
 func roll_up_cash_first_round() -> void:
-	update_cost_label()
-	#var duration :float = clamp(player_cash / 1000.0, 0.5, 3.0)
-	#cash_label.text = "$0"
-	#update_cost_label()
-	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_CUBIC)
-	tween.set_ease(Tween.EASE_OUT)
+	if gl_PlayerState.dataset.power_gun < 1:
+		print("hit")
+		return
+
+	var target_cash: int = gl_PlayerState.dataset.cash
+
+	# Show "0" immediately, invisible, then fade in
+	cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$0"
+	cash_label.modulate.a = 0.0
+	cash_label.show()
+
+	var duration: float = clamp(target_cash / 1000.0, 0.5, 3.0)
+
+	var sfx := $SFX/shop_reroll_sfx_02
+	var sfx_2 := $SFX/cash_roll_up
+	var default_pitch: float = sfx.pitch_scale
+	var default_pitch_2: float = sfx_2.pitch_scale
+
+	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.set_parallel(true)
+
 	tween.tween_property(cash_label, "modulate:a", 1.0, 0.2)
-	#tween.tween_method(
-		#func(value: float):
-			#cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$" + str(int(value)),
-		#0.0,
-		#float(player_cash),
-		#duration
-	#)
-	#update_cost_label()
+
+	tween.tween_method(
+		func(value: float):
+			cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$" + str(int(value)),
+		0.0,
+		float(target_cash),
+		duration
+	)
+
+	# Ramp both SFX pitches up over the course of the roll-up
+	tween.tween_property(sfx, "pitch_scale", 1.8, duration)
+	tween.tween_property(sfx_2, "pitch_scale", 1.8, duration)
+
+	tween.set_parallel(false)
+
+	# Retrigger both tick sounds repeatedly while the tween runs
+	var tick_interval := 0.08
+	var elapsed := 0.0
+	while elapsed < duration:
+		var pitch : float = lerp(0.8, 1.8, elapsed / duration)
+		sfx.pitch_scale = pitch
+		sfx_2.pitch_scale = pitch
+		sfx.play(0.08)
+		sfx_2.play(0.08)
+		await get_tree().create_timer(tick_interval).timeout
+		elapsed += tick_interval
+
+	await tween.finished
+
+	# Reset pitch back to default once the roll-up finishes
+	sfx.pitch_scale = default_pitch
+	sfx_2.pitch_scale = default_pitch_2
+
+	await get_tree().create_timer(1.0).timeout
+	update_cost_label()
+
 	 
 func is_skill_maxed(skill) -> bool:
 	
@@ -295,7 +380,6 @@ func reveal_random_skills(_dur : float = 0.05, wait_reroll : bool = false) -> vo
 
 	# FIRST SHOP OPEN
 	if gl_PlayerState.dataset.round == 0:
-		roll_up_cash_first_round()
 		for skill in all_skills:
 			if skill.name == "AddGun": # replace with your actual gun node name
 				selected_skills.append(skill)
@@ -369,7 +453,7 @@ func reveal_random_skills(_dur : float = 0.05, wait_reroll : bool = false) -> vo
 	reveal_skill_sfx.pitch_scale = _orig_pitch_scale
 
 func update_in_menu() -> void:
-	pass
+	roll_up_cash_first_round()
 	
 
 func gun_purchased() -> void:
@@ -411,7 +495,7 @@ func _on_re_roll_pressed() -> void:
 	
 	sfx_reroll_purchased()
 	# Remove money
-	
+	spawn_spent_cash_label(reroll_current_price)
 	gl_PlayerState.log_buy("reroll", reroll_current_price)
 	reroll_index += 1
 	await get_tree().create_timer(0.1).timeout
@@ -474,6 +558,7 @@ func clear_available_skills() -> void:
 func update_shop_labels() -> void:
 	
 	cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$" + str(player_cash)
+	update_cash_label_color()
 	update_cost_label()
 	
 	if price_reroll == 0:
@@ -559,7 +644,7 @@ func _on_max_out_powers_pressed() -> void:
 		
 func update_cost_label() -> void:
 	cash_label.text = "$" + str(player_cash)
-
+	update_cash_label_color()
 	await get_tree().process_frame
 
 	cash_label.pivot_offset.x = cash_label.size.x * 0.5
@@ -620,3 +705,11 @@ func check_the_amount_of_balloons_in_play() -> int:
 	else:
 		return 0
 	
+func update_next_ticket() -> void:
+	$%Transport_Tickets.update_tickets()
+
+func update_cash_label_color() -> void:
+	if gl_PlayerState.dataset.cash < 0:
+		cash_label.modulate = Color("ad0000ff")
+	else:
+		cash_label.modulate = Color("42d100ff")

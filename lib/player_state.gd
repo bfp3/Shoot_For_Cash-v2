@@ -164,7 +164,7 @@ func log_hit(item:String, item_type:String, value:int):
 	
 	elif item.contains('hazard'):
 		print("hazard")
-		dataset.total_hazards += 1
+		#dataset.total_hazards += 1
 		EventBus.instance.end_round_rock_missed.emit()
 		return
 		#if item.contains('red'):
@@ -193,7 +193,7 @@ func log_white_rock() -> void:
 func log_rocks(_total_rocks : int, rock_type_name : String) -> void:
 	if rock_type_name.contains('hazard'):
 		return
-		
+	
 	dataset.total_rocks_in_round += 1
 	dataset.total_rocks_in_round_remaining += 1
 	
@@ -212,13 +212,18 @@ func log_rock_missed(item : String = '') -> void:
 func check_all_rocks_cleared() -> void:
 	#if round_finished:
 		#return
-
+		
+	print(dataset.total_rocks_missed, " ROCKS MISSED")
+	
 	if dataset.total_rocks_in_round_remaining > 0:
 		return
 
 	round_finished = true
-
+	
+	
+	
 	if dataset.total_rocks_missed == 0:
+	#if dataset.total_white_rocks == 0:
 		EventBus.instance.rocks_cleared_end_wave.emit()
 		EventBus.instance.all_rocks_destroyed.emit()
 	#else:

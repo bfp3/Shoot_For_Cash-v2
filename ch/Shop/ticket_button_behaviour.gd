@@ -77,7 +77,7 @@ func check_tickets() -> void:
 			#modulate = Color.DARK_GREEN
 			#modulate.a = 0.5
 			modulate = Color.TRANSPARENT
-			#self.hide()
+			self.hide()
 			
 	if text == 'REDD':
 		#if gl_PlayerState.dataset.stage_name == 'end game':
@@ -88,6 +88,8 @@ func check_tickets() -> void:
 			#modulate = Color.DARK_GREEN
 			modulate = Color.TRANSPARENT
 			modulate.a = 0.5
+			self.hide()
+
 	
 	
 	var tickets_bought : int = gl_PlayerState.dataset.tickets
@@ -169,7 +171,7 @@ func update_unavailable() -> void:
 func update_on_sale() -> void:
 	
 	disabled = false
-
+	self.show()
 	text = "to " + location_name.to_upper()
 
 	price_label.show()# green #42d100
@@ -227,7 +229,8 @@ func _on_pressed() -> void:
 				return
 				
 			if gl_PlayerState.log_buy('power_ticket_moss', ticket_price):
-				gl_PlayerState.dataset.tickets += 1
+				#gl_PlayerState.dataset.tickets += 1
+				
 				purchase_ticket_special_effects()
 				
 				await get_tree().create_timer(0.5).timeout
@@ -293,7 +296,7 @@ func _play_purchase_effect() -> void:
 		flash_tween.tween_property(purchase_flash, "scale:x", 2.2, 0.28)
 		flash_tween.parallel().tween_property(purchase_flash, "self_modulate:a", 0.0, 0.38).set_delay(0.04)
 		flash_tween.parallel().tween_property(purchase_flash, "rotation", deg_to_rad(8.0), 0.28)
-
+	
 	var punch := create_tween()
 	punch.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	punch.tween_property(self, "scale", orig_scale * 1.42, 0.22)

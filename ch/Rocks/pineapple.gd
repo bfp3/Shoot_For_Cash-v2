@@ -133,7 +133,7 @@ func update_active() -> void:
 	
 func update_hit() -> void:
 	update_gravity(1.0)
-	$Pineapple_sound_hit.play()
+	
 	set_collision_layer_value(9, false)
 	set_collision_mask_value(9, false)
 	set_collision_layer_value(1, false)
@@ -141,10 +141,7 @@ func update_hit() -> void:
 	#disable_collision()
 	gl_PlayerState.log_hit('pineapple', 'pineapple', cash_value)
 	#gl_PlayerState.add_cash(cash_value)
-	$Pineapple_shot_explode.play()
 	
-	await get_tree().create_timer(0.3).timeout
-	$Pineapple_destroyed.play()
 	
 func update_missed() -> void:
 	reset_stats()
@@ -341,7 +338,9 @@ func bounce_rocks() -> void:
 	global_position = start_pos
 
 func start_destroyed_process() -> void:
-
+	
+	check_position_for_wall()
+	
 	if !rock_activated:
 		return
 	expand_blast_radius()
@@ -351,7 +350,10 @@ func start_destroyed_process() -> void:
 	rock_activated = false
 	freeze = true
 	enter_state(State.HIT)
-	
+	$Pineapple_shot_explode.play()
+	$Pineapple_sound_hit.play()
+	await get_tree().create_timer(0.3).timeout
+	$Pineapple_destroyed.play()
 	#if !destroyed_by_marked:
 	
 	remove_from_group('Target')
@@ -462,7 +464,7 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 func hit_out_of_bounds() -> void:
 	if !rock_activated:
 		return
-
+	
 	rock_activated = false
 	gl_PlayerState.log_hit('pineapple', 'pineapple', 0)
 	current_mesh.get_node('damage_mesh').show()
@@ -474,26 +476,26 @@ func hit_out_of_bounds() -> void:
 	remove_from_group('Target')
 
 	# Same explosion feedback as a normal destroy
-	play_destroy_sfx()
-	$Pineapple_sound_hit.play()
+	#play_destroy_sfx()
+	#$Pineapple_sound_hit.play()
 	#$Pineapple_shot_explode.play()
 
 	# Penalize instead of reward
 	
-	money_label_3d.money_is_money(global_position, 0)
+	#money_label_3d.money_is_money(global_position, 0)
 
 	set_collision_layer_value(1, false)
 	set_collision_layer_value(3, false)
 	is_deactivated = true
 
 
-	hit_wall_effects()
+	#hit_wall_effects()
 	$Mesh.hide()
 	#var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
 	#tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
 	#await tween.finished
 
-	shake_camera()
+	#shake_camera()
 
 	#await get_tree().create_timer(0.3).timeout
 	#$Pineapple_destroyed.play()

@@ -17,9 +17,12 @@ const MULTI_SHOT_DATA := {
 }
 
 func multi_shot(multiplier: int, pos : Vector3) -> void:
+
+	
 	if !MULTI_SHOT_DATA.has(multiplier):
 		return
-		
+	
+	
 	start_oranges(multiplier, pos)
 		
 	var data = MULTI_SHOT_DATA[multiplier]
@@ -36,6 +39,11 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 	multi_label.font_size = data.font_size
 	multi_label.show()
 	multi_label.global_position = pos
+	
+	
+	if gl_PlayerState.dataset.total_hazards > 0:
+		return
+	
 	$MultiShotSFX.play()
 
 	if tween:
@@ -51,7 +59,22 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 	tween.tween_property(multi_label, "modulate:a", 0.0, 0.2)
 	tween.parallel().tween_property(multi_label, "outline_modulate:a", 0.0, 0.2)
 
+func check_if_within_zone(pos : float) -> int:
+	var zone_a_reward := 10
+	var zone_b_reward := 20
+	
+	if pos > 3.3:
+		return 0
+	
+	if pos <= 3.3 && pos > 0.65:
+		return zone_a_reward
+		
+	if pos <= 0.65:
+		return zone_b_reward
 
+		
+	else:
+		return 0 
 
 func start_oranges(multiplier : int, _pos : Vector3) -> void:
 	var orange_container := get_tree().get_first_node_in_group('orange_container')

@@ -210,18 +210,31 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1353853436]
+self_modulate = Color(0.9, 0.9, 0.9, 1)
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 30
-theme_override_font_sizes/italics_font_size = 30
+theme_override_font_sizes/italics_font_size = 34
 bbcode_enabled = true
-text = "			Shoot every WHITE ROCK.
-			Pass: +$20. Perfect Score: +$50.
-			Pay $10 to PLAY.
-			$1000 = WIN.
-"
+text = "Shoot every [i][color=888888]GREY ROCK[/color][/i]
+to PASS [i][color=42d100]$20[/color][/i]
+Shoot EVERYTHING [i][color=ffc700]$50[/color]"
 autowrap_mode = 0
+horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/RichTextLabel" unique_id=641280641]
+modulate = Color(0.8, 0.8, 0.8, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(592.975, 23.65)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.914, 0.914)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=5093305]
 visible = false

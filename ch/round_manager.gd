@@ -3,22 +3,32 @@ class_name RoundManager
 
 @export var rounds_until_shop := 3
 
+var in_display_text_prompt := false
 var force_shop_open := false
 
-const current_rock_sequence : Array = [
+const current_rock_sequence : Array[Array] = [
 	# First
-	[1,2,3,4,5,6,7,8]
-	,[1,33,33]
+	#[1,2,3,4,5,6,7,8]
+	[1,33,33]
 	,[41,1,33,33]
-	,[321,313  ,41,1,33,33]
-	
+	,[1,33,33]
+	,[311,323,41,33,1,33]
+
 	# Second
-	#,[2,2,32 ,34,34,34]
-	#,[42,2,2,32 ,34,44,34,34]
-	#,[312,332,324,  42,2,2,32 ,34,44,34,34]
-	#
-	
-	]
+	,[2,2,32,34,34,34]
+	,[42,2,2,32,34,44,34,34]
+	,[312,332,324,42,2,2,32,34,44,34,34]
+
+	# Third
+	,[33,5,7,37,37,5,33]
+	,[33,5,7,37,37,45,5,47,47,33]
+	,[33,5,7,37,37,45,5,47,47,33,323,314,325,316,327]
+
+	# Fourth
+	,[2,32,4,34,34,6,6,36,36,8,8,38]
+	,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46]
+	,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46,311,312,313,314,315,316,317,318]
+]
 
 var current_sequence_index := 0
 var wave_in_round := 0
@@ -46,7 +56,7 @@ var transitioning_worlds := false
 @export var rounds_to_complete := 5
 @export var switched_on := true
 @export var confetti_cannon : Node3D
-@export var upgrade_menu : Control
+@export var shop_main_menu : Control
 @export var tally_menu : Control
 @export var round_timer : RoundTimer
 @export var place_name : Control
@@ -100,10 +110,21 @@ func _ready() -> void:
 	enter_state(current_round_state)
 	
 func successful_round() -> void:
-
+	print('successful round')
+	if gl_PlayerState.dataset.total_hazards > 0:
+		unsuccessful_round()
+		return
 	success = true
 	print('successful round')
-	perfect_score_feedback()
+	
+	if wave_in_round == 2:
+		current_sequence_index += 1
+		if gl_PlayerState.dataset.total_white_rocks == 0 && gl_PlayerState.dataset.total_rocks_in_round == 0:
+			gl_PlayerState.dataset.power_bonus_round_pineapples = 1
+		else:
+			perfect_score_feedback()
+				
+		
 	enter_state(RoundState.ROUND_END)
 	
 	
@@ -119,6 +140,7 @@ func unsuccessful_round() -> void:
 func next_wave() -> void:
 	print('Next Wave Called')
 	stop_timer()
+	await get_tree().create_timer(0.5).timeout
 	enter_state(RoundState.ROUND_END)
 	pass
 
@@ -184,7 +206,15 @@ func update_round_first_round() -> void:
 
 
 func update_round_start() -> void:
-
+	
+	if current_round == 0:
+		in_display_text_prompt = true
+		$"../MainGameCanvasLayer/Intro_Prompt".start()
+	
+	while in_display_text_prompt:
+		await get_tree().process_frame
+	
+		
 	success = false
 	
 	while game_has_been_beaten:
@@ -197,7 +227,7 @@ func update_round_start() -> void:
 	if gl_PlayerState.dataset.round == 1:
 		music_manager.first_round()
 	
-	
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	if gl_PlayerState.dataset.power_balloon_buster > 0:
 		player.start_player()
@@ -364,9 +394,10 @@ func update_check_rounds() -> void:
 		wave_in_round = 0
 		force_shop_open = false
 
-		current_sequence_index += 1
 		if current_sequence_index >= current_rock_sequence.size():
-			current_sequence_index = 0
+			print("Game Over")
+			return
+			
 		stop_player()
 		rounds_until_shop = 3
 		await get_tree().create_timer(1.0).timeout
@@ -404,7 +435,7 @@ func update_shop_end() -> void:
 	#red_circle.display_circle()
 	hud_system.reset_hud()
 	#await get_tree().create_timer(0.5).timeout
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
 	enter_state(RoundState.ROUND_START)
 	if current_round > 2:
 		$'../PlayerBalloon'.check_balloons_status()
@@ -426,7 +457,7 @@ func update_game_won() -> void:
 	music_manager.game_won()
 	ending_song.play()
 	
-	%Shop_Main_Menu.enter_state(%Shop_Main_Menu.SkillState.CLOSE_MENU)
+	shop_main_menu.enter_state(shop_main_menu.SkillState.CLOSE_MENU)
 	%TallyCard.enter_state(%TallyCard.State.CLOSE_MENU)
 	stop_player()
 	
@@ -496,13 +527,16 @@ func move_to_moss() -> void:
 	if current_round == 0:
 		#await get_tree().create_timer(0.5).timeout
 		$'../PlayerBalloon'.add_balloon()
-	
+		
+	gl_PlayerState.dataset.tickets += 1
+	shop_main_menu.update_next_ticket()
+		
 	#rocks_container.reset_rock_back_on()
 	await get_tree().create_timer(3.0).timeout
 	transitioning_worlds = false
 	#enter_state(RoundState.SHOP_END)
-	#enter_state(RoundState.SHOP_START)
-	$"../MainGameCanvasLayer/Intro_Prompt".start()
+	enter_state(RoundState.SHOP_START)
+
 	
 	
 func move_to_redd() -> void:

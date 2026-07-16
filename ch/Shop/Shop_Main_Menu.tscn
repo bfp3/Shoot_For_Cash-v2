@@ -433,9 +433,9 @@ anchor_left = -1.6413333
 anchor_top = 0.18251856
 anchor_right = -1.6413333
 anchor_bottom = 2.7450185
-offset_left = 356.6667
+offset_left = 1574.6667
 offset_top = 341.74072
-offset_right = 561.6667
+offset_right = 1779.6667
 offset_bottom = -734.5093
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = ExtResource("5_vom4t")
@@ -760,7 +760,6 @@ mouse_filter = 2
 
 [node name="MoneyLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1835839393]
 unique_name_in_owner = true
-self_modulate = Color(0.25882354, 0.81960785, 0, 1)
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -949,22 +948,6 @@ layout_mode = 2
 alignment = 1
 script = ExtResource("16_vom4t")
 
-[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=3046836]
-layout_mode = 2
-
-[node name="Close_menu" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control" unique_id=1783714691 instance=ExtResource("21_tnodp")]
-custom_minimum_size = Vector2(65, 0)
-layout_mode = 0
-offset_left = -52.0
-offset_right = -2.0
-offset_bottom = 80.0
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-
-[node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=2018742998]
-visible = false
-custom_minimum_size = Vector2(270, 0)
-layout_mode = 2
-
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=499804393]
 custom_minimum_size = Vector2(720, 0)
 layout_mode = 2
@@ -977,6 +960,11 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 0
 alignment = 1
 
+[node name="VSeparator7" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=321403803]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
+
 [node name="Ticket" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=2058490507 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
 layout_mode = 2
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
@@ -984,44 +972,69 @@ focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
 [node name="VSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1459209934]
+visible = false
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
 [node name="Ticket2" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1976905100 groups=["restartable"] instance=ExtResource("20_xklyy")]
+visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 ticket_id = 2
 
 [node name="VSeparator3" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1474129767]
+visible = false
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
 [node name="Ticket3" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=953294936 instance=ExtResource("20_xklyy")]
+visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 ticket_id = 3
 
 [node name="VSeparator4" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=297611364]
+visible = false
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
 [node name="Ticket4" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=514221593 instance=ExtResource("20_xklyy")]
+visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 ticket_id = 4
 
 [node name="VSeparator5" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1688227533]
+visible = false
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 
 [node name="Ticket5" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=657145580 instance=ExtResource("20_xklyy")]
+visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 ticket_id = 5
 
 [node name="VSeparator6" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=105381239]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
+
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=2018742998]
+visible = false
+custom_minimum_size = Vector2(270, 0)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=3046836]
+layout_mode = 2
+
+[node name="Close_menu" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control" unique_id=1783714691 instance=ExtResource("21_tnodp")]
+custom_minimum_size = Vector2(65, 0)
+layout_mode = 0
+offset_left = -52.0
+offset_right = -2.0
+offset_bottom = 80.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 
 [node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1282620482]
 custom_minimum_size = Vector2(50, 34.5)
@@ -1596,6 +1609,10 @@ volume_db = -40.0
 stream = ExtResource("45_teea5")
 volume_db = -40.0
 
+[node name="shop_reroll_sfx_02" type="AudioStreamPlayer" parent="SFX" unique_id=1591640710]
+stream = ExtResource("45_teea5")
+volume_db = -40.0
+
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1183352834]
 stream = ExtResource("26_bovdg")
 volume_db = -32.0
@@ -1639,6 +1656,11 @@ pitch_scale = 0.4
 stream = ExtResource("40_8mk8u")
 volume_db = -40.0
 pitch_scale = 2.0
+
+[node name="cash_roll_up" type="AudioStreamPlayer" parent="SFX" unique_id=1664576771]
+stream = ExtResource("46_i821l")
+volume_db = -30.0
+pitch_scale = 0.5
 
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]

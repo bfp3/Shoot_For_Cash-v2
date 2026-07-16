@@ -21,7 +21,7 @@ func start() -> void:
 	
 func stop() -> void:
 	active = false
-	show()
+	hide()
 	pineapple_texture.show()
 
 	

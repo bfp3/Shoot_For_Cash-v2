@@ -64,6 +64,7 @@ func update_open_menu() -> void:
 	
 	var round_count := round_manager.rounds_to_complete
 	
+	
 	# BALLOON PROMPT
 	#prompt.text = (
 		#"Survive [color=#ffc700]" + str(round_count) + "[/color] Rounds to [color=#ffc700][wave]WIN[/wave][/color]\n" +
@@ -169,11 +170,13 @@ func sfx_close_tally() -> void:
 	$SFX/low_humming.stop()
 
 func start() -> void:
+	
 	update_open_menu()
 
 func _on_retry_pressed() -> void:
 	
 	if round_manager:
-		round_manager.enter_state(round_manager.RoundState.SHOP_START)
+		round_manager.in_display_text_prompt = false
+		#round_manager.enter_state(round_manager.RoundState.SHOP_START)
 		
 	update_close_menu()

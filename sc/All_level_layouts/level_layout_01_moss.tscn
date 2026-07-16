@@ -19,7 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://ignpdv10rx52" path="res://addons/boujie_water_shader/prefabs/deep_ocean.tscn" id="18_1thcr"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="18_v0xb0"]
 [ext_resource type="Script" uid="uid://dn76e05h17t31" path="res://scripts/multiplier_zones.gd" id="19_md1in"]
-[ext_resource type="Material" uid="uid://dnxuldiy8408d" path="res://res/small_rock_material.tres" id="20_s470r"]
+[ext_resource type="Material" uid="uid://bgn3t0qsuudf" path="res://res/markers_mat.tres" id="20_s470r"]
 
 [sub_resource type="Animation" id="Animation_k7lvh"]
 length = 0.001
@@ -1104,7 +1104,6 @@ height = 0.501
 radial_segments = 4
 
 [sub_resource type="BoxMesh" id="BoxMesh_s470r"]
-material = ExtResource("20_s470r")
 size = Vector3(0.108, 0.502, 0.007)
 
 [node name="Moss" type="Node3D" unique_id=229302118]
@@ -3517,34 +3516,42 @@ mesh = SubResource("CylinderMesh_md1in")
 
 [node name="Column1" type="MeshInstance3D" parent="." unique_id=1925895366]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.769, -2.614, 19.556)
+material_override = ExtResource("20_s470r")
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column2" type="MeshInstance3D" parent="." unique_id=1906403061]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.115, -2.614, 19.556)
+material_override = ExtResource("20_s470r")
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column3" type="MeshInstance3D" parent="." unique_id=261050208]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.413, -2.614, 19.556)
+material_override = ExtResource("20_s470r")
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column4" type="MeshInstance3D" parent="." unique_id=1929982561]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.722, -2.614, 19.556)
+material_override = ExtResource("20_s470r")
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column5" type="MeshInstance3D" parent="." unique_id=927015456]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.939, -2.614, 19.556)
+material_override = ExtResource("20_s470r")
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column6" type="MeshInstance3D" parent="." unique_id=904575327]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.636, -2.614, 19.556)
+material_override = ExtResource("20_s470r")
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column7" type="MeshInstance3D" parent="." unique_id=1750789358]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.317, -2.614, 19.556)
+material_override = ExtResource("20_s470r")
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column8" type="MeshInstance3D" parent="." unique_id=1604281670]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.957, -2.614, 19.556)
+material_override = ExtResource("20_s470r")
 mesh = SubResource("BoxMesh_s470r")
 
 [editable path="Boatmesh/brick_fountain_2"]

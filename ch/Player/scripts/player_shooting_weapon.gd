@@ -421,6 +421,8 @@ func shoot_target() -> void:
 
 	if rocks_to_destroy.size() >= 2 && !shot_with_right_click:
 		await wait_for_all_rocks_destroyed(rocks_to_destroy)
+		if gl_PlayerState.dataset.total_hazards > 0:
+			return
 		activate_multishot_bonus(rock_count)
 		
 	
@@ -617,6 +619,9 @@ func wait_for_all_rocks_destroyed(rocks: Array) -> void:
 		await get_tree().process_frame
 	
 func activate_multishot_bonus(rock_count: int) -> void:
+	if gl_PlayerState.dataset.total_hazards > 0:
+		return
+	
 	var multi_shot := get_tree().get_first_node_in_group('multi_shot')
 	multi_shot.multi_shot(rock_count, temp_label_pos)
 	

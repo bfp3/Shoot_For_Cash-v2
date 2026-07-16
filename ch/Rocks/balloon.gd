@@ -116,7 +116,8 @@ func configure_balloon_colour() -> void:
 			#$Decal_Container.show()
 			
 		BalloonType.RED:
-			balloon_mesh.material_override = BALLOON_RED_MAT
+			#balloon_mesh.material_override = BALLOON_RED_MAT
+			balloon_mesh.material_override = BALLOON_ORANGE_MAT
 			penalty_amount = -10
 			#penalty_amount = 0
 			original_penalty_amount = penalty_amount
@@ -346,7 +347,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 			start_destroyed_process()
 
 		BalloonType.RED:
-			gl_PlayerState.log_hit(rock_type_name, current_rock_type, penalty_amount)
+			gl_PlayerState.log_hit(rock_type_name, current_rock_type, 30)
 			start_destroyed_process()
 			
 		BalloonType.ORANGE:
@@ -393,8 +394,8 @@ func start_destroyed_process() -> void:
 	
 	
 	if balloon_type == BalloonType.RED:
-		if abs(cash_value) > 0:
-			money_label_3d.money_is_money(global_position, penalty_amount)
+		#if abs(cash_value) > 0:
+		money_label_3d.money_is_money(global_position, -30)
 		
 	#else:
 		#money_label_3d.print_text(global_position, 'BLUE DOWN')
@@ -673,7 +674,7 @@ func temp_slow_down() -> void:
 	
 	
 func blast_radius() -> void:
-	#return
+	return
 	await get_tree().create_timer(0.1).timeout
 
 	const BLAST_RADIUS := 500.0
@@ -813,7 +814,47 @@ func _sky_mine_hit_after_delay(target: Node, delay: float, chain_penalty: int) -
 			#target.start_destroyed_process()
 			target.sky_mine_blast()
 
+
 func end_of_the_round_pop_balloon(_added_cash : int) -> void:
+	# Only pop balloons that are actually still in play.
+	if !rock_activated or current_state != State.ACTIVE:
+		return
+
+	rock_activated = false
+	stop_gentle_pan()
+	disable_collision()
+
+	# Same pop feedback as a player hit.
+	#$pop_balloon.pitch_scale = randf_range(0.95, 1.1)
+	#$pop_balloon.play()
+	#play_destroy_sfx()
+
+	
+
+	if is_in_group('Target'):
+		remove_from_group('Target')
+
+	set_collision_layer_value(1, false)
+	is_deactivated = true
+
+	# Reward instead of penalize: always +$1 regardless of balloon_type/penalty_amount.
+	cash_value = _added_cash
+	cash_value = 0
+	
+	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self, "global_position:z", 4.0, 3.0).as_relative()
+	tween.parallel().tween_property(self, "global_position:y", 7.0, 3.0).as_relative()
+	tween.parallel().tween_property(self, "global_position:x", -6.0, 3.0).as_relative()
+	await tween.finished
+	
+	if balloon_type == BalloonType.RED:
+		get_parent().add_balloon_back_into_list(self)
+	else:
+		get_parent().add_balloon_back_into_list(self)
+
+
+
+func XXend_of_the_round_pop_balloon(_added_cash : int) -> void:
 	# Only pop balloons that are actually still in play.
 	if !rock_activated or current_state != State.ACTIVE:
 		return
