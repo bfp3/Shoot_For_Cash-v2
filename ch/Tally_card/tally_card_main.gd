@@ -103,7 +103,6 @@ func update_inactive() -> void:
 
 
 func start_fail_sequence() -> void:
-	print('FAIL')
 	#grade_cash_label.text = ""
 	#grade_cash_label.text = "$0"
 	fail_label.show()
@@ -112,8 +111,14 @@ func start_fail_sequence() -> void:
 	grade_label.text = ""
 	grade_label.modulate = Color("a6a6a6ff")
 	grade_cash_label.modulate = Color('a6a6a6ff')
+
+	if gl_PlayerState.dataset.fines < 0:
+		fail_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
+
+		
+
 	bonuses_cash_label.modulate.a = 0.0
-	
+
 	grand_total_label.hide()
 	bonuses_label.hide()
 	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 1.0
@@ -124,7 +129,6 @@ func start_fail_sequence() -> void:
 	
 	
 func start_perfect_sequence() -> void:
-	print('PERFECT')
 	await get_tree().create_timer(0.5).timeout
 	var dur := 1.0
 
@@ -153,13 +157,12 @@ func start_perfect_sequence() -> void:
 	await get_tree().create_timer(dur).timeout
 	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = true
 	$SFX/shop_purchase_02.play()
-	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus))
+	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines ))
 	await get_tree().create_timer(dur).timeout
 	return
 
 
 func start_pass_sequence() -> void:
-	print('PASS')
 	var dur := 1.0
 
 	# 1. GRADE LABEL
@@ -185,7 +188,7 @@ func start_pass_sequence() -> void:
 	# 4. TOTAL CASH EARNED
 	$SFX/shop_purchase_02.play()
 	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = true
-	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + pass_bonus))
+	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
 	grand_total_cash_label.modulate = Color("42d100")
 	await get_tree().create_timer(dur).timeout
 	return
@@ -197,6 +200,7 @@ func check_white_rocks() -> void:
 	grand_total_label.show()
 	bonuses_label.show()
 	fail_label.hide()
+	fail_label.text = "$0"
 	grade_label.text = ""
 	grade_cash_label.text = ""
 	grade_cash_label.modulate = Color("42d100")
@@ -209,17 +213,20 @@ func check_white_rocks() -> void:
 	
 	start_sequence = true
 	
+	gl_PlayerState.subtract_penalties_from_cash()
+	
+	
 	if gl_PlayerState.dataset.total_hazards > 0:
 		await start_fail_sequence()
 		start_sequence = false
 		return
 		
-	if white_rocks > 0:
+	if white_rocks > 0 && gl_PlayerState.dataset.perfect_rounds < 3:
 		await start_fail_sequence()
 		start_sequence = false
 		return
 		
-	elif white_rocks == 0 && gl_PlayerState.dataset.total_rocks_in_round == 0:
+	elif white_rocks == 0 && gl_PlayerState.dataset.perfect_rounds >= 3:
 		await start_perfect_sequence()
 		start_sequence = false
 		return

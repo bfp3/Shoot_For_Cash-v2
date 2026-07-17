@@ -10,6 +10,7 @@ signal pineapple_round_started()
 signal level_restarted()
 signal next_round()
 
+signal all_white_compulsory_rocks_destroyed()
 signal all_rocks_destroyed()
 signal rocks_cleared_end_wave()
 signal end_round_rock_missed()
@@ -100,6 +101,10 @@ func _init():
 
 # Do not call this function ever, Blake...
 func XXemit_all_signals() -> void:
+	
+	all_white_compulsory_rocks_destroyed.emit()
+	
+	
 	health_changed.emit(100) # Example value
 	game_won.emit()
 	game_beaten.emit()

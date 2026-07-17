@@ -251,7 +251,7 @@ func enable_collision() -> void:
 
 func reset_rock_back_on() -> void:
 	#enter_state(State.MISSED)
-	current_rock_type 	= "Balloon Large"
+	current_rock_type 	= "hazard"
 	#rock_type_name 		= "hazard_type_1"
 	rock_type_name = ""
 
@@ -286,7 +286,7 @@ func reset_stats() -> void:
 	
 	rock_activated = false
 	current_mesh = $Mesh/small_rock2
-	current_rock_type = ""
+	current_rock_type = "hazard"
 	rock_type_name = ""
 	health = 0
 	cash_value = 0
@@ -347,7 +347,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 			start_destroyed_process()
 
 		BalloonType.RED:
-			gl_PlayerState.log_hit(rock_type_name, current_rock_type, 30)
+			gl_PlayerState.log_hit('hazard_type_1', 'balloon', -30)
 			start_destroyed_process()
 			
 		BalloonType.ORANGE:
@@ -817,8 +817,8 @@ func _sky_mine_hit_after_delay(target: Node, delay: float, chain_penalty: int) -
 
 func end_of_the_round_pop_balloon(_added_cash : int) -> void:
 	# Only pop balloons that are actually still in play.
-	if !rock_activated or current_state != State.ACTIVE:
-		return
+	#if !rock_activated or current_state != State.ACTIVE:
+		#return
 
 	rock_activated = false
 	stop_gentle_pan()
@@ -843,8 +843,8 @@ func end_of_the_round_pop_balloon(_added_cash : int) -> void:
 	
 	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 	tween.tween_property(self, "global_position:z", 4.0, 3.0).as_relative()
-	tween.parallel().tween_property(self, "global_position:y", 7.0, 3.0).as_relative()
-	tween.parallel().tween_property(self, "global_position:x", -6.0, 3.0).as_relative()
+	tween.parallel().tween_property(self, "global_position:y", 15.0, 3.5) #.as_relative()
+	tween.parallel().tween_property(self, "global_position:x", -6.0, 3.5).as_relative()
 	await tween.finished
 	
 	if balloon_type == BalloonType.RED:

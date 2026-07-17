@@ -552,6 +552,7 @@ gravity = Vector3(0, 0, 0)
 scale_min = 10.0
 scale_max = 10.0
 scale_curve = SubResource("CurveTexture_7b7wa")
+color = Color(0.25, 0.25, 0.25, 1)
 color_ramp = ExtResource("21_y4gyo")
 emission_curve = SubResource("CurveTexture_1a1cp")
 turbulence_noise_scale = 0.0
@@ -560,7 +561,7 @@ turbulence_influence_over_life = SubResource("CurveTexture_qfoqq")
 
 [sub_resource type="QuadMesh" id="QuadMesh_herjc"]
 material = SubResource("StandardMaterial3D_6bfdk")
-size = Vector2(15, 15)
+size = Vector2(150, 150)
 
 [sub_resource type="Curve" id="Curve_vhbws"]
 _data = [Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.8034189, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.55551094), 0.0, 0.0, 0, 0]
@@ -1014,6 +1015,12 @@ stream = ExtResource("13_gxoxp")
 volume_db = -35.0
 max_polyphony = 2
 
+[node name="hazard_hit_sound" type="AudioStreamPlayer" parent="." unique_id=1736702722]
+unique_name_in_owner = true
+stream = ExtResource("13_gxoxp")
+volume_db = -32.0
+pitch_scale = 0.5
+
 [node name="take_damage_sfx" type="AudioStreamPlayer" parent="." unique_id=1867904270]
 unique_name_in_owner = true
 stream = ExtResource("14_gxoxp")
@@ -1141,7 +1148,6 @@ process_material = SubResource("ParticleProcessMaterial_65uxc")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
 [node name="upward_smoke_glow" type="GPUParticles3D" parent="Hazard_AoE2" unique_id=603999832]
-visible = false
 material_override = SubResource("ShaderMaterial_fw7wv")
 cast_shadow = 0
 emitting = false
@@ -1171,7 +1177,7 @@ draw_pass_1 = SubResource("QuadMesh_bymj0")
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -0.5)
 cast_shadow = 0
 emitting = false
-amount = 4
+amount = 2
 lifetime = 8.0
 one_shot = true
 explosiveness = 0.9

@@ -15,7 +15,7 @@ const RESTART_DATASET := {
 	"reroll": 0,
 	"reroll_unlocked": 0,
 	"bonus_cash_this_round": 0,
-	
+	"perfect_rounds" : 0,
 	"rock_limit" : 3,
 	"total_white_rocks" : 0,
 	"total_rocks_in_round": 0,
@@ -28,6 +28,7 @@ const RESTART_DATASET := {
 	"power_bonus_round_pineapples": 0,
 	
 	"power_auto_fire" : 0,
+	"power_balloon_buster" : 0,
 	"power_max_items_in_shop" : 3,
 	"power_time_upgrade" : 0,
 	"power_target_circle": 0,
@@ -55,7 +56,7 @@ const DEFAULT_DATASET := {
 	"reroll": 0,
 	"reroll_unlocked": 0,
 	"bonus_cash_this_round": 0,
-	
+	"perfect_rounds" : 0,
 	"rock_limit" : 3,
 	"total_white_rocks" : 0,
 	"total_rocks_in_round": 0,
@@ -91,6 +92,7 @@ var _log: Array=[]
 var _current_round_log: Array = []
 
 func next_round() -> void:
+	dataset.perfect_rounds = 0
 	dataset.round += 1
 	dataset.bonus_cash = 0
 	dataset.fines = 0
@@ -128,7 +130,10 @@ func get_cash() -> Dictionary:
 	
 func add_cash(value : int) -> void:
 	dataset.cash = dataset.cash + value
-	
+
+func subtract_penalties_from_cash() -> void:
+	dataset.cash = dataset.cash + dataset.fines
+
 func add_bonus(value : int) -> void:
 	dataset.bonus_cash = dataset.bonus_cash + value
 
@@ -143,6 +148,7 @@ func log_hit(item:String, item_type:String, value:int):
 	
 	if value < 0:
 		dataset.fines = dataset.fines + value
+		print("add the value to fines ", value)
 	else:
 		dataset.bonus_cash = dataset.bonus_cash + value
 		
@@ -163,15 +169,19 @@ func log_hit(item:String, item_type:String, value:int):
 		
 	
 	elif item.contains('hazard'):
-		print("hazard")
+		if  item_type.contains('balloon'):
+			pass
+		#print("player state hazard")
 		#dataset.total_hazards += 1
-		EventBus.instance.end_round_rock_missed.emit()
-		return
+		else:
+			EventBus.instance.end_round_rock_missed.emit()
+		#return
 		#if item.contains('red'):
 		
 	elif item.contains('pineapple'):
 		dataset.total_pineapples_destroyed += 1
-		
+	
+		return
 		
 	elif item.contains('orange'):
 		print('Hit an Orange')
@@ -212,8 +222,10 @@ func log_rock_missed(item : String = '') -> void:
 func check_all_rocks_cleared() -> void:
 	#if round_finished:
 		#return
-		
-	print(dataset.total_rocks_missed, " ROCKS MISSED")
+	if dataset.total_white_rocks <= 0:
+		EventBus.instance.all_white_compulsory_rocks_destroyed.emit()
+	
+	#print(dataset.total_rocks_missed, " ROCKS MISSED")
 	
 	if dataset.total_rocks_in_round_remaining > 0:
 		return
@@ -221,11 +233,12 @@ func check_all_rocks_cleared() -> void:
 	round_finished = true
 	
 	
-	
-	if dataset.total_rocks_missed == 0:
-	#if dataset.total_white_rocks == 0:
+	#if dataset.total_rocks_missed == 0:
+	if dataset.total_white_rocks <= 0:
 		EventBus.instance.rocks_cleared_end_wave.emit()
 		EventBus.instance.all_rocks_destroyed.emit()
+		dataset.perfect_rounds += 1
+		print("PERFECT ROUND")
 	#else:
 		##EventBus.instance.end_round_rock_missed.emit()
 		

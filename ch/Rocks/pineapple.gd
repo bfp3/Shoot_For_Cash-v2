@@ -2,6 +2,8 @@ extends RigidBody3D
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
+var	did_not_get_all_pineapples := false
+
 @export var cash_value := 3
 var original_cash_value := 3
 @export var force_multiplier := 1.5
@@ -318,6 +320,7 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
+	
 	health -= damage
 	if damage == 0:
 		cash_value += 10
@@ -339,7 +342,7 @@ func bounce_rocks() -> void:
 
 func start_destroyed_process() -> void:
 	
-	check_position_for_wall()
+	#check_position_for_wall()
 	
 	if !rock_activated:
 		return
@@ -352,7 +355,7 @@ func start_destroyed_process() -> void:
 	enter_state(State.HIT)
 	$Pineapple_shot_explode.play()
 	$Pineapple_sound_hit.play()
-	await get_tree().create_timer(0.3).timeout
+	#await get_tree().create_timer(0.3).timeout
 	$Pineapple_destroyed.play()
 	#if !destroyed_by_marked:
 	
@@ -364,13 +367,16 @@ func start_destroyed_process() -> void:
 		remove_from_group('Target')
 		
 	print("cash value pineapples ", cash_value)
-	money_label_3d.money_is_money(global_position, cash_value)
+	#money_label_3d.money_is_money(global_position, cash_value)
 	
-
+	if gl_PlayerState.dataset.total_pineapples_destroyed >= 3 && did_not_get_all_pineapples == false:
+		print(gl_PlayerState.dataset.total_pineapples_destroyed)
+		money_label_3d.pineapple_is_pineapple()
+	
 	is_deactivated = true
 	#$Mesh.hide()
 	#freeze = true
-	
+	did_not_get_all_pineapples = false
 	was_hit_tween()
 	
 
@@ -466,7 +472,8 @@ func hit_out_of_bounds() -> void:
 		return
 	
 	rock_activated = false
-	gl_PlayerState.log_hit('pineapple', 'pineapple', 0)
+	did_not_get_all_pineapples = true
+	gl_PlayerState.log_hit('pineapple', 'pineapple_fail', 0)
 	current_mesh.get_node('damage_mesh').show()
 	await get_tree().create_timer(0.28).timeout
 	current_mesh.get_node('damage_mesh').hide()
@@ -556,6 +563,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		body.hit_by_player(100, Vector2.ZERO)
 	
 func expand_blast_radius() -> void:
+	%explosion_radius_mesh.hide()
 	return
 	%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.2

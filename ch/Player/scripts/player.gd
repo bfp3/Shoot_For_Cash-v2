@@ -97,6 +97,7 @@ var camera_pan_able := false
 func _ready() -> void:
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)
+	EventBus.instance.end_round_rock_missed.connect(stop_player)
 	#EventBus.instance.pineapple_round_bought.connect(pineapples_start)
 	var scale_multiplier = power_target_circle / gl_DataSet.dataset_float.power_target_circle[0]
 	tween_scope(scale_multiplier, 0.33)
@@ -468,14 +469,15 @@ func update_player_stats() -> void:
 
 func update_stats_visually() -> void:
 	await get_tree().create_timer(0.5).timeout
-	if gl_PlayerState.dataset.power_bullet_damage >= 1:
-		$CanvasLayer/Crosshair/Inner_scope/Inner_scope3.show()
-		
-	if gl_PlayerState.dataset.power_bullet_damage >= 3:
-		$CanvasLayer/Crosshair/Inner_scope/Inner_scope4.show()
-		
-	if gl_PlayerState.dataset.power_bullet_damage >= 5:
-		$CanvasLayer/Crosshair/Inner_scope/Inner_scope4.modulate = Color('ff7700')
+	
+	#if gl_PlayerState.dataset.power_bullet_damage >= 1:
+		#$CanvasLayer/Crosshair/Inner_scope/Inner_scope3.show()
+		#
+	#if gl_PlayerState.dataset.power_bullet_damage >= 3:
+		#$CanvasLayer/Crosshair/Inner_scope/Inner_scope4.show()
+		#
+	#if gl_PlayerState.dataset.power_bullet_damage >= 5:
+		#$CanvasLayer/Crosshair/Inner_scope/Inner_scope4.modulate = Color('ff7700')
 	
 	#if gl_PlayerState.dataset.power_bullet_damage > 2:
 		#pass

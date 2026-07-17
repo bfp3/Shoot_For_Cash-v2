@@ -224,6 +224,7 @@ func update_open_menu() -> void:
 	
 func play_round_button_pressed() -> void:
 	reroll_button.hide()
+	%NextRound.disabled = true
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
 	$%Transport_Tickets.modulate.a = 0.0
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
@@ -237,6 +238,7 @@ func play_round_button_pressed() -> void:
 	
 	
 	await get_tree().create_timer(1.0).timeout
+	%NextRound.disabled = false
 	update_close_menu()
 	
 func update_close_menu() -> void:
@@ -292,7 +294,6 @@ func update_close_menu() -> void:
 		
 func roll_up_cash_first_round() -> void:
 	if gl_PlayerState.dataset.power_gun < 1:
-		print("hit")
 		return
 
 	var target_cash: int = gl_PlayerState.dataset.cash

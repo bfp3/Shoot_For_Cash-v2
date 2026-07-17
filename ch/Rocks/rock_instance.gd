@@ -104,10 +104,17 @@ func _ready() -> void:
 	
 	await get_tree().create_timer(0.2).timeout
 	
-	
+	#EventBus.instance.all_rocks_destroyed.connect(hazard_disappear)
 	enter_state(State.INACTIVE)
-
-
+#
+#func hazard_disappear() -> void:
+	##enter_state(State.DISABLED)
+	#return
+	#print("hazard disappear")
+	#print('rock_type_name ', rock_type_name)
+	#if rock_type_name.contains('hazard'):
+		#hazard_smoke_particles_duplicates()
+		#print(' i am disappaering ')
 
 func enter_state(new_state : State) -> void:
 
@@ -150,9 +157,7 @@ func update_prepare_rock() -> void:
 	force_mult.shuffle()
 	await get_tree().process_frame
 	setup_rock_type()
-	if rock_type_name == 'hazard_type_1':
-		print("one hazard")
-	else:
+	if rock_type_name != 'hazard_type_1':
 		gl_PlayerState.log_rocks(1, rock_type_name)
 		
 	await get_tree().create_timer(0.2).timeout
@@ -193,6 +198,12 @@ func round_end_check_rock_status() -> void:
 		State.ACTIVE:
 			enter_state(State.DISABLED)
 			
+		State.PREPARE_ROCK:
+			pass
+			
+		State.DISABLED:
+			pass
+			
 		_:
 			print("We are in some other state rock instance ", current_state)
 
@@ -215,7 +226,6 @@ func enable_collision() -> void:
 
 
 func update_gravity(_gravity_scale : float) -> void:
-	#print("hit this")
 	for i in range(3):
 		#gravity_scale = _gravity_scale
 		gravity_scale = 0.15
@@ -308,6 +318,7 @@ func setup_rock_type() -> void:
 			current_rock_type 	= "Small Rock"
 			rock_type_name 		= "rock_type_1"
 			gl_PlayerState.log_white_rock()
+			print("LOGGING WHITE ROCK")
 			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
 			var base_scale  := Vector3.ONE * 0.35
@@ -380,7 +391,7 @@ func setup_rock_type() -> void:
 		# Rock Type 3
 		RockSize.LARGE:
 			var base_scale  := Vector3.ONE * 0.35
-			var size_multiplier_float : float = randf_range (1.2, 1.35)
+			var size_multiplier_float : float = 1.2
 			var size_multiplier_int : int = 1
 			current_rock_type 	= "Gold"
 			rock_type_name 		= "rock_type_2"
@@ -388,7 +399,7 @@ func setup_rock_type() -> void:
 			max_health = health
 			cash_value 			= 0
 			large_rock.visible 	= true
-			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
+			main_col.scale = Vector3.ONE * 0.11  * size_multiplier_float
 			current_mesh 		= large_rock
 			current_mesh.scale = base_scale * size_multiplier_float
 			assign_random_mesh(current_mesh)
@@ -403,7 +414,7 @@ func setup_rock_type() -> void:
 		
 		# Rock Type 4
 		RockSize.MEDIUM_REDD:
-			var size_multiplier_float : float = randf_range (1.2, 1.35)
+			var size_multiplier_float : float = 1.2
 			var base_scale  := Vector3.ONE * 0.35
 			current_rock_type 	= "Coal"
 			rock_type_name 		= "hazard_type_1"
@@ -413,7 +424,8 @@ func setup_rock_type() -> void:
 		
 			hazard_large.visible = true
 			current_mesh.scale = base_scale * size_multiplier_float
-			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
+			main_col.scale = Vector3.ONE * 0.12  * size_multiplier_float
+
 			current_mesh 		= hazard_large
 			assign_random_mesh(current_mesh)
 			current_mesh.scale  = Vector3.ONE * 0.625
@@ -744,6 +756,7 @@ func add_to_rocks_round() -> void:
 
 
 func bounce_rocks() -> void:
+	linear_damp = 0.5
 	update_gravity(0.04)
 	#apply_torque_impulse(Vector3.LEFT * 3000.0)
 	#global_position = start_pos
@@ -771,7 +784,14 @@ func start_destroyed_process() -> void:
 
 	if !rock_activated:
 		return
-		
+	
+	#if rock_type_name != 'hazard_type_1':
+		#Engine.time_scale = 0.01
+		#await get_tree().create_timer(0.5).timeout
+		#Engine.time_scale = 1.0
+		#print('slow time')
+	#
+	
 	rock_activated = false
 	
 	#if player_has_marked_rock == false:
@@ -779,27 +799,27 @@ func start_destroyed_process() -> void:
 	enter_state(State.HIT)
 	
 	
-	if rock_type_name == 'hazard_type_1':
-		print("Hazard, do not award bonuses")
-		
-	else:
+	if rock_type_name != 'hazard_type_1':
 		var bonus_cash_reward := 0
 		var bonus_zones := get_tree().get_first_node_in_group('multi_shot')
 		if bonus_zones:
 			bonus_cash_reward = bonus_zones.check_if_within_zone(global_position.y)
 			
 		cash_value += bonus_cash_reward
-			
+		
+	
+	if rock_type_name.contains('hazard'):
+		%hazard_hit_sound.play()
+		cash_value = -10
 	
 	if !rock_has_been_logged:
 		rock_has_been_logged = true
+
 		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
 		
 	#if !destroyed_by_marked:
-	
-	if rock_type_name.contains('Hazard'):
-		$Hazard_sfx.play()
-		cash_value = 0
+
+
 	
 	
 	
@@ -808,9 +828,13 @@ func start_destroyed_process() -> void:
 	play_destroy_sfx()
 	$Marked.hide()
 
-	if cash_value > 0:
+	if cash_value > abs(0):
 		money_label_3d.money_is_money(global_position, cash_value)
-	
+		
+	if cash_value < 0:
+		print('show peantly')
+		money_label_3d.money_is_money(global_position, cash_value)
+			
 	set_collision_layer_value(1, false)
 
 	is_deactivated = true
@@ -973,6 +997,19 @@ func smoke_particles() -> void:
 		$AoE.play_particles = true
 
 
+func hazard_smoke_particles_duplicates() -> void:
+	var _new_particles : GPUParticles3D = $Smoke_quick.duplicate()
+
+	if !_new_particles:
+		return
+		
+	_new_particles.emitting = true
+	_new_particles.duplicate_particles = true
+	_new_particles.show()
+	get_tree().get_current_scene().add_child(_new_particles)
+	_new_particles.global_position = global_position
+
+
 func smoke_particles_duplicates() -> void:
 	var _new_particles : GPUParticles3D = $Smoke_quick #.duplicate()
 
@@ -1009,7 +1046,6 @@ func start_bullet_to_target() -> void:
 	play_accurate_sounds()
 	if rock_type_name.contains('hazard'):
 		gl_PlayerState.dataset.total_hazards += 1
-		print("hazard")
 		
 func play_accurate_sounds() -> void:
 	#await get_tree().create_timer(0.05).timeout

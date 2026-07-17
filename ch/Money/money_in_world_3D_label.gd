@@ -29,7 +29,7 @@ func money_is_money(_display_pos : Vector3, money_yield : int) -> void:
 		new_money_label.tween_fade(Color('42d100'), 1.5)
 		
 	else:
-		new_money_label.tween_fade(Color('d10000'), 1.5)
+		new_money_label.tween_fade(Color('d10000'), 2.5)
 
 func money_rock(_display_pos : Vector3, money_yield : int) -> void:
 	
@@ -164,3 +164,29 @@ func tween_fade_gold() -> void:
 	tween.parallel().tween_property(self, 'outline_modulate', Color.TRANSPARENT, fade_dur)
 	await tween.finished
 	self.queue_free()
+
+
+func pineapple_is_pineapple() -> void:
+	gl_PlayerState.add_bonus(30)
+	var new_money_label: Label3D = self.duplicate()
+
+	get_tree().get_current_scene().add_child(new_money_label)
+	new_money_label.font_size *= 3
+	new_money_label.top_level = true
+	new_money_label.text = "$30"
+	new_money_label.global_position = Vector3(0, 5, 23)
+
+	new_money_label.modulate = Color("42d100")
+	new_money_label.outline_modulate = Color("262626")
+	new_money_label.show()
+
+	var tween := new_money_label.create_tween() \
+		.set_ease(Tween.EASE_OUT) \
+		.set_trans(Tween.TRANS_LINEAR)
+
+	tween.tween_interval(3.0)
+	tween.tween_property(new_money_label, "modulate:a", 0.0, 0.5)
+	tween.parallel().tween_property(new_money_label, "outline_modulate:a", 0.0, 0.5)
+
+	await tween.finished
+	new_money_label.queue_free()

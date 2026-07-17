@@ -37,8 +37,8 @@ func balloon_lane_to_y(lane: int) -> float:
 		return LANE_Y[1]
 	return LANE_Y[lane]
 
-func add_balloon(balloon_array : Array) -> void:
-	#print('Add Balloon Called ', balloon_array)
+func add_balloon(_balloon_array : Array) -> void:
+	var balloon_array = _balloon_array
 	
 	if balloon_array.is_empty():
 		return
@@ -55,7 +55,6 @@ func add_balloon(balloon_array : Array) -> void:
 	
 	for i in balloon_array:
 		if i <= 300 || i > 400:
-			print('erasing ', i)
 			balloon_array.erase(i)
 		#else:
 			#i -= 300
@@ -68,8 +67,7 @@ func add_balloon(balloon_array : Array) -> void:
 	for code in balloon_array:
 		if code < 300:
 			continue
-		
-		print('adding ballooon')
+
 		var _offset : int = code - 300
 		var column : int = int(_offset / 10)
 		var lane : int = _offset % 10

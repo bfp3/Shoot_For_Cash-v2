@@ -66,6 +66,7 @@
 [ext_resource type="PackedScene" uid="uid://cmrkldyt0ctt1" path="res://ch/demo_end_screen/Game_over_screen.tscn" id="65_vwwt2"]
 [ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="65_wtxnc"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
+[ext_resource type="PackedScene" uid="uid://bpblpaoucfp2x" path="res://ch/demo_end_screen/Grand_total_prompt.tscn" id="66_heewt"]
 [ext_resource type="PackedScene" uid="uid://bkeli6dyx0ytw" path="res://ch/demo_end_screen/Intro_prompt.tscn" id="66_mdemw"]
 [ext_resource type="PackedScene" uid="uid://dqvfwdvbr3hgi" path="res://ch/demo_end_screen/game_won_prompt.tscn" id="67_qmj5w"]
 [ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
@@ -956,6 +957,12 @@ one_shot = true
 explosiveness = 0.8
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_wtxnc")
+
+[node name="Gold_sfx" type="AudioStreamPlayer" parent="Round_manager" unique_id=1819342297]
+stream = ExtResource("23_1i2h1")
+volume_db = -10.0
+pitch_scale = 0.7
+max_polyphony = 2
 
 [node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("current_song", "opening_song")]
 script = ExtResource("3_r5w5l")
@@ -2765,6 +2772,11 @@ round_manager = NodePath("../../Round_manager")
 unique_name_in_owner = true
 visible = false
 
+[node name="Grand_total_prompt" parent="MainGameCanvasLayer" unique_id=1992131053 node_paths=PackedStringArray("round_manager") instance=ExtResource("66_heewt")]
+unique_name_in_owner = true
+visible = false
+round_manager = NodePath("../../Round_manager")
+
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
@@ -2825,17 +2837,20 @@ round_manager = NodePath("../Round_manager")
 [node name="Pineapple" parent="Pineapple" unique_id=1539472592 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-force_multiplier = 1.1
+cash_value = 0
+force_multiplier = 1.0
 
 [node name="Pineapple2" parent="Pineapple" unique_id=1349360149 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-force_multiplier = 1.2
+cash_value = 0
+force_multiplier = 1.0
 
 [node name="Pineapple3" parent="Pineapple" unique_id=1506732277 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-force_multiplier = 1.25
+cash_value = 0
+force_multiplier = 1.0
 
 [node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["orange_container"]]
 script = ExtResource("68_qmj5w")

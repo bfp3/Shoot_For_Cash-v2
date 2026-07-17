@@ -3,23 +3,24 @@ class_name RoundManager
 
 @export var rounds_until_shop := 3
 
+var player_failed := false
+var compulsory_rocks_destroyed := false
 var in_display_text_prompt := false
 var force_shop_open := false
+var player_can_progress := false
 
-const current_rock_sequence : Array[Array] = [
+const current_rock_sequence : Array = [
 	# First
-	#[1,2,3,4,5,6,7,8]
 	[1,33,33]
 	,[41,1,33,33]
-	,[1,33,33]
 	,[311,323,41,33,1,33]
-
-	# Second
+#
+	 ##Second
 	,[2,2,32,34,34,34]
 	,[42,2,2,32,34,44,34,34]
 	,[312,332,324,42,2,2,32,34,44,34,34]
-
-	# Third
+#
+	## Third
 	,[33,5,7,37,37,5,33]
 	,[33,5,7,37,37,45,5,47,47,33]
 	,[33,5,7,37,37,45,5,47,47,33,323,314,325,316,327]
@@ -28,7 +29,8 @@ const current_rock_sequence : Array[Array] = [
 	,[2,32,4,34,34,6,6,36,36,8,8,38]
 	,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46]
 	,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46,311,312,313,314,315,316,317,318]
-]
+
+	]
 
 var current_sequence_index := 0
 var wave_in_round := 0
@@ -105,32 +107,46 @@ func _ready() -> void:
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
 	EventBus.instance.rocks_cleared_end_wave.connect(next_wave)
 	EventBus.instance.end_round_rock_missed.connect(unsuccessful_round)
-	
+	EventBus.instance.all_white_compulsory_rocks_destroyed.connect(white_rocks_destroyed)
 	await get_tree().process_frame
 	enter_state(current_round_state)
 	
+	
+func white_rocks_destroyed() -> void:
+	compulsory_rocks_destroyed = true
+
 func successful_round() -> void:
 	print('successful round')
 	if gl_PlayerState.dataset.total_hazards > 0:
 		unsuccessful_round()
 		return
-	success = true
-	print('successful round')
 	
-	if wave_in_round == 2:
-		current_sequence_index += 1
-		if gl_PlayerState.dataset.total_white_rocks == 0 && gl_PlayerState.dataset.total_rocks_in_round == 0:
-			gl_PlayerState.dataset.power_bonus_round_pineapples = 1
-		else:
-			perfect_score_feedback()
-				
+	success = true
+	
+	$Gold_sfx.play()
+	$Gold_sfx.pitch_scale += 0.05
+	
+	if wave_in_round >= 2:
+		player_can_progress = true
 		
+		await get_tree().create_timer(0.2).timeout
+		if gl_PlayerState.dataset.total_hazards <= 0:
+			if gl_PlayerState.dataset.perfect_rounds >= 3:
+				print("Start Pineapple Round")
+				gl_PlayerState.dataset.power_bonus_round_pineapples = 1
+				perfect_score_feedback()
+			else:
+				if !pineapple_mode:
+					perfect_score_feedback()
+				
+	#perfect_score_feedback()
 	enter_state(RoundState.ROUND_END)
 	
 	
 func unsuccessful_round() -> void:
 	print('unsuccessful round')
 	stop_timer()
+	player_failed = true
 	rounds_until_shop = 0
 	force_shop_open = true
 	%Splash_zone.deactivate_splash_zone()
@@ -138,7 +154,6 @@ func unsuccessful_round() -> void:
 	
 	
 func next_wave() -> void:
-	print('Next Wave Called')
 	stop_timer()
 	await get_tree().create_timer(0.5).timeout
 	enter_state(RoundState.ROUND_END)
@@ -216,6 +231,8 @@ func update_round_start() -> void:
 	
 		
 	success = false
+	player_failed = false
+	compulsory_rocks_destroyed = false
 	
 	while game_has_been_beaten:
 		await get_tree().process_frame
@@ -252,23 +269,15 @@ func update_round_start() -> void:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
 	
 	
-	
-	#seq_rock_pointer = 0
-	
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	
-
-
-	
 	var rock_seq := update_rock_sequence()
-
-	
-	
-	
-	print('Next Rock Seq ', rock_seq)
-	rocks_container.start_manual_rock_round(rock_seq)
-
-	
+	if rock_seq != []:
+		print('Next Rock Seq ', rock_seq)
+		rocks_container.start_manual_rock_round(rock_seq)
+		
+	else:
+		start_game_over()
 	
 	if rounds_until_shop == 3:
 		round_timer.enter_state(round_timer.State.RESTARTING)
@@ -290,8 +299,11 @@ func update_round_start() -> void:
 func update_rock_sequence() -> Array:
 	if current_rock_sequence.is_empty():
 		return []
-
-	return current_rock_sequence[current_sequence_index]
+		
+	if current_sequence_index >= current_rock_sequence.size():
+		return []
+	
+	return current_rock_sequence[current_sequence_index].duplicate()
 
 
 
@@ -352,6 +364,7 @@ func update_round_end() -> void:
 	if success:
 		
 		success = false
+		
 		#perfect_score_feedback()
 		if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
 			player.round_finished(false)
@@ -385,22 +398,26 @@ func update_round_end() -> void:
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
 
 func update_check_rounds() -> void:
-	
-	print('Current Round ', gl_PlayerState.dataset.round)
-	
 	wave_in_round += 1
 
 	if wave_in_round >= 3 or force_shop_open:
-		wave_in_round = 0
+		
 		force_shop_open = false
 
 		if current_sequence_index >= current_rock_sequence.size():
-			print("Game Over")
+			start_game_over()
 			return
 			
 		stop_player()
 		rounds_until_shop = 3
+		
+		if compulsory_rocks_destroyed == true && player_failed != true:
+			current_sequence_index += 1
+			player_can_progress = false
+			compulsory_rocks_destroyed = false
+		
 		await get_tree().create_timer(1.0).timeout
+		wave_in_round = 0
 		balloon_container.end_round()
 		enter_state(RoundState.TALLY_START)
 	else:
@@ -416,20 +433,22 @@ func update_tally_start() -> void:
 
 func update_tally_end() -> void:
 	#await get_tree().create_timer(0.5).timeout
-	
-	gl_PlayerState.add_cash(gl_PlayerState.dataset.bonus_cash)
+	if !player_failed:
+		gl_PlayerState.add_cash(gl_PlayerState.dataset.bonus_cash)
 	
 	# Check whether to add balloons
 	enter_state(RoundState.SHOP_START)
 
 	
 func update_shop_start() -> void:
+	$Gold_sfx.pitch_scale = 0.7
 	EventBus.instance.open_shop.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
+	rocks_container.reset_all_rocks()
 	if current_round > 0:
 		var rock_seq := update_rock_sequence()
-		balloon_container.add_balloon(rock_seq)
+		if rock_seq != []:
+			balloon_container.add_balloon(rock_seq)
 	
 func update_shop_end() -> void:
 	#red_circle.display_circle()
@@ -505,6 +524,7 @@ func move_to_moss() -> void:
 	scene_transition_screen.next_level_start()
 	await get_tree().create_timer(1.0).timeout
 	
+	
 	if level_layout.get_child(0) != null:
 		level_layout.get_child(0).queue_free()
 	#var current_level_layout = level_layout.get_node_or_null('current_level_layout')
@@ -532,8 +552,17 @@ func move_to_moss() -> void:
 	shop_main_menu.update_next_ticket()
 		
 	#rocks_container.reset_rock_back_on()
-	await get_tree().create_timer(3.0).timeout
+	await get_tree().create_timer(2.0).timeout
+	%Grand_total_prompt.start()
+	await get_tree().create_timer(1.0).timeout
 	transitioning_worlds = false
+	
+	in_display_text_prompt = true
+	
+	while in_display_text_prompt:
+		await get_tree().process_frame
+		
+	print("reached ")
 	#enter_state(RoundState.SHOP_END)
 	enter_state(RoundState.SHOP_START)
 

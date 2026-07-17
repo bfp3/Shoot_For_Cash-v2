@@ -42,7 +42,7 @@ var _bounds_check_accum := 0.0
 
 func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(enter_state.bind(State.PULSE_ROCKS))
-	EventBus.instance.all_rocks_destroyed.connect(all_rocks_destroyed)
+	#EventBus.instance.all_rocks_destroyed.connect(all_rocks_destroyed)
 	EventBus.instance.detonate_sky_mines.connect(detonate_sky_mines)
 	enter_state(current_state)
 
@@ -80,9 +80,12 @@ func update_inactive() -> void:
 	
 
 # This is the start of arranging the rocks.
-func start_manual_rock_round(sequence: Array = [8,8]) -> void:
-	
-	
+func start_manual_rock_round(sequence: Array) -> void:
+	for idx in range(sequence.size() - 1, -1, -1):
+		if sequence[idx] >= 300:
+			sequence.remove_at(idx)
+	#await get_tree().create_timer(0.5).timeout		
+	print('Rock Array Result is =  ', sequence)
 	
 	manual_rock_sequence = sequence
 	enter_state(State.PREPARE_ROCKS)
@@ -90,24 +93,10 @@ func start_manual_rock_round(sequence: Array = [8,8]) -> void:
 	
 	
 func update_prepare_rocks() -> void:
-
+	var temp_rock_array : Array = manual_rock_sequence
 	splash_zone.reset_detected_bodies()
+	rocks_limit = temp_rock_array.size()
 
-	for idx in range(manual_rock_sequence.size() - 1, -1, -1):
-		var value = manual_rock_sequence[idx]
-
-		if value >= 300 && value < 400:
-			print("REMOVING")
-			manual_rock_sequence.remove_at(idx)
-
-			print("Size:", manual_rock_sequence.size())
-			print(manual_rock_sequence)
-
-	print("After:", manual_rock_sequence)
-
-
-	rocks_limit = manual_rock_sequence.size()
-	print("man size ", manual_rock_sequence.size())
 	var active_bodies : Array = []
 
 	var container_children := $Container_1.get_children()
@@ -117,11 +106,11 @@ func update_prepare_rocks() -> void:
 
 	var counter := 0
 	for i in container_children:
+		if i.current_state == i.State.DISABLED:
+			continue
 		if counter < rocks_limit:
 			active_bodies.append(i)
 		else:
-			# Make sure any rock left over from a previous round with a
-			# larger sequence doesn't stay active/visible this round.
 			i.enter_state(i.State.INACTIVE)
 		counter += 1
 
@@ -129,12 +118,18 @@ func update_prepare_rocks() -> void:
 
 	var type : int
 	var pointer : int = 0
-
-	for column in manual_rock_sequence:
+	
+	var c := 0
+	for column in temp_rock_array:
+		#if active_bodies[pointer].current_state == active_bodies[pointer].State.DISABLED:
+			#continue
+		if c >= rocks_limit:
+			break
 		type = int(column / 10)
 		active_bodies[pointer].rock_type = type
 		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
 		pointer += 1
+		c += 1
 
 		
 	
@@ -155,7 +150,7 @@ func update_pulse_rocks() -> void:
 
 func check_rocks_out_of_bounds() -> void:
 	for body in $Container_1.get_children():
-		if body.current_state != body.State.ACTIVE:
+		if body.current_state != body.State.DISABLED:
 			continue
 			
 		if !body.name.contains('Rock_Instance'):
@@ -173,10 +168,7 @@ func deactivate_out_of_bounds_rock(body) -> void:
 
 
 func assign_rock_positions(bodies: Array) -> void:
-	# Assigns each active rock an X position in [X_MIN, X_MAX] such that:
-	#  - no two rocks share (or nearly share) a spot (MIN_ROCK_SPACING)
-	#  - exactly one pair of rocks ends up clustered close together
-	#    (between CLUSTER_MIN_DIST and CLUSTER_MAX_DIST apart)
+
 	if bodies.is_empty():
 		return
 	
@@ -307,10 +299,6 @@ func update_round_end() -> void:
 	
 
 
-func all_rocks_destroyed() -> void:
-	#if gl_PlayerState.dataset.total_rocks_missed == 0:
-	$Gold_sfx.play()
-	
 func detonate_sky_mines() -> void:
 	var bodies = $Container_1.get_children()
 	var counter := 0
@@ -334,20 +322,15 @@ func bounce_rocks() -> void:
 
 	var counter := 0
 	
-	#for body in bodies:
-		#if counter >= bodies.size():
-			#break
-		#print(body.name)
-		#body.enter_state(body.State.ACTIVE)
-	
-	counter = 0
-	
 	for body in bodies:
+		if body.current_state == body.State.DISABLED:
+			continue
+		
 		if counter >= bodies.size():
 			break
 		body.enter_state(body.State.ACTIVE)
 		body.bounce_rocks()
-		
+		print('ROCK INSTANCE NAME == ,', body.name)
 		#$AnimationPlayer.play('push_up')
 		
 		#var x_variation = randf_range(-2.0, 2.0)
@@ -400,7 +383,12 @@ func update_gravity(_gravity_scale : float) -> void:
 
 		#await get_tree().create_timer(0.01).timeout
 
+func reset_all_rocks() -> void:
+	var bodies = $Container_1.get_children()
 
+	for body in bodies:
+		body.enter_state(body.State.INACTIVE)
+		
 func end_of_round() -> void:
 	enter_state(State.ROUND_END)
 			

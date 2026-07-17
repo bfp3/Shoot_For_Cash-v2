@@ -172,12 +172,20 @@ func update_on_sale() -> void:
 	
 	disabled = false
 	self.show()
-	text = "to " + location_name.to_upper()
-
+	#text = "to " + location_name.to_upper()
+	#text = location_name.to_upper() + "\nShooting Range"
+	
 	price_label.show()# green #42d100
 	price_label.text = "[color=FFFFFF]$" + str(ticket_price)
 	self_modulate = Color('999999')
-	blinking_mode()
+	
+	if location_name == "moss":
+		text = "Moss Shooting Range"
+		blinking_mode()
+		
+	if location_name == "redd":
+		text = "Redd Shooting Range"
+		blinking_mode()
 
 
 func update_purchased() -> void:
@@ -195,6 +203,10 @@ func update_purchased() -> void:
 	
 	
 func blinking_mode() -> void:
+	if location_name == 'redd':
+		hide()
+		return
+	
 	if blink_tween:
 		blink_tween.stop()
 		blink_tween.kill()
