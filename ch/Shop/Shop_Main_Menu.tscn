@@ -27,13 +27,8 @@
 [ext_resource type="PackedScene" uid="uid://dcuml06w7i3km" path="res://ch/Shop/ticket_button.tscn" id="20_xklyy"]
 [ext_resource type="PackedScene" uid="uid://cjcdqa3pipb3j" path="res://ch/close_menu.tscn" id="21_tnodp"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
-[ext_resource type="Script" uid="uid://bia8r4n1kfwrp" path="res://ch/Shop/ticket_purchased_pop_up.gd" id="26_ei2sf"]
-[ext_resource type="Script" uid="uid://ducuh8laqrpgh" path="res://ch/Shop/popup_ticket_purchase.gd" id="27_pwib5"]
-[ext_resource type="StyleBox" uid="uid://eu6ax7sn7s7" path="res://res/card_icon_border_stylebox.tres" id="28_ppp57"]
-[ext_resource type="StyleBox" uid="uid://b0ho0ncfb085s" path="res://res/progress_bar_green.tres" id="29_vhtnt"]
-[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="32_b6naw"]
+[ext_resource type="PackedScene" uid="uid://dg8ab1qtj51xm" path="res://ch/Shop/ticket_purchased_pop_up.tscn" id="27_ei2sf"]
 [ext_resource type="AudioStream" uid="uid://cpr70poqkj2hs" path="res://sfx/greyscale_compressed.ogg" id="33_pwib5"]
-[ext_resource type="AudioStream" uid="uid://dnl57r7vck2bj" path="res://sfx/shop_free_sfx_01.ogg" id="37_eophr"]
 [ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="40_8mk8u"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="41_5w0u1"]
 [ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="42_hfqf8"]
@@ -145,121 +140,6 @@ border_width_bottom = 2
 border_color = Color(0.32, 0.2976, 0.22399999, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vrkmk"]
-
-[sub_resource type="Theme" id="Theme_64t06"]
-Panel/styles/panel = ExtResource("28_ppp57")
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_64t06"]
-bg_color = Color(0.32, 0.32, 0.32, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.32, 0.2976, 0.22399999, 1)
-
-[sub_resource type="Curve" id="Curve_ga617"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_gxbd8"]
-curve = SubResource("Curve_ga617")
-
-[sub_resource type="Curve" id="Curve_mntah"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_4eg6k"]
-curve = SubResource("Curve_mntah")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gxbd8"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 120.0
-initial_velocity_max = 240.0
-angular_velocity_min = -180.0
-angular_velocity_max = 180.0
-gravity = Vector3(0, 0, 0)
-scale_min = 6.0
-scale_max = 12.0
-scale_curve = SubResource("CurveTexture_4eg6k")
-color = Color(1, 0.78, 0, 1)
-alpha_curve = SubResource("CurveTexture_gxbd8")
-hue_variation_min = -0.100000024
-hue_variation_max = 0.09999997
-
-[sub_resource type="Curve" id="Curve_g6ubq"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_purchase_alpha"]
-curve = SubResource("Curve_g6ubq")
-
-[sub_resource type="Curve" id="Curve_bpx2c"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_purchase_scale"]
-curve = SubResource("Curve_bpx2c")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4eg6k"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(20, 20, 1)
-direction = Vector3(0, 0, 0)
-spread = 1.0
-gravity = Vector3(0, 0, 0)
-scale_min = 0.02
-scale_max = 0.049999997
-scale_curve = SubResource("CurveTexture_purchase_scale")
-color = Color(1.8247963, 1.4387401, 0, 1)
-alpha_curve = SubResource("CurveTexture_purchase_alpha")
-hue_variation_min = -0.050000023
-hue_variation_max = 0.049999975
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vom4t"]
-bg_color = Color(0.09803922, 0.09803922, 0.11372549, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.45, 0.55, 0.7, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 10
-
-[sub_resource type="Theme" id="Theme_ga617"]
-Button/styles/hover = null
-Button/styles/normal = SubResource("StyleBoxFlat_vom4t")
-
-[sub_resource type="Curve" id="Curve_cn8lj"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_8o1tj"]
-curve = SubResource("Curve_cn8lj")
-
-[sub_resource type="Curve" id="Curve_ei2sf"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_scjtr"]
-curve = SubResource("Curve_ei2sf")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hi3s5"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 120.0
-initial_velocity_max = 240.0
-angular_velocity_min = -180.0
-angular_velocity_max = 180.0
-gravity = Vector3(0, 80, 0)
-scale_min = 8.0
-scale_max = 16.0
-scale_curve = SubResource("CurveTexture_scjtr")
-color = Color(1, 0.78, 0, 1)
-alpha_curve = SubResource("CurveTexture_8o1tj")
 
 [node name="Shop_Main_Menu" type="Control" unique_id=973405492 node_paths=PackedStringArray("money_control", "reveal_skill_sfx") groups=["restartable", "shop_main_menu"]]
 layout_mode = 3
@@ -537,7 +417,7 @@ offset_bottom = 286.0
 upgrade_icon = ExtResource("5_lwcj2")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "target_circle"
-upgrade_name = "Target Circle"
+upgrade_name = "Reticle Size"
 
 [node name="GunFireRate" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1287420994 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -675,6 +555,8 @@ theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_disabled_color = Color(0.88, 0.88, 0.88, 0)
 theme_override_font_sizes/font_size = 26
 text = "DONE"
 
@@ -817,7 +699,7 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 88
 
-[node name="Target Circle" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=1277739787 instance=ExtResource("13_onfim")]
+[node name="Reticle Size" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=1277739787 instance=ExtResource("13_onfim")]
 layout_mode = 2
 upgrade_type = "target_circle"
 
@@ -1041,370 +923,12 @@ custom_minimum_size = Vector2(50, 34.5)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
-[node name="TicketPurchasedPopUp" type="CenterContainer" parent="." unique_id=344167720]
+[node name="TicketPurchasedPopUp" parent="." unique_id=1840245893 instance=ExtResource("27_ei2sf")]
 unique_name_in_owner = true
 visible = false
-z_index = 1
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("26_ei2sf")
-
-[node name="ColorRect" type="ColorRect" parent="TicketPurchasedPopUp" unique_id=1759319141]
-custom_minimum_size = Vector2(3840, 2160)
-layout_mode = 2
-color = Color(0, 0, 0, 0.3137255)
-
-[node name="MainPanel" type="PanelContainer" parent="TicketPurchasedPopUp" unique_id=475322432]
-custom_minimum_size = Vector2(600, 400)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("5_vom4t")
-
-[node name="TreePanel" type="Control" parent="TicketPurchasedPopUp/MainPanel" unique_id=1006452892]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-mouse_filter = 2
-
-[node name="PurchasedTicket" type="Button" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=957449504 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
-custom_minimum_size = Vector2(210, 250)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -105.0
-offset_top = -125.0
-offset_right = 105.0
-offset_bottom = 125.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-disabled = true
-clip_text = true
-script = ExtResource("27_pwib5")
-upgrade_icon = ExtResource("12_kvqbn")
-focus_enter_sfx = NodePath("focus_enter_sfx")
-focus_exit_sfx = NodePath("focus_exit")
-purchase_sfx = NodePath("../../../../CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/focus_enter_sfx")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=493506063]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 2.0
-offset_right = -8.0
-offset_bottom = -2.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="UpgradePanel" type="Panel" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=1516595616]
-clip_contents = true
-custom_minimum_size = Vector2(120, 120)
-layout_mode = 2
-mouse_filter = 2
-theme = SubResource("Theme_64t06")
-
-[node name="Upgrade_Icon" type="TextureRect" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer/UpgradePanel" unique_id=270279238]
-unique_name_in_owner = true
-self_modulate = Color(1, 0.78039217, 0, 1)
-custom_minimum_size = Vector2(100, 110)
-layout_mode = 0
-offset_top = 4.0
-offset_right = 187.0
-offset_bottom = 114.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("7_cn8lj")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="NameLabel" type="Label" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=2144643434]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Upgrade Name"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=129271411]
-layout_mode = 2
-mouse_filter = 2
-alignment = 1
-
-[node name="PurchaseHoldProgressBar" type="ProgressBar" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer/HBoxContainer" unique_id=998683865]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 25)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_64t06")
-theme_override_styles/fill = ExtResource("29_vhtnt")
-step = 1.0
-show_percentage = false
-
-[node name="CostLabel" type="RichTextLabel" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=1697108673]
-unique_name_in_owner = true
-visible = false
-modulate = Color(1, 0.78039217, 0, 1)
-custom_minimum_size = Vector2(0, 70)
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 66
-theme_override_font_sizes/italics_font_size = 48
-bbcode_enabled = true
-text = "Cost: 0"
-horizontal_alignment = 1
-
-[node name="DescriptionLabel" type="Label" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=385361191]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "Description"
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="Purchased" type="VBoxContainer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=2133076126]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 68.000015
-offset_top = 104.0
-offset_right = -57.999985
-offset_bottom = -110.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2.2, 5.105)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="NameLabel" type="RichTextLabel" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/Purchased" unique_id=1623989385]
-custom_minimum_size = Vector2(84.88, 0)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/normal_font_size = 33
-theme_override_font_sizes/bold_font_size = 23
-theme_override_font_sizes/italics_font_size = 23
-bbcode_enabled = true
-text = "[rainbow]SOLD"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-
-[node name="Capped" type="VBoxContainer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=1886234027]
-visible = false
-modulate = Color(1, 0.78039217, 0, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 72.0
-offset_top = 104.0
-offset_right = -70.0
-offset_bottom = -110.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 0.61126375
-scale = Vector2(2.2, 2.2)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="NameLabel" type="Label" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket/Capped" unique_id=1199857745]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 26
-text = "CAPPED"
-horizontal_alignment = 1
-
-[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=1674690240]
-stream = ExtResource("26_bovdg")
-volume_db = -34.0
-
-[node name="Free_sfx" type="AudioStreamPlayer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=1901564952]
-stream = ExtResource("37_eophr")
-volume_db = -52.0
-
-[node name="focus_exit" type="AudioStreamPlayer" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=2031807403]
-stream = ExtResource("26_bovdg")
-volume_db = -49.0
-pitch_scale = 0.9
-
-[node name="PurchaseParticles" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=1037957764]
-z_index = 3
-position = Vector2(104, 212)
-emitting = false
-amount = 12
-lifetime = 0.5
-one_shot = true
-explosiveness = 1.0
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_gxbd8")
-
-[node name="FreeParticles" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=1890361837]
-z_index = 3
-position = Vector2(168, 212)
-amount = 2
-texture = ExtResource("32_b6naw")
-lifetime = 2.0
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_4eg6k")
-
-[node name="Button" type="Button" parent="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" unique_id=228509391]
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 1.0
-offset_top = 8.0
-offset_right = 1.0
-offset_bottom = 8.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme = SubResource("Theme_ga617")
-
-[node name="ticket_particles" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=1618108805]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(-176, -124)
-emitting = false
-amount = 32
-lifetime = 0.8
-one_shot = true
-explosiveness = 0.95
-randomness = 0.4
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_hi3s5")
-
-[node name="ticket_particles2" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=316854253]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(200, -124)
-emitting = false
-amount = 32
-lifetime = 0.8
-one_shot = true
-explosiveness = 0.95
-randomness = 0.4
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_hi3s5")
-
-[node name="ticket_particles3" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=1590122366]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(200, 124)
-emitting = false
-amount = 32
-lifetime = 0.8
-one_shot = true
-explosiveness = 0.95
-randomness = 0.4
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_hi3s5")
-
-[node name="ticket_particles4" type="GPUParticles2D" parent="TicketPurchasedPopUp/MainPanel/TreePanel" unique_id=1199686298]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(-176, 124)
-emitting = false
-amount = 32
-lifetime = 0.8
-one_shot = true
-explosiveness = 0.95
-randomness = 0.4
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_hi3s5")
-
-[node name="Control" type="Control" parent="TicketPurchasedPopUp" unique_id=1191033289]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="NextRound" type="Button" parent="TicketPurchasedPopUp/Control" unique_id=452825858]
-layout_mode = 0
-offset_left = -226.0
-offset_top = 78.0
-offset_right = -126.0
-offset_bottom = 123.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-script = ExtResource("3_y3o4g")
-border_outline_colour = Color(0.19780001, 0.19780001, 0.23, 1)
-
-[node name="RichTextLabel" type="RichTextLabel" parent="TicketPurchasedPopUp/Control/NextRound" unique_id=2107366732]
-modulate = Color(0.7, 0.7, 0.7, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/italics_font_size = 26
-bbcode_enabled = true
-text = "Back"
-fit_content = true
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="NextRound" type="Button" parent="TicketPurchasedPopUp/Control/NextRound" unique_id=2078152162]
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 8.0
-offset_right = 100.0
-offset_bottom = 49.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_vrkmk")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-text = "Not Yet"
-
-[node name="NextRound2" type="Button" parent="TicketPurchasedPopUp/Control/NextRound" unique_id=181569061]
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 9.0
-offset_right = 100.0
-offset_bottom = 50.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_vrkmk")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-text = "Not Yet"
+offset_left = -960.0
+offset_right = 960.0
 
 [node name="NextRound" type="Button" parent="." unique_id=185981390]
 visible = false
@@ -1666,8 +1190,6 @@ pitch_scale = 0.5
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
-[connection signal="pressed" from="TicketPurchasedPopUp/MainPanel/TreePanel/PurchasedTicket" to="TicketPurchasedPopUp" method="_on_purchased_ticket_pressed"]
-[connection signal="pressed" from="TicketPurchasedPopUp/Control/NextRound" to="TicketPurchasedPopUp" method="_on_next_round_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]
 [connection signal="pressed" from="MaxOutPowers" to="." method="_on_max_out_powers_pressed"]
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]

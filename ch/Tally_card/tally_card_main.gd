@@ -134,7 +134,7 @@ func start_perfect_sequence() -> void:
 
 	# 1. GRADE LABEL
 	grade_label.modulate = Color("ffc700ff")
-	grade_label.text = "PERFECT"
+	grade_label.text = "[i][wave]PERFECT"
 
 	# 2. GRADE CASH LABEL
 	grade_cash_label.text = '$50'
@@ -167,7 +167,7 @@ func start_pass_sequence() -> void:
 
 	# 1. GRADE LABEL
 	grade_label.modulate = Color("cccccc")
-	grade_label.text = "Nice!"
+	grade_label.text = "All Clear!"
 
 	# 2. GRADE CASH LABEL
 	grade_cash_label.text = '$20'

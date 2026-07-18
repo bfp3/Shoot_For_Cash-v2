@@ -11,7 +11,8 @@ var default_volume_map : Dictionary = {}
 @export var current_song : AudioStreamPlayer
 @export var opening_song : AudioStreamPlayer
 
-@export var background_music_vol := -40.0
+@export var background_music_vol_in_shop := -40.0
+@export var background_music_vol_out_of_shop := -40.0
 
 func _ready() -> void:
 	default_volumes()
@@ -61,7 +62,7 @@ func shop_music_raise_volume() -> void:
 	if current_song == null:
 		return
 		
-	var targ_volume := background_music_vol
+	var targ_volume := background_music_vol_in_shop
 		
 	var tween := create_tween()
 	tween.tween_property(current_song, "volume_db", targ_volume, 3.0)
@@ -71,7 +72,7 @@ func shop_music_lower_volume() -> void:
 		return
 	var tween := create_tween()
 	#tween.tween_property(current_song, "volume_db", -80.0, 5.0)
-	tween.tween_property(current_song, "volume_db", -45.0, 3.0)
+	tween.tween_property(current_song, "volume_db", background_music_vol_out_of_shop, 3.0)
 	await tween.finished
 	current_song.pitch_scale = 1.0
 	
@@ -85,6 +86,11 @@ func game_won() -> void:
 func first_round() -> void:
 	if current_song == null:
 		return
+		
+	if current_song.playing:
+		return
+		
+		
 	var curr_song : AudioStreamPlayer = current_song
 	var orig_vol = curr_song.volume_db
 	var _pitch_scale = curr_song.pitch_scale

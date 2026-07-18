@@ -62,7 +62,7 @@ func add_balloon(_balloon_array : Array) -> void:
 	if balloon_array.is_empty():
 		return
 	
-	print('Balloon Codes --- ', balloon_array )
+	#print('Balloon Codes --- ', balloon_array )
 	
 	for code in balloon_array:
 		if code < 300:

@@ -30,8 +30,42 @@ func _ready() -> void:
 
 
 func show_end_screen():
+	
+	if gl_PlayerState.dataset.cash >= 2000:
+		show_win_text()
+	else:
+		show_lose_text()
+	
+	
+	
 	show()
 
+func show_win_text() -> void:
+	var text_box := %TextBOX
+	var player_cash: int = int(gl_PlayerState.dataset.cash)
+	$CenterContainer/FreeParticles.emitting = true
+	text_box.text = (
+		"Moss Shooting Range: \n[i][pulse][color=#ffc700]ALL CLEAR[/color][/pulse][/i]\n"
+		+ "Cash Target [color=#42d100]$2,000[/color]\n"
+		+ "Your Cash [color=#42d100]$%s[/color]" % player_cash
+	)
+	
+func show_lose_text() -> void:
+	var text_box := %TextBOX
+	var player_cash: int = int(gl_PlayerState.dataset.cash)
+	$CenterContainer/FreeParticles.emitting = false
+	text_box.text = (
+		"Moss Shooting Range:\n"
+		+ "Cash Target [color=#42d100]$2,000[/color]\n"
+		+ "Your Cash [color=#42d100]$%s[/color]\n"
+		+ "[i][pulse][color=#ffc700]Try Again?[/color][/pulse][/i]"
+	) % player_cash
+	
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed('left'):
+		show_lose_text()
+	if Input.is_action_just_pressed('right'):
+		show_win_text()
 	
 func enter_state(new_state: State) -> void:
 	current_state = new_state
@@ -57,7 +91,7 @@ func update_inactive() -> void:
 func update_open_menu() -> void:
 
 	show()
-
+	show_end_screen()
 	# OPEN ANIMATION
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_LINEAR)
@@ -67,7 +101,7 @@ func update_open_menu() -> void:
 	tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
 
 	await tween.finished
-
+	
 
 func update_close_menu() -> void:
 	sfx_close_tally()

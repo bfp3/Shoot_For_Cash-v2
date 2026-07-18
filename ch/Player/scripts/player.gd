@@ -284,7 +284,15 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_released("shootWeapon"):
 		weapon_shooting.shot_with_right_click = false
 		fire_weapon()
-		
+	
+	
+	if Input.is_action_just_released("shoot_weapon_2"):
+		if gl_PlayerState.dataset.power_sky_mine > 0:
+			weapon_shooting.shooting_sky_mine = true
+			fire_weapon()
+		else:
+			weapon_shooting.play_missed_sounds()
+	
 	if Input.is_action_just_released("shoot_weapon_2") && can_right_click_shoot:
 		weapon_shooting.shot_with_right_click = true
 		fire_weapon()
@@ -301,7 +309,7 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
-	#handle_keyboard_crosshair(delta)
+	handle_keyboard_crosshair(delta)
 	update_gun_look()
 	handle_scope_shrink(delta)
 	#handle_pan_keyboard(delta)
@@ -507,7 +515,6 @@ func apply_sky_mine() -> void:
 	
 func remove_sky_mine() -> void:
 	#await get_tree().create_timer(0.25).timeout
-	#gl_PlayerState.dataset.power_sky_mine = 0
 	$CanvasLayer/HUD_bottom_corner/SkyMine.stop()
 	%Cooldown_progressBar3.self_modulate = Color('FFFFFF')
 	$CanvasLayer/Crosshair/Inner_scope/center_container.modulate = Color('FFFFFF')

@@ -85,7 +85,7 @@ func start_manual_rock_round(sequence: Array) -> void:
 		if sequence[idx] >= 300:
 			sequence.remove_at(idx)
 	#await get_tree().create_timer(0.5).timeout		
-	print('Rock Array Result is =  ', sequence)
+
 	
 	manual_rock_sequence = sequence
 	enter_state(State.PREPARE_ROCKS)
@@ -330,7 +330,7 @@ func bounce_rocks() -> void:
 			break
 		body.enter_state(body.State.ACTIVE)
 		body.bounce_rocks()
-		print('ROCK INSTANCE NAME == ,', body.name)
+
 		#$AnimationPlayer.play('push_up')
 		
 		#var x_variation = randf_range(-2.0, 2.0)

@@ -2603,38 +2603,7 @@ mouse_filter = 2
 theme = SubResource("Theme_pivo4")
 theme_override_styles/panel = ExtResource("29_fuvvr")
 
-[node name="SkyMineLabel" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=1334393879]
-unique_name_in_owner = true
-modulate = Color(0.4, 0.4, 0.4, 0)
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -272.28284
-offset_top = -95.65173
-offset_right = -145.10876
-offset_bottom = 4.3482666
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_outline_size = 1
-theme_override_constants/outline_size = 0
-theme_override_font_sizes/normal_font_size = 60
-theme_override_font_sizes/bold_font_size = 50
-theme_override_font_sizes/bold_italics_font_size = 50
-theme_override_font_sizes/italics_font_size = 71
-bbcode_enabled = true
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Texture" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/SkyMine/SkyMineLabel" unique_id=1615080593]
-show_behind_parent = true
+[node name="Texture" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=1615080593]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
 anchors_preset = 8
@@ -2642,10 +2611,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -63.58728
-offset_top = -41.303955
-offset_right = 63.586792
-offset_bottom = 58.696045
+offset_left = -272.28284
+offset_top = -86.95557
+offset_right = -145.10875
+offset_bottom = 13.044434
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(2.935, 2.935)
@@ -2656,7 +2625,7 @@ texture = ExtResource("35_bpx2c")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Texture2" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/SkyMine/SkyMineLabel/Texture" unique_id=1472582693]
+[node name="Texture2" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/SkyMine/Texture" unique_id=1472582693]
 modulate = Color(0, 0, 0, 1)
 show_behind_parent = true
 custom_minimum_size = Vector2(50, 50)
@@ -2679,6 +2648,36 @@ mouse_filter = 2
 texture = ExtResource("35_bpx2c")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="SkyMineLabel" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=1334393879]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -207.06555
+offset_top = -134.78162
+offset_right = -79.89148
+offset_bottom = -34.781616
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 1
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 50
+theme_override_font_sizes/bold_italics_font_size = 50
+theme_override_font_sizes/italics_font_size = 71
+bbcode_enabled = true
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SkyMineParticles2D" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=1749942014]
 z_index = 3

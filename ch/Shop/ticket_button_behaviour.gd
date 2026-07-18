@@ -180,11 +180,11 @@ func update_on_sale() -> void:
 	self_modulate = Color('999999')
 	
 	if location_name == "moss":
-		text = "Moss Shooting Range"
+		text = "Select Shooting Range"
 		blinking_mode()
 		
 	if location_name == "redd":
-		text = "Redd Shooting Range"
+		text = "Select Shooting Range"
 		blinking_mode()
 
 

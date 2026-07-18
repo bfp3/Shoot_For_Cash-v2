@@ -132,7 +132,6 @@ func successful_round() -> void:
 		await get_tree().create_timer(0.2).timeout
 		if gl_PlayerState.dataset.total_hazards <= 0:
 			if gl_PlayerState.dataset.perfect_rounds >= 3:
-				print("Start Pineapple Round")
 				gl_PlayerState.dataset.power_bonus_round_pineapples = 1
 				perfect_score_feedback()
 			else:
@@ -241,7 +240,7 @@ func update_round_start() -> void:
 		go_to_fake_round()
 		return
 		
-	if gl_PlayerState.dataset.round == 1:
+	if gl_PlayerState.dataset.round == 2:
 		music_manager.first_round()
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -251,7 +250,7 @@ func update_round_start() -> void:
 		
 	while gl_PlayerState.dataset.power_balloon_buster > 0:
 		#gl_PlayerState.dataset.power_balloon_buster = 0
-		#print('true')
+		
 		#if bullet_active:
 			#bullet_active = false
 			#await get_tree().create_timer(1.0).timeout
@@ -273,7 +272,7 @@ func update_round_start() -> void:
 	
 	var rock_seq := update_rock_sequence()
 	if rock_seq != []:
-		print('Next Rock Seq ', rock_seq)
+		#print('Next Rock Seq ', rock_seq)
 		rocks_container.start_manual_rock_round(rock_seq)
 		
 	else:
@@ -436,6 +435,10 @@ func update_tally_end() -> void:
 	if !player_failed:
 		gl_PlayerState.add_cash(gl_PlayerState.dataset.bonus_cash)
 	
+	if current_sequence_index >= current_rock_sequence.size():
+		start_game_over()
+		return
+	
 	# Check whether to add balloons
 	enter_state(RoundState.SHOP_START)
 
@@ -562,7 +565,6 @@ func move_to_moss() -> void:
 	while in_display_text_prompt:
 		await get_tree().process_frame
 		
-	print("reached ")
 	#enter_state(RoundState.SHOP_END)
 	enter_state(RoundState.SHOP_START)
 

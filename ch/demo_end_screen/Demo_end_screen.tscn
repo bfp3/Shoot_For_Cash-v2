@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dpbgyfs2kgdtr"]
 
 [ext_resource type="Script" uid="uid://mtqsnjnmst05" path="res://ch/demo_end_screen/demo_end_screen.gd" id="1_c5dla"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_c5dla"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="2_yvcyi"]
 [ext_resource type="PackedScene" uid="uid://b04e2sb5337vo" path="res://ch/Tally_card/TallyComponent_v3.tscn" id="3_sfhak"]
 [ext_resource type="Texture2D" uid="uid://bl6g8v8djrlds" path="res://unfiled/Decal_placeholders/counter_clock_arrow_2.png" id="4_858g4"]
@@ -53,6 +54,35 @@ scale_max = 10.0
 scale_curve = SubResource("CurveTexture_64t06")
 color = Color(0.25882354, 0.81960785, 0, 1)
 alpha_curve = SubResource("CurveTexture_vhsx8")
+
+[sub_resource type="Curve" id="Curve_ff4up"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_purchase_alpha"]
+curve = SubResource("Curve_ff4up")
+
+[sub_resource type="Curve" id="Curve_bxur6"]
+_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_purchase_scale"]
+curve = SubResource("Curve_bxur6")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bqs52"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(258.075, 118.255, 81)
+direction = Vector3(0, 0, 0)
+spread = 1.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.02
+scale_max = 0.049999997
+scale_curve = SubResource("CurveTexture_purchase_scale")
+color = Color(1.8247963, 1.4387401, 0, 1)
+alpha_curve = SubResource("CurveTexture_purchase_alpha")
+hue_variation_min = -0.050000023
+hue_variation_max = 0.049999975
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
 
@@ -215,6 +245,18 @@ scale = Vector2(0.9948992, 0.9948992)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
+[node name="FreeParticles" type="GPUParticles2D" parent="CenterContainer" unique_id=1108518596]
+z_index = 3
+position = Vector2(952.5776, 544.5723)
+scale = Vector2(1.005127, 1.005127)
+emitting = false
+amount = 6
+texture = ExtResource("2_c5dla")
+lifetime = 2.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_bqs52")
+
 [node name="ColorRect" type="ColorRect" parent="CenterContainer" unique_id=636300411]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 2
@@ -263,7 +305,8 @@ script = ExtResource("8_p2noj")
 border_outline_colour = Color(0.46799996, 0.46799996, 0.52, 1)
 editable = true
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/DoneButton" unique_id=6153412]
+[node name="TextBOX" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/DoneButton" unique_id=6153412]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

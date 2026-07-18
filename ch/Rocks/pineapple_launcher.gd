@@ -74,7 +74,6 @@ func launch_pineapple(body : RigidBody3D) -> void:
 
 
 func pineapple_round_1() -> void:
-	print('Pineapple Round 1')
 	launch_pineapple(pineapple)
 
 
@@ -86,14 +85,7 @@ func pineapple_round_3() -> void:
 	launch_pineapple(pineapple_3)
 	
 func stop_pineapples() -> void:
-	print('Stop Pineapples')
 	await get_tree().create_timer(2.0).timeout
 	pineapple.reset_stats()
 	pineapple_2.reset_stats()
 	pineapple_3.reset_stats()
-	#pineapple_4.reset_stats()
-	#pineapple_5.reset_stats()
-	#pineapple_6.reset_stats()
-	#pineapple_7.reset_stats()
-	#pineapple_8.reset_stats()
-	#pineapple_9.reset_stats()

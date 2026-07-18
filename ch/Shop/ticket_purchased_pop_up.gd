@@ -37,25 +37,19 @@ func display_ticket() -> void:
 	
 	modulate.a = 0.0
 	show()
+	position = Vector2.ZERO
 	self.mouse_filter = Control.MOUSE_FILTER_STOP
 	$MainPanel/TreePanel/PurchasedTicket.disabled = false
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 1.0, 0.5)
 	await tween.finished
 	
-	%ticket_particles.emitting = true
-	await %ticket_particles.finished
-
-
-	%ticket_particles2.emitting = true
-	await %ticket_particles2.finished
-
-	%ticket_particles3.emitting = true
-	await %ticket_particles3.finished
-	
-	%ticket_particles4.emitting = true
-	await %ticket_particles4.finished
-
+func close_pop_up() -> void:
+	var tween2 = create_tween()
+	tween2.tween_property(self, "modulate:a", 0.0, 0.25)
+	await  tween2.finished
+	self.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hide()
 
 func _on_next_round_pressed() -> void:
 	var tween2 = create_tween()

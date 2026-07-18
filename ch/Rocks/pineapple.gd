@@ -120,8 +120,7 @@ func update_active() -> void:
 
 	pineapple_mesh.show()
 	rock_activated = true
-	pineapple_mesh.scale.x = 2.0
-	pineapple_mesh.scale.z = 2.0
+	pineapple_mesh.scale = Vector3.ONE * 2
 	$Mesh.show()
 	$Start_falling_timer.start(2.2)
 
@@ -347,7 +346,7 @@ func start_destroyed_process() -> void:
 	if !rock_activated:
 		return
 	expand_blast_radius()
-
+	
 	
 	#$Mesh/Yellow_particles.emitting = true
 	rock_activated = false
@@ -366,11 +365,17 @@ func start_destroyed_process() -> void:
 	if is_in_group('Target'):
 		remove_from_group('Target')
 		
-	print("cash value pineapples ", cash_value)
+
+	var bonus_cash_reward := 0
+	var bonus_zones := get_tree().get_first_node_in_group('multi_shot')
+	if bonus_zones:
+		bonus_cash_reward = bonus_zones.check_if_within_zone(global_position.y)
+		
+	cash_value += bonus_cash_reward
+		
 	#money_label_3d.money_is_money(global_position, cash_value)
 	
 	if gl_PlayerState.dataset.total_pineapples_destroyed >= 3 && did_not_get_all_pineapples == false:
-		print(gl_PlayerState.dataset.total_pineapples_destroyed)
 		money_label_3d.pineapple_is_pineapple()
 	
 	is_deactivated = true
@@ -512,7 +517,7 @@ func hit_out_of_bounds() -> void:
 func hit_wall_effects() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_property($AoE2Fail, "play_particles", true, 0.10)
-	tween.tween_property($Mesh, "scale", Vector3.ZERO, 0.10)
+	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
 	await tween.finished
 
 func check_position_for_wall() -> void:
@@ -552,7 +557,6 @@ func _on_hit_wall_timer_timeout() -> void:
 
 
 func _on_explosion_area_body_entered(body: Node3D) -> void:
-	print('is this hit?')
 	if body.name.contains('Balloon'):
 		if body.balloon_type == body.BalloonType.BLUE:
 			return

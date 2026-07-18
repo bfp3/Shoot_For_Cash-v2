@@ -323,15 +323,16 @@ func process_target_hit(target, damage, screen_offset) -> void:
 		)
 		
 
-		
+
+
 func shoot_target() -> void:
 
 	if !can_fire_weapon:
 		return
 
-	if shooting_sky_mine:
-		return
-
+	#if shooting_sky_mine:
+		#return
+	
 	round_manager.bullet_active = true
 
 	
@@ -350,11 +351,11 @@ func shoot_target() -> void:
 			rock_count += 1
 			rocks_to_destroy.append(target)
 
-	if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
-		shooting_sky_mine = true
+	#if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
+		#shooting_sky_mine = true
 
-		if !targets.is_empty():
-			targets = [targets[0]] # Only the closest target
+		#if !targets.is_empty():
+			#targets = [targets[0]] # Only the closest target
 
 	if targets.is_empty():
 		var shootable_hit = get_shootable_hit()
@@ -363,7 +364,7 @@ func shoot_target() -> void:
 			shoot_shootable_object(shootable_hit)
 		else:
 			shoot_bullet_without_target()
-
+		
 		shooting_sky_mine = false
 		return
 
@@ -390,6 +391,11 @@ func shoot_target() -> void:
 		if gl_PlayerState.dataset.power_balloon_buster > 0:
 			if target.has_method("apply_marked_ability") && target is not RockInstance:
 				target.apply_marked_ability()
+		
+		if shooting_sky_mine:
+			if target is RockInstance:
+				target.player_has_marked_rock = true
+				shooting_sky_mine = false
 
 		target.start_bullet_to_target()
 

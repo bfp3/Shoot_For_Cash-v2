@@ -2,6 +2,10 @@ extends Node3D
 
 @onready var multi_label: Label3D = $mutli_label
 
+
+var bonus_cash_labels_zone_a = null
+var bonus_cash_labels_zone_b = null
+
 var tween: Tween = null
 
 const MULTI_SHOT_DATA := {
@@ -15,6 +19,9 @@ const MULTI_SHOT_DATA := {
 	9: {"name":"9X",      "reward":0,  "color":"00ff88", "font_size":110},
 	10: {"name":"10X",    "reward":0,  "color":"ffe600", "font_size":120},
 }
+
+
+
 
 func multi_shot(multiplier: int, pos : Vector3) -> void:
 
@@ -63,13 +70,18 @@ func check_if_within_zone(pos : float) -> int:
 	var zone_a_reward := 10
 	var zone_b_reward := 20
 	
+	bonus_cash_labels_zone_a = get_tree().get_first_node_in_group('zone_a')
+	bonus_cash_labels_zone_b = get_tree().get_first_node_in_group('zone_b')
+	
 	if pos > 3.3:
 		return 0
 	
 	if pos <= 3.3 && pos > 0.65:
+		bonus_cash_labels_zone_a.start()
 		return zone_a_reward
 		
 	if pos <= 0.65:
+		bonus_cash_labels_zone_b.start()
 		return zone_b_reward
 
 		
