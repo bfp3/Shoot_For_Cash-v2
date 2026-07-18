@@ -33,7 +33,7 @@ const current_rock_sequence : Array = [
 	]
 
 var current_sequence_index := 0
-var wave_in_round := 0
+var current_wave := 0
 
 
 const LEVEL_LAYOUT_00_OPENING_SCENE = preload('uid://88s7u86w4lfr')
@@ -41,16 +41,13 @@ const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
 const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
 const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
 
-const DEMO_END_SCREEN = preload('uid://dpbgyfs2kgdtr')
-
 var game_has_been_beaten := false
-
 
 var bullet_active := false
 var bullet_active_counter := 0.0
 var round_finished := false
 var transitioning_worlds := false
-@export var pineapple_mode := false
+var pineapple_mode := false
 
 @export var level_layout : Node3D
 @export var scene_transition_screen : Control 
@@ -75,15 +72,16 @@ var egg_pulse : Egg
 
 enum RoundState {
 	INACTIVE,
-	FIRST_ROUND,
+	CHECK_EVENTS,
+	SHOP_START,
+	SHOP_END,
 	ROUND_START,
-	ROUND_IN_PROGRESS,
+	WAVE_START,
+	WAVE_END,
 	ROUND_END,
 	CHECK_ROUNDS,
 	TALLY_START,
 	TALLY_END,
-	SHOP_START,
-	SHOP_END,
 	PAUSE,
 	RESUME,
 	GAME_WON,
@@ -97,7 +95,7 @@ var success := false
 
 func _ready() -> void:
 	current_sequence_index = 0
-	wave_in_round = 0
+	current_wave = 0
 	force_shop_open = false
 	
 	move_to_start()
@@ -126,7 +124,7 @@ func successful_round() -> void:
 	$Gold_sfx.play()
 	$Gold_sfx.pitch_scale += 0.05
 	
-	if wave_in_round >= 2:
+	if current_wave >= 2:
 		player_can_progress = true
 		
 		await get_tree().create_timer(0.2).timeout
@@ -262,7 +260,7 @@ func update_round_start() -> void:
 	else:
 		gl_PlayerState.next_wave()
 
-	current_round = gl_PlayerState.dataset.round
+	#current_round = gl_PlayerState.dataset.round
 	
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -397,9 +395,9 @@ func update_round_end() -> void:
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
 
 func update_check_rounds() -> void:
-	wave_in_round += 1
+	current_wave += 1
 
-	if wave_in_round >= 3 or force_shop_open:
+	if current_wave >= 3 or force_shop_open:
 		
 		force_shop_open = false
 
@@ -416,7 +414,7 @@ func update_check_rounds() -> void:
 			compulsory_rocks_destroyed = false
 		
 		await get_tree().create_timer(1.0).timeout
-		wave_in_round = 0
+		current_wave = 0
 		balloon_container.end_round()
 		enter_state(RoundState.TALLY_START)
 	else:
@@ -473,47 +471,23 @@ func update_resume() -> void:
 		round_timer.enter_state(round_timer.State.RESUME_TIMER)
 
 func update_game_won() -> void:
-	#$'../Cannon_Launcher'.send_in_the_pineapples()
 	stop_timer()
-	game_has_been_beaten = true
 	music_manager.game_won()
 	ending_song.play()
-	
-	shop_main_menu.enter_state(shop_main_menu.SkillState.CLOSE_MENU)
-	%TallyCard.enter_state(%TallyCard.State.CLOSE_MENU)
 	stop_player()
-	
-	await get_tree().create_timer(1.0).timeout
 	enter_state(RoundState.INACTIVE)
-	
-	await get_tree().create_timer(60.0).timeout
-	
-	
-	
-	
-	#BackgroundForTransition.fade_out()
-	
-
-	
 
 
 			
 func move_to_start() -> void:
 	if level_layout.get_children().size() > 0:
 		level_layout.get_child(0).queue_free()
-	#var current_level_layout = level_layout.get_node_or_null('current_level_layout')
-	#if current_level_layout:
-		#current_level_layout.queue_free()
 	
 	var level_mesh = LEVEL_LAYOUT_00_OPENING_SCENE.instantiate()
 	level_layout.add_child(level_mesh)
 	level_mesh.name = 'current_level_layout'
 
 func move_to_moss() -> void:
-	
-	#current_rock_sequence = gl_DataSet.get_array('seq_rocks_moss')
-
-	
 	transitioning_worlds = true
 	player.display_hud()
 	gl_PlayerState.dataset["stage"] = 1
@@ -720,7 +694,8 @@ func pineapple_round() -> void:
 	
 func restart() -> void:
 	current_sequence_index = 0
-	wave_in_round = 0
+	current_round = 0
+	current_wave = 0
 	force_shop_open = false
 	
 	# Runtime state
@@ -731,7 +706,6 @@ func restart() -> void:
 	transitioning_worlds = false
 	pineapple_mode = false
 	success = false
-	current_round = 0
 
 	# Reset state machine
 	current_round_state = RoundState.INACTIVE

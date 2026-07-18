@@ -4,8 +4,7 @@ var mouse_sensitivity := 1.0
 
 const RESTART_DATASET := {
 	"cash": 50,
-	"stage": 1,
-	"stage_name": "moss",
+	"level_name": "moss",
 	"tickets": 1,
 	"debug_add_cash": 1000,
 
