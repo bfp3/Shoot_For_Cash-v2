@@ -78,46 +78,6 @@
 [ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 
-[sub_resource type="Curve" id="Curve_ymbdo"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_fuvvr"]
-curve = SubResource("Curve_ymbdo")
-
-[sub_resource type="Curve" id="Curve_wv0tc"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_3gdew"]
-curve = SubResource("Curve_wv0tc")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gf2tl"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(980, 580, 1)
-spread = 180.0
-gravity = Vector3(0, 0, 0)
-attractor_interaction_enabled = false
-scale_min = 10.0
-scale_max = 10.0
-scale_curve = SubResource("CurveTexture_3gdew")
-color = Color(1.8247963, 1.4387401, 0, 1)
-alpha_curve = SubResource("CurveTexture_fuvvr")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wtxnc"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 150.0
-initial_velocity_max = 300.0
-angular_velocity_min = -180.0
-angular_velocity_max = 180.0
-gravity = Vector3(0, 0, 0)
-scale_min = 0.099999994
-scale_max = 0.19999999
-scale_curve = SubResource("CurveTexture_3gdew")
-alpha_curve = SubResource("CurveTexture_fuvvr")
-
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
 bake_interval = 5.0
 _data = {
@@ -790,6 +750,46 @@ points = PackedVector3Array(-1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, 1)
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 bounce = 0.5
 
+[sub_resource type="Curve" id="Curve_ymbdo"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_fuvvr"]
+curve = SubResource("Curve_ymbdo")
+
+[sub_resource type="Curve" id="Curve_wv0tc"]
+_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_3gdew"]
+curve = SubResource("Curve_wv0tc")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gf2tl"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(980, 580, 1)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+attractor_interaction_enabled = false
+scale_min = 10.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_3gdew")
+color = Color(1.8247963, 1.4387401, 0, 1)
+alpha_curve = SubResource("CurveTexture_fuvvr")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wtxnc"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 150.0
+initial_velocity_max = 300.0
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.099999994
+scale_max = 0.19999999
+scale_curve = SubResource("CurveTexture_3gdew")
+alpha_curve = SubResource("CurveTexture_fuvvr")
+
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
 intro_title_screen = true
@@ -802,50 +802,21 @@ splash_screen = NodePath("SplashScreenCanvasLayer/SplashScreen_v2")
 music_manager = NodePath("Music")
 main_game_canvas = NodePath("MainGameCanvasLayer")
 
-[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("level_layout", "scene_transition_screen", "shop_main_menu", "tally_menu", "round_timer", "place_name", "player", "ending_song", "rocks_container", "music_manager", "hud_system", "birds", "balloon_container") groups=["restartable", "round_manager"]]
+[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("player", "scene_transition_screen", "shop_main_menu", "tally_menu", "round_timer", "place_name", "ending_song", "rocks_container", "music_manager", "hud_system", "birds", "balloon_container", "level_layout") groups=["restartable", "round_manager"]]
 script = ExtResource("2_wtxnc")
-rounds_until_shop = null
-level_layout = NodePath("../Level_Visual")
+player = NodePath("../Player")
 scene_transition_screen = NodePath("../Background_transition")
-current_round = null
-rounds_to_complete = 100
-switched_on = null
 shop_main_menu = NodePath("../MainGameCanvasLayer/Shop_Main_Menu")
 tally_menu = NodePath("../MainGameCanvasLayer/TallyCard")
 round_timer = NodePath("../MainGameCanvasLayer/Timer")
 place_name = NodePath("../MainGameCanvasLayer/Place_name")
-player = NodePath("../Player")
 ending_song = NodePath("../Music/EndingSong")
 rocks_container = NodePath("../Rocks")
 music_manager = NodePath("../Music")
 hud_system = NodePath("../TV_hud")
 birds = NodePath("../BirdsFlightPath/PathFollow3D/Bird_fly_by_helpers")
 balloon_container = NodePath("../Balloon_container")
-current_round_state = null
-
-[node name="PerfectParticles" type="GPUParticles2D" parent="Round_manager" unique_id=1036525292]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(965, 524)
-emitting = false
-amount = 100
-lifetime = 0.5
-one_shot = true
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_gf2tl")
-
-[node name="PerfectParticles2" type="GPUParticles2D" parent="Round_manager" unique_id=87246473]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(964, 517)
-emitting = false
-amount = 10
-texture = ExtResource("3_wv0tc")
-lifetime = 1.5
-one_shot = true
-explosiveness = 0.8
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_wtxnc")
+level_layout = NodePath("../Level_Visual")
 
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="Round_manager" unique_id=1819342297]
 stream = ExtResource("23_1i2h1")
@@ -2721,6 +2692,30 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 cash_value = 0
 force_multiplier = 1.0
+
+[node name="PerfectParticles" type="GPUParticles2D" parent="Pineapple" unique_id=989237153]
+unique_name_in_owner = true
+z_index = 3
+position = Vector2(965, 524)
+emitting = false
+amount = 100
+lifetime = 0.5
+one_shot = true
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_gf2tl")
+
+[node name="PerfectParticles2" type="GPUParticles2D" parent="Pineapple" unique_id=1561808200]
+unique_name_in_owner = true
+z_index = 3
+position = Vector2(964, 517)
+emitting = false
+amount = 10
+texture = ExtResource("3_wv0tc")
+lifetime = 1.5
+one_shot = true
+explosiveness = 0.8
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_wtxnc")
 
 [node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["orange_container"]]
 script = ExtResource("68_qmj5w")

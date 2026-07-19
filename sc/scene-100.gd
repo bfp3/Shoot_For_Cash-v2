@@ -34,7 +34,7 @@ func start_game_quick() -> void:
 	main_game_canvas.show()
 	start_cam.queue_free()
 	HUD_CRT.crt_start_up()
-	round_manager.enter_state(round_manager.RoundState.FIRST_ROUND)
+	round_manager.enter_state(round_manager.RoundState.SHOP_START)
 	await get_tree().create_timer(0.05).timeout
 	music_manager.start_bg_noise()
 	await get_tree().create_timer(0.25).timeout
@@ -68,7 +68,7 @@ func start_game() -> void:
 	set_process(true)
 	# wait until camera is close enough
 	main_game_canvas.show()
-	round_manager.enter_state(round_manager.RoundState.FIRST_ROUND)
+	round_manager.enter_state(round_manager.RoundState.SHOP_START)
 	
 	while moving_camera:
 		await get_tree().process_frame

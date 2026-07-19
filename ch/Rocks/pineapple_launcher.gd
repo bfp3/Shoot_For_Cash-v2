@@ -4,33 +4,36 @@ extends Node3D
 @onready var pineapple_2: RigidBody3D = $Pineapple2
 @onready var pineapple_3: RigidBody3D = $Pineapple3
 
-#@onready var pineapple_4: RigidBody3D = $Pineapple4
-#@onready var pineapple_5: RigidBody3D = $Pineapple5
-#@onready var pineapple_6: RigidBody3D = $Pineapple6
-#@onready var pineapple_7: RigidBody3D = $Pineapple7
-#@onready var pineapple_8: RigidBody3D = $Pineapple8
-#@onready var pineapple_9: RigidBody3D = $Pineapple9
-
-
 @export var left_marker: Marker3D
 @export var right_marker: Marker3D
 
 @export var round_manager : RoundManager
 
-func launch_pineapple(body : RigidBody3D) -> void:
-	
-	#round_manager.pineapple_mode = true
-	
-	#var body : RigidBody3D
-	#for i in get_children():
-		#if i.rock_activated == false:
-			#body = i
-			#break
+func start_bonus_round() -> void:
+	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
+	%PerfectParticles.emitting = true
+	%PerfectParticles2.emitting = true
 
-	
+	await get_tree().create_timer(1.0).timeout
+	launch_pineapple(pineapple)
+
+	await get_tree().create_timer(2.0).timeout
+	launch_pineapple(pineapple_2)
+
+	await get_tree().create_timer(2.0).timeout
+	launch_pineapple(pineapple_3)
+
+
+func stop_pineapples() -> void:
+	await get_tree().create_timer(2.0).timeout
+	pineapple.reset_stats()
+	pineapple_2.reset_stats()
+	pineapple_3.reset_stats()
+
+
+func launch_pineapple(body : RigidBody3D) -> void:
+		
 	body.update_active()
-	# 50% chance sideways, 50% chance horizontal launch
-	#var sideways := randf() < 0.5
 	var sideways := true
 	if sideways:
 		body.exit_side = body.ExitSide.TOP
@@ -71,21 +74,4 @@ func launch_pineapple(body : RigidBody3D) -> void:
 			body.apply_central_impulse(Vector3(force, 0.0, 0.0))
 			body.start_timer()
 
-
-
-func pineapple_round_1() -> void:
-	launch_pineapple(pineapple)
-
-
-func pineapple_round_2() -> void:
-	launch_pineapple(pineapple_2)
-
-
-func pineapple_round_3() -> void:
-	launch_pineapple(pineapple_3)
 	
-func stop_pineapples() -> void:
-	await get_tree().create_timer(2.0).timeout
-	pineapple.reset_stats()
-	pineapple_2.reset_stats()
-	pineapple_3.reset_stats()

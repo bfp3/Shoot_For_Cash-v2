@@ -52,7 +52,7 @@ func _update_for_new_round() -> void:
 	
 func update_label() -> void:
 	var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
-	var total_rounds := round_manager.rounds_to_complete
+	var total_rounds := round_manager.current_round
 	#rocks_hit_label.text = str(gl_PlayerState.dataset.round) + "[i][color=DDDDDD]/[/color][color=ffc700]" + str(total_rounds) +"[/color]"
 
 	

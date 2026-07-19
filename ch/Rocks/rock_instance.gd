@@ -781,10 +781,18 @@ func start_destroyed_process() -> void:
 	
 	rock_activated = false
 	
+	
+	
 	#if player_has_marked_rock == false:
 	expand_blast_radius()
 	enter_state(State.HIT)
 	
+	if rock_type_name.contains('hazard'):
+		var tweeny = create_tween().set_ease(Tween.EASE_IN)
+		tweeny.tween_property(Engine, "time_scale", 0.01, 0.01)
+		tweeny.tween_interval(0.02)
+		tweeny.tween_property(Engine, "time_scale", 1.0, 0.5)
+		await tweeny.finished
 	
 	if rock_type_name != 'hazard_type_1':
 		var bonus_cash_reward := 0
@@ -798,6 +806,7 @@ func start_destroyed_process() -> void:
 	if rock_type_name.contains('hazard'):
 		%hazard_hit_sound.play()
 		cash_value = -10
+	
 	
 	if !rock_has_been_logged:
 		rock_has_been_logged = true

@@ -62,7 +62,7 @@ func update_inactive() -> void:
 
 func update_open_menu() -> void:
 	
-	var round_count := round_manager.rounds_to_complete
+	#var round_count = round_manager.rounds_to_complete
 	
 	
 	# BALLOON PROMPT

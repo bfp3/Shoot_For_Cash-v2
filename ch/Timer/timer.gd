@@ -269,7 +269,7 @@ func update_round_manager() -> void:
 		EventBus.instance.end_round_rock_missed.emit()
 		return
 	
-	round_manager.enter_state(round_manager.RoundState.ROUND_END)
+	round_manager.round_timer_time_out()
 	
 	
 func update_text() -> void:

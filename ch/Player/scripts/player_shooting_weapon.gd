@@ -395,8 +395,9 @@ func shoot_target() -> void:
 		if shooting_sky_mine:
 			if target is RockInstance:
 				target.player_has_marked_rock = true
-				shooting_sky_mine = false
-
+				#shooting_sky_mine = false
+				
+				
 		target.start_bullet_to_target()
 
 		if shot_with_right_click:
@@ -423,6 +424,10 @@ func shoot_target() -> void:
 			delay += 0.5
 
 		await get_tree().create_timer(delay).timeout
+		if shooting_sky_mine:
+			shooting_sky_mine = false
+			break
+		
 		shooting_sky_mine = false
 
 	if rocks_to_destroy.size() >= 2 && !shot_with_right_click:

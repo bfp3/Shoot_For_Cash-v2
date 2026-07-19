@@ -114,7 +114,7 @@ func next_wave() -> void:
 	dataset.total_pineapples_destroyed = 0
 	dataset.total_rocks_in_round_remaining = 0
 	round_finished = false
-	_current_round_log.clear()
+	#_current_round_log.clear()
 
 func get_all() -> Dictionary:
 	return dataset
