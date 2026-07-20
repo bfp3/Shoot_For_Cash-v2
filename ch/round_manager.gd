@@ -14,8 +14,8 @@ const current_rock_sequence : Array = [
 
 	 #Second
 	,[12,32,34,34,34]
-	,[42,12,32,34,44,34,34]
-	,[312,332,324,42,12,32,34,44,34,34]
+	,[18,32,34,44,34,34]
+	,[316,336,324,46,34,44,16,34,34]
 
 	# Third
 	,[33,5,37,37,37,5,33]
@@ -247,7 +247,7 @@ func update_round_start() -> void:
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
 	
 	# If we are in the starting world, don't continue further
-	if gl_PlayerState.dataset.stage_name == 'start':
+	if gl_PlayerState.dataset.level_name == 'start':
 		return
 		
 	# Start playing the level's music
@@ -343,6 +343,8 @@ func update_round_end() -> void:
 
 		if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
 			# PERFECT -> bonus round
+			wave_label.start_bonus()
+			
 			player.round_finished(false)
 			pineapple_mode = true
 			pineapple_round()

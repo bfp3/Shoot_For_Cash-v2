@@ -38,11 +38,11 @@ func start() -> void:
 	if tower_tween_end:
 		tower_tween_end.kill()
 
-	#if self.name == 'ZoneA':
-		#self.get_node('QuadMeshA').start()
-			#
-	#if self.name == 'ZoneB':
-		#self.get_node('QuadMeshB').start()
+	if self.name == 'ZoneA':
+		self.get_node('QuadMeshA').start()
+			
+	if self.name == 'ZoneB':
+		self.get_node('QuadMeshB').start()
 		
 	tower_tween = create_tween()
 

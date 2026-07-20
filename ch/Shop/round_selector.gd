@@ -40,7 +40,7 @@ func _ready() -> void:
 func _on_pressed() -> void:
 	if pressed_sfx:
 		pressed_sfx.play()
-	
+	disabled = true
 	_deselect_all_buttons()
 	set_selected(true)
 	
@@ -63,8 +63,10 @@ func _on_pressed() -> void:
 	
 	await interaction_tween.finished
 	
-	#await get_tree().create_timer(1.0).timeout
 	shop_main_menu.play_round_button_pressed()
+	await get_tree().create_timer(1.0).timeout
+	
+	disabled = false
 	
 
 func _on_focus_entered() -> void:

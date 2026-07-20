@@ -45,7 +45,7 @@ const RESTART_DATASET := {
 const DEFAULT_DATASET := {
 	"cash": 50,
 	"stage": 0,
-	"stage_name": "start",
+	"level_name": "start",
 	"tickets": 0,
 	"debug_add_cash": 1000,
 	
@@ -184,6 +184,7 @@ func log_hit(item:String, item_type:String, value:int):
 		
 	elif item.contains('orange'):
 		print('Hit an Orange')
+		return
 	
 	else:
 		pass
@@ -334,9 +335,9 @@ func get_demo_stats() -> Dictionary:
 
 
 func change_location(_new_location : String) -> bool:
-	var old_location = dataset.stage_name
+	var old_location = dataset.level_name
 	_new_location = _new_location.to_lower()
-	if _new_location == dataset.stage_name:
+	if _new_location == dataset.level_name:
 		print('we are already here do not move')
 		return false
 	
@@ -353,19 +354,19 @@ func change_location(_new_location : String) -> bool:
 	
 	if old_location == gl_DataSet.get_string('place_name', 5) && _new_location == gl_DataSet.get_string('place_name', 0):
 		round_manager.move_to_moss()
-		dataset.stage_name = _new_location
+		dataset.level_name = _new_location
 		return true
 		
 	if old_location == gl_DataSet.get_string('place_name', 0) && _new_location == gl_DataSet.get_string('place_name', 1):
 		round_manager.move_to_redd()
-		dataset.stage_name = _new_location
+		dataset.level_name = _new_location
 		print('moving to redd')
 		return true
 		
 	if old_location == gl_DataSet.get_string('place_name', 1) && _new_location == gl_DataSet.get_string('place_name', 2):
 		#round_manager.move_to_glory()
 		round_manager.update_end_demo()
-		dataset.stage_name = _new_location
+		dataset.level_name = _new_location
 		return true
 	#round_manager.move_location()
 	

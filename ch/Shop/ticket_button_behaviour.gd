@@ -68,8 +68,8 @@ func _ready() -> void:
 func check_tickets() -> void:
 	
 	if text == 'MOSS':
-		#if gl_PlayerState.dataset.stage_name == 'redd':
-		if gl_PlayerState.dataset.stage_name == 'moss':
+		#if gl_PlayerState.dataset.level_name == 'redd':
+		if gl_PlayerState.dataset.level_name == 'moss':
 			current_state = TicketState.UNAVAILABLE
 			self.disabled = true
 			self.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -80,8 +80,8 @@ func check_tickets() -> void:
 			self.hide()
 			
 	if text == 'REDD':
-		#if gl_PlayerState.dataset.stage_name == 'end game':
-		if gl_PlayerState.dataset.stage_name == 'redd':
+		#if gl_PlayerState.dataset.level_name == 'end game':
+		if gl_PlayerState.dataset.level_name == 'redd':
 			self.disabled = true
 			self.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			current_state = TicketState.UNAVAILABLE

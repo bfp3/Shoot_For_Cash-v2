@@ -214,10 +214,11 @@ func handle_pan_left_and_right(delta) -> void:
 
 func _process(delta: float) -> void:
 	
-
+	
 	if OS.has_feature("editor") && !game_lost:
 		if Input.is_action_pressed("middle_mouse"):
-			Engine.time_scale = 6.0
+			Engine.time_scale = 10.0
+			#Engine.time_scale = 0.25
 		if Input.is_action_just_released("middle_mouse"):
 			if Engine.time_scale != 1.0:
 				Engine.time_scale = 1.0
@@ -231,26 +232,13 @@ func _process(delta: float) -> void:
 		if current_gun_fire_rate_cooldown > 0.0:
 			current_gun_fire_rate_cooldown -= delta
 			current_gun_fire_rate_cooldown = max(current_gun_fire_rate_cooldown, 0.0)
-		
-		#	%Cooldown_progressBar.rotation += (2.0 * delta)
 
 		%Cooldown_progressBar3.value = (1.0 - (current_gun_fire_rate_cooldown / power_gun_fire_rate)) * 100.0
 		%Bullet_icon.value = (1.0 - (current_gun_fire_rate_cooldown / power_gun_fire_rate)) * 100.0
 		
 		if %Cooldown_progressBar3.value >= 100.0 && !$SFX/Reload.playing:
 			$SFX/Reload.play()
-			#%Cooldown_progressBar.rotation += (2.0 * delta)
-			#$SFX/Reload2.play(0.12)
-		#	var tween = create_tween()
-		#	tween.tween_property(%Cooldown_progressBar2, 'modulate', Color.WHITE, 0.1)
-		#	tween.parallel().tween_property(%Cooldown_progressBar, 'modulate', Color.WHITE, 0.1)
-			
-			#tween.tween_property(%Cooldown_progressBar, 'scale', Vector2(0.13,0.13), 0.05)
-			#tween.tween_property(%Cooldown_progressBar, 'scale', Vector2(0.111,0.111), 0.05)
-			
-			#tween.tween_property(%Cooldown_progressBar2, 'scale', Vector2(0.075,0.075), 0.05)
-			#tween.tween_property(%Cooldown_progressBar2, 'scale', Vector2(0.06,0.06), 0.05)
-	
+
 	if current_state == State.ROUND_FINISHED:
 		crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
 		update_gun_look() 
@@ -304,7 +292,10 @@ func _process(delta: float) -> void:
 	#if Input.is_action_just_released("shoot_weapon_2"):
 		#weapon_shooting.shot_with_right_click = false
 	
+	handle_scope_shrink(delta)
 	
+	#if Input.is_action_pressed("shootWeapon"):
+		#return
 	crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
 	%Crosshair.global_position = crosshair_position
 	
@@ -312,7 +303,7 @@ func _process(delta: float) -> void:
 	#handle_pan_left_and_right(delta)
 	#handle_keyboard_crosshair(delta)
 	update_gun_look()
-	handle_scope_shrink(delta)
+	
 	#handle_pan_keyboard(delta)
 	
 func update_gun_look() -> void:

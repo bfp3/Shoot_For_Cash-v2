@@ -28,7 +28,7 @@ extends HBoxContainer
 	#if stage >= 1 and stage <= AREA_COUNT:
 		#return stage
 #
-	#var current_place := str(gl_PlayerState.dataset.stage_name).to_lower()
+	#var current_place := str(gl_PlayerState.dataset.level_name).to_lower()
 	#var location_names: Array = gl_DataSet.dataset_string["place_name"]
 	#var place_index := location_names.find(current_place)
 #

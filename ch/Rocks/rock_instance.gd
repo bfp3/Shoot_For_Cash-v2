@@ -704,26 +704,8 @@ func bounce_rocks() -> void:
 	linear_damp = 0.5
 	update_gravity(0.04)
 	#apply_torque_impulse(Vector3.LEFT * 3000.0)
-	#global_position = start_pos
-	#global_position.x += randi_range(-16,16)
-	#global_position.x = clamp(global_position.x, -2,2)
 
-func tween_rocks() -> void:
-	update_gravity(0.04)
-	apply_torque_impulse(Vector3.LEFT * 3000.0)
-	
-	var x_variation 	:= randf_range(-2.0, 2.0)
-	var up_force 	:= randf_range(5.0, 7.0)
-	var _dur 		:= randf_range(0.8,1.2)
-	
-	var _target_position : Vector3 = Vector3(global_position.x + x_variation, up_force, global_position.z)
-	
-	#self.freeze = true
-	
-	var tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	tween.tween_property(self, "global_position", _target_position, _dur)
-	await tween.finished
-	self.freeze = false
+
 
 func start_destroyed_process() -> void:
 
@@ -1057,17 +1039,6 @@ func play_piano_note() -> void:
 		7.0:
 			$"PianoNotes/8".play()
 		
-		
-func went_through_cash_multi_zone() -> void:
-	return
-	if current_state != State.ACTIVE:
-		return
-	$gold_sfx.play(0.01)
-	apply_torque_impulse(Vector3.UP * 1000)
-	#$Mesh.scale += Vector3.ONE * 0.4
-	current_mesh.get_node('damage_mesh').show()
-	await get_tree().create_timer(0.08).timeout
-	current_mesh.get_node('damage_mesh').hide()
 
 		
 

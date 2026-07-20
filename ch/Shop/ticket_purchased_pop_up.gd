@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 func display_ticket() -> void:
-	var ticket_bought = gl_PlayerState.dataset.stage_name
+	var ticket_bought = gl_PlayerState.dataset.level_name
 	
 	match ticket_bought:
 		"start":

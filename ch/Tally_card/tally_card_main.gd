@@ -240,7 +240,7 @@ func check_white_rocks() -> void:
 	else:
 		%GradeLabel.text = ""
 		print('Some other condition was met')
-
+		start_sequence = false
 
 func perfect_particles() -> void:
 	play_cash_sfx()

@@ -34,6 +34,9 @@ func start() -> void:
 	match wave_count:
 		1:
 			wave_label.text = "[i]First Wave"
+			#fade_in_time = 0.5
+			#hold_time = 1.05
+			#fade_out_time = 0.35
 		2:
 			wave_label.text = "[i]Second Wave"
 		3:
@@ -41,6 +44,14 @@ func start() -> void:
 		_:
 			wave_label.text = "Wave %d" % wave_count
 
+
+	start_tween()
+	
+func start_bonus() -> void:
+	wave_label.text = "[i][rainbow][pulse]Bonus Round"	
+	start_tween()
+	
+func start_tween() -> void:
 	# Start off-screen to the right and invisible
 	panel.position = _original_position - Vector2(slide_distance, 0)
 	panel.modulate = Color(
@@ -49,12 +60,10 @@ func start() -> void:
 		_original_modulate.b,
 		0.0
 	)
-
 	
-
 	var tween := create_tween()
 
-	tween.tween_interval(1.0)
+	tween.tween_interval(0.2)
 	# Slide in + fade in
 	tween.tween_property(panel, "position", _original_position, fade_in_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(panel, "modulate:a", _original_modulate.a, fade_in_time)

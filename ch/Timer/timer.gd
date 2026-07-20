@@ -141,12 +141,12 @@ func update_restarting() -> void:
 	start_time = gl_DataSet.get_value('power_time_upgrade', gl_PlayerState.dataset.power_time_upgrade)
 	#start_time = 12.0
 	
+	await get_tree().create_timer(0.25).timeout
 	time_left = start_time
 	var _orig_pos : Vector2 = timer_label.position 
 	var center_position : Vector2 = $Timer_centerPOS.position - (timer_label.size / 2)
 	timer_label.position = center_position
 	
-	await get_tree().create_timer(0.25).timeout
 	var move_to_center_tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	move_to_center_tween.tween_property(timer_label, "horizontal_alignment", 1, 0.01)
 	move_to_center_tween.parallel().tween_property(timer_label, "scale", Vector2.ONE * 3, 0.01)

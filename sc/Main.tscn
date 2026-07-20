@@ -831,8 +831,8 @@ max_polyphony = 2
 script = ExtResource("3_r5w5l")
 current_song = NodePath("Windmill")
 opening_song = NodePath("Opening_song")
-background_music_vol_in_shop = -80.0
-background_music_vol_out_of_shop = -80.0
+background_music_vol_in_shop = -50.0
+background_music_vol_out_of_shop = -60.0
 
 [node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
 stream = ExtResource("5_ec2we")
@@ -2639,8 +2639,9 @@ layout_mode = 1
 [node name="Wave_Text" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1851310312 instance=ExtResource("66_fjxa8")]
 layout_mode = 1
 slide_distance = 800.0
-fade_in_time = 0.5
-hold_time = 1.5
+fade_in_time = 0.15
+hold_time = 1.4
+fade_out_time = 0.15
 
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
 unique_name_in_owner = true
@@ -2725,6 +2726,7 @@ emitting = false
 amount = 100
 lifetime = 0.5
 one_shot = true
+fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_gf2tl")
 
@@ -2738,6 +2740,7 @@ texture = ExtResource("3_wv0tc")
 lifetime = 1.5
 one_shot = true
 explosiveness = 0.8
+fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_wtxnc")
 

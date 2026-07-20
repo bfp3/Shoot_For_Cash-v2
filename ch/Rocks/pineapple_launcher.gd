@@ -13,7 +13,9 @@ func start_bonus_round() -> void:
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
 	%PerfectParticles.emitting = true
 	%PerfectParticles2.emitting = true
-
+	
+	await get_tree().create_timer(1.0).timeout
+	
 	await get_tree().create_timer(1.0).timeout
 	launch_pineapple(pineapple)
 

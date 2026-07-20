@@ -6,7 +6,7 @@ func _ready() -> void:
 	update_place_name()
 
 func update_place_name() -> void:
-	var current_place : String = gl_PlayerState.dataset.stage_name
+	var current_place : String = gl_PlayerState.dataset.level_name
 	show()
 	if current_place == 'start':
 		hide()
