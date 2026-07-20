@@ -215,11 +215,12 @@ func handle_pan_left_and_right(delta) -> void:
 func _process(delta: float) -> void:
 	
 
-	#if OS.has_feature("editor") && !game_lost:
-		#if Input.is_action_pressed("middle_mouse"):
-			#Engine.time_scale = 6.0
-		#elif Engine.time_scale != 1.0:
-			#Engine.time_scale = 1.0
+	if OS.has_feature("editor") && !game_lost:
+		if Input.is_action_pressed("middle_mouse"):
+			Engine.time_scale = 6.0
+		if Input.is_action_just_released("middle_mouse"):
+			if Engine.time_scale != 1.0:
+				Engine.time_scale = 1.0
 	
 	if current_state == State.IN_SHOP:
 		return 
@@ -615,7 +616,7 @@ func fire_weapon() -> void:
 	player_did_not_miss()
 	
 	
-	%Crosshair.duplicate_inner_scope()
+	#%Crosshair.duplicate_inner_scope()
 	
 	shot_count = clamp(shot_count - 1, 0, 100)
 	%ShotRemaining.text = str(shot_count).pad_zeros(2)

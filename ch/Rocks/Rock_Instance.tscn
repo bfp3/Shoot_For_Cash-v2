@@ -69,6 +69,36 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
+[sub_resource type="Curve" id="Curve_p78v0"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.23722628, 1), 0.0, 0.0, 0, 0, Vector2(0.81751823, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_0cvxb"]
+curve = SubResource("Curve_p78v0")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_herjc"]
+emission_shape = 1
+emission_sphere_radius = 0.31
+spread = 180.0
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, 0, 0)
+scale_min = 0.099999994
+scale_max = 0.19999999
+scale_curve = SubResource("CurveTexture_0cvxb")
+color = Color(4.415934, 3.4977326, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pqbxg"]
+transparency = 1
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("11_fao6x")
+billboard_mode = 2
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_ltsxa"]
+material = SubResource("StandardMaterial3D_pqbxg")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2s6n3"]
 albedo_color = Color(0, 0, 0, 1)
 metallic = 1.0
@@ -908,19 +938,24 @@ unique_name_in_owner = true
 
 [node name="small_rock" type="MeshInstance3D" parent="Mesh" unique_id=1341908173]
 unique_name_in_owner = true
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 layers = 524288
-material_override = ExtResource("4_beb3h")
+material_override = ExtResource("4_w8aba")
 cast_shadow = 0
 mesh = ExtResource("5_27dlh")
 
 [node name="damage_mesh" type="MeshInstance3D" parent="Mesh/small_rock" unique_id=522776861]
-transform = Transform3D(0.34201992, -0.9396927, 0, 0.9396927, 0.34201992, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.37622193, -1.033662, 0, 1.033662, 0.37622193, 0, 0, 0, 1.1, 0, 0, 0)
 visible = false
 layers = 524289
 material_override = ExtResource("8_eq13p")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_g5cjo")
+
+[node name="GoldParticles" type="GPUParticles3D" parent="Mesh/small_rock" unique_id=1639505190]
+amount = 3
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_herjc")
+draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
 [node name="medium_rock" type="MeshInstance3D" parent="Mesh" unique_id=64886353]
 unique_name_in_owner = true
@@ -941,7 +976,7 @@ mesh = SubResource("ArrayMesh_g5cjo")
 [node name="Large_rock" type="MeshInstance3D" parent="Mesh" unique_id=938600297]
 unique_name_in_owner = true
 layers = 524288
-material_override = ExtResource("4_w8aba")
+material_override = ExtResource("4_beb3h")
 cast_shadow = 0
 mesh = ExtResource("5_27dlh")
 
@@ -1086,6 +1121,12 @@ volume_db = -15.0
 [node name="Freeze_sfx2" type="AudioStreamPlayer" parent="." unique_id=1813387723]
 stream = ExtResource("20_ltsxa")
 volume_db = -15.0
+
+[node name="progress_rock_sound" type="AudioStreamPlayer" parent="." unique_id=1715758718]
+unique_name_in_owner = true
+stream = ExtResource("30_8mu68")
+volume_db = -5.0
+pitch_scale = 0.85
 
 [node name="AoE" type="Node3D" parent="." unique_id=708438174]
 top_level = true

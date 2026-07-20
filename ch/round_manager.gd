@@ -1,26 +1,31 @@
 extends Node
 class_name RoundManager
 
+const LEVEL_LAYOUT_00_OPENING_SCENE = preload('uid://88s7u86w4lfr')
+const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
+const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
+const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
+
 const current_rock_sequence : Array = [
 	# First
 	[1,33,33]
-	,[41,1,33,33]
+	,[43,1,33,33]
 	,[311,323,41,33,1,33]
 
-	 ##Second
-	,[2,2,32,34,34,34]
-	,[42,2,2,32,34,44,34,34]
-	,[312,332,324,42,2,2,32,34,44,34,34]
+	 #Second
+	,[12,32,34,34,34]
+	,[42,12,32,34,44,34,34]
+	,[312,332,324,42,12,32,34,44,34,34]
 
-	## Third
-	,[33,5,7,37,37,5,33]
-	,[33,5,7,37,37,45,5,47,47,33]
-	,[33,5,7,37,37,45,5,47,47,33,323,314,325,316,327]
+	# Third
+	,[33,5,37,37,37,5,33]
+	,[33,6,37,37,37,45,5,47,47,33]
+	,[33,7,37,37,37,45,5,47,47,33,323,314,325,316,327]
 
 	# Fourth
 	,[2,32,4,34,34,6,6,36,36,8,8,38]
-	,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46]
-	,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46,311,312,313,314,315,316,317,318]
+	#,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46]
+	#,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46,311,312,313,314,315,316,317,318]
 
 	]
 
@@ -29,17 +34,11 @@ var current_wave := 0
 var success := false
 var wave_ending := false
 var player_failed := false
+var force_shop_open := false
 var compulsory_rocks_destroyed := false
 var in_display_text_prompt := false
-var force_shop_open := false
 var player_can_progress := false
 
-const LEVEL_LAYOUT_00_OPENING_SCENE = preload('uid://88s7u86w4lfr')
-const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
-const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
-const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
-
-var game_has_been_beaten := false
 
 var bullet_active := false
 var bullet_active_counter := 0.0
@@ -55,14 +54,14 @@ var pineapple_mode := false
 @export var tally_menu : Control
 @export var round_timer : RoundTimer
 @export var place_name : Control
-@export var current_song : AudioStreamPlayer
-@export var ending_song : AudioStreamPlayer
 @export var rocks_container: RockManager
 @export var music_manager : Node
-@export var hud_system : TextureRect
 @export var birds : Node3D
 @export var balloon_container : Node3D
+@export var blue_balloon : Node3D
 @export var level_layout : Node3D
+@export var wave_progress_indication : Control
+@export var wave_label : Control
 var egg_pulse : Egg
 
 enum RoundState {
@@ -257,12 +256,16 @@ func update_round_start() -> void:
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
+	wave_label.reset()
+	
 	player.update_player_stats()
 	music_manager.shop_music_raise_volume()
 	enter_state(RoundState.WAVE_START)
-
+	
 
 func update_wave_start() -> void:
+	wave_label.start()
+	
 	await get_tree().create_timer(0.1).timeout
 	current_wave += 1
 	rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -418,7 +421,6 @@ func update_resume() -> void:
 func update_game_won() -> void:
 	stop_timer()
 	music_manager.game_won()
-	ending_song.play()
 	stop_player()
 	enter_state(RoundState.INACTIVE)
 
@@ -523,6 +525,7 @@ func perfect_score_feedback() -> void:
 	player.perfect_score()
 
 func pineapple_round() -> void:
+	stop_timer()
 	$"../Pineapple".start_bonus_round()
 	
 	while gl_PlayerState.dataset.total_pineapples_destroyed < 3:
@@ -559,7 +562,6 @@ func restart() -> void:
 	
 	# Runtime state
 	wave_ending = false
-	game_has_been_beaten = false
 	bullet_active = false
 	bullet_active_counter = 0.0
 
@@ -574,11 +576,6 @@ func restart() -> void:
 	stop_timer()
 	stop_player()
 
-	if current_song:
-		current_song.stop()
-	if ending_song:
-		ending_song.stop()
-
 	move_to_moss()
 
 	player.round_finished(false)
@@ -591,3 +588,8 @@ func restart() -> void:
 	# Reset scenery
 	rocks_container.hide()
 	birds.start_birds()
+
+
+func _input(event: InputEvent) -> void:
+	if Input.is_key_label_pressed(KEY_TAB):
+		unsuccessful_round()

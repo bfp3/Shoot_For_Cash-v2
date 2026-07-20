@@ -63,9 +63,11 @@
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
 [ext_resource type="PackedScene" uid="uid://ownxjc3mlmfd" path="res://ch/HUD_components/pause_and_exit_menu.tscn" id="64_tnw34"]
 [ext_resource type="Script" uid="uid://3le0jpjo3qtu" path="res://ch/background_transition.gd" id="65_fjk4d"]
+[ext_resource type="PackedScene" uid="uid://bdbe1uwqejohk" path="res://ch/HUD_components/wave_progress_indicator.tscn" id="65_heewt"]
 [ext_resource type="PackedScene" uid="uid://cmrkldyt0ctt1" path="res://ch/demo_end_screen/Game_over_screen.tscn" id="65_vwwt2"]
 [ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="65_wtxnc"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
+[ext_resource type="PackedScene" uid="uid://b8up6woqoujb3" path="res://ch/HUD_components/wave_number_text.tscn" id="66_fjxa8"]
 [ext_resource type="PackedScene" uid="uid://bpblpaoucfp2x" path="res://ch/demo_end_screen/Grand_total_prompt.tscn" id="66_heewt"]
 [ext_resource type="PackedScene" uid="uid://bkeli6dyx0ytw" path="res://ch/demo_end_screen/Intro_prompt.tscn" id="66_mdemw"]
 [ext_resource type="PackedScene" uid="uid://dqvfwdvbr3hgi" path="res://ch/demo_end_screen/game_won_prompt.tscn" id="67_qmj5w"]
@@ -802,7 +804,7 @@ splash_screen = NodePath("SplashScreenCanvasLayer/SplashScreen_v2")
 music_manager = NodePath("Music")
 main_game_canvas = NodePath("MainGameCanvasLayer")
 
-[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("player", "scene_transition_screen", "shop_main_menu", "tally_menu", "round_timer", "place_name", "ending_song", "rocks_container", "music_manager", "hud_system", "birds", "balloon_container", "level_layout") groups=["restartable", "round_manager"]]
+[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("player", "scene_transition_screen", "shop_main_menu", "tally_menu", "round_timer", "place_name", "rocks_container", "music_manager", "birds", "balloon_container", "blue_balloon", "level_layout", "wave_progress_indication", "wave_label") groups=["restartable", "round_manager"]]
 script = ExtResource("2_wtxnc")
 player = NodePath("../Player")
 scene_transition_screen = NodePath("../Background_transition")
@@ -810,13 +812,14 @@ shop_main_menu = NodePath("../MainGameCanvasLayer/Shop_Main_Menu")
 tally_menu = NodePath("../MainGameCanvasLayer/TallyCard")
 round_timer = NodePath("../MainGameCanvasLayer/Timer")
 place_name = NodePath("../MainGameCanvasLayer/Place_name")
-ending_song = NodePath("../Music/EndingSong")
 rocks_container = NodePath("../Rocks")
 music_manager = NodePath("../Music")
-hud_system = NodePath("../TV_hud")
 birds = NodePath("../BirdsFlightPath/PathFollow3D/Bird_fly_by_helpers")
 balloon_container = NodePath("../Balloon_container")
+blue_balloon = NodePath("../PlayerBalloon")
 level_layout = NodePath("../Level_Visual")
+wave_progress_indication = NodePath("../MainGameCanvasLayer/WaveProgressIndication")
+wave_label = NodePath("../MainGameCanvasLayer/WaveProgressIndication/Wave_Text")
 
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="Round_manager" unique_id=1819342297]
 stream = ExtResource("23_1i2h1")
@@ -828,7 +831,8 @@ max_polyphony = 2
 script = ExtResource("3_r5w5l")
 current_song = NodePath("Windmill")
 opening_song = NodePath("Opening_song")
-background_music_vol_out_of_shop = -50.0
+background_music_vol_in_shop = -80.0
+background_music_vol_out_of_shop = -80.0
 
 [node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
 stream = ExtResource("5_ec2we")
@@ -2270,6 +2274,7 @@ pitch_scale = 2.0
 
 [node name="MainGameCanvasLayer" type="CanvasLayer" parent="." unique_id=778582470]
 layer = -1
+visible = false
 
 [node name="QuitMenu" type="PanelContainer" parent="MainGameCanvasLayer" unique_id=2079405395]
 unique_name_in_owner = true
@@ -2617,6 +2622,25 @@ visible = false
 unique_name_in_owner = true
 visible = false
 round_manager = NodePath("../../Round_manager")
+
+[node name="WaveProgressIndication" type="Control" parent="MainGameCanvasLayer" unique_id=1362113778]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="WaveProgressIndicator" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1331631106 instance=ExtResource("65_heewt")]
+layout_mode = 1
+
+[node name="Wave_Text" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1851310312 instance=ExtResource("66_fjxa8")]
+layout_mode = 1
+slide_distance = 800.0
+fade_in_time = 0.5
+hold_time = 1.5
 
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
 unique_name_in_owner = true

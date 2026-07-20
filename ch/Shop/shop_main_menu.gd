@@ -654,7 +654,9 @@ func _input(event: InputEvent) -> void:
 	if Input.is_key_label_pressed(KEY_KP_0):
 		%AddMoney.visible = !%AddMoney.visible
 		%MaxOutPowers.visible = !%MaxOutPowers.visible
-
+		%RoundSelector.visible = !%RoundSelector.visible
+		
+		
 func restart() -> void:
 	current_state = SkillState.INACTIVE
 

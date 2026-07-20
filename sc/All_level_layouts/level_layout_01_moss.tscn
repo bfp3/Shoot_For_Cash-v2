@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://ignpdv10rx52" path="res://addons/boujie_water_shader/prefabs/deep_ocean.tscn" id="18_1thcr"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="18_v0xb0"]
 [ext_resource type="Script" uid="uid://dn76e05h17t31" path="res://scripts/multiplier_zones.gd" id="19_md1in"]
+[ext_resource type="Shader" uid="uid://edq6lqyshe6v" path="res://sc/All_level_layouts/money_tower_shader.gdshader" id="20_fwjsh"]
 [ext_resource type="Material" uid="uid://bgn3t0qsuudf" path="res://res/markers_mat.tres" id="20_s470r"]
 
 [sub_resource type="Animation" id="Animation_k7lvh"]
@@ -1088,8 +1089,83 @@ shadow_mesh = SubResource("ArrayMesh_pnf6a")
 [sub_resource type="BoxShape3D" id="BoxShape3D_md1in"]
 size = Vector3(29.4, 1.315, 5)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x8ffe"]
+render_priority = 0
+shader = ExtResource("20_fwjsh")
+shader_parameter/band_color = Color(1, 0.90000004, 0, 0.5764706)
+shader_parameter/band_thickness = 0.60000002780148
+shader_parameter/skew = 0.060000097850000156
+shader_parameter/progress = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_1vd3e"]
+size = Vector2(20.065, 1)
+
+[sub_resource type="GDScript" id="GDScript_2svof"]
+script/source = "extends MeshInstance3D
+## Attach this to the quad MeshInstance3D that uses diagonal_band.gdshader.
+## Make sure the mesh has a ShaderMaterial (using diagonal_band.gdshader)
+## set as its material (either on the mesh surface or as material_override).
+
+@export var default_color: Color = Color(1.0, 0.9, 0.0, 1.0) # yellow
+@export var default_speed: float = 1.0       # sweeps/second: 1.0 = full sweep in 1 second
+@export var default_thickness: float = 0.15
+@export var default_skew: float = 0.4
+
+var _tween: Tween
+
+func _get_material() -> ShaderMaterial:
+	if material_override:
+		return material_override as ShaderMaterial
+	return get_surface_override_material(0) as ShaderMaterial
+
+#func _input(event: InputEvent) -> void:
+	#if Input.is_action_just_pressed(\"backward\"):
+		#play_band(Color(1, 0.85, 0, 1), 1.5, 0.1, 0.1)
+
+func start() -> void:
+	play_band(default_color, default_speed, default_thickness, default_skew)
+
+func play_band(color = null, speed: float = -1.0, thickness: float = -1.0, skew: float = -100.0) -> void:
+	show()
+	var mat := _get_material()
+	if mat == null:
+		push_warning(\"BandAnimator: no ShaderMaterial found on this mesh.\")
+		return
+
+	var c: Color = color if color != null else default_color
+	var s: float = speed if speed > 0.0 else default_speed
+	var t: float = thickness if thickness > 0.0 else default_thickness
+	var k: float = skew if skew > -99.0 else default_skew
+
+	mat.set_shader_parameter(\"band_color\", c)
+	mat.set_shader_parameter(\"band_thickness\", t)
+	mat.set_shader_parameter(\"skew\", k)
+
+	# Kill any sweep already in progress so re-triggering restarts cleanly.
+	if _tween and _tween.is_valid():
+		_tween.kill()
+
+	# Reset to the start position, then animate progress 0 -> 1.
+	# Duration is driven directly by \"speed\": higher speed = shorter duration = faster sweep.
+	mat.set_shader_parameter(\"progress\", 0.0)
+	var duration: float = 1.0 / s
+
+	_tween = create_tween()
+	_tween.tween_property(mat, \"shader_parameter/progress\", 1.0, duration) \\
+		.set_trans(Tween.TRANS_LINEAR)
+	# Band stays fully swept-past (invisible) once progress hits 1.0 — this is the \"stop\".
+
+	await _tween.finished
+	hide()
+## Example usage from elsewhere:
+## $Quad.play_band(Color(1, 0.85, 0, 1), 1.5, 0.1, 0.4)
+"
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_x8ffe"]
 size = Vector3(45, 5, 5)
+
+[sub_resource type="QuadMesh" id="QuadMesh_fwjsh"]
+size = Vector2(20.065, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_1vd3e"]
 size = Vector3(50, 0.001, 0.05)
@@ -3663,6 +3739,19 @@ text = "$10"
 font_size = 40
 outline_size = 0
 
+[node name="QuadMeshA" type="MeshInstance3D" parent="ZoneA" unique_id=733965394]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 2.25, 0, 8.742278e-08, 0, -1, 0, 1.8870001, 20.175)
+top_level = true
+visible = false
+layers = 16
+material_override = SubResource("ShaderMaterial_x8ffe")
+mesh = SubResource("QuadMesh_1vd3e")
+script = SubResource("GDScript_2svof")
+default_color = Color(1, 0.90000004, 0, 0.21568628)
+default_speed = 5.0
+default_thickness = 0.05
+default_skew = 0.1
+
 [node name="ZoneB" type="Area3D" parent="." unique_id=1017343580 groups=["zone_b"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, -0.5899999, 23)
 monitoring = false
@@ -3696,6 +3785,18 @@ modulate = Color(1, 1, 1, 0.25882354)
 text = "$20"
 font_size = 40
 outline_size = 0
+
+[node name="QuadMeshB" type="MeshInstance3D" parent="ZoneB" unique_id=222187773]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 2.25, 0, 8.742278e-08, 0, -1, 8.8, 0, -2.825)
+visible = false
+layers = 16
+material_override = SubResource("ShaderMaterial_x8ffe")
+mesh = SubResource("QuadMesh_fwjsh")
+script = SubResource("GDScript_2svof")
+default_color = Color(0.2596667, 0.82, 0, 0.3764706)
+default_speed = 5.0
+default_thickness = 0.1
+default_skew = 0.1
 
 [node name="Wire_A" type="MeshInstance3D" parent="." unique_id=1626375877]
 transform = Transform3D(0.367, 0, 0, 0, 1, 0, 0, 0, 1, -0.078, 3, 20.132)

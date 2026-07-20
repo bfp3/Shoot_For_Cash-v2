@@ -87,8 +87,7 @@ func update_open_menu() -> void:
 	
 
 	
-	
-	
+
 	sfx_open_tally()
 	show()
 
@@ -101,14 +100,7 @@ func update_open_menu() -> void:
 	tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
 
 	await tween.finished
-	var balloon = %giuseppeballoon
-	tween_giuseppe = create_tween().set_loops()
-	tween_giuseppe.set_trans(Tween.TRANS_SINE)
 
-	tween_giuseppe.tween_property(balloon, "rotation", -0.1, 1.0)
-	tween_giuseppe.tween_property(balloon, "rotation", 0.1, 1.0)
-
-	await tween_giuseppe.finished
 	
 
 func update_close_menu() -> void:
@@ -134,9 +126,9 @@ func update_close_menu() -> void:
 	
 	hide()
 	
-	await get_tree().create_timer(1.0).timeout
-	tween_giuseppe.stop()
-	tween_giuseppe.kill()
+	#await get_tree().create_timer(1.0).timeout
+	#tween_giuseppe.stop()
+	#tween_giuseppe.kill()
 
 func play_cash_sfx() -> void:
 	$SFX/shop_purchase_01.play()

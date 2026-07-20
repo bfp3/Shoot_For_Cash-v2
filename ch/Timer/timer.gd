@@ -68,13 +68,9 @@ func _process(delta: float) -> void:
 	_update_ticking_volume(time_left, delta)
 
 func ran_out_of_time() -> void:
-	
-	
-	
-	
+		
 	$TimeRanOut.play()
 	$TimeRanOut4.play()
-		#%timeOutParticles.emitting = true
 	enter_state(State.FINISHED)
 	#timer_label.text = "0:00"
 

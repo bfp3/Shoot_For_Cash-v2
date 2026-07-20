@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://b8up6woqoujb3"]
+
+[ext_resource type="Script" uid="uid://do0dxtu11wge1" path="res://ch/HUD_components/wave_number_text.gd" id="1_yxk46"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="2_yxk46"]
+[ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="3_tjyxn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txfio"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fuvvr"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1tjj5"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_od5kt"]
+Button/styles/normal = SubResource("StyleBoxFlat_txfio")
+Panel/styles/panel = SubResource("StyleBoxFlat_fuvvr")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_1tjj5")
+
+[node name="Wave_Text" type="Control" unique_id=1851310312]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("1_yxk46")
+
+[node name="Panel" type="Panel" parent="." unique_id=343402515]
+self_modulate = Color(1, 1, 1, 0.039215688)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = -26.5
+offset_right = 225.0
+offset_bottom = 28.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.165, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_od5kt")
+theme_override_styles/panel = ExtResource("2_yxk46")
+
+[node name="WaveLabel" type="RichTextLabel" parent="Panel" unique_id=1081870455]
+modulate = Color(0.72, 0.72, 0.72, 0.47058824)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -235.0
+offset_top = -75.5
+offset_right = 235.0
+offset_bottom = 75.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 48
+theme_override_font_sizes/italics_font_size = 48
+bbcode_enabled = true
+text = "[i]1st Wave"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FadeInSFX" type="AudioStreamPlayer" parent="." unique_id=786524765]
+stream = ExtResource("3_tjyxn")
+volume_db = -45.0

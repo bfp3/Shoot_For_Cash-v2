@@ -12,6 +12,8 @@ var pitch_adjustment := 0.02
 
 var rock_type := 0
 
+var current_particles : GPUParticles3D = null
+
 const ROCK_01 = preload('uid://c2pmyrm3e4ty5')
 const ROCK_02 = preload('uid://84ianb3xwjp7')
 const ROCK_03 = preload('uid://lxbrgqaovv68')
@@ -237,59 +239,6 @@ func hide_all_meshes() -> void:
 	red_rock.visible			= false
 
 
-func choose_rock_type() -> int:
-	var area_name: String = gl_PlayerState.dataset.stage_name
-	var current_rock_limit: int = gl_PlayerState.dataset.rock_limit
-	var allowed_rocks: Array[int] = []
-
-	match area_name:
-		"moss":
-	
-			if current_rock_limit >= 7:
-				pass
-				#allowed_rocks.append(RockSize.MEDIUM)
-
-			else:
-				allowed_rocks.append(RockSize.SMALL)
-
-				if current_rock_limit > 7:
-					var rand_chance := randi_range(0, 3)
-
-					if rand_chance > 1:
-						allowed_rocks.append(RockSize.MEDIUM)
-						
-					
-					
-
-		"redd":
-			if current_rock_limit >= 10:
-				allowed_rocks.append(RockSize.HUGE)
-
-			else:
-				allowed_rocks.append(RockSize.MEDIUM_REDD)
-				#if current_rock_limit > 5:
-					#var rand_chance := randi_range(0, 3)
-					#if rand_chance > 2:
-						#allowed_rocks.append(RockSize.HAZARD_SMALL)
-
-				if current_rock_limit > 3:
-					var rand_chance := randi_range(0, 1)
-
-					if rand_chance > 0:
-						allowed_rocks.append(RockSize.LARGE)
-
-		"glory":
-			allowed_rocks.append(RockSize.LARGE)
-
-			if current_rock_limit > 5:
-				allowed_rocks.append(RockSize.HUGE)
-
-	if allowed_rocks.is_empty():
-		return RockSize.SMALL
-
-	return allowed_rocks.pick_random()
-
-
 
 
 func reset_rock_back_on() -> void:
@@ -298,8 +247,6 @@ func reset_rock_back_on() -> void:
 
 func setup_rock_type() -> void:
 	current_mesh.scale = Vector3.ONE
-
-	#rock_type = choose_rock_type()
 	
 	match rock_type:
 		# 0
@@ -331,7 +278,11 @@ func setup_rock_type() -> void:
 			force_mult.clear()
 			force_mult = [3,4]
 			force_mult_index = 0
-		
+			
+			current_particles = $Mesh/small_rock/GoldParticles
+			current_particles.amount += 1
+			current_particles.amount -= 1
+			current_particles.emitting = true
 		
 		# 1
 		RockSize.SMALL_2:
@@ -781,18 +732,22 @@ func start_destroyed_process() -> void:
 	
 	rock_activated = false
 	
-	
+	if current_particles != null:
+		current_particles.emitting = false
 	
 	#if player_has_marked_rock == false:
 	expand_blast_radius()
 	enter_state(State.HIT)
 	
-	if rock_type_name.contains('hazard'):
-		var tweeny = create_tween().set_ease(Tween.EASE_IN)
-		tweeny.tween_property(Engine, "time_scale", 0.01, 0.01)
-		tweeny.tween_interval(0.02)
-		tweeny.tween_property(Engine, "time_scale", 1.0, 0.5)
-		await tweeny.finished
+	if rock_type == RockSize.SMALL:
+		%progress_rock_sound.play()
+	
+	#if rock_type_name.contains('hazard'):
+		#var tweeny = create_tween().set_ease(Tween.EASE_IN)
+		#tweeny.tween_property(Engine, "time_scale", 0.01, 0.01)
+		#tweeny.tween_interval(0.02)
+		#tweeny.tween_property(Engine, "time_scale", 1.0, 0.5)
+		#await tweeny.finished
 	
 	if rock_type_name != 'hazard_type_1':
 		var bonus_cash_reward := 0
