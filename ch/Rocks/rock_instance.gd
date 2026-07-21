@@ -160,6 +160,8 @@ func update_active() -> void:
 	enable_collision()
 	add_to_rocks_round()
 	
+	%launch_sound.pitch_scale = randf_range(3.0,3.2)
+	%launch_sound.play()
 
 
 func update_hit() -> void:
@@ -262,7 +264,7 @@ func setup_rock_type() -> void:
 
 			# Random subtype: 1x / 2x / 3x
 			#var size_multiplier : int = [1, 2].pick_random() #, 3].pick_random()
-			var size_multiplier_float : float = randf_range (1.2, 1.35)
+			var size_multiplier_float : float = 1.2 #randf_range (1.2, 1.35)
 			var size_multiplier_int : int = 1
 			$Mesh.scale = Vector3.ONE
 			health = base_health * size_multiplier_int
@@ -293,7 +295,7 @@ func setup_rock_type() -> void:
 			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
 			var base_scale  := Vector3.ONE * 0.35
 
-			var size_multiplier_float : float = randf_range (1.2, 1.35) * 2
+			var size_multiplier_float : float = 2.4 #randf_range (1.2, 1.35) * 2
 			var size_multiplier_int : int = 2
 			$Mesh.scale = Vector3.ONE
 			health = base_health * size_multiplier_int
@@ -333,7 +335,7 @@ func setup_rock_type() -> void:
 		RockSize.LARGE:
 			var base_scale  := Vector3.ONE * 0.35
 			var size_multiplier_float : float = 1.2
-			var size_multiplier_int : int = 1
+			#var size_multiplier_int : int = 1
 			current_rock_type 	= "Gold"
 			rock_type_name 		= "rock_type_2"
 			health 				= 1
@@ -652,7 +654,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	if player_has_marked_rock:
 		if gl_PlayerState.dataset.total_hazards > 0:
 			gl_PlayerState.dataset.total_hazards = 0
-			rock_type_name = 'rock_type_1'
+			rock_type_name = 'rock_type_4'
 		apply_marked_ability()
 		play_hit_sfx()
 		return
@@ -711,7 +713,9 @@ func start_destroyed_process() -> void:
 
 	if !rock_activated:
 		return
-	
+	if rock_destroyed:
+		return
+		
 	rock_activated = false
 	
 	if current_particles != null:

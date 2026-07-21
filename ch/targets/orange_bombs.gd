@@ -6,9 +6,7 @@ extends Node3D
 @onready var orange_4: RigidBody3D = $Orange4
 @onready var orange_5: RigidBody3D = $Orange5
 @onready var orange_6: RigidBody3D = $Orange6
-@onready var orange_7: RigidBody3D = $Orange7
-@onready var orange_8: RigidBody3D = $Orange8
-@onready var orange_9: RigidBody3D = $Orange9
+
 
 @export var left_marker: Marker3D
 @export var right_marker: Marker3D
@@ -17,7 +15,7 @@ extends Node3D
 
 func launch_orange(pos : Vector3) -> void:
 	#return
-	#round_manager.pineapple_mode = true
+
 	var body : Node3D
 	for i in get_children():
 		if i.rock_activated == false:
@@ -57,5 +55,3 @@ func stop_pineapples() -> void:
 	orange_4.reset_stats()
 	orange_5.reset_stats()
 	orange_6.reset_stats()
-	orange_7.reset_stats()
-	orange_8.reset_stats()

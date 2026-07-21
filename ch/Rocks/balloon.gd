@@ -319,6 +319,9 @@ func destroyed_by_shratnel() -> void:
 	
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
+	if balloon_type == BalloonType.BLUE:
+		return
+	
 	if !visible && $Mesh.visible == false:
 		return
 	
@@ -420,23 +423,23 @@ func start_destroyed_process() -> void:
 	if balloon_type == BalloonType.RED:
 		get_parent().add_balloon_back_into_list(self)
 		return
-		var current_pos := global_position
-		
-		global_position.y -= 20.0
-		show()
-		#current_mesh.scale = Vector3.ONE * 0.5
-		if balloon_type != BalloonType.GREY:
-			$Mesh.scale = Vector3.ONE
-		
-		var tween_balloon = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-		tween_balloon.tween_property(self, "global_position", current_pos, 2.5)
-		#await tween_balloon.finished
-		rock_activated = true
-		enable_collision()
-		is_deactivated = false
-		
-		
-		add_to_group('Target')
+		#var current_pos := global_position
+		#
+		#global_position.y -= 20.0
+		#show()
+		##current_mesh.scale = Vector3.ONE * 0.5
+		#if balloon_type != BalloonType.GREY:
+			#$Mesh.scale = Vector3.ONE
+		#
+		#var tween_balloon = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		#tween_balloon.tween_property(self, "global_position", current_pos, 2.5)
+		##await tween_balloon.finished
+		#rock_activated = true
+		#enable_collision()
+		#is_deactivated = false
+		#
+		#
+		#add_to_group('Target')
 		
 
 		#var player_balloon_container = get_tree().get_first_node_in_group('player_balloon_container')
@@ -547,6 +550,10 @@ func smoke_particles_duplicates() -> void:
 
 
 func start_bullet_to_target() -> void:
+	if balloon_type == BalloonType.BLUE:
+		return
+		
+		
 	if balloon_type == BalloonType.RED:
 		if gl_PlayerState.dataset.power_balloon_buster > 0:
 			player_has_marked_balloon = true
@@ -579,7 +586,7 @@ func rock_pop_balloon() -> void:
 		return
 	stop_gentle_pan()
 	if balloon_type == BalloonType.BLUE:# ||balloon_type == BalloonType.RED:
-		get_parent().player_balloon_was_popped()
+		#get_parent().player_balloon_was_popped()
 
 		var crt = get_tree().get_first_node_in_group('TV_CRT_Filter')
 		if crt:
@@ -614,12 +621,28 @@ func rock_pop_balloon() -> void:
 	#queue_free()
 
 
-func _on_area_3d_body_entered(body: Node3D) -> void:
-	if body.name.contains('Rock'):
+func _input(event: InputEvent) -> void:
+	
+	if Input.is_action_just_pressed('left'):
 		if balloon_type == BalloonType.BLUE:
-			rock_pop_balloon()
-		else:
-			start_destroyed_process()
+			restart()
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	
+
+	
+	if balloon_type != BalloonType.BLUE:
+		return
+		
+	if body.name.contains('Pineapple'):
+		start_destroyed_process()
+		
+		#
+	#if body.name.contains('Rock'):
+		#if balloon_type == BalloonType.BLUE:
+			#rock_pop_balloon()
+		#else:
+			#start_destroyed_process()
 
 
 func restart() -> void:
@@ -675,26 +698,26 @@ func temp_slow_down() -> void:
 	
 func blast_radius() -> void:
 	return
-	await get_tree().create_timer(0.1).timeout
-
-	const BLAST_RADIUS := 500.0
-	const MAX_DELAY := 0.2
-
-	var all_targets: Array[RockInstance] = []
-
-	for target in get_tree().get_nodes_in_group("Target"):
-		if target is RockInstance and target.current_state == target.State.ACTIVE:
-			all_targets.append(target)
-
-	for target in all_targets:
-		print(target.name)
-
-		var distance := Vector2(global_position.x, global_position.y).distance_to(
-			Vector2(target.global_position.x, target.global_position.y)
-		)
-
-		if distance <= BLAST_RADIUS:
-			_push_rock_after_delay(target, distance / BLAST_RADIUS * MAX_DELAY)
+	#await get_tree().create_timer(0.1).timeout
+#
+	#const BLAST_RADIUS := 500.0
+	#const MAX_DELAY := 0.2
+#
+	#var all_targets: Array[RockInstance] = []
+#
+	#for target in get_tree().get_nodes_in_group("Target"):
+		#if target is RockInstance and target.current_state == target.State.ACTIVE:
+			#all_targets.append(target)
+#
+	#for target in all_targets:
+		#print(target.name)
+#
+		#var distance := Vector2(global_position.x, global_position.y).distance_to(
+			#Vector2(target.global_position.x, target.global_position.y)
+		#)
+#
+		#if distance <= BLAST_RADIUS:
+			#_push_rock_after_delay(target, distance / BLAST_RADIUS * MAX_DELAY)
 
 
 
@@ -759,38 +782,38 @@ func sky_mine_blast() -> void:
 	
 	return
 
-	for target in get_tree().get_nodes_in_group("Target"):
-		if target == self:
-			continue
-
-		if !is_instance_valid(target):
-			continue
-
-		var distance := Vector2(global_position.x, global_position.y).distance_to(
-			Vector2(target.global_position.x, target.global_position.y)
-		)
-
-		if distance <= _blast_radius:
-			await get_tree().create_timer(0.075).timeout
-
-			var penalty := 2
-			if target.name.contains("Balloon") and target.balloon_type == target.BalloonType.RED:
-				penalty = chain_penalty
-				chain_penalty += 2
-
-			_sky_mine_hit_after_delay(
-				target,
-				(distance / _blast_radius) * 0.2,
-				penalty
-		)
-		break
+	#for target in get_tree().get_nodes_in_group("Target"):
+		#if target == self:
+			#continue
+#
+		#if !is_instance_valid(target):
+			#continue
+#
+		#var distance := Vector2(global_position.x, global_position.y).distance_to(
+			#Vector2(target.global_position.x, target.global_position.y)
+		#)
+#
+		#if distance <= _blast_radius:
+			#await get_tree().create_timer(0.075).timeout
+#
+			#var penalty := 2
+			#if target.name.contains("Balloon") and target.balloon_type == target.BalloonType.RED:
+				#penalty = chain_penalty
+				#chain_penalty += 2
+#
+			#_sky_mine_hit_after_delay(
+				#target,
+				#(distance / _blast_radius) * 0.2,
+				#penalty
+		#)
+		#break
 		
 
 
 
 
 	
-func _sky_mine_hit_after_delay(target: Node, delay: float, chain_penalty: int) -> void:
+func _sky_mine_hit_after_delay(target: Node, delay: float, _chain_penalty: int) -> void:
 	await get_tree().create_timer(delay).timeout
 
 	if !is_instance_valid(target):
@@ -809,7 +832,7 @@ func _sky_mine_hit_after_delay(target: Node, delay: float, chain_penalty: int) -
 			return
 	
 		if target.has_method("start_destroyed_process"):
-			target.penalty_amount = chain_penalty
+			target.penalty_amount = _chain_penalty
 			target.being_chained = true
 			#target.start_destroyed_process()
 			target.sky_mine_blast()

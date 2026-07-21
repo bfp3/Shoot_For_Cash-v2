@@ -8,8 +8,8 @@ var dataset_float : Dictionary = {
 	"power_max_items_in_shop" 		: [1,2,3]
 	
 	,"power_bonus_round_pineapples" 	: [0, 1]
-	,"power_auto_fire" 				: [0, 1]
-	,"power_sky_mine" 				: [0, 1, 2]
+	,"power_auto_fire" 					: [0, 1]
+	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 	,"power_target_circle"	: [20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,120.0,200.0]
 	,"power_gun_fire_rate"	: [1.25, 1.0, 0.9,0.8,0.65,0.50,0.35,0.20,0.15,0.10, 0.05]
@@ -26,21 +26,24 @@ var dataset_float : Dictionary = {
 	#,'power_time_upgrade' 	: [12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]	
 	#,'power_time_upgrade' 	: [40]	
 		
-	,"price_target_circle"			: [70, 70, 70, 70, 70, 70, 550, 1000, 1500]
-	,"price_gun_fire_rate"			: [50, 50, 50, 50, 50, 50, 350, 550, 998]
-	,"price_bullet_damage" 			: [40, 40, 40, 40, 40, 40, 350, 500, 680, 801]
-	,"price_bullet_speed" 			: [40, 40, 40, 40, 40, 40, 20, 30, 40, 50]
+	,"price_target_circle"			: [700,700,700,700,700,700,700,700,700,700]
+	,"price_gun_fire_rate"			: [500, 500,500,500,500,500,500,500,500,500]
+	,"price_bullet_damage" 			: [400,400,400,400,400,400,400,400,400,400]
+	,"price_bullet_speed" 			: [400, 400, 400,400,400,400,400,400,400,400]
 	,"price_bullet_delay" 			: [2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
 	,"price_gun"					: [0,0,0]
-	,"price_sky_mine" 				: [30,50]
+	,"price_sky_mine" 				: [300,500]
 	,"price_balloon_buster"			: [3, 6, 12, 56,125,400,800.1200,2400]
-	,'price_time_upgrade' 			: [0, 50, 50, 50, 50, 50, 50, 50, 50, 50]
+	,'price_time_upgrade' 			: [0, 500,500,500,500,500,500,500,500]
 	,"price_bonus_round_pineapples" : [200]
 	,"price_auto_fire" 				: [135]
 	,"price_max_items_in_shop" 		: [2,10,30]
 	
 	
+	,"reward_all_pineapples"		: [300]
+	,"reward_orange"				: [3]
 	
+	,"penalty_balloon_orange"		: [-30]
 	
 	#"price_bonus_round_pineapples" 	: [20]
 	#,"price_auto_fire" 				: [135]
@@ -60,7 +63,7 @@ var dataset_float : Dictionary = {
 	,'power_ticket_redd' 			: [0]
 	
 	,'price_ticket_moss' 		: [0]
-	,'price_ticket_redd' 		: [2000] #180
+	,'price_ticket_redd' 		: [20000] #180
 	,'price_ticket_glory' 		: [1800]
 	,'price_ticket_backwater' 	: [5000]
 	,'price_ticket_sodomi' 		: [5000]

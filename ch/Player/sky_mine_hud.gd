@@ -7,7 +7,7 @@ var active := false
 func _ready() -> void:
 	EventBus.instance.purchase_made.connect(update)
 	
-func update() -> void:
+func update(_string : String) -> void:
 		%SkyMineLabel.text = str(gl_PlayerState.dataset.power_sky_mine)
 
 func start() -> void:

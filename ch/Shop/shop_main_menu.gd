@@ -42,7 +42,7 @@ var player_cash := 0
 func _ready() -> void:
 	
 	EventBus.instance.update_money.connect(update_shop_labels)
-	
+	%RoundSelector.hide()
 	transport_tickets.modulate.a = 0.0
 	
 	bg_music.volume_db = -80.0
@@ -226,7 +226,7 @@ func play_round_button_pressed() -> void:
 	reroll_button.hide()
 	%NextRound.disabled = true
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
-	$%Transport_Tickets.modulate.a = 0.0
+	%Transport_Tickets.modulate.a = 0.0
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
 	
 	gl_PlayerState.log_buy('debug_add_cash', 10)
@@ -279,7 +279,7 @@ func update_close_menu() -> void:
 
 	reroll_button.show()
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 1.0
-	$%Transport_Tickets.modulate.a = 1.0
+	#%Transport_Tickets.modulate.a = 1.0
 	
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 1.0
 	%NextRound.modulate.a = 1.0
@@ -654,9 +654,47 @@ func _input(event: InputEvent) -> void:
 	if Input.is_key_label_pressed(KEY_KP_0):
 		%AddMoney.visible = !%AddMoney.visible
 		%MaxOutPowers.visible = !%MaxOutPowers.visible
-		%RoundSelector.visible = !%RoundSelector.visible
+		#%RoundSelector.visible = !%RoundSelector.visible
 		
+
+func setup_shop_for_rounds() -> void:
+	%Transport_Tickets.modulate.a = 0.0
+	%RoundSelector.show()
+	
+
+func mark_round_as_cleared() -> void:
+	var round_button_cont : HBoxContainer = $RoundSelector/Panel/VBoxContainer/HBoxContainer
+	
+	for i in round_button_cont.get_children():
+		if i.current_state != i.State.AVAILABLE:
+			continue
+			
+		else:
+			if i.current_state != i.State.PERFECTED:
+				i.enter_state(i.State.CLEARED)
+				break
+			else:
+				break
+	
+func mark_round_as_perfect() -> void:
+	var round_button_cont : HBoxContainer = $RoundSelector/Panel/VBoxContainer/HBoxContainer
+	
+	for i in round_button_cont.get_children():
 		
+		if i.current_state == i.State.AVAILABLE: # || i.current_state == i.State.CLEARED:
+			i.enter_state(i.State.PERFECTED)
+			
+
+func increase_round_available() -> void:
+	var round_button_cont : HBoxContainer = $RoundSelector/Panel/VBoxContainer/HBoxContainer
+		
+	for i in round_button_cont.get_children():
+		if i.current_state != i.State.LOCKED:
+			continue
+		else:
+			i.enter_state(i.State.AVAILABLE)
+			break
+	
 func restart() -> void:
 	current_state = SkillState.INACTIVE
 

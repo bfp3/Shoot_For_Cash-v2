@@ -167,13 +167,12 @@ func tween_fade_gold() -> void:
 
 
 func pineapple_is_pineapple() -> void:
-	gl_PlayerState.add_bonus(30)
 	var new_money_label: Label3D = self.duplicate()
 
 	get_tree().get_current_scene().add_child(new_money_label)
 	new_money_label.font_size *= 3
 	new_money_label.top_level = true
-	new_money_label.text = "$30"
+	new_money_label.text = "$" + str(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
 	new_money_label.global_position = Vector3(0, 5, 23)
 
 	new_money_label.modulate = Color("42d100")

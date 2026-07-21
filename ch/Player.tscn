@@ -991,8 +991,10 @@ scope_min_target_circle = 10.0
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
 
-[node name="Weapon_shooting" type="Node3D" parent="." unique_id=2019545500 node_paths=PackedStringArray("player_gun")]
+[node name="Weapon_shooting" type="Node3D" parent="." unique_id=2019545500 node_paths=PackedStringArray("player_camera", "stable_camera", "player_gun")]
 script = ExtResource("17_0locf")
+player_camera = NodePath("../Cam_pivot/Camera3D")
+stable_camera = NodePath("../StableCamera")
 player_gun = NodePath("../Cam_pivot/Camera3D/Player_gun")
 
 [node name="Cam_pivot" type="Node3D" parent="." unique_id=674976526]
@@ -1054,6 +1056,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26, 0.059, -0.436)
 
 [node name="mockGun3" parent="Cam_pivot/Camera3D/Player_gun" unique_id=826154005 instance=ExtResource("14_f75d4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 0.059, -0.436)
+
+[node name="StableCamera" type="Camera3D" parent="." unique_id=1918680024]
+keep_aspect = 0
+fov = 62.5
+size = 0.05
+far = 5.0
 
 [node name="SFX" type="Node" parent="." unique_id=228994868]
 

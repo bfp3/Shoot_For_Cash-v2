@@ -279,12 +279,12 @@ func format_time(time: float) -> String:
 	
 func fade_out_timer() -> void:
 	return
-	var _label : Label = timer_label
-	#_label.text = "0:00"
-	_label.show()
-	var tween = create_tween().set_ease(Tween.EASE_OUT)
-	tween.tween_interval(1.5)
-	tween.tween_property(_label, 'modulate', Color.TRANSPARENT, 1.0)
+	#var _label : Label = timer_label
+	##_label.text = "0:00"
+	#_label.show()
+	#var tween = create_tween().set_ease(Tween.EASE_OUT)
+	#tween.tween_interval(1.5)
+	#tween.tween_property(_label, 'modulate', Color.TRANSPARENT, 1.0)
 	
 
 func _update_ticking_volume(seconds_left: float, delta: float) -> void:

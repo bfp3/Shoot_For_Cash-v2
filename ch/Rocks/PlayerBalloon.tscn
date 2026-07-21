@@ -906,6 +906,9 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_2e5ni")
 size = Vector2(2, 2)
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_cn7iq"]
+radius = 0.335
+
 [node name="PlayerBalloon" type="StaticBody3D" unique_id=121622778 groups=["restartable"]]
 collision_layer = 3
 collision_mask = 3
@@ -1202,4 +1205,13 @@ process_material = SubResource("ParticleProcessMaterial_x11pa")
 draw_pass_1 = SubResource("QuadMesh_1cco6")
 script = ExtResource("21_nuqxd")
 
+[node name="Area3D" type="Area3D" parent="." unique_id=546083657]
+collision_layer = 257
+collision_mask = 257
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=789801342]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11088371, 0)
+shape = SubResource("SphereShape3D_cn7iq")
+
 [connection signal="body_entered" from="balloon_area" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

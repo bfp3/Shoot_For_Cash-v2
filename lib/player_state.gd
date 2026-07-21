@@ -3,7 +3,7 @@ extends Node
 var mouse_sensitivity := 1.0
 
 const RESTART_DATASET := {
-	"cash": 50,
+	"cash": 500,
 	"level_name": "moss",
 	"tickets": 1,
 	"debug_add_cash": 1000,
@@ -43,7 +43,7 @@ const RESTART_DATASET := {
 }
 
 const DEFAULT_DATASET := {
-	"cash": 50,
+	"cash": 500,
 	"stage": 0,
 	"level_name": "start",
 	"tickets": 0,
@@ -166,6 +166,10 @@ func log_hit(item:String, item_type:String, value:int):
 	if item.contains('rock_type_1'):
 		dataset.total_white_rocks -= 1
 		
+	elif item.contains('rock_type_4'):
+		EventBus.instance.rock_destroyed.emit()
+		check_all_rocks_cleared()
+		return
 	
 	elif item.contains('hazard'):
 		if  item_type.contains('balloon'):
@@ -238,7 +242,7 @@ func check_all_rocks_cleared() -> void:
 		EventBus.instance.rocks_cleared_end_wave.emit()
 		EventBus.instance.all_rocks_destroyed.emit()
 		dataset.perfect_rounds += 1
-		print("PERFECT ROUND")
+		#print("PERFECT ROUND")
 	#else:
 		##EventBus.instance.end_round_rock_missed.emit()
 		

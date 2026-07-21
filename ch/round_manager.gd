@@ -8,22 +8,31 @@ const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
 
 const current_rock_sequence : Array = [
 	# First
-	[1,33,33]
-	,[43,1,33,33]
-	,[311,323,41,33,1,33]
+	[1,3]
+	,[1,3,317, 327]
+	,[1,3,4,317,327,331]
+	,[43,1,3,3]
+	,[311,323,41,3,1,3]
+
+	,[1,3,3]
+	,[43,1,3,3]
+	,[311,323,41,3,1,3]
+
+	,[311,323,2,2,4,4,4]
 
 	 #Second
-	,[12,32,34,34,34]
-	,[18,32,34,44,34,34]
-	,[316,336,324,46,34,44,16,34,34]
+	,[2,2,4,4,4]
+	,[8,2,4,2,2,44]
+	,[1,8,2,7,3,6,4,5,41,42,43,44,45,46,47,48]
+	#,[316,336,324,46,4,4,6,4,4]
 
 	# Third
-	,[33,5,37,37,37,5,33]
-	,[33,6,37,37,37,45,5,47,47,33]
-	,[33,7,37,37,37,45,5,47,47,33,323,314,325,316,327]
+	,[3,5,7,7,7,5,3]
+	,[3,6,7,7,7,45,5,47,47,3]
+	,[3,7,7,7,7,5,5,47,47,3,323,314,325,316,327]
 
 	# Fourth
-	,[2,32,4,34,34,6,6,36,36,8,8,38]
+	,[2,2,4,34,4,6,6,6,6,8,8,8]
 	#,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46]
 	#,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46,311,312,313,314,315,316,317,318]
 
@@ -61,7 +70,9 @@ var pineapple_mode := false
 @export var blue_balloon : Node3D
 @export var level_layout : Node3D
 @export var wave_progress_indication : Control
-@export var wave_label : Control
+@export var wave_progress_feedback : Control
+
+
 var egg_pulse : Egg
 
 enum RoundState {
@@ -86,7 +97,7 @@ enum RoundState {
 
 
 func _ready() -> void:
-	EventBus.instance.rocks_cleared_end_wave.connect(next_wave)
+	#EventBus.instance.rocks_cleared_end_wave.connect(next_wave)
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
 	EventBus.instance.end_round_rock_missed.connect(unsuccessful_round)
 	EventBus.instance.all_white_compulsory_rocks_destroyed.connect(white_rocks_destroyed)
@@ -96,12 +107,15 @@ func _ready() -> void:
 	
 func white_rocks_destroyed() -> void:
 	compulsory_rocks_destroyed = true
+	wave_progress_feedback.start_clear()
 
 func successful_round() -> void:
 	if wave_ending:
 		return
 	wave_ending = true
-
+	
+	wave_progress_feedback.start_perfect()
+	
 	if gl_PlayerState.dataset.total_hazards > 0:
 		unsuccessful_round_locked()
 		return
@@ -111,10 +125,20 @@ func successful_round() -> void:
 	$Gold_sfx.pitch_scale += 0.05
 	enter_state(RoundState.WAVE_END)
 
-
+func progress_rock_missed() -> void:
+	if wave_ending:
+		return
+	
+	wave_progress_feedback.start_miss()
+	wave_ending = true
+	unsuccessful_round_locked()
+	
+	
 func unsuccessful_round() -> void:
 	if wave_ending:
 		return
+		
+	wave_progress_feedback.start_miss()
 	wave_ending = true
 	unsuccessful_round_locked()
 
@@ -133,7 +157,6 @@ func round_timer_time_out() -> void:
 		return
 	wave_ending = true
 
-	print("TIME OUT - Round Manager")
 	stop_timer()
 	if not compulsory_rocks_destroyed:
 		unsuccessful_round_locked()
@@ -147,21 +170,11 @@ func round_timer_time_out() -> void:
 	enter_state(RoundState.WAVE_END)
 
 	
-func next_wave() -> void:
-	return
-	if wave_ending:
-		return
-		
-	wave_ending = true
-	stop_timer()
-	await get_tree().create_timer(0.5).timeout
-	enter_state(RoundState.WAVE_END)
-
 
 func check_prompts() -> void:
-	if gl_PlayerState.dataset.round == 1:
-		in_display_text_prompt = true
-		$"../MainGameCanvasLayer/Intro_Prompt".start()
+	#if gl_PlayerState.dataset.round == 1:
+		#in_display_text_prompt = true
+		#$"../MainGameCanvasLayer/Intro_Prompt".start()
 	
 	if current_sequence_index >= current_rock_sequence.size():
 		start_game_over()
@@ -256,7 +269,7 @@ func update_round_start() -> void:
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
-	wave_label.reset()
+	wave_progress_feedback.reset()
 	
 	player.update_player_stats()
 	music_manager.shop_music_raise_volume()
@@ -264,18 +277,28 @@ func update_round_start() -> void:
 	
 
 func update_wave_start() -> void:
-	wave_label.start()
+	wave_progress_feedback.start()
 	
 	await get_tree().create_timer(0.1).timeout
 	current_wave += 1
+	
 	rocks_container.enter_state(rocks_container.State.ROUND_END)
 
 	await get_tree().create_timer(0.1).timeout
-
-	var rock_seq := update_rock_sequence()
-	if rock_seq != []:
-		rocks_container.start_manual_rock_round(rock_seq)
-
+	
+	
+	if current_wave == 1:
+		var rock_seq := update_rock_sequence()
+		if rock_seq != []:
+			rocks_container.start_manual_rock_round(rock_seq)
+		
+	else:
+		print("Current Wave ", current_wave)
+		var rock_seq := update_rock_sequence()
+		if rock_seq != []:
+			rocks_container.shuffle_current_sequence(rock_seq)
+			
+			
 	player.start_player()
 	gl_PlayerState.next_wave()
 
@@ -285,7 +308,8 @@ func update_wave_start() -> void:
 		round_timer.timer_rollup_sequence()
 
 	await get_tree().create_timer(0.75).timeout
-	egg_pulse.activate_pulse_wave()
+	if egg_pulse:
+		egg_pulse.activate_pulse_wave()
 
 	wave_ending = false   # only now can a wave-end signal be accepted
 
@@ -297,8 +321,6 @@ func update_bonus_round() -> void:
 	pass
 
 func update_check_score() -> void:
-	printt("Current Wave,", current_wave)
-
 	if current_wave >= 3 or force_shop_open:
 		enter_state(RoundState.ROUND_END)
 	else:
@@ -316,7 +338,7 @@ func update_rock_sequence() -> Array:
 
 
 func update_round_end() -> void:
-	birds.start_birds()
+
 	await get_tree().create_timer(0.25).timeout
 	music_manager.shop_music_lower_volume()
 
@@ -343,16 +365,17 @@ func update_round_end() -> void:
 
 		if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
 			# PERFECT -> bonus round
-			wave_label.start_bonus()
+			wave_progress_feedback.start_bonus()
 			
 			player.round_finished(false)
 			pineapple_mode = true
+			
 			pineapple_round()
 			while pineapple_mode:
 				await get_tree().process_frame
 
 	await get_tree().create_timer(1.0).timeout
-
+	
 	if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
 		EventBus.instance.pineapple_round_used.emit()
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
@@ -371,6 +394,10 @@ func update_round_end() -> void:
 		current_sequence_index += 1
 		player_can_progress = false
 		compulsory_rocks_destroyed = false
+		#shop_main_menu.mark_round_as_cleared()
+		shop_main_menu.mark_round_as_perfect()
+		shop_main_menu.increase_round_available()
+		birds.start_birds()
 
 	current_wave = 0
 	balloon_container.end_round()
@@ -378,7 +405,6 @@ func update_round_end() -> void:
 
 
 func update_tally_start() -> void:
-	#$'../PlayerBalloon'.reposition_balloon()
 	EventBus.instance.open_tally_card.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -443,6 +469,8 @@ func move_to_moss() -> void:
 	gl_PlayerState.dataset["round"] = 1
 	music_manager.stop_opening_song()
 	
+	
+	
 	scene_transition_screen.next_level_start()
 	await get_tree().create_timer(1.0).timeout
 	
@@ -456,6 +484,7 @@ func move_to_moss() -> void:
 	level_scenery.name = 'current_level_layout'
 	
 	await get_tree().create_timer(1.0).timeout
+	shop_main_menu.setup_shop_for_rounds()
 	
 	if egg_pulse == null:
 		find_egg()
@@ -472,14 +501,14 @@ func move_to_moss() -> void:
 		
 	#rocks_container.reset_rock_back_on()
 	await get_tree().create_timer(2.0).timeout
-	%Grand_total_prompt.start()
+	#%Grand_total_prompt.start()
 	await get_tree().create_timer(1.0).timeout
 	transitioning_worlds = false
 	
-	in_display_text_prompt = true
+	#in_display_text_prompt = true
 	
-	while in_display_text_prompt:
-		await get_tree().process_frame
+	#while in_display_text_prompt:
+		#await get_tree().process_frame
 		
 	current_round = 1
 	enter_state(RoundState.SHOP_START)
@@ -595,3 +624,16 @@ func restart() -> void:
 func _input(event: InputEvent) -> void:
 	if Input.is_key_label_pressed(KEY_TAB):
 		unsuccessful_round()
+
+	if Input.is_key_label_pressed(KEY_SHIFT):
+		successful_round()
+		
+	if Input.is_key_label_pressed(KEY_CTRL) && !success:
+		success = true
+		shop_main_menu.mark_round_as_perfect()
+		#shop_main_menu.mark_round_as_cleared()
+		
+		shop_main_menu.increase_round_available()
+		
+		current_wave = 3
+		successful_round()

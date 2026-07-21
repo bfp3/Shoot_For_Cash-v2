@@ -199,7 +199,7 @@ func reset_rock_back_on() -> void:
 
 	var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 
-	var base_scale  := Vector3.ONE * 2 #* 0.35
+	#var base_scale  := Vector3.ONE * 2 #* 0.35
 
 	# Random subtype: 1x / 2x / 3x
 	$hit_wall_timer.stop()
@@ -333,6 +333,8 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	health -= damage
 	if damage == 0:
 		cash_value += 10
+		main_col.scale += Vector3.ONE * 1.05
+		$Mesh.scale += Vector3.ONE * 1.05
 	
 	taken_hit = true
 	if health > 0:		
@@ -370,6 +372,7 @@ func start_destroyed_process() -> void:
 		remove_from_group('Target')
 		
 	print("cash value pineapples ", cash_value)
+	gl_PlayerState.add_bonus(cash_value)
 	money_label_3d.money_is_money(global_position, cash_value)
 	
 

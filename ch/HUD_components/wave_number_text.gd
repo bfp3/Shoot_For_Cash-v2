@@ -3,7 +3,14 @@ extends Control
 @onready var fade_in_sfx: AudioStreamPlayer = $FadeInSFX
 
 @onready var wave_label: RichTextLabel = $Panel/WaveLabel
-@onready var panel: Panel = $Panel
+@onready var wave_panel: Panel = $Panel
+
+@onready var clear_panel: Panel = $Clear_Panel
+@onready var clear_text_label: RichTextLabel = $Clear_Panel/ClearTextLabel
+
+@onready var perfect_panel: Panel = $Perfect_Panel
+@onready var perfect_label: RichTextLabel = $Perfect_Panel/PerfectLabel
+
 
 var wave_count := 0
 
@@ -15,18 +22,39 @@ var wave_count := 0
 var _original_position: Vector2
 var _original_modulate: Color
 
+var _clear_original_position: Vector2
+var _clear_original_modulate: Color
+
+var _perfect_original_position: Vector2
+var _perfect_original_modulate: Color
+
+var clear_has_been_called_this_wave := false
+var result_has_been_shown_this_wave := false
 
 func _ready() -> void:
-	_original_position = panel.position
-	_original_modulate = panel.modulate
-	
+	EventBus.instance.egg_pulsed.connect(reset_each_wave)
+	_original_position = wave_panel.position
+	_original_modulate = wave_panel.modulate
+
+	_clear_original_position = clear_panel.position
+	_clear_original_modulate = clear_panel.modulate
+
+	_perfect_original_position = perfect_panel.position
+	_perfect_original_modulate = perfect_panel.modulate
+
 	end()
 	
 
 func reset() -> void:
+	clear_has_been_called_this_wave = false
+	result_has_been_shown_this_wave = false
 	wave_count = 0
 	end()
 
+func reset_each_wave() -> void:
+	clear_has_been_called_this_wave = false
+	result_has_been_shown_this_wave = false
+	clear_panel.show()
 
 func start() -> void:
 	wave_count += 1
@@ -45,43 +73,95 @@ func start() -> void:
 			wave_label.text = "Wave %d" % wave_count
 
 
-	start_tween()
+	start_tween(wave_panel, _original_position, _original_modulate)
 	
 func start_bonus() -> void:
-	wave_label.text = "[i][rainbow][pulse]Bonus Round"	
-	start_tween()
+	wave_label.text = "[i][rainbow]Bonus Round"
+	start_tween(wave_panel, _original_position, _original_modulate)
 	
-func start_tween() -> void:
-	# Start off-screen to the right and invisible
-	panel.position = _original_position - Vector2(slide_distance, 0)
+func start_clear() -> void:
+	if clear_has_been_called_this_wave:
+		return
+	
+	if result_has_been_shown_this_wave:
+		return
+		
+	result_has_been_shown_this_wave = true
+	clear_has_been_called_this_wave = true
+	
+	clear_text_label.text = "[i]Wave Clear!"
+	if wave_count >= 3:
+		clear_text_label.text = "[i]Round Clear!"
+	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
+
+func start_miss() -> void:
+	if result_has_been_shown_this_wave:
+		return
+		
+	result_has_been_shown_this_wave = true
+	
+	clear_text_label.text = "[i]Miss!"
+	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
+
+func start_perfect() -> void:
+	result_has_been_shown_this_wave = true
+	clear_has_been_called_this_wave = true
+	
+	clear_panel.modulate.a = 0.0
+	clear_panel.hide()
+	clear_panel.position = _clear_original_position
+
+	perfect_label.text = "[i][wave]PERFECT!"
+	start_tween(perfect_panel, _perfect_original_position, _perfect_original_modulate)
+
+
+func start_tween(panel: Control, original_position: Vector2, original_modulate: Color) -> void:
+	panel.position = original_position - Vector2(slide_distance, 0)
 	panel.modulate = Color(
-		_original_modulate.r,
-		_original_modulate.g,
-		_original_modulate.b,
+		original_modulate.r,
+		original_modulate.g,
+		original_modulate.b,
 		0.0
 	)
-	
+
 	var tween := create_tween()
 
 	tween.tween_interval(0.2)
-	# Slide in + fade in
-	tween.tween_property(panel, "position", _original_position, fade_in_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property(panel, "modulate:a", _original_modulate.a, fade_in_time)
+	tween.tween_property(panel, "position", original_position, fade_in_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(panel, "modulate:a", original_modulate.a, fade_in_time)
 	tween.parallel().tween_callback(fade_in_sfx.play.bind(0.5)).set_delay(0.3)
 	tween.tween_interval(hold_time)
 
-	# Slide out + fade out
 	tween.tween_property(panel, "modulate:a", 0.0, fade_out_time)
-	#tween.parallel().tween_property(panel, "position", _original_position + Vector2(slide_distance, 0), fade_out_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.parallel().tween_property(panel, "position:x", 200.0, fade_out_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).as_relative()
-	tween.parallel().tween_callback(fade_in_sfx.play.bind(0.5)) #.set_delay(0.0)
-
+	tween.parallel().tween_callback(fade_in_sfx.play.bind(0.5))
+	
+	
+	
 func end() -> void:
-	if is_instance_valid(panel):
-		panel.position = _original_position
-		panel.modulate = Color(
+	if is_instance_valid(wave_panel):
+		wave_panel.position = _original_position
+		wave_panel.modulate = Color(
 			_original_modulate.r,
 			_original_modulate.g,
 			_original_modulate.b,
+			0.0
+		)
+
+	if is_instance_valid(clear_panel):
+		clear_panel.position = _clear_original_position
+		clear_panel.modulate = Color(
+			_clear_original_modulate.r,
+			_clear_original_modulate.g,
+			_clear_original_modulate.b,
+			0.0
+		)
+
+	if is_instance_valid(perfect_panel):
+		perfect_panel.position = _perfect_original_position
+		perfect_panel.modulate = Color(
+			_perfect_original_modulate.r,
+			_perfect_original_modulate.g,
+			_perfect_original_modulate.b,
 			0.0
 		)

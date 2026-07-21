@@ -1,7 +1,7 @@
 class_name TallyCard extends Control
 
-@export var perfect_bonus := 50
-@export var pass_bonus := 20
+@export var perfect_bonus := 500
+@export var pass_bonus := 200
 @onready var fail_label: RichTextLabel = %Fail_Label
 
 @onready var grade_label: RichTextLabel = %GradeLabel
@@ -12,6 +12,7 @@ class_name TallyCard extends Control
 
 @onready var grand_total_label: RichTextLabel = %TotalLabel
 @onready var grand_total_cash_label: RichTextLabel = %TotalCashCashLabel
+#@onready var cash_number_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashOut/NumberLabel
 
 enum ScoreResult {
 	ZERO_SCORE,
@@ -24,9 +25,8 @@ var score_result : ScoreResult = ScoreResult.PARTIAL_SCORE
 
 #@onready var hazard_mine: HBoxContainer = $CenterContainer/MainPanel/MainPanel/Item_List2/Panel/ScrollContainer/SalvageTable/Mine
 
-@onready var score_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/NumberLabel #$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel
+#@onready var score_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/NumberLabel #$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel
 @onready var penalties_number_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel
-@onready var cash_number_label: RichTextLabel = $'CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel'
 
 var full_score := false
 
@@ -137,7 +137,7 @@ func start_perfect_sequence() -> void:
 	grade_label.text = "[i][wave]PERFECT"
 
 	# 2. GRADE CASH LABEL
-	grade_cash_label.text = '$50'
+	grade_cash_label.text = '$' + str(perfect_bonus)
 	grade_cash_label.modulate = Color("42d100")
 	gl_PlayerState.add_cash(perfect_bonus)
 
@@ -155,9 +155,9 @@ func start_perfect_sequence() -> void:
 
 	# PAUSE
 	await get_tree().create_timer(dur).timeout
-	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = true
+	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
 	$SFX/shop_purchase_02.play()
-	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines ))
+	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
 	await get_tree().create_timer(dur).timeout
 	return
 
@@ -167,10 +167,10 @@ func start_pass_sequence() -> void:
 
 	# 1. GRADE LABEL
 	grade_label.modulate = Color("cccccc")
-	grade_label.text = "All Clear!"
+	grade_label.text = "Round Clear!"
 
 	# 2. GRADE CASH LABEL
-	grade_cash_label.text = '$20'
+	grade_cash_label.text = '$' + str(pass_bonus)
 	gl_PlayerState.add_cash(pass_bonus)
 
 	# PAUSE
@@ -187,7 +187,7 @@ func start_pass_sequence() -> void:
 
 	# 4. TOTAL CASH EARNED
 	$SFX/shop_purchase_02.play()
-	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = true
+	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
 	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
 	grand_total_cash_label.modulate = Color("42d100")
 	await get_tree().create_timer(dur).timeout
@@ -217,12 +217,12 @@ func check_white_rocks() -> void:
 	
 	
 	if gl_PlayerState.dataset.total_hazards > 0:
-		await start_fail_sequence()
+		start_fail_sequence()
 		start_sequence = false
 		return
 		
 	if white_rocks > 0 && gl_PlayerState.dataset.perfect_rounds < 3:
-		await start_fail_sequence()
+		start_fail_sequence()
 		start_sequence = false
 		return
 		
@@ -252,12 +252,12 @@ func perfect_particles() -> void:
 	var tween = create_tween()
 	tween.tween_property(%'100_percent', "modulate:a", 1.0, 0.1)
 	tween.tween_interval(0.35)
-	tween.tween_property(cash_number_label, "text", "$" + str(int(gl_PlayerState.dataset.cash)), 0.0001)
+	#tween.tween_property(grand_total_cash_label, "text", "$" + str(int(gl_PlayerState.dataset.cash)), 0.0001)
 	tween.tween_interval(2.0)
-	tween.tween_property(%'100_percent', "modulate:a", 0.0, 0.15)
+	#tween.tween_property(%'100_percent', "modulate:a", 0.0, 0.15)
 	await tween.finished
-	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.amount += 1
-	$'CenterContainer/MainPanel/MainPanel/Cash Out/BackgroundParticles'.emitting = false
+	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.amount += 1
+	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = false
 	
 
 func apply_bonus_cash() -> void:
@@ -310,7 +310,7 @@ func update_close_menu() -> void:
 	
 	total_cash_earned = 0
 	total_penalties_earned = 0
-
+	$'%100_percent'.modulate.a = 0.0
 	# ENSURE PIVOT IS CORRECT
 	pivot_offset = default_pivot_offset
 

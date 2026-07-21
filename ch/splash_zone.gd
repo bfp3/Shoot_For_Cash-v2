@@ -6,6 +6,7 @@ extends Area3D
 @onready var sfx_array : Array = [splash_sfx_01,splash_sfx_02]
 var detected_bodies: Array[Node3D] = []
 
+@export var round_manager : RoundManager
 #func _ready() -> void:
 	#await get_tree().create_timer(1.0).timeout
 	#monitoring = true
@@ -39,22 +40,20 @@ func _on_body_entered(body: Node3D) -> void:
 		#gl_PlayerState.log_rock_missed(body.rock_type_name)
 		body.enter_state(RockInstance.State.MISSED)
 
+		if body.rock_type == body.RockSize.SMALL:
+			round_manager.progress_rock_missed()
+
 
 func reset_detected_bodies() -> void:
 	return
-	var tween = create_tween()
-	tween.tween_property($Visual, 'transparency', 1.0, 2.0)
-	monitoring = false
-	monitorable = false
-	detected_bodies.clear()
 	
 func deactivate_splash_zone() -> void:
-	monitoring = false
-	monitorable = false
+	self.set_deferred('monitoring', false)
+	self.set_deferred('monitorable', false)
 
 func activate_splash_zone() -> void:
-	monitoring = true
-	monitorable = true
+	self.set_deferred('monitoring', true)
+	self.set_deferred('monitorable', true)
 	var tween = create_tween()
 	tween.tween_property($Visual, 'transparency', 0.0,1.0)
 

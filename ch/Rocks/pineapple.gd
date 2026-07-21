@@ -141,7 +141,6 @@ func update_hit() -> void:
 	set_collision_mask_value(1, false)
 	#disable_collision()
 	gl_PlayerState.log_hit('pineapple', 'pineapple', cash_value)
-	#gl_PlayerState.add_cash(cash_value)
 	
 	
 func update_missed() -> void:
@@ -376,6 +375,8 @@ func start_destroyed_process() -> void:
 	#money_label_3d.money_is_money(global_position, cash_value)
 	
 	if gl_PlayerState.dataset.total_pineapples_destroyed >= 3 && did_not_get_all_pineapples == false:
+		gl_PlayerState.add_bonus(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
+		print(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
 		money_label_3d.pineapple_is_pineapple()
 	
 	is_deactivated = true
@@ -569,23 +570,23 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 func expand_blast_radius() -> void:
 	%explosion_radius_mesh.hide()
 	return
-	%explosion_radius_mesh.show()
-	%explosion_radius_mesh.transparency = 0.2
-	#%explosion_radius_mesh.transparency = 1.0
-	var blast_node : Area3D = %Explosion_area
-	blast_node.scale = Vector3.ONE
-	blast_node.show()
-	blast_node.monitoring = true
-	$Explosion_area/CollisionShape3D.disabled = false
-	
-	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
-	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 13.0, 0.75)
-	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.75)
+	#%explosion_radius_mesh.show()
+	#%explosion_radius_mesh.transparency = 0.2
+	##%explosion_radius_mesh.transparency = 1.0
+	#var blast_node : Area3D = %Explosion_area
+	#blast_node.scale = Vector3.ONE
+	#blast_node.show()
+	#blast_node.monitoring = true
+	#$Explosion_area/CollisionShape3D.disabled = false
+	#
+	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	#tween.tween_interval(0.1)
-	await tween.finished
-	$Explosion_area/CollisionShape3D.disabled = true
-	blast_node.scale = Vector3.ONE
-
-	blast_node.hide()
-	blast_node.monitoring = false
+	#tween.tween_property(blast_node, "scale", Vector3.ONE * 13.0, 0.75)
+	#tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.75)
+	##tween.tween_interval(0.1)
+	#await tween.finished
+	#$Explosion_area/CollisionShape3D.disabled = true
+	#blast_node.scale = Vector3.ONE
+#
+	#blast_node.hide()
+	#blast_node.monitoring = false

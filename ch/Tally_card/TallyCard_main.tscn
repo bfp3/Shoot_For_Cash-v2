@@ -216,6 +216,7 @@ _data = {
 }
 
 [node name="TallyCard" type="Control" unique_id=1212322380 node_paths=PackedStringArray("cash_earned_label") groups=["tally_card_menu"]]
+z_index = 10
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -709,12 +710,12 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
-[node name="Cash Out" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=313444988]
+[node name="CashOut" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=313444988]
 custom_minimum_size = Vector2(200, 128)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
 
-[node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/Cash Out" unique_id=151705255]
+[node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=151705255]
 position = Vector2(365.2461, 74.37421)
 emitting = false
 amount = 25
@@ -725,7 +726,7 @@ fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_bux34")
 
-[node name="TotalLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/Cash Out" unique_id=709325133]
+[node name="TotalLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=709325133]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 170)
 layout_mode = 2
@@ -739,7 +740,7 @@ text = "[i]CASH[/i]"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="TotalCashCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/Cash Out" unique_id=1643114876]
+[node name="TotalCashCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=1643114876]
 unique_name_in_owner = true
 clip_contents = false
 custom_minimum_size = Vector2(170, 146.15)

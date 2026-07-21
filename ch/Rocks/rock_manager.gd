@@ -407,3 +407,20 @@ func reset_rock_back_on() -> void:
 	
 	await get_tree().create_timer(0.2).timeout
 	splash_zone.reset_detected_bodies()
+	
+
+func shuffle_current_sequence(_sequence: Array) -> void:
+	for idx in range(_sequence.size() - 1, -1, -1):
+		var value : int = _sequence[idx]
+
+		if value >= 300:
+			_sequence.remove_at(idx)
+			continue
+
+		if value < 10:
+			_sequence[idx] = randi_range(1, 8)
+		else:
+			_sequence[idx] = (value / 10) * 10 + randi_range(1, 8)
+
+	manual_rock_sequence = _sequence
+	start_manual_rock_round(_sequence)

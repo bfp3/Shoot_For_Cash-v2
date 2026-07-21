@@ -111,6 +111,98 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Clear_Panel" type="Panel" parent="." unique_id=435144791]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = -106.5
+offset_right = 225.0
+offset_bottom = -51.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.165, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_od5kt")
+theme_override_styles/panel = ExtResource("2_yxk46")
+
+[node name="ClearTextLabel" type="RichTextLabel" parent="Clear_Panel" unique_id=817353438]
+self_modulate = Color(1, 0.78039217, 0, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -235.0
+offset_top = -75.5
+offset_right = 235.0
+offset_bottom = 75.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 48
+theme_override_font_sizes/italics_font_size = 48
+bbcode_enabled = true
+text = "[i]Clear!"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Perfect_Panel" type="Panel" parent="." unique_id=767685972]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = -107.5
+offset_right = 225.0
+offset_bottom = -52.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.165, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_od5kt")
+theme_override_styles/panel = ExtResource("2_yxk46")
+
+[node name="PerfectLabel" type="RichTextLabel" parent="Perfect_Panel" unique_id=397173854]
+self_modulate = Color(1, 0.78039217, 0, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -235.0
+offset_top = -75.5
+offset_right = 235.0
+offset_bottom = 75.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 56
+theme_override_font_sizes/italics_font_size = 56
+bbcode_enabled = true
+text = "[i]1st Wave"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="FadeInSFX" type="AudioStreamPlayer" parent="." unique_id=786524765]
 stream = ExtResource("3_tjyxn")
 volume_db = -45.0

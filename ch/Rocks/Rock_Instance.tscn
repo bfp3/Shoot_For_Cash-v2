@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" uid="uid://bh211snc0txl4" path="res://res/Particles/Smoke_coloured.tscn" id="18_yskhd"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="19_mj3mj"]
 [ext_resource type="AudioStream" uid="uid://b3wehdx2vkaob" path="res://sfx/opt_5.ogg" id="19_pqbxg"]
+[ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="20_herjc"]
 [ext_resource type="AudioStream" uid="uid://b6adyjr237ckn" path="res://sfx/opt_4.ogg" id="20_ltsxa"]
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="21_27dlh"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="21_y4gyo"]
@@ -1127,6 +1128,13 @@ unique_name_in_owner = true
 stream = ExtResource("30_8mu68")
 volume_db = -5.0
 pitch_scale = 0.85
+
+[node name="launch_sound" type="AudioStreamPlayer" parent="." unique_id=910213729]
+unique_name_in_owner = true
+stream = ExtResource("20_herjc")
+volume_db = -43.0
+pitch_scale = 3.2
+max_polyphony = 10
 
 [node name="AoE" type="Node3D" parent="." unique_id=708438174]
 top_level = true

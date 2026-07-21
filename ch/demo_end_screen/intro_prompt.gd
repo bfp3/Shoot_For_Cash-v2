@@ -85,7 +85,8 @@ func update_open_menu() -> void:
 		#$1000 = WIN."
 	#)
 	
-
+#[i]MOSS SHOOTING RANGE
+#[i][color=42d100]$2000[/color][/i] to [i][color=ffc700]WIN[/color][/i]
 	
 
 	sfx_open_tally()

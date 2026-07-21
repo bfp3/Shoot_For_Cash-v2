@@ -491,7 +491,7 @@ func update_stats_visually() -> void:
 
 func display_hud() -> void:
 	%HUD_bottom_corner.show()
-	$CanvasLayer/HUD_bottom_corner/TotalRocks._update_for_new_round()
+	#$CanvasLayer/HUD_bottom_corner/TotalRocks._update_for_new_round()
 	
 	
 func hide_hud() -> void:
@@ -602,10 +602,15 @@ func fire_weapon() -> void:
 		
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
-		
+	
+	#set_process(false)
+	#set_process_input(false)
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
 	
+	#await get_tree().create_timer(0.25).timeout
+	#set_process_input(true)
+	#set_process(true)
 	
 	#%Crosshair.duplicate_inner_scope()
 	

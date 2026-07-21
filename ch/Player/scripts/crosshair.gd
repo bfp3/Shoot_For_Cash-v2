@@ -243,23 +243,23 @@ func crosshair_fade_out_mode() -> void:
 
 func duplicate_inner_scope() -> void:
 	var original: Control = $Inner_scope
-	var duplicate: Control = original.duplicate()
+	var _duplicate_scope: Control = original.duplicate()
 
 	# Add it somewhere outside the original hierarchy
-	get_tree().current_scene.add_child(duplicate)
+	get_tree().current_scene.add_child(_duplicate_scope)
 
 	# Keep it exactly where it currently is
-	duplicate.global_position = original.global_position
+	_duplicate_scope.global_position = original.global_position
 	#duplicate.global_rotation = original.global_rotation
-	duplicate.scale = original.scale
+	_duplicate_scope.scale = original.scale
 
 	# Make it independent of its parent
-	duplicate.top_level = true
+	_duplicate_scope.top_level = true
 
 	await get_tree().create_timer(5.0).timeout
 
 	if is_instance_valid(duplicate):
-		duplicate.queue_free()
+		_duplicate_scope.queue_free()
 
 func set_targeting_state(is_targeting: bool) -> void:
 	#print("YE")
