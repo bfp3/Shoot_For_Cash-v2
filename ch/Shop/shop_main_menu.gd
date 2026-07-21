@@ -679,6 +679,8 @@ func mark_round_as_cleared() -> void:
 func mark_round_as_perfect() -> void:
 	var round_button_cont : HBoxContainer = $RoundSelector/Panel/VBoxContainer/HBoxContainer
 	
+	%ScoreTotal.add_to_total()
+	
 	for i in round_button_cont.get_children():
 		
 		if i.current_state == i.State.AVAILABLE: # || i.current_state == i.State.CLEARED:

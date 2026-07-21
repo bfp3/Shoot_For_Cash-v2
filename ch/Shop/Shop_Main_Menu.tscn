@@ -142,6 +142,25 @@ border_color = Color(0.32, 0.2976, 0.22399999, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vrkmk"]
 
+[sub_resource type="GDScript" id="GDScript_hi3s5"]
+script/source = "extends RichTextLabel
+
+var grand_total : int = 0
+var subtitle := 'Winnings'
+
+func _ready() -> void:
+	
+	self.text = \"[i]\" + subtitle + \": $0\"
+
+func add_to_total() -> void:
+	grand_total += int(gl_PlayerState.dataset.bonus_cash - gl_PlayerState.dataset.fines + 500)
+	self.text = \"[i]\" + subtitle + \": $\" + str(grand_total)
+
+func restart() -> void:
+	grand_total = 0
+	self.text = \"[i]\" + subtitle + \": $\" + str(grand_total)
+"
+
 [node name="Shop_Main_Menu" type="Control" unique_id=973405492 node_paths=PackedStringArray("money_control", "reveal_skill_sfx") groups=["restartable", "shop_main_menu"]]
 layout_mode = 3
 anchors_preset = 15
@@ -1325,6 +1344,53 @@ shop_main_menu = NodePath("../../../../..")
 focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../SFX/purchase")
+
+[node name="ScoreTotal" type="RichTextLabel" parent="RoundSelector" unique_id=91302618 groups=["restartable"]]
+unique_name_in_owner = true
+self_modulate = Color(0.25882354, 0.81960785, 0, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -949.7999
+offset_top = -204.7951
+offset_right = -699.7999
+offset_bottom = -104.795105
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 40
+theme_override_font_sizes/italics_font_size = 29
+bbcode_enabled = true
+text = "[i]Winnings: $1,000,000,000"
+fit_content = true
+autowrap_mode = 2
+vertical_alignment = 1
+script = SubResource("GDScript_hi3s5")
+
+[node name="BgPanel" type="PanelContainer" parent="RoundSelector/ScoreTotal" unique_id=223331139]
+visible = false
+modulate = Color(0.8, 0.8, 0.8, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(250, 42)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -21.0
+offset_right = 125.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("5_vom4t")
 
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]

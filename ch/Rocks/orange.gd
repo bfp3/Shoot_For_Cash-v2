@@ -553,12 +553,14 @@ func _on_hit_wall_timer_timeout() -> void:
 
 func _on_explosion_area_body_entered(body: Node3D) -> void:
 
-	if body.name.contains('Balloon'):
-		if body.balloon_type == body.BalloonType.BLUE:
-			return
-		body.destroyed_by_shratnel()
+	#if body.name.contains('Balloon'):
+		#if body.balloon_type == body.BalloonType.BLUE:
+			#return
+		#body.destroyed_by_shratnel()
 		
 	if body is RockInstance:
+		if body.rock_type == body.RockSize.HAZARD:
+			return
 		body.cash_value += 2
 		body.hit_by_player(100, Vector2.ZERO)
 	

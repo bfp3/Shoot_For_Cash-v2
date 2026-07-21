@@ -32,7 +32,7 @@ enum RockSize {
 	SMALL_2,
 	MEDIUM,
 	LARGE,
-	MEDIUM_REDD,
+	HAZARD,
 	HUGE,
 	HAZARD_SMALL,
 	MONEY_ROCK
@@ -356,7 +356,7 @@ func setup_rock_type() -> void:
 		
 		
 		# Rock Type 4
-		RockSize.MEDIUM_REDD:
+		RockSize.HAZARD:
 			var size_multiplier_float : float = 1.2
 			var base_scale  := Vector3.ONE * 0.35
 			current_rock_type 	= "Game Ender"
