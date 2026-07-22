@@ -256,8 +256,7 @@ func reset_rock_back_on() -> void:
 	rock_type_name = ""
 
 	var base_health := int(gl_DataSet.get_value("hazard_type_1", 1))
-	#var base_cash   := int(gl_DataSet.get_value("hazard_type_1", 0))
-	var base_cash 	:= int(gl_PlayerState.dataset.cash / 8)
+	var base_cash 	:= int(gl_DataSet.get_value("balloon_orange", 1))
 	var base_scale  := Vector3.ONE * 1.0 #0.35
 
 	# Random subtype: 1x / 2x / 3x
@@ -319,8 +318,8 @@ func destroyed_by_shratnel() -> void:
 	
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
-	if balloon_type == BalloonType.BLUE:
-		return
+	#if balloon_type == BalloonType.BLUE:
+		#return
 	
 	if !visible && $Mesh.visible == false:
 		return
@@ -336,7 +335,6 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		BalloonType.BLUE:
 			#get_tree().get_first_node_in_group('Player').game_lost = true
 			#await get_tree().process_frame
-			temp_slow_down()
 			rock_pop_balloon()
 			play_destroy_sfx()
 			smoke_particles()
@@ -380,8 +378,7 @@ func start_destroyed_process() -> void:
 	rock_activated = false
 	enter_state(State.HIT)
 	stop_gentle_pan()
-	blast_radius()
-	#if !destroyed_by_marked:
+
 	disable_collision()
 
 	play_destroy_sfx()
@@ -391,68 +388,30 @@ func start_destroyed_process() -> void:
 	
 	if balloon_type == BalloonType.GREY:
 		cash_value = balloon_carrier_penalty
-		
-	#if balloon_type == BalloonType.WHITE and hazard_active:
-	
-	
+
 	
 	if balloon_type == BalloonType.RED:
-		#if abs(cash_value) > 0:
-		money_label_3d.money_is_money(global_position, -30)
-		
-	#else:
-		#money_label_3d.print_text(global_position, 'BLUE DOWN')
+		cash_value = int(gl_DataSet.get_value('balloon_orange', 0))
+		print("balloon value is ", cash_value)
+		money_label_3d.money_is_money(global_position, cash_value)
+
 		
 	set_collision_layer_value(1, false)
 	is_deactivated = true
-	#$Mesh.hide()
-	#freeze = true
+
 	
 	was_hit_tween()
 	
-
 	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(self, "scale", scale * 1.0, 0.33)
 	await tween.finished
-	#scale = clamp(scale, Vector3.ONE, Vector3.ONE * 2.5)
-	
 
 	#shake_camera()
 	
 
 	if balloon_type == BalloonType.RED:
 		get_parent().add_balloon_back_into_list(self)
-		return
-		#var current_pos := global_position
-		#
-		#global_position.y -= 20.0
-		#show()
-		##current_mesh.scale = Vector3.ONE * 0.5
-		#if balloon_type != BalloonType.GREY:
-			#$Mesh.scale = Vector3.ONE
-		#
-		#var tween_balloon = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-		#tween_balloon.tween_property(self, "global_position", current_pos, 2.5)
-		##await tween_balloon.finished
-		#rock_activated = true
-		#enable_collision()
-		#is_deactivated = false
-		#
-		#
-		#add_to_group('Target')
-		
 
-		#var player_balloon_container = get_tree().get_first_node_in_group('player_balloon_container')
-		#if player_balloon_container:
-			#player_balloon_container.white_reward()
-		
-	#elif balloon_type == BalloonType.RED:
-		#var player_balloon_container = get_tree().get_first_node_in_group('player_balloon_container')
-		#if player_balloon_container:
-			#player_balloon_container.red_penalty()
-			#player_balloon_container.player_balloon_was_popped()
-
-		
 	
 	
 func play_hit_sfx() -> void:
@@ -600,11 +559,6 @@ func rock_pop_balloon() -> void:
 	if is_in_group('Target'):
 		remove_from_group('Target')
 	
-	#if balloon_type == BalloonType.GREY:
-		#cash_value = balloon_carrier_penalty
-	
-	#if balloon_type != BalloonType.GREY:
-		#money_label_3d.money_is_money(global_position, cash_value)
 	is_deactivated = true
 	
 	was_hit_tween()
@@ -671,53 +625,6 @@ func restart() -> void:
 	if balloon_type == BalloonType.GREY:
 		$Mesh.scale = Vector3.ONE / 2
 		
-func temp_slow_down() -> void:
-	#if has_meta("slowmo_tween"):
-		#var old_tween: Tween = get_meta("slowmo_tween")
-		#if is_instance_valid(old_tween):
-			#old_tween.kill()
-#
-	var tween := create_tween()
-	#set_meta("slowmo_tween", tween)
-
-	# Instantly slow the game down.
-	Engine.time_scale = 0.2
-	
-	# Hold the slow motion briefly.
-	tween.tween_interval(0.2)
-
-	# Smoothly return to normal speed.
-	tween.tween_property(Engine, "time_scale", 1.0, 0.5)\
-		.set_trans(Tween.TRANS_SINE)\
-		.set_ease(Tween.EASE_OUT)
-
-	await tween.finished
-	Engine.time_scale = 1.0
-	
-	
-	
-func blast_radius() -> void:
-	return
-	#await get_tree().create_timer(0.1).timeout
-#
-	#const BLAST_RADIUS := 500.0
-	#const MAX_DELAY := 0.2
-#
-	#var all_targets: Array[RockInstance] = []
-#
-	#for target in get_tree().get_nodes_in_group("Target"):
-		#if target is RockInstance and target.current_state == target.State.ACTIVE:
-			#all_targets.append(target)
-#
-	#for target in all_targets:
-		#print(target.name)
-#
-		#var distance := Vector2(global_position.x, global_position.y).distance_to(
-			#Vector2(target.global_position.x, target.global_position.y)
-		#)
-#
-		#if distance <= BLAST_RADIUS:
-			#_push_rock_after_delay(target, distance / BLAST_RADIUS * MAX_DELAY)
 
 
 
@@ -743,72 +650,6 @@ func apply_marked_ability() -> void:
 		player.remove_sky_mine()
 
 	play_hit_sfx()
-	sky_mine_blast()
-
-
-func sky_mine_blast() -> void:
-	if !rock_activated:
-		return
-		
-	%Marked.show()
-	$marked_embers.emitting = true
-	
-	if pan_tween:
-		pan_tween.stop()
-		pan_tween.kill()
-		
-	$AnimationPlayer.stop()
-	
-	
-	if being_chained:
-		await get_tree().create_timer(0.02).timeout
-	
-	else:
-		#await get_tree().create_timer(1.0).timeout
-		penalty_amount = 0
-		
-	
-	%AoE2.play_particles = true
-	#var player_cam = get_tree().get_first_node_in_group("player_cam")
-	#if player_cam:
-		#player_cam.shake_camera_sky_mines()
-		#
-	player_has_marked_balloon = false
-	start_destroyed_process()
-	
-	var _blast_radius := 5.0
-
-	gl_PlayerState.dataset.power_balloon_buster = clamp(gl_PlayerState.dataset.power_balloon_buster - 1, 0, 10)
-	
-	return
-
-	#for target in get_tree().get_nodes_in_group("Target"):
-		#if target == self:
-			#continue
-#
-		#if !is_instance_valid(target):
-			#continue
-#
-		#var distance := Vector2(global_position.x, global_position.y).distance_to(
-			#Vector2(target.global_position.x, target.global_position.y)
-		#)
-#
-		#if distance <= _blast_radius:
-			#await get_tree().create_timer(0.075).timeout
-#
-			#var penalty := 2
-			#if target.name.contains("Balloon") and target.balloon_type == target.BalloonType.RED:
-				#penalty = chain_penalty
-				#chain_penalty += 2
-#
-			#_sky_mine_hit_after_delay(
-				#target,
-				#(distance / _blast_radius) * 0.2,
-				#penalty
-		#)
-		#break
-		
-
 
 
 
@@ -839,20 +680,10 @@ func _sky_mine_hit_after_delay(target: Node, delay: float, _chain_penalty: int) 
 
 
 func end_of_the_round_pop_balloon(_added_cash : int) -> void:
-	# Only pop balloons that are actually still in play.
-	#if !rock_activated or current_state != State.ACTIVE:
-		#return
 
 	rock_activated = false
 	stop_gentle_pan()
 	disable_collision()
-
-	# Same pop feedback as a player hit.
-	#$pop_balloon.pitch_scale = randf_range(0.95, 1.1)
-	#$pop_balloon.play()
-	#play_destroy_sfx()
-
-	
 
 	if is_in_group('Target'):
 		remove_from_group('Target')
@@ -870,49 +701,6 @@ func end_of_the_round_pop_balloon(_added_cash : int) -> void:
 	tween.parallel().tween_property(self, "global_position:x", -6.0, 3.5).as_relative()
 	await tween.finished
 	
-	if balloon_type == BalloonType.RED:
-		get_parent().add_balloon_back_into_list(self)
-	else:
-		get_parent().add_balloon_back_into_list(self)
-
-
-
-func XXend_of_the_round_pop_balloon(_added_cash : int) -> void:
-	# Only pop balloons that are actually still in play.
-	if !rock_activated or current_state != State.ACTIVE:
-		return
-
-	rock_activated = false
-	enter_state(State.HIT)
-	stop_gentle_pan()
-	disable_collision()
-
-	# Same pop feedback as a player hit.
-	$pop_balloon.pitch_scale = randf_range(0.95, 1.1)
-	$pop_balloon.play()
-	#play_destroy_sfx()
-	smoke_particles()
-
-	if is_in_group('Target'):
-		remove_from_group('Target')
-
-	set_collision_layer_value(1, false)
-	is_deactivated = true
-
-	# Reward instead of penalize: always +$1 regardless of balloon_type/penalty_amount.
-	cash_value = _added_cash
-	#gl_PlayerState.log_hit(rock_type_name, current_rock_type, 1)
-	
-	#money_label_3d.money_is_money(global_position, cash_value)
-	
-	cash_value = 0
-	was_hit_tween()
-
-	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(self, "scale", scale * 1.0, 0.33)
-	await tween.finished
-
-	# Return the balloon to its pool the same way a normal hit would.
 	if balloon_type == BalloonType.RED:
 		get_parent().add_balloon_back_into_list(self)
 	else:

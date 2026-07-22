@@ -8,21 +8,21 @@ const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
 
 const current_rock_sequence : Array = [
 	# BLAKE VER START
-	#[1,3]
-	#,[1,1,3,3]
-	#,[3,3,1,42]
-#
-	#,[6,6,45,46]
-	#,[311,1,2,3,4,5]
-	#,[311,1,2,3,4,5,43]
-	#
-	#,[1,1,3,3,5,5,7,7]
-	#,[48,7,8,7,8,47]
-	#,[311,312,317,318, 41, 47, 1, 8]
-	#
-	#,[3,4,5,6,7,7,6,5,4,3]
-	#,[1,8,2,7,3,6,4,5,41,42,43,44,45,46,47,48]
-	[42,4,44,6,46,8,8,8,8,47,311,312,313,314,315,316,317,318]
+	[1,3]
+	,[1,1,3,3]
+	,[3,3,1,42]
+
+	,[6,6,45,46]
+	,[311,1,2,3,4,5]
+	,[311,1,2,3,4,5,43]
+	
+	,[1,1,3,3,5,5,7,7]
+	,[48,7,8,7,8,47]
+	,[311,312,317,318, 41, 47, 1, 8]
+	
+	,[3,4,5,6,7,7,6,5,4,3]
+	,[1,8,2,7,3,6,4,5,41,42,43,44,45,46,47,48]
+	,[42,4,44,6,46,8,8,8,8,47,311,312,313,314,315,316,317,318]
 	
 	# BLAKE VER END
 	
@@ -114,6 +114,7 @@ enum RoundState {
 	}
 
 @export var current_round_state : RoundState = RoundState.INACTIVE
+var bonus_oranges_ready := false
 
 
 func _ready() -> void:
@@ -122,9 +123,12 @@ func _ready() -> void:
 	EventBus.instance.end_round_rock_missed.connect(unsuccessful_round)
 	EventBus.instance.all_white_compulsory_rocks_destroyed.connect(white_rocks_destroyed)
 	
+	EventBus.instance.bonus_oranges.connect(bonus_oranges)
 	move_to_start()
 	
-	
+func bonus_oranges() -> void:
+	bonus_oranges_ready = true
+
 func white_rocks_destroyed() -> void:
 	compulsory_rocks_destroyed = true
 	wave_progress_feedback.start_clear()
@@ -275,6 +279,7 @@ func update_round_start() -> void:
 	success = false
 	player_failed = false
 	compulsory_rocks_destroyed = false
+	bonus_oranges_ready = false
 	current_wave = 0
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
@@ -300,6 +305,13 @@ func update_wave_start() -> void:
 	wave_progress_feedback.start()
 	
 	await get_tree().create_timer(0.1).timeout
+	
+	if gl_PlayerState.dataset.total_hazards > 0:
+		unsuccessful_round()
+		return
+	
+	await get_tree().create_timer(0.1).timeout
+	
 	current_wave += 1
 	
 	rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -328,13 +340,29 @@ func update_wave_start() -> void:
 		round_timer.timer_rollup_sequence()
 
 	await get_tree().create_timer(0.75).timeout
+		
 	if egg_pulse:
 		egg_pulse.activate_pulse_wave()
 
 	wave_ending = false   # only now can a wave-end signal be accepted
-
+	
+	await get_tree().create_timer(1.9).timeout
+	
+	if gl_PlayerState.dataset.total_hazards > 0:
+		unsuccessful_round()
+		return
+	
+	EventBus.instance.egg_pulsed.emit()
+	
 func update_wave_end() -> void:
 	
+	#if bonus_oranges_ready:
+		#$'../BonusOranges'.start_bonus_oranges()
+		#
+	#while bonus_oranges_ready:
+		#await get_tree().process_frame
+	#
+	#bonus_oranges_ready = false
 	enter_state(RoundState.CHECK_SCORE)
 	
 func update_bonus_round() -> void:
@@ -396,6 +424,17 @@ func update_round_end() -> void:
 
 	await get_tree().create_timer(1.0).timeout
 	
+	if player_failed:
+		bonus_oranges_ready = false
+		
+	if bonus_oranges_ready:
+		$'../BonusOranges'.start_bonus_oranges()
+		
+	while bonus_oranges_ready:
+		await get_tree().process_frame
+	
+	
+		
 	if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
 		EventBus.instance.pineapple_round_used.emit()
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0

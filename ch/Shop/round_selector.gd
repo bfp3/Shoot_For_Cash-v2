@@ -110,8 +110,9 @@ func update_cleared() -> void:
 func update_perfected() -> void:
 	disabled = true
 	$CheckMark.show()
-	 
-	%CashEarned.text = "[i]$" + str(gl_PlayerState.dataset.bonus_cash + 500 - gl_PlayerState.dataset.fines)
+	
+	var round_bonus := int(gl_DataSet.get_value('reward_perfect_round'))
+	%CashEarned.text = "[i]$" + str(gl_PlayerState.dataset.bonus_cash + round_bonus - gl_PlayerState.dataset.fines)
 	$'100_percent'.show()
 	$OuterRing.modulate = Color("42d100ff")
 	$RoundNumber.hide()

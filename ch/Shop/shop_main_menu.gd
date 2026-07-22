@@ -187,7 +187,7 @@ func update_open_menu() -> void:
 	
 	sfx_open_shop()
 	update_shop()
-	
+	%Play_round_text.text = "[i][wave][color=]PLAY\n[color=42d100]$" + str(int(gl_DataSet.get_value('price_play_round', 0)))
 	
 	
 	if reroll_unlocked:
@@ -232,8 +232,8 @@ func play_round_button_pressed() -> void:
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
 	%Transport_Tickets.modulate.a = 0.0
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
-	
-	gl_PlayerState.log_buy('debug_add_cash', 10)
+	var play_round_cost = int(gl_DataSet.get_value('price_play_round', 0))
+	gl_PlayerState.log_buy('debug_add_cash', play_round_cost)
 	var tween := create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
 
 	tween.tween_property(%NextRound, "modulate:a", 0.0, 0.15)

@@ -75,7 +75,6 @@
 [ext_resource type="Script" uid="uid://bns2a7l7rdc41" path="res://ch/targets/orange_bombs.gd" id="68_qmj5w"]
 [ext_resource type="Script" uid="uid://byuybau4gp23h" path="res://ch/Balllons/player_balloon_container.gd" id="68_r5w5l"]
 [ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="68_wtxnc"]
-[ext_resource type="PackedScene" uid="uid://gmq0002obs0u" path="res://ch/targets/bonus_time_target.tscn" id="68_wv0tc"]
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
 [ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
@@ -847,8 +846,8 @@ max_polyphony = 2
 script = ExtResource("3_r5w5l")
 current_song = NodePath("Windmill")
 opening_song = NodePath("Opening_song")
-background_music_vol_in_shop = -50.0
-background_music_vol_out_of_shop = -60.0
+background_music_vol_in_shop = -60.0
+background_music_vol_out_of_shop = -45.0
 
 [node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
 stream = ExtResource("5_ec2we")
@@ -1262,6 +1261,7 @@ debug_color = Color(0, 1, 0, 1)
 [node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("23_ellt3")]
 unique_name_in_owner = true
 transform = Transform3D(-1, -8.379102e-09, -8.70203e-08, 0, 0.9953962, -0.09584575, 8.742278e-08, -0.09584575, -0.9953962, 0, -0.875, 0.5)
+scope_shrink_speed = 100.0
 scope_min_target_circle = 15.0
 can_right_click_shoot = true
 roundManager = NodePath("../Round_manager")
@@ -3178,17 +3178,10 @@ starting_balloons = 1
 round_manager = NodePath("../Round_manager")
 
 [node name="PlayerBalloon" parent="PlayerBalloon" unique_id=966203961 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 8, 5.2250004)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 8, 23.225)
+top_level = true
 
 [node name="Settings_pause_menu" parent="." unique_id=1950114573 instance=ExtResource("64_tnw34")]
-
-[node name="BonusTimeContainer" type="Node3D" parent="." unique_id=650695620]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.76, 19.86)
-
-[node name="BonusTime" parent="BonusTimeContainer" unique_id=143961963 instance=ExtResource("68_wv0tc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.146, 0)
-collision_layer = 3
-collision_mask = 3
 
 [node name="BonusCash" type="Node3D" parent="." unique_id=836260086 groups=["multi_shot"]]
 script = ExtResource("76_qmj5w")
@@ -3212,14 +3205,21 @@ volume_db = -40.0
 pitch_scale = 2.0
 
 [node name="PlayerBalloon2" parent="." unique_id=350761291 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 500, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 27.095, 23)
 top_level = true
 
-[node name="ProtectBalloonRound" type="Node3D" parent="." unique_id=919395476 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager")]
+[node name="PlayerBalloon3" parent="." unique_id=1574938481 instance=ExtResource("68_wtxnc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 29.095001, 23)
+top_level = true
+
+[node name="ProtectBalloonRound" type="Node3D" parent="." unique_id=919395476 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager", "blue_balloon")]
 script = ExtResource("80_ufvrt")
 left_marker = NodePath("../Pineapple_markers/LeftMarker")
 right_marker = NodePath("../Pineapple_markers/RightMarker")
 round_manager = NodePath("../Round_manager")
+blue_balloon = NodePath("../PlayerBalloon2")
+pineapples_from_any_direction = true
+pineapple_aim_offset = 6.0
 
 [node name="Pineapple" parent="ProtectBalloonRound" unique_id=1006380222 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
@@ -3341,143 +3341,12 @@ physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 cash_value = 0
 force_multiplier = 1.0
 
-[node name="Pineapple21" parent="ProtectBalloonRound" unique_id=458652707 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple22" parent="ProtectBalloonRound" unique_id=1955354929 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple23" parent="ProtectBalloonRound" unique_id=156425099 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple24" parent="ProtectBalloonRound" unique_id=415651683 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple25" parent="ProtectBalloonRound" unique_id=1428037162 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple26" parent="ProtectBalloonRound" unique_id=1989407033 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple27" parent="ProtectBalloonRound" unique_id=921833079 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple28" parent="ProtectBalloonRound" unique_id=99104260 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple29" parent="ProtectBalloonRound" unique_id=973903311 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple30" parent="ProtectBalloonRound" unique_id=954409495 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple31" parent="ProtectBalloonRound" unique_id=391439529 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple32" parent="ProtectBalloonRound" unique_id=946487339 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple33" parent="ProtectBalloonRound" unique_id=1716183034 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple34" parent="ProtectBalloonRound" unique_id=373407754 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple35" parent="ProtectBalloonRound" unique_id=966367638 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple36" parent="ProtectBalloonRound" unique_id=1662227926 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple37" parent="ProtectBalloonRound" unique_id=399763713 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple38" parent="ProtectBalloonRound" unique_id=1203005921 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple39" parent="ProtectBalloonRound" unique_id=175391085 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple40" parent="ProtectBalloonRound" unique_id=1345001972 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple41" parent="ProtectBalloonRound" unique_id=276152450 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple42" parent="ProtectBalloonRound" unique_id=798694863 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="BonusOranges" type="Node3D" parent="." unique_id=774568452 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager")]
+[node name="BonusOranges" type="Node3D" parent="." unique_id=774568452 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager", "blue_balloon")]
 script = ExtResource("80_ufvrt")
 left_marker = NodePath("../Pineapple_markers/LeftMarker")
 right_marker = NodePath("../Pineapple_markers/RightMarker")
 round_manager = NodePath("../Round_manager")
+blue_balloon = NodePath("../PlayerBalloon2")
 oranges = true
 
 [node name="Orange" parent="BonusOranges" unique_id=1922213171 instance=ExtResource("69_swp41")]

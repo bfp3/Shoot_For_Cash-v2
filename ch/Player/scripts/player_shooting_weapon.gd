@@ -268,10 +268,17 @@ func shoot_target() -> void:
 
 	for target_data in targets:
 		var target = target_data.target
-
-		if target is RockInstance:
+	
+	
+		if target.name.contains('Orange'):
+			print("orange")
+			pass
+		else:
 			rock_count += 1
-			rocks_to_destroy.append(target)
+
+		
+		#if target is RockInstance:
+		rocks_to_destroy.append(target)
 
 	#if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
 		#shooting_sky_mine = true
@@ -552,6 +559,8 @@ func wait_for_all_rocks_destroyed(rocks: Array) -> void:
 		await get_tree().process_frame
 	
 func activate_multishot_bonus(rock_count: int) -> void:
+	
+	print('called a mULTI')
 	if gl_PlayerState.dataset.total_hazards > 0:
 		return
 	

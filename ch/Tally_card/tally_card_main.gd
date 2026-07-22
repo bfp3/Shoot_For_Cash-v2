@@ -1,7 +1,7 @@
 class_name TallyCard extends Control
 
-@export var perfect_bonus := 500
-@export var pass_bonus := 200
+var perfect_bonus := 0
+var pass_bonus := -1
 @onready var fail_label: RichTextLabel = %Fail_Label
 
 @onready var grade_label: RichTextLabel = %GradeLabel
@@ -135,7 +135,9 @@ func start_perfect_sequence() -> void:
 	# 1. GRADE LABEL
 	grade_label.modulate = Color("ffc700ff")
 	grade_label.text = "[i][wave]PERFECT"
-
+	
+	perfect_bonus = int(gl_DataSet.get_value('reward_perfect_round', 0))
+	
 	# 2. GRADE CASH LABEL
 	grade_cash_label.text = '$' + str(perfect_bonus)
 	grade_cash_label.modulate = Color("42d100")

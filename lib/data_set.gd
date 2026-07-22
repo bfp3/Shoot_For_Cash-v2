@@ -4,10 +4,7 @@ extends Node
 
 var dataset_float : Dictionary = {
 
-	#,"power_bullet_delay" 	: [0.40,0.32,0.25,0.18,0.12,0.08,0.05,0.02,0.01]
-	"power_max_items_in_shop" 		: [1,2,3]
-	
-	,"power_bonus_round_pineapples" 	: [0, 1]
+	"power_bonus_round_pineapples" 	: [0, 1]
 	,"power_auto_fire" 					: [0, 1]
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -15,16 +12,10 @@ var dataset_float : Dictionary = {
 	,"power_gun_fire_rate"	: [1.25, 1.0, 0.9,0.8,0.65,0.50,0.35,0.20,0.15,0.10, 0.05]
 	,"power_bullet_damage" 	: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 	,"power_bullet_delay" 	: [0.1,0.08,0.05,0.02,0.01]
-	
 	,"power_bullet_speed" 	: [0.4, 0.2, 0.15, 0.1, 0.05, 0.03,0.02, 0.01, 0.005, 0.001]
-	#,"power_bullet_speed" 	: [1.0, 0.8, 0.5, 0.4, 0.2, 0.15, 0.1, 0.05,0.02, 0.01, 0.005]
-	
 	,"power_gun"				: [0]
-	
-	#,'power_time_upgrade' 	: [6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+
 	,'power_time_upgrade' 	: [7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]		
-	#,'power_time_upgrade' 	: [12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]	
-	#,'power_time_upgrade' 	: [40]	
 		
 	,"price_target_circle"			: [700,700,700,700,700,700,700,700,700,700]
 	,"price_gun_fire_rate"			: [500, 500,500,500,500,500,500,500,500,500]
@@ -40,25 +31,6 @@ var dataset_float : Dictionary = {
 	,"price_max_items_in_shop" 		: [2,10,30]
 	
 	
-	,"reward_all_pineapples"		: [300]
-	,"reward_orange"				: [3]
-	
-	,"penalty_balloon_orange"		: [-30]
-	
-	#"price_bonus_round_pineapples" 	: [20]
-	#,"price_auto_fire" 				: [135]
-	#,"price_target_circle"			: [7, 20, 40, 260, 320, 440, 550, 1000, 1500]
-	#,"price_gun_fire_rate"			: [2, 4, 8, 32, 99, 204, 350, 550, 998]
-	#,"price_bullet_damage" 			: [4, 8, 16, 50, 101, 202, 350, 500, 680, 801]
-	#,"price_bullet_speed" 			: [2, 3, 6, 8, 12, 16, 20, 30, 40, 50]
-	#,"price_bullet_delay" 			: [2, 4, 8, 16, 32, 64, 99, 124, 300, 801]
-	#,"price_gun"					: [0,0,0]
-	#,"price_sky_mine" 				: [10,40,150]
-	#,"price_balloon_buster"			: [3, 6, 12, 56,125,400,800.1200,2400]
-	#,"price_max_items_in_shop" 		: [2,10,30]
-	#,'price_time_upgrade' 			: [0, 22, 24, 26, 30, 220, 180, 160, 140, 1000]
-	
-	
 	,'power_ticket_moss' 			: [0]
 	,'power_ticket_redd' 			: [0]
 	
@@ -71,20 +43,24 @@ var dataset_float : Dictionary = {
 	
 	,"price_reroll" 		: [0,2,4,8,16,32,64,128,256,512,1024]
 	
+	,"reward_perfect_round"	: [500,1000,1500]
+	,"price_play_round"		: [10,50,100]
+	
+	,"reward_all_pineapples"		: [100]
 	# Targets / Rocks
 	# item name, 			$value, 	health
-	,"rock_type_1"			: [1,		1]
-	,"rock_type_2"			: [4,		3]
-	#,"rock_type_2"			: [12,		9]
+	,"pineapple"			: [10,		1]
+	,"orange"				: [2,		1]
+	,"balloon_orange"		: [-30,		1]
+	,"hazard_type_1"		: [-100,	1]
+	
+	,"rock_type_1"			: [0,		1]
+	,"rock_type_2"			: [0,		3]
 	,"rock_type_3"			: [20,		15]
 	,"rock_type_4"			: [120,		30]
 	
-	,"pineapple"				: [10,		1]
-	,"orange"					: [3,		1]
-	
 	# Hazards
-	# item name, 			$value, 	health
-	,"hazard_type_1"		: [-12,		5]
+	#,"hazard_type_1"		: [-100,	1]
 	,"hazard_type_2"		: [-20,		1]
 	,"hazard_type_3"		: [-100,	1]
 	,"hazard_type_4"		: [-100,	1]	
@@ -95,55 +71,22 @@ var dataset_float : Dictionary = {
 
 		]
 		
-	,"x_seq_rocks_moss" 		: [
-		[1,1,5]
-		,[2,2,8]
-		,[5,5,1,1,3,3,4,4,4,6,6,6]
-		
-		,[1,1,4]
-		,[6,6,2]
-		,[1,2,3,4,5,5,6,7,7,8,4,4]
-		
-		,[3,4,5]
-		,[6,7,2]
-		,[2,8,3,7,1,8,4,6,5,1,1,8,8,3,3,6,6,4]
-		
-		,[1,1,4]
-		,[6,6,2]
-		,[5,5,1,1,1,3,3,4,4,4,6,6,6,6,7,7,8,8,8,8]
-		
-		,[1,1,4]
-		,[6,6,2]
-		,[5,5,1,1,1,3,3,4,4,4,6,6,6,6,7,7,8,8,8,8]
-		
-		,[1,1,4]
-		,[6,6,2]
-		,[1,1,1,5,5,3,3,4,4,4,6,6,6,6,7,7,8,8,8,8]
-		
-		,[1,1,4]
-		,[6,6,2]
-		,[5,5,1,1,1,3,3,4,4,4,6,6,6,6,7,7,8,8,8,8,1,2,3,4,5,6,7,8]
-		
-		
-		]
 	}
 
 var dataset_string : Dictionary = {
-	 "place_name" 				: ['moss','redd','end game','blackwaters', 'sodomi', 'start']
-	
+	 "place_name" 				: ['moss','redd','glory','blackwaters', 'sodomi', 'start']
 	
 	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']
 	,"tooltip_auto_fire" 				: ['Just Point, No Click']
-	,"tooltip_sky_mine" 					: ["Take out the Blacks...\n [Right Click]"]
+	,"tooltip_sky_mine" 				: ["[i][wave]BOOM"]
 	,"tooltip_target_circle" 			: ["Do you even know what a Reticle is?"]
-	,"tooltip_gun_fire_rate"				: ["Faster Reload"]
+	,"tooltip_gun_fire_rate"			: ["Faster Reload"]
 	,"tooltip_bullet_damage" 			: ["The Big One's Hurt"]
-	,"tooltip_bullet_speed" 				: ["Just buy it"]
+	,"tooltip_bullet_speed" 			: ["Just buy it"]
 	,"tooltip_time_upgrade"				: ["+1 to Timer"]
-	,"tooltip_balloon_buster"				: ["Pop Balloons For Free"]
-	#,"tooltip_max_items_in_shop": ['Add +1 Item To The Shop Permanently']
-	#,"tooltip_bullet_delay"				: ["Bullet Delay * NOT USED"]
+	,"tooltip_balloon_buster"			: ["Pop Balloons For Free"]
+	#,"tooltip_bullet_delay"			: ["Bullet Delay * NOT USED"]
 	
 	,"tooltip_ticket_moss"		: ['Ticket To Moss, Where It All Begins']
 	,"tooltip_ticket_redd"		: ['Ticket To Redd, No More Of This Chump Change']

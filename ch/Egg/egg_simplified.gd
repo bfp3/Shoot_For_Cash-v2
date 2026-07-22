@@ -16,7 +16,8 @@ func activate_pulse_wave() -> void:
 
 func pulse() -> void:
 	$EggPulseSfx.play()
-	EventBus.instance.egg_pulsed.emit()
+	
+	#EventBus.instance.egg_pulsed.emit()
 	await get_tree().create_timer(flash_dur).timeout
 	await get_tree().create_timer(0.25).timeout
 	$EggPulseSfxReverse.play()

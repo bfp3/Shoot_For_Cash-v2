@@ -7,8 +7,10 @@ const RESTART_DATASET := {
 	"level_name": "moss",
 	"tickets": 1,
 	"debug_add_cash": 1000,
-
+	
+	# Round is set to 1, so that we can play the game instead of going back to start menu
 	"round": 1,
+	"total_winnings" : 0,
 	"bonus_cash": 0,
 	"fines": 0,
 	"reroll": 0,
@@ -49,7 +51,7 @@ const DEFAULT_DATASET := {
 	"level_name": "start",
 	"tickets": 0,
 	"debug_add_cash": 1000,
-	
+	"total_winnings" : 0,
 	"round": 0,
 	"bonus_cash": 0,
 	"fines": 0,
@@ -185,15 +187,14 @@ func log_hit(item:String, item_type:String, value:int):
 		
 	elif item.contains('pineapple'):
 		dataset.total_pineapples_destroyed += 1
-	
 		return
 		
 	elif item.contains('orange'):
-		print('Hit an Orange')
 		dataset.total_oranges_destroyed += 1
-		if dataset.total_oranges_destroyed >= 3:
-			dataset.total_oranges_destroyed = 0
-			EventBus.instance.bonus_oranges.emit()
+		#if dataset.total_oranges_destroyed >= 1:
+			#dataset.total_oranges_destroyed = 0
+			#EventBus.instance.bonus_oranges.emit()
+			#return
 		return
 	
 	else:
@@ -258,7 +259,8 @@ func check_all_rocks_cleared() -> void:
 		#EventBus.instance.end_round_rock_missed.emit()
 
 
-			
+func update_total_winnings(grand_total : int) -> void:
+	dataset.total_winnings += grand_total
 
 func log_buy(power_name:String, price:float, unit:int=1) -> bool:
 	

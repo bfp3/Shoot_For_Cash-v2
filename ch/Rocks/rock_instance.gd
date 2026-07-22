@@ -259,7 +259,7 @@ func setup_rock_type() -> void:
 			rock_type_name 		= "rock_type_1"
 			gl_PlayerState.log_white_rock()
 			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
-			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
+			var base_cash   := int(gl_DataSet.get_value("rock_type_1", 0))
 			var base_scale  := Vector3.ONE * 0.35
 
 			# Random subtype: 1x / 2x / 3x
@@ -361,9 +361,8 @@ func setup_rock_type() -> void:
 			var base_scale  := Vector3.ONE * 0.35
 			current_rock_type 	= "Game Ender"
 			rock_type_name 		= "hazard_type_1"
-			health 				= 1#int(gl_DataSet.get_value("rock_type_2", 1))
-			cash_value 			= 0 #int(gl_DataSet.get_value("rock_type_2", 0))
-			cash_value = 0	#cash_value * 2
+			health 				= int(gl_DataSet.get_value("hazard_type_1", 1))
+			cash_value 			= int(gl_DataSet.get_value("hazard_type_1", 0))
 		
 			hazard_large.visible = true
 			current_mesh.scale = base_scale * size_multiplier_float
@@ -716,10 +715,7 @@ func start_destroyed_process() -> void:
 	if rock_destroyed:
 		return
 		
-	get_parent().get_parent().get_node('pitch_shift_rock_sound').pitch_scale += 0.05
-	get_parent().get_parent().get_node('pitch_shift_rock_sound').volume_db += 1.0
-	get_parent().get_parent().get_node('pitch_shift_rock_sound').play()
-
+	
 	
 	rock_activated = false
 	
@@ -732,15 +728,12 @@ func start_destroyed_process() -> void:
 	
 	if rock_type == RockSize.SMALL:
 		%progress_rock_sound.play()
+		get_parent().get_parent().get_node('pitch_shift_rock_sound').pitch_scale += 0.05
+		get_parent().get_parent().get_node('pitch_shift_rock_sound').volume_db += 1.0
+		get_parent().get_parent().get_node('pitch_shift_rock_sound').play()
+
 	
-	#if rock_type_name.contains('hazard'):
-		#var tweeny = create_tween().set_ease(Tween.EASE_IN)
-		#tweeny.tween_property(Engine, "time_scale", 0.01, 0.01)
-		#tweeny.tween_interval(0.02)
-		#tweeny.tween_property(Engine, "time_scale", 1.0, 0.5)
-		#await tweeny.finished
-	
-	if rock_type_name != 'hazard_type_1':
+	if rock_type != RockSize.HAZARD:
 		var bonus_cash_reward := 0
 		var bonus_zones := get_tree().get_first_node_in_group('multi_shot')
 		if bonus_zones:
@@ -749,28 +742,23 @@ func start_destroyed_process() -> void:
 		cash_value += bonus_cash_reward
 		
 	
-	if rock_type_name.contains('hazard'):
+	if rock_type == RockSize.HAZARD:
 		%hazard_hit_sound.play()
-		cash_value = -10
+		#cash_value = -
 	
 	
 	if !rock_has_been_logged:
 		rock_has_been_logged = true
 
 		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
-		
-	#if !destroyed_by_marked:
-
-
-	
-	
+			
 	
 	remove_from_group('Target')
 	
 	play_destroy_sfx()
 	$Marked.hide()
 
-	if cash_value > abs(0):
+	if cash_value > 0:
 		money_label_3d.money_is_money(global_position, cash_value)
 		
 	if cash_value < 0:

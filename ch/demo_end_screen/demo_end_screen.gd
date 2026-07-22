@@ -42,25 +42,14 @@ func show_end_screen():
 
 func show_win_text() -> void:
 	var text_box := %TextBOX
-	var player_cash: int = int(gl_PlayerState.dataset.cash)
+	var player_winnings: int = int(gl_PlayerState.dataset.total_winnings)
 	$CenterContainer/FreeParticles.emitting = true
 	text_box.text = (
 		"Moss Shooting Range: \n[i][pulse][color=#ffc700]ALL CLEAR[/color][/pulse][/i]\n"
 		+ "Cash Target [color=#42d100]$2000[/color]\n"
-		+ "Your Cash [color=#42d100]$%s[/color]" % player_cash
+		+ "Your Cash [color=#42d100]$%s[/color]" % player_winnings
 	)
-	
-#func show_lose_text() -> void:
-	#var text_box := %TextBOX
-	#var player_cash: int = int(gl_PlayerState.dataset.cash)
-	#$CenterContainer/FreeParticles.emitting = false
-	#text_box.text = (
-		#"Moss Shooting Range:\n"
-		#+ "Cash Target [color=#42d100]$2000[/color]\n"
-		#+ "Your Cash [color=#42d100]$%s[/color]\n"
-		#+ "[i][pulse][color=#ffc700]Try Again?[/color][/pulse][/i]"
-	#) % player_cash
-	
+		
 	
 func enter_state(new_state: State) -> void:
 	current_state = new_state

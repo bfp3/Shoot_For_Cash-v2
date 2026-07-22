@@ -12,12 +12,10 @@ energy_multiplier = 0.2
 sky_material = SubResource("ProceduralSkyMaterial_wul6u")
 
 [resource]
-background_mode = 2
 background_color = Color(1, 1, 1, 1)
+background_energy_multiplier = 0.0
 sky = SubResource("Sky_iu7vk")
 sky_rotation = Vector3(0.0698132, -0.15708, 0)
-ambient_light_source = 1
-reflected_light_source = 1
 tonemap_mode = 4
 ssao_intensity = 12.86
 ssao_power = 0.416089
@@ -31,8 +29,6 @@ fog_light_color = Color(0.00392157, 0.552941, 0.607843, 1)
 fog_light_energy = 0.2
 fog_density = 0.003
 fog_sky_affect = 0.0
-volumetric_fog_density = 0.0005
-volumetric_fog_albedo = Color(0, 0.760784, 0.968627, 1)
-volumetric_fog_emission = Color(0, 0.592157, 0.976471, 1)
-volumetric_fog_length = 1024.0
-volumetric_fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.005
+volumetric_fog_length = 54.75

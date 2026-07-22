@@ -54,6 +54,7 @@ func launch_pineapple(body : RigidBody3D) -> void:
 	) * body.pulse_magnitude
 
 	body.apply_central_impulse(impulse)
+	body.apply_torque_impulse(Vector3.RIGHT * 3000.0)
 	body.start_timer()
 
 	

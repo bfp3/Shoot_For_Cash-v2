@@ -117,7 +117,7 @@ func update_active() -> void:
 	global_position = start_pos
 	global_position.x = randi_range(-8,8)
 	health = 1
-
+	
 	pineapple_mesh.show()
 	rock_activated = true
 	pineapple_mesh.scale = Vector3.ONE * 2
@@ -126,7 +126,7 @@ func update_active() -> void:
 
 	$explosion_sfx.play()
 	$Smoke_quick.emitting = true
-	apply_torque_impulse(Vector3.RIGHT * 3000.0)
+	#apply_torque_impulse(Vector3.RIGHT * 3000.0)
 	
 	$Pineapple_launch_sound.play()
 	
@@ -211,9 +211,9 @@ func reset_rock_back_on() -> void:
 	show()
 
 func reset_stats() -> void:
-	hide()
+	#hide()
 	$Mesh.scale = Vector3.ONE
-	$Mesh.show()
+	$Mesh.hide()
 	$hit_wall_timer.stop()
 	pitch_adjustment = 0.02
 	taken_hit = false
@@ -376,7 +376,6 @@ func start_destroyed_process() -> void:
 	
 	if gl_PlayerState.dataset.total_pineapples_destroyed >= 3 && did_not_get_all_pineapples == false:
 		gl_PlayerState.add_bonus(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
-		print(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
 		money_label_3d.pineapple_is_pineapple()
 	
 	is_deactivated = true

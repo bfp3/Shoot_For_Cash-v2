@@ -15,10 +15,10 @@ var rocks_limit := 3
 # --- Rock X-axis placement tuning ---------------------------------------
 const X_MAX := 10.0          # left-most bound
 const X_MIN := -10.0         # right-most bound
-const MIN_ROCK_SPACING := 10.0 # 0.5    # no two rocks closer than this
-const CLUSTER_MIN_DIST := 10.0 #0.5    # the clustered pair's minimum gap
-const CLUSTER_MAX_DIST := 10.0 #1.5    # the clustered pair's maximum gap
-const ANGLE_BIAS_STRENGTH := 10.0 # 0.1 # how hard rocks get angled back toward the opposite side
+const MIN_ROCK_SPACING := 0.0 # 0.5    # no two rocks closer than this
+const CLUSTER_MIN_DIST := 0.0 #0.5    # the clustered pair's minimum gap
+const CLUSTER_MAX_DIST := 0.0 #1.5    # the clustered pair's maximum gap
+var ANGLE_BIAS_STRENGTH := 10.0 # 0.1 # how hard rocks get angled back toward the opposite side
 # --------------------------------------------------------------------------
 
 # Columns run left to right along the X-axis: column 1 = 7, column 2 = 5... column 8 = -7
@@ -285,8 +285,12 @@ func _get_position_angle_bias(x_position: float) -> float:
 	# Rocks near X_MIN (right side, closer to -13) get angled the other way
 	# (positive bias, toward 10).
 	var center := (X_MAX + X_MIN) * 0.5
+	#var center = [-8.0, 8.0].pick_random() # 0.0,2.0, 6.0,10.0].pick_random()
 	var half_range := (X_MAX - X_MIN) * 0.5
+	#var half_range : float = [0.0,2.0, 6.0,10.0].pick_random()
 	var normalized = clamp((x_position - center) / half_range, -1.0, 1.0)
+	
+	ANGLE_BIAS_STRENGTH = 10.0
 	return -normalized * ANGLE_BIAS_STRENGTH
 
 	

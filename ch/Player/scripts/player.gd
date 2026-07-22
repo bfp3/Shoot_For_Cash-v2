@@ -1,5 +1,7 @@
 class_name Player extends Node3D
 
+@onready var spot_light_3d: SpotLight3D = %GunSpotlight
+
 @export_group('Scope Shrink While Holding')
 @onready var scope_shrink_sfx : AudioStreamPlayer = $SFX/ScopeShrink
 @export var scope_shrink_sfx_min_pitch := 1.0
@@ -446,6 +448,7 @@ func update_player_stats() -> void:
 		##power_bullet_delay = 
 		#power_gun_fire_rate = 0.5
 #
+
 	#else:
 	
 	#power_gun_fire_rate = 0.15

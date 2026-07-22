@@ -323,36 +323,36 @@ _data = {
 
 [sub_resource type="GDScript" id="GDScript_rpy68"]
 script/source = "extends Control
-
-var radius := 0
-@export var circle_color := Color(\"ff000071\")
-
-func _draw() -> void:
-	
-	var _rad = gl_DataSet.dataset_float.power_target_circle[gl_PlayerState.dataset.power_target_circle]
-	radius = _rad
-	prints('DRAW RADIUS ', radius)
-	var center = size / 2.0
-	draw_circle(center, radius, circle_color)
-
-func _physics_process(delta: float) -> void:
-	var current_frame = Engine.get_physics_frames()
-	if current_frame % 120 == 0:
-		_draw()
-	return
-		
-	
-	
-
-func draw_radius(_player_radius : float) -> void:
-	radius = _player_radius
-
-	hide()
-	await get_tree().create_timer(0.25).timeout
-
-	queue_redraw()   # ← replace _draw()
-
-	show()
+#
+#var radius := 0
+#@export var circle_color := Color(\"ff000071\")
+#
+#func _draw() -> void:
+	#
+	#var _rad = gl_DataSet.dataset_float.power_target_circle[gl_PlayerState.dataset.power_target_circle]
+	#radius = _rad
+	#prints('DRAW RADIUS ', radius)
+	#var center = size / 2.0
+	#draw_circle(center, radius, circle_color)
+#
+#func _physics_process(delta: float) -> void:
+	#var current_frame = Engine.get_physics_frames()
+	#if current_frame % 120 == 0:
+		#_draw()
+	#return
+		#
+	#
+	#
+#
+#func draw_radius(_player_radius : float) -> void:
+	#radius = _player_radius
+#
+	#hide()
+	#await get_tree().create_timer(0.25).timeout
+#
+	#queue_redraw()   # ← replace _draw()
+#
+	#show()
 "
 
 [sub_resource type="Animation" id="Animation_fuvvr"]
@@ -1050,6 +1050,16 @@ draw_pass_1 = SubResource("QuadMesh_bpx2c")
 [node name="mockGun" parent="Cam_pivot/Camera3D/Player_gun" unique_id=1054081565 instance=ExtResource("14_f75d4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.059, -0.436)
 
+[node name="GunSpotlight" type="SpotLight3D" parent="Cam_pivot/Camera3D/Player_gun/mockGun" unique_id=1305914277]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+visible = false
+shadow_enabled = true
+spot_range = 35.0
+spot_attenuation = 0.0
+spot_angle = 6.81
+spot_angle_attenuation = 1e-05
+
 [node name="mockGun2" parent="Cam_pivot/Camera3D/Player_gun" unique_id=459703774 instance=ExtResource("14_f75d4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26, 0.059, -0.436)
 
@@ -1671,6 +1681,45 @@ points = PackedVector2Array(753, 0, 130, 0)
 width = 4.0
 gradient = SubResource("Gradient_dpvnf")
 texture_mode = 2
+
+[node name="RedDot" type="TextureRect" parent="CanvasLayer/Crosshair" unique_id=979867009]
+self_modulate = Color(1, 0, 0, 0.5803922)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.484, 0.484)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+
+[node name="blackTexture" type="TextureRect" parent="CanvasLayer/Crosshair/RedDot" unique_id=1781160138]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.44, 1.44)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 4
 
 [node name="Inner_scope" type="Control" parent="CanvasLayer/Crosshair" unique_id=50226001]
 unique_name_in_owner = true

@@ -2,8 +2,9 @@ extends RigidBody3D
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
-@export var cash_value := 3
-var original_cash_value := 3
+var cash_value := 0
+var original_cash_value := 0
+
 @export var force_multiplier := 1.5
 var pitch_adjustment := 0.02
 var taken_hit = false
@@ -68,7 +69,8 @@ func _ready() -> void:
 	
 	enter_state(State.INACTIVE)
 
-		
+	
+	cash_value = int(gl_DataSet.get_value('orange', 0))
 	original_cash_value = cash_value
 
 
@@ -107,6 +109,7 @@ func update_prepare_rock() -> void:
 	await get_tree().process_frame
 	
 func update_active() -> void:
+	
 	enable_collision()
 	reset_stats()
 	reset_rock_back_on()
@@ -331,17 +334,14 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
 	health -= damage
-	if damage == 0:
-		cash_value += 10
-		main_col.scale += Vector3.ONE * 1.05
-		$Mesh.scale += Vector3.ONE * 1.05
-	
 	taken_hit = true
-	if health > 0:		
+	
+	if health > 0:
 		play_hit_sfx()
 		apply_hit_reaction(screen_offset)
 		return
 	
+	rock_destroyed = true
 	start_destroyed_process()
 	
 
@@ -355,10 +355,13 @@ func start_destroyed_process() -> void:
 
 	if !rock_activated:
 		return
+		
+	
 	expand_blast_radius()
 	
 	#$Mesh/Yellow_particles.emitting = true
 	rock_activated = false
+	#rock_destroyed = true
 	freeze = true
 	enter_state(State.HIT)
 	
@@ -474,6 +477,7 @@ func hit_out_of_bounds() -> void:
 	if !rock_activated:
 		return
 	rock_activated = false
+	rock_destroyed = true
 	set_collision_layer_value(1, false)
 	set_collision_layer_value(8, false)
 	current_mesh.get_node('damage_mesh').show()
@@ -561,11 +565,11 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 	if body is RockInstance:
 		if body.rock_type == body.RockSize.HAZARD:
 			return
-		body.cash_value += 2
+
 		body.hit_by_player(100, Vector2.ZERO)
 	
 func expand_blast_radius() -> void:
-	#return
+	return
 	%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.2
 	#%explosion_radius_mesh.transparency = 1.0
