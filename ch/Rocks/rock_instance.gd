@@ -357,7 +357,7 @@ func setup_rock_type() -> void:
 		
 		# Rock Type 4
 		RockSize.HAZARD:
-			var size_multiplier_float : float = 1.2
+			var size_multiplier_float : float = 1.0
 			var base_scale  := Vector3.ONE * 0.35
 			current_rock_type 	= "Game Ender"
 			rock_type_name 		= "hazard_type_1"
@@ -367,7 +367,7 @@ func setup_rock_type() -> void:
 		
 			hazard_large.visible = true
 			current_mesh.scale = base_scale * size_multiplier_float
-			main_col.scale = Vector3.ONE * 0.12  * size_multiplier_float
+			main_col.scale = Vector3.ONE * 0.2 #* size_multiplier_float
 
 			current_mesh 		= hazard_large
 			assign_random_mesh(current_mesh)
@@ -716,6 +716,11 @@ func start_destroyed_process() -> void:
 	if rock_destroyed:
 		return
 		
+	get_parent().get_parent().get_node('pitch_shift_rock_sound').pitch_scale += 0.05
+	get_parent().get_parent().get_node('pitch_shift_rock_sound').volume_db += 1.0
+	get_parent().get_parent().get_node('pitch_shift_rock_sound').play()
+
+	
 	rock_activated = false
 	
 	if current_particles != null:
@@ -780,9 +785,9 @@ func start_destroyed_process() -> void:
 	was_hit_tween()
 	
 
-	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
-	await tween.finished
+	#var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
+	#tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
+	#await tween.finished
 	
 	if !player_has_marked_rock:
 		shake_camera()

@@ -10,8 +10,33 @@ const POLL_INTERVAL := 0.25
 var pineapples: Array[RigidBody3D] = []
 var _total_launched: int = 0
 
+@export var oranges := false
+var done_once_in_round := false
+
 func _ready() -> void:
 	_collect_pineapples()
+	if oranges:
+		EventBus.instance.bonus_oranges.connect(start_bonus_oranges)
+		EventBus.instance.egg_pulsed.connect(reset_oranges)
+		
+
+func reset_oranges() -> void:
+	done_once_in_round = false
+
+func start_bonus_oranges() -> void:
+	
+	if done_once_in_round:
+		return
+	done_once_in_round = true
+	
+	for body in self.get_children():
+		if _total_launched >= 3:
+			_total_launched = 0
+			break
+		launch_pineapple(body)
+		_total_launched += 1
+		await get_tree().create_timer(0.02).timeout
+
 
 
 func _collect_pineapples() -> void:

@@ -132,6 +132,7 @@ func blink_tween() -> void:
 	
 	
 func _on_pressed() -> void:
+	return
 	if pressed_sfx:
 		pressed_sfx.play()
 		
@@ -189,6 +190,7 @@ func _on_focus_exited() -> void:
 
 
 func _play_wiggle(target_scale: float) -> void:
+	return
 	if interaction_tween:
 		interaction_tween.kill()
 
@@ -233,6 +235,7 @@ func restart() -> void:
 	rotation_degrees = 0.0
 	z_index = 0
 	disabled = false
+	$%CashEarned.text = ""
 
 	if get_index() == 0:
 		enter_state(State.AVAILABLE)

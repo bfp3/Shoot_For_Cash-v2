@@ -12,6 +12,7 @@ func _ready() -> void:
 
 
 func display_ticket() -> void:
+	return
 	var ticket_bought = gl_PlayerState.dataset.level_name
 	
 	match ticket_bought:
@@ -34,14 +35,17 @@ func display_ticket() -> void:
 			ticket_location = "end game"
 			print('headed to finish')
 
+	open_pop_up()
 	
+func open_pop_up() -> void:
+	ticket_location = "moss"
 	modulate.a = 0.0
 	show()
 	position = Vector2.ZERO
 	self.mouse_filter = Control.MOUSE_FILTER_STOP
 	$MainPanel/TreePanel/PurchasedTicket.disabled = false
 	var tween = create_tween()
-	tween.tween_property(self, "modulate:a", 1.0, 0.5)
+	tween.tween_property(self, "modulate:a", 1.0, 0.35)
 	await tween.finished
 	
 func close_pop_up() -> void:

@@ -376,6 +376,21 @@ alpha_curve = SubResource("CurveTexture_vhsx8")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1teaa"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vycyu"]
+bg_color = Color(0.33, 0.33, 0.33, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ufvrt"]
+bg_color = Color(0.25882354, 0.81960785, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.7833333, 0, 0)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [sub_resource type="Animation" id="Animation_uxymg"]
 length = 0.001
 tracks/0/type = "value"
@@ -1220,6 +1235,11 @@ volume_db = -10.0
 pitch_scale = 0.7
 max_polyphony = 2
 
+[node name="pitch_shift_rock_sound" type="AudioStreamPlayer" parent="Rocks" unique_id=1051112971]
+stream = ExtResource("23_1i2h1")
+volume_db = -9.0
+pitch_scale = 0.85
+
 [node name="Shover" type="StaticBody3D" parent="Rocks" unique_id=1202508704]
 collision_layer = 7
 collision_mask = 7
@@ -1610,6 +1630,20 @@ script = ExtResource("34_v17ib")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+
+[node name="Start_button_progressBar" type="ProgressBar" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" unique_id=1465759429]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_vycyu")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ufvrt")
+show_percentage = false
 
 [node name="TextureRect" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" unique_id=1131831230]
 self_modulate = Color(1, 0.78039217, 0, 1)
@@ -3437,6 +3471,37 @@ force_multiplier = 1.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 cash_value = 0
+force_multiplier = 1.0
+
+[node name="BonusOranges" type="Node3D" parent="." unique_id=774568452 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager")]
+script = ExtResource("80_ufvrt")
+left_marker = NodePath("../Pineapple_markers/LeftMarker")
+right_marker = NodePath("../Pineapple_markers/RightMarker")
+round_manager = NodePath("../Round_manager")
+oranges = true
+
+[node name="Orange" parent="BonusOranges" unique_id=1922213171 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange2" parent="BonusOranges" unique_id=242187963 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange3" parent="BonusOranges" unique_id=1809932125 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange4" parent="BonusOranges" unique_id=1213627521 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange5" parent="BonusOranges" unique_id=948107855 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -2.9, 23)
+force_multiplier = 1.0
+
+[node name="Orange6" parent="BonusOranges" unique_id=235237420 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
 force_multiplier = 1.0
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]

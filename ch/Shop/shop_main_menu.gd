@@ -69,6 +69,10 @@ func _ready() -> void:
 	cash_label.hide()
 	#update_shop_labels()
 	cash_label.text = "$0"
+	
+	$CenterContainer/MainPanel/VBoxContainer/Money_control.hide()
+	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.hide()
+	
 	#update_cost_label()
 	if test_mode:
 		EventBus.instance.open_shop.emit()
@@ -244,6 +248,8 @@ func play_round_button_pressed() -> void:
 func update_close_menu() -> void:
 	sfx_close_shop()
 	
+	$CenterContainer/MainPanel/VBoxContainer/Money_control.show()
+	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.show()
 	%QuitMenu.hide()
 	
 	clear_available_skills()
@@ -304,7 +310,7 @@ func roll_up_cash_first_round() -> void:
 	cash_label.show()
 
 	var duration: float = clamp(target_cash / 1000.0, 0.5, 3.0)
-
+	duration = clamp(duration, 0.5, 1.5)
 	var sfx := $SFX/shop_reroll_sfx_02
 	var sfx_2 := $SFX/cash_roll_up
 	var default_pitch: float = sfx.pitch_scale
@@ -459,17 +465,17 @@ func update_in_menu() -> void:
 
 func gun_purchased() -> void:
 	reroll_unlocked = true
-	transport_tickets.modulate.a = 0.0
-	transport_tickets.show()
-	
+	#transport_tickets.modulate.a = 0.0
+	#transport_tickets.show()
+	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.show()
 	sfx_purchase_made()
 	update_shop()
 
-	var tween = create_tween()
-	tween.tween_property(transport_tickets, "modulate:a", 1.0, 0.5)
-	tween.parallel().tween_property($CenterContainer/MainPanel/VBoxContainer/UpgradeStats, "modulate:a", 1.0, 0.5)
+	#var tween = create_tween()
+	#tween.tween_property(transport_tickets, "modulate:a", 1.0, 0.5)
+	#tween.parallel().tween_property($CenterContainer/MainPanel/VBoxContainer/UpgradeStats, "modulate:a", 1.0, 0.5)
 	
-
+	%TicketPurchasedPopUp.open_pop_up()
 
 func _on_re_roll_pressed() -> void:
 		

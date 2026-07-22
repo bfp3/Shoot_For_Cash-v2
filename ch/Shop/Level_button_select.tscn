@@ -21,6 +21,26 @@ focus_enter_sfx = NodePath("focus_enter_sfx")
 focus_exit_sfx = NodePath("focus_exit")
 pressed_sfx = NodePath("purchase")
 
+[node name="TextureProgressBar" type="TextureProgressBar" parent="." unique_id=1552498213]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1024.0
+offset_top = -1024.0
+offset_right = 1024.0
+offset_bottom = 1024.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.268, 0.268)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture_under = ExtResource("2_hjmm4")
+texture_progress = ExtResource("2_hjmm4")
+tint_under = Color(1, 1, 1, 0)
+tint_progress = Color(0.25882354, 0.81960785, 0, 1)
+
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1120615446]
 modulate = Color(0.32, 0.32, 0.32, 0.28627452)
 layout_mode = 1

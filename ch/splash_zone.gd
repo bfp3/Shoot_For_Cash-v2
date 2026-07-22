@@ -34,10 +34,15 @@ func _on_body_entered(body: Node3D) -> void:
 		
 		
 	if body.current_state == RockInstance.State.ACTIVE:
+		if body.rock_activated == false:
+			return
+		
 		#print('all the bodies ', body.name)
 		splash_particles(body)
 		splash_sfx()
 		#gl_PlayerState.log_rock_missed(body.rock_type_name)
+		# This is to avoid a rock that's been hit and hit the zone
+		body.rock_activated = false
 		body.enter_state(RockInstance.State.MISSED)
 
 		if body.rock_type == body.RockSize.SMALL:

@@ -190,6 +190,18 @@ func _on_next_round_pressed() -> void:
 
 
 func _on_start_game_pressed() -> void:
+	var prog_bar : ProgressBar = %Start_button_progressBar
+	
+	var tween = create_tween()
+
+	tween.tween_property(prog_bar, "value", 100.0, 0.3)
+#
+	#tween.tween_interval(0.15)
+	#await tween.finished
+	await get_tree().create_timer(0.29).timeout
+	prog_bar.value = 0.0
+	
+	
 	$'../../Music'._on_start_button_pressed()
 	
 	$SFX/hud_click_1.play()

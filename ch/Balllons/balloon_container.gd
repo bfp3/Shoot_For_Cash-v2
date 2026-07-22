@@ -64,10 +64,12 @@ func add_balloon(_balloon_array : Array) -> void:
 	
 	#print('Balloon Codes --- ', balloon_array )
 	
+	var duration := 1.0
+	
 	for code in balloon_array:
 		if code < 300:
 			continue
-
+		duration = clamp(duration - 0.1, 0.2,1.0)
 		var _offset : int = code - 300
 		var column : int = int(_offset / 10)
 		var lane : int = _offset % 10
@@ -79,7 +81,7 @@ func add_balloon(_balloon_array : Array) -> void:
 		if balloon == null:
 			push_warning("BalloonManager: no available balloon for code %d" % code)
 			continue
-
+		
 		balloons_in_play = clamp(balloons_in_play + 1, 0, get_children().size())
 
 		balloon.behind_player = false
@@ -94,7 +96,7 @@ func add_balloon(_balloon_array : Array) -> void:
 		tween.tween_interval(0.2)
 		tween.tween_property(balloon, "global_position:z", BALLOON_Z_FRONT, 5.0)
 
-		await get_tree().create_timer(1.5).timeout
+		await get_tree().create_timer(duration).timeout
 
 func _get_next_available_balloon() -> StaticBody3D:
 	for i in get_children():

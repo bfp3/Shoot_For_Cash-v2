@@ -8,21 +8,22 @@ const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
 
 const current_rock_sequence : Array = [
 	# BLAKE VER START
-	[1,3]
-	,[1,1,3,3]
-	,[3,3,1,42]
-
-	,[6,6,1,46]
-	,[311,1,2,3,4,5]
-	,[311,1,2,3,4,5,43]
+	#[1,3]
+	#,[1,1,3,3]
+	#,[3,3,1,42]
+#
+	#,[6,6,45,46]
+	#,[311,1,2,3,4,5]
+	#,[311,1,2,3,4,5,43]
+	#
+	#,[1,1,3,3,5,5,7,7]
+	#,[48,7,8,7,8,47]
+	#,[311,312,317,318, 41, 47, 1, 8]
+	#
+	#,[3,4,5,6,7,7,6,5,4,3]
+	#,[1,8,2,7,3,6,4,5,41,42,43,44,45,46,47,48]
+	[42,4,44,6,46,8,8,8,8,47,311,312,313,314,315,316,317,318]
 	
-	,[1,1,3,3,5,5,7,7]
-	,[48,7,8,7,8,47]
-	,[311,312,317,318, 41, 47, 1, 8]
-	
-	,[3,4,5,6,7,7,6,5,4,3]
-	,[1,8,2,7,3,6,4,5,41,42,43,44,45,46,47,48]
-	,[42,4,4,44,6,6,46,8,8,8,46,311,312,313,314,315,316,317,318]
 	# BLAKE VER END
 	
 	
@@ -641,13 +642,13 @@ func restart() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if Input.is_key_label_pressed(KEY_TAB):
+	if Input.is_key_label_pressed(KEY_8):
 		unsuccessful_round()
 
-	if Input.is_key_label_pressed(KEY_SHIFT):
+	if Input.is_key_label_pressed(KEY_7):
 		successful_round()
 		
-	if Input.is_key_label_pressed(KEY_CTRL) && !success:
+	if Input.is_key_label_pressed(KEY_6) && !success:
 		success = true
 		shop_main_menu.mark_round_as_perfect()
 		#shop_main_menu.mark_round_as_cleared()

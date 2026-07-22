@@ -130,7 +130,7 @@ func start_fail_sequence() -> void:
 	
 func start_perfect_sequence() -> void:
 	await get_tree().create_timer(0.5).timeout
-	var dur := 1.0
+	var dur := 0.8
 
 	# 1. GRADE LABEL
 	grade_label.modulate = Color("ffc700ff")
@@ -145,7 +145,8 @@ func start_perfect_sequence() -> void:
 	perfect_particles()
 	grand_total_cash_label.modulate = Color("42d100")
 	# PAUSE
-	await get_tree().create_timer(dur).timeout
+	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(dur / 2).timeout
 
 	# 3. BONUSES
 	$SFX/shop_purchase_02.play()
@@ -154,7 +155,7 @@ func start_perfect_sequence() -> void:
 	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 0.0
 
 	# PAUSE
-	await get_tree().create_timer(dur).timeout
+	await get_tree().create_timer(dur / 2).timeout
 	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
 	$SFX/shop_purchase_02.play()
 	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
@@ -162,37 +163,7 @@ func start_perfect_sequence() -> void:
 	return
 
 
-func start_pass_sequence() -> void:
-	var dur := 1.0
 
-	# 1. GRADE LABEL
-	grade_label.modulate = Color("cccccc")
-	grade_label.text = "Round Clear!"
-
-	# 2. GRADE CASH LABEL
-	grade_cash_label.text = '$' + str(pass_bonus)
-	gl_PlayerState.add_cash(pass_bonus)
-
-	# PAUSE
-	await get_tree().create_timer(dur).timeout
-
-	# 3. BONUSES
-	$SFX/shop_purchase_02.play()
-	apply_bonus_cash()
-	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned.modulate.a = 1.0
-	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 1.0
-
-	# PAUSE
-	await get_tree().create_timer(dur).timeout
-
-	# 4. TOTAL CASH EARNED
-	$SFX/shop_purchase_02.play()
-	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
-	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
-	grand_total_cash_label.modulate = Color("42d100")
-	await get_tree().create_timer(dur).timeout
-	return
-	
 func check_white_rocks() -> void:
 	
 	var white_rocks = gl_PlayerState.dataset.total_white_rocks
@@ -231,11 +202,11 @@ func check_white_rocks() -> void:
 		start_sequence = false
 		return
 		
-	elif white_rocks == 0:
-		await start_pass_sequence()
-		start_sequence = false
-		
-		return
+	#elif white_rocks == 0:
+		#await start_pass_sequence()
+		#start_sequence = false
+		#
+		#return
 		
 	else:
 		%GradeLabel.text = ""
@@ -244,7 +215,7 @@ func check_white_rocks() -> void:
 
 func perfect_particles() -> void:
 	play_cash_sfx()
-	%perfectScoreParticles.emitting = true
+	#%perfectScoreParticles.emitting = true
 	#await get_tree().create_timer(0.25).timeout
 	
 	$SFX/perfect_score.play()
@@ -256,9 +227,9 @@ func perfect_particles() -> void:
 	tween.tween_interval(2.0)
 	#tween.tween_property(%'100_percent', "modulate:a", 0.0, 0.15)
 	await tween.finished
-	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.amount += 1
-	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = false
-	
+	#$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.amount += 1
+	#$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = false
+	#
 
 func apply_bonus_cash() -> void:
 	var bonus_cash = gl_PlayerState.dataset.bonus_cash
@@ -420,4 +391,36 @@ func blink_penalty_red() -> void:
 func _on_shop_pressed() -> void:
 	enter_state(State.CLOSE_MENU)
 	round_manager.enter_state(round_manager.RoundState.TALLY_END)
-	
+	#
+	#
+#func Xstart_pass_sequence() -> void:
+	#var dur := 1.0
+#
+	## 1. GRADE LABEL
+	#grade_label.modulate = Color("cccccc")
+	#grade_label.text = "Round Clear!"
+#
+	## 2. GRADE CASH LABEL
+	#grade_cash_label.text = '$' + str(pass_bonus)
+	#gl_PlayerState.add_cash(pass_bonus)
+#
+	## PAUSE
+	#await get_tree().create_timer(dur).timeout
+#
+	## 3. BONUSES
+	#$SFX/shop_purchase_02.play()
+	#apply_bonus_cash()
+	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned.modulate.a = 1.0
+	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 1.0
+#
+	## PAUSE
+	#await get_tree().create_timer(dur).timeout
+#
+	## 4. TOTAL CASH EARNED
+	#$SFX/shop_purchase_02.play()
+	#$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
+	#grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
+	#grand_total_cash_label.modulate = Color("42d100")
+	#await get_tree().create_timer(dur).timeout
+	#return
+	#

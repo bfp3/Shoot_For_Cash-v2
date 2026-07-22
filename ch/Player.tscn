@@ -323,36 +323,36 @@ _data = {
 
 [sub_resource type="GDScript" id="GDScript_rpy68"]
 script/source = "extends Control
-#
-#var radius := 0
-#@export var circle_color := Color(\"ff000071\")
-#
-#func _draw() -> void:
-	#
-	#var _rad = gl_DataSet.dataset_float.power_target_circle[gl_PlayerState.dataset.power_target_circle]
-	#radius = _rad
-	#prints('DRAW RADIUS ', radius)
-	#var center = size / 2.0
-	#draw_circle(center, radius, circle_color)
-#
-#func _physics_process(delta: float) -> void:
-	#var current_frame = Engine.get_physics_frames()
-	#if current_frame % 120 == 0:
-		#_draw()
-	#return
-		#
-	#
-	#
-#
-#func draw_radius(_player_radius : float) -> void:
-	#radius = _player_radius
-#
-	#hide()
-	#await get_tree().create_timer(0.25).timeout
-#
-	#queue_redraw()   # ← replace _draw()
-#
-	#show()
+
+var radius := 0
+@export var circle_color := Color(\"ff000071\")
+
+func _draw() -> void:
+	
+	var _rad = gl_DataSet.dataset_float.power_target_circle[gl_PlayerState.dataset.power_target_circle]
+	radius = _rad
+	prints('DRAW RADIUS ', radius)
+	var center = size / 2.0
+	draw_circle(center, radius, circle_color)
+
+func _physics_process(delta: float) -> void:
+	var current_frame = Engine.get_physics_frames()
+	if current_frame % 120 == 0:
+		_draw()
+	return
+		
+	
+	
+
+func draw_radius(_player_radius : float) -> void:
+	radius = _player_radius
+
+	hide()
+	await get_tree().create_timer(0.25).timeout
+
+	queue_redraw()   # ← replace _draw()
+
+	show()
 "
 
 [sub_resource type="Animation" id="Animation_fuvvr"]
@@ -987,7 +987,6 @@ _data = {
 script = ExtResource("1_6ljxy")
 scope_shrink_sfx_max_pitch = 50.0
 scope_shrink_speed = 180.0
-scope_min_target_circle = 10.0
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
 
@@ -2075,7 +2074,6 @@ texture_progress = ExtResource("2_kbm6s")
 tint_under = Color(1, 1, 1, 0.05882353)
 
 [node name="Radius_Debug" type="Control" parent="CanvasLayer/Crosshair" unique_id=1320344999]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

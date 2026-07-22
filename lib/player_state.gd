@@ -23,6 +23,7 @@ const RESTART_DATASET := {
 	"total_rocks_missed" : 0,
 	"total_hazards": 0,
 	"total_pineapples_destroyed": 0,
+	"total_oranges_destroyed" : 0,
 	
 	"power_bonus_round_pineapples": 0,
 	
@@ -64,7 +65,8 @@ const DEFAULT_DATASET := {
 	"total_rocks_missed" : 0,
 	"total_hazards": 0,
 	"total_pineapples_destroyed": 0,
-		
+	"total_oranges_destroyed" : 0,
+	
 	"power_bonus_round_pineapples": 0,
 	
 	"power_auto_fire" : 0,
@@ -188,6 +190,10 @@ func log_hit(item:String, item_type:String, value:int):
 		
 	elif item.contains('orange'):
 		print('Hit an Orange')
+		dataset.total_oranges_destroyed += 1
+		if dataset.total_oranges_destroyed >= 3:
+			dataset.total_oranges_destroyed = 0
+			EventBus.instance.bonus_oranges.emit()
 		return
 	
 	else:

@@ -15,10 +15,10 @@ var rocks_limit := 3
 # --- Rock X-axis placement tuning ---------------------------------------
 const X_MAX := 10.0          # left-most bound
 const X_MIN := -10.0         # right-most bound
-const MIN_ROCK_SPACING := 0.0 # 0.5    # no two rocks closer than this
-const CLUSTER_MIN_DIST := 0.0 #0.5    # the clustered pair's minimum gap
-const CLUSTER_MAX_DIST := 0.0 #1.5    # the clustered pair's maximum gap
-const ANGLE_BIAS_STRENGTH := 0.0 # 0.1 # how hard rocks get angled back toward the opposite side
+const MIN_ROCK_SPACING := 10.0 # 0.5    # no two rocks closer than this
+const CLUSTER_MIN_DIST := 10.0 #0.5    # the clustered pair's minimum gap
+const CLUSTER_MAX_DIST := 10.0 #1.5    # the clustered pair's maximum gap
+const ANGLE_BIAS_STRENGTH := 10.0 # 0.1 # how hard rocks get angled back toward the opposite side
 # --------------------------------------------------------------------------
 
 # Columns run left to right along the X-axis: column 1 = 7, column 2 = 5... column 8 = -7
@@ -93,6 +93,8 @@ func start_manual_rock_round(sequence: Array) -> void:
 	
 	
 func update_prepare_rocks() -> void:
+	
+	
 	var temp_rock_array : Array = manual_rock_sequence
 	splash_zone.reset_detected_bodies()
 	rocks_limit = temp_rock_array.size()
@@ -292,6 +294,8 @@ func _get_position_angle_bias(x_position: float) -> float:
 
 func update_round_end() -> void:
 	_bounds_check_active = false
+	$pitch_shift_rock_sound.pitch_scale = 0.85
+	$pitch_shift_rock_sound.volume_db = -9.0
 	update_gravity(1.0)
 	for body in $Container_1.get_children():
 		body.round_end_check_rock_status()
