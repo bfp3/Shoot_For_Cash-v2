@@ -81,7 +81,7 @@ func enter_state(new_state : State) -> void:
 			update_perfected()
 			
 func update_locked() -> void:
-	disabled = true
+	#disabled = true
 	$CheckMark.hide()
 	$'100_percent'.hide()
 	$OuterRing.modulate = Color("666b78ff")
@@ -100,7 +100,7 @@ func update_available() -> void:
 	self.custom_minimum_size = Vector2(100.0,100.0)
 	
 func update_cleared() -> void:
-	disabled = true
+	#disabled = true
 	$CheckMark.show()
 	$'100_percent'.hide()
 	$OuterRing.modulate = Color("42d100ff")
@@ -108,7 +108,7 @@ func update_cleared() -> void:
 	self.custom_minimum_size = Vector2(75.0,75.0)
 	
 func update_perfected() -> void:
-	disabled = true
+	#disabled = true
 	$CheckMark.show()
 	
 	var round_bonus := int(gl_DataSet.get_value('reward_perfect_round'))
@@ -133,11 +133,11 @@ func blink_tween() -> void:
 	
 	
 func _on_pressed() -> void:
-	return
+	#return
 	if pressed_sfx:
 		pressed_sfx.play()
 		
-	disabled = true
+	#disabled = true
 	#_deselect_all_buttons()
 	#set_selected(true)
 	

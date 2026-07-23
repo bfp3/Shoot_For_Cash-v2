@@ -8,7 +8,7 @@ var dataset_float : Dictionary = {
 	,"power_auto_fire" 					: [0, 1]
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-	,"power_target_circle"	: [20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,120.0]
+	,"power_target_circle"	: [60.0,70.0,80.0,90.0,100.0,120.0, 130.0, 140.0,40.0,50.0]
 	,"power_gun_fire_rate"	: [1.25, 1.0, 0.9,0.8,0.65,0.50,0.35,0.20,0.15,0.10, 0.05]
 	,"power_bullet_damage" 	: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 	,"power_bullet_delay" 	: [0.1,0.08,0.05,0.02,0.01]

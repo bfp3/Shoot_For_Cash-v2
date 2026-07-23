@@ -97,7 +97,7 @@ func _ready() -> void:
 	
 	EventBus.instance.add_strike.connect(handle_rock_missed)
 	EventBus.instance.has_hit_three_strikes.connect(handle_three_strikes)
-	EventBus.instance.hazard_hit.connect(handle_hazard_hit)
+	EventBus.instance.hazard_hit.connect(handle_rock_missed)
 	move_to_start()
 	
 func bonus_oranges() -> void:
@@ -182,6 +182,7 @@ func unsuccessful_round() -> void:
 
 
 func handle_hazard_hit() -> void:
+	return
 	if pineapple_mode:
 		wave_progress_feedback.start_miss()
 		player_failed = true

@@ -77,3 +77,8 @@ func splash_particles(body: Node3D) -> void:
 
 	await get_tree().create_timer(particles.lifetime).timeout
 	particles.queue_free()
+
+
+func restart() -> void:
+	detected_bodies.clear()
+	deactivate_splash_zone()

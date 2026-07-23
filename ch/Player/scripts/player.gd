@@ -21,7 +21,7 @@ var game_lost := false
 
 var _scope_at_min := false
 var scope_base_scale := 1.0              # resting visual scale set by tween_scope()
-var scope_base_target_circle := 60.0     # resting real hit-radius, captured on press
+@export var scope_base_target_circle := 60.0     # resting real hit-radius, captured on press
 var scope_hold_time := 0.0
 var _is_holding_shoot := false
 var _shrink_return_tween : Tween
@@ -47,23 +47,20 @@ var current_round : int
 @export var weapon_shooting : Node3D
 @export var player_gun : Node3D
 
-
 var current_gun_fire_rate_cooldown := 0.0
 var _is_currently_shooting := false
-
-@export var max_targeting_circle := 60.0
 
 @onready var _mouse_sensitivity := 0.3
 @export var keyboard_crosshair_speed := 800.0
 
 @export_group('Player Upgradeable Stats')
-@export var power_target_circle := 0.0
-@export var power_gun_fire_rate := 0.0
-@export var power_bullet_speed = 0.0
-@export var power_bullet_damage : int = 1
-@export var power_bullet_delay := 0.5 #0.15
+var power_target_circle := 0.0
+var power_gun_fire_rate := 0.0
+var power_bullet_speed = 0.0
+var power_bullet_damage : int = 1
+var power_bullet_delay := 0.5 #0.15
 
-@export var rotation_speed := 0.5
+var rotation_speed := 0.8
 
 var pan_speed: float = 8.0
 
@@ -237,7 +234,7 @@ func _process(delta: float) -> void:
 		
 		if %Cooldown_progressBar3.value >= 100.0 && !$SFX/Reload.playing:
 			$SFX/Reload.play()
-			$CanvasLayer/Crosshair/RedDot.show()
+			#$CanvasLayer/Crosshair/RedDot.show()
 
 	if current_state == State.ROUND_FINISHED:
 		crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
@@ -449,12 +446,8 @@ func update_player_stats() -> void:
 	#power_gun_fire_rate = 0.0
 	#power_bullet_speed = 0.0
 	player_gun.update_guns()
-		
-	power_target_circle = gl_DataSet.get_value('power_target_circle', 9)
-	power_bullet_speed = gl_DataSet.get_value('power_bullet_speed', 9)
-	power_bullet_damage = int(gl_DataSet.get_value('power_bullet_damage', 9))
-	power_bullet_delay =  gl_DataSet.get_value('power_bullet_delay', 9)
-	power_gun_fire_rate = gl_DataSet.get_value('power_gun_fire_rate', 9)
+
+	#full_power_mode()
 	
 	player_cash 		= settings.cash
 	current_round 		= settings.round
@@ -463,7 +456,15 @@ func update_player_stats() -> void:
 	update_stats_visually()
 
 
+func full_power_mode() -> void:
+	power_target_circle = gl_DataSet.get_value('power_target_circle', 9)
+	power_bullet_speed = gl_DataSet.get_value('power_bullet_speed', 9)
+	power_bullet_damage = int(gl_DataSet.get_value('power_bullet_damage', 9))
+	power_bullet_delay =  gl_DataSet.get_value('power_bullet_delay', 9)
+	power_gun_fire_rate = gl_DataSet.get_value('power_gun_fire_rate', 9)
+
 func update_stats_visually() -> void:
+	print("UPDATE VISUAL")
 	await get_tree().create_timer(0.5).timeout
 	
 	#if gl_PlayerState.dataset.power_bullet_damage >= 1:
@@ -481,7 +482,7 @@ func update_stats_visually() -> void:
 	
 	
 	var scale_multiplier = power_target_circle / gl_DataSet.dataset_float.power_target_circle[0]
-
+	print("scale multiplier ", power_target_circle)
 	scale_multiplier = min(scale_multiplier, 21.0)
 	tween_scope(scale_multiplier, 0.33)
 
@@ -604,7 +605,7 @@ func fire_weapon() -> void:
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
 	
-	$CanvasLayer/Crosshair/RedDot.hide()
+	#$CanvasLayer/Crosshair/RedDot.hide()
 	
 	#await get_tree().create_timer(0.25).timeout
 	#set_process_input(true)
