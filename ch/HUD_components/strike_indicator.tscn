@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://bl05dppfiwaj6"]
+
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="1_6lhy0"]
+[ext_resource type="Script" uid="uid://di5rb4jfu01f" path="res://ch/HUD_components/strike_indicator.gd" id="1_trv68"]
+[ext_resource type="Texture2D" uid="uid://cg2gr8jrwder4" path="res://res/cross_icon.png" id="2_trv68"]
+
+[node name="StrikeIndicator" type="Control" unique_id=337672201]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1_trv68")
+
+[node name="Control" type="Control" parent="." unique_id=808486803]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.199, 0.199)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Circle" type="TextureRect" parent="Control" unique_id=1530636151]
+self_modulate = Color(0.45, 0.45, 0.45, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -130.0
+offset_right = 128.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("1_6lhy0")
+
+[node name="Cross" type="TextureRect" parent="Control" unique_id=1955548184]
+modulate = Color(0.78, 0.78, 0.78, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -129.0
+offset_top = -119.0
+offset_right = 127.0
+offset_bottom = 137.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("2_trv68")
+
+[node name="CrossFront" type="TextureRect" parent="Control" unique_id=1150449610]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -136.0
+offset_top = -128.0
+offset_right = 120.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("2_trv68")

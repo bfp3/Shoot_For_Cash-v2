@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://do0dxtu11wge1" path="res://ch/HUD_components/wave_number_text.gd" id="1_yxk46"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/shop_main_panel_stylebox.tres" id="2_yxk46"]
+[ext_resource type="PackedScene" uid="uid://bl05dppfiwaj6" path="res://ch/HUD_components/strike_indicator.tscn" id="3_38fvf"]
 [ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="3_tjyxn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txfio"]
@@ -249,7 +250,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Strike_system2" type="Panel" parent="." unique_id=697686758]
-self_modulate = Color(1, 1, 1, 0.12941177)
+self_modulate = Color(1, 1, 1, 0.4392157)
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -292,10 +293,30 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 
-[node name="StrikeIndicator" type="Control" parent="Strike_system2" unique_id=1382000708]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="HBoxContainer" type="HBoxContainer" parent="Strike_system2" unique_id=869889454]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -142.0
+offset_top = -20.0
+offset_right = 142.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_constants/separation = 92
+
+[node name="StrikeIndicator" parent="Strike_system2/HBoxContainer" unique_id=337672201 instance=ExtResource("3_38fvf")]
+layout_mode = 2
+
+[node name="StrikeIndicator2" parent="Strike_system2/HBoxContainer" unique_id=1925335380 instance=ExtResource("3_38fvf")]
+layout_mode = 2
+
+[node name="StrikeIndicator3" parent="Strike_system2/HBoxContainer" unique_id=995226603 instance=ExtResource("3_38fvf")]
+layout_mode = 2
 
 [node name="FadeInSFX" type="AudioStreamPlayer" parent="." unique_id=786524765]
 stream = ExtResource("3_tjyxn")
