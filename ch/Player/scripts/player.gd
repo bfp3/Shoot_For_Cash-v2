@@ -92,13 +92,25 @@ var cam_clamp_right := 1
 var camera_pan_able := false
 
 
+## Inner_scope is a 40x40 Control; at scale 1.0 its visual radius is 20px.
+## power_target_circle is a screen-pixel hit radius (same units Radius_Debug draws).
+func _inner_scope_scale_for_radius(radius: float) -> float:
+	var base_radius = %Inner_scope.size.x * 0.5
+	if base_radius <= 0.0:
+		base_radius = 20.0
+	return radius / base_radius
+
+
 func _ready() -> void:
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)
 	EventBus.instance.end_round_rock_missed.connect(stop_player)
 	#EventBus.instance.pineapple_round_bought.connect(pineapples_start)
-	var scale_multiplier = power_target_circle / gl_DataSet.dataset_float.power_target_circle[0]
-	tween_scope(scale_multiplier, 0.33)
+	var start_radius := gl_DataSet.get_value(
+		'power_target_circle',
+		gl_PlayerState.dataset.power_target_circle
+	)
+	tween_scope(_inner_scope_scale_for_radius(start_radius), 0.33)
 
 	original_shot_count = shot_count
 	
@@ -481,9 +493,8 @@ func update_stats_visually() -> void:
 	#await get_tree().create_timer(1.5).timeout
 	
 	
-	var scale_multiplier = power_target_circle / gl_DataSet.dataset_float.power_target_circle[0]
-	print("scale multiplier ", power_target_circle)
-	scale_multiplier = min(scale_multiplier, 21.0)
+	var scale_multiplier := _inner_scope_scale_for_radius(power_target_circle)
+	print("scale multiplier ", scale_multiplier)
 	tween_scope(scale_multiplier, 0.33)
 
 func display_hud() -> void:

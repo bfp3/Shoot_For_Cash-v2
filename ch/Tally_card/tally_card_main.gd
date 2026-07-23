@@ -134,7 +134,11 @@ func start_perfect_sequence() -> void:
 
 	# 1. GRADE LABEL
 	grade_label.modulate = Color("ffc700ff")
-	grade_label.text = "[i][wave]PERFECT"
+	grade_label.text = "[i][wave]Clear!"
+	
+	if gl_PlayerState.dataset.total_current_strikes <= 0:
+		grade_label.text = "[i][wave]PERFECT!"
+		perfect_particles()
 	
 	perfect_bonus = int(gl_DataSet.get_value('reward_perfect_round', 0))
 	
@@ -144,7 +148,7 @@ func start_perfect_sequence() -> void:
 	gl_PlayerState.add_cash(perfect_bonus)
 
 	# decorative particle flourish, fires in the background (non-blocking)
-	perfect_particles()
+	
 	grand_total_cash_label.modulate = Color("42d100")
 	# PAUSE
 	await get_tree().create_timer(0.5).timeout
@@ -188,13 +192,13 @@ func check_white_rocks() -> void:
 	
 	gl_PlayerState.subtract_penalties_from_cash()
 	
-	
-	if gl_PlayerState.dataset.total_hazards > 0:
-		start_fail_sequence()
-		start_sequence = false
-		return
+	#
+	#if gl_PlayerState.dataset.total_hazards > 0:
+		#start_fail_sequence()
+		#start_sequence = false
+		#return
 		
-	if gl_PlayerState.dataset.total_strikes >= 3:
+	if gl_PlayerState.dataset.total_current_strikes >= 3:
 		start_fail_sequence()
 		start_sequence = false
 		return

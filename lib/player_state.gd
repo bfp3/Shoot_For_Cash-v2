@@ -177,6 +177,7 @@ func log_hit(item:String, item_type:String, value:int):
 	elif item.contains('hazard'):
 		if item_type.contains('balloon'):
 			return
+		add_strike()
 		return
 		
 		
@@ -216,11 +217,8 @@ func log_rock_missed(item : String = '') -> void:
 	print("called? , " ,item)
 	
 	if item.contains('rock_type_1'):
-		dataset.total_current_strikes += 1
-		EventBus.instance.add_strike.emit()
-		if dataset.total_current_strikes >= 3:
-			EventBus.instance.has_hit_three_strikes.emit()
-			return
+		add_strike()
+		#return
 		
 
 	if dataset.total_rocks_in_round_remaining > 0:
@@ -230,6 +228,15 @@ func log_rock_missed(item : String = '') -> void:
 
 	check_all_rocks_cleared()
 
+
+func add_strike() -> void:
+	dataset.total_current_strikes += 1
+	if dataset.total_current_strikes >= 3:
+		EventBus.instance.has_hit_three_strikes.emit()
+
+	else:
+		EventBus.instance.add_strike.emit()
+	
 
 func check_all_rocks_cleared() -> void:
 	if dataset.total_white_rocks <= 0:

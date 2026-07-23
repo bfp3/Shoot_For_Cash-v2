@@ -265,6 +265,7 @@ theme = SubResource("Theme_od5kt")
 theme_override_styles/panel = ExtResource("2_yxk46")
 
 [node name="StrikeLabel" type="RichTextLabel" parent="Strike_system2" unique_id=1057863420]
+visible = false
 modulate = Color(1, 0, 0, 1)
 show_behind_parent = true
 clip_contents = false
@@ -290,6 +291,11 @@ bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
+
+[node name="StrikeIndicator" type="Control" parent="Strike_system2" unique_id=1382000708]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="FadeInSFX" type="AudioStreamPlayer" parent="." unique_id=786524765]
 stream = ExtResource("3_tjyxn")

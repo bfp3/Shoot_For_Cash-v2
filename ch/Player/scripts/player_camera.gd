@@ -25,8 +25,58 @@ var orig_rot : Vector3
 func _ready() -> void:
 	orig_pos = global_position
 	orig_rot = rotation_degrees
+	
+	EventBus.instance.add_strike.connect(on_strike)
+	EventBus.instance.has_hit_three_strikes.connect(_on_three_strikes)
+
+func on_strike() -> void:
+	pass
+
+func _on_three_strikes() -> void:
+	shake_camera_impact()
 
 
+func shake_camera_impact() -> void:
+	# Stronger shake — overrides any shake currently running because it
+	# shares cam_shake_tween with the others below.
+	if camera_stop_all_shaking:
+		return
+
+	camera_shaking = true
+
+	if cam_shake_tween:
+		cam_shake_tween.kill()
+
+	# Snap to the known-good transform first, so if we interrupted another
+	# shake mid-motion we don't start this one from a skewed offset.
+	global_position = orig_pos
+	rotation_degrees = orig_rot
+
+	var _shake_amount := shake_amount * magnitude_of_camera_shake * 3.0
+	var _pos_shake := shoot_shake_amount * 1.5
+	var _dur := temp_dur
+
+	cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+	# Punchy rotational + positional kick
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", _shake_amount, _dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", _shake_amount, _dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "position:z", _pos_shake, _dur).as_relative()
+
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", -_shake_amount * 1.6, _dur * 1.2).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", -_shake_amount * 1.6, _dur * 1.2).as_relative()
+
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", _shake_amount * 0.8, _dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", _shake_amount * 0.8, _dur).as_relative()
+
+	# Absolute (not relative) settle back to the exact saved transform —
+	# this is what guarantees no permanent tilt, even if this shake itself
+	# gets interrupted by something else calling kill() on cam_shake_tween.
+	cam_shake_tween.tween_property(self, "rotation_degrees", orig_rot, 0.6)
+	cam_shake_tween.parallel().tween_property(self, "global_position", orig_pos, 0.6)
+
+	await cam_shake_tween.finished
+	camera_shaking = false
 
 func shake_camera_sky_mines() -> void:
 	var _shake_amount :float= clamp(1.1, -2.0, 2.0)

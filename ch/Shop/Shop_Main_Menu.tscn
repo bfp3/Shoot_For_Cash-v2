@@ -311,6 +311,19 @@ hold_duration = 0.1
 upgrade_type = "bonus_round_pineapples"
 upgrade_name = "Pineapples"
 
+[node name="BulletDamage" parent="." unique_id=918058313 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 1062.0
+offset_top = 492.0
+offset_right = 1272.0
+offset_bottom = 742.0
+upgrade_icon = ExtResource("4_dq200")
+shop_main_menu = NodePath("..")
+upgrade_type = "bullet_damage"
+upgrade_name = "Bullet Strength"
+
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1832678188]
 layout_mode = 1
 anchors_preset = 15
@@ -453,18 +466,6 @@ upgrade_icon = ExtResource("12_pwib5")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "gun_fire_rate"
 upgrade_name = "Reload Rate"
-
-[node name="BulletDamage" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=918058313 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 590.0
-offset_top = 318.0
-offset_right = 800.0
-offset_bottom = 414.0
-upgrade_icon = ExtResource("4_dq200")
-shop_main_menu = NodePath("../../../../../../..")
-upgrade_type = "bullet_damage"
-upgrade_name = "Bullet Strength"
 
 [node name="BulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1833548560 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
@@ -749,10 +750,6 @@ theme_override_constants/separation = 214
 layout_mode = 2
 theme_override_constants/separation = 88
 
-[node name="Bullet Strength" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=170932053 instance=ExtResource("13_onfim")]
-layout_mode = 2
-upgrade_type = "bullet_damage"
-
 [node name="Bullet Speed" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=1166499484 instance=ExtResource("13_onfim")]
 layout_mode = 2
 upgrade_type = "bullet_speed"
@@ -761,6 +758,11 @@ upgrade_type = "bullet_speed"
 visible = false
 layout_mode = 2
 upgrade_type = "bullet_delay"
+
+[node name="Bullet Strength" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=170932053 instance=ExtResource("13_onfim")]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+upgrade_type = "bullet_damage"
 
 [node name="Bullets_per_round_Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=1805250448]
 visible = false
