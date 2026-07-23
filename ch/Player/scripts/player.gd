@@ -455,8 +455,9 @@ func update_player_stats() -> void:
 	power_bullet_delay = set_power(settings, 'power_bullet_delay')
 	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
 
-	#power_gun_fire_rate = 0.0
-	#power_bullet_speed = 0.0
+	#power_gun_fire_rate = 0.5
+	#power_bullet_speed = 0.3
+	
 	player_gun.update_guns()
 
 	#full_power_mode()

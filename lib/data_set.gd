@@ -9,10 +9,11 @@ var dataset_float : Dictionary = {
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 	,"power_target_circle"	: [40.0,60.0,80.0,90.0,100.0,120.0, 130.0, 140.0,40.0,50.0]
-	,"power_gun_fire_rate"	: [1.25, 1.0, 0.9,0.8,0.65,0.50,0.35,0.20,0.15,0.10, 0.05]
+	#,"power_gun_fire_rate"	: [1.25, 1.0, 0.9,0.8,0.65,0.50,0.35,0.20,0.15,0.10, 0.05]
+	,"power_gun_fire_rate"	: [0.35,0.20,0.15,0.10, 0.05]
 	,"power_bullet_damage" 	: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 	,"power_bullet_delay" 	: [0.1,0.08,0.05,0.02,0.01]
-	,"power_bullet_speed" 	: [0.4, 0.2, 0.15, 0.1, 0.05, 0.03,0.02, 0.01, 0.005, 0.001]
+	,"power_bullet_speed" 	: [0.3, 0.2, 0.15, 0.1, 0.05, 0.03,0.02, 0.01, 0.005, 0.001]
 	,"power_gun"				: [0]
 
 	#,'power_time_upgrade' 	: [7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]		
@@ -26,13 +27,13 @@ var dataset_float : Dictionary = {
 	,"price_gun"					: [0,0,0]
 	,"price_sky_mine" 				: [300,500]
 	,"price_balloon_buster"			: [3, 6, 12, 56,125,400,800.1200,2400]
-	,'price_time_upgrade' 			: [0, 500,500,500,500,500,500,500,500]
+	,'price_time_upgrade' 			: [500,500,500,500,500,500,500,500]
 	,"price_bonus_round_pineapples" : [200]
 	,"price_auto_fire" 				: [135]
 	,"price_max_items_in_shop" 		: [2,10,30]
 	
-	
 	,'power_ticket_moss' 			: [0]
+	
 	,'power_ticket_redd' 			: [0]
 	
 	,'price_ticket_moss' 		: [0]
@@ -42,9 +43,11 @@ var dataset_float : Dictionary = {
 	,'price_ticket_sodomi' 		: [5000]
 	
 	
-	,"price_reroll" 		: [0,2,4,8,16,32,64,128,256,512,1024]
+	#,"price_reroll" 		: [0,2,4,8,16,32,64,128,256,512,1024]
+
+	,"price_reroll" 		: [10,20,40,80,160,320,640]
 	
-	,"reward_perfect_round"	: [500,1000,1500]
+	,"reward_perfect_round"	: [50,1000,1500]
 	,"price_play_round"		: [10,50,100]
 	
 	,"reward_all_pineapples"		: [100]

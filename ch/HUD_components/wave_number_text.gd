@@ -107,37 +107,33 @@ func start_clear() -> void:
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
 
 func add_strike() -> void:
-
 	strikes_int += 1
 	if strikes_int > 3:
-		strike_label.text = 'X X X'
+		#strike_label.text = 'X X X'
 		return
-		
+
+	#match strikes_int:
+		#1:
+			#strike_label.text = 'X '
+		#2:
+			#strike_label.text = 'X X '
+		#3:
+			#strike_label.text = 'X X X'
+		#_:
+			#strike_label.text = ''
+
+	# Individual strike flashes stay on the old center panel.
+	# Persistent indicators + three-strike finale live on Strike_system2.
 	start_tween(strike_panel, _strike_panel_original_position, _strike_panel_original_modulate)
-	
-	
-	match strikes_int:
-		1:
-			$Strike_system2/StrikeLabel.text = 'X '
-			strike_label.text = 'X '
-			
-		2:
-			$Strike_system2/StrikeLabel.text = 'X X'
-			strike_label.text = 'X X '
-		3:
-			$Strike_system2/StrikeLabel.text = 'X X X'
-			strike_label.text = 'X X X'
-		_:
-			$Strike_system2/StrikeLabel.text = ''
-	
-	
+
+
 func start_miss() -> void:
 	if result_has_been_shown_this_wave:
 		return
 		
 	result_has_been_shown_this_wave = true
 	
-	clear_text_label.text = "[i]Miss!"
+	clear_text_label.text = "[i]You're Out!"
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
 
 func start_perfect() -> void:
@@ -213,13 +209,12 @@ func end() -> void:
 		)
 
 func reset_strikes() -> void:
-	
 	strikes_int = 0
 	strike_label.text = ''
-	$Strike_system2/StrikeLabel.text = ''
-	
+	if has_node("Strike_system2") and $Strike_system2.has_method("reset"):
+		$Strike_system2.reset()
+
+
 func restart() -> void:
-	
 	reset_strikes()
 	end()
-	

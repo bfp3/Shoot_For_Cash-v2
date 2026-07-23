@@ -114,7 +114,7 @@ func update_active() -> void:
 	reset_stats()
 	reset_rock_back_on()
 	add_to_group('Target')
-	#update_gravity(0.04)
+	#update_gravity(0.0)
 	update_gravity(0.0)
 	global_position = start_pos
 	global_position.x = randi_range(-8,8)
@@ -129,7 +129,7 @@ func update_active() -> void:
 	$explosion_sfx.play()
 	$Smoke_quick.emitting = true
 	
-	#apply_torque_impulse(Vector3.RIGHT * 3000.0)
+	apply_torque_impulse(Vector3.RIGHT * 1000.0)
 	
 	$Pineapple_launch_sound.play()
 	
@@ -351,8 +351,8 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 
 
 func bounce_rocks() -> void:
-	#update_gravity(0.04)
-	update_gravity(0.0)
+	update_gravity(0.04)
+	#update_gravity(0.0)
 	global_position = start_pos
 
 func start_destroyed_process() -> void:
@@ -564,7 +564,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		body.hit_by_player(100, Vector2.ZERO)
 	
 func expand_blast_radius() -> void:
-	return
+	#return
 	%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.2
 	#%explosion_radius_mesh.transparency = 1.0
@@ -576,7 +576,7 @@ func expand_blast_radius() -> void:
 	
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 7.0, 0.75)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * 10.0, 0.75)
 	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.75)
 	#tween.tween_interval(0.1)
 	await tween.finished

@@ -9,8 +9,8 @@ const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
 const current_rock_sequence : Array = [
 	# BLAKE VER START
 	[1,3]
-	,[1,1,3,3]
-	,[3,3,1,42]
+	,[311,1,1,3,3]
+	,[311, 313, 3,3,1,42]
 
 	,[6,6,45,46]
 	,[312,2,3,4,5]
@@ -522,7 +522,7 @@ func move_to_moss() -> void:
 	
 	await get_tree().create_timer(1.0).timeout
 	shop_main_menu.setup_shop_for_rounds()
-	
+	wave_progress_feedback.show()
 	if egg_pulse == null:
 		find_egg()
 	

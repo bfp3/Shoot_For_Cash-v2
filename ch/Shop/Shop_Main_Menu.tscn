@@ -149,7 +149,7 @@ var grand_total : int = 0
 var subtitle := 'Winnings '
 
 func _ready() -> void:
-	self.text = \"[i]\" + subtitle + \": $0\"
+	self.text = \"[i]\" + subtitle + \"$0\"
 
 func add_to_total() -> void:
 	var round_bonus := int(gl_DataSet.get_value('reward_perfect_round'))
@@ -760,7 +760,6 @@ layout_mode = 2
 upgrade_type = "bullet_delay"
 
 [node name="Bullet Strength" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=170932053 instance=ExtResource("13_onfim")]
-modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 upgrade_type = "bullet_damage"
 

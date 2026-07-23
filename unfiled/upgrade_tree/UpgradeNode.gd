@@ -147,7 +147,7 @@ func update_cost() -> void:
 	if new_round && shop_main_menu.reroll_index > 0: # && visible:
 		
 		var rand_chance_for_free = randi_range(0, 22)
-		if rand_chance_for_free > 21: #22:
+		if rand_chance_for_free > 22: #22:
 			cost = 0
 			
 	

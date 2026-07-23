@@ -20,7 +20,24 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 script = ExtResource("1_trv68")
 
-[node name="Control" type="Control" parent="." unique_id=808486803]
+[node name="MissTextLabel" type="RichTextLabel" parent="." unique_id=18946391]
+modulate = Color(1, 0.78039217, 0, 1)
+self_modulate = Color(1, 1, 1, 0)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[i]Miss!"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Control" type="Control" parent="." unique_id=808486803 groups=["restartable"]]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -33,11 +50,11 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.199, 0.199)
+scale = Vector2(0.229, 0.229)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="Circle" type="TextureRect" parent="Control" unique_id=1530636151]
-self_modulate = Color(0.45, 0.45, 0.45, 1)
+modulate = Color(0.082499996, 0.09441667, 0.11, 0.5921569)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -53,8 +70,29 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("1_6lhy0")
 
+[node name="Circle2" type="TextureRect" parent="Control/Circle" unique_id=1584825883]
+self_modulate = Color(0.31, 0.31, 0.31, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.22, 1.22)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("1_6lhy0")
+
 [node name="Cross" type="TextureRect" parent="Control" unique_id=1955548184]
-modulate = Color(0.78, 0.78, 0.78, 1)
+visible = false
+modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -71,17 +109,19 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("2_trv68")
 
 [node name="CrossFront" type="TextureRect" parent="Control" unique_id=1150449610]
+modulate = Color(0.75, 0, 0, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -136.0
+offset_left = -128.0
 offset_top = -128.0
-offset_right = 120.0
+offset_right = 128.0
 offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.654, 0.654)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("2_trv68")
