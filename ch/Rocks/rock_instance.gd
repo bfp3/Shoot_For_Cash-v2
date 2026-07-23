@@ -744,7 +744,7 @@ func start_destroyed_process() -> void:
 	
 	if rock_type == RockSize.HAZARD:
 		%hazard_hit_sound.play()
-		#cash_value = -
+		EventBus.instance.hazard_hit.emit()
 	
 	
 	if !rock_has_been_logged:

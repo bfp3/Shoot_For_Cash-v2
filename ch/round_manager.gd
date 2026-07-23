@@ -27,8 +27,6 @@ const current_rock_sequence : Array = [
 	# BLAKE VER END
 	]
 
-var strikes := 0
-var max_strikes_allowed := 3
 
 var current_sequence_index := 0
 var current_wave := 0
@@ -36,10 +34,13 @@ var success := false
 var wave_ending := false
 var player_failed := false
 var force_shop_open := false
-var compulsory_rocks_destroyed := false
 var in_display_text_prompt := false
 var player_can_progress := false
 
+# Set the instant we hit three strikes. Blocks any further state
+# transitions so nothing already "in flight" (awaits, etc.) can push
+# the round machine forward after the game is over.
+var game_over_triggered := false
 
 var bullet_active := false
 var bullet_active_counter := 0.0
@@ -90,41 +91,68 @@ var bonus_oranges_ready := false
 
 
 func _ready() -> void:
-	#EventBus.instance.rocks_cleared_end_wave.connect(next_wave)
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
-	#EventBus.instance.end_round_rock_missed.connect(unsuccessful_round)
-	EventBus.instance.all_white_compulsory_rocks_destroyed.connect(white_rocks_destroyed)
-	EventBus.instance.add_strike.connect(handle_rock_missed)
+	EventBus.instance.rocks_cleared_end_wave.connect(check_if_rocks_still_in_air)
 	EventBus.instance.bonus_oranges.connect(bonus_oranges)
+	
+	EventBus.instance.add_strike.connect(handle_rock_missed)
+	EventBus.instance.has_hit_three_strikes.connect(handle_three_strikes)
+	EventBus.instance.hazard_hit.connect(handle_hazard_hit)
 	move_to_start()
 	
 func bonus_oranges() -> void:
 	bonus_oranges_ready = true
 
-func white_rocks_destroyed() -> void:
-	compulsory_rocks_destroyed = true
-	wave_progress_feedback.start_clear()
+
+	
+func check_round_for_strikes() -> void:
+	current_round = current_sequence_index + 1
+	print(current_round , ' rucce')
+	
+	if current_round == 4:
+		wave_progress_feedback.reset_strikes()
+		gl_PlayerState.dataset.total_current_strikes = 0
+		
+	if current_round == 7:
+		wave_progress_feedback.reset_strikes()
+		gl_PlayerState.dataset.total_current_strikes = 0
+		
+	if current_round == 10:
+		wave_progress_feedback.reset_strikes()
+		gl_PlayerState.dataset.total_current_strikes = 0
 
 func handle_rock_missed() -> void:
+	wave_progress_feedback.add_strike()
+	check_if_rocks_still_in_air()
+
+# Three strikes = instant loss. This short-circuits the round/wave state
+# machine entirely rather than routing through WAVE_END/ROUND_END.
+func handle_three_strikes() -> void:
+	if game_over_triggered:
+		return
+
+	game_over_triggered = true
+	wave_ending = true
+	player_failed = true
+	success = false
+
+	stop_timer()
+	stop_player()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	
+	
+	await get_tree().create_timer(2.0).timeout
+	start_game_over()
+
+func check_if_rocks_still_in_air() -> void:
 	if wave_ending:
 		return
 
-	strikes += 1
-	wave_progress_feedback.add_strike()
-
-	if strikes >= max_strikes_allowed:
-		wave_ending = true
-		wave_progress_feedback.start_miss()
-		unsuccessful_round_locked()
-		return
-
-	check_if_rocks_still_in_air()
-
-func check_if_rocks_still_in_air() -> void:
 	if gl_PlayerState.dataset.total_rocks_in_round_remaining > 0:
 		return
 
 	wave_ending = true
+	stop_timer()
 	enter_state(RoundState.WAVE_END)
 
 func successful_round() -> void:
@@ -152,6 +180,21 @@ func unsuccessful_round() -> void:
 	unsuccessful_round_locked()
 
 
+
+func handle_hazard_hit() -> void:
+	if pineapple_mode:
+		wave_progress_feedback.start_miss()
+		player_failed = true
+		force_shop_open = true
+		success = false
+		pineapple_mode = false
+		EventBus.instance.end_round_rock_missed.emit()
+		$'../Pineapple'.stop_pineapples()
+		return
+
+	unsuccessful_round()
+
+
 func unsuccessful_round_locked() -> void:
 	stop_timer()
 	player_failed = true
@@ -168,10 +211,6 @@ func round_timer_time_out() -> void:
 	wave_ending = true
 
 	stop_timer()
-	if not compulsory_rocks_destroyed:
-		wave_progress_feedback.start_miss()
-		unsuccessful_round_locked()
-		return
 
 	if gl_PlayerState.dataset.total_hazards > 0:
 		wave_progress_feedback.start_miss()
@@ -184,17 +223,13 @@ func round_timer_time_out() -> void:
 	
 
 func check_prompts() -> void:
-	#if gl_PlayerState.dataset.round == 1:
-		#in_display_text_prompt = true
-		#$"../MainGameCanvasLayer/Intro_Prompt".start()
-	
 	if current_sequence_index >= current_rock_sequence.size():
 		start_game_over()
 		return
 	
 
 func enter_state(new_state: RoundState) -> void:
-	if transitioning_worlds:
+	if transitioning_worlds or game_over_triggered:
 		return
 		
 	current_round_state = new_state
@@ -266,10 +301,8 @@ func update_round_start() -> void:
 	# Reset variables for a fresh round
 	success = false
 	player_failed = false
-	compulsory_rocks_destroyed = false
 	bonus_oranges_ready = false
 	current_wave = 0
-	strikes = 0
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
 	
@@ -306,8 +339,9 @@ func update_wave_start() -> void:
 	rocks_container.enter_state(rocks_container.State.ROUND_END)
 
 	await get_tree().create_timer(0.1).timeout
-	
-	
+
+	gl_PlayerState.next_wave()
+
 	if current_wave == 1:
 		var rock_seq := update_rock_sequence()
 		if rock_seq != []:
@@ -318,10 +352,8 @@ func update_wave_start() -> void:
 		var rock_seq := update_rock_sequence()
 		if rock_seq != []:
 			rocks_container.shuffle_current_sequence(rock_seq)
-			
-			
+
 	player.start_player()
-	gl_PlayerState.next_wave()
 
 	if current_wave == 1:
 		round_timer.enter_state(round_timer.State.RESTARTING)
@@ -367,6 +399,9 @@ func update_rock_sequence() -> Array:
 
 
 func update_round_end() -> void:
+	# Capture the round outcome now - `success` gets reset to false further
+	# down before we need to act on it again.
+	var round_was_successful := success
 
 	await get_tree().create_timer(0.25).timeout
 	music_manager.shop_music_lower_volume()
@@ -382,15 +417,10 @@ func update_round_end() -> void:
 	bullet_active_counter = 0.0
 
 	# Only check PASS/PERFECT if the round wasn't cut short by a failure
-	if success and not player_failed:
+	if round_was_successful:
 		player_can_progress = true
 
-		if gl_PlayerState.dataset.total_hazards <= 0:
-			if gl_PlayerState.dataset.perfect_rounds >= 3:
-				gl_PlayerState.dataset.power_bonus_round_pineapples = 1
-				perfect_score_feedback()
-			elif not pineapple_mode:
-				perfect_score_feedback()
+		perfect_score_feedback()
 
 		if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
 			# PERFECT -> bonus round
@@ -430,11 +460,9 @@ func update_round_end() -> void:
 
 	stop_player()
 
-	if compulsory_rocks_destroyed and not player_failed:
+	if round_was_successful:
 		current_sequence_index += 1
 		player_can_progress = false
-		compulsory_rocks_destroyed = false
-		#shop_main_menu.mark_round_as_cleared()
 		shop_main_menu.mark_round_as_perfect()
 		shop_main_menu.increase_round_available()
 		birds.start_birds()
@@ -465,7 +493,7 @@ func update_shop_start() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	$Gold_sfx.pitch_scale = 0.7
 	rocks_container.reset_all_rocks()
-	
+	check_round_for_strikes()
 	# Add Balloons from Array into the Level during the SHOP phase
 	if current_round > 0:
 		var rock_seq := update_rock_sequence()
@@ -533,23 +561,15 @@ func move_to_moss() -> void:
 	place_name.update_place_name()
 	
 	if current_round == 0:
-		#await get_tree().create_timer(
 		$'../PlayerBalloon'.add_balloon()
 		
 	gl_PlayerState.dataset.tickets += 1
 	shop_main_menu.update_next_ticket()
 		
-	#rocks_container.reset_rock_back_on()
 	await get_tree().create_timer(2.0).timeout
-	#%Grand_total_prompt.start()
 	await get_tree().create_timer(1.0).timeout
 	transitioning_worlds = false
 	
-	#in_display_text_prompt = true
-	
-	#while in_display_text_prompt:
-		#await get_tree().process_frame
-		
 	current_round = 1
 	enter_state(RoundState.SHOP_START)
 	
@@ -573,7 +593,6 @@ func move_to_redd() -> void:
 	place_name.update_place_name()
 	if egg_pulse == null:
 		find_egg()
-	#rocks_container.reset_rock_back_on()
 
 	await get_tree().create_timer(1.0).timeout
 	transitioning_worlds = false
@@ -599,8 +618,13 @@ func pineapple_round() -> void:
 	stop_timer()
 	$"../Pineapple".start_bonus_round()
 	
-	while gl_PlayerState.dataset.total_pineapples_destroyed < 3:
+	while gl_PlayerState.dataset.total_pineapples_destroyed < 3 and pineapple_mode:
 		await get_tree().process_frame
+
+	if player_failed:
+		$'../Pineapple'.stop_pineapples()
+		EventBus.instance.pineapple_round_used.emit()
+		return
 		
 	if gl_PlayerState.dataset.total_pineapples_destroyed > 2:
 
@@ -631,7 +655,6 @@ func restart() -> void:
 	current_wave = 0
 	force_shop_open = false
 	
-	strikes = 0
 	
 	# Runtime state
 	wave_ending = false
@@ -641,6 +664,7 @@ func restart() -> void:
 	transitioning_worlds = false
 	pineapple_mode = false
 	success = false
+	game_over_triggered = false
 
 	# Reset state machine
 	current_round_state = RoundState.INACTIVE
@@ -673,7 +697,6 @@ func _input(event: InputEvent) -> void:
 	if Input.is_key_label_pressed(KEY_6) && !success:
 		success = true
 		shop_main_menu.mark_round_as_perfect()
-		#shop_main_menu.mark_round_as_cleared()
 		
 		shop_main_menu.increase_round_available()
 		

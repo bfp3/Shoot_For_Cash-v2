@@ -349,6 +349,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 
 		BalloonType.RED:
 			gl_PlayerState.log_hit('hazard_type_1', 'balloon', -30)
+			#EventBus.instance.hazard_hit.emit()
 			start_destroyed_process()
 			
 		BalloonType.ORANGE:

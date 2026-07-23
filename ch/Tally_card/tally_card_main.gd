@@ -204,7 +204,7 @@ func check_white_rocks() -> void:
 		#start_sequence = false
 		#return
 		
-	elif white_rocks == 0:
+	else:
 		await start_perfect_sequence()
 		start_sequence = false
 		return
@@ -220,10 +220,10 @@ func check_white_rocks() -> void:
 		#
 		#return
 		
-	else:
-		%GradeLabel.text = ""
-		print('Some other condition was met')
-		start_sequence = false
+	#else:
+		#%GradeLabel.text = ""
+		#print('Some other condition was met')
+		#start_sequence = false
 
 func perfect_particles() -> void:
 	play_cash_sfx()

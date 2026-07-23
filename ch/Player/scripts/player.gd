@@ -450,11 +450,11 @@ func update_player_stats() -> void:
 	#power_bullet_speed = 0.0
 	player_gun.update_guns()
 		
-	#power_target_circle = gl_DataSet.get_value('power_target_circle', 9)
-	#power_bullet_speed = gl_DataSet.get_value('power_bullet_speed', 9)
-	#power_bullet_damage = int(gl_DataSet.get_value('power_bullet_damage', 9))
-	#power_bullet_delay =  gl_DataSet.get_value('power_bullet_delay', 9)
-	#power_gun_fire_rate = gl_DataSet.get_value('power_gun_fire_rate', 9)
+	power_target_circle = gl_DataSet.get_value('power_target_circle', 9)
+	power_bullet_speed = gl_DataSet.get_value('power_bullet_speed', 9)
+	power_bullet_damage = int(gl_DataSet.get_value('power_bullet_damage', 9))
+	power_bullet_delay =  gl_DataSet.get_value('power_bullet_delay', 9)
+	power_gun_fire_rate = gl_DataSet.get_value('power_gun_fire_rate', 9)
 	
 	player_cash 		= settings.cash
 	current_round 		= settings.round

@@ -15,7 +15,6 @@ extends Control
 @onready var strike_panel: Panel = $Strike_system
 @onready var strike_label: RichTextLabel = $Strike_system/StrikeLabel
 
-
 var wave_count := 0
 
 @export var slide_distance := 250.0
@@ -37,6 +36,11 @@ var _strike_panel_original_modulate : Color
 
 var clear_has_been_called_this_wave := false
 var result_has_been_shown_this_wave := false
+
+
+var strikes_int : int = 0
+
+
 
 func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(reset_each_wave)
@@ -103,9 +107,30 @@ func start_clear() -> void:
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
 
 func add_strike() -> void:
-	strike_label.text += 'X '
-	start_tween(strike_panel, _strike_panel_original_position, _strike_panel_original_modulate)
 
+	strikes_int += 1
+	if strikes_int > 3:
+		strike_label.text = 'X X X'
+		return
+		
+	start_tween(strike_panel, _strike_panel_original_position, _strike_panel_original_modulate)
+	
+	
+	match strikes_int:
+		1:
+			$Strike_system2/StrikeLabel.text = 'X '
+			strike_label.text = 'X '
+			
+		2:
+			$Strike_system2/StrikeLabel.text = 'X X'
+			strike_label.text = 'X X '
+		3:
+			$Strike_system2/StrikeLabel.text = 'X X X'
+			strike_label.text = 'X X X'
+		_:
+			$Strike_system2/StrikeLabel.text = ''
+	
+	
 func start_miss() -> void:
 	if result_has_been_shown_this_wave:
 		return
@@ -186,3 +211,15 @@ func end() -> void:
 			_strike_panel_original_modulate.b,
 			0.0
 		)
+
+func reset_strikes() -> void:
+	
+	strikes_int = 0
+	strike_label.text = ''
+	$Strike_system2/StrikeLabel.text = ''
+	
+func restart() -> void:
+	
+	reset_strikes()
+	end()
+	

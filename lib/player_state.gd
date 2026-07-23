@@ -23,7 +23,6 @@ const RESTART_DATASET := {
 	"total_rocks_in_round": 0,
 	"total_rocks_in_round_remaining": 0,
 	"total_rocks_destroyed" : 0,
-	"total_rocks_missed" : 0,
 	"total_hazards": 0,
 	"total_pineapples_destroyed": 0,
 	"total_oranges_destroyed" : 0,
@@ -66,7 +65,6 @@ const DEFAULT_DATASET := {
 	"total_rocks_in_round": 0,
 	"total_rocks_in_round_remaining": 0,
 	"total_rocks_destroyed" : 0,
-	"total_rocks_missed" : 0,
 	"total_hazards": 0,
 	"total_pineapples_destroyed": 0,
 	"total_oranges_destroyed" : 0,
@@ -105,7 +103,6 @@ func next_round() -> void:
 	dataset.total_white_rocks = 0
 	dataset.total_rocks_in_round = 0
 	dataset.total_rocks_destroyed = 0
-	dataset.total_rocks_missed = 0
 	dataset.total_hazards = 0
 	dataset.total_pineapples_destroyed = 0
 	dataset.total_rocks_in_round_remaining = 0
@@ -116,7 +113,6 @@ func next_round() -> void:
 func next_wave() -> void:
 	dataset.total_white_rocks = 0
 	dataset.total_rocks_destroyed = 0
-	dataset.total_rocks_missed = 0
 	dataset.total_hazards = 0
 	dataset.total_pineapples_destroyed = 0
 	dataset.total_rocks_in_round_remaining = 0
@@ -180,7 +176,9 @@ func log_hit(item:String, item_type:String, value:int):
 	
 	elif item.contains('hazard'):
 		if item_type.contains('balloon'):
-			pass
+			return
+		return
+		
 		
 	elif item.contains('pineapple'):
 		dataset.total_pineapples_destroyed += 1
@@ -212,28 +210,41 @@ func log_rocks(_total_rocks : int, rock_type_name : String) -> void:
 	dataset.total_rocks_in_round_remaining += 1
 	
 func log_rock_missed(item : String = '') -> void:
-	dataset.total_rocks_missed += 1
+
 	dataset.total_rocks_in_round_remaining -= 1
-	check_all_rocks_cleared()
+	
+	print("called? , " ,item)
 	
 	if item.contains('rock_type_1'):
-		dataset.total_strikes += 1
+		dataset.total_current_strikes += 1
 		EventBus.instance.add_strike.emit()
+		if dataset.total_current_strikes >= 3:
+			EventBus.instance.has_hit_three_strikes.emit()
+			return
+		
+
+	if dataset.total_rocks_in_round_remaining > 0:
+		return
+		
+	
+
+	check_all_rocks_cleared()
 
 
 func check_all_rocks_cleared() -> void:
 	if dataset.total_white_rocks <= 0:
 		EventBus.instance.all_white_compulsory_rocks_destroyed.emit()
-	
+
 	if dataset.total_rocks_in_round_remaining > 0:
 		return
 
 	round_finished = true
-	
+
 	if dataset.total_white_rocks <= 0:
-		EventBus.instance.rocks_cleared_end_wave.emit()
 		EventBus.instance.all_rocks_destroyed.emit()
 		dataset.perfect_rounds += 1
+	else:
+		EventBus.instance.rocks_cleared_end_wave.emit()
 
 
 func update_total_winnings(grand_total : int) -> void:

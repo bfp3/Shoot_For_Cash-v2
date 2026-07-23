@@ -10,7 +10,9 @@ signal pineapple_round_started()
 signal level_restarted()
 signal next_round()
 
+signal has_hit_three_strikes()
 signal add_strike()
+signal hazard_hit()
 signal bonus_oranges()
 signal all_white_compulsory_rocks_destroyed()
 signal all_rocks_destroyed()
@@ -106,7 +108,9 @@ func XXemit_all_signals() -> void:
 	
 	all_white_compulsory_rocks_destroyed.emit()
 	
+	has_hit_three_strikes.emit()
 	add_strike.emit()
+	hazard_hit.emit()
 	bonus_oranges.emit()
 	health_changed.emit(100) # Example value
 	game_won.emit()
