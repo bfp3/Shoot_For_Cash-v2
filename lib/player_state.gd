@@ -18,6 +18,7 @@ const RESTART_DATASET := {
 	"bonus_cash_this_round": 0,
 	"perfect_rounds" : 0,
 	"rock_limit" : 3,
+	'total_current_strikes' : 0,
 	"total_white_rocks" : 0,
 	"total_rocks_in_round": 0,
 	"total_rocks_in_round_remaining": 0,
@@ -60,6 +61,7 @@ const DEFAULT_DATASET := {
 	"bonus_cash_this_round": 0,
 	"perfect_rounds" : 0,
 	"rock_limit" : 3,
+	"total_current_strikes" : 0,
 	"total_white_rocks" : 0,
 	"total_rocks_in_round": 0,
 	"total_rocks_in_round_remaining": 0,
@@ -99,6 +101,7 @@ func next_round() -> void:
 	dataset.round += 1
 	dataset.bonus_cash = 0
 	dataset.fines = 0
+	dataset.total_strikes = 0
 	dataset.total_white_rocks = 0
 	dataset.total_rocks_in_round = 0
 	dataset.total_rocks_destroyed = 0
@@ -176,15 +179,8 @@ func log_hit(item:String, item_type:String, value:int):
 		return
 	
 	elif item.contains('hazard'):
-		if  item_type.contains('balloon'):
+		if item_type.contains('balloon'):
 			pass
-		#print("player state hazard")
-		#dataset.total_hazards += 1
-		
-		#else:
-			#EventBus.instance.end_round_rock_missed.emit()
-		#return
-		#if item.contains('red'):
 		
 	elif item.contains('pineapple'):
 		dataset.total_pineapples_destroyed += 1
@@ -192,10 +188,6 @@ func log_hit(item:String, item_type:String, value:int):
 		
 	elif item.contains('orange'):
 		dataset.total_oranges_destroyed += 1
-		#if dataset.total_oranges_destroyed >= 1:
-			#dataset.total_oranges_destroyed = 0
-			#EventBus.instance.bonus_oranges.emit()
-			#return
 		return
 	
 	else:
@@ -225,39 +217,23 @@ func log_rock_missed(item : String = '') -> void:
 	check_all_rocks_cleared()
 	
 	if item.contains('rock_type_1'):
-		print('end the round case this was missed')
-		#EventBus.instance.end_round_rock_missed.emit()
+		dataset.total_strikes += 1
 		EventBus.instance.add_strike.emit()
-	
 
 
 func check_all_rocks_cleared() -> void:
-	#if round_finished:
-		#return
 	if dataset.total_white_rocks <= 0:
 		EventBus.instance.all_white_compulsory_rocks_destroyed.emit()
-	
-	#print(dataset.total_rocks_missed, " ROCKS MISSED")
 	
 	if dataset.total_rocks_in_round_remaining > 0:
 		return
 
 	round_finished = true
 	
-	
-	#if dataset.total_rocks_missed == 0:
 	if dataset.total_white_rocks <= 0:
 		EventBus.instance.rocks_cleared_end_wave.emit()
 		EventBus.instance.all_rocks_destroyed.emit()
 		dataset.perfect_rounds += 1
-		#print("PERFECT ROUND")
-	#else:
-		##EventBus.instance.end_round_rock_missed.emit()
-		
-#func out_of_time() -> void:
-	##check_all_rocks_cleared()
-	#if dataset.total_white_rocks > 0:
-		#EventBus.instance.end_round_rock_missed.emit()
 
 
 func update_total_winnings(grand_total : int) -> void:

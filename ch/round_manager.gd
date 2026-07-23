@@ -110,30 +110,30 @@ func handle_rock_missed() -> void:
 		return
 
 	strikes += 1
-	wave_progress_feedback.start_miss()
-	
-	
+	wave_progress_feedback.add_strike()
+
 	if strikes >= max_strikes_allowed:
 		wave_ending = true
+		wave_progress_feedback.start_miss()
 		unsuccessful_round_locked()
-	
+		return
+
 	check_if_rocks_still_in_air()
-		
+
 func check_if_rocks_still_in_air() -> void:
 	if gl_PlayerState.dataset.total_rocks_in_round_remaining > 0:
-		print('greater than zero')
-		
-	else:
-		print('all gone')
-		enter_state(RoundState.WAVE_END)
+		return
+
+	wave_ending = true
+	enter_state(RoundState.WAVE_END)
 
 func successful_round() -> void:
 	if wave_ending:
 		return
 	wave_ending = true
-	
+
 	wave_progress_feedback.start_perfect()
-	
+
 	if gl_PlayerState.dataset.total_hazards > 0:
 		unsuccessful_round_locked()
 		return
@@ -143,32 +143,21 @@ func successful_round() -> void:
 	$Gold_sfx.pitch_scale += 0.05
 	enter_state(RoundState.WAVE_END)
 
-func progress_rock_missed() -> void:
-	
-	if wave_ending:
-		return
-	
-	wave_progress_feedback.start_miss()
-	wave_ending = true
-	unsuccessful_round_locked()
-	
-	
 func unsuccessful_round() -> void:
-	
 	if wave_ending:
 		return
-	
+
 	wave_progress_feedback.start_miss()
 	wave_ending = true
 	unsuccessful_round_locked()
 
 
 func unsuccessful_round_locked() -> void:
-
 	stop_timer()
 	player_failed = true
 	force_shop_open = true
 	success = false
+	EventBus.instance.end_round_rock_missed.emit()
 	%Splash_zone.deactivate_splash_zone()
 	enter_state(RoundState.WAVE_END)
 
@@ -180,10 +169,12 @@ func round_timer_time_out() -> void:
 
 	stop_timer()
 	if not compulsory_rocks_destroyed:
+		wave_progress_feedback.start_miss()
 		unsuccessful_round_locked()
 		return
 
 	if gl_PlayerState.dataset.total_hazards > 0:
+		wave_progress_feedback.start_miss()
 		unsuccessful_round_locked()
 		return
 
@@ -278,6 +269,7 @@ func update_round_start() -> void:
 	compulsory_rocks_destroyed = false
 	bonus_oranges_ready = false
 	current_wave = 0
+	strikes = 0
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
 	

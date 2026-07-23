@@ -194,15 +194,25 @@ func check_white_rocks() -> void:
 		start_sequence = false
 		return
 		
-	if white_rocks > 0 && gl_PlayerState.dataset.perfect_rounds < 3:
+	if gl_PlayerState.dataset.total_strikes >= 3:
 		start_fail_sequence()
 		start_sequence = false
 		return
 		
-	elif white_rocks == 0 && gl_PlayerState.dataset.perfect_rounds >= 3:
+	#if white_rocks > 0 && gl_PlayerState.dataset.perfect_rounds < 3:
+		#start_fail_sequence()
+		#start_sequence = false
+		#return
+		
+	elif white_rocks == 0:
 		await start_perfect_sequence()
 		start_sequence = false
 		return
+		
+	#elif white_rocks == 0 && gl_PlayerState.dataset.perfect_rounds >= 3:
+		#await start_perfect_sequence()
+		#start_sequence = false
+		#return
 		
 	#elif white_rocks == 0:
 		#await start_pass_sequence()

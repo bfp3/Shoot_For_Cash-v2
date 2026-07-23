@@ -59,6 +59,7 @@ func reset() -> void:
 	clear_has_been_called_this_wave = false
 	result_has_been_shown_this_wave = false
 	wave_count = 0
+	strike_label.text = ''
 	end()
 
 func reset_each_wave() -> void:
@@ -72,9 +73,6 @@ func start() -> void:
 	match wave_count:
 		1:
 			wave_label.text = "[i]First Wave"
-			#fade_in_time = 0.5
-			#hold_time = 1.05
-			#fade_out_time = 0.35
 		2:
 			wave_label.text = "[i]Second Wave"
 		3:
@@ -104,6 +102,10 @@ func start_clear() -> void:
 		clear_text_label.text = "[i]Round Clear!"
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
 
+func add_strike() -> void:
+	strike_label.text += 'X '
+	start_tween(strike_panel, _strike_panel_original_position, _strike_panel_original_modulate)
+
 func start_miss() -> void:
 	if result_has_been_shown_this_wave:
 		return
@@ -112,9 +114,6 @@ func start_miss() -> void:
 	
 	clear_text_label.text = "[i]Miss!"
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
-	
-	strike_label.text += 'X '
-	start_tween(strike_panel, _strike_panel_original_position, _strike_panel_original_modulate)
 
 func start_perfect() -> void:
 	result_has_been_shown_this_wave = true

@@ -260,11 +260,7 @@ func _add_additional_time(additional_time : float = 0.0) -> void:
 func update_round_manager() -> void:
 	if !round_manager:
 		return
-	
-	if gl_PlayerState.dataset.total_white_rocks > 0:
-		EventBus.instance.end_round_rock_missed.emit()
-		return
-	
+
 	round_manager.round_timer_time_out()
 	
 	
