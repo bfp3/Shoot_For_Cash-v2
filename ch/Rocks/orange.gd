@@ -64,6 +64,8 @@ var falling := false
 func _ready() -> void:
 	
 	start_pos = global_position
+	
+	EventBus.instance.oranges_start_falling.connect(start_falling)
 	EventBus.instance.open_shop.connect(update_disabled)
 	await get_tree().create_timer(0.2).timeout
 	
@@ -73,7 +75,14 @@ func _ready() -> void:
 	cash_value = int(gl_DataSet.get_value('orange', 0))
 	original_cash_value = cash_value
 
-
+func start_falling() -> void:
+	apply_hit_reaction(Vector2.UP)
+	update_gravity(5.0)
+	disable_collision()
+	await get_tree().create_timer(0.15).timeout
+	linear_damp = 0.0
+	
+	
 func enter_state(new_state : State) -> void:
 
 	current_state = new_state
@@ -119,7 +128,7 @@ func update_active() -> void:
 	global_position = start_pos
 	global_position.x = randi_range(-8,8)
 	health = 1
-
+	linear_damp = 5.0
 	orange_mesh.show()
 	rock_activated = true
 
@@ -129,7 +138,8 @@ func update_active() -> void:
 	$explosion_sfx.play()
 	$Smoke_quick.emitting = true
 	
-	apply_torque_impulse(Vector3.RIGHT * 1000.0)
+	#apply_torque_impulse(Vector3.RIGHT * 1000.0)
+	apply_torque_impulse(Vector3.UP * 1000.0)
 	
 	$Pineapple_launch_sound.play()
 	
@@ -370,6 +380,9 @@ func start_destroyed_process() -> void:
 	enter_state(State.HIT)
 	
 	#if !destroyed_by_marked:
+	var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
+	if round_manager:
+		round_manager.orange_active -= 1
 	
 	remove_from_group('Target')
 
@@ -475,18 +488,23 @@ func hit_out_of_bounds() -> void:
 	rock_destroyed = true
 	set_collision_layer_value(1, false)
 	set_collision_layer_value(8, false)
-	current_mesh.get_node('damage_mesh').show()
-	await get_tree().create_timer(0.28).timeout
-	current_mesh.get_node('damage_mesh').hide()
+	#current_mesh.get_node('damage_mesh').show()
+	#await get_tree().create_timer(0.28).timeout
+	#current_mesh.get_node('damage_mesh').hide()
+	
+	var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
+	if round_manager:
+		round_manager.orange_active -= 1
 	
 	freeze = true
 
 	remove_from_group('Target')
 
 	# Same explosion feedback as a normal destroy
-	play_destroy_sfx()
-	$Pineapple_sound_hit.play()
-	#$Pineapple_shot_explode.play()
+
+	#play_destroy_sfx()
+	#$Pineapple_sound_hit.play()
+
 
 	# Penalize instead of reward
 	gl_PlayerState.log_hit('orange', 'orange', 0)
@@ -502,7 +520,7 @@ func hit_out_of_bounds() -> void:
 	#tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
 	#await tween.finished
 
-	shake_camera()
+	
 
 	#await get_tree().create_timer(0.3).timeout
 	#$Pineapple_destroyed.play()
@@ -516,23 +534,23 @@ func hit_wall_effects() -> void:
 	await tween.finished
 
 func check_position_for_wall() -> void:
-
+	var bottom_y := -3.0
 	match exit_side:
 		ExitSide.LEFT:
 			
-			if global_position.x > 15.5 || global_position.y <= -5.0:
+			if global_position.x > 15.5 || global_position.y <= bottom_y:
 				hit_out_of_bounds()
 			#if global_position.x > -18.5:
 				#hit_out_of_bounds()
 
 		ExitSide.RIGHT:
-			if global_position.x < -15.5 || global_position.y <= -5.0:
+			if global_position.x < -15.5 || global_position.y <= bottom_y:
 				hit_out_of_bounds()
 			#if global_position.x > 15.5:
 				#hit_out_of_bounds()
 
 		ExitSide.TOP:
-			if global_position.y > 9.0 || global_position.y <= -5.0:
+			if global_position.y > 9.0 || global_position.y <= bottom_y:
 				hit_out_of_bounds()
 				
 		
@@ -556,15 +574,21 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		#if body.balloon_type == body.BalloonType.BLUE:
 			#return
 		#body.destroyed_by_shratnel()
-		
+	
+	if body.name.contains('range') || body.name.contains('apple') :
+		body.start_destroyed_process()
+
+	
 	if body is RockInstance:
 		if body.rock_type == body.RockSize.HAZARD:
+			body.apply_central_impulse(body.global_position - global_position * 3.0)
 			return
 
 		body.hit_by_player(100, Vector2.ZERO)
 	
 func expand_blast_radius() -> void:
 	#return
+	const domain_expansion : float = 14.0
 	%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.2
 	#%explosion_radius_mesh.transparency = 1.0
@@ -576,7 +600,7 @@ func expand_blast_radius() -> void:
 	
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * 10.0, 0.75)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * domain_expansion, 0.5)
 	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.75)
 	#tween.tween_interval(0.1)
 	await tween.finished

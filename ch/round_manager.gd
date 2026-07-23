@@ -45,6 +45,8 @@ var game_over_triggered := false
 var bullet_active := false
 var bullet_active_counter := 0.0
 
+var orange_active := 0
+
 var transitioning_worlds := false
 var pineapple_mode := false
 @export var current_round := 0
@@ -384,7 +386,7 @@ func update_round_end() -> void:
 		if bullet_active_counter > 60.0:
 			bullet_active = false
 	bullet_active_counter = 0.0
-
+	
 	# Only check PASS/PERFECT if the round wasn't cut short by a failure
 	if round_was_successful:
 		player_can_progress = true
@@ -401,7 +403,9 @@ func update_round_end() -> void:
 			pineapple_round()
 			while pineapple_mode:
 				await get_tree().process_frame
-
+	
+	
+	EventBus.instance.oranges_start_falling.emit()
 	await get_tree().create_timer(1.0).timeout
 	
 	if player_failed:
@@ -414,6 +418,12 @@ func update_round_end() -> void:
 		await get_tree().process_frame
 	
 	
+	
+	while orange_active > 0 && success:
+		await get_tree().process_frame
+	
+		
+	orange_active = 0
 		
 	if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
 		EventBus.instance.pineapple_round_used.emit()

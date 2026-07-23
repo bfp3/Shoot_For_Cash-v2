@@ -46,8 +46,7 @@ func show_win_text() -> void:
 	$CenterContainer/FreeParticles.emitting = true
 	text_box.text = (
 		"Moss Shooting Range: \n[i][pulse][color=#ffc700]ALL CLEAR[/color][/pulse][/i]\n"
-		+ "Cash Target [color=#42d100]$2000[/color]\n"
-		+ "Your Cash [color=#42d100]$%s[/color]" % player_winnings
+		+ "Cash Won [color=#42d100]$%s[/color]" % player_winnings
 	)
 		
 	

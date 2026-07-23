@@ -86,6 +86,44 @@ albedo_color = Color(0.14904, 0.69, 0.1104, 1)
 material = SubResource("StandardMaterial3D_r08bu")
 size = Vector2(0.1, 0.1)
 
+[sub_resource type="Animation" id="Animation_oiolr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_osrcr"]
+resource_name = "idle"
+length = 1.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.46666667, 1.1, 1.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.1, 0), Vector3(0, -0.1, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2i7b7"]
+_data = {
+&"RESET": SubResource("Animation_oiolr"),
+&"idle": SubResource("Animation_osrcr")
+}
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nul74"]
 shading_mode = 0
 albedo_color = Color(2.454227, 1.8596233, 0, 1)
@@ -986,6 +1024,10 @@ transform = Transform3D(0.524, 0, 0, 0, -2.2904768e-08, -0.204, 0, 0.524, -8.917
 mesh = SubResource("PlaneMesh_vbm6k")
 skeleton = NodePath("")
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Mesh" unique_id=1911912636]
+libraries/ = SubResource("AnimationLibrary_2i7b7")
+autoplay = &"idle"
+
 [node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=350956147]
 unique_name_in_owner = true
 stream = ExtResource("3_mo482")
@@ -1261,8 +1303,8 @@ one_shot = true
 [node name="Explosion_area" type="Area3D" parent="." unique_id=1324813825]
 unique_name_in_owner = true
 visible = false
-collision_layer = 3
-collision_mask = 3
+collision_layer = 387
+collision_mask = 387
 monitoring = false
 monitorable = false
 

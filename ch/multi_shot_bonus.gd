@@ -30,8 +30,8 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 		return
 	
 	
-	#start_oranges(multiplier, pos)
-	start_oranges(2, pos)
+	start_oranges(multiplier, pos)
+	#start_oranges(2, pos)
 		
 	var data = MULTI_SHOT_DATA[multiplier]
 

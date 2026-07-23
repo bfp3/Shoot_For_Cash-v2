@@ -14,7 +14,6 @@ extends Node3D
 @export var round_manager : RoundManager
 
 func launch_orange(pos : Vector3) -> void:
-	
 
 	var body : Node3D
 	for i in get_children():
@@ -30,7 +29,9 @@ func launch_orange(pos : Vector3) -> void:
 	body.exit_side = body.ExitSide.TOP
 	# Original vertical/sideways launch
 	body.global_position.x = pos.x
-
+	
+	round_manager.orange_active += 1
+	
 	var x_variation = randf_range(-1.0, 1.0)
 	#var upward_force = randf_range(9.5, 10.0)
 	
