@@ -13,8 +13,8 @@ const current_rock_sequence : Array = [
 	,[3,3,1,42]
 
 	,[6,6,45,46]
-	,[311,1,2,3,4,5]
-	,[311,1,2,3,4,5,43]
+	,[312,2,3,4,5]
+	,[312,3,4,5,6,43]
 	
 	,[1,1,3,3,5,5,7,7]
 	,[48,7,8,7,8,47]
@@ -25,38 +25,10 @@ const current_rock_sequence : Array = [
 	,[42,4,44,6,46,8,8,8,8,47,311,312,313,314,315,316,317,318]
 	
 	# BLAKE VER END
-	
-	
-	## First
-	#[1,3]
-	#,[1,3,317, 327]
-	#,[1,3,4,317,327,331]
-	#,[43,1,3,3]
-	#,[311,323,41,3,1,3]
-#
-	#,[1,3,3]
-	#,[43,1,3,3]
-	#,[311,323,41,3,1,3]
-#
-	#,[311,323,2,2,4,4,4]
-#
-	 ##Second
-	#,[2,2,4,4,4]
-	#,[8,2,4,2,2,44]
-	#,[1,8,2,7,3,6,4,5,41,42,43,44,45,46,47,48]
-	##,[316,336,324,46,4,4,6,4,4]
-#
-	## Third
-	#,[3,5,7,7,7,5,3]
-	#,[3,6,7,7,7,45,5,47,47,3]
-	#,[3,7,7,7,7,5,5,47,47,3,323,314,325,316,327]
-#
-	## Fourth
-	#,[2,2,4,4,4,6,6,6,6,8,8,8]
-	##,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46]
-	##,[42,2,32,4,34,34,44,6,6,46,36,36,8,8,38,46,311,312,313,314,315,316,317,318]
-
 	]
+
+var strikes := 0
+var max_strikes_allowed := 3
 
 var current_sequence_index := 0
 var current_wave := 0
@@ -120,9 +92,9 @@ var bonus_oranges_ready := false
 func _ready() -> void:
 	#EventBus.instance.rocks_cleared_end_wave.connect(next_wave)
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
-	EventBus.instance.end_round_rock_missed.connect(unsuccessful_round)
+	#EventBus.instance.end_round_rock_missed.connect(unsuccessful_round)
 	EventBus.instance.all_white_compulsory_rocks_destroyed.connect(white_rocks_destroyed)
-	
+	EventBus.instance.add_strike.connect(handle_rock_missed)
 	EventBus.instance.bonus_oranges.connect(bonus_oranges)
 	move_to_start()
 	
@@ -132,6 +104,28 @@ func bonus_oranges() -> void:
 func white_rocks_destroyed() -> void:
 	compulsory_rocks_destroyed = true
 	wave_progress_feedback.start_clear()
+
+func handle_rock_missed() -> void:
+	if wave_ending:
+		return
+
+	strikes += 1
+	wave_progress_feedback.start_miss()
+	
+	
+	if strikes >= max_strikes_allowed:
+		wave_ending = true
+		unsuccessful_round_locked()
+	
+	check_if_rocks_still_in_air()
+		
+func check_if_rocks_still_in_air() -> void:
+	if gl_PlayerState.dataset.total_rocks_in_round_remaining > 0:
+		print('greater than zero')
+		
+	else:
+		print('all gone')
+		enter_state(RoundState.WAVE_END)
 
 func successful_round() -> void:
 	if wave_ending:
@@ -150,6 +144,7 @@ func successful_round() -> void:
 	enter_state(RoundState.WAVE_END)
 
 func progress_rock_missed() -> void:
+	
 	if wave_ending:
 		return
 	
@@ -159,15 +154,17 @@ func progress_rock_missed() -> void:
 	
 	
 func unsuccessful_round() -> void:
+	
 	if wave_ending:
 		return
-		
+	
 	wave_progress_feedback.start_miss()
 	wave_ending = true
 	unsuccessful_round_locked()
 
 
 func unsuccessful_round_locked() -> void:
+
 	stop_timer()
 	player_failed = true
 	force_shop_open = true
@@ -355,14 +352,6 @@ func update_wave_start() -> void:
 	EventBus.instance.egg_pulsed.emit()
 	
 func update_wave_end() -> void:
-	
-	#if bonus_oranges_ready:
-		#$'../BonusOranges'.start_bonus_oranges()
-		#
-	#while bonus_oranges_ready:
-		#await get_tree().process_frame
-	#
-	#bonus_oranges_ready = false
 	enter_state(RoundState.CHECK_SCORE)
 	
 func update_bonus_round() -> void:
@@ -649,6 +638,8 @@ func restart() -> void:
 	current_round = 0
 	current_wave = 0
 	force_shop_open = false
+	
+	strikes = 0
 	
 	# Runtime state
 	wave_ending = false

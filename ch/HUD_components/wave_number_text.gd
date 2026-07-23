@@ -12,6 +12,10 @@ extends Control
 @onready var perfect_label: RichTextLabel = $Perfect_Panel/PerfectLabel
 
 
+@onready var strike_panel: Panel = $Strike_system
+@onready var strike_label: RichTextLabel = $Strike_system/StrikeLabel
+
+
 var wave_count := 0
 
 @export var slide_distance := 250.0
@@ -28,6 +32,9 @@ var _clear_original_modulate: Color
 var _perfect_original_position: Vector2
 var _perfect_original_modulate: Color
 
+var _strike_panel_original_position : Vector2
+var _strike_panel_original_modulate : Color
+
 var clear_has_been_called_this_wave := false
 var result_has_been_shown_this_wave := false
 
@@ -41,7 +48,10 @@ func _ready() -> void:
 
 	_perfect_original_position = perfect_panel.position
 	_perfect_original_modulate = perfect_panel.modulate
-
+	
+	_strike_panel_original_position = strike_panel.position
+	_strike_panel_original_modulate = strike_panel.modulate
+	
 	end()
 	
 
@@ -102,6 +112,9 @@ func start_miss() -> void:
 	
 	clear_text_label.text = "[i]Miss!"
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
+	
+	strike_label.text += 'X '
+	start_tween(strike_panel, _strike_panel_original_position, _strike_panel_original_modulate)
 
 func start_perfect() -> void:
 	result_has_been_shown_this_wave = true
@@ -163,5 +176,14 @@ func end() -> void:
 			_perfect_original_modulate.r,
 			_perfect_original_modulate.g,
 			_perfect_original_modulate.b,
+			0.0
+		)
+		
+	if is_instance_valid(strike_panel):
+		strike_panel.position = _strike_panel_original_position
+		strike_panel.modulate = Color(
+			_strike_panel_original_modulate.r,
+			_strike_panel_original_modulate.g,
+			_strike_panel_original_modulate.b,
 			0.0
 		)

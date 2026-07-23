@@ -47,8 +47,8 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 	multi_label.outline_modulate.a = 0.0
 	multi_label.font_size = data.font_size
 	multi_label.show()
-	multi_label.global_position = pos
-	
+	multi_label.global_position.x = pos.x
+	multi_label.global_position.y = pos.y
 	
 	if gl_PlayerState.dataset.total_hazards > 0:
 		return

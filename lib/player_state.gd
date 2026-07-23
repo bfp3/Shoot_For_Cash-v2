@@ -180,8 +180,9 @@ func log_hit(item:String, item_type:String, value:int):
 			pass
 		#print("player state hazard")
 		#dataset.total_hazards += 1
-		else:
-			EventBus.instance.end_round_rock_missed.emit()
+		
+		#else:
+			#EventBus.instance.end_round_rock_missed.emit()
 		#return
 		#if item.contains('red'):
 		
@@ -225,8 +226,8 @@ func log_rock_missed(item : String = '') -> void:
 	
 	if item.contains('rock_type_1'):
 		print('end the round case this was missed')
-		EventBus.instance.end_round_rock_missed.emit()
-	
+		#EventBus.instance.end_round_rock_missed.emit()
+		EventBus.instance.add_strike.emit()
 	
 
 

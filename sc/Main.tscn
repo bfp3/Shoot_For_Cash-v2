@@ -218,10 +218,15 @@ _surfaces = [{
 }]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ugpmk"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_fjxa8"]
 friction = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ymbdo"]
 size = Vector3(40, 1, 9.025)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fjxa8"]
+size = Vector3(150, 0.1, 56)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nh3e2"]
 size = Vector3(40, 0.1, 56)
@@ -935,7 +940,6 @@ speed_multiplier = 60.0
 [node name="Rocks" type="Node3D" parent="." unique_id=859468523]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
-pulse_magnitude = 1.1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
 root_node = NodePath("../Shover")
@@ -1072,7 +1076,7 @@ physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance2" parent="Rocks/Container_1" unique_id=641614515 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8336112, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
+physics_material_override = SubResource("PhysicsMaterial_fjxa8")
 
 [node name="Rock_Instance3" parent="Rocks/Container_1" unique_id=977217555 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.658868, -0.08000016, 0.42000008)
@@ -1236,7 +1240,7 @@ max_polyphony = 2
 
 [node name="pitch_shift_rock_sound" type="AudioStreamPlayer" parent="Rocks" unique_id=1051112971]
 stream = ExtResource("23_1i2h1")
-volume_db = -9.0
+volume_db = -11.0
 pitch_scale = 0.85
 
 [node name="Shover" type="StaticBody3D" parent="Rocks" unique_id=1202508704]
@@ -1263,14 +1267,12 @@ unique_name_in_owner = true
 transform = Transform3D(-1, -8.379102e-09, -8.70203e-08, 0, 0.9953962, -0.09584575, 8.742278e-08, -0.09584575, -0.9953962, 0, -0.875, 0.5)
 scope_shrink_speed = 100.0
 scope_min_target_circle = 15.0
-can_right_click_shoot = true
 roundManager = NodePath("../Round_manager")
 rotation_speed = 0.8
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.735, 38.15)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.045, 38.15)
 collision_layer = 258
 collision_mask = 259
 monitorable = false
@@ -1279,7 +1281,7 @@ round_manager = NodePath("../Round_manager")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Splash_zone" unique_id=915563512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10.4)
-shape = SubResource("BoxShape3D_nh3e2")
+shape = SubResource("BoxShape3D_fjxa8")
 
 [node name="LeftCollision" type="CollisionShape3D" parent="Splash_zone" unique_id=1224875857]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 7.5, -25, 10.400002)
@@ -3022,26 +3024,128 @@ round_manager = NodePath("../Round_manager")
 
 [node name="Orange" parent="OrangeBombs" unique_id=1226943477 instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
 force_multiplier = 1.0
 
 [node name="Orange2" parent="OrangeBombs" unique_id=1044980419 instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
 force_multiplier = 1.0
 
 [node name="Orange3" parent="OrangeBombs" unique_id=63026475 instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
 force_multiplier = 1.0
 
 [node name="Orange4" parent="OrangeBombs" unique_id=1337323973 instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
 force_multiplier = 1.0
 
 [node name="Orange5" parent="OrangeBombs" unique_id=170169503 instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
 force_multiplier = 1.0
 
 [node name="Orange6" parent="OrangeBombs" unique_id=587617743 instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange7" parent="OrangeBombs" unique_id=1646497334 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange8" parent="OrangeBombs" unique_id=701289244 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange9" parent="OrangeBombs" unique_id=281292951 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange10" parent="OrangeBombs" unique_id=1807680331 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange11" parent="OrangeBombs" unique_id=841986730 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange12" parent="OrangeBombs" unique_id=1207006714 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange13" parent="OrangeBombs" unique_id=1406135056 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange14" parent="OrangeBombs" unique_id=730338939 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange15" parent="OrangeBombs" unique_id=1386007576 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange16" parent="OrangeBombs" unique_id=980118628 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange17" parent="OrangeBombs" unique_id=526260460 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
+force_multiplier = 1.0
+
+[node name="Orange18" parent="OrangeBombs" unique_id=1116110963 instance=ExtResource("69_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, -2.9, 23)
+mass = 0.5
+gravity_scale = 0.0
+linear_damp = 5.0
 force_multiplier = 1.0
 
 [node name="OrangeBombsMarkers" type="Node3D" parent="." unique_id=104155927 groups=["pineapple_container"]]
@@ -3187,12 +3291,12 @@ top_level = true
 script = ExtResource("76_qmj5w")
 
 [node name="mutli_label" type="Label3D" parent="BonusCash" unique_id=262291951]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 20.605)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 30)
 visible = false
 layers = 16
 pixel_size = 0.001
 billboard = 1
-no_depth_test = true
+double_sided = false
 fixed_size = true
 modulate = Color(1, 0.51666665, 0, 1)
 outline_modulate = Color(0.15, 0.15, 0.15, 1)

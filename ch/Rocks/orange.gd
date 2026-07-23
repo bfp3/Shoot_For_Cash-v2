@@ -109,12 +109,13 @@ func update_prepare_rock() -> void:
 	await get_tree().process_frame
 	
 func update_active() -> void:
-	
+	disable_collision()
 	enable_collision()
 	reset_stats()
 	reset_rock_back_on()
 	add_to_group('Target')
-	update_gravity(0.04)
+	#update_gravity(0.04)
+	update_gravity(0.0)
 	global_position = start_pos
 	global_position.x = randi_range(-8,8)
 	health = 1
@@ -124,16 +125,11 @@ func update_active() -> void:
 
 	$Mesh.show()
 	$Start_falling_timer.start(2.2)
-
-	#var x_variation = randf_range(-1.0, 1.0)
-	#const z_variation = 0.0
-	#var upward_force = randf_range(9.5, 10.0)
-	#var impulse = Vector3(x_variation, upward_force * force_multiplier, z_variation) * pulse_magnitude
-	#apply_central_impulse(impulse)
-
+	
 	$explosion_sfx.play()
 	$Smoke_quick.emitting = true
-	apply_torque_impulse(Vector3.RIGHT * 3000.0)
+	
+	#apply_torque_impulse(Vector3.RIGHT * 3000.0)
 	
 	$Pineapple_launch_sound.play()
 	
@@ -142,13 +138,8 @@ func update_active() -> void:
 func update_hit() -> void:
 	update_gravity(1.0)
 	$Pineapple_sound_hit.play()
-	set_collision_layer_value(8, false)
-	set_collision_mask_value(8, false)
-	set_collision_layer_value(1, false)
-	set_collision_mask_value(1, false)
-	#disable_collision()
+	disable_collision()
 	gl_PlayerState.log_hit('orange', 'orange', cash_value)
-	#gl_PlayerState.add_cash(cash_value)
 	$Pineapple_shot_explode.play()
 	
 	await get_tree().create_timer(0.3).timeout
@@ -156,6 +147,7 @@ func update_hit() -> void:
 	
 func update_missed() -> void:
 	reset_stats()
+	disable_collision()
 
 func round_end_check_rock_status() -> void:
 	
@@ -186,14 +178,25 @@ func update_disabled() -> void:
 func disable_collision() -> void:
 	set_collision_layer_value(1, false)
 	set_collision_layer_value(8, false)
-
+	
+	set_collision_mask_value(8, false)
+	set_collision_mask_value(1, false)
+	
 func enable_collision() -> void:
 	set_collision_layer_value(8, true)
 	#return
+	
+	
+	
+	set_collision_layer_value(8, true)
+	set_collision_mask_value(8, true)
+	set_collision_mask_value(1, true)
+	set_collision_layer_value(1, true)
 
 
 func update_gravity(_gravity_scale : float) -> void:
 	gravity_scale = _gravity_scale
+	pass
 
 func reset_rock_back_on() -> void:
 	#enter_state(State.MISSED)
@@ -348,7 +351,8 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 
 
 func bounce_rocks() -> void:
-	update_gravity(0.04)
+	#update_gravity(0.04)
+	update_gravity(0.0)
 	global_position = start_pos
 
 func start_destroyed_process() -> void:
@@ -370,11 +374,7 @@ func start_destroyed_process() -> void:
 	remove_from_group('Target')
 
 	play_destroy_sfx()
-	
-	if is_in_group('Target'):
-		remove_from_group('Target')
 		
-	print("cash value pineapples ", cash_value)
 	gl_PlayerState.add_bonus(cash_value)
 	money_label_3d.money_is_money(global_position, cash_value)
 	
@@ -412,11 +412,6 @@ func play_destroy_sfx() -> void:
 
 func _on_start_falling_timer_timeout() -> void:
 	falling = true
-	
-	if current_rock_type == 'Gold':
-		gravity_scale = 0.4
-		return
-		
 	
 
 func smoke_particles() -> void:

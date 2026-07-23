@@ -9,8 +9,9 @@ enum State {
 }
 
 var current_state : State = State.INACTIVE
-@export var pulse_magnitude := 0.885
-var rocks_limit := 3
+@export var pulse_magnitude := 1.1
+
+var rocks_limit := 0
 
 # --- Rock X-axis placement tuning ---------------------------------------
 const X_MAX := 10.0          # left-most bound
@@ -18,8 +19,11 @@ const X_MIN := -10.0         # right-most bound
 const MIN_ROCK_SPACING := 0.0 # 0.5    # no two rocks closer than this
 const CLUSTER_MIN_DIST := 0.0 #0.5    # the clustered pair's minimum gap
 const CLUSTER_MAX_DIST := 0.0 #1.5    # the clustered pair's maximum gap
-var ANGLE_BIAS_STRENGTH := 10.0 # 0.1 # how hard rocks get angled back toward the opposite side
+@export var angle_bias := 10.0 # 0.1 # how hard rocks get angled back toward the opposite side
+
+var convergence_x := 0.0
 # --------------------------------------------------------------------------
+
 
 # Columns run left to right along the X-axis: column 1 = 7, column 2 = 5... column 8 = -7
 # (step of -2 per column).
@@ -137,13 +141,9 @@ func update_prepare_rocks() -> void:
 	
 func update_pulse_rocks() -> void:
 	splash_zone.activate_splash_zone()
-	#if gl_PlayerState.dataset.round <= 1:
-		#start_first_round_rock_sequence()
-	#
-	#else:
-	
-	# Start watching for rocks that fly past the play area once the pulse
-	# has launched them. This gets switched off again in update_round_end().
+
+	pick_convergence_point()
+
 	_bounds_check_accum = 0.0
 	_bounds_check_active = true
 	
@@ -262,12 +262,10 @@ func _is_far_enough(candidate: float, positions: Array[float]) -> bool:
 
 
 func _best_effort_position(positions: Array[float]) -> float:
-	# Scans the range in small steps and returns the x with the greatest
-	# distance to its nearest neighbor. Guarantees a usable fallback even
-	# when the range is too crowded for clean rejection sampling.
 	var best_x := X_MIN
 	var best_gap := -1.0
 	var x := X_MIN
+	
 	while x <= X_MAX:
 		var nearest_gap := INF
 		for p in positions:
@@ -276,30 +274,30 @@ func _best_effort_position(positions: Array[float]) -> float:
 			best_gap = nearest_gap
 			best_x = x
 		x += 0.25
+
 	return best_x
 
 
 func _get_position_angle_bias(x_position: float) -> float:
-	# Rocks near X_MAX (left side, closer to 10) get angled toward the
-	# opposite side (negative bias, toward -13).
-	# Rocks near X_MIN (right side, closer to -13) get angled the other way
-	# (positive bias, toward 10).
-	var center := (X_MAX + X_MIN) * 0.5
-	#var center = [-8.0, 8.0].pick_random() # 0.0,2.0, 6.0,10.0].pick_random()
+	# Rocks get angled toward convergence_x instead of the exact center.
+	
+	
 	var half_range := (X_MAX - X_MIN) * 0.5
-	#var half_range : float = [0.0,2.0, 6.0,10.0].pick_random()
-	var normalized = clamp((x_position - center) / half_range, -1.0, 1.0)
+	var normalized = clamp((x_position - convergence_x) / half_range, -1.0, 1.0)
 	
-	ANGLE_BIAS_STRENGTH = 10.0
-	return -normalized * ANGLE_BIAS_STRENGTH
-
 	
+	return -normalized * angle_bias
 
+
+func pick_convergence_point() -> void:
+	var column := randi_range(1, COLUMN_COUNT - 2)
+	convergence_x = column_to_x(column)
+	print('This rounds convergence points == ', convergence_x)
 
 func update_round_end() -> void:
 	_bounds_check_active = false
 	$pitch_shift_rock_sound.pitch_scale = 0.85
-	$pitch_shift_rock_sound.volume_db = -9.0
+	#$pitch_shift_rock_sound.volume_db = -9.0
 	update_gravity(1.0)
 	for body in $Container_1.get_children():
 		body.round_end_check_rock_status()
@@ -323,11 +321,20 @@ func get_rock_limit() -> int:
 	return rocks_cap
 
 
-
+func get_angle_bias() -> float:
+	
+	var probability = randi_range(1,10)
+	if probability > 8:
+		return 0.0
+	
+	return 10.0
+	
 func bounce_rocks() -> void:
 	
 	var bodies = $Container_1.get_children()
-
+	
+	angle_bias = get_angle_bias()
+	
 	var counter := 0
 	
 	for body in bodies:
@@ -345,7 +352,7 @@ func bounce_rocks() -> void:
 		var x_variation = 0.0
 		const z_variation = 0.0
 		#var upward_force = randf_range(9.5, 10.0)
-		var upward_force = randf_range(9.5, 10.0)
+		var upward_force = 10.0
 		
 		# Angle the impulse back toward the opposite side based on where
 		# this rock currently sits along the X axis.
@@ -358,6 +365,9 @@ func bounce_rocks() -> void:
 		counter += 1
 		
 		await get_tree().create_timer(0.1).timeout
+		#var rand_dur = [0.01,0.1,0.2,0.3].pick_random()
+		#await get_tree().create_timer(rand_dur).timeout
+		#await get_tree().create_timer(0.1).timeout
 		#spin_rocks()
 		#await get_tree().create_timer(0.2).timeout
 		

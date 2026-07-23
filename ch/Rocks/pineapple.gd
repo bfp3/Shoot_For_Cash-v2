@@ -525,7 +525,7 @@ func check_position_for_wall() -> void:
 	match exit_side:
 		ExitSide.LEFT:
 			
-			if global_position.x > 15.5 || global_position.y <= -5.0:
+			if global_position.x > 16.5 || global_position.y <= -5.0:
 				hit_out_of_bounds()
 			#if global_position.x > -18.5:
 				#hit_out_of_bounds()

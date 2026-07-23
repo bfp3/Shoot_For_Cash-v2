@@ -46,7 +46,14 @@ func _on_body_entered(body: Node3D) -> void:
 		body.enter_state(RockInstance.State.MISSED)
 
 		if body.rock_type == body.RockSize.SMALL:
-			round_manager.progress_rock_missed()
+			#round_manager.progress_rock_missed()
+			print("something in the water")
+			#round_manager.handle_rock_missed()
+			gl_PlayerState.log_rock_missed(body.rock_type_name)
+			
+		else:
+			print("rock fell in water")
+			
 
 
 func reset_detected_bodies() -> void:

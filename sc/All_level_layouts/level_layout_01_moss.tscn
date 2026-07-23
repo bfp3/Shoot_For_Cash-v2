@@ -1427,7 +1427,7 @@ skeleton = NodePath("")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar5/StaticBody3D" unique_id=507066960]
 shape = SubResource("ConcavePolygonShape3D_u4skr")
 
-[node name="Left_tall_pillar7" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1106878613]
+[node name="Left_tall_pillar7HIDDEN" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1106878613]
 transform = Transform3D(1, 0, 0, 0, 7.835, 0, 0, 0, 1, 15.399999, 1.5, 1)
 visible = false
 material_override = ExtResource("6_u0cw1")
@@ -1436,12 +1436,13 @@ lod_bias = 3.0
 mesh = SubResource("ArrayMesh_yg5pk")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7" unique_id=346888207]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7HIDDEN" unique_id=346888207]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7/StaticBody3D" unique_id=858862529]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7HIDDEN/StaticBody3D" unique_id=858862529]
 shape = SubResource("ConvexPolygonShape3D_s470r")
+disabled = true
 
-[node name="Left_tall_pillar8" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=432618852]
+[node name="Left_tall_pillar8HIDDEN" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=432618852]
 transform = Transform3D(1, 0, 0, 0, 7.835, 0, 0, 0, 1, -3.6000013, -1, 1)
 visible = false
 material_override = ExtResource("6_u0cw1")
@@ -1450,10 +1451,11 @@ lod_bias = 3.0
 mesh = SubResource("ArrayMesh_yg5pk")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar8" unique_id=980150831]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar8HIDDEN" unique_id=980150831]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar8/StaticBody3D" unique_id=1181563749]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar8HIDDEN/StaticBody3D" unique_id=1181563749]
 shape = SubResource("ConvexPolygonShape3D_s470r")
+disabled = true
 
 [node name="Left_tall_pillar6" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1434454979]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.399999, 4.5, 0)
@@ -3684,6 +3686,7 @@ wave_fade_softness = 1.0
 
 [node name="ZoneA" type="Area3D" parent="." unique_id=1838933963 groups=["zone_a"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 2.345, 23)
+visible = false
 monitoring = false
 monitorable = false
 script = ExtResource("19_md1in")
@@ -3732,6 +3735,7 @@ default_skew = 0.1
 
 [node name="ZoneB" type="Area3D" parent="." unique_id=1017343580 groups=["zone_b"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, -0.5899999, 23)
+visible = false
 monitoring = false
 monitorable = false
 script = ExtResource("19_md1in")
@@ -3778,6 +3782,7 @@ default_skew = 0.1
 
 [node name="Wire_A" type="MeshInstance3D" parent="." unique_id=1626375877]
 transform = Transform3D(0.367, 0, 0, 0, 1, 0, 0, 0, 1, -0.078, 3, 20.132)
+visible = false
 mesh = SubResource("BoxMesh_1vd3e")
 skeleton = NodePath("../BonusCash")
 
@@ -3791,6 +3796,7 @@ mesh = SubResource("CylinderMesh_md1in")
 
 [node name="Wire_B" type="MeshInstance3D" parent="." unique_id=741637617]
 transform = Transform3D(0.367, 0, 0, 0, 1, 0, 0, 0, 1, -0.078, 0.65, 20.132)
+visible = false
 mesh = SubResource("BoxMesh_1vd3e")
 
 [node name="Notch" type="MeshInstance3D" parent="Wire_B" unique_id=315638872]

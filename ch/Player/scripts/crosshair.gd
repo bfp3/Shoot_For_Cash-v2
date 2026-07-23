@@ -95,7 +95,7 @@ func _fade_out() -> void:
 
 func crosshair_shake() -> void:
 
-	$Inner_scope4/AnimationPlayer.pause()
+
 	crosshair_inner_tween()
 	crosshair_shooting_something()
 	#outer_crosshair_rotation_tween()
@@ -115,8 +115,7 @@ func crosshair_shake() -> void:
 		scope_tween.tween_property(scope, "scale", Vector2.ONE, move_speed)
 	await scope_tween.finished
 	scale = orig_scale
-	await get_tree().create_timer(0.1).timeout
-	$Inner_scope4/AnimationPlayer.play('back_forth')
+
 	
 func crosshair_inner_tween() -> void:
 
@@ -207,7 +206,7 @@ func cannot_shoot_obstacle_in_way() -> void:
 
 func crosshair_shooting_something() -> void:
 	
-	%Cooldown_progressBar.hide()
+
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(self, "modulate", Color.ORANGE ,0.1)
 	tween.tween_property(self, "modulate", Color.WHITE, 0.1)

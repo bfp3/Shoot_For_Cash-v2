@@ -34,6 +34,7 @@ enum State {
 	PAUSE,
 	RESETING,
 	}
+@export var current_state := State.INACTIVE
 
 var player_cash : int
 var current_round : int
@@ -46,8 +47,6 @@ var current_round : int
 @export var weapon_shooting : Node3D
 @export var player_gun : Node3D
 
-@export var current_state := State.INACTIVE
-@export var facing_north := true
 
 var current_gun_fire_rate_cooldown := 0.0
 var _is_currently_shooting := false
@@ -167,8 +166,6 @@ func update_pause() -> void:
 
 func reset_pos() -> void:
 	var target_rot : Vector3 = start_rotation
-	if !facing_north:
-		target_rot = start_rotation + Vector3(0.0,180.0,0.0)
 	
 	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(self, 'rotation_degrees', target_rot, 1.0)
@@ -240,6 +237,7 @@ func _process(delta: float) -> void:
 		
 		if %Cooldown_progressBar3.value >= 100.0 && !$SFX/Reload.playing:
 			$SFX/Reload.play()
+			$CanvasLayer/Crosshair/RedDot.show()
 
 	if current_state == State.ROUND_FINISHED:
 		crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
@@ -441,18 +439,6 @@ func set_power(settings:Dictionary, setting_name:String)-> float:
 func update_player_stats() -> void:
 	var settings : Dictionary = gl_PlayerState.get_all()
 	
-	#if settings['round'] % 2 == 0:
-		#power_target_circle = 200.0
-		#power_bullet_speed = 0.5
-		#power_bullet_damage = 2
-		##power_bullet_delay = 
-		#power_gun_fire_rate = 0.5
-#
-
-	#else:
-	
-	#power_gun_fire_rate = 0.15
-	#power_bullet_delay = 0.1
 	
 	power_target_circle = set_power(settings, 'power_target_circle')
 	power_bullet_speed = set_power(settings, 'power_bullet_speed')
@@ -463,6 +449,12 @@ func update_player_stats() -> void:
 	#power_gun_fire_rate = 0.0
 	#power_bullet_speed = 0.0
 	player_gun.update_guns()
+		
+	#power_target_circle = gl_DataSet.get_value('power_target_circle', 9)
+	#power_bullet_speed = gl_DataSet.get_value('power_bullet_speed', 9)
+	#power_bullet_damage = int(gl_DataSet.get_value('power_bullet_damage', 9))
+	#power_bullet_delay =  gl_DataSet.get_value('power_bullet_delay', 9)
+	#power_gun_fire_rate = gl_DataSet.get_value('power_gun_fire_rate', 9)
 	
 	player_cash 		= settings.cash
 	current_round 		= settings.round
@@ -612,6 +604,8 @@ func fire_weapon() -> void:
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
 	
+	$CanvasLayer/Crosshair/RedDot.hide()
+	
 	#await get_tree().create_timer(0.25).timeout
 	#set_process_input(true)
 	#set_process(true)
@@ -662,37 +656,15 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		target_crosshair_position += event.relative * _mouse_sensitivity * gl_PlayerState.mouse_sensitivity
 		
-		
-func flip_around() -> void:
-	if !facing_north:
-		var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property(self, 'rotation_degrees', start_rotation, 1.0)
-		await tween.finished
-		facing_north = true
-		
-	else:
-		var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property(self, 'rotation_degrees', start_rotation + Vector3(0,180,0), 1.0)
-		await tween.finished
-		facing_north = false
-		
-	
 func little_camera_movement() -> void:
 	camera_3d.little_camera_movement()
 
 func title_screen_start() -> void:
 	stop_player()
-	#$HUD_display.hide()
-	#process_mode = Node.PROCESS_MODE_DISABLED
+
 	
 func title_screen_end() -> void:
-	#process_mode = Node.PROCESS_MODE_INHERIT
-	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	if !facing_north:
-		facing_north = true
-		reset_pos()
-		
-	#$HUD_display.show()
+	#reset_pos()
 	start_player()
 
 
@@ -704,9 +676,6 @@ func stop_player() -> void:
 	await get_tree().create_timer(0.5).timeout
 	_scope_at_min = false
 	
-	
-
-
 	
 func start_player() -> void:
 	
@@ -762,10 +731,6 @@ func perfect_score() -> void:
 
 func play_perfect_sfx() -> void:
 	pass
-	#$SFX/PerfectScore.play()
-	#$SFX/Flicker_sound.play()
-	#$SFX/PerfectScore4.play(0.5)
-	#await get_tree().create_timer(0.25).timeout
 
 	
 	

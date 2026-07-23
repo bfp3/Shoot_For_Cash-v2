@@ -728,8 +728,8 @@ func start_destroyed_process() -> void:
 	
 	if rock_type == RockSize.SMALL:
 		%progress_rock_sound.play()
-		get_parent().get_parent().get_node('pitch_shift_rock_sound').pitch_scale += 0.05
-		get_parent().get_parent().get_node('pitch_shift_rock_sound').volume_db += 1.0
+		#await get_tree().create_timer(0.1).timeout
+		get_parent().get_parent().get_node('pitch_shift_rock_sound').pitch_scale += 0.1
 		get_parent().get_parent().get_node('pitch_shift_rock_sound').play()
 
 	
