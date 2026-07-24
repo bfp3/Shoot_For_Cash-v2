@@ -250,7 +250,7 @@ func shake_camera() -> void:
 func apply_hit_reaction(screen_offset : Vector2) -> void:
 
 	gravity_scale = 0.1
-	linear_velocity = Vector3.ZERO
+	#linear_velocity = Vector3.ZERO
 	
 	var camera = get_viewport().get_camera_3d()
 
@@ -268,7 +268,10 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 		force_dir += up * 0.15
 
 	force_dir = force_dir.normalized()
-	apply_central_impulse(force_dir * force_mult[force_mult_index])
+	#apply_central_impulse(force_dir * force_mult[force_mult_index])
+	fly_off_into_the_distance()
+	
+	
 
 	# spin a bit too
 	var torque_dir = Vector3(
@@ -315,11 +318,23 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	
 	gravity_scale = rock_type_gravity_scale
 	
-
+func fly_off_into_the_distance() -> void:
+	var strength : float = [2.0,3.0].pick_random()
+	var x_direction := 1.0
+	if global_position.x <= -1.0:
+		x_direction = -15.0
+	
+	else:
+		x_direction = 15.0
+		
+	apply_central_impulse(Vector3(x_direction,-.0,35) * strength)
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
 	
-	health -= damage
+	
+	
+	$hit_wall_timer.stop()
+	health -= damage 
 	if damage == 0:
 		cash_value += 10
 	
@@ -327,6 +342,8 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	if health > 0:		
 		play_hit_sfx()
 		apply_hit_reaction(screen_offset)
+		await get_tree().create_timer(2.0).timeout
+		start_destroyed_process()
 		return
 	
 	start_destroyed_process()
@@ -521,7 +538,9 @@ func hit_wall_effects() -> void:
 	await tween.finished
 
 func check_position_for_wall() -> void:
-
+	if rock_destroyed:
+		return
+	
 	match exit_side:
 		ExitSide.LEFT:
 			
@@ -546,6 +565,9 @@ func start_timer() -> void:
 	$hit_wall_timer.start()
 
 func _on_hit_wall_timer_timeout() -> void:
+	if rock_destroyed:
+		return
+		
 	check_position_for_wall()
 
 	if is_deactivated:

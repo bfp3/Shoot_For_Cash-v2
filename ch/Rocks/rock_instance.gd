@@ -869,13 +869,13 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			body.start_destroyed_process()
 			body.hit_by_player(1, Vector2.ZERO)
 	
-	if body.name.contains('Balloon'):
+	#if body.name.contains('Balloon'):
 		#return
 		#if freeze_mine:
 			#return
 		#if player_has_marked_rock == false:
 			#return
-		body.destroyed_by_shratnel()
+		#body.destroyed_by_shratnel()
 
 
 

@@ -1275,8 +1275,8 @@ debug_color = Color(0, 1, 0, 1)
 [node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("23_ellt3")]
 unique_name_in_owner = true
 transform = Transform3D(-1, -8.379102e-09, -8.70203e-08, 0, 0.9953962, -0.09584575, 8.742278e-08, -0.09584575, -0.9953962, 0, -0.875, 0.5)
-scope_min_target_circle = 15.0
-scope_shrink_delay_dur = 0.15
+scope_shrink_speed = 360.0
+scope_shrink_delay_dur = 0.1
 roundManager = NodePath("../Round_manager")
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
@@ -2067,6 +2067,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName" unique_id=910870837]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -2110,7 +2111,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Control" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName" unique_id=1621591310]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

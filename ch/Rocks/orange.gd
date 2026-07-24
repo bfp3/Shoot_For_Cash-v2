@@ -298,8 +298,10 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 		force_dir += up * 0.15
 
 	force_dir = force_dir.normalized()
-	apply_central_impulse(force_dir * force_mult[force_mult_index])
-
+	#apply_central_impulse(force_dir * force_mult[force_mult_index])
+	
+	fly_off_into_the_distance()
+	
 	# spin a bit too
 	var torque_dir = Vector3(
 		force_dir.z,
@@ -345,6 +347,18 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	
 	gravity_scale = rock_type_gravity_scale
 	
+	
+func fly_off_into_the_distance() -> void:
+	var strength : float = [2.0,3.0].pick_random()
+	var x_direction := 1.0
+	if global_position.x <= -1.0:
+		x_direction = -15.0
+	
+	else:
+		x_direction = 15.0
+		
+	apply_central_impulse(Vector3(x_direction,-2.0,-35) * -strength)
+		
 
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
@@ -579,16 +593,30 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 	
 	#if body.name.contains('range') || body.name.contains('apple'):
 	if body.name.contains('apple'):
+		var strength : float = [2.0,3.0].pick_random()
+		body.rock_destroyed = true
+		body.apply_central_impulse(body.global_position - global_position * -strength)
+		await get_tree().create_timer(1.6).timeout
+		body.rock_destroyed = false
+		await get_tree().create_timer(0.1).timeout
 		body.start_destroyed_process()
+		#body.axis_lock_linear_z = true
 
 	
 	if body is RockInstance:
 		if body.rock_type == body.RockSize.HAZARD:
-			var strength : float = [2.0,3.0].pick_random()
-			body.apply_central_impulse(body.global_position - global_position * strength)
-			return
+			body.rock_type_name= 'rock_type_1'
+			body.rock_type = body.RockSize.SMALL
+			body.cash_value = 2
+			
+		var strength : float = [2.0,3.0].pick_random()
+		body.apply_central_impulse(body.global_position - global_position * -strength)
+		#return
+		await get_tree().create_timer(randf_range(1.2, 2.0)).timeout
 
-		body.hit_by_player(100, Vector2.ZERO)
+		body.start_destroyed_process()
+
+		#body.hit_by_player(100, Vector2.ZERO)
 	
 func expand_blast_radius() -> void:
 	#return
