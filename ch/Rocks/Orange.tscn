@@ -19,12 +19,44 @@
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="18_n52fv"]
 [ext_resource type="PackedScene" uid="uid://bh211snc0txl4" path="res://res/Particles/Smoke_coloured.tscn" id="19_sloxq"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="20_bamir"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="20_osrcr"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 bounce = 0.5
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_nul74"]
 radius = 0.35
+
+[sub_resource type="Curve" id="Curve_2i7b7"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.23722628, 1), 0.0, 0.0, 0, 0, Vector2(0.81751823, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_0cvxb"]
+curve = SubResource("Curve_2i7b7")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_mo482"]
+emission_shape = 1
+emission_sphere_radius = 0.31
+spread = 180.0
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, 0, 0)
+scale_min = 0.099999994
+scale_max = 0.19999999
+scale_curve = SubResource("CurveTexture_0cvxb")
+color = Color(4.415934, 3.4977326, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6dqdt"]
+transparency = 1
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("20_osrcr")
+billboard_mode = 2
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_1p817"]
+material = SubResource("StandardMaterial3D_6dqdt")
+size = Vector2(0.5, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oiolr"]
 no_depth_test = true
@@ -74,9 +106,10 @@ fill_to = Vector2(1, 1)
 repeat = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vbm6k"]
-albedo_color = Color(0.8, 0.39653334, 0.088000014, 1)
+albedo_color = Color(1.353256, 0.687616, 0.17859696, 1)
 albedo_texture = SubResource("GradientTexture2D_tw3hu")
 emission = Color(1, 0.466667, 0, 1)
+emission_energy_multiplier = 0.2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r08bu"]
 cull_mode = 2
@@ -239,6 +272,7 @@ damping_curve = SubResource("CurveTexture_sjja1")
 scale_min = 0.1
 scale_max = 0.2
 scale_curve = SubResource("CurveTexture_1gclf")
+color = Color(1.353256, 0.4411155, 0, 1)
 color_ramp = ExtResource("14_yp1pk")
 alpha_curve = SubResource("CurveTexture_lrylr")
 anim_offset_max = 1.0
@@ -962,14 +996,14 @@ curve = SubResource("Curve_37inu")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_be75m"]
 render_priority = 0
 shader = SubResource("Shader_nul74")
-shader_parameter/albedo = Color(1.825, 1.825, 0, 1)
+shader_parameter/albedo = Color(1.8247963, 0.81511104, 0, 1)
 shader_parameter/alpha_scissor_threshold = 0.125
 shader_parameter/alpha_antialiasing_edge = 0.25
-shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_scale = Vector3(1, 0.025, 1)
 shader_parameter/uv1_offset = Vector3(0, 0, 0)
 shader_parameter/fade_distance = 0.75
 shader_parameter/erosion_tex = ExtResource("15_5ah37")
-shader_parameter/erosion_tiling = Vector2(2, 4.355)
+shader_parameter/erosion_tiling = Vector2(0.69, 19.32)
 shader_parameter/erosion_curve = SubResource("CurveTexture_c4njd")
 shader_parameter/erosion_threshold_offset = 0.045
 shader_parameter/erosion_offset_y_curve = SubResource("CurveTexture_x7djv")
@@ -999,6 +1033,13 @@ shape = SubResource("SphereShape3D_nul74")
 
 [node name="Mesh" type="Node3D" parent="." unique_id=1406987277]
 unique_name_in_owner = true
+
+[node name="GoldParticles" type="GPUParticles3D" parent="Mesh" unique_id=1670739560]
+unique_name_in_owner = true
+amount = 10
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_mo482")
+draw_pass_1 = SubResource("QuadMesh_1p817")
 
 [node name="small_rock" type="MeshInstance3D" parent="Mesh" unique_id=151918807]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
@@ -1107,7 +1148,7 @@ draw_pass_1 = SubResource("SphereMesh_c4njd")
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false
-amount = 50
+amount = 35
 lifetime = 4.0
 one_shot = true
 explosiveness = 1.0

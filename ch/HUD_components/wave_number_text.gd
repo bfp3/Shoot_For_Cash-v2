@@ -134,6 +134,7 @@ func start_miss() -> void:
 	result_has_been_shown_this_wave = true
 	
 	clear_text_label.text = "[i]You're Out!"
+	clear_text_label.modulate = Color("c70102ff")
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
 
 func start_perfect() -> void:

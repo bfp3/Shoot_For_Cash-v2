@@ -271,7 +271,6 @@ func shoot_target() -> void:
 	
 	
 		if target.name.contains('Orange'):
-			print("orange")
 			pass
 		else:
 			rock_count += 1
@@ -519,7 +518,7 @@ func shoot_shootable_object(hit: Dictionary) -> void:
 	if player_gun:
 		player_gun.get_barrel_position(hit_position.x)
 
-	player_camera.shake_camera_shooting()
+	#player_camera.shake_camera_shooting()
 	%Crosshair.crosshair_shake()
 
 	spawn_projectile(null, power_bullet_speed, hit_position)
@@ -542,6 +541,7 @@ func explode_at_point(explosion_position: Vector3, normal: Vector3) -> void:
 	round_manager.bullet_active = false
 	explosion.play_particles = true
 	%take_damage_sfx.play()
+	player_camera.shake_camera_shooting()
 	
 func wait_for_all_rocks_destroyed(rocks: Array) -> void:
 	while true:

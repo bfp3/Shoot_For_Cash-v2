@@ -477,7 +477,6 @@ func full_power_mode() -> void:
 	power_gun_fire_rate = gl_DataSet.get_value('power_gun_fire_rate', 9)
 
 func update_stats_visually() -> void:
-	print("UPDATE VISUAL")
 	await get_tree().create_timer(0.5).timeout
 	
 	#if gl_PlayerState.dataset.power_bullet_damage >= 1:
@@ -495,7 +494,7 @@ func update_stats_visually() -> void:
 	
 	
 	var scale_multiplier := _inner_scope_scale_for_radius(power_target_circle)
-	print("scale multiplier ", scale_multiplier)
+
 	tween_scope(scale_multiplier, 0.33)
 
 func display_hud() -> void:

@@ -172,8 +172,6 @@ func start_perfect_sequence() -> void:
 
 func check_white_rocks() -> void:
 	
-	var white_rocks = gl_PlayerState.dataset.total_white_rocks
-	
 	grand_total_label.show()
 	bonuses_label.show()
 	fail_label.hide()

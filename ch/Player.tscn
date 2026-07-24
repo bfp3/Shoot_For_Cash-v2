@@ -46,10 +46,6 @@
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="41_k5tjv"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="42_ms1v2"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="43_vmtkp"]
-[ext_resource type="Script" uid="uid://dhcuqbqex0qu2" path="res://ch/Player/HUD/combo_mode.gd" id="46_44lbx"]
-[ext_resource type="Texture2D" uid="uid://dqf4legc6lkbl" path="res://unfiled/Circle_polygon/Circle_Polygon.tres" id="47_xfuv4"]
-[ext_resource type="AudioStream" uid="uid://deypwoaiih1g2" path="res://sfx/Clock_ticking.ogg" id="48_4v5xn"]
-[ext_resource type="AudioStream" uid="uid://bjptduj0m7nwu" path="res://sfx/ES_Bell Ding - SFX Producer.ogg" id="49_ej0ny"]
 
 [sub_resource type="Curve" id="Curve_emrcn"]
 _data = [Vector2(0, 0.460674), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -835,45 +831,6 @@ particles_anim_loop = false
 [sub_resource type="QuadMesh" id="QuadMesh_sqxov"]
 material = SubResource("StandardMaterial3D_5bweu")
 size = Vector2(2, 2)
-
-[sub_resource type="Animation" id="Animation_44lbx"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:texture:noise:offset")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_xfuv4"]
-resource_name = "anim"
-length = 3.0
-loop_mode = 1
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:texture:noise:offset")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(1, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_4v5xn"]
-_data = {
-&"RESET": SubResource("Animation_44lbx"),
-&"anim": SubResource("Animation_xfuv4")
-}
 
 [node name="Player" type="Node3D" unique_id=1061800479 node_paths=PackedStringArray("weapon_shooting", "player_gun") groups=["Player"]]
 script = ExtResource("1_6ljxy")
@@ -2362,44 +2319,4 @@ process_material = SubResource("ParticleProcessMaterial_nvq61")
 draw_pass_1 = SubResource("QuadMesh_sqxov")
 script = ExtResource("43_vmtkp")
 
-[node name="ComboMode" type="Control" parent="." unique_id=1426626036]
-unique_name_in_owner = true
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("46_44lbx")
-
-[node name="ComboModeTimer" type="Timer" parent="ComboMode" unique_id=2058852599]
-wait_time = 3.0
-one_shot = true
-
-[node name="TextureRect" type="TextureRect" parent="ComboMode" unique_id=295767712]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("47_xfuv4")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="ComboMode/TextureRect" unique_id=1523534221]
-libraries/ = SubResource("AnimationLibrary_4v5xn")
-
-[node name="TimerTickingSFX" type="AudioStreamPlayer" parent="ComboMode" unique_id=1571238362]
-stream = ExtResource("48_4v5xn")
-volume_db = -40.0
-
-[node name="TimeRanOut4" type="AudioStreamPlayer" parent="ComboMode" unique_id=768781529]
-stream = ExtResource("49_ej0ny")
-volume_db = -55.0
-pitch_scale = 0.6
-
 [connection signal="timeout" from="Mouse_turning_SFX/StopTimer" to="Mouse_turning_SFX" method="_on_stop_timer_timeout"]
-[connection signal="timeout" from="ComboMode/ComboModeTimer" to="ComboMode" method="_on_combo_mode_timer_timeout"]

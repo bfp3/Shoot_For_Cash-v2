@@ -88,7 +88,7 @@ scale_max = 0.19999999
 scale_curve = SubResource("CurveTexture_0cvxb")
 color = Color(4.415934, 3.4977326, 0, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pqbxg"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gsivy"]
 transparency = 1
 cull_mode = 2
 vertex_color_use_as_albedo = true
@@ -97,7 +97,7 @@ billboard_mode = 2
 billboard_keep_scale = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_ltsxa"]
-material = SubResource("StandardMaterial3D_pqbxg")
+material = SubResource("StandardMaterial3D_gsivy")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2s6n3"]
 albedo_color = Color(0, 0, 0, 1)
@@ -921,13 +921,11 @@ debug_color = Color(0.13208885, 1.8247963, 0, 1)
 [node name="Explosion_area" type="Area3D" parent="." unique_id=1849928946]
 collision_layer = 3
 collision_mask = 3
-monitoring = false
 monitorable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Explosion_area" unique_id=234644488]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("SphereShape3D_sjja1")
-disabled = true
 
 [node name="explosion_radius_mesh" type="MeshInstance3D" parent="Explosion_area" unique_id=841812942]
 unique_name_in_owner = true
@@ -1050,21 +1048,21 @@ mesh = SubResource("ArrayMesh_w8aba")
 
 [node name="Decal" type="Decal" parent="Mesh/Hazard_large" unique_id=680592524]
 transform = Transform3D(-6.556708e-08, 1.5, 0, -1.0606601, -4.6362924e-08, -1.0606602, -1.0606602, -4.6362928e-08, 1.0606601, 0, 0, 0)
-size = Vector3(0.15, 0.38, 0.15)
+size = Vector3(0.18, 0.38, 0.185)
 texture_albedo = ExtResource("11_fao6x")
-modulate = Color(1.8247963, 0, 0, 1)
+modulate = Color(1.2742168, 0, 0, 1)
 
 [node name="Decal2" type="Decal" parent="Mesh/Hazard_large" unique_id=1403625888]
 transform = Transform3D(-1.0606602, -1.1193001e-07, 1.0606601, -1.0606601, -4.6362924e-08, -1.0606602, 1.1193001e-07, -1.5, -4.6362924e-08, 0, 0, 0)
-size = Vector3(0.15, 0.38, 0.15)
+size = Vector3(0.18, 0.38, 0.185)
 texture_albedo = ExtResource("11_fao6x")
-modulate = Color(1.8247963, 0, 0, 1)
+modulate = Color(1.2742168, 0, 0, 1)
 
 [node name="Decal3" type="Decal" parent="Mesh/Hazard_large" unique_id=470213385]
 transform = Transform3D(-1.0606601, -1.1193001e-07, 1.0606601, -6.556708e-08, 1.5, 9.272585e-08, -1.0606601, 1.9204148e-08, -1.0606601, 0, 0, 0)
-size = Vector3(0.15, 0.38, 0.15)
+size = Vector3(0.18, 0.38, 0.185)
 texture_albedo = ExtResource("11_fao6x")
-modulate = Color(1.8247963, 0, 0, 1)
+modulate = Color(1.2742168, 0, 0, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Mesh/Hazard_large" unique_id=1679379595]
 libraries/ = SubResource("AnimationLibrary_herjc")
@@ -1126,7 +1124,7 @@ volume_db = -15.0
 [node name="progress_rock_sound" type="AudioStreamPlayer" parent="." unique_id=1715758718]
 unique_name_in_owner = true
 stream = ExtResource("30_8mu68")
-volume_db = -9.0
+volume_db = -22.0
 pitch_scale = 0.85
 
 [node name="launch_sound" type="AudioStreamPlayer" parent="." unique_id=910213729]

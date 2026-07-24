@@ -714,8 +714,7 @@ func start_destroyed_process() -> void:
 		return
 	if rock_destroyed:
 		return
-		
-	
+
 	
 	rock_activated = false
 	
@@ -741,10 +740,7 @@ func start_destroyed_process() -> void:
 			
 		cash_value += bonus_cash_reward
 		
-	
-	if rock_type == RockSize.HAZARD:
-		%hazard_hit_sound.play()
-		EventBus.instance.hazard_hit.emit()
+
 	
 	
 	if !rock_has_been_logged:
@@ -769,6 +765,20 @@ func start_destroyed_process() -> void:
 	is_deactivated = true
 	#$Mesh.hide()
 	#freeze = true
+	
+		
+			
+	if rock_type == RockSize.HAZARD:
+		$Marked.show()
+		$marked_embers.emitting = true
+		$marked_sfx.play()
+		freeze = true
+		await get_tree().create_timer(0.5).timeout
+		
+		await get_tree().create_timer(0.5).timeout
+		%hazard_hit_sound.play()
+		play_destroy_sfx()
+		EventBus.instance.hazard_hit.emit()
 	
 	was_hit_tween()
 	
@@ -825,15 +835,17 @@ func assign_random_mesh(mesh_instance: MeshInstance3D) -> void:
 func _on_explosion_area_body_entered(body: Node3D) -> void:
 	#if rock_destroyed:
 		#return
-	
+
 	# PUSH ROCKS AWAY IN BLAST
-	#if player_has_marked_rock == false:
-		#if body is RigidBody3D:
-			#var force_dir = (body.global_position - global_position)
-			#force_dir = force_dir.normalized()	
+	if player_has_marked_rock == false:
+		if body is RigidBody3D:
+
+			var force_dir = (body.global_position - global_position)
+			force_dir = force_dir.normalized()	
 			#body.apply_central_impulse(force_dir * 2)
-			#body.apply_torque_impulse(force_dir * 500.0)
-			#return
+			#body.apply_central_impulse(force_dir / 2)
+			body.apply_torque_impulse(force_dir * 500.0)
+			return
 	
 	if body.name.contains('Rock_Instance'):
 		if body.current_state != body.State.ACTIVE:
@@ -868,6 +880,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 
 
 func expand_blast_radius() -> void:
+
 	if !player_has_marked_rock && !start_exploding:
 		#gl_PlayerState.dataset.power_sky_mine = clamp(gl_PlayerState.dataset.power_sky_mine -1,0,3)
 		standard_blast()
@@ -881,8 +894,7 @@ func expand_blast_radius() -> void:
 		#blast_radius = 25.0
 	if current_rock_type.contains("Ender"):
 		_blast_radius = 15.0
-		print("WHY NOT")
-	print("WHY NOT 2 blast radius ", _blast_radius)
+
 	player_has_marked_rock = false
 	gl_PlayerState.dataset.power_sky_mine = clamp(gl_PlayerState.dataset.power_sky_mine - 1,0,3)
 	#gl_PlayerState.dataset.power_sky_mine = 0
@@ -909,11 +921,12 @@ func expand_blast_radius() -> void:
 	blast_node.monitoring = false
 	
 func standard_blast() -> void:
+
 	var blast_node : Area3D = $Explosion_area
 	blast_node.show()
 	%explosion_radius_mesh.show()
 	blast_node.monitoring = true
-	#$Explosion_area/CollisionShape3D.disabled = false
+	$Explosion_area/CollisionShape3D.disabled = false
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_interval(0.1)
 	tween.tween_property(blast_node, "scale", Vector3.ONE * 4.0, 0.35) #0.25

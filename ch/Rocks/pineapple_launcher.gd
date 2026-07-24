@@ -45,7 +45,8 @@ func launch_pineapple(body : RigidBody3D) -> void:
 	body.global_position.x = x_positions.pick_random()
 
 	var x_variation = 0 #randf_range(-1.0, 1.0)
-	var upward_force = randf_range(9.5, 10.0)
+	var upward_force = 18.0 #randf_range(9.5, 10.0) * 2.5
+	
 	
 	var impulse = Vector3(
 		x_variation,

@@ -77,9 +77,9 @@ func _ready() -> void:
 
 func start_falling() -> void:
 	apply_hit_reaction(Vector2.UP)
-	update_gravity(5.0)
 	disable_collision()
 	await get_tree().create_timer(0.15).timeout
+	update_gravity(5.0)
 	linear_damp = 0.0
 	
 	
@@ -120,11 +120,12 @@ func update_prepare_rock() -> void:
 func update_active() -> void:
 	disable_collision()
 	enable_collision()
+	%GoldParticles.emitting = true
 	reset_stats()
 	reset_rock_back_on()
 	add_to_group('Target')
 	#update_gravity(0.0)
-	update_gravity(0.0)
+	update_gravity(0.01)
 	global_position = start_pos
 	global_position.x = randi_range(-8,8)
 	health = 1
@@ -147,6 +148,7 @@ func update_active() -> void:
 	
 func update_hit() -> void:
 	update_gravity(1.0)
+	%GoldParticles.emitting = false
 	$Pineapple_sound_hit.play()
 	disable_collision()
 	gl_PlayerState.log_hit('orange', 'orange', cash_value)
@@ -261,7 +263,7 @@ func reset_stats() -> void:
 func was_hit_tween() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_callback(smoke_particles)
-	tween.tween_property($Mesh, "scale", Vector3.ZERO, 0.10)
+	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
 	await tween.finished
 
 	
@@ -308,7 +310,7 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	torque_dir = torque_dir * force_mult[force_mult_index]
 	apply_torque_impulse(torque_dir * hit_torque_strength)
 
-	smoke_particles_duplicates()
+	
 
 	# Quick squash/stretch feedback
 	if current_mesh.scale <= Vector3.ONE * 0.3:
@@ -348,7 +350,7 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
 	health -= damage
 	taken_hit = true
-	
+	smoke_particles_duplicates()
 	if health > 0:
 		play_hit_sfx()
 		apply_hit_reaction(screen_offset)
@@ -425,7 +427,7 @@ func play_destroy_sfx() -> void:
 
 func _on_start_falling_timer_timeout() -> void:
 	falling = true
-	
+	linear_damp = 0.0
 
 func smoke_particles() -> void:
 	$AoE.global_position = global_position
@@ -575,13 +577,15 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			#return
 		#body.destroyed_by_shratnel()
 	
-	if body.name.contains('range') || body.name.contains('apple') :
+	#if body.name.contains('range') || body.name.contains('apple'):
+	if body.name.contains('apple'):
 		body.start_destroyed_process()
 
 	
 	if body is RockInstance:
 		if body.rock_type == body.RockSize.HAZARD:
-			body.apply_central_impulse(body.global_position - global_position * 3.0)
+			var strength : float = [2.0,3.0].pick_random()
+			body.apply_central_impulse(body.global_position - global_position * strength)
 			return
 
 		body.hit_by_player(100, Vector2.ZERO)
@@ -599,9 +603,9 @@ func expand_blast_radius() -> void:
 	$Explosion_area/CollisionShape3D.disabled = false
 	
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
-	tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * domain_expansion, 0.5)
-	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.75)
+	#tween.tween_interval(0.1)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * domain_expansion, 0.25)
+	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.45)
 	#tween.tween_interval(0.1)
 	await tween.finished
 	$Explosion_area/CollisionShape3D.disabled = true

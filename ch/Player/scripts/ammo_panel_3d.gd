@@ -232,7 +232,6 @@ func check_can_shoot() -> bool:
 
 
 func show_out_of_ammo_effect() -> void:
-	print('called?')
 	modulate = Color.RED
 	await get_tree().create_timer(0.5).timeout
 	modulate = Color.WHITE

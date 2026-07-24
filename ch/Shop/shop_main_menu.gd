@@ -182,7 +182,6 @@ func update_shop() -> void:
 	
 func update_open_menu() -> void:
 	if gl_PlayerState.dataset.round == 1:
-		print('first round play music')
 		bg_music.play()
 	
 	sfx_open_shop()

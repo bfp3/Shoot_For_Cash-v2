@@ -292,7 +292,6 @@ func _get_position_angle_bias(x_position: float) -> float:
 func pick_convergence_point() -> void:
 	var column := randi_range(1, COLUMN_COUNT - 2)
 	convergence_x = column_to_x(column)
-	print('This rounds convergence points == ', convergence_x)
 
 func update_round_end() -> void:
 	_bounds_check_active = false

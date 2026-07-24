@@ -21,6 +21,7 @@
 [ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="20_nca8f"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="21_7t7cf"]
 [ext_resource type="Material" uid="uid://c5lrichw3wfce" path="res://res/Kenney_prototype_textures/Material_override/balloon_red_mat.tres" id="21_gooii"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="22_7t7cf"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_8ttoe"]
 size = Vector2(300, 200)
@@ -2567,6 +2568,12 @@ material_override = ExtResource("20_7t7cf")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_nxkf2")
 skeleton = NodePath("")
+
+[node name="Moon" type="Sprite3D" parent="." unique_id=1577013321]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -152.725, 66.068, 470.025)
+modulate = Color(1, 0.915, 0.83, 0.19215687)
+pixel_size = 0.1
+texture = ExtResource("22_7t7cf")
 
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

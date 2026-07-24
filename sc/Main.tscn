@@ -37,6 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="35_8ip8c"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="37_nn6vd"]
 [ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="38_8twtg"]
+[ext_resource type="Texture2D" uid="uid://blvtkhvnb16cm" path="res://res/wormfood_logo_2.png" id="38_ufvrt"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="42_0tmy3"]
 [ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="43_vavbc"]
 [ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="44_s3ss1"]
@@ -611,6 +612,15 @@ tangential_accel_max = 9.999997
 scale_min = 5.0
 scale_max = 5.0
 scale_curve = SubResource("CurveXYZTexture_b5kcl")
+
+[sub_resource type="Gradient" id="Gradient_ufvrt"]
+offsets = PackedFloat32Array(0, 0.1356674, 0.8293217)
+colors = PackedColorArray(1, 1, 0.7058824, 1, 1, 0.36862746, 0.09019608, 1, 1, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vycyu"]
+gradient = SubResource("Gradient_ufvrt")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ec2we"]
 
@@ -1240,7 +1250,7 @@ max_polyphony = 2
 
 [node name="pitch_shift_rock_sound" type="AudioStreamPlayer" parent="Rocks" unique_id=1051112971]
 stream = ExtResource("23_1i2h1")
-volume_db = -11.0
+volume_db = -16.0
 pitch_scale = 0.85
 
 [node name="Shover" type="StaticBody3D" parent="Rocks" unique_id=1202508704]
@@ -1266,6 +1276,7 @@ debug_color = Color(0, 1, 0, 1)
 unique_name_in_owner = true
 transform = Transform3D(-1, -8.379102e-09, -8.70203e-08, 0, 0.9953962, -0.09584575, 8.742278e-08, -0.09584575, -0.9953962, 0, -0.875, 0.5)
 scope_min_target_circle = 15.0
+scope_shrink_delay_dur = 0.15
 roundManager = NodePath("../Round_manager")
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
@@ -2084,9 +2095,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -101.0
-offset_top = 156.0
+offset_top = 132.0
 offset_right = 101.0
-offset_bottom = 212.0
+offset_bottom = 188.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -2097,6 +2108,81 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Control" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName" unique_id=1621591310]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Wormfood_Logo2" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName/Control" unique_id=140860143]
+modulate = Color(1, 0.78039217, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -31.0
+offset_top = 28.0
+offset_right = -31.0
+offset_bottom = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("38_ufvrt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Wormfood_Logo3" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName/Control" unique_id=1425503873]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -28.0
+offset_top = 28.0
+offset_right = -28.0
+offset_bottom = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("38_ufvrt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Wormfood_Logo" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName/Control" unique_id=33218516]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -30.0
+offset_top = 29.0
+offset_right = -30.0
+offset_bottom = 29.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("38_ufvrt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName/Control/Wormfood_Logo" unique_id=906695783]
+modulate = Color(1, 1, 0.2901961, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_vycyu")
 
 [node name="GameName" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=1764852665]
 layout_mode = 1
@@ -2741,252 +2827,294 @@ round_manager = NodePath("../Round_manager")
 [node name="Pineapple" parent="Pineapple" unique_id=1539472592 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple2" parent="Pineapple" unique_id=1349360149 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple3" parent="Pineapple" unique_id=1506732277 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple4" parent="Pineapple" unique_id=535343239 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple5" parent="Pineapple" unique_id=1865048044 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple6" parent="Pineapple" unique_id=1774864226 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple7" parent="Pineapple" unique_id=1117725698 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple8" parent="Pineapple" unique_id=1781194340 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple9" parent="Pineapple" unique_id=758482172 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple10" parent="Pineapple" unique_id=1485000339 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple11" parent="Pineapple" unique_id=1708590466 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple12" parent="Pineapple" unique_id=1426216787 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple13" parent="Pineapple" unique_id=671118281 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple14" parent="Pineapple" unique_id=1295308023 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple15" parent="Pineapple" unique_id=1987048298 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple16" parent="Pineapple" unique_id=204739255 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple17" parent="Pineapple" unique_id=1873066725 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple18" parent="Pineapple" unique_id=1407580827 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple19" parent="Pineapple" unique_id=732672277 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple20" parent="Pineapple" unique_id=964302430 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple21" parent="Pineapple" unique_id=867245492 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple22" parent="Pineapple" unique_id=486017192 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple23" parent="Pineapple" unique_id=1498884602 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple24" parent="Pineapple" unique_id=2141910420 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple25" parent="Pineapple" unique_id=1816153739 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple26" parent="Pineapple" unique_id=910893864 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple27" parent="Pineapple" unique_id=476421502 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple28" parent="Pineapple" unique_id=237156272 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple29" parent="Pineapple" unique_id=1274109507 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple30" parent="Pineapple" unique_id=204347860 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple31" parent="Pineapple" unique_id=940134101 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple32" parent="Pineapple" unique_id=1318316626 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple33" parent="Pineapple" unique_id=503126532 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple34" parent="Pineapple" unique_id=1084067243 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple35" parent="Pineapple" unique_id=1773304145 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple36" parent="Pineapple" unique_id=1329744472 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple37" parent="Pineapple" unique_id=397515411 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple38" parent="Pineapple" unique_id=104033067 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple39" parent="Pineapple" unique_id=313995080 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple40" parent="Pineapple" unique_id=275332281 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple41" parent="Pineapple" unique_id=1687626619 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 
 [node name="Pineapple42" parent="Pineapple" unique_id=2051133487 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+linear_damp = 0.6
 cash_value = 0
 force_multiplier = 1.0
 

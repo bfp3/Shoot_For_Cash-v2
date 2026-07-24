@@ -70,8 +70,8 @@ func update_start() -> void:
 	
 	
 	var tween = create_tween()
-	tween.tween_interval(1.0)
 	tween.tween_property(brand_name, "modulate:a", 1.0, 0.5)
+	tween.tween_interval(1.0)
 	
 	tween.tween_callback($'../../Music'.start_opening_song)
 	tween.tween_interval(1.0)

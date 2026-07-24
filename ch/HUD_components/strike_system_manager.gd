@@ -31,7 +31,6 @@ func _ready() -> void:
 
 func add_strike() -> void:
 	if strike_count > 2:
-
 		return
 	
 	if _is_playing_finale:
@@ -42,6 +41,7 @@ func add_strike() -> void:
 		return
 
 	strike_count += 1
+	
 	indicator.reveal_strike()
 	if strike_sfx:
 		strike_sfx.play()

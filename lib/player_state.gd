@@ -150,7 +150,6 @@ func log_hit(item:String, item_type:String, value:int):
 	
 	if value < 0:
 		dataset.fines = dataset.fines + value
-		print("add the value to fines ", value)
 	else:
 		dataset.bonus_cash = dataset.bonus_cash + value
 		
@@ -214,8 +213,7 @@ func log_rock_missed(item : String = '') -> void:
 
 	dataset.total_rocks_in_round_remaining -= 1
 	
-	print("called? , " ,item)
-	
+
 	if item.contains('rock_type_1'):
 		add_strike()
 		#return

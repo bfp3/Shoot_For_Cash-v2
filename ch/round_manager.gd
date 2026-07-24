@@ -130,7 +130,7 @@ func handle_three_strikes() -> void:
 	stop_player()
 	
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.3).timeout
 	
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	wave_progress_feedback.start_miss()
@@ -320,7 +320,6 @@ func update_wave_start() -> void:
 			rocks_container.start_manual_rock_round(rock_seq)
 		
 	else:
-		print("Current Wave ", current_wave)
 		var rock_seq := update_rock_sequence()
 		if rock_seq != []:
 			rocks_container.shuffle_current_sequence(rock_seq)
@@ -666,18 +665,18 @@ func restart() -> void:
 	birds.start_birds()
 
 
-func _input(event: InputEvent) -> void:
-	if Input.is_key_label_pressed(KEY_8):
-		unsuccessful_round()
-
-	if Input.is_key_label_pressed(KEY_7):
-		successful_round()
-		
-	if Input.is_key_label_pressed(KEY_6) && !success:
-		success = true
-		shop_main_menu.mark_round_as_perfect()
-		
-		shop_main_menu.increase_round_available()
-		
-		current_wave = 3
-		successful_round()
+#func _input(event: InputEvent) -> void:
+	#if Input.is_key_label_pressed(KEY_8):
+		#unsuccessful_round()
+#
+	#if Input.is_key_label_pressed(KEY_7):
+		#successful_round()
+		#
+	#if Input.is_key_label_pressed(KEY_6) && !success:
+		#success = true
+		#shop_main_menu.mark_round_as_perfect()
+		#
+		#shop_main_menu.increase_round_available()
+		#
+		#current_wave = 3
+		#successful_round()

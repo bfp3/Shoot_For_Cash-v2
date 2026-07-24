@@ -116,7 +116,7 @@ func update_active() -> void:
 	update_gravity(0.04)
 	global_position = start_pos
 	global_position.x = randi_range(-8,8)
-	health = 1
+	health = 2
 	
 	pineapple_mesh.show()
 	rock_activated = true
