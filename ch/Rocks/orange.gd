@@ -76,7 +76,7 @@ func _ready() -> void:
 	original_cash_value = cash_value
 
 func start_falling() -> void:
-	apply_hit_reaction(Vector2.UP)
+	#apply_hit_reaction(Vector2.UP)
 	disable_collision()
 	await get_tree().create_timer(0.15).timeout
 	update_gravity(5.0)
@@ -356,7 +356,7 @@ func fly_off_into_the_distance() -> void:
 	
 	else:
 		x_direction = 15.0
-		
+	linear_damp = 0.5
 	apply_central_impulse(Vector3(x_direction,-2.0,-35) * -strength)
 		
 
