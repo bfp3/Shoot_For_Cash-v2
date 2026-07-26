@@ -780,6 +780,10 @@ func start_destroyed_process() -> void:
 		play_destroy_sfx()
 		EventBus.instance.hazard_hit.emit()
 	
+	
+	if cash_value == 2:
+		hazard_aoe_delayed()
+	
 	was_hit_tween()
 	
 
@@ -939,7 +943,12 @@ func standard_blast() -> void:
 	%explosion_radius_mesh.hide()
 	blast_node.hide()
 	blast_node.monitoring = false
-	
+
+func hazard_aoe_delayed() -> void:
+
+	$Hazard_AoE2.global_position = global_position
+	$Hazard_AoE2.play_particles = true
+
 
 func smoke_particles() -> void:
 	if rock_type_name.contains('hazard'):

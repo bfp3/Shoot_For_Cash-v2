@@ -616,6 +616,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 
 		body.start_destroyed_process()
 
+
 		#body.hit_by_player(100, Vector2.ZERO)
 	
 func expand_blast_radius() -> void:

@@ -861,7 +861,6 @@ max_polyphony = 2
 script = ExtResource("3_r5w5l")
 current_song = NodePath("Windmill")
 opening_song = NodePath("Opening_song")
-background_music_vol_in_shop = -60.0
 background_music_vol_out_of_shop = -45.0
 
 [node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
@@ -913,6 +912,7 @@ volume_db = -40.0
 [node name="Windmill" type="AudioStreamPlayer" parent="Music" unique_id=109703835]
 stream = ExtResource("15_heewt")
 volume_db = -40.0
+pitch_scale = 0.85
 
 [node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
 stream = ExtResource("15_ymbdo")

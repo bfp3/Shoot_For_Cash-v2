@@ -74,7 +74,7 @@ func shop_music_lower_volume() -> void:
 	#tween.tween_property(current_song, "volume_db", -80.0, 5.0)
 	tween.tween_property(current_song, "volume_db", background_music_vol_out_of_shop, 3.0)
 	await tween.finished
-	current_song.pitch_scale = 1.0
+	#current_song.pitch_scale = 1.0
 	
 	
 func game_won() -> void:

@@ -368,7 +368,7 @@ func update_rock_sequence() -> Array:
 func update_round_end() -> void:
 	# Capture the round outcome now - `success` gets reset to false further
 	# down before we need to act on it again.
-	
+	stop_timer()
 	if gl_PlayerState.dataset.total_current_strikes < 3:
 		success = true
 	var round_was_successful := success

@@ -176,7 +176,7 @@ func log_hit(item:String, item_type:String, value:int):
 	elif item.contains('hazard'):
 		if item_type.contains('balloon'):
 			return
-		add_strike()
+		#add_strike()
 		return
 		
 		
