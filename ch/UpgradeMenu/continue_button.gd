@@ -6,9 +6,8 @@ enum UpgradeState {
 	PURCHASED
 }
 
-@export var base_colour : Color = Color("19191dff") 
-@export var border_outline_colour : Color = Color("404047ff")
-@export var editable := false
+#@export var base_colour : Color = Color("19191dff") 
+#@export var border_outline_colour : Color = Color("404047ff")
 @export var focus_enter_sfx: AudioStreamPlayer
 @export var focus_exit_sfx: AudioStreamPlayer
 @export var purchase_sfx: AudioStreamPlayer
@@ -92,14 +91,17 @@ func _play_wiggle(target_scale: float, _scale_dur : float = 0.08) -> void:
 func _update_visual_state() -> void:
 	if not is_node_ready():
 		return
-
+	
+	return
+	
 	var base := Color(0.22, 0.23, 0.26, 0.95)
 	var border := Color(0.40, 0.42, 0.47, 1.0)
 
 	match state:
 		UpgradeState.LOCKED:
-			base = base_colour
-			border = border_outline_colour
+			pass
+			#base = base_colour
+			#border = border_outline_colour
 
 		UpgradeState.UNLOCKED:
 			base = Color(0.20, 0.24, 0.30, 0.98) if can_afford else Color(0.26, 0.20, 0.20, 0.95)
@@ -117,11 +119,11 @@ func _update_visual_state() -> void:
 	var focus_style := _make_style(base.lightened(0.15), Color(0.95, 0.95, 1.0, 1.0), 3)
 	var disabled_style := _make_style(base.darkened(0.20), border.darkened(0.25), 2)
 
-	add_theme_stylebox_override("normal", hover_style if hover_boost else normal_style)
-	add_theme_stylebox_override("hover", hover_style)
-	add_theme_stylebox_override("pressed", pressed_style)
-	add_theme_stylebox_override("focus", focus_style)
-	add_theme_stylebox_override("disabled", disabled_style)
+	#add_theme_stylebox_override("normal", hover_style if hover_boost else normal_style)
+	#add_theme_stylebox_override("hover", hover_style)
+	#add_theme_stylebox_override("pressed", pressed_style)
+	#add_theme_stylebox_override("focus", focus_style)
+	#add_theme_stylebox_override("disabled", disabled_style)
 
 	#var text_color := Color(1, 1, 1, 0.95)
 #
@@ -137,8 +139,8 @@ func _update_visual_state() -> void:
 func _make_style(bg: Color, border: Color, width: int) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 
-	style.bg_color = bg
-	style.border_color = border
+	#style.bg_color = bg
+	#style.border_color = border
 
 	style.set_border_width_all(width)
 	style.set_corner_radius_all(10)

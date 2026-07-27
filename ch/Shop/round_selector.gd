@@ -1,4 +1,28 @@
+@tool
 extends TextureButton
+
+
+
+@onready var outer_ring: TextureRect = $OuterRing
+
+@export var outerRingColour_default: Color = Color("666b78ff"):
+	set(value):
+		outerRingColour_default = value
+		_update_editor_preview()
+
+@export var outerRingColour_active: Color = Color("ffc700ff"):
+	set(value):
+		outerRingColour_active = value
+		_update_editor_preview()
+
+@export var outerRingColour_levelCompleted: Color = Color("42d100ff"):
+	set(value):
+		outerRingColour_levelCompleted = value
+		_update_editor_preview()
+
+var outer_ring_mod_orig: Color
+
+
 @export var shop_main_menu : Control
 
 @export var focus_enter_sfx: AudioStreamPlayer
@@ -6,8 +30,6 @@ extends TextureButton
 @export var pressed_sfx: AudioStreamPlayer
 @onready var round_number: RichTextLabel = $RoundNumber
 
-@onready var outer_ring: TextureRect = $OuterRing
-var outer_ring_mod_orig : Color = Color('1c1f26')
 
 @onready var orig_scale := self.scale
 
@@ -31,6 +53,11 @@ var tween_available : Tween = null
 
 
 func _ready() -> void:
+
+	outer_ring_mod_orig = outerRingColour_default
+
+	round_number.text = str(get_index() + 1)
+	
 	round_manager = get_tree().get_first_node_in_group('round_manager')
 	all_levels = round_manager.current_rock_sequence
 	
@@ -51,15 +78,10 @@ func _ready() -> void:
 		self.pressed.connect(_on_pressed)
 	round_manager = get_tree().get_first_node_in_group('round_manager')
 
-	
 	enter_state(current_state)
+	_update_editor_preview()
 	
-#func _process(delta: float) -> void:
-	#if old_state != current_state:
-		#old_state = current_state
-		#enter_state(current_state)
-		#
-	#
+
 
 func enter_state(new_state : State) -> void:
 	current_state = new_state
@@ -84,18 +106,18 @@ func update_locked() -> void:
 	#disabled = true
 	$CheckMark.hide()
 	$'100_percent'.hide()
-	$OuterRing.modulate = Color("666b78ff")
+	outer_ring.modulate = outerRingColour_default
 	$RoundNumber.hide()
-	$RoundNumber.modulate = Color("000000ff")
+	$RoundNumber.modulate.a = 0.0
 	self.custom_minimum_size = Vector2(50.0,50.0)
 
 func update_available() -> void:
 	disabled = false
 	$CheckMark.hide()
 	$'100_percent'.hide()
-	$OuterRing.modulate = Color("ffc700ff")
+	outer_ring.modulate = outerRingColour_active
 	$RoundNumber.show()
-	$RoundNumber.modulate = Color("e6e6e6")
+	$RoundNumber.modulate.a = 100.0
 	blink_tween()
 	self.custom_minimum_size = Vector2(100.0,100.0)
 	
@@ -103,7 +125,7 @@ func update_cleared() -> void:
 	#disabled = true
 	$CheckMark.show()
 	$'100_percent'.hide()
-	$OuterRing.modulate = Color("42d100ff")
+	outer_ring.modulate = outerRingColour_levelCompleted
 	$RoundNumber.hide()
 	self.custom_minimum_size = Vector2(75.0,75.0)
 	
@@ -114,7 +136,7 @@ func update_perfected() -> void:
 	var round_bonus := int(gl_DataSet.get_value('reward_perfect_round'))
 	%CashEarned.text = "[i]$" + str(gl_PlayerState.dataset.bonus_cash + round_bonus - gl_PlayerState.dataset.fines)
 	$'100_percent'.show()
-	$OuterRing.modulate = Color("42d100ff")
+	outer_ring.modulate = outerRingColour_levelCompleted
 	$RoundNumber.hide()
 	self.custom_minimum_size = Vector2(75.0,75.0)
 	
@@ -214,7 +236,7 @@ func _play_wiggle(target_scale: float) -> void:
 	
 func set_selected(selected: bool) -> void:
 	if selected:
-		outer_ring.modulate = Color.GOLD
+		outer_ring.modulate = outerRingColour_active
 	else:
 		outer_ring.modulate = outer_ring_mod_orig
 
@@ -242,3 +264,18 @@ func restart() -> void:
 		enter_state(State.AVAILABLE)
 	else:
 		enter_state(State.LOCKED)
+
+func _update_editor_preview() -> void:
+	if !is_inside_tree() or !Engine.is_editor_hint():
+		return
+
+	if outer_ring == null:
+		return
+
+	match current_state:
+		State.LOCKED:
+			outer_ring.modulate = outerRingColour_default
+		State.AVAILABLE:
+			outer_ring.modulate = outerRingColour_active
+		State.CLEARED, State.PERFECTED:
+			outer_ring.modulate = outerRingColour_levelCompleted

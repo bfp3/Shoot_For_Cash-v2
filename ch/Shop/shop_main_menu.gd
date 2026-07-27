@@ -304,7 +304,7 @@ func roll_up_cash_first_round() -> void:
 	var target_cash: int = gl_PlayerState.dataset.cash
 
 	# Show "0" immediately, invisible, then fade in
-	cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$0"
+	cash_label.text = "[wave amp=2.0 freq=20.0 connected=1]$0"
 	cash_label.modulate.a = 0.0
 	cash_label.show()
 
@@ -322,7 +322,7 @@ func roll_up_cash_first_round() -> void:
 
 	tween.tween_method(
 		func(value: float):
-			cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$" + str(int(value)),
+			cash_label.text = "[wave amp=2.0 freq=20.0 connected=1]$" + str(int(value)),
 		0.0,
 		float(target_cash),
 		duration
@@ -563,7 +563,7 @@ func clear_available_skills() -> void:
 
 func update_shop_labels() -> void:
 	
-	cash_label.text = "[wave amp=2.0 freq=20.0 connected=1][pulse freq=1 color=#42d100 ease=-2.0]$" + str(player_cash)
+	cash_label.text = "[wave amp=2.0 freq=20.0 connected=1]$" + str(player_cash)
 	update_cash_label_color()
 	update_cost_label()
 	
@@ -659,6 +659,7 @@ func _input(event: InputEvent) -> void:
 	if Input.is_key_label_pressed(KEY_KP_0):
 		%AddMoney.visible = !%AddMoney.visible
 		%MaxOutPowers.visible = !%MaxOutPowers.visible
+		%ResetMoney.visible = !%ResetMoney.visible
 		#%RoundSelector.visible = !%RoundSelector.visible
 		
 
@@ -758,6 +759,6 @@ func update_next_ticket() -> void:
 
 func update_cash_label_color() -> void:
 	if gl_PlayerState.dataset.cash < 0:
-		cash_label.modulate = Color("ad0000ff")
+		cash_label.modulate = Color("c70102ff")
 	else:
-		cash_label.modulate = Color("42d100ff")
+		cash_label.modulate = Color("ebe0d8ff")

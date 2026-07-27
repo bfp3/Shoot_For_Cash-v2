@@ -39,7 +39,7 @@ var power_level := 0
 
 @onready var name_label: RichTextLabel = %NameLabel
 @onready var cost_label: RichTextLabel = %CostLabel
-@onready var description_label: Label = %DescriptionLabel
+
 
 @export var focus_enter_sfx: AudioStreamPlayer
 @export var focus_exit_sfx: AudioStreamPlayer
@@ -542,11 +542,11 @@ func _update_visual_state() -> void:
 	var focus_style := _make_style(base.lightened(0.15), Color(0.95, 0.95, 1.0, 1.0), 3)
 	var disabled_style := _make_style(base.darkened(0.20), border.darkened(0.25), 2)
 
-	add_theme_stylebox_override("normal", hover_style if hover_boost else normal_style)
-	add_theme_stylebox_override("hover", hover_style)
-	add_theme_stylebox_override("pressed", pressed_style)
-	add_theme_stylebox_override("focus", focus_style)
-	add_theme_stylebox_override("disabled", disabled_style)
+	#add_theme_stylebox_override("normal", hover_style if hover_boost else normal_style)
+	#add_theme_stylebox_override("hover", hover_style)
+	#add_theme_stylebox_override("pressed", pressed_style)
+	#add_theme_stylebox_override("focus", focus_style)
+	#add_theme_stylebox_override("disabled", disabled_style)
 
 	var text_color := Color(1, 1, 1, 0.95)
 
@@ -560,7 +560,6 @@ func _update_visual_state() -> void:
 
 	name_label.modulate = text_color
 	#cost_label.modulate = text_color
-	description_label.modulate = text_color
 	
 	
 func purchase_particles() -> void:
