@@ -500,7 +500,7 @@ func _refresh_text() -> void:
 	if not is_node_ready():
 		return
 
-	name_label.text = upgrade_name
+	name_label.text = upgrade_name.to_upper()
 	cost_label.text = "$%d" % cost
 
 

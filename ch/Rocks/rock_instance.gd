@@ -166,7 +166,7 @@ func update_active() -> void:
 
 func update_hit() -> void:
 	update_gravity(1.0)
-	linear_velocity = Vector3.ZERO
+	#linear_velocity = Vector3.ZERO
 	gravity_scale = 0.0
 	await get_tree().create_timer(1.0).timeout
 	disable_collision()
@@ -249,6 +249,8 @@ func reset_rock_back_on() -> void:
 
 func setup_rock_type() -> void:
 	current_mesh.scale = Vector3.ONE
+	
+	angular_damp = 1.0
 	
 	match rock_type:
 		# 0
@@ -493,7 +495,8 @@ func apply_marked_ability() -> void:
 		#return
 	
 	player_has_marked_rock = true
-	freeze = true
+	#freeze = true
+	apply_slow_linear_damp()
 	
 	if freeze_mine:
 		$Freeze.show()
@@ -518,6 +521,23 @@ func apply_marked_ability() -> void:
 	
 	await get_tree().create_timer(0.5).timeout
 	detonate_rock()
+	
+	
+func apply_slow_linear_damp() -> void:
+	var torque_dir := Vector3(
+		50.0,
+		1.0,
+		-50.0
+	).normalized()
+
+	apply_torque_impulse(
+		torque_dir * force_mult[force_mult_index] * hit_torque_strength
+	)
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT)
+	#tween.tween_interval(0.2)
+	tween.tween_property(self, "linear_damp", 8.0, 0.15).as_relative()
+	tween.parallel().tween_property(self, "angular_damp", 8.0, 0.15).as_relative()
 	
 func apply_hit_reaction(screen_offset: Vector2, accurate_direction := true) -> void:
 	
@@ -772,7 +792,7 @@ func start_destroyed_process() -> void:
 		$Marked.show()
 		$marked_embers.emitting = true
 		$marked_sfx.play()
-		freeze = true
+		apply_slow_linear_damp()
 		await get_tree().create_timer(0.5).timeout
 		
 		await get_tree().create_timer(0.5).timeout

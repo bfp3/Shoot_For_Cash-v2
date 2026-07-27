@@ -17,7 +17,7 @@ var sent_signal := false
 
 @export var timer_disabled := false
 
-@onready var timer_label: Label = $TimeLabel
+@onready var timer_label: RichTextLabel = $TimeLabel
 @export var start_time: float = 11.0 #14.0
 var time_left: float = 0.0
 var additional_increment := 1.0
@@ -143,25 +143,25 @@ func update_restarting() -> void:
 	
 	await get_tree().create_timer(0.25).timeout
 	time_left = start_time
-	var _orig_pos : Vector2 = timer_label.position 
-	var center_position : Vector2 = $Timer_centerPOS.position - (timer_label.size / 2)
-	timer_label.position = center_position
+	#var _orig_pos : Vector2 = timer_label.position 
+	#var center_position : Vector2 = $Timer_centerPOS.position - (timer_label.size / 2)
+	#timer_label.position = center_position
 	
-	var move_to_center_tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	move_to_center_tween.tween_property(timer_label, "horizontal_alignment", 1, 0.01)
-	move_to_center_tween.parallel().tween_property(timer_label, "scale", Vector2.ONE * 3, 0.01)
-	await move_to_center_tween.finished
+	#var move_to_center_tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	#move_to_center_tween.tween_property(timer_label, "horizontal_alignment", 1, 0.01)
+	#move_to_center_tween.parallel().tween_property(timer_label, "scale", Vector2.ONE * 3, 0.01)
+	#await move_to_center_tween.finished
 	
 	await timer_rollup_sequence()
 	$ReloadSound.pitch_scale = 1.0
 	await get_tree().create_timer(0.20).timeout
 
-	var move_back_tween := create_tween().set_trans(Tween.TRANS_CUBIC) #.set_ease(Tween.EASE_OUT)
-	move_back_tween.tween_property($TimeLabel, "position", _orig_pos, 0.15)
-	move_back_tween.parallel().tween_property(timer_label, "horizontal_alignment", 1, 0.1).set_delay(0.1)
-	move_back_tween.parallel().tween_property(timer_label, "scale", Vector2.ONE, 0.15)
-	move_back_tween.parallel().tween_callback($TimeRanOut3.play.bind(0.02)).set_delay(0.14)
-	await move_back_tween.finished
+	#var move_back_tween := create_tween().set_trans(Tween.TRANS_CUBIC) #.set_ease(Tween.EASE_OUT)
+	#move_back_tween.tween_property($TimeLabel, "position", _orig_pos, 0.15)
+	#move_back_tween.parallel().tween_property(timer_label, "horizontal_alignment", 1, 0.1).set_delay(0.1)
+	#move_back_tween.parallel().tween_property(timer_label, "scale", Vector2.ONE, 0.15)
+	#move_back_tween.parallel().tween_callback($TimeRanOut3.play.bind(0.02)).set_delay(0.14)
+	#await move_back_tween.finished
 
 func timer_rollup_sequence() -> void:
 
@@ -205,6 +205,9 @@ func timer_rollup_sequence() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if !OS.is_debug_build():
+		return
+	
 	if Input.is_key_label_pressed(KEY_U):
 		update_pause_timer()
 		

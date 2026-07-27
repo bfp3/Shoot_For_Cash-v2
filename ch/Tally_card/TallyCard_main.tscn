@@ -71,6 +71,14 @@ corner_detail = 10
 Button/styles/hover = null
 Button/styles/normal = SubResource("StyleBoxFlat_cn8lj")
 
+[sub_resource type="PrismMesh" id="PrismMesh_3q72g"]
+left_to_right = 1.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_4k5lx"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_cuwcq"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iforg"]
@@ -251,8 +259,6 @@ theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
 text = "DONE"
 script = ExtResource("9_4k5lx")
-border_outline_colour = Color(0.46799996, 0.46799996, 0.52, 1)
-editable = true
 
 [node name="RichTextLabel" type="RichTextLabel" parent="NextRound" unique_id=2106889567]
 layout_mode = 1
@@ -316,6 +322,31 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
+
+[node name="Control" type="Control" parent="CenterContainer" unique_id=21651763]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/Control" unique_id=135539786]
+modulate = Color(0.81, 0.008099993, 0.021464797, 1)
+position = Vector2(146.2511, 151.65076)
+rotation = 3.1415925
+scale = Vector2(191.4021, 81.436)
+mesh = SubResource("PrismMesh_3q72g")
+
+[node name="MeshInstance2D3" type="MeshInstance2D" parent="CenterContainer/Control" unique_id=2144145540]
+modulate = Color(0.81, 0.008099993, 0.021464797, 1)
+position = Vector2(-128.74792, 151.65082)
+rotation = 3.1415927
+scale = Vector2(-191.402, 81.436)
+mesh = SubResource("PrismMesh_4k5lx")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="CenterContainer/Control" unique_id=92637042]
+modulate = Color(0.81, 0.008099993, 0.021464797, 1)
+position = Vector2(8.591919, 152.02887)
+rotation = 3.1415925
+scale = Vector2(84.642, 81.561)
+mesh = SubResource("BoxMesh_cuwcq")
 
 [node name="BackgroundControl" type="Control" parent="CenterContainer" unique_id=49314975]
 layout_mode = 2
@@ -389,6 +420,7 @@ custom_minimum_size = Vector2(150, 100)
 layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/100_percent" unique_id=113222203]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 layout_mode = 0
 offset_left = -135.3089
 offset_top = -202.84262
@@ -396,12 +428,13 @@ offset_right = -8.308899
 offset_bottom = -133.84262
 rotation = -0.34906584
 pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 35
 theme_override_font_sizes/bold_font_size = 30
 theme_override_font_sizes/bold_italics_font_size = 30
 theme_override_font_sizes/italics_font_size = 49
 bbcode_enabled = true
-text = "[wave][rainbow][i]100%"
+text = "[wave][i]100%"
 fit_content = true
 autowrap_mode = 0
 
@@ -747,6 +780,7 @@ custom_minimum_size = Vector2(170, 146.15)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
+theme_type_variation = &"WhiteRichText"
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 10
 theme_override_font_sizes/normal_font_size = 110

@@ -6,7 +6,7 @@
 
 [node name="RoundSelector" type="TextureButton" unique_id=1495719427 groups=["restartable"]]
 self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(50, 50)
 anchors_preset = -1
 anchor_right = 0.052083332
 anchor_bottom = 0.09259259
@@ -21,6 +21,8 @@ texture_focused = ExtResource("1_jyr11")
 ignore_texture_size = true
 stretch_mode = 5
 script = ExtResource("2_xqnrj")
+outerRingColour_active = Color(0.78039217, 0.003921569, 0.007843138, 1)
+outerRingColour_levelCompleted = Color(0.08235294, 0.09411765, 0.10980392, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="CheckMark" type="TextureRect" parent="." unique_id=1256875408]
@@ -32,7 +34,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.194, 0.736)
+scale = Vector2(0.654, 0.79)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("2_24aoy")
@@ -46,10 +48,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 2.8571434
-offset_top = 9.999996
-offset_right = 2.8571472
-offset_bottom = 10.0
+offset_left = 0.965
+offset_top = 4.844
+offset_right = 0.9650078
+offset_bottom = 4.8440094
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -59,7 +61,6 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="RoundNumber" type="RichTextLabel" parent="." unique_id=780785008]
-modulate = Color(0.9, 0.9, 0.9, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -85,7 +86,7 @@ vertical_alignment = 1
 
 [node name="CashEarned" type="RichTextLabel" parent="." unique_id=1290443362]
 unique_name_in_owner = true
-modulate = Color(0.25882354, 0.81960785, 0, 1)
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -93,23 +94,24 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -54.0
-offset_top = 31.0
+offset_top = 39.0
 offset_right = 54.0
-offset_bottom = 97.0
+offset_bottom = 105.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 42
 bbcode_enabled = true
 fit_content = true
+autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="100_percent" type="Control" parent="." unique_id=1861128203]
 unique_name_in_owner = true
-visible = false
 z_index = 1
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 1
@@ -128,30 +130,31 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="perfected_label" type="RichTextLabel" parent="100_percent" unique_id=1451843102]
+modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.563
 anchor_right = 0.5
 anchor_bottom = 0.563
-offset_left = -98.50888
-offset_top = -83.14259
-offset_right = 28.491135
-offset_bottom = -14.142593
-rotation = -0.34906584
+offset_left = -63.50888
+offset_top = -101.14259
+offset_right = 63.491135
+offset_bottom = -32.142593
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 35
-theme_override_font_sizes/italics_font_size = 30
+theme_override_font_sizes/italics_font_size = 35
 bbcode_enabled = true
-text = "[wave][rainbow][i]100%"
+text = "[wave][i]100%"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="OuterRing" type="TextureRect" parent="." unique_id=562874062]
-modulate = Color(0.10800001, 0.1199, 0.15, 1)
+modulate = Color(0.4, 0.41960785, 0.47058824, 1)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15

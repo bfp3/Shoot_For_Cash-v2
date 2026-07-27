@@ -160,7 +160,7 @@ func _make_style(bg: Color, border: Color, width: int) -> StyleBoxFlat:
 
 func rename_self() -> void:
 	if upgrade_name_label:
-		upgrade_name_label.text = "[i]" + self.name + "[/i]".capitalize()
+		upgrade_name_label.text = "[i]" + self.name.to_upper()
 
 
 func reset_progress_bars() -> void:

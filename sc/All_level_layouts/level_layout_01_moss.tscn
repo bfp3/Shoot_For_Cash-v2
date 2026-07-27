@@ -1250,7 +1250,7 @@ light_color = Color(1, 0.7647059, 0.56078434, 1)
 light_indirect_energy = 0.0
 light_bake_mode = 0
 shadow_enabled = true
-shadow_opacity = 0.65
+shadow_opacity = 0.45
 directional_shadow_mode = 0
 directional_shadow_blend_splits = true
 
@@ -1259,8 +1259,7 @@ unique_name_in_owner = true
 environment = ExtResource("1_1thcr")
 
 [node name="ShadowBlocker" type="MeshInstance3D" parent="." unique_id=580761885]
-transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, -2, -3.015, -18)
-visible = false
+transform = Transform3D(-2.585, 0, -1.509958e-07, 0, 1, 0, 3.9032415e-07, 0, -1, -2, -7.197, -18)
 lod_bias = 10.0
 mesh = SubResource("QuadMesh_k7lvh")
 skeleton = NodePath("../Boatmesh")
@@ -1333,6 +1332,20 @@ mesh = SubResource("TextMesh_1vd3e")
 
 [node name="Quotes" type="MeshInstance3D" parent="Boatmesh/FrontRotatingPillars" unique_id=10351786]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -2.2812219, -0.45615864)
+material_override = ExtResource("16_1thcr")
+mesh = SubResource("TextMesh_snbl5")
+skeleton = NodePath("")
+script = ExtResource("17_fwjsh")
+
+[node name="Quotes2" type="MeshInstance3D" parent="Boatmesh/FrontRotatingPillars" unique_id=1040565472]
+transform = Transform3D(1.2676306e-07, 2.9, -2.5352605e-07, 2.9, -1.2676303e-07, 2.5352605e-07, 2.5352605e-07, -2.5352608e-07, -2.9, 4.795, 0.889, 7.953)
+material_override = ExtResource("16_1thcr")
+mesh = SubResource("TextMesh_snbl5")
+skeleton = NodePath("")
+script = ExtResource("17_fwjsh")
+
+[node name="Quotes3" type="MeshInstance3D" parent="Boatmesh/FrontRotatingPillars" unique_id=1703655386]
+transform = Transform3D(1.2676306e-07, 2.9, -2.5352605e-07, 2.9, -1.2676303e-07, 2.5352605e-07, 2.5352605e-07, -2.5352608e-07, -2.9, -13.969395, 0.889, 7.952999)
 material_override = ExtResource("16_1thcr")
 mesh = SubResource("TextMesh_snbl5")
 skeleton = NodePath("")
@@ -2497,8 +2510,6 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.175, -3, 9.850001)
 size = Vector3(15, 5, 10)
 texture_albedo = ExtResource("16_k7lvh")
-texture_normal = ExtResource("16_k7lvh")
-texture_orm = ExtResource("16_k7lvh")
 modulate = Color(1, 1, 1, 0.4627451)
 normal_fade = 0.5
 cull_mask = 1048559
@@ -2507,8 +2518,6 @@ cull_mask = 1048559
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.825, -3, 9.850001)
 size = Vector3(15, 5, 10)
 texture_albedo = ExtResource("16_k7lvh")
-texture_normal = ExtResource("16_k7lvh")
-texture_orm = ExtResource("16_k7lvh")
 modulate = Color(1, 1, 1, 0.4627451)
 normal_fade = 0.5
 cull_mask = 1048559

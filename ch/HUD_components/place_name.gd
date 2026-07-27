@@ -17,7 +17,7 @@ func update_place_name() -> void:
 	tween.tween_interval(1.0)
 	await tween.finished
 
-	place_label.text = "[b]" + current_place.to_upper()
+	place_label.text = current_place.to_upper()
 	
 	var tween2 = create_tween()
 	tween2.tween_property(place_label, 'modulate', Color.WHITE, 1.0)

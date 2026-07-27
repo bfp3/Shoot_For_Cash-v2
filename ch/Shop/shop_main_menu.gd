@@ -568,10 +568,10 @@ func update_shop_labels() -> void:
 	update_cost_label()
 	
 	if price_reroll == 0:
-		reroll_button.get_child(0).text = "[i][rainbow]REROLL[/rainbow]\n[wave][color=#ffc700]FREE[/color]"
+		reroll_button.get_child(0).text = "[i]REROLL\n[wave][color=#c70102]FREE[/color]"
 
 	else:
-		reroll_button.get_child(0).text = "[i][rainbow freq=0.5 sat=0.8 val=0.8 speed=1.0]REROLL[/rainbow]\n[color=#42d100]$" + str(price_reroll) + "[/color]"
+		reroll_button.get_child(0).text = "[i][wave]REROLL\n[color=#c70102]$" + str(price_reroll) + "[/color]"
 
 func sfx_purchase_made() -> void:
 	$SFX/shop_purchase_01.play()

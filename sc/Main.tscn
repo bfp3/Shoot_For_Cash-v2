@@ -327,7 +327,7 @@ _data = {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_taal3"]
 shader = ExtResource("28_ld44m")
 shader_parameter/overlay = false
-shader_parameter/aberration = 0.00300004764250005
+shader_parameter/aberration = 0.003000047642500059
 shader_parameter/brightness = 1.0
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.34000001615
@@ -335,11 +335,11 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.0
 shader_parameter/vignette_opacity = 0.800000038
 shader_parameter/scanlines_enabled = true
-shader_parameter/scanline_count = 600.0
-shader_parameter/scanline_opacity = 0.22000001045
-shader_parameter/scanline_speed = 100.0
+shader_parameter/scanline_count = 30.0
+shader_parameter/scanline_opacity = 0.0
+shader_parameter/scanline_speed = 0.2
 shader_parameter/mask_enabled = false
-shader_parameter/mask_opacity = 0.10000000475
+shader_parameter/mask_opacity = 0.24800001178
 shader_parameter/flicker_amount = 0.0
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_67uld"]
@@ -706,6 +706,8 @@ shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 Button/styles/normal = SubResource("StyleBoxFlat_r5w5l")
 Panel/styles/panel = SubResource("StyleBoxFlat_8twtg")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_3ga0b")
+
+[sub_resource type="PrismMesh" id="PrismMesh_vycyu"]
 
 [sub_resource type="GDScript" id="GDScript_mitwi"]
 script/source = "extends Node
@@ -2434,7 +2436,6 @@ pitch_scale = 2.0
 
 [node name="MainGameCanvasLayer" type="CanvasLayer" parent="." unique_id=778582470]
 layer = -1
-visible = false
 
 [node name="QuitMenu" type="PanelContainer" parent="MainGameCanvasLayer" unique_id=2079405395]
 unique_name_in_owner = true
@@ -2542,25 +2543,20 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = -9.0
-offset_top = -101.66675
-offset_right = 216.0
-offset_bottom = 10.0
+offset_top = -107.66675
+offset_right = 225.0
+offset_bottom = 4.0
 grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/default_color = Color(0.49, 0.49, 0.49, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 5
-theme_override_constants/shadow_offset_y = 5
-theme_override_constants/outline_size = 19
-theme_override_font_sizes/bold_font_size = 40
+theme_override_font_sizes/normal_font_size = 47
+theme_override_font_sizes/bold_font_size = 47
 bbcode_enabled = true
-text = "[b]MOSS"
+text = "MOSS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Panel" type="Panel" parent="MainGameCanvasLayer/Place_name/PlaceLabel" unique_id=1893096777]
+visible = false
 modulate = Color(1, 1, 1, 0.8627451)
 show_behind_parent = true
 custom_minimum_size = Vector2(180, 0)
@@ -2581,6 +2577,44 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme = SubResource("Theme_r5w5l")
 theme_override_styles/panel = ExtResource("31_hwubp")
+
+[node name="Panel2" type="Panel" parent="MainGameCanvasLayer/Place_name/PlaceLabel" unique_id=1869801473]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -37.833344
+offset_right = 90.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.165, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"TimerPanel"
+
+[node name="ColorRect" type="ColorRect" parent="MainGameCanvasLayer/Place_name/PlaceLabel/Panel2" unique_id=1473172203]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -17.0
+offset_bottom = -61.833344
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.968, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+color = Color(0.6, 0.0059999945, 0.01589985, 1)
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="MainGameCanvasLayer/Place_name/PlaceLabel/Panel2" unique_id=650191241]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+position = Vector2(89.270996, 10.025024)
+scale = Vector2(179.255, -13.95)
+mesh = SubResource("PrismMesh_vycyu")
 
 [node name="PlaceLabel2" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=1940403555]
 visible = false
@@ -2672,10 +2706,10 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
 [node name="SpacePanel" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer" parent_id_path=PackedInt32Array(973405492, 582425009) index="0" unique_id=763162626]
 theme_override_styles/panel = SubResource("StyleBoxEmpty_diemr")
 
-[node name="NextRound" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(973405492, 2043088047) index="1" unique_id=560640138]
+[node name="NextRound" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(973405492, 2043088047) index="2" unique_id=560640138]
 theme = SubResource("Theme_vrkmk")
 
-[node name="NextRound2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(973405492, 2043088047) index="2" unique_id=1388172073]
+[node name="NextRound2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(973405492, 2043088047) index="3" unique_id=1388172073]
 theme = SubResource("Theme_vrkmk")
 
 [node name="MoneyLabel" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Money_control" parent_id_path=PackedInt32Array(973405492, 1557695194) index="0" unique_id=1835839393]
