@@ -186,7 +186,7 @@ func update_open_menu() -> void:
 	
 	sfx_open_shop()
 	update_shop()
-	%Play_round_text.text = "[i][wave][color=]PLAY\n[color=42d100]$" + str(int(gl_DataSet.get_value('price_play_round', 0)))
+	%Play_round_text.text = "[i][wave][color=]PLAY\n[color=c70102]$" + str(int(gl_DataSet.get_value('price_play_round', 0)))
 	
 	
 	if reroll_unlocked:

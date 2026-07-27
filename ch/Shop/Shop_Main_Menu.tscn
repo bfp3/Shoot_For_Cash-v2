@@ -35,7 +35,6 @@
 [ext_resource type="PackedScene" uid="uid://ca7o2ypagyb3l" path="res://ch/Shop/RoundSelector.tscn" id="43_hi3s5"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="43_n5el2"]
 [ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="44_nc3xs"]
-[ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="44_sgib8"]
 [ext_resource type="AudioStream" uid="uid://bixius52c3n2s" path="res://sfx/shop_reroll_sfx_01.ogg" id="45_teea5"]
 [ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="46_i821l"]
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="47_gqw4q"]
@@ -114,6 +113,21 @@ hue_variation_max = -2.2351742e-08
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cn8lj"]
 
+[sub_resource type="Gradient" id="Gradient_jv82y"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.55505615, 0.72808987)
+colors = PackedColorArray(0.92156863, 0.8784314, 0.84705883, 1, 0.9, 0.858, 0.828, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_sgib8"]
+frequency = 0.085
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_pwib5"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_sgib8")
+color_ramp = SubResource("Gradient_jv82y")
+seamless = true
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hi3s5"]
@@ -122,6 +136,20 @@ corner_radius_top_left = 20
 corner_radius_top_right = 20
 
 [sub_resource type="PrismMesh" id="PrismMesh_hi3s5"]
+
+[sub_resource type="Gradient" id="Gradient_sgib8"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.55730337, 0.72808987)
+colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 0.68, 0.0067999936, 0.018019829, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jv82y"]
+frequency = 0.0069
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_atgli"]
+height = 162
+noise = SubResource("FastNoiseLite_jv82y")
+color_ramp = SubResource("Gradient_sgib8")
+seamless = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn8lj"]
 bg_color = Color(0.09803922, 0.09803922, 0.11372549, 1)
@@ -160,6 +188,17 @@ border_width_bottom = 2
 border_color = Color(0.32, 0.2976, 0.22399999, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vrkmk"]
+
+[sub_resource type="Gradient" id="Gradient_hi3s5"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.55730337, 0.72808987)
+colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 0.68, 0.0067999936, 0.018019829, 1)
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jv82y"]
+height = 64
+noise = SubResource("FastNoiseLite_sgib8")
+color_ramp = SubResource("Gradient_hi3s5")
+seamless = true
 
 [sub_resource type="GDScript" id="GDScript_hi3s5"]
 script/source = "extends RichTextLabel
@@ -469,11 +508,16 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("5_vom4t")
 
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel" unique_id=870996989]
+layout_mode = 2
+texture = SubResource("NoiseTexture2D_pwib5")
+expand_mode = 1
+
 [node name="Bullets" type="Control" parent="CenterContainer/MainPanel" unique_id=280148899]
 layout_mode = 2
 
 [node name="TextureRect2" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=1174213666]
-self_modulate = Color(1, 1, 1, 0.19215687)
+self_modulate = Color(1, 1, 1, 0.13725491)
 layout_mode = 0
 offset_left = 328.0
 offset_right = 1304.0
@@ -485,7 +529,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="TextureRect3" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=753410049]
-self_modulate = Color(1, 1, 1, 0.19215687)
+self_modulate = Color(1, 1, 1, 0.13725491)
 layout_mode = 0
 offset_left = 168.0
 offset_right = 1144.0
@@ -712,15 +756,27 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -90.0
-offset_top = -56.833344
+offset_top = -57.833344
 offset_right = 90.0
-offset_bottom = 56.166656
+offset_bottom = 1.4224854
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.525, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"RedPanel"
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound/Panel2" unique_id=506920231]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = SubResource("NoiseTexture2D_atgli")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Play_round_text" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1411659262]
 unique_name_in_owner = true
@@ -763,7 +819,6 @@ theme_override_font_sizes/font_size = 26
 text = "DONE"
 
 [node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1388172073]
-visible = false
 modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
 show_behind_parent = true
 layout_mode = 0
@@ -880,6 +935,7 @@ theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 90
 theme_override_font_sizes/italics_font_size = 90
 bbcode_enabled = true
+text = "$500,000"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -1208,11 +1264,20 @@ offset_right = 1450.0
 offset_bottom = 201.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_hi3s5")
 
+[node name="TextureRect" type="TextureRect" parent="ColorRect" unique_id=2113967704]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("NoiseTexture2D_jv82y")
+
 [node name="MeshInstance2D" type="MeshInstance2D" parent="ColorRect" unique_id=1348186323]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-position = Vector2(490.6712, 49.86006)
+position = Vector2(490.67126, 44.86006)
 rotation = 3.1415925
-scale = Vector2(982.3424, 94.5037)
+scale = Vector2(982.342, 106)
 mesh = SubResource("PrismMesh_hi3s5")
 
 [node name="TicketPurchasedPopUp" parent="." unique_id=1840245893 instance=ExtResource("27_ei2sf")]
@@ -1453,8 +1518,6 @@ alignment = 1
 [node name="RoundSelector" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1495719427 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-outerRingColour_active = Color(0.78039217, 0.003921569, 0.007843138, 1)
-outerRingColour_levelCompleted = Color(0.08235294, 0.09411765, 0.10980392, 1)
 shop_main_menu = NodePath("../../../../..")
 focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
@@ -1625,114 +1688,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/italics_font_size = 60
 bbcode_enabled = true
-text = "[i]GIUSEPPES"
+text = "[i]PLACEHOLDER"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="RichTextLabel4" type="RichTextLabel" parent="GameName" unique_id=1138963450]
-visible = false
-modulate = Color(0.5, 0.26999998, 0.26999998, 1)
-clip_contents = false
-custom_minimum_size = Vector2(500, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -425.5
-offset_top = -39.0
-offset_right = 439.5
-offset_bottom = 115.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_fonts/bold_font = ExtResource("44_sgib8")
-theme_override_fonts/bold_italics_font = ExtResource("44_sgib8")
-theme_override_font_sizes/bold_font_size = 110
-theme_override_font_sizes/bold_italics_font_size = 110
-theme_override_font_sizes/italics_font_size = 110
-bbcode_enabled = true
-text = "[i][color=#ffffff]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]!"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RichTextLabel3" type="RichTextLabel" parent="GameName" unique_id=676617437]
-visible = false
-modulate = Color(0.28, 0.28, 0.28, 0.48235294)
-clip_contents = false
-custom_minimum_size = Vector2(500, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -429.5
-offset_top = -45.0
-offset_right = 435.5
-offset_bottom = 109.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_fonts/bold_font = ExtResource("44_sgib8")
-theme_override_fonts/bold_italics_font = ExtResource("44_sgib8")
-theme_override_font_sizes/bold_font_size = 110
-theme_override_font_sizes/bold_italics_font_size = 110
-theme_override_font_sizes/italics_font_size = 110
-bbcode_enabled = true
-text = "[i][color=#ffc700]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="GameName" unique_id=1037987165]
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -432.5
-offset_top = -45.0
-offset_right = 432.5
-offset_bottom = 109.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/bold_font_size = 110
-theme_override_font_sizes/bold_italics_font_size = 110
-theme_override_font_sizes/italics_font_size = 110
-bbcode_enabled = true
-text = "[i]Moss"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="GameName" unique_id=2051311283]
-visible = false
-custom_minimum_size = Vector2(840, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -396.0
-offset_top = -34.0
-offset_right = 444.0
-offset_bottom = -30.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]
