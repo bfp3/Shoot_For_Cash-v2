@@ -208,9 +208,8 @@ gravity = Vector3(0, 0, 0)
 scale_min = 6.0
 scale_max = 12.0
 scale_curve = SubResource("CurveTexture_4eg6k")
-color = Color(1, 0.78, 0, 1)
 alpha_curve = SubResource("CurveTexture_gxbd8")
-hue_variation_min = -0.100000024
+hue_variation_min = -2.2351742e-08
 hue_variation_max = 0.09999997
 
 [sub_resource type="Curve" id="Curve_g6ubq"]
@@ -273,10 +272,12 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.972, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 theme_type_variation = &"RedPanel"
 
 [node name="Tooltip" type="PanelContainer" parent="." unique_id=1191019644]
 visible = false
+self_modulate = Color(0, 0, 0, 0.22352941)
 z_index = 1
 layout_mode = 1
 anchors_preset = -1
@@ -296,7 +297,9 @@ metadata/_edit_use_anchors_ = true
 [node name="RichTextLabel" type="RichTextLabel" parent="Tooltip" unique_id=995982953]
 layout_mode = 2
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 20
+theme_override_colors/default_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
+theme_override_font_sizes/normal_font_size = 50
+theme_override_font_sizes/italics_font_size = 50
 bbcode_enabled = true
 text = "Testing Tooltip"
 fit_content = true
@@ -319,8 +322,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="UpgradePanel" type="Panel" parent="VBoxContainer" unique_id=1516595616]
-clip_contents = true
-custom_minimum_size = Vector2(120, 120)
+custom_minimum_size = Vector2(100, 120)
 layout_mode = 2
 mouse_filter = 2
 theme = SubResource("Theme_64t06")
@@ -358,12 +360,13 @@ process_material = SubResource("ParticleProcessMaterial_vhsx8")
 
 [node name="Upgrade_Icon" type="TextureRect" parent="VBoxContainer/UpgradePanel" unique_id=270279238]
 unique_name_in_owner = true
-self_modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 custom_minimum_size = Vector2(100, 110)
 layout_mode = 0
-offset_top = 4.0
+offset_top = -0.0039138794
 offset_right = 187.0
-offset_bottom = 114.0
+offset_bottom = 136.78534
+scale = Vector2(0.807, 0.807)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("2_64t06")
 expand_mode = 1
@@ -529,7 +532,7 @@ mouse_filter = 2
 custom_minimum_size = Vector2(84.88, 0)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/default_color = Color(1, 0.78039217, 0, 1)
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 theme_override_font_sizes/normal_font_size = 82
 theme_override_font_sizes/bold_font_size = 23
 theme_override_font_sizes/italics_font_size = 23
@@ -559,6 +562,7 @@ mouse_filter = 2
 clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_filter = 2
 bbcode_enabled = true
 text = "CAPPED"
 fit_content = true
@@ -581,8 +585,8 @@ pitch_scale = 0.9
 z_index = 3
 position = Vector2(104, 212)
 emitting = false
-amount = 12
-lifetime = 0.5
+amount = 18
+lifetime = 0.8
 one_shot = true
 explosiveness = 1.0
 fixed_fps = 60

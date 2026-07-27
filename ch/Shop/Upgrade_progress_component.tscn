@@ -17,6 +17,7 @@ border_width_bottom = 2
 border_color = Color(0.32, 0.2976, 0.22399999, 1)
 
 [node name="Button" type="Button" unique_id=173612620 node_paths=PackedStringArray("upgrade_name_label", "progress_bar_container", "purchase_progress_bar", "tooltip", "focus_enter_sfx", "focus_exit_sfx", "cost_label", "purchase_sfx") groups=["restartable"]]
+self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(120.715, 0)
 anchors_preset = 15
 anchor_right = 1.0
@@ -138,6 +139,7 @@ theme_override_styles/fill = ExtResource("3_ivrgr")
 show_percentage = false
 
 [node name="UpgradePanel" type="Panel" parent="Upgrade_Permanent_button/Control" unique_id=696861470]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = -1.0
 offset_top = 28.0
@@ -163,6 +165,7 @@ step = 1.0
 show_percentage = false
 
 [node name="Label" type="RichTextLabel" parent="Upgrade_Permanent_button/Control/UpgradePanel" unique_id=963885621]
+clip_contents = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -170,10 +173,10 @@ anchor_bottom = 1.0370961
 grow_horizontal = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
-theme = ExtResource("2_v1a8s")
+theme_override_font_sizes/italics_font_size = 29
 bbcode_enabled = true
 text = "[i] Scope Radius [/i]"
-horizontal_alignment = 1
+fit_content = true
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
@@ -183,14 +186,13 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="PowerLevel_label" type="Label" parent="Upgrade_Permanent_button/Control/UpgradePanel" unique_id=1782013562]
+[node name="PowerLevel_label" type="RichTextLabel" parent="Upgrade_Permanent_button/Control/UpgradePanel" unique_id=892693222]
 layout_mode = 0
 offset_left = 90.0
 offset_top = 44.0
 offset_right = 130.0
 offset_bottom = 72.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/font_size = 15
 horizontal_alignment = 1
 vertical_alignment = 1
 

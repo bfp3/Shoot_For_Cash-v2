@@ -24,7 +24,6 @@
 [ext_resource type="Script" uid="uid://up6jew6r4kdm" path="res://ch/Shop/transport_tickets.gd" id="16_vom4t"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="17_cn8lj"]
 [ext_resource type="Texture2D" uid="uid://b2v72vmf55sw6" path="res://res/red_balloon_burst.png" id="19_pwib5"]
-[ext_resource type="Theme" uid="uid://bjwkhgoiebh1q" path="res://res/custom_themes_by_blake/shoot_for_cash_default_theme.tres" id="20_sgib8"]
 [ext_resource type="PackedScene" uid="uid://dcuml06w7i3km" path="res://ch/Shop/ticket_button.tscn" id="20_xklyy"]
 [ext_resource type="PackedScene" uid="uid://cjcdqa3pipb3j" path="res://ch/close_menu.tscn" id="21_tnodp"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
@@ -117,10 +116,9 @@ hue_variation_max = -2.2351742e-08
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hi3s5"]
+bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
 
 [sub_resource type="PrismMesh" id="PrismMesh_hi3s5"]
 
@@ -141,6 +139,14 @@ corner_detail = 10
 Button/colors/font_color = Color(0.88, 0.88, 0.88, 0)
 Button/styles/hover = null
 Button/styles/normal = SubResource("StyleBoxFlat_cn8lj")
+
+[sub_resource type="PrismMesh" id="PrismMesh_sgib8"]
+left_to_right = 1.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_jv82y"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_atgli"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbtj3"]
 bg_color = Color(0.32, 0.32, 0.32, 1)
@@ -186,30 +192,6 @@ mouse_filter = 2
 script = ExtResource("1_wlak1")
 money_control = NodePath("TEST_MONEY_CONTROL")
 reveal_skill_sfx = NodePath("SFX/shop_purchase_02")
-
-[node name="TextureRect2" type="TextureRect" parent="." unique_id=1174213666]
-self_modulate = Color(1, 1, 1, 0.7058824)
-layout_mode = 0
-offset_left = 1066.0
-offset_top = 286.0
-offset_right = 1578.0
-offset_bottom = 798.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TextureRect3" type="TextureRect" parent="." unique_id=753410049]
-self_modulate = Color(1, 1, 1, 0.7058824)
-layout_mode = 0
-offset_left = 906.0
-offset_top = 286.0
-offset_right = 1418.0
-offset_bottom = 798.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="TEST_MONEY_CONTROL" type="Node" parent="." unique_id=1590283361]
 script = SubResource("GDScript_mitwi")
@@ -483,6 +465,33 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("5_vom4t")
 
+[node name="Bullets" type="Control" parent="CenterContainer/MainPanel" unique_id=280148899]
+layout_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=1174213666]
+self_modulate = Color(1, 1, 1, 0.19215687)
+layout_mode = 0
+offset_left = 328.0
+offset_right = 1304.0
+offset_bottom = 765.0
+scale = Vector2(0.626, 0.626)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("8_7j408")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect3" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=753410049]
+self_modulate = Color(1, 1, 1, 0.19215687)
+layout_mode = 0
+offset_left = 168.0
+offset_right = 1144.0
+offset_bottom = 765.0
+scale = Vector2(0.626, 0.626)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("8_7j408")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=582425009]
 layout_mode = 2
 theme_override_constants/separation = 0
@@ -749,21 +758,28 @@ theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
 text = "DONE"
 
-[node name="Reroll" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=118877002]
+[node name="Reroll" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1354737390]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 863.0
-offset_top = 155.0
+offset_top = 153.0
 offset_right = 963.0
-offset_bottom = 276.155
+offset_bottom = 274.15503
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme = ExtResource("20_sgib8")
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+script = ExtResource("3_y3o4g")
 
-[node name="Reroll_label" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" unique_id=875627575]
+[node name="Reroll_label" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" unique_id=1127921913]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 2.0
+offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -795,8 +811,8 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = 16.0
-offset_bottom = 16.0
+offset_top = 33.0
+offset_bottom = 33.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0, 0.5)
@@ -811,6 +827,69 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="MoneyLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1366998873]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -52.0
+offset_top = -29.5
+offset_right = 52.0
+offset_bottom = -0.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0, 0.5)
+size_flags_horizontal = 3
+focus_mode = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/italics_font_size = 90
+bbcode_enabled = true
+text = "B A L A N C E"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1601384433]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2.0
+offset_bottom = 71.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.323, 1.323)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=549092801]
+modulate = Color(0.81, 0.008099993, 0.021464797, 1)
+position = Vector2(626.2511, 102.65076)
+rotation = 3.1415925
+scale = Vector2(191.4021, 81.436)
+mesh = SubResource("PrismMesh_sgib8")
+
+[node name="MeshInstance2D3" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=909585586]
+modulate = Color(0.81, 0.008099993, 0.021464797, 1)
+position = Vector2(351.25214, 102.65076)
+rotation = 3.1415927
+scale = Vector2(-191.402, 81.436)
+mesh = SubResource("PrismMesh_jv82y")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=927548181]
+modulate = Color(0.81, 0.008099993, 0.021464797, 1)
+position = Vector2(488.59204, 103.02887)
+rotation = 3.1415925
+scale = Vector2(84.642, 81.561)
+mesh = SubResource("BoxMesh_atgli")
 
 [node name="UpgradeStats" type="CenterContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1504735911]
 layout_mode = 2
@@ -1062,22 +1141,19 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="ColorRect" type="Panel" parent="." unique_id=77597337]
-visible = false
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-z_index = -1
 custom_minimum_size = Vector2(980, 0)
 layout_mode = 0
 offset_left = 470.0
-offset_top = 120.0
+offset_top = 104.0
 offset_right = 1450.0
-offset_bottom = 247.0
+offset_bottom = 201.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_hi3s5")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="ColorRect" unique_id=1348186323]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-position = Vector2(490.6712, 65.80411)
+position = Vector2(490.6712, 49.86006)
 rotation = 3.1415925
-scale = Vector2(982.3424, 126.39179)
+scale = Vector2(982.3424, 94.5037)
 mesh = SubResource("PrismMesh_hi3s5")
 
 [node name="TicketPurchasedPopUp" parent="." unique_id=1840245893 instance=ExtResource("27_ei2sf")]

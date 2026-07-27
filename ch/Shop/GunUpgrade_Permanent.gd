@@ -21,7 +21,7 @@ var max_upgrade_level := 10
 var current_bullet_amount := 1
 
 @export var upgrade_icon : CompressedTexture2D
-@export var cost_label : Label
+@export var cost_label : RichTextLabel
 @onready var purchase_hold_progress_bar: ProgressBar = %PurchaseHoldProgressBar
 
 var player_upgrading_script : Node
@@ -56,7 +56,7 @@ func update_power() -> void:
 	#var settings : Dictionary = gl_PlayerState.get_all()
 	var new_level := gl_DataSet.get_value(price_power, gl_PlayerState.dataset[upgrade_type_string])
 
-	var power_level_label : Label = $Upgrade_Permanent_button/Control/UpgradePanel/PowerLevel_label
+	var power_level_label : RichTextLabel = $Upgrade_Permanent_button/Control/UpgradePanel/PowerLevel_label
 	power_level_label.text = "$" + str(int(new_level))
 	
 	
@@ -160,7 +160,7 @@ func _make_style(bg: Color, border: Color, width: int) -> StyleBoxFlat:
 
 func rename_self() -> void:
 	if upgrade_name_label:
-		upgrade_name_label.text = "[i]" + self.name + "[/i]"
+		upgrade_name_label.text = "[i]" + self.name + "[/i]".capitalize()
 
 
 func reset_progress_bars() -> void:
@@ -195,7 +195,7 @@ func start_upgrade_tween() -> void:
 
 
 func update_power_label_position() -> void:
-	var power_level_label : Label = $Upgrade_Permanent_button/Control/UpgradePanel/PowerLevel_label
+	var power_level_label : RichTextLabel = $Upgrade_Permanent_button/Control/UpgradePanel/PowerLevel_label
 
 	var total_bars := progress_bar_container.get_child_count()
 

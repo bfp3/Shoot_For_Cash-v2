@@ -1,5 +1,19 @@
 [gd_resource type="Theme" format=3 uid="uid://bjwkhgoiebh1q"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_disabled"]
+bg_color = Color(0.75, 0.72, 0.69, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.45, 0.45, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0t4um"]
 bg_color = Color(0.88, 0.8389333, 0.8096, 1)
 border_width_left = 2
@@ -7,6 +21,18 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.43, 0.43, 0.43, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pressed"]
+bg_color = Color(0.82, 0.78, 0.74, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.35, 0.35, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -37,10 +63,15 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [resource]
+Button/styles/disabled = SubResource("StyleBoxFlat_disabled")
+Button/styles/focus = SubResource("StyleBoxEmpty_focus")
 Button/styles/hover = SubResource("StyleBoxFlat_0t4um")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_pressed")
 Button/styles/normal = SubResource("StyleBoxFlat_dclmx")
+Button/styles/pressed = SubResource("StyleBoxFlat_pressed")
 CashLabelRichText/base_type = &"RichTextLabel"
-CashLabelRichText/colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+CashLabelRichText/colors/default_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
+MenuUiButtons/base_type = &"Button"
 RedPanel/base_type = &"Panel"
 RedPanel/styles/panel = SubResource("StyleBoxFlat_dk8vw")
 RichTextLabel/colors/default_color = Color(0.08235294, 0.078431375, 0.09019608, 1)

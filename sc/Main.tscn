@@ -386,7 +386,7 @@ alpha_curve = SubResource("CurveTexture_vhsx8")
 bg_color = Color(0.33, 0.33, 0.33, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ufvrt"]
-bg_color = Color(0.25882354, 0.81960785, 0, 1)
+bg_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -459,8 +459,9 @@ _data = {
 &"new_animation": SubResource("Animation_exbpr")
 }
 
-[sub_resource type="Gradient" id="Gradient_ive30"]
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+[sub_resource type="Gradient" id="Gradient_vycyu"]
+offsets = PackedFloat32Array(0, 0.99117)
+colors = PackedColorArray(1, 1, 1, 0, 0.78039217, 0.003921569, 0.007843138, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
@@ -1688,7 +1689,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_ufvrt")
 show_percentage = false
 
 [node name="TextureRect" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" unique_id=1131831230]
-self_modulate = Color(1, 0.78039217, 0, 1)
+self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 1
 anchors_preset = 8
@@ -1728,31 +1729,17 @@ grow_vertical = 2
 scale = Vector2(0.25, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
-[node name="up" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=195380176]
-visible = false
-points = PackedVector2Array(0, -500, 0, -100)
-width = 4.0
-gradient = SubResource("Gradient_ive30")
-texture_mode = 2
-
-[node name="down" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=1822908109]
-visible = false
-points = PackedVector2Array(0, 500, 0, 100)
-width = 4.0
-gradient = SubResource("Gradient_ive30")
-texture_mode = 2
-
 [node name="left" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=2010528898]
 points = PackedVector2Array(-628, 0, -130, 0)
 width = 4.0
-gradient = SubResource("Gradient_ive30")
+gradient = SubResource("Gradient_vycyu")
 texture_mode = 2
 joint_mode = 2
 
 [node name="right" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=640537034]
 points = PackedVector2Array(758, 0, 130, 0)
 width = 4.0
-gradient = SubResource("Gradient_ive30")
+gradient = SubResource("Gradient_vycyu")
 texture_mode = 2
 joint_mode = 2
 
@@ -1872,11 +1859,11 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Bullet3" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=697000681]
-self_modulate = Color(0.22, 0.22, 0.22, 1)
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
-offset_left = 229.2461
+offset_left = 241.50684
 offset_top = 141.36035
-offset_right = 741.2461
+offset_right = 753.50684
 offset_bottom = 653.36035
 scale = Vector2(0.19, 0.19)
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -1886,7 +1873,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Bullet5" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=708204961]
-self_modulate = Color(0.22, 0.22, 0.22, 1)
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
 offset_left = 287.4839
 offset_top = 141.36035
@@ -1900,7 +1887,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Bullet6" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=1026862140]
-self_modulate = Color(0.22, 0.22, 0.22, 1)
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
 offset_left = 330.3943
 offset_top = 141.36035
@@ -1914,7 +1901,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Bullet" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=97407066]
-self_modulate = Color(0.22, 0.22, 0.22, 1)
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
 offset_left = -230.00537
 offset_top = 140.10358
@@ -1928,7 +1915,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Bullet4" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=682272177]
-self_modulate = Color(0.22, 0.22, 0.22, 1)
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
 offset_left = -272.92017
 offset_top = 140.10358
@@ -2270,6 +2257,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RichTextLabel4" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=441704417]
+visible = false
 modulate = Color(0.5, 0.26999998, 0.26999998, 1)
 clip_contents = false
 custom_minimum_size = Vector2(500, 0)
@@ -2300,7 +2288,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RichTextLabel3" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=2118421025]
-modulate = Color(0.28, 0.28, 0.28, 1)
+modulate = Color(0.28, 0.28, 0.28, 0.48235294)
 clip_contents = false
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 1
@@ -2323,7 +2311,7 @@ theme_override_font_sizes/bold_font_size = 110
 theme_override_font_sizes/bold_italics_font_size = 110
 theme_override_font_sizes/italics_font_size = 110
 bbcode_enabled = true
-text = "[i][color=#ffc700]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]!"
+text = "[i][color=#ffc700]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -2343,6 +2331,7 @@ offset_right = 432.5
 offset_bottom = 109.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/bold_italics_font = ExtResource("37_nn6vd")
@@ -2350,7 +2339,7 @@ theme_override_font_sizes/bold_font_size = 110
 theme_override_font_sizes/bold_italics_font_size = 110
 theme_override_font_sizes/italics_font_size = 110
 bbcode_enabled = true
-text = "[i][color=#ffffff]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]!"
+text = "[i][color=#c70102]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -2649,13 +2638,13 @@ unique_name_in_owner = true
 round_manager = NodePath("../../Round_manager")
 money_control = NodePath("../Money_labels")
 
-[node name="TEST_MONEY_CONTROL" parent="MainGameCanvasLayer/Shop_Main_Menu" index="2" unique_id=1590283361]
+[node name="TEST_MONEY_CONTROL" parent="MainGameCanvasLayer/Shop_Main_Menu" index="0" unique_id=1590283361]
 script = SubResource("GDScript_mitwi")
 
-[node name="BackgroundParticles" parent="MainGameCanvasLayer/Shop_Main_Menu" index="3" unique_id=229782520]
+[node name="BackgroundParticles" parent="MainGameCanvasLayer/Shop_Main_Menu" index="1" unique_id=229782520]
 process_material = SubResource("ParticleProcessMaterial_367yi")
 
-[node name="BalloonBuster" parent="MainGameCanvasLayer/Shop_Main_Menu" index="9" unique_id=1782515006]
+[node name="BalloonBuster" parent="MainGameCanvasLayer/Shop_Main_Menu" index="7" unique_id=1782515006]
 upgrade_icon = null
 balloon_buster = false
 hold_duration = 0.15
@@ -2689,12 +2678,6 @@ theme = SubResource("Theme_vrkmk")
 [node name="NextRound2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(973405492, 2043088047) index="2" unique_id=1388172073]
 theme = SubResource("Theme_vrkmk")
 
-[node name="Reroll" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel" parent_id_path=PackedInt32Array(973405492, 1314206077) index="3" unique_id=118877002]
-theme = SubResource("Theme_vrkmk")
-
-[node name="Reroll" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" index="1" unique_id=2024328167]
-theme = SubResource("Theme_vrkmk")
-
 [node name="MoneyLabel" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Money_control" parent_id_path=PackedInt32Array(973405492, 1557695194) index="0" unique_id=1835839393]
 offset_left = -0.5
 offset_right = 0.5
@@ -2726,7 +2709,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
 [node name="SpacePanel4" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer" parent_id_path=PackedInt32Array(973405492, 582425009) index="6" unique_id=1282620482]
 theme_override_styles/panel = SubResource("StyleBoxEmpty_diemr")
 
-[node name="TicketPurchasedPopUp" parent="MainGameCanvasLayer/Shop_Main_Menu" index="13" unique_id=1840245893]
+[node name="TicketPurchasedPopUp" parent="MainGameCanvasLayer/Shop_Main_Menu" index="12" unique_id=1840245893]
 anchors_preset = 0
 anchor_left = 0.0
 anchor_top = 0.0
@@ -2738,15 +2721,6 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 grow_horizontal = 1
 grow_vertical = 1
-
-[node name="Reroll" parent="MainGameCanvasLayer/Shop_Main_Menu" index="15" unique_id=1776584902]
-theme = SubResource("Theme_vrkmk")
-
-[node name="Reroll_label" parent="MainGameCanvasLayer/Shop_Main_Menu/Reroll" index="0" unique_id=2110889887]
-theme_override_font_sizes/bold_font_size = 18
-theme_override_font_sizes/bold_italics_font_size = 18
-theme_override_font_sizes/italics_font_size = 18
-theme_override_font_sizes/mono_font_size = 18
 
 [node name="Frame_rate" type="Control" parent="MainGameCanvasLayer" unique_id=439145462]
 visible = false

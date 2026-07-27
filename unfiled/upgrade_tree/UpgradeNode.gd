@@ -435,7 +435,7 @@ func remove_gun() -> void:
 
 func _on_focus_entered() -> void:
 	#var bbcode_des : String = "[rainbow][shake]" + description + "[/shake][/rainbow]"
-	var bbcode_des : String = "[pulse freq=2.0 color=#ffc70099 ease=-2.0]" + tooltip_description + "[/pulse]"
+	var bbcode_des : String = "" + tooltip_description
 	#var bbcode_des : String = "[shake rate=5.0 level=5 connected=1]" + description + "[/shake]"
 	if tooltip:
 		tooltip._toggle_tooltip(true, bbcode_des)
@@ -515,7 +515,7 @@ func _update_visual_state() -> void:
 		State.UNAVAILABLE:
 			base = Color(0.28, 0.28, 0.28, 0.196) #.darkened(0.7)
 			border = Color(0.249, 0.249, 0.28, 0.196)
-			self.modulate = Color('FFFFFF99')
+			self.modulate = Color("ffffffff")
 
 		State.AVAILABLE:
 			base = Color(0.078, 0.09, 0.11, 1.0)
