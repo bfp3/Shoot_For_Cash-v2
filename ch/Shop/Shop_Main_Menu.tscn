@@ -804,9 +804,15 @@ stretch_mode = 5
 [node name="Play_round_text" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1411659262]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -359.5
+offset_top = -486.0
+offset_right = 359.5
+offset_bottom = 486.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -879,156 +885,16 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 2.0
-offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 33
-theme_override_font_sizes/italics_font_size = 33
+theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/italics_font_size = 32
 bbcode_enabled = true
 text = "Reroll"
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1784955091]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 18.0
-offset_top = 23.0
-offset_right = 118.0
-offset_bottom = 144.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-script = ExtResource("3_y3o4g")
-
-[node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1138830874]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = -57.833344
-offset_right = 90.0
-offset_bottom = 1.4224854
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"RedPanel"
-
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2/Panel2" unique_id=1960744408]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = SubResource("NoiseTexture2D_atgli")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Play_round_text" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1492315006]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/italics_font_size = 45
-bbcode_enabled = true
-text = "[i][wave][color=]PLAY
-[color=42d100]---"
 fit_content = true
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=314356615]
-visible = false
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 8.0
-offset_right = 100.0
-offset_bottom = 129.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_vrkmk")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_disabled_color = Color(0.88, 0.88, 0.88, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-
-[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1929692663]
-visible = false
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 8.0
-offset_right = 100.0
-offset_bottom = 129.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_vrkmk")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-
-[node name="Reroll2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1598512]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 18.0
-offset_top = 151.0
-offset_right = 118.0
-offset_bottom = 272.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-script = ExtResource("3_y3o4g")
-
-[node name="Reroll_label" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll2" unique_id=781082894]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 2.0
-offset_bottom = 2.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 33
-theme_override_font_sizes/italics_font_size = 33
-bbcode_enabled = true
-text = "Reroll"
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1083,6 +949,7 @@ mesh = SubResource("BoxMesh_atgli")
 
 [node name="MoneyLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1835839393]
 unique_name_in_owner = true
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -1090,17 +957,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -142.5
-offset_top = -75.0
-offset_right = 142.5
-offset_bottom = 23.0
+offset_left = -896.0
+offset_top = -331.5
+offset_right = 896.0
+offset_bottom = 279.5
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset_ratio = Vector2(0, 0.5)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 focus_mode = 2
 theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 90
+theme_override_font_sizes/normal_font_size = 98
 theme_override_font_sizes/italics_font_size = 90
 bbcode_enabled = true
 text = "$500,000"
@@ -1112,6 +979,7 @@ vertical_alignment = 1
 
 [node name="MoneyLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1366998873]
 unique_name_in_owner = true
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -1125,7 +993,7 @@ offset_right = 52.0
 offset_bottom = -59.5
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset_ratio = Vector2(0, 0.5)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 focus_mode = 2
 theme_type_variation = &"WhiteRichText"
@@ -1229,6 +1097,7 @@ pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 current_state = 1
 
 [node name="RoundSelector2" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=209809932 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1236,6 +1105,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector3" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=961160610 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1243,6 +1113,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector4" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1150610278 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1250,6 +1121,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector5" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=323064248 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1257,6 +1129,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector6" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1940111857 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1264,6 +1137,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector7" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=898267515 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1271,6 +1145,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector8" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1953751896 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1278,6 +1153,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector9" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=204374324 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1285,6 +1161,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector10" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=612636488 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1292,6 +1169,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector11" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1706135853 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1299,6 +1177,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector12" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=127144028 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1777,8 +1656,6 @@ vertical_alignment = 1
 
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" to="." method="play_round_button_pressed"]
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll2" to="." method="_on_re_roll_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]
 [connection signal="pressed" from="MaxOutPowers" to="." method="_on_max_out_powers_pressed"]
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]

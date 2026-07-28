@@ -55,8 +55,6 @@ var tween_available : Tween = null
 func _ready() -> void:
 
 	outer_ring_mod_orig = outerRingColour_default
-
-	round_number.text = str(get_index() + 1)
 	
 	round_manager = get_tree().get_first_node_in_group('round_manager')
 	all_levels = round_manager.current_rock_sequence
@@ -108,8 +106,8 @@ func update_locked() -> void:
 	$'100_percent'.hide()
 	$ArrowIndication.hide()
 	outer_ring.modulate = outerRingColour_default
-	$RoundNumber.hide()
-	$RoundNumber.modulate.a = 0.0
+	round_number.hide()
+	round_number.modulate.a = 0.0
 	self.custom_minimum_size = Vector2(40.0,40.0)
 
 func update_available() -> void:
@@ -118,8 +116,8 @@ func update_available() -> void:
 	$CheckMark.hide()
 	$'100_percent'.hide()
 	outer_ring.modulate = outerRingColour_active
-	$RoundNumber.show()
-	$RoundNumber.modulate.a = 100.0
+	round_number.show()
+	round_number.modulate.a = 100.0
 	blink_tween()
 	self.custom_minimum_size = Vector2(50.0,50.0)
 	
@@ -129,7 +127,7 @@ func update_cleared() -> void:
 	$'100_percent'.hide()
 	$ArrowIndication.hide()
 	outer_ring.modulate = outerRingColour_levelCompleted
-	$RoundNumber.hide()
+	round_number.hide()
 	self.custom_minimum_size = Vector2(40.0,40.0)
 	
 func update_perfected() -> void:
@@ -140,7 +138,7 @@ func update_perfected() -> void:
 	%CashEarned.text = "[i]$" + str(gl_PlayerState.dataset.bonus_cash + round_bonus - gl_PlayerState.dataset.fines)
 	$'100_percent'.show()
 	outer_ring.modulate = outerRingColour_levelCompleted
-	$RoundNumber.hide()
+	round_number.hide()
 	self.custom_minimum_size = Vector2(40.0,40.0)
 	
 func blink_tween() -> void:
@@ -216,7 +214,7 @@ func _on_focus_exited() -> void:
 
 
 func _play_wiggle(target_scale: float) -> void:
-	return
+	#return
 	if interaction_tween:
 		interaction_tween.kill()
 
@@ -232,10 +230,10 @@ func _play_wiggle(target_scale: float) -> void:
 		0.08
 	)
 
-	interaction_tween.tween_property(self, "rotation_degrees", -2.0, 0.04)
-	interaction_tween.tween_property(self, "rotation_degrees", 2.0, 0.08)
-	interaction_tween.tween_property(self, "rotation_degrees", 0.0, 0.04)
-	
+	#interaction_tween.tween_property(self, "rotation_degrees", -2.0, 0.04)
+	#interaction_tween.tween_property(self, "rotation_degrees", 2.0, 0.08)
+	#interaction_tween.tween_property(self, "rotation_degrees", 0.0, 0.04)
+	#
 	
 func set_selected(selected: bool) -> void:
 	if selected:

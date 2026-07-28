@@ -9,7 +9,6 @@
 
 [node name="RoundSelector" type="TextureButton" unique_id=1495719427 groups=["restartable"]]
 self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-clip_contents = true
 custom_minimum_size = Vector2(40, 40)
 anchors_preset = -1
 anchor_left = -0.010416667
@@ -37,18 +36,15 @@ metadata/_edit_use_anchors_ = true
 
 [node name="OuterRing2" type="TextureRect" parent="." unique_id=326891373]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-z_index = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 0.24108028
-offset_top = 4.2410717
-offset_right = 0.24108124
-offset_bottom = 4.2410736
+offset_top = 2.000001
+offset_bottom = 3.0999756
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.95, 0.755)
+scale = Vector2(0.95, 0.87)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("1_jyr11")
@@ -56,15 +52,18 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="CheckMark" type="TextureRect" parent="." unique_id=1256875408]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -108.0
+offset_top = -106.0
+offset_right = 108.0
+offset_bottom = 110.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.654, 0.79)
+scale = Vector2(0.114, 0.114)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("2_24aoy")
@@ -99,17 +98,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -21.0
-offset_right = 20.0
-offset_bottom = 21.0
+offset_left = -75.0
+offset_top = -191.5
+offset_right = 75.0
+offset_bottom = 193.5
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
+theme_type_variation = &"RedRichText"
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/normal_font_size = 38
+theme_override_font_sizes/normal_font_size = 42
 theme_override_font_sizes/italics_font_size = 26
 bbcode_enabled = true
 text = "1"
@@ -186,6 +185,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="OuterRing" type="TextureRect" parent="." unique_id=562874062]
+modulate = Color(0.4, 0.41960785, 0.47058824, 1)
 self_modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
 show_behind_parent = true
 clip_contents = true
