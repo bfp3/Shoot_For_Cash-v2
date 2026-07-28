@@ -413,10 +413,10 @@ func _on_focus_entered() -> void:
 	#var bbcode_des : String = "[rainbow][shake]" + description + "[/shake][/rainbow]"
 	var bbcode_des : String = "" + tooltip_description
 	#var bbcode_des : String = "[shake rate=5.0 level=5 connected=1]" + description + "[/shake]"
-	if tooltip:
-		tooltip._toggle_tooltip(true, bbcode_des)
-
-	fade_tween(upgrade_icon_textureRect, false)
+	#if tooltip:
+		#tooltip._toggle_tooltip(true, bbcode_des)
+#
+	#fade_tween(upgrade_icon_textureRect, false)
 	
 	if current_state != State.AVAILABLE:
 		return

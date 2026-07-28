@@ -32,7 +32,7 @@ func reset_oranges() -> void:
 	done_once_in_round = false
 
 func start_bonus_oranges() -> void:
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 
 	var active_oranges: Array = []
 	var active_counter := 0
@@ -75,15 +75,15 @@ func start_bonus_round() -> void:
 	%PerfectParticles.emitting = true
 	%PerfectParticles2.emitting = true
 
-	await get_tree().create_timer(1.0).timeout
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
+	await get_tree().create_timer(1.0, false).timeout
 
 	# Launch every pineapple from the left or right.
 	for body in pineapples:
 		launch_pineapple(body)
 		_total_launched += 1
 		#await get_tree().create_timer(randf_range(0.1,0.33)).timeout
-		await get_tree().create_timer(0.5).timeout
+		await get_tree().create_timer(0.5, false).timeout
 			
 	# Wait until every launched pineapple has been destroyed, then wrap up.
 	await _wait_for_all_destroyed()
@@ -96,7 +96,7 @@ func _wait_for_all_destroyed() -> void:
 
 
 func stop_pineapples() -> void:
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, false).timeout
 	for body in pineapples:
 		body.reset_stats()
 

@@ -379,113 +379,6 @@ PanelContainer/styles/panel = SubResource("StyleBoxFlat_3ga0b")
 
 [sub_resource type="PrismMesh" id="PrismMesh_vycyu"]
 
-[sub_resource type="GDScript" id="GDScript_mitwi"]
-script/source = "extends Node
-
-var money_earned := 0.0
-@export var current_total_money := 100.0
-
-const rock_money := 2.0
-const cannonball_money := 2.0
-const popper_money := 2.0
-
-
-
-	
-func update_money(_money_added : int) -> void:
-	current_total_money += _money_added
-
-	#$\"../UpgradeTreeMenu\".add_player_money(_money_added)
-	#check_money_level_up()
-
-func update_money_after_shop(_current_money : int) -> void:
-	current_total_money = _current_money
-
-	
-
-	
-func _on_rock_destroyed(pos : Vector3, _money_value:int) -> void:
-	var money_yield := _money_value
-	update_money(money_yield)
-
-	
-"
-
-[sub_resource type="Curve" id="Curve_emmyb"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_b756w"]
-curve = SubResource("Curve_emmyb")
-
-[sub_resource type="Curve" id="Curve_bhfho"]
-_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_6cd10"]
-curve = SubResource("Curve_bhfho")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_367yi"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(534.76, 362.53, 1)
-initial_velocity_min = 1.0
-initial_velocity_max = 2.0
-gravity = Vector3(0, -2, 0)
-radial_accel_min = 0.99999774
-radial_accel_max = 4.9999976
-tangential_accel_min = -2.2351742e-06
-tangential_accel_max = -2.2351742e-06
-scale_min = 10.0
-scale_max = 20.0
-scale_curve = SubResource("CurveTexture_6cd10")
-color = Color(0.21, 0.0805, 0, 1)
-alpha_curve = SubResource("CurveTexture_b756w")
-hue_variation_min = -2.2351742e-08
-hue_variation_max = -2.2351742e-08
-
-[sub_resource type="Gradient" id="Gradient_jv82y"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0.55505615, 0.72808987)
-colors = PackedColorArray(0.92156863, 0.8784314, 0.84705883, 1, 0.9, 0.858, 0.828, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_sgib8"]
-frequency = 0.085
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_pwib5"]
-width = 256
-height = 256
-noise = SubResource("FastNoiseLite_sgib8")
-color_ramp = SubResource("Gradient_jv82y")
-seamless = true
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_diemr"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn8lj"]
-bg_color = Color(0.09803922, 0.09803922, 0.11372549, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.45, 0.55, 0.7, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 10
-
-[sub_resource type="Theme" id="Theme_vrkmk"]
-Button/styles/hover = null
-Button/styles/normal = SubResource("StyleBoxFlat_cn8lj")
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbtj3"]
-bg_color = Color(0.32, 0.32, 0.32, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.32, 0.2976, 0.22399999, 1)
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_an2hp"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_43pd7"]
@@ -1067,6 +960,7 @@ metadata/_edit_use_anchors_ = true
 
 [node name="MainGameCanvasLayer" type="CanvasLayer" parent="." unique_id=778582470]
 layer = -1
+visible = false
 
 [node name="QuitMenu" type="PanelContainer" parent="MainGameCanvasLayer" unique_id=2079405395]
 unique_name_in_owner = true
@@ -1270,44 +1164,8 @@ round_manager = NodePath("../../Round_manager")
 
 [node name="Shop_Main_Menu" parent="MainGameCanvasLayer" unique_id=1034704471 node_paths=PackedStringArray("round_manager", "money_control") instance=ExtResource("64_83tjn")]
 unique_name_in_owner = true
-visible = false
 round_manager = NodePath("../../Round_manager")
 money_control = NodePath("../Money_labels")
-
-[node name="TEST_MONEY_CONTROL" parent="MainGameCanvasLayer/Shop_Main_Menu" index="0" unique_id=1590283361]
-script = SubResource("GDScript_mitwi")
-
-[node name="BackgroundParticles" parent="MainGameCanvasLayer/Shop_Main_Menu" index="1" unique_id=229782520]
-process_material = SubResource("ParticleProcessMaterial_367yi")
-
-[node name="BalloonBuster" parent="MainGameCanvasLayer/Shop_Main_Menu" index="7" unique_id=1782515006]
-upgrade_icon = null
-balloon_buster = false
-hold_duration = 0.15
-upgrade_type = ""
-upgrade_name = "Upgrade"
-
-[node name="WhiteSmokeyBG" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel" parent_id_path=PackedInt32Array(1034704471, 1211974115) index="1" unique_id=1410432704]
-texture = SubResource("NoiseTexture2D_pwib5")
-
-[node name="SpacePanel" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer" parent_id_path=PackedInt32Array(1034704471, 582425009) index="1" unique_id=763162626]
-theme_override_styles/panel = SubResource("StyleBoxEmpty_diemr")
-
-[node name="NextRound" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(1034704471, 2043088047) index="2" unique_id=560640138]
-theme = SubResource("Theme_vrkmk")
-
-[node name="NextRound2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(1034704471, 2043088047) index="3" unique_id=1388172073]
-theme = SubResource("Theme_vrkmk")
-
-[node name="MoneyLabel" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Money_control" parent_id_path=PackedInt32Array(1034704471, 1051036391) index="1" unique_id=1835839393]
-offset_left = -0.5
-offset_right = 0.5
-
-[node name="PurchaseHoldProgressBar" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/UpgradePanel" parent_id_path=PackedInt32Array(1034704471, 831104298, 696861470) index="0" unique_id=380143476]
-theme_override_styles/background = SubResource("StyleBoxFlat_nbtj3")
-
-[node name="Panel2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" parent_id_path=PackedInt32Array(1034704471, 1302621281) index="4" unique_id=1209005292]
-theme_override_styles/panel = SubResource("StyleBoxEmpty_diemr")
 
 [node name="Frame_rate" type="Control" parent="MainGameCanvasLayer" unique_id=439145462]
 visible = false
@@ -2223,6 +2081,3 @@ force_multiplier = 1.0
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="MainGameCanvasLayer/QuitMenu" method="_on_cancel_menu_pressed"]
 [connection signal="timeout" from="MainGameCanvasLayer/Frame_rate/Timer" to="MainGameCanvasLayer/Frame_rate" method="_on_timer_timeout"]
-
-[editable path="MainGameCanvasLayer/Shop_Main_Menu"]
-[editable path="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]

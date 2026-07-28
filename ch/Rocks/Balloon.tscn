@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bxjmk0cn2o5bb" path="res://ch/Rocks/balloon.gd" id="1_6ube6"]
 [ext_resource type="Material" uid="uid://bg5auabbq8fo8" path="res://res/balloon_orange_mat.tres" id="2_jjdpg"]
 [ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="3_824l8"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_aljlg"]
 [ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="4_824l8"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="5_gfu80"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="6_6ube6"]
@@ -426,6 +427,18 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mesh/small_rock2:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_aljlg"]
 resource_name = "idle"
@@ -442,6 +455,18 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0, 0, 0.18325958), Vector3(0, 0, 0), Vector3(0, 0, -0.17453292), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mesh/small_rock2:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.2831855, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_imq00"]
@@ -927,13 +952,11 @@ unique_name_in_owner = true
 [node name="small_rock2" type="MeshInstance3D" parent="Mesh" unique_id=2102516094]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.123, 0)
 layers = 16
-material_override = ExtResource("2_jjdpg")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_824l8")
 
 [node name="string" type="MeshInstance3D" parent="Mesh/small_rock2" unique_id=2071839589]
 transform = Transform3D(0.6427008, -0.07430699, -6.793428e-10, 0.15857545, 0.30076167, -0.029007174, 0.0057971026, 0.010995055, 0.79346997, 0.004719715, -0.5801454, 0.0010683945)
-visible = false
 layers = 16
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cqen7")
@@ -941,7 +964,6 @@ skeleton = NodePath("")
 
 [node name="string2" type="MeshInstance3D" parent="Mesh/small_rock2" unique_id=1080372080]
 transform = Transform3D(0.6521575, 0.053254955, 0.0011796473, -0.113616124, 0.30519515, -0.028666265, -0.005074176, 0.010946671, 0.7934813, 0.009263546, -0.7658823, -0.0023553302)
-visible = false
 layers = 16
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cqen7")
@@ -949,11 +971,53 @@ skeleton = NodePath("")
 
 [node name="string3" type="MeshInstance3D" parent="Mesh/small_rock2" unique_id=527435349]
 transform = Transform3D(0.6610162, -0.01688015, 0.0010876532, 0.036056645, 0.3093391, -0.028543495, 0.00039096287, 0.011150757, 0.79348505, -0.00095726614, -0.9563001, -0.0055394615)
-visible = false
 layers = 16
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cqen7")
 skeleton = NodePath("")
+
+[node name="Decal" type="Decal" parent="Mesh/small_rock2" unique_id=425748152]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.22229108, -0.10355409, 0)
+visible = false
+layers = 16384
+size = Vector3(0.5, 0.18437195, 0.5)
+texture_albedo = ExtResource("3_aljlg")
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+upper_fade = 0.016322825
+lower_fade = 0.005384526
+cull_mask = 1048574
+
+[node name="Decal2" type="Decal" parent="Mesh/small_rock2" unique_id=382183238]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.22229108, -0.10355409, 0)
+visible = false
+layers = 16384
+sorting_offset = 1.0
+size = Vector3(0.4, 0.184, 0.4)
+texture_albedo = ExtResource("3_aljlg")
+modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+upper_fade = 0.016322825
+lower_fade = 0.005384526
+cull_mask = 1048574
+
+[node name="Decal3" type="Decal" parent="Mesh/small_rock2" unique_id=270295909]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.23259786, -0.10355409, 0)
+visible = false
+layers = 16384
+sorting_offset = 2.0
+size = Vector3(0.3, 0.184, 0.3)
+texture_albedo = ExtResource("3_aljlg")
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+upper_fade = 0.016322825
+lower_fade = 0.005384526
+cull_mask = 1048574
+
+[node name="Label3D" type="Label3D" parent="Mesh/small_rock2/Decal3" unique_id=2109645227]
+transform = Transform3D(-6.162012e-09, 0.99001384, -0.1409703, 4.327488e-08, 0.1409703, 0.99001384, 1, 0, -4.371139e-08, -0.011225283, 0.06383178, 0)
+pixel_size = 0.001
+shaded = true
+outline_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+text = "$30"
+font_size = 320
 
 [node name="Marked" type="Node3D" parent="Mesh" unique_id=181324181]
 unique_name_in_owner = true

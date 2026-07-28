@@ -16,20 +16,20 @@ func start_bonus_round() -> void:
 	%PerfectParticles.emitting = true
 	%PerfectParticles2.emitting = true
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	launch_pineapple(pineapple)
 
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, false).timeout
 	launch_pineapple(pineapple_2)
 
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, false).timeout
 	launch_pineapple(pineapple_3)
 
 
 func stop_pineapples() -> void:
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, false).timeout
 	pineapple.reset_stats()
 	pineapple_2.reset_stats()
 	pineapple_3.reset_stats()

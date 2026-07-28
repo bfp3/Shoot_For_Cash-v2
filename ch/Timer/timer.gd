@@ -143,7 +143,7 @@ func update_restarting() -> void:
 	start_time = gl_DataSet.get_value('power_time_upgrade', gl_PlayerState.dataset.power_time_upgrade)
 	#start_time = 12.0
 	
-	await get_tree().create_timer(0.25).timeout
+	await get_tree().create_timer(0.25, false).timeout
 	time_left = start_time
 	#var _orig_pos : Vector2 = timer_label.position 
 	#var center_position : Vector2 = $Timer_centerPOS.position - (timer_label.size / 2)
@@ -156,7 +156,7 @@ func update_restarting() -> void:
 	
 	await timer_rollup_sequence()
 	$ReloadSound.pitch_scale = 1.0
-	await get_tree().create_timer(0.20).timeout
+	await get_tree().create_timer(0.20, false).timeout
 
 	#var move_back_tween := create_tween().set_trans(Tween.TRANS_CUBIC) #.set_ease(Tween.EASE_OUT)
 	#move_back_tween.tween_property($TimeLabel, "position", _orig_pos, 0.15)
@@ -181,10 +181,10 @@ func timer_rollup_sequence() -> void:
 
 	$ReloadSound.pitch_scale = 1.0
 	$ReloadSound.play()
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	while elapsed < duration:
 
-		await get_tree().create_timer(dt).timeout
+		await get_tree().create_timer(dt, false).timeout
 
 		elapsed += dt
 
@@ -250,7 +250,7 @@ func _add_additional_time(additional_time : float = 0.0) -> void:
 	if additional_time > 0.0:
 		time_left += additional_time
 		timer_label.modulate = GlobalColorPalet.Global_color_orange
-		await get_tree().create_timer(0.2).timeout
+		await get_tree().create_timer(0.2, false).timeout
 		timer_label.modulate = GlobalColorPalet.Global_color_white
 		return
 	
@@ -258,7 +258,7 @@ func _add_additional_time(additional_time : float = 0.0) -> void:
 	if _rand_chance == 0:
 		time_left += additional_increment
 		timer_label.modulate = GlobalColorPalet.Global_color_orange
-		await get_tree().create_timer(0.2).timeout
+		await get_tree().create_timer(0.2, false).timeout
 		timer_label.modulate = GlobalColorPalet.Global_color_white
 
 

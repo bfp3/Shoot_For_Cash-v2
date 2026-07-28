@@ -221,7 +221,7 @@ func update_purchased() -> void:
 	if array_particles.size() > 0:
 		for i in array_particles:
 			i.emitting = false
-	#await get_tree().create_timer(0.1).timeout
+	#await get_tree().create_timer(0.1, false).timeout
 	_update_visual_state()
 	purchase_particles()
 	set_process(false)
@@ -369,7 +369,7 @@ func complete_purchase() -> void:
 
 		if power_level < max_level:
 			# Not maxed yet — stays in shop, ready to buy again
-			await get_tree().create_timer(0.1).timeout
+			await get_tree().create_timer(0.1, false).timeout
 			reset_buttons_settings()
 			return
 		# else: fall through to normal "purchased" behaviour below
@@ -395,7 +395,7 @@ func complete_purchase() -> void:
 	
 	var unpurchased_cont: VBoxContainer = $VBoxContainer
 	disabled = true
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	$Purchased.show()
 	var _button_down := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_button_down.tween_property(self, "position:y", 0.0, 0.05)
@@ -441,10 +441,10 @@ func _on_focus_entered() -> void:
 	#var bbcode_des : String = "[rainbow][shake]" + description + "[/shake][/rainbow]"
 	var bbcode_des : String = "" + tooltip_description
 	#var bbcode_des : String = "[shake rate=5.0 level=5 connected=1]" + description + "[/shake]"
-	if tooltip:
-		tooltip._toggle_tooltip(true, bbcode_des)
+	#if tooltip:
+		#tooltip._toggle_tooltip(true, bbcode_des)
 
-	fade_tween(upgrade_icon_textureRect, false)
+	#fade_tween(upgrade_icon_textureRect, false)
 	
 	if current_state != State.AVAILABLE:
 		return
@@ -569,10 +569,10 @@ func _update_visual_state() -> void:
 func purchase_particles() -> void:
 	
 	
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	$PurchaseParticles.emitting = true
 	if cost == 0 && !gun:
-		await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.1, false).timeout
 		#$Free_sfx.play()
 		$FreeParticles.emitting = true
 	

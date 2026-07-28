@@ -130,7 +130,7 @@ func handle_three_strikes() -> void:
 	stop_player()
 	
 	
-	await get_tree().create_timer(0.3).timeout
+	await get_tree().create_timer(0.3, false).timeout
 	
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	wave_progress_feedback.start_miss()
@@ -313,7 +313,7 @@ func update_wave_start() -> void:
 	wave_progress_feedback.start()
 	
 	
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	
 	if gl_PlayerState.dataset.total_current_strikes >= 3:
 		wave_progress_feedback.start_miss()
@@ -324,7 +324,7 @@ func update_wave_start() -> void:
 	
 	rocks_container.enter_state(rocks_container.State.ROUND_END)
 
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 
 	gl_PlayerState.next_wave()
 
@@ -345,14 +345,14 @@ func update_wave_start() -> void:
 	else:
 		round_timer.timer_rollup_sequence()
 
-	await get_tree().create_timer(0.75).timeout
+	await get_tree().create_timer(0.75, false).timeout
 		
 	if egg_pulse:
 		egg_pulse.activate_pulse_wave()
 
 	wave_ending = false   # only now can a wave-end signal be accepted
 	
-	await get_tree().create_timer(1.9).timeout
+	await get_tree().create_timer(1.9, false).timeout
 	
 	EventBus.instance.egg_pulsed.emit()
 	
@@ -387,7 +387,7 @@ func update_round_end() -> void:
 		success = true
 	var round_was_successful := success
 
-	await get_tree().create_timer(0.25).timeout
+	await get_tree().create_timer(0.25, false).timeout
 	music_manager.shop_music_lower_volume()
 
 	if rocks_container:
@@ -419,7 +419,7 @@ func update_round_end() -> void:
 	
 	
 	EventBus.instance.oranges_start_falling.emit()
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	
 	if player_failed:
 		bonus_oranges_ready = false
@@ -532,7 +532,7 @@ func move_to_moss() -> void:
 	
 	
 	scene_transition_screen.next_level_start()
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	
 	if level_layout.get_child(0) != null:
 		level_layout.get_child(0).queue_free()
@@ -543,7 +543,7 @@ func move_to_moss() -> void:
 	
 	level_scenery.name = 'current_level_layout'
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	shop_main_menu.setup_shop_for_rounds()
 	wave_progress_feedback.show()
 	if egg_pulse == null:
@@ -558,8 +558,7 @@ func move_to_moss() -> void:
 	gl_PlayerState.dataset.tickets += 1
 	shop_main_menu.update_next_ticket()
 		
-	await get_tree().create_timer(2.0).timeout
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(3.0, false).timeout
 	transitioning_worlds = false
 	
 	current_round = 1
@@ -571,7 +570,7 @@ func move_to_redd() -> void:
 	player.hide_hud()
 	gl_PlayerState.dataset["rock_limit"] = 1
 	scene_transition_screen.next_level_start()
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 
 	level_layout.get_child(0).queue_free()
 	
@@ -580,13 +579,13 @@ func move_to_redd() -> void:
 	
 	new_scene.name = 'current_level_layout'
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	scene_transition_screen.next_level_finish()
 	place_name.update_place_name()
 	if egg_pulse == null:
 		find_egg()
 
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	transitioning_worlds = false
 	enter_state(RoundState.SHOP_END)
 	player.display_hud()

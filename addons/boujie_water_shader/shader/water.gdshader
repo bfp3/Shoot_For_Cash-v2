@@ -31,6 +31,8 @@ uniform float specular : hint_range(0.0, 1.0) = 0.5;
 uniform float roughness : hint_range(0.0, 1.0) = 0.2;
 uniform float metallic : hint_range(0.0, 1.0) = 0.0;
 
+uniform float game_time;
+
 /* When ON - vertex waves rise along the mesh's normal
  * When OFF - vertex waves rise in the global up direction (+y)
  */

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://damsr4c1n8g60"]
 
 [ext_resource type="Script" uid="uid://dth8aeb528x78" path="res://ch/Shop/shop_main_menu.gd" id="1_wlak1"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_cn8lj"]
 [ext_resource type="PackedScene" uid="uid://cu0bay1llw7ua" path="res://unfiled/upgrade_tree/UpgradeNode.tscn" id="2_nn31g"]
 [ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://unfiled/Themes/ammo_manager_theme.tres" id="2_s82uk"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_y3o4g"]
@@ -41,44 +42,12 @@
 [ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="51_mxp20"]
 [ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="52_55hkm"]
 
-[sub_resource type="GDScript" id="GDScript_mitwi"]
-script/source = "extends Node
-
-var money_earned := 0.0
-@export var current_total_money := 100.0
-
-const rock_money := 2.0
-const cannonball_money := 2.0
-const popper_money := 2.0
-
-
-
-	
-func update_money(_money_added : int) -> void:
-	current_total_money += _money_added
-
-	#$\"../UpgradeTreeMenu\".add_player_money(_money_added)
-	#check_money_level_up()
-
-func update_money_after_shop(_current_money : int) -> void:
-	current_total_money = _current_money
-
-	
-
-	
-func _on_rock_destroyed(pos : Vector3, _money_value:int) -> void:
-	var money_yield := _money_value
-	update_money(money_yield)
-
-	
-"
-
-[sub_resource type="Curve" id="Curve_onfim"]
+[sub_resource type="Curve" id="Curve_xgu8n"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_vhsx8"]
-curve = SubResource("Curve_onfim")
+[sub_resource type="CurveTexture" id="CurveTexture_cn8lj"]
+curve = SubResource("Curve_xgu8n")
 
 [sub_resource type="Curve" id="Curve_r6l2h"]
 _data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
@@ -98,11 +67,11 @@ radial_accel_min = 0.99999774
 radial_accel_max = 4.9999976
 tangential_accel_min = -2.2351742e-06
 tangential_accel_max = -2.2351742e-06
-scale_min = 10.0
-scale_max = 20.0
+scale_min = 0.02
+scale_max = 0.04
 scale_curve = SubResource("CurveTexture_64t06")
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-alpha_curve = SubResource("CurveTexture_vhsx8")
+alpha_curve = SubResource("CurveTexture_cn8lj")
 hue_variation_min = -2.2351742e-08
 hue_variation_max = -2.2351742e-08
 
@@ -225,16 +194,13 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("1_wlak1")
-money_control = NodePath("TEST_MONEY_CONTROL")
+money_control = NodePath("")
 reveal_skill_sfx = NodePath("SFX/shop_purchase_02")
-
-[node name="TEST_MONEY_CONTROL" type="Node" parent="." unique_id=1590283361]
-script = SubResource("GDScript_mitwi")
-current_total_money = 5000.0
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=229782520]
 position = Vector2(962, 551)
-amount = 10
+amount = 20
+texture = ExtResource("2_cn8lj")
 lifetime = 5.0
 fixed_fps = 60
 local_coords = true
@@ -804,15 +770,9 @@ stretch_mode = 5
 [node name="Play_round_text" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1411659262]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -359.5
-offset_top = -486.0
-offset_right = 359.5
-offset_bottom = 486.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -957,15 +917,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -896.0
-offset_top = -331.5
-offset_right = 896.0
-offset_bottom = 279.5
+offset_left = -155.0
+offset_top = -79.0
+offset_right = 155.0
+offset_bottom = 27.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 focus_mode = 2
+mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 98
 theme_override_font_sizes/italics_font_size = 90
@@ -996,6 +957,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 focus_mode = 2
+mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 26
 theme_override_font_sizes/italics_font_size = 90
@@ -1097,7 +1059,6 @@ pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 current_state = 1
 
 [node name="RoundSelector2" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=209809932 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1105,7 +1066,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector3" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=961160610 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1113,7 +1073,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector4" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1150610278 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1121,7 +1080,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector5" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=323064248 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1129,7 +1087,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector6" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1940111857 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1137,7 +1094,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector7" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=898267515 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1145,7 +1101,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector8" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1953751896 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1153,7 +1108,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector9" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=204374324 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1161,7 +1115,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector10" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=612636488 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1169,7 +1122,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector11" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1706135853 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1177,7 +1129,6 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="RoundSelector12" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=127144028 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(40, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")

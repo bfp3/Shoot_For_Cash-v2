@@ -32,7 +32,6 @@ enum SkillState {
 
 var current_state : SkillState = SkillState.INACTIVE
 
-@export var test_mode := false
 
 var current_round := 0
 var player_cash := 0
@@ -72,12 +71,6 @@ func _ready() -> void:
 	#$CenterContainer/MainPanel/VBoxContainer/Money_control.hide()
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.hide()
 	
-	#update_cost_label()
-	if test_mode:
-		EventBus.instance.open_shop.emit()
-
-	if !money_control:
-		print("using test money control")
 		
 	
 
@@ -218,7 +211,7 @@ func update_open_menu() -> void:
 
 	await tween.finished
 	
-	await get_tree().create_timer(0.15).timeout
+	await get_tree().create_timer(0.15, false).timeout
 	
 	await reveal_random_skills(0.05)
 
@@ -238,7 +231,7 @@ func play_round_button_pressed() -> void:
 	purchase_made('debug_add_cash')
 	
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	%NextRound.disabled = false
 	update_close_menu()
 	
@@ -340,7 +333,7 @@ func roll_up_cash_first_round() -> void:
 		sfx_2.pitch_scale = pitch
 		sfx.play(0.08)
 		sfx_2.play(0.08)
-		await get_tree().create_timer(tick_interval).timeout
+		await get_tree().create_timer(tick_interval, false).timeout
 		elapsed += tick_interval
 
 	await tween.finished
@@ -349,7 +342,7 @@ func roll_up_cash_first_round() -> void:
 	sfx.pitch_scale = default_pitch
 	sfx_2.pitch_scale = default_pitch_2
 
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	update_cost_label()
 
 	 
@@ -432,7 +425,7 @@ func reveal_random_skills(_dur : float = 0.05, wait_reroll : bool = false) -> vo
 		
 	
 	if wait_reroll:
-		await get_tree().create_timer(0.5).timeout
+		await get_tree().create_timer(0.5, false).timeout
 	
 	# Reveal animation
 	for skill in selected_skills:
@@ -501,7 +494,7 @@ func _on_re_roll_pressed() -> void:
 	spawn_spent_cash_label(reroll_current_price)
 	gl_PlayerState.log_buy("reroll", reroll_current_price)
 	reroll_index += 1
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	update_shop()
 	#EventBus.instance.update_money.emit()
 	
@@ -520,7 +513,7 @@ func _on_re_roll_pressed() -> void:
 		hide_tween.parallel().tween_property(skill, "modulate:a", 0.0, 0.12)
 		hide_tween.parallel().tween_property(skill, "scale", Vector2(0.8, 0.8), 0.12)
 
-	await get_tree().create_timer(0.05).timeout
+	await get_tree().create_timer(0.05, false).timeout
 	
 	# Reveal new ones
 	await reveal_random_skills(0.05, true)
@@ -573,14 +566,14 @@ func update_shop_labels() -> void:
 func sfx_purchase_made() -> void:
 	$SFX/shop_purchase_01.play()
 	#$SFX/shop_purchase_02.play()
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	$SFX/shop_purchase_02.play()
 	$SFX/shop_coin_sfx_01.play()
 
 func sfx_reroll_purchased() -> void:
 	#$SFX/shop_purchase_01.play()
 	##$SFX/shop_purchase_02.play()
-	#await get_tree().create_timer(0.1).timeout
+	#await get_tree().create_timer(0.1, false).timeout
 	$SFX/shop_purchase_02.play()
 	$SFX/shop_coin_sfx_01.play()
 

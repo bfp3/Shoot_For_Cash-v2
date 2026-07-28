@@ -50,7 +50,7 @@ func launch_orange(pos : Vector3) -> void:
 
 	
 func stop_pineapples() -> void:
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, false).timeout
 	orange.reset_stats()
 	orange_2.reset_stats()
 	orange_3.reset_stats()

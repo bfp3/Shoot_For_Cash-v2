@@ -19,7 +19,7 @@ func _ready() -> void:
 	move_all_ballons_back()
 	set_physics_process(false)
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	configure_starting_balloons()
 	
 func configure_starting_balloons() -> void:
@@ -103,7 +103,7 @@ func add_balloon() -> void:
 func into_the_distance() -> void:
 	
 	#for l in range(1):
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, false).timeout
 	for i in get_children():
 		if i is StaticBody3D:
 			if i.behind_player:
@@ -136,7 +136,7 @@ func start_game_over() -> void:
 	
 	
 func restart() -> void:
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	current_balloon = null
 	balloons_popped = 0
 	blue_offset_y = 0
@@ -165,6 +165,6 @@ func restart() -> void:
 		if i >= starting_balloons:
 			b.hide()
 
-	await get_tree().create_timer(3.0).timeout
+	await get_tree().create_timer(3.0, false).timeout
 	add_balloon()
 	print('did we make it here with player balloon?')

@@ -96,7 +96,7 @@ func add_balloon(_balloon_array : Array) -> void:
 		tween.tween_interval(0.2)
 		tween.tween_property(balloon, "global_position:z", BALLOON_Z_FRONT, 5.0)
 
-		await get_tree().create_timer(duration).timeout
+		await get_tree().create_timer(duration, false).timeout
 
 func _get_next_available_balloon() -> StaticBody3D:
 	for i in get_children():
@@ -106,7 +106,7 @@ func _get_next_available_balloon() -> StaticBody3D:
 
 
 func restart() -> void:
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	for child in get_children():
 		if child is StaticBody3D:
 			child.show()
@@ -131,7 +131,7 @@ func add_bonuses() -> void:
 
 			
 			
-	await get_tree().create_timer(0.05).timeout
+	await get_tree().create_timer(0.05, false).timeout
 	return
 
 
@@ -146,7 +146,7 @@ func end_round() -> void:
 		if i is StaticBody3D and not i.behind_player:
 			counter += 1
 			i.end_of_the_round_pop_balloon(counter)
-			await get_tree().create_timer(dur).timeout
+			await get_tree().create_timer(dur, false).timeout
 			dur = clamp(dur - dur_increment, 0.05,dur)
 
 
@@ -156,7 +156,7 @@ func add_balloon_back_into_list(_balloon: StaticBody3D) -> void:
 
 	balloons_in_play = clamp(balloons_in_play - 1, 0, get_children().size())
 
-	await get_tree().create_timer(4.0).timeout
+	await get_tree().create_timer(4.0, false).timeout
 	_balloon.behind_player = true
 	_balloon.hide()
 	_balloon.global_position.z = _balloon.start_pos.z - 27.0

@@ -129,7 +129,7 @@ func start_fail_sequence() -> void:
 	
 	
 func start_perfect_sequence() -> void:
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.5, false).timeout
 	var dur := 0.8
 
 	# 1. GRADE LABEL
@@ -151,8 +151,8 @@ func start_perfect_sequence() -> void:
 	
 	grand_total_cash_label.modulate = Color("c70102ff")
 	# PAUSE
-	await get_tree().create_timer(0.5).timeout
-	await get_tree().create_timer(dur / 2).timeout
+	await get_tree().create_timer(0.5, false).timeout
+	await get_tree().create_timer(dur / 2, false).timeout
 
 	# 3. BONUSES
 	$SFX/shop_purchase_02.play()
@@ -161,11 +161,11 @@ func start_perfect_sequence() -> void:
 	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 0.0
 
 	# PAUSE
-	await get_tree().create_timer(dur / 2).timeout
+	await get_tree().create_timer(dur / 2, false).timeout
 	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
 	$SFX/shop_purchase_02.play()
 	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
-	await get_tree().create_timer(dur).timeout
+	await get_tree().create_timer(dur, false).timeout
 	return
 
 
@@ -230,7 +230,7 @@ func check_white_rocks() -> void:
 func perfect_particles() -> void:
 	play_cash_sfx()
 	#%perfectScoreParticles.emitting = true
-	#await get_tree().create_timer(0.25).timeout
+	#await get_tree().create_timer(0.25, false).timeout
 	
 	$SFX/perfect_score.play()
 	
@@ -282,12 +282,12 @@ func update_open_menu() -> void:
 	enter_state(State.IN_MENU)
 
 	
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, false).timeout
 	
 	while start_sequence:
 		await get_tree().process_frame
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	
 	_on_shop_pressed()
 		
@@ -325,7 +325,7 @@ func update_close_menu() -> void:
 func update_in_menu() -> void:
 	update_stats_visual()
 	
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, false).timeout
 	
 	
 
@@ -365,7 +365,7 @@ func reveal_stats() -> void:
 func sfx_purchase_made() -> void:
 	$SFX/shop_purchase_01.play()
 	#$SFX/shop_purchase_02.play()
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	$SFX/shop_purchase_02.play()
 	$SFX/shop_coin_sfx_01.play()
 	
@@ -394,11 +394,11 @@ func blink_penalty_red() -> void:
 		penalties_number_label.self_modulate = Color("aa000050")
 		$SFX/purchase.play() # replace with your preferred penalty SFX
 
-		await get_tree().create_timer(0.08).timeout
+		await get_tree().create_timer(0.08, false).timeout
 
 		penalties_number_label.self_modulate = Color("d10000")
 
-		await get_tree().create_timer(0.08).timeout
+		await get_tree().create_timer(0.08, false).timeout
 
 	penalties_number_label.self_modulate = Color("d10000")
 

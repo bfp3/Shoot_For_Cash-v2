@@ -62,7 +62,21 @@ func _ready():
 		get_tree().root.ready.connect(self.update)
 
 
+func _input(event: InputEvent) -> void:
+	
+	if Input.is_action_just_pressed('escape'):
+		get_parent().visible = !get_parent().visible
+		#freeze_ocean()
+
+func freeze_ocean() -> void:
+	material.visible = !material.visible
+	#material.set_shader_parameter("freeze_time", true)
+		
+	#else:
+		#material.set_shader_parameter("freeze_time", false)
+
 func _process(_delta):
+	
 	if editor_update_all_params:
 		editor_update_all_params = false
 		update()
