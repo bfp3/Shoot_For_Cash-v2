@@ -1149,6 +1149,8 @@ mouse_filter = 2
 start_time = 50.0
 
 [node name="Place_name" type="Control" parent="MainGameCanvasLayer" unique_id=877796412]
+visible = false
+z_index = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -1158,17 +1160,22 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("56_4ta1g")
+metadata/_edit_use_anchors_ = true
 
 [node name="CenterPOS" type="Control" parent="MainGameCanvasLayer/Place_name" unique_id=1728009373]
+visible = false
 layout_mode = 1
 anchor_left = 0.49947917
 anchor_top = 0.425
 anchor_right = 0.5005208
 anchor_bottom = 0.42685184
+offset_left = 846.0
+offset_top = -755.0
+offset_right = 846.0
+offset_bottom = -755.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="MainGameCanvasLayer/Place_name" unique_id=1893096777]
 visible = false
@@ -1194,6 +1201,7 @@ theme = SubResource("Theme_r5w5l")
 theme_override_styles/panel = ExtResource("31_hwubp")
 
 [node name="Panel2" type="Panel" parent="MainGameCanvasLayer/Place_name" unique_id=1869801473]
+visible = false
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
@@ -1201,10 +1209,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -937.5
-offset_top = 450.33325
-offset_right = -757.5
-offset_bottom = 528.1666
+offset_left = -91.5
+offset_top = -304.66675
+offset_right = 88.5
+offset_bottom = -226.83337
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.165, 1)
@@ -1223,7 +1231,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.968, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-color = Color(0.6, 0.0059999945, 0.01589985, 1)
+color = Color(0.78039217, 0.003921569, 0.007843138, 1)
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="MainGameCanvasLayer/Place_name/Panel2" unique_id=650191241]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
@@ -1232,13 +1240,15 @@ scale = Vector2(179.255, -13.95)
 mesh = SubResource("PrismMesh_vycyu")
 
 [node name="PlaceLabel" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=422115750]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -100.66675
-offset_right = 225.0
-offset_bottom = 11.0
+offset_left = 846.0
+offset_top = -855.66675
+offset_right = 1071.0
+offset_bottom = -744.0
 grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_font_sizes/normal_font_size = 47
@@ -1369,8 +1379,6 @@ fade_out_time = 0.15
 [node name="TicketPurchasedPopUp" parent="MainGameCanvasLayer" unique_id=212271171 node_paths=PackedStringArray("game_start_menu") instance=ExtResource("47_gspdd")]
 unique_name_in_owner = true
 visible = false
-offset_left = -960.0
-offset_right = 960.0
 game_start_menu = NodePath("../Start_menu_shop_clone")
 
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]

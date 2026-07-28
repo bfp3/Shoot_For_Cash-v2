@@ -2,16 +2,18 @@
 
 [ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="1_87tyx"]
 [ext_resource type="Script" uid="uid://cr1stfmu2rvl5" path="res://ch/Shop/level_button_select.gd" id="2_1oogj"]
-[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="2_hjmm4"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_35jhd"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="4_a7lqs"]
 [ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="5_35jhd"]
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_35jhd"]
+color = Color(1, 1, 1, 1)
+thickness = 4
+
 [node name="Level_button_selector" type="TextureButton" unique_id=2102660070 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "pressed_sfx")]
-offset_left = -253.5747
-offset_top = -58.299316
-offset_right = 542.4253
-offset_bottom = 538.7007
-scale = Vector2(0.147, 0.147)
+custom_minimum_size = Vector2(256, 256)
+offset_right = 256.0
+offset_bottom = 256.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture_normal = ExtResource("1_87tyx")
 ignore_texture_size = true
@@ -21,31 +23,34 @@ focus_enter_sfx = NodePath("focus_enter_sfx")
 focus_exit_sfx = NodePath("focus_exit")
 pressed_sfx = NodePath("purchase")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=1120615446]
-modulate = Color(0.32, 0.32, 0.32, 0.28627452)
+[node name="TextureRect3" type="TextureRect" parent="." unique_id=1426147914]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.605, 0.605)
+scale = Vector2(1.048, 1.048)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("2_hjmm4")
+texture = ExtResource("3_35jhd")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect2" type="TextureRect" parent="." unique_id=155314443]
-modulate = Color(0.04, 0.03991333, 0.0396, 0.4392157)
+modulate = Color(0.88, 0.8286667, 0.792, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.274, 0.274)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("2_hjmm4")
+texture = ExtResource("3_35jhd")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="." unique_id=1552498213]
 layout_mode = 1
@@ -54,35 +59,63 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -1024.0
-offset_top = -1017.1975
-offset_right = 1024.0
-offset_bottom = 1030.8025
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.268, 0.268)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture_under = ExtResource("2_hjmm4")
-texture_progress = ExtResource("2_hjmm4")
-tint_under = Color(1, 1, 1, 0)
-tint_progress = Color(0.78039217, 0.003921569, 0.007843138, 1)
-
-[node name="level_name_label" type="RichTextLabel" parent="." unique_id=1332746670]
-modulate = Color(1, 0.78039217, 0, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-theme_override_font_sizes/italics_font_size = 131
+texture_under = ExtResource("3_35jhd")
+texture_progress = ExtResource("3_35jhd")
+tint_under = Color(1, 1, 1, 0)
+tint_progress = Color(0.78039217, 0.003921569, 0.007843138, 1)
+
+[node name="level_name_label" type="RichTextLabel" parent="." unique_id=1332746670]
+modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -87.0
+offset_top = -59.0
+offset_right = 87.0
+offset_bottom = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.925)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 109
 bbcode_enabled = true
-text = "[i]Moss"
+text = "MOSS"
 fit_content = true
+autowrap_mode = 0
 horizontal_alignment = 1
-vertical_alignment = 1
+vertical_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="." unique_id=735061193]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.0
+offset_top = 48.0
+offset_right = 85.0
+offset_bottom = 52.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.13, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_35jhd")
 
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="." unique_id=1267045713]
 stream = ExtResource("4_a7lqs")

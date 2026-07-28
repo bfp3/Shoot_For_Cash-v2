@@ -112,14 +112,14 @@ offsets = PackedFloat32Array(0.55505615, 0.72808987)
 colors = PackedColorArray(0.92156863, 0.8784314, 0.84705883, 1, 0.9, 0.858, 0.828, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_sgib8"]
-frequency = 0.085
+frequency = 0.0181
+offset = Vector3(93.7, 0, 0)
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_pwib5"]
 width = 256
 height = 256
 noise = SubResource("FastNoiseLite_sgib8")
 color_ramp = SubResource("Gradient_jv82y")
-seamless = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hi3s5"]
 bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
@@ -216,7 +216,6 @@ border_width_bottom = 2
 border_color = Color(0.32, 0.2976, 0.22399999, 1)
 
 [node name="Shop_Main_Menu" type="Control" unique_id=973405492 node_paths=PackedStringArray("money_control", "reveal_skill_sfx") groups=["restartable", "shop_main_menu"]]
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -413,6 +412,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 32.0
+offset_bottom = 32.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -468,31 +469,34 @@ layout_mode = 2
 theme_override_constants/separation = 0
 
 [node name="ColorRect" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=77597337]
-custom_minimum_size = Vector2(980, 0)
+visible = false
+custom_minimum_size = Vector2(980, 97.125)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hi3s5")
 
 [node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect" unique_id=2113967704]
+visible = false
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -61.0
-offset_bottom = 32.0
+offset_top = -45.0
+offset_bottom = 48.000008
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("NoiseTexture2D_jv82y")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect" unique_id=1348186323]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-position = Vector2(490.67126, -20.139923)
+position = Vector2(490.67126, 11.860077)
 rotation = 3.1415925
 scale = Vector2(982.342, 106)
 mesh = SubResource("PrismMesh_hi3s5")
 
 [node name="CircleEmblem" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect" unique_id=546332306]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+z_index = 1
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
 anchors_preset = 8
@@ -500,10 +504,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -74.5
-offset_right = 25.0
-offset_bottom = 18.5
+offset_left = -26.0
+offset_top = -122.5
+offset_right = 24.0
+offset_bottom = -29.5
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -533,30 +537,8 @@ texture = ExtResource("14_sgib8")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CircleEmblem2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect/CircleEmblem" unique_id=114269006]
-visible = false
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -46.5
-offset_right = 25.0
-offset_bottom = 46.5
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.1, 1.1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("14_sgib8")
-expand_mode = 1
-stretch_mode = 5
-
 [node name="GameName" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect" unique_id=1398801826]
+z_index = 1
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 1
 anchors_preset = 8
@@ -564,10 +546,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -49.0
-offset_right = 20.0
-offset_bottom = -9.0
+offset_left = -21.0
+offset_top = -97.0
+offset_right = 19.0
+offset_bottom = -57.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -596,6 +578,34 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Giuseppes2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect/GameName" unique_id=1241702632]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = 33.0
+offset_right = 18.5
+offset_bottom = 99.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 47
+theme_override_font_sizes/italics_font_size = 60
+bbcode_enabled = true
+text = "MOSS"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpacePanel5" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=167149406]
+custom_minimum_size = Vector2(50, 97)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="SpacePanel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=763162626]
 custom_minimum_size = Vector2(50, 20)
@@ -1627,6 +1637,143 @@ pitch_scale = 2.0
 stream = ExtResource("46_i821l")
 volume_db = -30.0
 pitch_scale = 0.5
+
+[node name="ColorRect" type="Panel" parent="." unique_id=1985065690]
+custom_minimum_size = Vector2(980, 97.125)
+layout_mode = 0
+offset_left = 470.0
+offset_top = 210.0
+offset_right = 1450.0
+offset_bottom = 307.125
+theme_override_styles/panel = SubResource("StyleBoxFlat_hi3s5")
+
+[node name="TextureRect" type="TextureRect" parent="ColorRect" unique_id=1812646941]
+visible = false
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -45.0
+offset_bottom = 48.000008
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("NoiseTexture2D_jv82y")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="ColorRect" unique_id=775809021]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+position = Vector2(490.6712, 51.860077)
+rotation = 3.1415925
+scale = Vector2(982.342, 95.145)
+mesh = SubResource("PrismMesh_hi3s5")
+
+[node name="CircleEmblem" type="TextureRect" parent="ColorRect" unique_id=810496252]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+z_index = 1
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -26.0
+offset_top = -66.5
+offset_right = 24.0
+offset_bottom = 26.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("14_sgib8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem3" type="TextureRect" parent="ColorRect/CircleEmblem" unique_id=220829028]
+modulate = Color(0.77, 0.73406667, 0.7084, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -48.0
+offset_right = 25.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.174, 1.174)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("14_sgib8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GameName" type="Control" parent="ColorRect" unique_id=305044171]
+z_index = 1
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -21.0
+offset_top = -65.0
+offset_right = 19.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Giuseppes" type="RichTextLabel" parent="ColorRect/GameName" unique_id=119460611]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -7.0
+offset_right = 18.5
+offset_bottom = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/italics_font_size = 60
+bbcode_enabled = true
+text = "W"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Giuseppes2" type="RichTextLabel" parent="ColorRect/GameName" unique_id=820743795]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -68.5
+offset_top = 32.0
+offset_right = 68.5
+offset_bottom = 118.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 56
+theme_override_font_sizes/italics_font_size = 60
+bbcode_enabled = true
+text = "MOSS"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]

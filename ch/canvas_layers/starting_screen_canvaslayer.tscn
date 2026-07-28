@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="5_3jj4g"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="6_hmuk5"]
 [ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://res/ROCKS - title_rock_centered_large.png" id="7_wliss"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="8_qxvgm"]
 [ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="8_rxi2v"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="9_uk8vt"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="10_40wae"]
@@ -337,6 +338,27 @@ colors = PackedColorArray(1, 1, 0.7058824, 1, 1, 0.36862746, 0.09019608, 1, 1, 0
 gradient = SubResource("Gradient_ufvrt")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uucxj"]
+bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
+[sub_resource type="Gradient" id="Gradient_xgu8n"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.55730337, 0.72808987)
+colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 0.68, 0.0067999936, 0.018019829, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cn8lj"]
+frequency = 0.085
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_3jj4g"]
+height = 64
+noise = SubResource("FastNoiseLite_cn8lj")
+color_ramp = SubResource("Gradient_xgu8n")
+seamless = true
+
+[sub_resource type="PrismMesh" id="PrismMesh_hmuk5"]
 
 [node name="SplashScreenCanvasLayer" type="CanvasLayer" unique_id=991233177 node_paths=PackedStringArray("splash_control")]
 script = ExtResource("1_a6mtr")
@@ -714,6 +736,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="BlackScreen" type="Control" parent="SplashScreen_v2" unique_id=1221148739]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -886,8 +909,50 @@ texture = ExtResource("9_uk8vt")
 expand_mode = 1
 stretch_mode = 5
 
+[node name="Bullet8" type="TextureRect" parent="SplashScreen_v2/TempLogo" unique_id=1024343850]
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 0
+offset_left = 195.5293
+offset_top = 141.36035
+offset_right = 707.5293
+offset_bottom = 653.36035
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("9_uk8vt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet2" type="TextureRect" parent="SplashScreen_v2/TempLogo" unique_id=595436052]
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 0
+offset_left = -321.95776
+offset_top = 140.10358
+offset_right = 190.04224
+offset_bottom = 652.1036
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("9_uk8vt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet9" type="TextureRect" parent="SplashScreen_v2/TempLogo" unique_id=1437288764]
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 0
+offset_left = -364.87256
+offset_top = 140.10358
+offset_right = 147.12744
+offset_bottom = 652.1036
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("9_uk8vt")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="RockLarge" type="TextureRect" parent="SplashScreen_v2/TempLogo" unique_id=837463327]
-modulate = Color(1, 0.78039217, 0, 1)
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
@@ -895,9 +960,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -526.4387
+offset_left = -508.0483
 offset_top = -346.3603
-offset_right = -14.438721
+offset_right = 3.9516907
 offset_bottom = 165.63965
 grow_horizontal = 2
 grow_vertical = 2
@@ -954,7 +1019,7 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_acvv8")
 
 [node name="RockSmall" type="TextureRect" parent="SplashScreen_v2/TempLogo" unique_id=695192184]
-modulate = Color(1, 0.78039217, 0, 1)
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
@@ -986,7 +1051,7 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_acvv8")
 
 [node name="RockSmall2" type="TextureRect" parent="SplashScreen_v2/TempLogo" unique_id=1745391714]
-modulate = Color(1, 0.78039217, 0, 1)
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
@@ -1050,6 +1115,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="BrandName" type="Control" parent="SplashScreen_v2" unique_id=1941687000]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1261,17 +1327,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -429.5
-offset_top = -45.0
-offset_right = 435.5
-offset_bottom = 109.0
+offset_left = -441.5
+offset_top = -101.0
+offset_right = 447.5
+offset_bottom = 101.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/bold_font = ExtResource("12_kgbxa")
 theme_override_fonts/bold_italics_font = ExtResource("12_kgbxa")
-theme_override_font_sizes/normal_font_size = 110
+theme_override_font_sizes/normal_font_size = 360
 theme_override_font_sizes/italics_font_size = 110
 bbcode_enabled = true
 text = "[color=#ffffff]Shoot[/color] for [wave][color=#c70102]CASH[/color][/wave]"
@@ -1288,17 +1354,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -432.5
-offset_top = -45.0
-offset_right = 432.5
-offset_bottom = 109.0
+offset_left = -444.5
+offset_top = -101.0
+offset_right = 444.5
+offset_bottom = 101.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
-theme_override_fonts/bold_italics_font = ExtResource("12_kgbxa")
-theme_override_font_sizes/normal_font_size = 110
+theme_override_font_sizes/normal_font_size = 360
 theme_override_font_sizes/italics_font_size = 110
 bbcode_enabled = true
 text = "[color=#ebe0d8]Shoot[/color] for [wave][color=#c70102]CASH[/color][/wave]"
@@ -1308,6 +1373,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="SplashScreen_v2/GameName" unique_id=1881024190]
+visible = false
 custom_minimum_size = Vector2(840, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -1321,6 +1387,140 @@ offset_right = 444.0
 offset_bottom = -30.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="ColorRect" type="Panel" parent="SplashScreen_v2" unique_id=1539308565]
+custom_minimum_size = Vector2(1090, 0)
+layout_mode = 0
+offset_left = 416.0
+offset_top = 328.0
+offset_right = 1506.0
+offset_bottom = 328.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_uucxj")
+
+[node name="TextureRect" type="TextureRect" parent="SplashScreen_v2/ColorRect" unique_id=1876703456]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -61.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("NoiseTexture2D_3jj4g")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="SplashScreen_v2/ColorRect" unique_id=1175481776]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+position = Vector2(546.33136, -30.14595)
+rotation = 3.1415925
+scale = Vector2(1093.6621, 118.01205)
+mesh = SubResource("PrismMesh_hmuk5")
+
+[node name="CircleEmblem" type="TextureRect" parent="SplashScreen_v2/ColorRect" unique_id=853242211]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -74.5
+offset_right = 25.0
+offset_bottom = 18.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("8_qxvgm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem3" type="TextureRect" parent="SplashScreen_v2/ColorRect/CircleEmblem" unique_id=2064605100]
+modulate = Color(0.77, 0.73406667, 0.7084, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -48.0
+offset_right = 25.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.174, 1.174)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("8_qxvgm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem2" type="TextureRect" parent="SplashScreen_v2/ColorRect/CircleEmblem" unique_id=677267775]
+visible = false
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -46.5
+offset_right = 25.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.1, 1.1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("8_qxvgm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GameName" type="Control" parent="SplashScreen_v2/ColorRect" unique_id=1505413698]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -49.0
+offset_right = 20.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Giuseppes" type="RichTextLabel" parent="SplashScreen_v2/ColorRect/GameName" unique_id=569431358]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -31.0
+offset_right = 18.5
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/italics_font_size = 60
+bbcode_enabled = true
+text = "W"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SFX" type="Node" parent="SplashScreen_v2" unique_id=591766079]
 

@@ -9,6 +9,7 @@
 
 [node name="RoundSelector" type="TextureButton" unique_id=1495719427 groups=["restartable"]]
 self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+clip_contents = true
 custom_minimum_size = Vector2(40, 40)
 anchors_preset = -1
 anchor_left = -0.010416667
@@ -34,7 +35,28 @@ outerRingColour_active = Color(0.78039217, 0.003921569, 0.007843138, 1)
 outerRingColour_levelCompleted = Color(0.08235294, 0.09411765, 0.10980392, 1)
 metadata/_edit_use_anchors_ = true
 
+[node name="OuterRing2" type="TextureRect" parent="." unique_id=326891373]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.24108028
+offset_top = 4.2410717
+offset_right = 0.24108124
+offset_bottom = 4.2410736
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.95, 0.755)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("1_jyr11")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="CheckMark" type="TextureRect" parent="." unique_id=1256875408]
+visible = false
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -69,6 +91,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="RoundNumber" type="RichTextLabel" parent="." unique_id=780785008]
+visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -123,6 +146,7 @@ vertical_alignment = 1
 
 [node name="100_percent" type="Control" parent="." unique_id=1861128203]
 unique_name_in_owner = true
+visible = false
 z_index = 1
 layout_mode = 1
 anchors_preset = 8
@@ -162,15 +186,16 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="OuterRing" type="TextureRect" parent="." unique_id=562874062]
-modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+self_modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
 show_behind_parent = true
+clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.138, 1.138)
+scale = Vector2(1.042, 1.042)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("1_jyr11")
@@ -178,6 +203,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="ArrowIndication" type="Control" parent="." unique_id=1580700018]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

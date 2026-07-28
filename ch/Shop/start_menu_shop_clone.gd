@@ -123,7 +123,7 @@ func reveal_gun(_dur : float = 0.05, wait_reroll : bool = false) -> void:
 	reveal_skill_sfx.play()
 
 	tween.parallel().tween_property(skill, "modulate:a", 1.0, _dur)
-	tween.parallel().tween_property(skill, "scale", Vector2.ONE * 1.15, _dur)
+	#tween.parallel().tween_property(skill, "scale", Vector2.ONE * 1.15, _dur)
 	tween.tween_property(skill, "scale", Vector2.ONE, _dur)
 	
 	await tween.finished

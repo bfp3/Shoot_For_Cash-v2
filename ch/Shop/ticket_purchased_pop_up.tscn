@@ -2,115 +2,61 @@
 
 [ext_resource type="Script" uid="uid://bia8r4n1kfwrp" path="res://ch/Shop/ticket_purchased_pop_up.gd" id="1_vjt1i"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_rcr1f"]
-[ext_resource type="Script" uid="uid://ducuh8laqrpgh" path="res://ch/Shop/popup_ticket_purchase.gd" id="3_w6jbf"]
-[ext_resource type="Texture2D" uid="uid://hy4w24j6p2er" path="res://res/red_shop.png" id="4_ag0ht"]
-[ext_resource type="StyleBox" uid="uid://eu6ax7sn7s7" path="res://res/card_icon_border_stylebox.tres" id="5_c8psj"]
-[ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://res/ROCKS - title_rock_centered_large.png" id="6_0c1gg"]
-[ext_resource type="StyleBox" uid="uid://b0ho0ncfb085s" path="res://res/progress_bar_green.tres" id="7_he2oh"]
-[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="8_l6f35"]
-[ext_resource type="AudioStream" uid="uid://dnl57r7vck2bj" path="res://sfx/shop_free_sfx_01.ogg" id="9_tteo3"]
-[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="10_8fmx8"]
+[ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="3_soy43"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="5_xxttw"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="11_n61y1"]
-[ext_resource type="Texture2D" uid="uid://btygbepxpw7jk" path="res://res/TEMP FILE DELETE/map_overworld.png" id="11_w6jbf"]
 [ext_resource type="PackedScene" uid="uid://mmk21ngpuua6" path="res://ch/Shop/Level_button_select.tscn" id="12_ag0ht"]
 
-[sub_resource type="Theme" id="Theme_64t06"]
-Panel/styles/panel = ExtResource("5_c8psj")
+[sub_resource type="Gradient" id="Gradient_soy43"]
+offsets = PackedFloat32Array(0.456446, 0.5400697)
+colors = PackedColorArray(1, 1, 1, 0, 1, 0.9533333, 0.92, 0.039215688)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_64t06"]
-bg_color = Color(0.32, 0.32, 0.32, 1)
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xxttw"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8mvl6"]
+noise = SubResource("FastNoiseLite_xxttw")
+color_ramp = SubResource("Gradient_soy43")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w6jbf"]
+bg_color = Color(0.88, 0.8389333, 0.8096, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.32, 0.2976, 0.22399999, 1)
+border_width_bottom = 4
+border_color = Color(0.75, 0.715, 0.69, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[sub_resource type="Curve" id="Curve_ga617"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_soy43"]
+color = Color(1, 1, 1, 1)
+thickness = 4
 
-[sub_resource type="CurveTexture" id="CurveTexture_gxbd8"]
-curve = SubResource("Curve_ga617")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_soy43"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
 
-[sub_resource type="Curve" id="Curve_mntah"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_4eg6k"]
-curve = SubResource("Curve_mntah")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gxbd8"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 120.0
-initial_velocity_max = 240.0
-angular_velocity_min = -180.0
-angular_velocity_max = 180.0
-gravity = Vector3(0, 0, 0)
-scale_min = 6.0
-scale_max = 12.0
-scale_curve = SubResource("CurveTexture_4eg6k")
-color = Color(1, 0.78, 0, 1)
-alpha_curve = SubResource("CurveTexture_gxbd8")
-hue_variation_min = -0.100000024
-hue_variation_max = 0.09999997
-
-[sub_resource type="Curve" id="Curve_g6ubq"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_purchase_alpha"]
-curve = SubResource("Curve_g6ubq")
-
-[sub_resource type="Curve" id="Curve_bpx2c"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_purchase_scale"]
-curve = SubResource("Curve_bpx2c")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4eg6k"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(20, 20, 1)
-direction = Vector3(0, 0, 0)
-spread = 1.0
-gravity = Vector3(0, 0, 0)
-scale_min = 0.02
-scale_max = 0.049999997
-scale_curve = SubResource("CurveTexture_purchase_scale")
-color = Color(1.8247963, 1.4387401, 0, 1)
-alpha_curve = SubResource("CurveTexture_purchase_alpha")
-hue_variation_min = -0.050000023
-hue_variation_max = 0.049999975
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vom4t"]
-bg_color = Color(0.09803922, 0.09803922, 0.11372549, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.45, 0.55, 0.7, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 10
-
-[sub_resource type="Theme" id="Theme_ga617"]
-Button/styles/hover = null
-Button/styles/normal = SubResource("StyleBoxFlat_vom4t")
-
-[node name="TicketPurchasedPopUp" type="CenterContainer" unique_id=1840245893 groups=["map_menu"]]
+[node name="TicketPurchasedPopUp" type="Control" unique_id=309897566 groups=["map_menu"]]
 z_index = 2
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -990.0
+offset_left = -960.0
 offset_top = -540.0
-offset_right = 990.0
+offset_right = 960.0
 offset_bottom = 540.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -119,316 +65,157 @@ mouse_filter = 2
 script = ExtResource("1_vjt1i")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1761525488]
+z_index = -1
 custom_minimum_size = Vector2(1920, 1080)
-layout_mode = 2
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
 color = Color(0, 0, 0, 0.3137255)
 
-[node name="MainPanel" type="PanelContainer" parent="." unique_id=814251497]
-custom_minimum_size = Vector2(600, 400)
-layout_mode = 2
+[node name="MainPanel3" type="PanelContainer" parent="." unique_id=290922793]
+modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(1550, 900)
+layout_mode = 0
+offset_left = 185.0
+offset_top = 90.0
+offset_right = 1735.0
+offset_bottom = 990.0
+scale = Vector2(1.015, 1.022)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("2_rcr1f")
 
-[node name="TreePanel" type="Control" parent="MainPanel" unique_id=36449042]
-layout_mode = 2
+[node name="MainPanel2" type="PanelContainer" parent="." unique_id=829293957]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+custom_minimum_size = Vector2(1550, 900)
+layout_mode = 0
+offset_left = 185.0
+offset_top = 90.0
+offset_right = 1735.0
+offset_bottom = 990.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("2_rcr1f")
+
+[node name="TreePanel" type="Control" parent="." unique_id=36449042]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="PurchasedTicket" type="Button" parent="MainPanel/TreePanel" unique_id=1011296227 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx")]
-visible = false
-custom_minimum_size = Vector2(210, 250)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -105.0
-offset_top = -125.0
-offset_right = 105.0
-offset_bottom = 125.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-disabled = true
-clip_text = true
-script = ExtResource("3_w6jbf")
-upgrade_icon = ExtResource("4_ag0ht")
-focus_enter_sfx = NodePath("focus_enter_sfx")
-focus_exit_sfx = NodePath("focus_exit")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MainPanel/TreePanel/PurchasedTicket" unique_id=1009264925]
+[node name="MapOverlay" type="TextureRect" parent="TreePanel" unique_id=705275406]
+modulate = Color(0.47, 0.47, 0.47, 0.52156866)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 2.0
-offset_right = -8.0
-offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.4, 1.4)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="UpgradePanel" type="Panel" parent="MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=1306927881]
-clip_contents = true
-custom_minimum_size = Vector2(120, 120)
-layout_mode = 2
-mouse_filter = 2
-theme = SubResource("Theme_64t06")
-
-[node name="Upgrade_Icon" type="TextureRect" parent="MainPanel/TreePanel/PurchasedTicket/VBoxContainer/UpgradePanel" unique_id=1300485151]
-unique_name_in_owner = true
-self_modulate = Color(1, 0.78039217, 0, 1)
-custom_minimum_size = Vector2(100, 110)
-layout_mode = 0
-offset_top = 4.0
-offset_right = 187.0
-offset_bottom = 114.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("6_0c1gg")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="NameLabel" type="Label" parent="MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=557856901]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Upgrade Name"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=637808395]
-layout_mode = 2
-mouse_filter = 2
-alignment = 1
-
-[node name="PurchaseHoldProgressBar" type="ProgressBar" parent="MainPanel/TreePanel/PurchasedTicket/VBoxContainer/HBoxContainer" unique_id=1698387112]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 25)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_64t06")
-theme_override_styles/fill = ExtResource("7_he2oh")
-step = 1.0
-show_percentage = false
-
-[node name="CostLabel" type="RichTextLabel" parent="MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=1100920866]
-unique_name_in_owner = true
-visible = false
-modulate = Color(1, 0.78039217, 0, 1)
-custom_minimum_size = Vector2(0, 70)
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 66
-theme_override_font_sizes/italics_font_size = 48
-bbcode_enabled = true
-text = "Cost: 0"
-horizontal_alignment = 1
-
-[node name="DescriptionLabel" type="Label" parent="MainPanel/TreePanel/PurchasedTicket/VBoxContainer" unique_id=217147862]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "Description"
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="Purchased" type="VBoxContainer" parent="MainPanel/TreePanel/PurchasedTicket" unique_id=312310989]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 68.000015
-offset_top = 104.0
-offset_right = -57.999985
-offset_bottom = -110.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2.2, 5.105)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="NameLabel" type="RichTextLabel" parent="MainPanel/TreePanel/PurchasedTicket/Purchased" unique_id=456719161]
-custom_minimum_size = Vector2(84.88, 0)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/normal_font_size = 33
-theme_override_font_sizes/bold_font_size = 23
-theme_override_font_sizes/italics_font_size = 23
-bbcode_enabled = true
-text = "[rainbow]SOLD"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-
-[node name="Capped" type="VBoxContainer" parent="MainPanel/TreePanel/PurchasedTicket" unique_id=1230429957]
-visible = false
-modulate = Color(1, 0.78039217, 0, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 72.0
-offset_top = 104.0
-offset_right = -70.0
-offset_bottom = -110.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 0.61126375
-scale = Vector2(2.2, 2.2)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="NameLabel" type="Label" parent="MainPanel/TreePanel/PurchasedTicket/Capped" unique_id=415425423]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 26
-text = "CAPPED"
-horizontal_alignment = 1
-
-[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="MainPanel/TreePanel/PurchasedTicket" unique_id=402276153]
-stream = ExtResource("8_l6f35")
-volume_db = -34.0
-
-[node name="Free_sfx" type="AudioStreamPlayer" parent="MainPanel/TreePanel/PurchasedTicket" unique_id=2026597257]
-stream = ExtResource("9_tteo3")
-volume_db = -52.0
-
-[node name="focus_exit" type="AudioStreamPlayer" parent="MainPanel/TreePanel/PurchasedTicket" unique_id=1700933319]
-stream = ExtResource("8_l6f35")
-volume_db = -49.0
-pitch_scale = 0.9
-
-[node name="PurchaseParticles" type="GPUParticles2D" parent="MainPanel/TreePanel/PurchasedTicket" unique_id=283590317]
-z_index = 3
-position = Vector2(104, 212)
-emitting = false
-amount = 12
-lifetime = 0.5
-one_shot = true
-explosiveness = 1.0
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_gxbd8")
-
-[node name="FreeParticles" type="GPUParticles2D" parent="MainPanel/TreePanel/PurchasedTicket" unique_id=838864029]
-z_index = 3
-position = Vector2(168, 212)
-amount = 2
-texture = ExtResource("10_8fmx8")
-lifetime = 2.0
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_4eg6k")
-
-[node name="Button" type="Button" parent="MainPanel/TreePanel/PurchasedTicket" unique_id=901171162]
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 1.0
-offset_top = 8.0
-offset_right = 1.0
-offset_bottom = 8.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme = SubResource("Theme_ga617")
-
-[node name="MainPanel" type="PanelContainer" parent="MainPanel/TreePanel" unique_id=283713754]
-custom_minimum_size = Vector2(800, 600)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -200.0
-offset_right = 300.0
-offset_bottom = 200.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("2_rcr1f")
-
-[node name="Buttons" type="Control" parent="MainPanel/TreePanel/MainPanel" unique_id=1362834187]
-layout_mode = 2
-
-[node name="MapOverlay" type="TextureRect" parent="MainPanel/TreePanel/MainPanel/Buttons" unique_id=705275406]
-self_modulate = Color(0.14933333, 0.28, 0, 0.38039216)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -298.0
-offset_top = -198.5
-offset_right = 298.0
-offset_bottom = 198.5
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2.077, 2.077)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("11_w6jbf")
+texture = ExtResource("3_soy43")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Level_button_selector" parent="MainPanel/TreePanel/MainPanel/Buttons" unique_id=2102660070 instance=ExtResource("12_ag0ht")]
+[node name="MapOverlay2" type="TextureRect" parent="TreePanel" unique_id=746264084]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1175.5471
+offset_top = -599.24524
+offset_right = 744.4529
+offset_bottom = 480.75476
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = SubResource("NoiseTexture2D_8mvl6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Buttons" type="Control" parent="TreePanel" unique_id=1362834187]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Level_button_selector" parent="TreePanel/Buttons" unique_id=2102660070 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
-offset_left = -252.60449
-offset_top = -57.0
-offset_right = 543.3955
-offset_bottom = 540.0
+offset_left = 356.0
+offset_top = 315.0
+offset_right = 612.0
+offset_bottom = 571.0
+texture_pressed = ExtResource("5_xxttw")
+texture_hover = ExtResource("5_xxttw")
+texture_disabled = ExtResource("5_xxttw")
+texture_focused = ExtResource("5_xxttw")
 level_name = "Moss"
+level_locked = false
+main_control = NodePath("../../..")
 
-[node name="Level_button_selector2" parent="MainPanel/TreePanel/MainPanel/Buttons" unique_id=516604565 instance=ExtResource("12_ag0ht")]
+[node name="Level_button_selector2" parent="TreePanel/Buttons" unique_id=516604565 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
-offset_left = -121.68457
-offset_top = -137.04004
-offset_right = 674.3154
-offset_bottom = 459.95996
-scale = Vector2(0.124, 0.124)
-disabled = true
+offset_left = 618.0
+offset_top = 166.0
+offset_right = 874.0
+offset_bottom = 422.0
+texture_pressed = ExtResource("5_xxttw")
+texture_hover = ExtResource("5_xxttw")
+texture_disabled = ExtResource("5_xxttw")
+texture_focused = ExtResource("5_xxttw")
 level_name = "Redd"
+main_control = NodePath("../../..")
 
-[node name="Level_button_selector3" parent="MainPanel/TreePanel/MainPanel/Buttons" unique_id=1192796621 instance=ExtResource("12_ag0ht")]
+[node name="Level_button_selector3" parent="TreePanel/Buttons" unique_id=1192796621 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
-offset_left = 47.605957
-offset_top = -160.66138
-offset_right = 843.60596
-offset_bottom = 436.33862
-scale = Vector2(0.129, 0.129)
-disabled = true
+offset_left = 932.0
+offset_top = 106.0
+offset_right = 1188.0
+offset_bottom = 362.0
+texture_pressed = ExtResource("5_xxttw")
+texture_hover = ExtResource("5_xxttw")
+texture_disabled = ExtResource("5_xxttw")
+texture_focused = ExtResource("5_xxttw")
+level_name = "Glory"
+main_control = NodePath("../../..")
 
-[node name="Level_button_selector4" parent="MainPanel/TreePanel/MainPanel/Buttons" unique_id=299777263 instance=ExtResource("12_ag0ht")]
+[node name="Level_button_selector4" parent="TreePanel/Buttons" unique_id=299777263 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
-offset_left = 173.59082
-offset_top = -46.488037
-offset_right = 969.5908
-offset_bottom = 550.51196
-scale = Vector2(0.191, 0.191)
-disabled = true
+offset_left = 1143.0
+offset_top = 328.0
+offset_right = 1399.0
+offset_bottom = 584.0
+texture_pressed = ExtResource("5_xxttw")
+texture_hover = ExtResource("5_xxttw")
+texture_disabled = ExtResource("5_xxttw")
+texture_focused = ExtResource("5_xxttw")
+level_name = "??"
+main_control = NodePath("../../..")
 
-[node name="Level_button_selector5" parent="MainPanel/TreePanel/MainPanel/Buttons" unique_id=1062796673 instance=ExtResource("12_ag0ht")]
+[node name="Level_button_selector5" parent="TreePanel/Buttons" unique_id=1062796673 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
-offset_left = 303.51172
-offset_top = 34.220215
-offset_right = 1099.5117
-offset_bottom = 631.2202
-scale = Vector2(0.116, 0.116)
-disabled = true
+offset_left = 1391.0
+offset_top = 489.0
+offset_right = 1647.0
+offset_bottom = 745.0
+texture_pressed = ExtResource("5_xxttw")
+texture_hover = ExtResource("5_xxttw")
+texture_disabled = ExtResource("5_xxttw")
+texture_focused = ExtResource("5_xxttw")
+level_name = "Sodomi"
+main_control = NodePath("../../..")
 
-[node name="ShipperIsland" type="RichTextLabel" parent="MainPanel/TreePanel/MainPanel/Buttons" unique_id=2102947909]
-self_modulate = Color(1, 0.78039217, 0, 1)
+[node name="ShipperIsland" type="RichTextLabel" parent="TreePanel/Buttons" unique_id=2102947909]
 clip_contents = false
 layout_mode = 1
 anchors_preset = 3
@@ -436,45 +223,376 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -369.0
-offset_top = -194.0
-offset_right = -31.0
-offset_bottom = -125.0
+offset_left = -1597.0
+offset_top = -845.0
+offset_right = -1418.0
+offset_bottom = -808.0
 grow_horizontal = 0
 grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 34
 theme_override_font_sizes/italics_font_size = 22
 bbcode_enabled = true
-text = "[i][wave]SHIPPER ISLAND"
+text = "SHIPPER ISLAND"
 fit_content = true
 autowrap_mode = 0
-horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="ShipperIsland2" type="RichTextLabel" parent="MainPanel/TreePanel/MainPanel/Buttons" unique_id=1467011621]
-modulate = Color(0.61, 0.61, 0.61, 1)
+[node name="Panel" type="Panel" parent="TreePanel/Buttons/ShipperIsland" unique_id=604455429]
+modulate = Color(1, 1, 1, 0.38431373)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.105, 1.105)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_w6jbf")
+
+[node name="ShipperIsland2" type="RichTextLabel" parent="TreePanel/Buttons" unique_id=1467011621]
+visible = false
 clip_contents = false
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 7
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-offset_left = -169.0
-offset_top = 6.0
-offset_right = 169.0
-offset_bottom = 75.0
+anchor_bottom = 1.0
+offset_left = -239.5
+offset_top = -200.94238
+offset_right = 239.5
+offset_bottom = -102.94238
 grow_horizontal = 2
+grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/italics_font_size = 42
+theme_override_colors/default_color = Color(0.4, 0.37973332, 0.368, 1)
+theme_override_font_sizes/normal_font_size = 90
 bbcode_enabled = true
-text = "[i]Shooting Ranges"
+text = "Shooting Ranges"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="TreePanel/Buttons/ShipperIsland2" unique_id=878361172]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.105, 1.105)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_w6jbf")
+
+[node name="MainPanel" type="PanelContainer" parent="TreePanel" unique_id=283713754]
+visible = false
+custom_minimum_size = Vector2(800, 600)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("2_rcr1f")
+
+[node name="Control" type="Control" parent="TreePanel" unique_id=1275571051]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 528.0
+offset_top = 224.0
+offset_right = 528.0
+offset_bottom = 224.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.23, 0.705)
+mouse_filter = 2
+
+[node name="ShipperIsland" type="RichTextLabel" parent="TreePanel/Control" unique_id=1672144171]
+visible = false
+clip_contents = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -756.0
+offset_top = -330.0
+offset_right = -277.0
+offset_bottom = -232.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 90
+bbcode_enabled = true
+text = "Shooting Ranges"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="TreePanel/Control/ShipperIsland" unique_id=987984705]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.105, 1.105)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_w6jbf")
+
+[node name="HSeparator" type="HSeparator" parent="TreePanel/Control/ShipperIsland" unique_id=815723527]
+modulate = Color(0.63, 0.006299994, 0.016694842, 1)
+custom_minimum_size = Vector2(442.215, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = 46.0
+offset_right = 225.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/separator = SubResource("StyleBoxLine_soy43")
+
+[node name="HSeparator2" type="HSeparator" parent="TreePanel/Control/ShipperIsland" unique_id=1762228458]
+modulate = Color(0.63, 0.006299994, 0.016694842, 1)
+custom_minimum_size = Vector2(442.215, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = 54.0
+offset_right = 225.0
+offset_bottom = 58.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/separator = SubResource("StyleBoxLine_soy43")
+
+[node name="ShipperIsland2" type="RichTextLabel" parent="TreePanel/Control" unique_id=1015332280]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -760.0
+offset_top = -395.0
+offset_right = -281.0
+offset_bottom = -297.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "SELECT A RANGE"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+justification_flags = 162
+
+[node name="Control" type="Control" parent="TreePanel/Control" unique_id=1079193983]
+clip_contents = true
+custom_minimum_size = Vector2(400, 500)
+anchors_preset = 0
+offset_left = 211.0
+offset_top = 537.0
+offset_right = 680.0
+offset_bottom = 1136.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Panel" type="Panel" parent="TreePanel/Control/Control" unique_id=1964716013]
+custom_minimum_size = Vector2(400, 75)
+layout_mode = 0
+offset_left = 184.0
+offset_top = 92.0
+offset_right = 584.0
+offset_bottom = 167.0
+rotation = 0.5061455
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_soy43")
+
+[node name="Panel2" type="Panel" parent="TreePanel/Control/Control" unique_id=2022626145]
+custom_minimum_size = Vector2(400, 75)
+layout_mode = 0
+offset_left = -128.0
+offset_top = 92.0
+offset_right = 272.0
+offset_bottom = 167.0
+rotation = -0.5061455
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_soy43")
+
+[node name="Control2" type="Control" parent="TreePanel" unique_id=1227093502]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 104.0
+offset_bottom = 104.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.23, 0.705)
+mouse_filter = 2
+
+[node name="ShipperIsland" type="RichTextLabel" parent="TreePanel/Control2" unique_id=17830661]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -756.0
+offset_top = -330.0
+offset_right = -277.0
+offset_bottom = -232.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 90
+bbcode_enabled = true
+text = "Shooting Ranges"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="TreePanel/Control2/ShipperIsland" unique_id=1006724973]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.105, 1.105)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_w6jbf")
+
+[node name="HSeparator" type="HSeparator" parent="TreePanel/Control2/ShipperIsland" unique_id=1006851852]
+modulate = Color(0.63, 0.006299994, 0.016694842, 1)
+custom_minimum_size = Vector2(442.215, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = 46.0
+offset_right = 225.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/separator = SubResource("StyleBoxLine_soy43")
+
+[node name="HSeparator2" type="HSeparator" parent="TreePanel/Control2/ShipperIsland" unique_id=1477913447]
+modulate = Color(0.63, 0.006299994, 0.016694842, 1)
+custom_minimum_size = Vector2(442.215, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = 54.0
+offset_right = 225.0
+offset_bottom = 58.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/separator = SubResource("StyleBoxLine_soy43")
+
+[node name="ShipperIsland2" type="RichTextLabel" parent="TreePanel/Control2" unique_id=170787166]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -756.0
+offset_top = -394.0
+offset_right = -277.0
+offset_bottom = -296.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "SELECT A RANGE"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 162
+
+[node name="Control" type="Control" parent="TreePanel/Control2" unique_id=1602696874]
+clip_contents = true
+custom_minimum_size = Vector2(400, 500)
+anchors_preset = 0
+offset_left = 211.0
+offset_top = 537.0
+offset_right = 680.0
+offset_bottom = 1136.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Panel" type="Panel" parent="TreePanel/Control2/Control" unique_id=701104131]
+custom_minimum_size = Vector2(400, 75)
+layout_mode = 0
+offset_left = 184.0
+offset_top = 92.0
+offset_right = 584.0
+offset_bottom = 167.0
+rotation = 0.5061455
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_soy43")
+
+[node name="Panel2" type="Panel" parent="TreePanel/Control2/Control" unique_id=175862722]
+custom_minimum_size = Vector2(400, 75)
+layout_mode = 0
+offset_left = -128.0
+offset_top = 92.0
+offset_right = 272.0
+offset_bottom = 167.0
+rotation = -0.5061455
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_soy43")
 
 [node name="Control" type="Control" parent="." unique_id=1143580752]
 visible = false
-layout_mode = 2
+anchors_preset = 0
+offset_left = 960.0
+offset_top = 540.0
+offset_right = 960.0
+offset_bottom = 540.0
 mouse_filter = 2
 
 [node name="NextRound" type="Button" parent="Control" unique_id=1655657261]
@@ -508,5 +626,14 @@ text = "x"
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[connection signal="pressed" from="MainPanel/TreePanel/PurchasedTicket" to="." method="_on_purchased_ticket_pressed"]
+[node name="MainPanel" type="PanelContainer" parent="." unique_id=814251497]
+visible = false
+layout_mode = 0
+offset_left = 958.0
+offset_top = 538.0
+offset_right = 962.0
+offset_bottom = 542.0
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("2_rcr1f")
+
 [connection signal="pressed" from="Control/NextRound" to="." method="_on_next_round_pressed"]

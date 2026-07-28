@@ -11,6 +11,9 @@ var interaction_tween: Tween
 @onready var level_name_label: RichTextLabel = $level_name_label
 @export var level_name := 'Locked'
 
+@export var level_locked := true
+@export var main_control : Control
+
 var round_manager : RoundManager = null
 
 func _ready() -> void:
@@ -26,7 +29,20 @@ func _ready() -> void:
 	focus_entered.connect(_on_focus_entered)
 	focus_exited.connect(_on_focus_exited)
 
-	level_name_label.text = "[i]" + level_name
+	if level_locked:
+		level_name_label.text = "Locked".to_upper()
+		#level_name_label.modulate = Color('c70102')
+		level_name_label.add_theme_font_size_override("normal_font_size", 85)
+		$TextureRect3.modulate = Color('15181c')
+		$HSeparator.scale.x = 1.13
+
+	else:
+		level_name_label.text = "[wave]" + level_name.to_upper()
+		level_name_label.modulate = Color('15181c')
+		level_name_label.add_theme_font_size_override("normal_font_size", 109)
+		$HSeparator.scale.x = 1.0
+		
+		
 	self.pressed.connect(_on_level_button_pressed)
 	round_manager = get_tree().get_first_node_in_group('round_manager')
 	
@@ -35,18 +51,21 @@ func _ready() -> void:
 		level_name_label.modulate = Color("1f1f1fff")
 	
 func _on_level_button_pressed() -> void:
+	if level_locked:
+		return
+
 	await fill_progress_bar()
-	
-	var level_name_lower_case : String = level_name.to_lower()
+
+	var level_name_lower_case: String = level_name.to_lower()
 
 	match level_name_lower_case:
-		'moss':
+		"moss":
 			round_manager.move_to_moss()
-			$"../../../../..".ticket_used()
-			
-		_:
-			print('other button pressed')
+			main_control.ticket_used()
+			#$"../../../../..".ticket_used()
 
+		_:
+			print("other button pressed")
 
 
 func _on_pressed() -> void:
@@ -113,6 +132,6 @@ func _play_wiggle(target_scale: float) -> void:
 		0.08
 	)
 
-	interaction_tween.tween_property(self, "rotation_degrees", -2.0, 0.04)
-	interaction_tween.tween_property(self, "rotation_degrees", 2.0, 0.08)
-	interaction_tween.tween_property(self, "rotation_degrees", 0.0, 0.04)
+	#interaction_tween.tween_property(self, "rotation_degrees", -2.0, 0.04)
+	#interaction_tween.tween_property(self, "rotation_degrees", 2.0, 0.08)
+	#interaction_tween.tween_property(self, "rotation_degrees", 0.0, 0.04)

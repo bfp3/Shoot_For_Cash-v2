@@ -116,7 +116,7 @@ func update_active() -> void:
 	update_gravity(0.04)
 	global_position = start_pos
 	global_position.x = randi_range(-8,8)
-	health = 2
+	health = 3
 	
 	pineapple_mesh.show()
 	rock_activated = true
@@ -331,15 +331,26 @@ func fly_off_into_the_distance() -> void:
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
 	
+
+	
+	damage = 1
 	
 	
 	$hit_wall_timer.stop()
 	health -= damage 
+	
+	if health == 2:
+		freeze = true
+		smoke_particles()
+		return
+			
 	if damage == 0:
 		cash_value += 10
 	
 	taken_hit = true
-	if health > 0:		
+	freeze = false
+	
+	if health > 0:
 		play_hit_sfx()
 		apply_hit_reaction(screen_offset)
 		await get_tree().create_timer(2.0).timeout

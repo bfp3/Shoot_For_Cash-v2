@@ -1,4 +1,4 @@
-extends CenterContainer
+extends Control
 
 @export var game_start_menu : Control
 
@@ -12,6 +12,7 @@ var ticket_location := ''
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	hide()
+	pass
 
 
 func display_ticket() -> void:
@@ -46,7 +47,6 @@ func open_pop_up() -> void:
 	show()
 	position = Vector2.ZERO
 	self.mouse_filter = Control.MOUSE_FILTER_STOP
-	$MainPanel/TreePanel/PurchasedTicket.disabled = false
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 1.0, 0.35)
 	await tween.finished
