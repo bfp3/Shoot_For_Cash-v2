@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="4_ecf0a"]
 [ext_resource type="PackedScene" uid="uid://b04e2sb5337vo" path="res://ch/Tally_card/TallyComponent_v3.tscn" id="4_iforg"]
 [ext_resource type="Script" uid="uid://dbbltr23d26u6" path="res://ch/Shop/money_label.gd" id="5_7r173"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="6_4k5lx"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="9_4k5lx"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="11_ta7gf"]
 [ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="12_bux34"]
@@ -51,7 +52,7 @@ tangential_accel_max = -2.2351742e-06
 scale_min = 5.0
 scale_max = 10.0
 scale_curve = SubResource("CurveTexture_64t06")
-color = Color(0.25882354, 0.81960785, 0, 1)
+color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 alpha_curve = SubResource("CurveTexture_vhsx8")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn8lj"]
@@ -80,6 +81,27 @@ left_to_right = 1.0
 [sub_resource type="BoxMesh" id="BoxMesh_cuwcq"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7r173"]
+bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
+[sub_resource type="Gradient" id="Gradient_hi3s5"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.55730337, 0.72808987)
+colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 0.68, 0.0067999936, 0.018019829, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_sgib8"]
+frequency = 0.085
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ta7gf"]
+height = 64
+noise = SubResource("FastNoiseLite_sgib8")
+color_ramp = SubResource("Gradient_hi3s5")
+seamless = true
+
+[sub_resource type="PrismMesh" id="PrismMesh_bux34"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iforg"]
 
@@ -136,6 +158,19 @@ scale_max = 10.0
 scale_curve = SubResource("CurveTexture_64t06")
 color = Color(0.25882354, 0.81960785, 0, 1)
 alpha_curve = SubResource("CurveTexture_vhsx8")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cuwcq"]
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.082499996, 0.09441667, 0.11, 0.41568628)
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="Animation" id="Animation_3q72g"]
 length = 0.001
@@ -238,7 +273,8 @@ cash_earned_label = NodePath("CenterContainer/MainPanel/MainPanel/CashHboxcontai
 [node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=685089417]
 position = Vector2(962, 551)
 amount = 100
-lifetime = 4.0
+lifetime = 2.0
+fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_yuebc")
 
@@ -413,62 +449,6 @@ texture = ExtResource("4_ecf0a")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="100_percent" type="Control" parent="CenterContainer" unique_id=961449738]
-unique_name_in_owner = true
-z_index = 1
-custom_minimum_size = Vector2(150, 100)
-layout_mode = 2
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/100_percent" unique_id=113222203]
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-layout_mode = 0
-offset_left = -135.3089
-offset_top = -202.84262
-offset_right = -8.308899
-offset_bottom = -133.84262
-rotation = -0.34906584
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 35
-theme_override_font_sizes/bold_font_size = 30
-theme_override_font_sizes/bold_italics_font_size = 30
-theme_override_font_sizes/italics_font_size = 49
-bbcode_enabled = true
-text = "[wave][i]100%"
-fit_content = true
-autowrap_mode = 0
-
-[node name="Panel" type="Panel" parent="CenterContainer/100_percent/RichTextLabel" unique_id=1869445004]
-visible = false
-self_modulate = Color(1, 1, 1, 0.57254905)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.21731035
-anchor_top = 0.21588317
-anchor_right = 0.80382043
-anchor_bottom = 0.8139071
-metadata/_edit_use_anchors_ = true
-
-[node name="BonusCashLabel" type="RichTextLabel" parent="CenterContainer/100_percent" unique_id=1098716925]
-visible = false
-layout_mode = 0
-offset_left = -25.308838
-offset_top = -98.84262
-offset_right = 175.69116
-offset_bottom = -0.84262085
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/normal_font_size = 60
-theme_override_font_sizes/bold_font_size = 30
-theme_override_font_sizes/bold_italics_font_size = 30
-theme_override_font_sizes/italics_font_size = 31
-bbcode_enabled = true
-text = "+$100"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=785012210]
 custom_minimum_size = Vector2(250, 250)
 layout_mode = 2
@@ -481,12 +461,142 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="HSeparator5" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=1168585334]
+visible = false
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
+
+[node name="ColorRect" type="Panel" parent="CenterContainer/MainPanel/MainPanel" unique_id=313920766]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7r173")
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/MainPanel/ColorRect" unique_id=783302900]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -61.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("NoiseTexture2D_ta7gf")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/MainPanel/ColorRect" unique_id=1073230442]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+position = Vector2(364.97894, -20.139904)
+rotation = 3.1415925
+scale = Vector2(730.95734, 106)
+mesh = SubResource("PrismMesh_bux34")
+
+[node name="CircleEmblem" type="TextureRect" parent="CenterContainer/MainPanel/MainPanel/ColorRect" unique_id=1722118419]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -74.5
+offset_right = 25.0
+offset_bottom = 18.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("6_4k5lx")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem3" type="TextureRect" parent="CenterContainer/MainPanel/MainPanel/ColorRect/CircleEmblem" unique_id=48192102]
+modulate = Color(0.77, 0.73406667, 0.7084, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -48.0
+offset_right = 25.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.174, 1.174)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("6_4k5lx")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem2" type="TextureRect" parent="CenterContainer/MainPanel/MainPanel/ColorRect/CircleEmblem" unique_id=912216298]
+visible = false
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -46.5
+offset_right = 25.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.1, 1.1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("6_4k5lx")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GameName" type="Control" parent="CenterContainer/MainPanel/MainPanel/ColorRect" unique_id=2031810612]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -49.0
+offset_right = 20.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Giuseppes" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/ColorRect/GameName" unique_id=874255403]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -31.0
+offset_right = 18.5
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/italics_font_size = 60
+bbcode_enabled = true
+text = "W"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CashHboxcontainer2" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1278365589]
 layout_mode = 2
@@ -800,6 +910,68 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
+
+[node name="100_percent" type="Control" parent="CenterContainer" unique_id=961449738]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 100)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/100_percent" unique_id=113222203]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -276.00006
+offset_top = -57.5
+offset_right = -108.00006
+offset_bottom = 41.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.34906584
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_type_variation = &"RedRichText"
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/italics_font_size = 91
+bbcode_enabled = true
+text = "[wave][i]100%"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="CenterContainer/100_percent/RichTextLabel" unique_id=1869445004]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_cuwcq")
+
+[node name="BonusCashLabel" type="RichTextLabel" parent="CenterContainer/100_percent" unique_id=1098716925]
+visible = false
+layout_mode = 0
+offset_left = -25.308838
+offset_top = -98.84262
+offset_right = 175.69116
+offset_bottom = -0.84262085
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 30
+theme_override_font_sizes/bold_italics_font_size = 30
+theme_override_font_sizes/italics_font_size = 31
+bbcode_enabled = true
+text = "+$100"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1059437881]
 libraries/ = SubResource("AnimationLibrary_cuwcq")

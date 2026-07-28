@@ -7,7 +7,8 @@ extends Node3D
 @export var start_cam : Camera3D
 @export var round_timer : Control
 @export var HUD_CRT : TextureRect
-@export var splash_screen : Control
+@export var splash_screen : CanvasLayer
+
 @export var music_manager : Node
 @export var main_game_canvas : CanvasLayer
 @export var move_speed := 5.0
@@ -15,8 +16,8 @@ var moving_camera := false
 
 
 func _ready() -> void:
+	await get_tree().process_frame
 	set_process(false)
-	
 	main_game_canvas.hide()
 	if intro_title_screen:
 		start_intro_process()
@@ -45,8 +46,7 @@ func start_game_quick() -> void:
 
 	
 func start_intro_process() -> void:
-
-	splash_screen.enter_state(splash_screen.State.START)
+	splash_screen.start()
 	round_manager.enter_state(round_manager.RoundState.INACTIVE)
 	start_cam.current = true
 	round_timer.hide()
@@ -68,8 +68,8 @@ func start_game() -> void:
 	set_process(true)
 	# wait until camera is close enough
 	main_game_canvas.show()
-	round_manager.enter_state(round_manager.RoundState.SHOP_START)
-	
+	#round_manager.enter_state(round_manager.RoundState.SHOP_START)
+	round_manager.enter_state(round_manager.RoundState.START_START)
 	while moving_camera:
 		await get_tree().process_frame
 
@@ -77,7 +77,7 @@ func start_game() -> void:
 	#music_manager.start_bg_music()
 	#await get_tree().create_timer(0.25).timeout
 	player.start_player()
-	round_timer.show()
+	#round_timer.show()
 	HUD_CRT.start_game()
 	#rocks_on_screen_counter.show()
 

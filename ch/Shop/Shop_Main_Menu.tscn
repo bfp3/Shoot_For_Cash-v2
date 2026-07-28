@@ -18,16 +18,13 @@
 [ext_resource type="PackedScene" uid="uid://ck6lfy3kh3eqy" path="res://ch/Shop/Upgrade_progress_component.tscn" id="13_onfim"]
 [ext_resource type="Texture2D" uid="uid://icyevci50hge" path="res://res/gun_icon_shop.png" id="13_xklyy"]
 [ext_resource type="Script" uid="uid://k67b4ujxorb3" path="res://ch/Shop/upgrade_progress_component.gd" id="14_r6l2h"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="14_sgib8"]
 [ext_resource type="Texture2D" uid="uid://bf8o6gnj6g1nc" path="res://res/time_upgrade_icon.png" id="14_xklyy"]
 [ext_resource type="Texture2D" uid="uid://gbka4yjc0p4k" path="res://res/bullet_texture.png" id="15_htvy6"]
 [ext_resource type="Texture2D" uid="uid://cdibh2x081m8m" path="res://res/auto_fire_icon.png" id="16_cn8lj"]
-[ext_resource type="Script" uid="uid://up6jew6r4kdm" path="res://ch/Shop/transport_tickets.gd" id="16_vom4t"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="17_cn8lj"]
 [ext_resource type="Texture2D" uid="uid://b2v72vmf55sw6" path="res://res/red_balloon_burst.png" id="19_pwib5"]
-[ext_resource type="PackedScene" uid="uid://dcuml06w7i3km" path="res://ch/Shop/ticket_button.tscn" id="20_xklyy"]
-[ext_resource type="PackedScene" uid="uid://cjcdqa3pipb3j" path="res://ch/close_menu.tscn" id="21_tnodp"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
-[ext_resource type="PackedScene" uid="uid://dg8ab1qtj51xm" path="res://ch/Shop/ticket_purchased_pop_up.tscn" id="27_ei2sf"]
 [ext_resource type="AudioStream" uid="uid://cpr70poqkj2hs" path="res://sfx/greyscale_compressed.ogg" id="33_pwib5"]
 [ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="40_8mk8u"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="41_5w0u1"]
@@ -104,14 +101,10 @@ tangential_accel_max = -2.2351742e-06
 scale_min = 10.0
 scale_max = 20.0
 scale_curve = SubResource("CurveTexture_64t06")
-color = Color(0.21, 0.0805, 0, 1)
+color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 alpha_curve = SubResource("CurveTexture_vhsx8")
 hue_variation_min = -2.2351742e-08
 hue_variation_max = -2.2351742e-08
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cn8lj"]
 
 [sub_resource type="Gradient" id="Gradient_jv82y"]
 interpolation_mode = 1
@@ -128,14 +121,28 @@ noise = SubResource("FastNoiseLite_sgib8")
 color_ramp = SubResource("Gradient_jv82y")
 seamless = true
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hi3s5"]
 bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 
+[sub_resource type="Gradient" id="Gradient_xgu8n"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.55730337, 0.72808987)
+colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 0.68, 0.0067999936, 0.018019829, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cn8lj"]
+frequency = 0.085
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jv82y"]
+height = 64
+noise = SubResource("FastNoiseLite_cn8lj")
+color_ramp = SubResource("Gradient_xgu8n")
+seamless = true
+
 [sub_resource type="PrismMesh" id="PrismMesh_hi3s5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
 [sub_resource type="Gradient" id="Gradient_sgib8"]
 interpolation_mode = 1
@@ -169,8 +176,6 @@ Button/colors/font_color = Color(0.88, 0.88, 0.88, 0)
 Button/styles/hover = null
 Button/styles/normal = SubResource("StyleBoxFlat_cn8lj")
 
-[sub_resource type="PrismMesh" id="PrismMesh_atgli"]
-
 [sub_resource type="PrismMesh" id="PrismMesh_sgib8"]
 left_to_right = 1.0
 
@@ -178,27 +183,6 @@ left_to_right = 1.0
 left_to_right = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_atgli"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbtj3"]
-bg_color = Color(0.32, 0.32, 0.32, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.32, 0.2976, 0.22399999, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vrkmk"]
-
-[sub_resource type="Gradient" id="Gradient_hi3s5"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0.55730337, 0.72808987)
-colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 0.68, 0.0067999936, 0.018019829, 1)
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jv82y"]
-height = 64
-noise = SubResource("FastNoiseLite_sgib8")
-color_ramp = SubResource("Gradient_hi3s5")
-seamless = true
 
 [sub_resource type="GDScript" id="GDScript_hi3s5"]
 script/source = "extends RichTextLabel
@@ -223,7 +207,16 @@ func restart() -> void:
 	text = \"[i]\" + subtitle + \"[color=#c70102]$0[/color][/i]\"
 "
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbtj3"]
+bg_color = Color(0.32, 0.32, 0.32, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.32, 0.2976, 0.22399999, 1)
+
 [node name="Shop_Main_Menu" type="Control" unique_id=973405492 node_paths=PackedStringArray("money_control", "reveal_skill_sfx") groups=["restartable", "shop_main_menu"]]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -425,90 +418,18 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="QuitControl" type="Control" parent="CenterContainer" unique_id=623695201]
-visible = false
-custom_minimum_size = Vector2(500, 500)
-layout_mode = 2
-
-[node name="QuitMenu" type="PanelContainer" parent="CenterContainer/QuitControl" unique_id=652711176]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(205, 205)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -1.6413333
-anchor_top = 0.18251856
-anchor_right = -1.6413333
-anchor_bottom = 2.7450185
-offset_left = 1574.6667
-offset_top = 341.74072
-offset_right = 1779.6667
-offset_bottom = -734.5093
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_styles/panel = ExtResource("5_vom4t")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/QuitControl/QuitMenu" unique_id=1223709064]
-layout_mode = 2
-
-[node name="VSeparator" type="VSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=473970147]
-custom_minimum_size = Vector2(19.4, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=1734679969]
-layout_mode = 2
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1006108101]
-custom_minimum_size = Vector2(50, 12.18)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=107992642]
-custom_minimum_size = Vector2(150, 50)
-layout_mode = 2
-theme_override_font_sizes/normal_font_size = 19
-bbcode_enabled = true
-text = "Are You Sure?"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-
-[node name="HSeparator4" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=722915459]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="CloseGame" type="Button" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1842338374]
-layout_mode = 2
-text = "Quit"
-script = ExtResource("3_y3o4g")
-
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=225086530]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="CancelMenu" type="Button" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=348898124]
-layout_mode = 2
-text = "Keep Playing"
-script = ExtResource("3_y3o4g")
-
-[node name="HSeparator3" type="HSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1304174969]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="VSeparator2" type="VSeparator" parent="CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=1039230397]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
-
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=1211974115]
-custom_minimum_size = Vector2(980, 640)
+custom_minimum_size = Vector2(980, 540)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("5_vom4t")
 
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel" unique_id=870996989]
+[node name="TextureRect" type="Panel" parent="CenterContainer/MainPanel" unique_id=30652129]
+visible = false
+layout_mode = 2
+theme_type_variation = &"TextureRectOverlays"
+
+[node name="WhiteSmokeyBG" type="TextureRect" parent="CenterContainer/MainPanel" unique_id=1410432704]
 layout_mode = 2
 texture = SubResource("NoiseTexture2D_pwib5")
 expand_mode = 1
@@ -520,8 +441,9 @@ layout_mode = 2
 self_modulate = Color(1, 1, 1, 0.13725491)
 layout_mode = 0
 offset_left = 328.0
+offset_top = -80.0
 offset_right = 1304.0
-offset_bottom = 765.0
+offset_bottom = 685.0
 scale = Vector2(0.626, 0.626)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("8_7j408")
@@ -532,8 +454,9 @@ stretch_mode = 5
 self_modulate = Color(1, 1, 1, 0.13725491)
 layout_mode = 0
 offset_left = 168.0
+offset_top = -80.0
 offset_right = 1144.0
-offset_bottom = 765.0
+offset_bottom = 685.0
 scale = Vector2(0.626, 0.626)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("8_7j408")
@@ -543,7 +466,136 @@ stretch_mode = 5
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=582425009]
 layout_mode = 2
 theme_override_constants/separation = 0
-alignment = 1
+
+[node name="ColorRect" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=77597337]
+custom_minimum_size = Vector2(980, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hi3s5")
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect" unique_id=2113967704]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -61.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("NoiseTexture2D_jv82y")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect" unique_id=1348186323]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+position = Vector2(490.67126, -20.139923)
+rotation = 3.1415925
+scale = Vector2(982.342, 106)
+mesh = SubResource("PrismMesh_hi3s5")
+
+[node name="CircleEmblem" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect" unique_id=546332306]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -74.5
+offset_right = 25.0
+offset_bottom = 18.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("14_sgib8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem3" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect/CircleEmblem" unique_id=1157235958]
+modulate = Color(0.77, 0.73406667, 0.7084, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -48.0
+offset_right = 25.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.174, 1.174)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("14_sgib8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect/CircleEmblem" unique_id=114269006]
+visible = false
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -46.5
+offset_right = 25.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.1, 1.1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("14_sgib8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GameName" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect" unique_id=1398801826]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -49.0
+offset_right = 20.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Giuseppes" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/ColorRect/GameName" unique_id=844013163]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -31.0
+offset_right = 18.5
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/italics_font_size = 60
+bbcode_enabled = true
+text = "W"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SpacePanel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=763162626]
 custom_minimum_size = Vector2(50, 20)
@@ -551,47 +603,8 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="TreePanel" type="Control" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1314206077]
-custom_minimum_size = Vector2(930, 250)
+custom_minimum_size = Vector2(930, 260)
 layout_mode = 2
-
-[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1593740303]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -472.0
-offset_top = -154.0
-offset_right = -472.0
-offset_bottom = -154.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="ColorRect" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Control" unique_id=1603784421]
-self_modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(980, 0)
-layout_mode = 0
-offset_left = 470.0
-offset_top = 424.0
-offset_right = 1450.0
-offset_bottom = 551.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_hi3s5")
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Control/ColorRect" unique_id=505645507]
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-position = Vector2(490.67126, 123.804016)
-rotation = 3.1415925
-scale = Vector2(692.342, 15)
-mesh = SubResource("PrismMesh_hi3s5")
-
-[node name="MeshInstance2D2" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Control/ColorRect" unique_id=769719379]
-visible = false
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-position = Vector2(490.67114, 65.80405)
-rotation = 6.2831855
-scale = Vector2(200, 126.607)
-mesh = SubResource("PrismMesh_hi3s5")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=743938547]
 visible = false
@@ -726,9 +739,9 @@ upgrade_name = "Weapon"
 [node name="AvailableUpgrades" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=499030465]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.096
+anchor_top = 0.085864864
 anchor_right = 1.0
-anchor_bottom = 0.99738
+anchor_bottom = 0.9189189
 theme_override_constants/separation = 50
 alignment = 1
 metadata/_edit_use_anchors_ = true
@@ -737,9 +750,9 @@ metadata/_edit_use_anchors_ = true
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 863.0
-offset_top = 25.0
+offset_top = 23.0
 offset_right = 963.0
-offset_bottom = 146.15503
+offset_bottom = 144.15503
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -819,6 +832,7 @@ theme_override_font_sizes/font_size = 26
 text = "DONE"
 
 [node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1388172073]
+visible = false
 modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
 show_behind_parent = true
 layout_mode = 0
@@ -835,51 +849,13 @@ theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
 text = "DONE"
 
-[node name="Panel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=519103705]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = -37.833344
-offset_right = 90.0
-offset_bottom = 40.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.165, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"TimerPanel"
-
-[node name="ColorRect" type="ColorRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound/Panel3" unique_id=1303399651]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -19.0
-offset_bottom = -63.833344
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.968, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-color = Color(0.6, 0.0059999945, 0.01589985, 1)
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound/Panel3" unique_id=2029470404]
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-position = Vector2(89.270996, 8.024998)
-scale = Vector2(179.255, -13.95)
-mesh = SubResource("PrismMesh_atgli")
-
 [node name="Reroll" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1354737390]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 863.0
-offset_top = 153.0
+offset_top = 151.0
 offset_right = 963.0
-offset_bottom = 274.15503
+offset_bottom = 272.15503
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -900,7 +876,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/normal_font_size = 33
 theme_override_font_sizes/italics_font_size = 33
 bbcode_enabled = true
 text = "Reroll"
@@ -908,12 +884,192 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Money_control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1557695194]
-custom_minimum_size = Vector2(500, 150)
+[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1784955091]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 18.0
+offset_top = 23.0
+offset_right = 118.0
+offset_bottom = 144.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+script = ExtResource("3_y3o4g")
+
+[node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1138830874]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -57.833344
+offset_right = 90.0
+offset_bottom = 1.4224854
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"RedPanel"
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2/Panel2" unique_id=1960744408]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = SubResource("NoiseTexture2D_atgli")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Play_round_text" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1492315006]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/italics_font_size = 45
+bbcode_enabled = true
+text = "[i][wave][color=]PLAY
+[color=42d100]---"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=314356615]
+visible = false
+modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_top = 8.0
+offset_right = 100.0
+offset_bottom = 129.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vrkmk")
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_disabled_color = Color(0.88, 0.88, 0.88, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
+
+[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1929692663]
+visible = false
+modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_top = 8.0
+offset_right = 100.0
+offset_bottom = 129.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vrkmk")
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
+
+[node name="Reroll2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1598512]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 18.0
+offset_top = 151.0
+offset_right = 118.0
+offset_bottom = 272.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+script = ExtResource("3_y3o4g")
+
+[node name="Reroll_label" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll2" unique_id=781082894]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 33
+theme_override_font_sizes/italics_font_size = 33
+bbcode_enabled = true
+text = "Reroll"
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1015178323]
+custom_minimum_size = Vector2(50, 120)
 layout_mode = 2
-size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="Money_control" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1051036391]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
 focus_mode = 2
 mouse_filter = 2
+
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1601384433]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 13.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.753, 1.323)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=549092801]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+position = Vector2(137.49652, -38.647064)
+rotation = 3.1415925
+scale = Vector2(191.4021, 81.436)
+mesh = SubResource("PrismMesh_sgib8")
+
+[node name="MeshInstance2D3" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=909585586]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+position = Vector2(-137.50253, -38.647095)
+rotation = 3.1415927
+scale = Vector2(-191.402, 81.436)
+mesh = SubResource("PrismMesh_jv82y")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=927548181]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+position = Vector2(-0.16268921, -38.654816)
+rotation = 3.1415925
+scale = Vector2(85, 81.385)
+mesh = SubResource("BoxMesh_atgli")
 
 [node name="MoneyLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1835839393]
 unique_name_in_owner = true
@@ -924,8 +1080,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = 33.0
-offset_bottom = 33.0
+offset_left = -142.5
+offset_top = -75.0
+offset_right = 142.5
+offset_bottom = 23.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0, 0.5)
@@ -952,9 +1110,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -52.0
-offset_top = -29.5
+offset_top = -88.5
 offset_right = 52.0
-offset_bottom = -0.5
+offset_bottom = -59.5
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0, 0.5)
@@ -964,49 +1122,187 @@ theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 26
 theme_override_font_sizes/italics_font_size = 90
 bbcode_enabled = true
-text = "B A L A N C E"
+text = "C    A    S    H"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1601384433]
+[node name="SpacePanel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1401745246]
+custom_minimum_size = Vector2(50, 57.265)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="RoundSelector" type="Control" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1471273823]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ScoreTotal" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=91302618 groups=["restartable"]]
+unique_name_in_owner = true
+visible = false
+clip_contents = false
+layout_mode = 0
+offset_left = 69.0
+offset_top = -5.0
+offset_right = 246.0
+offset_bottom = 43.0
+theme_override_font_sizes/normal_font_size = 40
+theme_override_font_sizes/italics_font_size = 44
+bbcode_enabled = true
+text = "[i]Winnings [color=#c70102]$0"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_hi3s5")
+
+[node name="BgPanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/ScoreTotal" unique_id=223331139]
+visible = false
+modulate = Color(0.8, 0.8, 0.8, 1)
 show_behind_parent = true
+custom_minimum_size = Vector2(250, 42)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -21.0
+offset_right = 125.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("5_vom4t")
+
+[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1600258792]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -2.0
-offset_bottom = 71.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.323, 1.323)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=549092801]
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-position = Vector2(626.2511, 102.65076)
-rotation = 3.1415925
-scale = Vector2(191.4021, 81.436)
-mesh = SubResource("PrismMesh_sgib8")
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel" unique_id=486141513]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -421.0
+offset_top = -25.0
+offset_right = 421.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="MeshInstance2D3" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=909585586]
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-position = Vector2(351.25214, 102.65076)
-rotation = 3.1415927
-scale = Vector2(-191.402, 81.436)
-mesh = SubResource("PrismMesh_jv82y")
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer" unique_id=1296682477]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
 
-[node name="MeshInstance2D2" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=927548181]
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-position = Vector2(488.59204, 103.02887)
-rotation = 3.1415925
-scale = Vector2(84.642, 81.561)
-mesh = SubResource("BoxMesh_atgli")
+[node name="RoundSelector" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1495719427 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+current_state = 1
+
+[node name="RoundSelector2" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=209809932 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector3" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=961160610 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector4" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1150610278 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector5" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=323064248 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector6" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1940111857 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector7" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=898267515 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector8" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1953751896 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector9" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=204374324 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector10" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=612636488 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector11" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1706135853 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="RoundSelector12" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=127144028 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
+layout_mode = 2
+shop_main_menu = NodePath("../../../../../../../..")
+focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
+pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
+
+[node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1092885386]
+visible = false
+custom_minimum_size = Vector2(50, 20)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="UpgradeStats" type="CenterContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1504735911]
+visible = false
 layout_mode = 2
 mouse_filter = 2
 
@@ -1149,152 +1445,14 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 24
 
-[node name="SpacePanel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1202723950]
-visible = false
-custom_minimum_size = Vector2(50, 42.235)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
-
-[node name="Transport_Tickets" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1416644772]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 2
-alignment = 1
-script = ExtResource("16_vom4t")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=499804393]
-custom_minimum_size = Vector2(720, 0)
-layout_mode = 2
-theme_override_constants/separation = -32
-alignment = 1
-
-[node name="Tickets" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer" unique_id=919511713]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="VSeparator7" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=321403803]
-custom_minimum_size = Vector2(280, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="Ticket" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=2058490507 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx") instance=ExtResource("20_xklyy")]
-layout_mode = 2
-focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
-
-[node name="VSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1459209934]
-visible = false
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="Ticket2" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1976905100 groups=["restartable"] instance=ExtResource("20_xklyy")]
-visible = false
-modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-ticket_id = 2
-
-[node name="VSeparator3" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1474129767]
-visible = false
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="Ticket3" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=953294936 instance=ExtResource("20_xklyy")]
-visible = false
-modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-ticket_id = 3
-
-[node name="VSeparator4" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=297611364]
-visible = false
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="Ticket4" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=514221593 instance=ExtResource("20_xklyy")]
-visible = false
-modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-ticket_id = 4
-
-[node name="VSeparator5" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=1688227533]
-visible = false
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="Ticket5" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=657145580 instance=ExtResource("20_xklyy")]
-visible = false
-modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-ticket_id = 5
-
-[node name="VSeparator6" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" unique_id=105381239]
-custom_minimum_size = Vector2(280, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=2018742998]
-visible = false
-custom_minimum_size = Vector2(270, 0)
-layout_mode = 2
-
-[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets" unique_id=3046836]
-layout_mode = 2
-
-[node name="Close_menu" parent="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control" unique_id=1783714691 instance=ExtResource("21_tnodp")]
-custom_minimum_size = Vector2(65, 0)
-layout_mode = 0
-offset_left = -52.0
-offset_right = -2.0
-offset_bottom = 80.0
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-
-[node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1282620482]
-custom_minimum_size = Vector2(50, 34.5)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
-
-[node name="ColorRect" type="Panel" parent="." unique_id=77597337]
-custom_minimum_size = Vector2(980, 0)
-layout_mode = 0
-offset_left = 470.0
-offset_top = 104.0
-offset_right = 1450.0
-offset_bottom = 201.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_hi3s5")
-
-[node name="TextureRect" type="TextureRect" parent="ColorRect" unique_id=2113967704]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("NoiseTexture2D_jv82y")
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="ColorRect" unique_id=1348186323]
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-position = Vector2(490.67126, 44.86006)
-rotation = 3.1415925
-scale = Vector2(982.342, 106)
-mesh = SubResource("PrismMesh_hi3s5")
-
-[node name="TicketPurchasedPopUp" parent="." unique_id=1840245893 instance=ExtResource("27_ei2sf")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-offset_left = -960.0
-offset_right = 960.0
-
 [node name="AddMoney" type="Button" parent="." unique_id=225417206]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
 offset_left = 1282.0
-offset_top = 460.0
+offset_top = 539.0
 offset_right = 1434.0
-offset_bottom = 491.0
+offset_bottom = 570.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -1325,9 +1483,9 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 0
 offset_left = 1282.0
-offset_top = 497.0
+offset_top = 576.0
 offset_right = 1434.0
-offset_bottom = 528.0
+offset_bottom = 607.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -1358,9 +1516,9 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 0
 offset_left = 1282.0
-offset_top = 534.0
+offset_top = 613.0
 offset_right = 1434.0
-offset_bottom = 565.0
+offset_bottom = 644.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -1470,234 +1628,10 @@ stream = ExtResource("46_i821l")
 volume_db = -30.0
 pitch_scale = 0.5
 
-[node name="RoundSelector" type="Control" parent="." unique_id=1471273823]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_top = -128.0
-offset_bottom = -128.0
-grow_horizontal = 2
-grow_vertical = 0
-scale = Vector2(0.498, 0.498)
-mouse_filter = 2
-
-[node name="Panel" type="Panel" parent="RoundSelector" unique_id=1600258792]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -128.0
-offset_bottom = -128.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="RoundSelector/Panel" unique_id=486141513]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -734.0
-offset_top = -87.0
-offset_right = 734.0
-offset_bottom = 87.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="RoundSelector/Panel/VBoxContainer" unique_id=1296682477]
-layout_mode = 2
-theme_override_constants/separation = 52
-alignment = 1
-
-[node name="RoundSelector" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1495719427 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-current_state = 1
-
-[node name="RoundSelector2" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=209809932 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector3" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=961160610 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector4" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1150610278 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector5" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=323064248 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector6" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1940111857 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector7" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=898267515 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector8" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1953751896 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector9" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=204374324 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector10" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=612636488 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector11" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1706135853 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="RoundSelector12" parent="RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=127144028 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-layout_mode = 2
-shop_main_menu = NodePath("../../../../..")
-focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-pressed_sfx = NodePath("../../../../../SFX/purchase")
-
-[node name="ScoreTotal" type="RichTextLabel" parent="RoundSelector" unique_id=91302618 groups=["restartable"]]
-unique_name_in_owner = true
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -931.7278
-offset_top = -222.77899
-offset_right = -781.7278
-offset_bottom = -78.77899
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/normal_font_size = 40
-theme_override_font_sizes/italics_font_size = 44
-bbcode_enabled = true
-text = "[i]Winnings [color=#c70102]$0"
-fit_content = true
-horizontal_alignment = 1
-vertical_alignment = 1
-script = SubResource("GDScript_hi3s5")
-
-[node name="BgPanel" type="PanelContainer" parent="RoundSelector/ScoreTotal" unique_id=223331139]
-visible = false
-modulate = Color(0.8, 0.8, 0.8, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(250, 42)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -125.0
-offset_top = -21.0
-offset_right = 125.0
-offset_bottom = 21.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("5_vom4t")
-
-[node name="HSeparator" type="HSeparator" parent="." unique_id=809309357]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = 480.0
-offset_top = 286.0
-offset_right = -480.0
-offset_bottom = 290.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="GameName" type="Control" parent="." unique_id=1398801826]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -39.0
-offset_bottom = -795.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="Giuseppes" type="RichTextLabel" parent="GameName" unique_id=844013163]
-custom_minimum_size = Vector2(500, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -250.0
-offset_right = 250.0
-offset_bottom = 84.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/italics_font_size = 60
-bbcode_enabled = true
-text = "[i]PLACEHOLDER"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_close_game_pressed"]
-[connection signal="pressed" from="CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/Control/Close_menu" method="_on_cancel_menu_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" to="." method="play_round_button_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll2" to="." method="_on_re_roll_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]
 [connection signal="pressed" from="MaxOutPowers" to="." method="_on_max_out_powers_pressed"]
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]

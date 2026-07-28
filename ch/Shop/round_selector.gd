@@ -106,39 +106,42 @@ func update_locked() -> void:
 	#disabled = true
 	$CheckMark.hide()
 	$'100_percent'.hide()
+	$ArrowIndication.hide()
 	outer_ring.modulate = outerRingColour_default
 	$RoundNumber.hide()
 	$RoundNumber.modulate.a = 0.0
-	self.custom_minimum_size = Vector2(50.0,50.0)
+	self.custom_minimum_size = Vector2(40.0,40.0)
 
 func update_available() -> void:
 	disabled = false
+	$ArrowIndication.show()
 	$CheckMark.hide()
 	$'100_percent'.hide()
 	outer_ring.modulate = outerRingColour_active
 	$RoundNumber.show()
 	$RoundNumber.modulate.a = 100.0
 	blink_tween()
-	self.custom_minimum_size = Vector2(100.0,100.0)
+	self.custom_minimum_size = Vector2(50.0,50.0)
 	
 func update_cleared() -> void:
 	#disabled = true
 	$CheckMark.show()
 	$'100_percent'.hide()
+	$ArrowIndication.hide()
 	outer_ring.modulate = outerRingColour_levelCompleted
 	$RoundNumber.hide()
-	self.custom_minimum_size = Vector2(75.0,75.0)
+	self.custom_minimum_size = Vector2(40.0,40.0)
 	
 func update_perfected() -> void:
 	#disabled = true
 	$CheckMark.show()
-	
+	$ArrowIndication.hide()
 	var round_bonus := int(gl_DataSet.get_value('reward_perfect_round'))
 	%CashEarned.text = "[i]$" + str(gl_PlayerState.dataset.bonus_cash + round_bonus - gl_PlayerState.dataset.fines)
 	$'100_percent'.show()
 	outer_ring.modulate = outerRingColour_levelCompleted
 	$RoundNumber.hide()
-	self.custom_minimum_size = Vector2(75.0,75.0)
+	self.custom_minimum_size = Vector2(40.0,40.0)
 	
 func blink_tween() -> void:
 	var dur : float = 0.2

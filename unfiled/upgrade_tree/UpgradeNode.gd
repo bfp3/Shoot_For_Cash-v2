@@ -74,7 +74,8 @@ func _ready() -> void:
 		%Upgrade_Icon.self_modulate = Color.WHITE
 	
 	
-	shop_main_menu = get_tree().get_first_node_in_group('shop_main_menu')
+	if !gun:
+		shop_main_menu = get_tree().get_first_node_in_group('shop_main_menu')
 
 	focus_mode = Control.FOCUS_ALL
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -143,12 +144,12 @@ func update_cost() -> void:
 			#if new_round:
 				#cost += randi_range(1,5)
 	
-	
-	if new_round && shop_main_menu.reroll_index > 0: # && visible:
-		
-		var rand_chance_for_free = randi_range(0, 22)
-		if rand_chance_for_free > 22: #22:
-			cost = 0
+	if shop_main_menu != null:
+		if new_round && shop_main_menu.reroll_index > 0: # && visible:
+			
+			var rand_chance_for_free = randi_range(0, 22)
+			if rand_chance_for_free > 22: #22:
+				cost = 0
 			
 	
 	new_round = false
@@ -403,7 +404,7 @@ func complete_purchase() -> void:
 	var tween = create_tween()
 	tween.tween_property(unpurchased_cont, "scale", scale * 1.3, 0.1)
 	tween.parallel().tween_property(unpurchased_cont, "modulate", Color('42d100'), 0.1)
-	tween.tween_property(unpurchased_cont, "scale", _orig_scale, 0.1)
+	tween.tween_property(unpurchased_cont, "scale", 0.8, 0.1)
 	tween.parallel().tween_property(unpurchased_cont, "modulate", Color("80808050"), 0.1)
 	await tween.finished
 
@@ -431,7 +432,10 @@ func remove_gun() -> void:
 	var _upgrade_name : String = "power_" + upgrade_type
 	gl_PlayerState.log_buy(_upgrade_name, cost)
 	remove_from_shop = true
-	shop_main_menu.gun_purchased()
+	var main_shop = get_tree().get_first_node_in_group('shop_main_menu')
+	if main_shop:
+		main_shop.gun_purchased()
+	
 
 func _on_focus_entered() -> void:
 	#var bbcode_des : String = "[rainbow][shake]" + description + "[/shake][/rainbow]"

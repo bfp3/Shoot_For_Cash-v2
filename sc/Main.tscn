@@ -27,36 +27,15 @@
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="25_ibr3v"]
 [ext_resource type="Shader" uid="uid://d3ak3drqp32j5" path="res://res/Shaders/simplified_TV_shader.gdshader" id="28_ld44m"]
 [ext_resource type="AudioStream" uid="uid://b80q15yp4lvhc" path="res://sfx/water_splash_sfx_01.ogg" id="28_nq3ni"]
+[ext_resource type="PackedScene" uid="uid://b6o112wnsu6a" path="res://ch/canvas_layers/starting_screen_canvaslayer.tscn" id="29_c7cmr"]
 [ext_resource type="Script" uid="uid://d2hbdu3aenrpl" path="res://lib/tv_hud_shader.gd" id="29_f1f1n"]
 [ext_resource type="AudioStream" uid="uid://bwulgbjlr2hv5" path="res://sfx/water_splash_sfx_02.ogg" id="29_q3aq7"]
-[ext_resource type="Script" uid="uid://c7htjgdubhb0n" path="res://ch/splash_screen/splash_screen_v2.gd" id="30_jtymb"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="31_hwubp"]
-[ext_resource type="Script" uid="uid://dbbltr23d26u6" path="res://ch/Shop/money_label.gd" id="32_42kox"]
-[ext_resource type="Script" uid="uid://drmqfnbqyvmps" path="res://ch/Shop/tooltip.gd" id="33_sqjjv"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="34_v17ib"]
-[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="35_8ip8c"]
-[ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="37_nn6vd"]
-[ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="38_8twtg"]
-[ext_resource type="Texture2D" uid="uid://blvtkhvnb16cm" path="res://res/wormfood_logo_2.png" id="38_ufvrt"]
-[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="38_vycyu"]
-[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="42_0tmy3"]
-[ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="43_vavbc"]
-[ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="44_s3ss1"]
-[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="45_dqcwm"]
-[ext_resource type="AudioStream" uid="uid://bixius52c3n2s" path="res://sfx/shop_reroll_sfx_01.ogg" id="46_nl2qx"]
-[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="47_e85oc"]
-[ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="48_giacd"]
-[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="49_x2bv1"]
-[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="50_i541k"]
-[ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="51_3u5oq"]
-[ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://res/ROCKS - title_rock_centered_large.png" id="51_e85oc"]
-[ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="52_4ta1g"]
-[ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="52_giacd"]
-[ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="53_gskg6"]
-[ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="54_3f3c7"]
+[ext_resource type="PackedScene" uid="uid://cl0yh38bqfqd3" path="res://ch/Shop/Start_menu_shop_clone.tscn" id="37_0tjmb"]
+[ext_resource type="PackedScene" uid="uid://dg8ab1qtj51xm" path="res://ch/Shop/ticket_purchased_pop_up.tscn" id="47_gspdd"]
 [ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="54_i541k"]
 [ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="55_3u5oq"]
-[ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="55_s4335"]
 [ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="56_4ta1g"]
 [ext_resource type="PackedScene" uid="uid://dpbgyfs2kgdtr" path="res://ch/demo_end_screen/Demo_end_screen.tscn" id="61_ec2we"]
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
@@ -327,7 +306,7 @@ _data = {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_taal3"]
 shader = ExtResource("28_ld44m")
 shader_parameter/overlay = false
-shader_parameter/aberration = 0.003000047642500059
+shader_parameter/aberration = 0.00300004764250005
 shader_parameter/brightness = 1.0
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.34000001615
@@ -343,315 +322,6 @@ shader_parameter/mask_opacity = 0.24800001178
 shader_parameter/flicker_amount = 0.0
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_67uld"]
-
-[sub_resource type="Curve" id="Curve_onfim"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_vhsx8"]
-curve = SubResource("Curve_onfim")
-
-[sub_resource type="Curve" id="Curve_r6l2h"]
-_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_64t06"]
-curve = SubResource("Curve_r6l2h")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yuebc"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(534.76, 362.53, 1)
-initial_velocity_min = 1.0
-initial_velocity_max = 2.0
-gravity = Vector3(0, -2, 0)
-radial_accel_min = 0.99999774
-radial_accel_max = 4.9999976
-tangential_accel_min = -2.2351742e-06
-tangential_accel_max = -2.2351742e-06
-scale_min = 10.0
-scale_max = 15.0
-scale_curve = SubResource("CurveTexture_64t06")
-alpha_curve = SubResource("CurveTexture_vhsx8")
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_arg5w"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iforg"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1teaa"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vycyu"]
-bg_color = Color(0.33, 0.33, 0.33, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ufvrt"]
-bg_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.7833333, 0, 0)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="Animation" id="Animation_uxymg"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(1, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_exbpr"]
-resource_name = "new_animation"
-length = 14.566667
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 5.2, 9.235343),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.0, -6.283185307179586, -6.283185307179586]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.3333334, 2.1333334, 2.8333333, 3.3375256, 3.9666667, 5.2, 9.235343),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(1, 1), Vector2(0.9, 0.9), Vector2(0.9, 0.9), Vector2(1, 1), Vector2(0.9, 0.9), Vector2(0.9, 0.9), Vector2(1, 1), Vector2(1, 1)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_le04b"]
-_data = {
-&"RESET": SubResource("Animation_uxymg"),
-&"new_animation": SubResource("Animation_exbpr")
-}
-
-[sub_resource type="Gradient" id="Gradient_vycyu"]
-offsets = PackedFloat32Array(0, 0.99117)
-colors = PackedColorArray(1, 1, 1, 0, 0.78039217, 0.003921569, 0.007843138, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
-
-[sub_resource type="Gradient" id="Gradient_hsuqi"]
-colors = PackedColorArray(0, 0, 0, 1, 0.1, 0.1, 0.1, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_uxymg"]
-gradient = SubResource("Gradient_hsuqi")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-
-[sub_resource type="GDScript" id="GDScript_3ga0b"]
-script/source = "extends TextureRect
-
-@export var balloon_1_speed: float = 150.0
-@export var balloon_2_speed: float = 120.0
-@export var balloon_3_speed: float = 180.0
-
-@export var loop_top_y: float = -200.0
-@export var loop_bottom_offset: float = 500.0
-
-@onready var balloons: TextureRect = $\".\"
-@onready var balloons_2: TextureRect = $\"../Balloons2\"
-@onready var balloons_3: TextureRect = $\"../Balloons3\"
-
-func _process(delta: float) -> void:
-	move_balloon(balloons, balloon_1_speed, delta)
-	move_balloon(balloons_2, balloon_2_speed, delta)
-	move_balloon(balloons_3, balloon_3_speed, delta)
-
-func move_balloon(balloon: TextureRect, speed: float, delta: float) -> void:
-	balloon.position.y -= speed * delta
-
-	if balloon.position.y < loop_top_y:
-		balloon.position.y = get_viewport_rect().size.y + loop_bottom_offset
-"
-
-[sub_resource type="Animation" id="Animation_le04b"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = false
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(-332.50662, -90.36029)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.2, 0.2)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-
-[sub_resource type="Animation" id="Animation_b5kcl"]
-resource_name = "new_animation"
-length = 5.1
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = false
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 2.7670083, 5.1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(-332.50662, -90.36029), Vector2(-330, -87.77), Vector2(-332.50662, -90.36029)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:scale")
-tracks/1/interp = 2
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 2.7670083, 5.1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(0.2, 0.2), Vector2(0.18, 0.18), Vector2(0.2, 0.2)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:rotation")
-tracks/2/interp = 2
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 1.4666667, 3.7666667, 5.1),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.17453292519943295, -0.17453292519943295, 0.0]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_om6sf"]
-_data = {
-&"RESET": SubResource("Animation_le04b"),
-&"new_animation": SubResource("Animation_b5kcl")
-}
-
-[sub_resource type="Curve" id="Curve_uxymg"]
-_limits = [0.0, 101.0, 0.0, 1.0]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 17.022476), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_exbpr"]
-_data = [Vector2(1e-05, 0.033707857), 0.0, 0.0, 0, 0, Vector2(1, 0.033707857), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_le04b"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_b5kcl"]
-curve_x = SubResource("Curve_uxymg")
-curve_y = SubResource("Curve_exbpr")
-curve_z = SubResource("Curve_le04b")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_uxymg"]
-particle_flag_disable_z = true
-angle_min = 35.00001
-angle_max = 58.400013
-direction = Vector3(0, 50, 0)
-gravity = Vector3(0, 0, 0)
-tangential_accel_min = 9.999997
-tangential_accel_max = 9.999997
-scale_min = 5.0
-scale_max = 5.0
-scale_curve = SubResource("CurveXYZTexture_b5kcl")
-
-[sub_resource type="Curve" id="Curve_85u0j"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_purchase_alpha"]
-curve = SubResource("Curve_85u0j")
-
-[sub_resource type="Curve" id="Curve_lwcfe"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_purchase_scale"]
-curve = SubResource("Curve_lwcfe")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_acvv8"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(200, 200, 200)
-direction = Vector3(0, 0, 0)
-spread = 1.0
-gravity = Vector3(0, 0, 0)
-scale_min = 0.19999999
-scale_max = 0.5
-scale_curve = SubResource("CurveTexture_purchase_scale")
-color = Color(1.8247963, 1.4387401, 0, 1)
-alpha_curve = SubResource("CurveTexture_purchase_alpha")
-hue_variation_min = -0.050000023
-hue_variation_max = 0.049999975
-
-[sub_resource type="Gradient" id="Gradient_ufvrt"]
-offsets = PackedFloat32Array(0, 0.1356674, 0.8293217)
-colors = PackedColorArray(1, 1, 0.7058824, 1, 1, 0.36862746, 0.09019608, 1, 1, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_vycyu"]
-gradient = SubResource("Gradient_ufvrt")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ec2we"]
 
@@ -774,9 +444,20 @@ alpha_curve = SubResource("CurveTexture_b756w")
 hue_variation_min = -2.2351742e-08
 hue_variation_max = -2.2351742e-08
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
+[sub_resource type="Gradient" id="Gradient_jv82y"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.55505615, 0.72808987)
+colors = PackedColorArray(0.92156863, 0.8784314, 0.84705883, 1, 0.9, 0.858, 0.828, 1)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cn8lj"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_sgib8"]
+frequency = 0.085
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_pwib5"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_sgib8")
+color_ramp = SubResource("Gradient_jv82y")
+seamless = true
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_diemr"]
 
@@ -804,8 +485,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.32, 0.2976, 0.22399999, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vrkmk"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_an2hp"]
 
@@ -863,7 +542,7 @@ round_manager = NodePath("Round_manager")
 start_cam = NodePath("Camera3D")
 round_timer = NodePath("MainGameCanvasLayer/Timer")
 HUD_CRT = NodePath("TV_hud")
-splash_screen = NodePath("SplashScreenCanvasLayer/SplashScreen_v2")
+splash_screen = NodePath("SplashScreenCanvasLayer")
 music_manager = NodePath("Music")
 main_game_canvas = NodePath("MainGameCanvasLayer")
 
@@ -1384,1055 +1063,7 @@ script = ExtResource("29_f1f1n")
 start_up = true
 metadata/_edit_use_anchors_ = true
 
-[node name="SplashScreenCanvasLayer" type="CanvasLayer" parent="." unique_id=1613004485]
-
-[node name="SplashScreen_v2" type="Control" parent="SplashScreenCanvasLayer" unique_id=1109729386]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("30_jtymb")
-
-[node name="BackgroundParticles" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=685089417]
-position = Vector2(962, 551)
-emitting = false
-lifetime = 4.0
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_yuebc")
-
-[node name="CenterContainer" type="CenterContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=1625197918]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 8.0
-offset_bottom = 8.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.9948992, 0.9948992)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="MainPanel" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer" unique_id=785012210]
-custom_minimum_size = Vector2(1100, 500)
-layout_mode = 2
-mouse_filter = 1
-theme_override_styles/panel = ExtResource("31_hwubp")
-
-[node name="MainPanel" type="VBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel" unique_id=461386074]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="HSeparator5" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=1168585334]
-custom_minimum_size = Vector2(0, 41.305)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
-
-[node name="CashHboxcontainer" type="HBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=555082800]
-visible = false
-layout_mode = 2
-
-[node name="VSeparator" type="VSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1341660736]
-custom_minimum_size = Vector2(135, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
-
-[node name="TotalRocks" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=507413251]
-custom_minimum_size = Vector2(200, 128)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
-
-[node name="TitleLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks" unique_id=318496818]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/bold_font_size = 26
-theme_override_font_sizes/bold_italics_font_size = 26
-theme_override_font_sizes/italics_font_size = 26
-bbcode_enabled = true
-text = "[i]SCORE[/i]"
-fit_content = true
-autowrap_mode = 0
-
-[node name="NumberLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks" unique_id=121854785]
-self_modulate = Color(1, 0.78039217, 0, 1)
-clip_contents = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 70
-bbcode_enabled = true
-text = "$00"
-fit_content = true
-autowrap_mode = 0
-vertical_alignment = 1
-script = ExtResource("32_42kox")
-
-[node name="Tooltip" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel" unique_id=1416415398]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.1608203
-anchor_top = 0.31410217
-anchor_right = 1.1081288
-anchor_bottom = 0.5250397
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("33_sqjjv")
-metadata/_edit_use_anchors_ = true
-
-[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel/Tooltip" unique_id=707550776]
-layout_mode = 2
-mouse_filter = 2
-bbcode_enabled = true
-text = "Testing Tooltip"
-fit_content = true
-scroll_active = false
-autowrap_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="VSeparator4" type="VSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=141557445]
-custom_minimum_size = Vector2(20, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
-
-[node name="CashEarned" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=391685329]
-custom_minimum_size = Vector2(200, 128)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
-
-[node name="TitleLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=1289664472]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/bold_font_size = 26
-theme_override_font_sizes/bold_italics_font_size = 26
-theme_override_font_sizes/italics_font_size = 26
-bbcode_enabled = true
-text = "[i]EARNINGS[/i]"
-fit_content = true
-autowrap_mode = 0
-
-[node name="NumberLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=263932816]
-clip_contents = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 70
-bbcode_enabled = true
-text = "$00"
-fit_content = true
-autowrap_mode = 0
-vertical_alignment = 1
-script = ExtResource("32_42kox")
-
-[node name="Tooltip" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/NumberLabel" unique_id=1905369223]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.1608203
-anchor_top = 0.31410217
-anchor_right = 0.8391797
-anchor_bottom = 0.5250397
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("33_sqjjv")
-metadata/_edit_use_anchors_ = true
-
-[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/NumberLabel/Tooltip" unique_id=1104524896]
-layout_mode = 2
-mouse_filter = 2
-bbcode_enabled = true
-text = "Testing Tooltip"
-fit_content = true
-scroll_active = false
-autowrap_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="VSeparator3" type="VSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1769694785]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
-
-[node name="Fines" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=389115546]
-custom_minimum_size = Vector2(200, 128)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
-
-[node name="TitleLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines" unique_id=353837213]
-clip_contents = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/bold_font_size = 26
-theme_override_font_sizes/bold_italics_font_size = 26
-theme_override_font_sizes/italics_font_size = 26
-bbcode_enabled = true
-text = "[i]FINES[/i]"
-fit_content = true
-autowrap_mode = 0
-
-[node name="NumberLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines" unique_id=161285833]
-clip_contents = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 70
-theme_override_font_sizes/italics_font_size = 50
-bbcode_enabled = true
-text = "$00"
-fit_content = true
-autowrap_mode = 0
-vertical_alignment = 1
-script = ExtResource("32_42kox")
-
-[node name="Tooltip" type="PanelContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel" unique_id=1781084112]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.3467688
-anchor_top = 0.31410217
-anchor_right = 0.6532312
-anchor_bottom = 0.5250397
-offset_right = 50.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("33_sqjjv")
-metadata/_edit_use_anchors_ = true
-
-[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel/Tooltip" unique_id=1779935107]
-layout_mode = 2
-mouse_filter = 2
-bbcode_enabled = true
-text = "Testing Tooltip"
-fit_content = true
-scroll_active = false
-autowrap_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="VSeparator2" type="VSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1987157655]
-custom_minimum_size = Vector2(85, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
-
-[node name="HSeparator4" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=912371730]
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
-
-[node name="HSeparator6" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=293657851]
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
-
-[node name="ButtonsHBoxContainer" type="HBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel" unique_id=1750056005]
-layout_mode = 2
-theme_override_constants/separation = 4
-alignment = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer" unique_id=1423245519]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=628323630]
-custom_minimum_size = Vector2(0, 70)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="HSeparator" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=132084556]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
-
-[node name="StartGame" type="Button" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1519659985 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
-z_index = 1
-custom_minimum_size = Vector2(0, 70)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 30
-script = ExtResource("34_v17ib")
-focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
-
-[node name="Start_button_progressBar" type="ProgressBar" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" unique_id=1465759429]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_vycyu")
-theme_override_styles/fill = SubResource("StyleBoxFlat_ufvrt")
-show_percentage = false
-
-[node name="TextureRect" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" unique_id=1131831230]
-self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -40.0
-offset_top = -40.0
-offset_right = 40.0
-offset_bottom = 40.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("35_8ip8c")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/TextureRect" unique_id=772579282]
-libraries/ = SubResource("AnimationLibrary_le04b")
-autoplay = &"new_animation"
-speed_scale = 3.0
-
-[node name="center_container" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" unique_id=1482503167]
-modulate = Color(1, 1, 1, 0.19607843)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_top = -4.020508
-offset_bottom = -4.020508
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.25, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="left" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=2010528898]
-points = PackedVector2Array(-628, 0, -130, 0)
-width = 4.0
-gradient = SubResource("Gradient_vycyu")
-texture_mode = 2
-joint_mode = 2
-
-[node name="right" type="Line2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame/center_container" unique_id=640537034]
-points = PackedVector2Array(758, 0, 130, 0)
-width = 4.0
-gradient = SubResource("Gradient_vycyu")
-texture_mode = 2
-joint_mode = 2
-
-[node name="HSeparator2" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1797492704]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
-
-[node name="SpacePanel2" type="Panel" parent="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1637319920]
-custom_minimum_size = Vector2(10, 23.65)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
-
-[node name="BlackScreen" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=992935780]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="RichTextLabel" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BlackScreen" unique_id=2120545789]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = SubResource("GradientTexture2D_uxymg")
-
-[node name="TempLogo" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=594436550]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -255.99994
-offset_top = -248.0
-offset_right = 256.0
-offset_bottom = 264.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.305, 1.305)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("51_e85oc")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Balloons" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=1407436492]
-z_index = -2
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 137.16473
-offset_top = -347.12646
-offset_right = 393.16495
-offset_bottom = -91.12639
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("38_8twtg")
-expand_mode = 1
-stretch_mode = 5
-script = SubResource("GDScript_3ga0b")
-balloon_1_speed = 180.0
-balloon_2_speed = 150.0
-balloon_3_speed = 220.0
-loop_top_y = -540.0
-loop_bottom_offset = -300.0
-
-[node name="Balloons2" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=633172788]
-z_index = -2
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -380.07663
-offset_top = -353.25687
-offset_right = -124.07663
-offset_bottom = -97.256805
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("38_8twtg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Balloons3" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=526043893]
-z_index = -2
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 226.81995
-offset_top = -353.25687
-offset_right = 482.81998
-offset_bottom = -97.256805
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("38_8twtg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet3" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=697000681]
-self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-layout_mode = 0
-offset_left = 241.50684
-offset_top = 141.36035
-offset_right = 753.50684
-offset_bottom = 653.36035
-scale = Vector2(0.19, 0.19)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("52_giacd")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet5" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=708204961]
-self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-layout_mode = 0
-offset_left = 287.4839
-offset_top = 141.36035
-offset_right = 799.4839
-offset_bottom = 653.36035
-scale = Vector2(0.19, 0.19)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("52_giacd")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet6" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=1026862140]
-self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-layout_mode = 0
-offset_left = 330.3943
-offset_top = 141.36035
-offset_right = 842.3943
-offset_bottom = 653.36035
-scale = Vector2(0.19, 0.19)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("52_giacd")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=97407066]
-self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-layout_mode = 0
-offset_left = -230.00537
-offset_top = 140.10358
-offset_right = 281.99463
-offset_bottom = 652.1036
-scale = Vector2(0.19, 0.19)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("52_giacd")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet4" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=682272177]
-self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-layout_mode = 0
-offset_left = -272.92017
-offset_top = 140.10358
-offset_right = 239.07983
-offset_bottom = 652.1036
-scale = Vector2(0.19, 0.19)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("52_giacd")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="RockLarge" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=117091773]
-modulate = Color(1, 0.78039217, 0, 1)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -526.4387
-offset_top = -346.3603
-offset_right = -14.438721
-offset_bottom = 165.63965
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.2, 0.2)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("51_e85oc")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockLarge" unique_id=567227839]
-libraries/ = SubResource("AnimationLibrary_om6sf")
-autoplay = &"new_animation"
-speed_scale = 3.0
-
-[node name="GPUParticles2D" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockLarge" unique_id=516753885]
-show_behind_parent = true
-position = Vector2(459.77063, 91.9541)
-amount = 2
-lifetime = 2.0
-preprocess = 1.0
-speed_scale = 0.5
-fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_uxymg")
-
-[node name="GPUParticles2D2" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockLarge" unique_id=61560867]
-show_behind_parent = true
-position = Vector2(735.63257, 30.651306)
-amount = 2
-lifetime = 2.0
-preprocess = 1.0
-speed_scale = 0.5
-fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_uxymg")
-
-[node name="GPUParticles2D3" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockLarge" unique_id=2145888099]
-show_behind_parent = true
-position = Vector2(950.19165, 57.471252)
-amount = 2
-lifetime = 2.0
-preprocess = 1.0
-speed_scale = 0.5
-fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_uxymg")
-
-[node name="FreeParticles" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockLarge" unique_id=240524409]
-z_index = 3
-position = Vector2(168, 212)
-amount = 3
-texture = ExtResource("38_vycyu")
-lifetime = 2.0
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_acvv8")
-
-[node name="RockSmall" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=1021791281]
-modulate = Color(1, 0.78039217, 0, 1)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -431.45065
-offset_top = -358.13782
-offset_right = 80.54935
-offset_bottom = 153.86212
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.12, 0.12)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("51_e85oc")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="FreeParticles" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockSmall" unique_id=40720860]
-z_index = 3
-position = Vector2(168, 212)
-amount = 3
-texture = ExtResource("38_vycyu")
-lifetime = 2.0
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_acvv8")
-
-[node name="RockSmall2" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo" unique_id=2045065334]
-modulate = Color(1, 0.78039217, 0, 1)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -388.53903
-offset_top = -363.50146
-offset_right = 123.46097
-offset_bottom = 148.49847
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.06, 0.06)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("51_e85oc")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="FreeParticles" type="GPUParticles2D" parent="SplashScreenCanvasLayer/SplashScreen_v2/TempLogo/RockSmall2" unique_id=1852906066]
-z_index = 3
-position = Vector2(168, 212)
-amount = 3
-texture = ExtResource("38_vycyu")
-lifetime = 2.0
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_acvv8")
-
-[node name="Copyright" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=672892314]
-modulate = Color(0.4, 0.4, 0.4, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/Copyright" unique_id=681882853]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -499.5
-offset_top = 320.0
-offset_right = 499.5
-offset_bottom = 460.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/italics_font_size = 20
-bbcode_enabled = true
-text = "[i]© 2026 WORMFOOD 
-all rights reserved"
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="BrandName" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=59022775]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 1.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="RichTextLabel" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName" unique_id=910870837]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -307.0
-offset_top = 18.0
-offset_right = 307.0
-offset_bottom = 158.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/normal_font_size = 100
-bbcode_enabled = true
-text = "WORMFOOD"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName" unique_id=1674868597]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -101.0
-offset_top = 132.0
-offset_right = 101.0
-offset_bottom = 188.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_font_sizes/italics_font_size = 40
-bbcode_enabled = true
-text = "[i]presents..."
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Control" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName" unique_id=1621591310]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="Wormfood_Logo2" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName/Control" unique_id=140860143]
-modulate = Color(1, 0.78039217, 0, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -31.0
-offset_top = 28.0
-offset_right = -31.0
-offset_bottom = 28.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("38_ufvrt")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Wormfood_Logo3" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName/Control" unique_id=1425503873]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -28.0
-offset_top = 28.0
-offset_right = -28.0
-offset_bottom = 28.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("38_ufvrt")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Wormfood_Logo" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName/Control" unique_id=33218516]
-clip_children = 2
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -30.0
-offset_top = 29.0
-offset_right = -30.0
-offset_bottom = 29.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("38_ufvrt")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TextureRect" type="TextureRect" parent="SplashScreenCanvasLayer/SplashScreen_v2/BrandName/Control/Wormfood_Logo" unique_id=906695783]
-modulate = Color(1, 1, 0.2901961, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = SubResource("GradientTexture2D_vycyu")
-
-[node name="GameName" type="Control" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=1764852665]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 1.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="Giuseppes" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=704275748]
-visible = false
-custom_minimum_size = Vector2(500, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 110.0
-offset_top = -123.0
-offset_right = 610.0
-offset_bottom = -39.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/italics_font_size = 30
-bbcode_enabled = true
-text = "[i]GIUSEPPES"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RichTextLabel4" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=441704417]
-visible = false
-modulate = Color(0.5, 0.26999998, 0.26999998, 1)
-clip_contents = false
-custom_minimum_size = Vector2(500, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -425.5
-offset_top = -39.0
-offset_right = 439.5
-offset_bottom = 115.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_fonts/bold_font = ExtResource("37_nn6vd")
-theme_override_fonts/bold_italics_font = ExtResource("37_nn6vd")
-theme_override_font_sizes/bold_font_size = 110
-theme_override_font_sizes/bold_italics_font_size = 110
-theme_override_font_sizes/italics_font_size = 110
-bbcode_enabled = true
-text = "[i][color=#ffffff]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]!"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RichTextLabel3" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=2118421025]
-modulate = Color(0.28, 0.28, 0.28, 0.48235294)
-clip_contents = false
-custom_minimum_size = Vector2(500, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -429.5
-offset_top = -45.0
-offset_right = 435.5
-offset_bottom = 109.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_fonts/bold_font = ExtResource("37_nn6vd")
-theme_override_fonts/bold_italics_font = ExtResource("37_nn6vd")
-theme_override_font_sizes/bold_font_size = 110
-theme_override_font_sizes/bold_italics_font_size = 110
-theme_override_font_sizes/italics_font_size = 110
-bbcode_enabled = true
-text = "[i][color=#ffc700]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=302123878]
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -432.5
-offset_top = -45.0
-offset_right = 432.5
-offset_bottom = 109.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_fonts/bold_italics_font = ExtResource("37_nn6vd")
-theme_override_font_sizes/bold_font_size = 110
-theme_override_font_sizes/bold_italics_font_size = 110
-theme_override_font_sizes/italics_font_size = 110
-bbcode_enabled = true
-text = "[i][color=#c70102]Shoot[/color] for [wave][color=#42d100]CASH[/color][/wave]"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="SplashScreenCanvasLayer/SplashScreen_v2/GameName" unique_id=2135516292]
-custom_minimum_size = Vector2(840, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -396.0
-offset_top = -34.0
-offset_right = 444.0
-offset_bottom = -30.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="SFX" type="Node" parent="SplashScreenCanvasLayer/SplashScreen_v2" unique_id=818937010]
-
-[node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1075327639]
-stream = ExtResource("42_0tmy3")
-volume_db = -40.0
-
-[node name="start_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=2098260800]
-stream = ExtResource("43_vavbc")
-volume_db = -30.0
-pitch_scale = 0.7
-
-[node name="shop_purchase_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=921652107]
-stream = ExtResource("44_s3ss1")
-volume_db = -40.0
-
-[node name="shop_purchase_02" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1901638632]
-stream = ExtResource("23_1i2h1")
-volume_db = -15.0
-pitch_scale = 1.2
-
-[node name="shop_purchase_03" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1452359778]
-stream = ExtResource("45_dqcwm")
-volume_db = -40.0
-
-[node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=334161139]
-stream = ExtResource("46_nl2qx")
-volume_db = -40.0
-
-[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=618503378]
-stream = ExtResource("47_e85oc")
-volume_db = -32.0
-
-[node name="focus_exit" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=475387272]
-stream = ExtResource("47_e85oc")
-volume_db = -50.0
-
-[node name="purchase" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1148902315]
-stream = ExtResource("48_giacd")
-volume_db = -40.0
-pitch_scale = 3.0
-
-[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=759328512]
-stream = ExtResource("49_x2bv1")
-volume_db = -40.0
-pitch_scale = 2.0
-
-[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1492928252]
-stream = ExtResource("50_i541k")
-volume_db = -40.0
-pitch_scale = 1.5
-
-[node name="hud_click_1" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1251476345]
-stream = ExtResource("51_3u5oq")
-volume_db = -34.0
-
-[node name="hud_click_2" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1631394354]
-stream = ExtResource("52_4ta1g")
-volume_db = -20.0
-
-[node name="hud_click_3" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=389034069]
-stream = ExtResource("53_gskg6")
-volume_db = -21.0
-
-[node name="low_humming" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=815406511]
-stream = ExtResource("54_3f3c7")
-pitch_scale = 0.4
-
-[node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SplashScreenCanvasLayer/SplashScreen_v2/SFX" unique_id=1199956550]
-stream = ExtResource("55_s4335")
-volume_db = -40.0
-pitch_scale = 2.0
+[node name="SplashScreenCanvasLayer" parent="." unique_id=991233177 instance=ExtResource("29_c7cmr")]
 
 [node name="MainGameCanvasLayer" type="CanvasLayer" parent="." unique_id=778582470]
 layer = -1
@@ -2513,6 +1144,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
 [node name="Money_labels" parent="MainGameCanvasLayer" unique_id=2012145336 instance=ExtResource("54_i541k")]
 
 [node name="Timer" parent="MainGameCanvasLayer" unique_id=779418741 instance=ExtResource("55_3u5oq")]
+visible = false
 mouse_filter = 2
 start_time = 50.0
 
@@ -2538,24 +1170,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 metadata/_edit_use_anchors_ = true
 
-[node name="PlaceLabel" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=422115750]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -107.66675
-offset_right = 225.0
-offset_bottom = 4.0
-grow_vertical = 0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/normal_font_size = 47
-theme_override_font_sizes/bold_font_size = 47
-bbcode_enabled = true
-text = "MOSS"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Panel" type="Panel" parent="MainGameCanvasLayer/Place_name/PlaceLabel" unique_id=1893096777]
+[node name="Panel" type="Panel" parent="MainGameCanvasLayer/Place_name" unique_id=1893096777]
 visible = false
 modulate = Color(1, 1, 1, 0.8627451)
 show_behind_parent = true
@@ -2566,10 +1181,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -89.0
-offset_top = -38.597412
-offset_right = 91.0
-offset_bottom = 34.805176
+offset_left = -936.5
+offset_top = 449.5692
+offset_right = -756.5
+offset_bottom = 522.9718
 grow_horizontal = 2
 grow_vertical = 2
 rotation = 3.1415927
@@ -2578,7 +1193,7 @@ mouse_filter = 2
 theme = SubResource("Theme_r5w5l")
 theme_override_styles/panel = ExtResource("31_hwubp")
 
-[node name="Panel2" type="Panel" parent="MainGameCanvasLayer/Place_name/PlaceLabel" unique_id=1869801473]
+[node name="Panel2" type="Panel" parent="MainGameCanvasLayer/Place_name" unique_id=1869801473]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
@@ -2586,10 +1201,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = -37.833344
-offset_right = 90.0
-offset_bottom = 40.0
+offset_left = -937.5
+offset_top = 450.33325
+offset_right = -757.5
+offset_bottom = 528.1666
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.165, 1)
@@ -2597,7 +1212,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"TimerPanel"
 
-[node name="ColorRect" type="ColorRect" parent="MainGameCanvasLayer/Place_name/PlaceLabel/Panel2" unique_id=1473172203]
+[node name="ColorRect" type="ColorRect" parent="MainGameCanvasLayer/Place_name/Panel2" unique_id=1473172203]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2610,56 +1225,28 @@ scale = Vector2(0.968, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 color = Color(0.6, 0.0059999945, 0.01589985, 1)
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="MainGameCanvasLayer/Place_name/PlaceLabel/Panel2" unique_id=650191241]
+[node name="MeshInstance2D" type="MeshInstance2D" parent="MainGameCanvasLayer/Place_name/Panel2" unique_id=650191241]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 position = Vector2(89.270996, 10.025024)
 scale = Vector2(179.255, -13.95)
 mesh = SubResource("PrismMesh_vycyu")
 
-[node name="PlaceLabel2" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=1940403555]
-visible = false
+[node name="PlaceLabel" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=422115750]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -112.5
-offset_top = -29.0
-offset_right = 112.5
-offset_bottom = 82.66669
-grow_horizontal = 2
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -100.66675
+offset_right = 225.0
+offset_bottom = 11.0
+grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/default_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 5
-theme_override_constants/shadow_offset_y = 5
-theme_override_constants/outline_size = 19
-theme_override_font_sizes/bold_font_size = 40
+theme_override_font_sizes/normal_font_size = 47
+theme_override_font_sizes/bold_font_size = 47
 bbcode_enabled = true
-text = "[b]MOSS"
+text = "MOSS"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="Panel" type="Panel" parent="MainGameCanvasLayer/Place_name/PlaceLabel2" unique_id=586945002]
-modulate = Color(1, 1, 1, 0.8627451)
-show_behind_parent = true
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = -100.0
-offset_right = 90.0
-offset_bottom = 30.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_r5w5l")
-theme_override_styles/panel = ExtResource("31_hwubp")
 
 [node name="TallyCard" parent="MainGameCanvasLayer" unique_id=813632953 node_paths=PackedStringArray("round_manager") instance=ExtResource("63_err0d")]
 unique_name_in_owner = true
@@ -2667,8 +1254,13 @@ visible = false
 mouse_filter = 2
 round_manager = NodePath("../../Round_manager")
 
-[node name="Shop_Main_Menu" parent="MainGameCanvasLayer" unique_id=973405492 node_paths=PackedStringArray("round_manager", "money_control") instance=ExtResource("64_83tjn")]
+[node name="Start_menu_shop_clone" parent="MainGameCanvasLayer" unique_id=973405492 node_paths=PackedStringArray("round_manager") instance=ExtResource("37_0tjmb")]
 unique_name_in_owner = true
+round_manager = NodePath("../../Round_manager")
+
+[node name="Shop_Main_Menu" parent="MainGameCanvasLayer" unique_id=1034704471 node_paths=PackedStringArray("round_manager", "money_control") instance=ExtResource("64_83tjn")]
+unique_name_in_owner = true
+visible = false
 round_manager = NodePath("../../Round_manager")
 money_control = NodePath("../Money_labels")
 
@@ -2685,76 +1277,27 @@ hold_duration = 0.15
 upgrade_type = ""
 upgrade_name = "Upgrade"
 
-[node name="VSeparator" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/QuitControl/QuitMenu/HBoxContainer" parent_id_path=PackedInt32Array(973405492, 1223709064) index="0" unique_id=473970147]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
+[node name="WhiteSmokeyBG" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel" parent_id_path=PackedInt32Array(1034704471, 1211974115) index="1" unique_id=1410432704]
+texture = SubResource("NoiseTexture2D_pwib5")
 
-[node name="HSeparator" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" parent_id_path=PackedInt32Array(973405492, 1734679969) index="0" unique_id=1006108101]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="HSeparator4" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" parent_id_path=PackedInt32Array(973405492, 1734679969) index="2" unique_id=722915459]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="HSeparator2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" parent_id_path=PackedInt32Array(973405492, 1734679969) index="4" unique_id=225086530]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="HSeparator3" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" parent_id_path=PackedInt32Array(973405492, 1734679969) index="6" unique_id=1304174969]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="VSeparator2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/QuitControl/QuitMenu/HBoxContainer" parent_id_path=PackedInt32Array(973405492, 1223709064) index="2" unique_id=1039230397]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
-
-[node name="SpacePanel" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer" parent_id_path=PackedInt32Array(973405492, 582425009) index="0" unique_id=763162626]
+[node name="SpacePanel" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer" parent_id_path=PackedInt32Array(1034704471, 582425009) index="1" unique_id=763162626]
 theme_override_styles/panel = SubResource("StyleBoxEmpty_diemr")
 
-[node name="NextRound" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(973405492, 2043088047) index="2" unique_id=560640138]
+[node name="NextRound" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(1034704471, 2043088047) index="2" unique_id=560640138]
 theme = SubResource("Theme_vrkmk")
 
-[node name="NextRound2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(973405492, 2043088047) index="3" unique_id=1388172073]
+[node name="NextRound2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" parent_id_path=PackedInt32Array(1034704471, 2043088047) index="3" unique_id=1388172073]
 theme = SubResource("Theme_vrkmk")
 
-[node name="MoneyLabel" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Money_control" parent_id_path=PackedInt32Array(973405492, 1557695194) index="0" unique_id=1835839393]
+[node name="MoneyLabel" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Money_control" parent_id_path=PackedInt32Array(1034704471, 1051036391) index="1" unique_id=1835839393]
 offset_left = -0.5
 offset_right = 0.5
 
-[node name="PurchaseHoldProgressBar" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/UpgradePanel" parent_id_path=PackedInt32Array(973405492, 831104298, 696861470) index="0" unique_id=380143476]
+[node name="PurchaseHoldProgressBar" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/UpgradePanel" parent_id_path=PackedInt32Array(1034704471, 831104298, 696861470) index="0" unique_id=380143476]
 theme_override_styles/background = SubResource("StyleBoxFlat_nbtj3")
 
-[node name="Panel2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" parent_id_path=PackedInt32Array(973405492, 1302621281) index="4" unique_id=1209005292]
+[node name="Panel2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" parent_id_path=PackedInt32Array(1034704471, 1302621281) index="4" unique_id=1209005292]
 theme_override_styles/panel = SubResource("StyleBoxEmpty_diemr")
-
-[node name="SpacePanel3" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer" parent_id_path=PackedInt32Array(973405492, 582425009) index="4" unique_id=1202723950]
-theme_override_styles/panel = SubResource("StyleBoxEmpty_diemr")
-
-[node name="VSeparator2" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" parent_id_path=PackedInt32Array(973405492, 919511713) index="2" unique_id=1459209934]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="VSeparator3" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" parent_id_path=PackedInt32Array(973405492, 919511713) index="4" unique_id=1474129767]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="VSeparator4" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" parent_id_path=PackedInt32Array(973405492, 919511713) index="6" unique_id=297611364]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="VSeparator5" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" parent_id_path=PackedInt32Array(973405492, 919511713) index="8" unique_id=1688227533]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="VSeparator6" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer/Transport_Tickets/VBoxContainer/Tickets" parent_id_path=PackedInt32Array(973405492, 919511713) index="10" unique_id=105381239]
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vrkmk")
-
-[node name="SpacePanel4" parent="MainGameCanvasLayer/Shop_Main_Menu/CenterContainer/MainPanel/VBoxContainer" parent_id_path=PackedInt32Array(973405492, 582425009) index="6" unique_id=1282620482]
-theme_override_styles/panel = SubResource("StyleBoxEmpty_diemr")
-
-[node name="TicketPurchasedPopUp" parent="MainGameCanvasLayer/Shop_Main_Menu" index="12" unique_id=1840245893]
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 1920.0
-offset_bottom = 1080.0
-grow_horizontal = 1
-grow_vertical = 1
 
 [node name="Frame_rate" type="Control" parent="MainGameCanvasLayer" unique_id=439145462]
 visible = false
@@ -2822,6 +1365,13 @@ slide_distance = 800.0
 fade_in_time = 0.15
 hold_time = 1.4
 fade_out_time = 0.15
+
+[node name="TicketPurchasedPopUp" parent="MainGameCanvasLayer" unique_id=212271171 node_paths=PackedStringArray("game_start_menu") instance=ExtResource("47_gspdd")]
+unique_name_in_owner = true
+visible = false
+offset_left = -960.0
+offset_right = 960.0
+game_start_menu = NodePath("../Start_menu_shop_clone")
 
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
 unique_name_in_owner = true
@@ -3662,7 +2212,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
 force_multiplier = 1.0
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
-[connection signal="pressed" from="SplashScreenCanvasLayer/SplashScreen_v2/CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/StartGame" to="SplashScreenCanvasLayer/SplashScreen_v2" method="_on_start_game_pressed"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="MainGameCanvasLayer/QuitMenu" method="_on_cancel_menu_pressed"]
 [connection signal="timeout" from="MainGameCanvasLayer/Frame_rate/Timer" to="MainGameCanvasLayer/Frame_rate" method="_on_timer_timeout"]

@@ -8,7 +8,6 @@ extends Control
 @onready var reroll_button: Button = %Reroll
 @onready var all_skills_container: Control = %TreeCanvas
 @onready var bg_music: AudioStreamPlayer = $SFX/BG_Music
-@onready var transport_tickets: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/Transport_Tickets
 
 @export var can_appear_when_maxed := false
 
@@ -42,8 +41,8 @@ var player_cash := 0
 func _ready() -> void:
 	
 	EventBus.instance.update_money.connect(update_shop_labels)
-	%RoundSelector.hide()
-	transport_tickets.modulate.a = 0.0
+
+
 	
 	bg_music.volume_db = -80.0
 	#bg_music.play()
@@ -70,7 +69,7 @@ func _ready() -> void:
 	#update_shop_labels()
 	cash_label.text = "$0"
 	
-	$CenterContainer/MainPanel/VBoxContainer/Money_control.hide()
+	#$CenterContainer/MainPanel/VBoxContainer/Money_control.hide()
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.hide()
 	
 	#update_cost_label()
@@ -110,7 +109,6 @@ func purchase_made(_upgrade_type:String = '') -> void:
 	if spent > 0:
 		spawn_spent_cash_label(spent)
 	
-	transport_tickets.check_tickets()
 	EventBus.instance.player_update_stats_visually.emit()
 	
 	for i in all_skills:
@@ -188,13 +186,14 @@ func update_open_menu() -> void:
 	update_shop()
 	%Play_round_text.text = "[i][wave][color=]PLAY\n[color=c70102]$" + str(int(gl_DataSet.get_value('price_play_round', 0)))
 	
-	
-	if reroll_unlocked:
-		%Reroll.show()
-		%NextRound.show()
-	else:
-		%Reroll.hide()
-		%NextRound.hide()
+	#%Reroll.show()
+	#%NextRound.show()
+	#if reroll_unlocked:
+		#%Reroll.show()
+		#%NextRound.show()
+	#else:
+		#%Reroll.hide()
+		#%NextRound.hide()
 
 	
 	update_shop_labels()
@@ -229,7 +228,6 @@ func play_round_button_pressed() -> void:
 	reroll_button.hide()
 	%NextRound.disabled = true
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
-	%Transport_Tickets.modulate.a = 0.0
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
 	var play_round_cost = int(gl_DataSet.get_value('price_play_round', 0))
 	gl_PlayerState.log_buy('debug_add_cash', play_round_cost)
@@ -248,7 +246,7 @@ func update_close_menu() -> void:
 	sfx_close_shop()
 	
 	$CenterContainer/MainPanel/VBoxContainer/Money_control.show()
-	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.show()
+	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.show()
 	%QuitMenu.hide()
 	
 	clear_available_skills()
@@ -284,7 +282,6 @@ func update_close_menu() -> void:
 
 	reroll_button.show()
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 1.0
-	#%Transport_Tickets.modulate.a = 1.0
 	
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 1.0
 	%NextRound.modulate.a = 1.0
@@ -568,10 +565,10 @@ func update_shop_labels() -> void:
 	update_cost_label()
 	
 	if price_reroll == 0:
-		reroll_button.get_child(0).text = "[i]REROLL\n[wave][color=#c70102]FREE[/color]"
+		reroll_button.get_child(0).text = "REROLL\n[wave][color=#c70102]FREE[/color]"
 
 	else:
-		reroll_button.get_child(0).text = "[i][wave]REROLL\n[color=#c70102]$" + str(price_reroll) + "[/color]"
+		reroll_button.get_child(0).text = "[wave]REROLL\n[color=#c70102]$" + str(price_reroll) + "[/color]"
 
 func sfx_purchase_made() -> void:
 	$SFX/shop_purchase_01.play()
@@ -664,13 +661,11 @@ func _input(event: InputEvent) -> void:
 		
 
 func setup_shop_for_rounds() -> void:
-	%Transport_Tickets.modulate.a = 0.0
 	%RoundSelector.show()
 	
 
 func mark_round_as_cleared() -> void:
-	var round_button_cont : HBoxContainer = $RoundSelector/Panel/VBoxContainer/HBoxContainer
-	
+	var round_button_cont : HBoxContainer = 	$CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
 	for i in round_button_cont.get_children():
 		if i.current_state != i.State.AVAILABLE:
 			continue
@@ -683,8 +678,8 @@ func mark_round_as_cleared() -> void:
 				break
 	
 func mark_round_as_perfect() -> void:
-	var round_button_cont : HBoxContainer = $RoundSelector/Panel/VBoxContainer/HBoxContainer
-	
+	var round_button_cont : HBoxContainer = 	$CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
+
 	%ScoreTotal.add_to_total()
 	
 	for i in round_button_cont.get_children():
@@ -694,8 +689,7 @@ func mark_round_as_perfect() -> void:
 			
 
 func increase_round_available() -> void:
-	var round_button_cont : HBoxContainer = $RoundSelector/Panel/VBoxContainer/HBoxContainer
-		
+	var round_button_cont : HBoxContainer = 	$CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer	
 	for i in round_button_cont.get_children():
 		if i.current_state != i.State.LOCKED:
 			continue
@@ -725,17 +719,6 @@ func restart() -> void:
 	#cash_label.modulate.a = 0.0
 	cash_label.text = "$0"
 
-	#transport_tickets.hide()
-	#transport_tickets.modulate.a = 0.0
-	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
-
-	#%QuitMenu.hide()
-	#%Reroll.hide()
-	#%NextRound.hide()
-
-	#bg_music.stop()
-	#bg_music.volume_db = -80.0
-
 	for skill in all_skills:
 		skill.new_round = true
 		skill.reset_buttons_settings()
@@ -755,7 +738,7 @@ func check_the_amount_of_balloons_in_play() -> int:
 		return 0
 	
 func update_next_ticket() -> void:
-	$%Transport_Tickets.update_tickets()
+	pass
 
 func update_cash_label_color() -> void:
 	if gl_PlayerState.dataset.cash < 0:

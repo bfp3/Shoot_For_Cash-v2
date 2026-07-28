@@ -1,4 +1,7 @@
 extends CenterContainer
+
+@export var game_start_menu : Control
+
 @onready var purchased_ticket:= $MainPanel/TreePanel/PurchasedTicket
 const RED_SHOP = preload('uid://hy4w24j6p2er')
 const MOSS_SHOP = preload('uid://bcvk6h5k84n3h')
@@ -63,11 +66,13 @@ func _on_next_round_pressed() -> void:
 	hide()
 
 func ticket_used() -> void:
-	
 	if gl_PlayerState.change_location(ticket_location) == true:
-		$"..".enter_state($"..".SkillState.CLOSE_MENU)
+		game_start_menu.enter_state(game_start_menu.State.CLOSE_MENU)
 		_on_next_round_pressed()
-		
 	
-	await get_tree().create_timer(3.5).timeout
-	%Transport_Tickets.check_tickets()
+	#if gl_PlayerState.change_location(ticket_location) == true:
+		#$"..".enter_state($"..".SkillState.CLOSE_MENU)
+		
+		
+	#await get_tree().create_timer(3.5).timeout
+	#%Transport_Tickets.check_tickets()

@@ -144,12 +144,12 @@ func start_perfect_sequence() -> void:
 	
 	# 2. GRADE CASH LABEL
 	grade_cash_label.text = '$' + str(perfect_bonus)
-	grade_cash_label.modulate = Color("42d100")
+	grade_cash_label.modulate = Color("15181cff")
 	gl_PlayerState.add_cash(perfect_bonus)
 
 	# decorative particle flourish, fires in the background (non-blocking)
 	
-	grand_total_cash_label.modulate = Color("42d100")
+	grand_total_cash_label.modulate = Color("c70102ff")
 	# PAUSE
 	await get_tree().create_timer(0.5).timeout
 	await get_tree().create_timer(dur / 2).timeout
@@ -293,9 +293,7 @@ func update_open_menu() -> void:
 		
 func update_close_menu() -> void:
 	
-	total_cash_earned = 0
-	total_penalties_earned = 0
-	$'%100_percent'.modulate.a = 0.0
+	
 	# ENSURE PIVOT IS CORRECT
 	pivot_offset = default_pivot_offset
 
@@ -315,7 +313,9 @@ func update_close_menu() -> void:
 	position = default_position
 	menu_in_display = false
 	updating_stats = false
-	
+	total_cash_earned = 0
+	total_penalties_earned = 0
+	$'%100_percent'.modulate.a = 0.0
 	
 	hide()
 
@@ -405,36 +405,3 @@ func blink_penalty_red() -> void:
 func _on_shop_pressed() -> void:
 	enter_state(State.CLOSE_MENU)
 	round_manager.enter_state(round_manager.RoundState.TALLY_END)
-	#
-	#
-#func Xstart_pass_sequence() -> void:
-	#var dur := 1.0
-#
-	## 1. GRADE LABEL
-	#grade_label.modulate = Color("cccccc")
-	#grade_label.text = "Round Clear!"
-#
-	## 2. GRADE CASH LABEL
-	#grade_cash_label.text = '$' + str(pass_bonus)
-	#gl_PlayerState.add_cash(pass_bonus)
-#
-	## PAUSE
-	#await get_tree().create_timer(dur).timeout
-#
-	## 3. BONUSES
-	#$SFX/shop_purchase_02.play()
-	#apply_bonus_cash()
-	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned.modulate.a = 1.0
-	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 1.0
-#
-	## PAUSE
-	#await get_tree().create_timer(dur).timeout
-#
-	## 4. TOTAL CASH EARNED
-	#$SFX/shop_purchase_02.play()
-	#$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
-	#grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
-	#grand_total_cash_label.modulate = Color("42d100")
-	#await get_tree().create_timer(dur).timeout
-	#return
-	#

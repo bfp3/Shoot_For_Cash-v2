@@ -85,7 +85,8 @@ enum RoundState {
 	TALLY_END,
 	PAUSE,
 	RESUME,
-	GAME_WON
+	GAME_WON,
+	START_START
 	}
 
 @export var current_round_state : RoundState = RoundState.INACTIVE
@@ -104,7 +105,6 @@ func _ready() -> void:
 	
 func bonus_oranges() -> void:
 	bonus_oranges_ready = true
-
 
 	
 func check_round_for_strikes() -> void:
@@ -251,7 +251,21 @@ func enter_state(new_state: RoundState) -> void:
 		
 		RoundState.GAME_WON:
 			update_game_won()
-
+			
+		RoundState.START_START:
+			update_start_menu()
+			
+func update_start_menu() -> void:
+	%Start_menu_shop_clone.open_menu()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	$Gold_sfx.pitch_scale = 0.7
+	rocks_container.reset_all_rocks()
+	check_round_for_strikes()
+	# Add Balloons from Array into the Level during the SHOP phase
+	if current_round > 0:
+		var rock_seq := update_rock_sequence()
+		if rock_seq != []:
+			balloon_container.add_balloon(rock_seq)
 
 func update_round_inactive() -> void:
 	rocks_container.enter_state(rocks_container.State.INACTIVE)

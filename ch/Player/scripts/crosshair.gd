@@ -193,7 +193,9 @@ func cross_hair_fade_in() -> void:
 	await tween.finished
 
 	round_end_label.show()
-
+	%Bullet_icon2.show()
+	
+	
 func cannot_shoot_obstacle_in_way() -> void:
 	return
 	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
