@@ -36,7 +36,7 @@ func _ready() -> void:
 
 	else:
 		level_name_label.text = "[wave]" + level_name.to_upper()
-		level_name_label.modulate = Color('15181c')
+		#level_name_label.modulate = Color('15181c')
 		level_name_label.add_theme_font_size_override("normal_font_size", 109)
 		$HSeparator.scale.x = 1.0
 		

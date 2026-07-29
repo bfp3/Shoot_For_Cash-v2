@@ -734,7 +734,8 @@ func update_next_ticket() -> void:
 	pass
 
 func update_cash_label_color() -> void:
-	if gl_PlayerState.dataset.cash < 0:
-		cash_label.modulate = Color("c70102ff")
-	else:
-		cash_label.modulate = Color("ebe0d8ff")
+	pass
+	#if gl_PlayerState.dataset.cash < 0:
+		#cash_label.modulate = Color("c70102ff")
+	#else:
+		#cash_label.modulate = Color("ffff")

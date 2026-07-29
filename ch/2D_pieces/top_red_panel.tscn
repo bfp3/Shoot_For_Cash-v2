@@ -1,22 +1,85 @@
 [gd_scene format=3 uid="uid://bxx83kupf6rgj"]
 
+[ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="1_hw7bi"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_vmj5j"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="3_oq28x"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uucxj"]
 bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
+border_width_left = 75
+border_width_top = 51
+border_width_right = 75
+border_width_bottom = 69
+border_color = Color(0.5, 0.004999995, 0.013249874, 1)
+border_blend = true
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 
 [sub_resource type="PrismMesh" id="PrismMesh_hmuk5"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r5w5l"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8twtg"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ga0b"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_vv4e8"]
+Button/styles/normal = SubResource("StyleBoxFlat_r5w5l")
+Panel/styles/panel = SubResource("StyleBoxFlat_8twtg")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_3ga0b")
+
+[sub_resource type="PrismMesh" id="PrismMesh_dpyg1"]
+
 [node name="TopRedPanel" type="Panel" unique_id=2081657472]
+custom_minimum_size = Vector2(0, 162)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -550.0
-offset_top = -41.900024
+offset_top = -122.0
 offset_right = 550.0
-offset_bottom = 41.900024
+offset_bottom = 40.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -25,9 +88,140 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_uucxj")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="." unique_id=1125389776]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-z_index = 1
 texture_filter = 6
-position = Vector2(546.33136, 43.72918)
+position = Vector2(549.6589, 83.65918)
 rotation = 3.1415925
-scale = Vector2(1093.6621, 82.6753)
+scale = Vector2(1100.3169, 162.53531)
 mesh = SubResource("PrismMesh_hmuk5")
+
+[node name="Place_name" type="Control" parent="." unique_id=542050662]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("1_hw7bi")
+metadata/_edit_use_anchors_ = true
+
+[node name="CenterPOS" type="Control" parent="Place_name" unique_id=1932469031]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Panel" type="Panel" parent="Place_name" unique_id=1405284666]
+visible = false
+modulate = Color(1, 1, 1, 0.8627451)
+show_behind_parent = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -36.701294
+offset_right = 90.0
+offset_bottom = 36.701294
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 3.1415927
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vv4e8")
+theme_override_styles/panel = ExtResource("2_vmj5j")
+
+[node name="Panel2" type="Panel" parent="Place_name" unique_id=891678335]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -70.91669
+offset_right = 90.0
+offset_bottom = 6.916687
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.165, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"TimerPanel"
+
+[node name="ColorRect" type="ColorRect" parent="Place_name/Panel2" unique_id=674870800]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -17.0
+offset_bottom = -61.833344
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.968, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Place_name/Panel2" unique_id=836089993]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+position = Vector2(89.270996, 10.025024)
+scale = Vector2(179.255, -13.95)
+mesh = SubResource("PrismMesh_dpyg1")
+
+[node name="PlaceLabel" type="RichTextLabel" parent="Place_name" unique_id=614947465]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -86.5
+offset_top = -22.5
+offset_right = 86.5
+offset_bottom = 86.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.82, 0.73431, 0.6642, 1)
+theme_override_font_sizes/normal_font_size = 100
+bbcode_enabled = true
+text = "MOSS"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="Place_name/PlaceLabel" unique_id=19904917]
+visible = false
+modulate = Color(0.91764706, 0.8745098, 0.8392157, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 3.1415927
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vv4e8")
+theme_override_styles/panel = ExtResource("2_vmj5j")
+
+[node name="CoatArms" parent="." unique_id=409353141 instance=ExtResource("3_oq28x")]
+visible = false
+z_index = 76
+layout_mode = 1

@@ -13,9 +13,14 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wt77o"]
 bg_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
-border_color = Color(0.75, 0.007499993, 0.019874811, 1)
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+border_width_left = 468
+border_width_right = 152
+border_color = Color(0.68, 0.0067999936, 0.018019829, 1)
+border_blend = true
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 3
+shadow_size = 3
 
 [sub_resource type="Gradient" id="Gradient_sgib8"]
 interpolation_mode = 1
@@ -526,15 +531,14 @@ stretch_mode = 6
 
 [node name="Upgrade_Icon_shadow2" type="TextureRect" parent="VBoxContainer/UpgradePanel/Upgrade_Icon" unique_id=1516292458]
 unique_name_in_owner = true
-visible = false
-modulate = Color(0, 0, 0, 1)
+modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
 show_behind_parent = true
 custom_minimum_size = Vector2(100, 110)
 layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 191.0
-offset_bottom = 114.0
+offset_left = 1.5
+offset_top = 15.25
+offset_right = 188.5
+offset_bottom = 125.25
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("2_64t06")
 expand_mode = 1
@@ -548,7 +552,6 @@ speed_scale = 2.0
 
 [node name="NameLabel" type="RichTextLabel" parent="VBoxContainer" unique_id=1765170004]
 unique_name_in_owner = true
-modulate = Color(1, 0.89166665, 0.5, 1)
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 33
@@ -577,6 +580,7 @@ show_percentage = false
 
 [node name="CostLabel2" type="RichTextLabel" parent="VBoxContainer" unique_id=407818220]
 unique_name_in_owner = true
+visible = false
 clip_contents = false
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
@@ -659,6 +663,7 @@ fit_content = true
 horizontal_alignment = 1
 
 [node name="Tooltip" type="PanelContainer" parent="." unique_id=1191019644]
+visible = false
 self_modulate = Color(0, 0, 0, 0)
 layout_mode = 1
 anchors_preset = -1

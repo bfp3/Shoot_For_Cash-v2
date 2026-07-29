@@ -10,9 +10,9 @@
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="5_vom4t"]
 [ext_resource type="Texture2D" uid="uid://bhst5en4f2e3b" path="res://res/mountain_image.png" id="6_pwib5"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_7j408"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="8_kvqbn"]
 [ext_resource type="Texture2D" uid="uid://dk2p6y27c64hs" path="res://res/cooldown_reduction_upgrade_icon_128x128.png" id="12_pwib5"]
 [ext_resource type="Texture2D" uid="uid://cuw4sgs22s23" path="res://res/sky_mine_icon_2.png" id="13_cn8lj"]
-[ext_resource type="PackedScene" uid="uid://bxx83kupf6rgj" path="res://ch/2D_pieces/top_red_panel.tscn" id="13_ei2sf"]
 [ext_resource type="PackedScene" uid="uid://ck6lfy3kh3eqy" path="res://ch/Shop/Upgrade_progress_component.tscn" id="13_onfim"]
 [ext_resource type="Texture2D" uid="uid://icyevci50hge" path="res://res/gun_icon_shop.png" id="13_xklyy"]
 [ext_resource type="Script" uid="uid://k67b4ujxorb3" path="res://ch/Shop/upgrade_progress_component.gd" id="14_r6l2h"]
@@ -67,8 +67,6 @@ scale_max = 0.04
 scale_curve = SubResource("CurveTexture_64t06")
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 alpha_curve = SubResource("CurveTexture_cn8lj")
-hue_variation_min = -2.2351742e-08
-hue_variation_max = -2.2351742e-08
 
 [sub_resource type="Gradient" id="Gradient_jv82y"]
 interpolation_mode = 1
@@ -86,6 +84,80 @@ noise = SubResource("FastNoiseLite_sgib8")
 color_ramp = SubResource("Gradient_jv82y")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uucxj"]
+bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
+[sub_resource type="PrismMesh" id="PrismMesh_hmuk5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r5w5l"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8twtg"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ga0b"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_vv4e8"]
+Button/styles/normal = SubResource("StyleBoxFlat_r5w5l")
+Panel/styles/panel = SubResource("StyleBoxFlat_8twtg")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_3ga0b")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tnodp"]
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2125, 0.23, 0.25, 1)
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+shadow_color = Color(1, 1, 1, 0.6)
+shadow_offset = Vector2(2.5, 2.5)
+anti_aliasing = false
 
 [sub_resource type="Gradient" id="Gradient_sgib8"]
 interpolation_mode = 1
@@ -132,12 +204,32 @@ content_margin_left = 0.0
 content_margin_top = 0.0
 content_margin_right = 0.0
 content_margin_bottom = 0.0
-bg_color = Color(0.88, 0.8074, 0.748, 1)
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+border_width_left = 151
+border_width_top = 1
+border_width_right = 108
+border_width_bottom = 1
+border_color = Color(0.75, 0.684, 0.63, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xklyy"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+draw_center = false
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
+border_blend = true
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -148,7 +240,7 @@ corner_detail = 5
 script/source = "extends RichTextLabel
 
 var grand_total : int = 0
-var subtitle := 'Winnings '.to_upper()
+var subtitle := 'WINNINGS\\n'.to_upper()
 
 func _ready() -> void:
 	text = subtitle + \"[color=#c70102]$0[/color]\"
@@ -266,12 +358,12 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -490.0
-offset_top = -309.0
+offset_top = -321.0
 offset_right = 490.0
-offset_bottom = 252.0
+offset_bottom = 293.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.245, 1.245)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
@@ -346,18 +438,106 @@ theme_override_constants/separation = 0
 visible = false
 custom_minimum_size = Vector2(50, 20)
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
-[node name="TopRedPanel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=2081657472 instance=ExtResource("13_ei2sf")]
-custom_minimum_size = Vector2(0, 84.02)
+[node name="TopRedPanel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=2081657472]
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uucxj")
 
-[node name="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" index="0" unique_id=1125389776]
-position = Vector2(488.6612, 43.7614)
-scale = Vector2(978.32166, 82.6753)
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1125389776]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+z_index = 1
+texture_filter = 6
+position = Vector2(489.50732, 62.884117)
+rotation = 3.1415925
+scale = Vector2(980.0137, 116.82727)
+mesh = SubResource("PrismMesh_hmuk5")
+
+[node name="Place_name" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=542050662]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -12.048195
+offset_bottom = -12.048195
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="PlaceLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name" unique_id=614947465]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -97.0
+offset_top = 13.67672
+offset_right = 97.0
+offset_bottom = 74.67673
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.08235294, 0.07058824, 0.043137256, 1)
+theme_override_font_sizes/normal_font_size = 53
+bbcode_enabled = true
+text = "MOSS"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name/PlaceLabel" unique_id=19904917]
+show_behind_parent = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -12.048065
+offset_bottom = -12.048065
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 3.1415927
+scale = Vector2(1.177, 1.245)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vv4e8")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tnodp")
+
+[node name="CoatArms" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=409353141 instance=ExtResource("8_kvqbn")]
+z_index = 76
+layout_mode = 1
+offset_left = -128.51404
+offset_top = -144.16467
+offset_right = 127.48596
+offset_bottom = 111.83536
+scale = Vector2(0.925, 0.925)
+
+[node name="CoatArms2" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1647909721 instance=ExtResource("8_kvqbn")]
+visible = false
+z_index = 76
+layout_mode = 1
+offset_left = 303.6145
+offset_top = 371.49805
+offset_right = 559.6145
+offset_bottom = 627.49805
+scale = Vector2(0.599, 0.599)
+
+[node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1387478224]
+custom_minimum_size = Vector2(50, 10)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="TreePanel" type="Control" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1314206077]
-custom_minimum_size = Vector2(930, 260)
+custom_minimum_size = Vector2(930, 0)
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=743938547]
@@ -504,9 +684,9 @@ metadata/_edit_use_anchors_ = true
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 863.0
-offset_top = 23.0
+offset_top = 0.33328247
 offset_right = 963.0
-offset_bottom = 144.15503
+offset_bottom = 121.48831
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -534,6 +714,7 @@ mouse_filter = 2
 theme_type_variation = &"RedPanel"
 
 [node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound/Panel2" unique_id=506920231]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -607,9 +788,9 @@ text = "DONE"
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 863.0
-offset_top = 151.0
+offset_top = 128.33328
 offset_right = 963.0
-offset_bottom = 272.15503
+offset_bottom = 249.48831
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -638,13 +819,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1015178323]
-custom_minimum_size = Vector2(50, 111.985)
+custom_minimum_size = Vector2(50, 284.29)
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="Money_control" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1051036391]
 self_modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 focus_mode = 2
 mouse_filter = 2
@@ -657,33 +839,31 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = 13.0
-offset_bottom = 13.0
+offset_top = -6.4257813
+offset_bottom = -6.4257813
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.753, 1.323)
+scale = Vector2(1.339, 1.257)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="RightTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=549092801]
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-position = Vector2(94.01836, -38.647057)
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+position = Vector2(238.31876, -1.1107938e-05)
 rotation = 3.1415925
-scale = Vector2(104.44577, 81.436)
+scale = Vector2(251.57509, 82)
 mesh = SubResource("PrismMesh_sgib8")
 
 [node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=909585586]
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-position = Vector2(-95.66949, -38.64709)
-rotation = 3.1415927
-scale = Vector2(-107.735916, 81.436)
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+position = Vector2(-237.92644, -6.252573e-06)
+scale = Vector2(250.77818, -82)
 mesh = SubResource("PrismMesh_jv82y")
 
 [node name="Square" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=927548181]
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-position = Vector2(-0.16268921, -38.654816)
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
 rotation = 3.1415925
-scale = Vector2(85, 81.385)
+scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_atgli")
 
 [node name="CashBalanceLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1835839393]
@@ -695,10 +875,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -155.0
-offset_top = -79.0
+offset_left = -154.99997
+offset_top = -72.36548
 offset_right = 155.0
-offset_bottom = 27.0
+offset_bottom = 61.63452
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -706,10 +886,12 @@ size_flags_horizontal = 3
 focus_mode = 2
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 123
-theme_override_font_sizes/italics_font_size = 90
+theme_override_constants/shadow_outline_size = 133
+theme_override_constants/shadow_offset_x = 7
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 124
 bbcode_enabled = true
-text = "$500"
+text = "[rainbow]$5000"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -718,6 +900,7 @@ vertical_alignment = 1
 
 [node name="Cash_subtitle" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1366998873]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 clip_contents = false
 layout_mode = 1
@@ -727,9 +910,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -64.0
-offset_top = -95.41385
+offset_top = -56.747192
 offset_right = 64.0
-offset_bottom = -66.41385
+offset_bottom = -27.747192
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -740,7 +923,7 @@ theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 19
 theme_override_font_sizes/italics_font_size = 90
 bbcode_enabled = true
-text = "C     A     S     H"
+text = "[wave]C     A     S     H"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -748,14 +931,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SpacePanel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1401745246]
-visible = false
-custom_minimum_size = Vector2(50, 60)
+custom_minimum_size = Vector2(50, 5.045)
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="RoundSelector" type="Control" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1471273823]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
 mouse_filter = 2
 
@@ -764,10 +947,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = 25.0
+offset_top = 6.42572
+offset_bottom = 31.42572
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_kvqbn")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel" unique_id=486141513]
@@ -875,22 +1060,38 @@ focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
+[node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1661126035]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -0.8353195
+offset_bottom = 32.176445
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_xklyy")
+
 [node name="ScoreTotal" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=91302618 groups=["restartable"]]
 unique_name_in_owner = true
+modulate = Color(0.65, 0.62226665, 0.598, 1)
 clip_contents = false
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 5.992508
-offset_top = -36.760376
-offset_right = 100.48691
-offset_bottom = 53.239624
+offset_left = 2.6592102
+offset_top = -27.001343
+offset_right = 97.15361
+offset_bottom = 62.998657
 grow_vertical = 2
-theme_override_font_sizes/normal_font_size = 29
-theme_override_font_sizes/italics_font_size = 44
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 19
 bbcode_enabled = true
-text = "Winnings[color=#c70102] $0"
+text = "WINNINGS[color=#c70102]
+$122455"
 fit_content = true
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -917,13 +1118,115 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("5_vom4t")
 
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/ScoreTotal" unique_id=741251944]
+modulate = Color(1, 1, 1, 0.3372549)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -2.666626
+offset_right = 36.0
+offset_bottom = 1.333374
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.402, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="ScoreTotal2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=781063997 groups=["restartable"]]
+unique_name_in_owner = true
+visible = false
+clip_contents = false
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -110.49408
+offset_top = -34.333344
+offset_right = -15.999695
+offset_bottom = 55.66666
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 19
+bbcode_enabled = true
+text = "[color=#c70102]
+$122455"
+fit_content = true
+horizontal_alignment = 2
+vertical_alignment = 1
+script = SubResource("GDScript_hi3s5")
+
+[node name="BgPanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/ScoreTotal2" unique_id=1096622578]
+visible = false
+modulate = Color(0.8, 0.8, 0.8, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(250, 42)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -21.0
+offset_right = 125.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("5_vom4t")
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/ScoreTotal2" unique_id=518453432]
+modulate = Color(1, 1, 1, 0.3372549)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -2.666626
+offset_right = 36.0
+offset_bottom = 1.333374
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.402, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
 [node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=453767486]
-layout_mode = 0
-offset_left = 107.86499
-offset_top = 17.003784
-offset_right = 111.86499
-offset_bottom = 57.003784
-scale = Vector2(1, 1.36)
+modulate = Color(1, 1, 1, 0.3372549)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 110.04022
+offset_top = -20.0
+offset_right = 114.04022
+offset_bottom = 20.0
+grow_vertical = 2
+scale = Vector2(1, 2.019)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="VSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=180300677]
+modulate = Color(1, 1, 1, 0.3372549)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -111.82318
+offset_top = -51.759033
+offset_right = -107.82318
+offset_bottom = -11.759033
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(1, 2.019)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="UpgradeStats" type="CenterContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1504735911]
@@ -1074,9 +1377,9 @@ theme_override_constants/separation = 24
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 1459.0
+offset_left = 1523.0
 offset_top = 611.0
-offset_right = 1591.0
+offset_right = 1655.0
 offset_bottom = 642.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
@@ -1107,9 +1410,9 @@ vertical_alignment = 1
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 1459.0
+offset_left = 1523.0
 offset_top = 644.0
-offset_right = 1591.0
+offset_right = 1655.0
 offset_bottom = 675.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
@@ -1140,9 +1443,9 @@ vertical_alignment = 1
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 1459.0
+offset_left = 1523.0
 offset_top = 677.0
-offset_right = 1591.0
+offset_right = 1655.0
 offset_bottom = 708.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
@@ -1397,5 +1700,4 @@ vertical_alignment = 1
 [connection signal="pressed" from="MaxOutPowers" to="." method="_on_max_out_powers_pressed"]
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]
 
-[editable path="CenterContainer/MainPanel/VBoxContainer/TopRedPanel"]
 [editable path="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]

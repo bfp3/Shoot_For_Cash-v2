@@ -88,8 +88,8 @@ func update_start() -> void:
 	
 	tween.tween_property(game_name, "scale", Vector2.ONE * 1.0, 0.15)
 	
-	tween.tween_interval(2.0)
-	tween.tween_property(copyright, "modulate:a", 1.0, 1.5)
+	#tween.tween_interval(2.0)
+	#tween.tween_property(copyright, "modulate:a", 1.0, 1.5)
 	
 		
 func opening_sfx() -> void:

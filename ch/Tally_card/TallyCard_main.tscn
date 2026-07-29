@@ -2,10 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bmkw103pryi4x" path="res://ch/Tally_card/tally_card_main.gd" id="1_d46ke"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_cuwcq"]
-[ext_resource type="Texture2D" uid="uid://bl6g8v8djrlds" path="res://unfiled/Decal_placeholders/counter_clock_arrow_2.png" id="3_4k5lx"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="3_ecf0a"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="4_ecf0a"]
-[ext_resource type="PackedScene" uid="uid://b04e2sb5337vo" path="res://ch/Tally_card/TallyComponent_v3.tscn" id="4_iforg"]
 [ext_resource type="Script" uid="uid://dbbltr23d26u6" path="res://ch/Shop/money_label.gd" id="5_7r173"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="6_4k5lx"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="9_4k5lx"]
@@ -72,13 +70,12 @@ corner_detail = 10
 Button/styles/hover = null
 Button/styles/normal = SubResource("StyleBoxFlat_cn8lj")
 
-[sub_resource type="PrismMesh" id="PrismMesh_3q72g"]
-left_to_right = 1.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uucxj"]
+bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
 
-[sub_resource type="PrismMesh" id="PrismMesh_4k5lx"]
-left_to_right = 1.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_cuwcq"]
+[sub_resource type="PrismMesh" id="PrismMesh_hmuk5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
 
@@ -351,40 +348,21 @@ theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
 text = "DONE"
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1625197918]
+[node name="CenterContainer" type="MarginContainer" parent="." unique_id=721365468]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -490.0
+offset_top = -351.0
+offset_right = 490.0
+offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-
-[node name="Control" type="Control" parent="CenterContainer" unique_id=21651763]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/Control" unique_id=135539786]
-modulate = Color(0.81, 0.008099993, 0.021464797, 1)
-position = Vector2(146.2511, 151.65076)
-rotation = 3.1415925
-scale = Vector2(191.4021, 81.436)
-mesh = SubResource("PrismMesh_3q72g")
-
-[node name="MeshInstance2D3" type="MeshInstance2D" parent="CenterContainer/Control" unique_id=2144145540]
-modulate = Color(0.81, 0.008099993, 0.021464797, 1)
-position = Vector2(-128.74792, 151.65082)
-rotation = 3.1415927
-scale = Vector2(-191.402, 81.436)
-mesh = SubResource("PrismMesh_4k5lx")
-
-[node name="MeshInstance2D2" type="MeshInstance2D" parent="CenterContainer/Control" unique_id=92637042]
-modulate = Color(0.81, 0.008099993, 0.021464797, 1)
-position = Vector2(8.591919, 152.02887)
-rotation = 3.1415925
-scale = Vector2(84.642, 81.561)
-mesh = SubResource("BoxMesh_cuwcq")
 
 [node name="BackgroundControl" type="Control" parent="CenterContainer" unique_id=49314975]
 layout_mode = 2
@@ -462,6 +440,21 @@ self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 4
 
+[node name="TopRedPanel" type="Panel" parent="CenterContainer/MainPanel/MainPanel" unique_id=2081657472]
+custom_minimum_size = Vector2(0, 84.29)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uucxj")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/MainPanel/TopRedPanel" unique_id=1125389776]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+z_index = 1
+texture_filter = 6
+position = Vector2(484.48126, 42.729187)
+rotation = 3.1415925
+scale = Vector2(975.962, 82.6753)
+mesh = SubResource("PrismMesh_hmuk5")
+
 [node name="HSeparator5" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=1168585334]
 visible = false
 custom_minimum_size = Vector2(0, 30)
@@ -472,6 +465,7 @@ theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
 
 [node name="ColorRect" type="Panel" parent="CenterContainer/MainPanel/MainPanel" unique_id=313920766]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7r173")
 
@@ -796,64 +790,6 @@ custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/separator = SubResource("StyleBoxEmpty_arg5w")
-
-[node name="Item_List" type="FlowContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=208860132]
-visible = false
-custom_minimum_size = Vector2(0, 190)
-layout_mode = 2
-alignment = 1
-
-[node name="Nothing" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=834535786 instance=ExtResource("4_iforg")]
-layout_mode = 2
-description = "Nothing..."
-rock_type = ""
-icon_texture = ExtResource("3_4k5lx")
-
-[node name="Rocks" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1096068837 instance=ExtResource("4_iforg")]
-layout_mode = 2
-
-[node name="Coal" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=216271256 instance=ExtResource("4_iforg")]
-layout_mode = 2
-rock_type = "rock_type_2"
-icon_modulate = Color(0.24, 0.24, 0.24, 1)
-
-[node name="Gold" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=113580913 instance=ExtResource("4_iforg")]
-layout_mode = 2
-rock_type = "rock_type_3"
-icon_modulate = Color(1, 0.78039217, 0, 1)
-
-[node name="Clay Rocks" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=233664546 instance=ExtResource("4_iforg")]
-layout_mode = 2
-rock_type = "rock_type_4"
-icon_modulate = Color(0.81960785, 0, 0, 1)
-
-[node name="Plastic Bottles" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=82464469 instance=ExtResource("4_iforg")]
-visible = false
-layout_mode = 2
-
-[node name="Tires" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1403801708 instance=ExtResource("4_iforg")]
-visible = false
-layout_mode = 2
-
-[node name="Scrap Metal" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1365494356 instance=ExtResource("4_iforg")]
-visible = false
-layout_mode = 2
-
-[node name="Oil Drums" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1624599254 instance=ExtResource("4_iforg")]
-visible = false
-layout_mode = 2
-
-[node name="Cargo Crates" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=547775032 instance=ExtResource("4_iforg")]
-visible = false
-layout_mode = 2
-
-[node name="Rare Goodies" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=854578873 instance=ExtResource("4_iforg")]
-visible = false
-layout_mode = 2
-
-[node name="Crackers" parent="CenterContainer/MainPanel/MainPanel/Item_List" unique_id=1219068111 instance=ExtResource("4_iforg")]
-visible = false
-layout_mode = 2
 
 [node name="CashOut" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=313444988]
 custom_minimum_size = Vector2(200, 128)

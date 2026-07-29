@@ -11,7 +11,6 @@
 [ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="8_rxi2v"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="9_uk8vt"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="10_40wae"]
-[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="12_a6mtr"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="12_kgbxa"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="13_k34bf"]
 [ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="14_irbev"]
@@ -196,17 +195,27 @@ curve = SubResource("Curve_lwcfe")
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_acvv8"]
 particle_flag_disable_z = true
 emission_shape = 3
-emission_box_extents = Vector3(200, 200, 200)
+emission_box_extents = Vector3(100, 100, 200)
 direction = Vector3(0, 0, 0)
 spread = 1.0
 gravity = Vector3(0, 0, 0)
-scale_min = 0.19999999
-scale_max = 0.5
+scale_min = 0.099999994
+scale_max = 0.19999999
 scale_curve = SubResource("CurveTexture_purchase_scale")
-color = Color(1.8247963, 1.4387401, 0, 1)
+color = Color(1, 0.78039217, 0, 1)
 alpha_curve = SubResource("CurveTexture_purchase_alpha")
-hue_variation_min = -0.050000023
-hue_variation_max = 0.049999975
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a6mtr"]
+bg_color = Color(1, 0.95600003, 0.92, 0.39215687)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vycyu"]
 bg_color = Color(0.33, 0.33, 0.33, 0)
@@ -400,7 +409,22 @@ scale = Vector2(0.9948992, 0.9948992)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
+[node name="BackgroundPanel2" type="PanelContainer" parent="SplashScreen_v2/GameTitleBackground" unique_id=1286405205]
+visible = false
+modulate = Color(0.86, 0.7674067, 0.6966, 0.25882354)
+custom_minimum_size = Vector2(1100, 500)
+layout_mode = 0
+offset_left = 410.00003
+offset_top = 243.48761
+offset_right = 1510.0
+offset_bottom = 760.8514
+scale = Vector2(1.72, 0.625)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("2_a6mtr")
+
 [node name="BackgroundPanel" type="PanelContainer" parent="SplashScreen_v2/GameTitleBackground" unique_id=1419090721]
+visible = false
 custom_minimum_size = Vector2(1100, 500)
 layout_mode = 0
 offset_left = 410.0
@@ -411,12 +435,13 @@ mouse_filter = 2
 theme_override_styles/panel = ExtResource("2_a6mtr")
 
 [node name="TopRedPanel" parent="SplashScreen_v2/GameTitleBackground" unique_id=2081657472 instance=ExtResource("7_qxvgm")]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.21354167
-anchor_top = 0.1903778
+anchor_top = 0.19326238
 anchor_right = 0.7864583
-anchor_bottom = 0.26797038
+anchor_bottom = 0.3432624
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
@@ -424,6 +449,7 @@ offset_bottom = 0.0
 metadata/_edit_use_anchors_ = true
 
 [node name="Bullets" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground" unique_id=606292427]
+modulate = Color(1, 1, 1, 0.41568628)
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -447,23 +473,9 @@ stretch_mode = 5
 [node name="RightBullet" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=2004838894]
 self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
-offset_left = 241.50684
+offset_left = 278.47705
 offset_top = 141.36035
-offset_right = 753.50684
-offset_bottom = 653.36035
-scale = Vector2(0.19, 0.19)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("9_uk8vt")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="RightBullet2" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=2003364590]
-self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-layout_mode = 0
-offset_left = 287.4839
-offset_top = 141.36035
-offset_right = 799.4839
+offset_right = 790.47705
 offset_bottom = 653.36035
 scale = Vector2(0.19, 0.19)
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -475,9 +487,23 @@ stretch_mode = 5
 [node name="RightBullet3" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=1024343850]
 self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
-offset_left = 195.5293
+offset_left = 232.49951
 offset_top = 141.36035
-offset_right = 707.5293
+offset_right = 744.4995
+offset_bottom = 653.36035
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("9_uk8vt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RightBullet2" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=2003364590]
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 0
+offset_left = 355.2627
+offset_top = 141.36035
+offset_right = 867.2627
 offset_bottom = 653.36035
 scale = Vector2(0.19, 0.19)
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -489,9 +515,9 @@ stretch_mode = 5
 [node name="RightBullet4" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=1132712320]
 self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
-offset_left = 330.3943
+offset_left = 398.17334
 offset_top = 141.36035
-offset_right = 842.3943
+offset_right = 910.17334
 offset_bottom = 653.36035
 scale = Vector2(0.19, 0.19)
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -531,9 +557,9 @@ stretch_mode = 5
 [node name="LeftBullet3" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=595436052]
 self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
-offset_left = -321.95776
+offset_left = -346.60425
 offset_top = 140.10358
-offset_right = 190.04224
+offset_right = 165.39575
 offset_bottom = 652.1036
 scale = Vector2(0.19, 0.19)
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -545,9 +571,9 @@ stretch_mode = 5
 [node name="LeftBullet4" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=1437288764]
 self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
-offset_left = -364.87256
+offset_left = -389.51978
 offset_top = 140.10358
-offset_right = 147.12744
+offset_right = 122.480225
 offset_bottom = 652.1036
 scale = Vector2(0.19, 0.19)
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -564,13 +590,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -257.71277
-offset_top = -257.71277
-offset_right = 254.28711
-offset_bottom = 254.28723
+offset_left = 931.7527
+offset_top = 224.14325
+offset_right = 1443.7534
+offset_bottom = 736.1433
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.305, 1.305)
+scale = Vector2(5.457, 5.457)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("7_wliss")
@@ -579,17 +605,16 @@ stretch_mode = 5
 
 [node name="RockLarge" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks" unique_id=1779314020]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -508.0483
-offset_top = -346.3603
-offset_right = 3.9516296
-offset_bottom = 165.63965
+offset_left = -607.0263
+offset_top = -397.8292
+offset_right = -95.02637
+offset_bottom = 114.17073
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.2, 0.2)
@@ -646,17 +671,16 @@ process_material = SubResource("ParticleProcessMaterial_acvv8")
 
 [node name="RockSmall" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks" unique_id=179528731]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -431.45065
-offset_top = -358.13782
-offset_right = 80.54935
-offset_bottom = 153.86218
+offset_left = -530.4291
+offset_top = -409.6068
+offset_right = -18.429077
+offset_bottom = 102.39317
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.12, 0.12)
@@ -678,17 +702,16 @@ process_material = SubResource("ParticleProcessMaterial_acvv8")
 
 [node name="RockSmall2" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks" unique_id=2057996564]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -388.53903
-offset_top = -363.50146
-offset_right = 123.46097
-offset_bottom = 148.49841
+offset_left = -487.5177
+offset_top = -414.97064
+offset_right = 24.4823
+offset_bottom = 97.02925
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.06, 0.06)
@@ -710,6 +733,7 @@ process_material = SubResource("ParticleProcessMaterial_acvv8")
 
 [node name="StartGame" type="Button" parent="SplashScreen_v2/GameTitleBackground" unique_id=540972591 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.50980395)
 custom_minimum_size = Vector2(460, 102.47)
 layout_mode = 1
 anchors_preset = 8
@@ -724,7 +748,9 @@ offset_bottom = 241.2041
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.86, 0.7674067, 0.6966, 0.22745098)
+theme_override_font_sizes/font_size = 92
+theme_override_styles/normal = SubResource("StyleBoxFlat_a6mtr")
 script = ExtResource("5_3jj4g")
 focus_enter_sfx = NodePath("../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../SFX/focus_exit")
@@ -745,7 +771,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_ufvrt")
 show_percentage = false
 
 [node name="TextureRect" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/StartGame" unique_id=158142522]
-self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
 anchors_preset = 8
@@ -768,6 +794,27 @@ stretch_mode = 5
 libraries/ = SubResource("AnimationLibrary_le04b")
 autoplay = &"new_animation"
 speed_scale = 3.0
+
+[node name="TextureRect2" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/StartGame/TextureRect" unique_id=2074720371]
+modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.98462
+offset_top = -61.989746
+offset_right = 67.01538
+offset_bottom = 66.010254
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("6_hmuk5")
+stretch_mode = 5
 
 [node name="center_container" type="Control" parent="SplashScreen_v2/GameTitleBackground/StartGame" unique_id=385814340]
 modulate = Color(1, 1, 1, 0.19607843)
@@ -798,11 +845,6 @@ gradient = SubResource("Gradient_vycyu")
 texture_mode = 2
 joint_mode = 2
 
-[node name="CoatArms" parent="SplashScreen_v2/GameTitleBackground" unique_id=409353141 instance=ExtResource("12_a6mtr")]
-layout_mode = 1
-offset_top = -329.0254
-offset_bottom = -73.02539
-
 [node name="GameName" type="Control" parent="SplashScreen_v2" unique_id=1156789192]
 layout_mode = 1
 anchors_preset = 15
@@ -817,17 +859,18 @@ mouse_filter = 2
 
 [node name="CopyrightText" type="RichTextLabel" parent="SplashScreen_v2/GameName" unique_id=509772390]
 unique_name_in_owner = true
-modulate = Color(0.4, 0.4, 0.4, 1)
+visible = false
+modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -499.5
-offset_top = 279.0
-offset_right = 499.5
-offset_bottom = 419.0
+offset_left = -68.0
+offset_top = 281.0
+offset_right = 68.0
+offset_bottom = 327.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"WhiteRichText"
@@ -835,6 +878,7 @@ theme_override_font_sizes/italics_font_size = 20
 bbcode_enabled = true
 text = "[i]© 2026 WORMFOOD 
 all rights reserved"
+fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -874,10 +918,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -854.5
-offset_top = -192.5
-offset_right = 866.5
-offset_bottom = 196.5
+offset_left = -857.5
+offset_top = -232.5
+offset_right = 863.5
+offset_bottom = 156.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -902,10 +946,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -444.5
-offset_top = -101.0
-offset_right = 444.5
-offset_bottom = 101.0
+offset_left = -860.5
+offset_top = -234.5
+offset_right = 860.5
+offset_bottom = 154.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2

@@ -2,6 +2,18 @@
 
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="1_hx5og"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hx5og"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
 [node name="CoatArms" type="Control" unique_id=409353141]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 3
@@ -10,13 +22,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -128.0
-offset_top = -128.0
-offset_right = 128.0
-offset_bottom = 128.0
+offset_left = -130.0
+offset_top = -129.0
+offset_right = 126.0
+offset_bottom = 127.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 
 [node name="CircleEmblem" type="TextureRect" parent="." unique_id=712626264]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
@@ -40,7 +53,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="CircleEmblem3" type="TextureRect" parent="CircleEmblem" unique_id=220934762]
-modulate = Color(0.77, 0.73406667, 0.7084, 1)
+modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
 show_behind_parent = true
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
@@ -76,12 +89,72 @@ offset_bottom = 33.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/default_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
-theme_override_font_sizes/normal_font_size = 30
-theme_override_font_sizes/italics_font_size = 60
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.81, 0.621, 0.3564, 1)
+theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/normal_font_size = 84
 bbcode_enabled = true
 text = "W"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Control" type="Control" parent="." unique_id=16653932]
+show_behind_parent = true
+clip_contents = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 1
+anchor_left = 0.28828126
+anchor_top = 0.45434374
+anchor_right = 0.7117188
+anchor_bottom = 0.7253437
+offset_left = -145.8
+offset_top = -93.312
+offset_right = 145.79999
+offset_bottom = 93.31201
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.271, 0.271)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="Control" unique_id=1108466991]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -173.0
+offset_top = -64.0
+offset_right = 27.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.5235988
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hx5og")
+
+[node name="Panel3" type="Panel" parent="Control" unique_id=1709715427]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -27.0
+offset_top = -64.00003
+offset_right = 173.0
+offset_bottom = -14.0000305
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.5235988
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hx5og")

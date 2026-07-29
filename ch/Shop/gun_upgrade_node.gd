@@ -105,7 +105,7 @@ func update_shop(_power_name : String = "") -> void:
 func update_cost() -> void:
 	
 	if cost == 0:
-		cost_label.text = "[i][wave]EQUIP"
+		cost_label.text = "[wave]EQUIP"
 		
 		return
 		
@@ -127,14 +127,14 @@ func update_cost() -> void:
 	new_round = false
 	
 	if current_state == State.UNAVAILABLE:
-		cost_label.text = "[i]$" + str(cost)
+		cost_label.text = "$" + str(cost)
 		%upgrade_icon_anim.pause()
 		
 	if cost == 0:
-		cost_label.text = "[i][wave]EQUIP"
+		cost_label.text = "[wave]EQUIP"
 
 	else:
-		cost_label.text = "[i][wave]$" + str(cost)
+		cost_label.text = "[wave]$" + str(cost)
 	
 	power_level = gl_PlayerState.get_power_level("power_" + upgrade_type)
 	tooltip_description = gl_DataSet.get_string("tooltip_" + upgrade_type, 0)
