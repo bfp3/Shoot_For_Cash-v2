@@ -1154,6 +1154,27 @@ text = "MOSS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="WaveProgressIndication" type="Control" parent="MainGameCanvasLayer" unique_id=1362113778]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="WaveProgressIndicator" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1331631106 instance=ExtResource("65_heewt")]
+layout_mode = 1
+
+[node name="Wave_Text" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1851310312 instance=ExtResource("66_fjxa8")]
+visible = false
+layout_mode = 1
+slide_distance = 800.0
+fade_in_time = 0.15
+hold_time = 1.4
+fade_out_time = 0.15
+
 [node name="TallyCard" parent="MainGameCanvasLayer" unique_id=813632953 node_paths=PackedStringArray("round_manager") instance=ExtResource("63_err0d")]
 unique_name_in_owner = true
 visible = false
@@ -1215,27 +1236,6 @@ unique_name_in_owner = true
 visible = false
 round_manager = NodePath("../../Round_manager")
 
-[node name="WaveProgressIndication" type="Control" parent="MainGameCanvasLayer" unique_id=1362113778]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="WaveProgressIndicator" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1331631106 instance=ExtResource("65_heewt")]
-layout_mode = 1
-
-[node name="Wave_Text" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1851310312 instance=ExtResource("66_fjxa8")]
-visible = false
-layout_mode = 1
-slide_distance = 800.0
-fade_in_time = 0.15
-hold_time = 1.4
-fade_out_time = 0.15
-
 [node name="TicketPurchasedPopUp" parent="MainGameCanvasLayer" unique_id=212271171 node_paths=PackedStringArray("game_start_menu") instance=ExtResource("47_gspdd")]
 unique_name_in_owner = true
 visible = false
@@ -1267,6 +1267,8 @@ scale = Vector2(3, 3)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="Settings_pause_menu" parent="." unique_id=1950114573 instance=ExtResource("64_tnw34")]
 
 [node name="floor2" type="MeshInstance3D" parent="." unique_id=1359241023]
 transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 30, 0, -3.39, 50)
@@ -1886,8 +1888,6 @@ round_manager = NodePath("../Round_manager")
 [node name="PlayerBalloon" parent="PlayerBalloon" unique_id=966203961 instance=ExtResource("68_wtxnc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 8, 23.225)
 top_level = true
-
-[node name="Settings_pause_menu" parent="." unique_id=1950114573 instance=ExtResource("64_tnw34")]
 
 [node name="BonusCash" type="Node3D" parent="." unique_id=836260086 groups=["multi_shot"]]
 script = ExtResource("76_qmj5w")

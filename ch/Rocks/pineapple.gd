@@ -339,7 +339,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	$hit_wall_timer.stop()
 	health -= damage 
 	
-	if health == 2:
+	if health == 1:
 		freeze = true
 		smoke_particles()
 		return
@@ -353,7 +353,9 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	if health > 0:
 		play_hit_sfx()
 		apply_hit_reaction(screen_offset)
-		await get_tree().create_timer(2.0).timeout
+		
+	if health == 0:
+		#await get_tree().create_timer(2.0).timeout
 		start_destroyed_process()
 		return
 	

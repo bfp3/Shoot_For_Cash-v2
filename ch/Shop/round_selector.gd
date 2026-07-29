@@ -55,6 +55,7 @@ var tween_available : Tween = null
 func _ready() -> void:
 
 	outer_ring_mod_orig = outerRingColour_default
+	round_number.modulate = Color.TRANSPARENT
 	
 	round_manager = get_tree().get_first_node_in_group('round_manager')
 	all_levels = round_manager.current_rock_sequence

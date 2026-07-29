@@ -3,7 +3,7 @@ extends Control
 @export var round_manager : RoundManager
 @export var money_control : Node
 @export var reveal_skill_sfx: AudioStreamPlayer
-@onready var cash_label: RichTextLabel = %MoneyLabel
+@onready var cash_label: RichTextLabel = %CashBalanceLabel
 @onready var available_upgrades: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades
 @onready var reroll_button: Button = %Reroll
 @onready var all_skills_container: Control = %TreeCanvas

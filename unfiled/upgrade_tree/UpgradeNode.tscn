@@ -9,6 +9,13 @@
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="7_gxbd8"]
 [ext_resource type="AudioStream" uid="uid://dnl57r7vck2bj" path="res://sfx/shop_free_sfx_01.ogg" id="8_4eg6k"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="9_gxbd8"]
+[ext_resource type="PackedScene" uid="uid://bxx83kupf6rgj" path="res://ch/2D_pieces/top_red_panel.tscn" id="10_4eg6k"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wt77o"]
+bg_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+border_color = Color(0.75, 0.007499993, 0.019874811, 1)
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="Gradient" id="Gradient_sgib8"]
 interpolation_mode = 1
@@ -294,6 +301,11 @@ alpha_curve = SubResource("CurveTexture_wt77o")
 hue_variation_min = -0.050000023
 hue_variation_max = 0.049999975
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4eg6k"]
+bg_color = Color(0.88, 0.8389333, 0.8096, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
 [node name="UpgradeNode" type="Button" unique_id=834535786 node_paths=PackedStringArray("tooltip", "focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 custom_minimum_size = Vector2(210, 250)
 anchors_preset = 8
@@ -328,8 +340,36 @@ scale = Vector2(0.972, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"RedPanel"
+theme_override_styles/panel = SubResource("StyleBoxFlat_wt77o")
+
+[node name="CostLabel" type="RichTextLabel" parent="RedPanel" unique_id=1697108673]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -56.0
+offset_top = -28.0
+offset_right = 56.0
+offset_bottom = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 51
+bbcode_enabled = true
+text = "$500"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Panel2" type="Panel" parent="RedPanel" unique_id=2091375896]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -341,6 +381,7 @@ mouse_filter = 2
 theme_type_variation = &"RedPanel"
 
 [node name="TextureRect" type="TextureRect" parent="RedPanel/Panel2" unique_id=1998690171]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -548,22 +589,6 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="CostLabel" type="RichTextLabel" parent="VBoxContainer" unique_id=1697108673]
-unique_name_in_owner = true
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-clip_contents = false
-custom_minimum_size = Vector2(0, 70)
-layout_mode = 2
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 66
-theme_override_font_sizes/italics_font_size = 66
-bbcode_enabled = true
-text = "Cost: 0"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-
 [node name="Purchased" type="VBoxContainer" parent="." unique_id=2133076126]
 visible = false
 layout_mode = 1
@@ -607,6 +632,7 @@ mouse_filter = 2
 theme_type_variation = &"RedPanel"
 
 [node name="Capped" type="VBoxContainer" parent="." unique_id=1886234027]
+visible = false
 modulate = Color(1, 0.78039217, 0, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -705,3 +731,11 @@ lifetime = 2.0
 fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_7dvrv")
+
+[node name="TopRedPanel" parent="." unique_id=2081657472 instance=ExtResource("10_4eg6k")]
+visible = false
+layout_mode = 1
+offset_top = -174.90002
+offset_bottom = -91.099976
+scale = Vector2(0.19, 0.371)
+theme_override_styles/panel = SubResource("StyleBoxFlat_4eg6k")
