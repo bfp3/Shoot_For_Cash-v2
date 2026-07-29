@@ -127,9 +127,11 @@ func reveal_gun(_dur : float = 0.05, wait_reroll : bool = false) -> void:
 	tween.tween_property(skill, "scale", Vector2.ONE, _dur)
 	
 	await tween.finished
-
-	skill._update_visual_state()
-	skill.purchase_particles()
+	
+	if skill.has_method('_update_visual_state'):
+		skill._update_visual_state()
+	if skill.has_method('purchase_particles'):
+		skill.purchase_particles()
 
 func update_in_menu() -> void:
 	pass

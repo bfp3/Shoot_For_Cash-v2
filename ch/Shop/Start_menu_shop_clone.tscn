@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://5pemc5g1d7pl" path="res://ch/Shop/start_menu_shop_clone.gd" id="1_djhmw"]
 [ext_resource type="PackedScene" uid="uid://cu0bay1llw7ua" path="res://unfiled/upgrade_tree/UpgradeNode.tscn" id="2_2hdnu"]
+[ext_resource type="PackedScene" uid="uid://bxx83kupf6rgj" path="res://ch/2D_pieces/top_red_panel.tscn" id="2_djhmw"]
 [ext_resource type="Script" uid="uid://dl5jnr0o3adsf" path="res://ch/Shop/gun_upgrade_node.gd" id="6_jgqed"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="7_jgqed"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="11_nlwxl"]
-[ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="13_atn5u"]
-[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="14_gsxsh"]
 [ext_resource type="Texture2D" uid="uid://icyevci50hge" path="res://res/gun_icon_shop.png" id="20_2g04y"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="31_w12mi"]
 [ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="32_ok2nh"]
@@ -69,6 +69,18 @@ mouse_filter = 2
 script = ExtResource("1_djhmw")
 reveal_skill_sfx = NodePath("SFX/reveal_sfx")
 
+[node name="TopRedPanel" parent="." unique_id=2081657472 instance=ExtResource("2_djhmw")]
+layout_mode = 1
+offset_left = -251.0
+offset_top = -338.0
+offset_right = 249.0
+offset_bottom = 2.0
+scale = Vector2(1.5, 1)
+
+[node name="MeshInstance2D" parent="TopRedPanel" index="0" unique_id=1125389776]
+position = Vector2(250.33124, 42.72917)
+scale = Vector2(503.662, 82.675)
+
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1832678188]
 layout_mode = 1
 anchors_preset = 15
@@ -86,6 +98,7 @@ mouse_filter = 2
 theme_override_styles/panel = ExtResource("11_nlwxl")
 
 [node name="TextureRect" type="Panel" parent="CenterContainer/MainPanel" unique_id=30652129]
+visible = false
 layout_mode = 2
 theme_type_variation = &"TextureRectOverlays"
 
@@ -93,36 +106,6 @@ theme_type_variation = &"TextureRectOverlays"
 layout_mode = 2
 texture = SubResource("NoiseTexture2D_pwib5")
 expand_mode = 1
-
-[node name="Bullets" type="Control" parent="CenterContainer/MainPanel" unique_id=280148899]
-visible = false
-layout_mode = 2
-
-[node name="TextureRect2" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=1174213666]
-self_modulate = Color(1, 1, 1, 0.13725491)
-layout_mode = 0
-offset_left = 328.0
-offset_top = -80.0
-offset_right = 1304.0
-offset_bottom = 685.0
-scale = Vector2(0.626, 0.626)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("13_atn5u")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TextureRect3" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=753410049]
-self_modulate = Color(1, 1, 1, 0.13725491)
-layout_mode = 0
-offset_left = 168.0
-offset_top = -80.0
-offset_right = 1144.0
-offset_bottom = 685.0
-scale = Vector2(0.626, 0.626)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("13_atn5u")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=582425009]
 layout_mode = 2
@@ -136,6 +119,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hi3s5")
 
 [node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/Emblem" unique_id=2113967704]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,112 +132,12 @@ texture = SubResource("NoiseTexture2D_jv82y")
 expand_mode = 1
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Emblem" unique_id=1348186323]
+visible = false
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 position = Vector2(249.52481, -8.870165)
 rotation = 3.1415925
 scale = Vector2(500.04907, 83.460556)
 mesh = SubResource("PrismMesh_hi3s5")
-
-[node name="CircleEmblem" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/Emblem" unique_id=546332306]
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -45.5
-offset_right = 25.0
-offset_bottom = 47.5
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("14_gsxsh")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CircleEmblem3" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/Emblem/CircleEmblem" unique_id=1157235958]
-modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -46.5
-offset_right = 25.0
-offset_bottom = 46.5
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.174, 1.174)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("14_gsxsh")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CircleEmblem2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/Emblem/CircleEmblem" unique_id=114269006]
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -46.5
-offset_right = 25.0
-offset_bottom = 46.5
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.1, 1.1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("14_gsxsh")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="GameName" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Emblem" unique_id=1398801826]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="Giuseppes" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Emblem/GameName" unique_id=844013163]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.5
-offset_top = -33.0
-offset_right = 18.5
-offset_bottom = 33.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/normal_font_size = 50
-theme_override_font_sizes/italics_font_size = 60
-bbcode_enabled = true
-text = "W"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="SpacePanel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=763162626]
 custom_minimum_size = Vector2(0, 170)
@@ -290,6 +174,14 @@ custom_minimum_size = Vector2(50, 170)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="CoatArms" parent="." unique_id=409353141 instance=ExtResource("7_jgqed")]
+z_index = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.26759258
+anchor_bottom = 0.26759258
+metadata/_edit_use_anchors_ = true
 
 [node name="SFX" type="Node" parent="." unique_id=645241627]
 
@@ -366,3 +258,5 @@ pitch_scale = 2.0
 stream = ExtResource("37_10lj2")
 volume_db = -30.0
 pitch_scale = 0.5
+
+[editable path="TopRedPanel"]

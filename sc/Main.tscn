@@ -956,7 +956,9 @@ script = ExtResource("29_f1f1n")
 start_up = true
 metadata/_edit_use_anchors_ = true
 
-[node name="SplashScreenCanvasLayer" parent="." unique_id=991233177 instance=ExtResource("29_c7cmr")]
+[node name="SplashScreenCanvasLayer" parent="." unique_id=991233177 node_paths=PackedStringArray("round_manager", "music_control") instance=ExtResource("29_c7cmr")]
+round_manager = NodePath("../Round_manager")
+music_control = NodePath("../Music")
 
 [node name="MainGameCanvasLayer" type="CanvasLayer" parent="." unique_id=778582470]
 layer = -1

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bxx83kupf6rgj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uucxj"]
+bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
+[sub_resource type="PrismMesh" id="PrismMesh_hmuk5"]
+
+[node name="TopRedPanel" type="Panel" unique_id=2081657472]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -550.0
+offset_top = -41.900024
+offset_right = 550.0
+offset_bottom = 41.900024
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uucxj")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="." unique_id=1125389776]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+z_index = 1
+position = Vector2(546.33136, 43.72918)
+rotation = 3.1415925
+scale = Vector2(1093.6621, 82.6753)
+mesh = SubResource("PrismMesh_hmuk5")

@@ -7,6 +7,7 @@ extends TextureButton
 var interaction_tween: Tween
 
 @onready var orig_scale := self.scale
+@onready var outer_ring: TextureRect = $OuterRing
 
 @onready var level_name_label: RichTextLabel = $level_name_label
 @export var level_name := 'Locked'
@@ -15,6 +16,7 @@ var interaction_tween: Tween
 @export var main_control : Control
 
 var round_manager : RoundManager = null
+
 
 func _ready() -> void:
 
@@ -30,11 +32,7 @@ func _ready() -> void:
 	focus_exited.connect(_on_focus_exited)
 
 	if level_locked:
-		level_name_label.text = "Locked".to_upper()
-		#level_name_label.modulate = Color('c70102')
-		level_name_label.add_theme_font_size_override("normal_font_size", 85)
-		$TextureRect3.modulate = Color('15181c')
-		$HSeparator.scale.x = 1.13
+		set_locked_visuals()
 
 	else:
 		level_name_label.text = "[wave]" + level_name.to_upper()
@@ -50,12 +48,22 @@ func _ready() -> void:
 		modulate= Color("ababab59")
 		level_name_label.modulate = Color("1f1f1fff")
 	
+
+func set_locked_visuals() -> void:
+	level_name_label.text = "Locked".to_upper()
+	level_name_label.modulate = Color("dbcfc5ff")
+	level_name_label.add_theme_font_size_override("normal_font_size", 85)
+	outer_ring.modulate = Color("c9a587ff")
+	$HSeparator.scale.x = 1.13
+
 func _on_level_button_pressed() -> void:
 	if level_locked:
 		return
 
 	await fill_progress_bar()
-
+	
+	await get_tree().create_timer(0.1, false).timeout
+	
 	var level_name_lower_case: String = level_name.to_lower()
 
 	match level_name_lower_case:
@@ -66,7 +74,10 @@ func _on_level_button_pressed() -> void:
 
 		_:
 			print("other button pressed")
-
+	
+	
+	await get_tree().create_timer(0.3, false).timeout
+	$TextureProgressBar.value = 0.0
 
 func _on_pressed() -> void:
 	if pressed_sfx:
@@ -93,12 +104,12 @@ func fill_progress_bar() -> void:
 	tween.set_trans(Tween.TRANS_SINE)
 	tween.set_ease(Tween.EASE_OUT)
 
-	tween.tween_property($TextureProgressBar, "value", 100.0, 0.35)
+	tween.tween_property($TextureProgressBar, "value", 100.0, 0.15)
 #
 	#tween.tween_interval(0.15)
 	await tween.finished
 	
-	$TextureProgressBar.value = 0.0
+	
 	
 func _on_focus_entered() -> void:
 	if focus_enter_sfx:

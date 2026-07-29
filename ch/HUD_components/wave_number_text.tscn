@@ -71,7 +71,7 @@ mouse_filter = 2
 script = ExtResource("1_yxk46")
 
 [node name="Panel" type="Panel" parent="." unique_id=343402515]
-self_modulate = Color(1, 1, 1, 0.039215688)
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -79,9 +79,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -225.0
-offset_top = -26.5
+offset_top = -27.5
 offset_right = 225.0
-offset_bottom = 28.5
+offset_bottom = 27.5
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.165, 1)
@@ -91,6 +91,7 @@ theme = SubResource("Theme_od5kt")
 theme_override_styles/panel = ExtResource("2_yxk46")
 
 [node name="WaveLabel" type="RichTextLabel" parent="Panel" unique_id=1081870455]
+process_mode = 1
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8

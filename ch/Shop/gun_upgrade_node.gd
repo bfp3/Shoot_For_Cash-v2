@@ -5,11 +5,8 @@ extends Button
 @onready var purchase_hold_progress_bar: ProgressBar = %PurchaseHoldProgressBar
 
 @export var guaranteed_until_purchased := false
-@export var gun := false
-@export var sky_mine := false
-@export var balloon_buster := false
+
 var new_round := true
-var remove_from_shop := false
 
 enum State {
 	UNAVAILABLE,
@@ -23,9 +20,8 @@ var current_state: State = State.UNAVAILABLE
 @export var shop_main_menu: Control
 
 @export_group('Hold Button Down Settings')
-@export var hold_duration := 0.15
-var is_holding := false
-var hold_progress := 0.0
+var hold_duration := 0.15
+var purchase_tween: Tween
 
 @export_group('Upgrade Costs')
 @export var upgrade_type := ""
@@ -76,7 +72,6 @@ func _ready() -> void:
 	#pressed.connect(_on_pressed)
 	
 	button_down.connect(_on_button_down)
-	button_up.connect(_on_button_up)
 	
 	mouse_entered.connect(_on_focus_entered)
 	mouse_exited.connect(_on_focus_exited)
@@ -86,7 +81,7 @@ func _ready() -> void:
 	original_upgrade_name = upgrade_name
 	
 	_refresh_text()
-	_update_visual_state()
+
 	
 	await get_tree().process_frame
 	update_shop()
@@ -110,19 +105,7 @@ func update_shop(_power_name : String = "") -> void:
 func update_cost() -> void:
 	
 	if cost == 0:
-		if sky_mine and gl_PlayerState.dataset.power_sky_mine > 0:
-			if cost == 0:
-				cost = int(gl_DataSet.get_value('price_sky_mine', gl_PlayerState.dataset.power_sky_mine))
-				cost_label.text = "[i][wave]" + str(cost)
-			pass
-		
-		
-		else:	
-			cost_label.text = "[i][wave]FREE"
-		
-		if gun:
-			cost_label.text = "[i][wave]EQUIP"
-		
+		cost_label.text = "[i][wave]EQUIP"
 		
 		return
 		
@@ -131,11 +114,7 @@ func update_cost() -> void:
 	%upgrade_icon_anim.play('idle')
 	player_money = settings.cash
 	cost = gl_DataSet.get_price(upgrade_type)
-	
-	#if cost > 0:
-		#if upgrade_type == "sky_mine":
-			#if new_round:
-				#cost += randi_range(1,5)
+
 	
 	if shop_main_menu != null:
 		if new_round && shop_main_menu.reroll_index > 0: # && visible:
@@ -152,9 +131,7 @@ func update_cost() -> void:
 		%upgrade_icon_anim.pause()
 		
 	if cost == 0:
-		cost_label.text = "[i][wave]FREE"
-		if gun:
-			cost_label.text = "[i][wave]EQUIP"
+		cost_label.text = "[i][wave]EQUIP"
 
 	else:
 		cost_label.text = "[i][wave]$" + str(cost)
@@ -199,15 +176,12 @@ func update_unavailable() -> void:
 		for i in array_particles:
 			i.emitting = false
 
-	_update_visual_state()
 	
 func update_available() -> void:
 	if array_particles.size() > 0:
 		for i in range(min(power_level, array_particles.size())):
 			array_particles[i].emitting = true
 
-	set_process(true)
-	_update_visual_state()
 	
 	
 func update_purchased() -> void:
@@ -224,10 +198,8 @@ func update_purchased() -> void:
 	if array_particles.size() > 0:
 		for i in array_particles:
 			i.emitting = false
-	#await get_tree().create_timer(0.1).timeout
-	_update_visual_state()
+
 	purchase_particles()
-	set_process(false)
 	complete_purchase()
 	$FreeParticles.emitting = false
 	
@@ -235,42 +207,11 @@ func update_capped() -> void:
 	pass
 	
 	
-func _process(delta: float) -> void:
-	if current_state != State.AVAILABLE && cost > 0:
-		set_process(false)
-		return
-	
-	if player_money < cost && cost > 0:
-		enter_state(State.UNAVAILABLE)
-		return
-
-	if is_holding:
-		hold_progress += delta / hold_duration
-		hold_progress = clamp(hold_progress, 0.0, 1.0)
-		
-		purchase_hold_progress_bar.value = hold_progress * 100.0
-		
-		var _button_down := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-		_button_down.tween_property(self, "scale", Vector2.ONE * 0.9, 0.1)
-		
-		if hold_progress >= 1.0:
-			enter_state(State.PURCHASED)
-	
-	else:
-		# Drain back down
-		hold_progress = move_toward(hold_progress, 0.0, delta * 7.5)
-		purchase_hold_progress_bar.value = hold_progress * 100.0
-		
-
-
 func reset_buttons_settings() -> void:
 	if current_state == State.CAPPED:
 		print('CAPPED OUT ITEM')
 		$Capped.show()
 		return
-	
-	if sky_mine || balloon_buster:
-		_update_power_name()
 	
 	$FreeParticles.emitting = false
 	
@@ -280,8 +221,8 @@ func reset_buttons_settings() -> void:
 	$Purchased.hide()
 	purchase_hold_progress_bar.value = 0.0
 
-	is_holding = false
-	hold_progress = 0.0
+	if purchase_tween:
+		purchase_tween.kill()
 	disabled = false
 	z_index = 0
 	
@@ -291,34 +232,8 @@ func reset_buttons_settings() -> void:
 	scale = Vector2.ONE
 	
 	update_shop()
-	#_update_visual_state()
+
 	
-	
-	
-func configure(config: Dictionary) -> void:
-	upgrade_name = config.get("name", "Upgrade")
-
-	#min_cost = config.get("min_cost", 25)
-	#max_cost = config.get("max_cost", 250)
-
-	_refresh_text()
-	_update_visual_state()
-
-
-#func set_state(new_state: UpgradeState, is_affordable: bool) -> void:
-	#state = new_state
-	#can_afford = is_affordable
-#
-	#disabled = (
-		#state == UpgradeState.LOCKED
-		#or state == UpgradeState.PURCHASED
-		#or not can_afford
-	#)
-#
-	#_update_visual_state()
-
-
-
 func _on_button_down() -> void:
 	
 	if current_state != State.AVAILABLE && cost > 0:
@@ -333,15 +248,23 @@ func _on_button_down() -> void:
 		tween.tween_property(self, "modulate", _orig_modulate, 0.1)
 		return
 
-	set_process(true)
-	is_holding = true
-	
+	if purchase_tween:
+		purchase_tween.kill()
+
+	purchase_hold_progress_bar.value = 0.0
+
+	purchase_tween = create_tween()
+	purchase_tween.tween_property(purchase_hold_progress_bar, "value", 100.0, hold_duration)
+	purchase_tween.parallel().tween_property(self, "scale", Vector2.ONE * 0.9, 0.1).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	purchase_tween.tween_callback(_on_purchase_hold_complete)
 
 
-func _on_button_up() -> void:
-	is_holding = false
+func _on_purchase_hold_complete() -> void:
+	if current_state != State.AVAILABLE:
+		return
+	enter_state(State.PURCHASED)
 	
-	
+
 
 func complete_purchase() -> void:
 	if current_state != State.PURCHASED:
@@ -405,7 +328,7 @@ func _update_power_name() -> void:
 func remove_gun() -> void:
 	var _upgrade_name : String = "power_" + upgrade_type
 	gl_PlayerState.log_buy(_upgrade_name, cost)
-	remove_from_shop = true
+
 	
 	
 
@@ -479,91 +402,7 @@ func _refresh_text() -> void:
 	name_label.text = upgrade_name.to_upper()
 	cost_label.text = "$%d" % cost
 
-
-func _update_visual_state() -> void:
-	if not is_node_ready():
-		return
-
-	var base := Color(0.22, 0.23, 0.26, 0.95)
-	var border := Color(0.40, 0.42, 0.47, 1.0)
-	
-	match current_state:
-		State.UNAVAILABLE:
-			base = Color(0.28, 0.28, 0.28, 0.196) #.darkened(0.7)
-			border = Color(0.249, 0.249, 0.28, 0.196)
-			self.modulate = Color("ffffffff")
-
-		State.AVAILABLE:
-			base = Color(0.078, 0.09, 0.11, 1.0)
-			border = Color(0.251, 0.275, 0.314, 1.0)
-			self.modulate = Color('FFFFFF')
-			##if item_free:
-			#if cost == 0:
-				#base = Color(0.254, 0.337, 0.47, 1.0)
-				#border = Color(1.0, 0.8, 0.0, 1.0)
-
-				
-		State.PURCHASED:
-			#base = Color(0.15, 0.35, 0.22, 0.98)
-			#border = Color(0.40, 0.88, 0.52, 1.0)
-			base = Color(0.078, 0.09, 0.11, 1.0)
-			border = Color(0.251, 0.275, 0.314, 1.0)
-			self.modulate = Color('FFFFFF')
-
-	var hover_boost := is_hovered() or has_focus()
-
-	var normal_style := _make_style(base, border, 2)
-	var hover_style := _make_style(base.lightened(0.10), border.lightened(0.15), 3)
-	var pressed_style := _make_style(base.darkened(0.07), border, 3)
-	var focus_style := _make_style(base.lightened(0.15), Color(0.95, 0.95, 1.0, 1.0), 3)
-	var disabled_style := _make_style(base.darkened(0.20), border.darkened(0.25), 2)
-
-	#add_theme_stylebox_override("normal", hover_style if hover_boost else normal_style)
-	#add_theme_stylebox_override("hover", hover_style)
-	#add_theme_stylebox_override("pressed", pressed_style)
-	#add_theme_stylebox_override("focus", focus_style)
-	#add_theme_stylebox_override("disabled", disabled_style)
-
-	var text_color := Color(1, 1, 1, 0.95)
-
-	if current_state == State.UNAVAILABLE:
-		text_color = Color(0.75, 0.75, 0.75, 0.80)
-
-	elif current_state == State.AVAILABLE:
-		text_color = Color(1.0, 0.85, 0.85, 0.90)
-
-	add_theme_color_override("font_color", text_color)
-
-	name_label.modulate = text_color
-	#cost_label.modulate = text_color
-	
 	
 func purchase_particles() -> void:
-	
-	
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	$PurchaseParticles.emitting = true
-	if cost == 0 && !gun:
-		await get_tree().create_timer(0.1).timeout
-		#$Free_sfx.play()
-		$FreeParticles.emitting = true
-	
-#func _physics_process(delta: float) -> void:
-	#_update_visual_state()
-
-
-func _make_style(bg: Color, border: Color, width: int) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-
-	style.bg_color = bg
-	style.border_color = border
-
-	style.set_border_width_all(width)
-	style.set_corner_radius_all(10)
-
-	style.content_margin_left = 10
-	style.content_margin_top = 0
-	style.content_margin_right = 10
-	style.content_margin_bottom = 0
-
-	return style

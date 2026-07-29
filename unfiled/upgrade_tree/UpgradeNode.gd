@@ -24,8 +24,7 @@ var current_state: State = State.UNAVAILABLE
 
 @export_group('Hold Button Down Settings')
 @export var hold_duration := 0.15
-var is_holding := false
-var hold_progress := 0.0
+var purchase_tween: Tween
 
 @export_group('Upgrade Costs')
 @export var upgrade_type := ""
@@ -83,7 +82,6 @@ func _ready() -> void:
 	#pressed.connect(_on_pressed)
 	
 	button_down.connect(_on_button_down)
-	button_up.connect(_on_button_up)
 	
 	mouse_entered.connect(_on_focus_entered)
 	mouse_exited.connect(_on_focus_exited)
@@ -213,7 +211,6 @@ func update_available() -> void:
 		for i in range(min(power_level, array_particles.size())):
 			array_particles[i].emitting = true
 
-	set_process(true)
 	_update_visual_state()
 	
 	
@@ -224,7 +221,6 @@ func update_purchased() -> void:
 	#await get_tree().create_timer(0.1, false).timeout
 	_update_visual_state()
 	purchase_particles()
-	set_process(false)
 	complete_purchase()
 	$FreeParticles.emitting = false
 	
@@ -232,34 +228,6 @@ func update_capped() -> void:
 	pass
 	
 	
-func _process(delta: float) -> void:
-	if current_state != State.AVAILABLE && cost > 0:
-		set_process(false)
-		return
-	
-	if player_money < cost && cost > 0:
-		enter_state(State.UNAVAILABLE)
-		return
-
-	if is_holding:
-		hold_progress += delta / hold_duration
-		hold_progress = clamp(hold_progress, 0.0, 1.0)
-		
-		purchase_hold_progress_bar.value = hold_progress * 100.0
-		
-		var _button_down := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-		_button_down.tween_property(self, "position:y", 10.0, 0.1)
-		
-		if hold_progress >= 1.0:
-			enter_state(State.PURCHASED)
-	
-	else:
-		# Drain back down
-		hold_progress = move_toward(hold_progress, 0.0, delta * 7.5)
-		purchase_hold_progress_bar.value = hold_progress * 100.0
-		
-
-
 func reset_buttons_settings() -> void:
 	if current_state == State.CAPPED:
 		print('CAPPED OUT ITEM')
@@ -277,8 +245,9 @@ func reset_buttons_settings() -> void:
 	$Purchased.hide()
 	purchase_hold_progress_bar.value = 0.0
 
-	is_holding = false
-	hold_progress = 0.0
+	if purchase_tween:
+		purchase_tween.kill()
+	position.y = 0.0
 	disabled = false
 	z_index = 0
 	
@@ -330,15 +299,22 @@ func _on_button_down() -> void:
 		tween.tween_property(self, "modulate", _orig_modulate, 0.1)
 		return
 
-	set_process(true)
-	is_holding = true
-	
+	if purchase_tween:
+		purchase_tween.kill()
+
+	purchase_hold_progress_bar.value = 0.0
+
+	purchase_tween = create_tween()
+	purchase_tween.tween_property(purchase_hold_progress_bar, "value", 100.0, hold_duration)
+	purchase_tween.parallel().tween_property(self, "position:y", 10.0, 0.1).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	purchase_tween.tween_callback(_on_purchase_hold_complete)
 
 
-func _on_button_up() -> void:
-	is_holding = false
-	
-	
+func _on_purchase_hold_complete() -> void:
+	if current_state != State.AVAILABLE:
+		return
+	enter_state(State.PURCHASED)
+
 
 func complete_purchase() -> void:
 	if current_state != State.PURCHASED:
@@ -576,8 +552,6 @@ func purchase_particles() -> void:
 		#$Free_sfx.play()
 		$FreeParticles.emitting = true
 	
-#func _physics_process(delta: float) -> void:
-	#_update_visual_state()
 
 
 func _make_style(bg: Color, border: Color, width: int) -> StyleBoxFlat:

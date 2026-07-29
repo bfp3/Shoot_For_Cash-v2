@@ -21,7 +21,11 @@ func enable() -> void:
 func _input(_event: InputEvent) -> void:
 	#if !active:
 		#return
-
+	
+	if OS.is_debug_build():
+		if Input.is_key_label_pressed(KEY_KP_0):
+			$CenterContainer.visible = !$CenterContainer.visible
+			
 	if Input.is_action_just_pressed("escape"):
 		if visible:
 			close_menu()
