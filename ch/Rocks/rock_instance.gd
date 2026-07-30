@@ -519,15 +519,15 @@ func apply_marked_ability() -> void:
 	$marked_sfx.play()
 	
 	
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(1.0).timeout
 	detonate_rock()
 	
 	
 func apply_slow_linear_damp() -> void:
 	var torque_dir := Vector3(
-		50.0,
+		500.0,
 		1.0,
-		-50.0
+		-500.0
 	).normalized()
 
 	apply_torque_impulse(
@@ -536,8 +536,8 @@ func apply_slow_linear_damp() -> void:
 	
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	#tween.tween_interval(0.2)
-	tween.tween_property(self, "linear_damp", 8.0, 0.15).as_relative()
-	tween.parallel().tween_property(self, "angular_damp", 8.0, 0.15).as_relative()
+	tween.tween_property(self, "linear_damp", 18.0, 0.15).as_relative()
+	tween.parallel().tween_property(self, "angular_damp", 18.0, 0.15).as_relative()
 	
 func apply_hit_reaction(screen_offset: Vector2, accurate_direction := true) -> void:
 	
@@ -777,8 +777,7 @@ func start_destroyed_process() -> void:
 	if cash_value > 0:
 		money_label_3d.money_is_money(global_position, cash_value)
 		
-	if cash_value < 0:
-		money_label_3d.money_is_money(global_position, cash_value)
+	
 			
 	set_collision_layer_value(1, false)
 
@@ -790,12 +789,16 @@ func start_destroyed_process() -> void:
 			
 	if rock_type == RockSize.HAZARD:
 		$Marked.show()
-		$marked_embers.emitting = true
+		#$marked_embers.emitting = true
 		$marked_sfx.play()
 		apply_slow_linear_damp()
-		await get_tree().create_timer(0.5).timeout
+		await get_tree().create_timer(1.0).timeout
 		
 		await get_tree().create_timer(0.5).timeout
+		
+		if cash_value < 0:
+			money_label_3d.money_is_money(global_position, cash_value)
+		
 		%hazard_hit_sound.play()
 		play_destroy_sfx()
 		EventBus.instance.hazard_hit.emit()

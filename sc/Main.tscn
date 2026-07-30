@@ -34,6 +34,7 @@
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="34_v17ib"]
 [ext_resource type="PackedScene" uid="uid://cl0yh38bqfqd3" path="res://ch/Shop/Start_menu_shop_clone.tscn" id="37_0tjmb"]
 [ext_resource type="PackedScene" uid="uid://dg8ab1qtj51xm" path="res://ch/Shop/ticket_purchased_pop_up.tscn" id="47_gspdd"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="49_24t6b"]
 [ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="54_i541k"]
 [ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="55_3u5oq"]
 [ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="56_4ta1g"]
@@ -379,6 +380,19 @@ PanelContainer/styles/panel = SubResource("StyleBoxFlat_8xhv2")
 
 [sub_resource type="PrismMesh" id="PrismMesh_vycyu"]
 
+[sub_resource type="Gradient" id="Gradient_24t6b"]
+colors = PackedColorArray(0.92156863, 0.8784314, 0.84705883, 1, 0.85882354, 0.76862746, 0.69803923, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_8xhv2"]
+gradient = SubResource("Gradient_24t6b")
+width = 256
+height = 17
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2300m"]
+bg_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_an2hp"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_43pd7"]
@@ -414,11 +428,11 @@ scale_curve = SubResource("CurveTexture_3gdew")
 color = Color(1.8247963, 1.4387401, 0, 1)
 alpha_curve = SubResource("CurveTexture_fuvvr")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wtxnc"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_24t6b"]
 particle_flag_disable_z = true
 spread = 180.0
-initial_velocity_min = 150.0
-initial_velocity_max = 300.0
+initial_velocity_min = 450.0
+initial_velocity_max = 500.0
 angular_velocity_min = -180.0
 angular_velocity_max = 180.0
 gravity = Vector3(0, 0, 0)
@@ -534,9 +548,8 @@ volume_db = -30.0
 pitch_scale = 0.9
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1533254053]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 15.835)
-keep_aspect = 0
-fov = 62.5
+transform = Transform3D(-1, 0, -8.742277e-08, 0, 0.99999994, 0, 8.742278e-08, 0, -0.99999994, 0, 0, 17.224)
+fov = 37.9
 far = 2000.0
 
 [node name="BirdsFlightPath" type="Path3D" parent="." unique_id=659428985]
@@ -1243,7 +1256,6 @@ game_start_menu = NodePath("../Start_menu_shop_clone")
 
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
 unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0)
 z_index = 4096
 layout_mode = 3
 anchors_preset = 15
@@ -1251,22 +1263,195 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(2.395, 2.395)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("65_fjk4d")
+slide_duration = 1.0
+transition = 10
 
-[node name="ColorRect" type="ColorRect" parent="Background_transition" unique_id=1109783148]
+[node name="Background_control" type="Control" parent="Background_transition" unique_id=1050296865]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(3, 3)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Background" type="ColorRect" parent="Background_transition/Background_control" unique_id=1326191225]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 547.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+
+[node name="CoatArms" type="Control" parent="Background_transition/Background_control" unique_id=409353141]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -130.0
+offset_top = -129.0
+offset_right = 126.0
+offset_bottom = 127.0
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-color = Color(0, 0, 0, 1)
+
+[node name="CircleEmblem" type="TextureRect" parent="Background_transition/Background_control/CoatArms" unique_id=712626264]
+self_modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -46.5
+offset_right = 25.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("49_24t6b")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem3" type="TextureRect" parent="Background_transition/Background_control/CoatArms/CircleEmblem" unique_id=220934762]
+visible = false
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -48.0
+offset_right = 25.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.174, 1.174)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("49_24t6b")
+stretch_mode = 5
+
+[node name="Insignia" type="RichTextLabel" parent="Background_transition/Background_control/CoatArms" unique_id=1723705056]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -33.0
+offset_right = 18.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/normal_font_size = 400
+bbcode_enabled = true
+text = "W"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ColorRect3" type="ColorRect" parent="Background_transition/Background_control" unique_id=1713541627]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 56.5
+offset_bottom = 71.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="Background_transition/Background_control" unique_id=1056113604]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -71.5
+offset_bottom = -56.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+
+[node name="ColorRect" type="TextureRect" parent="Background_transition/Background_control" unique_id=1139922418]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_8xhv2")
+stretch_mode = 5
+
+[node name="HSeparator" type="HSeparator" parent="Background_transition/Background_control" unique_id=375295126]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -122.0
+offset_bottom = -118.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/separator = SubResource("StyleBoxFlat_2300m")
+
+[node name="LoadingText" type="RichTextLabel" parent="Background_transition/Background_control" unique_id=1194549037]
+modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -33.0
+offset_right = 18.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/normal_font_size = 86
+bbcode_enabled = true
+text = "[wave]To MOSS"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Settings_pause_menu" parent="." unique_id=1950114573 instance=ExtResource("64_tnw34")]
 
@@ -1618,7 +1803,7 @@ one_shot = true
 explosiveness = 0.8
 fixed_fps = 60
 local_coords = true
-process_material = SubResource("ParticleProcessMaterial_wtxnc")
+process_material = SubResource("ParticleProcessMaterial_24t6b")
 
 [node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["orange_container"]]
 script = ExtResource("68_qmj5w")

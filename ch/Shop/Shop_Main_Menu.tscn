@@ -368,7 +368,6 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=1211974115]
-self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 2
 
@@ -512,23 +511,13 @@ theme = SubResource("Theme_vv4e8")
 theme_override_styles/panel = SubResource("StyleBoxFlat_tnodp")
 
 [node name="CoatArms" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=409353141 instance=ExtResource("8_kvqbn")]
-z_index = 76
+z_index = 1
 layout_mode = 1
 offset_left = -128.51404
 offset_top = -144.16467
 offset_right = 127.48596
 offset_bottom = 111.83536
 scale = Vector2(0.925, 0.925)
-
-[node name="CoatArms2" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1647909721 instance=ExtResource("8_kvqbn")]
-visible = false
-z_index = 76
-layout_mode = 1
-offset_left = 303.6145
-offset_top = 371.49805
-offset_right = 559.6145
-offset_bottom = 627.49805
-scale = Vector2(0.599, 0.599)
 
 [node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1387478224]
 custom_minimum_size = Vector2(50, 10)
@@ -971,11 +960,10 @@ grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer" unique_id=1296682477]
 layout_mode = 2
-theme_override_constants/separation = 22
+theme_override_constants/separation = 1
 alignment = 1
 
 [node name="RoundSelector" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer" unique_id=1495719427 node_paths=PackedStringArray("shop_main_menu", "focus_enter_sfx", "focus_exit_sfx", "pressed_sfx") instance=ExtResource("43_hi3s5")]
-custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 shop_main_menu = NodePath("../../../../../../../..")
 focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
@@ -1074,9 +1062,151 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xklyy")
 
+[node name="Panel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1065744192]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 6.3935623
+offset_right = -0.040161133
+offset_bottom = 32.176445
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_xklyy")
+
+[node name="CoatArms2" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1647909721]
+modulate = Color(1, 1, 1, 0.078431375)
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 303.6145
+offset_top = -112.50195
+offset_right = 559.6145
+offset_bottom = 143.49805
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.139, 1.139)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Insignia" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/CoatArms2" unique_id=1723705056]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -33.0
+offset_right = 18.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.81, 0.621, 0.3564, 1)
+theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/normal_font_size = 86
+bbcode_enabled = true
+text = "W"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/CoatArms2" unique_id=16653932]
+show_behind_parent = true
+clip_contents = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 1
+anchor_left = 0.28828126
+anchor_top = 0.45434374
+anchor_right = 0.7117188
+anchor_bottom = 0.7253437
+offset_left = -145.8
+offset_top = -93.312
+offset_right = 145.79999
+offset_bottom = 93.31201
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.271, 0.271)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="CoatArms3" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=270775435]
+modulate = Color(1, 1, 1, 0.078431375)
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -70.682755
+offset_top = -108.7229
+offset_right = 185.31725
+offset_bottom = 147.2771
+grow_vertical = 2
+scale = Vector2(1.139, 1.139)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Insignia" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/CoatArms3" unique_id=2075078050]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -33.0
+offset_right = 18.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.81, 0.621, 0.3564, 1)
+theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/normal_font_size = 86
+bbcode_enabled = true
+text = "W"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/CoatArms3" unique_id=780610954]
+show_behind_parent = true
+clip_contents = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 1
+anchor_left = 0.28828126
+anchor_top = 0.45434374
+anchor_right = 0.7117188
+anchor_bottom = 0.7253437
+offset_left = -145.8
+offset_top = -93.312
+offset_right = 145.79999
+offset_bottom = 93.31201
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.271, 0.271)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
 [node name="ScoreTotal" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=91302618 groups=["restartable"]]
 unique_name_in_owner = true
-modulate = Color(0.65, 0.62226665, 0.598, 1)
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 4
@@ -1088,7 +1218,8 @@ offset_right = 97.15361
 offset_bottom = 62.998657
 grow_vertical = 2
 theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 19
+theme_override_colors/default_color = Color(0.66, 0.50666004, 0.38940004, 1)
+theme_override_font_sizes/normal_font_size = 25
 bbcode_enabled = true
 text = "WINNINGS[color=#c70102]
 $122455"
@@ -1376,11 +1507,18 @@ theme_override_constants/separation = 24
 [node name="AddMoney" type="Button" parent="." unique_id=225417206]
 unique_name_in_owner = true
 visible = false
-layout_mode = 0
-offset_left = 1523.0
-offset_top = 611.0
-offset_right = 1655.0
-offset_bottom = 642.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 455.0
+offset_top = 81.5
+offset_right = 587.0
+offset_bottom = 112.5
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -1409,11 +1547,18 @@ vertical_alignment = 1
 [node name="MaxOutPowers" type="Button" parent="." unique_id=605003613]
 unique_name_in_owner = true
 visible = false
-layout_mode = 0
-offset_left = 1523.0
-offset_top = 644.0
-offset_right = 1655.0
-offset_bottom = 675.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 455.0
+offset_top = 118.5
+offset_right = 587.0
+offset_bottom = 149.5
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
@@ -1442,11 +1587,18 @@ vertical_alignment = 1
 [node name="ResetMoney" type="Button" parent="." unique_id=120031225]
 unique_name_in_owner = true
 visible = false
-layout_mode = 0
-offset_left = 1523.0
-offset_top = 677.0
-offset_right = 1655.0
-offset_bottom = 708.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 455.0
+offset_top = 155.5
+offset_right = 587.0
+offset_bottom = 186.5
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.88, 0.88, 0.88, 0)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)

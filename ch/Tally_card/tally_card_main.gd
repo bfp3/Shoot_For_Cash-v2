@@ -103,9 +103,9 @@ func update_inactive() -> void:
 
 
 func start_fail_sequence() -> void:
+
 	#grade_cash_label.text = ""
-	#grade_cash_label.text = "$0"
-	fail_label.show()
+	grade_cash_label.text = ""
 	grade_cash_label.modulate = Color('a6a6a6ff')
 	#grade_label.text = "[i]Try Again"
 	grade_label.text = ""
@@ -114,32 +114,39 @@ func start_fail_sequence() -> void:
 
 	if gl_PlayerState.dataset.fines < 0:
 		fail_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
-
-		
-
+	bonuses_label.text = 'Fines'
 	bonuses_cash_label.modulate.a = 0.0
+	grand_total_cash_label.show()
+	grand_total_label.text = "Total Losses"
+	fail_label.show()
+	if abs(gl_PlayerState.dataset.fines) > 0:
+		grand_total_cash_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
+		
+	else:
+		grand_total_cash_label.text = "$0"
+		
+	bonuses_label.show()
 
-	grand_total_label.hide()
-	bonuses_label.hide()
-	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 1.0
-	grand_total_cash_label.modulate = Color('a6a6a6ff')
-	#$'CenterContainer/MainPanel/MainPanel/Cash Out/NumberLabel'.text = "$" + str(0)
+
 	return
-	
+
 	
 	
 func start_perfect_sequence() -> void:
+	
+	#start_fail_sequence()
+	#return
+	
 	await get_tree().create_timer(0.5, false).timeout
-	var dur := 0.8
-
-	# 1. GRADE LABEL
+	$SFX/shop_purchase_02.play()
+	$SFX/shop_purchase_01.play()
+	var dur := 0.33
 	grade_label.modulate = Color("ffc700ff")
 	grade_label.text = "[i][wave]Clear!"
 	
 	if gl_PlayerState.dataset.total_current_strikes <= 0:
 		grade_label.text = "[i][wave]PERFECT!"
-		perfect_particles()
-	
+		
 	perfect_bonus = int(gl_DataSet.get_value('reward_perfect_round', 0))
 	
 	# 2. GRADE CASH LABEL
@@ -149,23 +156,45 @@ func start_perfect_sequence() -> void:
 
 	# decorative particle flourish, fires in the background (non-blocking)
 	
-	grand_total_cash_label.modulate = Color("c70102ff")
+	grand_total_cash_label.modulate.a = 1.0
 	# PAUSE
-	await get_tree().create_timer(0.5, false).timeout
-	await get_tree().create_timer(dur / 2, false).timeout
+	await get_tree().create_timer(0.25, false).timeout
+	#await get_tree().create_timer(dur / 2, false).timeout
 
 	# 3. BONUSES
 	$SFX/shop_purchase_02.play()
 	apply_bonus_cash()
-	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned.modulate.a = 1.0
+	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned.modulate.a = 1.0
 	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 0.0
 
-	# PAUSE
-	await get_tree().create_timer(dur / 2, false).timeout
-	$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
-	$SFX/shop_purchase_02.play()
+	grand_total_cash_label.modulate.a = 0.0
 	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
+	grand_total_cash_label.pivot_offset_ratio = Vector2(0.5,0.5)
+	#await get_tree().create_timer(0.5, false).timeout
+
 	await get_tree().create_timer(dur, false).timeout
+	
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	
+	tween.tween_property(grand_total_cash_label, 'modulate:a', 1.0, 0.15)
+	tween.parallel().tween_property(grand_total_cash_label, 'scale', Vector2.ONE * 1.1, 0.15)
+	
+	tween.parallel().tween_property($CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles, "emitting", true, 0.1).set_delay(0.1)
+	tween.parallel().tween_callback($SFX/shop_purchase_02.play).set_delay(0.1)
+	tween.tween_property(grand_total_cash_label, 'scale', Vector2.ONE, 0.15)
+	#await get_tree().create_timer(dur / 3, false).timeout
+	await tween.finished
+	#$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
+	#$SFX/shop_purchase_02.play()
+	
+	
+	await get_tree().create_timer(dur, false).timeout
+	await get_tree().create_timer(dur, false).timeout
+	#await get_tree().create_timer(dur, false).timeout
+	
+	await perfect_particles()
+	
+	#await get_tree().create_timer(dur, false).timeout
 	return
 
 
@@ -228,22 +257,28 @@ func check_white_rocks() -> void:
 		#start_sequence = false
 
 func perfect_particles() -> void:
+	
+	
 	play_cash_sfx()
 	#%perfectScoreParticles.emitting = true
 	#await get_tree().create_timer(0.25, false).timeout
 	
 	$SFX/perfect_score.play()
-	
+	var stamp := $'CenterContainer/MainPanel/MainPanel/100_percent/RichTextLabel'
+	stamp.scale = Vector2.ONE * 3.0
 	var tween = create_tween()
-	tween.tween_property(%'100_percent', "modulate:a", 1.0, 0.1)
-	tween.tween_interval(0.35)
-	#tween.tween_property(grand_total_cash_label, "text", "$" + str(int(gl_PlayerState.dataset.cash)), 0.0001)
-	tween.tween_interval(2.0)
-	#tween.tween_property(%'100_percent', "modulate:a", 0.0, 0.15)
+	tween.tween_property(%'100_percent', "modulate:a", 1.0, 0.2)
+	tween.parallel().tween_property(stamp, "scale", Vector2.ONE * 1.0, 0.2)
+	tween.parallel().tween_callback($SFX/Stamp_sfx.play.bind(0.05)).set_delay(0.15)
+	#tween.tween_interval(0.1)
+	tween.tween_property(self, "scale", Vector2.ONE * 0.998, 0.1)
+	tween.tween_property(self, "scale", Vector2.ONE, 0.05)
+	
+	tween.tween_interval(1.0)
+	
+
 	await tween.finished
-	#$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.amount += 1
-	#$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = false
-	#
+
 
 func apply_bonus_cash() -> void:
 	var bonus_cash = gl_PlayerState.dataset.bonus_cash

@@ -3,10 +3,38 @@
 [ext_resource type="Script" uid="uid://bia8r4n1kfwrp" path="res://ch/Shop/ticket_purchased_pop_up.gd" id="1_vjt1i"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_rcr1f"]
 [ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="3_soy43"]
-[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="5_xxttw"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="6_8mvl6"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="11_n61y1"]
 [ext_resource type="PackedScene" uid="uid://mmk21ngpuua6" path="res://ch/Shop/Level_button_select.tscn" id="12_ag0ht"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8mvl6"]
+bg_color = Color(0.92, 0.87952006, 0.8464, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 4
+shadow_color = Color(1, 1, 1, 0.6)
+shadow_offset = Vector2(2.5, 2.5)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxttw"]
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.082499996, 0.09441667, 0.11, 0.41568628)
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="Gradient" id="Gradient_soy43"]
 offsets = PackedFloat32Array(0.456446, 0.5400697)
@@ -74,7 +102,6 @@ offset_bottom = 1080.0
 color = Color(0, 0, 0, 0.3137255)
 
 [node name="MainPanel3" type="PanelContainer" parent="." unique_id=290922793]
-modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
 custom_minimum_size = Vector2(1550, 900)
 layout_mode = 0
 offset_left = 185.0
@@ -84,7 +111,7 @@ offset_bottom = 990.0
 scale = Vector2(1.014, 1.022)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("2_rcr1f")
+theme_override_styles/panel = SubResource("StyleBoxFlat_8mvl6")
 
 [node name="MainPanel2" type="PanelContainer" parent="." unique_id=829293957]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
@@ -108,6 +135,75 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
+
+[node name="100_percent" type="Control" parent="TreePanel" unique_id=175400575]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TreePanel/100_percent" unique_id=1065693873]
+self_modulate = Color(1, 1, 1, 0.627451)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -788.0001
+offset_top = -340.00003
+offset_right = -299.0
+offset_bottom = -239.00003
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.34906584
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 54
+theme_override_font_sizes/italics_font_size = 248
+bbcode_enabled = true
+text = "SHIPPER ISLAND"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="TreePanel/100_percent/RichTextLabel" unique_id=1607551687]
+modulate = Color(0.92, 0.8770667, 0.8464, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.79, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_xxttw")
+
+[node name="BonusCashLabel" type="RichTextLabel" parent="TreePanel/100_percent" unique_id=662738230]
+visible = false
+layout_mode = 0
+offset_left = -25.308838
+offset_top = -98.84262
+offset_right = 175.69116
+offset_bottom = -0.84262085
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 30
+theme_override_font_sizes/bold_italics_font_size = 30
+theme_override_font_sizes/italics_font_size = 31
+bbcode_enabled = true
+text = "+$100"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="MapOverlay" type="TextureRect" parent="TreePanel" unique_id=705275406]
 modulate = Color(0.47, 0.47, 0.47, 0.39215687)
@@ -142,6 +238,15 @@ texture = SubResource("NoiseTexture2D_8mvl6")
 expand_mode = 1
 stretch_mode = 5
 
+[node name="CoatArms2" parent="TreePanel" unique_id=409353141 instance=ExtResource("6_8mvl6")]
+visible = false
+layout_mode = 1
+offset_left = -676.0
+offset_top = -412.0
+offset_right = -420.0
+offset_bottom = -156.0
+scale = Vector2(1.969, 1.969)
+
 [node name="Buttons" type="Control" parent="TreePanel" unique_id=1362834187]
 layout_mode = 1
 anchors_preset = 15
@@ -161,15 +266,12 @@ offset_left = 356.0
 offset_top = 315.0
 offset_right = 612.0
 offset_bottom = 571.0
-texture_pressed = ExtResource("5_xxttw")
-texture_hover = ExtResource("5_xxttw")
-texture_disabled = ExtResource("5_xxttw")
-texture_focused = ExtResource("5_xxttw")
 level_name = "Moss"
 level_locked = false
 main_control = NodePath("../../..")
 
 [node name="Level_button_selector2" parent="TreePanel/Buttons" unique_id=516604565 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+visible = false
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -180,14 +282,11 @@ offset_left = 618.0
 offset_top = 166.0
 offset_right = 874.0
 offset_bottom = 422.0
-texture_pressed = ExtResource("5_xxttw")
-texture_hover = ExtResource("5_xxttw")
-texture_disabled = ExtResource("5_xxttw")
-texture_focused = ExtResource("5_xxttw")
 level_name = "Redd"
 main_control = NodePath("../../..")
 
 [node name="Level_button_selector3" parent="TreePanel/Buttons" unique_id=1192796621 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+visible = false
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -198,14 +297,11 @@ offset_left = 932.0
 offset_top = 106.0
 offset_right = 1188.0
 offset_bottom = 362.0
-texture_pressed = ExtResource("5_xxttw")
-texture_hover = ExtResource("5_xxttw")
-texture_disabled = ExtResource("5_xxttw")
-texture_focused = ExtResource("5_xxttw")
 level_name = "Glory"
 main_control = NodePath("../../..")
 
 [node name="Level_button_selector4" parent="TreePanel/Buttons" unique_id=299777263 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+visible = false
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -216,14 +312,11 @@ offset_left = 1143.0
 offset_top = 328.0
 offset_right = 1399.0
 offset_bottom = 584.0
-texture_pressed = ExtResource("5_xxttw")
-texture_hover = ExtResource("5_xxttw")
-texture_disabled = ExtResource("5_xxttw")
-texture_focused = ExtResource("5_xxttw")
 level_name = "??"
 main_control = NodePath("../../..")
 
 [node name="Level_button_selector5" parent="TreePanel/Buttons" unique_id=1062796673 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+visible = false
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -234,14 +327,11 @@ offset_left = 1391.0
 offset_top = 489.0
 offset_right = 1647.0
 offset_bottom = 745.0
-texture_pressed = ExtResource("5_xxttw")
-texture_hover = ExtResource("5_xxttw")
-texture_disabled = ExtResource("5_xxttw")
-texture_focused = ExtResource("5_xxttw")
 level_name = "Sodomi"
 main_control = NodePath("../../..")
 
 [node name="ShipperIsland" type="RichTextLabel" parent="TreePanel/Buttons" unique_id=2102947909]
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 3
@@ -486,11 +576,10 @@ rotation = 0.5235988
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_soy43")
 
-[node name="CoatArms" parent="TreePanel/Control" unique_id=409353141 instance=ExtResource("6_8mvl6")]
+[node name="CoatArms" parent="TreePanel/Control" unique_id=583002181 instance=ExtResource("6_8mvl6")]
 layout_mode = 1
-offset_top = 104.00006
-offset_bottom = 360.00006
-scale = Vector2(3.849, 3.849)
+offset_top = 200.00006
+offset_bottom = 456.00006
 
 [node name="Control2" type="Control" parent="TreePanel" unique_id=1227093502]
 visible = false

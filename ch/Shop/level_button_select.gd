@@ -1,4 +1,12 @@
-extends TextureButton
+extends Button
+
+enum State {
+	LOCKED,
+	UNLOCKED,
+	COMPLETE
+}
+
+var current_state : State = State.LOCKED
 
 @export var focus_enter_sfx: AudioStreamPlayer
 @export var focus_exit_sfx: AudioStreamPlayer
@@ -35,6 +43,7 @@ func _ready() -> void:
 		set_locked_visuals()
 
 	else:
+		current_state = State.UNLOCKED
 		level_name_label.text = "[wave]" + level_name.to_upper()
 		#level_name_label.modulate = Color('15181c')
 		level_name_label.add_theme_font_size_override("normal_font_size", 109)
@@ -50,11 +59,15 @@ func _ready() -> void:
 	
 
 func set_locked_visuals() -> void:
-	level_name_label.text = "Locked".to_upper()
+	current_state = State.LOCKED
+	#level_name_label.text = "Locked".to_upper()
+	level_name_label.text = ""
 	level_name_label.modulate = Color("dbcfc5ff")
 	level_name_label.add_theme_font_size_override("normal_font_size", 85)
 	outer_ring.modulate = Color("c9a587ff")
 	$HSeparator.scale.x = 1.13
+	$TextureRect2.modulate = Color('d8c5b7')
+	current_state = State.LOCKED
 
 func _on_level_button_pressed() -> void:
 	if level_locked:
@@ -62,7 +75,7 @@ func _on_level_button_pressed() -> void:
 
 	await fill_progress_bar()
 	
-	await get_tree().create_timer(0.1, false).timeout
+	await get_tree().create_timer(0.6, false).timeout
 	
 	var level_name_lower_case: String = level_name.to_lower()
 
@@ -112,6 +125,9 @@ func fill_progress_bar() -> void:
 	
 	
 func _on_focus_entered() -> void:
+	if current_state == State.LOCKED:
+		return
+	
 	if focus_enter_sfx:
 		focus_enter_sfx.play()
 
@@ -120,6 +136,9 @@ func _on_focus_entered() -> void:
 
 
 func _on_focus_exited() -> void:
+	if current_state == State.LOCKED:
+		return
+		
 	if focus_exit_sfx:
 		focus_exit_sfx.play()
 

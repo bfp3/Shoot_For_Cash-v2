@@ -1,5 +1,8 @@
 extends Label3D
 
+const money_colour : Color = Color("ebe0d8ff")
+const penalty_colour : Color = Color("a10204ff")
+
 var damage_tween : Tween = null
 
 func print_text(_display_pos : Vector3, money_yield : String) -> void:
@@ -24,12 +27,11 @@ func money_is_money(_display_pos : Vector3, money_yield : int) -> void:
 	#money_container.update_money()
 	
 	new_money_label.tween_up()
-	
-	if money_yield >= 0:
-		new_money_label.tween_fade(Color('42d100'), 1.5)
 		
+	if money_yield >= 0:
+		new_money_label.tween_fade(money_colour, 1.5)
 	else:
-		new_money_label.tween_fade(Color('d10000'), 2.5)
+		new_money_label.tween_fade(penalty_colour, 2.5)
 
 func money_rock(_display_pos : Vector3, money_yield : int) -> void:
 	
@@ -43,7 +45,7 @@ func money_rock(_display_pos : Vector3, money_yield : int) -> void:
 	new_money_label.tween_up()
 	
 	if money_yield >= 0:
-		new_money_label.tween_fade(Color('42d100'), 0.5)
+		new_money_label.tween_fade(Color("ffc700ff"), 0.5)
 		
 	else:
 		new_money_label.tween_fade(Color('d10000'), 1.5)
@@ -175,7 +177,7 @@ func pineapple_is_pineapple() -> void:
 	new_money_label.text = "$" + str(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
 	new_money_label.global_position = Vector3(0, 5, 23)
 
-	new_money_label.modulate = Color("42d100")
+	new_money_label.modulate = money_colour
 	new_money_label.outline_modulate = Color("262626")
 	new_money_label.show()
 

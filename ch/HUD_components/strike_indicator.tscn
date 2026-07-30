@@ -55,6 +55,7 @@ scale = Vector2(0.229, 0.229)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="Outline" type="TextureRect" parent="Control" unique_id=1289301246]
+visible = false
 modulate = Color(0.36479998, 0.4161, 0.57, 1)
 layout_mode = 1
 anchors_preset = 8
@@ -72,8 +73,8 @@ scale = Vector2(0.5, 0.5)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("2_trv68")
 
-[node name="Circle" type="TextureRect" parent="Control" unique_id=1530636151]
-modulate = Color(0.082499996, 0.09441667, 0.11, 0.5921569)
+[node name="CircleHolder" type="TextureRect" parent="Control" unique_id=159962140]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -89,9 +90,26 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("1_6lhy0")
 
-[node name="Circle2" type="TextureRect" parent="Control/Circle" unique_id=1584825883]
-self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-show_behind_parent = true
+[node name="BackCircle" type="TextureRect" parent="Control/CircleHolder" unique_id=1563995427]
+self_modulate = Color(0.7764706, 0.003921569, 0.007843138, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -132.36719
+offset_right = 128.0
+offset_bottom = 123.63281
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.003, 1.003)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("1_6lhy0")
+
+[node name="FrontMostCircle" type="TextureRect" parent="Control/CircleHolder" unique_id=285659689]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -104,12 +122,68 @@ offset_right = 128.0
 offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.22, 1.22)
+scale = Vector2(0.911, 0.911)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("1_6lhy0")
+
+[node name="Circle" type="TextureRect" parent="Control" unique_id=1530636151]
+self_modulate = Color(0.42, 0.37478, 0.34019998, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -130.0
+offset_right = 128.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("1_6lhy0")
+
+[node name="BackCircle" type="TextureRect" parent="Control/Circle" unique_id=1584825883]
+unique_name_in_owner = true
+self_modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -132.36719
+offset_right = 128.0
+offset_bottom = 123.63281
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.003, 1.003)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("1_6lhy0")
+
+[node name="FrontMostCircle" type="TextureRect" parent="Control/Circle" unique_id=520737568]
+unique_name_in_owner = true
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.911, 0.911)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("1_6lhy0")
 
 [node name="CrossFront" type="TextureRect" parent="Control" unique_id=1150449610]
-self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+visible = false
+self_modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -127,7 +201,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("2_trv68")
 
 [node name="Cross" type="TextureRect" parent="Control/CrossFront" unique_id=1955548184]
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8

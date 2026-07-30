@@ -2,6 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://blvtkhvnb16cm" path="res://res/wormfood_logo_2.png" id="1_ger86"]
 [ext_resource type="Script" uid="uid://djp3gpek5tlof" path="res://ch/canvas_layers/wormfood_logo_title_screen.gd" id="1_rwg71"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="2_goc01"]
+[ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="4_ywb6o"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="5_rwcle"]
 
 [sub_resource type="Gradient" id="Gradient_hsuqi"]
 colors = PackedColorArray(0, 0, 0, 1, 0.1, 0.1, 0.1, 1)
@@ -44,6 +47,7 @@ texture = SubResource("GradientTexture2D_goc01")
 
 [node name="Presents" type="RichTextLabel" parent="." unique_id=573919183]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -75,9 +79,99 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
+[node name="CoatArms2" type="Control" parent="WormfoodLogoContainer" unique_id=41943716]
+modulate = Color(0.047058824, 0.047058824, 0.047058824, 1)
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -133.0
+offset_top = -133.0
+offset_right = 123.0
+offset_bottom = 123.00012
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(9.909, 9.909)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="CircleEmblem" type="TextureRect" parent="WormfoodLogoContainer/CoatArms2" unique_id=551987581]
+self_modulate = Color(0.0627451, 0.0627451, 0.0627451, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -46.5
+offset_right = 25.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_goc01")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem3" type="TextureRect" parent="WormfoodLogoContainer/CoatArms2/CircleEmblem" unique_id=1306206235]
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -48.0
+offset_right = 25.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.174, 1.174)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_goc01")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Insignia" type="RichTextLabel" parent="WormfoodLogoContainer/CoatArms2" unique_id=1269353765]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -33.0
+offset_right = 18.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/normal_font_size = 84
+bbcode_enabled = true
+text = "W"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Wormfood_Logo" type="TextureRect" parent="WormfoodLogoContainer" unique_id=277427176]
 unique_name_in_owner = true
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -93,3 +187,174 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("1_ger86")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Panel" type="Panel" parent="WormfoodLogoContainer" unique_id=240343047]
+modulate = Color(0.095199995, 0.17528002, 0.28, 1)
+custom_minimum_size = Vector2(0, 125)
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -62.412506
+offset_bottom = 62.412476
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TextureRectOverlays"
+
+[node name="WormfoodBrandText" type="RichTextLabel" parent="WormfoodLogoContainer" unique_id=1028095719]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 112
+text = "WORMFOOD"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Copyright" type="RichTextLabel" parent="WormfoodLogoContainer" unique_id=538580585]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 218.0
+offset_top = -25.0
+offset_right = 218.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 30
+text = "©"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="WormfoodLogoContainer" unique_id=1017595889]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 61.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="HSeparator2" type="HSeparator" parent="WormfoodLogoContainer" unique_id=1685336562]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -65.0
+offset_bottom = -61.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="CoatArms" type="Control" parent="WormfoodLogoContainer" unique_id=409353141]
+visible = false
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -132.99994
+offset_top = 146.00006
+offset_right = 123.0
+offset_bottom = 402.00012
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.453, 1.453)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="CircleEmblem" type="TextureRect" parent="WormfoodLogoContainer/CoatArms" unique_id=712626264]
+self_modulate = Color(0.0627451, 0.0627451, 0.0627451, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -46.5
+offset_right = 25.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_goc01")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem3" type="TextureRect" parent="WormfoodLogoContainer/CoatArms/CircleEmblem" unique_id=220934762]
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -48.0
+offset_right = 25.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.174, 1.174)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_goc01")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Insignia" type="RichTextLabel" parent="WormfoodLogoContainer/CoatArms" unique_id=1723705056]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -33.0
+offset_right = 18.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/normal_font_size = 84
+bbcode_enabled = true
+text = "W"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="stampSFX22" type="AudioStreamPlayer" parent="." unique_id=1438778268]
+stream = ExtResource("4_ywb6o")
+volume_db = -30.0
+pitch_scale = 0.75
+
+[node name="stampSFX" type="AudioStreamPlayer" parent="." unique_id=485317434]
+stream = ExtResource("5_rwcle")
+volume_db = -8.0

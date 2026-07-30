@@ -1,29 +1,83 @@
 extends Control
 
+@onready var color_rect := $Background_control
+
+@export_group("Transition")
+@export var slide_duration: float = 0.7
+@export var transition: Tween.TransitionType = Tween.TRANS_CUBIC
+@export var ease: Tween.EaseType = Tween.EASE_IN_OUT
+
+@export_group("Debug")
+@export var enable_debug_input := true
+@export var debug_action := "ui_accept"
+
+var _toggled := false
+
+
+func _ready() -> void:
+	modulate = Color.WHITE
+	_position_offscreen_bottom()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if !enable_debug_input:
+		return
+
+	if event.is_action_pressed(debug_action):
+		if _toggled:
+			await next_level_finish()
+		else:
+			await next_level_start()
+
+		_toggled = !_toggled
+
 
 func next_level_start() -> void:
-	#$'../../..'.scale = Vector2.ONE * 2
-	var tween = create_tween()
-	tween.tween_property(self, 'modulate', Color.WHITE, 0.5).set_trans(Tween.TRANS_LINEAR)
+	var screen_height := get_viewport_rect().size.y
+
+	color_rect.position.y = screen_height
+
+	var tween := create_tween()
+	tween.set_trans(transition)
+	tween.set_ease(ease)
+
+	tween.tween_property(
+		color_rect,
+		"position:y",
+		0.0,
+		slide_duration
+	)
+
 	await tween.finished
+
 
 func next_level_finish() -> void:
-	#$'../../..'.scale = Vector2.ONE
-	var tween = create_tween()
-	tween.tween_property(self, 'modulate', Color.TRANSPARENT, 1.5).set_trans(Tween.TRANS_LINEAR)
+	var screen_height := get_viewport_rect().size.y
+
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(ease)
+
+	tween.tween_property(
+		color_rect,
+		"position:y",
+		screen_height,
+		1.0
+	)
+
 	await tween.finished
 
-#func instant_fade_in() -> void:
-	#show()
-	#self.modulate = Color.BLACK
+	_position_offscreen_bottom()
+
 
 func demo_end_fadein() -> void:
-	var tween = create_tween()
-	tween.tween_property(self, 'modulate', Color.WHITE, 0.5).set_trans(Tween.TRANS_LINEAR)
-	await tween.finished
-	
+	await next_level_start()
+
 
 func demo_end_fadeout() -> void:
-	var tween = create_tween()
-	tween.tween_property(self, 'modulate', Color.TRANSPARENT, 1.5).set_trans(Tween.TRANS_LINEAR)
-	await tween.finished
+	await next_level_finish()
+
+
+func _position_offscreen_bottom() -> void:
+	var screen_height := get_viewport_rect().size.y
+	color_rect.position.y = screen_height

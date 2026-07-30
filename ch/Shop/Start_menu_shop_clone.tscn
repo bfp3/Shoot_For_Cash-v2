@@ -69,26 +69,6 @@ mouse_filter = 2
 script = ExtResource("1_djhmw")
 reveal_skill_sfx = NodePath("SFX/reveal_sfx")
 
-[node name="TopRedPanel" parent="." unique_id=2081657472 instance=ExtResource("2_djhmw")]
-z_index = 1
-custom_minimum_size = Vector2(0, 0)
-layout_mode = 1
-offset_left = -251.0
-offset_top = -338.0
-offset_right = 249.0
-offset_bottom = -249.0
-scale = Vector2(1.5, 1)
-
-[node name="MeshInstance2D" parent="TopRedPanel" index="0" unique_id=1125389776]
-position = Vector2(250.33124, 44.54735)
-scale = Vector2(503.662, 89.03864)
-
-[node name="Place_name" parent="TopRedPanel" index="1" unique_id=542050662]
-script = null
-
-[node name="PlaceLabel" parent="TopRedPanel/Place_name" index="3" unique_id=614947465]
-text = "PLACE"
-
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1832678188]
 layout_mode = 1
 anchors_preset = 15
@@ -111,6 +91,7 @@ layout_mode = 2
 theme_type_variation = &"TextureRectOverlays"
 
 [node name="WhiteSmokeyBG" type="TextureRect" parent="CenterContainer/MainPanel" unique_id=1410432704]
+visible = false
 layout_mode = 2
 texture = SubResource("NoiseTexture2D_pwib5")
 expand_mode = 1
@@ -169,6 +150,16 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 [node name="TreePanel" type="Control" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1314206077]
 layout_mode = 2
 
+[node name="CoatArms" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=730722553 instance=ExtResource("7_jgqed")]
+visible = false
+modulate = Color(1, 1, 1, 0.5254902)
+layout_mode = 1
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+scale = Vector2(4.076, 4.076)
+
 [node name="AddGun" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1770080767 instance=ExtResource("2_2hdnu")]
 unique_name_in_owner = true
 layout_mode = 1
@@ -195,14 +186,30 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
-[node name="CoatArms" parent="." unique_id=730722553 instance=ExtResource("7_jgqed")]
-visible = false
-z_index = 1
+[node name="TopRedPanel" parent="." unique_id=2081657472 instance=ExtResource("2_djhmw")]
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.26759258
-anchor_bottom = 0.26759258
-metadata/_edit_use_anchors_ = true
+offset_left = -375.0
+offset_top = -322.0
+offset_right = 375.0
+offset_bottom = -233.0
+
+[node name="MeshInstance2D" parent="TopRedPanel" index="0" unique_id=1125389776]
+position = Vector2(373.53528, 45.547333)
+scale = Vector2(750.0701, 89.03864)
+
+[node name="Place_name" parent="TopRedPanel" index="1" unique_id=542050662]
+visible = false
+script = null
+
+[node name="PlaceLabel" parent="TopRedPanel/Place_name" index="3" unique_id=614947465]
+text = "PLACE"
+
+[node name="CoatArms" parent="TopRedPanel" index="2" unique_id=409353141]
+visible = true
+z_index = 0
+offset_top = -97.0
+offset_bottom = 159.0
 
 [node name="SFX" type="Node" parent="." unique_id=645241627]
 

@@ -5,10 +5,10 @@
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_a6mtr"]
 [ext_resource type="PackedScene" uid="uid://c1lsb3hvgu3ev" path="res://ch/canvas_layers/wormfood_logo_titleScreen.tscn" id="4_qxvgm"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="5_3jj4g"]
+[ext_resource type="Texture2D" uid="uid://gvpsjidpvqm4" path="res://res/red_balloon.png" id="6_a6mtr"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="6_hmuk5"]
 [ext_resource type="PackedScene" uid="uid://bxx83kupf6rgj" path="res://ch/2D_pieces/top_red_panel.tscn" id="7_qxvgm"]
 [ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://res/ROCKS - title_rock_centered_large.png" id="7_wliss"]
-[ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="8_rxi2v"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="9_uk8vt"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="10_40wae"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="12_kgbxa"]
@@ -61,6 +61,45 @@ color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 alpha_curve = SubResource("CurveTexture_cn8lj")
 hue_variation_min = -2.2351742e-08
 hue_variation_max = -2.2351742e-08
+
+[sub_resource type="Animation" id="Animation_a6mtr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.78039217, 0.003921569, 0.007843138, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_qxvgm"]
+resource_name = "idle"
+length = 3.0
+loop_mode = 2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.16078432, 0.16078432, 0.16078432, 1), Color(3.4836063, 0.14874086, 0.25079408, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_uucxj"]
+_data = {
+&"RESET": SubResource("Animation_a6mtr"),
+&"idle": SubResource("Animation_qxvgm")
+}
 
 [sub_resource type="Animation" id="Animation_le04b"]
 length = 0.001
@@ -206,7 +245,7 @@ color = Color(1, 0.78039217, 0, 1)
 alpha_curve = SubResource("CurveTexture_purchase_alpha")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a6mtr"]
-bg_color = Color(1, 0.95600003, 0.92, 0.39215687)
+bg_color = Color(0.86, 0.7674067, 0.6966, 0.15294118)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
@@ -217,11 +256,24 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qxvgm"]
+bg_color = Color(0.86, 0.7674067, 0.6966, 0.21568628)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.88916665, 0.81, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vycyu"]
 bg_color = Color(0.33, 0.33, 0.33, 0)
+border_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ufvrt"]
-bg_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+bg_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -248,7 +300,7 @@ tracks/0/keys = {
 }
 tracks/1/type = "value"
 tracks/1/imported = false
-tracks/1/enabled = true
+tracks/1/enabled = false
 tracks/1/path = NodePath(".:scale")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
@@ -308,7 +360,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
+pivot_offset_ratio = Vector2(0.5, 1.155)
 mouse_filter = 2
 script = ExtResource("1_ch1rs")
 
@@ -346,16 +398,76 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 137.16473
-offset_top = -347.12646
-offset_right = 393.16495
-offset_bottom = -91.12639
+offset_left = 137.1648
+offset_top = 523.3717
+offset_right = 393.16492
+offset_bottom = 779.3718
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.2, 0.2)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("8_rxi2v")
-expand_mode = 1
+texture = ExtResource("6_a6mtr")
+stretch_mode = 5
+
+[node name="Balloons" type="TextureRect" parent="SplashScreen_v2/BackgroundBalloons/Balloons" unique_id=1992753560]
+z_index = -2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -124.23071
+offset_top = 231.32593
+offset_right = 899.7693
+offset_bottom = 1255.3259
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.82, 0.82)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("6_a6mtr")
+stretch_mode = 5
+
+[node name="Balloons2" type="TextureRect" parent="SplashScreen_v2/BackgroundBalloons/Balloons" unique_id=2083366815]
+z_index = -2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2239.173
+offset_top = 231.32593
+offset_right = -1215.1731
+offset_bottom = 1255.3259
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.82, 0.82)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("6_a6mtr")
+stretch_mode = 5
+
+[node name="Balloons3" type="TextureRect" parent="SplashScreen_v2/BackgroundBalloons/Balloons" unique_id=769669640]
+z_index = -2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2239.1729
+offset_top = -1086.6819
+offset_right = -1215.1729
+offset_bottom = -62.681885
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.82, 0.82)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("6_a6mtr")
 stretch_mode = 5
 
 [node name="Balloons2" type="TextureRect" parent="SplashScreen_v2/BackgroundBalloons" unique_id=316146144]
@@ -366,16 +478,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -380.07663
-offset_top = -353.25687
-offset_right = -124.07663
-offset_bottom = -97.256805
+offset_left = -380.07666
+offset_top = 517.24133
+offset_right = -124.07666
+offset_bottom = 773.24146
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.2, 0.2)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("8_rxi2v")
-expand_mode = 1
+texture = ExtResource("6_a6mtr")
 stretch_mode = 5
 
 [node name="Balloons3" type="TextureRect" parent="SplashScreen_v2/BackgroundBalloons" unique_id=1116360619]
@@ -386,16 +498,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 226.81995
-offset_top = -353.25687
-offset_right = 482.81998
-offset_bottom = -97.256805
+offset_left = 81.900635
+offset_top = 133.2414
+offset_right = 1105.9006
+offset_bottom = 1157.2415
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.15, 0.15)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("8_rxi2v")
-expand_mode = 1
+texture = ExtResource("6_a6mtr")
 stretch_mode = 5
 
 [node name="GameTitleBackground" type="Control" parent="SplashScreen_v2" unique_id=1361692200]
@@ -526,6 +638,34 @@ texture = ExtResource("9_uk8vt")
 expand_mode = 1
 stretch_mode = 5
 
+[node name="RightBullet5" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=813499999]
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 0
+offset_left = 478.49658
+offset_top = 141.36035
+offset_right = 990.4966
+offset_bottom = 653.36035
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("9_uk8vt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RightBullet6" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=1371881645]
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 0
+offset_left = 521.4072
+offset_top = 141.36035
+offset_right = 1033.4072
+offset_bottom = 653.36035
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("9_uk8vt")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="LeftBullet" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=1394291670]
 self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 layout_mode = 0
@@ -582,6 +722,34 @@ texture = ExtResource("9_uk8vt")
 expand_mode = 1
 stretch_mode = 5
 
+[node name="LeftBullet5" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=794936762]
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 0
+offset_left = -463.67712
+offset_top = 140.10358
+offset_right = 48.322876
+offset_bottom = 652.1036
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("9_uk8vt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LeftBullet6" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Bullets" unique_id=355516937]
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 0
+offset_left = -506.59387
+offset_top = 140.10358
+offset_right = 5.406128
+offset_bottom = 652.1036
+scale = Vector2(0.19, 0.19)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("9_uk8vt")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Rocks" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground" unique_id=767040409]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
@@ -602,6 +770,135 @@ mouse_filter = 2
 texture = ExtResource("7_wliss")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="RockSmall3" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks" unique_id=11341172]
+visible = false
+self_modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -337.63806
+offset_top = -415.30533
+offset_right = 174.36194
+offset_bottom = 96.69464
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.02, 0.02)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("7_wliss")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks/RockSmall3" unique_id=407875439]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -293.5
+offset_top = -293.0
+offset_right = 293.5
+offset_bottom = 293.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.6440265
+scale = Vector2(0.295, 0.295)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("10_40wae")
+
+[node name="RockSmall4" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks" unique_id=914677408]
+visible = false
+self_modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -349.24445
+offset_top = -413.83252
+offset_right = 162.75555
+offset_bottom = 98.16745
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.028, 0.028)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("7_wliss")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks/RockSmall4" unique_id=405450486]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -293.5
+offset_top = -293.0
+offset_right = 293.5
+offset_bottom = 293.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.6440265
+scale = Vector2(0.295, 0.295)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("10_40wae")
+
+[node name="RockSmall5" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks" unique_id=1235441715]
+visible = false
+self_modulate = Color(0.22, 0.22, 0.22, 1)
+visibility_layer = 5
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -371.3435
+offset_top = -403.51758
+offset_right = 140.6565
+offset_bottom = 108.48239
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.085, 0.085)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("7_wliss")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks/RockSmall5" unique_id=1949646260]
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -293.5
+offset_top = -293.0
+offset_right = 293.5
+offset_bottom = 293.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.6440265
+scale = Vector2(0.295, 0.295)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("10_40wae")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SplashScreen_v2/GameTitleBackground/Rocks/RockSmall5/TextureRect" unique_id=920019322]
+libraries/ = SubResource("AnimationLibrary_uucxj")
+autoplay = &"idle"
+speed_scale = 3.0
 
 [node name="RockLarge" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/Rocks" unique_id=1779314020]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
@@ -733,8 +1030,7 @@ process_material = SubResource("ParticleProcessMaterial_acvv8")
 
 [node name="StartGame" type="Button" parent="SplashScreen_v2/GameTitleBackground" unique_id=540972591 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true
-self_modulate = Color(1, 1, 1, 0.50980395)
-custom_minimum_size = Vector2(460, 102.47)
+custom_minimum_size = Vector2(460, 129.435)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -751,6 +1047,7 @@ size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.86, 0.7674067, 0.6966, 0.22745098)
 theme_override_font_sizes/font_size = 92
 theme_override_styles/normal = SubResource("StyleBoxFlat_a6mtr")
+theme_override_styles/hover = SubResource("StyleBoxFlat_qxvgm")
 script = ExtResource("5_3jj4g")
 focus_enter_sfx = NodePath("../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../SFX/focus_exit")
@@ -771,7 +1068,6 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_ufvrt")
 show_percentage = false
 
 [node name="TextureRect" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground/StartGame" unique_id=158142522]
-self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
 anchors_preset = 8
@@ -805,9 +1101,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -60.98462
+offset_left = -61.989746
 offset_top = -61.989746
-offset_right = 67.01538
+offset_right = 66.010254
 offset_bottom = 66.010254
 grow_horizontal = 2
 grow_vertical = 2

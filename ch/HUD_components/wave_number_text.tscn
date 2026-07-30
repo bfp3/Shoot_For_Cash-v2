@@ -8,6 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="4_strike"]
 [ext_resource type="AudioStream" uid="uid://cy68fbqqsasku" path="res://sfx/Egg_Damaged_7.ogg" id="5_0l5f6"]
 [ext_resource type="AudioStream" uid="uid://cm8btuv4pdotl" path="res://sfx/pineapple_shake_1.ogg" id="6_sqkat"]
+[ext_resource type="AudioStream" uid="uid://bjvnouldqokaa" path="res://sfx/Arrow_release.ogg" id="7_yxk46"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txfio"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
@@ -92,6 +93,7 @@ theme_override_styles/panel = ExtResource("2_yxk46")
 
 [node name="WaveLabel" type="RichTextLabel" parent="Panel" unique_id=1081870455]
 process_mode = 1
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -262,14 +264,11 @@ vertical_alignment = 1
 [node name="Strike_system2" type="Panel" parent="." unique_id=697686758 groups=["restartable"]]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 255.0
-offset_top = -59.005005
-offset_right = 446.20496
-offset_bottom = -37.0
-grow_vertical = 0
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme = SubResource("Theme_od5kt")
@@ -309,20 +308,17 @@ vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Strike_system2" unique_id=869889454]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -350.0
-offset_top = -20.0
-offset_right = -66.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -72.0
+offset_right = 324.0
+offset_bottom = -32.0
+grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_constants/separation = 35
-alignment = 1
+alignment = 2
 
 [node name="StrikeIndicator" parent="Strike_system2/HBoxContainer" unique_id=337672201 instance=ExtResource("3_38fvf")]
 custom_minimum_size = Vector2(40, 40)
@@ -344,6 +340,11 @@ volume_db = -21.0
 [node name="StrikeSFX2" type="AudioStreamPlayer" parent="Strike_system2" unique_id=67245962]
 stream = ExtResource("4_strike")
 volume_db = -25.0
+
+[node name="StrikeSFX3" type="AudioStreamPlayer" parent="Strike_system2" unique_id=856188911]
+stream = ExtResource("7_yxk46")
+volume_db = -40.0
+pitch_scale = 0.3
 
 [node name="ThreeStrikesSFX" type="AudioStreamPlayer" parent="Strike_system2" unique_id=491621169]
 stream = ExtResource("6_sqkat")

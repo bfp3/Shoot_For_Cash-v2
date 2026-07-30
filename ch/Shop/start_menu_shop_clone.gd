@@ -113,7 +113,7 @@ func reveal_gun(_dur : float = 0.05, wait_reroll : bool = false) -> void:
 	skill.reset_buttons_settings()
 	skill.show()
 	skill.modulate.a = 0.01
-	skill.scale = Vector2.ONE * 0.8
+	#skill.scale = Vector2.ONE * 0.8
 		
 
 	var tween := create_tween()

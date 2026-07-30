@@ -131,7 +131,7 @@ func configure_balloon_colour() -> void:
 			original_penalty_amount = penalty_amount
 			
 		BalloonType.BLUE:
-			balloon_mesh.material_override = BALLOON_BLUE_MAT
+			#balloon_mesh.material_override = BALLOON_BLUE_MAT
 			penalty_amount = 0
 			original_penalty_amount = penalty_amount
 			

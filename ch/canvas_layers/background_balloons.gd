@@ -12,7 +12,30 @@ extends Control
 @onready var balloons_2: TextureRect = $Balloons2
 @onready var balloons_3: TextureRect = $Balloons3
 
+var rotation_amount := 0.1
+var rotation_direction := true
+var start := false
+
 func _process(delta: float) -> void:
+	if !start:
+		return
+	
+	rotation_amount = 0.1
+	
+	if rotation_direction:
+		self.rotation += rotation_amount * delta
+		if rotation >= 0.2:
+			print("false")
+			rotation_direction = false
+			#rotation_amount = -rotation_amount
+	
+	else:
+		self.rotation -= rotation_amount * delta
+		if rotation <= -0.2:
+			print("true")
+			rotation_direction = true
+			#rotation_amount = abs(rotation_amount)
+	
 	move_balloon(balloons, balloon_1_speed, delta)
 	move_balloon(balloons_2, balloon_2_speed, delta)
 	move_balloon(balloons_3, balloon_3_speed, delta)

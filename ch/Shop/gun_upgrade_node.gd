@@ -185,15 +185,6 @@ func update_available() -> void:
 	
 	
 func update_purchased() -> void:
-	print("purchased the gun")
-	var map_menu := get_tree().get_first_node_in_group('map_menu')
-	if map_menu:
-		print("found the map menu")
-		map_menu.open_pop_up()
-		
-	else:
-		print("DID NOT found the map menu")
-		
 		
 	if array_particles.size() > 0:
 		for i in array_particles:
@@ -202,6 +193,16 @@ func update_purchased() -> void:
 	purchase_particles()
 	complete_purchase()
 	$FreeParticles.emitting = false
+	
+	var map_menu := get_tree().get_first_node_in_group('map_menu')
+	if map_menu:
+		await get_tree().create_timer(0.85).timeout
+		map_menu.open_pop_up()
+		
+	else:
+		print("DID NOT found the map menu")
+	
+	
 	
 func update_capped() -> void:
 	pass
@@ -218,7 +219,7 @@ func reset_buttons_settings() -> void:
 	enter_state(State.UNAVAILABLE)
 	$VBoxContainer.modulate = Color.WHITE
 	$VBoxContainer.scale = Vector2.ONE
-	$Purchased.hide()
+	%Purchased.hide()
 	purchase_hold_progress_bar.value = 0.0
 
 	if purchase_tween:
@@ -285,25 +286,16 @@ func complete_purchase() -> void:
 	var unpurchased_cont: VBoxContainer = $VBoxContainer
 	disabled = true
 	await get_tree().create_timer(0.1).timeout
-	$Purchased.show()
+	%Purchased.modulate.a = 0.0
+	%Purchased.show()
 	
 	var _button_down := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_button_down.tween_property(self, "scale", Vector2.ONE, 0.1)
 		
-	
-	var _orig_scale : Vector2 = unpurchased_cont.scale
 	var tween = create_tween()
-	tween.tween_property(unpurchased_cont, "scale", scale * 1.3, 0.1)
-	tween.parallel().tween_property(unpurchased_cont, "modulate", Color('42d100'), 0.1)
-	tween.tween_property(unpurchased_cont, "scale", 0.8, 0.1)
-	tween.parallel().tween_property(unpurchased_cont, "modulate", Color("80808050"), 0.1)
-	await tween.finished
+	tween.tween_property(%Purchased, "modulate:a", 100.0, 0.15)
 	
-	#await get_tree().create_timer(0.2).timeout
-	
-	#var main_shop = get_tree().get_first_node_in_group('shop_main_menu')
-	#if main_shop:
-		#main_shop.gun_purchased()
+
 	
 
 func _update_power_name() -> void:

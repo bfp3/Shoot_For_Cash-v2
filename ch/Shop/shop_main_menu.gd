@@ -54,7 +54,7 @@ func _ready() -> void:
 	# BOTTOM RIGHT PIVOT
 	#default_pivot_offset = size 
 	#pivot_offset = default_pivot_offset
-	pivot_offset_ratio = Vector2(0.5,1.0)
+	pivot_offset_ratio = Vector2(0.5,1.5)
 	cash_label.modulate.a = 0.0
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
 	

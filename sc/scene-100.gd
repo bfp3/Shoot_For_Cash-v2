@@ -105,3 +105,5 @@ func move_camera_to_player(delta: float) -> void:
 		start_cam.queue_free()
 		moving_camera = false
 	
+
+		

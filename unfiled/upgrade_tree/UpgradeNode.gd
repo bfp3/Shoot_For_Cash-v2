@@ -242,7 +242,7 @@ func reset_buttons_settings() -> void:
 	enter_state(State.UNAVAILABLE)
 	$VBoxContainer.modulate = Color.WHITE
 	$VBoxContainer.scale = Vector2.ONE
-	$Purchased.hide()
+	%Purchased.hide()
 	purchase_hold_progress_bar.value = 0.0
 
 	if purchase_tween:
@@ -372,16 +372,17 @@ func complete_purchase() -> void:
 	var unpurchased_cont: VBoxContainer = $VBoxContainer
 	disabled = true
 	await get_tree().create_timer(0.1, false).timeout
-	$Purchased.show()
-	var _button_down := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_button_down.tween_property(self, "position:y", 0.0, 0.05)
-	
+	%Purchased.show()
+	#var _button_down := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	#_button_down.tween_property(self, "position:y", 0.0, 0.05)
+	var node = $VBoxContainer/UpgradePanel
+	node.pivot_offset_ratio = Vector2.ONE / 2
 	var _orig_scale : Vector2 = unpurchased_cont.scale
 	var tween = create_tween()
-	tween.tween_property(unpurchased_cont, "scale", scale * 1.3, 0.1)
-	tween.parallel().tween_property(unpurchased_cont, "modulate", Color('42d100'), 0.1)
-	tween.tween_property(unpurchased_cont, "scale", 0.8, 0.1)
-	tween.parallel().tween_property(unpurchased_cont, "modulate", Color("80808050"), 0.1)
+	#tween.tween_property(unpurchased_cont, "scale", scale * 1.3, 0.1)
+	#tween.parallel().tween_property(unpurchased_cont, "modulate", Color('42d100'), 0.1)
+	tween.tween_property(node, "scale", Vector2.ONE * 0.8, 0.1)
+	tween.parallel().tween_property(node, "modulate", Color("80808050"), 0.1)
 	await tween.finished
 
 
@@ -470,7 +471,7 @@ func _play_wiggle(target_scale: float, _scale_dur : float = 0.08) -> void:
 	#wiggle_tween.set_trans(Tween.TRANS_SINE)
 	wiggle_tween.set_ease(Tween.EASE_OUT)
 
-	wiggle_tween.tween_property(_scale_node, "scale", Vector2(target_scale, target_scale), _scale_dur)
+	#wiggle_tween.tween_property(_scale_node, "scale", Vector2(target_scale, target_scale), _scale_dur)
 	wiggle_tween.tween_property(_scale_node, "rotation_degrees", -2.0, 0.04)
 	wiggle_tween.tween_property(_scale_node, "rotation_degrees", 3.0, 0.08)
 	wiggle_tween.tween_property(_scale_node, "rotation_degrees", 0.0, 0.04)

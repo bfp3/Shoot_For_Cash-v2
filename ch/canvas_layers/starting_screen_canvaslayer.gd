@@ -32,12 +32,12 @@ func _ready() -> void:
 	EventBus.instance.open_tally_card.connect(enter_state.bind(State.OPEN_MENU))
 
 	# STORE DEFAULT TRANSFORMS
-	splash_screen_control.default_scale = scale
+	splash_screen_control.default_scale = splash_screen_control.scale
 	default_position = splash_screen_control.position
 
 	# BOTTOM RIGHT PIVOT
-	splash_screen_control.default_pivot_offset = Vector2(splash_screen_control.size.x, splash_screen_control.size.y)
-	splash_screen_control.pivot_offset = default_pivot_offset
+	splash_screen_control.default_pivot_offset = Vector2(0.5,1.15)
+	splash_screen_control.pivot_offset_ratio = default_pivot_offset
 
 	hide()
 	
@@ -79,15 +79,17 @@ func update_start() -> void:
 	var tween = create_tween()
 	tween.tween_callback(music_control.start_opening_song)
 	tween.tween_interval(1.5)
-	tween.tween_property(game_title_background, "modulate:a", 1.0, 0.15)
-	tween.tween_interval(0.85)
+	
+	tween.tween_interval(1.0)
 	tween.tween_property(game_name, "modulate:a", 1.0, 0.15)
 	tween.parallel().tween_property(game_name, "scale", Vector2.ONE * 1.25, 0.15)
 	tween.parallel().tween_callback(opening_sfx)
-	tween.parallel().tween_property(game_title_background, "modulate:a", 1.0, 0.15)
 	
 	tween.tween_property(game_name, "scale", Vector2.ONE * 1.0, 0.15)
-	
+	tween.tween_interval(1.15)
+	tween.tween_property(game_title_background, "modulate:a", 1.0, 0.15)
+	await tween.finished
+	background_balloons.start = true
 	#tween.tween_interval(2.0)
 	#tween.tween_property(copyright, "modulate:a", 1.0, 1.5)
 	
@@ -113,7 +115,7 @@ func update_open_menu() -> void:
 	splash_screen_control.modulate.a = 0.0
 	splash_screen_control.scale = Vector2.ONE * 0.01
 	splash_screen_control.position = default_position
-	splash_screen_control.pivot_offset = default_pivot_offset
+	splash_screen_control.pivot_offset_ratio = default_pivot_offset
 
 	show()
 
@@ -122,9 +124,9 @@ func update_open_menu() -> void:
 	tween.set_trans(Tween.TRANS_LINEAR)
 	tween.set_ease(Tween.EASE_OUT)
 
-	tween.parallel().tween_property(self, "scale", default_scale, 0.4)
-	tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
-
+	tween.tween_property(splash_screen_control, "scale", default_scale, 0.4)
+	tween.parallel().tween_property(splash_screen_control, "modulate:a", 1.0, 0.18)
+	
 	await tween.finished
 	
 	enter_state(State.IN_MENU)
@@ -133,15 +135,15 @@ func update_open_menu() -> void:
 func update_close_menu() -> void:
 	$'..'.start_game()
 
-	splash_screen_control.pivot_offset = default_pivot_offset
+	splash_screen_control.pivot_offset_ratio = Vector2(0.5,1.155)
 
 	var tween := create_tween()
 
 	tween.set_trans(Tween.TRANS_LINEAR)
 	tween.set_ease(Tween.EASE_IN)
-
-	tween.parallel().tween_property(self, "scale", Vector2.ONE * 0.01, 0.4)
-	tween.parallel().tween_property(self, "modulate:a", 0.0, 0.16)
+	tween.parallel().tween_property(splash_screen_control, "scale", Vector2.ONE / 99, 0.4)
+	tween.parallel().tween_property(splash_screen_control, "modulate:a", 1.0, 0.18)
+	
 
 	await tween.finished
 

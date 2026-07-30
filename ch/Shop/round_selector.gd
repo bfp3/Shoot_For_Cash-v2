@@ -1,10 +1,6 @@
 @tool
 extends TextureButton
 
-
-
-@onready var outer_ring: TextureRect = $OuterRing
-
 @export var outerRingColour_default: Color = Color("666b78ff"):
 	set(value):
 		outerRingColour_default = value
@@ -22,21 +18,18 @@ extends TextureButton
 
 var outer_ring_mod_orig: Color
 
-
-@export var shop_main_menu : Control
+@export var shop_main_menu: Control
 
 @export var focus_enter_sfx: AudioStreamPlayer
 @export var focus_exit_sfx: AudioStreamPlayer
 @export var pressed_sfx: AudioStreamPlayer
-@onready var round_number: RichTextLabel = $RoundNumber
 
-
-@onready var orig_scale := self.scale
+@onready var orig_scale := scale
 
 var interaction_tween: Tween
-var round_manager : RoundManager = null
+var round_manager: RoundManager = null
 
-var all_levels : Array = []
+var all_levels: Array = []
 
 enum State {
 	LOCKED,
@@ -45,22 +38,30 @@ enum State {
 	PERFECTED
 }
 
-@export var current_state : State = State.LOCKED
-var old_state : State = State.LOCKED
-var tween_available : Tween = null
+@export var current_state: State = State.LOCKED
+var old_state: State = State.LOCKED
+var tween_available: Tween = null
 
+@onready var icon_control: Control = %Icon_Control
+@onready var outer_ring_3: TextureRect = %OuterRing3
+@onready var outer_ring: TextureRect = %OuterRing
+@onready var outer_ring_2: TextureRect = %OuterRing2
+@onready var check_mark: TextureRect = %CheckMark
+@onready var round_number: RichTextLabel = $RoundNumber
+@onready var cash_earned: RichTextLabel = %CashEarned
+@onready var one_hundred_percent_control: Control = %'100_percent'
+@onready var one_hundred_percent_label: RichTextLabel = %perfected_label
+@onready var arrow_indication: Control = %ArrowIndication
 
-
+var stored_text := ''
 
 func _ready() -> void:
 
-	outer_ring_mod_orig = outerRingColour_default
-	round_number.modulate = Color.TRANSPARENT
-	
-	round_manager = get_tree().get_first_node_in_group('round_manager')
+	round_manager = get_tree().get_first_node_in_group("round_manager")
 	all_levels = round_manager.current_rock_sequence
+	stored_text = str(get_index() + 1)
 	
-	round_number.text = str(get_index() + 1)
+	round_number.text = stored_text
 	
 	focus_mode = Control.FOCUS_ALL
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -72,103 +73,111 @@ func _ready() -> void:
 
 	focus_entered.connect(_on_focus_entered)
 	focus_exited.connect(_on_focus_exited)
-	
-	if !self.has_signal('pressed'):
-		self.pressed.connect(_on_pressed)
-	round_manager = get_tree().get_first_node_in_group('round_manager')
 
+	if !has_signal("pressed"):
+		pressed.connect(_on_pressed)
+
+	round_manager = get_tree().get_first_node_in_group("round_manager")
+	
+	outer_ring_mod_orig = outerRingColour_default
+	round_number.modulate.a = 0.0
+	one_hundred_percent_control.modulate.a = 0.0
+	arrow_indication.modulate.a = 0.0
+	cash_earned.modulate.a = 0.0
+	
 	enter_state(current_state)
 	_update_editor_preview()
-	
 
 
-func enter_state(new_state : State) -> void:
+func enter_state(new_state: State) -> void:
 	current_state = new_state
-	
+
 	if tween_available:
 		tween_available.kill()
-	
+
 	match current_state:
 		State.LOCKED:
 			update_locked()
-			
+
 		State.AVAILABLE:
 			update_available()
-			
+
 		State.CLEARED:
 			update_cleared()
-			
+
 		State.PERFECTED:
 			update_perfected()
-			
+
+
 func update_locked() -> void:
 	#disabled = true
-	$CheckMark.hide()
-	$'100_percent'.hide()
-	$ArrowIndication.hide()
 	outer_ring.modulate = outerRingColour_default
-	round_number.hide()
-	round_number.modulate.a = 0.0
-	self.custom_minimum_size = Vector2(40.0,40.0)
+	icon_control.scale = Vector2.ONE / 3
+
 
 func update_available() -> void:
 	disabled = false
-	$ArrowIndication.show()
-	$CheckMark.hide()
-	$'100_percent'.hide()
+	arrow_indication.modulate.a = 1.0
 	outer_ring.modulate = outerRingColour_active
-	round_number.show()
-	round_number.modulate.a = 100.0
-	blink_tween()
-	self.custom_minimum_size = Vector2(50.0,50.0)
-	
+	round_number.modulate.a = 1.0
+	round_number.text = '[wave]' + stored_text
+	outer_ring_2.modulate = Color('940104')
+	round_number.modulate = Color("ffffffff")
+	#blink_tween()
+	icon_control.scale = Vector2.ONE
+
+
+
 func update_cleared() -> void:
 	#disabled = true
-	$CheckMark.show()
-	$'100_percent'.hide()
-	$ArrowIndication.hide()
+	#check_mark.show()
+	#round_number.hide()
+	round_number.text = stored_text
+	one_hundred_percent_control.modulate.a = 0.0
+	arrow_indication.modulate.a = 0.0
+	cash_earned.modulate.a = 1.0
 	outer_ring.modulate = outerRingColour_levelCompleted
-	round_number.hide()
-	self.custom_minimum_size = Vector2(40.0,40.0)
+	outer_ring_2.modulate = Color('ebe0d8')
+	round_number.modulate = Color("dbc4b2ff")
 	
+
 func update_perfected() -> void:
-	#disabled = true
-	$CheckMark.show()
-	$ArrowIndication.hide()
-	var round_bonus := int(gl_DataSet.get_value('reward_perfect_round'))
-	%CashEarned.text = "[i]$" + str(gl_PlayerState.dataset.bonus_cash + round_bonus - gl_PlayerState.dataset.fines)
-	$'100_percent'.show()
+	round_number.text = stored_text
+	arrow_indication.modulate.a = 0.0
+	
+	var round_bonus := int(gl_DataSet.get_value("reward_perfect_round"))
+	cash_earned.text = "[i]$" + str(gl_PlayerState.dataset.bonus_cash + round_bonus - gl_PlayerState.dataset.fines)
+	cash_earned.modulate.a = 1.0
+
+	one_hundred_percent_control.modulate.a = 1.0
 	outer_ring.modulate = outerRingColour_levelCompleted
-	round_number.hide()
-	self.custom_minimum_size = Vector2(40.0,40.0)
+	outer_ring_2.modulate = Color('ebe0d8')
+	round_number.modulate = Color("dbc4b2ff")
+	
 	
 func blink_tween() -> void:
-	var dur : float = 0.2
+	var dur := 0.2
+
 	if tween_available:
 		tween_available.kill()
-	
+
 	tween_available = create_tween()
-	tween_available.tween_property($OuterRing, "modulate:a", 0.2, dur)
-	tween_available.tween_property($OuterRing, "modulate:a", 1.0, dur)
+	tween_available.tween_property(outer_ring, "modulate:a", 0.2, dur)
+	tween_available.tween_property(outer_ring, "modulate:a", 1.0, dur)
+
 	await tween_available.finished
-	
+
 	if current_state == State.AVAILABLE:
 		blink_tween()
-	
-	
+
+
 func _on_pressed() -> void:
-	#return
 	if pressed_sfx:
 		pressed_sfx.play()
-		
-	#disabled = true
-	#_deselect_all_buttons()
-	#set_selected(true)
-	
-	var sequence_index := get_index() # Same as (get_index() + 1) - 1
-	
-	round_manager.current_sequence_index = sequence_index #- 1
-	
+
+	var sequence_index := get_index()
+	round_manager.current_sequence_index = sequence_index
+
 	if interaction_tween:
 		interaction_tween.kill()
 
@@ -180,21 +189,22 @@ func _on_pressed() -> void:
 
 	interaction_tween.tween_property(self, "scale", original_scale * 0.85, 0.06)
 	interaction_tween.tween_property(self, "scale", original_scale, 0.08)
-	
-	
+
 	await interaction_tween.finished
-	
+
 	shop_main_menu.play_round_button_pressed()
 	await get_tree().create_timer(1.0).timeout
-	
+
 	disabled = false
-	
+
 
 func _on_focus_entered() -> void:
-	
+	if !OS.is_debug_build():
+		return
+		
 	if current_state == State.LOCKED:
 		return
-	
+
 	if focus_enter_sfx:
 		focus_enter_sfx.play()
 
@@ -203,6 +213,8 @@ func _on_focus_entered() -> void:
 
 
 func _on_focus_exited() -> void:
+	if !OS.is_debug_build():
+		return
 	
 	if current_state == State.LOCKED:
 		return
@@ -215,7 +227,6 @@ func _on_focus_exited() -> void:
 
 
 func _play_wiggle(target_scale: float) -> void:
-	#return
 	if interaction_tween:
 		interaction_tween.kill()
 
@@ -234,8 +245,8 @@ func _play_wiggle(target_scale: float) -> void:
 	#interaction_tween.tween_property(self, "rotation_degrees", -2.0, 0.04)
 	#interaction_tween.tween_property(self, "rotation_degrees", 2.0, 0.08)
 	#interaction_tween.tween_property(self, "rotation_degrees", 0.0, 0.04)
-	#
-	
+
+
 func set_selected(selected: bool) -> void:
 	if selected:
 		outer_ring.modulate = outerRingColour_active
@@ -260,12 +271,13 @@ func restart() -> void:
 	rotation_degrees = 0.0
 	z_index = 0
 	disabled = false
-	$%CashEarned.text = ""
+	cash_earned.text = ""
 
 	if get_index() == 0:
 		enter_state(State.AVAILABLE)
 	else:
 		enter_state(State.LOCKED)
+
 
 func _update_editor_preview() -> void:
 	if !is_inside_tree() or !Engine.is_editor_hint():
@@ -277,7 +289,9 @@ func _update_editor_preview() -> void:
 	match current_state:
 		State.LOCKED:
 			outer_ring.modulate = outerRingColour_default
+
 		State.AVAILABLE:
 			outer_ring.modulate = outerRingColour_active
+
 		State.CLEARED, State.PERFECTED:
 			outer_ring.modulate = outerRingColour_levelCompleted
