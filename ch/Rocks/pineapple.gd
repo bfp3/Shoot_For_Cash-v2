@@ -323,15 +323,23 @@ func apply_hit_reaction(screen_offset : Vector2) -> void:
 	
 func fly_off_into_the_distance() -> void:
 	var strength : float = [2.0,3.0].pick_random()
-	var x_direction := 1.0
-	if global_position.x <= -1.0:
-		x_direction = -15.0
+	var x_direction := 0.0
+	#if global_position.x <= -1.0:
+		#x_direction = -15.0
+	#
+	#else:
+		#x_direction = 15.0
 	
-	else:
-		x_direction = 15.0
-		
-	apply_central_impulse(Vector3(x_direction,-.0,35) * strength)
+	var player := get_tree().get_first_node_in_group('Player')
+	
+	if !player:
+		apply_central_impulse(Vector3(x_direction,-0.0,35) * strength)
 
+	else:
+		strength = 4.0
+		var dir : Vector3= self.global_position - player.global_position.normalized()
+		dir.y /= 3
+		apply_central_impulse(dir * strength)
 
 func hit_by_player(damage: int, screen_offset: Vector2 = Vector2.ZERO) -> void:
 	if is_deactivated:
@@ -575,19 +583,19 @@ func check_position_for_wall() -> void:
 	match exit_side:
 		ExitSide.LEFT:
 			
-			if global_position.x > 16.5 || global_position.y <= -5.0:
+			if global_position.x > 16.5 || global_position.y <= -3.0:
 				hit_out_of_bounds()
 			#if global_position.x > -18.5:
 				#hit_out_of_bounds()
 
 		ExitSide.RIGHT:
-			if global_position.x < -15.5 || global_position.y <= -5.0:
+			if global_position.x < -15.5 || global_position.y <= -3.0:
 				hit_out_of_bounds()
 			#if global_position.x > 15.5:
 				#hit_out_of_bounds()
 
 		ExitSide.TOP:
-			if global_position.y > 12.0 || global_position.y <= -5.0:
+			if global_position.y > 12.0 || global_position.y <= -3.0:
 				hit_out_of_bounds()
 				
 		

@@ -1,4 +1,11 @@
 class_name Player extends Node3D
+@onready var mobile_controller: Node = $MobileControl
+var is_mobile := OS.has_feature("mobile")
+var running_on_mobile := false
+
+const sensitivity_step := 0.2
+const min_mouse_sensitivity := 0.8
+const max_mouse_sensitivity := 3.0
 
 @onready var spot_light_3d: SpotLight3D = %GunSpotlight
 
@@ -91,7 +98,6 @@ var cam_clamp_left := 1
 var cam_clamp_right := 1
 var camera_pan_able := false
 
-
 ## Inner_scope is a 40x40 Control; at scale 1.0 its visual radius is 20px.
 ## power_target_circle is a screen-pixel hit radius (same units Radius_Debug draws).
 func _inner_scope_scale_for_radius(radius: float) -> float:
@@ -102,6 +108,10 @@ func _inner_scope_scale_for_radius(radius: float) -> float:
 
 
 func _ready() -> void:
+
+	if is_mobile:
+		running_on_mobile = true
+		
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)
 	EventBus.instance.end_round_rock_missed.connect(stop_player)
@@ -111,7 +121,7 @@ func _ready() -> void:
 		gl_PlayerState.dataset.power_target_circle
 	)
 	tween_scope(_inner_scope_scale_for_radius(start_radius), 0.33)
-
+	
 	original_shot_count = shot_count
 	
 	%Bullet_icon.hide()
@@ -223,6 +233,8 @@ func handle_pan_left_and_right(delta) -> void:
 func _process(delta: float) -> void:
 	
 	
+	
+	
 	if OS.has_feature("editor") && !game_lost:
 		if Input.is_action_pressed("middle_mouse"):
 			Engine.time_scale = 10.0
@@ -271,8 +283,17 @@ func _process(delta: float) -> void:
 		viewport_size.y - half_crosshair.y
 	)
 	
-	crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
-	
+	if running_on_mobile:
+		target_crosshair_position += mobile_controller.get_crosshair_motion()
+
+		
+		
+	else:
+		crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
+		crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
+		%Crosshair.global_position = crosshair_position
+		
+		
 	#if Input.is_action_pressed("shootWeapon") && gl_PlayerState.dataset.power_auto_fire > 0:
 		#fire_weapon()
 	
@@ -305,8 +326,7 @@ func _process(delta: float) -> void:
 	
 	#if Input.is_action_pressed("shootWeapon"):
 		#return
-	crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
-	%Crosshair.global_position = crosshair_position
+	
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
@@ -658,16 +678,33 @@ func _input(event: InputEvent) -> void:
 	
 	if current_state != State.ACTIVE:
 		return
-
-	if Input.is_action_just_pressed("switch_viewport"):
-		if get_viewport().debug_draw == Viewport.DebugDraw.DEBUG_DRAW_UNSHADED:
-			get_viewport().debug_draw = Viewport.DebugDraw.DEBUG_DRAW_DISABLED
-		else:
-			get_viewport().debug_draw = Viewport.DebugDraw.DEBUG_DRAW_UNSHADED
-		
-	if event is InputEventMouseMotion:
+	
+	if !running_on_mobile and event is InputEventMouseMotion:
 		target_crosshair_position += event.relative * _mouse_sensitivity * gl_PlayerState.mouse_sensitivity
-		
+	
+	elif event is InputEventMouseButton and event.pressed:
+		match event.button_index:
+			MOUSE_BUTTON_WHEEL_UP:
+				gl_PlayerState.mouse_sensitivity = clamp(
+					gl_PlayerState.mouse_sensitivity + sensitivity_step,
+					min_mouse_sensitivity,
+					max_mouse_sensitivity
+				)
+				
+				$SFX/ScopeShrink.play()
+				print("Mouse sensitivity:", gl_PlayerState.mouse_sensitivity)
+
+			MOUSE_BUTTON_WHEEL_DOWN:
+				gl_PlayerState.mouse_sensitivity = clamp(
+					gl_PlayerState.mouse_sensitivity - sensitivity_step,
+					min_mouse_sensitivity,
+					max_mouse_sensitivity
+				)
+				$SFX/ScopeShrink.play()
+				print("Mouse sensitivity:", gl_PlayerState.mouse_sensitivity)
+
+
+
 func little_camera_movement() -> void:
 	camera_3d.little_camera_movement()
 

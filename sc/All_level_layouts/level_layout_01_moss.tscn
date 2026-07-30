@@ -14,7 +14,6 @@
 [ext_resource type="PackedScene" uid="uid://bopuv7ypfra3i" path="res://ch/environment_decoration/boat2.tscn" id="15_x8ffe"]
 [ext_resource type="Texture2D" uid="uid://x5tjmkxr3qll" path="res://res/dirt_texture_01.png" id="16_k7lvh"]
 [ext_resource type="Material" uid="uid://dnf6h6nys5ggr" path="res://res/mountain_material.tres" id="16_r0nke"]
-[ext_resource type="PackedScene" uid="uid://b5i0347dtybjp" path="res://ch/spare_parts_removed_to_optimise/outset_ocean.tscn" id="17_1thcr"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="17_fwjsh"]
 [ext_resource type="Texture2D" uid="uid://bhst5en4f2e3b" path="res://res/mountain_image.png" id="17_p87rn"]
 [ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="17_snbl5"]
@@ -3091,13 +3090,6 @@ modulate = Color(1, 0.80883336, 0.63, 0.23529412)
 pixel_size = 0.5
 texture = ExtResource("21_fwjsh")
 
-[node name="OutsetOcean" parent="." unique_id=658307306 instance=ExtResource("17_1thcr")]
-process_mode = 3
-transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 3.36, -4.115, 333.782)
-
-[node name="WaterMaterialDesigner" parent="OutsetOcean" index="0" unique_id=1811003880]
-wave_fade_softness = 1.0
-
 [node name="ZoneA" type="Area3D" parent="." unique_id=1838933963 groups=["zone_a"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 2.345, 23)
 monitoring = false
@@ -3255,4 +3247,3 @@ cull_mask = 1032191
 [editable path="Boatmesh/FrontRotatingPillars/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]
 [editable path="Boatmesh/brick_fountain_3"]
-[editable path="OutsetOcean"]

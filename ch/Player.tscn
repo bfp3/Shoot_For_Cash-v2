@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://da45gubie1h3t" path="res://ch/Player/scripts/player.gd" id="1_6ljxy"]
 [ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="2_kbm6s"]
+[ext_resource type="Script" uid="uid://4a0w5mbutje7" path="res://ch/Player/mobile_controller.gd" id="2_vmtkp"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_b1tng"]
 [ext_resource type="Script" uid="uid://b8ta6ry80sv7q" path="res://ch/inner_scope_2.gd" id="9_b1tng"]
 [ext_resource type="AudioStream" uid="uid://bk1svagr7yjcv" path="res://sfx/gunLocked.ogg" id="9_g6ubq"]
@@ -839,6 +840,9 @@ scope_shrink_sfx_max_pitch = 50.0
 scope_shrink_speed = 180.0
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
+
+[node name="MobileControl" type="Node" parent="." unique_id=770032217]
+script = ExtResource("2_vmtkp")
 
 [node name="Weapon_shooting" type="Node3D" parent="." unique_id=2019545500 node_paths=PackedStringArray("player_camera", "stable_camera", "player_gun")]
 script = ExtResource("17_0locf")
