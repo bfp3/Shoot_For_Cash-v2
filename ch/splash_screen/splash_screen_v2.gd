@@ -9,9 +9,7 @@ enum State {
 	IN_MENU,
 	CLOSE_MENU
 }
-@onready var black_screen: Control = $BlackScreen
-@onready var copyright: Control = $Copyright
-@onready var brand_name: Control = $BrandName
+
 @onready var game_name: Control = $GameName
 
 var current_state : State = State.INACTIVE

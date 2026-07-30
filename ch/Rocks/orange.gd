@@ -5,6 +5,8 @@ const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 var cash_value := 0
 var original_cash_value := 0
 
+
+
 @export var force_multiplier := 1.5
 var pitch_adjustment := 0.02
 var taken_hit = false
@@ -28,7 +30,7 @@ enum State {
 }
 @export var pulse_magnitude := 0.8
 
-var current_state : State
+@export var current_state : State = State.INACTIVE
 
 
 var	force_mult : Array = [3,4]

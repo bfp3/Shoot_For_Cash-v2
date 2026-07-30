@@ -54,6 +54,7 @@ var rock_activated := false
 var rock_destroyed := true
 var is_deactivated := false
 var health := 0
+var strike_count := 0
 var start_pos : Vector3
 
 var current_rock_type : String = ""
@@ -197,6 +198,7 @@ func reset_rock_back_on() -> void:
 	$hit_wall_timer.stop()
 	$Mesh.scale = Vector3.ONE
 	health = base_health
+	strike_count = 0
 	#cash_value = base_cash # * size_multiplier
 	max_health = health
 	pineapple_mesh.visible = true
@@ -217,6 +219,7 @@ func reset_stats() -> void:
 	$hit_wall_timer.stop()
 	pitch_adjustment = 0.02
 	taken_hit = false
+	strike_count = 0
 	rock_activated = false
 	current_mesh = pineapple_mesh
 	current_rock_type = ""
@@ -328,39 +331,54 @@ func fly_off_into_the_distance() -> void:
 		x_direction = 15.0
 		
 	apply_central_impulse(Vector3(x_direction,-.0,35) * strength)
-		
-func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:
-	
 
-	
-	damage = 1
-	
-	
+
+func hit_by_player(damage: int, screen_offset: Vector2 = Vector2.ZERO) -> void:
+	if is_deactivated:
+		return
+
 	$hit_wall_timer.stop()
-	health -= damage 
-	
-	if health == 1:
-		freeze = true
-		smoke_particles()
-		return
-			
-	if damage == 0:
-		cash_value += 10
-	
 	taken_hit = true
-	freeze = false
-	
-	if health > 0:
-		play_hit_sfx()
-		apply_hit_reaction(screen_offset)
-		
-	if health == 0:
-		#await get_tree().create_timer(2.0).timeout
-		start_destroyed_process()
+	strike_count += 1
+
+	match strike_count:
+		1:
+			# Strike 1: send it flying off into the distance
+			play_hit_sfx()
+			fly_off_into_the_distance()
+			smoke_particles_duplicates()
+			watch_for_abandoned_hit()
+
+		2:
+			# Strike 2: freeze it midair
+			freeze = false
+			start_destroyed_process()
+
+		#3:
+			#play_hit_sfx()
+			#freeze = true
+			## Strike 3: destroy it
+
+
+func watch_for_abandoned_hit() -> void:
+	var strike_at_call := strike_count
+	await get_tree().create_timer(1.5).timeout
+
+	# If the player followed up with strike 2/3 already, or it's gone, bail out
+	if strike_count != strike_at_call or is_deactivated:
 		return
-	
-	start_destroyed_process()
-	
+
+	# Left hanging after one hit - let gravity take over and watch for it landing
+	update_gravity(1.0)
+	monitor_fall_after_abandon()
+
+
+func monitor_fall_after_abandon() -> void:
+	while strike_count == 1 and not is_deactivated:
+		if global_position.y <= -5.0:
+			hit_out_of_bounds()
+			return
+		await get_tree().create_timer(0.1).timeout
 
 
 
@@ -569,7 +587,7 @@ func check_position_for_wall() -> void:
 				#hit_out_of_bounds()
 
 		ExitSide.TOP:
-			if global_position.y > 9.0 || global_position.y <= -5.0:
+			if global_position.y > 12.0 || global_position.y <= -5.0:
 				hit_out_of_bounds()
 				
 		

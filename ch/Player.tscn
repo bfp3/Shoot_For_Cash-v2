@@ -37,6 +37,7 @@
 [ext_resource type="Script" uid="uid://lbyemwcvc6j3" path="res://ch/Player/auto_fire.gd" id="32_hv0dl"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="33_1tjj5"]
 [ext_resource type="Script" uid="uid://dkgy3x0fuv70v" path="res://ch/Player/pineapple_round_hud.gd" id="33_lf8qf"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="33_ms1v2"]
 [ext_resource type="Texture2D" uid="uid://cxk0yxen5f6sp" path="res://unfiled/Decal_placeholders/pineapple_1024x1024.png" id="34_11n43"]
 [ext_resource type="Texture2D" uid="uid://cdibh2x081m8m" path="res://res/auto_fire_icon.png" id="34_fuvvr"]
 [ext_resource type="Texture2D" uid="uid://celcha768vcmg" path="res://res/sky_mine_icon.png" id="35_bpx2c"]
@@ -1801,6 +1802,14 @@ fill_mode = 3
 texture_under = ExtResource("8_b1tng")
 texture_progress = ExtResource("8_b1tng")
 tint_under = Color(1, 1, 1, 0.05882353)
+
+[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/Bullet_icon" unique_id=409353141 instance=ExtResource("33_ms1v2")]
+layout_mode = 1
+offset_left = -128.125
+offset_top = -94.00006
+offset_right = 127.875
+offset_bottom = 161.99994
+scale = Vector2(0.288, 0.288)
 
 [node name="TotalRocks" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=1526152981]
 visible = false
