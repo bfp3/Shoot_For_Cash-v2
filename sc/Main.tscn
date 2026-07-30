@@ -35,6 +35,8 @@
 [ext_resource type="PackedScene" uid="uid://cl0yh38bqfqd3" path="res://ch/Shop/Start_menu_shop_clone.tscn" id="37_0tjmb"]
 [ext_resource type="PackedScene" uid="uid://dg8ab1qtj51xm" path="res://ch/Shop/ticket_purchased_pop_up.tscn" id="47_gspdd"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="49_24t6b"]
+[ext_resource type="Shader" uid="uid://b0w47e61vj8md" path="res://res/Shaders/transitionshader.gdshader" id="49_2300m"]
+[ext_resource type="Script" uid="uid://cl3cmsr8nw8vb" path="res://ch/transitionMask.gd" id="51_tnw34"]
 [ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="54_i541k"]
 [ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="55_3u5oq"]
 [ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="56_4ta1g"]
@@ -379,6 +381,13 @@ Panel/styles/panel = SubResource("StyleBoxFlat_24t6b")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_8xhv2")
 
 [sub_resource type="PrismMesh" id="PrismMesh_vycyu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nn6vd"]
+shader = ExtResource("49_2300m")
+shader_parameter/mask_texture = ExtResource("49_24t6b")
+shader_parameter/zoom = 0.0
+shader_parameter/strength = 0.0
+shader_parameter/center = Vector2(0.5, 0.5)
 
 [sub_resource type="Gradient" id="Gradient_8xhv2"]
 colors = PackedColorArray(0.92156863, 0.8784314, 0.84705883, 1, 0.85882354, 0.76862746, 0.69803923, 1)
@@ -893,18 +902,20 @@ debug_color = Color(0, 1, 0, 1)
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="Rocks/Shover" unique_id=1565011847]
 transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, -20.699135, 3.0234952, -4.9721565)
 shape = SubResource("BoxShape3D_ymbdo")
+disabled = true
 debug_color = Color(0, 1, 0, 1)
 
 [node name="CollisionShape3D5" type="CollisionShape3D" parent="Rocks/Shover" unique_id=1086062209]
 transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 20.741976, 3.0234952, -4.9721565)
 shape = SubResource("BoxShape3D_ymbdo")
+disabled = true
 debug_color = Color(0, 1, 0, 1)
 
 [node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("23_ellt3")]
 unique_name_in_owner = true
 transform = Transform3D(-1, -8.379102e-09, -8.70203e-08, 0, 0.9953962, -0.09584575, 8.742278e-08, -0.09584575, -0.9953962, 0, -0.875, 0.5)
-scope_shrink_speed = 360.0
-scope_shrink_delay_dur = 0.1
+scope_shrink_duration = 0.1
+scope_shrink_delay_dur = 0.15
 roundManager = NodePath("../Round_manager")
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
@@ -1069,7 +1080,6 @@ start_time = 50.0
 
 [node name="Place_name" type="Control" parent="MainGameCanvasLayer" unique_id=877796412]
 visible = false
-z_index = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -1287,16 +1297,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 
 [node name="Background" type="ColorRect" parent="Background_transition/Background_control" unique_id=1326191225]
+material = SubResource("ShaderMaterial_nn6vd")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = 547.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+script = ExtResource("51_tnw34")
 
 [node name="ColorRect2" type="TextureRect" parent="Background_transition/Background_control" unique_id=133825860]
 visible = false
@@ -1397,7 +1411,16 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ColorRect3" type="ColorRect" parent="Background_transition/Background_control" unique_id=1713541627]
+[node name="Control" type="Control" parent="Background_transition/Background_control" unique_id=544167411]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect3" type="ColorRect" parent="Background_transition/Background_control/Control" unique_id=1713541627]
 custom_minimum_size = Vector2(0, 15)
 layout_mode = 1
 anchors_preset = 14
@@ -1408,9 +1431,10 @@ offset_top = 56.5
 offset_bottom = 71.5
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 
-[node name="ColorRect4" type="ColorRect" parent="Background_transition/Background_control" unique_id=1056113604]
+[node name="ColorRect4" type="ColorRect" parent="Background_transition/Background_control/Control" unique_id=1056113604]
 custom_minimum_size = Vector2(0, 15)
 layout_mode = 1
 anchors_preset = 14
@@ -1421,9 +1445,10 @@ offset_top = -71.5
 offset_bottom = -56.5
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 
-[node name="ColorRect" type="TextureRect" parent="Background_transition/Background_control" unique_id=1139922418]
+[node name="ColorRect" type="TextureRect" parent="Background_transition/Background_control/Control" unique_id=1139922418]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1435,7 +1460,7 @@ mouse_filter = 2
 texture = SubResource("GradientTexture2D_8xhv2")
 stretch_mode = 5
 
-[node name="HSeparator" type="HSeparator" parent="Background_transition/Background_control" unique_id=375295126]
+[node name="HSeparator" type="HSeparator" parent="Background_transition/Background_control/Control" unique_id=375295126]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -1445,9 +1470,10 @@ offset_top = -122.0
 offset_bottom = -118.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_styles/separator = SubResource("StyleBoxFlat_2300m")
 
-[node name="LoadingText" type="RichTextLabel" parent="Background_transition/Background_control" unique_id=1194549037]
+[node name="LoadingText" type="RichTextLabel" parent="Background_transition/Background_control/Control" unique_id=1194549037]
 modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
 layout_mode = 1
 anchors_preset = 8
@@ -1455,10 +1481,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -18.5
-offset_top = -33.0
-offset_right = 18.5
-offset_bottom = 33.0
+offset_left = -116.0
+offset_top = -47.0
+offset_right = 116.0
+offset_bottom = 47.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -1536,265 +1562,6 @@ force_multiplier = 1.0
 
 [node name="Pineapple5" parent="Pineapple" unique_id=1865048044 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple6" parent="Pineapple" unique_id=1774864226 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple7" parent="Pineapple" unique_id=1117725698 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple8" parent="Pineapple" unique_id=1781194340 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple9" parent="Pineapple" unique_id=758482172 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple10" parent="Pineapple" unique_id=1485000339 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple11" parent="Pineapple" unique_id=1708590466 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple12" parent="Pineapple" unique_id=1426216787 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple13" parent="Pineapple" unique_id=671118281 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple14" parent="Pineapple" unique_id=1295308023 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple15" parent="Pineapple" unique_id=1987048298 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple16" parent="Pineapple" unique_id=204739255 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple17" parent="Pineapple" unique_id=1873066725 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple18" parent="Pineapple" unique_id=1407580827 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple19" parent="Pineapple" unique_id=732672277 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple20" parent="Pineapple" unique_id=964302430 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple21" parent="Pineapple" unique_id=867245492 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple22" parent="Pineapple" unique_id=486017192 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple23" parent="Pineapple" unique_id=1498884602 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple24" parent="Pineapple" unique_id=2141910420 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple25" parent="Pineapple" unique_id=1816153739 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple26" parent="Pineapple" unique_id=910893864 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple27" parent="Pineapple" unique_id=476421502 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple28" parent="Pineapple" unique_id=237156272 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple29" parent="Pineapple" unique_id=1274109507 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple30" parent="Pineapple" unique_id=204347860 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple31" parent="Pineapple" unique_id=940134101 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple32" parent="Pineapple" unique_id=1318316626 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple33" parent="Pineapple" unique_id=503126532 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple34" parent="Pineapple" unique_id=1084067243 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple35" parent="Pineapple" unique_id=1773304145 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple36" parent="Pineapple" unique_id=1329744472 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple37" parent="Pineapple" unique_id=397515411 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple38" parent="Pineapple" unique_id=104033067 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple39" parent="Pineapple" unique_id=313995080 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple40" parent="Pineapple" unique_id=275332281 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple41" parent="Pineapple" unique_id=1687626619 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple42" parent="Pineapple" unique_id=2051133487 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0

@@ -551,7 +551,7 @@ func move_to_moss() -> void:
 	
 	scene_transition_screen.next_level_finish()
 	place_name.update_place_name()
-	
+	await get_tree().create_timer(1.0, false).timeout
 	#if current_round == 0:
 	$'../PlayerBalloon'.add_balloon()
 		

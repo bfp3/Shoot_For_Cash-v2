@@ -8,3 +8,7 @@ signal updated_lod(far_distance: float, middle_distance: float, unit_size: float
 
 func _on_water_material_designer_updated_lod(far_distance, middle_distance, unit_size):
 	updated_lod.emit(far_distance, middle_distance, unit_size)
+
+
+func _on_ocean_simple_updated_lod(far_distance: float, middle_distance: float, unit_size: float) -> void:
+	updated_lod.emit(far_distance, middle_distance, unit_size)

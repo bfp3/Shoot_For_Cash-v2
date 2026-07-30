@@ -21,6 +21,9 @@
 [ext_resource type="Script" uid="uid://dn76e05h17t31" path="res://scripts/multiplier_zones.gd" id="19_md1in"]
 [ext_resource type="Shader" uid="uid://edq6lqyshe6v" path="res://sc/All_level_layouts/money_tower_shader.gdshader" id="20_fwjsh"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="21_fwjsh"]
+[ext_resource type="Script" uid="uid://c7ynowu6kwn7d" path="res://addons/boujie_water_shader/prefabs/ocean_prefab.gd" id="22_2svof"]
+[ext_resource type="Material" uid="uid://cvnsu7lttsfsh" path="res://addons/boujie_water_shader/prefabs/outset_ocean_material.tres" id="23_u0cw1"]
+[ext_resource type="Script" uid="uid://by76ummufi43j" path="res://ch/spare_parts_removed_to_optimise/ocean_simplified.gd" id="24_qy441"]
 
 [sub_resource type="Animation" id="Animation_k7lvh"]
 length = 0.001
@@ -1121,28 +1124,47 @@ skeleton = NodePath("")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0.0079603195, 0.02744925, -0.03149128)
 mesh = SubResource("ArrayMesh_1vd3e")
 
-[node name="Emblem_3D11" type="Node3D" parent="." unique_id=1886778124]
-transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, -9.575199, 5.349901, 20.275)
+[node name="Emblem_3D13" type="Node3D" parent="." unique_id=133080741]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 2, 7, 1.75, 22)
+
+[node name="Circle2" type="MeshInstance3D" parent="Emblem_3D13" unique_id=1804312617]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.1, 0.0079603195, 0.82744914, -0.03149128)
+mesh = SubResource("ArrayMesh_1vd3e")
+
+[node name="Circle3" type="MeshInstance3D" parent="Emblem_3D13" unique_id=49007999]
+transform = Transform3D(0.9999998, 0, 0, 0, 0.9999998, 0, 0, 0, 0.1, -0.39203966, 0.82744914, -0.03149128)
 visible = false
+mesh = SubResource("ArrayMesh_1vd3e")
 
-[node name="W" type="MeshInstance3D" parent="Emblem_3D11" unique_id=155803480]
-transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_fwjsh")
-mesh = SubResource("TextMesh_fwjsh")
-skeleton = NodePath("")
+[node name="Circle5" type="MeshInstance3D" parent="Emblem_3D13" unique_id=978901599]
+transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.1, -0.7999998, 0.8274, -0.031499863)
+mesh = SubResource("ArrayMesh_1vd3e")
 
-[node name="Circle" type="MeshInstance3D" parent="Emblem_3D11" unique_id=567580040]
-transform = Transform3D(-3.1799998, 0, 3.5762787e-07, 0, 3.18, 0, -5.364418e-07, 0, -2.376, 0.003964424, 0.025807142, 0.008613586)
-mesh = SubResource("TextMesh_2svof")
-skeleton = NodePath("")
+[node name="Circle6" type="MeshInstance3D" parent="Emblem_3D13" unique_id=569215725]
+transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.1, -1.1999996, 0.8274, -0.031499863)
+visible = false
+mesh = SubResource("ArrayMesh_1vd3e")
 
-[node name="Circle2" type="MeshInstance3D" parent="Emblem_3D11" unique_id=257615926]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0.0079603195, 0.02744925, -0.03149128)
+[node name="Circle7" type="MeshInstance3D" parent="Emblem_3D13" unique_id=1536740064]
+transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.1, -1.5999994, 0.8274, -0.031499863)
+mesh = SubResource("ArrayMesh_1vd3e")
+
+[node name="Circle8" type="MeshInstance3D" parent="Emblem_3D13" unique_id=1753793204]
+transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.1, -1.9999993, 0.8274, -0.031499863)
+visible = false
+mesh = SubResource("ArrayMesh_1vd3e")
+
+[node name="Circle9" type="MeshInstance3D" parent="Emblem_3D13" unique_id=1161839181]
+transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.1, -2.3999991, 0.8274, -0.031499863)
+mesh = SubResource("ArrayMesh_1vd3e")
+
+[node name="Circle10" type="MeshInstance3D" parent="Emblem_3D13" unique_id=121907891]
+transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.1, -2.799999, 0.8274, -0.031499863)
+visible = false
 mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D3" type="Node3D" parent="." unique_id=992747553]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, -1, -1.97, 19.577)
-visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D3" unique_id=984901232]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1161,7 +1183,6 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D4" type="Node3D" parent="." unique_id=1040664154]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, 1, -1.97, 19.577)
-visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D4" unique_id=1811930214]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1180,7 +1201,6 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D5" type="Node3D" parent="." unique_id=883305337]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, 3, -1.97, 19.577)
-visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D5" unique_id=1950470608]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1199,7 +1219,6 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D6" type="Node3D" parent="." unique_id=900137779]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, -3, -1.97, 19.577)
-visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D6" unique_id=1791034457]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1218,7 +1237,6 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D7" type="Node3D" parent="." unique_id=1235805483]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, -5, -1.97, 19.577)
-visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D7" unique_id=1478465563]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1237,7 +1255,6 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D8" type="Node3D" parent="." unique_id=1058177003]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, 5, -1.97, 19.577)
-visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D8" unique_id=513124755]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1256,7 +1273,6 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D9" type="Node3D" parent="." unique_id=1435116952]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, 8, -1.97, 19.577)
-visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D9" unique_id=53369001]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1275,7 +1291,6 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D10" type="Node3D" parent="." unique_id=706641261]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, -8, -1.97, 19.577)
-visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D10" unique_id=1873286063]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -3243,6 +3258,21 @@ texture_albedo = SubResource("GradientTexture2D_x8ffe")
 upper_fade = 0.00025504405
 lower_fade = 0.0013936025
 cull_mask = 1032191
+
+[node name="OutsetOcean" type="Node3D" parent="." unique_id=941254550]
+process_mode = 3
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 3.36, -4.2, 333.782)
+script = ExtResource("22_2svof")
+material = ExtResource("23_u0cw1")
+levels_of_detail = 5
+unit_size = 2.0
+far_edge = 4000
+
+[node name="OceanSimple" type="Node3D" parent="OutsetOcean" unique_id=1972191110]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.36, 4.2, -333.782)
+script = ExtResource("24_qy441")
+
+[connection signal="updated_lod" from="OutsetOcean/OceanSimple" to="OutsetOcean" method="_on_ocean_simple_updated_lod"]
 
 [editable path="Boatmesh/FrontRotatingPillars/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

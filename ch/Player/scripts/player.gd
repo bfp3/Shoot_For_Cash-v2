@@ -7,14 +7,14 @@ const sensitivity_step := 0.2
 const min_mouse_sensitivity := 0.8
 const max_mouse_sensitivity := 3.0
 
-@onready var spot_light_3d: SpotLight3D = %GunSpotlight
-
 @export_group('Scope Shrink While Holding')
 @onready var scope_shrink_sfx : AudioStreamPlayer = $SFX/ScopeShrink
 @export var scope_shrink_sfx_min_pitch := 1.0
 @export var scope_shrink_sfx_max_pitch := 1.5
-
-@export var scope_shrink_speed := 80.0
+@export var scope_shrink_duration := 0.5          # total seconds to fully shrink, regardless of starting size
+@export var scope_shrink_large_bonus := 0.2        # extra seconds tacked on for very large scopes
+@export var scope_shrink_reference_circle := 60.0  # "normal" size; circles above this scale toward the bonus
+var _current_shrink_duration := 0.5
 @export var scope_min_target_circle := 20.0
 @export var scope_return_duration := 0.3
 @export var scope_shrink_delay_dur := 0.4
@@ -132,9 +132,6 @@ func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(pulse_shake_camera)
 	start_rotation = rotation_degrees
 
-	$Cam_pivot/Camera3D/SpotLight3D.light_energy = light_intensity
-	$Cam_pivot/Camera3D/SpotLight3D.light_color = light_colour
-	
 
 
 func enter_state(new_state : State) -> void:
@@ -561,10 +558,16 @@ func handle_scope_shrink(delta: float) -> void:
 		if not _is_holding_shoot:
 			_is_holding_shoot = true
 			scope_hold_time = 0.0
-			scope_base_target_circle = weapon_shooting.power_target_circle
+			scope_base_target_circle = power_target_circle   # stable source, not the live/transient value
 			_scope_at_min = false
 			if _shrink_return_tween:
 				_shrink_return_tween.kill()
+
+			var size_ratio :float = clamp(
+				(scope_base_target_circle - scope_shrink_reference_circle) / scope_shrink_reference_circle,
+				0.0, 1.0
+			)
+			_current_shrink_duration = scope_shrink_duration + (size_ratio * scope_shrink_large_bonus)
 
 		scope_hold_time += delta
 
@@ -577,11 +580,8 @@ func handle_scope_shrink(delta: float) -> void:
 		if not scope_shrink_sfx.playing && scope_hold_time < (scope_shrink_delay_dur + 0.2):
 			scope_shrink_sfx.play()
 
-		var new_target_circle : float = clamp(
-			scope_base_target_circle - ((scope_hold_time - scope_shrink_delay_dur) * scope_shrink_speed),
-			scope_min_target_circle,
-			scope_base_target_circle
-		)
+		var t :float = clamp((scope_hold_time - scope_shrink_delay_dur) / _current_shrink_duration, 0.0, 1.0)
+		var new_target_circle : float = lerp(scope_base_target_circle, scope_min_target_circle, t)
 
 		var shrink_ratio := new_target_circle / scope_base_target_circle
 
@@ -593,9 +593,8 @@ func handle_scope_shrink(delta: float) -> void:
 
 		weapon_shooting.power_target_circle = new_target_circle
 		%Inner_scope.scale = Vector2.ONE * (scope_base_scale * shrink_ratio)
-		# %Target_circle.scale = Vector2.ONE * (scope_base_scale * shrink_ratio)
 
-		if new_target_circle <= scope_min_target_circle:
+		if t >= 1.0:
 			_scope_at_min = true
 
 	elif _is_holding_shoot:
@@ -753,8 +752,8 @@ func start_player() -> void:
 func reset_mouse_pos() -> void:
 	var center : Vector2 = get_viewport().size / 2
 	center -= Vector2(20.0, 20.0)
-	center += Vector2(0.0, 140.0)
-	center += Vector2(0.0, 140.0)
+	#center += Vector2(0.0, 140.0)
+	#center += Vector2(0.0, 140.0)
 	var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	#tween.tween_interval(0.2)
 	tween.tween_property(self, "target_crosshair_position", center, 0.75)

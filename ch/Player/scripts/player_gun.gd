@@ -1,6 +1,6 @@
 extends Node3D
 
-@onready var sparks_01: GPUParticles3D = $embers
+@onready var sparks_01: GPUParticles3D = %gunEmbers
 
 @onready var gun: Node3D = $mockGun
 @onready var gun_2: Node3D = $mockGun2

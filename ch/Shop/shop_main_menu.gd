@@ -646,6 +646,10 @@ func update_cost_label() -> void:
 	cash_label.pivot_offset.x = cash_label.size.x * 0.5
 	
 func _input(event: InputEvent) -> void:
+	if !OS.is_debug_build():
+		set_process_input(false)
+		return
+		
 	if Input.is_key_label_pressed(KEY_KP_0):
 		%AddMoney.visible = !%AddMoney.visible
 		%MaxOutPowers.visible = !%MaxOutPowers.visible

@@ -18,7 +18,6 @@
 [ext_resource type="Script" uid="uid://1uqdupt170u1" path="res://ch/Player/scripts/player_gun.gd" id="13_mxtxj"]
 [ext_resource type="AudioStream" uid="uid://bywfw3hl3lt6o" path="res://sfx/reload_sound_01.ogg" id="14_3gdew"]
 [ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="14_f75d4"]
-[ext_resource type="Texture2D" uid="uid://ch485mwlpr8ae" path="res://res/Explosion_paid_patreon/textures/fire_orange_ramp.tres" id="14_fb4mk"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="15_lf8qf"]
 [ext_resource type="AudioStream" uid="uid://c38iicjo31b7l" path="res://sfx/gun_combination_1.ogg" id="16_11n43"]
 [ext_resource type="Script" uid="uid://dekncurcyax44" path="res://ch/Player/scripts/player_shooting_weapon.gd" id="17_0locf"]
@@ -166,8 +165,6 @@ initial_velocity_max = 1.0
 angular_velocity_min = -360.0
 angular_velocity_max = 360.0
 angular_velocity_curve = SubResource("CurveTexture_ovlpg")
-radial_velocity_min = 1.9999776
-radial_velocity_max = 3.9999776
 radial_velocity_curve = SubResource("CurveTexture_uvb68")
 gravity = Vector3(0, 0, 0)
 radial_accel_min = 0.029997764
@@ -181,7 +178,7 @@ scale_min = 0.1
 scale_max = 0.2
 scale_curve = SubResource("CurveTexture_tfuqf")
 color = Color(4.415934, 3.5683637, 0, 1)
-color_ramp = ExtResource("14_fb4mk")
+color_ramp = ExtResource("39_11n43")
 alpha_curve = SubResource("CurveTexture_blb0d")
 anim_offset_max = 1.0
 turbulence_enabled = true
@@ -837,7 +834,6 @@ size = Vector2(2, 2)
 [node name="Player" type="Node3D" unique_id=1061800479 node_paths=PackedStringArray("weapon_shooting", "player_gun") groups=["Player"]]
 script = ExtResource("1_6ljxy")
 scope_shrink_sfx_max_pitch = 50.0
-scope_shrink_speed = 180.0
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
 
@@ -863,16 +859,6 @@ script = ExtResource("10_n6ds6")
 move_speed = 0.05
 shoot_shake_amount = 0.2
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Cam_pivot/Camera3D" unique_id=585521769]
-process_mode = 4
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 101.337, -6.823)
-visible = false
-layers = 0
-spot_range = 75.0
-spot_attenuation = 0.22
-spot_angle = 25.0
-spot_angle_attenuation = 3.24901
-
 [node name="Player_gun" type="Node3D" parent="Cam_pivot/Camera3D" unique_id=548588123 groups=["player_gun"]]
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.665, -1.07)
@@ -888,19 +874,6 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_8wrod")
 draw_pass_1 = SubResource("QuadMesh_g6ubq")
 
-[node name="embers" type="GPUParticles3D" parent="Cam_pivot/Camera3D/Player_gun" unique_id=471194883]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1.3763247e-06, 0.31421822, 14.925163)
-material_override = SubResource("StandardMaterial3D_rpy68")
-emitting = false
-amount = 5
-lifetime = 0.25
-one_shot = true
-explosiveness = 1.0
-fixed_fps = 60
-visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
-process_material = SubResource("ParticleProcessMaterial_g6ubq")
-draw_pass_1 = SubResource("QuadMesh_bpx2c")
-
 [node name="mockGun" parent="Cam_pivot/Camera3D/Player_gun" unique_id=1054081565 instance=ExtResource("14_f75d4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.059, -0.436)
 
@@ -913,6 +886,20 @@ spot_range = 35.0
 spot_attenuation = 0.0
 spot_angle = 6.81
 spot_angle_attenuation = 1e-05
+
+[node name="gunEmbers" type="GPUParticles3D" parent="Cam_pivot/Camera3D/Player_gun/mockGun" unique_id=471194883]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0.237, 1.842)
+material_override = SubResource("StandardMaterial3D_rpy68")
+emitting = false
+amount = 30
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_g6ubq")
+draw_pass_1 = SubResource("QuadMesh_bpx2c")
 
 [node name="mockGun2" parent="Cam_pivot/Camera3D/Player_gun" unique_id=459703774 instance=ExtResource("14_f75d4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26, 0.059, -0.436)

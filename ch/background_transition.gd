@@ -52,22 +52,37 @@ func next_level_start() -> void:
 
 
 func next_level_finish() -> void:
-	var screen_height := get_viewport_rect().size.y
+	
 
-	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_BACK)
-	tween.set_ease(ease)
-
-	tween.tween_property(
-		color_rect,
-		"position:y",
-		screen_height,
-		1.0
-	)
-
-	await tween.finished
-
-	_position_offscreen_bottom()
+	var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(ease)
+	tween.tween_property($Background_control/CoatArms, "modulate:a", 0.0,1.0)
+	tween.parallel().tween_property($Background_control/CoatArms, "modulate:a", 0.0,1.0)
+	tween.parallel().tween_property($Background_control/Control, "modulate:a", 0.0,1.0)
+	tween.parallel().tween_property($Background_control/Control, "modulate:a", 0.0,1.0)
+	tween.parallel().tween_property($Background_control/Control, "position:x", 1920.0,0.5).as_relative().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	
+	tween.parallel().tween_callback($Background_control/Background.fade_in).set_delay(1.5)
+	return
+	#var screen_height := get_viewport_rect().size.y
+	
+	
+	
+	
+	#
+	#var tween := create_tween()
+	#tween.set_trans(Tween.TRANS_BACK)
+	#tween.set_ease(ease)
+#
+	#tween.tween_property(
+		#color_rect,
+		#"position:y",
+		#screen_height,
+		#1.0
+	#)
+#
+	#await tween.finished
+#
+	#_position_offscreen_bottom()
 
 
 func demo_end_fadein() -> void:
