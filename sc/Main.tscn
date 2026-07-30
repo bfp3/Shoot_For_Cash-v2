@@ -380,12 +380,22 @@ PanelContainer/styles/panel = SubResource("StyleBoxFlat_8xhv2")
 
 [sub_resource type="PrismMesh" id="PrismMesh_vycyu"]
 
+[sub_resource type="Gradient" id="Gradient_8xhv2"]
+colors = PackedColorArray(0.92156863, 0.8784314, 0.84705883, 1, 0.85882354, 0.76862746, 0.69803923, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2300m"]
+gradient = SubResource("Gradient_8xhv2")
+width = 1920
+height = 1080
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
 [sub_resource type="Gradient" id="Gradient_24t6b"]
 colors = PackedColorArray(0.92156863, 0.8784314, 0.84705883, 1, 0.85882354, 0.76862746, 0.69803923, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_8xhv2"]
 gradient = SubResource("Gradient_24t6b")
-width = 256
+width = 234
 height = 17
 fill = 1
 fill_from = Vector2(0.5, 0.5)
@@ -1288,6 +1298,19 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.85882354, 0.76862746, 0.69803923, 1)
 
+[node name="ColorRect2" type="TextureRect" parent="Background_transition/Background_control" unique_id=133825860]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_2300m")
+stretch_mode = 5
+
 [node name="CoatArms" type="Control" parent="Background_transition/Background_control" unique_id=409353141]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 1
@@ -1306,7 +1329,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="CircleEmblem" type="TextureRect" parent="Background_transition/Background_control/CoatArms" unique_id=712626264]
-self_modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+self_modulate = Color(0.84, 0.75222, 0.68039995, 1)
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
 anchors_preset = 8
@@ -1323,12 +1346,10 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("49_24t6b")
-expand_mode = 1
 stretch_mode = 5
 
 [node name="CircleEmblem3" type="TextureRect" parent="Background_transition/Background_control/CoatArms/CircleEmblem" unique_id=220934762]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+modulate = Color(0.83, 0.7458933, 0.6723, 1)
 show_behind_parent = true
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
@@ -1365,7 +1386,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
-theme_override_colors/default_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+theme_override_colors/default_color = Color(0.84, 0.74956, 0.68039995, 1)
 theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/normal_font_size = 400
