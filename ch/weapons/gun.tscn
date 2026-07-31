@@ -89,9 +89,8 @@ _data = {
 &"shoot": SubResource("Animation_bf2sn")
 }
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ebno1"]
-albedo_color = Color(0.247059, 0.270588, 0.290196, 1)
-metallic = 0.8
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mqmh4"]
+albedo_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
 roughness = 0.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_8xld4"]
@@ -99,6 +98,20 @@ top_radius = 0.2
 bottom_radius = 0.2
 height = 2.655
 radial_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8343t"]
+albedo_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+metallic = 0.8
+roughness = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8a00f"]
+albedo_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bf2sn"]
+albedo_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_byku7"]
+albedo_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_mqmh4"]
 top_radius = 0.12
@@ -117,6 +130,11 @@ top_radius = 0.15
 bottom_radius = 0.15
 height = 0.2
 radial_segments = 12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ebno1"]
+albedo_color = Color(0.247059, 0.270588, 0.290196, 1)
+metallic = 0.8
+roughness = 0.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cfto5"]
 albedo_color = Color(0.643137, 0.709804, 0.784314, 1)
@@ -150,39 +168,87 @@ ring_segments = 8
 libraries/ = SubResource("AnimationLibrary_byku7")
 speed_scale = 0.5
 
+[node name="OrigBlue" type="MeshInstance3D" parent="." unique_id=993976170]
+transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
+visible = false
+material_override = SubResource("StandardMaterial3D_mqmh4")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8xld4")
+skeleton = NodePath("../top")
+
+[node name="DarkBlue2" type="MeshInstance3D" parent="." unique_id=1810354394]
+transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
+visible = false
+material_override = SubResource("StandardMaterial3D_8343t")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8xld4")
+skeleton = NodePath("../top")
+
+[node name="Red" type="MeshInstance3D" parent="." unique_id=1174891118]
+transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
+visible = false
+material_override = SubResource("StandardMaterial3D_8343t")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8xld4")
+skeleton = NodePath("../top")
+
+[node name="DarkRed" type="MeshInstance3D" parent="." unique_id=225884749]
+transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
+visible = false
+material_override = SubResource("StandardMaterial3D_8a00f")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8xld4")
+skeleton = NodePath("../top")
+
+[node name="Cream" type="MeshInstance3D" parent="." unique_id=1034737317]
+transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
+visible = false
+material_override = SubResource("StandardMaterial3D_bf2sn")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8xld4")
+skeleton = NodePath("../top")
+
+[node name="LightCream" type="MeshInstance3D" parent="." unique_id=233244387]
+transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
+visible = false
+material_override = SubResource("StandardMaterial3D_byku7")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8xld4")
+skeleton = NodePath("../top")
+
 [node name="top" type="Node3D" parent="." unique_id=1806577118]
 transform = Transform3D(0.336, 0, 0, 0, 0.336, 0, 0, 0, 0.336, 0, -0.096, 0.714)
 
 [node name="scope" type="MeshInstance3D" parent="top" unique_id=1313439302]
 transform = Transform3D(0.70710677, 1.2802769e-08, 0.70710677, 0.70710677, -3.090862e-08, -0.70710677, 1.2802769e-08, 1, -3.090862e-08, 0, 1, -0.82)
-material_override = SubResource("StandardMaterial3D_ebno1")
+material_override = SubResource("StandardMaterial3D_mqmh4")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_8xld4")
 
 [node name="scope3" type="MeshInstance3D" parent="top" unique_id=1516563294]
 transform = Transform3D(0.48861086, 8.84671e-09, 0.4886107, 0.4886107, -2.1357852e-08, -0.48861086, 8.84671e-09, 0.691, -2.1357852e-08, 0, 1, 1.3135202)
-material_override = SubResource("StandardMaterial3D_ebno1")
+material_override = SubResource("StandardMaterial3D_mqmh4")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_mqmh4")
 skeleton = NodePath("../..")
 
 [node name="scope2" type="MeshInstance3D" parent="top" unique_id=1700064361]
 transform = Transform3D(0.7071068, 1.2802769e-08, 0.7071067, 0.7071067, -3.0908616e-08, -0.7071068, 1.2802769e-08, 1, -3.0908616e-08, 0, 1, 2.5)
-material_override = SubResource("StandardMaterial3D_ebno1")
+material_override = SubResource("StandardMaterial3D_mqmh4")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_8343t")
 skeleton = NodePath("../..")
 
 [node name="notch3" type="MeshInstance3D" parent="top/scope2" unique_id=1314869046]
 transform = Transform3D(0.18031226, 0.18031223, 3.2647058e-09, 3.2647058e-09, -7.881697e-09, 0.255, 0.18031223, -0.18031226, -7.881697e-09, 0.111722946, -0.39799976, -0.111722946)
-material_override = SubResource("StandardMaterial3D_ebno1")
+material_override = SubResource("StandardMaterial3D_mqmh4")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_eumxl")
 skeleton = NodePath("../../..")
 
 [node name="scope4" type="MeshInstance3D" parent="top" unique_id=1715737310]
 transform = Transform3D(0.8237794, 1.4979239e-09, 0.8237793, 0.8237793, -3.6163081e-09, -0.8237794, 1.4915225e-08, 0.117, -3.6008537e-08, 0, 1, 2.94)
-material_override = SubResource("StandardMaterial3D_ebno1")
+material_override = SubResource("StandardMaterial3D_mqmh4")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_8343t")
 skeleton = NodePath("../..")
@@ -204,14 +270,14 @@ skeleton = NodePath("../..")
 
 [node name="bump" type="MeshInstance3D" parent="top" unique_id=1118438067]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35292, -0.87785)
-material_override = ExtResource("1_0k0dw")
+material_override = SubResource("StandardMaterial3D_byku7")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_hjpow")
 skeleton = NodePath("../..")
 
 [node name="notch" type="MeshInstance3D" parent="top" unique_id=1047171996]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2264, -0.874655)
-material_override = SubResource("StandardMaterial3D_ebno1")
+material_override = SubResource("StandardMaterial3D_mqmh4")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_eumxl")
 skeleton = NodePath("../..")

@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bhst5en4f2e3b" path="res://res/mountain_image.png" id="6_pwib5"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_7j408"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="8_kvqbn"]
+[ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="8_tnodp"]
 [ext_resource type="Texture2D" uid="uid://dk2p6y27c64hs" path="res://res/cooldown_reduction_upgrade_icon_128x128.png" id="12_pwib5"]
 [ext_resource type="Texture2D" uid="uid://cuw4sgs22s23" path="res://res/sky_mine_icon_2.png" id="13_cn8lj"]
 [ext_resource type="PackedScene" uid="uid://ck6lfy3kh3eqy" path="res://ch/Shop/Upgrade_progress_component.tscn" id="13_onfim"]
@@ -20,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://bf8o6gnj6g1nc" path="res://res/time_upgrade_icon.png" id="14_xklyy"]
 [ext_resource type="Texture2D" uid="uid://gbka4yjc0p4k" path="res://res/bullet_texture.png" id="15_htvy6"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="17_cn8lj"]
+[ext_resource type="PackedScene" uid="uid://bnvrnccnsas5n" path="res://ch/Shop/PlayButton_v2.tscn" id="17_xklyy"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
 [ext_resource type="AudioStream" uid="uid://cpr70poqkj2hs" path="res://sfx/greyscale_compressed.ogg" id="33_pwib5"]
 [ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="40_8mk8u"]
@@ -82,6 +84,131 @@ width = 256
 height = 256
 noise = SubResource("FastNoiseLite_sgib8")
 color_ramp = SubResource("Gradient_jv82y")
+
+[sub_resource type="Animation" id="Animation_uxymg"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_exbpr"]
+resource_name = "new_animation"
+length = 14.566667
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5.2, 9.235343),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -6.283185307179586, -6.283185307179586]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.3333334, 2.1333334, 2.8333333, 3.3375256, 3.9666667, 5.2, 9.235343),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.9, 0.9), Vector2(0.9, 0.9), Vector2(1, 1), Vector2(0.9, 0.9), Vector2(0.9, 0.9), Vector2(1, 1), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tnodp"]
+_data = {
+&"RESET": SubResource("Animation_uxymg"),
+&"new_animation": SubResource("Animation_exbpr")
+}
+
+[sub_resource type="Animation" id="Animation_tnodp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_ohn7f"]
+resource_name = "rotation"
+length = 4.0
+loop_mode = 2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 3.141592653589793]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xgu8n"]
+_data = {
+&"RESET": SubResource("Animation_tnodp"),
+&"rotation": SubResource("Animation_ohn7f")
+}
+
+[sub_resource type="Gradient" id="Gradient_tnodp"]
+offsets = PackedFloat32Array(0.008830011, 1)
+colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_ohn7f"]
+offsets = PackedFloat32Array(0.008830011, 1)
+colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tnodp"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(1920, 1080, 1)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 1.05
+scale_max = 1.05
+scale_curve = SubResource("CurveTexture_64t06")
+color = Color(0.92, 0.87446004, 0.8372, 1)
+alpha_curve = SubResource("CurveTexture_cn8lj")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
@@ -205,9 +332,7 @@ content_margin_top = 0.0
 content_margin_right = 0.0
 content_margin_bottom = 0.0
 bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-border_width_left = 151
 border_width_top = 1
-border_width_right = 108
 border_width_bottom = 1
 border_color = Color(0.75, 0.684, 0.63, 1)
 border_blend = true
@@ -368,6 +493,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=1211974115]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 2
 
@@ -381,53 +507,550 @@ layout_mode = 2
 texture = SubResource("NoiseTexture2D_pwib5")
 expand_mode = 1
 
-[node name="Bullets" type="Control" parent="CenterContainer/MainPanel" unique_id=280148899]
-modulate = Color(0.92, 0.8770667, 0.8464, 0.15686275)
+[node name="BackgroundImages" type="Control" parent="CenterContainer/MainPanel" unique_id=280148899]
+clip_contents = true
 layout_mode = 2
+mouse_filter = 2
 
-[node name="TextureRect2" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=1174213666]
+[node name="TextureRect2" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1174213666]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
 layout_mode = 0
 offset_left = 867.32544
 offset_top = 399.4008
 offset_right = 995.32544
 offset_bottom = 527.40076
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 texture = ExtResource("8_7j408")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TextureRect3" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=753410049]
+[node name="MapBackground" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=903028086]
+modulate = Color(0.86, 0.7674067, 0.6966, 0.078431375)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1024.0
+offset_top = -934.8433
+offset_right = 1024.0
+offset_bottom = 1113.1567
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.555, 0.555)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("8_tnodp")
+stretch_mode = 5
+
+[node name="MapBackground2" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=2127128880]
+modulate = Color(0.86, 0.7674067, 0.6966, 0.078431375)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1024.0
+offset_top = -1114.7628
+offset_right = 1024.0
+offset_bottom = 933.2372
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.555, 0.555)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("8_tnodp")
+stretch_mode = 5
+
+[node name="TextureRect6" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1028768478]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 0.803215
+offset_bottom = 0.80322266
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect8" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=134847440]
+modulate = Color(0.92, 0.8770667, 0.8464, 0.078431375)
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+offset_left = 109.23706
+offset_top = 128.514
+offset_right = 237.23706
+offset_bottom = 256.514
+scale = Vector2(2.426, 2.426)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=753410049]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
 layout_mode = 0
 offset_left = 809.1975
 offset_top = 399.4008
 offset_right = 937.1975
 offset_bottom = 527.40076
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 texture = ExtResource("8_7j408")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TextureRect4" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=1514939702]
+[node name="Bullet2" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1514939702]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
 layout_mode = 0
 offset_left = 64.32913
 offset_top = 399.4008
 offset_right = 192.32913
 offset_bottom = 527.40076
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 texture = ExtResource("8_7j408")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TextureRect5" type="TextureRect" parent="CenterContainer/MainPanel/Bullets" unique_id=155023758]
+[node name="Bullet3" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=155023758]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
 layout_mode = 0
 offset_left = 6.2012177
 offset_top = 399.4008
 offset_right = 134.20122
 offset_bottom = 527.40076
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 texture = ExtResource("8_7j408")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Bullet4" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=216451405]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
+layout_mode = 0
+offset_left = 777.069
+offset_top = 161.64972
+offset_right = 905.069
+offset_bottom = 289.64972
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("8_7j408")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet5" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1089751225]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
+layout_mode = 0
+offset_left = 642.6423
+offset_top = 161.64972
+offset_right = 770.6423
+offset_bottom = 289.64972
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("8_7j408")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bullet6" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=309223957]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
+layout_mode = 0
+offset_left = 584.51465
+offset_top = 161.64972
+offset_right = 712.51465
+offset_bottom = 289.64972
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("8_7j408")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=429692834]
+visible = false
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -59.979492
+offset_right = 64.0
+offset_bottom = 68.02051
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/TextureRect" unique_id=17882523]
+libraries/ = SubResource("AnimationLibrary_tnodp")
+autoplay = &"new_animation"
+speed_scale = 3.0
+
+[node name="Reticle" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=929043320]
+modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -82.47385
+offset_right = 64.0
+offset_bottom = 45.526184
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4.129, 4.129)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle" unique_id=1344829094]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+speed_scale = 0.8
+
+[node name="Reticle2" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=618485896]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -198.93976
+offset_top = -82.47391
+offset_right = -70.93976
+offset_bottom = 45.526123
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle2" unique_id=1722191119]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+
+[node name="Reticle3" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=874861631]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 77.36548
+offset_top = -82.47391
+offset_right = 205.36548
+offset_bottom = 45.526123
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle3" unique_id=1305389926]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+
+[node name="Reticle4" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1934095055]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -82.47391
+offset_right = 64.0
+offset_bottom = 45.526123
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle4" unique_id=767842127]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+speed_scale = 0.8
+
+[node name="Reticle5" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=101474291]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -217.41367
+offset_right = 64.0
+offset_bottom = -89.413635
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle5" unique_id=1701303686]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+
+[node name="Reticle6" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=944272282]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.3855
+offset_top = -185.28513
+offset_right = -32.385498
+offset_bottom = -57.285095
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle6" unique_id=422148687]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+
+[node name="Reticle7" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1035300691]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 25.959839
+offset_top = -185.28513
+offset_right = 153.95984
+offset_bottom = -57.285095
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle7" unique_id=689593377]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+
+[node name="Reticle8" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=540841696]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -485.0185
+offset_top = -26.361603
+offset_right = -357.0185
+offset_bottom = 101.63843
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle8" unique_id=263944812]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+
+[node name="Reticle9" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1866784351]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -298.67316
+offset_top = -26.361603
+offset_right = -170.67316
+offset_bottom = 101.63843
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle9" unique_id=1840117543]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+
+[node name="Reticle10" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=423864607]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 159.96143
+offset_top = -26.361603
+offset_right = 287.96143
+offset_bottom = 101.63843
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle10" unique_id=1441586226]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+
+[node name="Reticle11" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=256809774]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 346.30676
+offset_top = -26.361603
+offset_right = 474.30676
+offset_bottom = 101.63843
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 0.525)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("5_lwcj2")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle11" unique_id=422616997]
+libraries/ = SubResource("AnimationLibrary_xgu8n")
+autoplay = &"rotation"
+
+[node name="center_container" type="Control" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=33514297]
+modulate = Color(1, 1, 1, 0.19607843)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 3.0517578e-05
+offset_bottom = 3.0517578e-05
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="left" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=150314236]
+position = Vector2(0, -23.293152)
+points = PackedVector2Array(0, 0, -230, 0)
+width = 1.178
+gradient = SubResource("Gradient_tnodp")
+texture_mode = 2
+joint_mode = 2
+
+[node name="right" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=2087370666]
+position = Vector2(0, -23.293152)
+points = PackedVector2Array(0, 0, 230, 0)
+width = 1.178
+gradient = SubResource("Gradient_ohn7f")
+texture_mode = 2
+joint_mode = 2
+
+[node name="right2" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=724262866]
+position = Vector2(0, -23.293152)
+points = PackedVector2Array(0, 0, 0, 230)
+width = 1.178
+gradient = SubResource("Gradient_ohn7f")
+texture_mode = 2
+joint_mode = 2
+
+[node name="right3" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=300482887]
+position = Vector2(0, -23.293152)
+points = PackedVector2Array(0, 0, 0, -230)
+width = 1.178
+gradient = SubResource("Gradient_ohn7f")
+texture_mode = 2
+joint_mode = 2
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1666275727]
+position = Vector2(962, 551)
+amount = 20
+lifetime = 5.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_tnodp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=582425009]
 layout_mode = 2
@@ -483,7 +1106,7 @@ offset_bottom = 74.67673
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/default_color = Color(0.08235294, 0.07058824, 0.043137256, 1)
+theme_override_colors/default_color = Color(0.64705884, 0.101960786, 0.12156863, 1)
 theme_override_font_sizes/normal_font_size = 53
 bbcode_enabled = true
 text = "MOSS"
@@ -660,6 +1283,7 @@ upgrade_type = "gun"
 upgrade_name = "Weapon"
 
 [node name="AvailableUpgrades" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=499030465]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.085864864
@@ -671,6 +1295,7 @@ metadata/_edit_use_anchors_ = true
 
 [node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=2043088047]
 unique_name_in_owner = true
+visible = false
 layout_mode = 0
 offset_left = 863.0
 offset_top = 0.33328247
@@ -773,8 +1398,190 @@ theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
 text = "DONE"
 
+[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=339193874]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.99997
+offset_top = 55.08513
+offset_right = 50.0
+offset_bottom = 176.24016
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+script = ExtResource("3_y3o4g")
+
+[node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=932649273]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -84.53125
+offset_top = -56.270844
+offset_right = 85.05875
+offset_bottom = -29.973892
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"RedPanel"
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2/Panel2" unique_id=118922201]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = SubResource("NoiseTexture2D_atgli")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Panel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=524556188]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -84.531265
+offset_top = 31.471893
+offset_right = 85.05873
+offset_bottom = 54.390793
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.525, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"RedPanel"
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2/Panel3" unique_id=1488161081]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = SubResource("NoiseTexture2D_atgli")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=159442046]
+modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_top = 8.0
+offset_right = 100.0
+offset_bottom = 129.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vrkmk")
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_disabled_color = Color(0.88, 0.88, 0.88, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
+
+[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=595246014]
+visible = false
+modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_top = 8.0
+offset_right = 100.0
+offset_bottom = 129.15503
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_vrkmk")
+theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
+theme_override_font_sizes/font_size = 26
+text = "DONE"
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=413491091]
+modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.352, 0.352)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("14_sgib8")
+
+[node name="TextureRect2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1369892457]
+modulate = Color(0.86, 0.7674067, 0.6966, 0.24313726)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.852, 0.852)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("13_xklyy")
+
+[node name="Play_round_text" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1126813106]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+theme_override_colors/font_outline_color = Color(0.7, 0.6246333, 0.567, 1)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/italics_font_size = 36
+bbcode_enabled = true
+text = "[i][wave]PLAY"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Reroll" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1354737390]
 unique_name_in_owner = true
+visible = false
 layout_mode = 0
 offset_left = 863.0
 offset_top = 128.33328
@@ -838,14 +1645,14 @@ mouse_filter = 2
 
 [node name="RightTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=549092801]
 modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
-position = Vector2(238.31876, -1.1107938e-05)
+position = Vector2(237.71887, 0)
 rotation = 3.1415925
 scale = Vector2(251.57509, 82)
 mesh = SubResource("PrismMesh_sgib8")
 
 [node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=909585586]
 modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
-position = Vector2(-237.92644, -6.252573e-06)
+position = Vector2(-237.32658, 0)
 scale = Vector2(250.77818, -82)
 mesh = SubResource("PrismMesh_jv82y")
 
@@ -880,7 +1687,7 @@ theme_override_constants/shadow_offset_x = 7
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/normal_font_size = 124
 bbcode_enabled = true
-text = "[rainbow]$5000"
+text = "$500"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -1344,6 +2151,7 @@ scale = Vector2(1, 2.019)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="VSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=180300677]
+visible = false
 modulate = Color(1, 1, 1, 0.3372549)
 layout_mode = 1
 anchors_preset = 3
@@ -1359,6 +2167,23 @@ grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(1, 2.019)
 pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="PlayButton" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=388452363 instance=ExtResource("17_xklyy")]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -158.27325
+offset_top = -106.87952
+offset_right = 57.69873
+offset_bottom = 143.12048
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(0.444, 0.444)
+wiggle_amount = 0.46
+wiggle_amount_exit = 0.444
 
 [node name="UpgradeStats" type="CenterContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1504735911]
 visible = false
@@ -1847,7 +2672,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="play_round_button_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PlayButton" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]
 [connection signal="pressed" from="MaxOutPowers" to="." method="_on_max_out_powers_pressed"]
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]

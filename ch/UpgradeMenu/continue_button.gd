@@ -12,7 +12,7 @@ enum UpgradeState {
 @export var focus_exit_sfx: AudioStreamPlayer
 @export var purchase_sfx: AudioStreamPlayer
 @export var wiggle_amount := 1.0
-
+@export var wiggle_amount_exit := 1.0
 
 @export var state: UpgradeState = UpgradeState.LOCKED
 var can_afford := false
@@ -73,7 +73,7 @@ func _on_focus_exited() -> void:
 	if focus_exit_sfx:
 		focus_exit_sfx.play()
 
-	_play_wiggle(1.0, 0.04)
+	_play_wiggle(wiggle_amount_exit, 0.04)
 
 
 func _play_wiggle(target_scale: float, _scale_dur : float = 0.08) -> void:

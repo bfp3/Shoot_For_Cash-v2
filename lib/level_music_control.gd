@@ -90,7 +90,11 @@ func first_round() -> void:
 	if current_song.playing:
 		return
 		
-		
+	$Randomiser.play()
+	
+	return
+	
+	
 	var curr_song : AudioStreamPlayer = current_song
 	var orig_vol = curr_song.volume_db
 	var _pitch_scale = curr_song.pitch_scale
@@ -144,3 +148,7 @@ func stop_opening_song() -> void:
 	tween.tween_property(curr_song, "volume_db", -80.0, 1.5)
 	await tween.finished
 	curr_song.stop()
+
+
+func _on_randomiser_finished() -> void:
+	$Randomiser.play()

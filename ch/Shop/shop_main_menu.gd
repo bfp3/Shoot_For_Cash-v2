@@ -218,6 +218,7 @@ func update_open_menu() -> void:
 	enter_state(SkillState.IN_MENU)
 	
 func play_round_button_pressed() -> void:
+
 	reroll_button.hide()
 	%NextRound.disabled = true
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
@@ -273,7 +274,7 @@ func update_close_menu() -> void:
 	cash_label.text = ''
 	EventBus.instance.close_shop.emit()
 
-	reroll_button.show()
+	#reroll_button.show()
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 1.0
 	
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 1.0
@@ -369,7 +370,7 @@ func is_skill_maxed(skill) -> bool:
 func reveal_random_skills(_dur : float = 0.05, wait_reroll : bool = false) -> void:
 
 	clear_available_skills()
-	
+	return
 	var _orig_pitch_scale : float = reveal_skill_sfx.pitch_scale
 
 	var selected_skills := []

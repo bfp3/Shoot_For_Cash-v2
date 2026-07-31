@@ -1,0 +1,263 @@
+[gd_scene format=3 uid="uid://c6f8vt5j0ir1l"]
+
+[ext_resource type="Material" uid="uid://ddadbpcv1ve5d" path="res://res/Kenney_prototype_textures/Material_override/Black_texture.tres" id="1_rvpfe"]
+[ext_resource type="Texture2D" uid="uid://bcvk6h5k84n3h" path="res://res/moss_shop.png" id="2_56eb2"]
+
+[sub_resource type="Animation" id="Animation_8a00f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("top/scope2:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1, 2.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("top/bump:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.35292, -0.87785)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("top/notch:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.2264, -0.874655)]
+}
+
+[sub_resource type="Animation" id="Animation_bf2sn"]
+resource_name = "shoot"
+length = 0.1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("top/scope2:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.01, 0.05281551, 0.099999994),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1, 2.5), Vector3(0, 1, 1.34), Vector3(0, 1, 1.34), Vector3(0, 1, 2.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("top/bump:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.01, 0.052998804, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1.293, -0.878), Vector3(0, 1.308, -1.325), Vector3(0, 1.308, -1.325), Vector3(0, 1.293, -0.878)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("top/notch:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.01, 0.053, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1.192, -0.878), Vector3(0, 1.226, -1.325), Vector3(0, 1.226, -1.325), Vector3(0, 1.192, -0.875)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_byku7"]
+_data = {
+&"RESET": SubResource("Animation_8a00f"),
+&"shoot": SubResource("Animation_bf2sn")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ebno1"]
+albedo_color = Color(0.247059, 0.270588, 0.290196, 1)
+metallic = 0.8
+roughness = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_8xld4"]
+top_radius = 0.2
+bottom_radius = 0.2
+height = 2.655
+radial_segments = 8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mqmh4"]
+top_radius = 0.12
+bottom_radius = 0.12
+height = 2.51
+radial_segments = 8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_8343t"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 1.45
+radial_segments = 8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_eumxl"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 0.2
+radial_segments = 12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cfto5"]
+albedo_color = Color(0.643137, 0.709804, 0.784314, 1)
+metallic = 0.9
+roughness = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_yk86m"]
+top_radius = 0.15
+bottom_radius = 0.1
+height = 0.2
+radial_segments = 18
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hjpow"]
+top_radius = 0.13
+bottom_radius = 0.13
+height = 0.05
+radial_segments = 18
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5uma"]
+albedo_color = Color(0.184314, 0.184314, 0.184314, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_nxho2"]
+inner_radius = 0.259
+outer_radius = 0.188
+rings = 8
+ring_segments = 8
+
+[node name="mockGun" type="Node3D" unique_id=1054081565]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=327544690]
+libraries/ = SubResource("AnimationLibrary_byku7")
+speed_scale = 0.5
+
+[node name="top" type="Node3D" parent="." unique_id=1806577118]
+transform = Transform3D(0.336, 0, 0, 0, 0.336, 0, 0, 0, 0.336, 0, -0.096, 0.714)
+
+[node name="scope" type="MeshInstance3D" parent="top" unique_id=1313439302]
+transform = Transform3D(0.70710677, 1.2802769e-08, 0.70710677, 0.70710677, -3.090862e-08, -0.70710677, 1.2802769e-08, 1, -3.090862e-08, 0, 1, -0.82)
+material_override = SubResource("StandardMaterial3D_ebno1")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8xld4")
+
+[node name="scope3" type="MeshInstance3D" parent="top" unique_id=1516563294]
+transform = Transform3D(0.48861086, 8.84671e-09, 0.4886107, 0.4886107, -2.1357852e-08, -0.48861086, 8.84671e-09, 0.691, -2.1357852e-08, 0, 1, 1.3135202)
+material_override = SubResource("StandardMaterial3D_ebno1")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_mqmh4")
+skeleton = NodePath("../..")
+
+[node name="scope2" type="MeshInstance3D" parent="top" unique_id=1700064361]
+transform = Transform3D(0.7071068, 1.2802769e-08, 0.7071067, 0.7071067, -3.0908616e-08, -0.7071068, 1.2802769e-08, 1, -3.0908616e-08, 0, 1, 2.5)
+material_override = SubResource("StandardMaterial3D_ebno1")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8343t")
+skeleton = NodePath("../..")
+
+[node name="notch3" type="MeshInstance3D" parent="top/scope2" unique_id=1314869046]
+transform = Transform3D(0.18031226, 0.18031223, 3.2647058e-09, 3.2647058e-09, -7.881697e-09, 0.255, 0.18031223, -0.18031226, -7.881697e-09, 0.111722946, -0.39799976, -0.111722946)
+material_override = SubResource("StandardMaterial3D_ebno1")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_eumxl")
+skeleton = NodePath("../../..")
+
+[node name="scope4" type="MeshInstance3D" parent="top" unique_id=1715737310]
+transform = Transform3D(0.8237794, 1.4979239e-09, 0.8237793, 0.8237793, -3.6163081e-09, -0.8237794, 1.4915225e-08, 0.117, -3.6008537e-08, 0, 1, 2.94)
+material_override = SubResource("StandardMaterial3D_ebno1")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8343t")
+skeleton = NodePath("../..")
+
+[node name="scope5" type="MeshInstance3D" parent="top" unique_id=1678951049]
+transform = Transform3D(0.98994964, 1.8051899e-09, 0.9899494, 0.9899494, -4.3581148e-09, -0.98994964, 1.792387e-08, 0.141, -4.3272063e-08, 0, 1, 0.175)
+material_override = SubResource("StandardMaterial3D_ebno1")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8343t")
+skeleton = NodePath("../..")
+
+[node name="glass" type="MeshInstance3D" parent="top" unique_id=845464674]
+transform = Transform3D(1.333, 0, 0, 0, -0.0234734, 1.33279, 0, -1.33279, -0.0234734, 0, 0.998, -1.944)
+visible = false
+material_override = SubResource("StandardMaterial3D_cfto5")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_yk86m")
+skeleton = NodePath("../..")
+
+[node name="bump" type="MeshInstance3D" parent="top" unique_id=1118438067]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35292, -0.87785)
+material_override = ExtResource("1_rvpfe")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_hjpow")
+skeleton = NodePath("../..")
+
+[node name="notch" type="MeshInstance3D" parent="top" unique_id=1047171996]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2264, -0.874655)
+material_override = SubResource("StandardMaterial3D_ebno1")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_eumxl")
+skeleton = NodePath("../..")
+
+[node name="notch3" type="MeshInstance3D" parent="top/notch" unique_id=2038708832]
+transform = Transform3D(-9.8350625e-09, 2.2, 0, -0.225, -9.616505e-08, 0, 0, 0, 0.225, 0.24, -0.195, 1.01)
+visible = false
+material_override = SubResource("StandardMaterial3D_ebno1")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_eumxl")
+skeleton = NodePath("../../..")
+
+[node name="bump2" type="MeshInstance3D" parent="top" unique_id=168706208]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0.65487504, 1.0003452)
+visible = false
+material_override = ExtResource("1_rvpfe")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_hjpow")
+skeleton = NodePath("../..")
+
+[node name="notch2" type="MeshInstance3D" parent="top" unique_id=75636597]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0.78139496, 0.9971502)
+visible = false
+material_override = SubResource("StandardMaterial3D_ebno1")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_eumxl")
+skeleton = NodePath("../..")
+
+[node name="eyeRubber" type="MeshInstance3D" parent="top" unique_id=633418753]
+transform = Transform3D(1, 0, 0, 0, -1.31134e-07, -1, 0, 3, -4.37114e-08, 0, 1, -2)
+material_override = SubResource("StandardMaterial3D_r5uma")
+cast_shadow = 0
+mesh = SubResource("TorusMesh_nxho2")
+skeleton = NodePath("../..")
+
+[node name="Decal" type="Decal" parent="." unique_id=1867217433]
+transform = Transform3D(-4.371139e-08, 0.9998477, -0.017452296, 0, -0.017452296, -0.9998477, -1, -4.370473e-08, 7.628641e-10, 0.056, 0.263, 0.678)
+visible = false
+size = Vector3(0.2, 0.079, 0.2)
+texture_albedo = ExtResource("2_56eb2")
+
+[node name="Decal2" type="Decal" parent="." unique_id=1306200974]
+transform = Transform3D(-1, -8.740946e-08, 1.5257282e-09, 5.5511148e-17, -0.017452296, -0.9998477, 8.742278e-08, -0.9998477, 0.017452296, 0.045, 0.337, 0.378)
+visible = false
+size = Vector3(0.05, 0.079, 0.05)
+texture_albedo = ExtResource("2_56eb2")
+
+[node name="bullet_marker_pos" type="Marker3D" parent="." unique_id=166836894]
+transform = Transform3D(1, 0, 3.7550926e-08, 0, 1, 0, -3.7550926e-08, 0, 1, 0, 0.23773086, 1.7953424)

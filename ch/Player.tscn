@@ -11,12 +11,16 @@
 [ext_resource type="Script" uid="uid://bh2xro2ru0ok0" path="res://ch/Player/scripts/crosshair.gd" id="10_hwyif"]
 [ext_resource type="Script" uid="uid://lqvwdyu058t8" path="res://ch/Player/scripts/cam_pivot.gd" id="10_kkix3"]
 [ext_resource type="Script" uid="uid://snu7cq0wsbqk" path="res://ch/Player/scripts/player_camera.gd" id="10_n6ds6"]
+[ext_resource type="Material" uid="uid://du6stho3eesie" path="res://res/hood_body_parts/main_body_material.tres" id="11_ej0ny"]
 [ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="11_txfio"]
+[ext_resource type="Material" uid="uid://csum6kiahh4u8" path="res://res/hood_body_parts/main_body_2_material.tres" id="12_crcb6"]
 [ext_resource type="AudioStream" uid="uid://bx66frfw01x0d" path="res://sfx/gun-whit-ay-yah.ogg" id="12_fuvvr"]
 [ext_resource type="AudioStream" uid="uid://bicv070p4lp8j" path="res://sfx/Shoot_sfx_1.ogg" id="13_1tjj5"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="13_isobx"]
+[ext_resource type="Material" uid="uid://ig6l6depd7ao" path="res://res/hood_body_parts/main_body_3_material.tres" id="13_l3uax"]
 [ext_resource type="Script" uid="uid://1uqdupt170u1" path="res://ch/Player/scripts/player_gun.gd" id="13_mxtxj"]
 [ext_resource type="AudioStream" uid="uid://bywfw3hl3lt6o" path="res://sfx/reload_sound_01.ogg" id="14_3gdew"]
+[ext_resource type="Texture2D" uid="uid://dcbh2d4up4wjl" path="res://res/white_dented_texture2.png" id="14_5d6j6"]
 [ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="14_f75d4"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="15_lf8qf"]
 [ext_resource type="AudioStream" uid="uid://c38iicjo31b7l" path="res://sfx/gun_combination_1.ogg" id="16_11n43"]
@@ -47,6 +51,7 @@
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="41_k5tjv"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="42_ms1v2"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="43_vmtkp"]
+[ext_resource type="PackedScene" uid="uid://dbuyf4x33jxsi" path="res://ch/Player/hoodMesh.tscn" id="48_vmtkp"]
 
 [sub_resource type="Curve" id="Curve_emrcn"]
 _data = [Vector2(0, 0.460674), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -188,6 +193,41 @@ turbulence_influence_max = 1.0
 turbulence_influence_over_life = SubResource("CurveTexture_aqenm")
 
 [sub_resource type="QuadMesh" id="QuadMesh_bpx2c"]
+
+[sub_resource type="TextMesh" id="TextMesh_4gbdm"]
+text = "♣"
+font_size = 63
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rui0b"]
+top_radius = 0.51
+bottom_radius = 0.51
+height = 0.09
+radial_segments = 24
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5b161"]
+top_radius = 0.435
+bottom_radius = 0.435
+height = 0.12
+radial_segments = 24
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0upqd"]
+top_radius = 0.35
+bottom_radius = 0.35
+height = 0.12
+radial_segments = 24
+cap_bottom = false
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ta18e"]
+top_radius = 0.33
+bottom_radius = 0.33
+height = 0.12
+radial_segments = 13
+cap_bottom = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p0lsl"]
+shading_mode = 0
+albedo_color = Color(0.43, 0.25212333, 0.11609999, 1)
+albedo_texture = ExtResource("14_5d6j6")
 
 [sub_resource type="Gradient" id="Gradient_j58se"]
 offsets = PackedFloat32Array(0, 0.0969163)
@@ -864,6 +904,10 @@ unique_name_in_owner = true
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.665, -1.07)
 script = ExtResource("13_mxtxj")
 
+[node name="HoodMesh" parent="Cam_pivot/Camera3D/Player_gun" unique_id=623382488 instance=ExtResource("48_vmtkp")]
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, -0.52, 0)
+visible = true
+
 [node name="Sparks01" type="GPUParticles3D" parent="Cam_pivot/Camera3D/Player_gun" unique_id=1763354739]
 transform = Transform3D(-1, 0, -8.766586e-08, 0, 0.99999994, 0, 8.766587e-08, 0, -1.0000001, -1.2284135e-06, -1.1920929e-07, 14.392311)
 emitting = false
@@ -906,6 +950,54 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26, 0.059, -0.436)
 
 [node name="mockGun3" parent="Cam_pivot/Camera3D/Player_gun" unique_id=826154005 instance=ExtResource("14_f75d4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 0.059, -0.436)
+
+[node name="Base" type="Node3D" parent="Cam_pivot/Camera3D" unique_id=650256526]
+transform = Transform3D(-0.903, -2.3717582e-06, -3.0677309e-06, -2.6752487e-06, 0.8934483, 0.17741358, 1.8970371e-06, 0.13099302, -1.2100635, 0, -0.43970084, -0.63886774)
+
+[node name="suit_mesh" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=1665813197]
+transform = Transform3D(1, 2.2737368e-13, -2.2737368e-13, 1.2789769e-13, -4.4703484e-08, -1, 0, 1, -4.4703484e-08, 7.1054274e-14, 0.09611361, -0.05000001)
+material_override = ExtResource("11_ej0ny")
+mesh = SubResource("TextMesh_4gbdm")
+
+[node name="suit_mesh2" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=174629730]
+transform = Transform3D(-1, -5.157786e-06, -2.2545397e-13, 0, -4.371139e-08, 1, -5.157786e-06, 1, 4.371139e-08, 4.7030557e-07, -0.11100112, -0.098455414)
+material_override = ExtResource("11_ej0ny")
+mesh = SubResource("TextMesh_4gbdm")
+
+[node name="Hearts_base_colour2" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=464835868]
+transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 0, 0, 0)
+material_override = ExtResource("11_ej0ny")
+mesh = SubResource("CylinderMesh_rui0b")
+
+[node name="White_inner_colour" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=2106614360]
+transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 6.3948846e-14, 0.025000002, 3.7252903e-09)
+material_override = ExtResource("12_crcb6")
+mesh = SubResource("CylinderMesh_5b161")
+
+[node name="White_inner_colour3" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=1155388222]
+transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 7.1054274e-14, 0.037368104, 0)
+material_override = ExtResource("13_l3uax")
+mesh = SubResource("CylinderMesh_0upqd")
+
+[node name="White_inner_colour4" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=1182045130]
+transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 2.1316282e-14, 0.054009996, 0)
+material_override = ExtResource("12_crcb6")
+mesh = SubResource("CylinderMesh_ta18e")
+
+[node name="White_inner_colour2" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=2046488019]
+transform = Transform3D(-1, 8.742177e-08, -5.070367e-06, -8.7422904e-08, -1, -1.3075962e-11, -5.0703666e-06, -1.2632706e-11, 1, 4.5595915e-08, -0.023822945, 3.7252499e-09)
+material_override = ExtResource("11_ej0ny")
+mesh = SubResource("CylinderMesh_5b161")
+
+[node name="White_inner_colour5" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=879393785]
+transform = Transform3D(-1, 8.742177e-08, -5.070367e-06, -8.7422904e-08, -1, -1.3075962e-11, -5.0703666e-06, -1.2632706e-11, 1, 4.6677314e-08, -0.036191076, -1.1427064e-13)
+material_override = ExtResource("13_l3uax")
+mesh = SubResource("CylinderMesh_0upqd")
+
+[node name="White_inner_colour6" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=885068819]
+transform = Transform3D(-1, 8.742177e-08, -5.070367e-06, -8.7422904e-08, -1, -1.3075962e-11, -5.0703666e-06, -1.2632706e-11, 1, 4.8132037e-08, -0.05283294, -2.1754254e-13)
+material_override = SubResource("StandardMaterial3D_p0lsl")
+mesh = SubResource("CylinderMesh_ta18e")
 
 [node name="StableCamera" type="Camera3D" parent="." unique_id=1918680024]
 keep_aspect = 0

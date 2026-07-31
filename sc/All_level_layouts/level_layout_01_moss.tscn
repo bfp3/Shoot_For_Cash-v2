@@ -24,6 +24,10 @@
 [ext_resource type="Script" uid="uid://c7ynowu6kwn7d" path="res://addons/boujie_water_shader/prefabs/ocean_prefab.gd" id="22_2svof"]
 [ext_resource type="Material" uid="uid://cvnsu7lttsfsh" path="res://addons/boujie_water_shader/prefabs/outset_ocean_material.tres" id="23_u0cw1"]
 [ext_resource type="Script" uid="uid://by76ummufi43j" path="res://ch/spare_parts_removed_to_optimise/ocean_simplified.gd" id="24_qy441"]
+[ext_resource type="Material" uid="uid://du6stho3eesie" path="res://res/hood_body_parts/main_body_material.tres" id="25_74xva"]
+[ext_resource type="Material" uid="uid://csum6kiahh4u8" path="res://res/hood_body_parts/main_body_2_material.tres" id="26_sc1d7"]
+[ext_resource type="Material" uid="uid://ig6l6depd7ao" path="res://res/hood_body_parts/main_body_3_material.tres" id="27_ejnqt"]
+[ext_resource type="Texture2D" uid="uid://dcbh2d4up4wjl" path="res://res/white_dented_texture2.png" id="28_oyq6x"]
 
 [sub_resource type="Animation" id="Animation_k7lvh"]
 length = 0.001
@@ -1060,6 +1064,41 @@ width = 256
 height = 256
 fill_from = Vector2(0, 1)
 
+[sub_resource type="TextMesh" id="TextMesh_tej34"]
+text = "♣"
+font_size = 63
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6qhn0"]
+top_radius = 0.51
+bottom_radius = 0.51
+height = 0.09
+radial_segments = 24
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_u4skr"]
+top_radius = 0.435
+bottom_radius = 0.435
+height = 0.12
+radial_segments = 24
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_r0nke"]
+top_radius = 0.35
+bottom_radius = 0.35
+height = 0.12
+radial_segments = 24
+cap_bottom = false
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_p87rn"]
+top_radius = 0.33
+bottom_radius = 0.33
+height = 0.12
+radial_segments = 13
+cap_bottom = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v0xb0"]
+shading_mode = 0
+albedo_color = Color(0.43, 0.25212333, 0.11609999, 1)
+albedo_texture = ExtResource("28_oyq6x")
+
 [node name="Moss" type="Node3D" unique_id=229302118]
 
 [node name="Weather_animation" type="AnimationPlayer" parent="." unique_id=142603363]
@@ -1126,6 +1165,7 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D13" type="Node3D" parent="." unique_id=133080741]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 2, 7, 1.75, 22)
+visible = false
 
 [node name="Circle2" type="MeshInstance3D" parent="Emblem_3D13" unique_id=1804312617]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.1, 0.0079603195, 0.82744914, -0.03149128)
@@ -1165,6 +1205,7 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D3" type="Node3D" parent="." unique_id=992747553]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, -1, -1.97, 19.577)
+visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D3" unique_id=984901232]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1183,6 +1224,7 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D4" type="Node3D" parent="." unique_id=1040664154]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, 1, -1.97, 19.577)
+visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D4" unique_id=1811930214]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1201,6 +1243,7 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D5" type="Node3D" parent="." unique_id=883305337]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, 3, -1.97, 19.577)
+visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D5" unique_id=1950470608]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1219,6 +1262,7 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D6" type="Node3D" parent="." unique_id=900137779]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, -3, -1.97, 19.577)
+visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D6" unique_id=1791034457]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1237,6 +1281,7 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D7" type="Node3D" parent="." unique_id=1235805483]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, -5, -1.97, 19.577)
+visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D7" unique_id=1478465563]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1255,6 +1300,7 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D8" type="Node3D" parent="." unique_id=1058177003]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, 5, -1.97, 19.577)
+visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D8" unique_id=513124755]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1273,6 +1319,7 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D9" type="Node3D" parent="." unique_id=1435116952]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, 8, -1.97, 19.577)
+visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D9" unique_id=53369001]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -1291,6 +1338,7 @@ mesh = SubResource("ArrayMesh_1vd3e")
 
 [node name="Emblem_3D10" type="Node3D" parent="." unique_id=706641261]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 1.534, -8, -1.97, 19.577)
+visible = false
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D10" unique_id=1873286063]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
@@ -3271,6 +3319,55 @@ far_edge = 4000
 [node name="OceanSimple" type="Node3D" parent="OutsetOcean" unique_id=1972191110]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.36, 4.2, -333.782)
 script = ExtResource("24_qy441")
+
+[node name="Base" type="Node3D" parent="." unique_id=1162864450]
+transform = Transform3D(-2.435, 0, 0, 0, -6.625, 0, 0, 0, -2.435, -4.6000004, -2.569, 11.781)
+visible = false
+
+[node name="suit_mesh" type="MeshInstance3D" parent="Base" unique_id=97107610]
+transform = Transform3D(1, 2.2737368e-13, -2.2737368e-13, 1.2789769e-13, -4.4703484e-08, -1, 0, 1, -4.4703484e-08, 7.1054274e-14, 0.09611361, -0.05000001)
+material_override = ExtResource("25_74xva")
+mesh = SubResource("TextMesh_tej34")
+
+[node name="suit_mesh2" type="MeshInstance3D" parent="Base" unique_id=1809439925]
+transform = Transform3D(-1, -5.157786e-06, -2.2545397e-13, 0, -4.371139e-08, 1, -5.157786e-06, 1, 4.371139e-08, 4.7030557e-07, -0.11100112, -0.098455414)
+material_override = ExtResource("25_74xva")
+mesh = SubResource("TextMesh_tej34")
+
+[node name="Hearts_base_colour2" type="MeshInstance3D" parent="Base" unique_id=1747084618]
+transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 0, 0, 0)
+material_override = ExtResource("25_74xva")
+mesh = SubResource("CylinderMesh_6qhn0")
+
+[node name="White_inner_colour" type="MeshInstance3D" parent="Base" unique_id=32134259]
+transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 6.3948846e-14, 0.025000002, 3.7252903e-09)
+material_override = ExtResource("26_sc1d7")
+mesh = SubResource("CylinderMesh_u4skr")
+
+[node name="White_inner_colour3" type="MeshInstance3D" parent="Base" unique_id=599383885]
+transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 7.1054274e-14, 0.037368104, 0)
+material_override = ExtResource("27_ejnqt")
+mesh = SubResource("CylinderMesh_r0nke")
+
+[node name="White_inner_colour4" type="MeshInstance3D" parent="Base" unique_id=2030380231]
+transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 2.1316282e-14, 0.054009996, 0)
+material_override = ExtResource("26_sc1d7")
+mesh = SubResource("CylinderMesh_p87rn")
+
+[node name="White_inner_colour2" type="MeshInstance3D" parent="Base" unique_id=672798848]
+transform = Transform3D(-1, 8.742177e-08, -5.070367e-06, -8.7422904e-08, -1, -1.3075962e-11, -5.0703666e-06, -1.2632706e-11, 1, 4.5595915e-08, -0.023822945, 3.7252499e-09)
+material_override = ExtResource("25_74xva")
+mesh = SubResource("CylinderMesh_u4skr")
+
+[node name="White_inner_colour5" type="MeshInstance3D" parent="Base" unique_id=1165276364]
+transform = Transform3D(-1, 8.742177e-08, -5.070367e-06, -8.7422904e-08, -1, -1.3075962e-11, -5.0703666e-06, -1.2632706e-11, 1, 4.6677314e-08, -0.036191076, -1.1427064e-13)
+material_override = ExtResource("27_ejnqt")
+mesh = SubResource("CylinderMesh_r0nke")
+
+[node name="White_inner_colour6" type="MeshInstance3D" parent="Base" unique_id=1075433081]
+transform = Transform3D(-1, 8.742177e-08, -5.070367e-06, -8.7422904e-08, -1, -1.3075962e-11, -5.0703666e-06, -1.2632706e-11, 1, 4.8132037e-08, -0.05283294, -2.1754254e-13)
+material_override = SubResource("StandardMaterial3D_v0xb0")
+mesh = SubResource("CylinderMesh_p87rn")
 
 [connection signal="updated_lod" from="OutsetOcean/OceanSimple" to="OutsetOcean" method="_on_ocean_simple_updated_lod"]
 

@@ -18,12 +18,18 @@
 [ext_resource type="AudioStream" uid="uid://bblf41t53etln" path="res://sfx/Windmill_Sprint.ogg" id="15_ymbdo"]
 [ext_resource type="AudioStream" uid="uid://bk6dsl4ownky8" path="res://sfx/USERSONG164.ogg" id="16_ec2we"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="17_lysu5"]
+[ext_resource type="AudioStream" uid="uid://yotbn67ks25f" path="res://sfx/spare_songs/Windmill_math_anim2.ogg" id="19_gf2tl"]
 [ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="19_gu7ia"]
 [ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="20_l8wgb"]
+[ext_resource type="AudioStream" uid="uid://clf7afnig2h1f" path="res://sfx/spare_songs/Windmill_Math_Anim.ogg" id="20_wtxnc"]
 [ext_resource type="PackedScene" uid="uid://b51vopusw334w" path="res://ch/Rocks/Rock_Instance.tscn" id="21_e0u1b"]
+[ext_resource type="AudioStream" uid="uid://0lbg312kw1wk" path="res://sfx/spare_songs/aa_joyful_chess.ogg" id="21_r5w5l"]
+[ext_resource type="AudioStream" uid="uid://dctp46n0tk8gb" path="res://sfx/spare_songs/aa_joyful_frog.ogg" id="22_8twtg"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="23_1i2h1"]
+[ext_resource type="AudioStream" uid="uid://dp4u5i5gbw6q3" path="res://sfx/spare_songs/aa_joyful_frog_reverb.ogg" id="23_3ga0b"]
 [ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://ch/Player.tscn" id="23_ellt3"]
 [ext_resource type="Script" uid="uid://cbcv8383lu5sl" path="res://ch/splash_zone.gd" id="24_dse8t"]
+[ext_resource type="AudioStream" uid="uid://ccno3gyxudx7r" path="res://sfx/spare_songs/aa_joyful_matchmakers.ogg" id="24_vwwt2"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="25_ibr3v"]
 [ext_resource type="Shader" uid="uid://d3ak3drqp32j5" path="res://res/Shaders/simplified_TV_shader.gdshader" id="28_ld44m"]
 [ext_resource type="AudioStream" uid="uid://b80q15yp4lvhc" path="res://sfx/water_splash_sfx_01.ogg" id="28_nq3ni"]
@@ -40,6 +46,7 @@
 [ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="54_i541k"]
 [ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="55_3u5oq"]
 [ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="56_4ta1g"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="58_wtxnc"]
 [ext_resource type="PackedScene" uid="uid://dpbgyfs2kgdtr" path="res://ch/demo_end_screen/Demo_end_screen.tscn" id="61_ec2we"]
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
 [ext_resource type="PackedScene" uid="uid://q855h2qsq0w7" path="res://ch/Tally_card/TallyCard_main.tscn" id="63_err0d"]
@@ -63,6 +70,16 @@
 [ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="Script" uid="uid://c2w53e8iak64g" path="res://ch/protect_balloon_round.gd" id="80_ufvrt"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_mdemw"]
+random_pitch = 1.0293022
+streams_count = 6
+stream_0/stream = ExtResource("19_gf2tl")
+stream_1/stream = ExtResource("20_wtxnc")
+stream_2/stream = ExtResource("21_r5w5l")
+stream_3/stream = ExtResource("22_8twtg")
+stream_4/stream = ExtResource("23_3ga0b")
+stream_5/stream = ExtResource("24_vwwt2")
 
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
 bake_interval = 5.0
@@ -412,6 +429,19 @@ fill_from = Vector2(0.5, 0.5)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2300m"]
 bg_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uucxj"]
+bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
+border_width_left = 792
+border_width_top = 51
+border_width_right = 75
+border_width_bottom = 69
+border_color = Color(0.5, 0.004999995, 0.013249874, 1)
+border_blend = true
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
+[sub_resource type="PrismMesh" id="PrismMesh_hmuk5"]
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_an2hp"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_43pd7"]
@@ -565,6 +595,10 @@ unique_name_in_owner = true
 stream = ExtResource("17_lysu5")
 volume_db = -30.0
 pitch_scale = 0.9
+
+[node name="Randomiser" type="AudioStreamPlayer" parent="Music" unique_id=1748658751]
+stream = SubResource("AudioStreamRandomizer_mdemw")
+volume_db = -40.0
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1533254053]
 transform = Transform3D(-1, 6.859112e-09, 8.7153275e-08, 0, 0.99691725, -0.07845909, -8.742278e-08, -0.07845909, -0.99691725, 0, 0, 17.224)
@@ -977,7 +1011,7 @@ speed_scale = 0.005
 [node name="TV_hud" type="TextureRect" parent="." unique_id=1738601225 groups=["TV_CRT_Filter"]]
 unique_name_in_owner = true
 visible = false
-z_index = 1
+z_index = 4096
 material = SubResource("ShaderMaterial_taal3")
 anchors_preset = 15
 anchor_right = 1.0
@@ -991,6 +1025,7 @@ start_up = true
 metadata/_edit_use_anchors_ = true
 
 [node name="SplashScreenCanvasLayer" parent="." unique_id=991233177 node_paths=PackedStringArray("round_manager", "music_control") instance=ExtResource("29_c7cmr")]
+visible = false
 round_manager = NodePath("../Round_manager")
 music_control = NodePath("../Music")
 
@@ -1287,7 +1322,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("65_fjk4d")
 slide_duration = 1.0
-transition = 10
+transition = 1
 
 [node name="Background_control" type="Control" parent="Background_transition" unique_id=1050296865]
 layout_mode = 1
@@ -1427,8 +1462,8 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = 56.5
-offset_bottom = 71.5
+offset_top = 69.5
+offset_bottom = 84.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -1441,8 +1476,8 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = -71.5
-offset_bottom = -56.5
+offset_top = -84.5
+offset_bottom = -69.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -1500,7 +1535,39 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="TopRedPanel" type="Panel" parent="Background_transition" unique_id=2081657472]
+custom_minimum_size = Vector2(0, 162)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -990.0
+offset_right = 960.0
+offset_bottom = -828.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.03, 1.1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uucxj")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Background_transition/TopRedPanel" unique_id=1125389776]
+modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+texture_filter = 6
+position = Vector2(960, 83.659)
+rotation = 3.1415925
+scale = Vector2(1920, 162.535)
+mesh = SubResource("PrismMesh_hmuk5")
+
+[node name="CoatArms" parent="Background_transition/TopRedPanel" unique_id=1538240790 instance=ExtResource("58_wtxnc")]
+z_index = 76
+layout_mode = 1
+
 [node name="Settings_pause_menu" parent="." unique_id=1950114573 instance=ExtResource("64_tnw34")]
+visible = false
 
 [node name="floor2" type="MeshInstance3D" parent="." unique_id=1359241023]
 transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 30, 0, -3.39, 50)
@@ -2052,6 +2119,7 @@ force_multiplier = 1.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
 force_multiplier = 1.0
 
+[connection signal="finished" from="Music/Randomiser" to="Music" method="_on_randomiser_finished"]
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="MainGameCanvasLayer/QuitMenu" method="_on_cancel_menu_pressed"]
