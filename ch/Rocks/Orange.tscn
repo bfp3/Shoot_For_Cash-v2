@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://ddqfihifjccx5"]
 
 [ext_resource type="Script" uid="uid://dq6cbl62l07oc" path="res://ch/Rocks/orange.gd" id="1_osrcr"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_osrcr"]
 [ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="3_mo482"]
 [ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="4_6dqdt"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="5_1p817"]
@@ -19,7 +20,6 @@
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="18_n52fv"]
 [ext_resource type="PackedScene" uid="uid://bh211snc0txl4" path="res://res/Particles/Smoke_coloured.tscn" id="19_sloxq"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="20_bamir"]
-[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="20_osrcr"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 bounce = 0.5
@@ -46,17 +46,16 @@ scale_max = 0.19999999
 scale_curve = SubResource("CurveTexture_0cvxb")
 color = Color(4.415934, 3.4977326, 0, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6dqdt"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gsivy"]
 transparency = 1
 cull_mode = 2
 vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("20_osrcr")
+albedo_texture = ExtResource("2_osrcr")
 billboard_mode = 2
 billboard_keep_scale = true
 
-[sub_resource type="QuadMesh" id="QuadMesh_1p817"]
-material = SubResource("StandardMaterial3D_6dqdt")
-size = Vector2(0.5, 0.5)
+[sub_resource type="QuadMesh" id="QuadMesh_6dqdt"]
+material = SubResource("StandardMaterial3D_gsivy")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oiolr"]
 no_depth_test = true
@@ -286,7 +285,9 @@ turbulence_influence_over_life = SubResource("CurveTexture_27dlh")
 
 [sub_resource type="Shader" id="Shader_osrcr"]
 code = "shader_type spatial;
-render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_toon,specular_disabled,ambient_light_disabled,alpha_to_coverage;
+// Unshaded: Forward+ does not light these particles the same way Compatibility did
+// (ambient_light_disabled + custom light() = black/invisible without reliable light hits).
+render_mode blend_mix,depth_draw_opaque,cull_back,unshaded,specular_disabled,ambient_light_disabled,alpha_to_coverage;
 
 uniform vec4 albedo : source_color;
 uniform sampler2D texture_albedo : source_color,filter_linear_mipmap,repeat_enable;
@@ -347,17 +348,15 @@ void fragment() {
 	vec4 albedo_tex = texture(texture_albedo,base_uv);
 	albedo_tex.rgb = mix(pow((albedo_tex.rgb + vec3(0.055)) * (1.0 / (1.0 + 0.055)),vec3(2.4)),albedo_tex.rgb.rgb * (1.0 / 12.92),lessThan(albedo_tex.rgb,vec3(0.04045)));
 	albedo_tex *= COLOR;
-	ALBEDO = albedo.rgb * albedo_tex.rgb;
-	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
-	METALLIC = metallic_tex * metallic;
-	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
-	float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
-	ROUGHNESS = roughness_tex * roughness;
-	SPECULAR = specular;
+
+	vec3 dark_color = texture(dark_side, vec2(0.0)).rgb;
+	vec3 bright_color = texture(bright_side, vec2(0.0)).rgb;
+	// View-based rim replaces former light()-based toon mix so the glow self-illuminates.
+	float fres = fresnel(2.0, NORMAL, VIEW);
+	vec3 custom = mix(dark_color, bright_color, smoothstep(threshold, threshold + threshold_offset, fres));
+
+	ALBEDO = albedo.rgb * albedo_tex.rgb * custom;
 	ALPHA *= albedo.a * albedo_tex.a;
-	//ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold;
-	//ALPHA_ANTIALIASING_EDGE = alpha_antialiasing_edge;
-	//ALPHA_TEXTURE_COORDINATE = UV * vec2(albedo_texture_size);
 	
 	float erosion_offset_y = texture(erosion_offset_y_curve, vec2(lifetime)).r;
 	
@@ -382,28 +381,6 @@ void fragment() {
 #endif
 	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
 	ALPHA *= depth_fade(world_pos, VERTEX);
-}
-
-void light() {
-	// standard
-	DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * ALBEDO;
-	
-	vec3 dark_color = texture(dark_side, vec2(0.0)).rgb;
-	vec3 bright_color = texture(bright_side, vec2(0.0)).rgb;
-	
-	vec3 custom = mix(
-		dark_color, 
-		bright_color, 
-		smoothstep(
-			threshold, 
-			threshold + threshold_offset, 
-			dot(NORMAL, LIGHT)
-			)
-		);
-	
-	float fres = fresnel(2.0, NORMAL, VIEW);
-	
-	DIFFUSE_LIGHT = (ALBEDO + (fres * clamp(ATTENUATION - 0.75, 0.0, 1.0))) * custom;// * ATTENUATION;
 }
 "
 
@@ -439,7 +416,7 @@ curve = SubResource("Curve_6dqdt")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1p817"]
 render_priority = 1
 shader = SubResource("Shader_osrcr")
-shader_parameter/albedo = Color(1.825, 0.815, 0, 1)
+shader_parameter/albedo = Color(18.892157, 8.71517, 0, 1)
 shader_parameter/alpha_scissor_threshold = 0.125
 shader_parameter/alpha_antialiasing_edge = 0.25
 shader_parameter/albedo_texture_size = Vector2i(0, 0)
@@ -448,7 +425,7 @@ shader_parameter/roughness = 0.1
 shader_parameter/metallic_texture_channel = Vector4(0, 0, 0, 0)
 shader_parameter/specular = 0.0
 shader_parameter/metallic = 0.0
-shader_parameter/uv1_scale = Vector3(0, 0, 0)
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
 shader_parameter/uv1_offset = Vector3(0, 0, 0)
 shader_parameter/uv2_scale = Vector3(1, 1, 1)
 shader_parameter/uv2_offset = Vector3(0, 0, 0)
@@ -460,7 +437,7 @@ shader_parameter/erosion_offset_y_curve = SubResource("CurveTexture_1p817")
 shader_parameter/erosion_threshold_offset = 0.2
 shader_parameter/dark_side = SubResource("GradientTexture1D_mo482")
 shader_parameter/bright_side = SubResource("GradientTexture1D_2i7b7")
-shader_parameter/threshold = 0.0
+shader_parameter/threshold = -0.25
 shader_parameter/threshold_offset = 0.075
 
 [sub_resource type="Curve" id="Curve_qlnda"]
@@ -1022,13 +999,6 @@ height = 0.608
 radial_segments = 18
 rings = 6
 
-[sub_resource type="SphereMesh" id="SphereMesh_x7djv"]
-material = SubResource("ShaderMaterial_1p817")
-radius = 0.304
-height = 0.608
-radial_segments = 18
-rings = 6
-
 [node name="Orange" type="RigidBody3D" unique_id=1539472592 groups=["Target", "pineapple"]]
 collision_layer = 128
 collision_mask = 128
@@ -1043,12 +1013,12 @@ shape = SubResource("SphereShape3D_nul74")
 [node name="Mesh" type="Node3D" parent="." unique_id=1406987277]
 unique_name_in_owner = true
 
-[node name="GoldParticles" type="GPUParticles3D" parent="Mesh" unique_id=1670739560]
+[node name="GoldParticless" type="GPUParticles3D" parent="Mesh" unique_id=2125638247]
 unique_name_in_owner = true
 amount = 10
 fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_mo482")
-draw_pass_1 = SubResource("QuadMesh_1p817")
+draw_pass_1 = SubResource("QuadMesh_6dqdt")
 
 [node name="small_rock" type="MeshInstance3D" parent="Mesh" unique_id=151918807]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
@@ -1149,6 +1119,7 @@ process_material = SubResource("ParticleProcessMaterial_jq8lj")
 draw_pass_1 = SubResource("SphereMesh_c4njd")
 
 [node name="embers" type="GPUParticles3D" parent="AoE" unique_id=2040597011]
+visible = false
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false
@@ -1201,6 +1172,7 @@ draw_pass_1 = SubResource("QuadMesh_c7jqr")
 script = ExtResource("18_n52fv")
 
 [node name="pineapple_embers" type="GPUParticles3D" parent="AoE" unique_id=1238460025]
+visible = false
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false
@@ -1346,7 +1318,6 @@ one_shot = true
 
 [node name="Explosion_area" type="Area3D" parent="." unique_id=1324813825]
 unique_name_in_owner = true
-visible = false
 collision_layer = 387
 collision_mask = 387
 monitoring = false
@@ -1359,23 +1330,8 @@ disabled = true
 
 [node name="explosion_radius_mesh" type="MeshInstance3D" parent="Explosion_area" unique_id=1525320380]
 unique_name_in_owner = true
-visible = false
 layers = 16
 material_override = SubResource("ShaderMaterial_be75m")
-cast_shadow = 0
-mesh = SubResource("SphereMesh_osrcr")
-
-[node name="explosion_radius_mesh3" type="MeshInstance3D" parent="Explosion_area" unique_id=1520304910]
-unique_name_in_owner = true
-visible = false
-layers = 16
-cast_shadow = 0
-mesh = SubResource("SphereMesh_x7djv")
-
-[node name="explosion_radius_mesh2" type="MeshInstance3D" parent="Explosion_area" unique_id=181809612]
-unique_name_in_owner = true
-visible = false
-layers = 16
 cast_shadow = 0
 mesh = SubResource("SphereMesh_osrcr")
 

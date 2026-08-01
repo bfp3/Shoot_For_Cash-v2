@@ -533,7 +533,7 @@ func move_to_moss() -> void:
 	
 	scene_transition_screen.next_level_start()
 	await get_tree().create_timer(1.0, false).timeout
-	
+	await get_tree().create_timer(1.0, false).timeout
 	if level_layout.get_child(0) != null:
 		level_layout.get_child(0).queue_free()
 
@@ -542,6 +542,9 @@ func move_to_moss() -> void:
 	level_layout.add_child(level_scenery)
 	
 	level_scenery.name = 'current_level_layout'
+	# Let Compatibility/Web compile the new layout's pipelines under the fade.
+	await get_tree().process_frame
+	await get_tree().process_frame
 	
 	await get_tree().create_timer(1.0, false).timeout
 	shop_main_menu.setup_shop_for_rounds()
@@ -578,6 +581,9 @@ func move_to_redd() -> void:
 	level_layout.add_child(new_scene)
 	
 	new_scene.name = 'current_level_layout'
+	# Let Compatibility/Web compile the new layout's pipelines under the fade.
+	await get_tree().process_frame
+	await get_tree().process_frame
 	
 	await get_tree().create_timer(1.0, false).timeout
 	scene_transition_screen.next_level_finish()

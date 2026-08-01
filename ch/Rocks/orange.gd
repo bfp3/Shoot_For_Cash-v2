@@ -122,7 +122,7 @@ func update_prepare_rock() -> void:
 func update_active() -> void:
 	disable_collision()
 	enable_collision()
-	%GoldParticles.emitting = true
+	%GoldParticless.emitting = true
 	reset_stats()
 	reset_rock_back_on()
 	add_to_group('Target')
@@ -150,7 +150,7 @@ func update_active() -> void:
 	
 func update_hit() -> void:
 	update_gravity(1.0)
-	%GoldParticles.emitting = false
+	%GoldParticless.emitting = false
 	$Pineapple_sound_hit.play()
 	disable_collision()
 	gl_PlayerState.log_hit('orange', 'orange', cash_value)
@@ -624,7 +624,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 func expand_blast_radius() -> void:
 	#return
 	const domain_expansion : float = 14.0
-	#%explosion_radius_mesh.show()
+	%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.2
 	#%explosion_radius_mesh.transparency = 1.0
 	var blast_node : Area3D = %Explosion_area

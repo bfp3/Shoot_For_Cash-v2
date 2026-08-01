@@ -67,16 +67,10 @@ func pull_up_score_tally() -> void:
 	main_score_tally.pull_up_score()
 
 func fade_out_score() -> void:
-	if GameManager.player_has_winning_score:
-		await $Corner_Container/Game_won_tally.display_tally()
-		main_score_tally.hide()
-	else:
-		main_score_tally.fade_out_score()
-		$Corner_Container/Points_particles_receptor.return_to_default()
+	pass
 
 func fade_out_score_dials_one_by_one() -> void:
-	if GameManager.player_has_winning_score:
-		main_score_tally.fade_out_score_dials_one_by_one()
+	pass
 
 func main_score_update(amount_of_points: float) -> void:
 	# Placeholder or intentionally left empty

@@ -19,6 +19,10 @@ func _ready() -> void:
 	await get_tree().process_frame
 	set_process(false)
 	main_game_canvas.hide()
+
+	# Compatibility / Web: compile shaders & particle pipelines before control.
+	#await ShaderWarmup.ensure_warmed()
+
 	if intro_title_screen:
 		start_intro_process()
 		

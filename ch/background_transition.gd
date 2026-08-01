@@ -34,11 +34,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func next_level_start() -> void:
 	_reset_next_level()
-	
 	var screen_height := get_viewport_rect().size.y
 
 	color_rect.position.y = screen_height
 	$TopRedPanel.position.y = -450.0
+	$Background_control/Control.position.x = -1950.0
 	
 	var tween := create_tween()
 	tween.set_trans(transition)
@@ -51,6 +51,7 @@ func next_level_start() -> void:
 		slide_duration
 	)
 	tween.parallel().tween_property($TopRedPanel, "position:y", 0.0,slide_duration) #.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT_IN)#.set_delay(0.5)
+	tween.parallel().tween_property($Background_control/Control, "position:x", 0.0,slide_duration - 0.2).set_delay(slide_duration - 0.2)
 
 	await tween.finished
 
@@ -64,7 +65,7 @@ func next_level_finish() -> void:
 	tween.parallel().tween_property($Background_control/CoatArms, "modulate:a", 0.0,1.0)
 	tween.parallel().tween_property($Background_control/Control, "modulate:a", 0.0,1.0)
 	tween.parallel().tween_property($TopRedPanel, "position:y", -450.0,1.0).set_trans(Tween.TRANS_LINEAR)
-	tween.parallel().tween_property($Background_control/Control, "position:x", 1920.0,0.5).as_relative().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tween.parallel().tween_property($Background_control/Control, "position:x", 1920.0,0.35).as_relative().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	
 	tween.parallel().tween_callback($Background_control/Background.fade_in).set_delay(1.15)
 	

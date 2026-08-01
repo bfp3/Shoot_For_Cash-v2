@@ -29,20 +29,6 @@
 [ext_resource type="Material" uid="uid://ig6l6depd7ao" path="res://res/hood_body_parts/main_body_3_material.tres" id="27_ejnqt"]
 [ext_resource type="Texture2D" uid="uid://dcbh2d4up4wjl" path="res://res/white_dented_texture2.png" id="28_oyq6x"]
 
-[sub_resource type="Animation" id="Animation_k7lvh"]
-length = 0.001
-
-[sub_resource type="Animation" id="Animation_snbl5"]
-resource_name = "weather_anim"
-length = 15.0
-step = 0.05
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_1thcr"]
-_data = {
-&"RESET": SubResource("Animation_k7lvh"),
-&"weather_anim": SubResource("Animation_snbl5")
-}
-
 [sub_resource type="QuadMesh" id="QuadMesh_k7lvh"]
 size = Vector2(19.91, 10)
 
@@ -1101,17 +1087,10 @@ albedo_texture = ExtResource("28_oyq6x")
 
 [node name="Moss" type="Node3D" unique_id=229302118]
 
-[node name="Weather_animation" type="AnimationPlayer" parent="." unique_id=142603363]
-libraries/ = SubResource("AnimationLibrary_1thcr")
-autoplay = &"weather_anim"
-speed_scale = 0.05
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true
 transform = Transform3D(-0.9848077, -0.006060238, -0.17354251, 0, 0.99939084, -0.034899496, 0.1736483, -0.034369294, -0.9842078, 0, 0, 0)
 light_color = Color(1, 0.7647059, 0.56078434, 1)
-light_energy = 0.3
-light_indirect_energy = 0.0
 light_bake_mode = 0
 shadow_enabled = true
 shadow_opacity = 0.45

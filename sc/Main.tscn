@@ -25,8 +25,8 @@
 [ext_resource type="AudioStream" uid="uid://0lbg312kw1wk" path="res://sfx/spare_songs/aa_joyful_chess.ogg" id="21_r5w5l"]
 [ext_resource type="AudioStream" uid="uid://dctp46n0tk8gb" path="res://sfx/spare_songs/aa_joyful_frog.ogg" id="22_8twtg"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="23_1i2h1"]
-[ext_resource type="AudioStream" uid="uid://dp4u5i5gbw6q3" path="res://sfx/spare_songs/aa_joyful_frog_reverb.ogg" id="23_3ga0b"]
 [ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://ch/Player.tscn" id="23_ellt3"]
+[ext_resource type="AudioStream" uid="uid://csdms3nt5xv53" path="res://sfx/Windmill_Sunburst_NOT_IN_USE.ogg" id="23_wtxnc"]
 [ext_resource type="Script" uid="uid://cbcv8383lu5sl" path="res://ch/splash_zone.gd" id="24_dse8t"]
 [ext_resource type="AudioStream" uid="uid://ccno3gyxudx7r" path="res://sfx/spare_songs/aa_joyful_matchmakers.ogg" id="24_vwwt2"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="25_ibr3v"]
@@ -39,6 +39,7 @@
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="34_v17ib"]
 [ext_resource type="PackedScene" uid="uid://cl0yh38bqfqd3" path="res://ch/Shop/Start_menu_shop_clone.tscn" id="37_0tjmb"]
 [ext_resource type="PackedScene" uid="uid://dg8ab1qtj51xm" path="res://ch/Shop/ticket_purchased_pop_up.tscn" id="47_gspdd"]
+[ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="47_wtxnc"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="49_24t6b"]
 [ext_resource type="Shader" uid="uid://b0w47e61vj8md" path="res://res/Shaders/transitionshader.gdshader" id="49_2300m"]
 [ext_resource type="Script" uid="uid://cl3cmsr8nw8vb" path="res://ch/transitionMask.gd" id="51_tnw34"]
@@ -71,13 +72,14 @@
 [ext_resource type="Script" uid="uid://c2w53e8iak64g" path="res://ch/protect_balloon_round.gd" id="80_ufvrt"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_mdemw"]
-random_pitch = 1.0293022
-streams_count = 5
+random_pitch = 1.0442737
+streams_count = 6
 stream_0/stream = ExtResource("19_gf2tl")
 stream_1/stream = ExtResource("21_r5w5l")
 stream_2/stream = ExtResource("22_8twtg")
-stream_3/stream = ExtResource("23_3ga0b")
-stream_4/stream = ExtResource("24_vwwt2")
+stream_3/stream = ExtResource("24_vwwt2")
+stream_4/stream = ExtResource("14_mdemw")
+stream_5/stream = ExtResource("23_wtxnc")
 
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
 bake_interval = 5.0
@@ -1029,7 +1031,6 @@ music_control = NodePath("../Music")
 
 [node name="MainGameCanvasLayer" type="CanvasLayer" parent="." unique_id=778582470]
 layer = -1
-visible = false
 
 [node name="QuitMenu" type="PanelContainer" parent="MainGameCanvasLayer" unique_id=2079405395]
 unique_name_in_owner = true
@@ -1257,6 +1258,7 @@ round_manager = NodePath("../../Round_manager")
 money_control = NodePath("../Money_labels")
 
 [node name="Frame_rate" type="Control" parent="MainGameCanvasLayer" unique_id=439145462]
+visible = false
 custom_minimum_size = Vector2(250, 50)
 layout_mode = 3
 anchors_preset = 0
@@ -1277,6 +1279,7 @@ offset_right = 8.0
 offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("47_wtxnc")
 text = "FPS"
 
 [node name="Timer" type="Timer" parent="MainGameCanvasLayer/Frame_rate" unique_id=1710339876]
@@ -1798,6 +1801,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 23)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 23)
 
 [node name="Pineapple_markers" type="Node3D" parent="." unique_id=253776400 groups=["pineapple_container"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9)
 
 [node name="LeftMarker" type="Marker3D" parent="Pineapple_markers" unique_id=784347114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 23)
@@ -1948,20 +1952,24 @@ volume_db = -40.0
 pitch_scale = 2.0
 
 [node name="PlayerBalloon2" parent="." unique_id=350761291 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 27.095, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24.095, 30.9)
 top_level = true
+visible = false
 
 [node name="PlayerBalloon3" parent="." unique_id=1574938481 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 29.095001, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 26.095001, 30.9)
 top_level = true
+visible = false
 
 [node name="ProtectBalloonRound" type="Node3D" parent="." unique_id=919395476 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager", "blue_balloon")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 29)
+visible = false
 script = ExtResource("80_ufvrt")
 left_marker = NodePath("../Pineapple_markers/LeftMarker")
 right_marker = NodePath("../Pineapple_markers/RightMarker")
 round_manager = NodePath("../Round_manager")
 blue_balloon = NodePath("../PlayerBalloon2")
-pineapples_from_any_direction = true
+pineapple_spawn_radius = 20.0
 pineapple_aim_offset = 6.0
 
 [node name="Pineapple" parent="ProtectBalloonRound" unique_id=1006380222 instance=ExtResource("68_14r73")]
