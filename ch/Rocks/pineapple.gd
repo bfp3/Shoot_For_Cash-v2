@@ -240,7 +240,7 @@ func reset_stats() -> void:
 func was_hit_tween() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_callback(smoke_particles)
-	tween.tween_property($Mesh, "scale", Vector3.ZERO, 0.10)
+	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
 	await tween.finished
 
 	

@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_7j408"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="8_kvqbn"]
 [ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="8_tnodp"]
+[ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="10_ohn7f"]
 [ext_resource type="Texture2D" uid="uid://dk2p6y27c64hs" path="res://res/cooldown_reduction_upgrade_icon_128x128.png" id="12_pwib5"]
 [ext_resource type="Texture2D" uid="uid://cuw4sgs22s23" path="res://res/sky_mine_icon_2.png" id="13_cn8lj"]
 [ext_resource type="PackedScene" uid="uid://ck6lfy3kh3eqy" path="res://ch/Shop/Upgrade_progress_component.tscn" id="13_onfim"]
@@ -85,67 +86,31 @@ height = 256
 noise = SubResource("FastNoiseLite_sgib8")
 color_ramp = SubResource("Gradient_jv82y")
 
-[sub_resource type="Animation" id="Animation_uxymg"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = false
-tracks/1/path = NodePath(".:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(1, 1)]
-}
+[sub_resource type="Gradient" id="Gradient_tnodp"]
+offsets = PackedFloat32Array(0.008830011, 1)
+colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
 
-[sub_resource type="Animation" id="Animation_exbpr"]
-resource_name = "new_animation"
-length = 14.566667
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 5.2, 9.235343),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.0, -6.283185307179586, -6.283185307179586]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.3333334, 2.1333334, 2.8333333, 3.3375256, 3.9666667, 5.2, 9.235343),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(1, 1), Vector2(0.9, 0.9), Vector2(0.9, 0.9), Vector2(1, 1), Vector2(0.9, 0.9), Vector2(0.9, 0.9), Vector2(1, 1), Vector2(1, 1)]
-}
+[sub_resource type="Gradient" id="Gradient_ohn7f"]
+offsets = PackedFloat32Array(0.008830011, 1)
+colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_tnodp"]
-_data = {
-&"RESET": SubResource("Animation_uxymg"),
-&"new_animation": SubResource("Animation_exbpr")
-}
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tnodp"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(1100, 220, 1)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 2.0
+scale_max = 8.0
+scale_curve = SubResource("CurveTexture_64t06")
+color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+alpha_curve = SubResource("CurveTexture_cn8lj")
+hue_variation_min = -2.2351742e-08
+hue_variation_max = -2.2351742e-08
 
 [sub_resource type="Animation" id="Animation_tnodp"]
 length = 0.001
@@ -186,30 +151,6 @@ _data = {
 &"rotation": SubResource("Animation_ohn7f")
 }
 
-[sub_resource type="Gradient" id="Gradient_tnodp"]
-offsets = PackedFloat32Array(0.008830011, 1)
-colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
-
-[sub_resource type="Gradient" id="Gradient_ohn7f"]
-offsets = PackedFloat32Array(0.008830011, 1)
-colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tnodp"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(1920, 1080, 1)
-initial_velocity_min = 1.0
-initial_velocity_max = 2.0
-radial_accel_min = 0.99999774
-radial_accel_max = 4.9999976
-tangential_accel_min = -2.2351742e-06
-tangential_accel_max = -2.2351742e-06
-scale_min = 1.05
-scale_max = 1.05
-scale_curve = SubResource("CurveTexture_64t06")
-color = Color(0.92, 0.87446004, 0.8372, 1)
-alpha_curve = SubResource("CurveTexture_cn8lj")
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uucxj"]
@@ -219,7 +160,7 @@ corner_radius_top_right = 20
 
 [sub_resource type="PrismMesh" id="PrismMesh_hmuk5"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r5w5l"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ohn7f"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
 border_width_left = 1
 border_width_top = 1
@@ -234,7 +175,7 @@ corner_radius_bottom_left = 5
 corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8twtg"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xgu8n"]
 bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
 border_width_left = 3
 border_width_top = 3
@@ -249,7 +190,7 @@ corner_radius_bottom_left = 5
 corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ga0b"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ei2sf"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
 border_width_left = 1
 border_width_top = 1
@@ -265,9 +206,9 @@ corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
 [sub_resource type="Theme" id="Theme_vv4e8"]
-Button/styles/normal = SubResource("StyleBoxFlat_r5w5l")
-Panel/styles/panel = SubResource("StyleBoxFlat_8twtg")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_3ga0b")
+Button/styles/normal = SubResource("StyleBoxFlat_ohn7f")
+Panel/styles/panel = SubResource("StyleBoxFlat_xgu8n")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_ei2sf")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tnodp"]
 bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
@@ -545,6 +486,55 @@ mouse_filter = 2
 texture = ExtResource("8_tnodp")
 stretch_mode = 5
 
+[node name="center_container" type="Control" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=33514297]
+modulate = Color(1, 1, 1, 0.19607843)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0517578e-05
+offset_top = -0.8031616
+offset_right = 3.0517578e-05
+offset_bottom = -0.8031616
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="left" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=150314236]
+position = Vector2(0, -23.293152)
+points = PackedVector2Array(0, 0, -230, 0)
+width = 1.178
+gradient = SubResource("Gradient_tnodp")
+texture_mode = 2
+joint_mode = 2
+
+[node name="right" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=2087370666]
+position = Vector2(0, -23.293152)
+points = PackedVector2Array(0, 0, 230, 0)
+width = 1.178
+gradient = SubResource("Gradient_ohn7f")
+texture_mode = 2
+joint_mode = 2
+
+[node name="right2" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=724262866]
+position = Vector2(0, -23.293152)
+points = PackedVector2Array(0, 0, 0, 230)
+width = 1.178
+gradient = SubResource("Gradient_ohn7f")
+texture_mode = 2
+joint_mode = 2
+
+[node name="right3" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=300482887]
+position = Vector2(0, -23.293152)
+points = PackedVector2Array(0, 0, 0, -230)
+width = 1.178
+gradient = SubResource("Gradient_ohn7f")
+texture_mode = 2
+joint_mode = 2
+
 [node name="MapBackground2" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=2127128880]
 modulate = Color(0.86, 0.7674067, 0.6966, 0.078431375)
 layout_mode = 1
@@ -564,6 +554,14 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("8_tnodp")
 stretch_mode = 5
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1666275727]
+position = Vector2(480, 276.42572)
+amount = 250
+lifetime = 5.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_tnodp")
 
 [node name="TextureRect6" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1028768478]
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
@@ -674,33 +672,8 @@ texture = ExtResource("8_7j408")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=429692834]
-visible = false
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -59.979492
-offset_right = 64.0
-offset_bottom = 68.02051
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/TextureRect" unique_id=17882523]
-libraries/ = SubResource("AnimationLibrary_tnodp")
-autoplay = &"new_animation"
-speed_scale = 3.0
-
 [node name="Reticle" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=929043320]
-modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+modulate = Color(0.9137255, 0.87058824, 0.8352941, 1)
 show_behind_parent = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
@@ -709,16 +682,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -82.47385
-offset_right = 64.0
-offset_bottom = 45.526184
+offset_left = -512.0
+offset_top = -495.9357
+offset_right = 512.0
+offset_bottom = 528.06433
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(4.129, 4.129)
+scale = Vector2(0.619, 0.619)
 pivot_offset_ratio = Vector2(0.5, 0.46)
 mouse_filter = 2
-texture = ExtResource("5_lwcj2")
+texture = ExtResource("10_ohn7f")
 stretch_mode = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle" unique_id=1344829094]
@@ -726,9 +699,8 @@ libraries/ = SubResource("AnimationLibrary_xgu8n")
 autoplay = &"rotation"
 speed_scale = 0.8
 
-[node name="Reticle2" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=618485896]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+[node name="Reticle3" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1910278677]
+modulate = Color(0.91, 0.864955, 0.82809997, 0.2901961)
 show_behind_parent = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
@@ -737,80 +709,25 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -198.93976
-offset_top = -82.47391
-offset_right = -70.93976
-offset_bottom = 45.526123
+offset_left = -170.63449
+offset_top = -622.04016
+offset_right = 853.3655
+offset_bottom = 401.95984
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.525, 0.525)
+scale = Vector2(0.335, 0.335)
 pivot_offset_ratio = Vector2(0.5, 0.46)
 mouse_filter = 2
-texture = ExtResource("5_lwcj2")
+texture = ExtResource("10_ohn7f")
 stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle2" unique_id=1722191119]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-
-[node name="Reticle3" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=874861631]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 77.36548
-offset_top = -82.47391
-offset_right = 205.36548
-offset_bottom = 45.526123
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 0.525)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle3" unique_id=1305389926]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-
-[node name="Reticle4" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1934095055]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -82.47391
-offset_right = 64.0
-offset_bottom = 45.526123
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 0.525)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle4" unique_id=767842127]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle3" unique_id=1034292794]
 libraries/ = SubResource("AnimationLibrary_xgu8n")
 autoplay = &"rotation"
 speed_scale = 0.8
 
-[node name="Reticle5" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=101474291]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+[node name="Reticle5" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=11549405]
+modulate = Color(0.91, 0.864955, 0.82809997, 0.2901961)
 show_behind_parent = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
@@ -819,238 +736,22 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -217.41367
-offset_right = 64.0
-offset_bottom = -89.413635
+offset_left = -883.88745
+offset_top = -377.8635
+offset_right = 140.11255
+offset_bottom = 646.1365
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.525, 0.525)
+scale = Vector2(0.335, 0.335)
 pivot_offset_ratio = Vector2(0.5, 0.46)
 mouse_filter = 2
-texture = ExtResource("5_lwcj2")
+texture = ExtResource("10_ohn7f")
 stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle5" unique_id=1701303686]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle5" unique_id=603015917]
 libraries/ = SubResource("AnimationLibrary_xgu8n")
 autoplay = &"rotation"
-
-[node name="Reticle6" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=944272282]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -160.3855
-offset_top = -185.28513
-offset_right = -32.385498
-offset_bottom = -57.285095
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 0.525)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle6" unique_id=422148687]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-
-[node name="Reticle7" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1035300691]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 25.959839
-offset_top = -185.28513
-offset_right = 153.95984
-offset_bottom = -57.285095
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 0.525)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle7" unique_id=689593377]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-
-[node name="Reticle8" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=540841696]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -485.0185
-offset_top = -26.361603
-offset_right = -357.0185
-offset_bottom = 101.63843
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 0.525)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle8" unique_id=263944812]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-
-[node name="Reticle9" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1866784351]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -298.67316
-offset_top = -26.361603
-offset_right = -170.67316
-offset_bottom = 101.63843
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 0.525)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle9" unique_id=1840117543]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-
-[node name="Reticle10" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=423864607]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 159.96143
-offset_top = -26.361603
-offset_right = 287.96143
-offset_bottom = 101.63843
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 0.525)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle10" unique_id=1441586226]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-
-[node name="Reticle11" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=256809774]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 346.30676
-offset_top = -26.361603
-offset_right = 474.30676
-offset_bottom = 101.63843
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 0.525)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle11" unique_id=422616997]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-
-[node name="center_container" type="Control" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=33514297]
-modulate = Color(1, 1, 1, 0.19607843)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_top = 3.0517578e-05
-offset_bottom = 3.0517578e-05
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="left" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=150314236]
-position = Vector2(0, -23.293152)
-points = PackedVector2Array(0, 0, -230, 0)
-width = 1.178
-gradient = SubResource("Gradient_tnodp")
-texture_mode = 2
-joint_mode = 2
-
-[node name="right" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=2087370666]
-position = Vector2(0, -23.293152)
-points = PackedVector2Array(0, 0, 230, 0)
-width = 1.178
-gradient = SubResource("Gradient_ohn7f")
-texture_mode = 2
-joint_mode = 2
-
-[node name="right2" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=724262866]
-position = Vector2(0, -23.293152)
-points = PackedVector2Array(0, 0, 0, 230)
-width = 1.178
-gradient = SubResource("Gradient_ohn7f")
-texture_mode = 2
-joint_mode = 2
-
-[node name="right3" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=300482887]
-position = Vector2(0, -23.293152)
-points = PackedVector2Array(0, 0, 0, -230)
-width = 1.178
-gradient = SubResource("Gradient_ohn7f")
-texture_mode = 2
-joint_mode = 2
-
-[node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1666275727]
-position = Vector2(962, 551)
-amount = 20
-lifetime = 5.0
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_tnodp")
+speed_scale = 0.8
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=582425009]
 layout_mode = 2
@@ -1283,7 +984,6 @@ upgrade_type = "gun"
 upgrade_name = "Weapon"
 
 [node name="AvailableUpgrades" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=499030465]
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.085864864
@@ -2175,10 +1875,10 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -158.27325
-offset_top = -106.87952
-offset_right = 57.69873
-offset_bottom = 143.12048
+offset_left = -156.66681
+offset_top = -107.68274
+offset_right = 59.305176
+offset_bottom = 142.31726
 grow_horizontal = 0
 grow_vertical = 2
 scale = Vector2(0.444, 0.444)

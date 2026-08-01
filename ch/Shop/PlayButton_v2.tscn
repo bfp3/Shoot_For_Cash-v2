@@ -184,6 +184,12 @@ corner_radius_bottom_left = 3
 corner_detail = 3
 shadow_size = 3
 
+[sub_resource type="Gradient" id="Gradient_okand"]
+colors = PackedColorArray(0.6313726, 0.007843138, 0.015686275, 1, 0.85882354, 0.76862746, 0.69803923, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_so3my"]
+gradient = SubResource("Gradient_okand")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_okand"]
 particle_flag_disable_z = true
 spread = 180.0
@@ -192,13 +198,10 @@ initial_velocity_max = 240.0
 angular_velocity_min = -180.0
 angular_velocity_max = 180.0
 gravity = Vector3(0, 0, 0)
-scale_min = 6.0
-scale_max = 12.0
+scale_min = 4.0
+scale_max = 8.0
 scale_curve = SubResource("CurveTexture_4eg6k")
-color = Color(0.6313726, 0.007843138, 0.015686275, 1)
-alpha_curve = SubResource("CurveTexture_gxbd8")
-hue_variation_min = -2.2351742e-08
-hue_variation_max = 0.09999997
+color_ramp = SubResource("GradientTexture1D_so3my")
 
 [sub_resource type="Animation" id="Animation_qxmyh"]
 length = 0.001
@@ -687,36 +690,6 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="RedPanel" type="Panel" parent="VBoxContainer2/Play" unique_id=467587587]
-visible = false
-clip_contents = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -99.06542
-offset_top = -15.939259
-offset_right = 98.13086
-offset_bottom = 5.2546997
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"RedPanel"
-theme_override_styles/panel = SubResource("StyleBoxFlat_wt77o")
-
-[node name="PurchaseParticles2" type="GPUParticles2D" parent="VBoxContainer2/Play/RedPanel" unique_id=1130698464]
-visible = false
-position = Vector2(99.06542, 69.04388)
-scale = Vector2(0.93457943, 0.93457943)
-amount = 18
-lifetime = 0.8
-fixed_fps = 2
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_okand")
-
 [node name="RedPanel3" type="Panel" parent="VBoxContainer2/Play" unique_id=564021378]
 clip_contents = true
 layout_mode = 1
@@ -735,25 +708,27 @@ mouse_filter = 2
 theme_type_variation = &"RedPanel"
 theme_override_styles/panel = SubResource("StyleBoxFlat_wt77o")
 
-[node name="PurchaseParticles2" type="GPUParticles2D" parent="VBoxContainer2/Play/RedPanel3" unique_id=193308665]
-visible = false
-position = Vector2(99.06542, 69.04388)
+[node name="PlayParticles" type="GPUParticles2D" parent="VBoxContainer2/Play/RedPanel3" unique_id=193308665]
+position = Vector2(107.09618, 69.04388)
 scale = Vector2(0.93457943, 0.93457943)
 amount = 18
-lifetime = 0.8
-fixed_fps = 2
+fixed_fps = 6
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_okand")
 
 [node name="Icon" type="Control" parent="VBoxContainer2/Play" unique_id=667654554]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+modulate = Color(0.63, 0.006299994, 0.016694842, 0.43137255)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 1.8691583
+offset_top = 14.953268
+offset_right = 1.8691559
+offset_bottom = 14.953278
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.78, 0.78)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_vertical = 3
 mouse_filter = 2
@@ -874,7 +849,6 @@ libraries/ = SubResource("AnimationLibrary_vhsx8")
 speed_scale = 2.0
 
 [node name="Bullet4" type="TextureRect" parent="VBoxContainer2/Play" unique_id=68349062]
-visible = false
 self_modulate = Color(0.91, 0.8675333, 0.83720005, 0.25882354)
 layout_mode = 1
 anchors_preset = 15
