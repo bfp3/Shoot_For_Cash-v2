@@ -45,10 +45,11 @@ func show_win_text() -> void:
 	var player_winnings: int = int(gl_PlayerState.dataset.total_winnings)
 	$CenterContainer/FreeParticles.emitting = true
 	text_box.text = (
-		"Moss Shooting Range: \n[i][pulse][color=#ffc700]ALL CLEAR[/color][/pulse][/i]\n"
-		+ "Cash Won [color=#42d100]$%s[/color]" % player_winnings
+		"\n\n[i][pulse][color=#a10204]ALL CLEAR[/color][/pulse][/i]\n"
+		+ "Cash Won [color=#a10204]$%s[/color]" % player_winnings
 	)
-		
+
+	
 	
 func enter_state(new_state: State) -> void:
 	current_state = new_state

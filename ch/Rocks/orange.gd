@@ -624,7 +624,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 func expand_blast_radius() -> void:
 	#return
 	const domain_expansion : float = 14.0
-	%explosion_radius_mesh.show()
+	#%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.2
 	#%explosion_radius_mesh.transparency = 1.0
 	var blast_node : Area3D = %Explosion_area

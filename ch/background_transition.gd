@@ -33,6 +33,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func next_level_start() -> void:
+	_reset_next_level()
+	
 	var screen_height := get_viewport_rect().size.y
 
 	color_rect.position.y = screen_height
@@ -68,29 +70,27 @@ func next_level_finish() -> void:
 	
 	await tween.finished
 	$TopRedPanel.modulate.a = 0.0
-	return
-	#var screen_height := get_viewport_rect().size.y
 	
 	
-	
-	
-	#
-	#var tween := create_tween()
-	#tween.set_trans(Tween.TRANS_BACK)
-	#tween.set_ease(ease)
-#
-	#tween.tween_property(
-		#color_rect,
-		#"position:y",
-		#screen_height,
-		#1.0
-	#)
-#
-	#await tween.finished
-#
-	#_position_offscreen_bottom()
+func _reset_next_level() -> void:
+	# Stop any running fade transition
+	$Background_control/Background._set_shader_values(
+		$Background_control/Background.strength_start,
+		$Background_control/Background.zoom_start,
+		$Background_control/Background.center_start
+	)
 
+	# Restore alpha
+	$TopRedPanel.modulate.a = 1.0
+	$Background_control/CoatArms.modulate.a = 1.0
+	$Background_control/Control.modulate.a = 1.0
 
+	# Restore positions
+	$TopRedPanel.position.y = -450.0
+	$Background_control/Control.position.x = 0.0
+
+	# Put background offscreen
+	color_rect.position.y = get_viewport_rect().size.y
 func demo_end_fadein() -> void:
 	await next_level_start()
 

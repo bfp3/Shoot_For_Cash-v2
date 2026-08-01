@@ -123,7 +123,7 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 emission_energy_multiplier = 19.5
 
-[sub_resource type="PrismMesh" id="PrismMesh_pqbxg"]
+[sub_resource type="BoxMesh" id="BoxMesh_herjc"]
 size = Vector3(0.019, 0.1, 0.022)
 
 [sub_resource type="Animation" id="Animation_p78v0"]
@@ -240,7 +240,7 @@ turbulence_influence_over_life = SubResource("CurveTexture_q8tld")
 
 [sub_resource type="QuadMesh" id="QuadMesh_bymj0"]
 
-[sub_resource type="Shader" id="Shader_0cvxb"]
+[sub_resource type="Shader" id="Shader_herjc"]
 code = "shader_type spatial;
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_toon,specular_disabled,ambient_light_disabled,alpha_to_coverage;
 
@@ -293,12 +293,9 @@ float fresnel(float amount, vec3 normal, vec3 view)
 	return pow((1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0 )), amount);
 }
 
-float depth_fade(vec2 screen_uv, vec4 world_pos, vec3 vertex) {
-	float depth_tex = textureLod(depth_texture, screen_uv, 0.0).r;
+float depth_fade(vec4 world_pos, vec3 vertex) {
 	world_pos.xyz /= world_pos.w;
-	
-	float fade = clamp(1.0-smoothstep(world_pos.z+fade_distance,world_pos.z,vertex.z),0.0,1.0);
-	return fade;
+	return clamp(1.0 - smoothstep(world_pos.z + fade_distance, world_pos.z, vertex.z), 0.0, 1.0);
 }
 
 void fragment() {
@@ -334,10 +331,13 @@ void fragment() {
 	ALPHA *= erosion_smooth;
 	
 	float depth_tex = textureLod(depth_texture, SCREEN_UV, 0.0).r;
-	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0-1.0, depth_tex, 1.0);
-	float fade = depth_fade(SCREEN_UV, world_pos, VERTEX);
-	
-	ALPHA *= fade;
+#if CURRENT_RENDERER == RENDERER_COMPATIBILITY
+	vec3 ndc = vec3(SCREEN_UV, depth_tex) * 2.0 - 1.0;
+#else
+	vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, depth_tex);
+#endif
+	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	ALPHA *= depth_fade(world_pos, VERTEX);
 }
 
 void light() {
@@ -367,14 +367,14 @@ void light() {
 offsets = PackedFloat32Array(0)
 colors = PackedColorArray(0.99558, 0.99558, 0.99558, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_gsivy"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pqbxg"]
 gradient = SubResource("Gradient_yucjy")
 
 [sub_resource type="Gradient" id="Gradient_0pas4"]
 offsets = PackedFloat32Array(0)
 colors = PackedColorArray(0.288519, 0.288518, 0.288518, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_pbe1n"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ltsxa"]
 gradient = SubResource("Gradient_0pas4")
 
 [sub_resource type="Curve" id="Curve_mye0p"]
@@ -382,19 +382,19 @@ _limits = [0.0, 1.1, 0.0, 1.0]
 _data = [Vector2(0, 0), 0.0, 3.25, 0, 0, Vector2(1, 1.1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_qfsx3"]
+[sub_resource type="CurveTexture" id="CurveTexture_gsivy"]
 curve = SubResource("Curve_mye0p")
 
 [sub_resource type="Curve" id="Curve_88vqi"]
 _data = [Vector2(0, 0), 0.0, 2.5, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_20bhc"]
+[sub_resource type="CurveTexture" id="CurveTexture_pbe1n"]
 curve = SubResource("Curve_88vqi")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fw7wv"]
 render_priority = 1
-shader = SubResource("Shader_0cvxb")
+shader = SubResource("Shader_herjc")
 shader_parameter/albedo = Color(1, 1, 1, 1)
 shader_parameter/alpha_scissor_threshold = 0.125
 shader_parameter/alpha_antialiasing_edge = 0.25
@@ -411,43 +411,43 @@ shader_parameter/uv2_offset = Vector3(0, 0, 0)
 shader_parameter/fade_distance = 0.75
 shader_parameter/erosion_tex = ExtResource("21_27dlh")
 shader_parameter/erosion_tiling = Vector2(2, 1)
-shader_parameter/erosion_curve = SubResource("CurveTexture_qfsx3")
-shader_parameter/erosion_offset_y_curve = SubResource("CurveTexture_20bhc")
+shader_parameter/erosion_curve = SubResource("CurveTexture_gsivy")
+shader_parameter/erosion_offset_y_curve = SubResource("CurveTexture_pbe1n")
 shader_parameter/erosion_threshold_offset = 0.2
-shader_parameter/dark_side = SubResource("GradientTexture1D_pbe1n")
-shader_parameter/bright_side = SubResource("GradientTexture1D_gsivy")
+shader_parameter/dark_side = SubResource("GradientTexture1D_ltsxa")
+shader_parameter/bright_side = SubResource("GradientTexture1D_pqbxg")
 shader_parameter/threshold = 0.0
 shader_parameter/threshold_offset = 0.075
 
-[sub_resource type="Curve" id="Curve_aci82"]
+[sub_resource type="Curve" id="Curve_qlnda"]
 _limits = [-1.0, 1.0, 0.0, 1.0]
 _data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CurveTexture" id="CurveTexture_vi06r"]
-curve = SubResource("Curve_aci82")
+curve = SubResource("Curve_qlnda")
 
-[sub_resource type="Curve" id="Curve_0jf5t"]
+[sub_resource type="Curve" id="Curve_f0n8o"]
 _limits = [0.0, 2.0, 0.0, 1.0]
 _data = [Vector2(0, 2), 0.0, 0.0, 0, 0, Vector2(1, 0), -4.92824, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CurveTexture" id="CurveTexture_1a1cp"]
-curve = SubResource("Curve_0jf5t")
+curve = SubResource("Curve_f0n8o")
 
-[sub_resource type="Curve" id="Curve_1uye2"]
+[sub_resource type="Curve" id="Curve_ypig7"]
 _data = [Vector2(0, 0.400518), 0.0, 3.42605, 0, 0, Vector2(0.504021, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -5.33409, 0.0, 0, 0]
 point_count = 3
 
 [sub_resource type="CurveTexture" id="CurveTexture_7b7wa"]
-curve = SubResource("Curve_1uye2")
+curve = SubResource("Curve_ypig7")
 
-[sub_resource type="Curve" id="Curve_e2vt3"]
+[sub_resource type="Curve" id="Curve_i2ggm"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CurveTexture" id="CurveTexture_qfoqq"]
-curve = SubResource("Curve_e2vt3")
+curve = SubResource("Curve_i2ggm")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2vt30"]
 lifetime_randomness = 0.4
@@ -592,6 +592,36 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_6bfdk")
 size = Vector2(2, 2)
 
+[sub_resource type="Curve" id="Curve_aci82"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_qfsx3"]
+curve = SubResource("Curve_aci82")
+
+[sub_resource type="Curve" id="Curve_0jf5t"]
+_limits = [0.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 2), 0.0, 0.0, 0, 0, Vector2(1, 0), -4.92824, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_20bhc"]
+curve = SubResource("Curve_0jf5t")
+
+[sub_resource type="Curve" id="Curve_1uye2"]
+_data = [Vector2(0, 0.400518), 0.0, 3.42605, 0, 0, Vector2(0.504021, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -5.33409, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_b00sn"]
+curve = SubResource("Curve_1uye2")
+
+[sub_resource type="Curve" id="Curve_e2vt3"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_6bfdk"]
+curve = SubResource("Curve_e2vt3")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_p78v0"]
 lifetime_randomness = 0.4
 particle_flag_rotate_y = true
@@ -599,17 +629,17 @@ direction = Vector3(0, 0, 0)
 spread = 180.0
 angular_velocity_min = -1.6093254e-05
 angular_velocity_max = -1.6093254e-05
-angular_velocity_curve = SubResource("CurveTexture_vi06r")
+angular_velocity_curve = SubResource("CurveTexture_qfsx3")
 gravity = Vector3(0, 0, 0)
 scale_min = 10.0
 scale_max = 10.0
-scale_curve = SubResource("CurveTexture_7b7wa")
+scale_curve = SubResource("CurveTexture_b00sn")
 color = Color(0.25, 0.25, 0.25, 1)
 color_ramp = ExtResource("21_y4gyo")
-emission_curve = SubResource("CurveTexture_1a1cp")
+emission_curve = SubResource("CurveTexture_20bhc")
 turbulence_noise_scale = 0.0
 turbulence_noise_speed = Vector3(0, 1, 0)
-turbulence_influence_over_life = SubResource("CurveTexture_qfoqq")
+turbulence_influence_over_life = SubResource("CurveTexture_6bfdk")
 
 [sub_resource type="Gradient" id="Gradient_luarq"]
 offsets = PackedFloat32Array(0)
@@ -1073,54 +1103,64 @@ cast_shadow = 0
 mesh = SubResource("ArrayMesh_w8aba")
 
 [node name="Xmark" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=1733138459]
-transform = Transform3D(-1.1175871e-07, 0.61591125, 1.3677182, 1.0443203, 0.9817958, -0.4421224, -1.0767521, 0.9522239, -0.42880583, -0.21314442, 0.03541357, 0.0016205311)
+transform = Transform3D(0.32212183, 0.30283618, 1.4333624, 1.0443203, 0.9817958, -0.4421224, -1.0274398, 1.0928712, -6.265426e-08, -0.21314442, 0.02889894, 0)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Xmark2" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=780142321]
-transform = Transform3D(0.6159111, 6.7055225e-08, 1.3677183, 0.9817958, -1.0443202, -0.44212237, 0.952224, 1.0767522, -0.42880565, -0.21314442, 0.02741628, 0.009866238)
+transform = Transform3D(0.30283615, -0.3221218, 1.4333624, 0.9817958, -1.0443202, -0.44212237, 1.0928711, 1.02744, -6.265426e-08, -0.21314442, 0.02889894, 0)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Xmark5" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=496599073]
-transform = Transform3D(1.2990382, 0.74999994, -1.4972823e-09, -0.7320117, 1.2678815, -0.3265506, -0.1632753, 0.28280115, 1.4640235, 0.0044744955, 0.035692327, -0.23071504)
+transform = Transform3D(1.2990382, 0.75, -1.4972823e-09, -0.7320116, 1.2678815, -0.3265506, -0.1632753, 0.28280115, 1.4640235, 0.004841362, 0.035692327, -0.23071504)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Xmark6" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=731661757]
 transform = Transform3D(0.7500001, -1.299038, -1.497284e-09, 1.2678814, 0.7320118, -0.32655057, 0.2828011, 0.1632753, 1.4640235, 0.00047584996, 0.02713749, -0.22417474)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark11" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=2101543290]
+transform = Transform3D(1.0278924, 1.0922929, 0.018302752, 1.0919845, -1.0265838, -0.06079808, -0.031746652, 0.05498685, -1.4986558, 0.005695734, 0.028898286, 0.2019549)
+material_override = SubResource("StandardMaterial3D_herjc")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark12" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=148901312]
+transform = Transform3D(1.0922933, -1.0278921, 0.018302772, -1.0265834, -1.0919851, -0.060798183, 0.05498682, 0.031746775, -1.4986557, -0.0003785221, 0.03393153, 0.20524675)
+material_override = SubResource("StandardMaterial3D_herjc")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Xmark3" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=1748034284]
 transform = Transform3D(-7.9146474e-08, -1.3579388e-08, 1.5, -1.0606601, 1.0606601, -4.6362928e-08, -1.0606601, -1.0606601, -6.556708e-08, 0.23886469, -0.0040612705, 0.0016821623)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Xmark4" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=1353423685]
 transform = Transform3D(-7.9146474e-08, 1.3579388e-08, 1.5, 1.0606602, 1.0606601, 4.6362935e-08, -1.0606601, 1.0606602, -6.556708e-08, 0.23886469, 0.00406115, 0.009804487)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Xmark7" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=1966865396]
-transform = Transform3D(0.99831164, -0.99831164, 0.5067028, -0.358293, 0.35829294, 1.4118259, -1.0606601, -1.0606604, -2.2148681e-08, -0.0012160961, 0.19594732, 0.0016821027)
+transform = Transform3D(0.97821367, -0.97821355, 0.57982504, -0.40999818, 0.40999818, 1.3834027, -1.0606604, -1.0606602, 1.512154e-14, 0.022141611, 0.18016721, 0)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Xmark8" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=1764034722]
-transform = Transform3D(-0.99831176, -0.9983116, 0.5067028, 0.35829294, 0.35829294, 1.4118259, -1.0606601, 1.0606601, -2.2148681e-08, -0.008861049, 0.19869108, 0.009804428)
+transform = Transform3D(-0.97821367, -0.97821355, 0.57982504, 0.40999818, 0.40999818, 1.3834027, -1.0606604, 1.0606602, 3.9555325e-15, 0.023202218, 0.18269773, 0)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Xmark9" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=549933846]
 transform = Transform3D(1.0600567, -1.0600564, 0.050596286, -0.035777, 0.03577695, 1.4991465, -1.06066, -1.0606604, -2.6337823e-08, -0.0009796772, -0.25107297, 0.0016821027)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Xmark10" type="MeshInstance3D" parent="Mesh/Hazard_large" unique_id=589872025]
 transform = Transform3D(-1.0600568, -1.0600564, 0.050596286, 0.035776924, 0.035777032, 1.4991465, -1.06066, 1.0606604, -8.6653294e-08, -0.009097468, -0.250799, 0.009804428)
 material_override = SubResource("StandardMaterial3D_herjc")
-mesh = SubResource("PrismMesh_pqbxg")
+mesh = SubResource("BoxMesh_herjc")
 
 [node name="Decal" type="Decal" parent="Mesh/Hazard_large" unique_id=680592524]
 transform = Transform3D(-6.556708e-08, 1.5, 0, -1.0606601, -4.6362924e-08, -1.0606602, -1.0606602, -4.6362928e-08, 1.0606601, 0, 0, 0)

@@ -178,15 +178,6 @@ func update_open_menu() -> void:
 	sfx_open_shop()
 	update_shop()
 	%Play_round_text.text = "[i][wave][color=]PLAY\n[color=c70102]$" + str(int(gl_DataSet.get_value('price_play_round', 0)))
-	
-	#%Reroll.show()
-	#%NextRound.show()
-	#if reroll_unlocked:
-		#%Reroll.show()
-		#%NextRound.show()
-	#else:
-		#%Reroll.hide()
-		#%NextRound.hide()
 
 	
 	update_shop_labels()
@@ -218,22 +209,22 @@ func update_open_menu() -> void:
 	enter_state(SkillState.IN_MENU)
 	
 func play_round_button_pressed() -> void:
-
+	
 	reroll_button.hide()
-	%NextRound.disabled = true
+	%PlayButton.disabled = true
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
 	var play_round_cost = int(gl_DataSet.get_value('price_play_round', 0))
 	gl_PlayerState.log_buy('debug_add_cash', play_round_cost)
 	var tween := create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
-
-	tween.tween_property(%NextRound, "modulate:a", 0.0, 0.15)
+	tween.tween_property(%PlayButton, "modulate:a", 0.0, 0.15)
+	tween.parallel().tween_property(%PlayButton, "modulate:a", 0.0, 0.15)
 	await tween.finished
 	purchase_made('debug_add_cash')
 	
 	
 	await get_tree().create_timer(1.0, false).timeout
-	%NextRound.disabled = false
+	%PlayButton.disabled = false
 	update_close_menu()
 	
 func update_close_menu() -> void:
@@ -278,7 +269,7 @@ func update_close_menu() -> void:
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 1.0
 	
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 1.0
-	%NextRound.modulate.a = 1.0
+	%PlayButton.modulate.a = 1.0
 	
 	if round_manager:
 		round_manager.enter_state(round_manager.RoundState.SHOP_END)

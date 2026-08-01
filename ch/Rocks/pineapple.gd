@@ -344,7 +344,10 @@ func fly_off_into_the_distance() -> void:
 func hit_by_player(damage: int, screen_offset: Vector2 = Vector2.ZERO) -> void:
 	if is_deactivated:
 		return
-
+	
+	$Smoke_quick.emitting = false
+	$Smoke_quick.amount = 21
+	$Smoke_quick.amount = 20
 	$hit_wall_timer.stop()
 	taken_hit = true
 	strike_count += 1
@@ -595,7 +598,7 @@ func check_position_for_wall() -> void:
 				#hit_out_of_bounds()
 
 		ExitSide.TOP:
-			if global_position.y > 12.0 || global_position.y <= -3.0:
+			if global_position.y > 10.0 || global_position.y <= -3.0:
 				hit_out_of_bounds()
 				
 		

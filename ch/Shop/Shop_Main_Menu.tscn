@@ -100,6 +100,7 @@ emission_shape = 3
 emission_box_extents = Vector3(1100, 220, 1)
 initial_velocity_min = 1.0
 initial_velocity_max = 2.0
+gravity = Vector3(0, 0, 0)
 radial_accel_min = 0.99999774
 radial_accel_max = 4.9999976
 tangential_accel_min = -2.2351742e-06
@@ -107,7 +108,7 @@ tangential_accel_max = -2.2351742e-06
 scale_min = 2.0
 scale_max = 8.0
 scale_curve = SubResource("CurveTexture_64t06")
-color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+color = Color(0.85882354, 0.76862746, 0.69803923, 1)
 alpha_curve = SubResource("CurveTexture_cn8lj")
 hue_variation_min = -2.2351742e-08
 hue_variation_max = -2.2351742e-08
@@ -557,9 +558,9 @@ stretch_mode = 5
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1666275727]
 position = Vector2(480, 276.42572)
-amount = 250
-lifetime = 5.0
-fixed_fps = 60
+amount = 50
+lifetime = 3.0
+fixed_fps = 10
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_tnodp")
 
@@ -1869,6 +1870,7 @@ scale = Vector2(1, 2.019)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="PlayButton" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=388452363 instance=ExtResource("17_xklyy")]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0

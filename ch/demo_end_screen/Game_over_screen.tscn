@@ -14,7 +14,6 @@
 [ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="17_28tve"]
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="18_641y2"]
 [ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="19_3l0c5"]
-[ext_resource type="Texture2D" uid="uid://bunjdvkocs3ti" path="res://res/blue_balloon.png" id="19_6m6o7"]
 [ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="20_65su1"]
 [ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="21_0ddxm"]
 [ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="22_n4vm3"]
@@ -45,7 +44,7 @@ gravity = Vector3(0, 0, 0)
 scale_min = 0.02
 scale_max = 0.049999997
 scale_curve = SubResource("CurveTexture_wbnky")
-color = Color(1.8247963, 1.4387401, 0, 1)
+color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 alpha_curve = SubResource("CurveTexture_syari")
 hue_variation_min = -0.050000023
 hue_variation_max = 0.049999975
@@ -247,7 +246,7 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_qe654")
 
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=785012210]
-custom_minimum_size = Vector2(250, 350)
+custom_minimum_size = Vector2(250, 312.06)
 layout_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = ExtResource("2_npx21")
@@ -266,9 +265,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -97.0
-offset_top = -123.02054
+offset_top = -131.06155
 offset_right = 97.0
-offset_bottom = -62.02054
+offset_bottom = -70.061554
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -320,13 +319,8 @@ theme_override_constants/separation = 4
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1637319920]
-custom_minimum_size = Vector2(592.975, 23.65)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
-
 [node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=5093305]
-custom_minimum_size = Vector2(590, 110)
+custom_minimum_size = Vector2(590, 137.625)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
@@ -334,16 +328,16 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 unique_name_in_owner = true
 clip_contents = false
 layout_mode = 0
-offset_top = -110.99997
+offset_top = -86.87692
 offset_right = 592.0
-offset_bottom = -3.9999695
-theme_override_font_sizes/normal_font_size = 37
-theme_override_font_sizes/italics_font_size = 39
+offset_bottom = 125.12308
+theme_override_font_sizes/normal_font_size = 48
+theme_override_font_sizes/italics_font_size = 48
 bbcode_enabled = true
-text = "[color=a10204]MOSS[/color] [i][pulse]
-Cash Target [color=a10204]$2,000[/color]
-Your Cash [color=a10204]$2,000
-[i][pulse][color=#a10204]Try Again?"
+text = "
+
+[i][pulse][color=#a10204]ALL CLEAR[/color][/pulse][/i]
+Cash Won [color=#a10204]$2097[/color]"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -361,7 +355,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
 [node name="Retry" type="Button" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1519659985 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 66
 text = "Retry"
 script = ExtResource("3_oy0ks")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
@@ -375,7 +369,7 @@ size_flags_horizontal = 3
 theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
 
 [node name="SpacePanel3" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1390965522]
-custom_minimum_size = Vector2(592.975, 23.65)
+custom_minimum_size = Vector2(592.975, 6.955)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
@@ -453,43 +447,5 @@ pitch_scale = 2.0
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1059437881]
 libraries/ = SubResource("AnimationLibrary_cuwcq")
 autoplay = &"light_wobble"
-
-[node name="giuseppeballoon" type="TextureRect" parent="." unique_id=1122839491]
-unique_name_in_owner = true
-visible = false
-z_index = 1
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 0
-offset_left = 931.65295
-offset_top = 361.65283
-offset_right = 1187.653
-offset_bottom = 617.65283
-scale = Vector2(0.4, 0.4)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("19_6m6o7")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="giuseppeballoon2" type="TextureRect" parent="giuseppeballoon" unique_id=1043613886]
-unique_name_in_owner = true
-modulate = Color(0, 0, 0, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -120.5
-offset_top = -120.5
-offset_right = 135.5
-offset_bottom = 135.5
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("19_6m6o7")
-expand_mode = 1
-stretch_mode = 5
 
 [connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/Retry" to="." method="_on_retry_pressed"]

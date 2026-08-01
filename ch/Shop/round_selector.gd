@@ -263,21 +263,43 @@ func _deselect_all_buttons() -> void:
 func restart() -> void:
 	if tween_available:
 		tween_available.kill()
+		tween_available = null
 
 	if interaction_tween:
 		interaction_tween.kill()
+		interaction_tween = null
 
+	# Restore transforms
 	scale = orig_scale
 	rotation_degrees = 0.0
 	z_index = 0
-	disabled = false
-	cash_earned.text = ""
 
+	# Restore default visibility
+	disabled = false
+
+	round_number.text = stored_text
+	round_number.modulate = Color.WHITE
+	round_number.modulate.a = 0.0
+
+	cash_earned.text = ""
+	cash_earned.modulate.a = 0.0
+
+	one_hundred_percent_control.modulate.a = 0.0
+	arrow_indication.modulate.a = 0.0
+
+	check_mark.modulate.a = 1.0
+
+	icon_control.scale = Vector2.ONE / 3
+
+	outer_ring.modulate = outerRingColour_default
+	outer_ring_2.modulate = Color('ebe0d8')
+	outer_ring_3.modulate = Color('c70102')
+
+	# Reset to the correct starting state
 	if get_index() == 0:
 		enter_state(State.AVAILABLE)
 	else:
 		enter_state(State.LOCKED)
-
 
 func _update_editor_preview() -> void:
 	if !is_inside_tree() or !Engine.is_editor_hint():
