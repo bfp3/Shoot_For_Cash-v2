@@ -10,6 +10,11 @@ enum State {
 
 var current_state : State = State.INACTIVE
 @export var pulse_magnitude := 1.1
+## When true, waves after wave 1 randomise rock columns (existing behaviour).
+@export var randomize_later_waves := true
+## Depth launch strength for `pigeon` rocks (away from camera / into the distance).
+## Applied on world -Z. Raise to send pigeons further back; lower for a softer toss.
+const pigeon_depth_impulse := 100.0
 
 var rocks_limit := 0
 
@@ -36,6 +41,18 @@ const COLUMN_STEP := 2.0
 const COLUMN_COUNT := 8
 const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a column
 const DEFAULT_LAUNCH_WAIT_MS := 100
+## Aim apex heights — same Y bands balloons use (A/B/C → 1/2/3).
+const AIM_LANE_Y := {
+	1: 6.5,
+	2: 3.5,
+	3: 0.5,
+}
+## Row A is the reference / max pulse. B and C scale down from that.
+const AIM_PULSE_SCALE := {
+	1: 1.0,   # A
+	2: 0.85,  # B
+	3: 0.70,  # C
+}
 # --------------------------------------------------------------------------
 
 # --- Out-of-bounds monitoring (during PULSE_ROCKS only) -------------------
@@ -99,7 +116,7 @@ func start_manual_rock_round(sequence: Array) -> void:
 			if cmd == 'wait':
 				pending_wait_ms = int(entry.get('ms', DEFAULT_LAUNCH_WAIT_MS))
 				continue
-			if cmd != 'rock' and cmd != 'black':
+			if not _is_launchable_spawn_cmd(cmd):
 				continue
 
 			if is_first_rock:
@@ -171,9 +188,11 @@ func update_prepare_rocks() -> void:
 
 func _spawn_entry_to_rock_type(entry) -> int:
 	if entry is Dictionary:
-		match String(entry.get('cmd', '')):
+		match String(entry.get('cmd', '')).to_lower():
 			'black':
 				return RockInstance.RockSize.HAZARD
+			'pigeon':
+				return RockInstance.RockSize.SMALL_2
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -182,6 +201,10 @@ func _spawn_entry_to_rock_type(entry) -> int:
 		return int(entry / 10)
 
 	return RockInstance.RockSize.SMALL
+
+
+func _is_launchable_spawn_cmd(cmd: String) -> bool:
+	return cmd == 'rock' or cmd == 'black' or cmd == 'pigeon'
 
 
 func update_pulse_rocks() -> void:
@@ -197,21 +220,28 @@ func update_pulse_rocks() -> void:
 
 func check_rocks_out_of_bounds() -> void:
 	for body in $Container_1.get_children():
-		if body.current_state != body.State.DISABLED:
+		if !(body is RockInstance):
 			continue
-			
-		if !body.name.contains('Rock_Instance'):
+		# Same eligibility as splash_zone: only live round rocks can miss.
+		if body.current_state != body.State.ACTIVE:
+			continue
+		if body.rock_activated == false:
 			continue
 		if absf(body.global_position.x) > OUT_OF_BOUNDS_X:
 			deactivate_out_of_bounds_rock(body)
 
 
-func deactivate_out_of_bounds_rock(body) -> void:
-	if body.current_state == RockInstance.State.ACTIVE:
-		body.enter_state(body.State.MISSED)
-		print('OUT OF BOUNDS ', body.name)
-		gl_PlayerState.log_rock_missed()
-		#body.enter_state(RockInstance.State.MISSED)
+func deactivate_out_of_bounds_rock(body: RockInstance) -> void:
+	if body.current_state != RockInstance.State.ACTIVE:
+		return
+	if body.rock_activated == false:
+		return
+
+	# Capture before MISSED → reset_stats() clears rock_type_name.
+	var missed_rock_type_name: String = body.rock_type_name
+	body.rock_activated = false
+	body.enter_state(body.State.MISSED)
+	gl_PlayerState.log_rock_missed(missed_rock_type_name)
 
 
 func assign_rock_positions(bodies: Array) -> void:
@@ -411,25 +441,17 @@ func bounce_rocks() -> void:
 			var delay_sec: float = float(_launch_delays_sec[counter])
 			if delay_sec > 0.0:
 				await get_tree().create_timer(delay_sec).timeout
-				#await get_tree().create_timer(0.1).timeout
 
 		body.enter_state(body.State.ACTIVE)
 		body.bounce_rocks()
 
-		#$AnimationPlayer.play('push_up')
-		
-		#var x_variation = randf_range(-2.0, 2.0)
-		var x_variation = 0.0
-		const z_variation = 0.0
-		#var upward_force = randf_range(9.5, 10.0)
+		var z_variation := 0.0
 		var upward_force = 10.0
-		
-		# Angle the impulse back toward the opposite side based on where
-		# this rock currently sits along the X axis.
-		x_variation += _get_position_angle_bias(body.global_position.x)
-		
-		var impulse = Vector3(x_variation, upward_force, z_variation) * pulse_magnitude
-		
+		if body.rock_type == RockInstance.RockSize.SMALL_2:
+			# Away from camera / into the distance (world -Z in this level layout).
+			z_variation = pigeon_depth_impulse
+			upward_force = upward_force * 2
+		var impulse := _build_launch_impulse(body, counter, upward_force, z_variation)
 		body.apply_central_impulse(impulse)
 
 		counter += 1
@@ -438,8 +460,46 @@ func bounce_rocks() -> void:
 			break
 
 	#spin_rocks()
-	
-	
+
+
+## Same pulse power (upward_force * pulse_magnitude). Aimed rocks steer toward A/B/C cells.
+func _build_launch_impulse(body, rock_index: int, upward_force: float, z_variation: float) -> Vector3:
+	var entry = null
+	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
+		entry = manual_rock_sequence[rock_index]
+
+	if entry is Dictionary:
+		var aim_row: int = int(entry.get('aim_row', 0))
+		var aim_column: int = int(entry.get('aim_column', 0))
+		if aim_row > 0 and aim_column > 0:
+			return _aimed_launch_impulse(body, aim_row, aim_column, upward_force, z_variation)
+
+	# No aim — original angle_bias / convergence behaviour.
+	var x_variation := 0.0
+	x_variation += _get_position_angle_bias(body.global_position.x)
+	return Vector3(x_variation, upward_force, z_variation) * pulse_magnitude
+
+
+## Aimed rocks steer toward A/B/C cells. Row A uses full pulse; B/C scale down from that.
+func _aimed_launch_impulse(body, aim_row: int, aim_column: int, upward_force: float, z_variation: float) -> Vector3:
+	var pulse_scale: float = float(AIM_PULSE_SCALE.get(aim_row, 1.0))
+	var scaled_upward: float = upward_force * pulse_scale
+
+	var aim_x := column_to_x(aim_column)
+	var aim_y := float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1]))
+	var dx: float = aim_x - body.global_position.x
+	var dy: float = aim_y - body.global_position.y
+
+	var x_variation := 0.0
+	if dy > 0.001:
+		# Scale so Y stays at scaled_upward (A = full power; B/C reduced).
+		x_variation = dx * (scaled_upward / dy)
+	elif absf(dx) > 0.001:
+		# Aim is at/below spawn height — still pulse upward, steer sideways toward the column.
+		x_variation = dx * pulse_scale
+
+	return Vector3(x_variation, scaled_upward, z_variation) * pulse_magnitude
+
 
 func spin_rocks() -> void:
 	
@@ -491,6 +551,10 @@ func reset_rock_back_on() -> void:
 	
 
 func shuffle_current_sequence(_sequence: Array) -> void:
+	if not randomize_later_waves:
+		start_manual_rock_round(_sequence)
+		return
+
 	for idx in range(_sequence.size() - 1, -1, -1):
 		var entry = _sequence[idx]
 
@@ -499,7 +563,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 			# Keep wait markers in place so launch stagger survives wave shuffles.
 			if cmd == 'wait':
 				continue
-			if cmd != 'rock' and cmd != 'black':
+			if not _is_launchable_spawn_cmd(cmd):
 				_sequence.remove_at(idx)
 				continue
 			# Waves 2+: randomise column exactly like the old int shuffle.

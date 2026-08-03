@@ -227,7 +227,7 @@ friction = 0.0
 size = Vector3(40, 1, 9.025)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fjxa8"]
-size = Vector3(150, 0.1, 56)
+size = Vector3(150, 0.1, 2019)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nh3e2"]
 size = Vector3(40, 0.1, 56)
@@ -598,7 +598,7 @@ pitch_scale = 0.9
 
 [node name="Randomiser" type="AudioStreamPlayer" parent="Music" unique_id=1748658751]
 stream = SubResource("AudioStreamRandomizer_mdemw")
-volume_db = -80.0
+volume_db = -40.0
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1533254053]
 transform = Transform3D(-1, 6.859112e-09, 8.7153275e-08, 0, 0.99691725, -0.07845909, -8.742278e-08, -0.07845909, -0.99691725, 0, 0, 17.224)
@@ -621,6 +621,7 @@ speed_multiplier = 60.0
 [node name="Rocks" type="Node3D" parent="." unique_id=859468523]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
+randomize_later_waves = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
 root_node = NodePath("../Shover")
@@ -963,7 +964,7 @@ script = ExtResource("24_dse8t")
 round_manager = NodePath("../Round_manager")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Splash_zone" unique_id=915563512]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 991.9)
 shape = SubResource("BoxShape3D_fjxa8")
 
 [node name="LeftCollision" type="CollisionShape3D" parent="Splash_zone" unique_id=1224875857]
@@ -1952,12 +1953,12 @@ volume_db = -40.0
 pitch_scale = 2.0
 
 [node name="PlayerBalloon2" parent="." unique_id=350761291 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24.095, 30.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0949993, 30.9)
 top_level = true
 visible = false
 
 [node name="PlayerBalloon3" parent="." unique_id=1574938481 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 26.095001, 30.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 6.095001, 30.9)
 top_level = true
 visible = false
 

@@ -199,9 +199,9 @@ func Xlaunch_pineapple(body: RigidBody3D) -> void:
 	body.start_timer()
 	
 	
-#func _input(event: InputEvent) -> void:
-	#if Input.is_action_just_pressed('left'):
-		#start_bonus_round()
-	#
-	#if Input.is_action_just_pressed('right'):
-		#stop_pineapples()
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed('left'):
+		start_bonus_round()
+	
+	if Input.is_action_just_pressed('right'):
+		stop_pineapples()

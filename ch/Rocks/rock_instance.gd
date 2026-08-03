@@ -290,17 +290,17 @@ func setup_rock_type() -> void:
 		
 		# 1
 		RockSize.SMALL_2:
-			current_rock_type 	= "Small Rock"
+			current_rock_type 	= "Pigeon"
 			rock_type_name 		= "rock_type_1"
 			gl_PlayerState.log_white_rock()
 			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
-			var base_scale  := Vector3.ONE * 0.35
+			var base_scale  := Vector3.ONE * 0.35 * 2
 
 			var size_multiplier_float : float = 2.4 #randf_range (1.2, 1.35) * 2
 			var size_multiplier_int : int = 2
 			$Mesh.scale = Vector3.ONE
-			health = base_health * size_multiplier_int
+			health = 1 #base_health * size_multiplier_int
 			cash_value = base_cash # * size_multiplier
 			max_health = health
 			small_rock.visible = true

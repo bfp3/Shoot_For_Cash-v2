@@ -144,7 +144,8 @@ func update_restarting() -> void:
 	#start_time = 12.0
 	
 	await get_tree().create_timer(0.25, false).timeout
-	time_left = start_time
+	#time_left = start_time
+	time_left = 60.0
 	#var _orig_pos : Vector2 = timer_label.position 
 	#var center_position : Vector2 = $Timer_centerPOS.position - (timer_label.size / 2)
 	#timer_label.position = center_position
@@ -200,7 +201,7 @@ func timer_rollup_sequence() -> void:
 		$ReloadSound.pitch_scale += 0.1
 		$ReloadSound.play()
 
-	time_left = start_time
+	time_left = 50.0
 	update_text()
 
 	

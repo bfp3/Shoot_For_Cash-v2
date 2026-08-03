@@ -66,7 +66,10 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## rock/black: {cmd, column, param} — column -1 means random.
+## rock/black/pigeon: {cmd, column, aim_row, aim_column, param}
+##   column -1 means random. Aim cell (e.g. A8) is optional; 0/0 means none.
+##   If only an aim cell is given (`rock A8`), spawn column defaults to 1.
+##   pigeon → RockSize.SMALL_2 (launches away from camera).
 ## balloon: {cmd, row, column, param} — row 1=A, 2=B, 3=C; defaults to A1.
 ## wait: {cmd, ms} — delay before the next rock; defaults to 100ms.
 ## repeat: {cmd, count} — wave count for the round; defaults to 3.
@@ -78,20 +81,8 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'black':
-			var rock_result := {
-				'cmd': cmd,
-				'column': -1,
-				'param': '',
-			}
-			if parts.size() > 1:
-				if parts[1].is_valid_int():
-					rock_result.column = int(parts[1])
-				else:
-					rock_result.param = parts[1]
-			if parts.size() > 2:
-				rock_result.param = parts[2]
-			return rock_result
+		'rock', 'black', 'pigeon':
+			return _parse_rock_command(cmd, parts)
 
 		'balloon':
 			return _parse_balloon_command(parts)
@@ -108,6 +99,46 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 const DEFAULT_ROUND_REPEAT := 3
 const DEFAULT_WAIT_MS := 100
+
+
+## rock / pigeon / rock 1 / rock 1 A8 / rock A8 (column defaults to 1 when only aim is given).
+func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
+	var result := {
+		'cmd': cmd,
+		'column': -1,
+		'aim_row': 0,
+		'aim_column': 0,
+		'param': '',
+	}
+
+	if parts.size() <= 1:
+		return result
+
+	var token1 := String(parts[1]).strip_edges()
+	if token1.is_valid_int():
+		result.column = int(token1)
+	else:
+		var aim_only := _parse_balloon_cell(token1)
+		if not aim_only.is_empty():
+			# `rock A8` — aim only, spawn defaults to column 1.
+			result.column = 1
+			result.aim_row = aim_only.row
+			result.aim_column = aim_only.column
+			if parts.size() > 2:
+				result.param = parts[2]
+			return result
+		result.param = token1
+
+	if parts.size() > 2:
+		var token2 := String(parts[2]).strip_edges()
+		var aim := _parse_balloon_cell(token2)
+		if not aim.is_empty():
+			result.aim_row = aim.row
+			result.aim_column = aim.column
+		else:
+			result.param = token2
+
+	return result
 
 
 ## wait → 100ms. wait 600 → 600ms. Values below 0 clamp to 0.
