@@ -8,9 +8,13 @@ const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
 
 const LEVEL_FILE_PATH := 'res://sc/island-shipper.txt'
 const LEVEL_ISLAND_NAME := 'shipper'
+## How often to check the level file for edits while playing (seconds).
+const LEVEL_RELOAD_POLL_INTERVAL := 0.35
 
 ## Populated from LEVEL_FILE_PATH via Parser — one array of spawn dicts per round.
 var current_rock_sequence : Array = []
+var _level_file_mtime := 0
+var _level_reload_poll_accum := 0.0
 
 
 var current_sequence_index := 0
@@ -79,7 +83,7 @@ var bonus_oranges_ready := false
 
 
 func _ready() -> void:
-	
+	load_level_sequence()
 
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
 	EventBus.instance.rocks_cleared_end_wave.connect(check_if_rocks_still_in_air)
@@ -91,16 +95,56 @@ func _ready() -> void:
 	move_to_start()
 
 
+func _process(delta: float) -> void:
+	_level_reload_poll_accum += delta
+	if _level_reload_poll_accum < LEVEL_RELOAD_POLL_INTERVAL:
+		return
+	_level_reload_poll_accum = 0.0
+	reload_level_if_changed()
+
+
+func _level_file_abs_path() -> String:
+	return ProjectSettings.globalize_path(LEVEL_FILE_PATH)
+
+
+func _read_level_file_mtime() -> int:
+	return int(FileAccess.get_modified_time(_level_file_abs_path()))
+
+
+## Reloads island-shipper.txt when it has been saved on disk.
+func reload_level_if_changed() -> bool:
+	var mtime := _read_level_file_mtime()
+	if mtime == 0:
+		return false
+	if mtime == _level_file_mtime and not current_rock_sequence.is_empty():
+		return false
+	load_level_sequence()
+	return true
+
+
 func load_level_sequence() -> void:
 	if not Parser.loadIslandFile(LEVEL_FILE_PATH):
 		push_error('RoundManager: failed to load level file %s' % LEVEL_FILE_PATH)
 		current_rock_sequence = []
 		return
 
+	var previous_count := current_rock_sequence.size()
 	current_rock_sequence = Parser.get_rock_sequences(LEVEL_ISLAND_NAME)
+	_level_file_mtime = _read_level_file_mtime()
+
 	if current_rock_sequence.is_empty():
 		push_warning('RoundManager: level file loaded but produced no rounds.')
-	
+	else:
+		# Keep the player on a valid round if the file lost rounds.
+		if current_sequence_index >= current_rock_sequence.size():
+			current_sequence_index = maxi(current_rock_sequence.size() - 1, 0)
+
+		if previous_count > 0:
+			print('RoundManager: reloaded %s (%d rounds) — next wave/shop uses the new data.' % [
+				LEVEL_FILE_PATH,
+				current_rock_sequence.size(),
+			])
+
 func bonus_oranges() -> void:
 	bonus_oranges_ready = true
 
@@ -367,6 +411,9 @@ func update_check_score() -> void:
 		enter_state(RoundState.WAVE_START)
 
 func update_rock_sequence() -> Array:
+	# Pick up any saves that landed between poll ticks.
+	reload_level_if_changed()
+
 	if current_rock_sequence.is_empty():
 		return []
 		

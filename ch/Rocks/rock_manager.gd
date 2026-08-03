@@ -401,11 +401,6 @@ func bounce_rocks() -> void:
 		counter += 1
 		
 		await get_tree().create_timer(0.1).timeout
-		#var rand_dur = [0.01,0.1,0.2,0.3].pick_random()
-		#await get_tree().create_timer(rand_dur).timeout
-		#await get_tree().create_timer(0.1).timeout
-		#spin_rocks()
-		#await get_tree().create_timer(0.2).timeout
 		
 		if counter >= rocks_limit:
 			break
