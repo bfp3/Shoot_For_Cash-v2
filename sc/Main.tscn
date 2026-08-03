@@ -70,6 +70,7 @@
 [ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="Script" uid="uid://c2w53e8iak64g" path="res://ch/protect_balloon_round.gd" id="80_ufvrt"]
+[ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_mdemw"]
 random_pitch = 1.0442737
@@ -489,6 +490,14 @@ scale_min = 0.099999994
 scale_max = 0.19999999
 scale_curve = SubResource("CurveTexture_3gdew")
 alpha_curve = SubResource("CurveTexture_fuvvr")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5w5l"]
+shading_mode = 0
+albedo_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r5w5l"]
+material = SubResource("StandardMaterial3D_r5w5l")
+size = Vector3(0.05, 30, 0.05)
 
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
@@ -1256,6 +1265,12 @@ round_manager = NodePath("../../Round_manager")
 unique_name_in_owner = true
 round_manager = NodePath("../../Round_manager")
 money_control = NodePath("../Money_labels")
+
+[node name="LevelEditorMenu" parent="MainGameCanvasLayer" unique_id=1888001001 node_paths=PackedStringArray("round_manager", "shop_main_menu") instance=ExtResource("81_lvled")]
+unique_name_in_owner = true
+visible = false
+round_manager = NodePath("../../Round_manager")
+shop_main_menu = NodePath("../Shop_Main_Menu")
 
 [node name="Frame_rate" type="Control" parent="MainGameCanvasLayer" unique_id=439145462]
 visible = false
@@ -2121,6 +2136,142 @@ force_multiplier = 1.0
 [node name="Orange6" parent="BonusOranges" unique_id=235237420 instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
 force_multiplier = 1.0
+
+[node name="DebugVisualiser" type="Node3D" parent="." unique_id=1321570169]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 23)
+visible = false
+
+[node name="Column1" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1494068997]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column1" unique_id=957156339]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "1"
+font_size = 363
+
+[node name="Column2" type="MeshInstance3D" parent="DebugVisualiser" unique_id=756792632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column2" unique_id=776624174]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "2"
+font_size = 363
+
+[node name="Column3" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1204986257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column3" unique_id=1781802579]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.49999976, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "3"
+font_size = 363
+
+[node name="Column4" type="MeshInstance3D" parent="DebugVisualiser" unique_id=876816692]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column4" unique_id=1949995617]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "4"
+font_size = 363
+
+[node name="Column5" type="MeshInstance3D" parent="DebugVisualiser" unique_id=663355396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column5" unique_id=1623821103]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.50000006, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "5"
+font_size = 363
+
+[node name="Column6" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1317091329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column6" unique_id=1951433967]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.49999976, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "6"
+font_size = 363
+
+[node name="Column7" type="MeshInstance3D" parent="DebugVisualiser" unique_id=866795825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column7" unique_id=1837264852]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "7"
+font_size = 363
+
+[node name="Column8" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1471829065]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column8" unique_id=1414520683]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "8"
+font_size = 363
+
+[node name="RowA" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1554108687]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 6.5, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/RowA" unique_id=5275279]
+transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "A"
+font_size = 363
+
+[node name="RowA2" type="MeshInstance3D" parent="DebugVisualiser" unique_id=936778820]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 3.5, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/RowA2" unique_id=154806771]
+transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "B"
+font_size = 363
+
+[node name="RowA3" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1764665298]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="DebugVisualiser/RowA3" unique_id=283320935]
+transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "C"
+font_size = 363
 
 [connection signal="finished" from="Music/Randomiser" to="Music" method="_on_randomiser_finished"]
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]

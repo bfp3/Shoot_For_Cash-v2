@@ -97,7 +97,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 			return {}
 
 
-const DEFAULT_ROUND_REPEAT := 3
+const DEFAULT_ROUND_REPEAT := 1
 const DEFAULT_WAIT_MS := 100
 
 
@@ -234,6 +234,29 @@ func _balloon_row_letter_to_index(letter: String) -> int:
 			return 3
 		_:
 			return 0
+
+
+## Parse freeform level-editor text as a single round under island/range `test`.
+## Caller text is the body of the round (rock, wait, repeat, etc.).
+## Returns { "spawns": [...], "repeat": int }. Empty spawns if nothing parsed.
+func parse_round_text(text: String) -> Dictionary:
+	var body := text.strip_edges()
+	var wrapped := "island test\nrange test\nround\n"
+	if body != "":
+		wrapped += body + "\n"
+
+	# Don't clobber the live island-shipper dataset.
+	var backup: Array = data_set.duplicate(true)
+	loadIsland(wrapped)
+	var sequences: Array = get_rock_sequences("test")
+	data_set = backup
+
+	if sequences.is_empty():
+		return {
+			"spawns": [],
+			"repeat": DEFAULT_ROUND_REPEAT,
+		}
+	return sequences[0]
 
 
 ## Builds one round dict per round, in file order:

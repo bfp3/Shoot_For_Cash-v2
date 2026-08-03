@@ -226,6 +226,18 @@ func play_round_button_pressed() -> void:
 	await get_tree().create_timer(1.0, false).timeout
 	%PlayButton.disabled = false
 	update_close_menu()
+
+
+## Hide shop for the debug level editor without firing CLOSE_MENU / SHOP_END.
+func soft_hide_for_level_editor() -> void:
+	current_state = SkillState.INACTIVE
+	hide()
+	shop_music_lower_volume()
+
+
+## Re-open shop after leaving the level editor (BACK).
+func soft_show_from_level_editor() -> void:
+	enter_state(SkillState.OPEN_MENU)
 	
 func update_close_menu() -> void:
 	sfx_close_shop()

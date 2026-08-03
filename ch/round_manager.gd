@@ -16,6 +16,15 @@ var current_rock_sequence : Array = []
 var _level_file_mtime := 0
 var _level_reload_poll_accum := 0.0
 
+## Debug level editor (press D from shop). One-round sandbox under island/range `test`.
+var level_editor_menu: Control = null
+var level_editor_open := false
+var level_editor_test_active := false
+var _level_editor_finishing := false
+var _saved_rock_sequence: Array = []
+var _saved_sequence_index := 0
+var _saved_player_round := 0
+var _saved_current_round := 0
 
 var current_sequence_index := 0
 var current_wave := 0
@@ -112,6 +121,8 @@ func _read_level_file_mtime() -> int:
 
 ## Reloads island-shipper.txt when it has been saved on disk.
 func reload_level_if_changed() -> bool:
+	if level_editor_test_active:
+		return false
 	var mtime := _read_level_file_mtime()
 	if mtime == 0:
 		return false
@@ -119,6 +130,156 @@ func reload_level_if_changed() -> bool:
 		return false
 	load_level_sequence()
 	return true
+
+
+func register_level_editor(menu: Control) -> void:
+	level_editor_menu = menu
+
+
+## Open level editor from shop (debug D). Soft-closes shop without starting a round.
+func open_level_editor_from_shop() -> void:
+	if not OS.is_debug_build():
+		return
+	if level_editor_test_active or level_editor_open:
+		return
+	if current_round_state != RoundState.SHOP_START:
+		return
+	if shop_main_menu == null or not shop_main_menu.visible:
+		return
+	if level_editor_menu == null:
+		push_warning("RoundManager: level editor menu missing")
+		return
+
+	level_editor_open = true
+	if shop_main_menu.has_method("soft_hide_for_level_editor"):
+		shop_main_menu.soft_hide_for_level_editor()
+	else:
+		shop_main_menu.hide()
+	level_editor_menu.open_menu()
+
+
+## BACK from editor → resume shop without advancing the round.
+func exit_level_editor_to_shop() -> void:
+	level_editor_open = false
+	if level_editor_menu and level_editor_menu.has_method("close_menu"):
+		level_editor_menu.close_menu()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if shop_main_menu and shop_main_menu.has_method("soft_show_from_level_editor"):
+		shop_main_menu.soft_show_from_level_editor()
+	elif shop_main_menu:
+		EventBus.instance.open_shop.emit()
+
+
+## Parse editor text as island test / range test / round, then play that one round.
+func begin_level_editor_test(text: String) -> void:
+	if not OS.is_debug_build():
+		return
+	if level_editor_test_active or _level_editor_finishing:
+		return
+
+	var round_data: Dictionary = Parser.parse_round_text(text)
+	if round_data.get("spawns", []).is_empty():
+		push_warning("Level editor: no spawn commands parsed — returning to editor")
+		level_editor_open = true
+		if level_editor_menu:
+			level_editor_menu.open_menu()
+		return
+
+	_saved_rock_sequence = current_rock_sequence.duplicate(true)
+	_saved_sequence_index = current_sequence_index
+	_saved_player_round = int(gl_PlayerState.dataset.round)
+	_saved_current_round = current_round
+
+	current_rock_sequence = [round_data]
+	current_sequence_index = 0
+	current_wave = 0
+	current_round = 1
+	level_editor_open = false
+	level_editor_test_active = true
+	force_shop_open = false
+	wave_ending = false
+	player_failed = false
+	success = false
+
+	print("Level editor: starting test round (repeat=%s, spawns=%d)" % [
+		str(round_data.get("repeat", 3)),
+		int(round_data.get("spawns", []).size()),
+	])
+
+	enter_state(RoundState.SHOP_END)
+
+
+## Backspace during a test round — abort and return to the editor with text kept.
+func abort_level_editor_test() -> void:
+	if not level_editor_test_active or _level_editor_finishing:
+		return
+	print("Level editor: aborting test round (Backspace)")
+	wave_ending = true
+	force_shop_open = true
+	player_failed = true
+	success = false
+	stop_timer()
+	stop_player()
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+	enter_state(RoundState.ROUND_END)
+
+
+func _restore_level_editor_sequence() -> void:
+	current_rock_sequence = _saved_rock_sequence
+	current_sequence_index = _saved_sequence_index
+	current_round = _saved_current_round
+	gl_PlayerState.dataset.round = _saved_player_round
+	_saved_rock_sequence = []
+
+
+## End of a level-editor test round (success, fail, or abort) → editor, not tally/shop.
+func finish_level_editor_test_round() -> void:
+	if _level_editor_finishing:
+		return
+	_level_editor_finishing = true
+
+	stop_timer()
+	stop_player()
+	music_manager.shop_music_lower_volume()
+
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+
+	await get_tree().create_timer(0.2, false).timeout
+
+	while bullet_active:
+		await get_tree().process_frame
+		bullet_active_counter += 1.0
+		if bullet_active_counter > 60.0:
+			bullet_active = false
+	bullet_active_counter = 0.0
+
+	force_shop_open = false
+	success = false
+	pineapple_mode = false
+	player_failed = false
+	wave_ending = false
+	current_wave = 0
+	bonus_oranges_ready = false
+	orange_active = 0
+
+	if balloon_container:
+		balloon_container.end_round()
+
+	_restore_level_editor_sequence()
+	level_editor_test_active = false
+
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	current_round_state = RoundState.SHOP_START
+	level_editor_open = true
+	_level_editor_finishing = false
+
+	if level_editor_menu:
+		level_editor_menu.open_menu()
+	else:
+		exit_level_editor_to_shop()
 
 
 func load_level_sequence() -> void:
@@ -355,6 +516,8 @@ func update_wave_start() -> void:
 	
 	
 	await get_tree().create_timer(0.1, false).timeout
+	if force_shop_open or _level_editor_finishing:
+		return
 	
 	if gl_PlayerState.dataset.total_current_strikes >= 3:
 		wave_progress_feedback.start_miss()
@@ -366,6 +529,8 @@ func update_wave_start() -> void:
 	rocks_container.enter_state(rocks_container.State.ROUND_END)
 
 	await get_tree().create_timer(0.1, false).timeout
+	if force_shop_open or _level_editor_finishing:
+		return
 
 	gl_PlayerState.next_wave()
 
@@ -387,6 +552,8 @@ func update_wave_start() -> void:
 		round_timer.timer_rollup_sequence()
 
 	await get_tree().create_timer(0.75, false).timeout
+	if force_shop_open or _level_editor_finishing:
+		return
 		
 	if egg_pulse:
 		egg_pulse.activate_pulse_wave()
@@ -394,6 +561,8 @@ func update_wave_start() -> void:
 	wave_ending = false   # only now can a wave-end signal be accepted
 	
 	await get_tree().create_timer(1.9, false).timeout
+	if force_shop_open or _level_editor_finishing:
+		return
 	
 	EventBus.instance.egg_pulsed.emit()
 	
@@ -412,7 +581,7 @@ func update_check_score() -> void:
 
 ## Waves for the active round. Comes from `repeat` in the level file (default 3).
 func get_current_round_wave_count() -> int:
-	const DEFAULT_WAVES := 3
+	const DEFAULT_WAVES := 1
 	if current_rock_sequence.is_empty():
 		return DEFAULT_WAVES
 	if current_sequence_index >= current_rock_sequence.size():
@@ -456,6 +625,10 @@ func update_rock_sequence() -> Array:
 
 
 func update_round_end() -> void:
+	if level_editor_test_active:
+		await finish_level_editor_test_round()
+		return
+
 	# Capture the round outcome now - `success` gets reset to false further
 	# down before we need to act on it again.
 	stop_timer()
@@ -835,6 +1008,11 @@ func _input(event: InputEvent) -> void:
 	if !OS.is_debug_build():
 		set_process_input(false)
 		return
+
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_BACKSPACE and level_editor_test_active:
+			abort_level_editor_test()
+			get_viewport().set_input_as_handled()
 	#if Input.is_action_just_pressed('backward'):
 		#enter_state(RoundState.TALLY_START)
 #func _input(event: InputEvent) -> void:

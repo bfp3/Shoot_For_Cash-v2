@@ -1,0 +1,216 @@
+[gd_scene format=3 uid="uid://sg6uosg7dbbs"]
+
+[ext_resource type="Script" uid="uid://cbvndmktrk545" path="res://ch/debug/level_editor_menu.gd" id="1_script"]
+
+[node name="LevelEditorMenu" type="Control" unique_id=1808484863]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=627906894]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.02, 0.02, 0.45)
+
+[node name="Center" type="CenterContainer" parent="." unique_id=1690572181]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Cluster" type="Control" parent="Center" unique_id=1888002100]
+custom_minimum_size = Vector2(1016, 520)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="RulesPanel" type="PanelContainer" parent="Center/Cluster" unique_id=1888002101]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_right = 280.0
+offset_bottom = 520.0
+
+[node name="RulesVBox" type="VBoxContainer" parent="Center/Cluster/RulesPanel" unique_id=1888002102]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RulesTitle" type="Label" parent="Center/Cluster/RulesPanel/RulesVBox" unique_id=1888002103]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+
+[node name="RulesList" type="RichTextLabel" parent="Center/Cluster/RulesPanel/RulesVBox" unique_id=1888002104]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[color=#C70102]COMMANDS[/color]
+[color=#C70102]rock[/color]  basic rock
+
+[color=#C70102]rock-black[/color] black rock / hazard
+
+[color=#C70102]rock-pigeon[/color] rock that flies into the distance
+
+[color=#C70102]wait[/color] / [color=#C70102]wait 200[/color] delay before next action default 100ms
+
+[color=#C70102]repeat[/color] / [color=#C70102]repeat 3[/color] how many waves in the round default 3
+
+[color=#C70102]balloon[/color] / [color=#C70102]balloon A1[/color] place a balloon default A1
+
+[color=#C70102]PARAMETERS[/color]
+[color=#C70102]rock 2[/color]
+spawn at column 2
+(omit number = random column)
+
+[color=#C70102]rock 2 A8[/color]
+column 2, aimed at cell A8
+
+[color=#C70102]rock A8[/color]
+aim only — spawn defaults to column 1
+
+[color=#C70102]AIM CELLS A / B / C[/color]
+row letter + column 1–8
+e.g. A1, B4, C8"
+fit_content = true
+
+[node name="MainPanel" type="PanelContainer" parent="Center/Cluster" unique_id=1166374857]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 296.0
+offset_right = 1016.0
+offset_bottom = 520.0
+
+[node name="VBox" type="VBoxContainer" parent="Center/Cluster/MainPanel" unique_id=769762777]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="Control" parent="Center/Cluster/MainPanel/VBox" unique_id=370696941]
+visible = false
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="HeaderBg" type="ColorRect" parent="Center/Cluster/MainPanel/VBox/Header" unique_id=1731670118]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+
+[node name="TitleLabel" type="RichTextLabel" parent="Center/Cluster/MainPanel/VBox/Header" unique_id=1616449684]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "LEVEL EDITOR"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hint" type="RichTextLabel" parent="Center/Cluster/MainPanel/VBox" unique_id=441866692]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+text = "CTRL = Toggle KEY"
+fit_content = true
+
+[node name="ScriptEdit" type="TextEdit" parent="Center/Cluster/MainPanel/VBox" unique_id=857673602]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "rock
+rock-black 2
+wait 200
+rock-pigeon 1 A8
+repeat 3"
+wrap_mode = 1
+scroll_smooth = true
+
+[node name="Buttons" type="HBoxContainer" parent="Center/Cluster/MainPanel/VBox" unique_id=1393430845]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BackButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=385973197]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 52
+text = "BACK"
+
+[node name="TestButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=1956887159]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 52
+text = "TEST"
+
+[node name="KeysPanel" type="PanelContainer" parent="Center/Cluster" unique_id=1888002002]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 296.0
+offset_top = 536.0
+offset_right = 1016.0
+offset_bottom = 820.0
+
+[node name="KeysVBox" type="VBoxContainer" parent="Center/Cluster/KeysPanel" unique_id=1888002003]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="KeysTitle" type="Label" parent="Center/Cluster/KeysPanel/KeysVBox" unique_id=1888002004]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+theme_override_font_sizes/font_size = 28
+text = "KEYS"
+horizontal_alignment = 1
+
+[node name="KeysList" type="RichTextLabel" parent="Center/Cluster/KeysPanel/KeysVBox" unique_id=1888002005]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[color=#C70102]SHIFT + ENTER[/color]
+Test round
+
+[color=#C70102]ENTER[/color]
+New line
+
+[color=#C70102]BACKSPACE[/color]
+Abort mid-round
+
+[color=#C70102]CTRL[/color]
+Toggle KEY panel
+
+[color=#C70102]D[/color]
+Open editor (from shop)
+
+[color=#C70102]BACK[/color]
+Return to shop
+
+[color=#C70102]TEST[/color]
+Play test round"
+fit_content = true
+scroll_active = false

@@ -1,4 +1,4 @@
-@tool
+#@tool
 extends TextureButton
 
 @export var outerRingColour_default: Color = Color("666b78ff"):
