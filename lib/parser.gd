@@ -2,33 +2,96 @@ extends Node
 
 class_name parser
 
-func loadFrames(file_name : String) -> Array:
-	
+var data_set : Array = []
+
+func loadIslandFile(file_name : String) -> bool:
+
 	var file = FileAccess.open(file_name, FileAccess.READ)
 	var content := file.get_as_text().strip_edges()
+	return loadIsland(content)
 
-	var ary1 : Array = content.split("\n", false)
+func loadIsland(data : String) -> bool:
+	
+	data_set.clear()
+	
+	var ary : Array = data.split("\n", false)
+	
+	var island_name: String = 'none'
+	var range_name: String = 'none'
+	var round_no: int = 0 
+	var token: String
+	var token_list: Array
+	
+	for ptr in range(0, ary.size()):
+		token = ary[ptr]
+		token = token.replace('\t', '').strip_edges()
 
-	# find --start directive
-	if ary1.has('--start'):
-		for i in range(0, ary1.size()):
-			if ary1[i] == '--start':
-				ary1[i] = ''
-				break
+		if token.begins_with('#'):
+			# if comment
+			token = ''
+			
+		if token.length() == 0:
+			continue
+			
+		token_list = token.split(' ')
+		
+		match(token_list[0]):
+			
+			'island':
+				island_name = token_list[1]	
+
+			'range':
+				range_name = token_list[1]	
+				round_no = 0
+
+			'round':
+				round_no += 1
 				
-			if ary1[i].strip_edges().begins_with('until'):
-				ary1[i] = 'next'
+			_:
+				if round_no > 0:
+					data_set.push_back( [island_name,range_name,round_no,token] )
 
-	# remove comments
-	ary1 = ary1.filter (func(i): return not i.strip_edges().begins_with('#'))
+	return(true)
 	
-	content = '\n'.join( PackedStringArray(ary1) )
+	
+func getRound(island_name : String, range_name : String, round_no : int) -> Array:
+	var ary: Array
+	for i:int in range(0,data_set.size()):
+		if data_set[i][0] == island_name:
+			if data_set[i][1] == range_name:
+				if data_set[i][2] == round_no:
+					ary.push_back(data_set[i][3])
+	return ary
 
-	return content.split("frame", false)
+
+func getWaves():
+	var cmd_list:Array = Parser.getRound('shipper', 'moss', 1)
 	
-func loadFrame(content : String) -> Array:
-	content = content.replace('\t', '')
-	return content.split("\n", false)
+	var cmd:String = cmd_list[0]
+	
+	var d:Dictionary = {"t":'', "p1":'', "p2":''}
+	
+	var l = cmd.split(' ')
+	
+	if l[0] == 'rock':
+		d.t = 'rock'
+		if l.size() > 1:
+			d.p1 = l[1]
+		if l.size() > 2:
+			d.p2 = l[2]
+		
+
+		return d
+		
+
+
+
+
+
+
+
+
+
 
 func getCommand(_str : String) -> Dictionary:
 	

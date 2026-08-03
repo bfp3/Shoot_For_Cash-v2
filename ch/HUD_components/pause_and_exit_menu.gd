@@ -59,10 +59,14 @@ func open_menu() -> void:
 
 	sfx_open_shop()
 
+	var backgroundColor := $Control/CenterContainer/ColorRect
+	backgroundColor.modulate.a = 0.0
+	
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_BACK)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(main_control, "scale", Vector2.ONE, anim_duration)
+	tween.parallel().tween_property(backgroundColor, "modulate:a", 0.25, anim_duration).set_delay(0.2)
 	await tween.finished
 
 	animating = false

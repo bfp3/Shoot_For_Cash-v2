@@ -108,7 +108,7 @@ tangential_accel_max = -2.2351742e-06
 scale_min = 2.0
 scale_max = 8.0
 scale_curve = SubResource("CurveTexture_64t06")
-color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+color = Color(0.91764706, 0.8666667, 0.8352941, 1)
 alpha_curve = SubResource("CurveTexture_cn8lj")
 hue_variation_min = -2.2351742e-08
 hue_variation_max = -2.2351742e-08
@@ -851,6 +851,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="TreePanel" type="Control" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1314206077]
+visible = false
 custom_minimum_size = Vector2(930, 0)
 layout_mode = 2
 
@@ -1346,15 +1347,15 @@ mouse_filter = 2
 
 [node name="RightTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=549092801]
 modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
-position = Vector2(237.71887, 0)
+position = Vector2(203.00085, 5.242276e-06)
 rotation = 3.1415925
-scale = Vector2(251.57509, 82)
+scale = Vector2(182.13904, 82)
 mesh = SubResource("PrismMesh_sgib8")
 
 [node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=909585586]
 modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
-position = Vector2(-237.32658, 0)
-scale = Vector2(250.77818, -82)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
 mesh = SubResource("PrismMesh_jv82y")
 
 [node name="Square" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=927548181]
@@ -1557,6 +1558,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1661126035]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 custom_minimum_size = Vector2(0, 90)
 layout_mode = 1
 anchors_preset = 15

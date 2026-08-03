@@ -25,14 +25,14 @@ func _process(delta: float) -> void:
 	if rotation_direction:
 		self.rotation += rotation_amount * delta
 		if rotation >= 0.2:
-			print("false")
+			#print("false")
 			rotation_direction = false
 			#rotation_amount = -rotation_amount
 	
 	else:
 		self.rotation -= rotation_amount * delta
 		if rotation <= -0.2:
-			print("true")
+			#print("true")
 			rotation_direction = true
 			#rotation_amount = abs(rotation_amount)
 	

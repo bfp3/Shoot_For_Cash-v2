@@ -689,8 +689,8 @@ func _input(event: InputEvent) -> void:
 	if !OS.is_debug_build():
 		set_process_input(false)
 		return
-	if Input.is_action_just_pressed('backward'):
-		enter_state(RoundState.TALLY_START)
+	#if Input.is_action_just_pressed('backward'):
+		#enter_state(RoundState.TALLY_START)
 #func _input(event: InputEvent) -> void:
 	#if Input.is_key_label_pressed(KEY_8):
 		#unsuccessful_round()

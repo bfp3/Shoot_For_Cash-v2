@@ -20,6 +20,11 @@ func _ready() -> void:
 	set_process(false)
 	main_game_canvas.hide()
 
+	Parser.loadIslandFile('res://sc/island-shipper.txt')
+	
+
+	
+
 	# Compatibility / Web: compile shaders & particle pipelines before control.
 	#await ShaderWarmup.ensure_warmed()
 

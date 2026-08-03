@@ -20,6 +20,7 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	return
 	if !enable_debug_input:
 		return
 

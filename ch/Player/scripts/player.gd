@@ -1,11 +1,14 @@
 class_name Player extends Node3D
+
 @onready var mobile_controller: Node = $MobileControl
 var is_mobile := OS.has_feature("mobile")
 var running_on_mobile := false
 
 const sensitivity_step := 0.2
-const min_mouse_sensitivity := 0.8
+const min_mouse_sensitivity := 1.0
 const max_mouse_sensitivity := 3.0
+
+var keyboard_velocity := Vector2.ZERO
 
 @export_group('Scope Shrink While Holding')
 @onready var scope_shrink_sfx : AudioStreamPlayer = $SFX/ScopeShrink
@@ -58,7 +61,7 @@ var current_gun_fire_rate_cooldown := 0.0
 var _is_currently_shooting := false
 
 @onready var _mouse_sensitivity := 0.3
-@export var keyboard_crosshair_speed := 800.0
+#@export var keyboard_crosshair_speed := 800.0
 
 @export_group('Player Upgradeable Stats')
 var power_target_circle := 0.0
@@ -327,7 +330,7 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
-	#handle_keyboard_crosshair(delta)
+	handle_keyboard_crosshair(delta)
 	update_gun_look()
 	
 	#handle_pan_keyboard(delta)
@@ -453,12 +456,25 @@ func handle_keyboard_crosshair(delta: float) -> void:
 		Input.get_axis("left", "right"),
 		Input.get_axis("forward", "backward")
 	)
+	const keyboard_crosshair_speed := 1300.0
+	var speed := keyboard_crosshair_speed
+	if Input.is_action_pressed("sprint"):
+		speed *= 0.5
 
-	if direction == Vector2.ZERO:
-		return
+	var target_velocity := Vector2.ZERO
+	if direction != Vector2.ZERO:
+		target_velocity = direction.normalized() * speed
 
-	target_crosshair_position += direction.normalized() * keyboard_crosshair_speed * delta
+	const ACCEL := 60.0
+	const DECEL := 18.0
 
+	var lerp_speed := ACCEL if direction != Vector2.ZERO else DECEL
+	keyboard_velocity = keyboard_velocity.lerp(target_velocity, lerp_speed * delta)
+
+	target_crosshair_position += keyboard_velocity * delta
+	
+	
+	
 func set_power(settings:Dictionary, setting_name:String)-> float:
 	return gl_DataSet.get_value(setting_name, settings[setting_name])
 
@@ -474,7 +490,8 @@ func update_player_stats() -> void:
 
 	#power_gun_fire_rate = 0.2
 	#power_bullet_speed = 0.3
-	power_target_circle = 60.0
+	#power_target_circle = 60.0
+	
 	player_gun.update_guns()
 
 	#full_power_mode()
@@ -699,7 +716,7 @@ func _input(event: InputEvent) -> void:
 					min_mouse_sensitivity,
 					max_mouse_sensitivity
 				)
-				$SFX/ScopeShrink.play()
+				#$SFX/ScopeShrink.play()
 				print("Mouse sensitivity:", gl_PlayerState.mouse_sensitivity)
 
 
