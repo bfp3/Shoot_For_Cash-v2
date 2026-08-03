@@ -48,39 +48,62 @@ func add_balloon(_balloon_array : Array) -> void:
 		
 	started = true
 
-	
-	if 399 in balloon_array:
-		await add_all_balloons()
-		return
-	
-	# Balloons still use legacy int codes (300+). Skip rocks / spawn dicts.
-	for i in range(balloon_array.size() - 1, -1, -1):
-		var entry = balloon_array[i]
-		if typeof(entry) != TYPE_INT or entry <= 300 or entry > 400:
-			balloon_array.remove_at(i)
+	# Collect balloon placements from spawn dicts and legacy int codes.
+	var placements: Array = []
+	var spawn_all := false
 
-	if balloon_array.is_empty():
+	for entry in balloon_array:
+		if entry is Dictionary:
+			if String(entry.get('cmd', '')).to_lower() != 'balloon':
+				continue
+			if bool(entry.get('all', false)):
+				spawn_all = true
+				break
+			placements.append({
+				'row': int(entry.get('row', 1)),
+				'column': int(entry.get('column', 1)),
+			})
+			continue
+
+		if typeof(entry) != TYPE_INT:
+			continue
+
+		var code: int = entry
+		if code == 399:
+			spawn_all = true
+			break
+		if code <= 300 or code > 400:
+			continue
+
+		var _offset: int = code - 300
+		placements.append({
+			'row': int(_offset / 10),
+			'column': _offset % 10,
+		})
+
+	if spawn_all:
+		placements.clear()
+		for row in LANE_Y.keys():
+			for column in range(1, BALLOON_COLUMN_COUNT + 1):
+				placements.append({'row': row, 'column': column})
+
+	if placements.is_empty():
 		started = false
 		return
 	
-	#print('Balloon Codes --- ', balloon_array )
-	
 	var duration := 1.0
 	
-	for code in balloon_array:
-		if code < 300:
-			continue
-		duration = clamp(duration - 0.1, 0.2,1.0)
-		var _offset : int = code - 300
-		var column : int = int(_offset / 10)
-		var lane : int = _offset % 10
+	for placement in placements:
+		duration = clamp(duration - 0.1, 0.2, 1.0)
+		var row: int = int(placement.row)
+		var column: int = int(placement.column)
 
-		var target_x := balloon_column_to_x(lane)
-		var target_y := balloon_lane_to_y(column)
+		var target_x := balloon_column_to_x(column)
+		var target_y := balloon_lane_to_y(row)
 
 		var balloon := _get_next_available_balloon()
 		if balloon == null:
-			push_warning("BalloonManager: no available balloon for code %d" % code)
+			push_warning("BalloonManager: no available balloon for row %d column %d" % [row, column])
 			continue
 		
 		balloons_in_play = clamp(balloons_in_play + 1, 0, get_children().size())
@@ -99,6 +122,7 @@ func add_balloon(_balloon_array : Array) -> void:
 
 		await get_tree().create_timer(duration, false).timeout
 
+
 func _get_next_available_balloon() -> StaticBody3D:
 	for i in get_children():
 		if i is StaticBody3D and i.behind_player:
@@ -116,11 +140,10 @@ func restart() -> void:
 
 
 func add_all_balloons() -> void:
-	var full_array : Array = []
-	for column in range(1, BALLOON_COLUMN_COUNT + 1):
-		for lane in LANE_Y.keys():
-			full_array.append(300 + (column * 10) + lane)
-	
+	var full_array: Array = []
+	for row in LANE_Y.keys():
+		for column in range(1, BALLOON_COLUMN_COUNT + 1):
+			full_array.append({'cmd': 'balloon', 'row': row, 'column': column})
 	await add_balloon(full_array)
 
 func add_bonuses() -> void:

@@ -28,11 +28,14 @@ var convergence_x := 0.0
 # Columns run left to right along the X-axis: column 1 = 7, column 2 = 5... column 8 = -7
 # (step of -2 per column).
 var manual_rock_sequence : Array = [4]
+## Seconds to wait BEFORE launching each rock (index 0 is usually 0).
+var _launch_delays_sec : Array = []
 
 const COLUMN_1_X := 7.0
 const COLUMN_STEP := 2.0
 const COLUMN_COUNT := 8
 const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a column
+const DEFAULT_LAUNCH_WAIT_MS := 100
 # --------------------------------------------------------------------------
 
 # --- Out-of-bounds monitoring (during PULSE_ROCKS only) -------------------
@@ -85,22 +88,45 @@ func update_inactive() -> void:
 
 # This is the start of arranging the rocks.
 func start_manual_rock_round(sequence: Array) -> void:
-	# Drop anything that isn't a rock/black spawn dict (legacy ints / balloons).
-	for idx in range(sequence.size() - 1, -1, -1):
-		var entry = sequence[idx]
+	var rocks: Array = []
+	var delays_sec: Array = []
+	var pending_wait_ms = null
+	var is_first_rock := true
+
+	for entry in sequence:
 		if entry is Dictionary:
-			var cmd: String = entry.get('cmd', '')
+			var cmd: String = String(entry.get('cmd', '')).to_lower()
+			if cmd == 'wait':
+				pending_wait_ms = int(entry.get('ms', DEFAULT_LAUNCH_WAIT_MS))
+				continue
 			if cmd != 'rock' and cmd != 'black':
-				sequence.remove_at(idx)
+				continue
+
+			if is_first_rock:
+				delays_sec.append(0.0)
+				is_first_rock = false
+			else:
+				var wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
+				delays_sec.append(float(wait_ms) / 1000.0)
+			pending_wait_ms = null
+			rocks.append(entry)
 			continue
+
 		# Legacy integer format support while migrating.
 		if typeof(entry) == TYPE_INT:
 			if entry >= 300:
-				sequence.remove_at(idx)
-			continue
-		sequence.remove_at(idx)
+				continue
+			if is_first_rock:
+				delays_sec.append(0.0)
+				is_first_rock = false
+			else:
+				var legacy_wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
+				delays_sec.append(float(legacy_wait_ms) / 1000.0)
+			pending_wait_ms = null
+			rocks.append(entry)
 
-	manual_rock_sequence = sequence
+	manual_rock_sequence = rocks
+	_launch_delays_sec = delays_sec
 	enter_state(State.PREPARE_ROCKS)
 	
 func update_prepare_rocks() -> void:
@@ -379,6 +405,14 @@ func bounce_rocks() -> void:
 		
 		if counter >= bodies.size():
 			break
+
+		# Delay before this rock (from `wait` markers; default 100ms between rocks).
+		if counter < _launch_delays_sec.size():
+			var delay_sec: float = float(_launch_delays_sec[counter])
+			if delay_sec > 0.0:
+				await get_tree().create_timer(delay_sec).timeout
+				#await get_tree().create_timer(0.1).timeout
+
 		body.enter_state(body.State.ACTIVE)
 		body.bounce_rocks()
 
@@ -400,14 +434,12 @@ func bounce_rocks() -> void:
 
 		counter += 1
 		
-		await get_tree().create_timer(0.1).timeout
-		
 		if counter >= rocks_limit:
 			break
 
 	#spin_rocks()
 	
-
+	
 
 func spin_rocks() -> void:
 	
@@ -463,11 +495,14 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		var entry = _sequence[idx]
 
 		if entry is Dictionary:
-			var cmd: String = entry.get('cmd', '')
+			var cmd: String = String(entry.get('cmd', '')).to_lower()
+			# Keep wait markers in place so launch stagger survives wave shuffles.
+			if cmd == 'wait':
+				continue
 			if cmd != 'rock' and cmd != 'black':
 				_sequence.remove_at(idx)
 				continue
-			# Waves 2/3: randomise column exactly like the old int shuffle.
+			# Waves 2+: randomise column exactly like the old int shuffle.
 			entry.column = randi_range(1, COLUMN_COUNT)
 			_sequence[idx] = entry
 			continue

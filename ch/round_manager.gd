@@ -405,10 +405,26 @@ func update_bonus_round() -> void:
 	pass
 
 func update_check_score() -> void:
-	if current_wave >= 3 or force_shop_open:
+	if current_wave >= get_current_round_wave_count() or force_shop_open:
 		enter_state(RoundState.ROUND_END)
 	else:
 		enter_state(RoundState.WAVE_START)
+
+
+## Waves for the active round. Comes from `repeat` in the level file (default 3).
+func get_current_round_wave_count() -> int:
+	const DEFAULT_WAVES := 3
+	if current_rock_sequence.is_empty():
+		return DEFAULT_WAVES
+	if current_sequence_index >= current_rock_sequence.size():
+		return DEFAULT_WAVES
+
+	var round_data = current_rock_sequence[current_sequence_index]
+	if round_data is Dictionary:
+		return maxi(int(round_data.get('repeat', DEFAULT_WAVES)), 1)
+
+	return DEFAULT_WAVES
+
 
 func update_rock_sequence() -> Array:
 	# Pick up any saves that landed between poll ticks.
@@ -420,8 +436,16 @@ func update_rock_sequence() -> Array:
 	if current_sequence_index >= current_rock_sequence.size():
 		return []
 
+	var round_data = current_rock_sequence[current_sequence_index]
+	var source: Array = []
+	if round_data is Dictionary:
+		source = round_data.get('spawns', [])
+	elif round_data is Array:
+		source = round_data
+	else:
+		return []
+
 	# Deep-copy spawn dicts so wave shuffles don't mutate the level data.
-	var source: Array = current_rock_sequence[current_sequence_index]
 	var copy: Array = []
 	for entry in source:
 		if entry is Dictionary:

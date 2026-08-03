@@ -73,20 +73,38 @@ func reset_each_wave() -> void:
 
 func start() -> void:
 	wave_count += 1
-
-	match wave_count:
-		1:
-			wave_label.text = "[i]First Wave"
-		2:
-			wave_label.text = "[i]Second Wave"
-		3:
-			wave_label.text = "[i]Final Wave"
-		_:
-			wave_label.text = "Wave %d" % wave_count
-
-
+	wave_label.text = "[i]%s" % _wave_display_name(wave_count, _total_waves_in_round())
 	start_tween(wave_panel, _original_position, _original_modulate)
-	
+
+
+func _total_waves_in_round() -> int:
+	var round_manager := get_tree().get_first_node_in_group('round_manager')
+	if round_manager and round_manager.has_method('get_current_round_wave_count'):
+		return maxi(int(round_manager.get_current_round_wave_count()), 1)
+	return 3
+
+
+## First–Ninth for waves 1–9; "Wave N" from 10 up. Last wave is always Final Wave.
+func _wave_display_name(wave: int, total_waves: int) -> String:
+	if wave >= total_waves:
+		return 'Final Wave'
+
+	const ORDINALS := [
+		'First',
+		'Second',
+		'Third',
+		'Fourth',
+		'Fifth',
+		'Sixth',
+		'Seventh',
+		'Eighth',
+		'Ninth',
+	]
+	if wave >= 1 and wave <= ORDINALS.size():
+		return '%s Wave' % ORDINALS[wave - 1]
+
+	return 'Wave %d' % wave
+
 func start_bonus() -> void:
 	wave_label.text = "[i][rainbow]Bonus Round"
 	start_tween(wave_panel, _original_position, _original_modulate)
@@ -102,7 +120,7 @@ func start_clear() -> void:
 	clear_has_been_called_this_wave = true
 	
 	clear_text_label.text = "[i]Wave Clear!"
-	if wave_count >= 3:
+	if wave_count >= _total_waves_in_round():
 		clear_text_label.text = "[i]Round Clear!"
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
 

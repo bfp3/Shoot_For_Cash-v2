@@ -92,14 +92,14 @@ var crosshair_lag_speed := 11.0  # Higher = faster catch-up
 
 var crosshair_move_left_limit := 660
 var crosshair_move_right_limit := 1260
-var crosshair_move_top_limit := 400
-var crosshair_move_bottom_limit := 700
+const crosshair_move_top_limit := 400
+const crosshair_move_bottom_limit := 700
 
 var cam_clamp_top := 1
 var cam_clamp_bottom := 1
 var cam_clamp_left := 1
 var cam_clamp_right := 1
-var camera_pan_able := false
+const camera_pan_able := true
 
 ## Inner_scope is a 40x40 Control; at scale 1.0 its visual radius is 20px.
 ## power_target_circle is a screen-pixel hit radius (same units Radius_Debug draws).
@@ -330,7 +330,7 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
-	handle_keyboard_crosshair(delta)
+	#handle_keyboard_crosshair(delta)
 	update_gun_look()
 	
 	#handle_pan_keyboard(delta)
