@@ -81,7 +81,7 @@ func start_falling() -> void:
 	#apply_hit_reaction(Vector2.UP)
 	disable_collision()
 	await get_tree().create_timer(0.15).timeout
-	update_gravity(2.0)
+	update_gravity(1.0)
 	linear_damp = 0.0
 	
 	
@@ -145,6 +145,9 @@ func update_active() -> void:
 	apply_torque_impulse(Vector3.UP * 1000.0)
 	
 	$Pineapple_launch_sound.play()
+	
+	#await get_tree().create_timer(2.0,false).timeout
+	#update_gravity(1.0)
 	
 	#apply_hit_reaction(Vector2.ZERO)
 	

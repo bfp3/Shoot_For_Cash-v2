@@ -162,6 +162,8 @@ func update_active() -> void:
 	
 	%launch_sound.pitch_scale = randf_range(3.0,3.2)
 	%launch_sound.play()
+	
+
 
 
 func update_hit() -> void:
@@ -287,6 +289,7 @@ func setup_rock_type() -> void:
 			current_particles.amount += 1
 			current_particles.amount -= 1
 			current_particles.emitting = true
+			%TrailParticles.emitting = true
 		
 		# 1
 		RockSize.SMALL_2:
@@ -740,6 +743,9 @@ func start_destroyed_process() -> void:
 	
 	if current_particles != null:
 		current_particles.emitting = false
+	
+	if %TrailParticles != null:
+		%TrailParticles.emitting = false
 	
 	#if player_has_marked_rock == false:
 	expand_blast_radius()

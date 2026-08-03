@@ -9,6 +9,7 @@
 [ext_resource type="Material" uid="uid://n8a0es2a4juo" path="res://res/Materials/Coal_material.tres" id="5_k0v7p"]
 [ext_resource type="Material" uid="uid://c66mc200y264r" path="res://res/Explosion_paid_patreon/shaders/toon_smoke.tres" id="5_mj3mj"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="7_hrkv6"]
+[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="7_pqbxg"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_bc0l2"]
 [ext_resource type="Material" uid="uid://bg8ypxqsno1nc" path="res://res/damage_mesh_mat.tres" id="8_eq13p"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="8_tnjxo"]
@@ -70,8 +71,8 @@ _surfaces = [{
 blend_shape_mode = 0
 
 [sub_resource type="Curve" id="Curve_p78v0"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.23722628, 1), 0.0, 0.0, 0, 0, Vector2(0.81751823, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
-point_count = 4
+_data = [Vector2(0.23722628, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [sub_resource type="CurveTexture" id="CurveTexture_0cvxb"]
 curve = SubResource("Curve_p78v0")
@@ -98,6 +99,30 @@ billboard_keep_scale = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_ltsxa"]
 material = SubResource("StandardMaterial3D_gsivy")
+
+[sub_resource type="CurveTexture" id="CurveTexture_crjlc"]
+curve = SubResource("Curve_p78v0")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7v60h"]
+spread = 180.0
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, 0, 0)
+scale_min = 0.02
+scale_max = 0.02
+scale_curve = SubResource("CurveTexture_crjlc")
+color = Color(4.415934, 3.4977326, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e1cj4"]
+transparency = 1
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("7_pqbxg")
+billboard_mode = 2
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_0fxxt"]
+material = SubResource("StandardMaterial3D_e1cj4")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2s6n3"]
 albedo_color = Color(0, 0, 0, 1)
@@ -1007,10 +1032,19 @@ cast_shadow = 0
 mesh = SubResource("ArrayMesh_g5cjo")
 
 [node name="GoldParticles" type="GPUParticles3D" parent="Mesh/small_rock" unique_id=1639505190]
+visible = false
 amount = 3
 fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_herjc")
 draw_pass_1 = SubResource("QuadMesh_ltsxa")
+
+[node name="TrailParticles" type="GPUParticles3D" parent="Mesh/small_rock" unique_id=767494089]
+unique_name_in_owner = true
+amount = 100
+lifetime = 4.5
+preprocess = 1.0
+process_material = SubResource("ParticleProcessMaterial_7v60h")
+draw_pass_1 = SubResource("QuadMesh_0fxxt")
 
 [node name="medium_rock" type="MeshInstance3D" parent="Mesh" unique_id=64886353]
 unique_name_in_owner = true
