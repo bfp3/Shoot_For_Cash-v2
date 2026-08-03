@@ -94,6 +94,46 @@ func start_game() -> void:
 	splash_screen.queue_free()
 
 
+## Debug (Shift+M): tear down title/splash so Moss can start immediately.
+func debug_bootstrap_gameplay() -> void:
+	moving_camera = false
+	set_process(false)
+
+	if is_instance_valid(splash_screen):
+		splash_screen.hide()
+		splash_screen.queue_free()
+		splash_screen = null
+
+	if main_game_canvas:
+		main_game_canvas.show()
+
+	if is_instance_valid(start_cam):
+		var player_cam = get_tree().get_first_node_in_group("player_cam")
+		if player_cam:
+			player_cam.current = true
+		start_cam.queue_free()
+		start_cam = null
+
+	if HUD_CRT and HUD_CRT.has_method("crt_start_up"):
+		HUD_CRT.crt_start_up()
+	elif HUD_CRT and HUD_CRT.has_method("start_game"):
+		HUD_CRT.start_game()
+
+	if music_manager and music_manager.has_method("start_bg_noise"):
+		music_manager.start_bg_noise()
+
+	if player:
+		if player.has_method("title_screen_end"):
+			player.title_screen_end()
+		player.display_hud()
+
+	if round_timer:
+		round_timer.show()
+
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	await get_tree().process_frame
+
+
 func move_camera_to_player(delta: float) -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
 

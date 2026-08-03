@@ -761,6 +761,75 @@ func restart() -> void:
 	birds.start_birds()
 
 
+## Debug (Shift+M): same end-state as move_to_moss(), with no transition waits.
+func debug_restart_to_moss() -> void:
+	current_sequence_index = 0
+	current_round = 0
+	current_wave = 0
+	force_shop_open = false
+	wave_ending = false
+	bullet_active = false
+	bullet_active_counter = 0.0
+	transitioning_worlds = false
+	pineapple_mode = false
+	success = false
+	game_over_triggered = false
+	current_round_state = RoundState.INACTIVE
+
+	stop_timer()
+	stop_player()
+	player.round_finished(false)
+	player.display_hud()
+	player.update_player_stats()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	birds.start_birds()
+
+	await move_to_moss_instant()
+
+
+## Instant Moss setup — everything move_to_moss() does at the end, no fade timers.
+func move_to_moss_instant() -> void:
+	transitioning_worlds = true
+	player.display_hud()
+	gl_PlayerState.dataset["stage"] = 1
+	gl_PlayerState.dataset["reroll_unlocked"] = 1
+	gl_PlayerState.dataset["round"] = 1
+	gl_PlayerState.dataset["level_name"] = "moss"
+	music_manager.stop_opening_song()
+
+	# Keep transition overlay off-screen (no slide animation).
+	if scene_transition_screen and scene_transition_screen.has_method("_reset_next_level"):
+		scene_transition_screen._reset_next_level()
+
+	if level_layout.get_child_count() > 0:
+		for child in level_layout.get_children():
+			child.queue_free()
+		await get_tree().process_frame
+
+	rocks_container.show()
+	var level_scenery = LEVEL_LAYOUT_01_MOSS.instantiate()
+	level_layout.add_child(level_scenery)
+	level_scenery.name = 'current_level_layout'
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	shop_main_menu.setup_shop_for_rounds()
+	wave_progress_feedback.show()
+	find_egg()
+	place_name.update_place_name()
+
+	var player_balloon := get_node_or_null('../PlayerBalloon')
+	if player_balloon and player_balloon.has_method('add_balloon'):
+		player_balloon.add_balloon()
+
+	gl_PlayerState.dataset.tickets += 1
+	shop_main_menu.update_next_ticket()
+
+	load_level_sequence()
+	transitioning_worlds = false
+	current_round = 1
+	enter_state(RoundState.SHOP_START)
+
 	
 func _input(event: InputEvent) -> void:
 	if !OS.is_debug_build():

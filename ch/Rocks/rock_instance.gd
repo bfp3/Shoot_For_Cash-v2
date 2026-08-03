@@ -762,13 +762,14 @@ func start_destroyed_process() -> void:
 		get_parent().get_parent().get_node('pitch_shift_rock_sound').play()
 
 	
-	if rock_type != RockSize.HAZARD:
-		var bonus_cash_reward := 0
-		var bonus_zones := get_tree().get_first_node_in_group('multi_shot')
-		if bonus_zones:
-			bonus_cash_reward = bonus_zones.check_if_within_zone(global_position.y)
+	# This is to score bonus cash for shooting rocks beneath the Cash Zones / ZoneA, ZoneB
+	#if rock_type != RockSize.HAZARD:
+		#var bonus_cash_reward := 0
+		#var bonus_zones := get_tree().get_first_node_in_group('multi_shot')
+		#if bonus_zones:
+			#bonus_cash_reward = bonus_zones.check_if_within_zone(global_position.y)
 			
-		cash_value += bonus_cash_reward
+		#cash_value += bonus_cash_reward
 		
 
 	
