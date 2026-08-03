@@ -95,6 +95,8 @@ var target_x_position : float = 0.0
 var current_rock_type : String = ""
 var rock_type_name : String = ""
 var falling := false
+## When true, side-rail X out-of-bounds does not count as a miss (pigeons / depth rocks).
+var ignores_x_out_of_bounds := false
 
 
 
@@ -289,12 +291,13 @@ func setup_rock_type() -> void:
 			current_particles.amount += 1
 			current_particles.amount -= 1
 			current_particles.emitting = true
-			%TrailParticles.emitting = true
+			#%TrailParticles.emitting = true
 		
 		# 1
 		RockSize.SMALL_2:
 			current_rock_type 	= "Pigeon"
 			rock_type_name 		= "rock_type_1"
+			ignores_x_out_of_bounds = true
 			gl_PlayerState.log_white_rock()
 			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
@@ -439,6 +442,7 @@ func setup_rock_type() -> void:
 			force_mult = [1,2]
 
 func reset_stats() -> void:
+	ignores_x_out_of_bounds = false
 	$Mesh.scale = Vector3.ONE
 	$Marked.hide()
 	$Freeze.hide()

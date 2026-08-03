@@ -229,8 +229,8 @@ func check_rocks_out_of_bounds() -> void:
 			continue
 		if body.rock_activated == false:
 			continue
-		# Pigeons fan past the side rails on purpose — only splash/water misses them.
-		if body.rock_type == RockInstance.RockSize.SMALL_2:
+		# Depth/fan rocks (pigeons) may leave the side rails — only splash/water misses them.
+		if body.ignores_x_out_of_bounds:
 			continue
 		if absf(body.global_position.x) > OUT_OF_BOUNDS_X:
 			deactivate_out_of_bounds_rock(body)

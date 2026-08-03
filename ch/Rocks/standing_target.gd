@@ -652,7 +652,9 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			body.rock_type_name= 'rock_type_1'
 			body.rock_type = body.RockSize.SMALL
 			body.cash_value = 2
-			
+
+		# Blasted into the distance — don't count side-rail X as a miss.
+		body.ignores_x_out_of_bounds = true
 		var strength : float = [2.0,3.0].pick_random()
 		body.apply_central_impulse(body.global_position - global_position * -strength)
 		#return

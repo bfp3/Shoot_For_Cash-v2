@@ -40,7 +40,6 @@ var transitioning_worlds := false
 var pineapple_mode := false
 @export var current_round := 0
 
-
 @export var player : Player
 @export var scene_transition_screen : Control 
 @export var shop_main_menu : Control
