@@ -12,9 +12,11 @@ var current_state : State = State.INACTIVE
 @export var pulse_magnitude := 1.1
 ## When true, waves after wave 1 randomise rock columns (existing behaviour).
 @export var randomize_later_waves := true
-## Depth launch strength for `pigeon` rocks (away from camera / into the distance).
-## Applied on world -Z. Raise to send pigeons further back; lower for a softer toss.
-const pigeon_depth_impulse := 100.0
+## Depth launch strength for `rock-pigeon` (into the distance). Raise to send them further back.
+const pigeon_depth_impulse := 70.0
+## Sideways fan strength for pigeons. Multiplies spawn X so outer lanes flare outward.
+## 0 = straight back; higher = wider fan.
+const pigeon_fan_spread := 4.0
 
 var rocks_limit := 0
 
@@ -189,9 +191,9 @@ func update_prepare_rocks() -> void:
 func _spawn_entry_to_rock_type(entry) -> int:
 	if entry is Dictionary:
 		match String(entry.get('cmd', '')).to_lower():
-			'black':
+			'rock-black':
 				return RockInstance.RockSize.HAZARD
-			'pigeon':
+			'rock-pigeon':
 				return RockInstance.RockSize.SMALL_2
 			_:
 				return RockInstance.RockSize.SMALL
@@ -204,7 +206,7 @@ func _spawn_entry_to_rock_type(entry) -> int:
 
 
 func _is_launchable_spawn_cmd(cmd: String) -> bool:
-	return cmd == 'rock' or cmd == 'black' or cmd == 'pigeon'
+	return cmd == 'rock' or cmd == 'rock-black' or cmd == 'rock-pigeon'
 
 
 func update_pulse_rocks() -> void:
@@ -226,6 +228,9 @@ func check_rocks_out_of_bounds() -> void:
 		if body.current_state != body.State.ACTIVE:
 			continue
 		if body.rock_activated == false:
+			continue
+		# Pigeons fan past the side rails on purpose — only splash/water misses them.
+		if body.rock_type == RockInstance.RockSize.SMALL_2:
 			continue
 		if absf(body.global_position.x) > OUT_OF_BOUNDS_X:
 			deactivate_out_of_bounds_rock(body)
@@ -445,13 +450,13 @@ func bounce_rocks() -> void:
 		body.enter_state(body.State.ACTIVE)
 		body.bounce_rocks()
 
-		var z_variation := 0.0
 		var upward_force = 10.0
+		var impulse: Vector3
 		if body.rock_type == RockInstance.RockSize.SMALL_2:
-			# Away from camera / into the distance (world -Z in this level layout).
-			z_variation = pigeon_depth_impulse
-			upward_force = upward_force * 2
-		var impulse := _build_launch_impulse(body, counter, upward_force, z_variation)
+			upward_force = upward_force * 2.0
+			impulse = _pigeon_launch_impulse(body, counter, upward_force)
+		else:
+			impulse = _build_launch_impulse(body, counter, upward_force, 0.0)
 		body.apply_central_impulse(impulse)
 
 		counter += 1
@@ -460,6 +465,25 @@ func bounce_rocks() -> void:
 			break
 
 	#spin_rocks()
+
+
+## Pigeons leave their spawn lane and fly into the distance in a fan:
+## outer columns flare outward, centre columns go more straight back.
+func _pigeon_launch_impulse(body, rock_index: int, upward_force: float) -> Vector3:
+	var spawn_x: float = body.global_position.x
+	# Outward fan from centre: +X lanes push further +X, -X lanes further -X.
+	var x_fan: float = spawn_x * pigeon_fan_spread
+
+	var y_force: float = upward_force
+	var entry = null
+	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
+		entry = manual_rock_sequence[rock_index]
+	if entry is Dictionary:
+		var aim_row: int = int(entry.get('aim_row', 0))
+		if aim_row > 0:
+			y_force = upward_force * float(AIM_PULSE_SCALE.get(aim_row, 1.0))
+
+	return Vector3(x_fan, y_force, pigeon_depth_impulse) * pulse_magnitude
 
 
 ## Same pulse power (upward_force * pulse_magnitude). Aimed rocks steer toward A/B/C cells.

@@ -66,10 +66,10 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## rock/black/pigeon: {cmd, column, aim_row, aim_column, param}
+## rock / rock-black / rock-pigeon: {cmd, column, aim_row, aim_column, param}
 ##   column -1 means random. Aim cell (e.g. A8) is optional; 0/0 means none.
 ##   If only an aim cell is given (`rock A8`), spawn column defaults to 1.
-##   pigeon → RockSize.SMALL_2 (launches away from camera).
+##   rock-pigeon → RockSize.SMALL_2 (launches away from camera).
 ## balloon: {cmd, row, column, param} — row 1=A, 2=B, 3=C; defaults to A1.
 ## wait: {cmd, ms} — delay before the next rock; defaults to 100ms.
 ## repeat: {cmd, count} — wave count for the round; defaults to 3.
@@ -81,7 +81,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'black', 'pigeon':
+		'rock', 'rock-black', 'rock-pigeon':
 			return _parse_rock_command(cmd, parts)
 
 		'balloon':
@@ -101,7 +101,7 @@ const DEFAULT_ROUND_REPEAT := 3
 const DEFAULT_WAIT_MS := 100
 
 
-## rock / pigeon / rock 1 / rock 1 A8 / rock A8 (column defaults to 1 when only aim is given).
+## rock / rock-black / rock-pigeon / rock 1 A8 / rock A8 (column defaults to 1 when only aim is given).
 func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': cmd,
