@@ -30,6 +30,9 @@ func launch_orange(pos : Vector3) -> void:
 	# Original vertical/sideways launch
 	body.global_position.x = pos.x
 	
+	# this allows it to spawn in the distance
+	body.global_position.z = pos.z
+	
 	round_manager.orange_active += 1
 	
 	var x_variation = randf_range(-1.0, 1.0)
