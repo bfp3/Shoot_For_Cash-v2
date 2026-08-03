@@ -6,26 +6,11 @@ const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
 const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
 const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
 
-const current_rock_sequence : Array = [
-	# BLAKE VER START
-	[1,3]
-	,[311,1,1,3,3]
-	,[311, 313, 3,3,1,42]
+const LEVEL_FILE_PATH := 'res://sc/island-shipper.txt'
+const LEVEL_ISLAND_NAME := 'shipper'
 
-	,[6,6,45,46]
-	,[312,2,3,4,5]
-	,[312,3,4,5,6,43]
-	
-	,[1,1,3,3,5,5,7,7]
-	,[48,7,8,7,8,47]
-	,[311,312,317,318, 41, 47, 1, 8]
-	
-	,[3,4,5,6,7,7,6,5,4,3]
-	,[1,8,2,7,3,6,4,5,41,42,43,44,45,46,47,48]
-	,[42,4,44,6,46,8,8,8,8,47,311,312,313,314,315,316,317,318]
-	
-	# BLAKE VER END
-	]
+## Populated from LEVEL_FILE_PATH via Parser — one array of spawn dicts per round.
+var current_rock_sequence : Array = []
 
 
 var current_sequence_index := 0
@@ -94,6 +79,8 @@ var bonus_oranges_ready := false
 
 
 func _ready() -> void:
+	
+
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
 	EventBus.instance.rocks_cleared_end_wave.connect(check_if_rocks_still_in_air)
 	EventBus.instance.bonus_oranges.connect(bonus_oranges)
@@ -102,6 +89,17 @@ func _ready() -> void:
 	EventBus.instance.add_strike.connect(handle_rock_missed)
 	#EventBus.instance.hazard_hit.connect(handle_rock_missed)
 	move_to_start()
+
+
+func load_level_sequence() -> void:
+	if not Parser.loadIslandFile(LEVEL_FILE_PATH):
+		push_error('RoundManager: failed to load level file %s' % LEVEL_FILE_PATH)
+		current_rock_sequence = []
+		return
+
+	current_rock_sequence = Parser.get_rock_sequences(LEVEL_ISLAND_NAME)
+	if current_rock_sequence.is_empty():
+		push_warning('RoundManager: level file loaded but produced no rounds.')
 	
 func bonus_oranges() -> void:
 	bonus_oranges_ready = true
@@ -374,8 +372,16 @@ func update_rock_sequence() -> Array:
 		
 	if current_sequence_index >= current_rock_sequence.size():
 		return []
-	
-	return current_rock_sequence[current_sequence_index].duplicate()
+
+	# Deep-copy spawn dicts so wave shuffles don't mutate the level data.
+	var source: Array = current_rock_sequence[current_sequence_index]
+	var copy: Array = []
+	for entry in source:
+		if entry is Dictionary:
+			copy.append(entry.duplicate())
+		else:
+			copy.append(entry)
+	return copy
 
 
 
@@ -562,8 +568,9 @@ func move_to_moss() -> void:
 	shop_main_menu.update_next_ticket()
 		
 	await get_tree().create_timer(3.0, false).timeout
+
+	load_level_sequence()
 	transitioning_worlds = false
-	
 	current_round = 1
 	enter_state(RoundState.SHOP_START)
 	

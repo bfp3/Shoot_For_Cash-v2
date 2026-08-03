@@ -81,7 +81,7 @@ func start_falling() -> void:
 	#apply_hit_reaction(Vector2.UP)
 	disable_collision()
 	await get_tree().create_timer(0.15).timeout
-	update_gravity(5.0)
+	update_gravity(2.0)
 	linear_damp = 0.0
 	
 	

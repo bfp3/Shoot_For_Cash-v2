@@ -85,16 +85,23 @@ func update_inactive() -> void:
 
 # This is the start of arranging the rocks.
 func start_manual_rock_round(sequence: Array) -> void:
+	# Drop anything that isn't a rock/black spawn dict (legacy ints / balloons).
 	for idx in range(sequence.size() - 1, -1, -1):
-		if sequence[idx] >= 300:
-			sequence.remove_at(idx)
-	#await get_tree().create_timer(0.5).timeout		
+		var entry = sequence[idx]
+		if entry is Dictionary:
+			var cmd: String = entry.get('cmd', '')
+			if cmd != 'rock' and cmd != 'black':
+				sequence.remove_at(idx)
+			continue
+		# Legacy integer format support while migrating.
+		if typeof(entry) == TYPE_INT:
+			if entry >= 300:
+				sequence.remove_at(idx)
+			continue
+		sequence.remove_at(idx)
 
-	
 	manual_rock_sequence = sequence
 	enter_state(State.PREPARE_ROCKS)
-	
-	
 	
 func update_prepare_rocks() -> void:
 	
@@ -122,23 +129,35 @@ func update_prepare_rocks() -> void:
 
 	assign_manual_rock_positions(active_bodies)
 
-	var type : int
 	var pointer : int = 0
 	
 	var c := 0
-	for column in temp_rock_array:
+	for entry in temp_rock_array:
 		#if active_bodies[pointer].current_state == active_bodies[pointer].State.DISABLED:
 			#continue
 		if c >= rocks_limit:
 			break
-		type = int(column / 10)
-		active_bodies[pointer].rock_type = type
+		active_bodies[pointer].rock_type = _spawn_entry_to_rock_type(entry)
 		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
 		pointer += 1
 		c += 1
 
-		
-	
+
+func _spawn_entry_to_rock_type(entry) -> int:
+	if entry is Dictionary:
+		match String(entry.get('cmd', '')):
+			'black':
+				return RockInstance.RockSize.HAZARD
+			_:
+				return RockInstance.RockSize.SMALL
+
+	# Legacy integer encoding: type = value / 10 (1-8 → SMALL, 41-48 → HAZARD)
+	if typeof(entry) == TYPE_INT:
+		return int(entry / 10)
+
+	return RockInstance.RockSize.SMALL
+
+
 func update_pulse_rocks() -> void:
 	splash_zone.activate_splash_zone()
 
@@ -234,7 +253,8 @@ func assign_manual_rock_positions(bodies: Array) -> void:
 	var column_counts := {}
 	var positions : Array[float] = []
 	
-	for column in manual_rock_sequence:
+	for entry in manual_rock_sequence:
+		var column := _resolve_spawn_column(entry)
 		var base_x := column_to_x(column)
 		var occurrence : int = column_counts.get(column, 0)
 		column_counts[column] = occurrence + 1
@@ -251,6 +271,23 @@ func assign_manual_rock_positions(bodies: Array) -> void:
 	for idx in range(bodies.size()):
 		var body = bodies[idx]
 		body.target_x_position = positions[idx]
+
+
+## Resolves a spawn entry to column 1-8. Missing/negative column → random (same as waves 2/3).
+func _resolve_spawn_column(entry) -> int:
+	if entry is Dictionary:
+		var column: int = int(entry.get('column', -1))
+		if column < 1:
+			return randi_range(1, COLUMN_COUNT)
+		return column
+
+	if typeof(entry) == TYPE_INT:
+		var value: int = entry
+		if value < 10:
+			return clampi(value, 1, COLUMN_COUNT)
+		return clampi(value % 10, 1, COLUMN_COUNT)
+
+	return randi_range(1, COLUMN_COUNT)
 
 
 
@@ -323,7 +360,7 @@ func get_rock_limit() -> int:
 func get_angle_bias() -> float:
 	
 	var probability = randi_range(1,10)
-	if probability > 8:
+	if probability > 0:
 		return 0.0
 	
 	return 10.0
@@ -428,8 +465,23 @@ func reset_rock_back_on() -> void:
 
 func shuffle_current_sequence(_sequence: Array) -> void:
 	for idx in range(_sequence.size() - 1, -1, -1):
-		var value : int = _sequence[idx]
+		var entry = _sequence[idx]
 
+		if entry is Dictionary:
+			var cmd: String = entry.get('cmd', '')
+			if cmd != 'rock' and cmd != 'black':
+				_sequence.remove_at(idx)
+				continue
+			# Waves 2/3: randomise column exactly like the old int shuffle.
+			entry.column = randi_range(1, COLUMN_COUNT)
+			_sequence[idx] = entry
+			continue
+
+		if typeof(entry) != TYPE_INT:
+			_sequence.remove_at(idx)
+			continue
+
+		var value: int = entry
 		if value >= 300:
 			_sequence.remove_at(idx)
 			continue

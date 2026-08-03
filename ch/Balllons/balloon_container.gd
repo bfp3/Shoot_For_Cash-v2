@@ -53,13 +53,14 @@ func add_balloon(_balloon_array : Array) -> void:
 		await add_all_balloons()
 		return
 	
-	for i in balloon_array:
-		if i <= 300 || i > 400:
-			balloon_array.erase(i)
-		#else:
-			#i -= 300
+	# Balloons still use legacy int codes (300+). Skip rocks / spawn dicts.
+	for i in range(balloon_array.size() - 1, -1, -1):
+		var entry = balloon_array[i]
+		if typeof(entry) != TYPE_INT or entry <= 300 or entry > 400:
+			balloon_array.remove_at(i)
 
 	if balloon_array.is_empty():
+		started = false
 		return
 	
 	#print('Balloon Codes --- ', balloon_array )
