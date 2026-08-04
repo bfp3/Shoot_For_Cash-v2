@@ -69,6 +69,7 @@
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
 [ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
+[ext_resource type="Script" uid="uid://cw36fy6a37j1h" path="res://ch/bonus_rounds/protect_balloons.gd" id="80_protect"]
 [ext_resource type="Script" uid="uid://c2w53e8iak64g" path="res://ch/protect_balloon_round.gd" id="80_ufvrt"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 
@@ -509,7 +510,7 @@ splash_screen = NodePath("SplashScreenCanvasLayer")
 music_manager = NodePath("Music")
 main_game_canvas = NodePath("MainGameCanvasLayer")
 
-[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("player", "scene_transition_screen", "shop_main_menu", "tally_menu", "round_timer", "place_name", "rocks_container", "music_manager", "birds", "balloon_container", "blue_balloon", "level_layout", "wave_progress_indication", "wave_progress_feedback") groups=["restartable", "round_manager"]]
+[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("player", "scene_transition_screen", "shop_main_menu", "tally_menu", "round_timer", "place_name", "rocks_container", "music_manager", "birds", "balloon_container", "blue_balloon", "protect_balloons", "level_layout", "wave_progress_indication", "wave_progress_feedback") groups=["restartable", "round_manager"]]
 script = ExtResource("2_wtxnc")
 player = NodePath("../Player")
 scene_transition_screen = NodePath("../Background_transition")
@@ -522,6 +523,7 @@ music_manager = NodePath("../Music")
 birds = NodePath("../BirdsFlightPath/PathFollow3D/Bird_fly_by_helpers")
 balloon_container = NodePath("../Balloon_container")
 blue_balloon = NodePath("../PlayerBalloon")
+protect_balloons = NodePath("../ProtectBalloons")
 level_layout = NodePath("../Level_Visual")
 wave_progress_indication = NodePath("../MainGameCanvasLayer/WaveProgressIndication")
 wave_progress_feedback = NodePath("../MainGameCanvasLayer/WaveProgressIndication/Wave_Text")
@@ -629,6 +631,7 @@ speed_multiplier = 60.0
 [node name="Rocks" type="Node3D" parent="." unique_id=859468523]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
+randomize_later_waves = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
 root_node = NodePath("../Shover")
@@ -1965,11 +1968,15 @@ stream = ExtResource("17_lysu5")
 volume_db = -40.0
 pitch_scale = 2.0
 
-[node name="PlayerBalloon2" parent="." unique_id=350761291 instance=ExtResource("68_wtxnc")]
+[node name="ProtectBalloons" type="Node3D" parent="." unique_id=1888003001 node_paths=PackedStringArray("round_manager")]
+script = ExtResource("80_protect")
+round_manager = NodePath("../Round_manager")
+
+[node name="PlayerBalloon2" parent="ProtectBalloons" unique_id=350761291 instance=ExtResource("68_wtxnc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50.095, 30.9)
 top_level = true
 
-[node name="PlayerBalloon3" parent="." unique_id=1574938481 instance=ExtResource("68_wtxnc")]
+[node name="PlayerBalloon3" parent="ProtectBalloons" unique_id=1574938481 instance=ExtResource("68_wtxnc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 52.095, 30.9)
 top_level = true
 
@@ -1980,7 +1987,7 @@ script = ExtResource("80_ufvrt")
 left_marker = NodePath("../Pineapple_markers/LeftMarker")
 right_marker = NodePath("../Pineapple_markers/RightMarker")
 round_manager = NodePath("../Round_manager")
-blue_balloon = NodePath("../PlayerBalloon2")
+blue_balloon = NodePath("../ProtectBalloons/PlayerBalloon2")
 pineapple_spawn_radius = 20.0
 pineapple_aim_offset = 6.0
 
@@ -2109,7 +2116,7 @@ script = ExtResource("80_ufvrt")
 left_marker = NodePath("../Pineapple_markers/LeftMarker")
 right_marker = NodePath("../Pineapple_markers/RightMarker")
 round_manager = NodePath("../Round_manager")
-blue_balloon = NodePath("../PlayerBalloon2")
+blue_balloon = NodePath("../ProtectBalloons/PlayerBalloon2")
 oranges = true
 
 [node name="Orange" parent="BonusOranges" unique_id=1922213171 instance=ExtResource("69_swp41")]

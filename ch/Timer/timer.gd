@@ -207,20 +207,20 @@ func timer_rollup_sequence() -> void:
 	
 
 
-func _input(event: InputEvent) -> void:
-	if !OS.is_debug_build():
-		return
-	
-	if Input.is_key_label_pressed(KEY_U):
-		update_pause_timer()
-		
-	if Input.is_key_label_pressed(KEY_Y):
-		update_resume_timer()
-		
-	if Input.is_key_label_pressed(KEY_T):
-		timer_disabled = !timer_disabled
-		visible = !visible
+#func _input(event: InputEvent) -> void:
+	#if !OS.is_debug_build():
+		#return
+	#
+	#if Input.is_key_label_pressed(KEY_U):
+		#update_pause_timer()
+		#
+	#if Input.is_key_label_pressed(KEY_Y):
 		#update_resume_timer()
+		#
+	#if Input.is_key_label_pressed(KEY_T):
+		#timer_disabled = !timer_disabled
+		#visible = !visible
+		##update_resume_timer()
 
 func update_pause_timer() -> void:
 	_timer_paused = true

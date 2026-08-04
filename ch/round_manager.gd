@@ -60,6 +60,7 @@ var pineapple_mode := false
 @export var birds : Node3D
 @export var balloon_container : Node3D
 @export var blue_balloon : Node3D
+@export var protect_balloons : Node3D
 @export var level_layout : Node3D
 @export var wave_progress_indication : Control
 @export var wave_progress_feedback : Control
@@ -69,6 +70,10 @@ var egg_pulse : Egg
 
 ## When true, missed rocks in the active round do not award strikes (`no-lives` keyword).
 var no_lives_this_round := false
+## Active bonus subtype from the level file (`protect`, etc.). Empty = normal round.
+var bonus_type_this_round := ""
+## Protect balloon was popped during `bonus-protect` — no bonus cash, still advance.
+var protect_bonus_failed := false
 
 enum RoundState {
 	INACTIVE,
@@ -231,6 +236,8 @@ func _reset_level_editor_round_runtime() -> void:
 	bonus_oranges_ready = false
 	orange_active = 0
 	pineapple_mode = false
+	bonus_type_this_round = ""
+	protect_bonus_failed = false
 
 	gl_PlayerState.round_finished = false
 	gl_PlayerState.dataset.total_current_strikes = 0
@@ -312,6 +319,8 @@ func finish_level_editor_test_round() -> void:
 	orange_active = 0
 	game_over_triggered = false
 	no_lives_this_round = false
+	bonus_type_this_round = ""
+	protect_bonus_failed = false
 	gl_PlayerState.dataset.total_current_strikes = 0
 	gl_PlayerState.round_finished = false
 	if wave_progress_feedback and wave_progress_feedback.has_method("reset_strikes"):
@@ -320,6 +329,8 @@ func finish_level_editor_test_round() -> void:
 	# Fly remaining test balloons away (same end-of-round exit as normal play).
 	if balloon_container:
 		await balloon_container.end_round()
+	if protect_balloons and protect_balloons.has_method('cleanup_protect_round'):
+		protect_balloons.cleanup_protect_round()
 
 	_restore_level_editor_sequence()
 	level_editor_test_active = false
@@ -368,22 +379,48 @@ func check_round_for_strikes() -> void:
 	gl_PlayerState.dataset.total_current_strikes = 0
 
 
-## Reads round modifiers like `no-lives` from the active sequence entry only.
+## Reads round modifiers like `no-lives` / `bonus-protect` from the active sequence entry only.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
+	bonus_type_this_round = ""
+	protect_bonus_failed = false
 	if current_rock_sequence.is_empty():
 		return
 	if current_sequence_index < 0 or current_sequence_index >= current_rock_sequence.size():
 		return
 	var round_data = current_rock_sequence[current_sequence_index]
 	if round_data is Dictionary:
-		no_lives_this_round = bool(round_data.get('no_lives', false))
+		bonus_type_this_round = String(round_data.get('bonus', ''))
+		no_lives_this_round = bool(round_data.get('no_lives', false)) or bonus_type_this_round != ""
 		if no_lives_this_round:
 			print('RoundManager: no-lives active for this round only')
+		if bonus_type_this_round != "":
+			print('RoundManager: bonus-%s active for this round' % bonus_type_this_round)
 
 
 func is_current_round_no_lives() -> bool:
 	return no_lives_this_round
+
+
+func is_protect_bonus_round() -> bool:
+	return bonus_type_this_round == 'protect'
+
+
+## Protect balloon popped — end the wave early with no protect cash (still progress the round).
+func on_protect_bonus_failed() -> void:
+	if protect_bonus_failed or wave_ending:
+		return
+	protect_bonus_failed = true
+	wave_ending = true
+	stop_timer()
+	stop_player()
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+	# Not a strike-out: player still advances after round end.
+	success = true
+	player_failed = false
+	force_shop_open = false
+	enter_state(RoundState.WAVE_END)
 
 
 func handle_rock_missed() -> void:
@@ -604,6 +641,15 @@ func update_wave_start() -> void:
 	if force_shop_open or _level_editor_finishing:
 		return
 
+	if current_wave == 1 and is_protect_bonus_round() and protect_balloons:
+		if protect_balloons.has_method('begin_protect_round'):
+			var placements: Array = []
+			if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
+				var round_data = current_rock_sequence[current_sequence_index]
+				if round_data is Dictionary:
+					placements = round_data.get('protect_placements', [])
+			protect_balloons.begin_protect_round(placements)
+
 	gl_PlayerState.next_wave()
 
 	if current_wave == 1:
@@ -698,6 +744,9 @@ func update_rock_sequence() -> Array:
 
 func update_round_end() -> void:
 	if level_editor_test_active:
+		if is_protect_bonus_round() and protect_balloons and protect_balloons.has_method('resolve_protect_round'):
+			var survived := not protect_bonus_failed and not player_failed
+			protect_balloons.resolve_protect_round(survived)
 		await finish_level_editor_test_round()
 		return
 
@@ -707,6 +756,10 @@ func update_round_end() -> void:
 	if gl_PlayerState.dataset.total_current_strikes < 3:
 		success = true
 	var round_was_successful := success
+
+	if is_protect_bonus_round() and protect_balloons and protect_balloons.has_method('resolve_protect_round'):
+		var survived := not protect_bonus_failed and round_was_successful and not player_failed
+		protect_balloons.resolve_protect_round(survived)
 
 	await get_tree().create_timer(0.25, false).timeout
 	music_manager.shop_music_lower_volume()
@@ -722,7 +775,8 @@ func update_round_end() -> void:
 	bullet_active_counter = 0.0
 	
 	# Only check PASS/PERFECT if the round wasn't cut short by a failure
-	if round_was_successful:
+	# Protect bonus rounds skip the post-round pineapple perfect bonus.
+	if round_was_successful and not is_protect_bonus_round():
 		player_can_progress = true
 
 		perfect_score_feedback()
@@ -737,6 +791,8 @@ func update_round_end() -> void:
 			pineapple_round()
 			while pineapple_mode:
 				await get_tree().process_frame
+	elif round_was_successful:
+		player_can_progress = true
 	
 	
 	EventBus.instance.oranges_start_falling.emit()
@@ -745,7 +801,7 @@ func update_round_end() -> void:
 	if player_failed:
 		bonus_oranges_ready = false
 		
-	if bonus_oranges_ready:
+	if bonus_oranges_ready and not is_protect_bonus_round():
 		$'../BonusOranges'.start_bonus_oranges()
 		
 	while bonus_oranges_ready:
@@ -766,6 +822,8 @@ func update_round_end() -> void:
 	force_shop_open = false
 	success = false
 	pineapple_mode = false
+	bonus_type_this_round = ""
+	protect_bonus_failed = false
 
 	if current_sequence_index >= current_rock_sequence.size():
 		start_game_over()
@@ -803,6 +861,8 @@ func update_tally_end() -> void:
 	
 func update_shop_start() -> void:
 	no_lives_this_round = false
+	bonus_type_this_round = ""
+	protect_bonus_failed = false
 	EventBus.instance.open_shop.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	$Gold_sfx.pitch_scale = 0.7

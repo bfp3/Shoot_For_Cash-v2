@@ -86,6 +86,9 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 ## wait: {cmd, ms} — delay before the next rock; defaults to 100ms.
 ## repeat: {cmd, count} — wave count for the round; defaults to 1.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
+## bonus-protect / bonus protect: marks the round as a protect bonus (no strikes).
+## protect-balloon / protect-balloon A4: place a protect balloon (bonus-protect only).
+##   Bare `protect-balloon` defaults to B4. Multiple lines place multiple balloons.
 ## Unknown commands become red_rock_error so bad editor lines are visible in-game.
 ## Commands and row letters are case-insensitive.
 func parse_spawn_command(token: String) -> Dictionary:
@@ -108,6 +111,9 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'balloon':
 			return _parse_balloon_command(parts)
 
+		'protect-balloon':
+			return _parse_protect_balloon_command(parts)
+
 		'wait':
 			return _parse_wait_command(parts)
 
@@ -117,7 +123,30 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'no-lives':
 			return {'cmd': 'no-lives'}
 
+		'bonus-protect':
+			return {'cmd': 'bonus-protect'}
+
+		'bonus':
+			# `bonus protect` → same as `bonus-protect` (subtype after bonus).
+			if parts.size() > 1:
+				var subtype := String(parts[1]).strip_edges().to_lower()
+				if subtype.begins_with('bonus-'):
+					subtype = subtype.substr(6)
+				return {'cmd': 'bonus-%s' % subtype}
+			push_warning("parser: 'bonus' needs a subtype (e.g. bonus-protect) — using red_rock_error")
+			return {
+				'cmd': 'red_rock_error',
+				'column': 3,
+				'aim_row': 3,
+				'aim_column': 3,
+				'param': token,
+			}
+
 		_:
+			# Future `bonus-<type>` keywords are round markers, not spawns.
+			if cmd.begins_with('bonus-') and cmd.length() > 6:
+				return {'cmd': cmd}
+
 			push_warning("parser: unknown spawn command '%s' — using red_rock_error" % token)
 			return {
 				'cmd': 'red_rock_error',
@@ -235,6 +264,26 @@ func _parse_balloon_command(parts: PackedStringArray) -> Dictionary:
 	return result
 
 
+## protect-balloon → B4 (bonus-protect default). protect-balloon A4 / a4 → that cell.
+func _parse_protect_balloon_command(parts: PackedStringArray) -> Dictionary:
+	var result := {
+		'cmd': 'protect-balloon',
+		'row': 2,       # B — same default as bonus-protect
+		'column': 4,
+		'param': '',
+	}
+
+	if parts.size() <= 1:
+		return result
+
+	# Reuse balloon cell parsing, then restore protect defaults if bare/invalid.
+	var as_balloon := _parse_balloon_command(parts)
+	result.row = int(as_balloon.get('row', 2))
+	result.column = int(as_balloon.get('column', 4))
+	result.param = String(as_balloon.get('param', ''))
+	return result
+
+
 ## Parses "A1", "b3", "C8" into {row, column}. Returns {} on failure.
 func _parse_balloon_cell(cell: String) -> Dictionary:
 	if cell.length() < 2:
@@ -287,12 +336,15 @@ func parse_round_text(text: String) -> Dictionary:
 			"spawns": [],
 			"repeat": DEFAULT_ROUND_REPEAT,
 			"no_lives": false,
+			"bonus": "",
+			"protect_placements": [],
 		}
 	return sequences[0]
 
 
 ## Builds one round dict per round, in file order:
-## { "spawns": [spawn dicts...], "repeat": wave_count, "no_lives": bool }
+## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"protect"|...,
+##   "protect_placements": [{row, column}, ...] }
 ## Pass an empty island_name to include every island in the loaded file.
 func get_rock_sequences(island_name: String = '') -> Array:
 	var rounds: Dictionary = {}
@@ -308,6 +360,8 @@ func get_rock_sequences(island_name: String = '') -> Array:
 				'spawns': [],
 				'repeat': DEFAULT_ROUND_REPEAT,
 				'no_lives': false,
+				'bonus': '',
+				'protect_placements': [],
 			}
 			order.append(key)
 
@@ -324,12 +378,66 @@ func get_rock_sequences(island_name: String = '') -> Array:
 			rounds[key].no_lives = true
 			continue
 
+		if parsed_cmd.begins_with('bonus-') and parsed_cmd.length() > 6:
+			var bonus_type := parsed_cmd.substr(6)
+			rounds[key].bonus = bonus_type
+			rounds[key].no_lives = true
+			# Bonus rounds are one sequence unless `repeat` is set after this line.
+			rounds[key].repeat = 1
+			continue
+
+		if parsed_cmd == 'protect-balloon':
+			rounds[key].protect_placements.append({
+				'row': int(parsed.get('row', 2)),
+				'column': int(parsed.get('column', 4)),
+			})
+			continue
+
 		rounds[key].spawns.append(parsed)
 
 	var sequences: Array = []
 	for key in order:
+		_finalize_bonus_round(rounds[key])
 		sequences.append(rounds[key])
 	return sequences
+
+
+## Bonus rounds with parse errors (or no rock instructions) become a single red_rock_error.
+func _finalize_bonus_round(round_data: Dictionary) -> void:
+	var bonus := String(round_data.get('bonus', ''))
+	if bonus == '':
+		# protect-balloon outside a bonus-protect round is an error marker.
+		if not round_data.get('protect_placements', []).is_empty():
+			round_data.protect_placements = []
+			round_data.spawns = [_make_bonus_error_spawn('protect-balloon without bonus-protect')]
+		return
+
+	# Unknown bonus subtypes are treated as errors until implemented.
+	if bonus != 'protect':
+		round_data.spawns = [_make_bonus_error_spawn('bonus-%s' % bonus)]
+		round_data.protect_placements = []
+		return
+
+	var spawns: Array = round_data.get('spawns', [])
+	if spawns.is_empty():
+		round_data.spawns = [_make_bonus_error_spawn('bonus-%s empty' % bonus)]
+		return
+
+	for entry in spawns:
+		if entry is Dictionary and String(entry.get('cmd', '')).to_lower() == 'red_rock_error':
+			round_data.spawns = [_make_bonus_error_spawn(String(entry.get('param', 'bonus-%s' % bonus)))]
+			round_data.protect_placements = []
+			return
+
+
+func _make_bonus_error_spawn(param: String) -> Dictionary:
+	return {
+		'cmd': 'red_rock_error',
+		'column': 3,
+		'aim_row': 3,
+		'aim_column': 3,
+		'param': param,
+	}
 
 
 func getWaves():

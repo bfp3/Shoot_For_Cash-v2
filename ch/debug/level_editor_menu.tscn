@@ -74,6 +74,12 @@ text = "[color=#C70102]COMMANDS[/color]
 
 [color=#C70102]balloon[/color] / [color=#C70102]balloon A1[/color] place a balloon default A1
 
+[color=#C70102]no-lives[/color] no strikes this round
+
+[color=#C70102]bonus-protect[/color] protect balloon at B4 (no strikes)
+
+[color=#C70102]protect-balloon A4[/color] place/override protect balloon(s)
+
 [color=#C70102]PARAMETERS[/color]
 [color=#C70102]rock 2[/color]
 spawn at column 2
@@ -161,9 +167,14 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "no-lives
-rock 1 a1
-rock 3 b3
-rock 3 c3
+
+#rock
+#rock-black
+#rock-pigeon
+#balloon
+#smokebomb
+
+rock 2
 repeat 3"
 placeholder_text = "rock
 rock-black 2
@@ -182,7 +193,7 @@ alignment = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 56)
 layout_mode = 2
-theme_override_font_sizes/font_size = 52
+theme_override_font_sizes/font_size = 22
 text = "BACK"
 
 [node name="VSeparator" type="VSeparator" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=263273983]

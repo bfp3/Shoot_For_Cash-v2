@@ -45,6 +45,8 @@ enum BalloonType {
 var original_penalty_amount := 0
 var default_balloon_type : BalloonType
 
+## When true (bonus-protect), rocks/pineapples popping this BLUE balloon fail the bonus.
+var protect_mode := false
 
 var hazard_active := true
 var default_hazard_active := true
@@ -551,6 +553,9 @@ func rock_pop_balloon() -> void:
 		var crt = get_tree().get_first_node_in_group('TV_CRT_Filter')
 		if crt:
 			crt.taking_damage_tween()
+
+		if protect_mode:
+			_notify_protect_container_popped()
 	
 	rock_activated = false
 	enter_state(State.HIT)
@@ -576,6 +581,12 @@ func rock_pop_balloon() -> void:
 	#queue_free()
 
 
+func _notify_protect_container_popped() -> void:
+	var container := get_parent()
+	if container and container.has_method('notify_protect_balloon_popped'):
+		container.notify_protect_balloon_popped()
+
+
 func _input(event: InputEvent) -> void:
 	
 	if Input.is_action_just_pressed('left'):
@@ -583,21 +594,18 @@ func _input(event: InputEvent) -> void:
 			restart()
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
-	
-
-	
 	if balloon_type != BalloonType.BLUE:
 		return
-		
+
+	if protect_mode:
+		var is_rock := body is RockInstance or body.name.contains('Rock')
+		var is_pineapple := body.name.contains('Pineapple')
+		if is_rock or is_pineapple:
+			rock_pop_balloon()
+		return
+
 	if body.name.contains('Pineapple'):
 		start_destroyed_process()
-		
-		#
-	#if body.name.contains('Rock'):
-		#if balloon_type == BalloonType.BLUE:
-			#rock_pop_balloon()
-		#else:
-			#start_destroyed_process()
 
 
 func restart() -> void:
