@@ -22,7 +22,8 @@ func _input(event) -> void:
 			debug_jump_to_moss()
 			return
 		if event.keycode == KEY_D and not event.shift_pressed and not event.ctrl_pressed and not event.alt_pressed:
-			debug_open_level_editor()
+			if debug_open_level_editor():
+				get_viewport().set_input_as_handled()
 
 
 ## Instant Moss: land on the open shop menu — do not start the round.
@@ -73,13 +74,15 @@ func debug_jump_to_moss() -> void:
 
 
 ## Debug D: open level editor from the shop (closes shop UI, does not start a round).
-func debug_open_level_editor() -> void:
+## Returns true only when the editor actually opened (so the D key can be consumed).
+func debug_open_level_editor() -> bool:
 	var round_manager = get_tree().get_first_node_in_group("round_manager")
 	if round_manager == null:
 		push_warning("DEBUG D: round_manager not found")
-		return
+		return false
 	if round_manager.has_method("open_level_editor_from_shop"):
-		round_manager.open_level_editor_from_shop()
+		return bool(round_manager.open_level_editor_from_shop())
+	return false
 
 
 func _is_start_menu_shop(node: Node) -> bool:

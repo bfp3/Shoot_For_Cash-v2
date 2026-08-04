@@ -137,18 +137,19 @@ func register_level_editor(menu: Control) -> void:
 
 
 ## Open level editor from shop (debug D). Soft-closes shop without starting a round.
-func open_level_editor_from_shop() -> void:
+## Returns true if the editor opened (caller should consume the D key).
+func open_level_editor_from_shop() -> bool:
 	if not OS.is_debug_build():
-		return
+		return false
 	if level_editor_test_active or level_editor_open:
-		return
+		return false
 	if current_round_state != RoundState.SHOP_START:
-		return
+		return false
 	if shop_main_menu == null or not shop_main_menu.visible:
-		return
+		return false
 	if level_editor_menu == null:
 		push_warning("RoundManager: level editor menu missing")
-		return
+		return false
 
 	level_editor_open = true
 	if shop_main_menu.has_method("soft_hide_for_level_editor"):
@@ -156,6 +157,7 @@ func open_level_editor_from_shop() -> void:
 	else:
 		shop_main_menu.hide()
 	level_editor_menu.open_menu()
+	return true
 
 
 ## BACK from editor → resume shop without advancing the round.

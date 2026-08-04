@@ -15,6 +15,7 @@ var _is_open := false
 var _busy := false
 ## True if another key was pressed while Ctrl was held (so Ctrl+C/V still work).
 var _ctrl_chord_used := false
+var _waiting_to_focus := false
 
 @onready var _main_panel: PanelContainer = %MainPanel
 @onready var _rules_panel: PanelContainer = %RulesPanel
@@ -68,6 +69,24 @@ func open_menu() -> void:
 	_is_open = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	show()
+	# Wait for the open key (D) to release before focusing, so it isn't typed in.
+	# Do not permanently swallow D — typing "d" afterward must still work.
+	_script_edit.release_focus()
+	_focus_script_edit_after_open_key()
+
+
+func _focus_script_edit_after_open_key() -> void:
+	if _waiting_to_focus:
+		return
+	_waiting_to_focus = true
+	while _is_open and (Input.is_physical_key_pressed(KEY_D) or Input.is_key_pressed(KEY_D)):
+		await get_tree().process_frame
+	_waiting_to_focus = false
+	if _is_open:
+		_focus_script_edit()
+
+
+func _focus_script_edit() -> void:
 	_script_edit.grab_focus()
 	# Place caret at end so returning from a test feels continuous.
 	_script_edit.set_caret_line(_script_edit.get_line_count() - 1)
@@ -76,6 +95,7 @@ func open_menu() -> void:
 
 func close_menu() -> void:
 	_is_open = false
+	_waiting_to_focus = false
 	_keys_panel.hide()
 	_rules_panel.hide()
 	hide()
