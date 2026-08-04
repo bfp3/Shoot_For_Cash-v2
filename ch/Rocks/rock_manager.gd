@@ -15,9 +15,15 @@ var current_state : State = State.INACTIVE
 ## Depth launch strength for `rock-pigeon` (into the distance). Raise to send them further back.
 const pigeon_depth_impulse := 35.0 #70.0
 const rock_pigeon_upward_force := 2.0
-## Sideways fan strength for pigeons. Multiplies spawn X so outer lanes flare outward.
-## 0 = straight back; higher = wider fan.
-const pigeon_fan_spread := 0.0
+## Half-angle of the pigeon fan in degrees. Column 1 = +this, column 8 = -this.
+## Matches the editor reference: origin → rotate Y by this → push out.
+const pigeon_fan_half_angle_deg := 17.0
+## How far from world origin the fan aim reference points sit (meters along each ray).
+## Separate from impulse strength — move/tweak via `PigeonAimMarkers` children if present.
+const pigeon_aim_reference_depth := 45.0
+## Optional: Node3D with 8 Marker3D children named "1"…"8" (or in column order).
+## When set, those world positions override the computed 17° fan points.
+@export var pigeon_aim_markers: Node3D
 
 var rocks_limit := 0
 
@@ -619,23 +625,98 @@ func bounce_rocks() -> void:
 	#spin_rocks()
 
 
-## Pigeons leave their spawn lane and fly into the distance in a fan:
-## outer columns flare outward, centre columns go more straight back.
+## Pigeons fly into the distance along the column fan (17° half-angle from world origin).
+## `rock-pigeon 1` → spawn col 1, aim along col 1's distant ray.
+## `rock-pigeon 1 A8` → spawn col 1, aim at col 8's distant point (row A height).
 func _pigeon_launch_impulse(body, rock_index: int, upward_force: float) -> Vector3:
-	var spawn_x: float = body.global_position.x
-	# Outward fan from centre: +X lanes push further +X, -X lanes further -X.
-	var x_fan: float = spawn_x * pigeon_fan_spread
+	var aim_row := 0
+	var aim_column := 0
+	var spawn_column := -1
 
-	var y_force: float = upward_force
 	var entry = null
 	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
 		entry = manual_rock_sequence[rock_index]
 	if entry is Dictionary:
-		var aim_row: int = int(entry.get('aim_row', 0))
-		if aim_row > 0:
-			y_force = upward_force * float(AIM_PULSE_SCALE.get(aim_row, 1.0))
+		aim_row = int(entry.get('aim_row', 0))
+		aim_column = int(entry.get('aim_column', 0))
+		spawn_column = int(entry.get('column', -1))
 
-	return Vector3(x_fan, y_force, pigeon_depth_impulse) * pulse_magnitude
+	# No aim cell → stay on this lane's own fan ray (into the distance).
+	if aim_column < 1:
+		if spawn_column < 1:
+			spawn_column = _x_to_nearest_column(body.global_position.x)
+		aim_column = spawn_column
+
+	var y_force: float = upward_force
+	if aim_row > 0:
+		y_force = upward_force * float(AIM_PULSE_SCALE.get(aim_row, 1.0))
+
+	var aim_point := _pigeon_aim_world_point(aim_column, aim_row, body.global_position.y)
+	var dx: float = aim_point.x - body.global_position.x
+	var dz: float = aim_point.z - body.global_position.z
+
+	var x_impulse := 0.0
+	if absf(dz) > 0.001:
+		# Keep depth impulse fixed; steer X so the path lines up with the aim point.
+		x_impulse = pigeon_depth_impulse * (dx / dz)
+	elif absf(dx) > 0.001:
+		x_impulse = dx
+
+	return Vector3(x_impulse, y_force, pigeon_depth_impulse) * pulse_magnitude
+
+
+## Distant aim point for a column on the pigeon fan (optionally at an A/B/C height).
+func _pigeon_aim_world_point(column: int, aim_row: int, fallback_y: float) -> Vector3:
+	var clamped := clampi(column, 1, COLUMN_COUNT)
+	var y: float = fallback_y
+	if aim_row > 0:
+		y = float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1]))
+
+	var marker := _get_pigeon_aim_marker(clamped)
+	if marker:
+		return Vector3(marker.global_position.x, y, marker.global_position.z)
+
+	# Reference construction: Vector3.ZERO → rotate Y by fan angle → push out.
+	var angle := _pigeon_column_fan_angle(clamped)
+	var offset := Vector3(sin(angle), 0.0, cos(angle)) * pigeon_aim_reference_depth
+	return Vector3(offset.x, y, offset.z)
+
+
+## Column 1 → +17°, column 8 → -17°, linear in between.
+func _pigeon_column_fan_angle(column: int) -> float:
+	var clamped := clampi(column, 1, COLUMN_COUNT)
+	var t := float(clamped - 1) / float(COLUMN_COUNT - 1)
+	return deg_to_rad(lerpf(pigeon_fan_half_angle_deg, -pigeon_fan_half_angle_deg, t))
+
+
+func _get_pigeon_aim_marker(column: int) -> Marker3D:
+	if pigeon_aim_markers == null:
+		pigeon_aim_markers = get_node_or_null('../PigeonAimMarkers') as Node3D
+	if pigeon_aim_markers == null:
+		return null
+
+	var by_name: Node = pigeon_aim_markers.get_node_or_null(str(column))
+	if by_name is Marker3D:
+		return by_name
+
+	var markers: Array[Marker3D] = []
+	for child in pigeon_aim_markers.get_children():
+		if child is Marker3D:
+			markers.append(child)
+	if column >= 1 and column <= markers.size():
+		return markers[column - 1]
+	return null
+
+
+func _x_to_nearest_column(x: float) -> int:
+	var best := 1
+	var best_dist := absf(x - column_to_x(1))
+	for col in range(2, COLUMN_COUNT + 1):
+		var dist := absf(x - column_to_x(col))
+		if dist < best_dist:
+			best_dist = dist
+			best = col
+	return best
 
 
 ## Same pulse power (upward_force * pulse_magnitude). Aimed rocks steer toward A/B/C cells.

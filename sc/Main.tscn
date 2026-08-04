@@ -498,6 +498,9 @@ shading_mode = 0
 material = SubResource("StandardMaterial3D_r5w5l")
 size = Vector3(0.05, 30, 0.05)
 
+[sub_resource type="BoxMesh" id="BoxMesh_8twtg"]
+size = Vector3(5, 5, 5)
+
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
 intro_title_screen = true
@@ -628,10 +631,38 @@ loop = false
 flight_speed_curve = SubResource("Curve_7gshx")
 speed_multiplier = 60.0
 
-[node name="Rocks" type="Node3D" parent="." unique_id=859468523]
+[node name="PigeonAimMarkers" type="Node3D" parent="." unique_id=1888004100]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="1" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004101]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.1567, 0, 43.0337)
+
+[node name="2" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004102]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.4657, 0, 43.9932)
+
+[node name="3" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.7068, 0, 44.6367)
+
+[node name="4" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004104]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9068, 0, 44.9596)
+
+[node name="5" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004105]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9068, 0, 44.9596)
+
+[node name="6" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004106]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7068, 0, 44.6367)
+
+[node name="7" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.4657, 0, 43.9932)
+
+[node name="8" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.1567, 0, 43.0337)
+
+[node name="Rocks" type="Node3D" parent="." unique_id=859468523 node_paths=PackedStringArray("pigeon_aim_markers")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
 randomize_later_waves = false
+pigeon_aim_markers = NodePath("../PigeonAimMarkers")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
 root_node = NodePath("../Shover")
@@ -2278,6 +2309,14 @@ no_depth_test = true
 fixed_size = true
 text = "C"
 font_size = 363
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=804874602]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -63)
+mesh = SubResource("BoxMesh_8twtg")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1858634427]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -63)
+mesh = SubResource("BoxMesh_8twtg")
 
 [connection signal="finished" from="Music/Randomiser" to="Music" method="_on_randomiser_finished"]
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
