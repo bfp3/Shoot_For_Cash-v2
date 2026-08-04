@@ -67,6 +67,9 @@ var pineapple_mode := false
 
 var egg_pulse : Egg
 
+## When true, missed rocks in the active round do not award strikes (`no-lives` keyword).
+var no_lives_this_round := false
+
 enum RoundState {
 	INACTIVE,
 	CHECK_EVENTS,
@@ -301,6 +304,7 @@ func finish_level_editor_test_round() -> void:
 	bonus_oranges_ready = false
 	orange_active = 0
 	game_over_triggered = false
+	no_lives_this_round = false
 	gl_PlayerState.dataset.total_current_strikes = 0
 	gl_PlayerState.round_finished = false
 	if wave_progress_feedback and wave_progress_feedback.has_method("reset_strikes"):
@@ -354,6 +358,24 @@ func check_round_for_strikes() -> void:
 	current_round = current_sequence_index + 1
 	wave_progress_feedback.reset_strikes()
 	gl_PlayerState.dataset.total_current_strikes = 0
+
+
+## Reads round modifiers like `no-lives` from the active sequence entry only.
+func apply_current_round_modifiers() -> void:
+	no_lives_this_round = false
+	if current_rock_sequence.is_empty():
+		return
+	if current_sequence_index < 0 or current_sequence_index >= current_rock_sequence.size():
+		return
+	var round_data = current_rock_sequence[current_sequence_index]
+	if round_data is Dictionary:
+		no_lives_this_round = bool(round_data.get('no_lives', false))
+		if no_lives_this_round:
+			print('RoundManager: no-lives active for this round only')
+
+
+func is_current_round_no_lives() -> bool:
+	return no_lives_this_round
 
 
 func handle_rock_missed() -> void:
@@ -534,6 +556,7 @@ func update_round_start() -> void:
 	current_wave = 0
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
+	apply_current_round_modifiers()
 	
 	# If we are in the starting world, don't continue further
 	if gl_PlayerState.dataset.level_name == 'start':
@@ -771,6 +794,7 @@ func update_tally_end() -> void:
 
 	
 func update_shop_start() -> void:
+	no_lives_this_round = false
 	EventBus.instance.open_shop.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	$Gold_sfx.pitch_scale = 0.7

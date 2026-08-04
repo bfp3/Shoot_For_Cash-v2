@@ -233,6 +233,12 @@ func log_rock_missed(item : String = '') -> void:
 
 
 func add_strike() -> void:
+	# `no-lives` on the active round only — never a global / permanent disable.
+	var round_manager = get_tree().get_first_node_in_group('round_manager')
+	if round_manager != null and round_manager.has_method('is_current_round_no_lives'):
+		if round_manager.is_current_round_no_lives():
+			return
+
 	dataset.total_current_strikes += 1
 	if dataset.total_current_strikes >= 3:
 		EventBus.instance.has_hit_three_strikes.emit()

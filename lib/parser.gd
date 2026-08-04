@@ -73,13 +73,16 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## rock / rock-black / rock-pigeon: {cmd, column, aim_row, aim_column, param}
+## rock / rock-black / rock-pigeon / red_rock_error: {cmd, column, aim_row, aim_column, param}
 ##   column -1 means random. Aim cell (e.g. A8) is optional; 0/0 means none.
 ##   If only an aim cell is given (`rock A8`), spawn column defaults to 1.
 ##   rock-pigeon → RockSize.SMALL_2 (launches away from camera).
+##   red_rock_error → RockSize.RED_ROCK_ERROR (editor/parse error marker).
 ## balloon: {cmd, row, column, param} — row 1=A, 2=B, 3=C; defaults to A1.
 ## wait: {cmd, ms} — delay before the next rock; defaults to 100ms.
-## repeat: {cmd, count} — wave count for the round; defaults to 3.
+## repeat: {cmd, count} — wave count for the round; defaults to 1.
+## no-lives: {cmd} — this round only; missed rocks do not award strikes.
+## Unknown commands become red_rock_error so bad editor lines are visible in-game.
 ## Commands and row letters are case-insensitive.
 func parse_spawn_command(token: String) -> Dictionary:
 	var parts: PackedStringArray = token.split(' ', false)
@@ -88,8 +91,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon':
-			print(parts)
+		'rock', 'rock-black', 'rock-pigeon', 'red_rock_error':
 			return _parse_rock_command(cmd, parts)
 
 		'balloon':
@@ -101,16 +103,25 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'repeat':
 			return _parse_repeat_command(parts)
 
+		'no-lives':
+			return {'cmd': 'no-lives'}
+
 		_:
-			print(parts)
-			return _parse_rock_command('rock', ["rock", "1", "c1"])
+			push_warning("parser: unknown spawn command '%s' — using red_rock_error" % token)
+			return {
+				'cmd': 'red_rock_error',
+				'column': 3,
+				'aim_row': 3,
+				'aim_column': 3,
+				'param': token,
+			}
 
 
 const DEFAULT_ROUND_REPEAT := 1
-const DEFAULT_WAIT_MS := 100
+const DEFAULT_WAIT_MS := 1000
 
 
-## rock / rock-black / rock-pigeon / rock 1 A8 / rock A8 (column defaults to 1 when only aim is given).
+## rock / rock-black / rock-pigeon / red_rock_error / rock 1 A8 / rock A8 (column defaults to 1 when only aim is given).
 func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': cmd,
@@ -264,12 +275,13 @@ func parse_round_text(text: String) -> Dictionary:
 		return {
 			"spawns": [],
 			"repeat": DEFAULT_ROUND_REPEAT,
+			"no_lives": false,
 		}
 	return sequences[0]
 
 
 ## Builds one round dict per round, in file order:
-## { "spawns": [spawn dicts...], "repeat": wave_count }
+## { "spawns": [spawn dicts...], "repeat": wave_count, "no_lives": bool }
 ## Pass an empty island_name to include every island in the loaded file.
 func get_rock_sequences(island_name: String = '') -> Array:
 	var rounds: Dictionary = {}
@@ -284,6 +296,7 @@ func get_rock_sequences(island_name: String = '') -> Array:
 			rounds[key] = {
 				'spawns': [],
 				'repeat': DEFAULT_ROUND_REPEAT,
+				'no_lives': false,
 			}
 			order.append(key)
 
@@ -291,8 +304,13 @@ func get_rock_sequences(island_name: String = '') -> Array:
 		if parsed.is_empty():
 			continue
 
-		if String(parsed.get('cmd', '')) == 'repeat':
+		var parsed_cmd := String(parsed.get('cmd', ''))
+		if parsed_cmd == 'repeat':
 			rounds[key].repeat = int(parsed.get('count', DEFAULT_ROUND_REPEAT))
+			continue
+
+		if parsed_cmd == 'no-lives':
+			rounds[key].no_lives = true
 			continue
 
 		rounds[key].spawns.append(parsed)

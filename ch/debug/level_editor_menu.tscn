@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cbvndmktrk545" path="res://ch/debug/level_editor_menu.gd" id="1_script"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_38qoy"]
+
 [node name="LevelEditorMenu" type="Control" unique_id=1808484863]
 layout_mode = 3
 anchors_preset = 15
@@ -32,7 +34,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Cluster" type="Control" parent="Center" unique_id=1888002100]
-custom_minimum_size = Vector2(1016, 520)
+custom_minimum_size = Vector2(1016, 720)
 layout_mode = 2
 mouse_filter = 2
 
@@ -66,7 +68,7 @@ text = "[color=#C70102]COMMANDS[/color]
 
 [color=#C70102]rock-pigeon[/color] rock that flies into the distance
 
-[color=#C70102]wait[/color] / [color=#C70102]wait 200[/color] delay before next action default 100ms
+[color=#C70102]wait[/color] / [color=#C70102]wait 200[/color] delay before next action default 1000ms
 
 [color=#C70102]repeat[/color] / [color=#C70102]repeat 3[/color] how many waves in the round default 3
 
@@ -140,10 +142,11 @@ fit_content = true
 
 [node name="ScriptEdit" type="TextEdit" parent="Center/Cluster/MainPanel/VBox" unique_id=857673602]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 520)
 layout_mode = 2
 size_flags_vertical = 3
-text = "rock 3 a3
+text = "no-lives
+rock 3 a3
 repeat 3"
 placeholder_text = "rock
 rock-black 2
@@ -156,7 +159,7 @@ scroll_smooth = true
 [node name="Buttons" type="HBoxContainer" parent="Center/Cluster/MainPanel/VBox" unique_id=1393430845]
 layout_mode = 2
 theme_override_constants/separation = 16
-alignment = 1
+alignment = 2
 
 [node name="BackButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=385973197]
 unique_name_in_owner = true
@@ -164,6 +167,11 @@ custom_minimum_size = Vector2(160, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 52
 text = "BACK"
+
+[node name="VSeparator" type="VSeparator" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=263273983]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_38qoy")
 
 [node name="TestButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=1956887159]
 unique_name_in_owner = true
@@ -176,9 +184,9 @@ text = "TEST"
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 296.0
-offset_top = 536.0
+offset_top = 656.0
 offset_right = 1016.0
-offset_bottom = 669.0
+offset_bottom = 789.0
 
 [node name="KeysVBox" type="VBoxContainer" parent="Center/Cluster/KeysPanel" unique_id=1888002003]
 layout_mode = 2

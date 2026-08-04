@@ -195,6 +195,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.HAZARD
 			'rock-pigeon':
 				return RockInstance.RockSize.SMALL_2
+			'red_rock_error':
+				return RockInstance.RockSize.RED_ROCK_ERROR
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -206,7 +208,12 @@ func _spawn_entry_to_rock_type(entry) -> int:
 
 
 func _is_launchable_spawn_cmd(cmd: String) -> bool:
-	return cmd == 'rock' or cmd == 'rock-black' or cmd == 'rock-pigeon'
+	return (
+		cmd == 'rock'
+		or cmd == 'rock-black'
+		or cmd == 'rock-pigeon'
+		or cmd == 'red_rock_error'
+	)
 
 
 func update_pulse_rocks() -> void:

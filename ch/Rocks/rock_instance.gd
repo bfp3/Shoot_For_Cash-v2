@@ -35,7 +35,8 @@ enum RockSize {
 	HAZARD,
 	HUGE,
 	HAZARD_SMALL,
-	MONEY_ROCK
+	MONEY_ROCK,
+	RED_ROCK_ERROR
 }
 
 enum State {
@@ -440,6 +441,37 @@ func setup_rock_type() -> void:
 			gl_PlayerState.log_hazard()
 			linear_damp = 1.0
 			force_mult = [1,2]
+			
+			
+			
+		RockSize.RED_ROCK_ERROR:
+			# Base values
+			current_rock_type 	= "Red Rock"
+			rock_type_name 		= "rock_type_9"
+			gl_PlayerState.log_white_rock()
+			var base_health := 0 #int(gl_DataSet.get_value("rock_type_9", 1))
+			var base_cash   := int(gl_DataSet.get_value("rock_type_9", 0))
+			var base_scale  := Vector3.ONE * 0.35
+
+			# Random subtype: 1x / 2x / 3x
+			#var size_multiplier : int = [1, 2].pick_random() #, 3].pick_random()
+			var size_multiplier_float : float = 1.2 #randf_range (1.2, 1.35)
+			var size_multiplier_int : int = 1
+			$Mesh.scale = Vector3.ONE
+			health = base_health * size_multiplier_int
+			cash_value = base_cash # * size_multiplier
+			max_health = health
+			red_rock.visible = true
+			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
+			current_mesh = red_rock
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = base_scale * size_multiplier_float
+			rock_type_gravity_scale = 2.5 # + (size_multiplier / 10)
+			linear_damp = 1.5
+			force_mult.clear()
+			force_mult = [0, 1]
+			force_mult_index = 0
+
 
 func reset_stats() -> void:
 	ignores_x_out_of_bounds = false
