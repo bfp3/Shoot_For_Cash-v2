@@ -618,7 +618,7 @@ func restart() -> void:
 	enter_state(State.ACTIVE)
 	
 	await get_tree().create_timer(2.0).timeout
-	scale = Vector3.ONE
+	scale = Vector3.ONE * 1.7
 
 	show()
 	$Mesh.show()

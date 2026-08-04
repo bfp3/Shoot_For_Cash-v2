@@ -208,6 +208,13 @@ func begin_level_editor_test(text: String) -> void:
 		int(round_data.get("spawns", []).size()),
 	])
 
+	# Shop balloons aren't added during editor tests — spawn this round's balloons now.
+	# Clear any leftovers from the shop / previous test first (`add_balloon` early-outs if started).
+	if balloon_container:
+		if balloon_container.started or balloon_container.balloons_in_play > 0:
+			await balloon_container.end_round()
+		await balloon_container.add_balloon(round_data.get("spawns", []))
+
 	enter_state(RoundState.SHOP_END)
 
 
@@ -310,8 +317,9 @@ func finish_level_editor_test_round() -> void:
 	if wave_progress_feedback and wave_progress_feedback.has_method("reset_strikes"):
 		wave_progress_feedback.reset_strikes()
 
+	# Fly remaining test balloons away (same end-of-round exit as normal play).
 	if balloon_container:
-		balloon_container.end_round()
+		await balloon_container.end_round()
 
 	_restore_level_editor_sequence()
 	level_editor_test_active = false
