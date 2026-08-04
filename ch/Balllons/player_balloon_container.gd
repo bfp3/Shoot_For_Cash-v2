@@ -55,7 +55,9 @@ func move_all_ballons_back() -> void:
 
 func add_balloon_replacement() -> void:
 	current_balloon = null
-		
+	
+	const balloon_mov_dur := 1.0
+	
 	#await get_tree().create_timer(2.0).timeout
 	for i in get_children():
 		if i is StaticBody3D:
@@ -65,7 +67,7 @@ func add_balloon_replacement() -> void:
 				var tween = create_tween()
 				tween.set_ease(Tween.EASE_IN_OUT)
 				tween.set_trans(Tween.TRANS_SINE)
-				tween.tween_property(i, "global_position", i.start_pos, 4.0).as_relative()
+				tween.tween_property(i, "global_position", i.start_pos,balloon_mov_dur).as_relative()
 
 				break
 

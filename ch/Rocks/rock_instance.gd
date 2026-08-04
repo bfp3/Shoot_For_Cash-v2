@@ -17,14 +17,14 @@ var current_particles : GPUParticles3D = null
 const ROCK_01 = preload('uid://c2pmyrm3e4ty5')
 const ROCK_02 = preload('uid://84ianb3xwjp7')
 const ROCK_03 = preload('uid://lxbrgqaovv68')
-#const ROCK_04 = preload('uid://g2r7kpvm47k0')
+#const SMOKEBOMB_MESH = preload('uid://mk0dna4yesux')
 
 
 const ROCK_MESHES = [
 	ROCK_01,
 	ROCK_02,
 	ROCK_03,
-	#ROCK_04
+	#SMOKEBOMB_MESH
 ]
 
 enum RockSize {
@@ -36,7 +36,8 @@ enum RockSize {
 	HUGE,
 	HAZARD_SMALL,
 	MONEY_ROCK,
-	RED_ROCK_ERROR
+	RED_ROCK_ERROR,
+	SMOKEBOMB
 }
 
 enum State {
@@ -66,6 +67,8 @@ var rock_has_been_logged := false
 @onready var gold_rock: MeshInstance3D = %Gold_rock
 @onready var huge_rock: MeshInstance3D = %Huge_rock
 @onready var red_rock: MeshInstance3D = %Red_rock
+@onready var smokebomb: MeshInstance3D = %Smokebomb
+
 @onready var hazard_large: MeshInstance3D = %Hazard_large
 
 @onready var current_mesh: MeshInstance3D = small_rock
@@ -244,6 +247,7 @@ func hide_all_meshes() -> void:
 	huge_rock.visible 			= false
 	hazard_large.visible 		= false
 	red_rock.visible			= false
+	smokebomb.visible			= false
 
 
 
@@ -449,7 +453,7 @@ func setup_rock_type() -> void:
 			current_rock_type 	= "Red Rock"
 			rock_type_name 		= "rock_type_9"
 			gl_PlayerState.log_white_rock()
-			var base_health := 0 #int(gl_DataSet.get_value("rock_type_9", 1))
+			var base_health :=  int(gl_DataSet.get_value("rock_type_9", 1))
 			var base_cash   := int(gl_DataSet.get_value("rock_type_9", 0))
 			var base_scale  := Vector3.ONE * 0.35
 
@@ -471,11 +475,44 @@ func setup_rock_type() -> void:
 			force_mult.clear()
 			force_mult = [0, 1]
 			force_mult_index = 0
+			
+		
+		RockSize.SMOKEBOMB:
+			# Base values
+			current_rock_type 	= "Smokebomb"
+			rock_type_name 		= "rock_type_8"
+			gl_PlayerState.log_white_rock()
+			var base_health := int(gl_DataSet.get_value("rock_type_8", 1))
+			var base_cash   := int(gl_DataSet.get_value("rock_type_8", 0))
+			var base_scale  := Vector3.ONE * 0.35
+
+			# Random subtype: 1x / 2x / 3x
+			#var size_multiplier : int = [1, 2].pick_random() #, 3].pick_random()
+			var size_multiplier_float : float = 3.0 #randf_range (1.2, 1.35)
+			var size_multiplier_int : int = 1
+			$Mesh.scale = Vector3.ONE
+			health = base_health * size_multiplier_int
+			cash_value = base_cash # * size_multiplier
+			max_health = health
+			smokebomb.visible = true
+			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
+			current_mesh = smokebomb
+			#assign_random_mesh(current_mesh)
+			current_mesh.scale = base_scale * size_multiplier_float
+			rock_type_gravity_scale = 2.5 # + (size_multiplier / 10)
+			linear_damp = 1.5
+			force_mult.clear()
+			force_mult = [0, 1]
+			force_mult_index = 0
+			
+		
+		
 
 
 func reset_stats() -> void:
 	ignores_x_out_of_bounds = false
 	$Mesh.scale = Vector3.ONE
+	$Mesh.position = Vector3.ZERO
 	$Marked.hide()
 	$Freeze.hide()
 	$Mesh.hide()
@@ -744,8 +781,38 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		return
 	
 	
+	if rock_type == RockSize.SMOKEBOMB:
+		apply_torque_impulse(Vector3.BACK * 100.0)
+		play_hit_sfx()
+		#%launch_sound.play()
+		%progress_rock_sound.play()
+		%launched_into_distance_3d.play(0.25)
+		fly_off_into_distance()
+		var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property($Mesh, "position:y", 0.5, 0.5)
+		return
+		
 	#Rock Destroyed Process
 	start_destroyed_process()
+	
+	
+	
+func fly_off_into_distance() -> void:
+	ignores_x_out_of_bounds = true
+	
+	var strength : float = [6.0].pick_random()
+	var x_direction := 0.0
+	var player := get_tree().get_first_node_in_group('Player')
+	
+	if !player:
+		apply_central_impulse(Vector3(x_direction,-0.0,35) * strength)
+
+	else:
+		#strength = 4.0
+		var dir : Vector3= self.global_position - player.global_position.normalized()
+		dir.y /= 3
+		apply_central_impulse(dir * strength)
+	
 	
 	
 func add_to_rocks_round() -> void:
@@ -850,6 +917,9 @@ func start_destroyed_process() -> void:
 	if cash_value == 2:
 		hazard_aoe_delayed()
 	
+	if rock_type == RockSize.SMOKEBOMB:
+		%hazard_hit_sound.play()
+		
 	was_hit_tween()
 	
 
@@ -863,7 +933,7 @@ func start_destroyed_process() -> void:
 	
 
 	round_manager.bullet_active = false
-	
+	$Mesh.position = Vector3.ZERO
 
 func play_hit_sfx() -> void:
 	$take_damage_sfx.volume_db = randf_range(-25.0, -20.0)
@@ -888,7 +958,18 @@ func play_destroy_sfx() -> void:
 func _on_start_falling_timer_timeout() -> void:
 	falling = true
 	
-	#if current_rock_type == 'Gold':
+	if rock_type == RockSize.SMOKEBOMB:
+		var damage_mesh = current_mesh.get_child(0) 
+		for i in range(3):
+			damage_mesh.show()
+			await get_tree().create_timer(0.1, false).timeout
+			damage_mesh.hide()
+			await get_tree().create_timer(0.1, false).timeout
+			
+		damage_mesh.show()
+		await get_tree().create_timer(0.1, false).timeout
+		damage_mesh.hide()
+		start_destroyed_process()
 		#gravity_scale = 0.4
 		#return
 
@@ -896,7 +977,7 @@ func _on_start_falling_timer_timeout() -> void:
 func assign_random_mesh(mesh_instance: MeshInstance3D) -> void:
 	if mesh_instance == null:
 		return
-	
+		
 	var rand_selection = ROCK_MESHES.pick_random()
 	mesh_instance.mesh = rand_selection
 	mesh_instance.get_child(0).mesh = rand_selection
@@ -1017,6 +1098,11 @@ func hazard_aoe_delayed() -> void:
 
 
 func smoke_particles() -> void:
+	
+	if rock_type == RockSize.SMOKEBOMB:
+		%Smokebomb_AoE.global_position = global_position
+		%Smokebomb_AoE.play_particles = true
+		
 	if rock_type_name.contains('hazard'):
 		$Hazard_AoE2.global_position = global_position
 		$Hazard_AoE2.play_particles = true

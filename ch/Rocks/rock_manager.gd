@@ -37,6 +37,11 @@ var convergence_x := 0.0
 var manual_rock_sequence : Array = [4]
 ## Seconds to wait BEFORE launching each rock (index 0 is usually 0).
 var _launch_delays_sec : Array = []
+## Balloons that appear after a `wait` — spawned mid-pulse at these absolute times.
+## Also holds `pineapple` launches (any time, including t=0).
+## Items: { "kind": "balloon"|"pineapple", "entry": Dictionary, "time_sec": float }
+var _timed_event_schedule : Array = []
+var _timed_event_epoch := 0
 
 const COLUMN_1_X := 7.0
 const COLUMN_STEP := 2.0
@@ -146,7 +151,94 @@ func start_manual_rock_round(sequence: Array) -> void:
 
 	manual_rock_sequence = rocks
 	_launch_delays_sec = delays_sec
+	_timed_event_schedule = _build_timed_event_schedule(sequence)
 	enter_state(State.PREPARE_ROCKS)
+
+
+## Mid-round balloons (after a `wait`) and pineapples share the rock absolute timeline.
+## Pending waits are NOT consumed by balloons/pineapples (rock stagger stays unchanged).
+func _build_timed_event_schedule(sequence: Array) -> Array:
+	var schedule: Array = []
+	var abs_t := 0.0
+	var pending_wait_ms = null
+	var is_first_rock := true
+	var seen_wait := false
+
+	for entry in sequence:
+		if entry is Dictionary:
+			var cmd: String = String(entry.get('cmd', '')).to_lower()
+			if cmd == 'wait':
+				seen_wait = true
+				pending_wait_ms = int(entry.get('ms', DEFAULT_LAUNCH_WAIT_MS))
+				continue
+
+			if cmd == 'balloon':
+				if seen_wait:
+					var balloon_extra := 0.0
+					if pending_wait_ms != null:
+						balloon_extra = float(pending_wait_ms) / 1000.0
+					schedule.append({
+						'kind': 'balloon',
+						'entry': entry,
+						'time_sec': abs_t + balloon_extra,
+					})
+				continue
+
+			if cmd == 'pineapple':
+				var pineapple_extra := 0.0
+				if pending_wait_ms != null:
+					pineapple_extra = float(pending_wait_ms) / 1000.0
+				schedule.append({
+					'kind': 'pineapple',
+					'entry': entry,
+					'time_sec': abs_t + pineapple_extra,
+				})
+				continue
+
+			if not _is_launchable_spawn_cmd(cmd):
+				continue
+
+			if is_first_rock:
+				is_first_rock = false
+			else:
+				var wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
+				abs_t += float(wait_ms) / 1000.0
+			pending_wait_ms = null
+			continue
+
+		if typeof(entry) == TYPE_INT:
+			var code: int = entry
+			# Legacy balloon codes after a wait → mid-round.
+			if code == 399 or (code > 300 and code <= 400):
+				if seen_wait:
+					var legacy_extra := 0.0
+					if pending_wait_ms != null:
+						legacy_extra = float(pending_wait_ms) / 1000.0
+					var legacy_entry: Dictionary
+					if code == 399:
+						legacy_entry = {'cmd': 'balloon', 'all': true}
+					else:
+						legacy_entry = {
+							'cmd': 'balloon',
+							'row': int((code - 300) / 10),
+							'column': (code - 300) % 10,
+						}
+					schedule.append({
+						'kind': 'balloon',
+						'entry': legacy_entry,
+						'time_sec': abs_t + legacy_extra,
+					})
+				continue
+			if code >= 300:
+				continue
+			if is_first_rock:
+				is_first_rock = false
+			else:
+				var legacy_wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
+				abs_t += float(legacy_wait_ms) / 1000.0
+			pending_wait_ms = null
+
+	return schedule
 	
 func update_prepare_rocks() -> void:
 	
@@ -197,6 +289,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.SMALL_2
 			'red_rock_error':
 				return RockInstance.RockSize.RED_ROCK_ERROR
+			'smokebomb':
+				return RockInstance.RockSize.SMOKEBOMB
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -213,6 +307,7 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-black'
 		or cmd == 'rock-pigeon'
 		or cmd == 'red_rock_error'
+		or cmd == 'smokebomb'
 	)
 
 
@@ -223,8 +318,56 @@ func update_pulse_rocks() -> void:
 
 	_bounds_check_accum = 0.0
 	_bounds_check_active = true
-	
+
+	_run_timed_event_spawns()
 	bounce_rocks()
+
+
+func _run_timed_event_spawns() -> void:
+	if _timed_event_schedule.is_empty():
+		return
+
+	var balloon_container := get_tree().get_first_node_in_group('balloon_container')
+	var pineapple_launcher: Node = null
+	for node in get_tree().get_nodes_in_group('pineapple_container'):
+		if node.has_method('launch_from_spawn_entry'):
+			pineapple_launcher = node
+			break
+
+	_timed_event_epoch += 1
+	var epoch := _timed_event_epoch
+	var schedule: Array = _timed_event_schedule.duplicate(true)
+	var elapsed := 0.0
+
+	for item in schedule:
+		if epoch != _timed_event_epoch:
+			return
+		if current_state != State.PULSE_ROCKS:
+			return
+
+		var time_sec: float = float(item.get('time_sec', 0.0))
+		var wait_for: float = time_sec - elapsed
+		if wait_for > 0.0:
+			await get_tree().create_timer(wait_for, false).timeout
+			elapsed += wait_for
+
+		if epoch != _timed_event_epoch:
+			return
+		if current_state != State.PULSE_ROCKS:
+			return
+
+		var kind: String = String(item.get('kind', ''))
+		var entry = item.get('entry', {})
+		if not (entry is Dictionary):
+			continue
+
+		match kind:
+			'balloon':
+				if balloon_container and balloon_container.has_method('spawn_balloon_entry'):
+					await balloon_container.spawn_balloon_entry(entry)
+			'pineapple':
+				if pineapple_launcher and pineapple_launcher.has_method('launch_from_spawn_entry'):
+					pineapple_launcher.launch_from_spawn_entry(entry)
 
 
 func check_rocks_out_of_bounds() -> void:
@@ -400,6 +543,7 @@ func pick_convergence_point() -> void:
 
 func update_round_end() -> void:
 	_bounds_check_active = false
+	_timed_event_epoch += 1
 	$pitch_shift_rock_sound.pitch_scale = 0.85
 	#$pitch_shift_rock_sound.volume_db = -9.0
 	update_gravity(1.0)

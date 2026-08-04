@@ -73,12 +73,16 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## rock / rock-black / rock-pigeon / red_rock_error: {cmd, column, aim_row, aim_column, param}
+## rock / rock-black / rock-pigeon / red_rock_error / smokebomb: {cmd, column, aim_row, aim_column, param}
 ##   column -1 means random. Aim cell (e.g. A8) is optional; 0/0 means none.
 ##   If only an aim cell is given (`rock A8`), spawn column defaults to 1.
 ##   rock-pigeon → RockSize.SMALL_2 (launches away from camera).
 ##   red_rock_error → RockSize.RED_ROCK_ERROR (editor/parse error marker).
+##   smokebomb → RockSize.SMOKEBOMB.
 ## balloon: {cmd, row, column, param} — row 1=A, 2=B, 3=C; defaults to A1.
+## pineapple: {cmd, column, aim_row, aim_column} — column required for placement (default 1).
+##   `pineapple 1` launches straight up from column 1.
+##   `pineapple 1 A8` aims diagonally toward cell A8.
 ## wait: {cmd, ms} — delay before the next rock; defaults to 100ms.
 ## repeat: {cmd, count} — wave count for the round; defaults to 1.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
@@ -91,8 +95,15 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon', 'red_rock_error':
+		'rock', 'rock-black', 'rock-pigeon', 'red_rock_error', 'smokebomb':
 			return _parse_rock_command(cmd, parts)
+
+		'pineapple':
+			var pineapple := _parse_rock_command(cmd, parts)
+			# Bare `pineapple` / missing column → column 1 (straight up from lane 1).
+			if int(pineapple.get('column', -1)) < 1:
+				pineapple.column = 1
+			return pineapple
 
 		'balloon':
 			return _parse_balloon_command(parts)
@@ -117,11 +128,11 @@ func parse_spawn_command(token: String) -> Dictionary:
 			}
 
 
-const DEFAULT_ROUND_REPEAT := 1
+const DEFAULT_ROUND_REPEAT := 2
 const DEFAULT_WAIT_MS := 1000
 
 
-## rock / rock-black / rock-pigeon / red_rock_error / rock 1 A8 / rock A8 (column defaults to 1 when only aim is given).
+## rock / rock-black / rock-pigeon / red_rock_error / smokebomb / rock 1 A8 / rock A8 (column defaults to 1 when only aim is given).
 func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': cmd,

@@ -3,6 +3,10 @@ extends Node3D
 var balloons_in_play := 0
 var started := false
 const BALLOON_Z_FRONT := 22.5
+## How long intro (shop / pre-wait) balloons take to fly in.
+const BALLOON_APPROACH_DURATION := 4.0
+## Mid-round (after `wait`) balloons arrive this much faster.
+const BALLOON_MID_ROUND_APPROACH_SPEEDUP := 1.0
 
 # Column 1 -> -7, column 2 -> -5, ... column 8 -> 7 (mirrored vs RockManager)
 const BALLOON_COLUMN_1_X := 7.0
@@ -22,7 +26,7 @@ func _ready() -> void:
 func move_all_ballons_back() -> void:
 	for i in get_children():
 		if i is StaticBody3D:
-			i.global_position.z = i.start_pos.z - 27.0
+			i.global_position.z = i.start_pos.z - 20.0
 			i.hide()
 
 func balloon_column_to_x(column: int) -> float:
@@ -38,14 +42,16 @@ func balloon_lane_to_y(lane: int) -> float:
 	return LANE_Y[lane]
 
 func add_balloon(_balloon_array : Array) -> void:
-	var balloon_array = _balloon_array
-	
+	# Only balloons that appear before the first `wait` arrive at round/shop start.
+	# Balloons after a wait are spawned mid-round by RockManager.
+	var balloon_array := _balloons_before_first_wait(_balloon_array)
+
 	if balloon_array.is_empty():
 		return
-	
+
 	if started:
 		return
-		
+
 	started = true
 
 	# Collect balloon placements from spawn dicts and legacy int codes.
@@ -90,37 +96,79 @@ func add_balloon(_balloon_array : Array) -> void:
 	if placements.is_empty():
 		started = false
 		return
-	
+
 	var duration := 1.0
-	
+
 	for placement in placements:
 		duration = clamp(duration - 0.1, 0.2, 1.0)
-		var row: int = int(placement.row)
-		var column: int = int(placement.column)
+		await _spawn_one_balloon(int(placement.row), int(placement.column), duration, BALLOON_APPROACH_DURATION)
 
-		var target_x := balloon_column_to_x(column)
-		var target_y := balloon_lane_to_y(row)
 
-		var balloon := _get_next_available_balloon()
-		if balloon == null:
-			push_warning("BalloonManager: no available balloon for row %d column %d" % [row, column])
+## Balloons listed before the first `wait` in a round sequence (shop / round-start intros).
+func _balloons_before_first_wait(sequence: Array) -> Array:
+	var intro: Array = []
+	for entry in sequence:
+		if entry is Dictionary:
+			var cmd: String = String(entry.get('cmd', '')).to_lower()
+			if cmd == 'wait':
+				break
+			if cmd == 'balloon':
+				intro.append(entry)
 			continue
-		
-		balloons_in_play = clamp(balloons_in_play + 1, 0, get_children().size())
+		if typeof(entry) == TYPE_INT:
+			var code: int = entry
+			if code == 399 or (code > 300 and code <= 400):
+				intro.append(entry)
+	return intro
 
-		balloon.behind_player = false
-		balloon.show()
-		balloon.global_position.x = target_x
-		balloon.global_position.y = target_y
-		balloon.move_balloon_in_front_of_player()
 
-		var tween = create_tween()
-		tween.set_ease(Tween.EASE_IN_OUT)
-		tween.set_trans(Tween.TRANS_SINE)
-		tween.tween_interval(0.2)
-		tween.tween_property(balloon, "global_position:z", BALLOON_Z_FRONT, 5.0)
+## Mid-round spawn for a single `balloon` command (after a wait).
+func spawn_balloon_entry(entry: Dictionary) -> void:
+	if String(entry.get('cmd', '')).to_lower() != 'balloon':
+		return
 
-		await get_tree().create_timer(duration, false).timeout
+	started = true
+	var approach := maxf(BALLOON_APPROACH_DURATION - BALLOON_MID_ROUND_APPROACH_SPEEDUP, 0.5)
+
+	if bool(entry.get('all', false)):
+		for row in LANE_Y.keys():
+			for column in range(1, BALLOON_COLUMN_COUNT + 1):
+				await _spawn_one_balloon(int(row), column, 0.15, approach)
+		return
+
+	await _spawn_one_balloon(
+		int(entry.get('row', 1)),
+		int(entry.get('column', 1)),
+		0.0,
+		approach
+	)
+
+
+func _spawn_one_balloon(row: int, column: int, stagger_sec: float = 0.0, approach_duration: float = BALLOON_APPROACH_DURATION) -> void:
+	var target_x := balloon_column_to_x(column)
+	var target_y := balloon_lane_to_y(row)
+
+	var balloon := _get_next_available_balloon()
+	if balloon == null:
+		push_warning("BalloonManager: no available balloon for row %d column %d" % [row, column])
+		return
+
+	balloons_in_play = clamp(balloons_in_play + 1, 0, get_children().size())
+
+	balloon.behind_player = false
+	balloon.show()
+	balloon.global_position.x = target_x
+	balloon.global_position.y = target_y
+	balloon.move_balloon_in_front_of_player()
+
+	var tween = create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.tween_interval(0.2)
+	tween.tween_property(balloon, "global_position:z", BALLOON_Z_FRONT, approach_duration)
+
+	if stagger_sec > 0.0:
+		await get_tree().create_timer(stagger_sec, false).timeout
 
 
 func _get_next_available_balloon() -> StaticBody3D:
