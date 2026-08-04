@@ -198,10 +198,7 @@ func begin_level_editor_test(text: String) -> void:
 	current_round = 1
 	level_editor_open = false
 	level_editor_test_active = true
-	force_shop_open = false
-	wave_ending = false
-	player_failed = false
-	success = false
+	_reset_level_editor_round_runtime()
 
 	print("Level editor: starting test round (repeat=%s, spawns=%d)" % [
 		str(round_data.get("repeat", 3)),
@@ -209,6 +206,34 @@ func begin_level_editor_test(text: String) -> void:
 	])
 
 	enter_state(RoundState.SHOP_END)
+
+
+## Clear leftovers from the previous test so the next TEST doesn't instantly fail
+## (e.g. total_current_strikes still at 3 — tests skip the shop SHOP_START reset).
+func _reset_level_editor_round_runtime() -> void:
+	force_shop_open = false
+	wave_ending = false
+	player_failed = false
+	success = false
+	game_over_triggered = false
+	bullet_active = false
+	bullet_active_counter = 0.0
+	bonus_oranges_ready = false
+	orange_active = 0
+	pineapple_mode = false
+
+	gl_PlayerState.round_finished = false
+	gl_PlayerState.dataset.total_current_strikes = 0
+	gl_PlayerState.dataset.total_rocks_in_round = 0
+	gl_PlayerState.dataset.total_rocks_in_round_remaining = 0
+	gl_PlayerState.dataset.total_white_rocks = 0
+	gl_PlayerState.dataset.total_rocks_destroyed = 0
+	gl_PlayerState.dataset.total_hazards = 0
+
+	if wave_progress_feedback and wave_progress_feedback.has_method("reset_strikes"):
+		wave_progress_feedback.reset_strikes()
+	if rocks_container:
+		rocks_container.reset_all_rocks()
 
 
 ## Backspace during a test round — abort and return to the editor with text kept.
@@ -266,6 +291,11 @@ func finish_level_editor_test_round() -> void:
 	current_wave = 0
 	bonus_oranges_ready = false
 	orange_active = 0
+	game_over_triggered = false
+	gl_PlayerState.dataset.total_current_strikes = 0
+	gl_PlayerState.round_finished = false
+	if wave_progress_feedback and wave_progress_feedback.has_method("reset_strikes"):
+		wave_progress_feedback.reset_strikes()
 
 	if balloon_container:
 		balloon_container.end_round()

@@ -210,6 +210,11 @@ func log_rocks(_total_rocks : int, rock_type_name : String) -> void:
 	dataset.total_rocks_in_round_remaining += 1
 	
 func log_rock_missed(item : String = '') -> void:
+	# Hazards are never added to total_rocks_in_round_remaining (see log_rocks).
+	# If they still decrement it on splash/OOB, a batch of hazards can zero out
+	# remaining and end the wave while real rocks are still in the air / waiting to launch.
+	if item.contains('hazard'):
+		return
 
 	dataset.total_rocks_in_round_remaining -= 1
 	
