@@ -125,6 +125,10 @@ billboard_keep_scale = true
 [sub_resource type="QuadMesh" id="QuadMesh_0fxxt"]
 material = SubResource("StandardMaterial3D_e1cj4")
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_ltsxa"]
+height = 0.095
+radial_segments = 22
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2s6n3"]
 albedo_color = Color(0, 0, 0, 1)
 metallic = 1.0
@@ -1034,7 +1038,6 @@ collision_mask = 4
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.5
 angular_damp = 1.0
-constant_torque = Vector3(0.01, 0, 0)
 script = ExtResource("1_bc0l2")
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=291819753]
@@ -1083,6 +1086,36 @@ draw_pass_1 = SubResource("QuadMesh_ltsxa")
 [node name="TrailParticles" type="GPUParticles3D" parent="Mesh/small_rock" unique_id=767494089]
 unique_name_in_owner = true
 visible = false
+emitting = false
+amount = 100
+lifetime = 4.5
+preprocess = 1.0
+process_material = SubResource("ParticleProcessMaterial_7v60h")
+draw_pass_1 = SubResource("QuadMesh_0fxxt")
+
+[node name="clay_pigeon" type="MeshInstance3D" parent="Mesh" unique_id=130360754]
+unique_name_in_owner = true
+layers = 524288
+material_override = ExtResource("4_w8aba")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_ltsxa")
+
+[node name="damage_mesh" type="MeshInstance3D" parent="Mesh/clay_pigeon" unique_id=1404046946]
+transform = Transform3D(1.0999999, 0, 0, 0, 1.0999999, 0, 0, 0, 1.1, 0, 0, 0)
+visible = false
+layers = 524289
+material_override = ExtResource("8_eq13p")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_ltsxa")
+
+[node name="GoldParticles" type="GPUParticles3D" parent="Mesh/clay_pigeon" unique_id=2105579488]
+emitting = false
+amount = 3
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_herjc")
+draw_pass_1 = SubResource("QuadMesh_ltsxa")
+
+[node name="TrailParticles" type="GPUParticles3D" parent="Mesh/clay_pigeon" unique_id=1598403655]
 emitting = false
 amount = 100
 lifetime = 4.5

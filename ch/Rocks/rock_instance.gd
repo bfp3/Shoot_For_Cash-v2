@@ -62,6 +62,8 @@ var rock_has_been_logged := false
 @onready var mesh_container: Node3D = %Mesh
 
 @onready var small_rock: MeshInstance3D = %small_rock
+@onready var clay_pigeon: MeshInstance3D = %clay_pigeon
+
 @onready var medium_rock: MeshInstance3D = %medium_rock
 @onready var large_rock: MeshInstance3D = %Large_rock
 @onready var gold_rock: MeshInstance3D = %Gold_rock
@@ -163,6 +165,13 @@ func update_prepare_rock() -> void:
 	global_position.x = target_x_position
 	
 func update_active() -> void:
+	if rock_type != RockSize.SMALL_2:
+		constant_force.x = 0.01
+	
+	else:
+		constant_force.x = 0.01
+		rotation_degrees = Vector3.ZERO
+	
 	enable_collision()
 	add_to_rocks_round()
 	
@@ -241,6 +250,7 @@ func update_gravity(_gravity_scale : float) -> void:
 
 func hide_all_meshes() -> void:
 	small_rock.visible			= false
+	clay_pigeon.visible			= false
 	medium_rock.visible 		= false
 	gold_rock.visible			= false
 	large_rock.visible 			= false
@@ -298,7 +308,7 @@ func setup_rock_type() -> void:
 			current_particles.emitting = true
 			#%TrailParticles.emitting = true
 		
-		# 1
+		
 		RockSize.SMALL_2:
 			current_rock_type 	= "Pigeon"
 			rock_type_name 		= "rock_type_1"
@@ -306,24 +316,58 @@ func setup_rock_type() -> void:
 			gl_PlayerState.log_white_rock()
 			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
-			var base_scale  := Vector3.ONE * 0.35 * 2
+			var base_scale  := Vector3.ONE * 0.35
 
-			var size_multiplier_float : float = 2.4 #randf_range (1.2, 1.35) * 2
+			var size_multiplier_float : float = 1.4 #randf_range (1.2, 1.35) * 2
 			var size_multiplier_int : int = 2
 			$Mesh.scale = Vector3.ONE
 			health = 1 #base_health * size_multiplier_int
 			cash_value = base_cash # * size_multiplier
 			max_health = health
-			small_rock.visible = true
+			clay_pigeon.visible = true
 			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
-			current_mesh = small_rock
-			assign_random_mesh(current_mesh)
+			current_mesh = clay_pigeon
 			current_mesh.scale = base_scale * size_multiplier_float
 			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
 			linear_damp = 0.5
 			force_mult.clear()
 			force_mult = [3,4]
 			force_mult_index = 0
+		
+			current_particles = $Mesh/clay_pigeon/GoldParticles
+			current_particles.amount += 1
+			current_particles.amount -= 1
+			current_particles.emitting = true
+			#%TrailParticles.emitting = true
+		
+		
+		
+		# 1
+		#RockSize.SMALL_2:
+			#current_rock_type 	= "Pigeon"
+			#rock_type_name 		= "rock_type_1"
+			#ignores_x_out_of_bounds = true
+			#gl_PlayerState.log_white_rock()
+			#var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
+			#var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
+			#var base_scale  := Vector3.ONE * 0.35 * 2
+#
+			#var size_multiplier_float : float = 2.4 #randf_range (1.2, 1.35) * 2
+			#var size_multiplier_int : int = 2
+			#$Mesh.scale = Vector3.ONE
+			#health = 1 #base_health * size_multiplier_int
+			#cash_value = base_cash # * size_multiplier
+			#max_health = health
+			#small_rock.visible = true
+			#main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
+			#current_mesh = small_rock
+			#assign_random_mesh(current_mesh)
+			#current_mesh.scale = base_scale * size_multiplier_float
+			#rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
+			#linear_damp = 0.5
+			#force_mult.clear()
+			#force_mult = [3,4]
+			#force_mult_index = 0
 		
 		# 2
 		RockSize.MEDIUM:

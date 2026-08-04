@@ -13,10 +13,11 @@ var current_state : State = State.INACTIVE
 ## When true, waves after wave 1 randomise rock columns (existing behaviour).
 @export var randomize_later_waves := true
 ## Depth launch strength for `rock-pigeon` (into the distance). Raise to send them further back.
-const pigeon_depth_impulse := 70.0
+const pigeon_depth_impulse := 35.0 #70.0
+const rock_pigeon_upward_force := 2.0
 ## Sideways fan strength for pigeons. Multiplies spawn X so outer lanes flare outward.
 ## 0 = straight back; higher = wider fan.
-const pigeon_fan_spread := 4.0
+const pigeon_fan_spread := 0.0
 
 var rocks_limit := 0
 
@@ -318,7 +319,7 @@ func update_pulse_rocks() -> void:
 
 	_bounds_check_accum = 0.0
 	_bounds_check_active = true
-
+	
 	_run_timed_event_spawns()
 	bounce_rocks()
 
@@ -604,7 +605,7 @@ func bounce_rocks() -> void:
 		var upward_force = 10.0
 		var impulse: Vector3
 		if body.rock_type == RockInstance.RockSize.SMALL_2:
-			upward_force = upward_force * 2.0
+			upward_force = upward_force * rock_pigeon_upward_force
 			impulse = _pigeon_launch_impulse(body, counter, upward_force)
 		else:
 			impulse = _build_launch_impulse(body, counter, upward_force, 0.0)
