@@ -74,13 +74,12 @@
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_mdemw"]
 random_pitch = 1.0442737
-streams_count = 6
+streams_count = 5
 stream_0/stream = ExtResource("19_gf2tl")
 stream_1/stream = ExtResource("21_r5w5l")
 stream_2/stream = ExtResource("22_8twtg")
 stream_3/stream = ExtResource("24_vwwt2")
-stream_4/stream = ExtResource("14_mdemw")
-stream_5/stream = ExtResource("23_wtxnc")
+stream_4/stream = ExtResource("23_wtxnc")
 
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
 bake_interval = 5.0
@@ -607,7 +606,8 @@ pitch_scale = 0.9
 
 [node name="Randomiser" type="AudioStreamPlayer" parent="Music" unique_id=1748658751]
 stream = SubResource("AudioStreamRandomizer_mdemw")
-volume_db = -70.0
+volume_db = -40.0
+pitch_scale = 1.1
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1533254053]
 transform = Transform3D(-1, 6.859112e-09, 8.7153275e-08, 0, 0.99691725, -0.07845909, -8.742278e-08, -0.07845909, -0.99691725, 0, 0, 17.224)

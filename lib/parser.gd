@@ -50,9 +50,16 @@ func loadIsland(data : String) -> bool:
 				
 			_:
 				if round_no > 0:
-					data_set.push_back( [island_name,range_name,round_no,token] )
-
+					data_set.push_back( [island_name,range_name,round_no,sanitise_token(token)] )
+					
+				
 	return(true)
+	
+	
+func sanitise_token(s: String) -> String:
+	var ary:Array = s.split(' ')
+	ary = ary.filter( func(_name: String): return _name.length() > 0) 
+	return ' '.join(ary)
 	
 	
 func getRound(island_name : String, range_name : String, round_no : int) -> Array:
@@ -82,6 +89,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
 		'rock', 'rock-black', 'rock-pigeon':
+			print(parts)
 			return _parse_rock_command(cmd, parts)
 
 		'balloon':
@@ -94,7 +102,8 @@ func parse_spawn_command(token: String) -> Dictionary:
 			return _parse_repeat_command(parts)
 
 		_:
-			return {}
+			print(parts)
+			return _parse_rock_command('rock', ["rock", "1", "c1"])
 
 
 const DEFAULT_ROUND_REPEAT := 1

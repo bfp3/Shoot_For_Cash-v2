@@ -274,6 +274,15 @@ func finish_level_editor_test_round() -> void:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
 		rocks_container.reset_all_rocks()
 
+	# Drop any oranges still in play so they don't carry into the next test.
+	if orange_active > 0:
+		EventBus.instance.oranges_start_falling.emit()
+		var orange_wait := 0.0
+		while orange_active > 0 and orange_wait < 3.0:
+			await get_tree().process_frame
+			orange_wait += get_process_delta_time()
+		orange_active = 0
+
 	await get_tree().create_timer(0.2, false).timeout
 
 	while bullet_active:
