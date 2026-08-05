@@ -156,10 +156,14 @@ func _on_command_button_pressed(command: String) -> void:
 		_script_edit.text = command
 		_script_edit.set_caret_line(0)
 		_script_edit.set_caret_column(command.length())
+	elif insert_line >= line_count:
+		# insert_line_at only accepts line < line_count, so append after the last line.
+		var last_line := line_count - 1
+		var last_col := _script_edit.get_line(last_line).length()
+		_script_edit.insert_text("\n" + command, last_line, last_col)
+		_script_edit.set_caret_line(last_line + 1)
+		_script_edit.set_caret_column(command.length())
 	else:
-		# TextEdit.insert_line_at inserts a brand-new line at that index.
-		if insert_line > line_count:
-			insert_line = line_count
 		_script_edit.insert_line_at(insert_line, command)
 		_script_edit.set_caret_line(insert_line)
 		_script_edit.set_caret_column(command.length())

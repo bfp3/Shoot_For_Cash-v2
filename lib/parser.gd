@@ -84,8 +84,11 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 ##   `pineapple 1` launches straight up from column 1.
 ##   `pineapple 1 A8` aims diagonally toward cell A8.
 ## wait: {cmd, ms} — delay before the next rock; defaults to 100ms.
-## repeat: {cmd, count} — total waves stored on the round.
-##   Omitted → 1 wave. Bare `repeat` → 2 waves. `repeat N` → N+1 waves.
+## repeat: {cmd, count} — section / wave control (see `_finalize_round_repeats`).
+##   Bare `repeat` / `repeat 1` / `repeat 2` → count 2. `repeat N` (N ≥ 2) → N.
+##   One trailing `repeat` with nothing after → that count is the round's wave count.
+##   Commands after a `repeat` → sectional mode: each `repeat` closes a section that
+##   plays `count` times inside one wave; round wave count becomes 1.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
 ## shuffle: {cmd} — this round only; later waves randomise rock columns.
 ## surprise-me: {cmd} — replace this round's spawns with a random generated sequence.
@@ -221,16 +224,15 @@ func _parse_wait_command(parts: PackedStringArray) -> Dictionary:
 	}
 
 
-## Omitted → 1 wave (DEFAULT_ROUND_REPEAT).
-## `repeat` → 2 waves. `repeat 3` → 4 waves (1 base wave + N extras).
-## `count` is the total wave count stored on the round.
+## Section / wave count token. Bare / 1 / 2 → 2. `repeat N` (N ≥ 2) → N.
+## Meaning depends on whether anything follows (see `_finalize_round_repeats`).
 func _parse_repeat_command(parts: PackedStringArray) -> Dictionary:
-	var extras := 1
+	var count := 2
 	if parts.size() > 1 and String(parts[1]).is_valid_int():
-		extras = maxi(int(parts[1]), 0)
+		count = maxi(int(parts[1]), 2)
 	return {
 		'cmd': 'repeat',
-		'count': 1 + extras,
+		'count': count,
 	}
 
 
@@ -376,6 +378,9 @@ func get_rock_sequences(island_name: String = '') -> Array:
 				'protect_placements': [],
 				'shuffle': false,
 				'surprise': false,
+				# Temporary while parsing — removed by `_finalize_round_repeats`.
+				'_pending': [],
+				'_sections': [],
 			}
 			order.append(key)
 
@@ -385,7 +390,12 @@ func get_rock_sequences(island_name: String = '') -> Array:
 
 		var parsed_cmd := String(parsed.get('cmd', ''))
 		if parsed_cmd == 'repeat':
-			rounds[key].repeat = int(parsed.get('count', DEFAULT_ROUND_REPEAT))
+			var section_spawns: Array = rounds[key]._pending
+			rounds[key]._sections.append({
+				'spawns': section_spawns,
+				'count': int(parsed.get('count', DEFAULT_ROUND_REPEAT)),
+			})
+			rounds[key]._pending = []
 			continue
 
 		if parsed_cmd == 'no-lives':
@@ -404,8 +414,6 @@ func get_rock_sequences(island_name: String = '') -> Array:
 			var bonus_type := parsed_cmd.substr(6)
 			rounds[key].bonus = bonus_type
 			rounds[key].no_lives = true
-			# Bonus rounds are one sequence unless `repeat` is set after this line.
-			rounds[key].repeat = 1
 			continue
 
 		if parsed_cmd == 'protect-balloon':
@@ -415,15 +423,60 @@ func get_rock_sequences(island_name: String = '') -> Array:
 			})
 			continue
 
-		rounds[key].spawns.append(parsed)
+		rounds[key]._pending.append(parsed)
 
 	var sequences: Array = []
 	for key in order:
+		_finalize_round_repeats(rounds[key])
 		if bool(rounds[key].get('surprise', false)):
 			_apply_surprise_me(rounds[key])
 		_finalize_bonus_round(rounds[key])
 		sequences.append(rounds[key])
 	return sequences
+
+
+## Resolves `repeat` markers collected while parsing.
+## - No `repeat` → spawns = pending body, 1 wave.
+## - One trailing `repeat` (nothing after) → that count is the wave count; spawns play once per wave.
+## - Anything after a `repeat` (or multiple `repeat`s) → expand each section `count` times
+##   into one flat spawn list; round wave count = 1.
+func _finalize_round_repeats(round_data: Dictionary) -> void:
+	var sections: Array = round_data.get('_sections', [])
+	var pending: Array = round_data.get('_pending', [])
+	round_data.erase('_sections')
+	round_data.erase('_pending')
+
+	if sections.is_empty():
+		round_data.spawns = pending
+		round_data.repeat = DEFAULT_ROUND_REPEAT
+		return
+
+	# Classic single trailing repeat → wave count (existing island-shipper rounds).
+	if pending.is_empty() and sections.size() == 1:
+		round_data.spawns = sections[0].get('spawns', [])
+		round_data.repeat = maxi(int(sections[0].get('count', DEFAULT_ROUND_REPEAT)), 1)
+		return
+
+	# Sectional mode — trailing body without a closing repeat plays once.
+	if not pending.is_empty():
+		sections.append({
+			'spawns': pending,
+			'count': 1,
+		})
+
+	var expanded: Array = []
+	for section in sections:
+		var body: Array = section.get('spawns', [])
+		var times := maxi(int(section.get('count', 1)), 1)
+		for _i in times:
+			for entry in body:
+				if entry is Dictionary:
+					expanded.append(entry.duplicate(true))
+				else:
+					expanded.append(entry)
+
+	round_data.spawns = expanded
+	round_data.repeat = 1
 
 
 ## Fills a round with a random rock/wait/balloon mix for testing.
@@ -519,11 +572,11 @@ func surprise_round_to_text(round_data: Dictionary) -> String:
 	if bool(round_data.get('shuffle', false)):
 		lines.append('shuffle')
 	var wave_count := int(round_data.get('repeat', DEFAULT_ROUND_REPEAT))
-	if wave_count == 2:
-		lines.append('repeat')
-	elif wave_count > 2:
-		# Script uses extras: `repeat 3` → 4 waves.
-		lines.append('repeat %d' % (wave_count - 1))
+	if wave_count >= 2:
+		if wave_count == 2:
+			lines.append('repeat')
+		else:
+			lines.append('repeat %d' % wave_count)
 
 	for entry in round_data.get('spawns', []):
 		if not (entry is Dictionary):
