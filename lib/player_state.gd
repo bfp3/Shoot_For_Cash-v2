@@ -360,43 +360,31 @@ func get_demo_stats() -> Dictionary:
 
 
 func change_location(_new_location : String) -> bool:
-	var old_location = dataset.level_name
 	_new_location = _new_location.to_lower()
 	if _new_location == dataset.level_name:
 		print('we are already here do not move')
 		return false
-	
+
 	var location_names : Array = gl_DataSet.dataset_string["place_name"]
-	
 	if not location_names.has(_new_location):
 		print('error in change location')
 		return false
-	
+	if _new_location == 'start':
+		print('error in change location - cannot travel to start')
+		return false
+
 	var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
 	if round_manager == null:
 		print('error change location - cannot find round manager')
 		return false
-	
-	if old_location == gl_DataSet.get_string('place_name', 5) && _new_location == gl_DataSet.get_string('place_name', 0):
-		round_manager.move_to_moss()
-		dataset.level_name = _new_location
-		return true
-		
-	if old_location == gl_DataSet.get_string('place_name', 0) && _new_location == gl_DataSet.get_string('place_name', 1):
-		round_manager.move_to_redd()
-		dataset.level_name = _new_location
-		print('moving to redd')
-		return true
-		
-	if old_location == gl_DataSet.get_string('place_name', 1) && _new_location == gl_DataSet.get_string('place_name', 2):
-		#round_manager.move_to_glory()
-		round_manager.update_end_demo()
-		dataset.level_name = _new_location
-		return true
-	#round_manager.move_location()
-	
-	else:
+
+	if not round_manager.has_method('travel_to_level'):
+		print('error change location - round manager missing travel_to_level')
 		return false
+
+	# travel_to_level owns dataset.level_name updates after the fade begins.
+	round_manager.travel_to_level(_new_location)
+	return true
 
 
 func reset_cash_debug_tool() -> void:

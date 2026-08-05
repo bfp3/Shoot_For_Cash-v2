@@ -80,9 +80,25 @@ func ticket_purchased() -> void:
 		reroll_unlocked = true
 		
 	update_shop()
-	$TicketPurchasedPopUp.display_ticket()
+	open_map_menu()
 
-	
+
+## Opens the island map popup (Moss / Redd select) from the shop.
+func open_map_menu() -> void:
+	var map_menu := get_tree().get_first_node_in_group('map_menu')
+	if map_menu and map_menu.has_method('open_pop_up'):
+		map_menu.open_pop_up()
+	else:
+		push_warning('Shop: map menu missing')
+
+
+func update_place_label() -> void:
+	var place_label := get_node_or_null('CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name/PlaceLabel') as RichTextLabel
+	if place_label:
+		var current_place := String(gl_PlayerState.dataset.level_name).to_upper()
+		if current_place == 'START' or current_place.is_empty():
+			current_place = 'MOSS'
+		place_label.text = current_place
 
 
 func purchase_made(_upgrade_type:String = '') -> void:
@@ -177,6 +193,7 @@ func update_open_menu() -> void:
 	
 	sfx_open_shop()
 	update_shop()
+	update_place_label()
 	%Play_round_text.text = "[i][wave][color=]PLAY\n[color=c70102]$" + str(int(gl_DataSet.get_value('price_play_round', 0)))
 
 	

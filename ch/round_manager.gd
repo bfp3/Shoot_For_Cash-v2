@@ -49,6 +49,10 @@ var transitioning_worlds := false
 var pineapple_mode := false
 @export var current_round := 0
 
+## Per-range progress so swapping Moss ↔ Redd restores where you left off.
+## Keys are level ids (`moss`, `redd`); values are { sequence_index, round }.
+var _level_progress: Dictionary = {}
+
 @export var player : Player
 @export var scene_transition_screen : Control 
 @export var shop_main_menu : Control
@@ -378,6 +382,14 @@ func finish_level_editor_test_round() -> void:
 		exit_level_editor_to_shop()
 
 
+## Active shooting range key used when parsing LEVEL_FILE_PATH (`moss`, `redd`, …).
+func get_active_range_name() -> String:
+	var range_id := String(gl_PlayerState.dataset.level_name).to_lower()
+	if range_id == '' or range_id == 'start':
+		return 'moss'
+	return range_id
+
+
 func load_level_sequence() -> void:
 	if not Parser.loadIslandFile(LEVEL_FILE_PATH):
 		push_error('RoundManager: failed to load level file %s' % LEVEL_FILE_PATH)
@@ -385,19 +397,21 @@ func load_level_sequence() -> void:
 		return
 
 	var previous_count := current_rock_sequence.size()
-	current_rock_sequence = Parser.get_rock_sequences(LEVEL_ISLAND_NAME)
+	var range_id := get_active_range_name()
+	current_rock_sequence = Parser.get_rock_sequences(LEVEL_ISLAND_NAME, range_id)
 	_level_file_mtime = _read_level_file_mtime()
 
 	if current_rock_sequence.is_empty():
-		push_warning('RoundManager: level file loaded but produced no rounds.')
+		push_warning('RoundManager: level file loaded but produced no rounds for range "%s".' % range_id)
 	else:
 		# Keep the player on a valid round if the file lost rounds.
 		if current_sequence_index >= current_rock_sequence.size():
 			current_sequence_index = maxi(current_rock_sequence.size() - 1, 0)
 
 		if previous_count > 0:
-			print('RoundManager: reloaded %s (%d rounds) — next wave/shop uses the new data.' % [
+			print('RoundManager: reloaded %s range "%s" (%d rounds) — next wave/shop uses the new data.' % [
 				LEVEL_FILE_PATH,
+				range_id,
 				current_rock_sequence.size(),
 			])
 
@@ -946,81 +960,146 @@ func move_to_start() -> void:
 	level_layout.add_child(level_mesh)
 	level_mesh.name = 'current_level_layout'
 
-func move_to_moss() -> void:
+
+func _layout_for_level(level_id: String) -> PackedScene:
+	match level_id:
+		'moss':
+			return LEVEL_LAYOUT_01_MOSS
+		'redd':
+			return LEVEL_LAYOUT_02_REDD
+		'glory':
+			return LEVEL_LAYOUT_03_GLORY
+		_:
+			return null
+
+
+func _save_level_progress() -> void:
+	var level_id := String(gl_PlayerState.dataset.level_name).to_lower()
+	if level_id == '' or level_id == 'start':
+		return
+	_level_progress[level_id] = {
+		'sequence_index': current_sequence_index,
+		'round': maxi(current_round, 1),
+		'player_round': int(gl_PlayerState.dataset.round),
+	}
+
+
+func _restore_level_progress(level_id: String) -> void:
+	var saved: Dictionary = _level_progress.get(level_id, {})
+	if saved.is_empty():
+		current_sequence_index = 0
+		current_round = 1
+		gl_PlayerState.dataset.round = 1
+		return
+	current_sequence_index = int(saved.get('sequence_index', 0))
+	current_round = int(saved.get('round', 1))
+	gl_PlayerState.dataset.round = int(saved.get('player_round', current_round))
+
+
+## Swap scenery + round data for a shooting range. Used for first arrival and mid-run map travel.
+func travel_to_level(level_id: String) -> void:
+	level_id = level_id.to_lower()
+	var layout_scene := _layout_for_level(level_id)
+	if layout_scene == null:
+		push_error('RoundManager: unknown level "%s"' % level_id)
+		return
+	if transitioning_worlds:
+		return
+
+	var coming_from_start := String(gl_PlayerState.dataset.level_name).to_lower() == 'start'
+	var already_here := String(gl_PlayerState.dataset.level_name).to_lower() == level_id
+	if already_here:
+		return
+
 	transitioning_worlds = true
+	_save_level_progress()
+
+	# Soft-close shop / start menu so nothing fires SHOP_END during the fade.
+	if shop_main_menu and shop_main_menu.visible:
+		if shop_main_menu.has_method('soft_hide_for_level_editor'):
+			shop_main_menu.soft_hide_for_level_editor()
+		else:
+			shop_main_menu.hide()
+
+	stop_timer()
+	stop_player()
+	force_shop_open = false
+	wave_ending = false
+	player_failed = false
+	success = false
+	game_over_triggered = false
+	current_wave = 0
+	current_round_state = RoundState.INACTIVE
+
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+	if balloon_container and (balloon_container.started or balloon_container.balloons_in_play > 0):
+		await balloon_container.end_round()
+	if bonus_target_manager and bonus_target_manager.has_method('cleanup_bonus_round'):
+		bonus_target_manager.cleanup_bonus_round()
+
 	player.display_hud()
-	gl_PlayerState.dataset["stage"] = 1
-	gl_PlayerState.dataset["reroll_unlocked"] = 1
-	gl_PlayerState.dataset["round"] = 1
-	music_manager.stop_opening_song()
-	
-	
-	
+	gl_PlayerState.dataset.level_name = level_id
+
+	if coming_from_start:
+		gl_PlayerState.dataset['stage'] = 1
+		gl_PlayerState.dataset['reroll_unlocked'] = 1
+		music_manager.stop_opening_song()
+
 	scene_transition_screen.next_level_start()
 	await get_tree().create_timer(1.0, false).timeout
-	await get_tree().create_timer(1.0, false).timeout
-	if level_layout.get_child(0) != null:
-		level_layout.get_child(0).queue_free()
+	if coming_from_start:
+		await get_tree().create_timer(1.0, false).timeout
+
+	# Replace level layout under the fade.
+	if level_layout.get_child_count() > 0:
+		for child in level_layout.get_children():
+			child.queue_free()
+		await get_tree().process_frame
 
 	rocks_container.show()
-	var level_scenery = LEVEL_LAYOUT_01_MOSS.instantiate()
+	var level_scenery = layout_scene.instantiate()
 	level_layout.add_child(level_scenery)
-	
 	level_scenery.name = 'current_level_layout'
 	# Let Compatibility/Web compile the new layout's pipelines under the fade.
 	await get_tree().process_frame
 	await get_tree().process_frame
-	
-	await get_tree().create_timer(1.0, false).timeout
-	shop_main_menu.setup_shop_for_rounds()
-	wave_progress_feedback.show()
-	if egg_pulse == null:
-		find_egg()
-	
-	scene_transition_screen.next_level_finish()
-	place_name.update_place_name()
-	await get_tree().create_timer(1.0, false).timeout
-	#if current_round == 0:
-	$'../PlayerBalloon'.add_balloon()
-		
-	gl_PlayerState.dataset.tickets += 1
-	shop_main_menu.update_next_ticket()
-		
-	await get_tree().create_timer(3.0, false).timeout
 
+	await get_tree().create_timer(1.0, false).timeout
+
+	_restore_level_progress(level_id)
 	load_level_sequence()
-	transitioning_worlds = false
-	current_round = 1
-	enter_state(RoundState.SHOP_START)
-	
-	
-func move_to_redd() -> void:
-	transitioning_worlds = true
-	player.hide_hud()
-	gl_PlayerState.dataset["rock_limit"] = 1
-	scene_transition_screen.next_level_start()
-	await get_tree().create_timer(1.0, false).timeout
+	if current_sequence_index >= current_rock_sequence.size():
+		current_sequence_index = maxi(current_rock_sequence.size() - 1, 0)
 
-	level_layout.get_child(0).queue_free()
-	
-	var new_scene = LEVEL_LAYOUT_02_REDD.instantiate()
-	level_layout.add_child(new_scene)
-	
-	new_scene.name = 'current_level_layout'
-	# Let Compatibility/Web compile the new layout's pipelines under the fade.
-	await get_tree().process_frame
-	await get_tree().process_frame
-	
-	await get_tree().create_timer(1.0, false).timeout
+	shop_main_menu.setup_shop_for_rounds()
+	shop_main_menu.update_place_label()
+	wave_progress_feedback.show()
+	find_egg()
+
 	scene_transition_screen.next_level_finish()
 	place_name.update_place_name()
-	if egg_pulse == null:
-		find_egg()
-
 	await get_tree().create_timer(1.0, false).timeout
+
+	if coming_from_start:
+		var player_balloon := get_node_or_null('../PlayerBalloon')
+		if player_balloon and player_balloon.has_method('add_balloon'):
+			player_balloon.add_balloon()
+		gl_PlayerState.dataset.tickets += 1
+		shop_main_menu.update_next_ticket()
+		await get_tree().create_timer(3.0, false).timeout
+
 	transitioning_worlds = false
-	enter_state(RoundState.SHOP_END)
-	player.display_hud()
+	enter_state(RoundState.SHOP_START)
+
+
+func move_to_moss() -> void:
+	await travel_to_level('moss')
+
+
+func move_to_redd() -> void:
+	await travel_to_level('redd')
 
 	
 func stop_player() -> void:
@@ -1077,6 +1156,7 @@ func restart() -> void:
 	current_round = 0
 	current_wave = 0
 	force_shop_open = false
+	_level_progress.clear()
 	
 	
 	# Runtime state
@@ -1163,6 +1243,7 @@ func move_to_moss_instant() -> void:
 	await get_tree().process_frame
 
 	shop_main_menu.setup_shop_for_rounds()
+	shop_main_menu.update_place_label()
 	wave_progress_feedback.show()
 	find_egg()
 	place_name.update_place_name()
@@ -1174,9 +1255,10 @@ func move_to_moss_instant() -> void:
 	gl_PlayerState.dataset.tickets += 1
 	shop_main_menu.update_next_ticket()
 
+	current_sequence_index = 0
+	current_round = 1
 	load_level_sequence()
 	transitioning_worlds = false
-	current_round = 1
 	enter_state(RoundState.SHOP_START)
 
 	

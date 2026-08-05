@@ -1028,6 +1028,8 @@ func play_destroy_sfx() -> void:
 
 func _on_start_falling_timer_timeout() -> void:
 	falling = true
+	#set_collision_layer_value(1, true)
+	#set_collision_mask_value(1, true)
 	
 	if rock_type == RockSize.SMOKECAN:
 		var damage_mesh = current_mesh.get_child(0) 

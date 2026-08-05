@@ -69,6 +69,20 @@ func set_locked_visuals() -> void:
 	$TextureRect2.modulate = Color('d8c5b7')
 	current_state = State.LOCKED
 
+
+func set_unlocked_visuals() -> void:
+	level_locked = false
+	current_state = State.UNLOCKED
+	level_name_label.text = "[wave]" + level_name.to_upper()
+	level_name_label.modulate = Color.WHITE
+	level_name_label.add_theme_font_size_override("normal_font_size", 109)
+	outer_ring.modulate = Color.WHITE
+	$HSeparator.scale.x = 1.0
+	$TextureRect2.modulate = Color.WHITE
+	disabled = false
+	modulate = Color.WHITE
+
+
 func _on_level_button_pressed() -> void:
 	if level_locked:
 		return
@@ -78,16 +92,15 @@ func _on_level_button_pressed() -> void:
 	await get_tree().create_timer(0.6, false).timeout
 	
 	var level_name_lower_case: String = level_name.to_lower()
-
-	match level_name_lower_case:
-		"moss":
-			round_manager.move_to_moss()
-			main_control.ticket_used()
-			#$"../../../../..".ticket_used()
-
-		_:
-			print("other button pressed")
-	
+	if main_control and main_control.has_method('select_level'):
+		await main_control.select_level(level_name_lower_case)
+	elif round_manager:
+		# Fallback if map popup wiring is missing.
+		match level_name_lower_case:
+			'moss', 'redd', 'glory':
+				round_manager.travel_to_level(level_name_lower_case)
+			_:
+				print('other button pressed: ', level_name_lower_case)
 	
 	await get_tree().create_timer(0.3, false).timeout
 	$TextureProgressBar.value = 0.0

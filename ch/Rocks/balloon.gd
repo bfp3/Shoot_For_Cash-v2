@@ -188,6 +188,7 @@ func update_prepare_rock() -> void:
 	await get_tree().process_frame
 	
 func update_active() -> void:
+	scale = Vector3.ONE * 1.7
 	enable_collision()
 	reset_stats()
 	#quick_pan()

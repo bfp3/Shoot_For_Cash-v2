@@ -795,9 +795,6 @@ script = ExtResource("20_l8wgb")
 randomize_later_waves = false
 pigeon_aim_markers = NodePath("../PigeonAimMarkers")
 aim_impulse_scale = 1.1
-aim_launch_gravity_scale = 0.45
-aim_descent_linear_damp = 0.7
-aim_hang_time_sec = 0.5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
 root_node = NodePath("../Shover")
@@ -1787,35 +1784,35 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
-force_multiplier = 1.0
+force_multiplier = 0.75
 
 [node name="Pineapple2" parent="Pineapple" unique_id=1349360149 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
-force_multiplier = 1.0
+force_multiplier = 0.75
 
 [node name="Pineapple3" parent="Pineapple" unique_id=1506732277 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
-force_multiplier = 1.0
+force_multiplier = 0.75
 
 [node name="Pineapple4" parent="Pineapple" unique_id=535343239 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
-force_multiplier = 1.0
+force_multiplier = 0.75
 
 [node name="Pineapple5" parent="Pineapple" unique_id=1865048044 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
-force_multiplier = 1.0
+force_multiplier = 0.75
 
 [node name="PerfectParticles" type="GPUParticles2D" parent="Pineapple" unique_id=989237153]
 unique_name_in_owner = true
@@ -1994,7 +1991,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 23)
 
 [node name="Balloon_container" type="Node3D" parent="." unique_id=906093422 groups=["balloon_container", "restartable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 22.5)
-visible = false
 script = ExtResource("63_nn6vd")
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]

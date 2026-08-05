@@ -201,7 +201,7 @@ func timer_rollup_sequence() -> void:
 		$ReloadSound.pitch_scale += 0.1
 		$ReloadSound.play()
 
-	time_left = 50.0
+	time_left = 25.0
 	update_text()
 
 	

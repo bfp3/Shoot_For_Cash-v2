@@ -383,12 +383,15 @@ func parse_round_text(text: String) -> Dictionary:
 ## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"type1"|...,
 ##   "bonus_targets": [{ "waypoints": [{row, column}, ...] }, ...], "shuffle": bool }
 ## Pass an empty island_name to include every island in the loaded file.
-func get_rock_sequences(island_name: String = '') -> Array:
+## Pass range_name (e.g. "moss", "redd") to only include that shooting range.
+func get_rock_sequences(island_name: String = '', range_name: String = '') -> Array:
 	var rounds: Dictionary = {}
 	var order: Array = []
 
 	for entry in data_set:
 		if island_name != '' and entry[0] != island_name:
+			continue
+		if range_name != '' and entry[1] != range_name:
 			continue
 
 		var key := '%s|%s|%d' % [entry[0], entry[1], entry[2]]
