@@ -543,9 +543,13 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 		sound_instance.queue_free()
 
 
+
+
 func rock_pop_balloon() -> void:
 	if !rock_activated:
 		return
+	
+	
 	stop_gentle_pan()
 	if balloon_type == BalloonType.BLUE:# ||balloon_type == BalloonType.RED:
 		#get_parent().player_balloon_was_popped()
@@ -597,14 +601,22 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 	if balloon_type != BalloonType.BLUE:
 		return
 
-	if protect_mode:
-		var is_rock := body is RockInstance or body.name.contains('Rock')
-		var is_pineapple := body.name.contains('Pineapple')
-		if is_rock or is_pineapple:
-			rock_pop_balloon()
-		return
+	#if protect_mode:
+		#var is_rock := body is RockInstance or body.name.contains('Rock')
+		#var is_pineapple := body.name.contains('Pineapple')
+		#if is_rock or is_pineapple:
+			#rock_pop_balloon()
+		#return
 
 	if body.name.contains('Pineapple'):
+		start_destroyed_process()
+	
+	if body is RockInstance or body.name.contains('Rock'):
+		if body.current_state != body.State.ACTIVE:
+			print("not active")
+			return
+			
+		print("active")
 		start_destroyed_process()
 
 

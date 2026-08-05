@@ -178,6 +178,10 @@ func log_hit(item:String, item_type:String, value:int):
 			return
 		#add_strike()
 		return
+
+	# Smokecans are obstacles only — do not gate round progress.
+	elif item.contains('rock_type_8') or item.contains('smokecan'):
+		return
 		
 		
 	elif item.contains('pineapple'):
@@ -205,15 +209,20 @@ func log_white_rock() -> void:
 func log_rocks(_total_rocks : int, rock_type_name : String) -> void:
 	if rock_type_name.contains('hazard'):
 		return
+	# Smokecan — obstacle only (same as rock-black / hazard for wave clear).
+	if rock_type_name.contains('rock_type_8') or rock_type_name.contains('smokecan'):
+		return
 	
 	dataset.total_rocks_in_round += 1
 	dataset.total_rocks_in_round_remaining += 1
 	
 func log_rock_missed(item : String = '') -> void:
-	# Hazards are never added to total_rocks_in_round_remaining (see log_rocks).
-	# If they still decrement it on splash/OOB, a batch of hazards can zero out
-	# remaining and end the wave while real rocks are still in the air / waiting to launch.
+	# Hazards / smokecans are never added to total_rocks_in_round_remaining (see log_rocks).
+	# If they still decrement it on splash/OOB, a batch can zero out remaining and end
+	# the wave while real rocks are still in the air / waiting to launch.
 	if item.contains('hazard'):
+		return
+	if item.contains('rock_type_8') or item.contains('smokecan'):
 		return
 
 	dataset.total_rocks_in_round_remaining -= 1

@@ -9,7 +9,7 @@ const PLAYER_BALLOON_SCENE := preload('res://ch/Rocks/PlayerBalloon.tscn')
 
 const DEFAULT_COLUMN := 4
 const DEFAULT_ROW := 2 ## B
-const BALLOON_Z_FRONT := 22.5
+const BALLOON_Z_FRONT := 23.0
 const BALLOON_COLUMN_1_X := 7.0
 const BALLOON_COLUMN_STEP := -2.0
 const BALLOON_COLUMN_COUNT := 8

@@ -296,8 +296,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.SMALL_2
 			'red_rock_error':
 				return RockInstance.RockSize.RED_ROCK_ERROR
-			'smokebomb':
-				return RockInstance.RockSize.SMOKEBOMB
+			'smokecan':
+				return RockInstance.RockSize.SMOKECAN
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -314,7 +314,7 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-black'
 		or cmd == 'rock-pigeon'
 		or cmd == 'red_rock_error'
-		or cmd == 'smokebomb'
+		or cmd == 'smokecan'
 	)
 
 
@@ -578,8 +578,11 @@ func get_rock_limit() -> int:
 
 func get_angle_bias() -> float:
 	
+	if !randomize_later_waves:
+		return 0.0
+	
 	var probability = randi_range(1,10)
-	if probability > 0:
+	if probability > 8:
 		return 0.0
 	
 	return 10.0

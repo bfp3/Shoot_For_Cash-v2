@@ -89,7 +89,7 @@ func start_game() -> void:
 	#round_timer.show()
 	HUD_CRT.start_game()
 	#rocks_on_screen_counter.show()
-
+	
 	await get_tree().create_timer(0.25).timeout
 	splash_screen.queue_free()
 

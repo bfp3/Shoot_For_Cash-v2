@@ -27,14 +27,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -104.0
-offset_right = -104.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
 [node name="Cluster" type="Control" parent="Center" unique_id=1888002100]
-custom_minimum_size = Vector2(1016, 720)
+custom_minimum_size = Vector2(1280, 720)
 layout_mode = 2
 mouse_filter = 2
 
@@ -71,11 +69,16 @@ flies into the distance (fan aim)
 
 [color=#C70102]wait[/color] / [color=#C70102]wait 200[/color] delay before next action default 1000ms
 
-[color=#C70102]repeat[/color] / [color=#C70102]repeat 3[/color] how many waves in the round default 3
+[color=#C70102]repeat[/color] / [color=#C70102]repeat 3[/color]
+extra waves (omit = 1, bare = 2, repeat 3 = 4)
 
 [color=#C70102]balloon[/color] / [color=#C70102]balloon A1[/color] place a balloon default A1
 
 [color=#C70102]no-lives[/color] no strikes this round
+
+[color=#C70102]shuffle[/color] randomise columns on later waves
+
+[color=#C70102]surprise-me[/color] generate a random test round
 
 [color=#C70102]bonus-protect[/color] protect balloon at B4 (no strikes)
 
@@ -158,7 +161,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"RedRichText"
 bbcode_enabled = true
-text = "CTRL = Toggle KEY"
+text = "SHIFT + K = Toggle KEY"
 fit_content = true
 
 [node name="ScriptEdit" type="TextEdit" parent="Center/Cluster/MainPanel/VBox" unique_id=857673602]
@@ -173,7 +176,7 @@ text = "no-lives
 #rock-black
 #rock-pigeon
 #balloon
-#smokebomb
+#smokecan
 
 rock 2
 repeat 3"
@@ -237,9 +240,27 @@ bbcode_enabled = true
 text = "[color=#C70102]SHIFT + ENTER[/color]			Test round
 [color=#C70102]ENTER[/color]						New line
 [color=#C70102]BACKSPACE[/color]				Abort mid-round
-[color=#C70102]CTRL[/color]							Toggle KEY panel
+[color=#C70102]SHIFT + K[/color]						Toggle KEY panel
 [color=#C70102]D[/color]								Open editor (from shop)
 [color=#C70102]BACK[/color] 						Return to shop
 [color=#C70102]TEST[/color]							Play test round"
 fit_content = true
 scroll_active = false
+
+[node name="CommandsPanel" type="PanelContainer" parent="Center/Cluster" unique_id=1888002200]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 647)
+layout_mode = 0
+offset_left = 1028.0
+offset_right = 1280.0
+offset_bottom = 520.0
+
+[node name="CommandsScroll" type="ScrollContainer" parent="Center/Cluster/CommandsPanel" unique_id=1888002201]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="CommandsVBox" type="VBoxContainer" parent="Center/Cluster/CommandsPanel/CommandsScroll" unique_id=1888002202]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6

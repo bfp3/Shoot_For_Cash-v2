@@ -74,6 +74,9 @@ var no_lives_this_round := false
 var bonus_type_this_round := ""
 ## Protect balloon was popped during `bonus-protect` — no bonus cash, still advance.
 var protect_bonus_failed := false
+## Scene default for Rocks.randomize_later_waves (restored when `shuffle` is off).
+var _rocks_randomize_baseline := false
+var _rocks_randomize_baseline_captured := false
 
 enum RoundState {
 	INACTIVE,
@@ -100,6 +103,7 @@ var bonus_oranges_ready := false
 
 func _ready() -> void:
 	load_level_sequence()
+	_capture_rocks_randomize_baseline()
 
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
 	EventBus.instance.rocks_cleared_end_wave.connect(check_if_rocks_still_in_air)
@@ -109,6 +113,26 @@ func _ready() -> void:
 	EventBus.instance.add_strike.connect(handle_rock_missed)
 	#EventBus.instance.hazard_hit.connect(handle_rock_missed)
 	move_to_start()
+
+
+func _capture_rocks_randomize_baseline() -> void:
+	if _rocks_randomize_baseline_captured:
+		return
+	if rocks_container:
+		_rocks_randomize_baseline = rocks_container.randomize_later_waves
+		_rocks_randomize_baseline_captured = true
+
+
+## Apply or clear the per-round `shuffle` keyword on RockManager.
+func _apply_shuffle_modifier(enabled: bool) -> void:
+	_capture_rocks_randomize_baseline()
+	if rocks_container == null:
+		return
+	if enabled:
+		rocks_container.randomize_later_waves = true
+		print('RoundManager: shuffle active for this round only')
+	else:
+		rocks_container.randomize_later_waves = _rocks_randomize_baseline
 
 
 func _process(delta: float) -> void:
@@ -321,6 +345,7 @@ func finish_level_editor_test_round() -> void:
 	no_lives_this_round = false
 	bonus_type_this_round = ""
 	protect_bonus_failed = false
+	_apply_shuffle_modifier(false)
 	gl_PlayerState.dataset.total_current_strikes = 0
 	gl_PlayerState.round_finished = false
 	if wave_progress_feedback and wave_progress_feedback.has_method("reset_strikes"):
@@ -379,11 +404,12 @@ func check_round_for_strikes() -> void:
 	gl_PlayerState.dataset.total_current_strikes = 0
 
 
-## Reads round modifiers like `no-lives` / `bonus-protect` from the active sequence entry only.
+## Reads round modifiers like `no-lives` / `bonus-protect` / `shuffle` from the active sequence entry only.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
 	bonus_type_this_round = ""
 	protect_bonus_failed = false
+	_apply_shuffle_modifier(false)
 	if current_rock_sequence.is_empty():
 		return
 	if current_sequence_index < 0 or current_sequence_index >= current_rock_sequence.size():
@@ -392,6 +418,7 @@ func apply_current_round_modifiers() -> void:
 	if round_data is Dictionary:
 		bonus_type_this_round = String(round_data.get('bonus', ''))
 		no_lives_this_round = bool(round_data.get('no_lives', false)) or bonus_type_this_round != ""
+		_apply_shuffle_modifier(bool(round_data.get('shuffle', false)))
 		if no_lives_this_round:
 			print('RoundManager: no-lives active for this round only')
 		if bonus_type_this_round != "":
@@ -697,7 +724,8 @@ func update_check_score() -> void:
 		enter_state(RoundState.WAVE_START)
 
 
-## Waves for the active round. Comes from `repeat` in the level file (default 3).
+## Waves for the active round. Comes from `repeat` in the level file (default 1).
+## Omitted → 1. `repeat` → 2. `repeat N` → N+1.
 func get_current_round_wave_count() -> int:
 	const DEFAULT_WAVES := 1
 	if current_rock_sequence.is_empty():
@@ -863,6 +891,7 @@ func update_shop_start() -> void:
 	no_lives_this_round = false
 	bonus_type_this_round = ""
 	protect_bonus_failed = false
+	_apply_shuffle_modifier(false)
 	EventBus.instance.open_shop.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	$Gold_sfx.pitch_scale = 0.7

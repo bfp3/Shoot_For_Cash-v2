@@ -73,19 +73,22 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## rock / rock-black / rock-pigeon / red_rock_error / smokebomb: {cmd, column, aim_row, aim_column, param}
+## rock / rock-black / rock-pigeon / red_rock_error / smokecan: {cmd, column, aim_row, aim_column, param}
 ##   column -1 means random. Aim cell (e.g. A8) is optional; 0/0 means none.
 ##   If only an aim cell is given (`rock A8`), spawn column defaults to 1.
 ##   rock-pigeon → RockSize.SMALL_2 (launches away from camera).
 ##   red_rock_error → RockSize.RED_ROCK_ERROR (editor/parse error marker).
-##   smokebomb → RockSize.SMOKEBOMB.
+##   smokecan → RockSize.SMOKECAN.
 ## balloon: {cmd, row, column, param} — row 1=A, 2=B, 3=C; defaults to A1.
 ## pineapple: {cmd, column, aim_row, aim_column} — column required for placement (default 1).
 ##   `pineapple 1` launches straight up from column 1.
 ##   `pineapple 1 A8` aims diagonally toward cell A8.
 ## wait: {cmd, ms} — delay before the next rock; defaults to 100ms.
-## repeat: {cmd, count} — wave count for the round; defaults to 1.
+## repeat: {cmd, count} — total waves stored on the round.
+##   Omitted → 1 wave. Bare `repeat` → 2 waves. `repeat N` → N+1 waves.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
+## shuffle: {cmd} — this round only; later waves randomise rock columns.
+## surprise-me: {cmd} — replace this round's spawns with a random generated sequence.
 ## bonus-protect / bonus protect: marks the round as a protect bonus (no strikes).
 ## protect-balloon / protect-balloon A4: place a protect balloon (bonus-protect only).
 ##   Bare `protect-balloon` defaults to B4. Multiple lines place multiple balloons.
@@ -98,7 +101,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon', 'red_rock_error', 'smokebomb':
+		'rock', 'rock-black', 'rock-pigeon', 'red_rock_error', 'smokecan':
 			return _parse_rock_command(cmd, parts)
 
 		'pineapple':
@@ -122,6 +125,12 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'no-lives':
 			return {'cmd': 'no-lives'}
+
+		'shuffle':
+			return {'cmd': 'shuffle'}
+
+		'surprise-me':
+			return {'cmd': 'surprise-me'}
 
 		'bonus-protect':
 			return {'cmd': 'bonus-protect'}
@@ -157,11 +166,11 @@ func parse_spawn_command(token: String) -> Dictionary:
 			}
 
 
-const DEFAULT_ROUND_REPEAT := 2
+const DEFAULT_ROUND_REPEAT := 1
 const DEFAULT_WAIT_MS := 1000
 
 
-## rock / rock-black / rock-pigeon / red_rock_error / smokebomb / rock 1 A8 / rock A8 (column defaults to 1 when only aim is given).
+## rock / rock-black / rock-pigeon / red_rock_error / smokecan / rock 1 A8 / rock A8 (column defaults to 1 when only aim is given).
 func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': cmd,
@@ -212,14 +221,16 @@ func _parse_wait_command(parts: PackedStringArray) -> Dictionary:
 	}
 
 
-## repeat → 3. repeat 2 → 2 waves. Count is clamped to at least 1.
+## Omitted → 1 wave (DEFAULT_ROUND_REPEAT).
+## `repeat` → 2 waves. `repeat 3` → 4 waves (1 base wave + N extras).
+## `count` is the total wave count stored on the round.
 func _parse_repeat_command(parts: PackedStringArray) -> Dictionary:
-	var count := DEFAULT_ROUND_REPEAT
+	var extras := 1
 	if parts.size() > 1 and String(parts[1]).is_valid_int():
-		count = maxi(int(parts[1]), 1)
+		extras = maxi(int(parts[1]), 0)
 	return {
 		'cmd': 'repeat',
-		'count': count,
+		'count': 1 + extras,
 	}
 
 
@@ -338,13 +349,14 @@ func parse_round_text(text: String) -> Dictionary:
 			"no_lives": false,
 			"bonus": "",
 			"protect_placements": [],
+			"shuffle": false,
 		}
 	return sequences[0]
 
 
 ## Builds one round dict per round, in file order:
 ## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"protect"|...,
-##   "protect_placements": [{row, column}, ...] }
+##   "protect_placements": [{row, column}, ...], "shuffle": bool }
 ## Pass an empty island_name to include every island in the loaded file.
 func get_rock_sequences(island_name: String = '') -> Array:
 	var rounds: Dictionary = {}
@@ -362,6 +374,8 @@ func get_rock_sequences(island_name: String = '') -> Array:
 				'no_lives': false,
 				'bonus': '',
 				'protect_placements': [],
+				'shuffle': false,
+				'surprise': false,
 			}
 			order.append(key)
 
@@ -376,6 +390,14 @@ func get_rock_sequences(island_name: String = '') -> Array:
 
 		if parsed_cmd == 'no-lives':
 			rounds[key].no_lives = true
+			continue
+
+		if parsed_cmd == 'shuffle':
+			rounds[key].shuffle = true
+			continue
+
+		if parsed_cmd == 'surprise-me':
+			rounds[key].surprise = true
 			continue
 
 		if parsed_cmd.begins_with('bonus-') and parsed_cmd.length() > 6:
@@ -397,9 +419,139 @@ func get_rock_sequences(island_name: String = '') -> Array:
 
 	var sequences: Array = []
 	for key in order:
+		if bool(rounds[key].get('surprise', false)):
+			_apply_surprise_me(rounds[key])
 		_finalize_bonus_round(rounds[key])
 		sequences.append(rounds[key])
 	return sequences
+
+
+## Fills a round with a random rock/wait/balloon mix for testing.
+func _apply_surprise_me(round_data: Dictionary) -> void:
+	var spawns: Array = []
+	var rock_count := randi_range(5, 12)
+
+	# Optional intro balloon(s).
+	if randf() < 0.35:
+		var balloon_count := randi_range(1, 3)
+		for _i in balloon_count:
+			spawns.append({
+				'cmd': 'balloon',
+				'row': randi_range(1, 3),
+				'column': randi_range(1, 8),
+				'param': '',
+			})
+
+	for i in rock_count:
+		if i > 0 and randf() < 0.5:
+			spawns.append({
+				'cmd': 'wait',
+				'ms': [100, 200, 300, 400, 500, 750, 1000][randi() % 7],
+			})
+
+		var roll := randf()
+		var cmd := 'rock'
+		if roll < 0.55:
+			cmd = 'rock'
+		elif roll < 0.72:
+			cmd = 'rock-black'
+		elif roll < 0.88:
+			cmd = 'rock-pigeon'
+		elif roll < 0.95:
+			cmd = 'smokecan'
+		else:
+			cmd = 'pineapple'
+
+		var entry := {
+			'cmd': cmd,
+			'column': -1,
+			'aim_row': 0,
+			'aim_column': 0,
+			'param': '',
+		}
+
+		if cmd == 'pineapple':
+			entry.column = randi_range(1, 8)
+			if randf() < 0.45:
+				entry.aim_row = randi_range(1, 3)
+				entry.aim_column = randi_range(1, 8)
+		elif randf() < 0.55:
+			entry.column = randi_range(1, 8)
+			if randf() < 0.55:
+				entry.aim_row = randi_range(1, 3)
+				entry.aim_column = randi_range(1, 8)
+		elif randf() < 0.35:
+			# Aim-only (`rock A8`) — spawn defaults to column 1 in gameplay.
+			entry.column = 1
+			entry.aim_row = randi_range(1, 3)
+			entry.aim_column = randi_range(1, 8)
+
+		spawns.append(entry)
+
+		# Occasional mid-round balloon after a rock.
+		if cmd != 'pineapple' and randf() < 0.08:
+			spawns.append({
+				'cmd': 'balloon',
+				'row': randi_range(1, 3),
+				'column': randi_range(1, 8),
+				'param': '',
+			})
+
+	round_data.spawns = spawns
+
+	# Keep an explicit `repeat` if the author set one; otherwise sometimes add extras.
+	if int(round_data.get('repeat', DEFAULT_ROUND_REPEAT)) == DEFAULT_ROUND_REPEAT and randf() < 0.7:
+		round_data.repeat = randi_range(1, 4)
+
+	if randf() < 0.35:
+		round_data.shuffle = true
+	if randf() < 0.25:
+		round_data.no_lives = true
+
+	print('parser: surprise-me generated:\n%s' % surprise_round_to_text(round_data))
+
+
+## Pretty-print a round dict back to level-script lines (for console / debugging).
+func surprise_round_to_text(round_data: Dictionary) -> String:
+	var lines: PackedStringArray = []
+	if bool(round_data.get('no_lives', false)):
+		lines.append('no-lives')
+	if bool(round_data.get('shuffle', false)):
+		lines.append('shuffle')
+	var wave_count := int(round_data.get('repeat', DEFAULT_ROUND_REPEAT))
+	if wave_count == 2:
+		lines.append('repeat')
+	elif wave_count > 2:
+		# Script uses extras: `repeat 3` → 4 waves.
+		lines.append('repeat %d' % (wave_count - 1))
+
+	for entry in round_data.get('spawns', []):
+		if not (entry is Dictionary):
+			continue
+		var cmd := String(entry.get('cmd', ''))
+		match cmd:
+			'wait':
+				lines.append('wait %d' % int(entry.get('ms', DEFAULT_WAIT_MS)))
+			'balloon':
+				var row_letter = ['', 'A', 'B', 'C'][clampi(int(entry.get('row', 1)), 1, 3)]
+				lines.append('balloon %s%d' % [row_letter, int(entry.get('column', 1))])
+			'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'smokecan', 'red_rock_error':
+				var col := int(entry.get('column', -1))
+				var ar := int(entry.get('aim_row', 0))
+				var ac := int(entry.get('aim_column', 0))
+				if ar > 0 and ac > 0:
+					var aim := '%s%d' % [['', 'A', 'B', 'C'][clampi(ar, 1, 3)], ac]
+					if col >= 1:
+						lines.append('%s %d %s' % [cmd, col, aim])
+					else:
+						lines.append('%s %s' % [cmd, aim])
+				elif col >= 1:
+					lines.append('%s %d' % [cmd, col])
+				else:
+					lines.append(cmd)
+			_:
+				lines.append(cmd)
+	return '\n'.join(lines)
 
 
 ## Bonus rounds with parse errors (or no rock instructions) become a single red_rock_error.

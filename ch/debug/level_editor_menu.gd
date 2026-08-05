@@ -7,14 +7,29 @@ const COLOR_CREAM_PANEL := Color(0.92156863, 0.8784314, 0.84705883, 1)
 const COLOR_RED := Color("C70102")
 const COLOR_INK := Color(0.12, 0.08, 0.06, 1)
 
+## Keywords inserted by the right-hand command panel (one per button).
+const COMMAND_BUTTONS: PackedStringArray = [
+	"rock",
+	"rock-black",
+	"rock-pigeon",
+	"smokecan",
+	"pineapple",
+	"balloon",
+	"wait",
+	"repeat",
+	"shuffle",
+	"no-lives",
+	"surprise-me",
+	"bonus-protect",
+	"protect-balloon",
+]
+
 @export var round_manager: RoundManager
 @export var shop_main_menu: Control
 
 var _font: Font
 var _is_open := false
 var _busy := false
-## True if another key was pressed while Ctrl was held (so Ctrl+C/V still work).
-var _ctrl_chord_used := false
 var _waiting_to_focus := false
 
 @onready var _main_panel: PanelContainer = %MainPanel
@@ -22,6 +37,8 @@ var _waiting_to_focus := false
 @onready var _rules_list: RichTextLabel = %RulesList
 @onready var _keys_panel: PanelContainer = %KeysPanel
 @onready var _keys_list: RichTextLabel = %KeysList
+@onready var _commands_panel: PanelContainer = %CommandsPanel
+@onready var _commands_vbox: VBoxContainer = %CommandsVBox
 @onready var _script_edit: TextEdit = %ScriptEdit
 @onready var _test_button: Button = %TestButton
 @onready var _back_button: Button = %BackButton
@@ -39,6 +56,7 @@ func _ready() -> void:
 	set_process_input(true)
 	set_process_unhandled_input(true)
 
+	_build_command_buttons()
 	_apply_styles()
 	_keys_panel.hide()
 	_rules_panel.hide()
@@ -109,6 +127,46 @@ func toggle_keys_panel() -> void:
 	_rules_panel.visible = show_help
 
 
+func _build_command_buttons() -> void:
+	if _commands_vbox == null:
+		return
+	for child in _commands_vbox.get_children():
+		child.queue_free()
+
+	for command in COMMAND_BUTTONS:
+		var button := Button.new()
+		button.text = command
+		button.focus_mode = Control.FOCUS_NONE
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.pressed.connect(_on_command_button_pressed.bind(command))
+		_commands_vbox.add_child(button)
+
+
+## Insert `command` on a new line directly below the caret's current line.
+func _on_command_button_pressed(command: String) -> void:
+	if not _is_open or _script_edit == null:
+		return
+
+	var caret_line := _script_edit.get_caret_line()
+	var insert_line := caret_line + 1
+	var line_count := _script_edit.get_line_count()
+
+	# Empty editor — just place the command as the first line.
+	if _script_edit.text.strip_edges() == "" and line_count <= 1 and _script_edit.get_line(0) == "":
+		_script_edit.text = command
+		_script_edit.set_caret_line(0)
+		_script_edit.set_caret_column(command.length())
+	else:
+		# TextEdit.insert_line_at inserts a brand-new line at that index.
+		if insert_line > line_count:
+			insert_line = line_count
+		_script_edit.insert_line_at(insert_line, command)
+		_script_edit.set_caret_line(insert_line)
+		_script_edit.set_caret_column(command.length())
+
+	_script_edit.grab_focus()
+
+
 func _apply_styles() -> void:
 	var panel_style := StyleBoxFlat.new()
 	panel_style.bg_color = COLOR_CREAM_PANEL
@@ -122,6 +180,7 @@ func _apply_styles() -> void:
 	_main_panel.add_theme_stylebox_override("panel", panel_style)
 	_keys_panel.add_theme_stylebox_override("panel", panel_style.duplicate())
 	_rules_panel.add_theme_stylebox_override("panel", panel_style.duplicate())
+	_commands_panel.add_theme_stylebox_override("panel", panel_style.duplicate())
 
 	var edit_style := StyleBoxFlat.new()
 	edit_style.bg_color = COLOR_CREAM
@@ -152,6 +211,40 @@ func _apply_styles() -> void:
 
 	_style_action_button(_test_button, true)
 	_style_action_button(_back_button, false)
+	_style_command_buttons()
+
+
+func _style_command_buttons() -> void:
+	if _commands_vbox == null:
+		return
+	for child in _commands_vbox.get_children():
+		if child is Button:
+			_style_command_button(child)
+
+
+func _style_command_button(button: Button) -> void:
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = COLOR_CREAM
+	normal.set_border_width_all(2)
+	normal.border_color = COLOR_RED
+	normal.set_corner_radius_all(4)
+	normal.content_margin_left = 10
+	normal.content_margin_top = 8
+	normal.content_margin_right = 10
+	normal.content_margin_bottom = 8
+
+	var hover := normal.duplicate() as StyleBoxFlat
+	hover.bg_color = Color(0.95, 0.9, 0.86, 1)
+
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", hover)
+	button.add_theme_stylebox_override("focus", hover)
+	button.add_theme_color_override("font_color", COLOR_RED)
+	button.add_theme_color_override("font_hover_color", COLOR_RED)
+	button.add_theme_font_size_override("font_size", 30)
+	if _font:
+		button.add_theme_font_override("font", _font)
 
 
 func _style_action_button(button: Button, primary: bool) -> void:
@@ -180,8 +273,9 @@ func _style_action_button(button: Button, primary: bool) -> void:
 func _input(event: InputEvent) -> void:
 	if not OS.is_debug_build() or not _is_open:
 		return
-	if event is InputEventKey and not event.echo:
-		_handle_ctrl_toggle(event)
+	if Input.is_action_just_pressed('toggle_key_editor'):
+		toggle_keys_panel()
+		get_viewport().set_input_as_handled()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -198,31 +292,16 @@ func _on_script_gui_input(event: InputEvent) -> void:
 	if not _is_open:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
+		# Block Shift+K from typing into the script while the action toggles help.
+		if event.shift_pressed and (event.keycode == KEY_K or event.physical_keycode == KEY_K):
+			_script_edit.accept_event()
+			return
 		if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
 			if not event.shift_pressed:
 				# Enter inserts a newline (default TextEdit behaviour).
 				return
 			_on_test_pressed()
 			_script_edit.accept_event()
-
-
-## Ctrl alone toggles the KEY panel. Holding Ctrl with another key (copy/paste) does not.
-func _handle_ctrl_toggle(event: InputEventKey) -> void:
-	var is_ctrl_key := (
-		event.keycode == KEY_CTRL
-		or event.keycode == KEY_META
-
-	)
-	if is_ctrl_key:
-		if event.pressed:
-			_ctrl_chord_used = false
-		elif not _ctrl_chord_used:
-			toggle_keys_panel()
-			get_viewport().set_input_as_handled()
-		return
-
-	if event.pressed and event.ctrl_pressed:
-		_ctrl_chord_used = true
 
 
 func _on_test_pressed() -> void:

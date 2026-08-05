@@ -17,14 +17,14 @@ var current_particles : GPUParticles3D = null
 const ROCK_01 = preload('uid://c2pmyrm3e4ty5')
 const ROCK_02 = preload('uid://84ianb3xwjp7')
 const ROCK_03 = preload('uid://lxbrgqaovv68')
-#const SMOKEBOMB_MESH = preload('uid://mk0dna4yesux')
+
 
 
 const ROCK_MESHES = [
 	ROCK_01,
 	ROCK_02,
 	ROCK_03,
-	#SMOKEBOMB_MESH
+
 ]
 
 enum RockSize {
@@ -37,7 +37,7 @@ enum RockSize {
 	HAZARD_SMALL,
 	MONEY_ROCK,
 	RED_ROCK_ERROR,
-	SMOKEBOMB
+	SMOKECAN
 }
 
 enum State {
@@ -69,7 +69,7 @@ var rock_has_been_logged := false
 @onready var gold_rock: MeshInstance3D = %Gold_rock
 @onready var huge_rock: MeshInstance3D = %Huge_rock
 @onready var red_rock: MeshInstance3D = %Red_rock
-@onready var smokebomb: MeshInstance3D = %Smokebomb
+@onready var smokecan: MeshInstance3D = %Smokecan
 
 @onready var hazard_large: MeshInstance3D = %Hazard_large
 
@@ -158,7 +158,8 @@ func update_prepare_rock() -> void:
 	force_mult.shuffle()
 	await get_tree().process_frame
 	setup_rock_type()
-	if rock_type_name != 'hazard_type_1':
+	# Hazards / smokecans are obstacles — not required to clear the round.
+	if rock_type_name != 'hazard_type_1' and rock_type != RockSize.SMOKECAN:
 		gl_PlayerState.log_rocks(1, rock_type_name)
 		
 	await get_tree().create_timer(0.2).timeout
@@ -167,6 +168,9 @@ func update_prepare_rock() -> void:
 func update_active() -> void:
 	if rock_type != RockSize.SMALL_2:
 		constant_force.x = 0.01
+	
+	if  rock_type == RockSize.SMOKECAN:
+		constant_force.x = 0.5
 	
 	else:
 		constant_force.x = 0.01
@@ -257,7 +261,7 @@ func hide_all_meshes() -> void:
 	huge_rock.visible 			= false
 	hazard_large.visible 		= false
 	red_rock.visible			= false
-	smokebomb.visible			= false
+	smokecan.visible			= false
 
 
 
@@ -521,26 +525,25 @@ func setup_rock_type() -> void:
 			force_mult_index = 0
 			
 		
-		RockSize.SMOKEBOMB:
-			# Base values
-			current_rock_type 	= "Smokebomb"
+		RockSize.SMOKECAN:
+			# Base values — obstacle only; does not count toward round progress (like HAZARD).
+			current_rock_type 	= "Smokecan"
 			rock_type_name 		= "rock_type_8"
-			gl_PlayerState.log_white_rock()
 			var base_health := int(gl_DataSet.get_value("rock_type_8", 1))
 			var base_cash   := int(gl_DataSet.get_value("rock_type_8", 0))
 			var base_scale  := Vector3.ONE * 0.35
 
 			# Random subtype: 1x / 2x / 3x
 			#var size_multiplier : int = [1, 2].pick_random() #, 3].pick_random()
-			var size_multiplier_float : float = 3.0 #randf_range (1.2, 1.35)
+			var size_multiplier_float : float = 1.5 #randf_range (1.2, 1.35)
 			var size_multiplier_int : int = 1
 			$Mesh.scale = Vector3.ONE
 			health = base_health * size_multiplier_int
 			cash_value = base_cash # * size_multiplier
 			max_health = health
-			smokebomb.visible = true
+			smokecan.visible = true
 			main_col.scale = Vector3.ONE * 0.125  * size_multiplier_float
-			current_mesh = smokebomb
+			current_mesh = smokecan
 			#assign_random_mesh(current_mesh)
 			current_mesh.scale = base_scale * size_multiplier_float
 			rock_type_gravity_scale = 2.5 # + (size_multiplier / 10)
@@ -825,7 +828,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		return
 	
 	
-	if rock_type == RockSize.SMOKEBOMB:
+	if rock_type == RockSize.SMOKECAN:
 		apply_torque_impulse(Vector3.BACK * 100.0)
 		play_hit_sfx()
 		#%launch_sound.play()
@@ -844,7 +847,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 func fly_off_into_distance() -> void:
 	ignores_x_out_of_bounds = true
 	
-	var strength : float = [6.0].pick_random()
+	var strength : float = 4.0 # [4.0].pick_random()
 	var x_direction := 0.0
 	var player := get_tree().get_first_node_in_group('Player')
 	
@@ -961,7 +964,7 @@ func start_destroyed_process() -> void:
 	if cash_value == 2:
 		hazard_aoe_delayed()
 	
-	if rock_type == RockSize.SMOKEBOMB:
+	if rock_type == RockSize.SMOKECAN:
 		%hazard_hit_sound.play()
 		
 	was_hit_tween()
@@ -1002,7 +1005,7 @@ func play_destroy_sfx() -> void:
 func _on_start_falling_timer_timeout() -> void:
 	falling = true
 	
-	if rock_type == RockSize.SMOKEBOMB:
+	if rock_type == RockSize.SMOKECAN:
 		var damage_mesh = current_mesh.get_child(0) 
 		for i in range(3):
 			damage_mesh.show()
@@ -1143,9 +1146,9 @@ func hazard_aoe_delayed() -> void:
 
 func smoke_particles() -> void:
 	
-	if rock_type == RockSize.SMOKEBOMB:
-		%Smokebomb_AoE.global_position = global_position
-		%Smokebomb_AoE.play_particles = true
+	if rock_type == RockSize.SMOKECAN:
+		%Smokecan_AoE.global_position = global_position
+		%Smokecan_AoE.play_particles = true
 		
 	if rock_type_name.contains('hazard'):
 		$Hazard_AoE2.global_position = global_position

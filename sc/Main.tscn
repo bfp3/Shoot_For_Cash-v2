@@ -491,6 +491,45 @@ scale_max = 0.19999999
 scale_curve = SubResource("CurveTexture_3gdew")
 alpha_curve = SubResource("CurveTexture_fuvvr")
 
+[sub_resource type="Animation" id="Animation_8twtg"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_3ga0b"]
+resource_name = "idle_move"
+length = 3.0
+loop_mode = 2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(2, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vwwt2"]
+_data = {
+&"RESET": SubResource("Animation_8twtg"),
+&"idle_move": SubResource("Animation_3ga0b")
+}
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5w5l"]
 shading_mode = 0
 
@@ -632,7 +671,6 @@ flight_speed_curve = SubResource("Curve_7gshx")
 speed_multiplier = 60.0
 
 [node name="PigeonAimMarkers" type="Node3D" parent="." unique_id=1888004100]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="1" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004101]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.1567, 0, 43.0337)
@@ -2004,12 +2042,17 @@ script = ExtResource("80_protect")
 round_manager = NodePath("../Round_manager")
 
 [node name="PlayerBalloon2" parent="ProtectBalloons" unique_id=350761291 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50.095, 30.9)
-top_level = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 23)
+pan_axis = 0
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="ProtectBalloons/PlayerBalloon2" unique_id=355023616]
+libraries/ = SubResource("AnimationLibrary_vwwt2")
+autoplay = &"idle_move"
 
 [node name="PlayerBalloon3" parent="ProtectBalloons" unique_id=1574938481 instance=ExtResource("68_wtxnc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 52.095, 30.9)
 top_level = true
+pan_axis = 0
 
 [node name="ProtectBalloonRound" type="Node3D" parent="." unique_id=919395476 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager", "blue_balloon")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 29)
@@ -2311,11 +2354,11 @@ text = "C"
 font_size = 363
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=804874602]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -63)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 69)
 mesh = SubResource("BoxMesh_8twtg")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1858634427]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -63)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 69)
 mesh = SubResource("BoxMesh_8twtg")
 
 [connection signal="finished" from="Music/Randomiser" to="Music" method="_on_randomiser_finished"]

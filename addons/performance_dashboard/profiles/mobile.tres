@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="PerformanceTargetProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/performance_dashboard/core/performance_target_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+profile_id = &"mobile"
+display_name = "Mobile"
+description = "Aggressive budgets for mid-range mobile GPUs. Edit these values freely."
+targets = {
+"fps": 30.0,
+"frame_time_ms": 33.33,
+"process_time_ms": 22.0,
+"physics_time_ms": 6.0,
+"navigation_time_ms": 2.0,
+"draw_calls": 200.0,
+"render_objects": 400.0,
+"primitives": 300000.0,
+"triangles_est": 100000.0,
+"visible_objects": 400.0,
+"physics_3d_objects": 80.0,
+"physics_3d_pairs": 150.0,
+"physics_2d_objects": 50.0,
+"active_lights": 4.0,
+"shadow_casters": 1.0,
+"active_particles": 6.0,
+"audio_voices": 24.0,
+"audio_latency_ms": 60.0,
+"texture_mem_mb": 192.0,
+"buffer_mem_mb": 96.0,
+"video_mem_mb": 320.0,
+"static_mem_mb": 512.0,
+"object_count": 3000.0,
+"node_count": 2000.0,
+"resource_count": 1000.0,
+"orphan_node_count": 0.0,
+"nav_agents": 16.0,
+"nav_regions": 8.0,
+"nav_polygons": 4000.0,
+"pipeline_compilations_draw": 0.0
+}
