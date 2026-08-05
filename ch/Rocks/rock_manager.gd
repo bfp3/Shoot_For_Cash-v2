@@ -508,6 +508,17 @@ func _resolve_spawn_column(entry) -> int:
 	return randi_range(1, COLUMN_COUNT)
 
 
+## Resolves aim cell. Missing/invalid (< 1) row or column → random A–C × 1–8.
+func _resolve_aim_cell(entry) -> Vector2i:
+	var aim_row := 0
+	var aim_column := 0
+	if entry is Dictionary:
+		aim_row = int(entry.get('aim_row', -1))
+		aim_column = int(entry.get('aim_column', -1))
+	if aim_row < 1 or aim_column < 1:
+		return Vector2i(randi_range(1, 3), randi_range(1, COLUMN_COUNT))
+	return Vector2i(aim_row, aim_column)
+
 
 func _is_far_enough(candidate: float, positions: Array[float]) -> bool:
 	for p in positions:
@@ -629,31 +640,18 @@ func bounce_rocks() -> void:
 
 
 ## Pigeons fly into the distance along the column fan (17° half-angle from world origin).
-## `rock-pigeon 1` → spawn col 1, aim along col 1's distant ray.
+## `rock-pigeon 1` → spawn col 1, random aim cell on the fan.
 ## `rock-pigeon 1 A8` → spawn col 1, aim at col 8's distant point (row A height).
 func _pigeon_launch_impulse(body, rock_index: int, upward_force: float) -> Vector3:
-	var aim_row := 0
-	var aim_column := 0
-	var spawn_column := -1
-
 	var entry = null
 	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
 		entry = manual_rock_sequence[rock_index]
-	if entry is Dictionary:
-		aim_row = int(entry.get('aim_row', 0))
-		aim_column = int(entry.get('aim_column', 0))
-		spawn_column = int(entry.get('column', -1))
 
-	# No aim cell → stay on this lane's own fan ray (into the distance).
-	if aim_column < 1:
-		if spawn_column < 1:
-			spawn_column = _x_to_nearest_column(body.global_position.x)
-		aim_column = spawn_column
+	var aim := _resolve_aim_cell(entry)
+	var aim_row := aim.x
+	var aim_column := aim.y
 
-	var y_force: float = upward_force
-	if aim_row > 0:
-		y_force = upward_force * float(AIM_PULSE_SCALE.get(aim_row, 1.0))
-
+	var y_force: float = upward_force * float(AIM_PULSE_SCALE.get(aim_row, 1.0))
 	var aim_point := _pigeon_aim_world_point(aim_column, aim_row, body.global_position.y)
 	var dx: float = aim_point.x - body.global_position.x
 	var dz: float = aim_point.z - body.global_position.z
@@ -723,21 +721,14 @@ func _x_to_nearest_column(x: float) -> int:
 
 
 ## Same pulse power (upward_force * pulse_magnitude). Aimed rocks steer toward A/B/C cells.
+## Unspecified / `?` aim → random cell at launch.
 func _build_launch_impulse(body, rock_index: int, upward_force: float, z_variation: float) -> Vector3:
 	var entry = null
 	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
 		entry = manual_rock_sequence[rock_index]
 
-	if entry is Dictionary:
-		var aim_row: int = int(entry.get('aim_row', 0))
-		var aim_column: int = int(entry.get('aim_column', 0))
-		if aim_row > 0 and aim_column > 0:
-			return _aimed_launch_impulse(body, aim_row, aim_column, upward_force, z_variation)
-
-	# No aim — original angle_bias / convergence behaviour.
-	var x_variation := 0.0
-	x_variation += _get_position_angle_bias(body.global_position.x)
-	return Vector3(x_variation, upward_force, z_variation) * pulse_magnitude
+	var aim := _resolve_aim_cell(entry)
+	return _aimed_launch_impulse(body, aim.x, aim.y, upward_force, z_variation)
 
 
 ## Aimed rocks steer toward A/B/C cells. Row A uses full pulse; B/C scale down from that.

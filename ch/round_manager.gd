@@ -724,9 +724,8 @@ func update_check_score() -> void:
 		enter_state(RoundState.WAVE_START)
 
 
-## Waves for the active round. Comes from `repeat` in the level file (default 1).
-## One trailing `repeat` → wave count. Sectional `repeat`s (commands after a `repeat`)
-## expand inside one wave, so this returns 1.
+## Waves for the active round (`wave-repeat`, or a single trailing `repeat`).
+## Sectional `repeat`s expand inside each wave and do not change this count.
 func get_current_round_wave_count() -> int:
 	const DEFAULT_WAVES := 1
 	if current_rock_sequence.is_empty():

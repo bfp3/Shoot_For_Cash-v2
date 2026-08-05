@@ -66,8 +66,8 @@ func add_balloon(_balloon_array : Array) -> void:
 				spawn_all = true
 				break
 			placements.append({
-				'row': int(entry.get('row', 1)),
-				'column': int(entry.get('column', 1)),
+				'row': int(entry.get('row', -1)),
+				'column': int(entry.get('column', -1)),
 			})
 			continue
 
@@ -101,7 +101,12 @@ func add_balloon(_balloon_array : Array) -> void:
 
 	for placement in placements:
 		duration = clamp(duration - 0.1, 0.2, 1.0)
-		await _spawn_one_balloon(int(placement.row), int(placement.column), duration, BALLOON_APPROACH_DURATION)
+		var row := int(placement.row)
+		var column := int(placement.column)
+		if row < 1 or column < 1:
+			row = randi_range(1, 3)
+			column = randi_range(1, BALLOON_COLUMN_COUNT)
+		await _spawn_one_balloon(row, column, duration, BALLOON_APPROACH_DURATION)
 
 
 ## Balloons listed before the first `wait` in a round sequence (shop / round-start intros).
@@ -137,11 +142,25 @@ func spawn_balloon_entry(entry: Dictionary) -> void:
 		return
 
 	await _spawn_one_balloon(
-		int(entry.get('row', 1)),
-		int(entry.get('column', 1)),
+		_resolve_balloon_row(entry),
+		_resolve_balloon_column(entry),
 		0.0,
 		approach
 	)
+
+
+func _resolve_balloon_row(entry: Dictionary) -> int:
+	var row := int(entry.get('row', -1))
+	if row < 1:
+		return randi_range(1, 3)
+	return row
+
+
+func _resolve_balloon_column(entry: Dictionary) -> int:
+	var column := int(entry.get('column', -1))
+	if column < 1:
+		return randi_range(1, BALLOON_COLUMN_COUNT)
+	return column
 
 
 func _spawn_one_balloon(row: int, column: int, stagger_sec: float = 0.0, approach_duration: float = BALLOON_APPROACH_DURATION) -> void:

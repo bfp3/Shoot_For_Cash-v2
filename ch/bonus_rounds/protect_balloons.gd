@@ -66,7 +66,13 @@ func begin_protect_round(placements: Array = []) -> void:
 		if balloon == null:
 			push_warning('ProtectBalloons: could not create protect balloon')
 			continue
-		_activate_balloon_at(balloon, int(cell.row), int(cell.column))
+		var row := int(cell.row)
+		var column := int(cell.column)
+		if row < 1:
+			row = randi_range(1, 3)
+		if column < 1:
+			column = randi_range(1, BALLOON_COLUMN_COUNT)
+		_activate_balloon_at(balloon, row, column)
 		_balloons.append(balloon)
 
 	if _balloons.is_empty():

@@ -17,6 +17,7 @@ const COMMAND_BUTTONS: PackedStringArray = [
 	"balloon",
 	"wait",
 	"repeat",
+	"wave-repeat",
 	"shuffle",
 	"no-lives",
 	"surprise-me",

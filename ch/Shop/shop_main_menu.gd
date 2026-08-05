@@ -44,7 +44,7 @@ func _ready() -> void:
 
 	
 	bg_music.volume_db = -80.0
-	#bg_music.play()
+	bg_music.play()
 
 	# STORE DEFAULT TRANSFORMS
 	default_scale = scale
@@ -584,16 +584,9 @@ func sfx_reroll_purchased() -> void:
 
 	
 func shop_music_raise_volume() -> void:
+	const _music_vol := -30.0
 	var tween := create_tween()
-	tween.tween_property(bg_music, "volume_db", -80.0, 0.25)
-	
-	#tween.tween_property(bg_music, "volume_db", -20.0, 0.25)
-	#tween.tween_property(bg_music, "volume_db", 4.0, 1.0)
-	
-	# Original song was played at this level
-	#tween.tween_property(bg_music, "volume_db", -60.0, 0.25)
-	#tween.tween_property(bg_music, "volume_db", -54.0, 1.0)
-	
+	tween.tween_property(bg_music, "volume_db", _music_vol, 0.25)	
 
 	
 	

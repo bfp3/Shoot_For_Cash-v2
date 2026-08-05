@@ -85,12 +85,15 @@ func launch_from_spawn_entry(entry: Dictionary) -> void:
 		push_warning("PineappleLauncher: no available pineapple for spawn")
 		return
 
-	var column := int(entry.get('column', 1))
+	var column := int(entry.get('column', -1))
 	if column < 1:
-		column = 1
+		column = randi_range(1, COLUMN_COUNT)
 	var x_pos := column_to_x(column)
-	var aim_row := int(entry.get('aim_row', 0))
-	var aim_column := int(entry.get('aim_column', 0))
+	var aim_row := int(entry.get('aim_row', -1))
+	var aim_column := int(entry.get('aim_column', -1))
+	if aim_row < 1 or aim_column < 1:
+		aim_row = randi_range(1, 3)
+		aim_column = randi_range(1, COLUMN_COUNT)
 	launch_pineapple(body, x_pos, aim_row, aim_column)
 
 
@@ -101,7 +104,8 @@ func _get_next_available_pineapple() -> RigidBody3D:
 	return null
 
 
-## Straight up from x_pos (current behaviour). With aim_row/aim_column, steer diagonally toward that cell.
+## Straight up from x_pos when aim is unset. With aim_row/aim_column, steer diagonally toward that cell.
+## Callers should resolve `?` / random aim before calling when random aim is desired.
 func launch_pineapple(body: RigidBody3D, x_pos: float, aim_row: int = 0, aim_column: int = 0) -> void:
 	body.update_active()
 	body.exit_side = body.ExitSide.TOP

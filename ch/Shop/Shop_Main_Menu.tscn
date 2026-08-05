@@ -23,8 +23,8 @@
 [ext_resource type="Texture2D" uid="uid://gbka4yjc0p4k" path="res://res/bullet_texture.png" id="15_htvy6"]
 [ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="17_cn8lj"]
 [ext_resource type="PackedScene" uid="uid://bnvrnccnsas5n" path="res://ch/Shop/PlayButton_v2.tscn" id="17_xklyy"]
+[ext_resource type="AudioStream" uid="uid://bljoq1kmbgs2" path="res://sfx/shop_music.ogg" id="25_ohn7f"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
-[ext_resource type="AudioStream" uid="uid://cpr70poqkj2hs" path="res://sfx/greyscale_compressed.ogg" id="33_pwib5"]
 [ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="40_8mk8u"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="41_5w0u1"]
 [ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="42_hfqf8"]
@@ -2173,8 +2173,8 @@ vertical_alignment = 1
 [node name="SFX" type="Node" parent="." unique_id=645241627]
 
 [node name="BG_Music" type="AudioStreamPlayer" parent="SFX" unique_id=1859295132]
-stream = ExtResource("33_pwib5")
-volume_db = -80.0
+stream = ExtResource("25_ohn7f")
+volume_db = -20.0
 
 [node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=428842167]
 stream = ExtResource("41_5w0u1")

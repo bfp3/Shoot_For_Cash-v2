@@ -240,7 +240,7 @@ func disable_collision() -> void:
 	set_collision_layer_value(2, false)
 	$main_col.disabled = true
 	if %balloon_area:
-		%balloon_area.monitoring = false
+		%balloon_area.set_deferred("monitoring", false)
 
 func enable_collision() -> void:
 	$main_col.disabled = false
@@ -249,20 +249,18 @@ func enable_collision() -> void:
 	set_collision_layer_value(2, true)
 
 	if %balloon_area:
-		%balloon_area.monitoring = true
+		%balloon_area.set_deferred("monitoring", true)
 
 func reset_rock_back_on() -> void:
 	#enter_state(State.MISSED)
 	current_rock_type 	= "hazard"
-	#rock_type_name 		= "hazard_type_1"
-	rock_type_name = ""
+	#rock_type_name 	= "hazard_type_1"
+	rock_type_name 		= ""
 
-	var base_health := int(gl_DataSet.get_value("hazard_type_1", 1))
-	var base_cash 	:= int(gl_DataSet.get_value("balloon_orange", 1))
-	var base_scale  := Vector3.ONE * 1.0 #0.35
+	var base_health 	:= int(gl_DataSet.get_value("hazard_type_1", 1))
+	var base_cash 		:= int(gl_DataSet.get_value("balloon_orange", 1))
+	var base_scale  	:= Vector3.ONE * 1.0 #0.35
 
-	# Random subtype: 1x / 2x / 3x
-	
 	#if base_cash >= 0:
 	base_cash = penalty_amount
 	

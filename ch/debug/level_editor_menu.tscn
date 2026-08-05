@@ -70,12 +70,15 @@ flies into the distance (fan aim)
 [color=#C70102]wait[/color] / [color=#C70102]wait 200[/color] delay before next action default 1000ms
 
 [color=#C70102]repeat[/color] / [color=#C70102]repeat 3[/color]
-trailing only = waves
+section plays N times in a wave
 (bare/1/2 = 2, else N)
-commands after a repeat =
-sections inside one wave
 
-[color=#C70102]balloon[/color] / [color=#C70102]balloon A1[/color] place a balloon default A1
+[color=#C70102]wave-repeat[/color] / [color=#C70102]wave-repeat 3[/color]
+how many waves (bare = 2)
+trailing [color=#C70102]repeat[/color] alone still = waves
+
+[color=#C70102]balloon[/color] / [color=#C70102]balloon A1[/color] / [color=#C70102]balloon ?[/color]
+place a balloon (bare = random)
 
 [color=#C70102]no-lives[/color] no strikes this round
 
@@ -88,15 +91,22 @@ sections inside one wave
 [color=#C70102]protect-balloon A4[/color] place/override protect balloon(s)
 
 [color=#C70102]PARAMETERS[/color]
-[color=#C70102]rock 2[/color]
-spawn at column 2
-(omit number = random column)
+[color=#C70102]?[/color] = leave to the game (random)
+
+[color=#C70102]rock[/color] = [color=#C70102]rock ? ?[/color]
+random column + random aim
+
+[color=#C70102]rock 2[/color] = [color=#C70102]rock 2 ?[/color]
+column 2, random aim
+
+[color=#C70102]rock ? A4[/color]
+random column, aim A4
 
 [color=#C70102]rock 2 A8[/color]
-column 2, aimed at cell A8
+column 2, aimed at A8
 
-[color=#C70102]rock A8[/color]
-aim only — spawn defaults to column 1
+[color=#C70102]balloon[/color] / [color=#C70102]balloon ?[/color]
+random cell
 
 [color=#C70102]AIM CELLS A / B / C[/color]
 row letter + column 1–8
@@ -175,14 +185,8 @@ size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "no-lives
 
-#rock
-#rock-black
-#rock-pigeon
-#balloon
-#smokecan
-
 rock 2
-repeat 3"
+wave-repeat 3"
 placeholder_text = "rock
 rock-black 2
 wait 200
