@@ -17,12 +17,11 @@ const COMMAND_BUTTONS: PackedStringArray = [
 	"balloon",
 	"wait",
 	"repeat",
-	"wave-repeat",
 	"shuffle",
 	"no-lives",
 	"surprise-me",
-	"bonus-protect",
-	"protect-balloon",
+	"bonus-type1",
+	"bonus-target",
 ]
 
 @export var round_manager: RoundManager

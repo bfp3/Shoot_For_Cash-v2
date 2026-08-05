@@ -49,7 +49,7 @@ func taking_damage_tween() -> void:
 		0.8,
 		0.2
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tween_damage.tween_interval(1.5)
+	#tween_damage.tween_interval(1.5)
 	# Flash back out
 	tween_damage.tween_method(
 		func(val):

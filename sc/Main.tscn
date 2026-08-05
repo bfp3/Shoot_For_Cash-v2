@@ -68,8 +68,8 @@
 [ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="68_wtxnc"]
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
 [ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
+[ext_resource type="Script" uid="uid://cw36fy6a37j1h" path="res://ch/bonus_rounds/bonus_target_manager.gd" id="71_3ga0b"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
-[ext_resource type="Script" uid="uid://cw36fy6a37j1h" path="res://ch/bonus_rounds/protect_balloons.gd" id="80_protect"]
 [ext_resource type="Script" uid="uid://c2w53e8iak64g" path="res://ch/protect_balloon_round.gd" id="80_ufvrt"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 
@@ -491,54 +491,12 @@ scale_max = 0.19999999
 scale_curve = SubResource("CurveTexture_3gdew")
 alpha_curve = SubResource("CurveTexture_fuvvr")
 
-[sub_resource type="Animation" id="Animation_8twtg"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("..:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_3ga0b"]
-resource_name = "idle_move"
-length = 3.0
-loop_mode = 2
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("..:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(5, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_vwwt2"]
-_data = {
-&"RESET": SubResource("Animation_8twtg"),
-&"idle_move": SubResource("Animation_3ga0b")
-}
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5w5l"]
 shading_mode = 0
 
 [sub_resource type="BoxMesh" id="BoxMesh_r5w5l"]
 material = SubResource("StandardMaterial3D_r5w5l")
 size = Vector3(0.05, 30, 0.05)
-
-[sub_resource type="BoxMesh" id="BoxMesh_8twtg"]
-size = Vector3(5, 5, 5)
 
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
@@ -552,7 +510,7 @@ splash_screen = NodePath("SplashScreenCanvasLayer")
 music_manager = NodePath("Music")
 main_game_canvas = NodePath("MainGameCanvasLayer")
 
-[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("player", "scene_transition_screen", "shop_main_menu", "tally_menu", "round_timer", "place_name", "rocks_container", "music_manager", "birds", "balloon_container", "blue_balloon", "protect_balloons", "level_layout", "wave_progress_indication", "wave_progress_feedback") groups=["restartable", "round_manager"]]
+[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("player", "scene_transition_screen", "shop_main_menu", "tally_menu", "round_timer", "place_name", "rocks_container", "music_manager", "birds", "balloon_container", "blue_balloon", "bonus_target_manager", "level_layout", "wave_progress_indication", "wave_progress_feedback") groups=["restartable", "round_manager"]]
 script = ExtResource("2_wtxnc")
 player = NodePath("../Player")
 scene_transition_screen = NodePath("../Background_transition")
@@ -565,7 +523,7 @@ music_manager = NodePath("../Music")
 birds = NodePath("../BirdsFlightPath/PathFollow3D/Bird_fly_by_helpers")
 balloon_container = NodePath("../Balloon_container")
 blue_balloon = NodePath("../PlayerBalloon")
-protect_balloons = NodePath("../ProtectBalloons")
+bonus_target_manager = NodePath("../BonusTargetManager")
 level_layout = NodePath("../Level_Visual")
 wave_progress_indication = NodePath("../MainGameCanvasLayer/WaveProgressIndication")
 wave_progress_feedback = NodePath("../MainGameCanvasLayer/WaveProgressIndication/Wave_Text")
@@ -649,7 +607,7 @@ pitch_scale = 0.9
 
 [node name="Randomiser" type="AudioStreamPlayer" parent="Music" unique_id=1748658751]
 stream = SubResource("AudioStreamRandomizer_mdemw")
-volume_db = -67.0
+volume_db = -80.0
 pitch_scale = 1.1
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1533254053]
@@ -2037,31 +1995,18 @@ stream = ExtResource("17_lysu5")
 volume_db = -40.0
 pitch_scale = 2.0
 
-[node name="ProtectBalloons" type="Node3D" parent="." unique_id=1888003001 node_paths=PackedStringArray("round_manager")]
-script = ExtResource("80_protect")
+[node name="BonusTargetManager" type="Node3D" parent="." unique_id=1888003001 node_paths=PackedStringArray("round_manager")]
+script = ExtResource("71_3ga0b")
 round_manager = NodePath("../Round_manager")
+patrol_seconds_per_leg = 6.0
 
-[node name="PlayerBalloon2" parent="ProtectBalloons" unique_id=350761291 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 23)
-pan_axis = 0
-
-[node name="AnimationPlayer2" type="AnimationPlayer" parent="ProtectBalloons/PlayerBalloon2" unique_id=355023616]
-libraries/ = SubResource("AnimationLibrary_vwwt2")
-autoplay = &"idle_move"
-
-[node name="PlayerBalloon3" parent="ProtectBalloons" unique_id=1574938481 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 52.095, 30.9)
-top_level = true
-pan_axis = 0
-
-[node name="ProtectBalloonRound" type="Node3D" parent="." unique_id=919395476 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager", "blue_balloon")]
+[node name="ProtectBalloonRound" type="Node3D" parent="." unique_id=919395476 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 29)
 visible = false
 script = ExtResource("80_ufvrt")
 left_marker = NodePath("../Pineapple_markers/LeftMarker")
 right_marker = NodePath("../Pineapple_markers/RightMarker")
 round_manager = NodePath("../Round_manager")
-blue_balloon = NodePath("../ProtectBalloons/PlayerBalloon2")
 pineapple_spawn_radius = 20.0
 pineapple_aim_offset = 6.0
 
@@ -2185,12 +2130,11 @@ physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 cash_value = 0
 force_multiplier = 1.0
 
-[node name="BonusOranges" type="Node3D" parent="." unique_id=774568452 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager", "blue_balloon")]
+[node name="BonusOranges" type="Node3D" parent="." unique_id=774568452 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager")]
 script = ExtResource("80_ufvrt")
 left_marker = NodePath("../Pineapple_markers/LeftMarker")
 right_marker = NodePath("../Pineapple_markers/RightMarker")
 round_manager = NodePath("../Round_manager")
-blue_balloon = NodePath("../ProtectBalloons/PlayerBalloon2")
 oranges = true
 
 [node name="Orange" parent="BonusOranges" unique_id=1922213171 instance=ExtResource("69_swp41")]
@@ -2352,14 +2296,6 @@ no_depth_test = true
 fixed_size = true
 text = "C"
 font_size = 363
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=804874602]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 69)
-mesh = SubResource("BoxMesh_8twtg")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1858634427]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 69)
-mesh = SubResource("BoxMesh_8twtg")
 
 [connection signal="finished" from="Music/Randomiser" to="Music" method="_on_randomiser_finished"]
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]

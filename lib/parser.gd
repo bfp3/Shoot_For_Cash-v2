@@ -75,21 +75,21 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 ## Parses a single spawn line into a spawn dictionary.
 ## Targets — rock / rock-black / rock-pigeon / smokecan / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, param}. `?` or omit = random (RANDOM_SLOT / -1).
-##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock A4` = random col + aim A4.
+##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
+##   `rock A4` is invalid — column must be a number or `?` before the aim cell.
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
 ## wait: {cmd, ms} — delay before the next rock; defaults to 1000ms.
-## repeat: {cmd, count} — closes a section that plays `count` times inside one wave.
-##   Bare `repeat` / `repeat 1` / `repeat 2` → count 2. `repeat N` (N ≥ 2) → N.
-##   Compat: a single trailing `repeat` with nothing after still means wave count
-##   (same as `wave-repeat`), matching existing island-shipper rounds.
-## wave-repeat: {cmd, count} — how many times the whole wave (after section expands) plays.
-##   Bare `wave-repeat` → 2. `wave-repeat N` → max(1, N).
+## repeat: {cmd, count} — closes a wave section that plays as `count` separate waves.
+##   Bare `repeat` / `repeat 1` / `repeat 2` → 2 waves. `repeat N` (N ≥ 2) → N waves.
+##   Commands after a `repeat` start the next section / next set of waves.
+##   Example: `rock 2` / `repeat 3` / `rock 4` / `repeat 2` → 5 waves total.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
 ## shuffle: {cmd} — this round only; later waves randomise rock columns.
 ## surprise-me: {cmd} — replace this round's spawns with a random generated sequence.
-## bonus-protect / bonus protect: marks the round as a protect bonus (no strikes).
-## protect-balloon / protect-balloon A4: place a protect balloon (bonus-protect only).
-##   Bare `protect-balloon` defaults to B4. `protect-balloon ?` → random. Multiple lines OK.
+## bonus-type1 / bonus type1: marks the round as bonus type 1 (no strikes).
+## bonus-target / bonus-target a4 a8 c1: each line is one bonus target with its own path.
+##   Bare `bonus-target` → stay still at B4. Cells listed → that target loops those cells.
+##   Multiple `bonus-target` lines → multiple active targets in the same round.
 ## Unknown commands become red_rock_error so bad editor lines are visible in-game.
 ## Commands and row letters are case-insensitive.
 func parse_spawn_command(token: String) -> Dictionary:
@@ -109,17 +109,14 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'balloon':
 			return _parse_balloon_command(parts)
 
-		'protect-balloon':
-			return _parse_protect_balloon_command(parts)
+		'bonus-target':
+			return _parse_bonus_target_command(parts)
 
 		'wait':
 			return _parse_wait_command(parts)
 
 		'repeat':
 			return _parse_repeat_command(parts)
-
-		'wave-repeat':
-			return _parse_wave_repeat_command(parts)
 
 		'no-lives':
 			return {'cmd': 'no-lives'}
@@ -130,17 +127,17 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'surprise-me':
 			return {'cmd': 'surprise-me'}
 
-		'bonus-protect':
-			return {'cmd': 'bonus-protect'}
+		'bonus-type1':
+			return {'cmd': 'bonus-type1'}
 
 		'bonus':
-			# `bonus protect` → same as `bonus-protect` (subtype after bonus).
+			# `bonus type1` → same as `bonus-type1` (subtype after bonus).
 			if parts.size() > 1:
 				var subtype := String(parts[1]).strip_edges().to_lower()
 				if subtype.begins_with('bonus-'):
 					subtype = subtype.substr(6)
 				return {'cmd': 'bonus-%s' % subtype}
-			push_warning("parser: 'bonus' needs a subtype (e.g. bonus-protect) — using red_rock_error")
+			push_warning("parser: 'bonus' needs a subtype (e.g. bonus-type1) — using red_rock_error")
 			return {
 				'cmd': 'red_rock_error',
 				'column': 3,
@@ -179,8 +176,8 @@ func _is_random_token(token: String) -> bool:
 ##   rock 2        → rock 2 ?   (column 2, random aim)
 ##   rock ? A4     → random column, aim A4
 ##   rock 2 A4     → column 2, aim A4
-##   rock A4       → rock ? A4  (random column, aim A4)
 ##   rock ? ?      → explicit both-random
+##   rock A4       → red_rock_error (must write `rock ? A4`)
 func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': cmd,
@@ -199,15 +196,18 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	elif token1.is_valid_int():
 		result.column = int(token1)
 	else:
-		var aim_only := _parse_balloon_cell(token1)
-		if not aim_only.is_empty():
-			# `rock A8` — aim only, spawn column random (same as `rock ? A8`).
-			result.column = RANDOM_SLOT
-			result.aim_row = aim_only.row
-			result.aim_column = aim_only.column
-			if parts.size() > 2:
-				result.param = parts[2]
-			return result
+		# Aim cell as first arg (`rock A4`) is invalid — require `rock ? A4`.
+		if not _parse_balloon_cell(token1).is_empty():
+			push_warning("parser: '%s' needs column or '?' before aim (use '%s ? %s')" % [
+				' '.join(parts), cmd, token1,
+			])
+			return {
+				'cmd': 'red_rock_error',
+				'column': 3,
+				'aim_row': 3,
+				'aim_column': 3,
+				'param': ' '.join(parts),
+			}
 		result.param = token1
 		return result
 
@@ -241,24 +241,13 @@ func _parse_wait_command(parts: PackedStringArray) -> Dictionary:
 	}
 
 
-## Section play count. Bare / 1 / 2 → 2. `repeat N` (N ≥ 2) → N.
+## Wave-section count. Bare / 1 / 2 → 2 waves of that section. `repeat N` (N ≥ 2) → N waves.
 func _parse_repeat_command(parts: PackedStringArray) -> Dictionary:
 	var count := 2
 	if parts.size() > 1 and String(parts[1]).is_valid_int():
 		count = maxi(int(parts[1]), 2)
 	return {
 		'cmd': 'repeat',
-		'count': count,
-	}
-
-
-## Whole-wave count. Bare → 2. `wave-repeat N` → max(1, N).
-func _parse_wave_repeat_command(parts: PackedStringArray) -> Dictionary:
-	var count := 2
-	if parts.size() > 1 and String(parts[1]).is_valid_int():
-		count = maxi(int(parts[1]), 1)
-	return {
-		'cmd': 'wave-repeat',
 		'count': count,
 	}
 
@@ -310,28 +299,23 @@ func _parse_balloon_command(parts: PackedStringArray) -> Dictionary:
 	return result
 
 
-## protect-balloon → B4 (bonus-protect default). protect-balloon A4 / ? → that cell / random.
-func _parse_protect_balloon_command(parts: PackedStringArray) -> Dictionary:
+## bonus-target → stay still (empty waypoints). bonus-target a4 a8 c1 → patrol those cells.
+func _parse_bonus_target_command(parts: PackedStringArray) -> Dictionary:
 	var result := {
-		'cmd': 'protect-balloon',
-		'row': 2,       # B — same default as bonus-protect
-		'column': 4,
-		'param': '',
+		'cmd': 'bonus-target',
+		'waypoints': [],
 	}
 
-	if parts.size() <= 1:
-		return result
+	for i in range(1, parts.size()):
+		var token := String(parts[i]).strip_edges()
+		if token.is_empty() or _is_random_token(token):
+			continue
+		var cell := _parse_balloon_cell(token)
+		if cell.is_empty():
+			push_warning("parser: bonus-target ignored invalid cell '%s'" % token)
+			continue
+		result.waypoints.append(cell)
 
-	var cell := String(parts[1]).strip_edges()
-	if _is_random_token(cell):
-		result.row = RANDOM_SLOT
-		result.column = RANDOM_SLOT
-		return result
-
-	var as_balloon := _parse_balloon_command(parts)
-	result.row = int(as_balloon.get('row', 2))
-	result.column = int(as_balloon.get('column', 4))
-	result.param = String(as_balloon.get('param', ''))
 	return result
 
 
@@ -388,15 +372,15 @@ func parse_round_text(text: String) -> Dictionary:
 			"repeat": DEFAULT_ROUND_REPEAT,
 			"no_lives": false,
 			"bonus": "",
-			"protect_placements": [],
+			"bonus_targets": [],
 			"shuffle": false,
 		}
 	return sequences[0]
 
 
 ## Builds one round dict per round, in file order:
-## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"protect"|...,
-##   "protect_placements": [{row, column}, ...], "shuffle": bool }
+## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"type1"|...,
+##   "bonus_targets": [{ "waypoints": [{row, column}, ...] }, ...], "shuffle": bool }
 ## Pass an empty island_name to include every island in the loaded file.
 func get_rock_sequences(island_name: String = '') -> Array:
 	var rounds: Dictionary = {}
@@ -413,13 +397,12 @@ func get_rock_sequences(island_name: String = '') -> Array:
 				'repeat': DEFAULT_ROUND_REPEAT,
 				'no_lives': false,
 				'bonus': '',
-				'protect_placements': [],
+				'bonus_targets': [],
 				'shuffle': false,
 				'surprise': false,
 				# Temporary while parsing — removed by `_finalize_round_repeats`.
 				'_pending': [],
 				'_sections': [],
-				'_wave_repeat': -1,
 			}
 			order.append(key)
 
@@ -437,10 +420,6 @@ func get_rock_sequences(island_name: String = '') -> Array:
 			rounds[key]._pending = []
 			continue
 
-		if parsed_cmd == 'wave-repeat':
-			rounds[key]._wave_repeat = int(parsed.get('count', 2))
-			continue
-
 		if parsed_cmd == 'no-lives':
 			rounds[key].no_lives = true
 			continue
@@ -453,17 +432,19 @@ func get_rock_sequences(island_name: String = '') -> Array:
 			rounds[key].surprise = true
 			continue
 
-		if parsed_cmd.begins_with('bonus-') and parsed_cmd.length() > 6:
+		if parsed_cmd == 'bonus-target':
+			var waypoints: Array = parsed.get('waypoints', [])
+			# Each `bonus-target` line is its own target with its own path.
+			rounds[key].bonus_targets.append({
+				'waypoints': waypoints.duplicate(true),
+			})
+			continue
+
+		# Round markers like `bonus-type1` — must not catch `bonus-target` (handled above).
+		if parsed_cmd.begins_with('bonus-') and parsed_cmd.length() > 6 and parsed_cmd != 'bonus-target':
 			var bonus_type := parsed_cmd.substr(6)
 			rounds[key].bonus = bonus_type
 			rounds[key].no_lives = true
-			continue
-
-		if parsed_cmd == 'protect-balloon':
-			rounds[key].protect_placements.append({
-				'row': int(parsed.get('row', 2)),
-				'column': int(parsed.get('column', 4)),
-			})
 			continue
 
 		rounds[key]._pending.append(parsed)
@@ -478,51 +459,63 @@ func get_rock_sequences(island_name: String = '') -> Array:
 	return sequences
 
 
-## Resolves `repeat` / `wave-repeat` collected while parsing.
-## - No `repeat` → spawns = pending body; waves from `wave-repeat` or 1.
-## - One trailing `repeat`, nothing after, no `wave-repeat` → classic wave count
-##   (existing island-shipper rounds).
-## - Otherwise expand each section `count` times into one wave's spawn list;
-##   wave count from `wave-repeat` (default 1).
+## Resolves `repeat` markers into a per-wave spawn list.
+## Each `repeat N` closes a section: that section's commands play as N separate waves.
+## Trailing commands with no closing `repeat` play as 1 wave.
+## Example: rock 2 / repeat 3 / rock 4 / repeat 2 → 5 waves.
 func _finalize_round_repeats(round_data: Dictionary) -> void:
 	var sections: Array = round_data.get('_sections', [])
 	var pending: Array = round_data.get('_pending', [])
-	var wave_repeat := int(round_data.get('_wave_repeat', -1))
 	round_data.erase('_sections')
 	round_data.erase('_pending')
 	round_data.erase('_wave_repeat')
 
-	if sections.is_empty():
-		round_data.spawns = pending
-		round_data.repeat = wave_repeat if wave_repeat > 0 else DEFAULT_ROUND_REPEAT
-		return
-
-	# Classic: single trailing `repeat` and no `wave-repeat` → that count is waves.
-	if wave_repeat < 0 and pending.is_empty() and sections.size() == 1:
-		round_data.spawns = sections[0].get('spawns', [])
-		round_data.repeat = maxi(int(sections[0].get('count', DEFAULT_ROUND_REPEAT)), 1)
-		return
-
-	# Sectional expand — trailing body without a closing `repeat` plays once.
 	if not pending.is_empty():
 		sections.append({
 			'spawns': pending,
 			'count': 1,
 		})
 
-	var expanded: Array = []
+	if sections.is_empty():
+		round_data.waves = []
+		round_data.spawns = []
+		round_data.repeat = DEFAULT_ROUND_REPEAT
+		return
+
+	var waves: Array = []
 	for section in sections:
 		var body: Array = section.get('spawns', [])
 		var times := maxi(int(section.get('count', 1)), 1)
 		for _i in times:
+			var wave_copy: Array = []
 			for entry in body:
 				if entry is Dictionary:
-					expanded.append(entry.duplicate(true))
+					wave_copy.append(entry.duplicate(true))
 				else:
-					expanded.append(entry)
+					wave_copy.append(entry)
+			waves.append(wave_copy)
 
-	round_data.spawns = expanded
-	round_data.repeat = wave_repeat if wave_repeat > 0 else 1
+	round_data.waves = waves
+	round_data.repeat = maxi(waves.size(), 1)
+	# Compat: code that still reads `spawns` gets wave 1's content.
+	round_data.spawns = waves[0].duplicate(true) if not waves.is_empty() else []
+
+
+## Rebuild `waves` from flat `spawns` × `repeat` (used after surprise-me).
+func _rebuild_waves_from_flat_spawns(round_data: Dictionary) -> void:
+	var spawns: Array = round_data.get('spawns', [])
+	var times := maxi(int(round_data.get('repeat', DEFAULT_ROUND_REPEAT)), 1)
+	var waves: Array = []
+	for _i in times:
+		var wave_copy: Array = []
+		for entry in spawns:
+			if entry is Dictionary:
+				wave_copy.append(entry.duplicate(true))
+			else:
+				wave_copy.append(entry)
+		waves.append(wave_copy)
+	round_data.waves = waves
+	round_data.repeat = times
 
 
 ## Fills a round with a random rock/wait/balloon mix for testing.
@@ -581,7 +574,7 @@ func _apply_surprise_me(round_data: Dictionary) -> void:
 				entry.aim_row = randi_range(1, 3)
 				entry.aim_column = randi_range(1, 8)
 		elif randf() < 0.35:
-			# Aim-only (`rock A8`) — random spawn column.
+			# Aim with random column (`rock ? A8`).
 			entry.aim_row = randi_range(1, 3)
 			entry.aim_column = randi_range(1, 8)
 
@@ -607,6 +600,7 @@ func _apply_surprise_me(round_data: Dictionary) -> void:
 	if randf() < 0.25:
 		round_data.no_lives = true
 
+	_rebuild_waves_from_flat_spawns(round_data)
 	print('parser: surprise-me generated:\n%s' % surprise_round_to_text(round_data))
 
 
@@ -617,74 +611,99 @@ func surprise_round_to_text(round_data: Dictionary) -> String:
 		lines.append('no-lives')
 	if bool(round_data.get('shuffle', false)):
 		lines.append('shuffle')
+
+	# Prefer structured waves when present (multi-section rounds).
+	var waves: Array = round_data.get('waves', [])
+	if waves is Array and waves.size() > 1:
+		# Collapse identical consecutive waves into `… / repeat N`.
+		var i := 0
+		while i < waves.size():
+			var body: Array = waves[i]
+			var run := 1
+			while i + run < waves.size() and _wave_bodies_equal(body, waves[i + run]):
+				run += 1
+			for entry in body:
+				if entry is Dictionary:
+					lines.append(_spawn_entry_to_line(entry))
+			if run == 2:
+				lines.append('repeat')
+			elif run > 2:
+				lines.append('repeat %d' % run)
+			i += run
+		return '\n'.join(lines)
+
 	var wave_count := int(round_data.get('repeat', DEFAULT_ROUND_REPEAT))
+	for entry in round_data.get('spawns', []):
+		if entry is Dictionary:
+			lines.append(_spawn_entry_to_line(entry))
 	if wave_count >= 2:
 		if wave_count == 2:
-			lines.append('wave-repeat')
+			lines.append('repeat')
 		else:
-			lines.append('wave-repeat %d' % wave_count)
-
-	for entry in round_data.get('spawns', []):
-		if not (entry is Dictionary):
-			continue
-		var cmd := String(entry.get('cmd', ''))
-		match cmd:
-			'wait':
-				lines.append('wait %d' % int(entry.get('ms', DEFAULT_WAIT_MS)))
-			'balloon':
-				var brow := int(entry.get('row', RANDOM_SLOT))
-				var bcol := int(entry.get('column', RANDOM_SLOT))
-				if brow < 1 or bcol < 1:
-					lines.append('balloon ?')
-				else:
-					var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
-					lines.append('balloon %s%d' % [row_letter, bcol])
-			'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'smokecan', 'red_rock_error':
-				var col := int(entry.get('column', RANDOM_SLOT))
-				var ar := int(entry.get('aim_row', RANDOM_SLOT))
-				var ac := int(entry.get('aim_column', RANDOM_SLOT))
-				var col_token := '?' if col < 1 else str(col)
-				if ar > 0 and ac > 0:
-					var aim := '%s%d' % [['', 'A', 'B', 'C'][clampi(ar, 1, 3)], ac]
-					lines.append('%s %s %s' % [cmd, col_token, aim])
-				elif ar < 1 or ac < 1:
-					# Random aim — omit trailing `?` when both slots random (`rock`).
-					if col < 1:
-						lines.append(cmd)
-					else:
-						lines.append('%s %s' % [cmd, col_token])
-				else:
-					lines.append('%s %s' % [cmd, col_token])
-			_:
-				lines.append(cmd)
+			lines.append('repeat %d' % wave_count)
 	return '\n'.join(lines)
 
 
-## Bonus rounds with parse errors (or no rock instructions) become a single red_rock_error.
+func _wave_bodies_equal(a: Array, b: Array) -> bool:
+	if a.size() != b.size():
+		return false
+	for idx in a.size():
+		if str(a[idx]) != str(b[idx]):
+			return false
+	return true
+
+
+func _spawn_entry_to_line(entry: Dictionary) -> String:
+	var cmd := String(entry.get('cmd', ''))
+	match cmd:
+		'wait':
+			return 'wait %d' % int(entry.get('ms', DEFAULT_WAIT_MS))
+		'balloon':
+			var brow := int(entry.get('row', RANDOM_SLOT))
+			var bcol := int(entry.get('column', RANDOM_SLOT))
+			if brow < 1 or bcol < 1:
+				return 'balloon ?'
+			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
+			return 'balloon %s%d' % [row_letter, bcol]
+		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'smokecan', 'red_rock_error':
+			var col := int(entry.get('column', RANDOM_SLOT))
+			var ar := int(entry.get('aim_row', RANDOM_SLOT))
+			var ac := int(entry.get('aim_column', RANDOM_SLOT))
+			var col_token := '?' if col < 1 else str(col)
+			if ar > 0 and ac > 0:
+				var aim := '%s%d' % [['', 'A', 'B', 'C'][clampi(ar, 1, 3)], ac]
+				return '%s %s %s' % [cmd, col_token, aim]
+			if col < 1:
+				return cmd
+			return '%s %s' % [cmd, col_token]
+		_:
+			return cmd
+
+
+## Bonus rounds with parse errors become a single red_rock_error.
+## `bonus-type1` may have zero rock spawns (target-only rounds are valid).
 func _finalize_bonus_round(round_data: Dictionary) -> void:
 	var bonus := String(round_data.get('bonus', ''))
+	var has_targets = not round_data.get('bonus_targets', []).is_empty()
 	if bonus == '':
-		# protect-balloon outside a bonus-protect round is an error marker.
-		if not round_data.get('protect_placements', []).is_empty():
-			round_data.protect_placements = []
-			round_data.spawns = [_make_bonus_error_spawn('protect-balloon without bonus-protect')]
+		# bonus-target outside a bonus-type1 round is an error marker.
+		if has_targets:
+			round_data.bonus_targets = []
+			round_data.spawns = [_make_bonus_error_spawn('bonus-target without bonus-type1')]
 		return
 
 	# Unknown bonus subtypes are treated as errors until implemented.
-	if bonus != 'protect':
+	if bonus != 'type1':
 		round_data.spawns = [_make_bonus_error_spawn('bonus-%s' % bonus)]
-		round_data.protect_placements = []
+		round_data.bonus_targets = []
 		return
 
+	# Target-only rounds (no rocks) are allowed — bonus targets still patrol.
 	var spawns: Array = round_data.get('spawns', [])
-	if spawns.is_empty():
-		round_data.spawns = [_make_bonus_error_spawn('bonus-%s empty' % bonus)]
-		return
-
 	for entry in spawns:
 		if entry is Dictionary and String(entry.get('cmd', '')).to_lower() == 'red_rock_error':
 			round_data.spawns = [_make_bonus_error_spawn(String(entry.get('param', 'bonus-%s' % bonus)))]
-			round_data.protect_placements = []
+			round_data.bonus_targets = []
 			return
 
 

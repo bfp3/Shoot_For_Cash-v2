@@ -60,7 +60,7 @@ var pineapple_mode := false
 @export var birds : Node3D
 @export var balloon_container : Node3D
 @export var blue_balloon : Node3D
-@export var protect_balloons : Node3D
+@export var bonus_target_manager : Node3D
 @export var level_layout : Node3D
 @export var wave_progress_indication : Control
 @export var wave_progress_feedback : Control
@@ -72,7 +72,7 @@ var egg_pulse : Egg
 var no_lives_this_round := false
 ## Active bonus subtype from the level file (`protect`, etc.). Empty = normal round.
 var bonus_type_this_round := ""
-## Protect balloon was popped during `bonus-protect` — no bonus cash, still advance.
+## Bonus target was destroyed during `bonus-type1` — no bonus cash, still advance.
 var protect_bonus_failed := false
 ## Scene default for Rocks.randomize_later_waves (restored when `shuffle` is off).
 var _rocks_randomize_baseline := false
@@ -212,7 +212,12 @@ func begin_level_editor_test(text: String) -> void:
 		return
 
 	var round_data: Dictionary = Parser.parse_round_text(text)
-	if round_data.get("spawns", []).is_empty():
+	var spawns: Array = round_data.get("spawns", [])
+	var is_bonus_only = (
+		String(round_data.get("bonus", "")) != ""
+		or not round_data.get("bonus_targets", []).is_empty()
+	)
+	if spawns.is_empty() and not is_bonus_only:
 		push_warning("Level editor: no spawn commands parsed — returning to editor")
 		level_editor_open = true
 		if level_editor_menu:
@@ -232,9 +237,11 @@ func begin_level_editor_test(text: String) -> void:
 	level_editor_test_active = true
 	_reset_level_editor_round_runtime()
 
-	print("Level editor: starting test round (repeat=%s, spawns=%d)" % [
+	print("Level editor: starting test round (bonus=%s, targets=%d, repeat=%s, spawns=%d)" % [
+		str(round_data.get("bonus", "")),
+		int(round_data.get("bonus_targets", []).size()),
 		str(round_data.get("repeat", 3)),
-		int(round_data.get("spawns", []).size()),
+		int(spawns.size()),
 	])
 
 	# Shop balloons aren't added during editor tests — spawn this round's balloons now.
@@ -354,8 +361,8 @@ func finish_level_editor_test_round() -> void:
 	# Fly remaining test balloons away (same end-of-round exit as normal play).
 	if balloon_container:
 		await balloon_container.end_round()
-	if protect_balloons and protect_balloons.has_method('cleanup_protect_round'):
-		protect_balloons.cleanup_protect_round()
+	if bonus_target_manager and bonus_target_manager.has_method('cleanup_bonus_round'):
+		bonus_target_manager.cleanup_bonus_round()
 
 	_restore_level_editor_sequence()
 	level_editor_test_active = false
@@ -404,7 +411,7 @@ func check_round_for_strikes() -> void:
 	gl_PlayerState.dataset.total_current_strikes = 0
 
 
-## Reads round modifiers like `no-lives` / `bonus-protect` / `shuffle` from the active sequence entry only.
+## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` from the active sequence entry only.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
 	bonus_type_this_round = ""
@@ -429,12 +436,12 @@ func is_current_round_no_lives() -> bool:
 	return no_lives_this_round
 
 
-func is_protect_bonus_round() -> bool:
-	return bonus_type_this_round == 'protect'
+func is_bonus_type1_round() -> bool:
+	return bonus_type_this_round == 'type1'
 
 
-## Protect balloon popped — end the wave early with no protect cash (still progress the round).
-func on_protect_bonus_failed() -> void:
+## Bonus target destroyed — end the wave early with no bonus cash (still progress the round).
+func on_bonus_type1_failed() -> void:
 	if protect_bonus_failed or wave_ending:
 		return
 	protect_bonus_failed = true
@@ -668,26 +675,25 @@ func update_wave_start() -> void:
 	if force_shop_open or _level_editor_finishing:
 		return
 
-	if current_wave == 1 and is_protect_bonus_round() and protect_balloons:
-		if protect_balloons.has_method('begin_protect_round'):
-			var placements: Array = []
+	if current_wave == 1 and is_bonus_type1_round() and bonus_target_manager:
+		if bonus_target_manager.has_method('begin_bonus_round'):
+			var targets: Array = []
 			if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
 				var round_data = current_rock_sequence[current_sequence_index]
 				if round_data is Dictionary:
-					placements = round_data.get('protect_placements', [])
-			protect_balloons.begin_protect_round(placements)
+					targets = round_data.get('bonus_targets', [])
+			bonus_target_manager.begin_bonus_round(targets)
 
 	gl_PlayerState.next_wave()
 
 	if current_wave == 1:
 		var rock_seq := update_rock_sequence()
-		if rock_seq != []:
-			rocks_container.start_manual_rock_round(rock_seq)
+		# Always prepare (even empty) so bonus-type1 target-only rounds don't hang on old rock state.
+		rocks_container.start_manual_rock_round(rock_seq)
 		
 	else:
 		var rock_seq := update_rock_sequence()
-		if rock_seq != []:
-			rocks_container.shuffle_current_sequence(rock_seq)
+		rocks_container.shuffle_current_sequence(rock_seq)
 
 	player.start_player()
 
@@ -724,8 +730,7 @@ func update_check_score() -> void:
 		enter_state(RoundState.WAVE_START)
 
 
-## Waves for the active round (`wave-repeat`, or a single trailing `repeat`).
-## Sectional `repeat`s expand inside each wave and do not change this count.
+## Waves for the active round — built from `repeat` sections (see parser).
 func get_current_round_wave_count() -> int:
 	const DEFAULT_WAVES := 1
 	if current_rock_sequence.is_empty():
@@ -735,6 +740,9 @@ func get_current_round_wave_count() -> int:
 
 	var round_data = current_rock_sequence[current_sequence_index]
 	if round_data is Dictionary:
+		var waves = round_data.get('waves', [])
+		if waves is Array and not waves.is_empty():
+			return waves.size()
 		return maxi(int(round_data.get('repeat', DEFAULT_WAVES)), 1)
 
 	return DEFAULT_WAVES
@@ -753,7 +761,13 @@ func update_rock_sequence() -> Array:
 	var round_data = current_rock_sequence[current_sequence_index]
 	var source: Array = []
 	if round_data is Dictionary:
-		source = round_data.get('spawns', [])
+		var waves = round_data.get('waves', [])
+		if waves is Array and not waves.is_empty():
+			# current_wave is 1-based during play; 0 before the first WAVE_START.
+			var wave_idx := clampi(maxi(current_wave - 1, 0), 0, waves.size() - 1)
+			source = waves[wave_idx]
+		else:
+			source = round_data.get('spawns', [])
 	elif round_data is Array:
 		source = round_data
 	else:
@@ -772,9 +786,9 @@ func update_rock_sequence() -> Array:
 
 func update_round_end() -> void:
 	if level_editor_test_active:
-		if is_protect_bonus_round() and protect_balloons and protect_balloons.has_method('resolve_protect_round'):
+		if is_bonus_type1_round() and bonus_target_manager and bonus_target_manager.has_method('resolve_bonus_round'):
 			var survived := not protect_bonus_failed and not player_failed
-			protect_balloons.resolve_protect_round(survived)
+			bonus_target_manager.resolve_bonus_round(survived)
 		await finish_level_editor_test_round()
 		return
 
@@ -785,9 +799,9 @@ func update_round_end() -> void:
 		success = true
 	var round_was_successful := success
 
-	if is_protect_bonus_round() and protect_balloons and protect_balloons.has_method('resolve_protect_round'):
+	if is_bonus_type1_round() and bonus_target_manager and bonus_target_manager.has_method('resolve_bonus_round'):
 		var survived := not protect_bonus_failed and round_was_successful and not player_failed
-		protect_balloons.resolve_protect_round(survived)
+		bonus_target_manager.resolve_bonus_round(survived)
 
 	await get_tree().create_timer(0.25, false).timeout
 	music_manager.shop_music_lower_volume()
@@ -804,7 +818,7 @@ func update_round_end() -> void:
 	
 	# Only check PASS/PERFECT if the round wasn't cut short by a failure
 	# Protect bonus rounds skip the post-round pineapple perfect bonus.
-	if round_was_successful and not is_protect_bonus_round():
+	if round_was_successful and not is_bonus_type1_round():
 		player_can_progress = true
 
 		perfect_score_feedback()
@@ -829,7 +843,7 @@ func update_round_end() -> void:
 	if player_failed:
 		bonus_oranges_ready = false
 		
-	if bonus_oranges_ready and not is_protect_bonus_round():
+	if bonus_oranges_ready and not is_bonus_type1_round():
 		$'../BonusOranges'.start_bonus_oranges()
 		
 	while bonus_oranges_ready:
