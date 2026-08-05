@@ -101,6 +101,10 @@ var target_x_position : float = 0.0
 var current_rock_type : String = ""
 var rock_type_name : String = ""
 var falling := false
+## Aimed rocks: damp-free ascent, then `aim_descent_linear_damp` once past the apex.
+var ballistic_aim_active := false
+var _ballistic_descent_damp := 0.5
+var _ballistic_in_descent := false
 ## When true, side-rail X out-of-bounds does not count as a miss (pigeons / depth rocks).
 var ignores_x_out_of_bounds := false
 
@@ -115,6 +119,24 @@ func _ready() -> void:
 	
 	#EventBus.instance.all_rocks_destroyed.connect(hazard_disappear)
 	enter_state(State.INACTIVE)
+
+
+func begin_ballistic_aim_feel(descent_damp: float = 0.5) -> void:
+	ballistic_aim_active = true
+	_ballistic_descent_damp = descent_damp
+	_ballistic_in_descent = false
+	linear_damp = 0.0
+
+
+func _physics_process(_delta: float) -> void:
+	if not ballistic_aim_active or _ballistic_in_descent:
+		return
+	if current_state != State.ACTIVE:
+		return
+	if linear_velocity.y > 0.0:
+		return
+	_ballistic_in_descent = true
+	linear_damp = _ballistic_descent_damp
 
 
 func enter_state(new_state : State) -> void:
@@ -587,6 +609,8 @@ func reset_stats() -> void:
 	rock_destroyed = false
 	player_has_marked_rock = false
 	is_deactivated = false
+	ballistic_aim_active = false
+	_ballistic_in_descent = false
 	global_position = start_pos
 	await get_tree().process_frame
 	

@@ -22,11 +22,6 @@ const AIM_LANE_Y := {
 	2: 3.5,
 	3: 0.5,
 }
-const AIM_PULSE_SCALE := {
-	1: 1.0,
-	2: 0.85,
-	3: 0.70,
-}
 const STRAIGHT_UP_FORCE := 15.0
 
 
@@ -91,8 +86,9 @@ func launch_from_spawn_entry(entry: Dictionary) -> void:
 	var x_pos := column_to_x(column)
 	var aim_row := int(entry.get('aim_row', -1))
 	var aim_column := int(entry.get('aim_column', -1))
-	if aim_row < 1 or aim_column < 1:
-		aim_row = randi_range(1, 3)
+	if aim_row < 1:
+		aim_row = 1
+	if aim_column < 1:
 		aim_column = randi_range(1, COLUMN_COUNT)
 	launch_pineapple(body, x_pos, aim_row, aim_column)
 
@@ -104,7 +100,7 @@ func _get_next_available_pineapple() -> RigidBody3D:
 	return null
 
 
-## Straight up from x_pos when aim is unset. With aim_row/aim_column, steer diagonally toward that cell.
+## Ballistic launch through aim cell apex (same math as RockManager).
 ## Callers should resolve `?` / random aim before calling when random aim is desired.
 func launch_pineapple(body: RigidBody3D, x_pos: float, aim_row: int = 0, aim_column: int = 0) -> void:
 	body.update_active()
@@ -112,28 +108,23 @@ func launch_pineapple(body: RigidBody3D, x_pos: float, aim_row: int = 0, aim_col
 
 	body.global_position.x = x_pos
 
-	var upward_force := STRAIGHT_UP_FORCE
-	var x_variation := 0.0
-
+	var impulse: Vector3
 	if aim_row > 0 and aim_column > 0:
-		var pulse_scale: float = float(AIM_PULSE_SCALE.get(aim_row, 1.0))
-		var scaled_upward: float = upward_force * pulse_scale
-		var aim_x := column_to_x(aim_column)
-		var aim_y: float = float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1]))
-		var dx: float = aim_x - body.global_position.x
-		var dy: float = aim_y - body.global_position.y
-		if dy > 0.001:
-			x_variation = dx * (scaled_upward / dy)
-		elif absf(dx) > 0.001:
-			x_variation = dx * pulse_scale
-		upward_force = scaled_upward
-
-	var impulse = Vector3(
-		x_variation,
-		upward_force * body.force_multiplier,
-		0.0
-	) * body.pulse_magnitude
+		BallisticAim.configure_body_for_ballistic_launch(body)
+		impulse = _pineapple_aimed_impulse(body, aim_row, aim_column)
+	else:
+		body.linear_damp = 0.0
+		impulse = Vector3(0.0, STRAIGHT_UP_FORCE * body.force_multiplier, 0.0) * body.pulse_magnitude
 
 	body.apply_central_impulse(impulse)
 	body.apply_torque_impulse(Vector3.RIGHT * 3000.0)
 	body.start_timer()
+
+
+func _pineapple_aimed_impulse(body: RigidBody3D, aim_row: int, aim_column: int) -> Vector3:
+	var aim_pos := Vector3(
+		column_to_x(aim_column),
+		float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1])),
+		23.0
+	)
+	return BallisticAim.impulse_to_point(body, body.global_position, aim_pos)

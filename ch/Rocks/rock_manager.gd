@@ -9,7 +9,7 @@ enum State {
 }
 
 var current_state : State = State.INACTIVE
-@export var pulse_magnitude := 1.1
+const pulse_magnitude := 1.1
 ## When true, waves after wave 1 randomise rock columns (existing behaviour).
 @export var randomize_later_waves := true
 ## Depth launch strength for `rock-pigeon` (into the distance). Raise to send them further back.
@@ -61,12 +61,16 @@ const AIM_LANE_Y := {
 	2: 3.5,
 	3: 0.5,
 }
-## Row A is the reference / max pulse. B and C scale down from that.
-const AIM_PULSE_SCALE := {
-	1: 1.0,   # A
-	2: 0.85,  # B
-	3: 0.70,  # C
-}
+## World Z of the aim grid (balloon board is at Z ≈ 22.5; A8 ≈ Vector3(-7, 6.5, 22.5)).
+const AIM_PLANE_Z := 23.0
+## Multiplier on computed aimed-launch impulse. 1.0 = exact ballistic solve; raise if rocks land short.
+@export_range(0.5, 2.0, 0.01) var aim_impulse_scale := 1.14
+## Gravity during the aimed arc (higher = faster launch, sharper slowdown at apex). Must match impulse math.
+@export_range(0.05, 1.0, 0.01) var aim_launch_gravity_scale := 0.35
+## Linear damp applied once the rock passes the apex and starts falling.
+@export_range(0.0, 2.0, 0.05) var aim_descent_linear_damp := 0.5
+## Extra seconds added to the ascent before passing the aim cell (0 = tight apex; try ~0.5 for old hang).
+@export_range(0.0, 2.0, 0.05) var aim_hang_time_sec := 0.0
 # --------------------------------------------------------------------------
 
 # --- Out-of-bounds monitoring (during PULSE_ROCKS only) -------------------
@@ -508,15 +512,17 @@ func _resolve_spawn_column(entry) -> int:
 	return randi_range(1, COLUMN_COUNT)
 
 
-## Resolves aim cell. Missing/invalid (< 1) row or column → random A–C × 1–8.
+## Resolves aim cell. Missing row → row A (1). Missing column → random 1–8.
 func _resolve_aim_cell(entry) -> Vector2i:
 	var aim_row := 0
 	var aim_column := 0
 	if entry is Dictionary:
 		aim_row = int(entry.get('aim_row', -1))
 		aim_column = int(entry.get('aim_column', -1))
-	if aim_row < 1 or aim_column < 1:
-		return Vector2i(randi_range(1, 3), randi_range(1, COLUMN_COUNT))
+	if aim_row < 1:
+		aim_row = 1
+	if aim_column < 1:
+		aim_column = randi_range(1, COLUMN_COUNT)
 	return Vector2i(aim_row, aim_column)
 
 
@@ -620,14 +626,16 @@ func bounce_rocks() -> void:
 				await get_tree().create_timer(delay_sec).timeout
 
 		body.enter_state(body.State.ACTIVE)
-		body.bounce_rocks()
 
 		var upward_force = 10.0
 		var impulse: Vector3
 		if body.rock_type == RockInstance.RockSize.SMALL_2:
+			body.bounce_rocks()
 			upward_force = upward_force * rock_pigeon_upward_force
 			impulse = _pigeon_launch_impulse(body, counter, upward_force)
 		else:
+			BallisticAim.configure_body_for_ballistic_launch(body, aim_launch_gravity_scale)
+			body.begin_ballistic_aim_feel(aim_descent_linear_damp)
 			impulse = _build_launch_impulse(body, counter, upward_force, 0.0)
 		body.apply_central_impulse(impulse)
 
@@ -636,7 +644,7 @@ func bounce_rocks() -> void:
 		if counter >= rocks_limit:
 			break
 
-	#spin_rocks()
+	spin_rocks()
 
 
 ## Pigeons fly into the distance along the column fan (17° half-angle from world origin).
@@ -651,7 +659,7 @@ func _pigeon_launch_impulse(body, rock_index: int, upward_force: float) -> Vecto
 	var aim_row := aim.x
 	var aim_column := aim.y
 
-	var y_force: float = upward_force * float(AIM_PULSE_SCALE.get(aim_row, 1.0))
+	var y_force: float = upward_force
 	var aim_point := _pigeon_aim_world_point(aim_column, aim_row, body.global_position.y)
 	var dx: float = aim_point.x - body.global_position.x
 	var dz: float = aim_point.z - body.global_position.z
@@ -720,36 +728,36 @@ func _x_to_nearest_column(x: float) -> int:
 	return best
 
 
-## Same pulse power (upward_force * pulse_magnitude). Aimed rocks steer toward A/B/C cells.
-## Unspecified / `?` aim → random cell at launch.
-func _build_launch_impulse(body, rock_index: int, upward_force: float, z_variation: float) -> Vector3:
+## Ballistic launch through the aim cell world point (e.g. A8 = (-7, 6.5, 23)).
+func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_variation: float) -> Vector3:
 	var entry = null
 	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
 		entry = manual_rock_sequence[rock_index]
 
 	var aim := _resolve_aim_cell(entry)
-	return _aimed_launch_impulse(body, aim.x, aim.y, upward_force, z_variation)
+	return _aimed_launch_impulse(body, aim.x, aim.y)
 
 
-## Aimed rocks steer toward A/B/C cells. Row A uses full pulse; B/C scale down from that.
-func _aimed_launch_impulse(body, aim_row: int, aim_column: int, upward_force: float, z_variation: float) -> Vector3:
-	var pulse_scale: float = float(AIM_PULSE_SCALE.get(aim_row, 1.0))
-	var scaled_upward: float = upward_force * pulse_scale
+func _aim_cell_world_position(aim_row: int, aim_column: int) -> Vector3:
+	return Vector3(
+		column_to_x(aim_column),
+		float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1])),
+		AIM_PLANE_Z
+	)
 
-	var aim_x := column_to_x(aim_column)
-	var aim_y := float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1]))
-	var dx: float = aim_x - body.global_position.x
-	var dy: float = aim_y - body.global_position.y
 
-	var x_variation := 0.0
-	if dy > 0.001:
-		# Scale so Y stays at scaled_upward (A = full power; B/C reduced).
-		x_variation = dx * (scaled_upward / dy)
-	elif absf(dx) > 0.001:
-		# Aim is at/below spawn height — still pulse upward, steer sideways toward the column.
-		x_variation = dx * pulse_scale
+## Launch position: column X is assigned in prepare; Y/Z come from the rock instance.
+func _launch_world_position(body) -> Vector3:
+	return Vector3(body.target_x_position, body.global_position.y, body.global_position.z)
 
-	return Vector3(x_variation, scaled_upward, z_variation) * pulse_magnitude
+
+## Reverse-engineered impulse so every lane passes through the same aim world point.
+func _aimed_launch_impulse(body, aim_row: int, aim_column: int) -> Vector3:
+	var aim_pos := _aim_cell_world_position(aim_row, aim_column)
+	var start_pos := _launch_world_position(body)
+	return BallisticAim.impulse_to_point(
+		body, start_pos, aim_pos, -1.0, aim_launch_gravity_scale, aim_impulse_scale, aim_hang_time_sec
+	)
 
 
 func spin_rocks() -> void:

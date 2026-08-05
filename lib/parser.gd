@@ -74,7 +74,8 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 
 ## Parses a single spawn line into a spawn dictionary.
 ## Targets — rock / rock-black / rock-pigeon / smokecan / pineapple / red_rock_error:
-##   {cmd, column, aim_row, aim_column, param}. `?` or omit = random (RANDOM_SLOT / -1).
+##   {cmd, column, aim_row, aim_column, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
+##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
 ##   `rock A4` is invalid — column must be a number or `?` before the aim cell.
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
@@ -172,8 +173,8 @@ func _is_random_token(token: String) -> bool:
 
 
 ## rock / rock-black / rock-pigeon / smokecan / pineapple / red_rock_error
-##   rock          → rock ? ?   (random column, random aim)
-##   rock 2        → rock 2 ?   (column 2, random aim)
+##   rock          → rock ? ?   (random column, aim row A + random aim column)
+##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
 ##   rock 2 A4     → column 2, aim A4
 ##   rock ? ?      → explicit both-random
@@ -566,16 +567,16 @@ func _apply_surprise_me(round_data: Dictionary) -> void:
 			if randf() < 0.55:
 				entry.column = randi_range(1, 8)
 			if randf() < 0.45:
-				entry.aim_row = randi_range(1, 3)
+				entry.aim_row = 1
 				entry.aim_column = randi_range(1, 8)
 		elif randf() < 0.55:
 			entry.column = randi_range(1, 8)
 			if randf() < 0.55:
-				entry.aim_row = randi_range(1, 3)
+				entry.aim_row = 1
 				entry.aim_column = randi_range(1, 8)
 		elif randf() < 0.35:
 			# Aim with random column (`rock ? A8`).
-			entry.aim_row = randi_range(1, 3)
+			entry.aim_row = 1
 			entry.aim_column = randi_range(1, 8)
 
 		spawns.append(entry)
