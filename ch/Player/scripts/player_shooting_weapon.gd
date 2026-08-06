@@ -263,6 +263,10 @@ func shoot_target() -> void:
 	var double_power: bool = get_parent()._scope_at_min
 	var targets = get_targets_in_scope()
 
+	# If the retreat target is the closest aim, only shoot that — don't multi-hit rocks.
+	if not targets.is_empty() and targets[0].target.is_in_group('early_exit_target'):
+		targets = [targets[0]]
+
 	var rock_count := 0
 	var rocks_to_destroy := []
 
@@ -270,14 +274,15 @@ func shoot_target() -> void:
 		var target = target_data.target
 	
 	
-		if target.name.contains('Orange'):
+		if target.name.contains('Orange') or target.is_in_group('early_exit_target'):
 			pass
 		else:
 			rock_count += 1
 
 		
 		#if target is RockInstance:
-		rocks_to_destroy.append(target)
+		if not target.is_in_group('early_exit_target'):
+			rocks_to_destroy.append(target)
 
 	#if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
 		#shooting_sky_mine = true
@@ -371,11 +376,48 @@ func shoot_target() -> void:
 	
 func can_shoot(_can_shoot : bool) -> void:
 	can_fire_weapon = _can_shoot
-	
-	
-func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO) -> bool:
 
-	if not player.consume_ammo(1):
+
+## Out-of-ammo path: fire only if the early-exit retreat target is in the reticle.
+func shoot_early_exit_if_aimed() -> bool:
+	if !can_fire_weapon:
+		return false
+
+	var targets := get_targets_in_scope()
+	var exit_target: Node3D = null
+	for target_data in targets:
+		var target = target_data.target
+		if is_instance_valid(target) and target.is_in_group('early_exit_target'):
+			exit_target = target
+			break
+
+	if exit_target == null:
+		return false
+
+	round_manager.bullet_active = true
+	_reset_pitch_adjustment()
+
+	$"../SFX/Flicker_sound".play()
+	%Crosshair.crosshair_shake()
+	player_gun.get_barrel_position(exit_target.global_position.x)
+	player_camera.shake_camera_shooting()
+
+	if exit_target.has_method('start_bullet_to_target'):
+		exit_target.start_bullet_to_target()
+
+	if not spawn_projectile(exit_target, power_bullet_speed, Vector3.ZERO, true):
+		round_manager.bullet_active = false
+		return false
+
+	var rock_screen_pos = stable_camera.unproject_position(exit_target.global_position)
+	var screen_offset = rock_screen_pos - crosshair.global_position
+	process_target_hit.call_deferred(exit_target, power_bullet_damage, screen_offset)
+	return true
+	
+	
+func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO, free_shot := false) -> bool:
+
+	if not free_shot and not player.consume_ammo(1):
 		return false
 
 	var new_bullet = BULLET_VISUAL_1.instantiate()

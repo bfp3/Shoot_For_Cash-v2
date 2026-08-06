@@ -111,10 +111,13 @@ func _inner_scope_scale_for_radius(radius: float) -> float:
 	return radius / base_radius
 
 
+	
 func _ready() -> void:
-
+	
 	if is_mobile:
 		running_on_mobile = true
+	
+	%HUD_bottom_corner.hide()
 		
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)
@@ -660,6 +663,8 @@ func _refresh_ammo_display(animate := false) -> void:
 		hud.set_ammo(shot_count, animate)
 	else:
 		%ShotRemaining.text = str(shot_count).pad_zeros(2)
+		
+	%Crosshair.out_of_ammo_hide()
 
 
 ## Adds pack bullets up to max capacity. Returns how many were actually added.
@@ -703,6 +708,9 @@ func fire_weapon() -> void:
 		return
 
 	if shot_count <= 0:
+		# Empty magazine: still allow shooting the early-exit retreat target.
+		if weapon_shooting.shoot_early_exit_if_aimed():
+			return
 		out_of_ammo()
 		weapon_shooting.play_missed_sounds()
 		return
@@ -862,3 +870,11 @@ func round_finished(_round_finished : bool) -> void:
 		
 	if _round_finished == false:
 		weapon_shooting.can_shoot(true)
+		
+		
+func show_ammo_panel() -> void:
+	%HUD_bottom_corner.modulate.a = 0.0
+	%HUD_bottom_corner.show()
+	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_interval(2.0)
+	tween.tween_property(%HUD_bottom_corner, 'modulate:a', 1.0, 1.0)

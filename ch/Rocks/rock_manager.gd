@@ -54,7 +54,7 @@ const COLUMN_1_X := 7.0
 const COLUMN_STEP := 2.0
 const COLUMN_COUNT := 8
 const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a column
-const DEFAULT_LAUNCH_WAIT_MS := 100
+@export var DEFAULT_LAUNCH_WAIT_MS := 100
 ## Aim apex heights — same Y bands balloons use (A/B/C → 1/2/3).
 const AIM_LANE_Y := {
 	1: 7.0, #6.5
@@ -71,6 +71,21 @@ const AIM_PLANE_Z := 23.0
 @export_range(0.0, 2.0, 0.05) var aim_descent_linear_damp := 0.5
 ## Extra seconds added to the ascent before passing the aim cell (0 = tight apex; try ~0.5 for old hang).
 @export_range(0.0, 2.0, 0.05) var aim_hang_time_sec := 0.0
+## When true, unspecified aims converge on the midpoint of this wave's leftmost/rightmost spawns
+## (center column ± 1). Explicit aims (e.g. `rock 1 A3`) are unchanged. Pigeons are not affected.
+@export var bias_random_aim_toward_center := true
+## Chance (0–1) that unspecified aims all meet on the same column. Remainder uses adjacent-lane split.
+@export_range(0.0, 1.0, 0.05) var converge_same_lane_chance := 0.5
+## World-space jitter around the aim cell. 0 = exact; higher = random point within this radius (X/Y).
+@export_range(0.0, 5.0, 0.05) var aim_offset := 0.0
+## Shared same-lane aim column for this pulse (-1 if unused).
+var _wave_convergence_aim_column := -1
+## True = all unspecified rocks share one column; false = left/right adjacent split.
+var _wave_aim_converge_same_lane := true
+## Midpoint / pool used for split aiming this pulse.
+var _wave_aim_mid := 0.0
+var _wave_aim_center := -1
+var _wave_aim_pool: Array[int] = []
 # --------------------------------------------------------------------------
 
 # --- Out-of-bounds monitoring (during PULSE_ROCKS only) -------------------
@@ -512,8 +527,9 @@ func _resolve_spawn_column(entry) -> int:
 	return randi_range(1, COLUMN_COUNT)
 
 
-## Resolves aim cell. Missing row → row A (1). Missing column → random 1–8.
-func _resolve_aim_cell(entry) -> Vector2i:
+## Resolves aim cell. Missing row → row A (1). Missing column → wave converge / split pool.
+## Pass apply_center_bias + spawn_column for rocks / rock-black / smokecan random aims.
+func _resolve_aim_cell(entry, apply_center_bias: bool = false, spawn_column: int = -1) -> Vector2i:
 	var aim_row := 0
 	var aim_column := 0
 	if entry is Dictionary:
@@ -522,8 +538,94 @@ func _resolve_aim_cell(entry) -> Vector2i:
 	if aim_row < 1:
 		aim_row = 1
 	if aim_column < 1:
-		aim_column = randi_range(1, COLUMN_COUNT)
+		if apply_center_bias and bias_random_aim_toward_center and not _wave_aim_pool.is_empty():
+			aim_column = _pick_wave_aim_column(spawn_column)
+		else:
+			aim_column = randi_range(1, COLUMN_COUNT)
 	return Vector2i(aim_row, aim_column)
+
+
+## Same-lane: shared column. Split: left spawn → center/right of pool; right spawn → left/center.
+func _pick_wave_aim_column(spawn_column: int) -> int:
+	if _wave_aim_converge_same_lane and _wave_convergence_aim_column >= 1:
+		return _wave_convergence_aim_column
+
+	var side_pool: Array[int] = []
+	if spawn_column < 1 or _wave_aim_center < 1:
+		side_pool = _wave_aim_pool.duplicate()
+	elif float(spawn_column) < _wave_aim_mid:
+		# Left side → aim center or one lane toward the right (e.g. A4 / A5).
+		for col in _wave_aim_pool:
+			if col >= _wave_aim_center:
+				side_pool.append(col)
+	elif float(spawn_column) > _wave_aim_mid:
+		# Right side → aim center or one lane toward the left (e.g. A3 / A4).
+		for col in _wave_aim_pool:
+			if col <= _wave_aim_center:
+				side_pool.append(col)
+	else:
+		side_pool = _wave_aim_pool.duplicate()
+
+	if side_pool.is_empty():
+		side_pool = _wave_aim_pool.duplicate()
+	if side_pool.is_empty():
+		return randi_range(1, COLUMN_COUNT)
+	return side_pool[randi() % side_pool.size()]
+
+
+## Midpoint of furthest-left / furthest-right spawn columns, then center ± 1 (clamped to 1–8).
+## e.g. spawns 1+8 → A3/A4/A5; spawns 1+2 → A1/A2/A3; spawns 2+4 → A2/A3/A4.
+func _convergence_aim_columns_from_spawns(spawn_columns: Array[int]) -> Dictionary:
+	var empty := {'pool': [] as Array[int], 'mid': 0.0, 'center': -1}
+	if spawn_columns.is_empty():
+		return empty
+
+	var leftmost := spawn_columns[0]
+	var rightmost := spawn_columns[0]
+	for col in spawn_columns:
+		leftmost = mini(leftmost, col)
+		rightmost = maxi(rightmost, col)
+
+	var mid := (float(leftmost) + float(rightmost)) * 0.5
+	var center := clampi(roundi(mid), 1, COLUMN_COUNT)
+	var pool: Array[int] = []
+	for col in range(center - 1, center + 2):
+		if col >= 1 and col <= COLUMN_COUNT:
+			pool.append(col)
+	return {'pool': pool, 'mid': mid, 'center': center}
+
+
+## Collect non-pigeon spawn columns, build aim pool, then roll same-lane vs adjacent-split.
+func _rebuild_wave_convergence_aim_columns(bodies: Array) -> void:
+	_wave_convergence_aim_column = -1
+	_wave_aim_converge_same_lane = true
+	_wave_aim_mid = 0.0
+	_wave_aim_center = -1
+	_wave_aim_pool.clear()
+
+	var spawn_cols: Array[int] = []
+	var counter := 0
+	for body in bodies:
+		if body.current_state == body.State.DISABLED:
+			continue
+		if counter >= rocks_limit:
+			break
+		if body.rock_type != RockInstance.RockSize.SMALL_2:
+			spawn_cols.append(_x_to_nearest_column(body.target_x_position))
+		counter += 1
+
+	var info := _convergence_aim_columns_from_spawns(spawn_cols)
+	_wave_aim_pool = info.pool
+	_wave_aim_mid = float(info.mid)
+	_wave_aim_center = int(info.center)
+	if _wave_aim_pool.is_empty():
+		return
+
+	_wave_aim_converge_same_lane = randf() < converge_same_lane_chance
+	if _wave_aim_converge_same_lane:
+		_wave_convergence_aim_column = _wave_aim_pool[randi() % _wave_aim_pool.size()]
+	else:
+		_wave_convergence_aim_column = -1
 
 
 func _is_far_enough(candidate: float, positions: Array[float]) -> bool:
@@ -609,6 +711,7 @@ func bounce_rocks() -> void:
 	var bodies = $Container_1.get_children()
 	
 	angle_bias = get_angle_bias()
+	_rebuild_wave_convergence_aim_columns(bodies)
 	
 	var counter := 0
 	
@@ -734,16 +837,24 @@ func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_varia
 	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
 		entry = manual_rock_sequence[rock_index]
 
-	var aim := _resolve_aim_cell(entry)
+	var spawn_column := _x_to_nearest_column(body.target_x_position)
+	var aim := _resolve_aim_cell(entry, true, spawn_column)
 	return _aimed_launch_impulse(body, aim.x, aim.y)
 
 
 func _aim_cell_world_position(aim_row: int, aim_column: int) -> Vector3:
-	return Vector3(
+	var pos := Vector3(
 		column_to_x(aim_column),
 		float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1])),
 		AIM_PLANE_Z
 	)
+	if aim_offset > 0.0:
+		# Uniform disk in the aim plane (X/Y); Z stays on the board depth.
+		var angle := randf() * TAU
+		var radius := aim_offset * sqrt(randf())
+		pos.x += cos(angle) * radius
+		pos.y += sin(angle) * radius
+	return pos
 
 
 ## Launch position: column X is assigned in prepare; Y/Z come from the rock instance.

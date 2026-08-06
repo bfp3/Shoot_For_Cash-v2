@@ -789,6 +789,7 @@ func _close_shop_mini_game() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.shift_pressed and event.keycode == KEY_2:
 			if current_state == SkillState.IN_MENU or current_state == SkillState.OPEN_MENU:

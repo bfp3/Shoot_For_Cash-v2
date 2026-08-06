@@ -72,6 +72,7 @@
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="Script" uid="uid://c2w53e8iak64g" path="res://ch/protect_balloon_round.gd" id="80_ufvrt"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
+[ext_resource type="PackedScene" uid="uid://l8unrpfb1xjd" path="res://ch/targets/early_exit_target.tscn" id="82_exit"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_mdemw"]
 random_pitch = 1.0442737
@@ -612,7 +613,6 @@ pitch_scale = 1.1
 
 [node name="DebugVisualiser" type="Node3D" parent="." unique_id=1321570169]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 23)
-visible = false
 
 [node name="Column1" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1494068997]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
@@ -795,7 +795,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
 randomize_later_waves = false
 pigeon_aim_markers = NodePath("../PigeonAimMarkers")
+DEFAULT_LAUNCH_WAIT_MS = 10
 aim_impulse_scale = 1.1
+aim_launch_gravity_scale = 0.1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
 root_node = NodePath("../Shover")
@@ -1126,6 +1128,9 @@ transform = Transform3D(-1, -8.379102e-09, -8.70203e-08, 0, 0.9953962, -0.095845
 scope_shrink_duration = 0.1
 scope_shrink_delay_dur = 0.15
 roundManager = NodePath("../Round_manager")
+
+[node name="EarlyExitTarget" parent="." unique_id=1222190939 instance=ExtResource("82_exit")]
+transform = Transform3D(0.266, 0, 0, 0, 0.266, 0, 0, 0, 0.266, -2.4, -1.5500002, 6.2)
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
 unique_name_in_owner = true

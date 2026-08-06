@@ -5,6 +5,19 @@
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="4_a7lqs"]
 [ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="5_35jhd"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1oogj"]
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.082499996, 0.09441667, 0.11, 0.41568628)
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_35jhd"]
 color = Color(1, 1, 1, 1)
 thickness = 4
@@ -79,6 +92,64 @@ mouse_filter = 2
 texture = ExtResource("3_35jhd")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="100_percent" type="Control" parent="." unique_id=1188003085]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_right = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.354, 0.354)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="100_percent" unique_id=1957077702]
+self_modulate = Color(1, 1, 1, 0.78431374)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -101.694916
+offset_top = 64.97174
+offset_right = 355.30508
+offset_bottom = 332.97174
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_type_variation = &"RedRichText"
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/italics_font_size = 248
+bbcode_enabled = true
+text = "[wave][i]100%"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="100_percent/RichTextLabel" unique_id=265490706]
+visible = false
+modulate = Color(0.92, 0.8770667, 0.8464, 0.47058824)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.25, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_1oogj")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="." unique_id=1552498213]
 layout_mode = 1

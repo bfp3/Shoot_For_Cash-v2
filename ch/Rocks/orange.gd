@@ -614,8 +614,10 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			#body.rock_type = body.RockSize.SMALL
 			body.cash_value = 2
 			body.ignores_x_out_of_bounds = true
-			var strength : float = [2.0,3.0].pick_random()
-			body.apply_central_impulse(body.global_position - global_position * -strength)
+			#var strength : float = [2.0,3.0].pick_random()
+			var impulse_dir = fly_away_from_player()
+			body.apply_central_impulse(impulse_dir)
+			#body.apply_central_impulse(body.global_position - global_position * -strength)
 			#return
 			await get_tree().create_timer(randf_range(1.2, 2.0), false).timeout
 			body.start_destroyed_process()
@@ -632,6 +634,18 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		body.start_destroyed_process()
 
 		#body.hit_by_player(100, Vector2.ZERO)
+		
+		
+func fly_away_from_player() -> Vector3:
+	var strength : float = [4.0].pick_random()
+	
+	var player := get_tree().get_first_node_in_group('Player')
+
+	var dir : Vector3= self.global_position - player.global_position.normalized()
+	dir.y /= 3
+	#apply_central_impulse(dir * strength)
+	var _direction = dir * strength
+	return _direction
 	
 func expand_blast_radius() -> void:
 	#return

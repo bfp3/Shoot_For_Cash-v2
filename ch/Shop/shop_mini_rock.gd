@@ -10,16 +10,30 @@ enum RockKind { BASIC, BLACK, RED }
 @export var red_color := Color(0.78, 0.02, 0.02, 1.0)
 @export var outline_width := 2.0
 
+@export_group("Physics Material")
+@export var physics_material: PhysicsMaterial:
+	set(value):
+		physics_material = value
+		physics_material_override = value
+
 @export_group("Trail")
 @export var trail_enabled := true
-@export var trail_length := 10
-@export var trail_width := 2.0
-@export var trail_color := Color(1.0, 0.0, 0.0, 0.349)
+@export var trail_length := 18
+@export var trail_width := 3.0
+@export var trail_color := Color(1.0, 0.0, 0.0, 0.55)
 
 @export_group("Red Rock")
 @export var red_hits_to_destroy := 3
 @export var red_hit_bounce_force := 280.0
 @export var red_hit_torque := 180.0
+
+@export_group("Yellow Particles")
+@export var yellow_particles_enabled := true
+@export_range(1, 64, 1) var yellow_particle_amount := 10
+@export var yellow_particle_color := Color(0.95, 0.78, 0.18, 0.85)
+@export_range(0.05, 2.0, 0.01) var yellow_particle_lifetime := 0.45
+@export_range(10.0, 200.0, 1.0) var yellow_particle_speed := 55.0
+@export_range(0.5, 8.0, 0.1) var yellow_particle_scale := 2.5
 
 var kind: RockKind = RockKind.BASIC
 var radius := 18.0
@@ -29,6 +43,7 @@ var hit := false
 var hits_remaining := 1
 var _trail: Line2D
 var _world_history: PackedVector2Array = PackedVector2Array()
+var _yellow_fx: GPUParticles2D
 
 
 func setup(p_radius: float, points: PackedVector2Array, p_kind: RockKind = RockKind.BASIC) -> void:
@@ -51,8 +66,14 @@ func setup(p_radius: float, points: PackedVector2Array, p_kind: RockKind = RockK
 	lock_rotation = false
 	can_sleep = false
 	contact_monitor = false
+	continuous_cd = RigidBody2D.CCD_MODE_CAST_RAY
+	collision_layer = 1
+	collision_mask = 1
+	if physics_material:
+		physics_material_override = physics_material
 	_ensure_collision()
 	_ensure_trail()
+	_ensure_yellow_particles()
 	queue_redraw()
 
 
@@ -72,15 +93,52 @@ func _ensure_trail() -> void:
 	if _trail == null:
 		_trail = Line2D.new()
 		_trail.name = "Trail"
-		_trail.z_index = -1
+		_trail.z_index = 40
 		_trail.joint_mode = Line2D.LINE_JOINT_ROUND
 		_trail.begin_cap_mode = Line2D.LINE_CAP_ROUND
 		_trail.end_cap_mode = Line2D.LINE_CAP_ROUND
 		add_child(_trail)
+	# Detach from rock rotation so the trail stays world-stable and visible.
+	_trail.top_level = true
+	_trail.global_rotation = 0.0
 	_trail.width = trail_width
 	_trail.default_color = trail_color
 	_trail.clear_points()
 	_trail.visible = trail_enabled
+	_world_history.clear()
+
+
+func _ensure_yellow_particles() -> void:
+	_yellow_fx = get_node_or_null("YellowParticles") as GPUParticles2D
+	if kind != RockKind.BASIC or not yellow_particles_enabled:
+		if _yellow_fx:
+			_yellow_fx.emitting = false
+			_yellow_fx.hide()
+		return
+	if _yellow_fx == null:
+		_yellow_fx = GPUParticles2D.new()
+		_yellow_fx.name = "YellowParticles"
+		_yellow_fx.z_index = -2
+		add_child(_yellow_fx)
+	var mat := ParticleProcessMaterial.new()
+	mat.particle_flag_disable_z = true
+	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	mat.emission_sphere_radius = maxf(radius * 0.35, 4.0)
+	mat.direction = Vector3(0, -1, 0)
+	mat.spread = 180.0
+	mat.initial_velocity_min = yellow_particle_speed * 0.35
+	mat.initial_velocity_max = yellow_particle_speed
+	mat.gravity = Vector3(0, 40, 0)
+	mat.scale_min = yellow_particle_scale * 0.6
+	mat.scale_max = yellow_particle_scale
+	mat.color = yellow_particle_color
+	_yellow_fx.process_material = mat
+	_yellow_fx.amount = yellow_particle_amount
+	_yellow_fx.lifetime = yellow_particle_lifetime
+	_yellow_fx.explosiveness = 0.0
+	_yellow_fx.local_coords = false
+	_yellow_fx.emitting = false
+	_yellow_fx.show()
 
 
 func get_draw_color() -> Color:
@@ -101,15 +159,14 @@ func pulse(upward_impulse: float, x_impulse: float, fall_gravity: float, torque_
 	sleeping = false
 	gravity_scale = fall_gravity
 	linear_velocity = Vector2.ZERO
-	# Drive spin directly so pulse_torque is easy to feel in the inspector.
 	angular_velocity = torque_impulse * 0.12
 	apply_central_impulse(Vector2(x_impulse, -upward_impulse) * mass)
 	if absf(torque_impulse) > 0.01:
 		apply_torque_impulse(torque_impulse * mass * maxf(radius, 1.0))
+	if _yellow_fx and kind == RockKind.BASIC and yellow_particles_enabled:
+		_yellow_fx.emitting = true
 
 
-## `away_from_crosshair` should point from the crosshair toward/away so bounce
-## pushes the rock opposite the crosshair center.
 ## `charged_shot` is true when the scope has been shrunk — required to destroy red rocks.
 ## Returns true when the rock is fully destroyed by this hit.
 func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO, crosshair_pos: Vector2 = Vector2.ZERO, charged_shot: bool = false) -> bool:
@@ -127,8 +184,7 @@ func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO, crosshair_pos: Vect
 		hit = true
 		freeze = true
 		hide()
-		if _trail:
-			_trail.hide()
+		_stop_fx()
 		return true
 
 	hits_remaining -= 1
@@ -139,8 +195,7 @@ func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO, crosshair_pos: Vect
 	hit = true
 	freeze = true
 	hide()
-	if _trail:
-		_trail.hide()
+	_stop_fx()
 	return true
 
 
@@ -167,12 +222,18 @@ func mark_destroyed() -> void:
 	hit = true
 	freeze = true
 	hide()
+	_stop_fx()
+
+
+func _stop_fx() -> void:
 	if _trail:
 		_trail.hide()
+		_trail.clear_points()
+	if _yellow_fx:
+		_yellow_fx.emitting = false
 
 
 func _physics_process(_delta: float) -> void:
-	
 	if not trail_enabled or hit or not pulsed or _trail == null:
 		return
 	_update_trail_from_history()
@@ -183,18 +244,20 @@ func _update_trail_from_history() -> void:
 	while _world_history.size() > trail_length:
 		_world_history.remove_at(_world_history.size() - 1)
 	_trail.clear_points()
-	var xf := global_transform.affine_inverse()
+	# World-space trail (top_level, no rotation) — points relative to trail origin at (0,0) global.
+	_trail.global_position = Vector2.ZERO
+	_trail.global_rotation = 0.0
 	for p in _world_history:
-		_trail.add_point(xf * p)
+		_trail.add_point(p)
 	_trail.width = trail_width
 	_trail.default_color = trail_color
+	_trail.visible = true
 
 
 func _draw() -> void:
 	if outline_points.size() < 2:
 		return
 	if kind == RockKind.BLACK:
-		# Filled black rock with red X hazard mark.
 		var fill := PackedVector2Array()
 		for i in outline_points.size() - 1:
 			fill.append(outline_points[i])

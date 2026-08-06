@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b6lbbuw3k10s"]
 
 [ext_resource type="Script" uid="uid://db115g5ikxaeo" path="res://ch/Shop/shop_mini_game.gd" id="1_mini"]
+[ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="2_53l6k"]
 [ext_resource type="Script" uid="uid://cy54vcmks0b5j" path="res://ch/Shop/aoe_script_2d.gd" id="2_aoe"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_8qrfn"]
 [ext_resource type="Script" uid="uid://y6vqoa5yce3s" path="res://ch/Shop/shop_mini_mouse_sfx.gd" id="3_mouse"]
@@ -18,6 +19,16 @@
 [ext_resource type="AudioStream" uid="uid://bwulgbjlr2hv5" path="res://sfx/water_splash_sfx_02.ogg" id="13_splash2"]
 [ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="14_scope"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="15_8xmsh"]
+[ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="16_pine_launch"]
+[ext_resource type="AudioStream" uid="uid://cgmf5xub0ewvx" path="res://sfx/pineapple_sound_3.ogg" id="17_pine_hit"]
+[ext_resource type="AudioStream" uid="uid://w5iohymmpptg" path="res://sfx/score_tally_sfx.ogg" id="18_pine_done"]
+[ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="19_multishot"]
+[ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="20_smoke"]
+[ext_resource type="AudioStream" uid="uid://cpvfg5fpp3w1g" path="res://sfx/balloon_popsfx_00.ogg" id="21_balloon"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_rock"]
+friction = 0.4
+bounce = 0.35
 
 [sub_resource type="Curve" id="Curve_8xmsh"]
 _data = [Vector2(0.022779044, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -93,6 +104,63 @@ color = Color(0.45, 0.62, 0.78, 1)
 hue_variation_min = -0.020000022
 hue_variation_max = 0.019999977
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fruit_burst"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 8.0
+direction = Vector3(0, -1, 0)
+spread = 180.0
+initial_velocity_min = 40.0
+initial_velocity_max = 120.0
+gravity = Vector3(0, 0, 0)
+scale_min = 2.0
+scale_max = 5.0
+scale_curve = SubResource("CurveTexture_pq3hp")
+color = Color(1, 0.92, 0.2, 1)
+alpha_curve = SubResource("CurveTexture_5v5l5")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fruit_sparks"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 60.0
+initial_velocity_max = 160.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.04
+scale_max = 0.08
+scale_curve = SubResource("CurveTexture_4bcnk")
+color = Color(1, 0.85, 0.15, 1)
+alpha_curve = SubResource("CurveTexture_mrbhi")
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_smoke"]
+particles_animation = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_smoke_scale"]
+_data = [Vector2(0, 0.35), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.7), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_smoke_scale"]
+curve = SubResource("Curve_smoke_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_smoke_can"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 36.0
+direction = Vector3(0, -1, 0)
+spread = 180.0
+initial_velocity_min = 8.0
+initial_velocity_max = 32.0
+gravity = Vector3(0, -6, 0)
+scale_min = 0.4
+scale_max = 1.05
+scale_curve = SubResource("CurveTexture_smoke_scale")
+color = Color(0.52, 0.54, 0.58, 0.8)
+alpha_curve = SubResource("CurveTexture_mrbhi")
+anim_speed_min = 0.75
+anim_speed_max = 1.2
+
 [sub_resource type="Curve" id="Curve_8qrfn"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.23234627, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
 point_count = 3
@@ -120,14 +188,30 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_mini")
+scope_expand_max_scale = 2.0
+cloud_pan_speed = 50.0
+wind_amount = 10
+wind_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
+wind_speed = 20.0
 launch_impulse = 1100.0
 launch_x_jitter = 100.0
 pulse_torque = 280.0
 rocks_per_wave = 3
 pulse_stagger = 0.0
 wave_interval = 0.5
+rock_physics_material = SubResource("PhysicsMaterial_rock")
 basic_outline_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
-trail_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+trail_width = 1.0
+trail_color = Color(1, 0, 0, 0.09803922)
+pineapple_texture = ExtResource("2_53l6k")
+pineapple_start_size = 90.0
+pineapple_launch_speed = 700.0
+pineapple_shrink_speed = 2.5
+orange_texture = ExtResource("3_8qrfn")
+orange_start_size = 60.0
+orange_apex_y_ratio = 0.7
+orange_blast_radius = 280.0
+orange_blast_duration = 0.8
 fire_shake_strength = 2.5
 destroy_shake_strength = 5.0
 destroy_shake_time = 0.5
@@ -200,6 +284,41 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_splash")
 
+[node name="FruitAOE2D" type="Node2D" parent="PlayArea/Content" unique_id=1931434979]
+script = ExtResource("2_aoe")
+delays = {
+"HitBurst": 0.05,
+"HitSparks": 0.0
+}
+
+[node name="HitBurst" type="GPUParticles2D" parent="PlayArea/Content/FruitAOE2D" unique_id=1426216015]
+emitting = false
+amount = 22
+lifetime = 0.85
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_fruit_burst")
+
+[node name="HitSparks" type="GPUParticles2D" parent="PlayArea/Content/FruitAOE2D" unique_id=878961085]
+emitting = false
+texture = ExtResource("3_8qrfn")
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_fruit_sparks")
+
+[node name="SmokeCanFX" type="GPUParticles2D" parent="PlayArea/Content" unique_id=1847200391]
+visible = false
+z_index = 30
+material = SubResource("CanvasItemMaterial_smoke")
+emitting = false
+amount = 42
+texture = ExtResource("20_smoke")
+lifetime = 2.4
+explosiveness = 0.12
+randomness = 0.35
+process_material = SubResource("ParticleProcessMaterial_smoke_can")
+
 [node name="Overlay" type="Control" parent="PlayArea/Content" unique_id=852003665]
 layout_mode = 1
 anchors_preset = 15
@@ -268,6 +387,31 @@ theme_override_font_sizes/normal_font_size = 48
 theme_override_font_sizes/italics_font_size = 48
 bbcode_enabled = true
 text = "[i]First Wave"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PerfectLabel" type="RichTextLabel" parent="PlayArea/Content/Overlay" unique_id=339537407]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -120.0
+offset_right = 180.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92, 0.62, 0.18, 1)
+theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/italics_font_size = 36
+bbcode_enabled = true
+text = "[i]PERFECT"
 fit_content = true
 scroll_active = false
 horizontal_alignment = 1
@@ -482,6 +626,52 @@ volume_db = -30.0
 [node name="Flicker_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1597879859]
 stream = ExtResource("15_8xmsh")
 volume_db = -25.0
+
+[node name="progress_rock_sound" type="AudioStreamPlayer" parent="SFX" unique_id=768257320]
+stream = ExtResource("15_8xmsh")
+volume_db = -22.0
+pitch_scale = 0.85
+
+[node name="pitch_shift_rock_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1738269755]
+stream = ExtResource("15_8xmsh")
+volume_db = -16.0
+pitch_scale = 0.85
+
+[node name="Pineapple_launch_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1062895011]
+stream = ExtResource("16_pine_launch")
+volume_db = -35.0
+max_polyphony = 3
+
+[node name="Pineapple_sound_hit" type="AudioStreamPlayer" parent="SFX" unique_id=1134337374]
+stream = ExtResource("17_pine_hit")
+volume_db = -18.0
+max_polyphony = 3
+
+[node name="Pineapple_shot_explode" type="AudioStreamPlayer" parent="SFX" unique_id=1296044795]
+stream = ExtResource("15_8xmsh")
+volume_db = -24.0
+max_polyphony = 2
+
+[node name="Pineapple_destroyed" type="AudioStreamPlayer" parent="SFX" unique_id=573309326]
+stream = ExtResource("18_pine_done")
+volume_db = -16.0
+max_polyphony = 2
+
+[node name="MultiShotSFX" type="AudioStreamPlayer" parent="SFX" unique_id=978327423]
+stream = ExtResource("19_multishot")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="BalloonPop" type="AudioStreamPlayer" parent="SFX" unique_id=1620483901]
+stream = ExtResource("21_balloon")
+volume_db = -12.0
+max_polyphony = 3
+
+[node name="Gold_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=46656239]
+stream = ExtResource("15_8xmsh")
+volume_db = -10.0
+pitch_scale = 0.7
+max_polyphony = 2
 
 [node name="Mouse_turning_SFX" type="Node" parent="." unique_id=344178073]
 script = ExtResource("3_mouse")

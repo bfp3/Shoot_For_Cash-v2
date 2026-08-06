@@ -541,6 +541,37 @@ func unsuccessful_round_locked() -> void:
 	enter_state(RoundState.WAVE_END)
 
 
+## Player shot the early-exit target — bail out of the round and reopen the shop.
+## Does not advance the round sequence or mark progress.
+func abort_round_to_shop() -> void:
+	if wave_ending or game_over_triggered or transitioning_worlds:
+		return
+	if current_round_state == RoundState.SHOP_START or current_round_state == RoundState.INACTIVE:
+		return
+
+	wave_ending = true
+	player_failed = true
+	force_shop_open = false
+	success = false
+
+	stop_timer()
+	stop_player()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+
+	if balloon_container:
+		balloon_container.end_round()
+
+	music_manager.shop_music_lower_volume()
+	current_wave = 0
+	bullet_active = false
+
+	enter_state(RoundState.SHOP_START)
+
+
 func round_timer_time_out() -> void:
 	if wave_ending:
 		return
@@ -1094,7 +1125,7 @@ func travel_to_level(level_id: String) -> void:
 
 	transitioning_worlds = false
 	enter_state(RoundState.SHOP_START)
-
+	player.show_ammo_panel()
 
 func move_to_moss() -> void:
 	await travel_to_level('moss')

@@ -864,6 +864,15 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		return
 		
 	#Rock Destroyed Process
+	
+	if rock_type == RockSize.HAZARD:
+		$Marked.show()
+		#$marked_embers.emitting = true
+		$marked_sfx.play()
+		apply_slow_linear_damp()
+		await get_tree().create_timer(1.5, false).timeout
+	
+	
 	start_destroyed_process()
 	
 	
@@ -969,13 +978,13 @@ func start_destroyed_process() -> void:
 		
 			
 	if rock_type == RockSize.HAZARD:
-		$Marked.show()
-		#$marked_embers.emitting = true
-		$marked_sfx.play()
-		apply_slow_linear_damp()
-		await get_tree().create_timer(1.0).timeout
-		
-		await get_tree().create_timer(0.5).timeout
+		#$Marked.show()
+		##$marked_embers.emitting = true
+		#$marked_sfx.play()
+		#apply_slow_linear_damp()
+		#await get_tree().create_timer(1.0).timeout
+		#
+		#await get_tree().create_timer(0.5).timeout
 		
 		if cash_value < 0:
 			money_label_3d.money_is_money(global_position, cash_value)
