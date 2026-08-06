@@ -184,9 +184,21 @@ func update_shop() -> void:
 	current_round = settings.round
 	
 	price_reroll = int(gl_DataSet.get_value('price_reroll', reroll_index))
+	_update_buy_ammo_cost_label()
 	
 	update_shop_labels()
-	
+
+
+func _update_buy_ammo_cost_label() -> void:
+	var buy_ammo := get_node_or_null('%BuyAmmo') as Control
+	if buy_ammo == null:
+		return
+	var cost_label := buy_ammo.find_child('CostLabel', true, false) as RichTextLabel
+	if cost_label:
+		var ammo_price := int(gl_DataSet.get_value('price_max_ammo', gl_PlayerState.dataset.power_max_ammo))
+		cost_label.text = "[wave]$" + str(ammo_price)
+
+
 func update_open_menu() -> void:
 	if gl_PlayerState.dataset.round == 1:
 		bg_music.play()
@@ -226,23 +238,30 @@ func update_open_menu() -> void:
 	enter_state(SkillState.IN_MENU)
 	
 func play_round_button_pressed() -> void:
-	
+	shake_shop()
 	reroll_button.hide()
 	%PlayButton.disabled = true
 	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
 	var play_round_cost = int(gl_DataSet.get_value('price_play_round', 0))
 	gl_PlayerState.log_buy('debug_add_cash', play_round_cost)
+	
 	var tween := create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
-	tween.tween_property(%PlayButton, "modulate:a", 0.0, 0.15)
-	tween.parallel().tween_property(%PlayButton, "modulate:a", 0.0, 0.15)
+	tween.tween_callback(purchase_made.bind('debug_add_cash'))
+	tween.tween_interval(0.4)
+	tween.tween_property(%RoundSelector, "modulate:a", 0.0, 0.15)
+
+	tween.tween_interval(0.8)
 	await tween.finished
-	purchase_made('debug_add_cash')
+	
+	#purchase_made('debug_add_cash')
 	
 	
-	await get_tree().create_timer(1.0, false).timeout
-	%PlayButton.disabled = false
+	#await get_tree().create_timer(1.0, false).timeout
 	update_close_menu()
+	await get_tree().create_timer(0.1, false).timeout
+	%PlayButton.disabled = false
+	%RoundSelector.modulate.a = 1.0
 
 
 ## Hide shop for the debug level editor without firing CLOSE_MENU / SHOP_END.
@@ -757,3 +776,76 @@ func update_cash_label_color() -> void:
 		#cash_label.modulate = Color("c70102ff")
 	#else:
 		#cash_label.modulate = Color("ffff")
+
+
+func _on_buy_ammo_pressed() -> void:
+	var player := get_tree().get_first_node_in_group('Player') as Player
+	if player == null:
+		push_warning('Shop: Player not found for ammo purchase')
+		return
+
+	if player.is_ammo_full():
+		_show_ammo_full_popup()
+		return
+
+	var ammo_price := int(gl_DataSet.get_value('price_max_ammo', gl_PlayerState.dataset.power_max_ammo))
+	if player_cash < ammo_price:
+		purchase_denied_tween()
+		return
+
+	var pack_size := player.get_ammo_pack_size()
+	if not gl_PlayerState.log_buy('ammo_packs_bought', ammo_price):
+		purchase_denied_tween()
+		return
+
+	player.add_ammo(pack_size, true)
+	purchase_made('ammo_packs_bought')
+	
+	shake_shop()
+	
+func shake_shop() -> void:
+	var accepted_tween := create_tween()
+		
+	accepted_tween.set_trans(Tween.TRANS_SINE)
+	accepted_tween.set_ease(Tween.EASE_OUT)
+	
+	var original_position := position
+	
+	accepted_tween.tween_property(self, "position:y", original_position.y - 12, 0.05)
+	accepted_tween.tween_property(self, "position:y", original_position.y + 12, 0.05)
+	accepted_tween.tween_property(self, "position:y", original_position.y, 0.05)
+		
+
+
+func _show_ammo_full_popup() -> void:
+	purchase_denied_tween()
+	
+	var popup := RichTextLabel.new()
+	popup.bbcode_enabled = true
+	popup.fit_content = true
+	popup.scroll_active = false
+	popup.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	popup.z_index = 1
+	popup.theme_type_variation = 'WhiteRichText'
+	popup.top_level = true
+	popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	popup.autowrap_mode = TextServer.AUTOWRAP_OFF
+	popup.add_theme_font_size_override('normal_font_size', 42)
+	popup.text = "[wave]Ammo is full"
+	popup.modulate = Color(0.63, 0.006, 0.017, 0.0)
+	add_child(popup)
+
+	await get_tree().process_frame
+	var buy_ammo_btn: Control = %BuyAmmo
+	var start_pos := buy_ammo_btn.global_position + (buy_ammo_btn.size * buy_ammo_btn.scale * 0.5)
+	start_pos.x -= popup.size.x * 0.5
+	start_pos.y -= 40.0
+	popup.global_position = start_pos
+
+	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(popup, 'modulate:a', 1.0, 0.12)
+	tween.parallel().tween_property(popup, 'global_position:y', start_pos.y - 100.0, 0.9)
+	tween.parallel().tween_property(popup, 'global_position:x', start_pos.x + 30.0, 0.9)
+	tween.tween_property(popup, 'modulate:a', 0.0, 0.35)
+	await tween.finished
+	popup.queue_free()

@@ -137,8 +137,8 @@ func update_restarting() -> void:
 	if timer_disabled:
 		return
 		
-	show()
-	#start_time = gl_PlayerState.dataset.power_time_upgrade
+	#show()
+	start_time = gl_PlayerState.dataset.power_time_upgrade
 	sent_signal = false
 	start_time = gl_DataSet.get_value('power_time_upgrade', gl_PlayerState.dataset.power_time_upgrade)
 	#start_time = 12.0

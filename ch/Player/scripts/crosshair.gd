@@ -219,6 +219,19 @@ func crosshair_nothing_to_shoot() -> void:
 	tween.tween_property(self, "modulate:a", 1.0, 0.1)
 	#await tween.finished
 	
+func out_of_ammo_display() -> void:
+	#crosshair_nothing_to_shoot()
+	var no_ammo_label : RichTextLabel = $OutOfAmmoLabel
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(no_ammo_label, "modulate:a", 1.0, 0.1)
+	tween.tween_property(no_ammo_label, "modulate:a", 0.2 ,0.1)
+	tween.tween_property(no_ammo_label, "modulate:a", 1.0, 0.1)
+	tween.tween_property(no_ammo_label, "modulate:a", 0.2 ,0.1)
+	tween.tween_property(no_ammo_label, "modulate:a", 1.0, 0.1)
+	tween.tween_interval(0.2)
+	tween.tween_property(no_ammo_label, "modulate:a", 0.0 ,0.1)
+	
+	
 func crosshair_fade_out_mode() -> void:
 	
 	#var outer_scope : Control = %Large_outer_scope

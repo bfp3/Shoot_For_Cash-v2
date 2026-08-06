@@ -4,6 +4,10 @@
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_rcr1f"]
 [ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="3_soy43"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="6_8mvl6"]
+[ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="7_8mvl6"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="8_8uupg"]
+[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="9_vjt1i"]
+[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="10_rcr1f"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="11_n61y1"]
 [ext_resource type="PackedScene" uid="uid://mmk21ngpuua6" path="res://ch/Shop/Level_button_select.tscn" id="12_ag0ht"]
 
@@ -763,16 +767,76 @@ text = "x"
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="CloseMapButton" type="Button" parent="."]
-z_index = 4
-layout_mode = 0
-offset_left = 1628.0
-offset_top = 108.0
-offset_right = 1710.0
-offset_bottom = 168.0
+[node name="CloseMapButton" type="Button" parent="." unique_id=2017567355 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+layout_mode = 1
+offset_left = 180.0
+offset_top = 104.0
+offset_right = 262.0
+offset_bottom = 164.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_font_sizes/font_size = 28
-text = "CLOSE"
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("11_n61y1")
+focus_enter_sfx = NodePath("focus_enter_sfx")
+focus_exit_sfx = NodePath("focus_exit")
+purchase_sfx = NodePath("shop_open_sfx_01")
+wiggle_amount = 1.1
+
+[node name="CloseButtonIcon2" type="TextureRect" parent="CloseMapButton" unique_id=887776723]
+self_modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -129.60632
+offset_top = -128.0
+offset_right = 126.39368
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.175, 0.175)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("7_8mvl6")
+stretch_mode = 5
+
+[node name="CloseButtonIcon2" type="TextureRect" parent="CloseMapButton/CloseButtonIcon2" unique_id=432115250]
+modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.477539
+offset_top = -6.477539
+offset_right = 6.477539
+offset_bottom = -6.477539
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.053, 1.053)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("7_8mvl6")
+stretch_mode = 5
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="CloseMapButton" unique_id=520395201]
+stream = ExtResource("8_8uupg")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="CloseMapButton" unique_id=1647627990]
+stream = ExtResource("8_8uupg")
+volume_db = -50.0
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="CloseMapButton" unique_id=1591355398]
+stream = ExtResource("9_vjt1i")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="CloseMapButton" unique_id=798786750]
+stream = ExtResource("10_rcr1f")
+volume_db = -40.0
+pitch_scale = 1.5
 
 [node name="MainPanel" type="PanelContainer" parent="." unique_id=814251497]
 visible = false

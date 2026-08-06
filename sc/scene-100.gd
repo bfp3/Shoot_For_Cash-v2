@@ -127,8 +127,8 @@ func debug_bootstrap_gameplay() -> void:
 			player.title_screen_end()
 		player.display_hud()
 
-	if round_timer:
-		round_timer.show()
+	#if round_timer:
+		#round_timer.show()
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	await get_tree().process_frame

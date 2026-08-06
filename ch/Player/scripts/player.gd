@@ -24,8 +24,9 @@ var _current_shrink_duration := 0.5
 
 @export var can_right_click_shoot := false
 
-@export var shot_count := 4000
-var original_shot_count := 0
+## Current bullets loaded. Starts at power_max_ammo and is refilled via shop ammo packs.
+var shot_count := 0
+var max_ammo := 0
 
 var game_lost := false
 
@@ -125,7 +126,7 @@ func _ready() -> void:
 	)
 	tween_scope(_inner_scope_scale_for_radius(start_radius), 0.33)
 	
-	original_shot_count = shot_count
+	_init_ammo()
 	
 	%Bullet_icon.hide()
 	%Auto_fire.hide()
@@ -634,6 +635,43 @@ func _tween_scope_back_to_base() -> void:
 
 
 
+func get_max_ammo() -> int:
+	return int(gl_DataSet.get_value('power_max_ammo', gl_PlayerState.dataset.power_max_ammo))
+
+
+func get_ammo_pack_size() -> int:
+	return int(gl_DataSet.get_value('ammo_pack_size', 0))
+
+
+func is_ammo_full() -> bool:
+	return shot_count >= get_max_ammo()
+
+
+func _init_ammo() -> void:
+	max_ammo = get_max_ammo()
+	max_ammo = 50
+	shot_count = max_ammo
+	_refresh_ammo_display()
+
+
+func _refresh_ammo_display(animate := false) -> void:
+	var hud := $CanvasLayer/HUD_bottom_corner/ShotRemaining
+	if hud and hud.has_method('set_ammo'):
+		hud.set_ammo(shot_count, animate)
+	else:
+		%ShotRemaining.text = str(shot_count).pad_zeros(2)
+
+
+## Adds pack bullets up to max capacity. Returns how many were actually added.
+func add_ammo(amount: int, animate := true) -> int:
+	max_ammo = get_max_ammo()
+	var before := shot_count
+	shot_count = mini(shot_count + amount, max_ammo)
+	var added := shot_count - before
+	_refresh_ammo_display(animate and added > 0)
+	return added
+
+
 func fire_weapon() -> void:
 	
 	if current_state != State.ACTIVE:
@@ -645,6 +683,11 @@ func fire_weapon() -> void:
 		return
 		
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
+	if shot_count <= 0:
+		out_of_ammo()
+		weapon_shooting.play_missed_sounds()
 		return
 	
 	#set_process(false)
@@ -660,14 +703,18 @@ func fire_weapon() -> void:
 	
 	#%Crosshair.duplicate_inner_scope()
 	
-	shot_count = clamp(shot_count - 1, 0, 100)
-	%ShotRemaining.text = str(shot_count).pad_zeros(2)
+	max_ammo = get_max_ammo()
+	shot_count = clampi(shot_count - 1, 0, max_ammo)
+	_refresh_ammo_display()
 	if shot_count <= 0:
-		await get_tree().create_timer(0.5).timeout
+		
+		#await get_tree().create_timer(0.5).timeout
 		print("shot count reached")
-		EventBus.instance.end_round_rock_missed.emit()
+		#EventBus.instance.end_round_rock_missed.emit()
 	
-
+func out_of_ammo() -> void:
+	%Crosshair.out_of_ammo_display()
+	
 
 func penalize_early_fire() -> void:
 	current_gun_fire_rate_cooldown = power_gun_fire_rate
@@ -748,8 +795,9 @@ func start_player() -> void:
 		return
 	game_lost = false
 	weapon_shooting.shot_with_right_click = false
-	shot_count = original_shot_count
-	%ShotRemaining.text = str(shot_count).pad_zeros(2)
+	max_ammo = get_max_ammo()
+	shot_count = clampi(shot_count, 0, max_ammo)
+	_refresh_ammo_display()
 	weapon_shooting.can_shoot(true)
 
 	%Cooldown_progressBar3.value = 100.0

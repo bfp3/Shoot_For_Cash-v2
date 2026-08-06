@@ -615,12 +615,11 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			body.cash_value = 2
 
 		# Blasted into the distance — don't count side-rail X as a miss.
-		body.ignores_x_out_of_bounds = true
-		var strength : float = [2.0,3.0].pick_random()
-		body.apply_central_impulse(body.global_position - global_position * -strength)
-		#return
-		await get_tree().create_timer(randf_range(1.2, 2.0)).timeout
-
+		#body.ignores_x_out_of_bounds = true
+		#var strength : float = [2.0,3.0].pick_random()
+		#body.apply_central_impulse(body.global_position - global_position * -strength)
+		##return
+		#await get_tree().create_timer(randf_range(1.2, 2.0)).timeout
 		body.start_destroyed_process()
 
 

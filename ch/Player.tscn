@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bowsa0qmgtgxx"]
 
 [ext_resource type="Script" uid="uid://da45gubie1h3t" path="res://ch/Player/scripts/player.gd" id="1_6ljxy"]
+[ext_resource type="Script" uid="uid://dphrg15ygnedc" path="res://ch/Player/scripts/shot_remaining.gd" id="1_shotrem"]
 [ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="2_kbm6s"]
 [ext_resource type="Script" uid="uid://4a0w5mbutje7" path="res://ch/Player/mobile_controller.gd" id="2_vmtkp"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_b1tng"]
@@ -319,6 +320,36 @@ _data = {
 &"rotate_arrow": SubResource("Animation_k5tjv")
 }
 
+[sub_resource type="Curve" id="Curve_g6ubq"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_lf8qf"]
+curve = SubResource("Curve_g6ubq")
+
+[sub_resource type="Curve" id="Curve_bpx2c"]
+_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_11n43"]
+curve = SubResource("Curve_bpx2c")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_txfio"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 150.0
+initial_velocity_max = 300.0
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 0, 0)
+scale_min = 10.0
+scale_max = 20.0
+scale_curve = SubResource("CurveTexture_11n43")
+color = Color(0.81960785, 0, 0, 1)
+alpha_curve = SubResource("CurveTexture_lf8qf")
+hue_variation_min = -0.050000023
+hue_variation_max = 0.049999975
+
 [sub_resource type="Curve" id="Curve_fuvvr"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
@@ -465,36 +496,6 @@ _data = {
 &"RESET": SubResource("Animation_txfio"),
 &"rot": SubResource("Animation_3gdew")
 }
-
-[sub_resource type="Curve" id="Curve_g6ubq"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_lf8qf"]
-curve = SubResource("Curve_g6ubq")
-
-[sub_resource type="Curve" id="Curve_bpx2c"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_11n43"]
-curve = SubResource("Curve_bpx2c")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_txfio"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 150.0
-initial_velocity_max = 300.0
-angular_velocity_min = -180.0
-angular_velocity_max = 180.0
-gravity = Vector3(0, 0, 0)
-scale_min = 10.0
-scale_max = 20.0
-scale_curve = SubResource("CurveTexture_11n43")
-color = Color(0.81960785, 0, 0, 1)
-alpha_curve = SubResource("CurveTexture_lf8qf")
-hue_variation_min = -0.050000023
-hue_variation_max = 0.049999975
 
 [sub_resource type="Shader" id="Shader_qfoqq"]
 code = "shader_type spatial;
@@ -1825,6 +1826,30 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 script = ExtResource("31_xfuv4")
 
+[node name="OutOfAmmoLabel" type="RichTextLabel" parent="CanvasLayer/Crosshair" unique_id=1998010493]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0.48235294)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 94
+bbcode_enabled = true
+text = "OUT"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="HUD_bottom_corner" type="Control" parent="CanvasLayer" unique_id=116034029]
 unique_name_in_owner = true
 layout_mode = 3
@@ -1838,9 +1863,127 @@ grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
+[node name="ShotRemaining" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=777895345]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -268.0
+offset_top = -130.0
+offset_right = -88.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.46, 0.46)
+pivot_offset_ratio = Vector2(1, 1)
+size_flags_horizontal = 4
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("1_shotrem")
+
+[node name="SkyMineParticles2D" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1579610197]
+z_index = 3
+position = Vector2(71.91324, -72.56433)
+emitting = false
+amount = 30
+lifetime = 1.5
+one_shot = true
+explosiveness = 0.8
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_txfio")
+
+[node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1199603002]
+position = Vector2(70.010376, -75.84613)
+scale = Vector2(1.005127, 1.005127)
+emitting = false
+amount = 26
+one_shot = true
+explosiveness = 0.8
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_11n43")
+
+[node name="Panel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=566358932]
+custom_minimum_size = Vector2(180, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -253.47815
+offset_top = -385.00024
+offset_right = 269.99988
+offset_bottom = 21.521606
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_pivo4")
+theme_override_styles/panel = ExtResource("29_fuvvr")
+
+[node name="Bullet_icon" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1535013277]
+visible = false
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 173.91284
+offset_top = -182.60828
+offset_right = 121.91284
+offset_bottom = -184.60828
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3.285, 3.285)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("8_b1tng")
+stretch_mode = 5
+
+[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining/Bullet_icon" unique_id=1774314751 instance=ExtResource("33_ms1v2")]
+layout_mode = 1
+offset_left = -128.125
+offset_top = -94.00006
+offset_right = 127.875
+offset_bottom = 161.99994
+scale = Vector2(0.288, 0.288)
+
+[node name="ShotRemaining" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1658642522]
+unique_name_in_owner = true
+self_modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+z_index = 1
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -194.67395
+offset_top = -327.9995
+offset_right = 50.32605
+offset_bottom = -11.999512
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 1
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/normal_font_size = 292
+bbcode_enabled = true
+text = "50"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Bullet_icon2" type="TextureProgressBar" parent="CanvasLayer/HUD_bottom_corner" unique_id=1509279836]
 unique_name_in_owner = true
-visible = false
 modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 layout_mode = 1
 anchors_preset = 3
@@ -1848,10 +1991,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -73.00006
-offset_top = -141.99986
-offset_right = 54.99994
-offset_bottom = -13.999863
+offset_left = -84.00006
+offset_top = -140.99986
+offset_right = 43.99994
+offset_bottom = -12.999863
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(1.6, 1.6)
@@ -1872,10 +2015,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -73.0
-offset_top = -134.99988
-offset_right = 55.0
-offset_bottom = -6.999878
+offset_left = -85.0
+offset_top = -137.99988
+offset_right = 43.0
+offset_bottom = -9.999878
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(1.6, 1.6)
@@ -2289,95 +2432,6 @@ process_material = SubResource("ParticleProcessMaterial_txfio")
 
 [node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=27718769]
 position = Vector2(-118.6853, 20.240479)
-scale = Vector2(1.005127, 1.005127)
-emitting = false
-amount = 26
-one_shot = true
-explosiveness = 0.8
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_11n43")
-
-[node name="ShotRemaining" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=777895345]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -180.0
-offset_top = -130.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.46, 0.46)
-pivot_offset_ratio = Vector2(1, 1)
-size_flags_horizontal = 4
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="Panel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=566358932]
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -611.73926
-offset_top = -110.65173
-offset_right = -431.73926
-offset_bottom = 19.348267
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_pivo4")
-theme_override_styles/panel = ExtResource("29_fuvvr")
-
-[node name="ShotRemaining" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1658642522]
-unique_name_in_owner = true
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -585.3263
-offset_top = -95.65173
-offset_right = -458.15222
-offset_bottom = 4.3482666
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_outline_size = 1
-theme_override_constants/outline_size = 0
-theme_override_font_sizes/normal_font_size = 60
-theme_override_font_sizes/bold_font_size = 50
-theme_override_font_sizes/bold_italics_font_size = 50
-theme_override_font_sizes/italics_font_size = 71
-bbcode_enabled = true
-text = "1"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SkyMineParticles2D" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1579610197]
-z_index = 3
-position = Vector2(-429.82617, 23.522583)
-emitting = false
-amount = 30
-lifetime = 1.5
-one_shot = true
-explosiveness = 0.8
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_txfio")
-
-[node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1199603002]
-position = Vector2(-431.72876, 20.240479)
 scale = Vector2(1.005127, 1.005127)
 emitting = false
 amount = 26

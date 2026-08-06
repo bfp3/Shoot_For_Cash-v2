@@ -23,7 +23,6 @@ func open_pop_up() -> void:
 	_selecting_level = false
 	ticket_location = String(gl_PlayerState.dataset.level_name).to_lower()
 	_refresh_level_buttons()
-	_update_close_button_visibility()
 
 	modulate.a = 0.0
 	show()
@@ -54,13 +53,6 @@ func _on_close_map_pressed() -> void:
 func display_ticket() -> void:
 	await open_pop_up()
 
-
-func _update_close_button_visibility() -> void:
-	if close_button == null:
-		return
-	# Must pick a range when leaving the opening scene.
-	var at_start := String(gl_PlayerState.dataset.level_name).to_lower() == 'start'
-	close_button.visible = not at_start
 
 
 func _refresh_level_buttons() -> void:

@@ -40,6 +40,8 @@ const RESTART_DATASET := {
 	"power_bullet_delay": 0,
 	"power_gun": 1,
 	"power_sky_mine" : 0,
+	"power_max_ammo": 0,
+	"ammo_packs_bought": 0,
 
 	"power_ticket_moss": 0,
 	"power_ticket_redd": 0,
@@ -82,6 +84,8 @@ const DEFAULT_DATASET := {
 	"power_bullet_delay": 0,
 	"power_gun": 0,
 	"power_sky_mine" : 0,
+	"power_max_ammo": 0,
+	"ammo_packs_bought": 0,
 
 	"power_ticket_moss": 0,
 	"power_ticket_redd": 0,

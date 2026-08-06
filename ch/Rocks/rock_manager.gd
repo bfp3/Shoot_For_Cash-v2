@@ -57,7 +57,7 @@ const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a c
 const DEFAULT_LAUNCH_WAIT_MS := 100
 ## Aim apex heights — same Y bands balloons use (A/B/C → 1/2/3).
 const AIM_LANE_Y := {
-	1: 6.5,
+	1: 7.0, #6.5
 	2: 3.5,
 	3: 0.5,
 }

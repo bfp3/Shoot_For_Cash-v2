@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="8_tnodp"]
 [ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="10_ohn7f"]
 [ext_resource type="Texture2D" uid="uid://dk2p6y27c64hs" path="res://res/cooldown_reduction_upgrade_icon_128x128.png" id="12_pwib5"]
+[ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="12_xgu8n"]
 [ext_resource type="Texture2D" uid="uid://cuw4sgs22s23" path="res://res/sky_mine_icon_2.png" id="13_cn8lj"]
 [ext_resource type="PackedScene" uid="uid://ck6lfy3kh3eqy" path="res://ch/Shop/Upgrade_progress_component.tscn" id="13_onfim"]
 [ext_resource type="Texture2D" uid="uid://icyevci50hge" path="res://res/gun_icon_shop.png" id="13_xklyy"]
@@ -325,6 +326,18 @@ func restart() -> void:
 	grand_total = 0
 	text = subtitle + \"[color=#c70102]$0[/color]\"
 "
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sgib8"]
+bg_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbtj3"]
 bg_color = Color(0.32, 0.32, 0.32, 1)
@@ -848,21 +861,86 @@ mouse_filter = 2
 theme = SubResource("Theme_vv4e8")
 theme_override_styles/panel = SubResource("StyleBoxFlat_tnodp")
 
-[node name="MapButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel"]
+[node name="MapButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1819880088 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true
+self_modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
 z_index = 2
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -210.0
-offset_top = 28.0
-offset_right = -40.0
-offset_bottom = 92.0
-grow_horizontal = 0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -496.9752
+offset_top = -58.220863
+offset_right = -453.012
+offset_bottom = -21.273064
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.731, 0.731)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_font_sizes/font_size = 30
-text = "MAP"
+script = ExtResource("3_y3o4g")
+focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("shop_open_sfx_01")
+wiggle_amount = 0.85
+wiggle_amount_exit = 0.731
+
+[node name="CloseButtonIcon" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=1333707700]
+self_modulate = Color(0.78, 0.6318, 0.63426995, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -129.60634
+offset_top = -128.00003
+offset_right = 126.39366
+offset_bottom = 127.99998
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.097, 0.097)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("12_xgu8n")
+stretch_mode = 5
+
+[node name="CloseButtonIcon2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton/CloseButtonIcon" unique_id=1428388682]
+modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.477539
+offset_top = -6.477539
+offset_right = 6.477539
+offset_bottom = -6.477539
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.053, 1.053)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("12_xgu8n")
+stretch_mode = 5
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=1595216180]
+stream = ExtResource("26_bovdg")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=226639554]
+stream = ExtResource("26_bovdg")
+volume_db = -50.0
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=884433803]
+stream = ExtResource("47_gqw4q")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=2039558574]
+stream = ExtResource("48_a8n1b")
+volume_db = -40.0
+pitch_scale = 1.5
 
 [node name="CoatArms" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=409353141 instance=ExtResource("8_kvqbn")]
 z_index = 1
@@ -1900,7 +1978,78 @@ grow_vertical = 0
 scale = Vector2(1, 2.019)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
-[node name="PlayButton" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=388452363 instance=ExtResource("17_xklyy")]
+[node name="BuyAmmo" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=388452363 instance=ExtResource("17_xklyy")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -59.437775
+offset_top = -107.32941
+offset_right = 156.53421
+offset_bottom = 142.6706
+grow_vertical = 2
+scale = Vector2(0.444, 0.444)
+wiggle_amount = 0.46
+wiggle_amount_exit = 0.444
+metadata/_edit_group_ = true
+
+[node name="RedPanel3" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="0" unique_id=564021378]
+visible = false
+
+[node name="Icon" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="1" unique_id=667654554]
+visible = false
+
+[node name="PlayLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="3" unique_id=160258226]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+offset_left = -93.63642
+offset_top = -18.038681
+offset_right = 93.36359
+offset_bottom = 108.96135
+theme_override_font_sizes/normal_font_size = 90
+text = "[shake]AMMO"
+
+[node name="CostLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Cost" parent_id_path=PackedInt32Array(388452363, 1538052106) index="0" unique_id=552854020]
+offset_left = 1.6906738
+offset_top = -1.1555786
+offset_right = 1.6906738
+offset_bottom = -1.1555786
+
+[node name="AmmoCountPopUp" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo" unique_id=2144831784]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -70.55243
+offset_top = -25.32727
+offset_right = -70.55243
+offset_bottom = 75.67273
+grow_horizontal = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 2
+bbcode_enabled = true
+text = "+12"
+fit_content = true
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/AmmoCountPopUp" unique_id=2054614214]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 22.807373
+offset_top = -32.662964
+offset_right = 115.0683
+offset_bottom = 30.966064
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sgib8")
+
+[node name="PlayButton" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=805831987 instance=ExtResource("17_xklyy")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 6
@@ -2404,13 +2553,15 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="open_map_menu"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo" to="." method="_on_buy_ammo_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PlayButton" to="." method="play_round_button_pressed"]
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="open_map_menu"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]
 [connection signal="pressed" from="MaxOutPowers" to="." method="_on_max_out_powers_pressed"]
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]
 
+[editable path="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo"]
 [editable path="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]

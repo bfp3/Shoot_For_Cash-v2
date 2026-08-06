@@ -20,6 +20,7 @@ var can_afford := false
 var wiggle_tween: Tween
 
 
+
 func _ready() -> void:
 	randomize()
 
