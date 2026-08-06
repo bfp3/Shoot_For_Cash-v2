@@ -42,8 +42,8 @@ spread = 180.0
 initial_velocity_min = 40.0
 initial_velocity_max = 120.0
 gravity = Vector3(0, 0, 0)
-scale_min = 0.02
-scale_max = 0.099999994
+scale_min = 2.0
+scale_max = 5.0
 scale_curve = SubResource("CurveTexture_pq3hp")
 color = Color(0.95, 0.75, 0.15, 1)
 alpha_curve = SubResource("CurveTexture_5v5l5")
@@ -59,8 +59,6 @@ curve = SubResource("Curve_53l6k")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sparks"]
 particle_flag_disable_z = true
-emission_shape = 1
-emission_sphere_radius = 4.0
 spread = 180.0
 initial_velocity_min = 60.0
 initial_velocity_max = 160.0
@@ -122,16 +120,17 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_mini")
-aim_together_chance = 1.0
+launch_impulse = 620.0
+launch_x_jitter = 100.0
+pulse_torque = 280.0
 rocks_per_wave = 3
-pulse_stagger = 0.5
+pulse_stagger = 0.0
 wave_interval = 0.5
 basic_outline_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
-trail_width = 8.0
 trail_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 fire_shake_strength = 2.5
-destroy_shake_strength = 16.0
-destroy_shake_time = 0.28
+destroy_shake_strength = 5.0
+destroy_shake_time = 0.5
 
 [node name="PlayArea" type="Panel" parent="." unique_id=19625396]
 clip_contents = true
@@ -166,14 +165,13 @@ position = Vector2(8, 8)
 [node name="AOE2D" type="Node2D" parent="PlayArea/Content" unique_id=1653402167]
 script = ExtResource("2_aoe")
 delays = {
-"HitBurst": 0.2,
+"HitBurst": 0.1,
 "HitSparks": 0.05
 }
 
 [node name="HitBurst" type="GPUParticles2D" parent="PlayArea/Content/AOE2D" unique_id=1284501315]
 emitting = false
 amount = 18
-texture = ExtResource("3_8qrfn")
 lifetime = 0.85
 one_shot = true
 explosiveness = 1.0
@@ -181,7 +179,7 @@ process_material = SubResource("ParticleProcessMaterial_burst")
 
 [node name="HitSparks" type="GPUParticles2D" parent="PlayArea/Content/AOE2D" unique_id=279751517]
 emitting = false
-amount = 12
+amount = 1
 texture = ExtResource("4_beb21")
 lifetime = 0.35
 one_shot = true
@@ -477,7 +475,7 @@ volume_db = -18.0
 stream = ExtResource("13_splash2")
 volume_db = -18.0
 
-[node name="ScopeShrink" type="AudioStreamPlayer" parent="SFX"]
+[node name="ScopeShrink" type="AudioStreamPlayer" parent="SFX" unique_id=1159021901]
 stream = ExtResource("14_scope")
 volume_db = -30.0
 

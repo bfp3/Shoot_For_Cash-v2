@@ -111,12 +111,12 @@ func pulse(upward_impulse: float, x_impulse: float, fall_gravity: float, torque_
 ## `away_from_crosshair` should point from the crosshair toward/away so bounce
 ## pushes the rock opposite the crosshair center.
 ## Returns true when the rock is fully destroyed by this hit.
-func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO) -> bool:
+func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO, crosshair_pos : Vector2 = Vector2.ZERO) -> bool:
 	if hit:
 		return false
 	
 	linear_velocity = Vector2.ZERO
-		
+
 	hits_remaining -= 1
 	if kind == RockKind.RED and hits_remaining > 0:
 		var dir := away_from_crosshair
@@ -125,8 +125,15 @@ func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO) -> bool:
 		else:
 			dir = dir.normalized()
 			
-		dir = Vector2.UP
-		dir.x = randi_range(-1,1)
+		dir = Vector2.UP / 2
+		
+		if crosshair_pos.x > 567:
+			dir.x = -1.3
+		
+		else:
+			dir.x = 1.3
+		
+		#dir.x = randi_range(-1,1)
 		# Bounce away from the crosshair center.
 		apply_central_impulse(dir * red_hit_bounce_force * mass)
 		apply_torque_impulse(randf_range(-red_hit_torque, red_hit_torque) * mass * maxf(radius, 1.0))

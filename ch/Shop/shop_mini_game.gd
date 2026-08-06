@@ -22,7 +22,7 @@ const WALL_Y_RATIO := 0.88
 const PILLAR_WIDTH_RATIO := 0.015 #0.045
 const PILLAR_INSET_RATIO := 0.02 # 0.12
 const CROSSHAIR_RADIUS := 48.0
-const PAD := Vector2(28.0, 28.0)
+const PAD := Vector2(0.0, 0.0)
 const HEADER_CLEARANCE := 120.0
 const MAX_STRIKES := 10
 
@@ -122,8 +122,8 @@ var _scope_base_target_radius := 48.0
 var _current_target_radius := 48.0
 var _current_shrink_duration := 0.5
 var _shrink_return_tween: Tween
-const SCOPE_SHRINK_DURATION := 0.5
-const SCOPE_SHRINK_DELAY := 0.4
+const SCOPE_SHRINK_DURATION := 0.2
+const SCOPE_SHRINK_DELAY := 0.15
 const SCOPE_RETURN_DURATION := 0.3
 const SCOPE_SHRINK_SFX_MIN_PITCH := 1.0
 const SCOPE_SHRINK_SFX_MAX_PITCH := 1.5
@@ -344,6 +344,8 @@ func _on_overlay_resized() -> void:
 func _process(delta: float) -> void:
 	if not is_open:
 		return
+	
+
 	_sync_to_panel()
 	_wave_phase += delta * 2.2
 	_handle_scope_shrink(delta)
@@ -654,7 +656,7 @@ func _try_shoot() -> void:
 
 	
 	_play_fire_sfx()
-	_add_shake(fire_shake_strength, fire_shake_time)
+	#_add_shake(fire_shake_strength, fire_shake_time)
 	var wall_y := _overlay.size.y * WALL_Y_RATIO
 	_shot_flashes.append({"pos": _crosshair, "t": 0.12})
 	var destroyed_count := 0
@@ -676,7 +678,7 @@ func _try_shoot() -> void:
 		# Bounce away from the crosshair center.
 		
 		var away_from_crosshair := rock.position - _crosshair
-		var destroyed: bool = rock.apply_shot(away_from_crosshair)
+		var destroyed: bool = rock.apply_shot(away_from_crosshair, _crosshair_node.position)
 		
 		if not destroyed:
 			_play_hit_sfx()
@@ -685,6 +687,7 @@ func _try_shoot() -> void:
 		destroyed_count += 1
 		_rocks.remove_at(i)
 		_on_rock_destroyed(rock, hit_pos, kind)
+		await get_tree().create_timer(0.1, false).timeout
 
 	if destroyed_count >= 2:
 		_show_multikill(destroyed_count)
@@ -707,11 +710,11 @@ func _on_rock_destroyed(rock: RigidBody2D, hit_pos: Vector2, kind: ShopMiniRock.
 	if _sfx_hit_flicker:
 		_sfx_hit_flicker.play()
 		
-	await get_tree().create_timer(0.1, false).timeout
+	#await get_tree().create_timer(0.1, false).timeout
 	
 	_play_destroy_sfx()
 	_play_aoe(hit_pos)
-	_add_shake(destroy_shake_strength, destroy_shake_time)
+	#_add_shake(destroy_shake_strength, destroy_shake_time)
 	_shot_flashes.append({"pos": hit_pos, "t": 0.22, "burst": true})
 	if kind == ShopMiniRock.RockKind.BLACK:
 		# Hazard: money penalty only — no strike (they're meant to be avoided).
@@ -964,6 +967,7 @@ func _draw_wall(area: Vector2, wall_y: float) -> void:
 
 
 func _draw_flashes() -> void:
+	
 	for flash in _shot_flashes:
 		var pos: Vector2 = flash["pos"]
 		var t := float(flash["t"])
@@ -971,12 +975,13 @@ func _draw_flashes() -> void:
 		var color := Color(CROSSHAIR_RED.r, CROSSHAIR_RED.g, CROSSHAIR_RED.b, alpha)
 		if flash.get("burst", false):
 			var r := (0.22 - t) * 90.0
-			_overlay.draw_arc(pos, maxf(r, 14.0), 0.0, TAU, 18, color, 1.5, true)
-		else:
-			_overlay.draw_circle(pos, 3.0, color)
+			_overlay.draw_arc(pos, maxf(r, CROSSHAIR_RADIUS - 5.0), 0.0, TAU, 18, color, 1.5, true)
+		#else:
+			#_overlay.draw_circle(pos, 3.0, color)
 
 
 func _draw_crosshair(pos: Vector2) -> void:
+	return
 	var r := CROSSHAIR_RADIUS
 	_overlay.draw_arc(pos, r, 0.0, TAU, 48, CROSSHAIR_RED, 2.0, true)
 	_overlay.draw_circle(pos, 12.2, Color("ff000028"))
