@@ -16,6 +16,7 @@
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="11_pulse"]
 [ext_resource type="AudioStream" uid="uid://b80q15yp4lvhc" path="res://sfx/water_splash_sfx_01.ogg" id="12_splash1"]
 [ext_resource type="AudioStream" uid="uid://bwulgbjlr2hv5" path="res://sfx/water_splash_sfx_02.ogg" id="13_splash2"]
+[ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="14_scope"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="15_8xmsh"]
 
 [sub_resource type="Curve" id="Curve_8xmsh"]
@@ -475,6 +476,10 @@ volume_db = -18.0
 [node name="splash_sfx_02" type="AudioStreamPlayer" parent="SFX" unique_id=1177391348]
 stream = ExtResource("13_splash2")
 volume_db = -18.0
+
+[node name="ScopeShrink" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("14_scope")
+volume_db = -30.0
 
 [node name="Flicker_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1597879859]
 stream = ExtResource("15_8xmsh")

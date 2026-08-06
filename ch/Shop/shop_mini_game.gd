@@ -5,6 +5,14 @@ extends Control
 ## Master size for rocks and their hit/target radius. 1.0 = default.
 @export_range(0.25, 3.0, 0.05) var size_scale := 1.0
 
+## How small the crosshair can shrink while holding fire (fraction of full size).
+const SCOPE_MIN_SCALE := 0.35
+
+## Soft distant scenery colours (tweak in code).
+var cloud_color := Color(1.0, 1.0, 1.0, 0.18)
+var mountain_far_color := Color(0.82, 0.76, 0.70, 0.28)
+var mountain_near_color := Color(0.74, 0.66, 0.58, 0.42)
+
 const CREAM := Color(0.92156863, 0.8784314, 0.84705883, 1.0)
 const BORDER_WHITE := Color(1.0, 1.0, 1.0, 1.0)
 const INK := Color(0.0824, 0.0941, 0.1098, 1.0)
@@ -98,11 +106,27 @@ var _multikill_timer := 0.0
 @onready var _sfx_pulse: AudioStreamPlayer = $SFX/EggPulseSfx
 @onready var _sfx_splash_01: AudioStreamPlayer = $SFX/splash_sfx_01
 @onready var _sfx_splash_02: AudioStreamPlayer = $SFX/splash_sfx_02
+@onready var _sfx_scope_shrink: AudioStreamPlayer = $SFX/ScopeShrink
 @onready var _splash_aoe: Node2D = get_node_or_null("PlayArea/Content/SplashAOE2D") as Node2D
 @onready var _miss_label: RichTextLabel = get_node_or_null("PlayArea/Content/Overlay/MissLabel") as RichTextLabel
 @onready var _mouse_sfx: Node = $Mouse_turning_SFX
 
 var _miss_timer := 0.0
+
+# Scope shrink (mirrors player.gd hold-to-shrink).
+var _is_holding_shoot := false
+var _scope_hold_time := 0.0
+var _scope_at_min := false
+var _scope_base_scale := 1.0
+var _scope_base_target_radius := 48.0
+var _current_target_radius := 48.0
+var _current_shrink_duration := 0.5
+var _shrink_return_tween: Tween
+const SCOPE_SHRINK_DURATION := 0.5
+const SCOPE_SHRINK_DELAY := 0.4
+const SCOPE_RETURN_DURATION := 0.3
+const SCOPE_SHRINK_SFX_MIN_PITCH := 1.0
+const SCOPE_SHRINK_SFX_MAX_PITCH := 1.5
 
 
 func _ready() -> void:
@@ -121,6 +145,9 @@ func _ready() -> void:
 	_multikill_label.modulate.a = 0.0
 	if _miss_label:
 		_miss_label.modulate.a = 0.0
+	if _sfx_scope_shrink:
+		_sfx_scope_shrink.finished.connect(_on_scope_shrink_sfx_finished)
+	_reset_scope_visual()
 	_refresh_hud()
 	set_process(false)
 	set_process_input(false)
@@ -210,6 +237,7 @@ func close() -> void:
 	is_open = false
 	_pulsing = false
 	_game_over = false
+	_reset_scope_visual()
 	set_process(false)
 	set_process_input(false)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -272,11 +300,35 @@ func _center_crosshair() -> void:
 	if area.x <= 1.0 or area.y <= 1.0:
 		return
 	_crosshair = area * 0.5
+	_reset_scope_visual()
 	_update_crosshair_node()
+
+
+func _base_target_radius() -> float:
+	return CROSSHAIR_RADIUS * size_scale
+
+
+func _reset_scope_visual() -> void:
+	_is_holding_shoot = false
+	_scope_at_min = false
+	_scope_hold_time = 0.0
+	_scope_base_scale = 1.0
+	_scope_base_target_radius = _base_target_radius()
+	_current_target_radius = _scope_base_target_radius
+	if _shrink_return_tween:
+		_shrink_return_tween.kill()
+		_shrink_return_tween = null
+	if _sfx_scope_shrink:
+		_sfx_scope_shrink.stop()
+		_sfx_scope_shrink.pitch_scale = SCOPE_SHRINK_SFX_MIN_PITCH
+	if _crosshair_node:
+		_crosshair_node.pivot_offset = _crosshair_node.size * 0.5
+		_crosshair_node.scale = Vector2.ONE * _scope_base_scale
 
 
 func _update_crosshair_node() -> void:
 	if _crosshair_node:
+		_crosshair_node.pivot_offset = _crosshair_node.size * 0.5
 		_crosshair_node.position = _crosshair - _crosshair_node.size * 0.5
 
 
@@ -294,6 +346,7 @@ func _process(delta: float) -> void:
 		return
 	_sync_to_panel()
 	_wave_phase += delta * 2.2
+	_handle_scope_shrink(delta)
 	_update_flashes(delta)
 	_update_shake(delta)
 	_cleanup_fallen_rocks()
@@ -329,9 +382,95 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
-		if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-			_try_shoot()
+		if mb.button_index == MOUSE_BUTTON_LEFT:
+			if mb.pressed:
+				_begin_scope_hold()
+			else:
+				_release_scope_and_shoot()
 			get_viewport().set_input_as_handled()
+
+
+func _begin_scope_hold() -> void:
+	_is_holding_shoot = true
+	_scope_hold_time = 0.0
+	_scope_at_min = false
+	_scope_base_target_radius = _base_target_radius()
+	_current_target_radius = _scope_base_target_radius
+	if _shrink_return_tween:
+		_shrink_return_tween.kill()
+		_shrink_return_tween = null
+	_current_shrink_duration = SCOPE_SHRINK_DURATION
+
+
+func _release_scope_and_shoot() -> void:
+	if not _is_holding_shoot:
+		return
+	_is_holding_shoot = false
+	_scope_at_min = false
+	if _sfx_scope_shrink:
+		_sfx_scope_shrink.stop()
+		_sfx_scope_shrink.pitch_scale = SCOPE_SHRINK_SFX_MIN_PITCH
+	_try_shoot()
+	_tween_scope_back_to_base()
+
+
+func _handle_scope_shrink(delta: float) -> void:
+	if not _is_holding_shoot:
+		return
+
+	_scope_hold_time += delta
+	if _scope_hold_time < SCOPE_SHRINK_DELAY:
+		return
+	if _scope_at_min:
+		return
+
+	if _sfx_scope_shrink and not _sfx_scope_shrink.playing and _scope_hold_time < (SCOPE_SHRINK_DELAY + 0.2):
+		_sfx_scope_shrink.play()
+
+	var t := clampf((_scope_hold_time - SCOPE_SHRINK_DELAY) / maxf(_current_shrink_duration, 0.001), 0.0, 1.0)
+	var min_radius := _scope_base_target_radius * SCOPE_MIN_SCALE
+	_current_target_radius = lerpf(_scope_base_target_radius, min_radius, t)
+	var shrink_ratio := _current_target_radius / maxf(_scope_base_target_radius, 0.001)
+
+	if _sfx_scope_shrink:
+		_sfx_scope_shrink.pitch_scale += lerpf(
+			SCOPE_SHRINK_SFX_MIN_PITCH,
+			SCOPE_SHRINK_SFX_MAX_PITCH,
+			0.005
+		)
+
+	if _crosshair_node:
+		_crosshair_node.scale = Vector2.ONE * (_scope_base_scale * shrink_ratio)
+
+	if t >= 1.0:
+		_scope_at_min = true
+
+
+func _on_scope_shrink_sfx_finished() -> void:
+	if _scope_at_min:
+		return
+	if _is_holding_shoot and _scope_hold_time >= SCOPE_SHRINK_DELAY:
+		if _sfx_scope_shrink:
+			_sfx_scope_shrink.play()
+
+
+func _tween_scope_back_to_base() -> void:
+	if _shrink_return_tween:
+		_shrink_return_tween.kill()
+	if _crosshair_node == null:
+		_current_target_radius = _base_target_radius()
+		return
+	_shrink_return_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	_shrink_return_tween.tween_interval(0.1)
+	_shrink_return_tween.tween_property(_crosshair_node, "scale", Vector2.ONE * _scope_base_scale, SCOPE_RETURN_DURATION)
+	var start_radius := _current_target_radius
+	var end_radius := _base_target_radius()
+	_shrink_return_tween.parallel().tween_method(
+		func(v: float) -> void: _current_target_radius = v,
+		start_radius,
+		end_radius,
+		SCOPE_RETURN_DURATION
+	)
 
 
 func _begin_next_wave() -> void:
@@ -529,7 +668,7 @@ func _try_shoot() -> void:
 			continue
 		if rock.position.y > wall_y:
 			continue
-		if rock.position.distance_to(_crosshair) > rock.radius + (CROSSHAIR_RADIUS * size_scale):
+		if rock.position.distance_to(_crosshair) > _current_target_radius:
 			continue
 		hit_any = true
 		var hit_pos := rock.position
@@ -707,25 +846,78 @@ func _update_shake(delta: float) -> void:
 
 
 func _draw_waves_layer() -> void:
-	return
 	var area := _wave_layer.size
 	if area.x < 4.0 or area.y < 4.0:
 		return
+	_draw_distant_scenery(area)
+
+
+func _draw_distant_scenery(area: Vector2) -> void:
 	var wall_y := area.y * WALL_Y_RATIO
-	var band_top := wall_y - area.y * 0.16
-	var band_bottom := wall_y - 2.0
-	var line_count := 4
-	for i in line_count:
-		var t := float(i) / float(maxi(line_count - 1, 1))
-		var base_y := lerpf(band_top, band_bottom, t)
-		var amp := lerpf(7.0, 3.0, t)
-		var pts := PackedVector2Array()
-		var steps := 36
-		for s in steps + 1:
-			var x := area.x * float(s) / float(steps)
-			var y := base_y + sin(_wave_phase * (1.0 + t * 0.35) + x * 0.028 + t * 2.0) * amp
-			pts.append(Vector2(x, y))
-		_wave_layer.draw_polyline(pts, INK, 1.5, true)
+	_draw_clouds(area, wall_y)
+	_draw_mountains(area, wall_y)
+
+
+func _draw_clouds(area: Vector2, wall_y: float) -> void:
+	# Soft distant cloud blobs — light touch, no outlines.
+	var clouds := [
+		{"c": Vector2(area.x * 0.18, wall_y * 0.22), "rx": 52.0, "ry": 16.0},
+		{"c": Vector2(area.x * 0.42, wall_y * 0.14), "rx": 70.0, "ry": 18.0},
+		{"c": Vector2(area.x * 0.68, wall_y * 0.20), "rx": 48.0, "ry": 14.0},
+		{"c": Vector2(area.x * 0.86, wall_y * 0.12), "rx": 58.0, "ry": 15.0},
+		{"c": Vector2(area.x * 0.30, wall_y * 0.32), "rx": 40.0, "ry": 12.0},
+	]
+	for cloud in clouds:
+		var c: Vector2 = cloud["c"]
+		var rx: float = cloud["rx"]
+		var ry: float = cloud["ry"]
+		# Drift slowly with wave phase for a little life.
+		c.x += sin(_wave_phase * 0.15 + rx) * 6.0
+		_draw_soft_ellipse(c, rx, ry, cloud_color)
+		_draw_soft_ellipse(c + Vector2(rx * 0.35, ry * 0.15), rx * 0.55, ry * 0.75, cloud_color)
+		_draw_soft_ellipse(c + Vector2(-rx * 0.4, ry * 0.1), rx * 0.45, ry * 0.7, cloud_color)
+
+
+func _draw_soft_ellipse(center: Vector2, rx: float, ry: float, color: Color) -> void:
+	var pts := PackedVector2Array()
+	var steps := 18
+	for i in steps + 1:
+		var a := TAU * float(i) / float(steps)
+		pts.append(center + Vector2(cos(a) * rx, sin(a) * ry))
+	if pts.size() >= 3:
+		_wave_layer.draw_colored_polygon(pts, color)
+
+
+func _draw_mountains(area: Vector2, wall_y: float) -> void:
+	# Far ridge.
+	var far := PackedVector2Array([
+		Vector2(0.0, wall_y),
+		Vector2(0.0, wall_y * 0.72),
+		Vector2(area.x * 0.12, wall_y * 0.48),
+		Vector2(area.x * 0.28, wall_y * 0.62),
+		Vector2(area.x * 0.45, wall_y * 0.38),
+		Vector2(area.x * 0.62, wall_y * 0.58),
+		Vector2(area.x * 0.78, wall_y * 0.42),
+		Vector2(area.x * 0.95, wall_y * 0.55),
+		Vector2(area.x, wall_y * 0.68),
+		Vector2(area.x, wall_y),
+	])
+	_wave_layer.draw_colored_polygon(far, mountain_far_color)
+
+	# Near ridge — a couple of clearer peaks.
+	var near := PackedVector2Array([
+		Vector2(0.0, wall_y),
+		Vector2(0.0, wall_y * 0.85),
+		Vector2(area.x * 0.08, wall_y * 0.70),
+		Vector2(area.x * 0.22, wall_y * 0.52),
+		Vector2(area.x * 0.36, wall_y * 0.74),
+		Vector2(area.x * 0.55, wall_y * 0.46),
+		Vector2(area.x * 0.70, wall_y * 0.68),
+		Vector2(area.x * 0.88, wall_y * 0.50),
+		Vector2(area.x, wall_y * 0.78),
+		Vector2(area.x, wall_y),
+	])
+	_wave_layer.draw_colored_polygon(near, mountain_near_color)
 
 
 func _draw_overlay() -> void:
@@ -740,6 +932,8 @@ func _draw_overlay() -> void:
 	# Fallback crosshair if no custom texture assigned.
 	if _crosshair_texture == null or _crosshair_texture.texture == null:
 		_draw_crosshair(_crosshair)
+	# Subtle aim circle matching current shrink radius.
+	_overlay.draw_arc(_crosshair, _current_target_radius, 0.0, TAU, 48, Color(CROSSHAIR_RED.r, CROSSHAIR_RED.g, CROSSHAIR_RED.b, 0.25), 1.25, true)
 
 
 func _draw_pillars(area: Vector2, wall_y: float) -> void:
