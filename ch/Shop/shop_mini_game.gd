@@ -13,36 +13,82 @@ const PILLAR_INSET_RATIO := 0.12
 const CROSSHAIR_RADIUS := 18.0
 const PAD := Vector2(28.0, 28.0)
 const HEADER_CLEARANCE := 120.0
-const ROCK_SCRIPT := preload("res://ch/Shop/shop_mini_rock.gd")
+const MAX_STRIKES := 3
 
 @export_group("Rock Pulse")
-## Upward impulse applied when a rock is pulsed (higher = faster launch).
 @export_range(50.0, 2000.0, 1.0) var launch_impulse := 450.0
-## Gravity scale while falling back down behind the wall (higher = faster fall).
 @export_range(0.05, 5.0, 0.01) var fall_gravity_scale := 0.25
-## Sideways kick added to each pulse.
 @export_range(0.0, 400.0, 1.0) var launch_x_jitter := 55.0
-@export_range(1, 10, 1) var rocks_per_wave := 2
+@export_range(0.0, 800.0, 1.0) var pulse_torque := 140.0
+@export_range(0.0, 1.0, 0.01) var aim_together_chance := 0.8
+@export_range(1, 10, 1) var rocks_per_wave := 4
 @export_range(0.0, 1.0, 0.01) var pulse_stagger := 0.2
 @export_range(0.5, 8.0, 0.05) var wave_interval := 2.2
 @export_range(0.1, 3.0, 0.05) var mouse_sensitivity := 0.4
+
+@export_group("Rock Types")
+@export var basic_outline_color := Color(0.95, 0.82, 0.12, 1.0)
+@export_range(0.0, 1.0, 0.01) var black_rock_chance := 0.15
+@export_range(0.0, 1.0, 0.01) var red_rock_chance := 0.2
+@export var red_hits_to_destroy := 3
+@export var red_hit_bounce_force := 280.0
+@export var red_hit_torque := 180.0
+
+@export_group("Trail")
+@export var trail_enabled := true
+@export_range(2, 40, 1) var trail_length := 10
+@export_range(0.5, 8.0, 0.1) var trail_width := 2.0
+@export var trail_color := Color(1, 1, 1, 0.35)
+
+@export_group("Money")
+@export var money_per_destroy := 0.10
+@export var black_rock_penalty := 1.0
+
+@export_group("Screen Shake")
+@export_range(0.0, 40.0, 0.1) var fire_shake_strength := 3.5
+@export_range(0.0, 2.0, 0.01) var fire_shake_time := 0.08
+@export_range(0.0, 40.0, 0.1) var destroy_shake_strength := 8.0
+@export_range(0.0, 2.0, 0.01) var destroy_shake_time := 0.14
+@export_range(1.0, 30.0, 0.1) var shake_decay := 12.0
 
 var is_open := false
 var _crosshair := Vector2.ZERO
 var _wave_phase := 0.0
 var _wave_timer := 0.0
+var _wave_index := 0
 var _pulsing := false
+var _game_over := false
+var _strikes := 0
+var _money := 0.0
 var _rocks: Array[RigidBody2D] = []
 var _shot_flashes: Array[Dictionary] = []
 var _rng := RandomNumberGenerator.new()
 var _follow_panel: Control
 var _header_clearance := HEADER_CLEARANCE
 var _stored_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_VISIBLE
+var _shake_trauma := 0.0
+var _shake_strength := 0.0
+var _multikill_timer := 0.0
 
 @onready var _play_area: Panel = $PlayArea
-@onready var _wave_layer: Control = $PlayArea/WaveLayer
-@onready var _physics_root: Node2D = $PlayArea/PhysicsRoot
-@onready var _overlay: Control = $PlayArea/Overlay
+@onready var _content: Control = $PlayArea/Content
+@onready var _wave_layer: Control = $PlayArea/Content/WaveLayer
+@onready var _physics_root: Node2D = $PlayArea/Content/PhysicsRoot
+@onready var _overlay: Control = $PlayArea/Content/Overlay
+@onready var _crosshair_node: Control = $PlayArea/Content/Overlay/Crosshair
+@onready var _crosshair_texture: TextureRect = $PlayArea/Content/Overlay/Crosshair/CrosshairTexture
+@onready var _money_label: RichTextLabel = $PlayArea/Content/Overlay/MoneyLabel
+@onready var _strike_label: RichTextLabel = $PlayArea/Content/Overlay/StrikeLabel
+@onready var _wave_label: RichTextLabel = $PlayArea/Content/Overlay/WaveAnnounceLabel
+@onready var _multikill_label: RichTextLabel = $PlayArea/Content/Overlay/MultiKillLabel
+@onready var _game_over_panel: Control = $PlayArea/Content/Overlay/GameOverPanel
+@onready var _game_over_money: RichTextLabel = $PlayArea/Content/Overlay/GameOverPanel/MoneyEarned
+@onready var _retry_button: Button = $PlayArea/Content/Overlay/GameOverPanel/RetryButton
+@onready var _aoe: Node2D = $PlayArea/Content/AOE2D
+@onready var _sfx_take_damage: AudioStreamPlayer = $SFX/take_damage_sfx
+@onready var _sfx_hit: AudioStreamPlayer = $SFX/hitSound
+@onready var _sfx_explosion: AudioStreamPlayer = $SFX/explosion_sfx
+@onready var _mouse_sfx: Node = $Mouse_turning_SFX
 
 
 func _ready() -> void:
@@ -55,6 +101,11 @@ func _ready() -> void:
 	_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	_overlay.draw.connect(_draw_overlay)
 	_overlay.resized.connect(_on_overlay_resized)
+	_retry_button.pressed.connect(_on_retry_pressed)
+	_game_over_panel.hide()
+	_wave_label.modulate.a = 0.0
+	_multikill_label.modulate.a = 0.0
+	_refresh_hud()
 	set_process(false)
 	set_process_input(false)
 
@@ -70,7 +121,6 @@ func _setup_play_area_style() -> void:
 	_play_area.clip_contents = true
 
 
-## Parent under the shop root and track the cream panel in screen space.
 func attach_to_shop(shop_root: Control, main_panel: Control, header_clearance: float = HEADER_CLEARANCE) -> void:
 	_follow_panel = main_panel
 	_header_clearance = header_clearance
@@ -99,9 +149,9 @@ func _sync_to_panel() -> void:
 		return
 	global_position = top_left
 	size = next_size
-	# Keep physics space aligned with the inset overlay.
-	if _physics_root and _overlay:
-		_physics_root.position = _overlay.position
+	if _content:
+		_content.size = size
+		_content.position = _shake_offset()
 
 
 func toggle() -> void:
@@ -116,7 +166,7 @@ func open() -> void:
 		return
 	is_open = true
 	_stored_mouse_mode = Input.mouse_mode
-	_reset_game()
+	_reset_run()
 	_sync_to_panel()
 	modulate.a = 0.0
 	show()
@@ -125,6 +175,8 @@ func open() -> void:
 	set_process(true)
 	set_process_input(true)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if _mouse_sfx and _mouse_sfx.has_method("set_active"):
+		_mouse_sfx.set_active(true)
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "modulate:a", 1.0, 0.2)
@@ -133,7 +185,7 @@ func open() -> void:
 	_center_crosshair()
 	_wave_layer.queue_redraw()
 	_overlay.queue_redraw()
-	_start_wave()
+	_begin_next_wave()
 
 
 func close() -> void:
@@ -141,11 +193,14 @@ func close() -> void:
 		return
 	is_open = false
 	_pulsing = false
+	_game_over = false
 	set_process(false)
 	set_process_input(false)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_play_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if _mouse_sfx and _mouse_sfx.has_method("set_active"):
+		_mouse_sfx.set_active(false)
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "modulate:a", 0.0, 0.15)
@@ -156,13 +211,31 @@ func close() -> void:
 		_shot_flashes.clear()
 
 
-func _reset_game() -> void:
+func _reset_run() -> void:
 	_clear_rocks()
 	_shot_flashes.clear()
 	_wave_timer = 0.0
 	_wave_phase = 0.0
+	_wave_index = 0
 	_pulsing = false
+	_game_over = false
+	_strikes = 0
+	_money = 0.0
+	_shake_trauma = 0.0
+	_multikill_timer = 0.0
+	_game_over_panel.hide()
+	_wave_label.modulate.a = 0.0
+	_multikill_label.modulate.a = 0.0
+	_refresh_hud()
 	_center_crosshair()
+
+
+func _on_retry_pressed() -> void:
+	_reset_run()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if _mouse_sfx and _mouse_sfx.has_method("set_active"):
+		_mouse_sfx.set_active(true)
+	_begin_next_wave()
 
 
 func _clear_rocks() -> void:
@@ -180,12 +253,19 @@ func _center_crosshair() -> void:
 	if area.x <= 1.0 or area.y <= 1.0:
 		return
 	_crosshair = area * 0.5
+	_update_crosshair_node()
+
+
+func _update_crosshair_node() -> void:
+	if _crosshair_node:
+		_crosshair_node.position = _crosshair - _crosshair_node.size * 0.5
 
 
 func _on_overlay_resized() -> void:
 	if is_open:
 		_crosshair.x = clampf(_crosshair.x, 0.0, _overlay.size.x)
 		_crosshair.y = clampf(_crosshair.y, 0.0, _overlay.size.y)
+		_update_crosshair_node()
 		_overlay.queue_redraw()
 		_wave_layer.queue_redraw()
 
@@ -196,24 +276,31 @@ func _process(delta: float) -> void:
 	_sync_to_panel()
 	_wave_phase += delta * 2.2
 	_update_flashes(delta)
+	_update_shake(delta)
 	_cleanup_fallen_rocks()
 
-	if not _pulsing and _alive_rock_count() == 0:
+	if _multikill_timer > 0.0:
+		_multikill_timer -= delta
+		if _multikill_timer <= 0.0:
+			_multikill_label.modulate.a = 0.0
+
+	if not _game_over and not _pulsing and _alive_rock_count() == 0:
 		_wave_timer -= delta
 		if _wave_timer <= 0.0:
-			_start_wave()
+			_begin_next_wave()
 
 	_wave_layer.queue_redraw()
 	_overlay.queue_redraw()
 
 
 func _input(event: InputEvent) -> void:
-	if not is_open:
+	if not is_open or _game_over:
 		return
 	if event is InputEventMouseMotion:
 		_crosshair += (event as InputEventMouseMotion).relative * mouse_sensitivity
 		_crosshair.x = clampf(_crosshair.x, 0.0, _overlay.size.x)
 		_crosshair.y = clampf(_crosshair.y, 0.0, _overlay.size.y)
+		_update_crosshair_node()
 		_overlay.queue_redraw()
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseButton:
@@ -223,14 +310,39 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 
-func _start_wave() -> void:
-	if _pulsing:
+func _begin_next_wave() -> void:
+	if _pulsing or _game_over:
 		return
 	_pulsing = true
+	_wave_index += 1
+	await _show_wave_announce(_wave_index)
+	if not is_open or _game_over:
+		_pulsing = false
+		return
 	_prepare_rocks()
 	await _pulse_rocks()
 	_pulsing = false
 	_wave_timer = wave_interval
+
+
+func _show_wave_announce(wave: int) -> void:
+	_wave_label.text = "[i]%s" % _wave_display_name(wave)
+	_wave_label.modulate.a = 0.0
+	_wave_label.scale = Vector2(0.85, 0.85)
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(_wave_label, "modulate:a", 1.0, 0.25)
+	tween.parallel().tween_property(_wave_label, "scale", Vector2.ONE, 0.25)
+	tween.tween_interval(0.7)
+	tween.tween_property(_wave_label, "modulate:a", 0.0, 0.25)
+	await tween.finished
+
+
+func _wave_display_name(wave: int) -> String:
+	const ORDINALS := ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth"]
+	if wave >= 1 and wave <= ORDINALS.size():
+		return "%s Wave" % ORDINALS[wave - 1]
+	return "Wave %d" % wave
 
 
 func _prepare_rocks() -> void:
@@ -243,9 +355,18 @@ func _prepare_rocks() -> void:
 	for i in count:
 		var column_t := float(i + 1) / float(count + 1)
 		var radius := _rng.randf_range(14.0, 26.0)
-		var rock: RigidBody2D = ROCK_SCRIPT.new()
+		var kind := _roll_rock_kind()
+		var rock := ShopMiniRock.new()
 		_physics_root.add_child(rock)
-		rock.setup(radius, _make_rock_outline(radius))
+		rock.outline_color = basic_outline_color
+		rock.red_hits_to_destroy = red_hits_to_destroy
+		rock.red_hit_bounce_force = red_hit_bounce_force
+		rock.red_hit_torque = red_hit_torque
+		rock.trail_enabled = trail_enabled
+		rock.trail_length = trail_length
+		rock.trail_width = trail_width
+		rock.trail_color = trail_color
+		rock.setup(radius, _make_rock_outline(radius), kind)
 		rock.position = Vector2(
 			area.x * column_t + _rng.randf_range(-18.0, 18.0),
 			wall_y + radius + _rng.randf_range(8.0, 22.0)
@@ -254,15 +375,38 @@ func _prepare_rocks() -> void:
 		_rocks.append(rock)
 
 
+func _roll_rock_kind() -> ShopMiniRock.RockKind:
+	var roll := _rng.randf()
+	if roll < black_rock_chance:
+		return ShopMiniRock.RockKind.BLACK
+	if roll < black_rock_chance + red_rock_chance:
+		return ShopMiniRock.RockKind.RED
+	return ShopMiniRock.RockKind.BASIC
+
+
 func _pulse_rocks() -> void:
-	# Copy in case the array mutates while awaiting.
 	var to_pulse: Array[RigidBody2D] = _rocks.duplicate()
+	var aim_together := _rng.randf() < aim_together_chance and to_pulse.size() >= 2
+	var center := Vector2.ZERO
+	if aim_together:
+		for rock in to_pulse:
+			if is_instance_valid(rock):
+				center += rock.position
+		center /= float(to_pulse.size())
+
 	for rock in to_pulse:
-		if not is_open:
+		if not is_open or _game_over:
 			return
 		if not is_instance_valid(rock) or rock.hit:
 			continue
-		rock.pulse(launch_impulse, launch_x_jitter, fall_gravity_scale)
+		var x_impulse := _rng.randf_range(-launch_x_jitter, launch_x_jitter)
+		if aim_together:
+			# Steer toward group center so arcs cross in the kill zone.
+			var toward := center.x - rock.position.x
+			x_impulse = clampf(toward * 0.85, -launch_impulse * 0.55, launch_impulse * 0.55)
+			x_impulse += _rng.randf_range(-launch_x_jitter * 0.25, launch_x_jitter * 0.25)
+		var torque := _rng.randf_range(-pulse_torque, pulse_torque)
+		rock.pulse(launch_impulse, x_impulse, fall_gravity_scale, torque)
 		if pulse_stagger > 0.0:
 			await get_tree().create_timer(pulse_stagger).timeout
 
@@ -288,6 +432,8 @@ func _alive_rock_count() -> int:
 
 
 func _cleanup_fallen_rocks() -> void:
+	if _game_over:
+		return
 	var wall_y := _overlay.size.y * WALL_Y_RATIO
 	var remaining: Array[RigidBody2D] = []
 	for rock in _rocks:
@@ -296,11 +442,10 @@ func _cleanup_fallen_rocks() -> void:
 		if rock.hit:
 			rock.queue_free()
 			continue
-		# Despawn once fully back behind the wall after being pulsed.
 		if rock.pulsed and rock.position.y > wall_y + rock.radius + 40.0 and rock.linear_velocity.y > 0.0:
+			_add_strike()
 			rock.queue_free()
 			continue
-		# Safety: off the top or far sides.
 		if rock.position.y < -80.0 or rock.position.x < -80.0 or rock.position.x > _overlay.size.x + 80.0:
 			rock.queue_free()
 			continue
@@ -318,26 +463,159 @@ func _update_flashes(delta: float) -> void:
 
 
 func _try_shoot() -> void:
+	if _game_over:
+		return
+	_add_shake(fire_shake_strength, fire_shake_time)
 	var wall_y := _overlay.size.y * WALL_Y_RATIO
 	_shot_flashes.append({"pos": _crosshair, "t": 0.12})
+	var destroyed_count := 0
+	var hit_any := false
+	# Hit every rock under the crosshair this frame (multi-kill).
 	for i in range(_rocks.size() - 1, -1, -1):
 		var rock := _rocks[i]
 		if not is_instance_valid(rock) or rock.hit:
 			continue
-		# Only hittable once emerged above the wall.
 		if rock.position.y > wall_y:
 			continue
-		if rock.position.distance_to(_crosshair) <= rock.radius + 10.0:
-			var hit_pos := rock.position
-			rock.mark_hit()
-			rock.queue_free()
-			_rocks.remove_at(i)
-			_shot_flashes.append({"pos": hit_pos, "t": 0.22, "burst": true})
-			break
+		if rock.position.distance_to(_crosshair) > rock.radius + 12.0:
+			continue
+		hit_any = true
+		var hit_pos := rock.position
+		var kind = rock.kind
+		var destroyed := rock.apply_shot((_crosshair - rock.position))
+		if not destroyed:
+			# Partial hit (red rock).
+			_play_hit_sfx()
+			_shot_flashes.append({"pos": hit_pos, "t": 0.18, "burst": true})
+			continue
+		destroyed_count += 1
+		_rocks.remove_at(i)
+		_on_rock_destroyed(rock, hit_pos, kind)
+
+	if destroyed_count >= 2:
+		_show_multikill(destroyed_count)
+	elif not hit_any:
+		pass
+
+
+func _on_rock_destroyed(rock: RigidBody2D, hit_pos: Vector2, kind: ShopMiniRock.RockKind) -> void:
+	_play_destroy_sfx()
+	_play_aoe(hit_pos)
+	_add_shake(destroy_shake_strength, destroy_shake_time)
+	_shot_flashes.append({"pos": hit_pos, "t": 0.22, "burst": true})
+	if kind == ShopMiniRock.RockKind.BLACK:
+		_add_money(-black_rock_penalty)
+		_add_strike()
+	else:
+		_add_money(money_per_destroy)
+	if is_instance_valid(rock):
+		rock.queue_free()
+
+
+func _show_multikill(count: int) -> void:
+	var text := "DOUBLE SHOT"
+	if count == 3:
+		text = "TRIPLE SHOT"
+	elif count == 4:
+		text = "QUAD SHOT"
+	elif count > 4:
+		text = "%dX SHOT" % count
+	_multikill_label.text = "[i][wave]%s" % text
+	_multikill_label.modulate.a = 1.0
+	_multikill_timer = 1.1
+
+
+func _add_money(amount: float) -> void:
+	_money = maxf(0.0, _money + amount)
+	_refresh_hud()
+
+
+func _add_strike() -> void:
+	if _game_over:
+		return
+	_strikes = mini(_strikes + 1, MAX_STRIKES)
+	_refresh_hud()
+	if _strikes >= MAX_STRIKES:
+		_trigger_game_over()
+
+
+func _trigger_game_over() -> void:
+	_game_over = true
+	_pulsing = false
+	_clear_rocks()
+	_game_over_money.text = "[center]You earned\n[color=#c70102]$%.2f[/color]" % _money
+	_game_over_panel.show()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if _mouse_sfx and _mouse_sfx.has_method("set_active"):
+		_mouse_sfx.set_active(false)
+
+
+func _refresh_hud() -> void:
+	if _money_label:
+		_money_label.text = "[right]$%.2f" % _money
+	if _strike_label:
+		var marks := ""
+		for i in MAX_STRIKES:
+			marks += "X" if i < _strikes else "·"
+			if i < MAX_STRIKES - 1:
+				marks += " "
+		_strike_label.text = "[center]%s" % marks
+
+
+func _play_hit_sfx() -> void:
+	if _sfx_take_damage == null:
+		return
+	_sfx_take_damage.volume_db = _rng.randf_range(-25.0, -20.0)
+	_sfx_take_damage.pitch_scale = _rng.randf_range(0.9, 1.2)
+	_sfx_take_damage.play(0.01)
+
+
+func _play_destroy_sfx() -> void:
+	# Same cadence as RockInstance.play_destroy_sfx / play_hit_sfx.
+	if _sfx_take_damage:
+		_sfx_take_damage.volume_db = _rng.randf_range(-25.0, -20.0)
+		_sfx_take_damage.pitch_scale = _rng.randf_range(0.9, 1.2)
+		_sfx_take_damage.play(0.02)
+	await get_tree().create_timer(0.1).timeout
+	if _sfx_hit:
+		_sfx_hit.play()
+	await get_tree().create_timer(0.1).timeout
+	if _sfx_explosion:
+		_sfx_explosion.play()
+
+
+func _play_aoe(local_pos: Vector2) -> void:
+	if _aoe == null:
+		return
+	# Rock positions are PhysicsRoot-local; AOE is a Content sibling.
+	_aoe.position = _physics_root.position + local_pos
+	if _aoe.has_method("play_at"):
+		_aoe.play_at(_aoe.global_position)
+
+
+func _add_shake(strength: float, time: float) -> void:
+	_shake_strength = maxf(_shake_strength, strength)
+	_shake_trauma = maxf(_shake_trauma, time)
+
+
+func _shake_offset() -> Vector2:
+	if _shake_trauma <= 0.0 or _shake_strength <= 0.0:
+		return Vector2.ZERO
+	var falloff := clampf(_shake_trauma * shake_decay * 0.35, 0.0, 1.0)
+	return Vector2(_rng.randf_range(-1.0, 1.0), _rng.randf_range(-1.0, 1.0)) * _shake_strength * falloff
+
+
+func _update_shake(delta: float) -> void:
+	if _shake_trauma > 0.0:
+		_shake_trauma = maxf(0.0, _shake_trauma - delta)
+		if _shake_trauma <= 0.0:
+			_shake_strength = 0.0
+	if _content:
+		_content.position = _shake_offset()
+		_content.size = size
 
 
 func _draw_waves_layer() -> void:
-	return
 	var area := _wave_layer.size
 	if area.x < 4.0 or area.y < 4.0:
 		return
@@ -363,12 +641,13 @@ func _draw_overlay() -> void:
 	if area.x < 4.0 or area.y < 4.0:
 		return
 	var wall_y := area.y * WALL_Y_RATIO
-	# Cream ground mask so rocks appear to rise/fall behind the wall.
 	_overlay.draw_rect(Rect2(0.0, wall_y, area.x, area.y - wall_y + 2.0), CREAM, true)
 	_draw_pillars(area, wall_y)
 	_draw_wall(area, wall_y)
 	_draw_flashes()
-	_draw_crosshair(_crosshair)
+	# Fallback crosshair if no custom texture assigned.
+	if _crosshair_texture == null or _crosshair_texture.texture == null:
+		_draw_crosshair(_crosshair)
 
 
 func _draw_pillars(area: Vector2, wall_y: float) -> void:
