@@ -482,7 +482,7 @@ func _try_shoot() -> void:
 		hit_any = true
 		var hit_pos := rock.position
 		var kind = rock.kind
-		var destroyed := rock.apply_shot((_crosshair - rock.position))
+		var destroyed = rock.apply_shot((_crosshair - rock.position))
 		if not destroyed:
 			# Partial hit (red rock).
 			_play_hit_sfx()
@@ -616,6 +616,7 @@ func _update_shake(delta: float) -> void:
 
 
 func _draw_waves_layer() -> void:
+	return
 	var area := _wave_layer.size
 	if area.x < 4.0 or area.y < 4.0:
 		return

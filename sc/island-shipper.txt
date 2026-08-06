@@ -1,3 +1,19 @@
+# line 47 in mini-game, we are getting out of bounds which I presume
+# means that we have gone through all the rigidbodys and none are left.
+# we need a safe guard to prevent this
+# but also we should be pooling these or never running out.
+# we need a fire weapon sfx like the player has.
+# need a player missed sfx and feedback
+
+# black rocks shouldn't cause you a strike, since they're meant to be avoided
+# the game seems to freeze for a moment when I shoot, this is fine except when I shoot nothing.
+
+# give the black rocks a black fill and a red cross or x on them
+# it doesn't appear that the rocks are spinning even though I cranked the pulse torque right up
+# need an sfx (refer to the splash zone) when a rock is missed. can add some splash particles as well when I miss a rock and it falls back down.
+
+# the red rocks bounce direction should be relative to where the crosshair hits it, and the impulse directino should be opposite to the center of the crosshair.
+# add the pulse sound effect which you can find inside the @egg.tscn
 island shipper
 range moss
 			
