@@ -672,6 +672,23 @@ func add_ammo(amount: int, animate := true) -> int:
 	return added
 
 
+## Spend ammo for each projectile fired. Returns false if not enough bullets.
+func consume_ammo(amount: int = 1) -> bool:
+	if amount <= 0:
+		return true
+	if shot_count < amount:
+		return false
+
+	max_ammo = get_max_ammo()
+	shot_count = clampi(shot_count - amount, 0, max_ammo)
+	_refresh_ammo_display()
+
+	if shot_count <= 0:
+		out_of_ammo()
+
+	return true
+
+
 func fire_weapon() -> void:
 	
 	if current_state != State.ACTIVE:
@@ -703,15 +720,7 @@ func fire_weapon() -> void:
 	
 	#%Crosshair.duplicate_inner_scope()
 	
-	max_ammo = get_max_ammo()
-	shot_count = clampi(shot_count - 1, 0, max_ammo)
-	_refresh_ammo_display()
-	if shot_count <= 0:
-		
-		#await get_tree().create_timer(0.5).timeout
-		print("shot count reached")
-		#EventBus.instance.end_round_rock_missed.emit()
-	
+
 func out_of_ammo() -> void:
 	%Crosshair.out_of_ammo_display()
 	

@@ -306,6 +306,9 @@ func shoot_target() -> void:
 		if !is_instance_valid(target):
 			continue
 
+		if player.shot_count <= 0:
+			break
+
 		var damage := power_bullet_damage
 
 		if double_power:
@@ -332,7 +335,8 @@ func shoot_target() -> void:
 			damage = 0
 			power_bullet_speed /= 4
 
-		spawn_projectile(target, power_bullet_speed)
+		if not spawn_projectile(target, power_bullet_speed):
+			break
 
 		var rock_screen_pos = stable_camera.unproject_position(target.global_position)
 		var screen_offset = rock_screen_pos - crosshair.global_position
@@ -369,7 +373,10 @@ func can_shoot(_can_shoot : bool) -> void:
 	can_fire_weapon = _can_shoot
 	
 	
-func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO) -> void:
+func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO) -> bool:
+
+	if not player.consume_ammo(1):
+		return false
 
 	var new_bullet = BULLET_VISUAL_1.instantiate()
 
@@ -389,6 +396,8 @@ func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos 
 	else:
 		# No target — fly toward the raycast hit point / horizon instead
 		new_bullet.bullet_setup_no_target(result_pos, _power_bullet_speed)
+
+	return true
 
 
 func Xspawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO) -> void:
