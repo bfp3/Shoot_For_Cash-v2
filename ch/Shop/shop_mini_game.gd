@@ -13,7 +13,7 @@ const CROSSHAIR_RED := Color(0.78039217, 0.003921569, 0.007843138, 1.0)
 const WALL_Y_RATIO := 0.88
 const PILLAR_WIDTH_RATIO := 0.015 #0.045
 const PILLAR_INSET_RATIO := 0.02 # 0.12
-const CROSSHAIR_RADIUS := 18.0
+const CROSSHAIR_RADIUS := 48.0
 const PAD := Vector2(28.0, 28.0)
 const HEADER_CLEARANCE := 120.0
 const MAX_STRIKES := 10
@@ -529,14 +529,12 @@ func _try_shoot() -> void:
 			continue
 		if rock.position.y > wall_y:
 			continue
-		if rock.position.distance_to(_crosshair) > rock.radius + (12.0 * size_scale):
+		if rock.position.distance_to(_crosshair) > rock.radius + (CROSSHAIR_RADIUS * size_scale):
 			continue
 		hit_any = true
 		var hit_pos := rock.position
 		var kind: ShopMiniRock.RockKind = rock.kind
 		# Bounce away from the crosshair center.
-		
-		
 		
 		var away_from_crosshair := rock.position - _crosshair
 		var destroyed: bool = rock.apply_shot(away_from_crosshair)
@@ -570,7 +568,7 @@ func _on_rock_destroyed(rock: RigidBody2D, hit_pos: Vector2, kind: ShopMiniRock.
 	if _sfx_hit_flicker:
 		_sfx_hit_flicker.play()
 		
-	await get_tree().create_timer(0.25, false).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	
 	_play_destroy_sfx()
 	_play_aoe(hit_pos)

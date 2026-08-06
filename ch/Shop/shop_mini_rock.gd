@@ -14,7 +14,7 @@ enum RockKind { BASIC, BLACK, RED }
 @export var trail_enabled := true
 @export var trail_length := 10
 @export var trail_width := 2.0
-@export var trail_color := Color(1, 1, 1, 0.35)
+@export var trail_color := Color(1.0, 0.0, 0.0, 0.349)
 
 @export_group("Red Rock")
 @export var red_hits_to_destroy := 3
@@ -114,6 +114,9 @@ func pulse(upward_impulse: float, x_impulse: float, fall_gravity: float, torque_
 func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO) -> bool:
 	if hit:
 		return false
+	
+	linear_velocity = Vector2.ZERO
+		
 	hits_remaining -= 1
 	if kind == RockKind.RED and hits_remaining > 0:
 		var dir := away_from_crosshair
@@ -121,6 +124,9 @@ func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO) -> bool:
 			dir = Vector2(randf_range(-1.0, 1.0), -1.0).normalized()
 		else:
 			dir = dir.normalized()
+			
+		dir = Vector2.UP
+		dir.x = randi_range(-1,1)
 		# Bounce away from the crosshair center.
 		apply_central_impulse(dir * red_hit_bounce_force * mass)
 		apply_torque_impulse(randf_range(-red_hit_torque, red_hit_torque) * mass * maxf(radius, 1.0))
