@@ -7,24 +7,24 @@ const BORDER_WHITE := Color(1.0, 1.0, 1.0, 1.0)
 const INK := Color(0.0824, 0.0941, 0.1098, 1.0)
 const CROSSHAIR_RED := Color(0.78039217, 0.003921569, 0.007843138, 1.0)
 
-const WALL_Y_RATIO := 0.78
-const PILLAR_WIDTH_RATIO := 0.045
-const PILLAR_INSET_RATIO := 0.12
+const WALL_Y_RATIO := 0.88
+const PILLAR_WIDTH_RATIO := 0.015 #0.045
+const PILLAR_INSET_RATIO := 0.02 # 0.12
 const CROSSHAIR_RADIUS := 18.0
 const PAD := Vector2(28.0, 28.0)
 const HEADER_CLEARANCE := 120.0
-const MAX_STRIKES := 3
+const MAX_STRIKES := 10
 
 @export_group("Rock Pulse")
 @export_range(50.0, 2000.0, 1.0) var launch_impulse := 450.0
-@export_range(0.05, 5.0, 0.01) var fall_gravity_scale := 0.25
-@export_range(0.0, 400.0, 1.0) var launch_x_jitter := 55.0
-@export_range(0.0, 800.0, 1.0) var pulse_torque := 140.0
-@export_range(0.0, 1.0, 0.01) var aim_together_chance := 0.8
-@export_range(1, 10, 1) var rocks_per_wave := 4
-@export_range(0.0, 1.0, 0.01) var pulse_stagger := 0.2
-@export_range(0.5, 8.0, 0.05) var wave_interval := 2.2
-@export_range(0.1, 3.0, 0.05) var mouse_sensitivity := 0.4
+@export_range(0.05, 5.0, 0.01) 	var fall_gravity_scale := 0.25
+@export_range(0.0, 400.0, 1.0) 	var launch_x_jitter := 55.0
+@export_range(0.0, 800.0, 1.0) 	var pulse_torque := 140.0
+@export_range(0.0, 1.0, 0.01) 	var aim_together_chance := 0.8
+@export_range(1, 10, 1) 		var rocks_per_wave := 4
+@export_range(0.0, 1.0, 0.01) 	var pulse_stagger := 0.2
+@export_range(0.5, 8.0, 0.05) 	var wave_interval := 2.2
+@export_range(0.1, 3.0, 0.05) 	var mouse_sensitivity := 0.4
 
 @export_group("Rock Types")
 @export var basic_outline_color := Color(0.95, 0.82, 0.12, 1.0)
@@ -86,6 +86,8 @@ var _multikill_timer := 0.0
 @onready var _retry_button: Button = $PlayArea/Content/Overlay/GameOverPanel/RetryButton
 @onready var _aoe: Node2D = $PlayArea/Content/AOE2D
 @onready var _sfx_take_damage: AudioStreamPlayer = $SFX/take_damage_sfx
+@onready var _sfx_hit_flicker: AudioStreamPlayer = $SFX/Flicker_sound
+
 @onready var _sfx_hit: AudioStreamPlayer = $SFX/hitSound
 @onready var _sfx_explosion: AudioStreamPlayer = $SFX/explosion_sfx
 @onready var _sfx_shoot: AudioStreamPlayer = $SFX/Shoot_sfx
@@ -373,7 +375,7 @@ func _prepare_rocks() -> void:
 	var count := rocks_per_wave
 	for i in count:
 		var column_t := float(i + 1) / float(count + 1)
-		var radius := _rng.randf_range(14.0, 26.0)
+		var radius := _rng.randf_range(14.0, 26.0) / 2
 		var kind := _roll_rock_kind()
 		var rock := ShopMiniRock.new()
 		_physics_root.add_child(rock)
@@ -419,8 +421,9 @@ func _pulse_rocks() -> void:
 		center /= float(to_pulse.size())
 
 	if _sfx_pulse:
-		_sfx_pulse.pitch_scale = _rng.randf_range(0.95, 1.05)
 		_sfx_pulse.play()
+	
+	_add_shake(destroy_shake_strength, destroy_shake_time)
 
 	for rock in to_pulse:
 		if not is_open or _game_over:
@@ -506,6 +509,8 @@ func _update_flashes(delta: float) -> void:
 func _try_shoot() -> void:
 	if _game_over:
 		return
+
+	
 	_play_fire_sfx()
 	_add_shake(fire_shake_strength, fire_shake_time)
 	var wall_y := _overlay.size.y * WALL_Y_RATIO
@@ -527,8 +532,12 @@ func _try_shoot() -> void:
 		var hit_pos := rock.position
 		var kind: ShopMiniRock.RockKind = rock.kind
 		# Bounce away from the crosshair center.
+		
+		
+		
 		var away_from_crosshair := rock.position - _crosshair
 		var destroyed: bool = rock.apply_shot(away_from_crosshair)
+		
 		if not destroyed:
 			_play_hit_sfx()
 			_shot_flashes.append({"pos": hit_pos, "t": 0.18, "burst": true})
@@ -544,6 +553,7 @@ func _try_shoot() -> void:
 
 
 func _on_shot_missed() -> void:
+
 	if _sfx_miss:
 		_sfx_miss.play(0.91)
 	if _miss_label:
@@ -554,6 +564,11 @@ func _on_shot_missed() -> void:
 
 
 func _on_rock_destroyed(rock: RigidBody2D, hit_pos: Vector2, kind: ShopMiniRock.RockKind) -> void:
+	if _sfx_hit_flicker:
+		_sfx_hit_flicker.play()
+		
+	await get_tree().create_timer(0.25, false).timeout
+	
 	_play_destroy_sfx()
 	_play_aoe(hit_pos)
 	_add_shake(destroy_shake_strength, destroy_shake_time)
@@ -639,6 +654,10 @@ func _play_destroy_sfx() -> void:
 		_sfx_take_damage.play(0.02)
 	if _sfx_hit:
 		_sfx_hit.play()
+
+	#if _sfx_hit_flicker:
+		#_sfx_hit_flicker.play()
+		
 	if _sfx_explosion:
 		_sfx_explosion.play()
 
@@ -757,7 +776,7 @@ func _draw_flashes() -> void:
 		var color := Color(CROSSHAIR_RED.r, CROSSHAIR_RED.g, CROSSHAIR_RED.b, alpha)
 		if flash.get("burst", false):
 			var r := (0.22 - t) * 90.0
-			_overlay.draw_arc(pos, maxf(r, 4.0), 0.0, TAU, 18, color, 1.5, true)
+			_overlay.draw_arc(pos, maxf(r, 14.0), 0.0, TAU, 18, color, 1.5, true)
 		else:
 			_overlay.draw_circle(pos, 3.0, color)
 
@@ -765,8 +784,8 @@ func _draw_flashes() -> void:
 func _draw_crosshair(pos: Vector2) -> void:
 	var r := CROSSHAIR_RADIUS
 	_overlay.draw_arc(pos, r, 0.0, TAU, 48, CROSSHAIR_RED, 2.0, true)
-	_overlay.draw_circle(pos, 2.2, CROSSHAIR_RED)
-	var tick := 7.0
+	_overlay.draw_circle(pos, 12.2, Color("ff000028"))
+	var tick := 30.0
 	_overlay.draw_line(pos + Vector2(0, -r - tick), pos + Vector2(0, -r), CROSSHAIR_RED, 2.0, true)
 	_overlay.draw_line(pos + Vector2(0, r), pos + Vector2(0, r + tick), CROSSHAIR_RED, 2.0, true)
 	_overlay.draw_line(pos + Vector2(-r - tick, 0), pos + Vector2(-r, 0), CROSSHAIR_RED, 2.0, true)
