@@ -308,6 +308,13 @@ func _base_target_radius() -> float:
 	return CROSSHAIR_RADIUS * size_scale
 
 
+## True once the scope has shrunk enough to destroy red rocks.
+func _scope_is_charged() -> bool:
+	var min_radius := _base_target_radius() * SCOPE_MIN_SCALE
+	# Count as charged when at (or very near) the fully shrunk size.
+	return _current_target_radius <= min_radius * 1.05
+
+
 func _reset_scope_visual() -> void:
 	_is_holding_shoot = false
 	_scope_at_min = false
@@ -678,7 +685,8 @@ func _try_shoot() -> void:
 		# Bounce away from the crosshair center.
 		
 		var away_from_crosshair := rock.position - _crosshair
-		var destroyed: bool = rock.apply_shot(away_from_crosshair, _crosshair_node.position)
+		var charged_shot := _scope_is_charged()
+		var destroyed: bool = rock.apply_shot(away_from_crosshair, _crosshair_node.position, charged_shot)
 		
 		if not destroyed:
 			_play_hit_sfx()

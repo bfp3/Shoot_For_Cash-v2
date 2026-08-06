@@ -110,42 +110,57 @@ func pulse(upward_impulse: float, x_impulse: float, fall_gravity: float, torque_
 
 ## `away_from_crosshair` should point from the crosshair toward/away so bounce
 ## pushes the rock opposite the crosshair center.
+## `charged_shot` is true when the scope has been shrunk — required to destroy red rocks.
 ## Returns true when the rock is fully destroyed by this hit.
-func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO, crosshair_pos : Vector2 = Vector2.ZERO) -> bool:
+func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO, crosshair_pos: Vector2 = Vector2.ZERO, charged_shot: bool = false) -> bool:
 	if hit:
 		return false
-	
+
 	linear_velocity = Vector2.ZERO
 
-	hits_remaining -= 1
-	if kind == RockKind.RED and hits_remaining > 0:
-		var dir := away_from_crosshair
-		if dir.length_squared() < 0.001:
-			dir = Vector2(randf_range(-1.0, 1.0), -1.0).normalized()
-		else:
-			dir = dir.normalized()
-			
-		dir = Vector2.UP / 2
-		
-		if crosshair_pos.x > 567:
-			dir.x = -1.3
-		
-		else:
-			dir.x = 1.3
-		
-		#dir.x = randi_range(-1,1)
-		# Bounce away from the crosshair center.
-		apply_central_impulse(dir * red_hit_bounce_force * mass)
-		apply_torque_impulse(randf_range(-red_hit_torque, red_hit_torque) * mass * maxf(radius, 1.0))
-		angular_velocity += signf(dir.x) * red_hit_torque * 0.08
-		queue_redraw()
+	# Red rocks only break on a charged (shrunk-scope) shot.
+	if kind == RockKind.RED and not charged_shot:
+		_bounce_from_shot(away_from_crosshair, crosshair_pos)
 		return false
+
+	if kind == RockKind.RED and charged_shot:
+		hit = true
+		freeze = true
+		hide()
+		if _trail:
+			_trail.hide()
+		return true
+
+	hits_remaining -= 1
+	if hits_remaining > 0:
+		_bounce_from_shot(away_from_crosshair, crosshair_pos)
+		return false
+
 	hit = true
 	freeze = true
 	hide()
 	if _trail:
 		_trail.hide()
 	return true
+
+
+func _bounce_from_shot(away_from_crosshair: Vector2, crosshair_pos: Vector2) -> void:
+	var dir := away_from_crosshair
+	if dir.length_squared() < 0.001:
+		dir = Vector2(randf_range(-1.0, 1.0), -1.0).normalized()
+	else:
+		dir = dir.normalized()
+
+	dir = Vector2.UP / 2.0
+	if crosshair_pos.x > 567.0:
+		dir.x = -1.3
+	else:
+		dir.x = 1.3
+
+	apply_central_impulse(dir * red_hit_bounce_force * mass)
+	apply_torque_impulse(randf_range(-red_hit_torque, red_hit_torque) * mass * maxf(radius, 1.0))
+	angular_velocity += signf(dir.x) * red_hit_torque * 0.08
+	queue_redraw()
 
 
 func mark_destroyed() -> void:
@@ -191,7 +206,3 @@ func _draw() -> void:
 		return
 
 	draw_polyline(outline_points, get_draw_color(), outline_width, true)
-	if kind == RockKind.RED and hits_remaining > 0 and not hit:
-		for i in hits_remaining:
-			var a := -0.4 + float(i) * 0.4
-			draw_circle(Vector2(a * radius * 0.35, -radius * 0.15), 2.0, red_color)
