@@ -38,6 +38,12 @@ var force_mult_index := 0
 
 var rock_type_gravity_scale := 0.4
 
+## Stagger index for basic rocks caught in this orange's blast.
+var _blast_destroy_stagger_index := 0
+const BLAST_DESTROY_STAGGER_SEC := 0.075
+const BLAST_DOMAIN_EXPANSION := 14.0
+const SMOKE_BLOW_BUFFER := 5.0
+
 @onready var money_label_3d: Label3D = $Money_Label3D
 @onready var gold_label_3d: Label3D = $Gold_label3D
 @onready var orange_mesh := $Mesh/small_rock
@@ -393,6 +399,7 @@ func start_destroyed_process() -> void:
 		
 	
 	expand_blast_radius()
+	_blow_nearby_smoke()
 	
 	#$Mesh/Yellow_particles.emitting = true
 	rock_activated = false
@@ -623,15 +630,21 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			body.start_destroyed_process()
 			return
 
-		# Blasted into the distance — don't count side-rail X as a miss.
-		#body.ignores_x_out_of_bounds = true
-		#var strength : float = [2.0,3.0].pick_random()
-		#body.apply_central_impulse(body.global_position - global_position * -strength)
-		##return
-		#await get_tree().create_timer(randf_range(1.2, 2.0)).timeout
-		await get_tree().create_timer(randf_range(0.1, 0.15), false).timeout
-		#await get_tree().create_timer(0.25, false).timeout
-		body.start_destroyed_process()
+		# Pineapples / non-basic rocks: no staggered chain — keep existing short delay.
+		if body.rock_type != body.RockSize.SMALL:
+			await get_tree().create_timer(randf_range(0.1, 0.15), false).timeout
+			body.start_destroyed_process()
+			return
+
+		# Basic rocks: stagger destroy chain so they don't all pop at once.
+		var stagger_i := _blast_destroy_stagger_index
+		_blast_destroy_stagger_index += 1
+		await get_tree().create_timer(
+			float(stagger_i) * BLAST_DESTROY_STAGGER_SEC + randf_range(0.05, 0.1),
+			false
+		).timeout
+		if is_instance_valid(body):
+			body.start_destroyed_process()
 
 		#body.hit_by_player(100, Vector2.ZERO)
 		
@@ -649,7 +662,7 @@ func fly_away_from_player() -> Vector3:
 	
 func expand_blast_radius() -> void:
 	#return
-	const domain_expansion : float = 14.0
+	_blast_destroy_stagger_index = 0
 	%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.2
 	#%explosion_radius_mesh.transparency = 1.0
@@ -661,7 +674,7 @@ func expand_blast_radius() -> void:
 	
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	#tween.tween_interval(0.1)
-	tween.tween_property(blast_node, "scale", Vector3.ONE * domain_expansion, 0.25)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * BLAST_DOMAIN_EXPANSION, 0.25)
 	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.45)
 	#tween.tween_interval(0.1)
 	await tween.finished
@@ -670,3 +683,13 @@ func expand_blast_radius() -> void:
 
 	blast_node.hide()
 	blast_node.monitoring = false
+
+
+func _blow_nearby_smoke() -> void:
+	return
+	#var shape_radius := 0.304
+	#var col := $Explosion_area.get_node_or_null("CollisionShape3D") as CollisionShape3D
+	#if col and col.shape is SphereShape3D:
+		#shape_radius = (col.shape as SphereShape3D).radius
+	#var radius := shape_radius * BLAST_DOMAIN_EXPANSION + SMOKE_BLOW_BUFFER
+	#CommonCode.blow_nearby_smoke_particles(global_position, radius, 7.0, 1.2)

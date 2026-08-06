@@ -3,8 +3,7 @@ extends GPUParticles3D
 var duplicate_particles := false
 
 func _ready() -> void:
-	if duplicate_particles:
-		add_to_group("smoke_particles")
+	add_to_group("smoke_particles")
 	one_shot = true
 	
 	#finished.connect(_on_finished)

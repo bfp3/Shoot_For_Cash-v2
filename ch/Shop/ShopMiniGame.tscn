@@ -193,7 +193,7 @@ cloud_pan_speed = 50.0
 wind_amount = 10
 wind_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
 wind_speed = 20.0
-launch_impulse = 1100.0
+launch_impulse = 600.0
 launch_x_jitter = 100.0
 pulse_torque = 280.0
 rocks_per_wave = 3
@@ -574,6 +574,32 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 44
 text = "RETRY"
+
+[node name="IntroTitle" type="RichTextLabel" parent="PlayArea" unique_id=80859305]
+visible = false
+z_index = 20
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -40.0
+offset_right = 280.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.0824, 0.0941, 0.1098, 1)
+theme_override_font_sizes/normal_font_size = 42
+theme_override_font_sizes/italics_font_size = 42
+bbcode_enabled = true
+text = "[i]Shoot for CENTS"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="PlayArea" unique_id=390032890]
 amount = 100

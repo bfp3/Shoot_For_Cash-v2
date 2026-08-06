@@ -151,7 +151,8 @@ func apply_shot(center_target: Vector2) -> bool:
 	flying_away = true
 	freeze = true
 	linear_velocity = Vector2.ZERO
-	angular_velocity = randf_range(-4.0, 4.0)
+	# Visible tumble while shrinking into the distance.
+	angular_velocity = randf_range(10.0, 18.0) * (1.0 if randf() > 0.5 else -1.0)
 	collision_layer = 0
 	collision_mask = 0
 	_center_target = center_target

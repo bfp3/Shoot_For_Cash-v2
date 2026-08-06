@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://bopuv7ypfra3i" path="res://ch/environment_decoration/boat2.tscn" id="15_x8ffe"]
 [ext_resource type="Texture2D" uid="uid://x5tjmkxr3qll" path="res://res/dirt_texture_01.png" id="16_k7lvh"]
 [ext_resource type="Material" uid="uid://dnf6h6nys5ggr" path="res://res/mountain_material.tres" id="16_r0nke"]
+[ext_resource type="PackedScene" uid="uid://bhvohh4kbphmt" path="res://ch/Egg/Egg_shootable.tscn" id="16_sc1d7"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="17_fwjsh"]
 [ext_resource type="Texture2D" uid="uid://bhst5en4f2e3b" path="res://res/mountain_image.png" id="17_p87rn"]
 [ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="17_snbl5"]
@@ -1640,7 +1641,7 @@ mesh = SubResource("ArrayMesh_o5bly")
 shape = SubResource("ConcavePolygonShape3D_fwjsh")
 
 [node name="Right_tall_pillar" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=2051219897]
-transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, -6.2, -1.4000001, 0)
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, -6.2, -1.4000001, -0.06386757)
 material_override = ExtResource("7_1vd3e")
 mesh = SubResource("ArrayMesh_fyjqt")
 skeleton = NodePath("")
@@ -2260,7 +2261,7 @@ skeleton = NodePath("")
 shape = SubResource("ConvexPolygonShape3D_2svof")
 
 [node name="Cube_019" type="MeshInstance3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts" unique_id=237471799]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -5, -0.5, -7)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -5, -0.5, -7)
 material_override = ExtResource("6_u0cw1")
 mesh = SubResource("ArrayMesh_fl4k6")
 skeleton = NodePath("")
@@ -2270,8 +2271,39 @@ skeleton = NodePath("")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_019/StaticBody3D" unique_id=1862977093]
 shape = SubResource("ConvexPolygonShape3D_u0cw1")
 
-[node name="Node3D" type="Node3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_019" unique_id=2028882128]
+[node name="Cube_023" type="MeshInstance3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts" unique_id=157321622]
+transform = Transform3D(1, 0, -3.5527137e-15, 0, 1, 0, 3.5527137e-15, 0, 1, -4.999998, -0.50000006, -1.6185589)
+material_override = ExtResource("6_u0cw1")
+mesh = SubResource("ArrayMesh_fl4k6")
+skeleton = NodePath("")
+
+[node name="Egg_Shootable" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_023" unique_id=1423962315 instance=ExtResource("16_sc1d7")]
+transform = Transform3D(0.21321961, 0, 8.881784e-16, 0, 0.21321961, 0, -8.881784e-16, 0, 0.21321961, -0.2729988, 0.657, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_023" unique_id=1773047875]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_023/StaticBody3D" unique_id=1016855075]
+shape = SubResource("ConvexPolygonShape3D_u0cw1")
+
+[node name="Node3D" type="Node3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_023" unique_id=1868742684]
 transform = Transform3D(1, -3.5527137e-15, -2.1175824e-22, 3.5527137e-15, 1, 7.1054274e-15, -4.2351647e-22, -7.1054274e-15, 1, 2.2814496, -5.722046e-06, 0)
+
+[node name="Cube_022" type="MeshInstance3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts" unique_id=1899935148]
+transform = Transform3D(-4.37114e-08, -1, -2.1316282e-14, 1, -4.37114e-08, 0, -1.4823077e-21, -2.1316282e-14, 1, -1.9238243, -0.50000006, 16.86998)
+material_override = ExtResource("6_u0cw1")
+mesh = SubResource("ArrayMesh_fl4k6")
+skeleton = NodePath("")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_022" unique_id=1006659711]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_022/StaticBody3D" unique_id=2029063833]
+shape = SubResource("ConvexPolygonShape3D_u0cw1")
+
+[node name="Node3D" type="Node3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_022" unique_id=1019855999]
+transform = Transform3D(1, -3.5527137e-15, -2.1175824e-22, 3.5527137e-15, 1, 7.1054274e-15, -4.2351647e-22, -7.1054274e-15, 1, 2.2814496, -5.722046e-06, 0)
+
+[node name="Egg_Shootable2" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts/Cube_022" unique_id=1975187430 instance=ExtResource("16_sc1d7")]
+transform = Transform3D(-9.320122e-09, 0.21321961, 9.320126e-09, -0.21321961, -9.320124e-09, -1.7763568e-15, -1.7763568e-15, -9.320126e-09, 0.21321961, 1.6643661, 0, 0)
 
 [node name="Cube_020" type="MeshInstance3D" parent="BackgroundMesh/Moving_nodes/Brick_wall_other_parts" unique_id=521090012]
 transform = Transform3D(-4.37114e-08, -1, 0, -4.37114e-08, 1.91069e-15, -1, 1, -4.37114e-08, -4.37114e-08, -5, -0.5, -6)

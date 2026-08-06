@@ -2,15 +2,14 @@
 
 [ext_resource type="Script" uid="uid://cumfy2ifle86b" path="res://ch/targets/early_exit_target.gd" id="1_exit"]
 [ext_resource type="AudioStream" uid="uid://bjvnouldqokaa" path="res://sfx/Arrow_release.ogg" id="2_hit"]
+[ext_resource type="Material" uid="uid://biyawm8nwgiiq" path="res://res/moss_level_white_material.tres" id="2_y7ohb"]
 [ext_resource type="Script" uid="uid://dfb5lst7quc8b" path="res://unfiled/targets/target_yellow_glow_mesh.gd" id="3_glow"]
+[ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="3_y6xbc"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_col"]
 margin = 0.0
 height = 0.425
 radius = 0.826
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ring"]
-albedo_color = Color(0.54902, 0.54902, 0.54902, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_inner"]
 top_radius = 0.06
@@ -20,16 +19,37 @@ height = 0.2
 [sub_resource type="TorusMesh" id="TorusMesh_mid"]
 outer_radius = 0.328
 
+[sub_resource type="Gradient" id="Gradient_nxt3y"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.522222)
+colors = PackedColorArray(0.73, 0.73, 0.73, 1, 0.68, 0.68, 0.68, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_s77kv"]
+frequency = 0.0014
+domain_warp_enabled = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6hgdg"]
+width = 500
+height = 500
+noise = SubResource("FastNoiseLite_s77kv")
+color_ramp = SubResource("Gradient_nxt3y")
+seamless = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y7ohb"]
+diffuse_mode = 1
+specular_mode = 1
+albedo_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
+metallic = 0.25
+roughness = 0.8
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+normal_scale = 0.3
+normal_texture = SubResource("NoiseTexture2D_6hgdg")
+uv1_triplanar = true
+
 [sub_resource type="TorusMesh" id="TorusMesh_outer"]
 inner_radius = 0.75
 outer_radius = 0.615
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_face"]
-transparency = 1
-albedo_color = Color(0.541176, 0.439216, 0.239216, 1)
-emission_enabled = true
-emission = Color(1, 0.435294, 0.239216, 1)
-emission_energy_multiplier = 0.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_face"]
 top_radius = 0.8
@@ -46,26 +66,36 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 
 shape = SubResource("CylinderShape3D_col")
 
 [node name="innerRing" type="MeshInstance3D" parent="." unique_id=730207758]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -1.55114e-09, -0.0354859)
-material_override = SubResource("StandardMaterial3D_ring")
+transform = Transform3D(3, 0, 0, 0, -4.371139e-08, 3, 0, -1, -1.3113416e-07, 0, -1.55114e-09, -0.0354859)
+visible = false
+material_override = ExtResource("2_y7ohb")
 mesh = SubResource("CylinderMesh_inner")
 
 [node name="middleRing" type="MeshInstance3D" parent="." unique_id=521285038]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -3.21807e-09, -0.073621)
-material_override = SubResource("StandardMaterial3D_ring")
+visible = false
+material_override = ExtResource("2_y7ohb")
 mesh = SubResource("TorusMesh_mid")
 
 [node name="outRing2" type="MeshInstance3D" parent="." unique_id=210465917]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -4.25129e-09, -0.0972582)
-material_override = SubResource("StandardMaterial3D_ring")
+material_override = SubResource("StandardMaterial3D_y7ohb")
 mesh = SubResource("TorusMesh_outer")
 
 [node name="yellow" type="MeshInstance3D" parent="." unique_id=2027921139]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_face")
+material_override = ExtResource("3_y6xbc")
 mesh = SubResource("CylinderMesh_face")
 script = ExtResource("3_glow")
 
 [node name="hitSound" type="AudioStreamPlayer3D" parent="." unique_id=332536669]
 stream = ExtResource("2_hit")
 volume_db = -25.0
+
+[node name="Label3D" type="Label3D" parent="." unique_id=1147348853]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -0.12670189)
+pixel_size = 0.003
+no_depth_test = true
+modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+text = "ABORT"
+font_size = 173

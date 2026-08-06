@@ -1423,7 +1423,7 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_65uxc")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE" unique_id=51698740]
+[node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE" unique_id=51698740 groups=["smoke_particles"]]
 material_override = SubResource("ShaderMaterial_fw7wv")
 cast_shadow = 0
 emitting = false
@@ -1449,7 +1449,7 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_beb3h")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="AoE" unique_id=1528363898]
+[node name="Smoke_quick" type="GPUParticles3D" parent="AoE" unique_id=1528363898 groups=["smoke_particles"]]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 cast_shadow = 0
 emitting = false
@@ -1486,7 +1486,7 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_65uxc")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="upward_smoke_glow" type="GPUParticles3D" parent="Hazard_AoE2" unique_id=603999832]
+[node name="upward_smoke_glow" type="GPUParticles3D" parent="Hazard_AoE2" unique_id=603999832 groups=["smoke_particles"]]
 material_override = SubResource("ShaderMaterial_fw7wv")
 cast_shadow = 0
 emitting = false
@@ -1512,7 +1512,7 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_beb3h")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="Hazard_AoE2" unique_id=2046246121]
+[node name="Smoke_quick" type="GPUParticles3D" parent="Hazard_AoE2" unique_id=2046246121 groups=["smoke_particles"]]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 cast_shadow = 0
 emitting = false
@@ -1562,7 +1562,7 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_beb3h")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="Smokecan_AoE" unique_id=1376323547]
+[node name="Smoke_quick" type="GPUParticles3D" parent="Smokecan_AoE" unique_id=1376323547 groups=["smoke_particles"]]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 cast_shadow = 0
 emitting = false
@@ -1576,7 +1576,7 @@ process_material = SubResource("ParticleProcessMaterial_ltsxa")
 draw_pass_1 = SubResource("QuadMesh_herjc")
 script = ExtResource("8_tnjxo")
 
-[node name="upward_smoke_glow" type="GPUParticles3D" parent="Smokecan_AoE" unique_id=2004466645]
+[node name="upward_smoke_glow" type="GPUParticles3D" parent="Smokecan_AoE" unique_id=2004466645 groups=["smoke_particles"]]
 material_override = SubResource("ShaderMaterial_fw7wv")
 cast_shadow = 0
 emitting = false
@@ -1590,7 +1590,7 @@ transform_align = 1
 process_material = SubResource("ParticleProcessMaterial_8mu68")
 draw_pass_1 = ExtResource("22_63gdt")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=1979338158]
+[node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=1979338158 groups=["smoke_particles"]]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -0.5)
 top_level = true
 cast_shadow = 0
@@ -1605,7 +1605,7 @@ process_material = SubResource("ParticleProcessMaterial_js5s8")
 draw_pass_1 = SubResource("QuadMesh_c7jqr")
 script = ExtResource("8_tnjxo")
 
-[node name="Smoke_quick2" parent="." unique_id=1910998751 instance=ExtResource("18_yskhd")]
+[node name="Smoke_quick2" parent="." unique_id=1910998751 instance=ExtResource("18_yskhd") groups=["smoke_particles"]]
 visible = false
 cast_shadow = 0
 process_material = SubResource("ParticleProcessMaterial_ae1ab")

@@ -170,6 +170,7 @@ const RING_POOL_SIZE := 8
 @export_range(1.0, 30.0, 0.1) var shake_decay := 12.0
 
 var is_open := false
+var _intro_active := false
 var _crosshair := Vector2.ZERO
 var _wave_phase := 0.0
 var _cloud_pan := 0.0
@@ -221,6 +222,7 @@ var _scope_mode: ScopeMode = ScopeMode.NONE
 
 @onready var _play_area: Panel = $PlayArea
 @onready var _content: Control = $PlayArea/Content
+@onready var _intro_title: RichTextLabel = get_node_or_null("PlayArea/IntroTitle") as RichTextLabel
 @onready var _wave_layer: Control = $PlayArea/Content/WaveLayer
 @onready var _physics_root: Node2D = $PlayArea/Content/PhysicsRoot
 @onready var _overlay: Control = $PlayArea/Content/Overlay
@@ -390,6 +392,7 @@ func open() -> void:
 	if is_open:
 		return
 	is_open = true
+	CommonCode.set_master_bus_retro_fx(true)
 	_stored_mouse_mode = Input.mouse_mode
 	_reset_run()
 	_sync_to_panel()
@@ -398,7 +401,7 @@ func open() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_play_area.mouse_filter = Control.MOUSE_FILTER_STOP
 	set_process(true)
-	set_process_input(true)
+	set_process_input(false)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if _mouse_sfx and _mouse_sfx.has_method("set_active"):
 		_mouse_sfx.set_active(true)
@@ -408,18 +411,77 @@ func open() -> void:
 	await get_tree().process_frame
 	_sync_to_panel()
 	_center_crosshair()
+	await _play_open_intro()
+	if not is_open:
+		return
 	_ensure_pillars()
 	_sync_pillars()
 	_update_wind_particles()
 	_wave_layer.queue_redraw()
 	_overlay.queue_redraw()
+	set_process_input(true)
 	_begin_next_wave()
+
+
+func _ensure_intro_title() -> void:
+	if _intro_title and is_instance_valid(_intro_title):
+		return
+	_intro_title = RichTextLabel.new()
+	_intro_title.name = "IntroTitle"
+	_intro_title.bbcode_enabled = true
+	_intro_title.fit_content = true
+	_intro_title.scroll_active = false
+	_intro_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_intro_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_intro_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_intro_title.add_theme_color_override("default_color", INK)
+	_intro_title.add_theme_font_size_override("normal_font_size", 42)
+	_intro_title.add_theme_font_size_override("italics_font_size", 42)
+	_intro_title.text = "[i]Shoot for CENTS"
+	_play_area.add_child(_intro_title)
+	_intro_title.set_anchors_preset(Control.PRESET_CENTER)
+	_intro_title.offset_left = -280.0
+	_intro_title.offset_right = 280.0
+	_intro_title.offset_top = -40.0
+	_intro_title.offset_bottom = 40.0
+	_intro_title.z_index = 20
+
+
+func _play_open_intro() -> void:
+	_ensure_intro_title()
+	_intro_active = true
+	# Blank cream panel only — hide the playfield until the title fades out.
+	if _content:
+		_content.visible = false
+	if _wind_particles:
+		_wind_particles.emitting = false
+		_wind_particles.hide()
+	_intro_title.text = "[i]Shoot for CENTS"
+	_intro_title.modulate.a = 0.0
+	_intro_title.show()
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(0.5)
+	tween.tween_property(_intro_title, "modulate:a", 1.0, 0.35)
+	tween.tween_interval(2.0)
+	tween.set_ease(Tween.EASE_IN)
+	tween.tween_property(_intro_title, "modulate:a", 0.0, 0.4)
+	tween.tween_interval(0.5)
+	await tween.finished
+	if is_instance_valid(_intro_title):
+		_intro_title.hide()
+		_intro_title.modulate.a = 0.0
+	if _content:
+		_content.visible = true
+	_intro_active = false
 
 
 func close() -> void:
 	if not is_open:
 		return
 	is_open = false
+	_intro_active = false
+	CommonCode.set_master_bus_retro_fx(false)
 	_pulsing = false
 	_game_over = false
 	_reset_scope_visual()
@@ -430,6 +492,11 @@ func close() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if _mouse_sfx and _mouse_sfx.has_method("set_active"):
 		_mouse_sfx.set_active(false)
+	if _intro_title:
+		_intro_title.hide()
+		_intro_title.modulate.a = 0.0
+	if _content:
+		_content.visible = true
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "modulate:a", 0.0, 0.15)
@@ -610,9 +677,9 @@ func _on_overlay_resized() -> void:
 func _process(delta: float) -> void:
 	if not is_open:
 		return
-	
-
 	_sync_to_panel()
+	if _intro_active:
+		return
 	_wave_phase += delta * 2.2
 	_cloud_pan += delta * cloud_pan_speed
 	_update_sky_transition(delta)
@@ -1075,9 +1142,7 @@ func _pulse_rocks() -> void:
 			to_pulse.append(can)
 	if to_pulse.is_empty():
 		return
-	
-	launch_impulse = [900, 1000, 1100].pick_random()
-	
+
 	var aim_together := _rng.randf() < aim_together_chance and to_pulse.size() >= 2
 	var center := Vector2.ZERO
 	if aim_together:
@@ -2335,14 +2400,14 @@ func _draw_flashes() -> void:
 
 func _draw_crosshair(pos: Vector2) -> void:
 	return
-	var r := CROSSHAIR_RADIUS
-	_overlay.draw_arc(pos, r, 0.0, TAU, 48, CROSSHAIR_RED, 2.0, true)
-	_overlay.draw_circle(pos, 12.2, Color("ff000028"))
-	var tick := 30.0
-	_overlay.draw_line(pos + Vector2(0, -r - tick), pos + Vector2(0, -r), CROSSHAIR_RED, 2.0, true)
-	_overlay.draw_line(pos + Vector2(0, r), pos + Vector2(0, r + tick), CROSSHAIR_RED, 2.0, true)
-	_overlay.draw_line(pos + Vector2(-r - tick, 0), pos + Vector2(-r, 0), CROSSHAIR_RED, 2.0, true)
-	_overlay.draw_line(pos + Vector2(r, 0), pos + Vector2(r + tick, 0), CROSSHAIR_RED, 2.0, true)
+	#var r := CROSSHAIR_RADIUS
+	#_overlay.draw_arc(pos, r, 0.0, TAU, 48, CROSSHAIR_RED, 2.0, true)
+	#_overlay.draw_circle(pos, 12.2, Color("ff000028"))
+	#var tick := 30.0
+	#_overlay.draw_line(pos + Vector2(0, -r - tick), pos + Vector2(0, -r), CROSSHAIR_RED, 2.0, true)
+	#_overlay.draw_line(pos + Vector2(0, r), pos + Vector2(0, r + tick), CROSSHAIR_RED, 2.0, true)
+	#_overlay.draw_line(pos + Vector2(-r - tick, 0), pos + Vector2(-r, 0), CROSSHAIR_RED, 2.0, true)
+	#_overlay.draw_line(pos + Vector2(r, 0), pos + Vector2(r + tick, 0), CROSSHAIR_RED, 2.0, true)
 
 
 func crosshair_blink() -> void:

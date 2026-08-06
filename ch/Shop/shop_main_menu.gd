@@ -113,13 +113,13 @@ func update_place_label() -> void:
 func purchase_made(_upgrade_type:String = '') -> void:
 	
 	update_cash_label_color()
-	var current_color = cash_label.modulate
 	var old_cash := player_cash
 	
 	var reroll_colour_tween := create_tween().set_trans(Tween.TRANS_SINE)
 	reroll_colour_tween.tween_property(cash_label, "modulate", Color('FF0000'), 0.1)
 	reroll_colour_tween.tween_callback(update_shop)
-	reroll_colour_tween.tween_property(cash_label, "modulate", current_color, 0.2)
+	reroll_colour_tween.tween_property(cash_label, "modulate", Color(1, 1, 1, 1), 0.2)
+	reroll_colour_tween.tween_callback(reset_cash_label_color)
 	sfx_purchase_made()
 	update_shop()
 	
@@ -294,6 +294,7 @@ func update_open_menu() -> void:
 	if gl_PlayerState.dataset.round == 1:
 		bg_music.play()
 	
+	reset_cash_label_color()
 	sfx_open_shop()
 	update_shop()
 	update_place_label()
@@ -357,6 +358,7 @@ func play_round_button_pressed() -> void:
 
 ## Hide shop for the debug level editor without firing CLOSE_MENU / SHOP_END.
 func soft_hide_for_level_editor() -> void:
+	reset_cash_label_color()
 	_close_shop_mini_game()
 	current_state = SkillState.INACTIVE
 	hide()
@@ -368,6 +370,7 @@ func soft_show_from_level_editor() -> void:
 	enter_state(SkillState.OPEN_MENU)
 	
 func update_close_menu() -> void:
+	reset_cash_label_color()
 	sfx_close_shop()
 	_force_hide_ammo_count_popup()
 	_close_shop_mini_game()
@@ -405,6 +408,7 @@ func update_close_menu() -> void:
 	hide()
 	cash_label.hide()
 	cash_label.text = ''
+	reset_cash_label_color()
 	EventBus.instance.close_shop.emit()
 
 	#reroll_button.show()
@@ -897,6 +901,13 @@ func update_cash_label_color() -> void:
 		#cash_label.modulate = Color("c70102ff")
 	#else:
 		#cash_label.modulate = Color("ffff")
+
+
+func reset_cash_label_color() -> void:
+	if cash_label == null:
+		return
+	var alpha := cash_label.modulate.a
+	cash_label.modulate = Color(1, 1, 1, alpha)
 
 
 func _on_buy_ammo_pressed() -> void:
