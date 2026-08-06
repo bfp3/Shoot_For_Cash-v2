@@ -613,6 +613,13 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			#body.rock_type_name= 'rock_type_1'
 			#body.rock_type = body.RockSize.SMALL
 			body.cash_value = 2
+			body.ignores_x_out_of_bounds = true
+			var strength : float = [2.0,3.0].pick_random()
+			body.apply_central_impulse(body.global_position - global_position * -strength)
+			#return
+			await get_tree().create_timer(randf_range(1.2, 2.0), false).timeout
+			body.start_destroyed_process()
+			return
 
 		# Blasted into the distance — don't count side-rail X as a miss.
 		#body.ignores_x_out_of_bounds = true
@@ -620,8 +627,9 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		#body.apply_central_impulse(body.global_position - global_position * -strength)
 		##return
 		#await get_tree().create_timer(randf_range(1.2, 2.0)).timeout
+		#await get_tree().create_timer(randf_range(0.1, 0.25), false).timeout
+		await get_tree().create_timer(0.25, false).timeout
 		body.start_destroyed_process()
-
 
 		#body.hit_by_player(100, Vector2.ZERO)
 	

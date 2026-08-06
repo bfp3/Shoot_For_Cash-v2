@@ -36,6 +36,11 @@ var current_state : SkillState = SkillState.INACTIVE
 var current_round := 0
 var player_cash := 0
 
+var _ammo_popup: Control
+var _ammo_popup_tween: Tween
+var _ammo_popup_rest_scale := Vector2.ONE
+var _ammo_popup_rest_position := Vector2.ZERO
+
 
 func _ready() -> void:
 	
@@ -71,7 +76,7 @@ func _ready() -> void:
 	#$CenterContainer/MainPanel/VBoxContainer/Money_control.hide()
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.hide()
 	
-		
+	_setup_ammo_count_popup()
 	
 
 
@@ -197,6 +202,88 @@ func _update_buy_ammo_cost_label() -> void:
 	if cost_label:
 		var ammo_price := int(gl_DataSet.get_value('price_max_ammo', gl_PlayerState.dataset.power_max_ammo))
 		cost_label.text = "[wave]$" + str(ammo_price)
+	_refresh_ammo_popup_text()
+
+
+func _setup_ammo_count_popup() -> void:
+	var buy_ammo := get_node_or_null('%BuyAmmo') as Control
+	if buy_ammo == null:
+		return
+
+	_ammo_popup = buy_ammo.get_node_or_null('AmmoCountPopUp') as Control
+	if _ammo_popup == null:
+		return
+
+	_ammo_popup.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for child in _ammo_popup.get_children():
+		if child is Control:
+			child.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	_ammo_popup.pivot_offset_ratio = Vector2(0.5, 0.0)
+	_ammo_popup_rest_scale = _ammo_popup.scale if _ammo_popup.scale != Vector2.ZERO else Vector2.ONE
+	_ammo_popup_rest_position = _ammo_popup.position
+	_ammo_popup.scale = Vector2(_ammo_popup_rest_scale.x, 0.01)
+	_ammo_popup.hide()
+
+	_refresh_ammo_popup_text()
+
+	if not buy_ammo.mouse_entered.is_connected(_show_ammo_count_popup):
+		buy_ammo.mouse_entered.connect(_show_ammo_count_popup)
+	if not buy_ammo.mouse_exited.is_connected(_hide_ammo_count_popup):
+		buy_ammo.mouse_exited.connect(_hide_ammo_count_popup)
+
+
+func _refresh_ammo_popup_text() -> void:
+	if _ammo_popup == null:
+		return
+	var pack_size := int(gl_DataSet.get_value('ammo_pack_size', 0))
+	if _ammo_popup is RichTextLabel:
+		(_ammo_popup as RichTextLabel).text = "+" + str(pack_size)
+
+
+func _show_ammo_count_popup() -> void:
+	if _ammo_popup == null:
+		return
+
+	_refresh_ammo_popup_text()
+	if _ammo_popup_tween:
+		_ammo_popup_tween.kill()
+
+	_ammo_popup.show()
+	_ammo_popup.pivot_offset_ratio = Vector2(0.5, 0.0)
+	_ammo_popup.scale = Vector2(_ammo_popup_rest_scale.x, 0.01)
+	_ammo_popup.position = _ammo_popup_rest_position + Vector2(0.0, -12.0)
+
+	_ammo_popup_tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_ammo_popup_tween.tween_property(_ammo_popup, 'scale', _ammo_popup_rest_scale, 0.22)
+	_ammo_popup_tween.parallel().tween_property(_ammo_popup, 'position', _ammo_popup_rest_position, 0.22)
+
+
+func _hide_ammo_count_popup() -> void:
+	if _ammo_popup == null:
+		return
+
+	if _ammo_popup_tween:
+		_ammo_popup_tween.kill()
+
+	_ammo_popup.pivot_offset_ratio = Vector2(0.5, 0.0)
+	var collapsed_scale := Vector2(_ammo_popup_rest_scale.x, 0.01)
+	var tuck_up := _ammo_popup_rest_position + Vector2(0.0, -10.0)
+
+	_ammo_popup_tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	_ammo_popup_tween.tween_property(_ammo_popup, 'scale', collapsed_scale, 0.16)
+	_ammo_popup_tween.parallel().tween_property(_ammo_popup, 'position', tuck_up, 0.16)
+	_ammo_popup_tween.tween_callback(_ammo_popup.hide)
+
+
+func _force_hide_ammo_count_popup() -> void:
+	if _ammo_popup == null:
+		return
+	if _ammo_popup_tween:
+		_ammo_popup_tween.kill()
+	_ammo_popup.scale = Vector2(_ammo_popup_rest_scale.x, 0.01)
+	_ammo_popup.position = _ammo_popup_rest_position
+	_ammo_popup.hide()
 
 
 func update_open_menu() -> void:
@@ -277,6 +364,7 @@ func soft_show_from_level_editor() -> void:
 	
 func update_close_menu() -> void:
 	sfx_close_shop()
+	_force_hide_ammo_count_popup()
 	
 	$CenterContainer/MainPanel/VBoxContainer/Money_control.show()
 	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.show()

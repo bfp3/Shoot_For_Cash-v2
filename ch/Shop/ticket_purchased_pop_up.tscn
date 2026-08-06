@@ -40,17 +40,6 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="Gradient" id="Gradient_soy43"]
-offsets = PackedFloat32Array(0.456446, 0.5400697)
-colors = PackedColorArray(1, 1, 1, 0, 1, 0.9533333, 0.92, 0.039215688)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_xxttw"]
-noise_type = 3
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8mvl6"]
-noise = SubResource("FastNoiseLite_xxttw")
-color_ramp = SubResource("Gradient_soy43")
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w6jbf"]
 bg_color = Color(0.88, 0.8389333, 0.8096, 1)
 border_width_left = 2
@@ -223,34 +212,6 @@ texture = ExtResource("3_soy43")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MapOverlay2" type="TextureRect" parent="TreePanel" unique_id=746264084]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1175.5471
-offset_top = -599.24524
-offset_right = 744.4529
-offset_bottom = 480.75476
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = SubResource("NoiseTexture2D_8mvl6")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CoatArms2" parent="TreePanel" unique_id=409353141 instance=ExtResource("6_8mvl6")]
-visible = false
-layout_mode = 1
-offset_left = -676.0
-offset_top = -412.0
-offset_right = -420.0
-offset_bottom = -156.0
-scale = Vector2(1.969, 1.969)
-
 [node name="Buttons" type="Control" parent="TreePanel" unique_id=1362834187]
 layout_mode = 1
 anchors_preset = 15
@@ -282,15 +243,14 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 618.0
-offset_top = 166.0
+offset_top = 167.0
 offset_right = 874.0
-offset_bottom = 422.0
+offset_bottom = 423.0
 level_name = "Redd"
 level_locked = false
 main_control = NodePath("../../..")
 
 [node name="Level_button_selector3" parent="TreePanel/Buttons" unique_id=1192796621 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
-visible = false
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -302,6 +262,7 @@ offset_top = 106.0
 offset_right = 1188.0
 offset_bottom = 362.0
 level_name = "Glory"
+level_locked = false
 main_control = NodePath("../../..")
 
 [node name="Level_button_selector4" parent="TreePanel/Buttons" unique_id=299777263 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
@@ -768,6 +729,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 
 [node name="CloseMapButton" type="Button" parent="." unique_id=2017567355 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 offset_left = 180.0
 offset_top = 104.0
@@ -784,7 +746,7 @@ purchase_sfx = NodePath("shop_open_sfx_01")
 wiggle_amount = 1.1
 
 [node name="CloseButtonIcon2" type="TextureRect" parent="CloseMapButton" unique_id=887776723]
-self_modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+self_modulate = Color(0.75, 0.12000002, 0.14100002, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -803,6 +765,7 @@ texture = ExtResource("7_8mvl6")
 stretch_mode = 5
 
 [node name="CloseButtonIcon2" type="TextureRect" parent="CloseMapButton/CloseButtonIcon2" unique_id=432115250]
+visible = false
 modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
 show_behind_parent = true
 layout_mode = 1
@@ -837,16 +800,6 @@ pitch_scale = 2.0
 stream = ExtResource("10_rcr1f")
 volume_db = -40.0
 pitch_scale = 1.5
-
-[node name="MainPanel" type="PanelContainer" parent="." unique_id=814251497]
-visible = false
-layout_mode = 0
-offset_left = 958.0
-offset_top = 538.0
-offset_right = 962.0
-offset_bottom = 542.0
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("2_rcr1f")
 
 [connection signal="pressed" from="Control/NextRound" to="." method="_on_next_round_pressed"]
 [connection signal="pressed" from="CloseMapButton" to="." method="_on_close_map_pressed"]

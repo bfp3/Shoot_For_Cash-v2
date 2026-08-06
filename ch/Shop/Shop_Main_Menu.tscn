@@ -229,6 +229,14 @@ shadow_color = Color(1, 1, 1, 0.6)
 shadow_offset = Vector2(2.5, 2.5)
 anti_aliasing = false
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jv82y"]
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+border_color = Color(0.3882353, 0.3882353, 0.3882353, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [sub_resource type="Gradient" id="Gradient_sgib8"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0.55730337, 0.72808987)
@@ -863,7 +871,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_tnodp")
 
 [node name="MapButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1819880088 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true
-self_modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+self_modulate = Color(0.58, 0.0057999943, 0.015369854, 0)
 z_index = 2
 layout_mode = 1
 anchors_preset = 8
@@ -871,15 +879,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -496.9752
-offset_top = -58.220863
-offset_right = -453.012
-offset_bottom = -21.273064
+offset_left = -490.5495
+offset_top = -50.99195
+offset_right = -446.5863
+offset_bottom = -14.044151
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.731, 0.731)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_jv82y")
 script = ExtResource("3_y3o4g")
 focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
@@ -888,7 +897,7 @@ wiggle_amount = 0.85
 wiggle_amount_exit = 0.731
 
 [node name="CloseButtonIcon" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=1333707700]
-self_modulate = Color(0.78, 0.6318, 0.63426995, 1)
+self_modulate = Color(0.75, 0.12000002, 0.14100002, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -907,6 +916,46 @@ texture = ExtResource("12_xgu8n")
 stretch_mode = 5
 
 [node name="CloseButtonIcon2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton/CloseButtonIcon" unique_id=1428388682]
+visible = false
+modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.477539
+offset_top = -6.477539
+offset_right = 6.477539
+offset_bottom = -6.477539
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.053, 1.053)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("12_xgu8n")
+stretch_mode = 5
+
+[node name="CloseButtonIcon2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=2018998414]
+visible = false
+self_modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -129.2543
+offset_top = -106.02419
+offset_right = 126.7457
+offset_bottom = 149.9758
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.097, 0.097)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("12_xgu8n")
+stretch_mode = 5
+
+[node name="CloseButtonIcon2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton/CloseButtonIcon2" unique_id=1877941480]
+visible = false
 modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
 show_behind_parent = true
 layout_mode = 1
@@ -1515,9 +1564,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -64.0
-offset_top = -56.747192
+offset_top = -63.172882
 offset_right = 64.0
-offset_bottom = -27.747192
+offset_bottom = -34.172882
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -1529,6 +1578,70 @@ theme_override_font_sizes/normal_font_size = 19
 theme_override_font_sizes/italics_font_size = 90
 bbcode_enabled = true
 text = "[wave]C     A     S     H"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CashBalanceLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=672175836]
+unique_name_in_owner = true
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.99997
+offset_top = -239.43372
+offset_right = 155.0
+offset_bottom = -105.433716
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+focus_mode = 2
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_constants/shadow_outline_size = 133
+theme_override_constants/shadow_offset_x = 7
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 124
+bbcode_enabled = true
+text = "$50,000"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Cash_subtitle2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=103258015]
+unique_name_in_owner = true
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -243.09259
+offset_right = 64.0
+offset_bottom = -214.09259
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+focus_mode = 2
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 19
+theme_override_font_sizes/italics_font_size = 90
+bbcode_enabled = true
+text = "D E B T"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -1553,7 +1666,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 6.42572
-offset_bottom = 31.42572
+offset_bottom = 30.449768
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -1665,6 +1778,7 @@ focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
 [node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1661126035]
+visible = false
 modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 custom_minimum_size = Vector2(0, 90)
 layout_mode = 1
@@ -1680,6 +1794,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xklyy")
 
 [node name="Panel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1065744192]
+visible = false
 custom_minimum_size = Vector2(0, 90)
 layout_mode = 1
 anchors_preset = 15
@@ -1687,7 +1802,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 6.3935623
 offset_right = -0.040161133
-offset_bottom = 32.176445
+offset_bottom = 28.843391
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -1947,6 +2062,7 @@ scale = Vector2(1.402, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=453767486]
+visible = false
 modulate = Color(1, 1, 1, 0.3372549)
 layout_mode = 1
 anchors_preset = 4
@@ -1984,10 +2100,10 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = -59.437775
-offset_top = -107.32941
-offset_right = 156.53421
-offset_bottom = 142.6706
+offset_left = -58.63452
+offset_top = -106.526184
+offset_right = 157.33746
+offset_bottom = 143.47382
 grow_vertical = 2
 scale = Vector2(0.444, 0.444)
 wiggle_amount = 0.46
@@ -2025,10 +2141,12 @@ offset_top = -25.32727
 offset_right = -70.55243
 offset_bottom = 75.67273
 grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0)
+mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 2
+theme_override_font_sizes/normal_font_size = 69
 bbcode_enabled = true
-text = "+12"
+text = "12"
 fit_content = true
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -2047,6 +2165,7 @@ offset_right = 115.0683
 offset_bottom = 30.966064
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sgib8")
 
 [node name="PlayButton" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=805831987 instance=ExtResource("17_xklyy")]

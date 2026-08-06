@@ -4,7 +4,9 @@ class_name RoundManager
 const LEVEL_LAYOUT_00_OPENING_SCENE = preload('uid://88s7u86w4lfr')
 const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
 const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
-const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
+const LEVEL_LAYOUT_03_GLORY = preload('uid://cu16ohrbbd3rb')
+#const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
+
 
 const LEVEL_FILE_PATH := 'res://sc/island-shipper.txt'
 const LEVEL_ISLAND_NAME := 'shipper'
