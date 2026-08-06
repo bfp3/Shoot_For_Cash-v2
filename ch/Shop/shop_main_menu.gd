@@ -1,5 +1,7 @@
 extends Control
 
+const SHOP_MINI_GAME_SCENE := preload("res://ch/Shop/ShopMiniGame.tscn")
+
 @export var round_manager : RoundManager
 @export var money_control : Node
 @export var reveal_skill_sfx: AudioStreamPlayer
@@ -40,6 +42,7 @@ var _ammo_popup: Control
 var _ammo_popup_tween: Tween
 var _ammo_popup_rest_scale := Vector2.ONE
 var _ammo_popup_rest_position := Vector2.ZERO
+var _shop_mini_game: Control
 
 
 func _ready() -> void:
@@ -77,6 +80,7 @@ func _ready() -> void:
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.hide()
 	
 	_setup_ammo_count_popup()
+	_setup_shop_mini_game()
 	
 
 
@@ -353,6 +357,7 @@ func play_round_button_pressed() -> void:
 
 ## Hide shop for the debug level editor without firing CLOSE_MENU / SHOP_END.
 func soft_hide_for_level_editor() -> void:
+	_close_shop_mini_game()
 	current_state = SkillState.INACTIVE
 	hide()
 	shop_music_lower_volume()
@@ -365,6 +370,7 @@ func soft_show_from_level_editor() -> void:
 func update_close_menu() -> void:
 	sfx_close_shop()
 	_force_hide_ammo_count_popup()
+	_close_shop_mini_game()
 	
 	$CenterContainer/MainPanel/VBoxContainer/Money_control.show()
 	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.show()
@@ -766,6 +772,31 @@ func update_cost_label() -> void:
 
 	cash_label.pivot_offset.x = cash_label.size.x * 0.5
 	
+func _setup_shop_mini_game() -> void:
+	var main_panel := get_node_or_null("CenterContainer/MainPanel") as Control
+	if main_panel == null:
+		push_warning("Shop: MainPanel missing — mini-game overlay skipped")
+		return
+	_shop_mini_game = SHOP_MINI_GAME_SCENE.instantiate()
+	add_child(_shop_mini_game)
+	if _shop_mini_game.has_method("attach_to_shop"):
+		_shop_mini_game.attach_to_shop(self, main_panel, 120.0)
+
+
+func _close_shop_mini_game() -> void:
+	if _shop_mini_game and _shop_mini_game.has_method("close") and _shop_mini_game.is_open:
+		_shop_mini_game.close()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.shift_pressed and event.keycode == KEY_2:
+			if current_state == SkillState.IN_MENU or current_state == SkillState.OPEN_MENU:
+				if _shop_mini_game and _shop_mini_game.has_method("toggle"):
+					_shop_mini_game.toggle()
+					get_viewport().set_input_as_handled()
+
+
 func _input(event: InputEvent) -> void:
 	if !OS.is_debug_build():
 		set_process_input(false)
@@ -816,6 +847,7 @@ func increase_round_available() -> void:
 			break
 	
 func restart() -> void:
+	_close_shop_mini_game()
 	current_state = SkillState.INACTIVE
 
 	current_round = 0

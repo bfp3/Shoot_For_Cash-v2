@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://b6lbbuw3k10s"]
+
+[ext_resource type="Script" uid="uid://db115g5ikxaeo" path="res://ch/Shop/shop_mini_game.gd" id="1_mini"]
+
+[node name="ShopMiniGame" type="Control" unique_id=1551046934]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_mini")
+
+[node name="PlayArea" type="Panel" parent="." unique_id=31452380]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="WaveLayer" type="Control" parent="PlayArea" unique_id=1561190173]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PhysicsRoot" type="Node2D" parent="PlayArea" unique_id=1429186391]
+position = Vector2(8, 8)
+
+[node name="Overlay" type="Control" parent="PlayArea" unique_id=765619391]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
