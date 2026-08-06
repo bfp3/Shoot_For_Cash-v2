@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://b6lbbuw3k10s"]
+[gd_scene load_steps=20 format=3 uid="uid://b6lbbuw3k10s"]
 
 [ext_resource type="Script" uid="uid://db115g5ikxaeo" path="res://ch/Shop/shop_mini_game.gd" id="1_mini"]
 [ext_resource type="Script" uid="uid://cy54vcmks0b5j" path="res://ch/Shop/aoe_script_2d.gd" id="2_aoe"]
@@ -12,6 +12,11 @@
 [ext_resource type="AudioStream" uid="uid://m75w4o7bl00c" path="res://sfx/explosion_sfx_01.ogg" id="6_expl"]
 [ext_resource type="AudioStream" uid="uid://3tos28iojxib" path="res://sfx/Hovercraft_turning_SFX_left_v3.ogg" id="7_turn_l"]
 [ext_resource type="AudioStream" uid="uid://cya8lm4w3l6hi" path="res://sfx/Hovercraft_turning_SFX_right_v3.ogg" id="8_turn_r"]
+[ext_resource type="AudioStream" path="res://sfx/gun_combination_1.ogg" id="9_shoot"]
+[ext_resource type="AudioStream" path="res://sfx/gunLocked.ogg" id="10_miss"]
+[ext_resource type="AudioStream" path="res://sfx/Egg_pulse_sfx.ogg" id="11_pulse"]
+[ext_resource type="AudioStream" path="res://sfx/water_splash_sfx_01.ogg" id="12_splash1"]
+[ext_resource type="AudioStream" path="res://sfx/water_splash_sfx_02.ogg" id="13_splash2"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_burst"]
 particle_flag_disable_z = true
@@ -55,6 +60,19 @@ scale_min = 5.0
 scale_max = 10.0
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 alpha_curve = SubResource("CurveTexture_beb21")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_splash"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 12.0
+direction = Vector3(0, -1, 0)
+spread = 70.0
+initial_velocity_min = 50.0
+initial_velocity_max = 140.0
+gravity = Vector3(0, 220, 0)
+scale_min = 0.06
+scale_max = 0.16
+color = Color(0.45, 0.62, 0.78, 1)
 
 [node name="ShopMiniGame" type="Control" unique_id=1594941492]
 layout_mode = 3
@@ -126,6 +144,21 @@ lifetime = 0.35
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_sparks")
+
+[node name="SplashAOE2D" type="Node2D" parent="PlayArea/Content"]
+script = ExtResource("2_aoe")
+delays = {
+"SplashBurst": 0.0
+}
+
+[node name="SplashBurst" type="GPUParticles2D" parent="PlayArea/Content/SplashAOE2D"]
+emitting = false
+amount = 16
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_splash")
+texture = ExtResource("3_8qrfn")
 
 [node name="Overlay" type="Control" parent="PlayArea/Content" unique_id=852003665]
 layout_mode = 1
@@ -220,6 +253,31 @@ theme_override_font_sizes/normal_font_size = 36
 theme_override_font_sizes/italics_font_size = 36
 bbcode_enabled = true
 text = "[i]DOUBLE SHOT"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MissLabel" type="RichTextLabel" parent="PlayArea/Content/Overlay"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.45, 0.45, 0.5, 1)
+theme_override_font_sizes/normal_font_size = 32
+theme_override_font_sizes/italics_font_size = 32
+bbcode_enabled = true
+text = "[i]MISS"
 fit_content = true
 scroll_active = false
 horizontal_alignment = 1
@@ -356,6 +414,28 @@ max_polyphony = 2
 stream = ExtResource("6_expl")
 volume_db = -30.0
 max_polyphony = 2
+
+[node name="Shoot_sfx" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("9_shoot")
+volume_db = -12.0
+pitch_scale = 0.5
+max_polyphony = 3
+
+[node name="cannot_shoot_sfx" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("10_miss")
+volume_db = -40.0
+
+[node name="EggPulseSfx" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("11_pulse")
+volume_db = -18.0
+
+[node name="splash_sfx_01" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("12_splash1")
+volume_db = -18.0
+
+[node name="splash_sfx_02" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("13_splash2")
+volume_db = -18.0
 
 [node name="Mouse_turning_SFX" type="Node" parent="." unique_id=344178073]
 script = ExtResource("3_mouse")

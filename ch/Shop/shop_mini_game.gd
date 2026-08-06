@@ -88,7 +88,16 @@ var _multikill_timer := 0.0
 @onready var _sfx_take_damage: AudioStreamPlayer = $SFX/take_damage_sfx
 @onready var _sfx_hit: AudioStreamPlayer = $SFX/hitSound
 @onready var _sfx_explosion: AudioStreamPlayer = $SFX/explosion_sfx
+@onready var _sfx_shoot: AudioStreamPlayer = $SFX/Shoot_sfx
+@onready var _sfx_miss: AudioStreamPlayer = $SFX/cannot_shoot_sfx
+@onready var _sfx_pulse: AudioStreamPlayer = $SFX/EggPulseSfx
+@onready var _sfx_splash_01: AudioStreamPlayer = $SFX/splash_sfx_01
+@onready var _sfx_splash_02: AudioStreamPlayer = $SFX/splash_sfx_02
+@onready var _splash_aoe: Node2D = get_node_or_null("PlayArea/Content/SplashAOE2D") as Node2D
+@onready var _miss_label: RichTextLabel = get_node_or_null("PlayArea/Content/Overlay/MissLabel") as RichTextLabel
 @onready var _mouse_sfx: Node = $Mouse_turning_SFX
+
+var _miss_timer := 0.0
 
 
 func _ready() -> void:
@@ -105,6 +114,8 @@ func _ready() -> void:
 	_game_over_panel.hide()
 	_wave_label.modulate.a = 0.0
 	_multikill_label.modulate.a = 0.0
+	if _miss_label:
+		_miss_label.modulate.a = 0.0
 	_refresh_hud()
 	set_process(false)
 	set_process_input(false)
@@ -223,9 +234,12 @@ func _reset_run() -> void:
 	_money = 0.0
 	_shake_trauma = 0.0
 	_multikill_timer = 0.0
+	_miss_timer = 0.0
 	_game_over_panel.hide()
 	_wave_label.modulate.a = 0.0
 	_multikill_label.modulate.a = 0.0
+	if _miss_label:
+		_miss_label.modulate.a = 0.0
 	_refresh_hud()
 	_center_crosshair()
 
@@ -283,6 +297,11 @@ func _process(delta: float) -> void:
 		_multikill_timer -= delta
 		if _multikill_timer <= 0.0:
 			_multikill_label.modulate.a = 0.0
+
+	if _miss_timer > 0.0:
+		_miss_timer -= delta
+		if _miss_timer <= 0.0 and _miss_label:
+			_miss_label.modulate.a = 0.0
 
 	if not _game_over and not _pulsing and _alive_rock_count() == 0:
 		_wave_timer -= delta
@@ -385,14 +404,23 @@ func _roll_rock_kind() -> ShopMiniRock.RockKind:
 
 
 func _pulse_rocks() -> void:
-	var to_pulse: Array[RigidBody2D] = _rocks.duplicate()
+	var to_pulse: Array[RigidBody2D] = []
+	for rock in _rocks:
+		if is_instance_valid(rock) and not rock.hit:
+			to_pulse.append(rock)
+	if to_pulse.is_empty():
+		return
+
 	var aim_together := _rng.randf() < aim_together_chance and to_pulse.size() >= 2
 	var center := Vector2.ZERO
 	if aim_together:
 		for rock in to_pulse:
-			if is_instance_valid(rock):
-				center += rock.position
+			center += rock.position
 		center /= float(to_pulse.size())
+
+	if _sfx_pulse:
+		_sfx_pulse.pitch_scale = _rng.randf_range(0.95, 1.05)
+		_sfx_pulse.play()
 
 	for rock in to_pulse:
 		if not is_open or _game_over:
@@ -401,11 +429,12 @@ func _pulse_rocks() -> void:
 			continue
 		var x_impulse := _rng.randf_range(-launch_x_jitter, launch_x_jitter)
 		if aim_together:
-			# Steer toward group center so arcs cross in the kill zone.
 			var toward := center.x - rock.position.x
 			x_impulse = clampf(toward * 0.85, -launch_impulse * 0.55, launch_impulse * 0.55)
 			x_impulse += _rng.randf_range(-launch_x_jitter * 0.25, launch_x_jitter * 0.25)
 		var torque := _rng.randf_range(-pulse_torque, pulse_torque)
+		if absf(torque) < pulse_torque * 0.35:
+			torque = pulse_torque * (1.0 if _rng.randf() > 0.5 else -1.0)
 		rock.pulse(launch_impulse, x_impulse, fall_gravity_scale, torque)
 		if pulse_stagger > 0.0:
 			await get_tree().create_timer(pulse_stagger).timeout
@@ -419,6 +448,12 @@ func _make_rock_outline(radius: float) -> PackedVector2Array:
 		var bump := _rng.randf_range(0.62, 1.12)
 		var jag := 1.0 + 0.08 * sin(angle * 3.0 + _rng.randf() * 2.0)
 		pts.append(Vector2(cos(angle), sin(angle)) * radius * bump * jag)
+	if pts.is_empty():
+		# Safe fallback so we never index an empty outline.
+		pts.append(Vector2(radius, 0.0))
+		pts.append(Vector2(0.0, radius))
+		pts.append(Vector2(-radius, 0.0))
+		pts.append(Vector2(0.0, -radius))
 	pts.append(pts[0])
 	return pts
 
@@ -443,7 +478,13 @@ func _cleanup_fallen_rocks() -> void:
 			rock.queue_free()
 			continue
 		if rock.pulsed and rock.position.y > wall_y + rock.radius + 40.0 and rock.linear_velocity.y > 0.0:
-			_add_strike()
+			var fall_pos := rock.position
+			var mini := rock as ShopMiniRock
+			var kind: ShopMiniRock.RockKind = mini.kind if mini else ShopMiniRock.RockKind.BASIC
+			_play_splash(fall_pos)
+			# Black rocks are hazards to avoid — letting them fall is success (no strike).
+			if kind != ShopMiniRock.RockKind.BLACK:
+				_add_strike()
 			rock.queue_free()
 			continue
 		if rock.position.y < -80.0 or rock.position.x < -80.0 or rock.position.x > _overlay.size.x + 80.0:
@@ -465,6 +506,7 @@ func _update_flashes(delta: float) -> void:
 func _try_shoot() -> void:
 	if _game_over:
 		return
+	_play_fire_sfx()
 	_add_shake(fire_shake_strength, fire_shake_time)
 	var wall_y := _overlay.size.y * WALL_Y_RATIO
 	_shot_flashes.append({"pos": _crosshair, "t": 0.12})
@@ -472,8 +514,10 @@ func _try_shoot() -> void:
 	var hit_any := false
 	# Hit every rock under the crosshair this frame (multi-kill).
 	for i in range(_rocks.size() - 1, -1, -1):
-		var rock := _rocks[i]
-		if not is_instance_valid(rock) or rock.hit:
+		if i < 0 or i >= _rocks.size():
+			continue
+		var rock := _rocks[i] as ShopMiniRock
+		if rock == null or not is_instance_valid(rock) or rock.hit:
 			continue
 		if rock.position.y > wall_y:
 			continue
@@ -481,10 +525,11 @@ func _try_shoot() -> void:
 			continue
 		hit_any = true
 		var hit_pos := rock.position
-		var kind = rock.kind
-		var destroyed = rock.apply_shot((_crosshair - rock.position))
+		var kind: ShopMiniRock.RockKind = rock.kind
+		# Bounce away from the crosshair center.
+		var away_from_crosshair := rock.position - _crosshair
+		var destroyed: bool = rock.apply_shot(away_from_crosshair)
 		if not destroyed:
-			# Partial hit (red rock).
 			_play_hit_sfx()
 			_shot_flashes.append({"pos": hit_pos, "t": 0.18, "burst": true})
 			continue
@@ -495,7 +540,17 @@ func _try_shoot() -> void:
 	if destroyed_count >= 2:
 		_show_multikill(destroyed_count)
 	elif not hit_any:
-		pass
+		_on_shot_missed()
+
+
+func _on_shot_missed() -> void:
+	if _sfx_miss:
+		_sfx_miss.play(0.91)
+	if _miss_label:
+		_miss_label.text = "[i]MISS"
+		_miss_label.modulate.a = 1.0
+		_miss_timer = 0.45
+	_shot_flashes.append({"pos": _crosshair, "t": 0.16, "burst": true})
 
 
 func _on_rock_destroyed(rock: RigidBody2D, hit_pos: Vector2, kind: ShopMiniRock.RockKind) -> void:
@@ -504,13 +559,12 @@ func _on_rock_destroyed(rock: RigidBody2D, hit_pos: Vector2, kind: ShopMiniRock.
 	_add_shake(destroy_shake_strength, destroy_shake_time)
 	_shot_flashes.append({"pos": hit_pos, "t": 0.22, "burst": true})
 	if kind == ShopMiniRock.RockKind.BLACK:
+		# Hazard: money penalty only — no strike (they're meant to be avoided).
 		_add_money(-black_rock_penalty)
-		_add_strike()
 	else:
 		_add_money(money_per_destroy)
 	if is_instance_valid(rock):
 		rock.queue_free()
-
 
 func _show_multikill(count: int) -> void:
 	var text := "DOUBLE SHOT"
@@ -562,6 +616,13 @@ func _refresh_hud() -> void:
 		_strike_label.text = "[center]%s" % marks
 
 
+func _play_fire_sfx() -> void:
+	if _sfx_shoot == null:
+		return
+	_sfx_shoot.pitch_scale = _rng.randf_range(0.95, 1.08)
+	_sfx_shoot.play()
+
+
 func _play_hit_sfx() -> void:
 	if _sfx_take_damage == null:
 		return
@@ -571,17 +632,28 @@ func _play_hit_sfx() -> void:
 
 
 func _play_destroy_sfx() -> void:
-	# Same cadence as RockInstance.play_destroy_sfx / play_hit_sfx.
+	# Non-blocking — avoids hitching the game when shooting.
 	if _sfx_take_damage:
 		_sfx_take_damage.volume_db = _rng.randf_range(-25.0, -20.0)
 		_sfx_take_damage.pitch_scale = _rng.randf_range(0.9, 1.2)
 		_sfx_take_damage.play(0.02)
-	await get_tree().create_timer(0.1).timeout
 	if _sfx_hit:
 		_sfx_hit.play()
-	await get_tree().create_timer(0.1).timeout
 	if _sfx_explosion:
 		_sfx_explosion.play()
+
+
+func _play_splash(local_pos: Vector2) -> void:
+	var splash := _sfx_splash_01
+	if _rng.randf() > 0.5 and _sfx_splash_02:
+		splash = _sfx_splash_02
+	if splash:
+		splash.pitch_scale = _rng.randf_range(0.9, 1.0)
+		splash.play()
+	if _splash_aoe:
+		_splash_aoe.position = _physics_root.position + Vector2(local_pos.x, _overlay.size.y * WALL_Y_RATIO)
+		if _splash_aoe.has_method("play_at"):
+			_splash_aoe.play_at(_splash_aoe.global_position)
 
 
 func _play_aoe(local_pos: Vector2) -> void:
@@ -591,7 +663,6 @@ func _play_aoe(local_pos: Vector2) -> void:
 	_aoe.position = _physics_root.position + local_pos
 	if _aoe.has_method("play_at"):
 		_aoe.play_at(_aoe.global_position)
-
 
 func _add_shake(strength: float, time: float) -> void:
 	_shake_strength = maxf(_shake_strength, strength)

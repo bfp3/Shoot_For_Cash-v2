@@ -6,6 +6,7 @@ enum RockKind { BASIC, BLACK, RED }
 
 @export var outline_color := Color(0.95, 0.82, 0.12, 1.0)
 @export var black_color := Color(0.08, 0.08, 0.08, 1.0)
+@export var black_fill_color := Color(0.05, 0.05, 0.05, 1.0)
 @export var red_color := Color(0.78, 0.02, 0.02, 1.0)
 @export var outline_width := 2.0
 
@@ -46,8 +47,9 @@ func setup(p_radius: float, points: PackedVector2Array, p_kind: RockKind = RockK
 	freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
 	gravity_scale = 0.0
 	linear_damp = 0.0
-	angular_damp = 0.35
+	angular_damp = 0.15
 	lock_rotation = false
+	can_sleep = false
 	contact_monitor = false
 	_ensure_collision()
 	_ensure_trail()
@@ -96,26 +98,33 @@ func pulse(upward_impulse: float, x_impulse: float, fall_gravity: float, torque_
 		return
 	pulsed = true
 	freeze = false
+	sleeping = false
 	gravity_scale = fall_gravity
 	linear_velocity = Vector2.ZERO
-	angular_velocity = 0.0
+	# Drive spin directly so pulse_torque is easy to feel in the inspector.
+	angular_velocity = torque_impulse * 0.12
 	apply_central_impulse(Vector2(x_impulse, -upward_impulse) * mass)
-	apply_torque_impulse(torque_impulse * mass)
+	if absf(torque_impulse) > 0.01:
+		apply_torque_impulse(torque_impulse * mass * maxf(radius, 1.0))
 
 
+## `away_from_crosshair` should point from the crosshair toward/away so bounce
+## pushes the rock opposite the crosshair center.
 ## Returns true when the rock is fully destroyed by this hit.
-func apply_shot(hit_dir: Vector2 = Vector2.ZERO) -> bool:
+func apply_shot(away_from_crosshair: Vector2 = Vector2.ZERO) -> bool:
 	if hit:
 		return false
 	hits_remaining -= 1
 	if kind == RockKind.RED and hits_remaining > 0:
-		var dir := hit_dir
+		var dir := away_from_crosshair
 		if dir.length_squared() < 0.001:
 			dir = Vector2(randf_range(-1.0, 1.0), -1.0).normalized()
 		else:
 			dir = dir.normalized()
+		# Bounce away from the crosshair center.
 		apply_central_impulse(dir * red_hit_bounce_force * mass)
-		apply_torque_impulse(randf_range(-red_hit_torque, red_hit_torque) * mass)
+		apply_torque_impulse(randf_range(-red_hit_torque, red_hit_torque) * mass * maxf(radius, 1.0))
+		angular_velocity += signf(dir.x) * red_hit_torque * 0.08
 		queue_redraw()
 		return false
 	hit = true
@@ -155,8 +164,20 @@ func _update_trail_from_history() -> void:
 func _draw() -> void:
 	if outline_points.size() < 2:
 		return
+	if kind == RockKind.BLACK:
+		# Filled black rock with red X hazard mark.
+		var fill := PackedVector2Array()
+		for i in outline_points.size() - 1:
+			fill.append(outline_points[i])
+		if fill.size() >= 3:
+			draw_colored_polygon(fill, black_fill_color)
+		draw_polyline(outline_points, black_color, outline_width, true)
+		var arm := radius * 0.45
+		draw_line(Vector2(-arm, -arm), Vector2(arm, arm), red_color, 3.0, true)
+		draw_line(Vector2(arm, -arm), Vector2(-arm, arm), red_color, 3.0, true)
+		return
+
 	draw_polyline(outline_points, get_draw_color(), outline_width, true)
-	# Red rocks show remaining hits as tiny ticks.
 	if kind == RockKind.RED and hits_remaining > 0 and not hit:
 		for i in hits_remaining:
 			var a := -0.4 + float(i) * 0.4
