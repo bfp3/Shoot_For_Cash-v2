@@ -627,8 +627,8 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		#body.apply_central_impulse(body.global_position - global_position * -strength)
 		##return
 		#await get_tree().create_timer(randf_range(1.2, 2.0)).timeout
-		#await get_tree().create_timer(randf_range(0.1, 0.25), false).timeout
-		await get_tree().create_timer(0.25, false).timeout
+		await get_tree().create_timer(randf_range(0.1, 0.15), false).timeout
+		#await get_tree().create_timer(0.25, false).timeout
 		body.start_destroyed_process()
 
 		#body.hit_by_player(100, Vector2.ZERO)

@@ -46,8 +46,8 @@ func setup(p_radius: float, points: PackedVector2Array, p_kind: RockKind = RockK
 	freeze = true
 	freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
 	gravity_scale = 0.0
-	linear_damp = 0.0
-	angular_damp = 0.15
+	linear_damp = 0.5
+	angular_damp = 0.1
 	lock_rotation = false
 	can_sleep = false
 	contact_monitor = false
@@ -172,6 +172,7 @@ func mark_destroyed() -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	
 	if not trail_enabled or hit or not pulsed or _trail == null:
 		return
 	_update_trail_from_history()

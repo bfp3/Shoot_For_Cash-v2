@@ -6,7 +6,7 @@ extends Control
 @export_range(0.25, 3.0, 0.05) var size_scale := 1.0
 
 ## How small the crosshair can shrink while holding fire (fraction of full size).
-const SCOPE_MIN_SCALE := 0.35
+const SCOPE_MIN_SCALE := 0.7
 
 ## Soft distant scenery colours (tweak in code).
 var cloud_color := Color(1.0, 1.0, 1.0, 0.18)
@@ -523,7 +523,7 @@ func _prepare_rocks() -> void:
 	if area.x < 8.0 or area.y < 8.0:
 		return
 	var wall_y := area.y * WALL_Y_RATIO
-	var count := rocks_per_wave
+	var count := randi_range(2,8)#rocks_per_wave
 	for i in count:
 		var column_t := float(i + 1) / float(count + 1)
 		var radius := _rng.randf_range(14.0, 26.0) * 0.5 * size_scale
@@ -563,7 +563,9 @@ func _pulse_rocks() -> void:
 			to_pulse.append(rock)
 	if to_pulse.is_empty():
 		return
-
+	
+	launch_impulse = [900,1000,1100].pick_random()
+	
 	var aim_together := _rng.randf() < aim_together_chance and to_pulse.size() >= 2
 	var center := Vector2.ZERO
 	if aim_together:
@@ -661,7 +663,7 @@ func _try_shoot() -> void:
 	if _game_over:
 		return
 
-	
+	crosshair_blink()
 	_play_fire_sfx()
 	#_add_shake(fire_shake_strength, fire_shake_time)
 	var wall_y := _overlay.size.y * WALL_Y_RATIO
@@ -998,3 +1000,15 @@ func _draw_crosshair(pos: Vector2) -> void:
 	_overlay.draw_line(pos + Vector2(0, r), pos + Vector2(0, r + tick), CROSSHAIR_RED, 2.0, true)
 	_overlay.draw_line(pos + Vector2(-r - tick, 0), pos + Vector2(-r, 0), CROSSHAIR_RED, 2.0, true)
 	_overlay.draw_line(pos + Vector2(r, 0), pos + Vector2(r + tick, 0), CROSSHAIR_RED, 2.0, true)
+
+
+func crosshair_blink() -> void:
+	_crosshair_node.hide()
+	await get_tree().create_timer(1.0,false).timeout
+	_crosshair_node.show()
+	return
+	
+	var tween = create_tween()
+	tween.tween_property(_crosshair_node, "modulate:a", 0.1,0.1)
+	tween.tween_interval(0.5)
+	tween.tween_property(_crosshair_node, "modulate:a", 1.0,0.1)
