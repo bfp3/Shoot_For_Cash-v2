@@ -2,6 +2,9 @@ extends Control
 ## Minimalistic 2D arcade overlay that runs inside the shop panel.
 ## Toggle with Shift+2 while the shop is open.
 
+## Master size for rocks and their hit/target radius. 1.0 = default.
+@export_range(0.25, 3.0, 0.05) var size_scale := 1.0
+
 const CREAM := Color(0.92156863, 0.8784314, 0.84705883, 1.0)
 const BORDER_WHITE := Color(1.0, 1.0, 1.0, 1.0)
 const INK := Color(0.0824, 0.0941, 0.1098, 1.0)
@@ -375,7 +378,7 @@ func _prepare_rocks() -> void:
 	var count := rocks_per_wave
 	for i in count:
 		var column_t := float(i + 1) / float(count + 1)
-		var radius := _rng.randf_range(14.0, 26.0) / 2
+		var radius := _rng.randf_range(14.0, 26.0) * 0.5 * size_scale
 		var kind := _roll_rock_kind()
 		var rock := ShopMiniRock.new()
 		_physics_root.add_child(rock)
@@ -390,7 +393,7 @@ func _prepare_rocks() -> void:
 		rock.setup(radius, _make_rock_outline(radius), kind)
 		rock.position = Vector2(
 			area.x * column_t + _rng.randf_range(-18.0, 18.0),
-			wall_y + radius + _rng.randf_range(8.0, 22.0)
+			wall_y + radius + _rng.randf_range(8.0, 22.0) * size_scale
 		)
 		rock.rotation = _rng.randf_range(-0.25, 0.25)
 		_rocks.append(rock)
@@ -526,7 +529,7 @@ func _try_shoot() -> void:
 			continue
 		if rock.position.y > wall_y:
 			continue
-		if rock.position.distance_to(_crosshair) > rock.radius + 12.0:
+		if rock.position.distance_to(_crosshair) > rock.radius + (12.0 * size_scale):
 			continue
 		hit_any = true
 		var hit_pos := rock.position
