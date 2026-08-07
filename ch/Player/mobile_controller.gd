@@ -1,9 +1,8 @@
 extends Node
 
-@export_range(0.1, 15.0, 0.05)
-var sensitivity := 1.0
-
-@export var fire_action : StringName = &"shootWeapon"
+## Landscape mobile controls:
+## - Right half: drag to move crosshair only
+## - Left half: tap = fire, hold = shrink scope then fire on release
 
 var aim_touch := -1
 var fire_touch := -1
@@ -11,59 +10,80 @@ var fire_touch := -1
 var previous_touch_position := Vector2.ZERO
 var motion := Vector2.ZERO
 
+var fire_held := false
+var _fire_just_released := false
+
+@onready var _player: Player = get_parent() as Player
+
+
+func _ready() -> void:
+	if not OS.has_feature("mobile"):
+		set_process_input(false)
+		return
+	# Prefer landscape on phones/tablets.
+	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
+
 
 func _input(event: InputEvent) -> void:
+	if not OS.has_feature("mobile"):
+		return
 
-	if !OS.has_feature("mobile"):
+	if _player == null or _player.current_state != Player.State.ACTIVE:
+		_reset_touches()
 		return
 
 	var half := get_viewport().get_visible_rect().size.x * 0.5
 
-	#
-	# Finger pressed
-	#
 	if event is InputEventScreenTouch:
-
-		if event.pressed:
-
-			# Right half = aiming trackpad
-			if event.position.x >= half and aim_touch == -1:
-				aim_touch = event.index
-				previous_touch_position = event.position
-
-			# Left half = fire button
-			elif event.position.x < half and fire_touch == -1:
-				fire_touch = event.index
-				Input.action_press(fire_action)
-
+		var touch := event as InputEventScreenTouch
+		if touch.pressed:
+			# Right half = aim trackpad only
+			if touch.position.x >= half and aim_touch == -1:
+				aim_touch = touch.index
+				previous_touch_position = touch.position
+			# Left half = fire / scope shrink
+			elif touch.position.x < half and fire_touch == -1:
+				fire_touch = touch.index
+				fire_held = true
+				_fire_just_released = false
 		else:
-
-			# Released aiming finger
-			if event.index == aim_touch:
+			if touch.index == aim_touch:
 				aim_touch = -1
-
-			# Released firing finger
-			elif event.index == fire_touch:
+			elif touch.index == fire_touch:
 				fire_touch = -1
-				Input.action_release(fire_action)
+				fire_held = false
+				_fire_just_released = true
 
-
-	#
-	# Finger dragged
-	#
 	elif event is InputEventScreenDrag:
-
-		if event.index != aim_touch:
+		var drag := event as InputEventScreenDrag
+		if drag.index != aim_touch:
 			return
-
-		motion += event.position - previous_touch_position
-		previous_touch_position = event.position
+		# Same resolution-independent scaling as mouse look / settings level.
+		motion += GameSettings.mouse_look_delta(drag.relative)
+		previous_touch_position = drag.position
 
 
 func get_crosshair_motion() -> Vector2:
-
-	var result := motion * sensitivity
-
+	var result := motion
 	motion = Vector2.ZERO
-
 	return result
+
+
+func is_fire_held() -> bool:
+	return fire_held
+
+
+func consume_fire_release() -> bool:
+	if not _fire_just_released:
+		return false
+	_fire_just_released = false
+	return true
+
+
+func _reset_touches() -> void:
+	aim_touch = -1
+	fire_touch = -1
+	fire_held = false
+	_fire_just_released = false
+	motion = Vector2.ZERO
+	previous_touch_position = Vector2.ZERO

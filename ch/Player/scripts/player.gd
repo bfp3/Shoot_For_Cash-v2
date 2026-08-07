@@ -118,10 +118,10 @@ func _inner_scope_scale_for_radius(radius: float) -> float:
 
 	
 func _ready() -> void:
-	
 	if is_mobile:
 		running_on_mobile = true
-	
+		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
+
 	%HUD_bottom_corner.hide()
 		
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
@@ -295,34 +295,21 @@ func _process(delta: float) -> void:
 	if running_on_mobile:
 		target_crosshair_position += mobile_controller.get_crosshair_motion()
 
-		
-		
+	crosshair.position = target_crosshair_position
+	crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
+	%Crosshair.global_position = crosshair_position
+
+	# Desktop: InputMap shoot / scope. Mobile: left-half touch only (ignore emulated mouse).
+	if running_on_mobile:
+		if mobile_controller.consume_fire_release():
+			fire_weapon()
 	else:
-		crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
-		crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
-		%Crosshair.global_position = crosshair_position
-		
-		
-	#if Input.is_action_pressed("shootWeapon") && gl_PlayerState.dataset.power_auto_fire > 0:
-		#fire_weapon()
-	
-	#if Input.is_action_just_pressed("shootWeapon") && gl_PlayerState.dataset.power_auto_fire == 0:
-		#fire_weapon()
-		
-	if Input.is_action_just_released("shootWeapon"):
-		#weapon_shooting.shot_with_right_click = false
-		fire_weapon()
-	
-	
-	if Input.is_action_just_released("shoot_weapon_2"):
-		fire_weapon()
-		#if gl_PlayerState.dataset.power_sky_mine > 0:
-			##weapon_shooting.shooting_sky_mine = true
-			#fire_weapon()
-		#else:
-			##weapon_shooting.shot_with_right_click = false
-			#fire_weapon()
-	
+		if Input.is_action_just_released("shootWeapon"):
+			fire_weapon()
+
+		if Input.is_action_just_released("shoot_weapon_2"):
+			fire_weapon()
+
 	handle_scope_adjust(delta)
 	
 	#if Input.is_action_pressed("shootWeapon"):
@@ -572,8 +559,14 @@ func _on_scope_shrink_sfx_finished() -> void:
 		
 		
 func handle_scope_adjust(delta: float) -> void:
-	var shrink_held := Input.is_action_pressed("shootWeapon")
-	var expand_held := Input.is_action_pressed("shoot_weapon_2")
+	var shrink_held := false
+	var expand_held := false
+	if running_on_mobile:
+		# Left-half hold only — right-half aim never shrinks/expands scope.
+		shrink_held = mobile_controller.is_fire_held()
+	else:
+		shrink_held = Input.is_action_pressed("shootWeapon")
+		expand_held = Input.is_action_pressed("shoot_weapon_2")
 
 	if shrink_held and _scope_mode != ScopeMode.EXPAND:
 		_update_scope_hold(ScopeMode.SHRINK, delta)
@@ -732,7 +725,7 @@ func fire_weapon() -> void:
 		#penalize_early_fire()
 		return
 		
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and not running_on_mobile:
 		return
 
 	if shot_count <= 0:
@@ -791,15 +784,15 @@ func _input(event: InputEvent) -> void:
 		# Resolution-independent look: same screen-fraction motion on any monitor.
 		target_crosshair_position += GameSettings.mouse_look_delta(event.relative)
 	
-	elif event is InputEventMouseButton and event.pressed:
-		match event.button_index:
-			MOUSE_BUTTON_WHEEL_UP:
-				GameSettings.bump_mouse_sensitivity(1)
-				print("Mouse sensitivity:", GameSettings.mouse_sensitivity_level)
-
-			MOUSE_BUTTON_WHEEL_DOWN:
-				GameSettings.bump_mouse_sensitivity(-1)
-				print("Mouse sensitivity:", GameSettings.mouse_sensitivity_level)
+	#elif event is InputEventMouseButton and event.pressed:
+		#match event.button_index:
+			#MOUSE_BUTTON_WHEEL_UP:
+				#GameSettings.bump_mouse_sensitivity(1)
+				#print("Mouse sensitivity:", GameSettings.mouse_sensitivity_level)
+#
+			#MOUSE_BUTTON_WHEEL_DOWN:
+				#GameSettings.bump_mouse_sensitivity(-1)
+				#print("Mouse sensitivity:", GameSettings.mouse_sensitivity_level)
 
 
 
