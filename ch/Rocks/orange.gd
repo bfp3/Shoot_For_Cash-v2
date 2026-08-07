@@ -624,9 +624,10 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			#var strength : float = [2.0,3.0].pick_random()
 			var impulse_dir = fly_away_from_player()
 			body.apply_central_impulse(impulse_dir)
+			#body.apply_central_impulse(global_position - body.global_position * -4.0)
 			#body.apply_central_impulse(body.global_position - global_position * -strength)
 			#return
-			await get_tree().create_timer(randf_range(1.2, 2.0), false).timeout
+			await get_tree().create_timer(randf_range(1.6, 2.0), false).timeout
 			body.start_destroyed_process()
 			return
 
@@ -655,7 +656,8 @@ func fly_away_from_player() -> Vector3:
 	var player := get_tree().get_first_node_in_group('Player')
 
 	var dir : Vector3= self.global_position - player.global_position.normalized()
-	dir.y /= 3
+	dir = dir * 2
+	#dir.y /= 3
 	#apply_central_impulse(dir * strength)
 	var _direction = dir * strength
 	return _direction

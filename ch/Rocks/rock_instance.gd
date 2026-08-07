@@ -234,7 +234,12 @@ func round_end_check_rock_status() -> void:
 			pass
 			
 		State.ACTIVE:
-			enter_state(State.DISABLED)
+			# Black hazards / smokecans should keep falling or orange-drift motion
+			# across wave clears; only normal rocks get parked as DISABLED.
+			if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or rock_type == RockSize.SMOKECAN:
+				pass
+			else:
+				enter_state(State.DISABLED)
 			
 		State.PREPARE_ROCK:
 			pass

@@ -271,24 +271,25 @@ func update_prepare_rocks() -> void:
 	splash_zone.reset_detected_bodies()
 
 	var container_children := $Container_1.get_children()
+	var available_bodies : Array = []
 
-	# Leftover ACTIVE rocks become DISABLED at wave end and were previously skipped,
-	# which permanently shrank the pool until the next full INACTIVE reset.
-	# Reclaim every slot before assigning the new sequence.
+	# Leave in-flight rocks alone (ACTIVE / DISABLED) so black hazards can keep
+	# falling or drifting from orange hits while the next wave prepares.
 	for i in container_children:
-		if i.current_state != i.State.INACTIVE:
-			i.enter_state(i.State.INACTIVE)
+		if _rock_slot_busy(i):
+			continue
+		available_bodies.append(i)
 
-	rocks_limit = mini(temp_rock_array.size(), container_children.size())
-	if temp_rock_array.size() > container_children.size():
+	rocks_limit = mini(temp_rock_array.size(), available_bodies.size())
+	if temp_rock_array.size() > available_bodies.size():
 		push_warning(
-			"Rock sequence needs %d rocks but only %d in the scene."
-			% [temp_rock_array.size(), container_children.size()]
+			"Rock sequence needs %d rocks but only %d free slots (others still in flight)."
+			% [temp_rock_array.size(), available_bodies.size()]
 		)
 
 	var active_bodies : Array = []
-	for i in container_children.size():
-		var body = container_children[i]
+	for i in available_bodies.size():
+		var body = available_bodies[i]
 		if i < rocks_limit:
 			active_bodies.append(body)
 		else:
@@ -301,6 +302,11 @@ func update_prepare_rocks() -> void:
 			break
 		active_bodies[pointer].rock_type = _spawn_entry_to_rock_type(temp_rock_array[pointer])
 		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
+
+
+## Slots still mid-flight must not be reclaimed for the next wave's sequence.
+func _rock_slot_busy(body) -> bool:
+	return body.current_state == body.State.ACTIVE or body.current_state == body.State.DISABLED
 
 
 func _spawn_entry_to_rock_type(entry) -> int:
@@ -603,7 +609,7 @@ func _rebuild_wave_convergence_aim_columns(bodies: Array) -> void:
 	var spawn_cols: Array[int] = []
 	var counter := 0
 	for body in bodies:
-		if body.current_state == body.State.DISABLED:
+		if body.current_state != body.State.PREPARE_ROCK and body.current_state != body.State.ACTIVE:
 			continue
 		if counter >= rocks_limit:
 			break
@@ -704,19 +710,20 @@ func get_angle_bias() -> float:
 	return 10.0
 	
 func bounce_rocks() -> void:
-	
 	var bodies = $Container_1.get_children()
-	
-	angle_bias = get_angle_bias()
-	_rebuild_wave_convergence_aim_columns(bodies)
-	
-	var counter := 0
-	
+	# Only launch rocks prepared for this wave — leave lingering ACTIVE hazards alone.
+	var to_launch: Array = []
 	for body in bodies:
-		if body.current_state == body.State.DISABLED:
-			continue
-		
-		if counter >= bodies.size():
+		if body.current_state == body.State.PREPARE_ROCK:
+			to_launch.append(body)
+
+	angle_bias = get_angle_bias()
+	_rebuild_wave_convergence_aim_columns(to_launch)
+
+	var counter := 0
+
+	for body in to_launch:
+		if counter >= rocks_limit:
 			break
 
 		# Delay before this rock (from `wait` markers; default 100ms between rocks).
@@ -740,11 +747,8 @@ func bounce_rocks() -> void:
 		body.apply_central_impulse(impulse)
 
 		counter += 1
-		
-		if counter >= rocks_limit:
-			break
 
-	spin_rocks()
+	spin_rocks(to_launch)
 
 
 ## Pigeons fly into the distance along the column fan (17° half-angle from world origin).
@@ -868,19 +872,17 @@ func _aimed_launch_impulse(body, aim_row: int, aim_column: int) -> Vector3:
 	)
 
 
-func spin_rocks() -> void:
-	
-	var bodies = $Container_1.get_children()
+func spin_rocks(bodies: Array = []) -> void:
+	if bodies.is_empty():
+		bodies = $Container_1.get_children()
+
 	var counter := 0
 	for body in bodies:
-		if counter >= bodies.size():
+		if counter >= rocks_limit:
 			break
 
 		body.apply_torque_impulse(Vector3.LEFT * 3000.0)
 		counter += 1
-		
-		if counter >= rocks_limit:
-			break
 		
 func update_gravity(_gravity_scale : float) -> void:
 	#var counter := 0

@@ -20,10 +20,6 @@ var can_fire_weapon := true
 @export var player_gun : Node3D
 @export var view_limit := 100.0
 
-## Seconds to cover this many world units (rock plane distance from origin).
-## power_bullet_speed is "time for this distance"; farther shots take longer at constant speed.
-const BULLET_REFERENCE_DISTANCE := 23.0
-
 var power_target_circle := 60.0
 var power_bullet_speed = 30.0
 var power_bullet_damage : int = 1
@@ -240,15 +236,8 @@ func _reset_pitch_adjustment() -> void:
 func _cannot_shoot() -> void:
 	process_mode = Node.PROCESS_MODE_DISABLED
 	
-## Convert upgrade "seconds for 23 units" into travel time for this shot distance.
-func bullet_travel_time(from_pos: Vector3, to_pos: Vector3, seconds_per_reference: float) -> float:
-	if seconds_per_reference <= 0.0:
-		return 0.0
-	return from_pos.distance_to(to_pos) * seconds_per_reference / BULLET_REFERENCE_DISTANCE
-
-
-func process_target_hit(target, damage, screen_offset, travel_time: float) -> void:
-	await get_tree().create_timer(travel_time).timeout
+func process_target_hit(target, damage, screen_offset) -> void:
+	await get_tree().create_timer(power_bullet_speed).timeout
 	if is_instance_valid(target):
 		target.hit_by_player(
 			damage,
@@ -351,20 +340,16 @@ func shoot_target() -> void:
 			damage = 0
 			power_bullet_speed /= 4
 
-		var shot_speed : float= power_bullet_speed
-		if not spawn_projectile(target, shot_speed):
+		if not spawn_projectile(target, power_bullet_speed):
 			break
 
 		var rock_screen_pos = stable_camera.unproject_position(target.global_position)
 		var screen_offset = rock_screen_pos - crosshair.global_position
-		var from_pos : Vector3 = player_gun.get_barrel_position().origin
-		var travel_time := bullet_travel_time(from_pos, target.global_position, shot_speed)
 
 		process_target_hit.call_deferred(
 			target,
 			damage,
-			screen_offset,
-			travel_time
+			screen_offset
 		)
 
 		if time_ran_out:
@@ -420,16 +405,13 @@ func shoot_early_exit_if_aimed() -> bool:
 	if exit_target.has_method('start_bullet_to_target'):
 		exit_target.start_bullet_to_target()
 
-	var shot_speed : float= power_bullet_speed
-	if not spawn_projectile(exit_target, shot_speed, Vector3.ZERO, true):
+	if not spawn_projectile(exit_target, power_bullet_speed, Vector3.ZERO, true):
 		round_manager.bullet_active = false
 		return false
 
 	var rock_screen_pos = stable_camera.unproject_position(exit_target.global_position)
 	var screen_offset = rock_screen_pos - crosshair.global_position
-	var from_pos :Vector3 = player_gun.get_barrel_position().origin
-	var travel_time := bullet_travel_time(from_pos, exit_target.global_position, shot_speed)
-	process_target_hit.call_deferred(exit_target, power_bullet_damage, screen_offset, travel_time)
+	process_target_hit.call_deferred(exit_target, power_bullet_damage, screen_offset)
 	return true
 	
 	
@@ -595,9 +577,7 @@ func shoot_shootable_object(hit: Dictionary) -> void:
 	process_shootable_hit.call_deferred(hit_position, hit_normal)
 
 func process_shootable_hit(hit_position: Vector3, hit_normal: Vector3) -> void:
-	var from_pos :Vector3 = player_gun.get_barrel_position().origin
-	var travel_time := bullet_travel_time(from_pos, hit_position, power_bullet_speed)
-	await get_tree().create_timer(travel_time).timeout
+	await get_tree().create_timer(power_bullet_speed).timeout
 	explode_at_point(hit_position, hit_normal)
 
 

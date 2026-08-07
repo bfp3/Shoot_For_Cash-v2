@@ -1,34 +1,22 @@
 extends Node3D
 
-## Must match player_shooting_weapon.BULLET_REFERENCE_DISTANCE.
-## _bullet_speed is seconds to cover this many units; travel duration scales with distance.
-const BULLET_REFERENCE_DISTANCE := 23.0
-
 var target_node : Node3D = null
 var target_position : Vector3
 var has_target_node := false
 
 var power_bullet_damage := 1
-var power_bullet_speed := 1.0 # travel duration for this shot (seconds)
+var power_bullet_speed := 1.0 # travel time in seconds
 var start_position : Vector3
 var elapsed_time := 0.0
-
-
-func _travel_duration(distance: float, seconds_per_reference: float) -> float:
-	if seconds_per_reference <= 0.0:
-		return 0.0
-	return distance * seconds_per_reference / BULLET_REFERENCE_DISTANCE
 
 
 func bullet_setup(_target_node : Node3D, _bullet_speed : float) -> void:
 	target_node = _target_node
 	has_target_node = true
+	power_bullet_speed *= 0.9
+	power_bullet_speed = _bullet_speed
 	start_position = global_position
 	elapsed_time = 0.0
-	power_bullet_speed = _travel_duration(
-		start_position.distance_to(_target_node.global_position),
-		_bullet_speed
-	)
 	set_physics_process(true)
 
 
@@ -36,12 +24,10 @@ func bullet_setup_no_target(_target_position : Vector3, _bullet_speed : float) -
 	target_node = null
 	has_target_node = false
 	target_position = _target_position
+	power_bullet_speed *= 0.9
+	power_bullet_speed = _bullet_speed
 	start_position = global_position
 	elapsed_time = 0.0
-	power_bullet_speed = _travel_duration(
-		start_position.distance_to(target_position),
-		_bullet_speed
-	)
 	set_physics_process(true)
 
 
@@ -51,11 +37,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	elapsed_time += delta
-	var progress : float
-	if power_bullet_speed <= 0.0:
-		progress = 1.0
-	else:
-		progress = clamp(elapsed_time / power_bullet_speed, 0.0, 1.0)
+	var progress : float = clamp(elapsed_time / power_bullet_speed, 0.0, 1.0)
 
 	var current_target_pos : Vector3
 	if has_target_node:

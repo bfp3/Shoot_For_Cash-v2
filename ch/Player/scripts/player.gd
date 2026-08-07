@@ -21,6 +21,8 @@ var _current_shrink_duration := 0.5
 @export var scope_min_target_circle := 20.0
 @export var scope_return_duration := 0.3
 @export var scope_shrink_delay_dur := 0.4
+## Max scope size while holding right-click, as a multiple of resting radius (1.0 = no grow).
+const SCOPE_EXPAND_MAX_SCALE := 1.85
 
 @export var can_right_click_shoot := false
 
@@ -30,7 +32,10 @@ var max_ammo := 0
 
 var game_lost := false
 
+enum ScopeMode { NONE, SHRINK, EXPAND }
+var _scope_mode := ScopeMode.NONE
 var _scope_at_min := false
+var _scope_at_max := false
 var scope_base_scale := 1.0              # resting visual scale set by tween_scope()
 @export var scope_base_target_circle := 60.0     # resting real hit-radius, captured on press
 var scope_hold_time := 0.0
@@ -67,8 +72,6 @@ var _is_currently_shooting := false
 @export_group('Player Upgradeable Stats')
 var power_target_circle := 0.0
 var power_gun_fire_rate := 0.0
-	## Seconds to travel BULLET_REFERENCE_DISTANCE (23 units). Lower = faster.
-	## Actual travel time scales with distance: farther targets take longer.
 var power_bullet_speed = 0.0
 var power_bullet_damage : int = 1
 var power_bullet_delay := 0.5 #0.15
@@ -307,28 +310,20 @@ func _process(delta: float) -> void:
 		#fire_weapon()
 		
 	if Input.is_action_just_released("shootWeapon"):
-		weapon_shooting.shot_with_right_click = false
+		#weapon_shooting.shot_with_right_click = false
 		fire_weapon()
 	
 	
 	if Input.is_action_just_released("shoot_weapon_2"):
-		if gl_PlayerState.dataset.power_sky_mine > 0:
-			weapon_shooting.shooting_sky_mine = true
-			fire_weapon()
-		else:
-			weapon_shooting.play_missed_sounds()
-	
-	if Input.is_action_just_released("shoot_weapon_2") && can_right_click_shoot:
-		weapon_shooting.shot_with_right_click = true
 		fire_weapon()
-		
-	#if Input.is_action_pressed("shoot_weapon_2"):
-		#weapon_shooting.shot_with_right_click = true
-		#
-	#if Input.is_action_just_released("shoot_weapon_2"):
-		#weapon_shooting.shot_with_right_click = false
+		#if gl_PlayerState.dataset.power_sky_mine > 0:
+			##weapon_shooting.shooting_sky_mine = true
+			#fire_weapon()
+		#else:
+			##weapon_shooting.shot_with_right_click = false
+			#fire_weapon()
 	
-	handle_scope_shrink(delta)
+	handle_scope_adjust(delta)
 	
 	#if Input.is_action_pressed("shootWeapon"):
 		#return
@@ -494,7 +489,7 @@ func update_player_stats() -> void:
 	power_bullet_delay = set_power(settings, 'power_bullet_delay')
 	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
 
-	#power_gun_fire_rate = 0.05
+	power_gun_fire_rate = 0.05
 	#power_bullet_speed = 0.1
 	#power_target_circle = 60.0
 	
@@ -569,63 +564,94 @@ func tween_scope(_scale_multiplier : float, _dur : float = 0.75) -> void:
 	increase_scope_tween.tween_property(%Inner_scope, "scale", Vector2.ONE * _scale_multiplier, _dur)
 
 func _on_scope_shrink_sfx_finished() -> void:
-	if _scope_at_min:
+	if _scope_at_min or _scope_at_max:
 		return
 		
 	if _is_holding_shoot and scope_hold_time >= scope_shrink_delay_dur:
 		scope_shrink_sfx.play()
 		
 		
-func handle_scope_shrink(delta: float) -> void:
-	if Input.is_action_pressed("shootWeapon"):
-		if not _is_holding_shoot:
-			_is_holding_shoot = true
-			scope_hold_time = 0.0
-			scope_base_target_circle = power_target_circle   # stable source, not the live/transient value
-			_scope_at_min = false
-			if _shrink_return_tween:
-				_shrink_return_tween.kill()
+func handle_scope_adjust(delta: float) -> void:
+	var shrink_held := Input.is_action_pressed("shootWeapon")
+	var expand_held := Input.is_action_pressed("shoot_weapon_2")
 
-			var size_ratio :float = clamp(
-				(scope_base_target_circle - scope_shrink_reference_circle) / scope_shrink_reference_circle,
-				0.0, 1.0
-			)
-			_current_shrink_duration = scope_shrink_duration + (size_ratio * scope_shrink_large_bonus)
-
-		scope_hold_time += delta
-
-		if scope_hold_time < scope_shrink_delay_dur:
-			return
-
-		if _scope_at_min:
-			return
-
-		if not scope_shrink_sfx.playing && scope_hold_time < (scope_shrink_delay_dur + 0.2):
-			scope_shrink_sfx.play()
-
-		var t :float = clamp((scope_hold_time - scope_shrink_delay_dur) / _current_shrink_duration, 0.0, 1.0)
-		var new_target_circle : float = lerp(scope_base_target_circle, scope_min_target_circle, t)
-
-		var shrink_ratio := new_target_circle / scope_base_target_circle
-
-		scope_shrink_sfx.pitch_scale += lerp(
-			scope_shrink_sfx_min_pitch,
-			scope_shrink_sfx_max_pitch,
-			0.005
-		)
-
-		weapon_shooting.power_target_circle = new_target_circle
-		%Inner_scope.scale = Vector2.ONE * (scope_base_scale * shrink_ratio)
-
-		if t >= 1.0:
-			_scope_at_min = true
-
+	if shrink_held and _scope_mode != ScopeMode.EXPAND:
+		_update_scope_hold(ScopeMode.SHRINK, delta)
+	elif expand_held and _scope_mode != ScopeMode.SHRINK:
+		_update_scope_hold(ScopeMode.EXPAND, delta)
 	elif _is_holding_shoot:
-		_is_holding_shoot = false
+		_release_scope_hold()
+
+
+func _update_scope_hold(mode: ScopeMode, delta: float) -> void:
+	if not _is_holding_shoot or _scope_mode != mode:
+		_is_holding_shoot = true
+		_scope_mode = mode
+		scope_hold_time = 0.0
+		scope_base_target_circle = power_target_circle
 		_scope_at_min = false
-		scope_shrink_sfx.stop()
-		scope_shrink_sfx.pitch_scale = scope_shrink_sfx_min_pitch
-		_tween_scope_back_to_base()
+		_scope_at_max = false
+		if _shrink_return_tween:
+			_shrink_return_tween.kill()
+
+		var size_ratio : float = clamp(
+			(scope_base_target_circle - scope_shrink_reference_circle) / scope_shrink_reference_circle,
+			0.0, 1.0
+		)
+		_current_shrink_duration = scope_shrink_duration + (size_ratio * scope_shrink_large_bonus)
+
+	scope_hold_time += delta
+
+	if scope_hold_time < scope_shrink_delay_dur:
+		return
+
+	if (mode == ScopeMode.SHRINK and _scope_at_min) or (mode == ScopeMode.EXPAND and _scope_at_max):
+		return
+
+	if not scope_shrink_sfx.playing and scope_hold_time < (scope_shrink_delay_dur + 0.2):
+		scope_shrink_sfx.play()
+
+	var t : float = clamp(
+		(scope_hold_time - scope_shrink_delay_dur) / maxf(_current_shrink_duration, 0.001),
+		0.0,
+		1.0
+	)
+	var goal_circle := scope_min_target_circle
+	if mode == ScopeMode.EXPAND:
+		goal_circle = scope_base_target_circle * SCOPE_EXPAND_MAX_SCALE
+
+	var new_target_circle : float = lerp(scope_base_target_circle, goal_circle, t)
+	var scale_ratio := new_target_circle / maxf(scope_base_target_circle, 0.001)
+
+	scope_shrink_sfx.pitch_scale += lerp(
+		scope_shrink_sfx_min_pitch,
+		scope_shrink_sfx_max_pitch,
+		0.005
+	)
+
+	weapon_shooting.power_target_circle = new_target_circle
+	%Inner_scope.scale = Vector2.ONE * (scope_base_scale * scale_ratio)
+
+	if t >= 1.0:
+		if mode == ScopeMode.SHRINK:
+			_scope_at_min = true
+		else:
+			_scope_at_max = true
+
+
+func _release_scope_hold() -> void:
+	_is_holding_shoot = false
+	_scope_mode = ScopeMode.NONE
+	_scope_at_min = false
+	_scope_at_max = false
+	scope_shrink_sfx.stop()
+	scope_shrink_sfx.pitch_scale = scope_shrink_sfx_min_pitch
+	_tween_scope_back_to_base()
+
+
+## Backward-compatible alias.
+func handle_scope_shrink(delta: float) -> void:
+	handle_scope_adjust(delta)
 
 
 func _tween_scope_back_to_base() -> void:
