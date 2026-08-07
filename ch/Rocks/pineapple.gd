@@ -478,6 +478,13 @@ func _on_start_falling_timer_timeout() -> void:
 	
 
 func smoke_particles() -> void:
+	# #region agent log
+	var _phys := global_position
+	var _interp := get_global_transform_interpolated().origin
+	var _aoe_before :Vector3= $AoE.global_position
+	var _expl : Vector3= $Explosion_area.global_position
+	var _expl_interp = $Explosion_area.get_global_transform_interpolated().origin
+	# #endregion
 	$AoE.global_position = global_position
 	$AoE.play_particles = true
 
@@ -495,6 +502,8 @@ func smoke_particles_duplicates() -> void:
 	add_child(_new_particles)
 	#get_tree().get_current_scene().add_child(_new_particles)
 	_new_particles.global_position = global_position
+
+	# #endregion
 	
 	var _new_sparks : GPUParticles3D = $Sparks01.duplicate()
 	if !_new_sparks:
@@ -618,6 +627,7 @@ func _on_hit_wall_timer_timeout() -> void:
 		
 	else:
 		$hit_wall_timer.start()
+
 
 
 func _on_explosion_area_body_entered(body: Node3D) -> void:

@@ -253,9 +253,9 @@ func round_end_check_rock_status() -> void:
 
 func update_disabled() -> void:
 	update_gravity(1.0)
-	await get_tree().create_timer(2.0).timeout
-	disable_collision()
-	remove_from_group('Target')
+	#await get_tree().create_timer(2.0).timeout
+	#disable_collision()
+	#remove_from_group('Target')
 
 
 
@@ -1161,6 +1161,8 @@ func expand_blast_radius() -> void:
 func standard_blast() -> void:
 
 	var blast_node : Area3D = $Explosion_area
+
+	# #endregion
 	blast_node.show()
 	%explosion_radius_mesh.show()
 	blast_node.monitoring = true
@@ -1195,21 +1197,15 @@ func smoke_particles() -> void:
 		$Hazard_AoE2.play_particles = true
 		
 	else:
+		# #region agent log
+		var _phys := global_position
+		var _interp := get_global_transform_interpolated().origin
+		var _expl_interp = $Explosion_area.get_global_transform_interpolated().origin
+		# #endregion
 		$AoE.global_position = global_position
 		$AoE.play_particles = true
 
-
-func hazard_smoke_particles_duplicates() -> void:
-	var _new_particles : GPUParticles3D = $Smoke_quick.duplicate()
-
-	if !_new_particles:
-		return
-		
-	_new_particles.emitting = true
-	_new_particles.duplicate_particles = true
-	_new_particles.show()
-	get_tree().get_current_scene().add_child(_new_particles)
-	_new_particles.global_position = global_position
+		# #endregion
 
 
 func smoke_particles_duplicates() -> void:
@@ -1225,6 +1221,8 @@ func smoke_particles_duplicates() -> void:
 	#add_child(_new_particles)
 	#get_tree().get_current_scene().add_child(_new_particles)
 	_new_particles.global_position = global_position
+	# #region agent log
+
 	
 	var _new_sparks : GPUParticles3D = $Sparks01 #.duplicate()
 	if !_new_sparks:
@@ -1243,6 +1241,22 @@ func smoke_particles_duplicates() -> void:
 	#_new_sparks.show()
 	#_new_sparks.global_position = global_position
 	#_new_sparks.emitting = true
+
+
+
+
+func hazard_smoke_particles_duplicates() -> void:
+	var _new_particles : GPUParticles3D = $Smoke_quick.duplicate()
+
+	if !_new_particles:
+		return
+		
+	_new_particles.emitting = true
+	_new_particles.duplicate_particles = true
+	_new_particles.show()
+	get_tree().get_current_scene().add_child(_new_particles)
+	_new_particles.global_position = global_position
+
 
 func start_bullet_to_target() -> void:
 	play_accurate_sounds()
