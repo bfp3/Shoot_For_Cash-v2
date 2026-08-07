@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://5pemc5g1d7pl" path="res://ch/Shop/start_menu_shop_clone.gd" id="1_djhmw"]
 [ext_resource type="PackedScene" uid="uid://cu0bay1llw7ua" path="res://unfiled/upgrade_tree/UpgradeNode.tscn" id="2_2hdnu"]
 [ext_resource type="PackedScene" uid="uid://bxx83kupf6rgj" path="res://ch/2D_pieces/top_red_panel.tscn" id="2_djhmw"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="4_jgqed"]
 [ext_resource type="Script" uid="uid://dl5jnr0o3adsf" path="res://ch/Shop/gun_upgrade_node.gd" id="6_jgqed"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="7_jgqed"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="11_nlwxl"]
@@ -56,6 +57,70 @@ seamless = true
 [sub_resource type="PrismMesh" id="PrismMesh_hi3s5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jgqed"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.39, 0.39, 0.39, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1babl"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.39, 0.39, 0.39, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ajb5j"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.39, 0.39, 0.39, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vy88d"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.39, 0.39, 0.39, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="Start_menu_shop_clone" type="Control" unique_id=973405492 node_paths=PackedStringArray("reveal_skill_sfx") groups=["restartable"]]
 layout_mode = 3
@@ -142,12 +207,68 @@ scale = Vector2(500.04907, 83.460556)
 mesh = SubResource("PrismMesh_hi3s5")
 
 [node name="SpacePanel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=763162626]
-custom_minimum_size = Vector2(0, 170)
+custom_minimum_size = Vector2(0, 103.595)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1502658315]
+custom_minimum_size = Vector2(0, 268.78)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 65
+theme_override_constants/v_separation = 38
+columns = 2
+
+[node name="Button" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/GridContainer" unique_id=2099686615 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+theme_override_font_sizes/font_size = 51
+theme_override_styles/normal = SubResource("StyleBoxFlat_jgqed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_1babl")
+text = "Solo"
+script = ExtResource("4_jgqed")
+focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
+wiggle_amount = 1.1
+
+[node name="Button2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/GridContainer" unique_id=1410574905]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+theme_override_colors/font_disabled_color = Color(0.64, 0.6101333, 0.5888, 1)
+theme_override_font_sizes/font_size = 51
+theme_override_styles/normal = SubResource("StyleBoxFlat_ajb5j")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_vy88d")
+disabled = true
+text = "Multiplayer"
+
+[node name="Button3" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/GridContainer" unique_id=1004880074]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+theme_override_colors/font_disabled_color = Color(0.64, 0.6101333, 0.5888, 1)
+theme_override_font_sizes/font_size = 51
+theme_override_styles/normal = SubResource("StyleBoxFlat_ajb5j")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_vy88d")
+disabled = true
+text = "Free Play"
+
+[node name="Button4" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/GridContainer" unique_id=1532106151]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+theme_override_colors/font_disabled_color = Color(0.64, 0.6101333, 0.5888, 1)
+theme_override_font_sizes/font_size = 51
+theme_override_styles/normal = SubResource("StyleBoxFlat_ajb5j")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_vy88d")
+disabled = true
+text = "Battle"
+
 [node name="TreePanel" type="Control" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1314206077]
+visible = false
 layout_mode = 2
 
 [node name="CoatArms" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=730722553 instance=ExtResource("7_jgqed")]
@@ -181,6 +302,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1309567494]
+visible = false
 custom_minimum_size = Vector2(50, 170)
 layout_mode = 2
 mouse_filter = 2
@@ -286,5 +408,7 @@ pitch_scale = 2.0
 stream = ExtResource("37_10lj2")
 volume_db = -30.0
 pitch_scale = 0.5
+
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/GridContainer/Button" to="CenterContainer/MainPanel/VBoxContainer/TreePanel/AddGun" method="_on_button_down"]
 
 [editable path="TopRedPanel"]

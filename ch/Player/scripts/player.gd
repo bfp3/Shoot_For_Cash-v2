@@ -67,6 +67,8 @@ var _is_currently_shooting := false
 @export_group('Player Upgradeable Stats')
 var power_target_circle := 0.0
 var power_gun_fire_rate := 0.0
+	## Seconds to travel BULLET_REFERENCE_DISTANCE (23 units). Lower = faster.
+	## Actual travel time scales with distance: farther targets take longer.
 var power_bullet_speed = 0.0
 var power_bullet_damage : int = 1
 var power_bullet_delay := 0.5 #0.15

@@ -267,43 +267,40 @@ func _build_timed_event_schedule(sequence: Array) -> Array:
 	return schedule
 	
 func update_prepare_rocks() -> void:
-	
-	
 	var temp_rock_array : Array = manual_rock_sequence
 	splash_zone.reset_detected_bodies()
-	rocks_limit = temp_rock_array.size()
-
-	var active_bodies : Array = []
 
 	var container_children := $Container_1.get_children()
-	if rocks_limit > container_children.size():
-		printt("Exceeding the number of rocks in the scene." % [rocks_limit, container_children.size()])
-		rocks_limit = container_children.size()
 
-	var counter := 0
+	# Leftover ACTIVE rocks become DISABLED at wave end and were previously skipped,
+	# which permanently shrank the pool until the next full INACTIVE reset.
+	# Reclaim every slot before assigning the new sequence.
 	for i in container_children:
-		if i.current_state == i.State.DISABLED:
-			continue
-		if counter < rocks_limit:
-			active_bodies.append(i)
-		else:
+		if i.current_state != i.State.INACTIVE:
 			i.enter_state(i.State.INACTIVE)
-		counter += 1
+
+	rocks_limit = mini(temp_rock_array.size(), container_children.size())
+	if temp_rock_array.size() > container_children.size():
+		push_warning(
+			"Rock sequence needs %d rocks but only %d in the scene."
+			% [temp_rock_array.size(), container_children.size()]
+		)
+
+	var active_bodies : Array = []
+	for i in container_children.size():
+		var body = container_children[i]
+		if i < rocks_limit:
+			active_bodies.append(body)
+		else:
+			body.enter_state(body.State.INACTIVE)
 
 	assign_manual_rock_positions(active_bodies)
 
-	var pointer : int = 0
-	
-	var c := 0
-	for entry in temp_rock_array:
-		#if active_bodies[pointer].current_state == active_bodies[pointer].State.DISABLED:
-			#continue
-		if c >= rocks_limit:
+	for pointer in rocks_limit:
+		if pointer >= active_bodies.size():
 			break
-		active_bodies[pointer].rock_type = _spawn_entry_to_rock_type(entry)
+		active_bodies[pointer].rock_type = _spawn_entry_to_rock_type(temp_rock_array[pointer])
 		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
-		pointer += 1
-		c += 1
 
 
 func _spawn_entry_to_rock_type(entry) -> int:

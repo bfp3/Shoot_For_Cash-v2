@@ -38,8 +38,8 @@ func play_reload_fill(from_amount: int, to_amount: int) -> void:
 
 	if ammo_label:
 		var base_scale := Vector2.ONE
-		_reload_tween.parallel().tween_property(ammo_label, "scale", base_scale * 1.5, duration * 0.4)
-		_reload_tween.tween_interval(0.25)
+		_reload_tween.parallel().tween_property(ammo_label, "scale", base_scale * 1.35, duration * 0.2)
+		_reload_tween.tween_interval(0.18)
 		_reload_tween.tween_property(ammo_label, "scale", base_scale, 0.12)
 
 
@@ -50,4 +50,4 @@ func _set_display_ammo(value: float) -> void:
 
 func _update_label(amount: int) -> void:
 	if ammo_label:
-		ammo_label.text = str(amount).pad_zeros(2)
+		ammo_label.text = '[wave]' + str(amount).pad_zeros(2)

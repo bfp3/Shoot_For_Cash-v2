@@ -640,7 +640,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		var stagger_i := _blast_destroy_stagger_index
 		_blast_destroy_stagger_index += 1
 		await get_tree().create_timer(
-			float(stagger_i) * BLAST_DESTROY_STAGGER_SEC + randf_range(0.05, 0.1),
+			float(stagger_i) * BLAST_DESTROY_STAGGER_SEC,
 			false
 		).timeout
 		if is_instance_valid(body):
