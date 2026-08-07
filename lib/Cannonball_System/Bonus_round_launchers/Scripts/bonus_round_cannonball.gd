@@ -1,7 +1,7 @@
 extends CharacterBody3D
 const BOMBS_LANDING_IN_THE_DISTANCE = preload('uid://disfcwr18xhfw')
 
-const RED_TAKEN_OUT_SFX = preload("res://sfx/pineapple_sound_3.wav")
+#const RED_TAKEN_OUT_SFX = preload("res://sfx/pineapple_sound_3.wav")
 const SMOKE_LINGERING = preload("res://res/Particles/Smoke_particles/Smoke_lingering.tscn")
 const ARROW_AREA_3D = preload("res://ch/weapons/bullet_area3D.tscn")
 
@@ -286,13 +286,13 @@ func destroy_siblings() -> void:
 					await get_tree().create_timer(0.25).timeout
 
 
-func play_red_hit_sfx() -> void:
-	await get_tree().create_timer(0.5).timeout
-	CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 0.75)
-	await get_tree().create_timer(0.1).timeout
-	CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.75)
-	CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.0)
-	
+func play_red_hit_sfx() -> void:pass
+	#await get_tree().create_timer(0.5).timeout
+	#CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 0.75)
+	#await get_tree().create_timer(0.1).timeout
+	#CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.75)
+	#CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.0)
+	#
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	

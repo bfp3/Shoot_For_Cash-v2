@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bq8mainlofi01"]
 
-[ext_resource type="Script" path="res://sc/main_lofi.gd" id="1_lofi"]
+[ext_resource type="Script" uid="uid://bdk7cc0wgs8bs" path="res://sc/main_lofi.gd" id="1_lofi"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_panel"]
 
-[node name="MainLofi" type="Control"]
+[node name="MainLofi" type="Control" unique_id=565383636]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lofi")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=202186877]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +21,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.921569, 0.878431, 0.847059, 1)
 
-[node name="MiniGameHost" type="Control" parent="."]
+[node name="MiniGameHost" type="Control" parent="." unique_id=1079209508]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,7 +30,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=935013644]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -38,63 +38,63 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Center"]
+[node name="Panel" type="PanelContainer" parent="Center" unique_id=1770451071]
 custom_minimum_size = Vector2(520, 520)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("2_panel")
 
-[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=1016870254]
 layout_mode = 2
 theme_override_constants/margin_left = 36
 theme_override_constants/margin_top = 28
 theme_override_constants/margin_right = 36
 theme_override_constants/margin_bottom = 28
 
-[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin" unique_id=1374443740]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Title" type="Label" parent="Center/Panel/Margin/VBox"]
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox" unique_id=1112045186]
 layout_mode = 2
 theme_override_font_sizes/font_size = 56
 text = "Shoot For Cash"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Center/Panel/Margin/VBox"]
+[node name="Subtitle" type="Label" parent="Center/Panel/Margin/VBox" unique_id=1846317694]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Quick Start"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Center/Panel/Margin/VBox"]
+[node name="Spacer" type="Control" parent="Center/Panel/Margin/VBox" unique_id=160218528]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
-[node name="GoToIntro" type="Button" parent="Center/Panel/Margin/VBox"]
+[node name="GoToIntro" type="Button" parent="Center/Panel/Margin/VBox" unique_id=1451061596]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 40
 text = "Go to Intro"
 
-[node name="GoToMoss" type="Button" parent="Center/Panel/Margin/VBox"]
+[node name="GoToMoss" type="Button" parent="Center/Panel/Margin/VBox" unique_id=595319992]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 40
 text = "Go to Moss"
 
-[node name="GoToRedd" type="Button" parent="Center/Panel/Margin/VBox"]
+[node name="GoToRedd" type="Button" parent="Center/Panel/Margin/VBox" unique_id=544931865]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 40
 text = "Go to Redd"
 
-[node name="GoToGlory" type="Button" parent="Center/Panel/Margin/VBox"]
+[node name="GoToGlory" type="Button" parent="Center/Panel/Margin/VBox" unique_id=1268680644]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 40
 text = "Go to Glory"
 
-[node name="GoToTesting" type="Button" parent="Center/Panel/Margin/VBox"]
+[node name="GoToTesting" type="Button" parent="Center/Panel/Margin/VBox" unique_id=1640537549]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 40

@@ -114,10 +114,10 @@ func _smoke_particles_2() -> void:
 # (Optional) Smoke destruction animation for win sequence
 func smoke_up() -> void:
 	if $launch_sound:
-		var launch_sound_dup = preload("res://sfx/Arrow_release.wav")
-		var pitch_fluc = randf_range(0.05, 0.15)
-		var vol_fluc = randf_range(10.0, 15.0)
-		CommonCode.play_sound_instance_pitch_adjusted(launch_sound_dup, $launch_sound.volume_db - vol_fluc, pitch_fluc)
+		#var launch_sound_dup = preload("res://sfx/Arrow_release.wav")
+		#var pitch_fluc = randf_range(0.05, 0.15)
+		#var vol_fluc = randf_range(10.0, 15.0)
+		#CommonCode.play_sound_instance_pitch_adjusted(launch_sound_dup, $launch_sound.volume_db - vol_fluc, pitch_fluc)
 		smoke_particles_destruction()
 
 func smoke_particles_destruction() -> void:

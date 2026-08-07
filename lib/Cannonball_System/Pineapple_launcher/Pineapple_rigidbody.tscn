@@ -6,7 +6,6 @@
 [ext_resource type="Material" uid="uid://e8bc1s83coly" path="res://ch/Egg/Materials/White_egg_basic_material.tres" id="3_0rsd5"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="4_7dn1e"]
 
-
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_k16rs"]
 bounce = 1.0
 
@@ -172,66 +171,66 @@ height = 0.025
 radial_segments = 4
 rings = 7
 
-[node name="Pineapple_round" type="RigidBody3D"]
+[node name="Pineapple_round" type="RigidBody3D" unique_id=1766943978]
 transform = Transform3D(1, 0, 8.74226e-08, 0, 0.999998, 0, -8.74228e-08, 0, 0.999998, 0, 0, 0)
 physics_material_override = SubResource("PhysicsMaterial_k16rs")
 script = ExtResource("1_k16rs")
 metadata/intended_color = Color(0, 0, 0, 1)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=626481533]
 transform = Transform3D(1, -8.74226e-08, -8.74226e-08, 8.74226e-08, 1, 1.06582e-14, 8.74226e-08, -1.83009e-14, 1, -1.28023e-15, 0.021687, -0.000500203)
 visible = false
 shape = SubResource("CapsuleShape3D_k16rs")
 
-[node name="Mesh" type="Node3D" parent="."]
+[node name="Mesh" type="Node3D" parent="." unique_id=1184478982]
 transform = Transform3D(0.324, 0, 0, 0, 0.324, 0, 0, 0, 0.324, 0, 0, 0)
 
-[node name="Egg_shape" type="MeshInstance3D" parent="Mesh"]
+[node name="Egg_shape" type="MeshInstance3D" parent="Mesh" unique_id=1774788276]
 transform = Transform3D(0.39, 0, 0, 0, 0.39, 0, 0, 0, 0.39, 0, 0, 0)
 layers = 2
 material_override = ExtResource("2_0k4un")
 mesh = SubResource("ArrayMesh_c646m")
 skeleton = NodePath("")
 
-[node name="Mesh2" type="Node3D" parent="."]
+[node name="Mesh2" type="Node3D" parent="." unique_id=584867551]
 transform = Transform3D(0.125, 0, 0, 0, 0.125, 0, 0, 0, 0.125, 0, 0, 0)
 visible = false
 
-[node name="Pineapple" type="Node3D" parent="Mesh2"]
+[node name="Pineapple" type="Node3D" parent="Mesh2" unique_id=1609315740]
 transform = Transform3D(9.73, 0, 0, 0, 9.73, 0, 0, 0, 9.73, 0, 0, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Mesh2/Pineapple"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mesh2/Pineapple" unique_id=1454447928]
 mesh = SubResource("CapsuleMesh_edjoi")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Mesh2/Pineapple"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Mesh2/Pineapple" unique_id=1734086486]
 transform = Transform3D(0.707107, 1.49012e-08, -0.707107, 0.707107, 2.98023e-08, 0.707107, 1.49012e-08, -1, 1.49012e-08, 0, 0.131343, 0)
 mesh = SubResource("PlaneMesh_j7avg")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D6" type="MeshInstance3D" parent="Mesh2/Pineapple"]
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="Mesh2/Pineapple" unique_id=24322315]
 transform = Transform3D(1.12609, 0.137408, 0.0230085, -0.138016, 0.997518, 0.356246, 0.0332671, -0.512813, 0.699131, -0.000245094, 0.131343, 0.000908375)
 mesh = SubResource("PlaneMesh_j7avg")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Mesh2/Pineapple"]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Mesh2/Pineapple" unique_id=2014374323]
 transform = Transform3D(0.328805, 7.45058e-09, -0.328805, 0.328805, 2.48241e-08, 0.328805, 2.23517e-08, -0.465, 3.72529e-08, -0.0481787, 0.130704, -0.0133796)
 mesh = SubResource("PlaneMesh_j7avg")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Mesh2/Pineapple"]
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Mesh2/Pineapple" unique_id=1323599003]
 transform = Transform3D(0.328805, 1.49012e-08, -0.328805, 0.328805, 2.48241e-08, 0.328805, 2.98023e-08, -0.465, 2.98023e-08, 0.0484133, 0.130704, 0.0125027)
 mesh = SubResource("PlaneMesh_j7avg")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="Mesh2/Pineapple"]
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Mesh2/Pineapple" unique_id=187012134]
 transform = Transform3D(0.328804, 2.23517e-08, -0.328805, 0.328805, 2.48241e-08, 0.328805, 4.47035e-08, -0.465, 1.49012e-08, 0.00427341, 0.130704, -0.0159512)
 mesh = SubResource("PlaneMesh_j7avg")
 skeleton = NodePath("../..")
 
-[node name="Particles" type="Node3D" parent="."]
+[node name="Particles" type="Node3D" parent="." unique_id=1594820253]
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="Particles"]
+[node name="Smoke_quick" type="GPUParticles3D" parent="Particles" unique_id=1610331609]
 transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 top_level = true
 visible = false
@@ -248,7 +247,7 @@ process_material = SubResource("ParticleProcessMaterial_ukdqb")
 draw_pass_1 = SubResource("QuadMesh_pkc0q")
 script = ExtResource("4_7dn1e")
 
-[node name="Trails" type="GPUParticles3D" parent="Particles"]
+[node name="Trails" type="GPUParticles3D" parent="Particles" unique_id=1539906697]
 amount = 20
 lifetime = 7.0
 speed_scale = 5.0
@@ -257,7 +256,7 @@ draw_order = 3
 process_material = SubResource("ParticleProcessMaterial_8cj0b")
 draw_pass_1 = SubResource("SphereMesh_0l0fl")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=861126021]
 wait_time = 5.0
 one_shot = true
 

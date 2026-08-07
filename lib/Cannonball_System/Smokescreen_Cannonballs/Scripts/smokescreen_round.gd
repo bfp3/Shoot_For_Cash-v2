@@ -1,6 +1,6 @@
 extends CharacterBody3D
 const BOMBS_LANDING_IN_THE_DISTANCE = preload('uid://disfcwr18xhfw')
-const RED_TAKEN_OUT_SFX = preload("res://sfx/pineapple_sound_3.wav")
+#const RED_TAKEN_OUT_SFX = preload("res://sfx/pineapple_sound_3.wav")
 const SMOKE_LINGERING = preload("res://res/Particles/Smoke_particles/Smoke_lingering.tscn")
 const ARROW_AREA_3D = preload("res://ch/weapons/bullet_area3D.tscn")
 
@@ -269,12 +269,12 @@ func was_hit_tween() -> void:
 
 
 
-func play_red_hit_sfx() -> void:
-	await get_tree().create_timer(0.5).timeout
-	CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 0.75)
-	await get_tree().create_timer(0.1).timeout
-	CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.75)
-	CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.0)
+func play_red_hit_sfx() -> void:pass
+	#await get_tree().create_timer(0.5).timeout
+	#CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 0.75)
+	#await get_tree().create_timer(0.1).timeout
+	#CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.75)
+	#CommonCode.play_sound_instance_pitch_adjusted(RED_TAKEN_OUT_SFX, -25.0, 1.0)
 	
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
@@ -300,34 +300,35 @@ func add_unique_marker(pos : Vector3) -> void:
 
 
 func instance_hud_feedback() -> void:
-	var new_feedback = get_tree().get_first_node_in_group("HUD_feedback_corner")
-	if new_feedback:
-		if special_bomb_undetected_on_radar:
-			GameManager.bombs_hit_by_player += ScoreGl.special_bonus_bomb
-			new_feedback.main_score_SPECIAL_flash()
-			new_feedback.main_score_update(ScoreGl.special_bonus_bomb)
-			return
-
-		else:
-			if will_hit_cage:
-				GameManager.bombs_hit_by_player += ScoreGl.red_dots
-				new_feedback.main_score_RED_flash()
-				new_feedback.main_score_update(ScoreGl.red_dots)
-				
-			else:
-				GameManager.bombs_hit_by_player += ScoreGl.grey_dots
-				new_feedback.main_score_GREY_flash()
-				new_feedback.main_score_update(ScoreGl.grey_dots)
+	pass
+	#var new_feedback = get_tree().get_first_node_in_group("HUD_feedback_corner")
+	#if new_feedback:
+		#if special_bomb_undetected_on_radar:
+			#GameManager.bombs_hit_by_player += ScoreGl.special_bonus_bomb
+			#new_feedback.main_score_SPECIAL_flash()
+			#new_feedback.main_score_update(ScoreGl.special_bonus_bomb)
+			#return
+#
+		#else:
+			#if will_hit_cage:
+				#GameManager.bombs_hit_by_player += ScoreGl.red_dots
+				#new_feedback.main_score_RED_flash()
+				#new_feedback.main_score_update(ScoreGl.red_dots)
+				#
+			#else:
+				#GameManager.bombs_hit_by_player += ScoreGl.grey_dots
+				#new_feedback.main_score_GREY_flash()
+				#new_feedback.main_score_update(ScoreGl.grey_dots)
 
 func instance_hud_missed_shot_feedback() -> void:
-	
-	GameManager.shots_missed_during_round += ScoreGl.grey_dots_astray
-	
-	var new_feedback = get_tree().get_first_node_in_group("HUD_feedback_corner")
-	if new_feedback:
-		if smokescreen:
-			new_feedback.points_added_blink_feedback(ScoreGl.smokescreen_rounds)
-			return
+	pass
+	#GameManager.shots_missed_during_round += ScoreGl.grey_dots_astray
+	#
+	#var new_feedback = get_tree().get_first_node_in_group("HUD_feedback_corner")
+	#if new_feedback:
+		#if smokescreen:
+			#new_feedback.points_added_blink_feedback(ScoreGl.smokescreen_rounds)
+			#return
 			
 			#new_feedback.points_added_blink_feedback(ScoreGl.grey_dots_astray)
 
