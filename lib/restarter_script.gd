@@ -1,7 +1,25 @@
 extends Node
 
 ## Debug-only Moss skip (Shift+M). Never runs in exported builds.
-var _moss_jump_busy := false
+var _level_jump_busy := false
+
+## Set by Main-lofi before loading Main.tscn — consumed once on boot.
+var pending_fast_travel_level := ""
+
+
+func clear_pending_fast_travel() -> void:
+	pending_fast_travel_level = ""
+
+
+func request_fast_travel(level_id: String) -> void:
+	pending_fast_travel_level = level_id.to_lower()
+	get_tree().change_scene_to_file("res://sc/Main.tscn")
+
+
+func take_pending_fast_travel() -> String:
+	var level := pending_fast_travel_level
+	pending_fast_travel_level = ""
+	return level
 
 
 func _input(event) -> void:
@@ -19,27 +37,35 @@ func _input(event) -> void:
 
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.shift_pressed and event.keycode == KEY_M:
-			debug_jump_to_moss()
+			debug_jump_to_level("moss")
 			return
 		if event.keycode == KEY_D and not event.shift_pressed and not event.ctrl_pressed and not event.alt_pressed:
 			if debug_open_level_editor():
 				get_viewport().set_input_as_handled()
 
 
-## Instant Moss: land on the open shop menu — do not start the round.
+## Instant range jump: land on the open shop menu — do not start the round.
 func debug_jump_to_moss() -> void:
-	if _moss_jump_busy:
+	await debug_jump_to_level("moss")
+
+
+func debug_jump_to_level(level_id: String) -> void:
+	level_id = level_id.to_lower()
+	if _level_jump_busy:
 		return
 
 	var round_manager = get_tree().get_first_node_in_group("round_manager")
 	if round_manager == null:
-		push_warning("DEBUG Shift+M: round_manager not found")
+		push_warning("DEBUG fast travel: round_manager not found")
 		return
 	if round_manager.transitioning_worlds:
 		return
+	if not round_manager.has_method("debug_restart_to_level"):
+		push_warning("DEBUG fast travel: round_manager missing debug_restart_to_level")
+		return
 
-	_moss_jump_busy = true
-	print("DEBUG: Shift+M → instant Moss (shop)")
+	_level_jump_busy = true
+	print("DEBUG: fast travel → instant %s (shop)" % level_id)
 
 	if get_tree().paused:
 		get_tree().paused = false
@@ -52,8 +78,8 @@ func debug_jump_to_moss() -> void:
 	gl_PlayerState.round_finished = false
 
 	# Reset other systems. Skip:
-	# - round_manager (instant moss path)
-	# - player balloon (instant moss adds it; restart has long awaits)
+	# - round_manager (instant level path)
+	# - player balloon (instant path adds it; restart has long awaits)
 	# - shop menus (their restart() calls CLOSE_MENU → SHOP_END → starts the round)
 	for node in get_tree().get_nodes_in_group("restartable"):
 		if node == round_manager:
@@ -69,8 +95,8 @@ func debug_jump_to_moss() -> void:
 		if node.has_method("restart"):
 			node.restart()
 
-	await round_manager.debug_restart_to_moss()
-	_moss_jump_busy = false
+	await round_manager.debug_restart_to_level(level_id)
+	_level_jump_busy = false
 
 
 ## Debug D: open level editor from the shop (closes shop UI, does not start a round).

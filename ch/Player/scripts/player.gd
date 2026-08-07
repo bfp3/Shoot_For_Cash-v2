@@ -4,9 +4,9 @@ class_name Player extends Node3D
 var is_mobile := OS.has_feature("mobile")
 var running_on_mobile := false
 
-const sensitivity_step := 0.2
+const sensitivity_step := 1.0
 const min_mouse_sensitivity := 1.0
-const max_mouse_sensitivity := 3.0
+const max_mouse_sensitivity := 10.0
 
 var keyboard_velocity := Vector2.ZERO
 
@@ -788,28 +788,18 @@ func _input(event: InputEvent) -> void:
 		return
 	
 	if !running_on_mobile and event is InputEventMouseMotion:
-		target_crosshair_position += event.relative * _mouse_sensitivity * gl_PlayerState.mouse_sensitivity
+		# Resolution-independent look: same screen-fraction motion on any monitor.
+		target_crosshair_position += GameSettings.mouse_look_delta(event.relative)
 	
 	elif event is InputEventMouseButton and event.pressed:
 		match event.button_index:
 			MOUSE_BUTTON_WHEEL_UP:
-				gl_PlayerState.mouse_sensitivity = clamp(
-					gl_PlayerState.mouse_sensitivity + sensitivity_step,
-					min_mouse_sensitivity,
-					max_mouse_sensitivity
-				)
-				
-				#$SFX/ScopeShrink.play()
-				print("Mouse sensitivity:", gl_PlayerState.mouse_sensitivity)
+				GameSettings.bump_mouse_sensitivity(1)
+				print("Mouse sensitivity:", GameSettings.mouse_sensitivity_level)
 
 			MOUSE_BUTTON_WHEEL_DOWN:
-				gl_PlayerState.mouse_sensitivity = clamp(
-					gl_PlayerState.mouse_sensitivity - sensitivity_step,
-					min_mouse_sensitivity,
-					max_mouse_sensitivity
-				)
-				#$SFX/ScopeShrink.play()
-				print("Mouse sensitivity:", gl_PlayerState.mouse_sensitivity)
+				GameSettings.bump_mouse_sensitivity(-1)
+				print("Mouse sensitivity:", GameSettings.mouse_sensitivity_level)
 
 
 

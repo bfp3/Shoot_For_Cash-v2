@@ -5,9 +5,11 @@ extends RigidBody2D
 enum RockKind { BASIC, BLACK, RED }
 
 @export var outline_color := Color(0.95, 0.82, 0.12, 1.0)
+@export var fill_color := Color(0.95, 0.826, 0.123, 1.0)  # for BASIC
 @export var black_color := Color(0.08, 0.08, 0.08, 1.0)
 @export var black_fill_color := Color(0.05, 0.05, 0.05, 1.0)
-@export var red_color := Color(0.78, 0.02, 0.02, 1.0)
+@export var red_color := Color(0.5, 0.5, 0.5, 1.0)
+@export var red_fill_color := Color(0.78, 0.78, 0.78, 0.686)
 @export var outline_width := 2.0
 
 @export_group("Physics Material")
@@ -84,7 +86,7 @@ func _ensure_collision() -> void:
 		shape_node.name = "CollisionShape2D"
 		add_child(shape_node)
 	var circle := CircleShape2D.new()
-	circle.radius = radius * 0.9
+	circle.radius = radius #* 0.9
 	shape_node.shape = circle
 
 
@@ -150,6 +152,14 @@ func get_draw_color() -> Color:
 		_:
 			return outline_color
 
+func get_fill_color() -> Color:
+	match kind:
+		RockKind.BLACK:
+			return black_fill_color
+		RockKind.RED:
+			return red_fill_color
+		_:
+			return fill_color
 
 func pulse(upward_impulse: float, x_impulse: float, fall_gravity: float, torque_impulse: float) -> void:
 	if pulsed or hit:
@@ -257,12 +267,14 @@ func _update_trail_from_history() -> void:
 func _draw() -> void:
 	if outline_points.size() < 2:
 		return
+
+	var fill := PackedVector2Array()
+	for i in outline_points.size() - 1:
+		fill.append(outline_points[i])
+	if fill.size() >= 3:
+		draw_colored_polygon(fill, get_fill_color())
+
 	if kind == RockKind.BLACK:
-		var fill := PackedVector2Array()
-		for i in outline_points.size() - 1:
-			fill.append(outline_points[i])
-		if fill.size() >= 3:
-			draw_colored_polygon(fill, black_fill_color)
 		draw_polyline(outline_points, black_color, outline_width, true)
 		var arm := radius * 0.45
 		draw_line(Vector2(-arm, -arm), Vector2(arm, arm), red_color, 3.0, true)

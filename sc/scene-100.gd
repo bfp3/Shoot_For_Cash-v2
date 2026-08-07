@@ -21,16 +21,21 @@ func _ready() -> void:
 	main_game_canvas.hide()
 
 	Parser.loadIslandFile('res://sc/island-shipper.txt')
-	
-
-	
 
 	# Compatibility / Web: compile shaders & particle pipelines before control.
 	#await ShaderWarmup.ensure_warmed()
 
+	var pending_level := RestarterScript.take_pending_fast_travel()
+	if pending_level != "":
+		await debug_bootstrap_gameplay()
+		gl_PlayerState.reset_level()
+		gl_PlayerState.round_finished = false
+		if round_manager and round_manager.has_method("debug_restart_to_level"):
+			await round_manager.debug_restart_to_level(pending_level)
+		return
+
 	if intro_title_screen:
 		start_intro_process()
-		
 	else:
 		start_game_quick()
 

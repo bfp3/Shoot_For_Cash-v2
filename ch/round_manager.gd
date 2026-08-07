@@ -1223,8 +1223,12 @@ func restart() -> void:
 	birds.start_birds()
 
 
-## Debug (Shift+M): same end-state as move_to_moss(), with no transition waits.
+## Debug (Shift+M / Main-lofi): same end-state as travel, with no transition waits.
 func debug_restart_to_moss() -> void:
+	await debug_restart_to_level("moss")
+
+
+func debug_restart_to_level(level_id: String) -> void:
 	current_sequence_index = 0
 	current_round = 0
 	current_wave = 0
@@ -1246,17 +1250,28 @@ func debug_restart_to_moss() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	birds.start_birds()
 
-	await move_to_moss_instant()
+	await move_to_level_instant(level_id)
 
 
 ## Instant Moss setup — everything move_to_moss() does at the end, no fade timers.
 func move_to_moss_instant() -> void:
+	await move_to_level_instant("moss")
+
+
+## Instant range setup for moss / redd / glory — no fade timers.
+func move_to_level_instant(level_id: String) -> void:
+	level_id = level_id.to_lower()
+	var layout_scene := _layout_for_level(level_id)
+	if layout_scene == null:
+		push_error('RoundManager: unknown level "%s" for instant travel' % level_id)
+		return
+
 	transitioning_worlds = true
 	player.display_hud()
 	gl_PlayerState.dataset["stage"] = 1
 	gl_PlayerState.dataset["reroll_unlocked"] = 1
 	gl_PlayerState.dataset["round"] = 1
-	gl_PlayerState.dataset["level_name"] = "moss"
+	gl_PlayerState.dataset["level_name"] = level_id
 	music_manager.stop_opening_song()
 
 	# Keep transition overlay off-screen (no slide animation).
@@ -1269,7 +1284,7 @@ func move_to_moss_instant() -> void:
 		await get_tree().process_frame
 
 	rocks_container.show()
-	var level_scenery = LEVEL_LAYOUT_01_MOSS.instantiate()
+	var level_scenery = layout_scene.instantiate()
 	level_layout.add_child(level_scenery)
 	level_scenery.name = 'current_level_layout'
 	await get_tree().process_frame
