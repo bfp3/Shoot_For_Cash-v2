@@ -781,12 +781,17 @@ func update_wave_start() -> void:
 	if force_shop_open or _level_editor_finishing:
 		return
 		
-	if egg_pulse:
-		egg_pulse.activate_pulse_wave()
+	#if egg_pulse:
+		#egg_pulse.activate_pulse_wave()
 
 	wave_ending = false   # only now can a wave-end signal be accepted
 	
 	await get_tree().create_timer(1.9, false).timeout
+	#await get_tree().create_timer(0.8, false).timeout
+	
+	if egg_pulse:
+		egg_pulse.activate_flash()
+	
 	if force_shop_open or _level_editor_finishing:
 		return
 	
@@ -1053,6 +1058,15 @@ func return_to_title() -> void:
 		if map_menu.has_method("close_pop_up"):
 			map_menu.close_pop_up()
 
+	# Never leave the level-clear overlay covering the title.
+	var game_over_menu = get_tree().get_first_node_in_group("game_over_screen")
+	if game_over_menu and game_over_menu is CanvasItem:
+		(game_over_menu as CanvasItem).hide()
+		if "modulate" in game_over_menu:
+			game_over_menu.modulate.a = 1.0
+		if "current_state" in game_over_menu:
+			game_over_menu.current_state = game_over_menu.State.INACTIVE
+
 	stop_timer()
 	stop_player()
 	force_shop_open = false
@@ -1102,9 +1116,14 @@ func return_to_title() -> void:
 
 	# Keep title hidden under the transition until it finishes.
 	var scene_mgr := get_tree().get_first_node_in_group('scene_manager')
-	var splash: Node = get_node_or_null('../SplashScreenCanvasLayer')
-	if splash == null and scene_mgr and is_instance_valid(scene_mgr.get("splash_screen")):
+	var splash: Node = null
+	if scene_mgr and is_instance_valid(scene_mgr.get("splash_screen")):
 		splash = scene_mgr.splash_screen
+	if splash == null and scene_mgr:
+		splash = scene_mgr.get_node_or_null("SplashScreenCanvasLayer")
+
+	if scene_mgr and is_instance_valid(scene_mgr.get("main_game_canvas")):
+		scene_mgr.main_game_canvas.hide()
 
 	if scene_transition_screen:
 		await scene_transition_screen.next_level_finish()
@@ -1114,6 +1133,12 @@ func return_to_title() -> void:
 		await splash.show_title_ready()
 	elif is_instance_valid(splash):
 		splash.show()
+	else:
+		# Last resort: back to Quick Start so the player is never soft-locked.
+		push_warning("RoundManager: title splash missing — returning to Quick Start")
+		get_tree().change_scene_to_file("res://sc/Main-lofi.tscn")
+		transitioning_worlds = false
+		return
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	enter_state(RoundState.INACTIVE)
@@ -1353,15 +1378,24 @@ func pineapple_round() -> void:
 
 
 func start_game_over() -> void:
-	game_over_triggered = true
-
-	# Lock in full clear immediately (survives title / quit before Close).
 	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+
+	# Lock progress at end-of-range.
 	if current_rock_sequence.size() > 0:
 		current_sequence_index = current_rock_sequence.size()
 		current_round = current_sequence_index
 		gl_PlayerState.dataset.round = current_round
 	_save_level_progress()
+
+	# Already cleared this range — show shop, not the clear screen again.
+	if gl_PlayerState.is_place_completed(place):
+		game_over_triggered = false
+		player.stop_player()
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		enter_state(RoundState.SHOP_START)
+		return
+
+	game_over_triggered = true
 	gl_PlayerState.mark_place_completed(place)
 
 	var game_over_menu = get_tree().get_first_node_in_group('game_over_screen')
@@ -1369,7 +1403,7 @@ func start_game_over() -> void:
 		game_over_menu.update_open_menu()
 	else:
 		print('cannot find game over')
-		
+
 	player.stop_player()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 

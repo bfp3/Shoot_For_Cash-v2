@@ -14,6 +14,9 @@ func activate_pulse_wave() -> void:
 	$Egg_shape/Emission_energy_egg/AnimationPlayer.play('RESET')
 
 
+func activate_flash() -> void:
+	pulse()
+
 func pulse() -> void:
 	$EggPulseSfx.play()
 	

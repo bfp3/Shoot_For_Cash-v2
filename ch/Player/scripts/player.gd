@@ -517,7 +517,7 @@ func update_player_stats() -> void:
 	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
 
 	power_gun_fire_rate = 0.05
-	power_bullet_speed = 0.1
+	power_bullet_speed = 0.01
 	#power_target_circle = 60.0
 	
 	player_gun.update_guns()

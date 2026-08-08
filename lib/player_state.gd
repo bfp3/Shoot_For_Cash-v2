@@ -3,8 +3,17 @@ extends Node
 var mouse_sensitivity := 1.0
 
 ## Persistent meta across title / quit (completed ranges + per-range round index).
+## Only written/read when persist_mode == LOAD (Load Game on Quick Start).
 const META_SAVE_PATH := "user://shoot_for_cash_progress.cfg"
 const META_SECTION := "progress"
+
+enum PersistMode {
+	TEST, ## Default while developing — session memory only, no disk I/O.
+	LOAD, ## Load Game — read/write user:// save file.
+}
+
+## Default is Test Mode so closing the editor does not restore old clears.
+var persist_mode: PersistMode = PersistMode.TEST
 
 const RESTART_DATASET := {
 	"cash": 500,
@@ -110,7 +119,40 @@ var _current_round_log: Array = []
 
 
 func _ready() -> void:
-	load_meta_progress()
+	# Test Mode by default — do not pull disk progress on boot.
+	persist_mode = PersistMode.TEST
+
+
+func is_persist_enabled() -> bool:
+	return persist_mode == PersistMode.LOAD
+
+
+## Fresh Test Mode session: keep any disk file, wipe runtime progress only.
+func begin_test_session() -> void:
+	persist_mode = PersistMode.TEST
+	dataset["completed_places"] = []
+	dataset["level_progress"] = {}
+
+
+## Load Game: enable disk I/O and hydrate runtime from the save file.
+func begin_load_game_session() -> void:
+	persist_mode = PersistMode.LOAD
+	dataset["completed_places"] = []
+	dataset["level_progress"] = {}
+	_load_meta_progress_from_disk()
+
+
+func has_meta_save_file() -> bool:
+	return FileAccess.file_exists(META_SAVE_PATH)
+
+
+## Wipe disk save + runtime progress. Keeps current persist_mode.
+func clear_meta_progress() -> void:
+	dataset["completed_places"] = []
+	dataset["level_progress"] = {}
+	if FileAccess.file_exists(META_SAVE_PATH):
+		var abs_path := ProjectSettings.globalize_path(META_SAVE_PATH)
+		DirAccess.remove_absolute(abs_path)
 
 
 func next_round() -> void:
@@ -354,6 +396,8 @@ func get_level_progress_entry(place_id: String) -> Dictionary:
 
 
 func save_meta_progress() -> void:
+	if not is_persist_enabled():
+		return
 	var cfg := ConfigFile.new()
 	cfg.load(META_SAVE_PATH) # ok if missing
 	cfg.set_value(META_SECTION, "completed_places", get_completed_places())
@@ -362,6 +406,12 @@ func save_meta_progress() -> void:
 
 
 func load_meta_progress() -> void:
+	if not is_persist_enabled():
+		return
+	_load_meta_progress_from_disk()
+
+
+func _load_meta_progress_from_disk() -> void:
 	if not FileAccess.file_exists(META_SAVE_PATH):
 		return
 	var cfg := ConfigFile.new()
@@ -497,7 +547,7 @@ func buy_all_upgrades() -> void:
 	dataset.power_bullet_delay = 9
 
 func reset_all() -> void:
-	# Keep range completion / round progress across title returns.
+	# Keep range completion / round progress across title returns (session memory).
 	var kept_places = get_completed_places().duplicate()
 	var kept_progress = dataset.get("level_progress", {})
 	if kept_progress is Dictionary:
@@ -511,8 +561,9 @@ func reset_all() -> void:
 
 	_log.clear()
 	_current_round_log.clear()
-	# Prefer disk copy if present (covers quit → relaunch edge cases).
-	load_meta_progress()
+	# Only overlay disk when Load Game is active.
+	if is_persist_enabled():
+		load_meta_progress()
 
 
 func reset_level() -> void:
@@ -529,4 +580,5 @@ func reset_level() -> void:
 	dataset["level_progress"] = kept_progress
 	_log.clear()
 	_current_round_log.clear()
-	load_meta_progress()
+	if is_persist_enabled():
+		load_meta_progress()

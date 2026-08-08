@@ -245,6 +245,8 @@ func activate_pulse_wave() -> void:
 
 	pulse_wave_active = false
 
+func activate_flash() -> void:
+	$Flash_sequence.activate_the_flash()
 	
 	
 func power_ring_tween() -> void:

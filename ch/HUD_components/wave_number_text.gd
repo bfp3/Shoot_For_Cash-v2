@@ -17,10 +17,10 @@ extends Control
 
 var wave_count := 0
 
-@export var slide_distance := 250.0
-@export var fade_in_time := 0.35
-@export var hold_time := 0.8
-@export var fade_out_time := 0.35
+const slide_distance := 560.0
+const fade_in_time := 0.15#0.35
+const hold_time := 0.6 #0.8
+const fade_out_time := 0.15
 
 var _original_position: Vector2
 var _original_modulate: Color

@@ -45,9 +45,13 @@ func _process(delta: float) -> void:
 		move_camera_to_player(delta)
 		
 func start_game_quick() -> void:
-	splash_screen.queue_free()
+	# Hide (do not free) so Back to Title can reopen Start.
+	if is_instance_valid(splash_screen):
+		splash_screen.hide()
 	main_game_canvas.show()
-	start_cam.queue_free()
+	if is_instance_valid(start_cam):
+		start_cam.queue_free()
+		start_cam = null
 	HUD_CRT.crt_start_up()
 	round_manager.enter_state(round_manager.RoundState.SHOP_START)
 	await get_tree().create_timer(0.05).timeout
@@ -120,10 +124,9 @@ func debug_bootstrap_gameplay() -> void:
 	moving_camera = false
 	set_process(false)
 
+	# Hide splash — never free it (Back to Title needs show_title_ready).
 	if is_instance_valid(splash_screen):
 		splash_screen.hide()
-		splash_screen.queue_free()
-		splash_screen = null
 
 	if main_game_canvas:
 		main_game_canvas.show()
