@@ -77,7 +77,39 @@ func _ready() -> void:
 	
 	_setup_ammo_count_popup()
 	_setup_shop_mini_game()
-	
+	_setup_shop_extra_buttons()
+
+
+func _setup_shop_extra_buttons() -> void:
+	var pause_btn := get_node_or_null("%PauseGameButton") as Button
+	if pause_btn:
+		if OS.has_feature("mobile"):
+			pause_btn.hide()
+		else:
+			pause_btn.show()
+			if not pause_btn.pressed.is_connected(_on_pause_game_button_pressed):
+				pause_btn.pressed.connect(_on_pause_game_button_pressed)
+
+	var cents_btn := get_node_or_null("%ShootForCentsButton") as Button
+	if cents_btn and not cents_btn.pressed.is_connected(_on_shoot_for_cents_pressed):
+		cents_btn.pressed.connect(_on_shoot_for_cents_pressed)
+
+
+func _on_pause_game_button_pressed() -> void:
+	var pause_menu = get_tree().get_first_node_in_group("pause_menu")
+	if pause_menu and pause_menu.has_method("open_menu"):
+		pause_menu.open_menu()
+	elif pause_menu and pause_menu.has_method("start"):
+		pause_menu.start()
+
+
+func _on_shoot_for_cents_pressed() -> void:
+	if current_state != SkillState.IN_MENU and current_state != SkillState.OPEN_MENU:
+		return
+	if _shop_mini_game and _shop_mini_game.has_method("toggle"):
+		_shop_mini_game.toggle()
+	elif _shop_mini_game and _shop_mini_game.has_method("open"):
+		_shop_mini_game.open()
 
 
 func ticket_purchased() -> void:

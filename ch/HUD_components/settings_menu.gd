@@ -5,6 +5,8 @@ extends Control
 signal back_pressed
 signal open_resolution_confirm
 
+const DROPDOWN_POPUP_FONT_SIZE := 50
+
 @onready var resolution_option: OptionButton = %ResolutionOption
 @onready var msaa_option: OptionButton = %MsaaOption
 @onready var scale_3d_option: OptionButton = %Scale3DOption
@@ -13,10 +15,13 @@ signal open_resolution_confirm
 @onready var sens_value_label: RichTextLabel = %SensValueLabel
 @onready var sens_down: Button = %SensDown
 @onready var sens_up: Button = %SensUp
+@onready var master_volume_dial: VolumeDial = %MasterVolumeDial
+@onready var music_volume_dial: VolumeDial = %MusicVolumeDial
 
 
 func _ready() -> void:
 	_populate_options()
+	_setup_volume_dials()
 	_sync_from_settings()
 	_make_popups_work_while_paused()
 	resolution_option.item_selected.connect(_on_resolution_selected)
@@ -26,13 +31,29 @@ func _ready() -> void:
 	max_fps_option.item_selected.connect(_on_max_fps_selected)
 	sens_down.pressed.connect(_on_sens_down)
 	sens_up.pressed.connect(_on_sens_up)
+	master_volume_dial.value_changed.connect(_on_master_volume_changed)
+	music_volume_dial.value_changed.connect(_on_music_volume_changed)
 	GameSettings.settings_changed.connect(_sync_from_settings)
+
+
+func _setup_volume_dials() -> void:
+	for dial in [master_volume_dial, music_volume_dial]:
+		if dial == null:
+			continue
+		dial.process_mode = Node.PROCESS_MODE_ALWAYS
+		dial.min_value = 0.0
+		dial.max_value = 100.0
+		dial.step = 1.0
 
 
 func _make_popups_work_while_paused() -> void:
 	for option in [resolution_option, msaa_option, scale_3d_option, vsync_option, max_fps_option]:
-		if option:
-			option.get_popup().process_mode = Node.PROCESS_MODE_ALWAYS
+		if option == null:
+			continue
+		var popup = option.get_popup()
+		popup.process_mode = Node.PROCESS_MODE_ALWAYS
+		# Dropdown *list* item size (not the closed OptionButton label).
+		popup.add_theme_font_size_override("font_size", DROPDOWN_POPUP_FONT_SIZE)
 
 
 func refresh() -> void:
@@ -73,7 +94,9 @@ func _sync_from_settings() -> void:
 	scale_3d_option.select(GameSettings.scale_3d_index())
 	vsync_option.select(1 if GameSettings.vsync_enabled else 0)
 	max_fps_option.select(GameSettings.max_fps_index())
-	sens_value_label.text = str(GameSettings.mouse_sensitivity_level)
+	sens_value_label.text = GameSettings.sensitivity_display_text()
+	master_volume_dial.set_value_no_signal(GameSettings.master_volume_percent)
+	music_volume_dial.set_value_no_signal(GameSettings.music_volume_percent)
 
 	resolution_option.set_block_signals(false)
 	msaa_option.set_block_signals(false)
@@ -116,6 +139,16 @@ func _on_sens_down() -> void:
 
 func _on_sens_up() -> void:
 	GameSettings.bump_mouse_sensitivity(1)
+
+
+func _on_master_volume_changed(value: float) -> void:
+	GameSettings.apply_master_volume(value)
+	master_volume_dial.set_value_no_signal(GameSettings.master_volume_percent)
+
+
+func _on_music_volume_changed(value: float) -> void:
+	GameSettings.apply_music_volume(value)
+	music_volume_dial.set_value_no_signal(GameSettings.music_volume_percent)
 
 
 func _on_back_pressed() -> void:

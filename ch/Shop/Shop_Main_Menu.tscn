@@ -2186,6 +2186,39 @@ scale = Vector2(0.444, 0.444)
 wiggle_amount = 0.46
 wiggle_amount_exit = 0.444
 
+[node name="PauseGameButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -72.0
+offset_right = 168.0
+offset_bottom = -16.0
+grow_vertical = 0
+theme_type_variation = &"MenuUiButtons"
+theme_override_font_sizes/font_size = 28
+text = "Pause"
+
+[node name="ShootForCentsButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -72.0
+offset_right = -8.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_type_variation = &"MenuUiButtons"
+theme_override_font_sizes/font_size = 26
+text = "Shoot for CENTS"
+
 [node name="UpgradeStats" type="CenterContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1504735911]
 visible = false
 layout_mode = 2

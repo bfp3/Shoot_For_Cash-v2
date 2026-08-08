@@ -143,8 +143,27 @@ func _ready() -> void:
 	$CanvasLayer/HUD_bottom_corner/SkyMine.hide()
 	EventBus.instance.egg_pulsed.connect(pulse_shake_camera)
 	start_rotation = rotation_degrees
+	_setup_mobile_pause_button()
 
 
+func _setup_mobile_pause_button() -> void:
+	var pause_btn := get_node_or_null("%PauseGameButtonMobile") as Button
+	if pause_btn == null:
+		return
+	if running_on_mobile:
+		pause_btn.show()
+		if not pause_btn.pressed.is_connected(_on_mobile_pause_pressed):
+			pause_btn.pressed.connect(_on_mobile_pause_pressed)
+	else:
+		pause_btn.hide()
+
+
+func _on_mobile_pause_pressed() -> void:
+	var pause_menu = get_tree().get_first_node_in_group("pause_menu")
+	if pause_menu and pause_menu.has_method("open_menu"):
+		pause_menu.open_menu()
+	elif pause_menu and pause_menu.has_method("start"):
+		pause_menu.start()
 
 func enter_state(new_state : State) -> void:
 	current_state = new_state
@@ -433,7 +452,7 @@ func handle_joystick(delta : float) -> void:
 	# Apply nonlinear scaling for better precision
 	strength = pow(strength, 1.5)  # Makes small inputs more precise, big inputs still fast
 
-	var joystick_motion := direction * strength * joystick_sensitivity * delta
+	var joystick_motion := direction * strength * joystick_sensitivity * GameSettings.crosshair_speed_multiplier() * delta
 	target_crosshair_position += joystick_motion
 
 func handle_keyboard_and_controller_input(delta: float) -> void:
@@ -446,7 +465,7 @@ func handle_keyboard_and_controller_input(delta: float) -> void:
 		return
 		
 	const keyboard_crosshair_speed := 1300.0
-	var speed := keyboard_crosshair_speed
+	var speed := keyboard_crosshair_speed * GameSettings.crosshair_speed_multiplier()
 	if Input.is_action_pressed("sprint"):
 		speed *= 0.5
 
@@ -781,12 +800,12 @@ func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed('increase_scope_speed'):
 		GameSettings.bump_mouse_sensitivity(1)
 		$SFX/scopeSpeedAdjustSpeedSfx.play()
-		print("Mouse sensitivity increased:", GameSettings.mouse_sensitivity_level)
+		_notify_reticle_sensitivity_popup(event)
 		
 	if Input.is_action_just_pressed('decrease_scope_speed'):
 		GameSettings.bump_mouse_sensitivity(-1)
 		$SFX/scopeSpeedAdjustSpeedSfx.play()
-		print("Mouse sensitivity decreased:", GameSettings.mouse_sensitivity_level)
+		_notify_reticle_sensitivity_popup(event)
 
 	
 	
@@ -796,6 +815,14 @@ func _input(event: InputEvent) -> void:
 	if !running_on_mobile and event is InputEventMouseMotion:
 		# Resolution-independent look: same screen-fraction motion on any monitor.
 		target_crosshair_position += GameSettings.mouse_look_delta(event.relative)
+
+
+func _notify_reticle_sensitivity_popup(event: InputEvent) -> void:
+	var popup := get_node_or_null("CanvasLayer/ReticleSensitivityPopup")
+	if popup == null or not popup.has_method("show_sensitivity"):
+		return
+	var from_controller := event is InputEventJoypadButton or event is InputEventJoypadMotion
+	popup.show_sensitivity(GameSettings.mouse_sensitivity_level, from_controller)
 	
 	
 	

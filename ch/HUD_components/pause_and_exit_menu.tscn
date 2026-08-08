@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="9_uy4i6"]
 [ext_resource type="Script" uid="uid://dfaimwsnabqrt" path="res://ch/HUD_components/settings_menu.gd" id="10_settings"]
 [ext_resource type="Script" uid="uid://2td2u2syuhrd" path="res://ch/HUD_components/resolution_confirm_dialog.gd" id="11_confirm"]
+[ext_resource type="Script" uid="uid://be14gsgtq6uyc" path="res://ch/HUD_components/volume_dial.gd" id="12_dial"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
 
@@ -216,6 +217,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.445, 1.445)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("10_settings")
 
@@ -229,109 +232,172 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="Control/Settings_menu/Center" unique_id=26298318]
-custom_minimum_size = Vector2(720, 780)
+custom_minimum_size = Vector2(980, 620)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("8_68q17")
 
 [node name="Margin" type="MarginContainer" parent="Control/Settings_menu/Center/Panel" unique_id=369667358]
 layout_mode = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 28
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 28
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 24
 
-[node name="VBox" type="VBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin" unique_id=954813550]
+[node name="RootVBox" type="VBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin" unique_id=403979398]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 14
 
-[node name="Title" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1868645378]
+[node name="Title" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox" unique_id=959190473]
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/normal_font_size = 56
 bbcode_enabled = true
 text = "Settings"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="ResLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1393890829]
+[node name="Columns" type="HBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox" unique_id=29380538]
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 42
+size_flags_vertical = 3
+theme_override_constants/separation = 36
+
+[node name="LeftColumn" type="VBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns" unique_id=1822792377]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="ResLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=1196326643]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 36
 bbcode_enabled = true
 text = "Resolution"
 fit_content = true
 autowrap_mode = 0
 
-[node name="ResolutionOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1516272270]
+[node name="ResolutionOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=2039907738]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 57
+theme_override_font_sizes/font_size = 40
 
-[node name="MsaaLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=2129266467]
+[node name="MsaaLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=420356130]
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 42
+theme_override_font_sizes/normal_font_size = 36
 bbcode_enabled = true
 text = "Anti-Aliasing (2D + 3D)"
 fit_content = true
 autowrap_mode = 0
 
-[node name="MsaaOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=313441040]
+[node name="MsaaOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=1065618108]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 57
+theme_override_font_sizes/font_size = 40
 
-[node name="ScaleLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1279813318]
+[node name="ScaleLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=1984764275]
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 42
+theme_override_font_sizes/normal_font_size = 36
 bbcode_enabled = true
 text = "3D Scaling"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Scale3DOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=932239202]
+[node name="Scale3DOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=201765825]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 57
+theme_override_font_sizes/font_size = 40
 
-[node name="VsyncLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=244473920]
+[node name="VsyncLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=2133190935]
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 42
+theme_override_font_sizes/normal_font_size = 36
 bbcode_enabled = true
 text = "V-Sync"
 fit_content = true
 autowrap_mode = 0
 
-[node name="VsyncOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=283401001]
+[node name="VsyncOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=1423511938]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 57
+theme_override_font_sizes/font_size = 40
 
-[node name="FpsLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=2020763159]
+[node name="FpsLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=1037406534]
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 42
+theme_override_font_sizes/normal_font_size = 36
 bbcode_enabled = true
 text = "Max FPS"
 fit_content = true
 autowrap_mode = 0
 
-[node name="MaxFpsOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1277799547]
+[node name="MaxFpsOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/LeftColumn" unique_id=1767750946]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 57
+theme_override_font_sizes/font_size = 40
 
-[node name="SensLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=42948696]
+[node name="RightColumn" type="VBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns" unique_id=1671131268]
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 42
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="VolumeRow" type="HBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn" unique_id=1331627502]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="MasterVolumeBlock" type="VBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn/VolumeRow" unique_id=1196057898]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="MasterVolumeLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn/VolumeRow/MasterVolumeBlock" unique_id=206760906]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
-text = "Crosshair Sensitivity"
+text = "Master Volume"
 fit_content = true
 autowrap_mode = 0
+horizontal_alignment = 1
 
-[node name="SensRow" type="HBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=766730213]
+[node name="MasterVolumeDial" type="Control" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn/VolumeRow/MasterVolumeBlock" unique_id=1134397085]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("12_dial")
+
+[node name="MusicVolumeBlock" type="VBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn/VolumeRow" unique_id=829432745]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="MusicVolumeLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn/VolumeRow/MusicVolumeBlock" unique_id=1905448864]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "Music Volume"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="MusicVolumeDial" type="Control" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn/VolumeRow/MusicVolumeBlock" unique_id=830161857]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("12_dial")
+
+[node name="SensLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn" unique_id=1813829565]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 36
+bbcode_enabled = true
+text = "Reticle Sensitivity"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="SensRow" type="HBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn" unique_id=767636613]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="SensDown" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/VBox/SensRow" unique_id=159611147]
+[node name="SensDown" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn/SensRow" unique_id=1046622172]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
@@ -339,18 +405,19 @@ theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 36
 text = "-"
 
-[node name="SensValueLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox/SensRow" unique_id=2039746734]
+[node name="SensValueLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn/SensRow" unique_id=594419702]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 0)
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 83
-text = "1"
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "1 / 10"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SensUp" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/VBox/SensRow" unique_id=470549355]
+[node name="SensUp" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox/Columns/RightColumn/SensRow" unique_id=1614835549]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
@@ -358,11 +425,7 @@ theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 36
 text = "+"
 
-[node name="Spacer" type="Control" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1099340411]
-custom_minimum_size = Vector2(0, 8)
-layout_mode = 2
-
-[node name="BackButton" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=803220563]
+[node name="BackButton" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/RootVBox" unique_id=2047186977]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 40
@@ -449,4 +512,4 @@ text = "Revert"
 [connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="." method="_on_close_game_pressed"]
 [connection signal="back_pressed" from="Control/Settings_menu" to="." method="_on_settings_back_pressed"]
 [connection signal="open_resolution_confirm" from="Control/Settings_menu" to="." method="_on_open_resolution_confirm"]
-[connection signal="pressed" from="Control/Settings_menu/Center/Panel/Margin/VBox/BackButton" to="Control/Settings_menu" method="_on_back_pressed"]
+[connection signal="pressed" from="Control/Settings_menu/Center/Panel/Margin/RootVBox/BackButton" to="Control/Settings_menu" method="_on_back_pressed"]

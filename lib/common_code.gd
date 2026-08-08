@@ -17,6 +17,7 @@ var retro_fade_out_sec := 0.7
 ## Master bus volume while retro is fully on (absolute dB). Leave as default layout value if unsure.
 var retro_master_volume_db := 6.02
 ## Master bus volume while retro is fully off (normal gameplay).
+## Prefer the player's Master Volume setting so 100% stays at the project baseline.
 var retro_normal_master_volume_db := 6.02
 ## High-pass cutoff when fully retro (Hz). Higher = thinner / more "radio".
 var retro_highpass_cutoff_hz := 720.0
@@ -36,6 +37,10 @@ var _retro_fade_tween: Tween
 var _retro_blend := 0.0
 
 
+func _normal_master_volume_db() -> float:
+	if GameSettings and GameSettings.has_method("effective_master_volume_db"):
+		return GameSettings.effective_master_volume_db()
+	return retro_normal_master_volume_db
 
 
 func load_pattern_from_file(path: String) -> String:
@@ -114,7 +119,7 @@ func _apply_retro_blend(blend: float, master_idx: int = -1) -> void:
 	var t := clampf(blend, 0.0, 1.0)
 	AudioServer.set_bus_volume_db(
 		master_idx,
-		lerpf(retro_normal_master_volume_db, retro_master_volume_db, t)
+		lerpf(_normal_master_volume_db(), retro_master_volume_db, t)
 	)
 
 	var highpass := AudioServer.get_bus_effect(master_idx, MASTER_BUS_IDX_HIGHPASS) as AudioEffectHighPassFilter

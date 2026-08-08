@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://da45gubie1h3t" path="res://ch/Player/scripts/player.gd" id="1_6ljxy"]
 [ext_resource type="Script" uid="uid://dphrg15ygnedc" path="res://ch/Player/scripts/shot_remaining.gd" id="1_shotrem"]
 [ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="2_kbm6s"]
+[ext_resource type="Script" uid="uid://wb58a1luc02y" path="res://ch/HUD_components/reticle_sensitivity_popup.gd" id="2_retsens"]
 [ext_resource type="Script" uid="uid://4a0w5mbutje7" path="res://ch/Player/mobile_controller.gd" id="2_vmtkp"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_b1tng"]
 [ext_resource type="Script" uid="uid://b8ta6ry80sv7q" path="res://ch/inner_scope_2.gd" id="9_b1tng"]
@@ -497,6 +498,18 @@ _data = {
 &"RESET": SubResource("Animation_txfio"),
 &"rot": SubResource("Animation_3gdew")
 }
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5d6j6"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
 
 [sub_resource type="Shader" id="Shader_qfoqq"]
 code = "shader_type spatial;
@@ -2467,6 +2480,114 @@ explosiveness = 0.8
 fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_11n43")
+
+[node name="ReticleSensitivityPopup" type="Control" parent="CanvasLayer" unique_id=2067706541]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -160.0
+offset_right = 220.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("2_retsens")
+
+[node name="Panel" type="PanelContainer" parent="CanvasLayer/ReticleSensitivityPopup" unique_id=385229148]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5d6j6")
+
+[node name="Margin" type="MarginContainer" parent="CanvasLayer/ReticleSensitivityPopup/Panel" unique_id=1545577186]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/ReticleSensitivityPopup/Panel/Margin" unique_id=1345625250]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ReticleSensTitle" type="RichTextLabel" parent="CanvasLayer/ReticleSensitivityPopup/Panel/Margin/VBox" unique_id=765759503]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"RedRichText"
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "Reticle Sensitivity"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="SensRow" type="HBoxContainer" parent="CanvasLayer/ReticleSensitivityPopup/Panel/Margin/VBox" unique_id=47731364]
+layout_mode = 2
+theme_override_constants/separation = 89
+alignment = 1
+
+[node name="ReticleSensHintLeft" type="RichTextLabel" parent="CanvasLayer/ReticleSensitivityPopup/Panel/Margin/VBox/SensRow" unique_id=193189468]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+theme_type_variation = &"RedRichText"
+theme_override_font_sizes/normal_font_size = 83
+text = "-"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ReticleSensValue" type="RichTextLabel" parent="CanvasLayer/ReticleSensitivityPopup/Panel/Margin/VBox/SensRow" unique_id=760265199]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 81
+bbcode_enabled = true
+text = "1[color=800000][font_size=50]/10"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ReticleSensHintRight" type="RichTextLabel" parent="CanvasLayer/ReticleSensitivityPopup/Panel/Margin/VBox/SensRow" unique_id=1911640964]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+theme_type_variation = &"RedRichText"
+theme_override_font_sizes/normal_font_size = 83
+text = "+"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PauseGameButtonMobile" type="Button" parent="CanvasLayer" unique_id=310517233]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -140.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = 88.0
+grow_horizontal = 0
+theme_type_variation = &"MenuUiButtons"
+theme_override_font_sizes/font_size = 28
+text = "Pause"
 
 [node name="ShootWallVFX" type="Node3D" parent="." unique_id=252782032]
 unique_name_in_owner = true

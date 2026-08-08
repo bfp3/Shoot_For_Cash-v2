@@ -31,6 +31,8 @@ signal settings_changed
 signal resolution_confirm_started(seconds_left: float)
 signal resolution_confirm_tick(seconds_left: float)
 signal resolution_confirm_finished(kept: bool)
+## Fired after a sensitivity stage bump (including when already at min/max).
+signal sensitivity_bumped(level: int)
 
 var resolution: Vector2i = Vector2i(1920, 1080)
 var msaa_level: int = 2 ## Viewport.MSAA_* shared for 2D + 3D
@@ -38,15 +40,23 @@ var scaling_3d: float = 1.0
 var vsync_enabled: bool = true
 var max_fps: int = 0
 var mouse_sensitivity_level: int = 1
+## 0–100. 100% keeps the project's existing Master bus loudness.
+var master_volume_percent: float = 100.0
+## 0–100. 100% keeps the project's existing MusicBus loudness.
+var music_volume_percent: float = 100.0
 
 var _prev_resolution: Vector2i = Vector2i(1920, 1080)
 var _prev_window_mode: int = DisplayServer.WINDOW_MODE_WINDOWED
 var _resolution_pending := false
 var _confirm_time_left := 0.0
+## Captured from AudioServer so 100% == current project loudness (not 0 dB).
+var _master_baseline_db := 0.0
+var _music_baseline_db := 0.0
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_capture_bus_baselines()
 	_load_defaults_from_project()
 	var had_save := FileAccess.file_exists(CONFIG_PATH)
 	load_from_disk()
@@ -81,6 +91,17 @@ func _load_defaults_from_project() -> void:
 	vsync_enabled = true
 	max_fps = 0
 	mouse_sensitivity_level = 1
+	master_volume_percent = 100.0
+	music_volume_percent = 100.0
+
+
+func _capture_bus_baselines() -> void:
+	var master_idx := AudioServer.get_bus_index("Master")
+	var music_idx := AudioServer.get_bus_index("MusicBus")
+	if master_idx >= 0:
+		_master_baseline_db = AudioServer.get_bus_volume_db(master_idx)
+	if music_idx >= 0:
+		_music_baseline_db = AudioServer.get_bus_volume_db(music_idx)
 
 
 func load_from_disk() -> void:
@@ -100,6 +121,8 @@ func load_from_disk() -> void:
 		MOUSE_SENS_MIN_LEVEL,
 		MOUSE_SENS_MAX_LEVEL
 	)
+	master_volume_percent = clampf(float(cfg.get_value(SECTION, "master_volume_percent", master_volume_percent)), 0.0, 100.0)
+	music_volume_percent = clampf(float(cfg.get_value(SECTION, "music_volume_percent", music_volume_percent)), 0.0, 100.0)
 
 
 func save_to_disk() -> void:
@@ -112,6 +135,8 @@ func save_to_disk() -> void:
 	cfg.set_value(SECTION, "vsync_enabled", vsync_enabled)
 	cfg.set_value(SECTION, "max_fps", max_fps)
 	cfg.set_value(SECTION, "mouse_sensitivity_level", mouse_sensitivity_level)
+	cfg.set_value(SECTION, "master_volume_percent", master_volume_percent)
+	cfg.set_value(SECTION, "music_volume_percent", music_volume_percent)
 	cfg.save(CONFIG_PATH)
 
 
@@ -123,6 +148,8 @@ func apply_all(persist: bool = true, apply_window: bool = true) -> void:
 	_apply_vsync()
 	_apply_max_fps()
 	_apply_mouse_sensitivity()
+	_apply_master_volume()
+	_apply_music_volume()
 	if persist:
 		save_to_disk()
 	settings_changed.emit()
@@ -165,6 +192,37 @@ func apply_mouse_sensitivity_level(level: int) -> void:
 
 func bump_mouse_sensitivity(delta_levels: int) -> void:
 	apply_mouse_sensitivity_level(mouse_sensitivity_level + delta_levels)
+	sensitivity_bumped.emit(mouse_sensitivity_level)
+
+
+func apply_master_volume(percent: float) -> void:
+	master_volume_percent = clampf(percent, 0.0, 100.0)
+	_apply_master_volume()
+	save_to_disk()
+	settings_changed.emit()
+
+
+func apply_music_volume(percent: float) -> void:
+	music_volume_percent = clampf(percent, 0.0, 100.0)
+	_apply_music_volume()
+	save_to_disk()
+	settings_changed.emit()
+
+
+## Shared display string for Settings + in-game popup ("1 / 10").
+func sensitivity_display_text(level: int = -1) -> String:
+	var stage := mouse_sensitivity_level if level < 0 else clampi(level, MOUSE_SENS_MIN_LEVEL, MOUSE_SENS_MAX_LEVEL)
+	return "%d[color=800000][font_size=50]/%d" % [stage, MOUSE_SENS_MAX_LEVEL]
+
+
+## Multiplier for keyboard / controller crosshair speed (stage 1 == 1.0).
+func crosshair_speed_multiplier() -> float:
+	return float(mouse_sensitivity_level)
+
+
+## Absolute Master bus dB for the current Master Volume setting (for systems like retro FX).
+func effective_master_volume_db() -> float:
+	return _percent_to_db(master_volume_percent, _master_baseline_db)
 
 
 ## Try a new resolution. Shows confirm UI via signals; auto-reverts after 15s.
@@ -308,3 +366,23 @@ func _apply_max_fps() -> void:
 
 func _apply_mouse_sensitivity() -> void:
 	gl_PlayerState.mouse_sensitivity = float(mouse_sensitivity_level)
+
+
+func _apply_master_volume() -> void:
+	var idx := AudioServer.get_bus_index("Master")
+	if idx < 0:
+		return
+	AudioServer.set_bus_volume_db(idx, _percent_to_db(master_volume_percent, _master_baseline_db))
+
+
+func _apply_music_volume() -> void:
+	var idx := AudioServer.get_bus_index("MusicBus")
+	if idx < 0:
+		return
+	AudioServer.set_bus_volume_db(idx, _percent_to_db(music_volume_percent, _music_baseline_db))
+
+
+func _percent_to_db(percent: float, baseline_db: float) -> float:
+	if percent <= 0.0:
+		return -80.0
+	return baseline_db + linear_to_db(percent / 100.0)
