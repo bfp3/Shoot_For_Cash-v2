@@ -36,6 +36,35 @@ func _on_three_strikes() -> void:
 	shake_camera_impact()
 
 
+## Side-biased X punch when a rock escapes the screen.
+## side_sign: -1 = miss on the left (kick camera left), +1 = miss on the right.
+func shake_camera_oob_miss(side_sign: float = 1.0, amount: float = 0.16, duration: float = 0.1) -> void:
+	if camera_stop_all_shaking:
+		return
+	if is_zero_approx(side_sign):
+		side_sign = 1.0
+	side_sign = signf(side_sign)
+
+	if cam_shake_tween:
+		cam_shake_tween.kill()
+
+	# Start from a known-good transform so stacked shakes don't drift.
+	global_position = orig_pos
+	rotation_degrees = orig_rot
+
+	var kick_x := amount * side_sign
+	var dur := maxf(duration, 0.02)
+
+	cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	cam_shake_tween.tween_property(self, "position:x", kick_x, dur).as_relative()
+	cam_shake_tween.tween_property(self, "position:x", -kick_x * 1.35, dur * 1.15).as_relative()
+	cam_shake_tween.tween_property(self, "position:x", kick_x * 0.45, dur * 0.9).as_relative()
+	cam_shake_tween.tween_property(self, "global_position", orig_pos, 0.35)
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees", orig_rot, 0.35)
+
+	await cam_shake_tween.finished
+
+
 func shake_camera_impact() -> void:
 	# Stronger shake — overrides any shake currently running because it
 	# shares cam_shake_tween with the others below.

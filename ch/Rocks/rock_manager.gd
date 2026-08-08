@@ -54,6 +54,9 @@ const COLUMN_1_X := 7.0 #18.0
 const COLUMN_STEP := 2.0 #4.0
 const COLUMN_COUNT := 8
 const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a column
+## Extra meters each column moves away from X=0.
+## 0 = default (7,5,3,1,-1,-3,-5,-7). 1 → (8,6,4,2,-2,-4,-6,-8).
+@export var broaden_columns := 0.0
 @export var DEFAULT_LAUNCH_WAIT_MS := 100
 ## Aim apex heights — same Y bands balloons use (A/B/C → 1/2/3).
 const AIM_LANE_Y := {
@@ -100,10 +103,19 @@ const BOUNDS_CHECK_INTERVAL := 0.1  # how often (seconds) to scan active rocks
 @export var oob_margin_bottom_px := 64.0
 ## Optional override; if unset, uses the active Camera3D / `player_cam`.
 @export var bounds_camera: Camera3D
+## Particle burst + side-biased camera shake when a rock escapes the screen (strike miss).
+## Toggle on the Rocks / RockManager node in Main.tscn.
+@export var oob_miss_feedback_enabled := true
+@export_range(0.0, 0.5, 0.005) var oob_miss_shake_amount := 0.16
+@export_range(0.02, 0.5, 0.01) var oob_miss_shake_duration := 0.1
 var _bounds_check_active := false
 var _bounds_check_accum := 0.0
-# --------------------------------------------------------------------------
 
+enum OobSide { NONE, LEFT, RIGHT, BOTTOM, BEHIND }
+
+const _OOB_MISS_SMOKE := preload("res://res/Particles/Smoke_particles/SmokeQuick.tscn")
+const _OOB_MISS_SPARKS = preload("uid://fsbgvpv0703x")
+# --------------------------------------------------------------------------
 
 func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(enter_state.bind(State.PULSE_ROCKS))
@@ -438,7 +450,8 @@ func check_rocks_out_of_bounds() -> void:
 			continue
 
 		if _is_outside_camera_miss_bounds(camera, world_pos, viewport_size):
-			deactivate_out_of_bounds_rock(body)
+			var side := _get_camera_miss_side(camera, world_pos, viewport_size)
+			deactivate_out_of_bounds_rock(body, side)
 
 
 func _get_bounds_camera() -> Camera3D:
@@ -466,21 +479,25 @@ func _is_inside_camera_viewport(camera: Camera3D, world_pos: Vector3, viewport_s
 ## Left / right / bottom past the viewport + margin. Top is never a miss.
 ## Behind the camera counts as out once the rock has already been on-screen.
 func _is_outside_camera_miss_bounds(camera: Camera3D, world_pos: Vector3, viewport_size: Vector2) -> bool:
+	return _get_camera_miss_side(camera, world_pos, viewport_size) != OobSide.NONE
+
+
+func _get_camera_miss_side(camera: Camera3D, world_pos: Vector3, viewport_size: Vector2) -> OobSide:
 	if camera.is_position_behind(world_pos):
-		return true
+		return OobSide.BEHIND
 
 	var screen := camera.unproject_position(world_pos)
 	if screen.x < -oob_margin_left_px:
-		return true
+		return OobSide.LEFT
 	if screen.x > viewport_size.x + oob_margin_right_px:
-		return true
+		return OobSide.RIGHT
 	if screen.y > viewport_size.y + oob_margin_bottom_px:
-		return true
+		return OobSide.BOTTOM
 	# screen.y < 0 (above the camera) is allowed
-	return false
+	return OobSide.NONE
 
 
-func deactivate_out_of_bounds_rock(body: RockInstance) -> void:
+func deactivate_out_of_bounds_rock(body: RockInstance, side: OobSide = OobSide.NONE) -> void:
 	if body.current_state != RockInstance.State.ACTIVE:
 		return
 	if body.rock_activated == false:
@@ -488,9 +505,82 @@ func deactivate_out_of_bounds_rock(body: RockInstance) -> void:
 
 	# Capture before MISSED → reset_stats() clears rock_type_name.
 	var missed_rock_type_name: String = body.rock_type_name
+	var miss_pos: Vector3 = body.global_position
 	body.rock_activated = false
+	if body.has_method('out_of_bounds'):
+		body.out_of_bounds()
 	body.enter_state(body.State.MISSED)
 	gl_PlayerState.log_rock_missed(missed_rock_type_name)
+
+	# Strike / miss feedback (skip hazards & smokecans — they don't count as OOB strikes).
+	if oob_miss_feedback_enabled and _oob_miss_should_show_feedback(missed_rock_type_name):
+		_play_oob_miss_feedback(miss_pos, side)
+
+
+func _oob_miss_should_show_feedback(rock_type_name: String) -> bool:
+	if rock_type_name.contains("hazard"):
+		return false
+	if rock_type_name.contains("rock_type_8") or rock_type_name.contains("smokecan"):
+		return false
+	return true
+
+
+func _play_oob_miss_feedback(world_pos: Vector3, side: OobSide) -> void:
+	_spawn_oob_miss_particles(world_pos)
+	var side_sign := _oob_side_to_camera_x_sign(side, world_pos)
+	var cam := get_tree().get_first_node_in_group("player_cam")
+	if cam and cam.has_method("shake_camera_oob_miss"):
+		cam.shake_camera_oob_miss(side_sign, oob_miss_shake_amount, oob_miss_shake_duration)
+
+
+## -1 = punch camera left, +1 = punch camera right (camera local X).
+func _oob_side_to_camera_x_sign(side: OobSide, world_pos: Vector3) -> float:
+	match side:
+		OobSide.LEFT:
+			return -1.0
+		OobSide.RIGHT:
+			return 1.0
+		_:
+			# Bottom / behind — bias by which half of the screen the rock was on.
+			var cam := _get_bounds_camera()
+			if cam == null:
+				return signf(world_pos.x) if not is_zero_approx(world_pos.x) else 1.0
+			if cam.is_position_behind(world_pos):
+				return signf(world_pos.x) if not is_zero_approx(world_pos.x) else 1.0
+			var screen := cam.unproject_position(world_pos)
+			var mid := get_viewport().get_visible_rect().size.x * 0.5
+			return -1.0 if screen.x < mid else 1.0
+
+
+func _spawn_oob_miss_particles(world_pos: Vector3) -> void:
+	var host := get_tree().current_scene
+	if host == null:
+		host = self
+
+	var smoke: Node = _OOB_MISS_SMOKE.instantiate()
+	host.add_child(smoke)
+	if smoke is Node3D:
+		(smoke as Node3D).global_position = world_pos
+	if smoke is GPUParticles3D:
+		var gp := smoke as GPUParticles3D
+		gp.one_shot = true
+		gp.emitting = true
+		gp.finished.connect(smoke.queue_free, CONNECT_ONE_SHOT)
+	else:
+		smoke.queue_free.call_deferred()
+
+	var sparks: Node = _OOB_MISS_SPARKS.instantiate()
+	host.add_child(sparks)
+	if sparks is Node3D:
+		(sparks as Node3D).global_position = world_pos
+	if sparks is GPUParticles3D:
+		var sp := sparks as GPUParticles3D
+		sp.one_shot = true
+		sp.emitting = true
+		sp.finished.connect(sparks.queue_free, CONNECT_ONE_SHOT)
+	else:
+		# Fallback free if scene root isn't a GPUParticles3D.
+		get_tree().create_timer(1.2).timeout.connect(sparks.queue_free, CONNECT_ONE_SHOT)
 
 
 func assign_rock_positions(bodies: Array) -> void:
@@ -542,13 +632,16 @@ func assign_rock_positions(bodies: Array) -> void:
 
 
 func column_to_x(column: int) -> float:
-	# Column 1 -> 7, column 2 -> 5, ... column 8 -> -7.
+	# Column 1 -> 7, column 2 -> 5, ... column 8 -> -7 (when broaden_columns == 0).
 	column = column % 10
 	
 	var clamped_column := clampi(column, 1, COLUMN_COUNT)
 	if clamped_column != column:
 		push_warning("RockManager: column %d out of range [1, %d], clamped to %d." % [column, COLUMN_COUNT, clamped_column])
-	return COLUMN_1_X - float(clamped_column - 1) * COLUMN_STEP
+	var base_x := COLUMN_1_X - float(clamped_column - 1) * COLUMN_STEP
+	if is_zero_approx(base_x):
+		return 0.0
+	return base_x + signf(base_x) * broaden_columns
 
 
 func assign_manual_rock_positions(bodies: Array) -> void:

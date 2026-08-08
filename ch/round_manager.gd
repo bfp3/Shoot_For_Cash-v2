@@ -789,13 +789,14 @@ func update_wave_start() -> void:
 	await get_tree().create_timer(1.9, false).timeout
 	#await get_tree().create_timer(0.8, false).timeout
 	
-	if egg_pulse:
-		egg_pulse.activate_flash()
-	
 	if force_shop_open or _level_editor_finishing:
 		return
 	
+	if egg_pulse:
+		egg_pulse.activate_flash()
+		
 	EventBus.instance.egg_pulsed.emit()
+	
 	
 func update_wave_end() -> void:
 	enter_state(RoundState.CHECK_SCORE)

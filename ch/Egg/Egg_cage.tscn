@@ -23,7 +23,6 @@
 [ext_resource type="PackedScene" uid="uid://be5qx3wm0xb13" path="res://unfiled/Blender_custom_assets/Egg_pedestal_project.blend" id="17_xadgt"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="19_4xafn"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="22_jqr44"]
-[ext_resource type="AudioStream" uid="uid://ckyllkccgnev0" path="res://sfx/Camera_waking_up_3.ogg" id="23_q05x1"]
 
 [sub_resource type="GDScript" id="GDScript_xadgt"]
 script/source = "extends Node
@@ -1332,113 +1331,6 @@ _surfaces = [{
 [sub_resource type="ViewportTexture" id="ViewportTexture_wamlg"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="GDScript" id="GDScript_4xafn"]
-script/source = "extends ProgressBar
-#
-#const POINTS_ADDED_SFX = preload(\"res://400_sounds/00_sfx/Camera_SFX/Camera_waking_up_3.wav\")
-#
-#@onready var parent: Egg_Cage = $'../..'
-#
-#@export var progress_speed := 5.0
-#@export var progress_threshold := 60.0
-#
-#var warming_up_speed := 3.0
-#
-#var temporarily_invulnerable := false
-#var currently_depleting := false
-#var can_pulse := false
-#var await_time := 0.04
-#
-#var charging_up := false
-#var colour_of_egg
-#var colour_hue_full_power : Color = Color('ff6600')
-#var colour_hue_no_power : Color = Color('ffffff')
-#
-#func _ready() -> void:
-	##EventBus.instance.egg_taken_damage.connect(_reset_value)
-	#EventBus.instance.egg_pulsed.connect(finished_pulse)
-	#EventBus.instance.rock_destroyed.connect(add_points_to_charge)
-	#
-	#colour_of_egg = %Egg_shape.material_override.emission
-	#%Egg_shape.material_override.emission = colour_hue_no_power
-#
-#func _reset_value() -> void:
-	#if temporarily_invulnerable || currently_depleting:
-		#return
-	#
-	#currently_depleting = true
-	#var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
-	#tween.tween_property(self, \"value\", 0.0, 1.0)
-	#tween.parallel().tween_property(self, \"modulate\", Color('bdbdbd'), 1.0)
-	#tween.parallel().tween_property(self, \"scale\", Vector2.ONE, 1.0)
-	#tween.parallel().tween_property( %Egg_shape, \"material_override:emission\", colour_hue_no_power, 2.0)
-	##tween.tween_interval(0.5)
-	#await tween.finished
-	#currently_depleting = false
-	#set_process(true)
-#
-#
-#func add_points_to_charge() -> void:
-	#value += progress_speed * warming_up_speed
-#
-#func _process(delta: float) -> void:
-	##value += delta * progress_speed * warming_up_speed
-	#
-	## Interpolate emission color based on value
-	#var t = clamp(value / 100.0, 0.0, 1.0)
-	#var interpolated_color := colour_hue_no_power.lerp(colour_hue_full_power, t)
-	#if %Egg_shape:
-		#%Egg_shape.material_override.emission = interpolated_color
-	#else:
-		#set_process(false)
-#
-	#if !can_pulse && value > progress_threshold:
-		#can_pulse = true
-	#
-	#if value >= 100.0:
-		#if parent.secondary_bonus_egg:
-			#return
-		#warming_up_speed = clamp(warming_up_speed - 0.5, 0.5, warming_up_speed)
-		#set_process(false)
-		#$Start_SFX.play()
-		#%GPUParticles3D.emitting = true
-		#can_pulse = false
-		#$EggPulseSfx_telegraphing.play()
-		#var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
-		#tween.tween_property(self, \"modulate\", Color.WHITE, 0.15)
-		#tween.parallel().tween_property(self, \"scale\", Vector2.ONE * 1.5, 0.15)
-		#tween.parallel().tween_callback(EventBus.instance.egg_pulse_activated.emit)
-		#await tween.finished
-		#while_loop()
-	#
-		#
-#
-#
-#func finished_pulse() -> void:
-	#await_time = 0.04
-	#charging_up = false
-#
-#
-#func while_loop() -> void:
-	#var pitch_scale: float = 2.0
-	#var counter := 0
-	#await get_tree().create_timer(0.1).timeout
-	#charging_up = true
-	#while charging_up:
-		#if counter >= 6:
-			#charging_up = false
-			#break
-		#CommonCode.play_sound_instance_pitch_adjusted(POINTS_ADDED_SFX, -50.0, pitch_scale)
-		#await_time += 0.04
-		#await_time = abs(await_time)
-	#
-		#await get_tree().create_timer(await_time).timeout
-		#counter += 1
-		#pitch_scale += 0.2
-#
-	##reset_score()
-"
-
 [sub_resource type="Curve" id="Curve_ncfhq"]
 _data = [Vector2(0, 0.605795), 0.0, 0.0, 0, 0, Vector2(0.325581, 1), 0.0, 0.0, 0, 0, Vector2(0.478405, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 4
@@ -1818,33 +1710,6 @@ texture = ExtResource("19_4xafn")
 [node name="Sprite3D" type="Sprite3D" parent="." unique_id=1326094909]
 transform = Transform3D(-0.29, 0, -2.53526e-08, 0, 0.29, 0, 2.53526e-08, 0, -0.29, 0, -0.24658, -0.529802)
 texture = SubResource("ViewportTexture_wamlg")
-
-[node name="SubViewport" type="SubViewport" parent="." unique_id=2092756530]
-transparent_bg = true
-size = Vector2i(336, 27)
-
-[node name="ProgressBar" type="ProgressBar" parent="SubViewport" unique_id=792819875]
-unique_name_in_owner = true
-modulate = Color(0.74, 0.74, 0.74, 1)
-offset_right = 336.0
-offset_bottom = 27.0
-show_percentage = false
-script = SubResource("GDScript_4xafn")
-
-[node name="EggPulseSfx_telegraphing" type="AudioStreamPlayer" parent="SubViewport/ProgressBar" unique_id=877766688]
-stream = ExtResource("3_4c1xo")
-volume_db = -31.0
-pitch_scale = 2.0
-
-[node name="Start_SFX" type="AudioStreamPlayer" parent="SubViewport/ProgressBar" unique_id=1341507291]
-stream = ExtResource("3_4c1xo")
-volume_db = -34.0
-pitch_scale = 6.0
-
-[node name="Charging_up_sound" type="AudioStreamPlayer" parent="SubViewport/ProgressBar" unique_id=1886998999]
-stream = ExtResource("23_q05x1")
-volume_db = -40.0
-pitch_scale = 5.0
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=2026598148]
 unique_name_in_owner = true

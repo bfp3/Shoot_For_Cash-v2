@@ -1317,5 +1317,7 @@ func play_piano_note() -> void:
 
 		
 
-		
+func out_of_bounds() -> void:
+	%hitSound.play()
+	%take_damage_sfx.play()
 		
