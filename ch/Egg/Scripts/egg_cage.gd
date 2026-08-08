@@ -87,12 +87,12 @@ func took_a_hit() -> void:
 		#$Egg_shape.hide()
 		#$cracked_egg.show()
 	
-	if !secondary_bonus_egg:
-		EventBus.instance.egg_taken_damage.emit()
-		taken_a_hit_from_a_target.emit()
-		var health_manager : HealthManager = get_tree().get_first_node_in_group('HealthManager')
-		if health_manager:
-			health_manager.egg_took_damage()
+	#if !secondary_bonus_egg:
+		#EventBus.instance.egg_taken_damage.emit()
+		#taken_a_hit_from_a_target.emit()
+		#var health_manager : HealthManager = get_tree().get_first_node_in_group('HealthManager')
+		#if health_manager:
+			#health_manager.egg_took_damage()
 			
 	#else:
 		#GameManager.current_score_not_displayed -= 100.0

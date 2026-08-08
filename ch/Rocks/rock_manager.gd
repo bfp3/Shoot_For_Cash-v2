@@ -66,7 +66,7 @@ const AIM_PLANE_Z := 23.0
 ## Multiplier on computed aimed-launch impulse. 1.0 = exact ballistic solve; raise if rocks land short.
 @export_range(0.5, 2.0, 0.01) var aim_impulse_scale := 1.14
 ## Gravity during the aimed arc (higher = faster launch, sharper slowdown at apex). Must match impulse math.
-@export_range(0.05, 1.0, 0.01) var aim_launch_gravity_scale := 0.35
+@export_range(0.05, 1.0, 0.01) var aim_launch_gravity_scale := 0.5
 ## Linear damp applied once the rock passes the apex and starts falling.
 @export_range(0.0, 2.0, 0.05) var aim_descent_linear_damp := 0.5
 ## Extra seconds added to the ascent before passing the aim cell (0 = tight apex; try ~0.5 for old hang).

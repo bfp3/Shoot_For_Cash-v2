@@ -2,7 +2,6 @@
 
 [ext_resource type="Environment" uid="uid://c2ydq6pe4fe5" path="res://res/moss_env_v2.tres" id="1_1thcr"]
 [ext_resource type="PackedScene" uid="uid://cbelgvglet2ae" path="res://sc/All_level_layouts/moss_visual_boost.tscn" id="2_mossboost"]
-[ext_resource type="Material" uid="uid://bwdcwnn0arat1" path="res://res/moss_pad_floor_material.tres" id="2_mossfloor"]
 [ext_resource type="Material" uid="uid://biyawm8nwgiiq" path="res://res/moss_level_white_material.tres" id="3_fwjsh"]
 [ext_resource type="PackedScene" uid="uid://c3mxy8tvyd34a" path="res://unfiled/Blender_custom_assets/brick_fountain_2.glb" id="4_1vd3e"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="6_u0cw1"]
@@ -1114,11 +1113,9 @@ radial_segments = 6
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true
-transform = Transform3D(-0.8660254, -0.3535534, -0.3535534, 0, 0.7071068, -0.7071068, 0.5, -0.6123724, -0.6123724, 40, 80, 60)
-light_color = Color(1, 0.9, 0.78, 1)
-light_energy = 1.45
+transform = Transform3D(-0.50000006, -0.04079538, -0.86506397, 0, 0.9988898, -0.047106452, 0.8660254, -0.023553228, -0.499445, 40, 80, 60)
+light_color = Color(1, 0.7435, 0.43, 1)
 light_indirect_energy = 1.1
-light_volumetric_fog_energy = 1.15
 light_angular_distance = 0.55
 light_bake_mode = 0
 shadow_enabled = true
@@ -1129,7 +1126,6 @@ shadow_blur = 1.25
 directional_shadow_mode = 1
 directional_shadow_split_1 = 0.08
 directional_shadow_split_2 = 0.22
-directional_shadow_split_3 = 0.5
 directional_shadow_blend_splits = true
 directional_shadow_max_distance = 520.0
 sky_mode = 1
@@ -1138,7 +1134,8 @@ sky_mode = 1
 unique_name_in_owner = true
 environment = ExtResource("1_1thcr")
 
-[node name="MossVisualBoost" parent="." instance=ExtResource("2_mossboost")]
+[node name="MossVisualBoost" parent="." unique_id=1842988639 instance=ExtResource("2_mossboost")]
+visible = false
 
 [node name="ShadowBlocker" type="MeshInstance3D" parent="." unique_id=580761885]
 transform = Transform3D(-2.585, 0, -1.509958e-07, 0, 1, 0, 3.9032415e-07, 0, -1, -2, -7.197, -18)
@@ -2961,6 +2958,7 @@ cull_mask = 1048559
 
 [node name="Road_Block_Brick_Mesh" type="Node3D" parent="." unique_id=1540325486]
 transform = Transform3D(0.545, 0, 0, 0, 0.545, 0, 0, 0, 0.545, -7, -0.52, 20.144)
+visible = false
 metadata/_edit_group_ = true
 
 [node name="Single_brick" type="MeshInstance3D" parent="Road_Block_Brick_Mesh" unique_id=862807135]
@@ -3244,7 +3242,6 @@ mesh = SubResource("BoxMesh_s470r")
 
 [node name="floor5" type="MeshInstance3D" parent="." unique_id=1782690611]
 transform = Transform3D(200, 0, 0, 0, 1, 0, 0, 0, 100.00001, 3.36, -3.48, 333.782)
-material_override = ExtResource("2_mossfloor")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
 skeleton = NodePath("../Boatmesh")
