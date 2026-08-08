@@ -34,6 +34,7 @@
 [ext_resource type="AudioStream" uid="uid://3tos28iojxib" path="res://sfx/Hovercraft_turning_SFX_left_v3.ogg" id="20_g6ubq"]
 [ext_resource type="AudioStream" uid="uid://cya8lm4w3l6hi" path="res://sfx/Hovercraft_turning_SFX_right_v3.ogg" id="21_bpx2c"]
 [ext_resource type="Script" uid="uid://bmye3h6jry1bf" path="res://ch/Player/scripts/mouse_turning_sfx_script.gd" id="24_b1tng"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_l3uax"]
 [ext_resource type="Script" uid="uid://c4ks6vo5kbwh5" path="res://ch/Player/sky_mine_hud.gd" id="29_f75d4"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="29_fuvvr"]
 [ext_resource type="Script" uid="uid://c66tdaw8j27r3" path="res://ch/HUD_components/total_rocks.gd" id="29_mxtxj"]
@@ -1086,6 +1087,10 @@ volume_db = -25.0
 [node name="ScopeShrink" type="AudioStreamPlayer" parent="SFX" unique_id=234682080]
 stream = ExtResource("11_txfio")
 volume_db = -30.0
+
+[node name="scopeSpeedAdjustSpeedSfx" type="AudioStreamPlayer" parent="SFX" unique_id=1857270040]
+stream = ExtResource("26_l3uax")
+volume_db = -22.0
 
 [node name="Mouse_turning_SFX" type="Node" parent="." unique_id=1347696153]
 unique_name_in_owner = true

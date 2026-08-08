@@ -315,7 +315,7 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
-	handle_keyboard_crosshair(delta)
+	handle_keyboard_and_controller_input(delta)
 	update_gun_look()
 	
 	#handle_pan_keyboard(delta)
@@ -436,11 +436,15 @@ func handle_joystick(delta : float) -> void:
 	var joystick_motion := direction * strength * joystick_sensitivity * delta
 	target_crosshair_position += joystick_motion
 
-func handle_keyboard_crosshair(delta: float) -> void:
+func handle_keyboard_and_controller_input(delta: float) -> void:
 	var direction := Vector2(
 		Input.get_axis("left", "right"),
 		Input.get_axis("forward", "backward")
 	)
+	
+	if direction == Vector2.ZERO:
+		return
+		
 	const keyboard_crosshair_speed := 1300.0
 	var speed := keyboard_crosshair_speed
 	if Input.is_action_pressed("sprint"):
@@ -774,6 +778,18 @@ func player_did_not_miss() -> void:
 
 func _input(event: InputEvent) -> void:
 	
+	if Input.is_action_just_pressed('increase_scope_speed'):
+		GameSettings.bump_mouse_sensitivity(1)
+		$SFX/scopeSpeedAdjustSpeedSfx.play()
+		print("Mouse sensitivity increased:", GameSettings.mouse_sensitivity_level)
+		
+	if Input.is_action_just_pressed('decrease_scope_speed'):
+		GameSettings.bump_mouse_sensitivity(-1)
+		$SFX/scopeSpeedAdjustSpeedSfx.play()
+		print("Mouse sensitivity decreased:", GameSettings.mouse_sensitivity_level)
+
+	
+	
 	if current_state != State.ACTIVE:
 		return
 	
@@ -781,17 +797,9 @@ func _input(event: InputEvent) -> void:
 		# Resolution-independent look: same screen-fraction motion on any monitor.
 		target_crosshair_position += GameSettings.mouse_look_delta(event.relative)
 	
-	#elif event is InputEventMouseButton and event.pressed:
-		#match event.button_index:
-			#MOUSE_BUTTON_WHEEL_UP:
-				#GameSettings.bump_mouse_sensitivity(1)
-				#print("Mouse sensitivity:", GameSettings.mouse_sensitivity_level)
-#
-			#MOUSE_BUTTON_WHEEL_DOWN:
-				#GameSettings.bump_mouse_sensitivity(-1)
-				#print("Mouse sensitivity:", GameSettings.mouse_sensitivity_level)
-
-
+	
+	
+	
 
 func little_camera_movement() -> void:
 	camera_3d.little_camera_movement()
