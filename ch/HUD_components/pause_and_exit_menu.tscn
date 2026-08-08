@@ -264,7 +264,7 @@ autowrap_mode = 0
 [node name="ResolutionOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1516272270]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 57
 
 [node name="MsaaLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=2129266467]
 layout_mode = 2
@@ -277,7 +277,7 @@ autowrap_mode = 0
 [node name="MsaaOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=313441040]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 57
 
 [node name="ScaleLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1279813318]
 layout_mode = 2
@@ -290,7 +290,7 @@ autowrap_mode = 0
 [node name="Scale3DOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=932239202]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 57
 
 [node name="VsyncLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=244473920]
 layout_mode = 2
@@ -303,7 +303,7 @@ autowrap_mode = 0
 [node name="VsyncOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=283401001]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 57
 
 [node name="FpsLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=2020763159]
 layout_mode = 2
@@ -316,7 +316,7 @@ autowrap_mode = 0
 [node name="MaxFpsOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1277799547]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 57
 
 [node name="SensLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=42948696]
 layout_mode = 2
@@ -414,12 +414,13 @@ theme_override_constants/margin_bottom = 28
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="CountdownLabel" type="Label" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox" unique_id=207074148]
+[node name="CountdownLabel" type="RichTextLabel" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox" unique_id=121445735]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/normal_font_size = 54
 text = "Keep this resolution?
 Reverting in 15..."
+fit_content = true
 horizontal_alignment = 1
 
 [node name="Buttons" type="HBoxContainer" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox" unique_id=1418798457]
@@ -432,7 +433,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 82
 text = "Keep"
 
 [node name="RevertButton" type="Button" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox/Buttons" unique_id=1503897895]
@@ -440,7 +441,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 82
 text = "Revert"
 
 [connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="." method="_on_cancel_menu_pressed"]

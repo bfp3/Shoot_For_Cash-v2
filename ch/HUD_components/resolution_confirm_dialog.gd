@@ -5,7 +5,7 @@ extends Control
 signal kept
 signal reverted
 
-@onready var countdown_label: Label = %CountdownLabel
+@onready var countdown_label: RichTextLabel = %CountdownLabel
 @onready var keep_button: Button = %KeepButton
 @onready var revert_button: Button = %RevertButton
 

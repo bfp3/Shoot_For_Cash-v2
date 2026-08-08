@@ -9,7 +9,6 @@ const SHOP_MINI_GAME_SCENE := preload("res://ch/Shop/ShopMiniGame.tscn")
 @onready var available_upgrades: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades
 @onready var reroll_button: Button = %Reroll
 @onready var all_skills_container: Control = %TreeCanvas
-@onready var bg_music: AudioStreamPlayer = $SFX/BG_Music
 
 @export var can_appear_when_maxed := false
 
@@ -49,10 +48,7 @@ func _ready() -> void:
 	
 	EventBus.instance.update_money.connect(update_shop_labels)
 
-
-	
-	bg_music.volume_db = -80.0
-	bg_music.play()
+	_music_control_call("ensure_shop_music_playing")
 
 	# STORE DEFAULT TRANSFORMS
 	default_scale = scale
@@ -292,7 +288,7 @@ func _force_hide_ammo_count_popup() -> void:
 
 func update_open_menu() -> void:
 	if gl_PlayerState.dataset.round == 1:
-		bg_music.play()
+		_music_control_call("ensure_shop_music_playing")
 	
 	reset_cash_label_color()
 	sfx_open_shop()
@@ -319,7 +315,7 @@ func update_open_menu() -> void:
 	tween.parallel().tween_property(self, "scale", default_scale, 0.3)
 	tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
 
-	shop_music_raise_volume()
+	_music_control_call("raise_shop_menu_music")
 
 	await tween.finished
 	
@@ -362,7 +358,7 @@ func soft_hide_for_level_editor() -> void:
 	_close_shop_mini_game()
 	current_state = SkillState.INACTIVE
 	hide()
-	shop_music_lower_volume()
+	_music_control_call("lower_shop_menu_music")
 
 
 ## Re-open shop after leaving the level editor (BACK).
@@ -381,7 +377,7 @@ func update_close_menu() -> void:
 	
 	clear_available_skills()
 
-	shop_music_lower_volume()
+	_music_control_call("lower_shop_menu_music")
 	reroll_index = 0
 	
 	# ENSURE PIVOT IS CORRECT
@@ -716,17 +712,17 @@ func sfx_reroll_purchased() -> void:
 	$SFX/shop_coin_sfx_01.play()
 
 
-	
-func shop_music_raise_volume() -> void:
-	const _music_vol := -30.0
-	var tween := create_tween()
-	tween.tween_property(bg_music, "volume_db", _music_vol, 0.25)	
+func _music_control_call(method_name: String) -> void:
+	var music := _get_music_control()
+	if music and music.has_method(method_name):
+		music.call(method_name)
 
-	
-	
-func shop_music_lower_volume() -> void:
-	var tween := create_tween()
-	tween.tween_property(bg_music, "volume_db", -80.0, 3.0)
+
+func _get_music_control() -> Node:
+	if round_manager and round_manager.music_manager:
+		return round_manager.music_manager
+	return get_tree().get_first_node_in_group("level_music")
+
 
 func sfx_open_shop() -> void:
 	$SFX/shop_open_sfx_01.play(0.3)

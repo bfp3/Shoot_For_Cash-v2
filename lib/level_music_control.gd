@@ -5,6 +5,7 @@ extends Node
 @onready var oasis: AudioStreamPlayer = $Oasis
 @onready var ending_song: AudioStreamPlayer = $EndingSong
 @onready var wind_noises: AudioStreamPlayer = $WindNoises
+@onready var shop_music: AudioStreamPlayer = $Shop_Music
 # Stores each song's original/default volume
 var default_volume_map : Dictionary = {}
 
@@ -13,10 +14,14 @@ var default_volume_map : Dictionary = {}
 
 @export var background_music_vol_in_shop := -40.0
 @export var background_music_vol_out_of_shop := -40.0
+## Dedicated shop-menu track volume when the shop is open.
+@export var shop_music_volume := -30.0
+
 
 func _ready() -> void:
 	default_volumes()
-	
+	_init_shop_music()
+
 
 #func start_bg_music() -> void:
 	##tween_item(oasis)
@@ -56,7 +61,41 @@ func tween_item(_song : AudioStreamPlayer, duration := 2.0) -> void:
 
 	var tween : Tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_property(_song, "volume_db", default_volume_map[_song], duration)
-	
+
+
+func _init_shop_music() -> void:
+	if shop_music == null:
+		return
+	shop_music.volume_db = -80.0
+	if not shop_music.playing:
+		shop_music.play()
+
+
+## Start/restart the shop menu track (muted until raise).
+func ensure_shop_music_playing() -> void:
+	if shop_music == null:
+		return
+	if not shop_music.playing:
+		shop_music.volume_db = -80.0
+		shop_music.play()
+
+
+## Fade in the dedicated shop-menu track (was BG_Music in the shop scene).
+func raise_shop_menu_music() -> void:
+	if shop_music == null:
+		return
+	ensure_shop_music_playing()
+	var tween := create_tween()
+	tween.tween_property(shop_music, "volume_db", shop_music_volume, 0.25)
+
+
+## Fade out the dedicated shop-menu track.
+func lower_shop_menu_music() -> void:
+	if shop_music == null:
+		return
+	var tween := create_tween()
+	tween.tween_property(shop_music, "volume_db", -80.0, 3.0)
+
 	
 func shop_music_raise_volume() -> void:
 	if current_song == null:
@@ -89,6 +128,9 @@ func first_round() -> void:
 		
 	if current_song.playing:
 		return
+
+	if $Randomiser.playing:
+		return 
 		
 	$Randomiser.play()
 	

@@ -50,8 +50,8 @@ var _launch_delays_sec : Array = []
 var _timed_event_schedule : Array = []
 var _timed_event_epoch := 0
 
-const COLUMN_1_X := 18.0 #7.0
-const COLUMN_STEP := 4.0 #2.0
+const COLUMN_1_X := 7.0 #18.0 
+const COLUMN_STEP := 2.0 #4.0
 const COLUMN_COUNT := 8
 const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a column
 @export var DEFAULT_LAUNCH_WAIT_MS := 100

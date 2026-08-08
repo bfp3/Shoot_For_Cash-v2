@@ -1,6 +1,7 @@
 extends Node
 class_name RoundManager
 
+const LEVEL_LAYOUT_000_JETZ = preload("uid://ceklxgxfwiv1t")
 const LEVEL_LAYOUT_00_OPENING_SCENE = preload('uid://88s7u86w4lfr')
 const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
 const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
@@ -1002,6 +1003,8 @@ func _layout_for_level(level_id: String) -> PackedScene:
 			return LEVEL_LAYOUT_02_REDD
 		'glory':
 			return LEVEL_LAYOUT_03_GLORY
+		'jetz', 'test':
+			return LEVEL_LAYOUT_000_JETZ
 		_:
 			return null
 
@@ -1258,7 +1261,7 @@ func move_to_moss_instant() -> void:
 	await move_to_level_instant("moss")
 
 
-## Instant range setup for moss / redd / glory — no fade timers.
+## Instant range setup for moss / redd / glory / jetz — no fade timers.
 func move_to_level_instant(level_id: String) -> void:
 	level_id = level_id.to_lower()
 	var layout_scene := _layout_for_level(level_id)

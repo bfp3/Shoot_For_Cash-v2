@@ -18,6 +18,7 @@
 [ext_resource type="AudioStream" uid="uid://bblf41t53etln" path="res://sfx/Windmill_Sprint.ogg" id="15_ymbdo"]
 [ext_resource type="AudioStream" uid="uid://bk6dsl4ownky8" path="res://sfx/USERSONG164.ogg" id="16_ec2we"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="17_lysu5"]
+[ext_resource type="AudioStream" uid="uid://bljoq1kmbgs2" path="res://sfx/shop_music.ogg" id="17_shopm"]
 [ext_resource type="AudioStream" uid="uid://yotbn67ks25f" path="res://sfx/spare_songs/Windmill_math_anim2.ogg" id="19_gf2tl"]
 [ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="19_gu7ia"]
 [ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="20_l8wgb"]
@@ -54,7 +55,6 @@
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
 [ext_resource type="PackedScene" uid="uid://ownxjc3mlmfd" path="res://ch/HUD_components/pause_and_exit_menu.tscn" id="64_tnw34"]
 [ext_resource type="Script" uid="uid://3le0jpjo3qtu" path="res://ch/background_transition.gd" id="65_fjk4d"]
-[ext_resource type="PackedScene" uid="uid://bdbe1uwqejohk" path="res://ch/HUD_components/wave_progress_indicator.tscn" id="65_heewt"]
 [ext_resource type="PackedScene" uid="uid://cmrkldyt0ctt1" path="res://ch/demo_end_screen/Game_over_screen.tscn" id="65_vwwt2"]
 [ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="65_wtxnc"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
@@ -236,10 +236,7 @@ friction = 0.0
 size = Vector3(40, 1, 9.025)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fjxa8"]
-size = Vector3(150, 0.1, 2019)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_nh3e2"]
-size = Vector3(40, 0.1, 56)
+size = Vector3(4000, 0.1, 4000)
 
 [sub_resource type="Gradient" id="Gradient_an2hp"]
 offsets = PackedFloat32Array(0, 0.1756374, 0.305949, 0.38243628)
@@ -535,7 +532,7 @@ volume_db = -10.0
 pitch_scale = 0.7
 max_polyphony = 2
 
-[node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("current_song", "opening_song")]
+[node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("current_song", "opening_song") groups=["level_music"]]
 script = ExtResource("3_r5w5l")
 current_song = NodePath("Windmill")
 opening_song = NodePath("Opening_song")
@@ -582,23 +579,28 @@ volume_db = -54.0
 [node name="Oasis" type="AudioStreamPlayer" parent="Music" unique_id=230623079]
 stream = ExtResource("14_ec2we")
 volume_db = -30.0
+bus = &"MusicBus"
 
 [node name="YokoKanno" type="AudioStreamPlayer" parent="Music" unique_id=1383563011]
 stream = ExtResource("14_mdemw")
 volume_db = -40.0
+bus = &"MusicBus"
 
 [node name="Windmill" type="AudioStreamPlayer" parent="Music" unique_id=109703835]
 stream = ExtResource("15_heewt")
 volume_db = -40.0
 pitch_scale = 0.85
+bus = &"MusicBus"
 
 [node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
 stream = ExtResource("15_ymbdo")
 volume_db = -35.0
+bus = &"MusicBus"
 
 [node name="EndingSong" type="AudioStreamPlayer" parent="Music" unique_id=468679081]
 stream = ExtResource("16_ec2we")
 volume_db = -20.0
+bus = &"MusicBus"
 
 [node name="PerfectPineappleRound" type="AudioStreamPlayer" parent="Music" unique_id=1838793762]
 unique_name_in_owner = true
@@ -609,6 +611,12 @@ pitch_scale = 0.9
 [node name="Randomiser" type="AudioStreamPlayer" parent="Music" unique_id=1748658751]
 stream = SubResource("AudioStreamRandomizer_mdemw")
 volume_db = -40.0
+bus = &"MusicBus"
+
+[node name="Shop_Music" type="AudioStreamPlayer" parent="Music" unique_id=800541780]
+stream = ExtResource("17_shopm")
+volume_db = -20.0
+bus = &"MusicBus"
 
 [node name="DebugVisualiser" type="Node3D" parent="." unique_id=1321570169]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 23)
@@ -1133,7 +1141,7 @@ transform = Transform3D(0.266, 0, 0, 0, 0.266, 0, 0, 0, 0.266, -4.432, -2.214, 1
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.045, 38.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.045, 0)
 visible = false
 collision_layer = 258
 collision_mask = 259
@@ -1142,16 +1150,15 @@ script = ExtResource("24_dse8t")
 round_manager = NodePath("../Round_manager")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Splash_zone" unique_id=915563512]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 991.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1982.4)
 shape = SubResource("BoxShape3D_fjxa8")
+disabled = true
 
-[node name="LeftCollision" type="CollisionShape3D" parent="Splash_zone" unique_id=1224875857]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 7.5, -25, 10.400002)
-shape = SubResource("BoxShape3D_nh3e2")
-
-[node name="RightCollision" type="CollisionShape3D" parent="Splash_zone" unique_id=788809730]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -8.5, -25, 10.400002)
-shape = SubResource("BoxShape3D_nh3e2")
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Splash_zone" unique_id=1899438336]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 10)
+depth = 0.1
+polygon = PackedVector2Array(-20, 0, -2000, -4000, 2000, -4000, 20, 0)
+debug_color = Color(0.58333325, 0.7, 0, 1)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Splash_zone" unique_id=1142810847]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.2624941, 0.4667511)
@@ -1173,9 +1180,9 @@ stream = ExtResource("29_q3aq7")
 volume_db = -18.0
 
 [node name="Visual" type="MeshInstance3D" parent="Splash_zone" unique_id=1883425194]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 23)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=1358077586]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
 material_override = SubResource("StandardMaterial3D_wv0tc")
 mesh = SubResource("BoxMesh_ymbdo")
 skeleton = NodePath("../..")
@@ -1408,9 +1415,6 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-
-[node name="WaveProgressIndicator" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1331631106 instance=ExtResource("65_heewt")]
-layout_mode = 1
 
 [node name="Wave_Text" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1851310312 instance=ExtResource("66_fjxa8")]
 visible = false

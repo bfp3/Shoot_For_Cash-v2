@@ -68,7 +68,8 @@ func _on_glory_pressed() -> void:
 
 
 func _on_testing_pressed() -> void:
-	pass
+	_close_mini_game_if_open()
+	RestarterScript.request_fast_travel("jetz")
 
 
 func _close_mini_game_if_open() -> void:

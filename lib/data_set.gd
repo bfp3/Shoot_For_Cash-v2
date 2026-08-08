@@ -84,7 +84,7 @@ var dataset_float : Dictionary = {
 	}
 
 var dataset_string : Dictionary = {
-	 "place_name" 				: ['moss','redd','glory','blackwaters', 'sodomi', 'start']
+	 "place_name" 				: ['moss','redd','glory','jetz','blackwaters', 'sodomi', 'start']
 	
 	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']
@@ -105,6 +105,7 @@ var dataset_string : Dictionary = {
 	,"wall_quote_moss"			: ["Good Habits\nSave Lives"]
 	,"wall_quote_redd"			: ["Don't Get In\nThe Way Of\nLove"]
 	,"wall_quote_glory"			: ["Morning\nGlory"]
+	,"wall_quote_jetz"			: ["Testing\nRoom"]
 	}
 	
 # DATASET.get_value('bullet_speed',4)
