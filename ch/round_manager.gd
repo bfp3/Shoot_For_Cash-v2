@@ -175,26 +175,38 @@ func register_level_editor(menu: Control) -> void:
 	level_editor_menu = menu
 
 
-## Open level editor from shop (debug D). Soft-closes shop without starting a round.
-## Returns true if the editor opened (caller should consume the D key).
+## Open level editor from shop / start menu (debug). Soft-closes menus without starting a round.
+## Returns true if the editor opened (caller should consume the toggle key).
 func open_level_editor_from_shop() -> bool:
 	if not OS.is_debug_build():
 		return false
 	if level_editor_test_active or level_editor_open:
 		return false
-	if current_round_state != RoundState.SHOP_START:
-		return false
-	if shop_main_menu == null or not shop_main_menu.visible:
-		return false
 	if level_editor_menu == null:
 		push_warning("RoundManager: level editor menu missing")
 		return false
 
+	var start_menu := get_tree().get_first_node_in_group("start_menu_ui") as Control
+	var shop_open := shop_main_menu != null and shop_main_menu.visible
+	var start_open := start_menu != null and start_menu.visible
+
+	# Prefer shop / start menu, but also allow when already in a shop-phase state.
+	if not shop_open and not start_open:
+		if current_round_state != RoundState.SHOP_START and current_round_state != RoundState.INACTIVE:
+			return false
+
 	level_editor_open = true
-	if shop_main_menu.has_method("soft_hide_for_level_editor"):
+	if shop_open and shop_main_menu.has_method("soft_hide_for_level_editor"):
 		shop_main_menu.soft_hide_for_level_editor()
-	else:
+	elif shop_open:
 		shop_main_menu.hide()
+	if start_open:
+		if start_menu.has_method("sfx_close_shop"):
+			start_menu.sfx_close_shop()
+		start_menu.hide()
+		if "current_state" in start_menu:
+			start_menu.current_state = start_menu.State.INACTIVE
+
 	level_editor_menu.open_menu()
 	return true
 

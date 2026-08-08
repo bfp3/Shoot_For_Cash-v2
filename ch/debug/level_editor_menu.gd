@@ -87,8 +87,7 @@ func open_menu() -> void:
 	_is_open = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	show()
-	# Wait for the open key (D) to release before focusing, so it isn't typed in.
-	# Do not permanently swallow D — typing "d" afterward must still work.
+	# Wait for the open key to release before focusing, so it isn't typed in.
 	_script_edit.release_focus()
 	_focus_script_edit_after_open_key()
 
@@ -97,7 +96,11 @@ func _focus_script_edit_after_open_key() -> void:
 	if _waiting_to_focus:
 		return
 	_waiting_to_focus = true
-	while _is_open and (Input.is_physical_key_pressed(KEY_D) or Input.is_key_pressed(KEY_D)):
+	# Hold until toggle keys are released (Shift+K / Shift+D).
+	while _is_open and (
+		Input.is_action_pressed("toggle_key_editor")
+		or Input.is_action_pressed("toggle_level_editor")
+	):
 		await get_tree().process_frame
 	_waiting_to_focus = false
 	if _is_open:
@@ -277,7 +280,8 @@ func _style_action_button(button: Button, primary: bool) -> void:
 func _input(event: InputEvent) -> void:
 	if not OS.is_debug_build() or not _is_open:
 		return
-	if Input.is_action_just_pressed('toggle_key_editor'):
+	# While open, Shift+K toggles the keys help panel (does not close the editor).
+	if event.is_action_pressed("toggle_key_editor") and not event.is_echo():
 		toggle_keys_panel()
 		get_viewport().set_input_as_handled()
 

@@ -24,6 +24,7 @@ func _ready() -> void:
 	_setup_volume_dials()
 	_sync_from_settings()
 	_make_popups_work_while_paused()
+	_wire_focus_neighbors()
 	resolution_option.item_selected.connect(_on_resolution_selected)
 	msaa_option.item_selected.connect(_on_msaa_selected)
 	scale_3d_option.item_selected.connect(_on_scale_3d_selected)
@@ -44,6 +45,71 @@ func _setup_volume_dials() -> void:
 		dial.min_value = 0.0
 		dial.max_value = 100.0
 		dial.step = 1.0
+		if not dial.edit_started.is_connected(_on_volume_edit_started):
+			dial.edit_started.connect(_on_volume_edit_started)
+		if not dial.edit_ended.is_connected(_on_volume_edit_ended):
+			dial.edit_ended.connect(_on_volume_edit_ended)
+
+
+func is_volume_editing() -> bool:
+	return (
+		(master_volume_dial != null and master_volume_dial.is_editing())
+		or (music_volume_dial != null and music_volume_dial.is_editing())
+	)
+
+
+func end_volume_edit() -> void:
+	if master_volume_dial and master_volume_dial.is_editing():
+		master_volume_dial.end_edit()
+	if music_volume_dial and music_volume_dial.is_editing():
+		music_volume_dial.end_edit()
+
+
+func _on_volume_edit_started() -> void:
+	# Close the other dial if somehow both try to edit.
+	var active := master_volume_dial if master_volume_dial and master_volume_dial.is_editing() else music_volume_dial
+	for dial in [master_volume_dial, music_volume_dial]:
+		if dial and dial != active and dial.is_editing():
+			dial.end_edit()
+
+
+func _on_volume_edit_ended() -> void:
+	pass
+
+
+func _wire_focus_neighbors() -> void:
+	# Left column flows top→bottom, then across to volumes / sensitivity / back.
+	var left := [resolution_option, msaa_option, scale_3d_option, vsync_option, max_fps_option]
+	for i in left.size():
+		var cur: Control = left[i]
+		if i > 0:
+			cur.focus_neighbor_top = left[i - 1].get_path()
+		if i < left.size() - 1:
+			cur.focus_neighbor_bottom = left[i + 1].get_path()
+		cur.focus_neighbor_right = master_volume_dial.get_path()
+
+	master_volume_dial.focus_neighbor_left = resolution_option.get_path()
+	master_volume_dial.focus_neighbor_right = music_volume_dial.get_path()
+	master_volume_dial.focus_neighbor_bottom = sens_down.get_path()
+	music_volume_dial.focus_neighbor_left = master_volume_dial.get_path()
+	music_volume_dial.focus_neighbor_bottom = sens_up.get_path()
+
+	sens_down.focus_neighbor_top = master_volume_dial.get_path()
+	sens_down.focus_neighbor_right = sens_up.get_path()
+	sens_up.focus_neighbor_top = music_volume_dial.get_path()
+	sens_up.focus_neighbor_left = sens_down.get_path()
+
+	max_fps_option.focus_neighbor_bottom = resolution_option.get_path()
+	var back := get_node_or_null("Center/Panel/Margin/RootVBox/BackButton") as Control
+	if back == null:
+		# Path relative to Settings_menu root in pause scene.
+		back = find_child("BackButton", true, false) as Control
+	if back:
+		sens_down.focus_neighbor_bottom = back.get_path()
+		sens_up.focus_neighbor_bottom = back.get_path()
+		back.focus_neighbor_top = sens_down.get_path()
+		back.focus_neighbor_left = max_fps_option.get_path()
+		max_fps_option.focus_neighbor_bottom = back.get_path()
 
 
 func _make_popups_work_while_paused() -> void:
@@ -152,4 +218,7 @@ func _on_music_volume_changed(value: float) -> void:
 
 
 func _on_back_pressed() -> void:
+	if is_volume_editing():
+		end_volume_edit()
+		return
 	back_pressed.emit()

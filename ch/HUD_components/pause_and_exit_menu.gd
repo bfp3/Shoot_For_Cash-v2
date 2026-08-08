@@ -40,17 +40,41 @@ func _input(_event: InputEvent) -> void:
 		if Input.is_key_label_pressed(KEY_KP_0):
 			center_container.visible = !center_container.visible
 
-	if Input.is_action_just_pressed("escape"):
+	var toggle_pause := Input.is_action_just_pressed("escape") or Input.is_action_just_pressed("pause")
+	var cancel := (
+		Input.is_action_just_pressed("ui_cancel")
+		or Input.is_action_just_pressed("controller_back_button")
+	)
+
+	# Map popup owns Back / B / Escape while it's open (and pause isn't).
+	if not visible and (cancel or toggle_pause):
+		var map_menu := get_tree().get_first_node_in_group("map_menu")
+		if map_menu and map_menu is CanvasItem and (map_menu as CanvasItem).visible:
+			if map_menu.has_method("_on_close_map_pressed"):
+				map_menu._on_close_map_pressed()
+			get_viewport().set_input_as_handled()
+			return
+
+	if toggle_pause or (cancel and visible):
 		if resolution_confirm.visible:
 			GameSettings.revert_resolution()
+			get_viewport().set_input_as_handled()
 			return
 		if settings_menu.visible:
+			# Volume edit modal owns Back first.
+			if settings_menu.has_method("is_volume_editing") and settings_menu.is_volume_editing():
+				settings_menu.end_volume_edit()
+				get_viewport().set_input_as_handled()
+				return
 			_show_pause_root()
+			get_viewport().set_input_as_handled()
 			return
 		if visible:
 			close_menu()
-		else:
+			get_viewport().set_input_as_handled()
+		elif toggle_pause:
 			open_menu()
+			get_viewport().set_input_as_handled()
 
 
 func open_menu() -> void:
@@ -81,6 +105,7 @@ func open_menu() -> void:
 	await tween.finished
 
 	animating = false
+	_focus_pause_root()
 
 
 func close_menu() -> void:
@@ -102,6 +127,9 @@ func close_menu() -> void:
 	get_tree().paused = false
 	Input.mouse_mode = stored_mouse_mode
 	_show_pause_root()
+	var focused := get_viewport().gui_get_focus_owner()
+	if focused:
+		focused.release_focus()
 
 	animating = false
 
@@ -118,6 +146,8 @@ func _show_pause_root() -> void:
 	quit_control.show()
 	settings_menu.hide()
 	resolution_confirm.hide()
+	if visible and not animating:
+		_focus_pause_root()
 
 
 func _show_settings() -> void:
@@ -126,6 +156,15 @@ func _show_settings() -> void:
 	if settings_menu.has_method("refresh"):
 		settings_menu.refresh()
 	resolution_confirm.hide()
+	UiFocus.grab_in(settings_menu)
+
+
+func _focus_pause_root() -> void:
+	var resume := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/CancelMenu") as Control
+	var settings_btn := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/Settings") as Control
+	var quit_btn := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/CloseGame") as Control
+	UiFocus.wire_vertical([resume, settings_btn, quit_btn])
+	UiFocus.grab_in(quit_control, resume)
 
 
 func _on_close_game_pressed() -> void:
@@ -146,6 +185,8 @@ func _on_settings_back_pressed() -> void:
 
 func _on_open_resolution_confirm() -> void:
 	resolution_confirm.show()
+	var keep := resolution_confirm.get_node_or_null("%KeepButton") as Control
+	UiFocus.grab_in(resolution_confirm, keep)
 
 
 func sfx_open_shop() -> void:

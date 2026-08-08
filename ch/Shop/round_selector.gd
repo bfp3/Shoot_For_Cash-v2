@@ -110,13 +110,18 @@ func enter_state(new_state: State) -> void:
 
 
 func update_locked() -> void:
-	#disabled = true
+	disabled = true
+	focus_mode = Control.FOCUS_NONE
+	if has_focus():
+		release_focus()
 	outer_ring.modulate = outerRingColour_default
 	icon_control.scale = Vector2.ONE / 3
+	arrow_indication.modulate.a = 0.0
 
 
 func update_available() -> void:
 	disabled = false
+	focus_mode = Control.FOCUS_ALL
 	arrow_indication.modulate.a = 1.0
 	outer_ring.modulate = outerRingColour_active
 	round_number.modulate.a = 1.0
@@ -129,7 +134,8 @@ func update_available() -> void:
 
 
 func update_cleared() -> void:
-	#disabled = true
+	disabled = false
+	focus_mode = Control.FOCUS_ALL
 	#check_mark.show()
 	#round_number.hide()
 	round_number.text = stored_text
@@ -142,6 +148,8 @@ func update_cleared() -> void:
 	
 
 func update_perfected() -> void:
+	disabled = false
+	focus_mode = Control.FOCUS_ALL
 	round_number.text = stored_text
 	arrow_indication.modulate.a = 0.0
 	
@@ -172,6 +180,9 @@ func blink_tween() -> void:
 
 
 func _on_pressed() -> void:
+	if current_state == State.LOCKED:
+		return
+
 	if pressed_sfx:
 		pressed_sfx.play()
 

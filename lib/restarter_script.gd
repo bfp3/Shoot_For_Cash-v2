@@ -39,9 +39,15 @@ func _input(event) -> void:
 		if event.shift_pressed and event.keycode == KEY_M:
 			debug_jump_to_level("moss")
 			return
-		if event.keycode == KEY_D and not event.shift_pressed and not event.ctrl_pressed and not event.alt_pressed:
-			if debug_open_level_editor():
-				get_viewport().set_input_as_handled()
+
+	# Prefer the event itself — is_action_just_pressed() is unreliable inside _input.
+	var toggle_editor = (
+		event.is_action_pressed("toggle_key_editor")
+		or event.is_action_pressed("toggle_level_editor")
+	)
+	if toggle_editor and not event.is_echo():
+		if debug_open_level_editor():
+			get_viewport().set_input_as_handled()
 
 
 ## Instant range jump: land on the open shop menu — do not start the round.
@@ -99,12 +105,12 @@ func debug_jump_to_level(level_id: String) -> void:
 	_level_jump_busy = false
 
 
-## Debug D: open level editor from the shop (closes shop UI, does not start a round).
-## Returns true only when the editor actually opened (so the D key can be consumed).
+## Debug: open level editor from the shop / start menu (closes menu UI, does not start a round).
+## Returns true only when the editor actually opened (so the toggle key can be consumed).
 func debug_open_level_editor() -> bool:
 	var round_manager = get_tree().get_first_node_in_group("round_manager")
 	if round_manager == null:
-		push_warning("DEBUG D: round_manager not found")
+		push_warning("DEBUG level editor: round_manager not found")
 		return false
 	if round_manager.has_method("open_level_editor_from_shop"):
 		return bool(round_manager.open_level_editor_from_shop())

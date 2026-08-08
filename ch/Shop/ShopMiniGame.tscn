@@ -5,6 +5,8 @@
 [ext_resource type="Script" uid="uid://cy54vcmks0b5j" path="res://ch/Shop/aoe_script_2d.gd" id="2_aoe"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_8qrfn"]
 [ext_resource type="Script" uid="uid://y6vqoa5yce3s" path="res://ch/Shop/shop_mini_mouse_sfx.gd" id="3_mouse"]
+[ext_resource type="Texture2D" uid="uid://b5a4r6g4rhvgl" path="res://res/orange_2d.png" id="3_q11bd"]
+[ext_resource type="Texture2D" uid="uid://lkkbvdr5c354" path="res://unfiled/Decal_placeholders/Cherry_paint.png" id="4_abof3"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="4_beb21"]
 [ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="4_hit"]
 [ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="5_dmg"]
@@ -25,10 +27,31 @@
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="19_multishot"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="20_smoke"]
 [ext_resource type="AudioStream" uid="uid://cpvfg5fpp3w1g" path="res://sfx/balloon_popsfx_00.ogg" id="21_balloon"]
+[ext_resource type="AudioStream" uid="uid://dpovml0j5l2yy" path="res://sfx/Clock_tick.ogg" id="22_smoke_tick"]
+[ext_resource type="AudioStream" uid="uid://eqghtysjf3ig" path="res://sfx/Explosion.ogg" id="23_smoke_boom"]
+[ext_resource type="AudioStream" uid="uid://bphel0xwbrj6b" path="res://sfx/Points_added.ogg" id="24_wave"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_rock"]
 friction = 0.4
 bounce = 0.35
+
+[sub_resource type="Curve" id="Curve_8qrfn"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.23234627, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_beb21"]
+curve = SubResource("Curve_8qrfn")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_m8x6p"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(1920, 1080, 1)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+gravity = Vector3(0, 0, 0)
+scale_min = 5.0
+scale_max = 10.0
+color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+alpha_curve = SubResource("CurveTexture_beb21")
 
 [sub_resource type="Curve" id="Curve_8xmsh"]
 _data = [Vector2(0.022779044, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -59,7 +82,12 @@ scale_curve = SubResource("CurveTexture_pq3hp")
 color = Color(0.95, 0.75, 0.15, 1)
 alpha_curve = SubResource("CurveTexture_5v5l5")
 
+[sub_resource type="Curve" id="Curve_q11bd"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.82687926, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
 [sub_resource type="CurveTexture" id="CurveTexture_mrbhi"]
+curve = SubResource("Curve_q11bd")
 
 [sub_resource type="Curve" id="Curve_53l6k"]
 _data = [Vector2(1e-05, 0.5895329), 0.0, 0.0, 0, 0, Vector2(0.109339416, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -153,31 +181,13 @@ spread = 180.0
 initial_velocity_min = 8.0
 initial_velocity_max = 32.0
 gravity = Vector3(0, -6, 0)
-scale_min = 0.4
-scale_max = 1.05
+scale_min = 3.0
+scale_max = 4.0
 scale_curve = SubResource("CurveTexture_smoke_scale")
-color = Color(0.52, 0.54, 0.58, 0.8)
+color = Color(0.52199996, 0.5413333, 0.58, 1)
 alpha_curve = SubResource("CurveTexture_mrbhi")
 anim_speed_min = 0.75
 anim_speed_max = 1.2
-
-[sub_resource type="Curve" id="Curve_8qrfn"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.23234627, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_beb21"]
-curve = SubResource("Curve_8qrfn")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_m8x6p"]
-particle_flag_disable_z = true
-emission_shape_scale = Vector3(1920, 1080, 1)
-emission_shape = 3
-emission_box_extents = Vector3(1, 1, 1)
-gravity = Vector3(0, 0, 0)
-scale_min = 5.0
-scale_max = 10.0
-color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-alpha_curve = SubResource("CurveTexture_beb21")
 
 [node name="ShopMiniGame" type="Control" unique_id=1594941492]
 layout_mode = 3
@@ -186,13 +196,27 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("1_mini")
-scope_expand_max_scale = 2.0
+size_scale = 2.0
 cloud_pan_speed = 50.0
+night_sky_color = Color(0.2947891, 0.38311458, 0.7200266, 1)
+blue_day_sky_color = Color(1, 1, 1, 1)
+moon_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
+environment_change_waves = Array[int]([3, 5])
+moon_x_ratio = 0.35
+moon_y_ratio = 0.27
+moon_base_radius = 61.0
+night_strike_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+blue_day_crosshair_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+blue_day_strike_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
 wind_amount = 10
 wind_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
 wind_speed = 20.0
+wind_trail_length = 1.0
+aim_impulse_scale = 1.05
+aim_launch_gravity_scale = 0.3
 launch_impulse = 600.0
 launch_x_jitter = 100.0
 pulse_torque = 280.0
@@ -207,11 +231,14 @@ pineapple_texture = ExtResource("2_53l6k")
 pineapple_start_size = 90.0
 pineapple_launch_speed = 700.0
 pineapple_shrink_speed = 2.5
-orange_texture = ExtResource("3_8qrfn")
-orange_start_size = 60.0
+orange_texture = ExtResource("3_q11bd")
+orange_start_size = 50.0
 orange_apex_y_ratio = 0.7
 orange_blast_radius = 280.0
 orange_blast_duration = 0.8
+cherry_texture = ExtResource("4_abof3")
+cherry_launch_speed = 1500.0
+smoke_can_money = 0.0
 fire_shake_strength = 2.5
 destroy_shake_strength = 5.0
 destroy_shake_time = 0.5
@@ -245,6 +272,12 @@ mouse_filter = 2
 
 [node name="PhysicsRoot" type="Node2D" parent="PlayArea/Content" unique_id=1676701967]
 position = Vector2(8, 8)
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="PlayArea/Content" unique_id=390032890]
+amount = 100
+lifetime = 6.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_m8x6p")
 
 [node name="AOE2D" type="Node2D" parent="PlayArea/Content" unique_id=1653402167]
 script = ExtResource("2_aoe")
@@ -312,11 +345,11 @@ visible = false
 z_index = 30
 material = SubResource("CanvasItemMaterial_smoke")
 emitting = false
-amount = 42
+amount = 15
 texture = ExtResource("20_smoke")
-lifetime = 2.4
-explosiveness = 0.12
-randomness = 0.35
+lifetime = 8.0
+explosiveness = 0.8
+fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_smoke_can")
 
 [node name="Overlay" type="Control" parent="PlayArea/Content" unique_id=852003665]
@@ -332,6 +365,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MoneyLabel" type="RichTextLabel" parent="PlayArea/Content/Overlay" unique_id=1933401245]
+clip_contents = false
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -351,6 +385,7 @@ scroll_active = false
 autowrap_mode = 0
 
 [node name="StrikeLabel" type="RichTextLabel" parent="PlayArea/Content/Overlay" unique_id=1338802397]
+clip_contents = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -372,6 +407,7 @@ scroll_active = false
 autowrap_mode = 0
 
 [node name="WaveAnnounceLabel" type="RichTextLabel" parent="PlayArea/Content/Overlay" unique_id=794508499]
+clip_contents = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -387,17 +423,19 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.78, 0.004, 0.008, 1)
-theme_override_font_sizes/normal_font_size = 48
-theme_override_font_sizes/italics_font_size = 48
+theme_override_font_sizes/normal_font_size = 72
+theme_override_font_sizes/italics_font_size = 140
 bbcode_enabled = true
 text = "[i]First Wave"
 fit_content = true
 scroll_active = false
+autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="PerfectLabel" type="RichTextLabel" parent="PlayArea/Content/Overlay" unique_id=339537407]
 modulate = Color(1, 1, 1, 0)
+clip_contents = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -412,17 +450,19 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.92, 0.62, 0.18, 1)
-theme_override_font_sizes/normal_font_size = 36
-theme_override_font_sizes/italics_font_size = 36
+theme_override_font_sizes/normal_font_size = 72
+theme_override_font_sizes/italics_font_size = 140
 bbcode_enabled = true
 text = "[i]PERFECT"
 fit_content = true
 scroll_active = false
+autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="MultiKillLabel" type="RichTextLabel" parent="PlayArea/Content/Overlay" unique_id=358756041]
 modulate = Color(1, 1, 1, 0)
+clip_contents = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -448,6 +488,7 @@ vertical_alignment = 1
 
 [node name="MissLabel" type="RichTextLabel" parent="PlayArea/Content/Overlay" unique_id=312617538]
 modulate = Color(1, 1, 1, 0)
+clip_contents = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -589,7 +630,6 @@ theme_override_font_sizes/font_size = 44
 text = "EXIT"
 
 [node name="IntroTitle" type="RichTextLabel" parent="PlayArea" unique_id=80859305]
-visible = false
 z_index = 20
 layout_mode = 1
 anchors_preset = 8
@@ -597,16 +637,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -40.0
-offset_right = 280.0
-offset_bottom = 40.0
+offset_left = -850.5
+offset_top = -180.0
+offset_right = 850.5
+offset_bottom = 180.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.0824, 0.0941, 0.1098, 1)
-theme_override_font_sizes/normal_font_size = 150
+theme_override_font_sizes/normal_font_size = 333
 bbcode_enabled = true
 text = "[rainbow][wave][wave]Shoot for CENTS"
 fit_content = true
@@ -614,12 +654,6 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="GPUParticles2D" type="GPUParticles2D" parent="PlayArea" unique_id=390032890]
-amount = 100
-lifetime = 6.0
-fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_m8x6p")
 
 [node name="SFX" type="Node" parent="." unique_id=1687344122]
 
@@ -704,7 +738,7 @@ pitch_scale = 2.0
 
 [node name="BalloonPop" type="AudioStreamPlayer" parent="SFX" unique_id=1620483901]
 stream = ExtResource("21_balloon")
-volume_db = -12.0
+volume_db = -36.0
 max_polyphony = 3
 
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=46656239]
@@ -712,6 +746,24 @@ stream = ExtResource("15_8xmsh")
 volume_db = -10.0
 pitch_scale = 0.7
 max_polyphony = 2
+
+[node name="SmokeCanTick" type="AudioStreamPlayer" parent="SFX" unique_id=237013793]
+stream = ExtResource("22_smoke_tick")
+volume_db = -27.0
+max_polyphony = 4
+
+[node name="SmokeCanExplode" type="AudioStreamPlayer" parent="SFX" unique_id=138577295]
+stream = ExtResource("23_smoke_boom")
+volume_db = -42.0
+max_polyphony = 2
+
+[node name="WaveAnnounce" type="AudioStreamPlayer" parent="SFX" unique_id=1523379183]
+stream = ExtResource("24_wave")
+volume_db = -35.0
+
+[node name="TitleIntro" type="AudioStreamPlayer" parent="SFX" unique_id=2129660971]
+stream = ExtResource("19_multishot")
+volume_db = -35.0
 
 [node name="Mouse_turning_SFX" type="Node" parent="." unique_id=344178073]
 script = ExtResource("3_mouse")

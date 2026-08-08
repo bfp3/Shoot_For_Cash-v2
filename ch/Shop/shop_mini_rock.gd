@@ -43,6 +43,10 @@ var outline_points: PackedVector2Array = PackedVector2Array()
 var pulsed := false
 var hit := false
 var hits_remaining := 1
+## Island-shipper spawn metadata for aimed launches.
+var spawn_column := 1
+var spawn_entry: Dictionary = {}
+var launch_delay_sec := 0.0
 var _trail: Line2D
 var _world_history: PackedVector2Array = PackedVector2Array()
 var _yellow_fx: GPUParticles2D
@@ -171,6 +175,24 @@ func pulse(upward_impulse: float, x_impulse: float, fall_gravity: float, torque_
 	linear_velocity = Vector2.ZERO
 	angular_velocity = torque_impulse * 0.12
 	apply_central_impulse(Vector2(x_impulse, -upward_impulse) * mass)
+	if absf(torque_impulse) > 0.01:
+		apply_torque_impulse(torque_impulse * mass * maxf(radius, 1.0))
+	if _yellow_fx and kind == RockKind.BASIC and yellow_particles_enabled:
+		_yellow_fx.emitting = true
+
+
+## Launch with a precomputed 2D velocity (Y+ down), matching BallisticAim2D.
+func pulse_ballistic(velocity: Vector2, fall_gravity: float, torque_impulse: float) -> void:
+	if pulsed or hit:
+		return
+	pulsed = true
+	freeze = false
+	sleeping = false
+	gravity_scale = fall_gravity
+	linear_damp = 0.0
+	linear_velocity = Vector2.ZERO
+	angular_velocity = torque_impulse * 0.12
+	apply_central_impulse(velocity * mass)
 	if absf(torque_impulse) > 0.01:
 		apply_torque_impulse(torque_impulse * mass * maxf(radius, 1.0))
 	if _yellow_fx and kind == RockKind.BASIC and yellow_particles_enabled:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bcj4fk718tqpy"]
+[gd_scene format=3 uid="uid://bcj4fk718tqpy"]
 
 [sub_resource type="Curve" id="Curve_afey8"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -58,10 +58,9 @@ material = SubResource("StandardMaterial3D_n8ef8")
 shape = 0
 size = 0.03
 
-[node name="Wind_trails" type="GPUParticles3D"]
+[node name="Wind_trails" type="GPUParticles3D" unique_id=800666355]
 process_mode = 3
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
-visible = false
 amount = 5
 lifetime = 3.0
 preprocess = 0.5

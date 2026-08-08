@@ -15,6 +15,16 @@ var _shop_mini_game: Control
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_setup_shop_mini_game()
+	var first_btn := $Center/Panel/Margin/VBox/GoToIntro as Control
+	UiFocus.wire_vertical([
+		$Center/Panel/Margin/VBox/GoToIntro,
+		$Center/Panel/Margin/VBox/GoToMoss,
+		$Center/Panel/Margin/VBox/GoToRedd,
+		$Center/Panel/Margin/VBox/GoToGlory,
+		$Center/Panel/Margin/VBox/GoToTesting,
+		$Center/Panel/Margin/VBox/GoToMiniGame,
+	])
+	UiFocus.grab_in(_launcher_panel, first_btn)
 
 
 func _setup_shop_mini_game() -> void:
@@ -44,6 +54,7 @@ func _toggle_shop_mini_game() -> void:
 		if _shop_mini_game and not _shop_mini_game.is_open:
 			_launcher_panel.show()
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			UiFocus.grab_in(_launcher_panel, $Center/Panel/Margin/VBox/GoToIntro)
 
 
 func _on_intro_pressed() -> void:

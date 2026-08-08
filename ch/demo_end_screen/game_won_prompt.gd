@@ -70,6 +70,8 @@ func update_open_menu() -> void:
 	tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
 
 	await tween.finished
+	var retry := find_child("Retry", true, false) as Control
+	UiFocus.grab_in(self, retry)
 	var balloon = %giuseppeballoon
 	tween_giuseppe = create_tween().set_loops()
 	tween_giuseppe.set_trans(Tween.TRANS_SINE)

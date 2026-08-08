@@ -90,6 +90,8 @@ func update_start() -> void:
 	tween.tween_property(game_title_background, "modulate:a", 1.0, 0.15)
 	await tween.finished
 	background_balloons.start = true
+	var start_btn := splash_screen_control.get_node_or_null("GameTitleBackground/StartGame") as Control
+	UiFocus.grab_in(splash_screen_control, start_btn)
 	#tween.tween_interval(2.0)
 	#tween.tween_property(copyright, "modulate:a", 1.0, 1.5)
 	

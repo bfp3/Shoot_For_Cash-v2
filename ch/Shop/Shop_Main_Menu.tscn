@@ -398,6 +398,7 @@ process_material = SubResource("ParticleProcessMaterial_yuebc")
 
 [node name="BulletDelay" parent="." unique_id=1403874933 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+process_mode = 4
 visible = false
 layout_mode = 0
 anchors_preset = 0
@@ -411,6 +412,7 @@ offset_right = 1040.0
 offset_bottom = 454.0
 grow_horizontal = 1
 grow_vertical = 1
+disabled = true
 upgrade_icon = ExtResource("6_pwib5")
 shop_main_menu = NodePath("..")
 upgrade_type = "bullet_delay"
@@ -418,6 +420,7 @@ upgrade_name = "Bullet Fire Rate"
 
 [node name="PineappleRound" parent="." unique_id=497395272 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+process_mode = 4
 visible = false
 layout_mode = 0
 anchors_preset = 0
@@ -431,6 +434,7 @@ offset_right = 1040.0
 offset_bottom = 454.0
 grow_horizontal = 1
 grow_vertical = 1
+disabled = true
 upgrade_icon = ExtResource("17_cn8lj")
 shop_main_menu = NodePath("..")
 hold_duration = 0.1
@@ -1023,6 +1027,7 @@ size_flags_vertical = 3
 
 [node name="TargetCircle" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=2131731495 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+process_mode = 4
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -1035,6 +1040,7 @@ offset_right = 570.0
 offset_bottom = 286.0
 grow_horizontal = 1
 grow_vertical = 1
+disabled = true
 upgrade_icon = ExtResource("5_lwcj2")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "target_circle"
@@ -1042,6 +1048,7 @@ upgrade_name = "Reticle Size"
 
 [node name="GunFireRate" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1287420994 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+process_mode = 4
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -1054,6 +1061,7 @@ offset_right = 338.0
 offset_bottom = 124.0
 grow_horizontal = 1
 grow_vertical = 1
+disabled = true
 upgrade_icon = ExtResource("12_pwib5")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "gun_fire_rate"
@@ -1061,6 +1069,7 @@ upgrade_name = "Reload Rate"
 
 [node name="BulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1833548560 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+process_mode = 4
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -1073,6 +1082,7 @@ offset_right = 340.0
 offset_bottom = 286.0
 grow_horizontal = 1
 grow_vertical = 1
+disabled = true
 upgrade_icon = ExtResource("4_lwcj2")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "bullet_speed"
@@ -1080,6 +1090,7 @@ upgrade_name = "Bullet Speed"
 
 [node name="SkyMine" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=475193945 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+process_mode = 4
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -1092,6 +1103,7 @@ offset_right = 568.0
 offset_bottom = 126.0
 grow_horizontal = 1
 grow_vertical = 1
+disabled = true
 upgrade_icon = ExtResource("13_cn8lj")
 sky_mine = true
 shop_main_menu = NodePath("../../../../../../..")
@@ -1100,6 +1112,7 @@ upgrade_name = "Sky Mine"
 
 [node name="TimeUpgrade" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1155153027 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+process_mode = 4
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -1112,6 +1125,7 @@ offset_right = 568.0
 offset_bottom = 126.0
 grow_horizontal = 1
 grow_vertical = 1
+disabled = true
 upgrade_icon = ExtResource("14_xklyy")
 shop_main_menu = NodePath("../../../../../../..")
 upgrade_type = "time_upgrade"
@@ -1119,6 +1133,7 @@ upgrade_name = "Add Time"
 
 [node name="AddGun" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1770080767 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
 unique_name_in_owner = true
+process_mode = 4
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -1131,6 +1146,7 @@ offset_right = 568.0
 offset_bottom = 126.0
 grow_horizontal = 1
 grow_vertical = 1
+disabled = true
 upgrade_icon = ExtResource("13_xklyy")
 guaranteed_until_purchased = true
 gun = true
@@ -1151,6 +1167,7 @@ metadata/_edit_use_anchors_ = true
 
 [node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=2043088047]
 unique_name_in_owner = true
+process_mode = 4
 visible = false
 layout_mode = 0
 offset_left = 863.0
@@ -1163,6 +1180,7 @@ theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
+disabled = true
 script = ExtResource("3_y3o4g")
 
 [node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1851249353]
@@ -1256,6 +1274,7 @@ text = "DONE"
 
 [node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=339193874]
 unique_name_in_owner = true
+process_mode = 4
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -1276,6 +1295,7 @@ theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
+disabled = true
 script = ExtResource("3_y3o4g")
 
 [node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=932649273]
@@ -1437,6 +1457,7 @@ vertical_alignment = 1
 
 [node name="Reroll" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1354737390]
 unique_name_in_owner = true
+process_mode = 4
 visible = false
 layout_mode = 0
 offset_left = 863.0
@@ -1449,6 +1470,7 @@ theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
 theme_override_font_sizes/font_size = 26
+disabled = true
 script = ExtResource("3_y3o4g")
 
 [node name="Reroll_label" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" unique_id=1127921913]
@@ -1480,7 +1502,6 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-focus_mode = 2
 mouse_filter = 2
 
 [node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1601384433]
@@ -1535,7 +1556,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
-focus_mode = 2
+focus_mode = 0
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_constants/shadow_outline_size = 133
@@ -1569,7 +1590,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
-focus_mode = 2
+focus_mode = 0
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 19
@@ -1601,7 +1622,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
-focus_mode = 2
+focus_mode = 0
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_constants/shadow_outline_size = 133
@@ -1635,7 +1656,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
-focus_mode = 2
+focus_mode = 0
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 19
@@ -2094,6 +2115,24 @@ grow_vertical = 0
 scale = Vector2(1, 2.019)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
+[node name="PlayButton" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=805831987 instance=ExtResource("17_xklyy")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -156.66681
+offset_top = -107.68274
+offset_right = 59.305176
+offset_bottom = 142.31726
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(0.444, 0.444)
+wiggle_amount = 0.46
+wiggle_amount_exit = 0.444
+
 [node name="BuyAmmo" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=388452363 instance=ExtResource("17_xklyy")]
 unique_name_in_owner = true
 layout_mode = 1
@@ -2168,54 +2207,76 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sgib8")
 
-[node name="PlayButton" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=805831987 instance=ExtResource("17_xklyy")]
+[node name="PauseGameButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=200851485]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -156.66681
-offset_top = -107.68274
-offset_right = 59.305176
-offset_bottom = 142.31726
-grow_horizontal = 0
-grow_vertical = 2
-scale = Vector2(0.444, 0.444)
-wiggle_amount = 0.46
-wiggle_amount_exit = 0.444
-
-[node name="PauseGameButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector"]
-unique_name_in_owner = true
+visible = false
+clip_contents = false
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -72.0
-offset_right = 168.0
-offset_bottom = -16.0
+offset_left = -0.032104492
+offset_top = 34.82715
+offset_right = 35.9678955
+offset_bottom = 70.82715
 grow_vertical = 0
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 28
-text = "Pause"
+theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+theme_override_font_sizes/font_size = 22
+text = "x"
 
-[node name="ShootForCentsButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector"]
-unique_name_in_owner = true
+[node name="PauseLabelPopUp" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PauseGameButton"]
+clip_contents = false
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -52.0
+offset_top = -56.0
+offset_right = 52.0
+offset_bottom = -8.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 1)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+theme_override_font_sizes/normal_font_size = 28
+bbcode_enabled = true
+text = "Pause"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PauseGameButton/PauseLabelPopUp"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -280.0
-offset_top = -72.0
-offset_right = -8.0
-offset_bottom = -16.0
-grow_horizontal = 0
+offset_left = -8.0
+offset_top = -4.0
+offset_right = 8.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sgib8")
+
+[node name="ShootForCentsButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1944351975]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 96.38565
+offset_top = 35.566223
+offset_right = 244.21686
+offset_bottom = 91.56622
 grow_vertical = 0
 theme_type_variation = &"MenuUiButtons"
+theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 theme_override_font_sizes/font_size = 26
 text = "Shoot for CENTS"
 
@@ -2705,8 +2766,8 @@ vertical_alignment = 1
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo" to="." method="_on_buy_ammo_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PlayButton" to="." method="play_round_button_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo" to="." method="_on_buy_ammo_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]
 [connection signal="pressed" from="MaxOutPowers" to="." method="_on_max_out_powers_pressed"]
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]

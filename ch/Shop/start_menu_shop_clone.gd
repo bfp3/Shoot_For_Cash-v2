@@ -23,6 +23,15 @@ func _ready() -> void:
 
 	pivot_offset_ratio = Vector2(0.5,1.0)
 
+	# Keep disabled mode buttons out of controller/keyboard focus.
+	for path in [
+		"CenterContainer/MainPanel/VBoxContainer/GridContainer/Button2",
+		"CenterContainer/MainPanel/VBoxContainer/GridContainer/Button4",
+	]:
+		var locked_btn := get_node_or_null(path) as Control
+		if locked_btn:
+			locked_btn.focus_mode = Control.FOCUS_NONE
+
 	hide()
 
 func purchase_made(_upgrade_type:String = '') -> void:
@@ -134,11 +143,37 @@ func reveal_gun(_dur : float = 0.05, wait_reroll : bool = false) -> void:
 		skill.purchase_particles()
 
 func update_in_menu() -> void:
-	pass
+	var solo := get_node_or_null("CenterContainer/MainPanel/VBoxContainer/GridContainer/Button") as Control
+	var free_play := get_node_or_null("CenterContainer/MainPanel/VBoxContainer/GridContainer/Button3") as Control
+	# Multiplayer / Battle stay disabled — skip them in the focus chain.
+	if solo and free_play:
+		solo.focus_neighbor_right = free_play.get_path()
+		solo.focus_neighbor_bottom = free_play.get_path()
+		free_play.focus_neighbor_left = solo.get_path()
+		free_play.focus_neighbor_top = solo.get_path()
+		free_play.focus_neighbor_right = solo.get_path()
+		free_play.focus_neighbor_bottom = solo.get_path()
+	UiFocus.grab_in(self, solo)
+
 
 func open_menu() -> void:
 	enter_state(State.OPEN_MENU)
 	
+
+func _on_free_play_pressed() -> void:
+	# Soft-close start menu, then jump straight to the testing room (jetz).
+	if has_method("sfx_close_shop"):
+		sfx_close_shop()
+	hide()
+	current_state = State.INACTIVE
+
+	var current := String(gl_PlayerState.dataset.level_name).to_lower()
+	if current == "jetz" or current == "test":
+		return
+
+	gl_PlayerState.change_location("jetz")
+
+
 func gun_purchased() -> void:
 	sfx_purchase_made()
 	%TicketPurchasedPopUp.open_pop_up()

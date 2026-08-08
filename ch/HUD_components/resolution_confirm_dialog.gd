@@ -22,6 +22,7 @@ func _ready() -> void:
 func _on_started(_seconds: float) -> void:
 	show()
 	_on_tick(ceili(GameSettings.confirm_seconds_left()))
+	UiFocus.grab_in(self, keep_button)
 
 
 func _on_tick(seconds_left: float) -> void:

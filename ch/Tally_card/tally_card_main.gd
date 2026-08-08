@@ -315,6 +315,8 @@ func update_open_menu() -> void:
 	await reveal_stats()
 	
 	enter_state(State.IN_MENU)
+	var next := get_node_or_null("NextRound") as Control
+	UiFocus.grab_in(self, next)
 
 	
 	await get_tree().create_timer(2.0, false).timeout

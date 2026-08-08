@@ -41,6 +41,10 @@ var _ammo_popup: Control
 var _ammo_popup_tween: Tween
 var _ammo_popup_rest_scale := Vector2.ONE
 var _ammo_popup_rest_position := Vector2.ZERO
+var _pause_popup: Control
+var _pause_popup_tween: Tween
+var _pause_popup_rest_scale := Vector2.ONE
+var _pause_popup_rest_position := Vector2.ZERO
 var _shop_mini_game: Control
 
 
@@ -76,8 +80,10 @@ func _ready() -> void:
 	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.hide()
 	
 	_setup_ammo_count_popup()
+	_setup_pause_label_popup()
 	_setup_shop_mini_game()
 	_setup_shop_extra_buttons()
+	_strip_non_interactive_focus(self)
 
 
 func _setup_shop_extra_buttons() -> void:
@@ -189,6 +195,62 @@ func spawn_spent_cash_label(amount: int) -> void:
 
 	await tween.finished
 	floating_label.queue_free()
+
+
+## Shoot for Cents payout — show dollars won, then add them to player cash.
+func receive_cents_winnings(dollars: int) -> void:
+	if dollars <= 0:
+		return
+	var before := int(gl_PlayerState.dataset.cash)
+	gl_PlayerState.add_cash(dollars)
+	player_cash = int(gl_PlayerState.dataset.cash)
+	_show_cents_winnings_float(dollars)
+	_roll_cash_from_to(before, player_cash)
+	if EventBus.instance:
+		EventBus.instance.update_money.emit()
+
+
+func _show_cents_winnings_float(dollars: int) -> void:
+	if cash_label == null:
+		return
+	var floating_label := cash_label.duplicate() as RichTextLabel
+	floating_label.top_level = true
+	floating_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	floating_label.z_index = 100
+	add_child(floating_label)
+	floating_label.global_position = cash_label.global_position
+	floating_label.size = cash_label.size
+	floating_label.text = "[color=#2ecc71]+$" + str(dollars) + "[/color]"
+	floating_label.modulate = Color(1, 1, 1, 1)
+	floating_label.show()
+	var start_pos := floating_label.global_position
+	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.set_parallel(true)
+	tween.tween_property(floating_label, "global_position:y", start_pos.y - 150.0, 1.0)
+	tween.tween_property(floating_label, "modulate:a", 0.0, 1.6)
+	tween.set_parallel(false)
+	tween.tween_callback(floating_label.queue_free)
+
+
+func _roll_cash_from_to(from_cash: int, to_cash: int) -> void:
+	if cash_label == null:
+		return
+	cash_label.show()
+	cash_label.modulate.a = 1.0
+	var duration := clampf(absf(float(to_cash - from_cash)) / 80.0, 0.35, 1.4)
+	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_method(
+		func(value: float):
+			cash_label.text = "[wave amp=2.0 freq=20.0 connected=1]$" + str(int(value)),
+		float(from_cash),
+		float(to_cash),
+		duration
+	)
+	tween.tween_callback(update_shop_labels)
+	if has_node("SFX/shop_coin_sfx_01"):
+		$SFX/shop_coin_sfx_01.play()
+	if has_node("SFX/cash_roll_up"):
+		$SFX/cash_roll_up.play()
 	
 	
 func enter_state(new_state: SkillState) -> void:
@@ -318,6 +380,76 @@ func _force_hide_ammo_count_popup() -> void:
 	_ammo_popup.hide()
 
 
+func _setup_pause_label_popup() -> void:
+	var pause_btn := get_node_or_null("%PauseGameButton") as Control
+	if pause_btn == null:
+		return
+
+	_pause_popup = pause_btn.get_node_or_null("PauseLabelPopUp") as Control
+	if _pause_popup == null:
+		return
+
+	_pause_popup.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for child in _pause_popup.get_children():
+		if child is Control:
+			child.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	_pause_popup.pivot_offset_ratio = Vector2(0.5, 1.0)
+	_pause_popup_rest_scale = _pause_popup.scale if _pause_popup.scale != Vector2.ZERO else Vector2.ONE
+	_pause_popup_rest_position = _pause_popup.position
+	_pause_popup.scale = Vector2(_pause_popup_rest_scale.x, 0.01)
+	_pause_popup.hide()
+
+	if not pause_btn.mouse_entered.is_connected(_show_pause_label_popup):
+		pause_btn.mouse_entered.connect(_show_pause_label_popup)
+	if not pause_btn.mouse_exited.is_connected(_hide_pause_label_popup):
+		pause_btn.mouse_exited.connect(_hide_pause_label_popup)
+
+
+func _show_pause_label_popup() -> void:
+	if _pause_popup == null:
+		return
+
+	if _pause_popup_tween:
+		_pause_popup_tween.kill()
+
+	_pause_popup.show()
+	_pause_popup.pivot_offset_ratio = Vector2(0.5, 1.0)
+	_pause_popup.scale = Vector2(_pause_popup_rest_scale.x, 0.01)
+	_pause_popup.position = _pause_popup_rest_position + Vector2(0.0, 12.0)
+
+	_pause_popup_tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_pause_popup_tween.tween_property(_pause_popup, "scale", _pause_popup_rest_scale, 0.22)
+	_pause_popup_tween.parallel().tween_property(_pause_popup, "position", _pause_popup_rest_position, 0.22)
+
+
+func _hide_pause_label_popup() -> void:
+	if _pause_popup == null:
+		return
+
+	if _pause_popup_tween:
+		_pause_popup_tween.kill()
+
+	_pause_popup.pivot_offset_ratio = Vector2(0.5, 1.0)
+	var collapsed_scale := Vector2(_pause_popup_rest_scale.x, 0.01)
+	var tuck_down := _pause_popup_rest_position + Vector2(0.0, 10.0)
+
+	_pause_popup_tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	_pause_popup_tween.tween_property(_pause_popup, "scale", collapsed_scale, 0.16)
+	_pause_popup_tween.parallel().tween_property(_pause_popup, "position", tuck_down, 0.16)
+	_pause_popup_tween.tween_callback(_pause_popup.hide)
+
+
+func _force_hide_pause_label_popup() -> void:
+	if _pause_popup == null:
+		return
+	if _pause_popup_tween:
+		_pause_popup_tween.kill()
+	_pause_popup.scale = Vector2(_pause_popup_rest_scale.x, 0.01)
+	_pause_popup.position = _pause_popup_rest_position
+	_pause_popup.hide()
+
+
 func update_open_menu() -> void:
 	if gl_PlayerState.dataset.round == 1:
 		_music_control_call("ensure_shop_music_playing")
@@ -358,6 +490,12 @@ func update_open_menu() -> void:
 	enter_state(SkillState.IN_MENU)
 	
 func play_round_button_pressed() -> void:
+	# Hide focus triangle during the play-out animation (avoids jumping to MapButton).
+	UiFocus.set_indicator_suppressed(true)
+	var focused := get_viewport().gui_get_focus_owner() as Control
+	if focused:
+		focused.release_focus()
+
 	shake_shop()
 	reroll_button.hide()
 	%PlayButton.disabled = true
@@ -398,9 +536,11 @@ func soft_show_from_level_editor() -> void:
 	enter_state(SkillState.OPEN_MENU)
 	
 func update_close_menu() -> void:
+	UiFocus.set_indicator_suppressed(true)
 	reset_cash_label_color()
 	sfx_close_shop()
 	_force_hide_ammo_count_popup()
+	_force_hide_pause_label_popup()
 	_close_shop_mini_game()
 	
 	$CenterContainer/MainPanel/VBoxContainer/Money_control.show()
@@ -616,7 +756,103 @@ func reveal_random_skills(_dur : float = 0.05, wait_reroll : bool = false) -> vo
 
 func update_in_menu() -> void:
 	roll_up_cash_first_round()
-	
+	UiFocus.set_indicator_suppressed(false)
+	_wire_shop_focus_neighbors()
+	_focus_shop_controls()
+
+
+func _strip_non_interactive_focus(node: Node) -> void:
+	# Decorative panels/labels must not steal controller focus from real buttons.
+	if node is Control and not (node is BaseButton):
+		var control := node as Control
+		if control is RichTextLabel or control is Label or control is Panel \
+				or control is PanelContainer or control is TextureRect or control is ColorRect:
+			control.focus_mode = Control.FOCUS_NONE
+	for child in node.get_children():
+		_strip_non_interactive_focus(child)
+
+
+func _focus_shop_controls() -> void:
+	var preferred: Control = null
+	var play_btn := get_node_or_null("%PlayButton") as Control
+	if play_btn and UiFocus.can_focus(play_btn):
+		preferred = play_btn
+	else:
+		for child in available_upgrades.get_children():
+			if child is Control and UiFocus.can_focus(child as Control):
+				preferred = child as Control
+				break
+	if preferred == null:
+		var map_btn := get_node_or_null("%MapButton") as Control
+		if map_btn and UiFocus.can_focus(map_btn):
+			preferred = map_btn
+	UiFocus.grab_in(self, preferred)
+
+
+func _wire_shop_focus_neighbors() -> void:
+	var map_btn := get_node_or_null("%MapButton") as Control
+	var play_btn := get_node_or_null("%PlayButton") as Control
+	var ammo_btn := get_node_or_null("%BuyAmmo") as Control
+	var pause_btn := get_node_or_null("%PauseGameButton") as Control
+	var cents_btn := get_node_or_null("%ShootForCentsButton") as Control
+
+	var upgrades: Array[Control] = []
+	for child in available_upgrades.get_children():
+		if child is Control and UiFocus.can_focus(child as Control):
+			upgrades.append(child as Control)
+
+	var rounds: Array[Control] = []
+	var round_row := get_node_or_null("CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer")
+	if round_row:
+		for child in round_row.get_children():
+			if child is Control and UiFocus.can_focus(child as Control):
+				rounds.append(child as Control)
+
+	var bottom: Array[Control] = []
+	for btn in [play_btn, ammo_btn, pause_btn, cents_btn]:
+		if btn and UiFocus.can_focus(btn):
+			bottom.append(btn)
+
+	# Horizontal chains.
+	UiFocus.wire_horizontal(upgrades)
+	UiFocus.wire_horizontal(rounds)
+	UiFocus.wire_horizontal(bottom)
+
+	var mid: Control = null
+	if not upgrades.is_empty():
+		mid = upgrades[0]
+	elif reroll_button and UiFocus.can_focus(reroll_button):
+		mid = reroll_button
+	elif not rounds.is_empty():
+		mid = rounds[0]
+	elif not bottom.is_empty():
+		mid = bottom[0]
+
+	if map_btn and mid:
+		map_btn.focus_neighbor_bottom = mid.get_path()
+		map_btn.focus_neighbor_top = mid.get_path()
+		map_btn.focus_next = mid.get_path()
+		mid.focus_neighbor_top = map_btn.get_path()
+
+	if not upgrades.is_empty() and not rounds.is_empty():
+		for u in upgrades:
+			u.focus_neighbor_bottom = rounds[0].get_path()
+		for r in rounds:
+			r.focus_neighbor_top = upgrades[0].get_path()
+
+	if not rounds.is_empty() and not bottom.is_empty():
+		for r in rounds:
+			r.focus_neighbor_bottom = bottom[0].get_path()
+		for b in bottom:
+			b.focus_neighbor_top = rounds[0].get_path()
+	elif not upgrades.is_empty() and not bottom.is_empty():
+		for u in upgrades:
+			u.focus_neighbor_bottom = bottom[0].get_path()
+		for b in bottom:
+			b.focus_neighbor_top = upgrades[0].get_path()
+
+	if map_btn and not bottom.is_empty():
+		bottom[0].focus_neighbor_bottom = map_btn.get_path()
 
 func gun_purchased() -> void:
 	reroll_unlocked = true
@@ -683,7 +919,7 @@ func _on_re_roll_pressed() -> void:
 	
 	# Reveal new ones
 	await reveal_random_skills(0.05, true)
-	
+	_wire_shop_focus_neighbors()
 
 	
 	is_rerolling = false

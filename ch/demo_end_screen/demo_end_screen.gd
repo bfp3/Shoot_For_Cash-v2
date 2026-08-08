@@ -85,6 +85,8 @@ func update_open_menu() -> void:
 	tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
 
 	await tween.finished
+	var retry := find_child("Retry", true, false) as Control
+	UiFocus.grab_in(self, retry)
 	
 
 func update_close_menu() -> void:

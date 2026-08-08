@@ -80,24 +80,25 @@ func _on_body_entered(body):
 
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
-	if body.is_in_group('bullet'):
-		GameManager.score += 1
-		axis_lock_angular_z = false
-		
-		# Get the collision position
-		var impact_position = body.global_position
-		$bulletHole.global_position = impact_position
-		$bulletHole.global_position.z += 0.246
-		$bulletHole.visible = true
-
-		# Calculate the impulse direction (from bullet to target)
-		var impulse_direction = (global_position - impact_position).normalized() * -1  # Adjust force as needed
-		
-		# Apply impulse at point of impact
-		apply_impulse(impulse_direction, impact_position)
-
-		$hitSound.play()
-		body.cleanUp()
+	pass
+	#if body.is_in_group('bullet'):
+		#GameManager.score += 1
+		#axis_lock_angular_z = false
+		#
+		## Get the collision position
+		#var impact_position = body.global_position
+		#$bulletHole.global_position = impact_position
+		#$bulletHole.global_position.z += 0.246
+		#$bulletHole.visible = true
+#
+		## Calculate the impulse direction (from bullet to target)
+		#var impulse_direction = (global_position - impact_position).normalized() * -1  # Adjust force as needed
+		#
+		## Apply impulse at point of impact
+		#apply_impulse(impulse_direction, impact_position)
+#
+		#$hitSound.play()
+		#body.cleanUp()
 
 
 func _on_exit_sound_finished():

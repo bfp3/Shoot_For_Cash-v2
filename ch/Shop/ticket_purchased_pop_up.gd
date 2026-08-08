@@ -17,6 +17,17 @@ var _selecting_level := false
 func _ready() -> void:
 	hide()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not visible or _selecting_level:
+		return
+	if not event.is_pressed() or event.is_echo():
+		return
+	if event.is_action("controller_back_button") or event.is_action("ui_cancel"):
+		_on_close_map_pressed()
+		get_viewport().set_input_as_handled()
 
 
 func open_pop_up() -> void:
@@ -31,14 +42,28 @@ func open_pop_up() -> void:
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 1.0, 0.35)
 	await tween.finished
+	var preferred: Control = moss_button if moss_button and moss_button.visible else close_button
+	UiFocus.grab_in(self, preferred)
 
 
 func close_pop_up() -> void:
+	if not visible:
+		return
 	var tween2 = create_tween()
 	tween2.tween_property(self, "modulate:a", 0.0, 0.25)
 	await tween2.finished
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hide()
+	_restore_focus_after_close()
+
+
+func _restore_focus_after_close() -> void:
+	var shop := get_tree().get_first_node_in_group("shop_main_menu") as Control
+	if shop and shop.is_visible_in_tree():
+		UiFocus.grab_in(shop)
+		return
+	if game_start_menu and game_start_menu.is_visible_in_tree():
+		UiFocus.grab_in(game_start_menu)
 
 
 func _on_next_round_pressed() -> void:

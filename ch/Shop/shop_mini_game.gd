@@ -6,11 +6,12 @@ extends Control
 @export_range(0.25, 3.0, 0.05) var size_scale := 1.0
 
 ## How small the crosshair can shrink while holding fire (fraction of full size).
-const SCOPE_MIN_SCALE := 0.7
+const CROSSHAIR_RADIUS := 68.0
+const SCOPE_MIN_SCALE := 0.5
+const SCOPE_EXPAND_MAX_SCALE := 2.0
 
 @export_group("Scope Expand (Right Click)")
 ## How large the crosshair can grow while holding right-click (fraction of full size).
-@export_range(1.05, 2.5, 0.01) var scope_expand_max_scale := 1.45
 
 @export_group("Scenery")
 @export var cloud_color := Color(1.0, 1.0, 1.0, 0.18)
@@ -26,6 +27,25 @@ const SCOPE_MIN_SCALE := 0.7
 @export var star_color := Color(1.0, 0.98, 0.9, 0.9)
 @export var moon_color := Color(0.92, 0.94, 1.0, 0.95)
 @export_range(0.2, 3.0, 0.05) var sky_transition_duration := 1.0
+## Wave numbers where the sky / colour scheme advances (phase 0 → 1 → 2…).
+@export var environment_change_waves: Array[int] = [10, 20]
+
+@export_group("Moon")
+@export_range(0.0, 1.0, 0.01) var moon_x_ratio := 0.5
+@export_range(0.0, 1.0, 0.01) var moon_y_ratio := 0.18
+@export_range(8.0, 80.0, 0.5) var moon_base_radius := 22.0
+@export_range(0.0, 20.0, 0.5) var moon_night_radius_boost := 6.0
+
+@export_group("Colour Schemes")
+@export var day_crosshair_color := Color(0.78039217, 0.003921569, 0.007843138, 1.0)
+@export var day_money_color := Color(0.78039217, 0.003921569, 0.007843138, 1.0)
+@export var day_strike_color := Color(0.78039217, 0.003921569, 0.007843138, 1.0)
+@export var night_crosshair_color := Color(0.95, 0.92, 0.75, 1.0)
+@export var night_money_color := Color(0.95, 0.92, 0.75, 1.0)
+@export var night_strike_color := Color(0.95, 0.92, 0.75, 1.0)
+@export var blue_day_crosshair_color := Color(0.12, 0.28, 0.55, 1.0)
+@export var blue_day_money_color := Color(0.12, 0.28, 0.55, 1.0)
+@export var blue_day_strike_color := Color(0.12, 0.28, 0.55, 1.0)
 
 @export_group("Pillars")
 @export_range(0.005, 0.3, 0.001) var pillar_width_ratio := 0.115
@@ -65,12 +85,45 @@ const INK := Color(0.0824, 0.0941, 0.1098, 1.0)
 const CROSSHAIR_RED := Color(0.78039217, 0.003921569, 0.007843138, 1.0)
 
 const WALL_Y_RATIO := 0.88
-const CROSSHAIR_RADIUS := 48.0
+
 const PAD := Vector2(0.0, 0.0)
 const HEADER_CLEARANCE := 120.0
 const MAX_STRIKES := 10
 const PILLAR_META := &"shop_mini_pillar"
 const RING_POOL_SIZE := 8
+
+const LEVEL_FILE_PATH := "res://sc/island-shipper.txt"
+const LEVEL_ISLAND_NAME := "shipper"
+const RANGE_ORDER: PackedStringArray = ["moss", "redd", "glory"]
+const GRID_COLUMN_COUNT := 8
+const GRID_LABEL_COLOR := Color(0.78, 0.02, 0.02, 0.85)
+const GRID_LINE_COLOR := Color(0.78, 0.02, 0.02, 0.35)
+
+@export_group("Aim Grid")
+## Draw column/row aim cells in-game so you can tune placement live.
+@export var display_grid := false
+## Screen X of column 1 as a fraction of play width (3D: col1 is the rightmost board lane).
+@export_range(0.0, 1.0, 0.001) var column_1_x_ratio := 0.82
+## Distance between columns as a fraction of play width (next column = previous − spacing).
+@export_range(0.01, 0.3, 0.001) var column_spacing_ratio := 0.09
+## Extra pixel nudge on column 1 X (after ratio).
+@export var column_1_x_offset := 0.0
+## Extra pixel spacing between columns.
+@export var column_spacing_offset := 0.0
+## Row A / B / C heights as fractions of play height from the top.
+@export_range(0.05, 0.95, 0.001) var row_a_y_ratio := 0.22
+@export_range(0.05, 0.95, 0.001) var row_b_y_ratio := 0.40
+@export_range(0.05, 0.95, 0.001) var row_c_y_ratio := 0.58
+@export var row_a_y_offset := 0.0
+@export var row_b_y_offset := 0.0
+@export var row_c_y_offset := 0.0
+@export_range(0.5, 2.0, 0.01) var aim_impulse_scale := 1.14
+@export_range(0.05, 1.0, 0.01) var aim_launch_gravity_scale := 0.35
+@export_range(0.0, 2.0, 0.05) var aim_hang_time_sec := 0.0
+@export_range(0.0, 40.0, 0.5) var aim_offset_px := 0.0
+@export var bias_random_aim_toward_center := true
+@export_range(0.0, 1.0, 0.05) var converge_same_lane_chance := 0.5
+@export var default_launch_wait_ms := 100
 
 @export_group("Rock Pulse")
 @export_range(50.0, 2000.0, 1.0) var launch_impulse := 450.0
@@ -94,13 +147,19 @@ const RING_POOL_SIZE := 8
 @export var red_hit_bounce_force := 280.0
 @export var red_hit_torque := 180.0
 
-@export_group("Rock Sizes")
+@export_group("Target Sizes")
 @export_range(4.0, 80.0, 0.5) var basic_rock_size_min := 7.0
 @export_range(4.0, 80.0, 0.5) var basic_rock_size_max := 13.0
 @export_range(4.0, 80.0, 0.5) var black_rock_size_min := 8.0
 @export_range(4.0, 80.0, 0.5) var black_rock_size_max := 14.0
 @export_range(4.0, 80.0, 0.5) var red_rock_size_min := 9.0
 @export_range(4.0, 80.0, 0.5) var red_rock_size_max := 16.0
+@export_range(8.0, 40.0, 0.5) var smoke_can_size := 14.0
+@export_range(8.0, 90.0, 0.5) var cherry_start_size := 22.0
+@export_range(0.25, 3.0, 0.05) var rock_size_scale := 1.0
+@export_range(0.25, 3.0, 0.05) var black_rock_size_scale := 1.0
+@export_range(0.25, 3.0, 0.05) var smoke_can_size_scale := 1.0
+@export_range(0.25, 3.0, 0.05) var cherry_size_scale := 1.0
 
 @export_group("Trail")
 @export var trail_enabled := true
@@ -124,6 +183,8 @@ const RING_POOL_SIZE := 8
 @export_range(0.1, 3.0, 0.01) var pineapple_shrink_speed := 0.9
 @export_range(40.0, 400.0, 1.0) var pineapple_fly_speed := 160.0
 @export var pineapple_money := 0.50
+## Delay between each pineapple launch in the perfect bonus.
+@export_range(0.0, 2.0, 0.05) var pineapple_pulse_stagger := 0.5
 
 @export_group("Oranges")
 @export var orange_texture: Texture2D
@@ -137,6 +198,17 @@ const RING_POOL_SIZE := 8
 @export var orange_money := 0.35
 @export_range(20.0, 280.0, 1.0) var orange_blast_radius := 90.0
 @export_range(0.05, 0.8, 0.01) var orange_blast_duration := 0.28
+
+@export_group("Cherries")
+@export var cherry_texture: Texture2D
+## Chance a double/multikill bonus fruit is a cherry (rest are oranges).
+@export_range(0.0, 1.0, 0.01) var cherry_spawn_chance := 0.4
+@export_range(100.0, 2500.0, 1.0) var cherry_launch_speed := 720.0
+@export_range(0.05, 2.0, 0.01) var cherry_bounce := 0.85
+@export_range(0.05, 2.0, 0.01) var cherry_gravity_scale := 0.55
+@export var cherry_money := 0.25
+@export_range(30.0, 45.0, 0.5) var cherry_angle_min_deg := 30.0
+@export_range(30.0, 45.0, 0.5) var cherry_angle_max_deg := 45.0
 
 @export_group("Balloons")
 @export_range(0, 6, 1) var balloons_per_wave_max := 2
@@ -152,7 +224,6 @@ const RING_POOL_SIZE := 8
 @export_group("Smoke Cans")
 @export_range(0, 4, 1) var smoke_cans_per_wave_max := 1
 @export_range(0.0, 1.0, 0.01) var smoke_can_spawn_chance := 0.35
-@export_range(8.0, 40.0, 0.5) var smoke_can_size := 14.0
 @export var smoke_can_money := 0.10
 @export_range(0.5, 8.0, 0.05) var smoke_cloud_duration := 3.5
 
@@ -168,16 +239,24 @@ const RING_POOL_SIZE := 8
 @export_range(0.0, 40.0, 0.1) var destroy_shake_strength := 8.0
 @export_range(0.0, 2.0, 0.01) var destroy_shake_time := 0.14
 @export_range(1.0, 30.0, 0.1) var shake_decay := 12.0
+## Vertical-only shake when a missed rock costs a strike.
+@export_range(0.0, 40.0, 0.1) var strike_miss_shake_strength := 11.0
+@export_range(0.0, 2.0, 0.01) var strike_miss_shake_time := 0.38
+@export_range(20.0, 120.0, 1.0) var strike_miss_shake_freq := 52.0
 
 var is_open := false
 var _intro_active := false
 var _crosshair := Vector2.ZERO
+var _aim_velocity := Vector2.ZERO
 var _wave_phase := 0.0
 var _cloud_pan := 0.0
 var _wave_timer := 0.0
 var _wave_index := 0
 var _pulsing := false
 var _game_over := false
+var _paused := false
+var _pause_label: RichTextLabel
+var _pre_pause_body_state: Dictionary = {}
 var _strikes := 0
 var _money := 0.0
 var _rocks: Array[RigidBody2D] = []
@@ -195,6 +274,8 @@ var _stored_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_VISIBLE
 var _shake_trauma := 0.0
 var _shake_strength := 0.0
 var _shake_time := 0.0
+var _strike_shake_trauma := 0.0
+var _strike_shake_strength := 0.0
 var _wave_layer_base_pos := Vector2(8, 8)
 var _overlay_base_pos := Vector2(8, 8)
 var _last_content_size := Vector2.ZERO
@@ -216,6 +297,26 @@ var _star_seeds: PackedVector2Array = PackedVector2Array()
 var _sky_from := 0.0
 var _sky_to := 0.0
 var _sky_blend_t := 1.0
+
+## Island-shipper script state (same rounds/waves as the 3D game).
+var _script_rounds: Array = []
+var _script_round_index := 0
+var _script_wave_index := 0
+var _script_range_id := "moss"
+var _script_wave_spawns: Array = []
+var _script_launch_delays: Array = []
+var _script_launch_bodies: Array[RigidBody2D] = []
+var _use_level_script := false
+var _pending_range_announce := false
+var _wave_aim_pool: Array[int] = []
+var _wave_aim_mid := 0.0
+var _wave_aim_center := -1
+var _wave_convergence_aim_column := -1
+var _wave_aim_converge_same_lane := true
+var _range_label: RichTextLabel
+var _active_hud_color := Color(0.78039217, 0.003921569, 0.007843138, 1.0)
+var _pending_cents_dollars := 0
+var _shop_menu: Control
 
 enum ScopeMode { NONE, SHRINK, EXPAND }
 var _scope_mode: ScopeMode = ScopeMode.NONE
@@ -263,6 +364,10 @@ var _scope_mode: ScopeMode = ScopeMode.NONE
 @onready var _sfx_pineapple_explode: AudioStreamPlayer = get_node_or_null("SFX/Pineapple_shot_explode") as AudioStreamPlayer
 @onready var _sfx_pineapple_destroyed: AudioStreamPlayer = get_node_or_null("SFX/Pineapple_destroyed") as AudioStreamPlayer
 @onready var _sfx_multishot: AudioStreamPlayer = get_node_or_null("SFX/MultiShotSFX") as AudioStreamPlayer
+@onready var _sfx_smoke_tick: AudioStreamPlayer = get_node_or_null("SFX/SmokeCanTick") as AudioStreamPlayer
+@onready var _sfx_smoke_explode: AudioStreamPlayer = get_node_or_null("SFX/SmokeCanExplode") as AudioStreamPlayer
+@onready var _sfx_wave_announce: AudioStreamPlayer = get_node_or_null("SFX/WaveAnnounce") as AudioStreamPlayer
+@onready var _sfx_title_intro: AudioStreamPlayer = get_node_or_null("SFX/TitleIntro") as AudioStreamPlayer
 @onready var _splash_aoe: Node2D = get_node_or_null("PlayArea/Content/SplashAOE2D") as Node2D
 @onready var _miss_label: RichTextLabel = get_node_or_null("PlayArea/Content/Overlay/MissLabel") as RichTextLabel
 @onready var _mouse_sfx: Node = $Mouse_turning_SFX
@@ -333,6 +438,8 @@ func _ensure_default_fruit_textures() -> void:
 		pineapple_texture = load("res://unfiled/Decal_placeholders/pineapple_outline.png") as Texture2D
 	if orange_texture == null:
 		orange_texture = load("res://res/orange_dented_texture.png") as Texture2D
+	if cherry_texture == null:
+		cherry_texture = load("res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png") as Texture2D
 
 
 func _setup_play_area_style() -> void:
@@ -347,6 +454,7 @@ func _setup_play_area_style() -> void:
 
 
 func attach_to_shop(shop_root: Control, main_panel: Control, header_clearance: float = HEADER_CLEARANCE) -> void:
+	_shop_menu = shop_root
 	_follow_panel = main_panel
 	_header_clearance = header_clearance
 	if get_parent() != shop_root:
@@ -423,7 +531,446 @@ func open() -> void:
 	_wave_layer.queue_redraw()
 	_overlay.queue_redraw()
 	set_process_input(true)
+	_boot_level_script()
+	_apply_colour_scheme_for_progress(_sky_visual_progress())
 	_begin_next_wave()
+
+
+func _boot_level_script() -> void:
+	_script_range_id = _resolve_start_range_id()
+	_load_range_script(_script_range_id)
+	# Initial sky follows wave thresholds (environment_change_waves), not range id.
+	_begin_sky_transition_for_wave(0)
+	_pending_range_announce = true
+
+
+func _resolve_start_range_id() -> String:
+	var range_id := String(gl_PlayerState.dataset.level_name).to_lower()
+	if range_id == "" or range_id == "start":
+		return "moss"
+	if range_id == "test":
+		return "jetz"
+	return range_id
+
+
+func _load_range_script(range_id: String) -> void:
+	_script_rounds.clear()
+	_script_round_index = 0
+	_script_wave_index = 0
+	_script_wave_spawns.clear()
+	_script_launch_delays.clear()
+	_script_launch_bodies.clear()
+	_use_level_script = false
+	if not Parser.loadIslandFile(LEVEL_FILE_PATH):
+		push_warning("ShopMiniGame: failed to load %s" % LEVEL_FILE_PATH)
+		return
+	_script_rounds = Parser.get_rock_sequences(LEVEL_ISLAND_NAME, range_id)
+	_use_level_script = not _script_rounds.is_empty()
+	if not _use_level_script:
+		push_warning("ShopMiniGame: no rounds for range \"%s\"" % range_id)
+
+
+func _sky_progress_for_range(range_id: String) -> float:
+	match range_id:
+		"moss":
+			return 0.0
+		"redd":
+			return 1.0
+		"glory":
+			return 2.0
+		_:
+			return 0.0
+
+
+func _display_range_name(range_id: String) -> String:
+	if range_id.is_empty():
+		return "Moss"
+	return range_id.substr(0, 1).to_upper() + range_id.substr(1)
+
+
+func _ensure_range_label() -> void:
+	if _range_label and is_instance_valid(_range_label):
+		return
+	_range_label = RichTextLabel.new()
+	_range_label.name = "RangeAnnounceLabel"
+	_range_label.bbcode_enabled = true
+	_range_label.fit_content = true
+	_range_label.scroll_active = false
+	_range_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_range_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_range_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_range_label.add_theme_color_override("default_color", INK)
+	_range_label.add_theme_font_size_override("normal_font_size", 70)
+	_range_label.add_theme_font_size_override("italics_font_size", 34)
+	_range_label.modulate.a = 0.0
+	_overlay.add_child(_range_label)
+	_range_label.set_anchors_preset(Control.PRESET_CENTER)
+	_range_label.offset_left = -280.0
+	_range_label.offset_right = 280.0
+	_range_label.offset_top = -160.0
+	_range_label.offset_bottom = -100.0
+
+
+func _show_range_announce() -> void:
+	_ensure_range_label()
+	_range_label.text = "Shooting Range: %s" % _display_range_name(_script_range_id)
+	_range_label.modulate.a = 0.0
+	_range_label.scale = Vector2(0.85, 0.85)
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(_range_label, "modulate:a", 1.0, 0.25)
+	tween.parallel().tween_property(_range_label, "scale", Vector2.ONE, 0.25)
+	tween.tween_interval(1.1)
+	tween.tween_property(_range_label, "modulate:a", 0.0, 0.3)
+	await tween.finished
+
+
+func _advance_to_next_range() -> void:
+	var idx := RANGE_ORDER.find(_script_range_id)
+	if idx < 0:
+		idx = 0
+	else:
+		idx = (idx + 1) % RANGE_ORDER.size()
+	_script_range_id = RANGE_ORDER[idx]
+	_load_range_script(_script_range_id)
+	_pending_range_announce = true
+
+
+func _current_round_data() -> Dictionary:
+	if _script_round_index < 0 or _script_round_index >= _script_rounds.size():
+		return {}
+	var data = _script_rounds[_script_round_index]
+	return data if data is Dictionary else {}
+
+
+func _current_wave_spawn_list() -> Array:
+	var round_data := _current_round_data()
+	if round_data.is_empty():
+		return []
+	var waves := _unique_waves_for_round(round_data)
+	if waves.is_empty():
+		return []
+	if _script_wave_index < 0 or _script_wave_index >= waves.size():
+		return []
+	return waves[_script_wave_index] as Array
+
+
+func _unique_waves_for_round(round_data: Dictionary) -> Array:
+	## Mini-game skips `repeat` duplicates — each distinct wave body plays once.
+	var waves: Array = round_data.get("waves", [])
+	if waves.is_empty():
+		var spawns: Array = round_data.get("spawns", []) as Array
+		return [spawns] if not spawns.is_empty() else []
+	var unique: Array = []
+	for wave in waves:
+		if wave is Array:
+			if unique.is_empty() or not _wave_bodies_equal(unique.back() as Array, wave as Array):
+				unique.append(wave)
+	return unique
+
+
+func _wave_bodies_equal(a: Array, b: Array) -> bool:
+	if a.size() != b.size():
+		return false
+	for idx in a.size():
+		if str(a[idx]) != str(b[idx]):
+			return false
+	return true
+
+
+func _advance_script_cursor() -> void:
+	if not _use_level_script:
+		return
+	var round_data := _current_round_data()
+	if round_data.is_empty():
+		_advance_to_next_range()
+		return
+	var waves := _unique_waves_for_round(round_data)
+	var wave_count := waves.size()
+	if wave_count <= 0:
+		wave_count = 1
+	_script_wave_index += 1
+	if _script_wave_index < wave_count:
+		return
+	_script_wave_index = 0
+	_script_round_index += 1
+	if _script_round_index >= _script_rounds.size():
+		_advance_to_next_range()
+		return
+
+
+func _is_launchable_spawn_cmd(cmd: String) -> bool:
+	return (
+		cmd == "rock"
+		or cmd == "rock-black"
+		or cmd == "rock-pigeon"
+		or cmd == "red_rock_error"
+		or cmd == "smokecan"
+	)
+
+
+func _column_to_x(column: int) -> float:
+	var area := _overlay.size
+	var clamped := clampi(column, 1, GRID_COLUMN_COUNT)
+	var c1 := column_1_x_ratio * area.x + column_1_x_offset
+	var step := column_spacing_ratio * area.x + column_spacing_offset
+	return c1 - float(clamped - 1) * step
+
+
+func _row_to_y(row: int) -> float:
+	var area := _overlay.size
+	match clampi(row, 1, 3):
+		2:
+			return row_b_y_ratio * area.y + row_b_y_offset
+		3:
+			return row_c_y_ratio * area.y + row_c_y_offset
+		_:
+			return row_a_y_ratio * area.y + row_a_y_offset
+
+
+func _aim_cell_position(aim_row: int, aim_column: int) -> Vector2:
+	var pos := Vector2(_column_to_x(aim_column), _row_to_y(aim_row))
+	if aim_offset_px > 0.0:
+		var angle := _rng.randf() * TAU
+		var radius := aim_offset_px * sqrt(_rng.randf())
+		pos += Vector2(cos(angle), sin(angle)) * radius
+	return pos
+
+
+func _resolve_spawn_column(entry) -> int:
+	if entry is Dictionary:
+		var column: int = int(entry.get("column", -1))
+		if column < 1:
+			return _rng.randi_range(1, GRID_COLUMN_COUNT)
+		return clampi(column, 1, GRID_COLUMN_COUNT)
+	return _rng.randi_range(1, GRID_COLUMN_COUNT)
+
+
+func _resolve_aim_cell(entry, apply_center_bias: bool = false, spawn_column: int = -1) -> Vector2i:
+	var aim_row := 0
+	var aim_column := 0
+	if entry is Dictionary:
+		aim_row = int(entry.get("aim_row", -1))
+		aim_column = int(entry.get("aim_column", -1))
+	if aim_row < 1:
+		aim_row = 1
+	if aim_column < 1:
+		if apply_center_bias and bias_random_aim_toward_center and not _wave_aim_pool.is_empty():
+			aim_column = _pick_wave_aim_column(spawn_column)
+		else:
+			aim_column = _rng.randi_range(1, GRID_COLUMN_COUNT)
+	return Vector2i(aim_row, clampi(aim_column, 1, GRID_COLUMN_COUNT))
+
+
+func _pick_wave_aim_column(spawn_column: int) -> int:
+	if _wave_aim_converge_same_lane and _wave_convergence_aim_column >= 1:
+		return _wave_convergence_aim_column
+	var side_pool: Array[int] = []
+	if spawn_column < 1 or _wave_aim_center < 1:
+		side_pool = _wave_aim_pool.duplicate()
+	elif float(spawn_column) < _wave_aim_mid:
+		for col in _wave_aim_pool:
+			if col >= _wave_aim_center:
+				side_pool.append(col)
+	elif float(spawn_column) > _wave_aim_mid:
+		for col in _wave_aim_pool:
+			if col <= _wave_aim_center:
+				side_pool.append(col)
+	else:
+		side_pool = _wave_aim_pool.duplicate()
+	if side_pool.is_empty():
+		side_pool = _wave_aim_pool.duplicate()
+	if side_pool.is_empty():
+		return _rng.randi_range(1, GRID_COLUMN_COUNT)
+	return side_pool[_rng.randi() % side_pool.size()]
+
+
+func _rebuild_wave_aim_convergence(spawn_columns: Array[int]) -> void:
+	_wave_convergence_aim_column = -1
+	_wave_aim_converge_same_lane = true
+	_wave_aim_mid = 0.0
+	_wave_aim_center = -1
+	_wave_aim_pool.clear()
+	if spawn_columns.is_empty():
+		return
+	var leftmost := spawn_columns[0]
+	var rightmost := spawn_columns[0]
+	for col in spawn_columns:
+		leftmost = mini(leftmost, col)
+		rightmost = maxi(rightmost, col)
+	var mid := (float(leftmost) + float(rightmost)) * 0.5
+	var center := clampi(roundi(mid), 1, GRID_COLUMN_COUNT)
+	var pool: Array[int] = []
+	for col in range(center - 1, center + 2):
+		if col >= 1 and col <= GRID_COLUMN_COUNT:
+			pool.append(col)
+	_wave_aim_pool = pool
+	_wave_aim_mid = mid
+	_wave_aim_center = center
+	_wave_aim_converge_same_lane = _rng.randf() < converge_same_lane_chance
+	if _wave_aim_converge_same_lane and not _wave_aim_pool.is_empty():
+		_wave_convergence_aim_column = _wave_aim_pool[_rng.randi() % _wave_aim_pool.size()]
+
+
+func _kind_from_spawn_cmd(cmd: String) -> ShopMiniRock.RockKind:
+	match cmd:
+		"rock-black":
+			return ShopMiniRock.RockKind.BLACK
+		"red_rock_error":
+			return ShopMiniRock.RockKind.RED
+		_:
+			return ShopMiniRock.RockKind.BASIC
+
+
+func _parse_wave_launchables(sequence: Array) -> void:
+	_script_wave_spawns.clear()
+	_script_launch_delays.clear()
+	var pending_wait_ms = null
+	var is_first := true
+	for entry in sequence:
+		if not (entry is Dictionary):
+			continue
+		var cmd := String(entry.get("cmd", "")).to_lower()
+		if cmd == "wait":
+			pending_wait_ms = int(entry.get("ms", default_launch_wait_ms))
+			continue
+		if not _is_launchable_spawn_cmd(cmd):
+			continue
+		if is_first:
+			_script_launch_delays.append(0.0)
+			is_first = false
+		else:
+			var wait_ms: int = default_launch_wait_ms if pending_wait_ms == null else int(pending_wait_ms)
+			_script_launch_delays.append(float(wait_ms) / 1000.0)
+		pending_wait_ms = null
+		_script_wave_spawns.append(entry)
+
+
+func _spawn_script_balloons(sequence: Array, _wall_y: float) -> void:
+	_ensure_balloon_layer()
+	var area := _overlay.size
+	for entry in sequence:
+		if not (entry is Dictionary):
+			continue
+		if String(entry.get("cmd", "")).to_lower() != "balloon":
+			continue
+		var row := int(entry.get("row", -1))
+		var col := int(entry.get("column", -1))
+		if row < 1:
+			row = _rng.randi_range(1, 3)
+		if col < 1:
+			col = _rng.randi_range(1, GRID_COLUMN_COUNT)
+		var balloon := ShopMiniBalloon.new()
+		_balloon_layer.add_child(balloon)
+		balloon.fill_color = balloon_fill_color
+		balloon.approach_duration = balloon_approach_duration
+		balloon.pan_distance = balloon_pan_distance
+		balloon.pan_duration = balloon_pan_duration
+		balloon.setup(balloon_size * size_scale)
+		var rest := Vector2(_column_to_x(col), _row_to_y(row))
+		rest.x = _clamp_spawn_x(rest.x, balloon.radius)
+		var from := Vector2(rest.x + _rng.randf_range(-12.0, 12.0), area.y + balloon.radius + 40.0)
+		balloon.begin_approach(from, rest)
+		balloon.popped.connect(_on_balloon_popped)
+		_balloons.append(balloon)
+
+
+func _make_script_rock(entry: Dictionary, spawn_column: int, delay_sec: float, wall_y: float) -> ShopMiniRock:
+	var cmd := String(entry.get("cmd", "")).to_lower()
+	var kind := _kind_from_spawn_cmd(cmd)
+	var radius := _radius_for_kind(kind)
+	var rock := ShopMiniRock.new()
+	_physics_root.add_child(rock)
+	rock.outline_color = basic_outline_color
+	rock.red_hits_to_destroy = red_hits_to_destroy
+	rock.red_hit_bounce_force = red_hit_bounce_force
+	rock.red_hit_torque = red_hit_torque
+	rock.trail_enabled = trail_enabled
+	rock.trail_length = trail_length
+	rock.trail_width = trail_width
+	rock.trail_color = trail_color
+	rock.physics_material = rock_physics_material
+	rock.yellow_particles_enabled = yellow_particles_enabled
+	rock.yellow_particle_amount = yellow_particle_amount
+	rock.yellow_particle_color = yellow_particle_color
+	rock.yellow_particle_lifetime = yellow_particle_lifetime
+	rock.yellow_particle_speed = yellow_particle_speed
+	rock.yellow_particle_scale = yellow_particle_scale
+	rock.setup(radius, _make_rock_outline(radius), kind)
+	rock.spawn_column = spawn_column
+	rock.spawn_entry = entry
+	rock.launch_delay_sec = delay_sec
+	rock.position = Vector2(
+		_clamp_spawn_x(_column_to_x(spawn_column), radius),
+		wall_y + radius + _rng.randf_range(6.0, 16.0) * size_scale
+	)
+	rock.rotation = _rng.randf_range(-0.25, 0.25)
+	_rocks.append(rock)
+	return rock
+
+
+func _make_script_smoke_can(entry: Dictionary, spawn_column: int, delay_sec: float, wall_y: float) -> ShopMiniSmokeCan:
+	var can := ShopMiniSmokeCan.new()
+	_physics_root.add_child(can)
+	can.setup(smoke_can_size * size_scale * smoke_can_size_scale, rock_physics_material)
+	can.spawn_column = spawn_column
+	can.spawn_entry = entry
+	can.launch_delay_sec = delay_sec
+	can.position = Vector2(
+		_clamp_spawn_x(_column_to_x(spawn_column), can.radius),
+		wall_y + can.radius + _rng.randf_range(6.0, 16.0)
+	)
+	can.smoked.connect(_on_smoke_can_smoked)
+	can.destroyed.connect(_on_smoke_can_destroyed)
+	can.exploded.connect(_on_smoke_can_exploded)
+	can.apex_tick.connect(_on_smoke_can_apex_tick)
+	_smoke_cans.append(can)
+	return can
+
+
+func _prepare_script_wave() -> void:
+	_release_wave_balloons()
+	_clear_rocks(false, false)
+	_ensure_pillars()
+	_sync_pillars()
+	_script_launch_bodies.clear()
+	var area := _overlay.size
+	if area.x < 8.0 or area.y < 8.0:
+		return
+	var wall_y := area.y * WALL_Y_RATIO
+	var sequence := _current_wave_spawn_list()
+	if bool(_current_round_data().get("shuffle", false)) and _script_wave_index > 0:
+		sequence = sequence.duplicate(true)
+		_shuffle_wave_columns(sequence)
+	_parse_wave_launchables(sequence)
+	_spawn_script_balloons(sequence, wall_y)
+
+	var spawn_cols: Array[int] = []
+	for i in _script_wave_spawns.size():
+		var entry: Dictionary = _script_wave_spawns[i]
+		var col := _resolve_spawn_column(entry)
+		var delay := float(_script_launch_delays[i]) if i < _script_launch_delays.size() else 0.0
+		var cmd := String(entry.get("cmd", "")).to_lower()
+		if cmd == "smokecan":
+			var can := _make_script_smoke_can(entry, col, delay, wall_y)
+			_script_launch_bodies.append(can)
+		else:
+			var rock := _make_script_rock(entry, col, delay, wall_y)
+			_script_launch_bodies.append(rock)
+			spawn_cols.append(col)
+	_rebuild_wave_aim_convergence(spawn_cols)
+
+
+func _shuffle_wave_columns(sequence: Array) -> void:
+	for entry in sequence:
+		if not (entry is Dictionary):
+			continue
+		var cmd := String(entry.get("cmd", "")).to_lower()
+		if cmd == "wait":
+			continue
+		if not _is_launchable_spawn_cmd(cmd):
+			continue
+		entry.column = _rng.randi_range(1, GRID_COLUMN_COUNT)
 
 
 func _ensure_intro_title() -> void:
@@ -463,6 +1010,9 @@ func _play_open_intro() -> void:
 	_intro_title.modulate.a = 0.0
 	_intro_title.show()
 	_intro_title.scale = Vector2.ONE / 99
+	if _sfx_title_intro:
+		_sfx_title_intro.pitch_scale = 1.0
+		_sfx_title_intro.play()
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.5)
@@ -487,6 +1037,8 @@ func close() -> void:
 		return
 	is_open = false
 	_intro_active = false
+	if _paused:
+		_set_paused(false)
 	CommonCode.set_master_bus_retro_fx(false)
 	_pulsing = false
 	_game_over = false
@@ -503,6 +1055,7 @@ func close() -> void:
 		_intro_title.modulate.a = 0.0
 	if _content:
 		_content.visible = true
+	_pending_cents_dollars = maxi(int(floor(_money)), 0)
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "modulate:a", 0.0, 0.15)
@@ -513,6 +1066,21 @@ func close() -> void:
 		_shot_flashes.clear()
 		_shot_rings.clear()
 		_update_wind_particles()
+		_payout_cents_to_shop()
+
+
+func _payout_cents_to_shop() -> void:
+	var dollars := _pending_cents_dollars
+	_pending_cents_dollars = 0
+	_money = 0.0
+	if dollars <= 0:
+		return
+	if _shop_menu and _shop_menu.has_method("receive_cents_winnings"):
+		_shop_menu.receive_cents_winnings(dollars)
+	else:
+		gl_PlayerState.add_cash(dollars)
+		if EventBus.instance:
+			EventBus.instance.update_money.emit()
 
 
 func _ensure_perfect_label() -> void:
@@ -529,7 +1097,7 @@ func _ensure_perfect_label() -> void:
 	_perfect_label.add_theme_color_override("default_color", Color(0.92, 0.62, 0.18, 1.0))
 	_perfect_label.add_theme_font_size_override("normal_font_size", 36)
 	_perfect_label.add_theme_font_size_override("italics_font_size", 36)
-	_perfect_label.text = "[i]PERFECT"
+	_perfect_label.text = "PERFECT"
 	_perfect_label.modulate.a = 0.0
 	_overlay.add_child(_perfect_label)
 	_perfect_label.set_anchors_preset(Control.PRESET_CENTER)
@@ -551,11 +1119,19 @@ func _reset_run() -> void:
 	_wave_index = 0
 	_pulsing = false
 	_game_over = false
+	_paused = false
+	_pre_pause_body_state.clear()
+	if _pause_label:
+		_pause_label.hide()
+		_pause_label.modulate.a = 0.0
 	_strikes = 0
 	_money = 0.0
+	_aim_velocity = Vector2.ZERO
 	_shake_trauma = 0.0
 	_shake_strength = 0.0
 	_shake_time = 0.0
+	_strike_shake_trauma = 0.0
+	_strike_shake_strength = 0.0
 	_multikill_timer = 0.0
 	_miss_timer = 0.0
 	_strikes_at_wave_start = 0
@@ -566,9 +1142,21 @@ func _reset_run() -> void:
 	_sky_from = 0.0
 	_sky_to = 0.0
 	_sky_blend_t = 1.0
+	_script_rounds.clear()
+	_script_round_index = 0
+	_script_wave_index = 0
+	_script_wave_spawns.clear()
+	_script_launch_delays.clear()
+	_script_launch_bodies.clear()
+	_use_level_script = false
+	_pending_range_announce = false
+	_wave_aim_pool.clear()
+	_wave_convergence_aim_column = -1
 	_game_over_panel.hide()
 	_wave_label.modulate.a = 0.0
 	_multikill_label.modulate.a = 0.0
+	if _range_label:
+		_range_label.modulate.a = 0.0
 	if _perfect_label:
 		_perfect_label.modulate.a = 0.0
 	if _miss_label:
@@ -588,38 +1176,68 @@ func _on_retry_pressed() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if _mouse_sfx and _mouse_sfx.has_method("set_active"):
 		_mouse_sfx.set_active(true)
+	_boot_level_script()
+	_apply_colour_scheme_for_progress(_sky_visual_progress())
 	_begin_next_wave()
 
 
-func _clear_rocks(clear_oranges: bool = false) -> void:
+func _clear_rocks(clear_oranges: bool = false, clear_balloons: bool = true) -> void:
 	for rock in _rocks:
 		if is_instance_valid(rock):
 			rock.queue_free()
 	_rocks.clear()
-	for balloon in _balloons:
-		if is_instance_valid(balloon):
-			balloon.queue_free()
-	_balloons.clear()
+	if clear_balloons:
+		for balloon in _balloons:
+			if is_instance_valid(balloon):
+				balloon.queue_free()
+		_balloons.clear()
 	for can in _smoke_cans:
 		if is_instance_valid(can):
 			can.queue_free()
 	_smoke_cans.clear()
-	var kept_oranges: Array[ShopMiniFruit] = []
+	var kept_fruits: Array[ShopMiniFruit] = []
 	for fruit in _fruits:
 		if not is_instance_valid(fruit):
 			continue
-		if fruit.kind == ShopMiniFruit.FruitKind.ORANGE and not clear_oranges and not fruit.hit:
-			kept_oranges.append(fruit)
+		var keep := (
+			not clear_oranges
+			and not fruit.hit
+			and (
+				fruit.kind == ShopMiniFruit.FruitKind.ORANGE
+				or fruit.kind == ShopMiniFruit.FruitKind.CHERRY
+			)
+		)
+		if keep:
+			kept_fruits.append(fruit)
 			continue
 		fruit.queue_free()
-	_fruits = kept_oranges
+	_fruits = kept_fruits
 	if _physics_root:
 		for child in _physics_root.get_children():
 			if child.get_meta(PILLAR_META, false):
 				continue
-			if child in kept_oranges:
+			if child in kept_fruits:
 				continue
 			child.queue_free()
+
+
+## End-of-wave: balloons stay until this, then float up and leave.
+func _release_wave_balloons() -> void:
+	var leaving: Array[ShopMiniBalloon] = _balloons.duplicate()
+	_balloons.clear()
+	for balloon in leaving:
+		if not is_instance_valid(balloon) or balloon.hit:
+			if is_instance_valid(balloon):
+				balloon.queue_free()
+			continue
+		if not balloon.drifted_away.is_connected(_on_balloon_drifted_away):
+			balloon.drifted_away.connect(_on_balloon_drifted_away, CONNECT_ONE_SHOT)
+		balloon.begin_drift_away(-90.0)
+
+
+func _on_balloon_drifted_away(balloon: ShopMiniBalloon) -> void:
+	if is_instance_valid(balloon):
+		balloon.queue_free()
 
 
 func _center_crosshair() -> void:
@@ -686,10 +1304,17 @@ func _process(delta: float) -> void:
 	_sync_to_panel()
 	if _intro_active:
 		return
+	if _paused:
+		_wave_layer.queue_redraw()
+		_overlay.queue_redraw()
+		return
 	_wave_phase += delta * 2.2
 	_cloud_pan += delta * cloud_pan_speed
 	_update_sky_transition(delta)
-	_handle_scope_adjust(delta)
+	if not _game_over:
+		_handle_keyboard_and_controller_aim(delta)
+		_handle_shoot_actions()
+		_handle_scope_adjust(delta)
 	_update_flashes(delta)
 	_update_shot_rings(delta)
 	_update_blast_rings(delta)
@@ -717,34 +1342,87 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	
-	if not is_open or _game_over:
+	if not is_open or _intro_active:
 		return
+
+	if event.is_action_pressed("escape") and not event.is_echo():
+		if _game_over:
+			return
+		_toggle_pause()
+		get_viewport().set_input_as_handled()
+		return
+
+	if _paused or _game_over:
+		return
+
+	if Input.is_action_just_pressed("increase_scope_speed"):
+		GameSettings.bump_mouse_sensitivity(1)
+		get_viewport().set_input_as_handled()
+		return
+	if Input.is_action_just_pressed("decrease_scope_speed"):
+		GameSettings.bump_mouse_sensitivity(-1)
+		get_viewport().set_input_as_handled()
+		return
+
 	if event is InputEventMouseMotion:
-		_crosshair += (event as InputEventMouseMotion).relative * mouse_sensitivity
-		_crosshair.x = clampf(_crosshair.x, 0.0, _overlay.size.x)
-		_crosshair.y = clampf(_crosshair.y, 0.0, _overlay.size.y)
+		# Same resolution-independent look curve as the main 3D game.
+		_crosshair += GameSettings.mouse_look_delta((event as InputEventMouseMotion).relative)
+		_clamp_crosshair()
 		_update_crosshair_node()
 		_overlay.queue_redraw()
 		get_viewport().set_input_as_handled()
-	elif event is InputEventMouseButton:
-		var mb := event as InputEventMouseButton
-		if mb.button_index == MOUSE_BUTTON_LEFT:
-			if mb.pressed:
-				_begin_scope_hold(ScopeMode.SHRINK)
-			else:
-				_release_scope_and_shoot(ScopeMode.SHRINK)
-			get_viewport().set_input_as_handled()
-		elif mb.button_index == MOUSE_BUTTON_RIGHT:
-			if mb.pressed:
-				_begin_scope_hold(ScopeMode.EXPAND)
-			else:
-				_release_scope_and_shoot(ScopeMode.EXPAND)
-			get_viewport().set_input_as_handled()
 	elif event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_3:
 			_debug_launch_orange()
 			get_viewport().set_input_as_handled()
+
+
+## WASD + left stick aim — mirrors Player.handle_keyboard_and_controller_input.
+func _handle_keyboard_and_controller_aim(delta: float) -> void:
+	var direction := Vector2(
+		Input.get_axis("left", "right"),
+		Input.get_axis("forward", "backward")
+	)
+
+	const keyboard_crosshair_speed := 1300.0
+	var speed := keyboard_crosshair_speed * GameSettings.crosshair_speed_multiplier()
+	if Input.is_action_pressed("sprint"):
+		speed *= 0.5
+
+	var target_velocity := Vector2.ZERO
+	if direction != Vector2.ZERO:
+		target_velocity = direction.normalized() * speed
+
+	const ACCEL := 60.0
+	const DECEL := 18.0
+	var lerp_speed := ACCEL if direction != Vector2.ZERO else DECEL
+	_aim_velocity = _aim_velocity.lerp(target_velocity, lerp_speed * delta)
+
+	if _aim_velocity.length_squared() < 0.01 and direction == Vector2.ZERO:
+		_aim_velocity = Vector2.ZERO
+		return
+
+	_crosshair += _aim_velocity * delta
+	_clamp_crosshair()
+	_update_crosshair_node()
+
+
+## Fire / scope via the same InputMap actions as the main game (mouse, Space, A, X, etc.).
+func _handle_shoot_actions() -> void:
+	if Input.is_action_just_pressed("shootWeapon"):
+		_begin_scope_hold(ScopeMode.SHRINK)
+	elif Input.is_action_just_released("shootWeapon"):
+		_release_scope_and_shoot(ScopeMode.SHRINK)
+
+	if Input.is_action_just_pressed("shoot_weapon_2"):
+		_begin_scope_hold(ScopeMode.EXPAND)
+	elif Input.is_action_just_released("shoot_weapon_2"):
+		_release_scope_and_shoot(ScopeMode.EXPAND)
+
+
+func _clamp_crosshair() -> void:
+	_crosshair.x = clampf(_crosshair.x, 0.0, _overlay.size.x)
+	_crosshair.y = clampf(_crosshair.y, 0.0, _overlay.size.y)
 
 
 func _begin_scope_hold(mode: ScopeMode) -> void:
@@ -791,7 +1469,7 @@ func _handle_scope_adjust(delta: float) -> void:
 	if _scope_mode == ScopeMode.SHRINK:
 		target_radius = _scope_base_target_radius * SCOPE_MIN_SCALE
 	else:
-		target_radius = _scope_base_target_radius * scope_expand_max_scale
+		target_radius = _scope_base_target_radius * SCOPE_EXPAND_MAX_SCALE
 	_current_target_radius = lerpf(_scope_base_target_radius, target_radius, t)
 	var scale_ratio := _current_target_radius / maxf(_scope_base_target_radius, 0.001)
 
@@ -841,6 +1519,8 @@ func _begin_next_wave() -> void:
 		return
 	_pulsing = true
 	_wave_index += 1
+	if _use_level_script and _wave_index > 1:
+		_advance_script_cursor()
 	await _show_wave_announce(_wave_index, _show_perfect_banner)
 	_show_perfect_banner = false
 	if not is_open or _game_over:
@@ -883,7 +1563,8 @@ func _run_perfect_pineapple_bonus() -> void:
 		_pulsing = false
 		return
 	_in_perfect_pineapple_bonus = true
-	_clear_rocks()
+	_release_wave_balloons()
+	_clear_rocks(false, false)
 	_ensure_pillars()
 	_sync_pillars()
 	_spawn_perfect_pineapples()
@@ -896,18 +1577,26 @@ func _show_wave_announce(wave: int, show_perfect: bool = false) -> void:
 	_ensure_perfect_label()
 	# Reload ammo as soon as the wave banner appears.
 	_bullets = bullets_per_wave
-	# Kick off sky/pillar phase transition for wave 10 / 20 (1s blend).
+	# Colour scheme / sky always follows wave count (environment_change_waves).
 	_begin_sky_transition_for_wave(wave)
+	if _pending_range_announce:
+		_pending_range_announce = false
+		await _show_range_announce()
+		if not is_open or _game_over:
+			return
 	_wave_label.text = "[i]%s" % _wave_display_name(wave)
 	_wave_label.modulate.a = 0.0
 	_wave_label.scale = Vector2(0.85, 0.85)
 	if _perfect_label:
 		_perfect_label.modulate.a = 0.0
 		_perfect_label.scale = Vector2(0.85, 0.85)
+	if _sfx_wave_announce:
+		_sfx_wave_announce.pitch_scale = _rng.randf_range(0.95, 1.08)
+		_sfx_wave_announce.play()
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	if show_perfect and _perfect_label:
-		_perfect_label.text = "[i]PERFECT"
+		_perfect_label.text = "PERFECT"
 		tween.tween_property(_perfect_label, "modulate:a", 1.0, 0.2)
 		tween.parallel().tween_property(_perfect_label, "scale", Vector2.ONE, 0.2)
 		tween.tween_interval(0.15)
@@ -928,14 +1617,18 @@ func _wave_display_name(wave: int) -> String:
 
 
 func _prepare_rocks() -> void:
-	_clear_rocks()
+	if _use_level_script:
+		_prepare_script_wave()
+		return
+	_release_wave_balloons()
+	_clear_rocks(false, false)
 	_ensure_pillars()
 	_sync_pillars()
 	var area := _overlay.size
 	if area.x < 8.0 or area.y < 8.0:
 		return
 	var wall_y := area.y * WALL_Y_RATIO
-	var count := randi_range(2, 8) # rocks_per_wave
+	var count := randi_range(2, 4) # rocks_per_wave
 	for i in count:
 		var column_t := float(i + 1) / float(count + 1)
 		var kind := _roll_rock_kind()
@@ -1017,7 +1710,7 @@ func _spawn_wave_smoke_cans(wall_y: float) -> void:
 	for i in count:
 		var can := ShopMiniSmokeCan.new()
 		_physics_root.add_child(can)
-		can.setup(smoke_can_size * size_scale, rock_physics_material)
+		can.setup(smoke_can_size * size_scale * smoke_can_size_scale, rock_physics_material)
 		var raw_x := area.x * _rng.randf_range(0.2, 0.8)
 		can.position = Vector2(
 			_clamp_spawn_x(raw_x, can.radius),
@@ -1025,6 +1718,8 @@ func _spawn_wave_smoke_cans(wall_y: float) -> void:
 		)
 		can.smoked.connect(_on_smoke_can_smoked)
 		can.destroyed.connect(_on_smoke_can_destroyed)
+		can.exploded.connect(_on_smoke_can_exploded)
+		can.apex_tick.connect(_on_smoke_can_apex_tick)
 		_smoke_cans.append(can)
 
 
@@ -1052,11 +1747,11 @@ func _clamp_spawn_x(x: float, radius: float) -> float:
 func _radius_for_kind(kind: ShopMiniRock.RockKind) -> float:
 	match kind:
 		ShopMiniRock.RockKind.BLACK:
-			return _rng.randf_range(minf(black_rock_size_min, black_rock_size_max), maxf(black_rock_size_min, black_rock_size_max)) * size_scale
+			return _rng.randf_range(minf(black_rock_size_min, black_rock_size_max), maxf(black_rock_size_min, black_rock_size_max)) * size_scale * black_rock_size_scale
 		ShopMiniRock.RockKind.RED:
-			return _rng.randf_range(minf(red_rock_size_min, red_rock_size_max), maxf(red_rock_size_min, red_rock_size_max)) * size_scale
+			return _rng.randf_range(minf(red_rock_size_min, red_rock_size_max), maxf(red_rock_size_min, red_rock_size_max)) * size_scale * rock_size_scale
 		_:
-			return _rng.randf_range(minf(basic_rock_size_min, basic_rock_size_max), maxf(basic_rock_size_min, basic_rock_size_max)) * size_scale
+			return _rng.randf_range(minf(basic_rock_size_min, basic_rock_size_max), maxf(basic_rock_size_min, basic_rock_size_max)) * size_scale * rock_size_scale
 
 
 func _spawn_perfect_pineapples() -> void:
@@ -1080,49 +1775,92 @@ func _spawn_perfect_pineapples() -> void:
 func _make_fruit(kind: ShopMiniFruit.FruitKind, start_size: float, texture: Texture2D) -> ShopMiniFruit:
 	var fruit := ShopMiniFruit.new()
 	_physics_root.add_child(fruit)
-	fruit.setup(kind, start_size * 0.5 * size_scale, texture, rock_physics_material)
-	if kind == ShopMiniFruit.FruitKind.PINEAPPLE:
-		fruit.shrink_speed = pineapple_shrink_speed
-		fruit.fly_speed = pineapple_fly_speed
-	else:
-		fruit.shrink_speed = orange_shrink_speed
-		fruit.fly_speed = orange_fly_speed
-		fruit.hang_apex_y = _overlay.size.y * orange_apex_y_ratio
-		fruit.ascent_speed = orange_ascent_speed
+	var mat := rock_physics_material
+	if kind == ShopMiniFruit.FruitKind.CHERRY:
+		mat = PhysicsMaterial.new()
+		mat.bounce = cherry_bounce
+		mat.friction = 0.15
+	var radius := start_size * 0.5 * size_scale
+	if kind == ShopMiniFruit.FruitKind.CHERRY:
+		radius *= cherry_size_scale
+	fruit.setup(kind, radius, texture, mat)
+	match kind:
+		ShopMiniFruit.FruitKind.PINEAPPLE:
+			fruit.shrink_speed = pineapple_shrink_speed
+			fruit.fly_speed = pineapple_fly_speed
+		ShopMiniFruit.FruitKind.ORANGE:
+			fruit.shrink_speed = orange_shrink_speed
+			fruit.fly_speed = orange_fly_speed
+			fruit.hang_apex_y = _overlay.size.y * orange_apex_y_ratio
+			fruit.ascent_speed = orange_ascent_speed
+		ShopMiniFruit.FruitKind.CHERRY:
+			fruit.shrink_speed = orange_shrink_speed
+			fruit.fly_speed = orange_fly_speed
 	fruit.flyaway_finished.connect(_on_fruit_flyaway_finished)
 	fruit.orange_exploded.connect(_on_orange_exploded)
 	return fruit
 
 
 func _debug_launch_orange() -> void:
-	if orange_texture == null:
+	if orange_texture == null and cherry_texture == null:
 		return
-	_spawn_oranges_from_multikill(2, _crosshair.x)
+	_spawn_bonus_fruit_from_multikill(2, _crosshair.x)
 
 
-func _spawn_oranges_from_multikill(count: int, origin_x: float) -> void:
-	# Double = 1 orange, triple = 2, etc. (same as multi_shot_bonus.start_oranges)
-	var orange_count := maxi(count - 1, 0)
-	if orange_count <= 0 or orange_texture == null:
+func _spawn_bonus_fruit_from_multikill(count: int, _origin_x: float) -> void:
+	# Double = 1 fruit, triple = 2, etc.
+	var fruit_count := maxi(count - 1, 0)
+	if fruit_count <= 0:
 		return
 	var area := _overlay.size
 	var wall_y := area.y * WALL_Y_RATIO
-	for i in orange_count:
-		var fruit := _make_fruit(ShopMiniFruit.FruitKind.ORANGE, orange_start_size, orange_texture)
-		var raw_x := origin_x + _rng.randf_range(-40.0, 40.0)
-		fruit.position = Vector2(
-			_clamp_spawn_x(raw_x, fruit.radius),
-			wall_y + fruit.radius + _rng.randf_range(6.0, 18.0)
-		)
-		fruit.rotation = _rng.randf_range(-0.4, 0.4)
-		_fruits.append(fruit)
-		var torque := _rng.randf_range(-pulse_torque, pulse_torque)
-		fruit.pulse(orange_ascent_speed, _rng.randf_range(-launch_x_jitter * 0.35, launch_x_jitter * 0.35), 0.0, torque)
+	for i in fruit_count:
+		var use_cherry := _rng.randf() < cherry_spawn_chance and cherry_texture != null
+		if use_cherry:
+			_spawn_cherry_from_center(wall_y)
+		else:
+			if orange_texture == null:
+				continue
+			var fruit := _make_fruit(ShopMiniFruit.FruitKind.ORANGE, orange_start_size, orange_texture)
+			var raw_x := area.x * 0.5 + _rng.randf_range(-40.0, 40.0)
+			fruit.position = Vector2(
+				_clamp_spawn_x(raw_x, fruit.radius),
+				wall_y + fruit.radius + _rng.randf_range(6.0, 18.0)
+			)
+			fruit.rotation = _rng.randf_range(-0.4, 0.4)
+			_fruits.append(fruit)
+			var torque := _rng.randf_range(-pulse_torque, pulse_torque)
+			fruit.pulse(orange_ascent_speed, _rng.randf_range(-launch_x_jitter * 0.35, launch_x_jitter * 0.35), 0.0, torque)
 		if _sfx_pineapple_launch:
 			_sfx_pineapple_launch.pitch_scale = _rng.randf_range(1.05, 1.2)
 			_sfx_pineapple_launch.play()
-		if i < orange_count - 1:
+		if i < fruit_count - 1:
 			await get_tree().create_timer(0.45, false).timeout
+
+
+func _spawn_cherry_from_center(wall_y: float) -> void:
+	if cherry_texture == null:
+		return
+	var area := _overlay.size
+	var fruit := _make_fruit(ShopMiniFruit.FruitKind.CHERRY, cherry_start_size, cherry_texture)
+	fruit.position = Vector2(
+		_clamp_spawn_x(area.x * 0.5, fruit.radius),
+		wall_y + fruit.radius + _rng.randf_range(4.0, 12.0)
+	)
+	fruit.rotation = _rng.randf_range(-0.5, 0.5)
+	_fruits.append(fruit)
+	var side := -1.0 if _rng.randf() < 0.5 else 1.0
+	var angle := _rng.randf_range(
+		minf(cherry_angle_min_deg, cherry_angle_max_deg),
+		maxf(cherry_angle_min_deg, cherry_angle_max_deg)
+	) * side
+	var torque := _rng.randf_range(-pulse_torque * 1.4, pulse_torque * 1.4)
+	fruit.pulse_angled(cherry_launch_speed, angle, cherry_gravity_scale, torque)
+
+
+## Legacy name kept for any external callers.
+func _spawn_oranges_from_multikill(count: int, origin_x: float) -> void:
+	await _spawn_bonus_fruit_from_multikill(count, origin_x)
 
 
 func _roll_rock_kind() -> ShopMiniRock.RockKind:
@@ -1135,6 +1873,13 @@ func _roll_rock_kind() -> ShopMiniRock.RockKind:
 
 
 func _pulse_rocks() -> void:
+	if _use_level_script and not _in_perfect_pineapple_bonus:
+		if _sfx_pulse:
+			_sfx_pulse.play()
+		_add_shake(launch_shake_strength, launch_shake_time)
+		await _pulse_scripted_bodies()
+		return
+
 	var to_pulse: Array[RigidBody2D] = []
 	for rock in _rocks:
 		if is_instance_valid(rock) and not rock.hit:
@@ -1149,6 +1894,11 @@ func _pulse_rocks() -> void:
 	if to_pulse.is_empty():
 		return
 
+	if _sfx_pulse:
+		_sfx_pulse.play()
+
+	_add_shake(launch_shake_strength, launch_shake_time)
+
 	var aim_together := _rng.randf() < aim_together_chance and to_pulse.size() >= 2
 	var center := Vector2.ZERO
 	if aim_together:
@@ -1156,12 +1906,8 @@ func _pulse_rocks() -> void:
 			center += body.position
 		center /= float(to_pulse.size())
 
-	if _sfx_pulse:
-		_sfx_pulse.play()
-	
-	_add_shake(launch_shake_strength, launch_shake_time)
-
 	for body in to_pulse:
+		await _await_while_paused()
 		if not is_open or _game_over:
 			return
 		if not is_instance_valid(body) or body.get("hit") == true:
@@ -1189,9 +1935,63 @@ func _pulse_rocks() -> void:
 		if absf(torque) < pulse_torque * 0.35:
 			torque = pulse_torque * (1.0 if _rng.randf() > 0.5 else -1.0)
 		var grav := 0.0 if (fruit and fruit.kind == ShopMiniFruit.FruitKind.ORANGE) else fall_gravity_scale
+		if fruit and fruit.kind == ShopMiniFruit.FruitKind.CHERRY:
+			grav = cherry_gravity_scale
 		body.pulse(impulse, x_impulse, grav, torque)
-		if pulse_stagger > 0.0:
-			await get_tree().create_timer(pulse_stagger).timeout
+		var wait := pulse_stagger
+		if fruit and fruit.kind == ShopMiniFruit.FruitKind.PINEAPPLE:
+			wait = pineapple_pulse_stagger
+		if wait > 0.0:
+			await get_tree().create_timer(wait).timeout
+			await _await_while_paused()
+
+
+func _pulse_scripted_bodies() -> void:
+	for body in _script_launch_bodies:
+		await _await_while_paused()
+		if not is_open or _game_over:
+			return
+		if not is_instance_valid(body) or body.get("hit") == true:
+			continue
+
+		var delay := 0.0
+		var entry: Dictionary = {}
+		var spawn_col := 1
+		var rock := body as ShopMiniRock
+		var can := body as ShopMiniSmokeCan
+		if rock:
+			delay = rock.launch_delay_sec
+			entry = rock.spawn_entry
+			spawn_col = rock.spawn_column
+		elif can:
+			delay = can.launch_delay_sec
+			entry = can.spawn_entry
+			spawn_col = can.spawn_column
+
+		if delay > 0.0:
+			await get_tree().create_timer(delay).timeout
+			await _await_while_paused()
+			if not is_open or _game_over:
+				return
+			if not is_instance_valid(body) or body.get("hit") == true:
+				continue
+
+		var aim := _resolve_aim_cell(entry, true, spawn_col)
+		var aim_pos := _aim_cell_position(aim.x, aim.y)
+		var velocity = BallisticAim2D.velocity_to_point(
+			body.position,
+			aim_pos,
+			-1.0,
+			aim_launch_gravity_scale,
+			aim_hang_time_sec
+		) * aim_impulse_scale
+		var torque := _rng.randf_range(-pulse_torque, pulse_torque)
+		if absf(torque) < pulse_torque * 0.35:
+			torque = pulse_torque * (1.0 if _rng.randf() > 0.5 else -1.0)
+		if rock:
+			rock.pulse_ballistic(velocity, aim_launch_gravity_scale, torque)
+		elif can:
+			can.pulse_ballistic(velocity, aim_launch_gravity_scale, torque)
 
 
 func _make_rock_outline(radius: float) -> PackedVector2Array:
@@ -1221,12 +2021,15 @@ func _alive_rock_count() -> int:
 
 
 func _alive_target_count() -> int:
-	# Oranges carry across rounds and do not gate the next wave.
+	# Oranges / cherries carry across rounds and do not gate the next wave.
 	# Balloons are obstacles — they do not gate wave clear.
 	var count := _alive_rock_count()
 	for fruit in _fruits:
-		if is_instance_valid(fruit) and not fruit.hit and fruit.kind != ShopMiniFruit.FruitKind.ORANGE:
-			count += 1
+		if not is_instance_valid(fruit) or fruit.hit:
+			continue
+		if fruit.kind == ShopMiniFruit.FruitKind.ORANGE or fruit.kind == ShopMiniFruit.FruitKind.CHERRY:
+			continue
+		count += 1
 	for can in _smoke_cans:
 		if is_instance_valid(can) and not can.hit:
 			count += 1
@@ -1251,7 +2054,7 @@ func _cleanup_fallen_rocks() -> void:
 			_play_splash(fall_pos)
 			# Black rocks are hazards to avoid — letting them fall is success (no strike).
 			if kind != ShopMiniRock.RockKind.BLACK:
-				_add_strike()
+				_add_strike(true)
 			rock.queue_free()
 			continue
 		if rock.position.y < -80.0 or rock.position.x < -80.0 or rock.position.x > _overlay.size.x + 80.0:
@@ -1276,7 +2079,9 @@ func _cleanup_fallen_rocks() -> void:
 			continue
 		if fruit.pulsed and fruit.position.y > wall_y + fruit.radius + 40.0 and fruit.linear_velocity.y > 0.0:
 			_play_splash(fruit.position)
-			_add_strike()
+			# Cherries are bonus toys — falling off is fine. Pineapples miss = strike.
+			if fruit.kind != ShopMiniFruit.FruitKind.CHERRY:
+				_add_strike()
 			fruit.queue_free()
 			continue
 		if fruit.position.y < -80.0 or fruit.position.x < -80.0 or fruit.position.x > _overlay.size.x + 80.0:
@@ -1302,8 +2107,8 @@ func _cleanup_fallen_rocks() -> void:
 		if can.hit:
 			can.queue_free()
 			continue
+		# Apex flash / explode handles smoke — don't treat wall fall as the boom.
 		if can.pulsed and can.position.y > wall_y + can.radius + 40.0 and can.linear_velocity.y > 0.0:
-			can.trigger_smoke()
 			_play_splash(can.position)
 			can.queue_free()
 			continue
@@ -1323,8 +2128,122 @@ func _update_flashes(delta: float) -> void:
 	_shot_flashes = remaining
 
 
+func _await_while_paused() -> void:
+	while _paused and is_open and not _game_over:
+		await get_tree().process_frame
+
+
+func _toggle_pause() -> void:
+	if not is_open or _game_over or _intro_active:
+		return
+	if _paused:
+		_set_paused(false)
+	else:
+		_set_paused(true)
+
+
+func _set_paused(paused: bool) -> void:
+	_paused = paused
+	if paused:
+		_freeze_playfield_for_pause()
+		_ensure_pause_label()
+		_pause_label.text = "[wave][pulse]Pause"
+		_pause_label.modulate.a = 1.0
+		_pause_label.show()
+		_reset_scope_visual()
+		if _mouse_sfx and _mouse_sfx.has_method("set_active"):
+			_mouse_sfx.set_active(false)
+	else:
+		_restore_playfield_after_pause()
+		if _pause_label:
+			_pause_label.modulate.a = 0.0
+			_pause_label.hide()
+		if is_open and not _game_over and _mouse_sfx and _mouse_sfx.has_method("set_active"):
+			_mouse_sfx.set_active(true)
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func _ensure_pause_label() -> void:
+	if _pause_label and is_instance_valid(_pause_label):
+		return
+	_pause_label = RichTextLabel.new()
+	_pause_label.name = "PauseLabel"
+	_pause_label.bbcode_enabled = true
+	_pause_label.fit_content = true
+	_pause_label.scroll_active = false
+	_pause_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pause_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_pause_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_pause_label.add_theme_color_override("default_color", INK)
+	_pause_label.add_theme_font_size_override("normal_font_size", 56)
+	_pause_label.add_theme_font_size_override("italics_font_size", 56)
+	_pause_label.text = "[wave][pulse]Pause"
+	_pause_label.modulate.a = 0.0
+	_overlay.add_child(_pause_label)
+	_pause_label.set_anchors_preset(Control.PRESET_CENTER)
+	_pause_label.offset_left = -200.0
+	_pause_label.offset_right = 200.0
+	_pause_label.offset_top = -40.0
+	_pause_label.offset_bottom = 40.0
+	_pause_label.z_index = 40
+
+
+func _freeze_playfield_for_pause() -> void:
+	_pre_pause_body_state.clear()
+	var bodies: Array = []
+	bodies.append_array(_rocks)
+	bodies.append_array(_fruits)
+	bodies.append_array(_smoke_cans)
+	for body in bodies:
+		if not is_instance_valid(body) or not (body is RigidBody2D):
+			continue
+		var rb := body as RigidBody2D
+		var id := rb.get_instance_id()
+		_pre_pause_body_state[id] = {
+			"freeze": rb.freeze,
+			"vel": rb.linear_velocity,
+			"ang": rb.angular_velocity,
+			"process_mode": rb.process_mode,
+		}
+		rb.linear_velocity = Vector2.ZERO
+		rb.angular_velocity = 0.0
+		rb.freeze = true
+		rb.process_mode = Node.PROCESS_MODE_DISABLED
+	if _balloon_layer:
+		_balloon_layer.process_mode = Node.PROCESS_MODE_DISABLED
+	for balloon in _balloons:
+		if is_instance_valid(balloon):
+			balloon.process_mode = Node.PROCESS_MODE_DISABLED
+
+
+func _restore_playfield_after_pause() -> void:
+	var bodies: Array = []
+	bodies.append_array(_rocks)
+	bodies.append_array(_fruits)
+	bodies.append_array(_smoke_cans)
+	for body in bodies:
+		if not is_instance_valid(body) or not (body is RigidBody2D):
+			continue
+		var rb := body as RigidBody2D
+		var id := rb.get_instance_id()
+		if not _pre_pause_body_state.has(id):
+			rb.process_mode = Node.PROCESS_MODE_INHERIT
+			continue
+		var state: Dictionary = _pre_pause_body_state[id]
+		rb.process_mode = int(state.get("process_mode", Node.PROCESS_MODE_INHERIT))
+		rb.freeze = bool(state.get("freeze", false))
+		rb.linear_velocity = state.get("vel", Vector2.ZERO)
+		rb.angular_velocity = float(state.get("ang", 0.0))
+	_pre_pause_body_state.clear()
+	if _balloon_layer:
+		_balloon_layer.process_mode = Node.PROCESS_MODE_INHERIT
+	for balloon in _balloons:
+		if is_instance_valid(balloon):
+			balloon.process_mode = Node.PROCESS_MODE_INHERIT
+
+
 func _try_shoot() -> void:
-	if _game_over:
+	if _game_over or _paused:
 		return
 	var bullet_cost := 2 if _scope_mode == ScopeMode.EXPAND else 1
 	if _bullets < bullet_cost:
@@ -1434,7 +2353,7 @@ func _on_shot_missed() -> void:
 	if _sfx_miss:
 		_sfx_miss.play(0.91)
 	if _miss_label:
-		_miss_label.text = "[i]MISS"
+		_miss_label.text = "MISS"
 		_miss_label.modulate.a = 1.0
 		_miss_timer = 0.45
 	_shot_flashes.append({"pos": _crosshair, "t": 0.16, "burst": true})
@@ -1456,7 +2375,7 @@ func _ensure_out_label() -> void:
 		_out_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_out_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		_out_label.add_theme_font_size_override("normal_font_size", 42)
-		_out_label.add_theme_color_override("default_color", CROSSHAIR_RED)
+		_out_label.add_theme_color_override("default_color", _active_hud_color)
 		_out_label.text = "OUT"
 		_crosshair_node.add_child(_out_label)
 		_out_label.set_anchors_preset(Control.PRESET_CENTER)
@@ -1512,6 +2431,8 @@ func _on_fruit_flyaway_finished(fruit: ShopMiniFruit, destroyed: bool) -> void:
 		_add_shake(destroy_shake_strength, destroy_shake_time)
 		if kind == ShopMiniFruit.FruitKind.PINEAPPLE:
 			_add_money(pineapple_money)
+		elif kind == ShopMiniFruit.FruitKind.CHERRY:
+			_add_money(cherry_money)
 		else:
 			_add_money(orange_money)
 		_shot_flashes.append({"pos": pos, "t": 0.22, "burst": true})
@@ -1618,7 +2539,7 @@ func _blast_intercept(entry: Dictionary) -> void:
 			continue
 		hit_ids[bid] = true
 		_balloons.remove_at(i)
-		balloon.apply_shot()
+		balloon.apply_shot(false)
 
 	for i in range(_smoke_cans.size() - 1, -1, -1):
 		if i < 0 or i >= _smoke_cans.size():
@@ -1650,7 +2571,7 @@ func _on_rock_destroyed_by_blast(rock: RigidBody2D, hit_pos: Vector2, kind: Shop
 		rock.queue_free()
 
 
-func _on_balloon_popped(balloon: ShopMiniBalloon, pos: Vector2) -> void:
+func _on_balloon_popped(balloon: ShopMiniBalloon, pos: Vector2, counts_as_strike: bool = true) -> void:
 	_balloons.erase(balloon)
 	if _game_over:
 		if is_instance_valid(balloon):
@@ -1662,14 +2583,39 @@ func _on_balloon_popped(balloon: ShopMiniBalloon, pos: Vector2) -> void:
 	_play_aoe(pos)
 	_add_shake(destroy_shake_strength * 0.55, destroy_shake_time * 0.7)
 	_shot_flashes.append({"pos": pos, "t": 0.2, "burst": true})
-	# Obstacle balloon — shooting it is a strike.
-	_add_strike()
+	# Obstacle balloon — direct shots strike; orange blasts do not.
+	if counts_as_strike:
+		_add_strike()
 	if is_instance_valid(balloon):
 		balloon.queue_free()
 
 
 func _on_smoke_can_smoked(can: ShopMiniSmokeCan, pos: Vector2) -> void:
 	_spawn_smoke_cloud(pos)
+
+
+func _on_smoke_can_apex_tick(_can: ShopMiniSmokeCan) -> void:
+	if _sfx_smoke_tick:
+		_sfx_smoke_tick.pitch_scale = _rng.randf_range(0.92, 1.12)
+		_sfx_smoke_tick.play()
+
+
+func _on_smoke_can_exploded(can: ShopMiniSmokeCan, pos: Vector2) -> void:
+	_smoke_cans.erase(can)
+	if _game_over:
+		if is_instance_valid(can):
+			can.queue_free()
+		return
+	if _sfx_smoke_explode:
+		_sfx_smoke_explode.pitch_scale = _rng.randf_range(0.9, 1.1)
+		_sfx_smoke_explode.play()
+	elif _sfx_explosion:
+		_sfx_explosion.play()
+	_play_aoe(pos)
+	_add_shake(destroy_shake_strength * 0.7, destroy_shake_time * 0.85)
+	_shot_flashes.append({"pos": pos, "t": 0.22, "burst": true})
+	if is_instance_valid(can):
+		can.queue_free()
 
 
 func _on_smoke_can_destroyed(can: ShopMiniSmokeCan, pos: Vector2) -> void:
@@ -1788,13 +2734,13 @@ func _show_multikill(count: int) -> void:
 		text = "QUAD SHOT"
 	elif count > 4:
 		text = "%dX SHOT" % count
-	_multikill_label.text = "[i][wave]%s" % text
+	_multikill_label.text = "[wave]%s" % text
 	_multikill_label.modulate.a = 1.0
 	_multikill_timer = 1.1
 	if _sfx_multishot:
 		_sfx_multishot.play()
 	# Oranges spawn from multi-shot only (double → 1, triple → 2, …).
-	_spawn_oranges_from_multikill(count, _crosshair.x)
+	_spawn_bonus_fruit_from_multikill(count, _crosshair.x)
 
 
 func _add_money(amount: float) -> void:
@@ -1802,16 +2748,25 @@ func _add_money(amount: float) -> void:
 	_refresh_hud()
 
 
-func _add_strike() -> void:
+func _add_strike(from_rock_miss: bool = false) -> void:
 	if _game_over:
 		return
 	_strikes = mini(_strikes + 1, MAX_STRIKES)
 	_refresh_hud()
+	if from_rock_miss:
+		_add_vertical_strike_shake(strike_miss_shake_strength, strike_miss_shake_time)
 	if _strikes >= MAX_STRIKES:
 		_trigger_game_over()
 
 
+func _add_vertical_strike_shake(strength: float, time: float) -> void:
+	_strike_shake_strength = maxf(_strike_shake_strength, strength)
+	_strike_shake_trauma = maxf(_strike_shake_trauma, time)
+
+
 func _trigger_game_over() -> void:
+	if _paused:
+		_set_paused(false)
 	_game_over = true
 	_pulsing = false
 	_clear_rocks(true)
@@ -1820,6 +2775,8 @@ func _trigger_game_over() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if _mouse_sfx and _mouse_sfx.has_method("set_active"):
 		_mouse_sfx.set_active(false)
+	UiFocus.wire_vertical([_retry_button, _close_button])
+	UiFocus.grab_in(_game_over_panel, _retry_button)
 
 
 func _refresh_hud() -> void:
@@ -2063,13 +3020,19 @@ func _add_shake(strength: float, time: float) -> void:
 
 
 func _shake_offset() -> Vector2:
-	if _shake_trauma <= 0.0 or _shake_strength <= 0.0:
-		return Vector2.ZERO
-	# Soft sine shake — applied only to visual layers, never PhysicsRoot.
-	var falloff := clampf(_shake_trauma / maxf(destroy_shake_time, 0.05), 0.0, 1.0)
-	falloff = falloff * falloff
-	var mag := _shake_strength * falloff
-	return Vector2(sin(_shake_time * 58.0), cos(_shake_time * 43.0)) * mag
+	var off := Vector2.ZERO
+	if _shake_trauma > 0.0 and _shake_strength > 0.0:
+		# Soft sine shake — applied only to visual layers, never PhysicsRoot.
+		var falloff := clampf(_shake_trauma / maxf(destroy_shake_time, 0.05), 0.0, 1.0)
+		falloff = falloff * falloff
+		var mag := _shake_strength * falloff
+		off += Vector2(sin(_shake_time * 58.0), cos(_shake_time * 43.0)) * mag
+	if _strike_shake_trauma > 0.0 and _strike_shake_strength > 0.0:
+		var s_fall := clampf(_strike_shake_trauma / maxf(strike_miss_shake_time, 0.05), 0.0, 1.0)
+		s_fall = s_fall * s_fall
+		# Pure vertical bob — no horizontal drift.
+		off.y += sin(_shake_time * strike_miss_shake_freq) * (_strike_shake_strength * s_fall)
+	return off
 
 
 func _capture_visual_base_positions() -> void:
@@ -2105,6 +3068,10 @@ func _update_shake(delta: float) -> void:
 		_shake_trauma = maxf(0.0, _shake_trauma - delta)
 		if _shake_trauma <= 0.0:
 			_shake_strength = 0.0
+	if _strike_shake_trauma > 0.0:
+		_strike_shake_trauma = maxf(0.0, _strike_shake_trauma - delta)
+		if _strike_shake_trauma <= 0.0:
+			_strike_shake_strength = 0.0
 	_apply_shake_to_visuals()
 
 
@@ -2135,11 +3102,17 @@ func _sky_visual_progress() -> float:
 
 
 func _target_sky_progress_for_wave(wave: int) -> float:
-	if not day_night_cycle_enabled or wave < 10:
+	if not day_night_cycle_enabled:
 		return 0.0
-	if wave < 20:
-		return 1.0
-	return 2.0
+	var thresholds := environment_change_waves.duplicate()
+	thresholds.sort()
+	var phase := 0
+	for threshold in thresholds:
+		if wave >= int(threshold):
+			phase += 1
+		else:
+			break
+	return float(mini(phase, 2))
 
 
 func _begin_sky_transition_for_wave(wave: int) -> void:
@@ -2148,14 +3121,78 @@ func _begin_sky_transition_for_wave(wave: int) -> void:
 		_sky_to = 0.0
 		_sky_blend_t = 1.0
 		_sync_pillars()
+		_apply_colour_scheme_for_progress(0.0)
 		return
 	var target := _target_sky_progress_for_wave(wave)
 	var current := _sky_visual_progress()
 	if is_equal_approx(current, target) and _sky_blend_t >= 1.0:
+		_apply_colour_scheme_for_progress(target)
 		return
 	_sky_from = current
 	_sky_to = target
 	_sky_blend_t = 0.0
+	_apply_colour_scheme_for_progress(target)
+
+
+func _begin_sky_transition_for_range(range_id: String, instant: bool = false) -> void:
+	if not day_night_cycle_enabled:
+		_sky_from = 0.0
+		_sky_to = 0.0
+		_sky_blend_t = 1.0
+		_sync_pillars()
+		_apply_colour_scheme_for_progress(0.0)
+		return
+	var target := _sky_progress_for_range(range_id)
+	if instant:
+		_sky_from = target
+		_sky_to = target
+		_sky_blend_t = 1.0
+		_sync_pillars()
+		_apply_colour_scheme_for_progress(target)
+		return
+	var current := _sky_visual_progress()
+	if is_equal_approx(current, target) and _sky_blend_t >= 1.0:
+		_apply_colour_scheme_for_progress(target)
+		return
+	_sky_from = current
+	_sky_to = target
+	_sky_blend_t = 0.0
+	_apply_colour_scheme_for_progress(target)
+
+
+func _colour_scheme_for_progress(progress: float) -> Dictionary:
+	if progress < 0.5:
+		return {
+			"crosshair": day_crosshair_color,
+			"money": day_money_color,
+			"strike": day_strike_color,
+		}
+	if progress < 1.5:
+		return {
+			"crosshair": night_crosshair_color,
+			"money": night_money_color,
+			"strike": night_strike_color,
+		}
+	return {
+		"crosshair": blue_day_crosshair_color,
+		"money": blue_day_money_color,
+		"strike": blue_day_strike_color,
+	}
+
+
+func _apply_colour_scheme_for_progress(progress: float) -> void:
+	var scheme := _colour_scheme_for_progress(progress)
+	_active_hud_color = scheme.crosshair
+	if _money_label:
+		_money_label.add_theme_color_override("default_color", scheme.money)
+	if _strike_label:
+		_strike_label.add_theme_color_override("default_color", scheme.strike)
+	if _crosshair_node:
+		_crosshair_node.modulate = Color(scheme.crosshair.r, scheme.crosshair.g, scheme.crosshair.b, _crosshair_node.modulate.a)
+	if _out_label:
+		_out_label.add_theme_color_override("default_color", scheme.crosshair)
+	if _crosshair_texture:
+		_crosshair_texture.modulate = Color(scheme.crosshair.r, scheme.crosshair.g, scheme.crosshair.b, _crosshair_texture.modulate.a)
 
 
 ## Returns Vector2(width_ratio, inset_ratio) for a sky progress value (0/1/2).
@@ -2225,18 +3262,18 @@ func _draw_stars(area: Vector2, wall_y: float, night: float) -> void:
 
 
 func _draw_moon(area: Vector2, wall_y: float, night: float) -> void:
-	var pos := Vector2(area.x * 0.78, wall_y * 0.22)
-	var radius := 18.0 + 6.0 * night
+	var pos := Vector2(area.x * moon_x_ratio, wall_y * moon_y_ratio)
+	var radius := moon_base_radius + moon_night_radius_boost * night
 	var glow := moon_color
 	glow.a *= night * 0.25
 	_wave_layer.draw_circle(pos, radius * 1.8, glow)
 	var body := moon_color
 	body.a *= night
 	_wave_layer.draw_circle(pos, radius, body)
-	# Soft crescent cut for a bit of character.
-	var cut := night_sky_color
-	cut.a *= night * 0.85
-	_wave_layer.draw_circle(pos + Vector2(radius * 0.35, -radius * 0.1), radius * 0.85, cut)
+	# Soft crescent cut (sky-coloured bite so pillars don't hide a solid disc).
+	var sky := _sky_color_for_progress(_sky_visual_progress())
+	sky.a = 1.0
+	_wave_layer.draw_circle(pos + Vector2(radius * 0.45, -radius * 0.1), radius * 0.88, sky)
 
 
 func _draw_clouds_colored(area: Vector2, wall_y: float, color: Color) -> void:
@@ -2307,6 +3344,8 @@ func _draw_overlay() -> void:
 	_overlay.draw_rect(Rect2(0.0, wall_y, area.x, area.y - wall_y + 2.0), CREAM, true)
 	_draw_pillars(area, wall_y)
 	_draw_wall(area, wall_y)
+	if display_grid:
+		_draw_aim_grid(area)
 	_draw_flashes()
 	_draw_active_shot_rings()
 	_draw_blast_rings()
@@ -2315,7 +3354,33 @@ func _draw_overlay() -> void:
 	if _crosshair_texture == null or _crosshair_texture.texture == null:
 		_draw_crosshair(_crosshair)
 	# Subtle aim circle matching current shrink radius.
-	_overlay.draw_arc(_crosshair, _current_target_radius, 0.0, TAU, 48, Color(CROSSHAIR_RED.r, CROSSHAIR_RED.g, CROSSHAIR_RED.b, 0.25), 1.25, true)
+	var aim_c := _active_hud_color
+	_overlay.draw_arc(_crosshair, _current_target_radius, 0.0, TAU, 48, Color(aim_c.r, aim_c.g, aim_c.b, 0.25), 1.25, true)
+
+
+func _draw_aim_grid(area: Vector2) -> void:
+	var row_letters := ["A", "B", "C"]
+	var row_ys := [_row_to_y(1), _row_to_y(2), _row_to_y(3)]
+	for col in range(1, GRID_COLUMN_COUNT + 1):
+		var x := _column_to_x(col)
+		_overlay.draw_line(Vector2(x, 0.0), Vector2(x, area.y * WALL_Y_RATIO), GRID_LINE_COLOR, 1.0, true)
+		for row_i in 3:
+			var y: float = row_ys[row_i]
+			var cell := Vector2(x, y)
+			_overlay.draw_circle(cell, 5.0, GRID_LABEL_COLOR)
+			_overlay.draw_arc(cell, 10.0, 0.0, TAU, 20, GRID_LINE_COLOR, 1.25, true)
+			var label := "%s%d" % [row_letters[row_i], col]
+			_overlay.draw_string(
+				ThemeDB.fallback_font,
+				cell + Vector2(8.0, -6.0),
+				label,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				-1,
+				14,
+				GRID_LABEL_COLOR
+			)
+	for y in row_ys:
+		_overlay.draw_line(Vector2(0.0, y), Vector2(area.x, y), GRID_LINE_COLOR, 1.0, true)
 
 
 func _draw_bullet_ticks() -> void:
@@ -2396,7 +3461,7 @@ func _draw_flashes() -> void:
 		var pos: Vector2 = flash["pos"]
 		var t := float(flash["t"])
 		var alpha := clampf(t / 0.12, 0.0, 1.0)
-		var color := Color(CROSSHAIR_RED.r, CROSSHAIR_RED.g, CROSSHAIR_RED.b, alpha)
+		var color := Color(_active_hud_color.r, _active_hud_color.g, _active_hud_color.b, alpha)
 		if flash.get("burst", false):
 			var r := (0.22 - t) * 90.0
 			_overlay.draw_arc(pos, maxf(r, CROSSHAIR_RADIUS - 5.0), 0.0, TAU, 18, color, 1.5, true)
