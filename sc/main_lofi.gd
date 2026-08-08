@@ -26,10 +26,9 @@ func _setup_shop_mini_game() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.shift_pressed and event.keycode == KEY_2:
-			_toggle_shop_mini_game()
-			get_viewport().set_input_as_handled()
+	if Input.is_action_just_pressed('select_button'):
+		_toggle_shop_mini_game()
+		get_viewport().set_input_as_handled()
 
 
 func _toggle_shop_mini_game() -> void:

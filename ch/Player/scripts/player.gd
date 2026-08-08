@@ -66,7 +66,7 @@ var current_round : int
 var current_gun_fire_rate_cooldown := 0.0
 var _is_currently_shooting := false
 
-@onready var _mouse_sensitivity := 0.3
+#@onready var _mouse_sensitivity := 0.3
 #@export var keyboard_crosshair_speed := 800.0
 
 @export_group('Player Upgradeable Stats')
@@ -241,9 +241,6 @@ func handle_pan_left_and_right(delta) -> void:
 
 func _process(delta: float) -> void:
 	
-	
-	
-	
 	if OS.has_feature("editor") && !game_lost:
 		if Input.is_action_pressed("middle_mouse"):
 			Engine.time_scale = 10.0
@@ -318,7 +315,7 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
-	#handle_keyboard_crosshair(delta)
+	handle_keyboard_crosshair(delta)
 	update_gun_look()
 	
 	#handle_pan_keyboard(delta)

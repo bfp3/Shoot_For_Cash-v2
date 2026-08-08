@@ -40,10 +40,9 @@ func start_destroyed_process() -> void:
 	if has_node("main_col"):
 		$main_col.disabled = true
 
-	if has_node("hitSound") and $hitSound.has_method("play_sound"):
-		$hitSound.play_sound()
-	elif has_node("hitSound"):
+	if has_node("hitSound"):
 		$hitSound.play()
+
 
 	if has_node("AoE"):
 		$AoE.show()

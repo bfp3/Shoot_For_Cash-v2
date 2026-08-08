@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://bdk7cc0wgs8bs" path="res://sc/main_lofi.gd" id="1_lofi"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_panel"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_r4124"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="4_42xgg"]
+[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="5_18iyv"]
+[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="6_tx3k1"]
 
 [node name="MainLofi" type="Control" unique_id=565383636]
 layout_mode = 3
@@ -39,7 +43,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=1770451071]
-custom_minimum_size = Vector2(520, 520)
+custom_minimum_size = Vector2(760, 760)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("2_panel")
 
@@ -54,54 +58,119 @@ theme_override_constants/margin_bottom = 28
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Title" type="Label" parent="Center/Panel/Margin/VBox" unique_id=1112045186]
+[node name="Title" type="RichTextLabel" parent="Center/Panel/Margin/VBox" unique_id=1017495005]
 layout_mode = 2
-theme_override_font_sizes/font_size = 56
-text = "Shoot For Cash"
+theme_override_font_sizes/normal_font_size = 64
+fit_content = true
+autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Center/Panel/Margin/VBox" unique_id=1846317694]
+[node name="Subtitle" type="RichTextLabel" parent="Center/Panel/Margin/VBox" unique_id=1579192190]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_type_variation = &"RedRichText"
+theme_override_font_sizes/normal_font_size = 140
 text = "Quick Start"
+fit_content = true
+autowrap_mode = 0
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="Center/Panel/Margin/VBox" unique_id=160218528]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
-[node name="GoToIntro" type="Button" parent="Center/Panel/Margin/VBox" unique_id=1451061596]
+[node name="GoToIntro" type="Button" parent="Center/Panel/Margin/VBox" unique_id=1451061596 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 80
 text = "Go to Intro"
+script = ExtResource("3_r4124")
+focus_enter_sfx = NodePath("../../../../../focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../focus_exit")
+purchase_sfx = NodePath("../../../../../shop_open_sfx_01")
+wiggle_amount = 1.05
+using_customer_pivot_offset = true
 
-[node name="GoToMoss" type="Button" parent="Center/Panel/Margin/VBox" unique_id=595319992]
+[node name="GoToMoss" type="Button" parent="Center/Panel/Margin/VBox" unique_id=595319992 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 80
 text = "Go to Moss"
+script = ExtResource("3_r4124")
+focus_enter_sfx = NodePath("../../../../../focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../focus_exit")
+purchase_sfx = NodePath("../../../../../shop_open_sfx_01")
+wiggle_amount = 1.05
+using_customer_pivot_offset = true
 
-[node name="GoToRedd" type="Button" parent="Center/Panel/Margin/VBox" unique_id=544931865]
+[node name="GoToRedd" type="Button" parent="Center/Panel/Margin/VBox" unique_id=544931865 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 80
 text = "Go to Redd"
+script = ExtResource("3_r4124")
+focus_enter_sfx = NodePath("../../../../../focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../focus_exit")
+purchase_sfx = NodePath("../../../../../shop_open_sfx_01")
+wiggle_amount = 1.05
+using_customer_pivot_offset = true
 
-[node name="GoToGlory" type="Button" parent="Center/Panel/Margin/VBox" unique_id=1268680644]
+[node name="GoToGlory" type="Button" parent="Center/Panel/Margin/VBox" unique_id=1268680644 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 80
 text = "Go to Glory"
+script = ExtResource("3_r4124")
+focus_enter_sfx = NodePath("../../../../../focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../focus_exit")
+purchase_sfx = NodePath("../../../../../shop_open_sfx_01")
+wiggle_amount = 1.05
+using_customer_pivot_offset = true
 
-[node name="GoToTesting" type="Button" parent="Center/Panel/Margin/VBox" unique_id=1640537549]
+[node name="GoToTesting" type="Button" parent="Center/Panel/Margin/VBox" unique_id=1640537549 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 80
 text = "Go to Testing Room"
+script = ExtResource("3_r4124")
+focus_enter_sfx = NodePath("../../../../../focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../focus_exit")
+purchase_sfx = NodePath("../../../../../shop_open_sfx_01")
+wiggle_amount = 1.05
+using_customer_pivot_offset = true
+
+[node name="GoToMiniGame" type="Button" parent="Center/Panel/Margin/VBox" unique_id=2028448077 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+layout_mode = 2
+theme_type_variation = &"MenuUiButtons"
+theme_override_font_sizes/font_size = 80
+text = "Go to Shoot for Cents"
+script = ExtResource("3_r4124")
+focus_enter_sfx = NodePath("../../../../../focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../focus_exit")
+purchase_sfx = NodePath("../../../../../shop_open_sfx_01")
+wiggle_amount = 1.05
+using_customer_pivot_offset = true
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="." unique_id=2027195645]
+stream = ExtResource("4_42xgg")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="." unique_id=931276126]
+stream = ExtResource("4_42xgg")
+volume_db = -50.0
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="." unique_id=289078183]
+stream = ExtResource("5_18iyv")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="." unique_id=1154901191]
+stream = ExtResource("6_tx3k1")
+volume_db = -40.0
+pitch_scale = 1.5
 
 [connection signal="pressed" from="Center/Panel/Margin/VBox/GoToIntro" to="." method="_on_intro_pressed"]
 [connection signal="pressed" from="Center/Panel/Margin/VBox/GoToMoss" to="." method="_on_moss_pressed"]
 [connection signal="pressed" from="Center/Panel/Margin/VBox/GoToRedd" to="." method="_on_redd_pressed"]
 [connection signal="pressed" from="Center/Panel/Margin/VBox/GoToGlory" to="." method="_on_glory_pressed"]
 [connection signal="pressed" from="Center/Panel/Margin/VBox/GoToTesting" to="." method="_on_testing_pressed"]
+[connection signal="pressed" from="Center/Panel/Margin/VBox/GoToMiniGame" to="." method="_toggle_shop_mini_game"]

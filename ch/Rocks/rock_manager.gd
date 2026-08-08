@@ -50,8 +50,8 @@ var _launch_delays_sec : Array = []
 var _timed_event_schedule : Array = []
 var _timed_event_epoch := 0
 
-const COLUMN_1_X := 7.0
-const COLUMN_STEP := 2.0
+const COLUMN_1_X := 18.0 #7.0
+const COLUMN_STEP := 4.0 #2.0
 const COLUMN_COUNT := 8
 const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a column
 @export var DEFAULT_LAUNCH_WAIT_MS := 100
@@ -89,9 +89,17 @@ var _wave_aim_pool: Array[int] = []
 # --------------------------------------------------------------------------
 
 # --- Out-of-bounds monitoring (during PULSE_ROCKS only) -------------------
+# Misses when an activated rock leaves the camera view on the left, right, or
+# bottom (top is allowed — rocks arc above and fall back). Margins are in
+# screen pixels beyond the viewport edge. Rocks that spawn off-screen only
+# count after they have entered the viewport at least once.
 @onready var splash_zone: Area3D = %Splash_zone
-const OUT_OF_BOUNDS_X := 17.0       # abs(x) beyond this is considered out of bounds
 const BOUNDS_CHECK_INTERVAL := 0.1  # how often (seconds) to scan active rocks
+@export var oob_margin_left_px := 64.0
+@export var oob_margin_right_px := 64.0
+@export var oob_margin_bottom_px := 64.0
+## Optional override; if unset, uses the active Camera3D / `player_cam`.
+@export var bounds_camera: Camera3D
 var _bounds_check_active := false
 var _bounds_check_accum := 0.0
 # --------------------------------------------------------------------------
@@ -400,6 +408,14 @@ func _run_timed_event_spawns() -> void:
 
 
 func check_rocks_out_of_bounds() -> void:
+	var camera := _get_bounds_camera()
+	if camera == null:
+		return
+
+	var viewport_size := get_viewport().get_visible_rect().size
+	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
+		return
+
 	for body in $Container_1.get_children():
 		if !(body is RockInstance):
 			continue
@@ -408,11 +424,60 @@ func check_rocks_out_of_bounds() -> void:
 			continue
 		if body.rock_activated == false:
 			continue
-		# Depth/fan rocks (pigeons) may leave the side rails — only splash/water misses them.
+		# Explicit opt-out (e.g. smokecan fly-off) — not a camera miss.
 		if body.ignores_x_out_of_bounds:
 			continue
-		if absf(body.global_position.x) > OUT_OF_BOUNDS_X:
+
+		var world_pos : Vector3 = body.global_position
+		if _is_inside_camera_viewport(camera, world_pos, viewport_size):
+			body.has_entered_camera_view = true
+			continue
+
+		# Spawned off-screen and still entering play — wait until they've been seen.
+		if not body.has_entered_camera_view:
+			continue
+
+		if _is_outside_camera_miss_bounds(camera, world_pos, viewport_size):
 			deactivate_out_of_bounds_rock(body)
+
+
+func _get_bounds_camera() -> Camera3D:
+	if bounds_camera != null and is_instance_valid(bounds_camera):
+		return bounds_camera
+	var active := get_viewport().get_camera_3d()
+	if active != null:
+		return active
+	return get_tree().get_first_node_in_group('player_cam') as Camera3D
+
+
+## True when the rock is currently inside the visible viewport rectangle (no margin).
+func _is_inside_camera_viewport(camera: Camera3D, world_pos: Vector3, viewport_size: Vector2) -> bool:
+	if camera.is_position_behind(world_pos):
+		return false
+	var screen := camera.unproject_position(world_pos)
+	return (
+		screen.x >= 0.0
+		and screen.x <= viewport_size.x
+		and screen.y >= 0.0
+		and screen.y <= viewport_size.y
+	)
+
+
+## Left / right / bottom past the viewport + margin. Top is never a miss.
+## Behind the camera counts as out once the rock has already been on-screen.
+func _is_outside_camera_miss_bounds(camera: Camera3D, world_pos: Vector3, viewport_size: Vector2) -> bool:
+	if camera.is_position_behind(world_pos):
+		return true
+
+	var screen := camera.unproject_position(world_pos)
+	if screen.x < -oob_margin_left_px:
+		return true
+	if screen.x > viewport_size.x + oob_margin_right_px:
+		return true
+	if screen.y > viewport_size.y + oob_margin_bottom_px:
+		return true
+	# screen.y < 0 (above the camera) is allowed
+	return false
 
 
 func deactivate_out_of_bounds_rock(body: RockInstance) -> void:

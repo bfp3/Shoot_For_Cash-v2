@@ -105,8 +105,11 @@ var falling := false
 var ballistic_aim_active := false
 var _ballistic_descent_damp := 0.5
 var _ballistic_in_descent := false
-## When true, side-rail X out-of-bounds does not count as a miss (pigeons / depth rocks).
+## When true, camera out-of-bounds does not count as a miss (e.g. smokecan fly-off).
 var ignores_x_out_of_bounds := false
+## Set by RockManager once this rock has been inside the camera viewport.
+## Off-screen spawns won't miss until they've entered play at least once.
+var has_entered_camera_view := false
 
 
 
@@ -343,14 +346,13 @@ func setup_rock_type() -> void:
 		RockSize.SMALL_2:
 			current_rock_type 	= "Pigeon"
 			rock_type_name 		= "rock_type_1"
-			ignores_x_out_of_bounds = true
 			gl_PlayerState.log_white_rock()
-			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
+			#var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
 			var base_scale  := Vector3.ONE * 0.35
 
 			var size_multiplier_float : float = 1.4 #randf_range (1.2, 1.35) * 2
-			var size_multiplier_int : int = 2
+			#var size_multiplier_int : int = 2
 			$Mesh.scale = Vector3.ONE
 			health = 1 #base_health * size_multiplier_int
 			cash_value = base_cash # * size_multiplier
@@ -585,6 +587,7 @@ func setup_rock_type() -> void:
 
 func reset_stats() -> void:
 	ignores_x_out_of_bounds = false
+	has_entered_camera_view = false
 	$Mesh.scale = Vector3.ONE
 	$Mesh.position = Vector3.ZERO
 	$Marked.hide()

@@ -13,7 +13,8 @@ enum UpgradeState {
 @export var purchase_sfx: AudioStreamPlayer
 @export var wiggle_amount := 1.0
 @export var wiggle_amount_exit := 1.0
-
+@export var custom_pivot_offset_ratio := Vector2(0.5,0.5)
+@export var using_customer_pivot_offset := false
 @export var state: UpgradeState = UpgradeState.LOCKED
 var can_afford := false
 
@@ -32,9 +33,12 @@ func _ready() -> void:
 
 	focus_entered.connect(_on_focus_entered)
 	focus_exited.connect(_on_focus_exited)
-
+	
+	if using_customer_pivot_offset:
+		pivot_offset_ratio = custom_pivot_offset_ratio
+	
 	_update_visual_state()
-
+	
 
 
 func configure(config: Dictionary) -> void:

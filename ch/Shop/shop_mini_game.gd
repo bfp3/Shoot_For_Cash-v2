@@ -235,7 +235,9 @@ var _scope_mode: ScopeMode = ScopeMode.NONE
 @onready var _multikill_label: RichTextLabel = $PlayArea/Content/Overlay/MultiKillLabel
 @onready var _game_over_panel: Control = $PlayArea/Content/Overlay/GameOverPanel
 @onready var _game_over_money: RichTextLabel = $PlayArea/Content/Overlay/GameOverPanel/MoneyEarned
-@onready var _retry_button: Button = $PlayArea/Content/Overlay/GameOverPanel/RetryButton
+@onready var _retry_button: Button = $PlayArea/Content/Overlay/GameOverPanel/HBoxContainer/RetryButton
+@onready var _close_button: Button = $PlayArea/Content/Overlay/GameOverPanel/HBoxContainer/CloseButton
+
 @onready var _aoe: Node2D = $PlayArea/Content/AOE2D
 @onready var _fruit_aoe: Node2D = get_node_or_null("PlayArea/Content/FruitAOE2D") as Node2D
 @onready var _smoke_can_fx_template: GPUParticles2D = get_node_or_null("PlayArea/Content/SmokeCanFX") as GPUParticles2D
@@ -296,6 +298,7 @@ func _ready() -> void:
 	_overlay.draw.connect(_draw_overlay)
 	_overlay.resized.connect(_on_overlay_resized)
 	_retry_button.pressed.connect(_on_retry_pressed)
+	_close_button.pressed.connect(close)
 	_game_over_panel.hide()
 	_wave_label.modulate.a = 0.0
 	_multikill_label.modulate.a = 0.0
@@ -437,7 +440,7 @@ func _ensure_intro_title() -> void:
 	_intro_title.add_theme_color_override("default_color", INK)
 	_intro_title.add_theme_font_size_override("normal_font_size", 42)
 	_intro_title.add_theme_font_size_override("italics_font_size", 42)
-	_intro_title.text = "[i]Shoot for CENTS"
+	#_intro_title.text = "[i]Shoot for CENTS"
 	_play_area.add_child(_intro_title)
 	_intro_title.set_anchors_preset(Control.PRESET_CENTER)
 	_intro_title.offset_left = -280.0
@@ -456,17 +459,20 @@ func _play_open_intro() -> void:
 	if _wind_particles:
 		_wind_particles.emitting = false
 		_wind_particles.hide()
-	_intro_title.text = "[i]Shoot for CENTS"
+	#_intro_title.text = "[i]Shoot for CENTS"
 	_intro_title.modulate.a = 0.0
 	_intro_title.show()
+	_intro_title.scale = Vector2.ONE / 99
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.5)
-	tween.tween_property(_intro_title, "modulate:a", 1.0, 0.35)
+	tween.tween_property(_intro_title, "modulate:a", 1.0, 0.05)
+	tween.parallel().tween_property(_intro_title, "scale", Vector2.ONE * 1.25, 0.45).set_ease(Tween.EASE_IN)
+	tween.tween_property(_intro_title, "scale", Vector2.ONE, 0.1).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(2.0)
 	tween.set_ease(Tween.EASE_IN)
 	tween.tween_property(_intro_title, "modulate:a", 0.0, 0.4)
-	tween.tween_interval(0.5)
+	tween.tween_interval(0.1)
 	await tween.finished
 	if is_instance_valid(_intro_title):
 		_intro_title.hide()
@@ -2243,12 +2249,12 @@ func _draw_clouds_colored(area: Vector2, wall_y: float, color: Color) -> void:
 		{"c": Vector2(area.x * 1.12, wall_y * 0.18), "rx": 60.0, "ry": 15.0},
 		{"c": Vector2(area.x * -0.12, wall_y * 0.26), "rx": 44.0, "ry": 13.0},
 	]
-	var wrap := area.x + 160.0
+	var _wrap :float= area.x + 160.0
 	for cloud in clouds:
 		var c: Vector2 = cloud["c"]
 		var rx: float = cloud["rx"]
 		var ry: float = cloud["ry"]
-		c.x = fposmod(c.x + _cloud_pan + sin(_wave_phase * 0.12 + rx * 0.01) * 4.0, wrap) - 80.0
+		c.x = fposmod(c.x + _cloud_pan + sin(_wave_phase * 0.12 + rx * 0.01) * 4.0, _wrap) - 80.0
 		_draw_soft_ellipse(c, rx, ry, color)
 		_draw_soft_ellipse(c + Vector2(rx * 0.35, ry * 0.15), rx * 0.55, ry * 0.75, color)
 		_draw_soft_ellipse(c + Vector2(-rx * 0.4, ry * 0.1), rx * 0.45, ry * 0.7, color)

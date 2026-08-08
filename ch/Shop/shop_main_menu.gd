@@ -793,13 +793,13 @@ func _close_shop_mini_game() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.shift_pressed and event.keycode == KEY_2:
-			if current_state == SkillState.IN_MENU or current_state == SkillState.OPEN_MENU:
-				if _shop_mini_game and _shop_mini_game.has_method("toggle"):
-					_shop_mini_game.toggle()
-					get_viewport().set_input_as_handled()
+	#
+	#if event is InputEventKey and event.pressed and not event.echo:
+	if Input.is_action_just_pressed('select_button'):
+		if current_state == SkillState.IN_MENU or current_state == SkillState.OPEN_MENU:
+			if _shop_mini_game and _shop_mini_game.has_method("toggle"):
+				_shop_mini_game.toggle()
+				get_viewport().set_input_as_handled()
 
 
 func _input(event: InputEvent) -> void:

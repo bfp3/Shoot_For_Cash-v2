@@ -10,7 +10,7 @@ signal open_resolution_confirm
 @onready var scale_3d_option: OptionButton = %Scale3DOption
 @onready var vsync_option: OptionButton = %VsyncOption
 @onready var max_fps_option: OptionButton = %MaxFpsOption
-@onready var sens_value_label: Label = %SensValueLabel
+@onready var sens_value_label: RichTextLabel = %SensValueLabel
 @onready var sens_down: Button = %SensDown
 @onready var sens_up: Button = %SensUp
 

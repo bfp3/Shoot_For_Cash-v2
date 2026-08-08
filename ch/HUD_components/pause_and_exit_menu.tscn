@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://ownxjc3mlmfd"]
+[gd_scene format=3 uid="uid://ownxjc3mlmfd"]
 
 [ext_resource type="Script" uid="uid://cvbg43fdc614e" path="res://ch/HUD_components/pause_and_exit_menu.gd" id="1_qf3f5"]
 [ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="4_863vg"]
@@ -11,60 +11,60 @@
 [ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="8_dvstp"]
 [ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="9_6uj88"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="9_uy4i6"]
-[ext_resource type="Script" path="res://ch/HUD_components/settings_menu.gd" id="10_settings"]
-[ext_resource type="Script" path="res://ch/HUD_components/resolution_confirm_dialog.gd" id="11_confirm"]
+[ext_resource type="Script" uid="uid://dfaimwsnabqrt" path="res://ch/HUD_components/settings_menu.gd" id="10_settings"]
+[ext_resource type="Script" uid="uid://2td2u2syuhrd" path="res://ch/HUD_components/resolution_confirm_dialog.gd" id="11_confirm"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cn8lj"]
 
-[node name="Settings_pause_menu" type="CanvasLayer" groups=["pause_menu"]]
+[node name="Settings_pause_menu" type="CanvasLayer" unique_id=127694209 groups=["pause_menu"]]
 process_mode = 3
 layer = 100
 script = ExtResource("1_qf3f5")
 
-[node name="SFX" type="Node" parent="."]
+[node name="SFX" type="Node" parent="." unique_id=451778208]
 
-[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX"]
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1444468266]
 stream = ExtResource("4_qf3f5")
 volume_db = -32.0
 
-[node name="focus_exit" type="AudioStreamPlayer" parent="SFX"]
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=310559306]
 stream = ExtResource("4_qf3f5")
 volume_db = -50.0
 
-[node name="purchase" type="AudioStreamPlayer" parent="SFX"]
+[node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=474343655]
 stream = ExtResource("5_863vg")
 volume_db = -40.0
 pitch_scale = 3.0
 
-[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX"]
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1220484536]
 stream = ExtResource("5_txrhr")
 volume_db = -40.0
 pitch_scale = 1.8
 
-[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX"]
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1702124169]
 stream = ExtResource("4_863vg")
 volume_db = -40.0
 pitch_scale = 1.5
 
-[node name="hud_click_1" type="AudioStreamPlayer" parent="SFX"]
+[node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=1841317546]
 stream = ExtResource("6_brcys")
 volume_db = -34.0
 
-[node name="hud_click_2" type="AudioStreamPlayer" parent="SFX"]
+[node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=1576755819]
 stream = ExtResource("7_s7dml")
 volume_db = -20.0
 
-[node name="hud_click_3" type="AudioStreamPlayer" parent="SFX"]
+[node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=2111076692]
 stream = ExtResource("8_dvstp")
 volume_db = -21.0
 
-[node name="low_humming" type="AudioStreamPlayer" parent="SFX"]
+[node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=315250551]
 stream = ExtResource("9_6uj88")
 pitch_scale = 0.4
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1075386791]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -73,7 +73,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 1.2)
 
-[node name="CenterContainer" type="CenterContainer" parent="Control"]
+[node name="CenterContainer" type="CenterContainer" parent="Control" unique_id=47598338]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -89,7 +89,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="ColorRect" type="ColorRect" parent="Control/CenterContainer"]
+[node name="ColorRect" type="ColorRect" parent="Control/CenterContainer" unique_id=1200476633]
 modulate = Color(1, 1, 1, 0.26666668)
 z_index = -1
 custom_minimum_size = Vector2(1920, 1080)
@@ -97,15 +97,15 @@ layout_mode = 2
 mouse_filter = 2
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 
-[node name="QuitControl" type="Control" parent="Control/CenterContainer"]
+[node name="QuitControl" type="Control" parent="Control/CenterContainer" unique_id=1728775442]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(500, 500)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="QuitMenu" type="PanelContainer" parent="Control/CenterContainer/QuitControl"]
+[node name="QuitMenu" type="PanelContainer" parent="Control/CenterContainer/QuitControl" unique_id=1093554413]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 400)
+custom_minimum_size = Vector2(800, 800)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -121,94 +121,95 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = ExtResource("8_68q17")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/CenterContainer/QuitControl/QuitMenu"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/CenterContainer/QuitControl/QuitMenu" unique_id=631780910]
 layout_mode = 2
 
-[node name="VSeparator" type="VSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer"]
-custom_minimum_size = Vector2(19.4, 0)
+[node name="VSeparator" type="VSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=150049176]
+custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.4
 theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=652433964]
 layout_mode = 2
 size_flags_horizontal = 3
+alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=124387531]
+visible = false
 custom_minimum_size = Vector2(50, 12.18)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1396683498]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 72
+theme_override_font_sizes/normal_font_size = 144
 bbcode_enabled = true
 text = "[pulse]Paused"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="HSeparator4" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer"]
+[node name="HSeparator4" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1117888658]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 
-[node name="CancelMenu" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="CancelMenu" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=539474980 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 96
 text = "Resume"
 script = ExtResource("9_uy4i6")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="HSeparator2" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=939094958]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 
-[node name="Settings" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="Settings" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1271211033 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 96
 text = "Options"
 script = ExtResource("9_uy4i6")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="HSeparator5" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer"]
+[node name="HSeparator5" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=29829569]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 
-[node name="CloseGame" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="CloseGame" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1955505925 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 96
 text = "Quit Game"
 script = ExtResource("9_uy4i6")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="HSeparator3" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=477719386]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 
-[node name="VSeparator2" type="VSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer"]
+[node name="VSeparator2" type="VSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=592141924]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.4
 theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
 
-[node name="Settings_menu" type="Control" parent="Control"]
+[node name="Settings_menu" type="Control" parent="Control" unique_id=103359054]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -218,7 +219,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("10_settings")
 
-[node name="Center" type="CenterContainer" parent="Control/Settings_menu"]
+[node name="Center" type="CenterContainer" parent="Control/Settings_menu" unique_id=1634245520]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -227,89 +228,110 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Panel" type="PanelContainer" parent="Control/Settings_menu/Center"]
+[node name="Panel" type="PanelContainer" parent="Control/Settings_menu/Center" unique_id=26298318]
 custom_minimum_size = Vector2(720, 780)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("8_68q17")
 
-[node name="Margin" type="MarginContainer" parent="Control/Settings_menu/Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="Control/Settings_menu/Center/Panel" unique_id=369667358]
 layout_mode = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 28
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 28
 
-[node name="VBox" type="VBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin" unique_id=954813550]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Title" type="Label" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="Title" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1868645378]
 layout_mode = 2
-theme_override_font_sizes/font_size = 64
+theme_override_font_sizes/normal_font_size = 60
+bbcode_enabled = true
 text = "Settings"
+fit_content = true
+autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="ResLabel" type="Label" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="ResLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1393890829]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
 text = "Resolution"
+fit_content = true
+autowrap_mode = 0
 
-[node name="ResolutionOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="ResolutionOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1516272270]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 
-[node name="MsaaLabel" type="Label" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="MsaaLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=2129266467]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
 text = "Anti-Aliasing (2D + 3D)"
+fit_content = true
+autowrap_mode = 0
 
-[node name="MsaaOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="MsaaOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=313441040]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 
-[node name="ScaleLabel" type="Label" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="ScaleLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1279813318]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
 text = "3D Scaling"
+fit_content = true
+autowrap_mode = 0
 
-[node name="Scale3DOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="Scale3DOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=932239202]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 
-[node name="VsyncLabel" type="Label" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="VsyncLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=244473920]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
 text = "V-Sync"
+fit_content = true
+autowrap_mode = 0
 
-[node name="VsyncOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="VsyncOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=283401001]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 
-[node name="FpsLabel" type="Label" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="FpsLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=2020763159]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
 text = "Max FPS"
+fit_content = true
+autowrap_mode = 0
 
-[node name="MaxFpsOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="MaxFpsOption" type="OptionButton" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1277799547]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 
-[node name="SensLabel" type="Label" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="SensLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=42948696]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
 text = "Crosshair Sensitivity"
+fit_content = true
+autowrap_mode = 0
 
-[node name="SensRow" type="HBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="SensRow" type="HBoxContainer" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=766730213]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="SensDown" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/VBox/SensRow"]
+[node name="SensDown" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/VBox/SensRow" unique_id=159611147]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
@@ -317,15 +339,18 @@ theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 36
 text = "-"
 
-[node name="SensValueLabel" type="Label" parent="Control/Settings_menu/Center/Panel/Margin/VBox/SensRow"]
+[node name="SensValueLabel" type="RichTextLabel" parent="Control/Settings_menu/Center/Panel/Margin/VBox/SensRow" unique_id=2039746734]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/normal_font_size = 83
 text = "1"
+fit_content = true
+autowrap_mode = 0
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="SensUp" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/VBox/SensRow"]
+[node name="SensUp" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/VBox/SensRow" unique_id=470549355]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
@@ -333,21 +358,18 @@ theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 36
 text = "+"
 
-[node name="Spacer" type="Control" parent="Control/Settings_menu/Center/Panel/Margin/VBox"]
+[node name="Spacer" type="Control" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=1099340411]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="BackButton" type="Button" parent="Control/Settings_menu/Center/Panel/Margin/VBox" unique_id=803220563]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 40
 text = "Back"
 script = ExtResource("9_uy4i6")
-focus_enter_sfx = NodePath("../../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../../SFX/purchase")
 
-[node name="ResolutionConfirm" type="Control" parent="Control"]
+[node name="ResolutionConfirm" type="Control" parent="Control" unique_id=1653785739]
 unique_name_in_owner = true
 visible = false
 z_index = 10
@@ -359,7 +381,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("11_confirm")
 
-[node name="Dim" type="ColorRect" parent="Control/ResolutionConfirm"]
+[node name="Dim" type="ColorRect" parent="Control/ResolutionConfirm" unique_id=1237198268]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -368,7 +390,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.08, 0.09, 0.11, 0.55)
 
-[node name="Center" type="CenterContainer" parent="Control/ResolutionConfirm"]
+[node name="Center" type="CenterContainer" parent="Control/ResolutionConfirm" unique_id=1250592098]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -376,23 +398,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Control/ResolutionConfirm/Center"]
+[node name="Panel" type="PanelContainer" parent="Control/ResolutionConfirm/Center" unique_id=585247622]
 custom_minimum_size = Vector2(560, 280)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("8_68q17")
 
-[node name="Margin" type="MarginContainer" parent="Control/ResolutionConfirm/Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="Control/ResolutionConfirm/Center/Panel" unique_id=1896866292]
 layout_mode = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 28
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 28
 
-[node name="VBox" type="VBoxContainer" parent="Control/ResolutionConfirm/Center/Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Control/ResolutionConfirm/Center/Panel/Margin" unique_id=1938143437]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="CountdownLabel" type="Label" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox"]
+[node name="CountdownLabel" type="Label" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox" unique_id=207074148]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
@@ -400,12 +422,12 @@ text = "Keep this resolution?
 Reverting in 15..."
 horizontal_alignment = 1
 
-[node name="Buttons" type="HBoxContainer" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox"]
+[node name="Buttons" type="HBoxContainer" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox" unique_id=1418798457]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="KeepButton" type="Button" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox/Buttons"]
+[node name="KeepButton" type="Button" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox/Buttons" unique_id=478557246]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
@@ -413,7 +435,7 @@ theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 36
 text = "Keep"
 
-[node name="RevertButton" type="Button" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox/Buttons"]
+[node name="RevertButton" type="Button" parent="Control/ResolutionConfirm/Center/Panel/Margin/VBox/Buttons" unique_id=1503897895]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
@@ -424,6 +446,6 @@ text = "Revert"
 [connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="." method="_on_cancel_menu_pressed"]
 [connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="." method="_on_close_game_pressed"]
-[connection signal="pressed" from="Control/Settings_menu/Center/Panel/Margin/VBox/BackButton" to="Control/Settings_menu" method="_on_back_pressed"]
 [connection signal="back_pressed" from="Control/Settings_menu" to="." method="_on_settings_back_pressed"]
 [connection signal="open_resolution_confirm" from="Control/Settings_menu" to="." method="_on_open_resolution_confirm"]
+[connection signal="pressed" from="Control/Settings_menu/Center/Panel/Margin/VBox/BackButton" to="Control/Settings_menu" method="_on_back_pressed"]
