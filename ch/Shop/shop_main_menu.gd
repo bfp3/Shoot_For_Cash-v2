@@ -142,6 +142,52 @@ func update_place_label() -> void:
 		if current_place == 'START' or current_place.is_empty():
 			current_place = 'MOSS'
 		place_label.text = current_place
+	_refresh_background_completion_stamp(false)
+
+
+## Tally-card style 100% stamp onto the shop background images after clearing a place.
+func play_level_complete_stamp(_place_id: String = "") -> void:
+	var stamp_root := _get_background_complete_stamp()
+	if stamp_root == null:
+		return
+	var stamp_label := stamp_root.get_node_or_null("RichTextLabel") as Control
+	stamp_root.visible = true
+	stamp_root.modulate.a = 0.0
+	if stamp_label:
+		stamp_label.scale = Vector2.ONE * 3.0
+
+	var stamp_sfx := get_node_or_null("SFX/shop_purchase_01") as AudioStreamPlayer
+	var tween := create_tween()
+	tween.tween_property(stamp_root, "modulate:a", 1.0, 0.2)
+	if stamp_label:
+		tween.parallel().tween_property(stamp_label, "scale", Vector2.ONE, 0.2)
+	if stamp_sfx:
+		tween.parallel().tween_callback(stamp_sfx.play.bind(0.05)).set_delay(0.15)
+	tween.tween_property(self, "scale", default_scale * 0.998, 0.1)
+	tween.tween_property(self, "scale", default_scale, 0.05)
+	tween.tween_interval(0.85)
+	tween.tween_property(%stampLabel, "modulate:a",  0.2, 1.0)
+	await tween.finished
+
+
+func _refresh_background_completion_stamp(_animate: bool = false) -> void:
+	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	var stamp_root := _get_background_complete_stamp()
+	if stamp_root == null:
+		return
+	if gl_PlayerState.is_place_completed(place):
+		stamp_root.visible = true
+		stamp_root.modulate.a = 1.0
+		var stamp_label := stamp_root.get_node_or_null("RichTextLabel") as Control
+		if stamp_label:
+			stamp_label.scale = Vector2.ONE
+	else:
+		stamp_root.visible = false
+		stamp_root.modulate.a = 0.0
+
+
+func _get_background_complete_stamp() -> Control:
+	return get_node_or_null("CenterContainer/MainPanel/BackgroundImages/100_percent") as Control
 
 
 func purchase_made(_upgrade_type:String = '') -> void:
@@ -1048,7 +1094,8 @@ func _setup_shop_mini_game() -> void:
 	_shop_mini_game = SHOP_MINI_GAME_SCENE.instantiate()
 	add_child(_shop_mini_game)
 	if _shop_mini_game.has_method("attach_to_shop"):
-		_shop_mini_game.attach_to_shop(self, main_panel, 120.0)
+		# Fullscreen overlay (no shop-panel inset).
+		_shop_mini_game.attach_to_shop(self)
 
 
 func _close_shop_mini_game() -> void:
@@ -1080,7 +1127,33 @@ func _input(event: InputEvent) -> void:
 
 func setup_shop_for_rounds() -> void:
 	%RoundSelector.show()
-	
+
+
+## Rebuild round-button states from the restored sequence index for this range.
+## sequence_index = next round to play (0-based). Completed rounds are stamped perfect.
+func sync_rounds_to_progress(sequence_index: int, total_rounds: int) -> void:
+	var round_button_cont: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
+	if round_button_cont == null:
+		return
+	var buttons := round_button_cont.get_children()
+	var next_index := maxi(sequence_index, 0)
+	for i in buttons.size():
+		var btn = buttons[i]
+		if btn == null or not btn.has_method("enter_state"):
+			continue
+		# Hide extra selector slots beyond this range's round count.
+		if total_rounds > 0 and i >= total_rounds:
+			btn.visible = false
+			btn.enter_state(btn.State.LOCKED)
+			continue
+		btn.visible = true
+		if i < next_index:
+			btn.enter_state(btn.State.PERFECTED)
+		elif i == next_index and (total_rounds <= 0 or next_index < total_rounds):
+			btn.enter_state(btn.State.AVAILABLE)
+		else:
+			btn.enter_state(btn.State.LOCKED)
+
 
 func mark_round_as_cleared() -> void:
 	var round_button_cont : HBoxContainer = 	$CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer

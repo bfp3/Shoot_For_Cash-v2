@@ -94,7 +94,6 @@ const RING_POOL_SIZE := 8
 
 const LEVEL_FILE_PATH := "res://sc/island-shipper.txt"
 const LEVEL_ISLAND_NAME := "shipper"
-const RANGE_ORDER: PackedStringArray = ["moss", "redd", "glory"]
 const GRID_COLUMN_COUNT := 8
 const GRID_LABEL_COLOR := Color(0.78, 0.02, 0.02, 0.85)
 const GRID_LINE_COLOR := Color(0.78, 0.02, 0.02, 0.35)
@@ -259,6 +258,9 @@ var _pause_label: RichTextLabel
 var _pre_pause_body_state: Dictionary = {}
 var _strikes := 0
 var _money := 0.0
+## Cumulative earnings for this open→close Shoot for Cents session (survives retries).
+var _session_money := 0.0
+var _fullscreen_overlay := true
 var _rocks: Array[RigidBody2D] = []
 var _fruits: Array[ShopMiniFruit] = []
 var _balloons: Array[ShopMiniBalloon] = []
@@ -302,7 +304,7 @@ var _sky_blend_t := 1.0
 var _script_rounds: Array = []
 var _script_round_index := 0
 var _script_wave_index := 0
-var _script_range_id := "moss"
+var _script_range_id := ""
 var _script_wave_spawns: Array = []
 var _script_launch_delays: Array = []
 var _script_launch_bodies: Array[RigidBody2D] = []
@@ -330,12 +332,14 @@ var _scope_mode: ScopeMode = ScopeMode.NONE
 @onready var _crosshair_node: Control = $PlayArea/Content/Overlay/Crosshair
 @onready var _crosshair_texture: TextureRect = $PlayArea/Content/Overlay/Crosshair/CrosshairTexture
 @onready var _money_label: RichTextLabel = $PlayArea/Content/Overlay/MoneyLabel
+@onready var _session_winnings_label: RichTextLabel = get_node_or_null("PlayArea/Content/Overlay/SessionWinningsLabel") as RichTextLabel
 @onready var _strike_label: RichTextLabel = $PlayArea/Content/Overlay/StrikeLabel
 @onready var _wave_label: RichTextLabel = $PlayArea/Content/Overlay/WaveAnnounceLabel
 @onready var _perfect_label: RichTextLabel = get_node_or_null("PlayArea/Content/Overlay/PerfectLabel") as RichTextLabel
 @onready var _multikill_label: RichTextLabel = $PlayArea/Content/Overlay/MultiKillLabel
 @onready var _game_over_panel: Control = $PlayArea/Content/Overlay/GameOverPanel
 @onready var _game_over_money: RichTextLabel = $PlayArea/Content/Overlay/GameOverPanel/MoneyEarned
+@onready var _game_over_lifetime: RichTextLabel = get_node_or_null("PlayArea/Content/Overlay/GameOverPanel/LifetimeEarned") as RichTextLabel
 @onready var _retry_button: Button = $PlayArea/Content/Overlay/GameOverPanel/HBoxContainer/RetryButton
 @onready var _close_button: Button = $PlayArea/Content/Overlay/GameOverPanel/HBoxContainer/CloseButton
 
@@ -453,20 +457,26 @@ func _setup_play_area_style() -> void:
 	_play_area.clip_contents = true
 
 
-func attach_to_shop(shop_root: Control, main_panel: Control, header_clearance: float = HEADER_CLEARANCE) -> void:
+func attach_to_shop(shop_root: Control, main_panel: Control = null, header_clearance: float = HEADER_CLEARANCE) -> void:
 	_shop_menu = shop_root
 	_follow_panel = main_panel
 	_header_clearance = header_clearance
-	if get_parent() != shop_root:
+	# Fullscreen overlay by default; pass a panel only if you want the old inset fit.
+	_fullscreen_overlay = main_panel == null
+	if shop_root and get_parent() != shop_root:
 		reparent(shop_root)
 	top_level = true
-	z_index = 40
+	z_index = 80
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_sync_to_panel()
 
 
 func _sync_to_panel() -> void:
+	if _fullscreen_overlay:
+		_sync_fullscreen()
+		return
 	if _follow_panel == null or not is_instance_valid(_follow_panel):
+		_sync_fullscreen()
 		return
 	if not _follow_panel.is_visible_in_tree():
 		return
@@ -480,6 +490,18 @@ func _sync_to_panel() -> void:
 	var next_size := bottom_right - top_left
 	if next_size.x < 64.0 or next_size.y < 64.0:
 		return
+	_apply_layout_rect(top_left, next_size)
+
+
+func _sync_fullscreen() -> void:
+	var vp := get_viewport()
+	if vp == null:
+		return
+	var rect := vp.get_visible_rect()
+	_apply_layout_rect(rect.position, rect.size)
+
+
+func _apply_layout_rect(top_left: Vector2, next_size: Vector2) -> void:
 	global_position = top_left
 	size = next_size
 	if _content:
@@ -505,10 +527,14 @@ func open() -> void:
 	is_open = true
 	CommonCode.set_master_bus_retro_fx(true)
 	_stored_mouse_mode = Input.mouse_mode
+	_session_money = 0.0
 	_reset_run()
 	_sync_to_panel()
 	modulate.a = 0.0
 	show()
+	# Stay above shop UI as a full-screen overlay.
+	if get_parent():
+		get_parent().move_child(self, -1)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_play_area.mouse_filter = Control.MOUSE_FILTER_STOP
 	set_process(true)
@@ -544,13 +570,50 @@ func _boot_level_script() -> void:
 	_pending_range_announce = true
 
 
+func _cents_range_order() -> PackedStringArray:
+	## First three playable places from dataset (skip start / testing for cents waves).
+	var out: PackedStringArray = PackedStringArray()
+	var names := gl_DataSet.get_place_names()
+	var testing := gl_DataSet.get_testing_place_name()
+	var start_name := gl_DataSet.get_start_place_name()
+	for n in names:
+		if n == start_name or n == "start" or n == testing:
+			continue
+		out.append(n)
+		if out.size() >= 3:
+			break
+	if out.is_empty():
+		out.append(gl_DataSet.get_default_range_name())
+	return out
+
+
 func _resolve_start_range_id() -> String:
-	var range_id := String(gl_PlayerState.dataset.level_name).to_lower()
-	if range_id == "" or range_id == "start":
-		return "moss"
-	if range_id == "test":
-		return "jetz"
+	var range_id := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	if range_id == "" or range_id == gl_DataSet.get_start_place_name() or range_id == "start":
+		return gl_DataSet.get_default_range_name()
+	if gl_DataSet.is_testing_place(range_id):
+		return gl_DataSet.get_testing_place_name()
 	return range_id
+
+
+func _sky_progress_for_range(range_id: String) -> float:
+	var order := _cents_range_order()
+	var idx := order.find(gl_DataSet.resolve_place_name(range_id))
+	if idx < 0:
+		return 0.0
+	return float(mini(idx, 2))
+
+
+func _advance_to_next_range() -> void:
+	var order := _cents_range_order()
+	var idx := order.find(_script_range_id)
+	if idx < 0:
+		idx = 0
+	else:
+		idx = (idx + 1) % order.size()
+	_script_range_id = order[idx]
+	_load_range_script(_script_range_id)
+	_pending_range_announce = true
 
 
 func _load_range_script(range_id: String) -> void:
@@ -570,21 +633,9 @@ func _load_range_script(range_id: String) -> void:
 		push_warning("ShopMiniGame: no rounds for range \"%s\"" % range_id)
 
 
-func _sky_progress_for_range(range_id: String) -> float:
-	match range_id:
-		"moss":
-			return 0.0
-		"redd":
-			return 1.0
-		"glory":
-			return 2.0
-		_:
-			return 0.0
-
-
 func _display_range_name(range_id: String) -> String:
 	if range_id.is_empty():
-		return "Moss"
+		return gl_DataSet.get_default_range_name().capitalize()
 	return range_id.substr(0, 1).to_upper() + range_id.substr(1)
 
 
@@ -623,17 +674,6 @@ func _show_range_announce() -> void:
 	tween.tween_interval(1.1)
 	tween.tween_property(_range_label, "modulate:a", 0.0, 0.3)
 	await tween.finished
-
-
-func _advance_to_next_range() -> void:
-	var idx := RANGE_ORDER.find(_script_range_id)
-	if idx < 0:
-		idx = 0
-	else:
-		idx = (idx + 1) % RANGE_ORDER.size()
-	_script_range_id = RANGE_ORDER[idx]
-	_load_range_script(_script_range_id)
-	_pending_range_announce = true
 
 
 func _current_round_data() -> Dictionary:
@@ -1055,7 +1095,7 @@ func close() -> void:
 		_intro_title.modulate.a = 0.0
 	if _content:
 		_content.visible = true
-	_pending_cents_dollars = maxi(int(floor(_money)), 0)
+	_pending_cents_dollars = maxi(int(floor(_session_money)), 0)
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "modulate:a", 0.0, 0.15)
@@ -1073,6 +1113,7 @@ func _payout_cents_to_shop() -> void:
 	var dollars := _pending_cents_dollars
 	_pending_cents_dollars = 0
 	_money = 0.0
+	_session_money = 0.0
 	if dollars <= 0:
 		return
 	if _shop_menu and _shop_menu.has_method("receive_cents_winnings"):
@@ -1153,6 +1194,8 @@ func _reset_run() -> void:
 	_wave_aim_pool.clear()
 	_wave_convergence_aim_column = -1
 	_game_over_panel.hide()
+	if _game_over_lifetime:
+		_game_over_lifetime.hide()
 	_wave_label.modulate.a = 0.0
 	_multikill_label.modulate.a = 0.0
 	if _range_label:
@@ -1379,10 +1422,23 @@ func _input(event: InputEvent) -> void:
 
 ## WASD + left stick aim — mirrors Player.handle_keyboard_and_controller_input.
 func _handle_keyboard_and_controller_aim(delta: float) -> void:
-	var direction := Vector2(
-		Input.get_axis("left", "right"),
-		Input.get_axis("forward", "backward")
+	# Raw stick axes keep full 360° aim (InputMap deadzones snap diagonals to cardinals).
+	var stick := Vector2(
+		Input.get_joy_axis(0, JOY_AXIS_LEFT_X),
+		Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
 	)
+	const STICK_DEADZONE := 0.12
+	var raw: Vector2
+	if stick.length() > STICK_DEADZONE:
+		raw = stick
+	else:
+		raw = Vector2(
+			Input.get_axis("left", "right"),
+			Input.get_axis("forward", "backward")
+		)
+	# Stick tilt scales speed (partial push = slower). Keys read as ±1 so stay full speed.
+	var magnitude := clampf(raw.length(), 0.0, 1.0)
+	var has_input := magnitude > STICK_DEADZONE
 
 	const keyboard_crosshair_speed := 1300.0
 	var speed := keyboard_crosshair_speed * GameSettings.crosshair_speed_multiplier()
@@ -1390,15 +1446,16 @@ func _handle_keyboard_and_controller_aim(delta: float) -> void:
 		speed *= 0.5
 
 	var target_velocity := Vector2.ZERO
-	if direction != Vector2.ZERO:
-		target_velocity = direction.normalized() * speed
+	if has_input:
+		var strength := pow(magnitude, 1.35)
+		target_velocity = raw.normalized() * speed * strength
 
 	const ACCEL := 60.0
 	const DECEL := 18.0
-	var lerp_speed := ACCEL if direction != Vector2.ZERO else DECEL
+	var lerp_speed := ACCEL if has_input else DECEL
 	_aim_velocity = _aim_velocity.lerp(target_velocity, lerp_speed * delta)
 
-	if _aim_velocity.length_squared() < 0.01 and direction == Vector2.ZERO:
+	if _aim_velocity.length_squared() < 0.01 and not has_input:
 		_aim_velocity = Vector2.ZERO
 		return
 
@@ -2282,8 +2339,12 @@ func _try_shoot() -> void:
 
 	# Fruits: pineapple flyaway / orange explode+blast.
 	# Pineapples never contribute to multi-shot / oranges.
+	# Collect hits first — apply_shot can erase from _fruits during the stagger await.
 	if not balloon_blocked:
+		var hit_fruits: Array[ShopMiniFruit] = []
 		for i in range(_fruits.size() - 1, -1, -1):
+			if i < 0 or i >= _fruits.size():
+				continue
 			var fruit := _fruits[i]
 			if fruit == null or not is_instance_valid(fruit) or fruit.hit or fruit.flying_away:
 				continue
@@ -2291,13 +2352,19 @@ func _try_shoot() -> void:
 				continue
 			if fruit.position.distance_to(_crosshair) > _current_target_radius + fruit.radius * 0.25:
 				continue
+			hit_fruits.append(fruit)
+		var center := Vector2(_overlay.size.x * 0.5, _overlay.size.y * 0.42)
+		for fruit_i in hit_fruits.size():
+			var fruit := hit_fruits[fruit_i]
+			if fruit == null or not is_instance_valid(fruit) or fruit.hit or fruit.flying_away:
+				continue
 			hit_any = true
-			var center := Vector2(_overlay.size.x * 0.5, _overlay.size.y * 0.42)
 			if fruit.apply_shot(center):
 				_play_fruit_hit_sfx(fruit)
 				if fruit.kind != ShopMiniFruit.FruitKind.PINEAPPLE:
 					multikill_count += 1
-			await get_tree().create_timer(0.05, false).timeout
+			if fruit_i < hit_fruits.size() - 1:
+				await get_tree().create_timer(0.05, false).timeout
 
 	for i in range(_smoke_cans.size() - 1, -1, -1):
 		if balloon_blocked:
@@ -2744,7 +2811,12 @@ func _show_multikill(count: int) -> void:
 
 
 func _add_money(amount: float) -> void:
+	var before := _money
 	_money = maxf(0.0, _money + amount)
+	var delta := _money - before
+	_session_money = maxf(0.0, _session_money + delta)
+	if delta > 0.0:
+		gl_PlayerState.add_cents_total_earned(delta)
 	_refresh_hud()
 
 
@@ -2764,13 +2836,66 @@ func _add_vertical_strike_shake(strength: float, time: float) -> void:
 	_strike_shake_trauma = maxf(_strike_shake_trauma, time)
 
 
+func _ensure_game_over_lifetime_label() -> void:
+	if _game_over_lifetime and is_instance_valid(_game_over_lifetime):
+		return
+	_game_over_lifetime = RichTextLabel.new()
+	_game_over_lifetime.name = "LifetimeEarned"
+	_game_over_lifetime.bbcode_enabled = true
+	_game_over_lifetime.fit_content = true
+	_game_over_lifetime.scroll_active = false
+	_game_over_lifetime.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_game_over_lifetime.add_theme_color_override("default_color", Color(0.0824, 0.0941, 0.1098, 1))
+	_game_over_lifetime.add_theme_font_size_override("normal_font_size", 28)
+	_game_over_panel.add_child(_game_over_lifetime)
+	_game_over_lifetime.set_anchors_preset(Control.PRESET_CENTER)
+	_game_over_lifetime.offset_left = -160.0
+	_game_over_lifetime.offset_right = 160.0
+	_game_over_lifetime.offset_top = 28.0
+	_game_over_lifetime.offset_bottom = 68.0
+
+
+func _ensure_session_winnings_label() -> void:
+	if _session_winnings_label and is_instance_valid(_session_winnings_label):
+		return
+	_session_winnings_label = RichTextLabel.new()
+	_session_winnings_label.name = "SessionWinningsLabel"
+	_session_winnings_label.bbcode_enabled = true
+	_session_winnings_label.fit_content = true
+	_session_winnings_label.scroll_active = false
+	_session_winnings_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_session_winnings_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_session_winnings_label.add_theme_font_size_override("normal_font_size", 36)
+	_overlay.add_child(_session_winnings_label)
+	_session_winnings_label.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_session_winnings_label.offset_left = 12.0
+	_session_winnings_label.offset_top = 8.0
+	_session_winnings_label.offset_right = 280.0
+	_session_winnings_label.offset_bottom = 48.0
+
+
 func _trigger_game_over() -> void:
 	if _paused:
 		_set_paused(false)
 	_game_over = true
 	_pulsing = false
 	_clear_rocks(true)
+	_ensure_game_over_lifetime_label()
 	_game_over_money.text = "[center]You earned\n[color=#c70102]$%.2f[/color]" % _money
+	var lifetime = gl_PlayerState.get_cents_total_earned()
+	_game_over_lifetime.text = "[center]All-time\n[color=#c70102]$%.2f[/color]" % lifetime
+	_game_over_lifetime.show()
+	# Make room for the lifetime line.
+	_game_over_panel.offset_top = -150.0
+	_game_over_panel.offset_bottom = 150.0
+	_game_over_money.offset_top = -55.0
+	_game_over_money.offset_bottom = 5.0
+	_game_over_lifetime.offset_top = 10.0
+	_game_over_lifetime.offset_bottom = 58.0
+	if _game_over_panel.get_node_or_null("HBoxContainer") is Control:
+		var buttons := _game_over_panel.get_node("HBoxContainer") as Control
+		buttons.offset_top = 75.0
+		buttons.offset_bottom = 127.0
 	_game_over_panel.show()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if _mouse_sfx and _mouse_sfx.has_method("set_active"):
@@ -2782,6 +2907,10 @@ func _trigger_game_over() -> void:
 func _refresh_hud() -> void:
 	if _money_label:
 		_money_label.text = "[right]$%.2f" % _money
+	_ensure_session_winnings_label()
+	if _session_winnings_label:
+		_session_winnings_label.text = "Total $%.2f" % _session_money
+		_session_winnings_label.show()
 	if _strike_label:
 		var marks := ""
 		for i in MAX_STRIKES:
@@ -3185,6 +3314,8 @@ func _apply_colour_scheme_for_progress(progress: float) -> void:
 	_active_hud_color = scheme.crosshair
 	if _money_label:
 		_money_label.add_theme_color_override("default_color", scheme.money)
+	if _session_winnings_label:
+		_session_winnings_label.add_theme_color_override("default_color", scheme.money)
 	if _strike_label:
 		_strike_label.add_theme_color_override("default_color", scheme.strike)
 	if _crosshair_node:

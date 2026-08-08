@@ -79,7 +79,6 @@ func display_ticket() -> void:
 	await open_pop_up()
 
 
-
 func _refresh_level_buttons() -> void:
 	# Moss is always available after the opening purchase flow.
 	if moss_button:
@@ -103,6 +102,29 @@ func _refresh_level_buttons() -> void:
 			redd_button.level_name_label.add_theme_font_size_override("normal_font_size", 109)
 			if redd_button.has_node('HSeparator'):
 				redd_button.get_node('HSeparator').scale.x = 1.0
+
+	_apply_completion_stamps(false)
+
+
+## Stamp the place button that matches place_id (tally-card style when animate).
+func mark_place_completed(place_id: String, animate: bool = true) -> void:
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	for button in [moss_button, redd_button]:
+		if button == null:
+			continue
+		var button_place := gl_DataSet.resolve_place_name(String(button.level_name).to_lower())
+		if button_place != place_id:
+			continue
+		if button.has_method("mark_completed"):
+			await button.mark_completed(animate)
+		return
+	_apply_completion_stamps(false)
+
+
+func _apply_completion_stamps(animate: bool) -> void:
+	for button in [moss_button, redd_button]:
+		if button and button.has_method("_refresh_completion_stamp"):
+			button._refresh_completion_stamp(animate)
 
 
 ## Called by level select buttons after their press animation.
@@ -135,4 +157,4 @@ func select_level(level_id: String) -> void:
 
 func ticket_used() -> void:
 	# Legacy path — prefer select_level from map buttons.
-	await select_level(ticket_location if ticket_location != '' else 'moss')
+	await select_level(ticket_location if ticket_location != '' else gl_DataSet.get_default_range_name())

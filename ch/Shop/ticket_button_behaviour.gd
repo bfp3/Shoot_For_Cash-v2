@@ -66,29 +66,17 @@ func _ready() -> void:
 	_update_visual_state()
 
 func check_tickets() -> void:
-	
-	if text == 'MOSS':
-		#if gl_PlayerState.dataset.level_name == 'redd':
-		if gl_PlayerState.dataset.level_name == 'moss':
-			current_state = TicketState.UNAVAILABLE
-			self.disabled = true
-			self.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			#await get_tree().create_timer(1.0).timeout
-			#modulate = Color.DARK_GREEN
-			#modulate.a = 0.5
-			modulate = Color.TRANSPARENT
-			self.hide()
-			
-	if text == 'REDD':
-		#if gl_PlayerState.dataset.level_name == 'end game':
-		if gl_PlayerState.dataset.level_name == 'redd':
-			self.disabled = true
-			self.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			current_state = TicketState.UNAVAILABLE
-			#modulate = Color.DARK_GREEN
-			modulate = Color.TRANSPARENT
-			modulate.a = 0.5
-			self.hide()
+	var current_place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	var this_place := gl_DataSet.resolve_place_name(location_name)
+	if this_place.is_empty() or this_place == "na":
+		return
+	# Hide the ticket for the range you're already in.
+	if current_place == this_place:
+		current_state = TicketState.UNAVAILABLE
+		self.disabled = true
+		self.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		modulate = Color.TRANSPARENT
+		self.hide()
 
 	
 	
@@ -110,32 +98,29 @@ func check_tickets() -> void:
 	
 func _update_tickets() -> void:
 	player_cash = gl_PlayerState.dataset.cash
-	match ticket_id:
-		1:
-			location_name = gl_DataSet.get_string("place_name",0)
-			ticket_price = int(gl_DataSet.get_value('price_ticket_moss', 0))
-		
-		2:
-			location_name = gl_DataSet.get_string("place_name",1)
-			ticket_price = int(gl_DataSet.get_value('price_ticket_redd', 0))
-			
-		3:
-			location_name = gl_DataSet.get_string("place_name",2)
-			ticket_price = int(gl_DataSet.get_value('price_ticket_glory', 0))
-			
-		4:
-			location_name = gl_DataSet.get_string("place_name",3)
-			ticket_price = int(gl_DataSet.get_value('price_ticket_backwater', 0))
-			
-		5:
-			location_name = gl_DataSet.get_string("place_name",4)
-			ticket_price = int(gl_DataSet.get_value('price_ticket_sodomi', 0))
-			
-		_:
-			location_name = 'NA'
-			ticket_price = 10000
-		
-	
+	# ticket_id 1..N maps to place_name indices 0..N-1
+	var place_index := ticket_id - 1
+	location_name = gl_DataSet.get_place_name(place_index)
+	if location_name.is_empty():
+		location_name = 'NA'
+		ticket_price = 10000
+	else:
+		var price_key := gl_DataSet.get_ticket_price_key(location_name)
+		# Legacy price keys (backwater/sodomi) if place was renamed in data.
+		if not gl_DataSet.dataset_float.has(price_key):
+			match place_index:
+				0:
+					price_key = 'price_ticket_moss'
+				1:
+					price_key = 'price_ticket_redd'
+				2:
+					price_key = 'price_ticket_glory'
+				3:
+					price_key = 'price_ticket_backwater'
+				4:
+					price_key = 'price_ticket_sodomi'
+		ticket_price = int(gl_DataSet.get_value(price_key, 0))
+
 	price_label.text = "$" + str(ticket_price)
 	check_tickets()
 	
@@ -179,11 +164,11 @@ func update_on_sale() -> void:
 	price_label.text = "[color=FFFFFF]$" + str(ticket_price)
 	self_modulate = Color('999999')
 	
-	if location_name == "moss":
+	if gl_DataSet.get_place_index(location_name) == 0:
 		text = "Select Shooting Range"
 		blinking_mode()
 		
-	if location_name == "redd":
+	if gl_DataSet.get_place_index(location_name) == 1:
 		text = "Select Shooting Range"
 		blinking_mode()
 
@@ -203,7 +188,7 @@ func update_purchased() -> void:
 	
 	
 func blinking_mode() -> void:
-	if location_name == 'redd':
+	if gl_DataSet.get_place_index(location_name) == 1:
 		hide()
 		return
 	
@@ -240,7 +225,10 @@ func _on_pressed() -> void:
 				cannot_purchase()
 				return
 				
-			if gl_PlayerState.log_buy('power_ticket_moss', ticket_price):
+			var power_key := gl_DataSet.get_ticket_power_key(location_name)
+			if not gl_PlayerState.dataset.has(power_key):
+				gl_PlayerState.dataset[power_key] = 0
+			if gl_PlayerState.log_buy(power_key, ticket_price):
 				#gl_PlayerState.dataset.tickets += 1
 				
 				purchase_ticket_special_effects()

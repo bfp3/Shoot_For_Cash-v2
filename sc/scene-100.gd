@@ -77,7 +77,21 @@ func start_intro_process() -> void:
 
 func start_game() -> void:
 	player.title_screen_end()
-	
+
+	# Already past the first title camera swoop (e.g. Back to Title → Start again).
+	if not is_instance_valid(start_cam):
+		moving_camera = false
+		set_process(false)
+		main_game_canvas.show()
+		round_manager.enter_state(round_manager.RoundState.START_START)
+		if player and player.has_method("start_player"):
+			player.start_player()
+		if HUD_CRT and HUD_CRT.has_method("start_game"):
+			HUD_CRT.start_game()
+		if is_instance_valid(splash_screen):
+			splash_screen.hide()
+		return
+
 	moving_camera = true
 	set_process(true)
 	# wait until camera is close enough
@@ -96,7 +110,9 @@ func start_game() -> void:
 	#rocks_on_screen_counter.show()
 	
 	await get_tree().create_timer(0.25).timeout
-	splash_screen.queue_free()
+	# Keep splash around so Back to Title can reopen it without a scene reload.
+	if is_instance_valid(splash_screen):
+		splash_screen.hide()
 
 
 ## Debug (Shift+M): tear down title/splash so Moss can start immediately.

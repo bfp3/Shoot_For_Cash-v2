@@ -2,10 +2,9 @@ extends Node
 
 ## Autoload entry point for the Performance Dashboard.
 ##
-## Layers of gating:
-## 1. Release exports — OS.is_debug_build() is false → fully inert.
-## 2. Master arm switch — ProjectSettings + Shift+Ctrl+O / Tools menu.
-## 3. Overlay visibility — Shift+O (only while armed); sampling only while visible.
+## When ProjectSettings `performance_dashboard/enabled` is false, this node
+## disables itself immediately and never builds profiler/UI or handles hotkeys.
+## Prefer removing the autoload entirely via Tools → Performance Dashboard.
 
 const ProfilerScript = preload("res://addons/performance_dashboard/core/performance_profiler.gd")
 const UIScript = preload("res://addons/performance_dashboard/ui/performance_profiler_ui.gd")
@@ -24,11 +23,8 @@ var _bootstrapped: bool = false
 
 
 func _enter_tree() -> void:
-	if not OS.is_debug_build():
-		set_process(false)
-		set_process_input(false)
-		set_process_unhandled_input(false)
-		process_mode = Node.PROCESS_MODE_DISABLED
+	if not OS.is_debug_build() or not _is_master_enabled():
+		_fully_disable()
 		return
 	_debug_available = true
 
@@ -38,25 +34,26 @@ func _ready() -> void:
 		return
 
 	_ensure_project_setting()
-	set_process_unhandled_input(true)
+	# Re-check after settings are ready — stay fully off when disabled.
+	if not _is_master_enabled():
+		_fully_disable()
+		print("[PerformanceDashboard] Disabled — not loaded. Enable via Project → Tools → Performance Dashboard.")
+		return
 
-	# Start from the persistent project setting (Tools menu / Project Settings).
-	var start_armed := bool(ProjectSettings.get_setting(
-		PDDashboardStyle.SETTING_ENABLED,
-		PDDashboardStyle.SETTING_ENABLED_DEFAULT
-	))
-	set_tool_enabled(start_armed, false)
+	set_process_unhandled_input(true)
+	set_tool_enabled(true, false)
+	print("[PerformanceDashboard] Armed — Shift+O opens the overlay. Shift+Ctrl+O disarms for this session.")
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _debug_available:
+	if not _debug_available or not _is_master_enabled():
 		return
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 
 	var key_event := event as InputEventKey
 
-	# Master arm / disarm for this play session.
+	# Session arm / disarm — only while the master project setting is on.
 	if key_event.keycode == PDDashboardStyle.ARM_KEY and key_event.shift_pressed and key_event.ctrl_pressed:
 		set_tool_enabled(not _armed, false)
 		_notify_arm_state()
@@ -79,8 +76,11 @@ func _on_ui_visibility_toggled(is_visible: bool) -> void:
 ## Arms or disarms the tool. When disarmed: no Shift+O, no sampling, UI hidden.
 ## If persist is true, also writes ProjectSettings (and saves when running in the editor).
 func set_tool_enabled(enabled: bool, persist: bool = true) -> void:
-	if not _debug_available:
+	if not _debug_available and enabled:
 		return
+	# Master project switch off → never arm, tear down if needed.
+	if enabled and not _is_master_enabled():
+		enabled = false
 
 	if enabled == _armed:
 		if persist:
@@ -91,6 +91,8 @@ func set_tool_enabled(enabled: bool, persist: bool = true) -> void:
 
 	if _armed:
 		_bootstrap_if_needed()
+		set_process_unhandled_input(true)
+		process_mode = Node.PROCESS_MODE_INHERIT
 	else:
 		_shutdown_runtime()
 
@@ -101,15 +103,15 @@ func set_tool_enabled(enabled: bool, persist: bool = true) -> void:
 
 
 func is_tool_enabled() -> bool:
-	return _armed
+	return _armed and _is_master_enabled()
 
 
 func is_available() -> bool:
-	return _debug_available
+	return _debug_available and _is_master_enabled()
 
 
 func show_dashboard() -> void:
-	if not _armed:
+	if not _armed or not _is_master_enabled():
 		return
 	_bootstrap_if_needed()
 	if ui:
@@ -125,8 +127,32 @@ func get_profiler() -> PerformanceProfiler:
 	return profiler
 
 
+func _is_master_enabled() -> bool:
+	return bool(ProjectSettings.get_setting(
+		PDDashboardStyle.SETTING_ENABLED,
+		PDDashboardStyle.SETTING_ENABLED_DEFAULT
+	))
+
+
+func _fully_disable() -> void:
+	_debug_available = false
+	_armed = false
+	_shutdown_runtime()
+	if is_instance_valid(profiler):
+		profiler.queue_free()
+		profiler = null
+	if is_instance_valid(ui):
+		ui.queue_free()
+		ui = null
+	_bootstrapped = false
+	set_process(false)
+	set_process_input(false)
+	set_process_unhandled_input(false)
+	process_mode = Node.PROCESS_MODE_DISABLED
+
+
 func _bootstrap_if_needed() -> void:
-	if _bootstrapped:
+	if _bootstrapped or not _is_master_enabled():
 		return
 	_bootstrapped = true
 

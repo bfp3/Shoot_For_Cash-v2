@@ -42,11 +42,13 @@ func show_end_screen():
 
 func show_win_text() -> void:
 	var text_box := %TextBOX
-	var player_winnings: int = int(gl_PlayerState.dataset.total_winnings)
+	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name)).to_upper()
+	if place.is_empty() or place == "START":
+		place = "THE LEVEL"
 	$CenterContainer/FreeParticles.emitting = true
 	text_box.text = (
-		"\n\n[i][pulse][color=#a10204]ALL CLEAR[/color][/pulse][/i]\n"
-		+ "Cash Won [color=#a10204]$%s[/color]" % player_winnings
+		"\n\n[i][pulse][color=#a10204]GREAT![/color][/pulse][/i]\n"
+		+ "You've completed [color=#a10204]%s[/color]" % place
 	)
 
 	
@@ -85,8 +87,8 @@ func update_open_menu() -> void:
 	tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
 
 	await tween.finished
-	var retry := find_child("Retry", true, false) as Control
-	UiFocus.grab_in(self, retry)
+	var close_btn := find_child("Retry", true, false) as Control
+	UiFocus.grab_in(self, close_btn)
 	
 
 func update_close_menu() -> void:
@@ -146,8 +148,24 @@ func sfx_close_tally() -> void:
 
 
 func _on_retry_pressed() -> void:
-	gl_PlayerState.reset_level()
-	gl_PlayerState.round_finished = false
-	
-	get_tree().call_group("restartable", "restart")
-	update_close_menu()
+	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	# Completion is already saved in start_game_over; keep stamp / shop flow.
+	if not gl_PlayerState.is_place_completed(place):
+		gl_PlayerState.mark_place_completed(place)
+
+	await update_close_menu()
+
+	var round_manager := get_tree().get_first_node_in_group("round_manager")
+	if round_manager:
+		round_manager.game_over_triggered = false
+		round_manager.enter_state(round_manager.RoundState.SHOP_START)
+
+	# Let the shop finish opening, then stamp like a perfect-round tally card.
+	await get_tree().create_timer(0.55, false).timeout
+	var shop := get_tree().get_first_node_in_group("shop_main_menu")
+	if shop and shop.has_method("play_level_complete_stamp"):
+		await shop.play_level_complete_stamp(place)
+
+	var map_menu := get_tree().get_first_node_in_group("map_menu")
+	if map_menu and map_menu.has_method("mark_place_completed"):
+		await map_menu.mark_place_completed(place, false)

@@ -111,6 +111,10 @@ var bonus_oranges_ready := false
 func _ready() -> void:
 	load_level_sequence()
 	_capture_rocks_randomize_baseline()
+	# Pull any disk-persisted range progress into the runtime cache.
+	var stored = gl_PlayerState.dataset.get('level_progress', {})
+	if stored is Dictionary:
+		_level_progress = (stored as Dictionary).duplicate(true)
 
 	EventBus.instance.all_rocks_destroyed.connect(successful_round)
 	EventBus.instance.rocks_cleared_end_wave.connect(check_if_rocks_still_in_air)
@@ -301,6 +305,8 @@ func _reset_level_editor_round_runtime() -> void:
 		wave_progress_feedback.reset_strikes()
 	if rocks_container:
 		rocks_container.reset_all_rocks()
+	if player and player.has_method("begin_level_editor_ammo"):
+		player.begin_level_editor_ammo()
 
 
 ## Backspace during a test round — abort and return to the editor with text kept.
@@ -314,6 +320,8 @@ func abort_level_editor_test() -> void:
 	success = false
 	stop_timer()
 	stop_player()
+	if player and player.has_method("end_level_editor_ammo"):
+		player.end_level_editor_ammo()
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
 	enter_state(RoundState.ROUND_END)
@@ -385,6 +393,8 @@ func finish_level_editor_test_round() -> void:
 
 	_restore_level_editor_sequence()
 	level_editor_test_active = false
+	if player and player.has_method("end_level_editor_ammo"):
+		player.end_level_editor_ammo()
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	current_round_state = RoundState.SHOP_START
@@ -397,12 +407,12 @@ func finish_level_editor_test_round() -> void:
 		exit_level_editor_to_shop()
 
 
-## Active shooting range key used when parsing LEVEL_FILE_PATH (`moss`, `redd`, …).
+## Active shooting range key used when parsing LEVEL_FILE_PATH.
 func get_active_range_name() -> String:
 	var range_id := String(gl_PlayerState.dataset.level_name).to_lower()
-	if range_id == '' or range_id == 'start':
-		return 'moss'
-	return range_id
+	if range_id == '' or range_id == gl_DataSet.get_start_place_name() or range_id == 'start':
+		return gl_DataSet.get_default_range_name()
+	return gl_DataSet.resolve_place_name(range_id)
 
 
 func load_level_sequence() -> void:
@@ -419,9 +429,10 @@ func load_level_sequence() -> void:
 	if current_rock_sequence.is_empty():
 		push_warning('RoundManager: level file loaded but produced no rounds for range "%s".' % range_id)
 	else:
-		# Keep the player on a valid round if the file lost rounds.
-		if current_sequence_index >= current_rock_sequence.size():
-			current_sequence_index = maxi(current_rock_sequence.size() - 1, 0)
+		# Only rewind if the level file lost rounds (index past the end).
+		# index == size means the range is fully cleared — keep that.
+		if current_sequence_index > current_rock_sequence.size():
+			current_sequence_index = current_rock_sequence.size()
 
 		if previous_count > 0:
 			print('RoundManager: reloaded %s range "%s" (%d rounds) — next wave/shop uses the new data.' % [
@@ -939,6 +950,7 @@ func update_round_end() -> void:
 		shop_main_menu.mark_round_as_perfect()
 		shop_main_menu.increase_round_available()
 		birds.start_birds()
+		_save_level_progress()
 
 	current_wave = 0
 	balloon_container.end_round()
@@ -958,6 +970,9 @@ func update_tally_end() -> void:
 	while in_display_text_prompt:
 		await get_tree().process_frame
 	
+	# Level-complete screen owns the next step — don't also open the shop underneath it.
+	if game_over_triggered:
+		return
 	enter_state(RoundState.SHOP_START)
 
 	
@@ -1007,46 +1022,155 @@ func move_to_start() -> void:
 	level_mesh.name = 'current_level_layout'
 
 
+## Smooth return to the title screen (no scene reload / Wormfood intro).
+func return_to_title() -> void:
+	if transitioning_worlds:
+		return
+	transitioning_worlds = true
+
+	# Soft-close open menus.
+	if shop_main_menu and shop_main_menu.visible:
+		if shop_main_menu.has_method('soft_hide_for_level_editor'):
+			shop_main_menu.soft_hide_for_level_editor()
+		else:
+			shop_main_menu.hide()
+			if "current_state" in shop_main_menu:
+				shop_main_menu.current_state = shop_main_menu.SkillState.INACTIVE
+	var start_clone := get_node_or_null("%Start_menu_shop_clone") as Control
+	if start_clone == null:
+		start_clone = get_tree().get_first_node_in_group("start_menu_ui") as Control
+	if start_clone and start_clone.visible:
+		start_clone.hide()
+		if "current_state" in start_clone:
+			start_clone.current_state = start_clone.State.INACTIVE
+
+	var map_menu := get_tree().get_first_node_in_group("map_menu")
+	if map_menu and map_menu is CanvasItem and (map_menu as CanvasItem).visible:
+		if map_menu.has_method("close_pop_up"):
+			map_menu.close_pop_up()
+
+	stop_timer()
+	stop_player()
+	force_shop_open = false
+	wave_ending = false
+	player_failed = false
+	success = false
+	game_over_triggered = false
+	current_wave = 0
+	current_sequence_index = 0
+	current_round = 0
+	current_round_state = RoundState.INACTIVE
+	# Keep range round progress — rehydrate from player meta after reset_all.
+
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+	if balloon_container and (balloon_container.started or balloon_container.balloons_in_play > 0):
+		await balloon_container.end_round()
+	if bonus_target_manager and bonus_target_manager.has_method('cleanup_bonus_round'):
+		bonus_target_manager.cleanup_bonus_round()
+
+	if scene_transition_screen and scene_transition_screen.has_method('set_destination_place'):
+		scene_transition_screen.set_destination_place('start')
+	if scene_transition_screen:
+		await scene_transition_screen.next_level_start()
+
+	gl_PlayerState.reset_all()
+	gl_PlayerState.dataset.level_name = 'start'
+	# Restore runtime progress cache from persisted meta (not wiped by reset_all).
+	var stored = gl_PlayerState.dataset.get('level_progress', {})
+	_level_progress = (stored as Dictionary).duplicate(true) if stored is Dictionary else {}
+
+	move_to_start()
+	if rocks_container:
+		rocks_container.hide()
+	if wave_progress_feedback:
+		wave_progress_feedback.hide()
+	if place_name and place_name.has_method('update_place_name'):
+		place_name.update_place_name()
+
+	# Reset shop round buttons to a fresh locked/available baseline.
+	if shop_main_menu and shop_main_menu.has_method('sync_rounds_to_progress'):
+		shop_main_menu.sync_rounds_to_progress(0, 0)
+
+	if player and player.has_method('title_screen_start'):
+		player.title_screen_start()
+
+	# Keep title hidden under the transition until it finishes.
+	var scene_mgr := get_tree().get_first_node_in_group('scene_manager')
+	var splash: Node = get_node_or_null('../SplashScreenCanvasLayer')
+	if splash == null and scene_mgr and is_instance_valid(scene_mgr.get("splash_screen")):
+		splash = scene_mgr.splash_screen
+
+	if scene_transition_screen:
+		await scene_transition_screen.next_level_finish()
+
+	# Only now — after arriving at start — reveal the title UI.
+	if is_instance_valid(splash) and splash.has_method('show_title_ready'):
+		await splash.show_title_ready()
+	elif is_instance_valid(splash):
+		splash.show()
+
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	enter_state(RoundState.INACTIVE)
+	transitioning_worlds = false
+
+
 func _layout_for_level(level_id: String) -> PackedScene:
-	match level_id:
-		'moss':
+	## Layouts are bound to place_name *index* so renaming entries in
+	## gl_DataSet.dataset_string.place_name keeps the same scenery.
+	level_id = gl_DataSet.resolve_place_name(level_id)
+	var idx := gl_DataSet.get_place_index(level_id)
+	match idx:
+		0:
 			return LEVEL_LAYOUT_01_MOSS
-		'redd':
+		1:
 			return LEVEL_LAYOUT_02_REDD
-		'glory':
+		2:
 			return LEVEL_LAYOUT_03_GLORY
-		'jetz', 'test':
+		3:
 			return LEVEL_LAYOUT_000_JETZ
 		_:
 			return null
 
 
 func _save_level_progress() -> void:
-	var level_id := String(gl_PlayerState.dataset.level_name).to_lower()
-	if level_id == '' or level_id == 'start':
+	var level_id := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	if level_id == '' or level_id == gl_DataSet.get_start_place_name() or level_id == 'start':
 		return
-	_level_progress[level_id] = {
+	var entry := {
 		'sequence_index': current_sequence_index,
 		'round': maxi(current_round, 1),
 		'player_round': int(gl_PlayerState.dataset.round),
 	}
+	_level_progress[level_id] = entry
+	gl_PlayerState.set_level_progress_entry(level_id, entry)
 
 
 func _restore_level_progress(level_id: String) -> void:
+	level_id = gl_DataSet.resolve_place_name(level_id)
 	var saved: Dictionary = _level_progress.get(level_id, {})
 	if saved.is_empty():
+		saved = gl_PlayerState.get_level_progress_entry(level_id)
+	if saved.is_empty():
+		# Fully cleared ranges still count as completed even if entry was lost.
+		if gl_PlayerState.is_place_completed(level_id) and current_rock_sequence.size() > 0:
+			current_sequence_index = current_rock_sequence.size()
+			current_round = current_sequence_index
+			gl_PlayerState.dataset.round = current_round
+			return
 		current_sequence_index = 0
 		current_round = 1
 		gl_PlayerState.dataset.round = 1
 		return
 	current_sequence_index = int(saved.get('sequence_index', 0))
-	current_round = int(saved.get('round', 1))
+	current_round = int(saved.get('round', maxi(current_sequence_index + 1, 1)))
 	gl_PlayerState.dataset.round = int(saved.get('player_round', current_round))
 
 
 ## Swap scenery + round data for a shooting range. Used for first arrival and mid-run map travel.
 func travel_to_level(level_id: String) -> void:
-	level_id = level_id.to_lower()
+	level_id = gl_DataSet.resolve_place_name(level_id)
 	var layout_scene := _layout_for_level(level_id)
 	if layout_scene == null:
 		push_error('RoundManager: unknown level "%s"' % level_id)
@@ -1054,8 +1178,9 @@ func travel_to_level(level_id: String) -> void:
 	if transitioning_worlds:
 		return
 
-	var coming_from_start := String(gl_PlayerState.dataset.level_name).to_lower() == 'start'
-	var already_here := String(gl_PlayerState.dataset.level_name).to_lower() == level_id
+	var start_name := gl_DataSet.get_start_place_name()
+	var coming_from_start := String(gl_PlayerState.dataset.level_name).to_lower() == start_name or String(gl_PlayerState.dataset.level_name).to_lower() == 'start'
+	var already_here := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name)) == level_id
 	if already_here:
 		return
 
@@ -1095,6 +1220,8 @@ func travel_to_level(level_id: String) -> void:
 		gl_PlayerState.dataset['reroll_unlocked'] = 1
 		music_manager.stop_opening_song()
 
+	if scene_transition_screen.has_method('set_destination_place'):
+		scene_transition_screen.set_destination_place(level_id)
 	scene_transition_screen.next_level_start()
 	await get_tree().create_timer(1.0, false).timeout
 	if coming_from_start:
@@ -1116,12 +1243,19 @@ func travel_to_level(level_id: String) -> void:
 
 	await get_tree().create_timer(1.0, false).timeout
 
-	_restore_level_progress(level_id)
 	load_level_sequence()
-	if current_sequence_index >= current_rock_sequence.size():
-		current_sequence_index = maxi(current_rock_sequence.size() - 1, 0)
+	_restore_level_progress(level_id)
+	# Only clamp if the level file shrank; keep completed ranges at the end index.
+	if current_rock_sequence.size() > 0 and current_sequence_index > current_rock_sequence.size():
+		current_sequence_index = current_rock_sequence.size()
+	if current_sequence_index >= current_rock_sequence.size() and current_rock_sequence.size() > 0:
+		current_round = current_rock_sequence.size()
+	else:
+		current_round = mini(current_sequence_index + 1, maxi(current_rock_sequence.size(), 1))
+	gl_PlayerState.dataset.round = current_round
 
 	shop_main_menu.setup_shop_for_rounds()
+	shop_main_menu.sync_rounds_to_progress(current_sequence_index, current_rock_sequence.size())
 	shop_main_menu.update_place_label()
 	wave_progress_feedback.show()
 	find_egg()
@@ -1142,12 +1276,34 @@ func travel_to_level(level_id: String) -> void:
 	enter_state(RoundState.SHOP_START)
 	player.show_ammo_panel()
 
+
+## Travel by place name or by index into gl_DataSet.place_name (0, 1, 2, …).
+## Replaces move_to_moss / move_to_redd / move_to_glory.
+func move_to_new_range(range_id = null) -> void:
+	var place := ""
+	if range_id == null:
+		place = gl_DataSet.get_default_range_name()
+	elif typeof(range_id) == TYPE_INT or typeof(range_id) == TYPE_FLOAT:
+		place = gl_DataSet.get_place_name(int(range_id))
+	else:
+		place = gl_DataSet.resolve_place_name(String(range_id))
+	if place.is_empty() or place == gl_DataSet.get_start_place_name() or place == "start":
+		push_error("RoundManager.move_to_new_range: invalid range %s" % str(range_id))
+		return
+	await travel_to_level(place)
+
+
+## Deprecated aliases — prefer move_to_new_range(name_or_index).
 func move_to_moss() -> void:
-	await travel_to_level('moss')
+	await move_to_new_range(0)
 
 
 func move_to_redd() -> void:
-	await travel_to_level('redd')
+	await move_to_new_range(1)
+
+
+func move_to_glory() -> void:
+	await move_to_new_range(2)
 
 	
 func stop_player() -> void:
@@ -1189,6 +1345,17 @@ func pineapple_round() -> void:
 
 
 func start_game_over() -> void:
+	game_over_triggered = true
+
+	# Lock in full clear immediately (survives title / quit before Close).
+	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	if current_rock_sequence.size() > 0:
+		current_sequence_index = current_rock_sequence.size()
+		current_round = current_sequence_index
+		gl_PlayerState.dataset.round = current_round
+	_save_level_progress()
+	gl_PlayerState.mark_place_completed(place)
+
 	var game_over_menu = get_tree().get_first_node_in_group('game_over_screen')
 	if game_over_menu:
 		game_over_menu.update_open_menu()
@@ -1204,7 +1371,9 @@ func restart() -> void:
 	current_round = 0
 	current_wave = 0
 	force_shop_open = false
-	_level_progress.clear()
+	# Full restartable wipe — keep disk meta; runtime cache reloads from player state.
+	var stored = gl_PlayerState.dataset.get('level_progress', {})
+	_level_progress = (stored as Dictionary).duplicate(true) if stored is Dictionary else {}
 	
 	
 	# Runtime state
@@ -1224,7 +1393,7 @@ func restart() -> void:
 	stop_timer()
 	stop_player()
 
-	move_to_moss()
+	move_to_new_range(0)
 
 	player.round_finished(false)
 	player.display_hud()
@@ -1240,10 +1409,14 @@ func restart() -> void:
 
 ## Debug (Shift+M / Main-lofi): same end-state as travel, with no transition waits.
 func debug_restart_to_moss() -> void:
-	await debug_restart_to_level("moss")
+	await debug_restart_to_level(gl_DataSet.get_default_range_name())
 
 
-func debug_restart_to_level(level_id: String) -> void:
+func debug_restart_to_level(level_id) -> void:
+	if typeof(level_id) == TYPE_INT or typeof(level_id) == TYPE_FLOAT:
+		level_id = gl_DataSet.get_place_name(int(level_id))
+	else:
+		level_id = gl_DataSet.resolve_place_name(String(level_id))
 	current_sequence_index = 0
 	current_round = 0
 	current_wave = 0
@@ -1268,14 +1441,17 @@ func debug_restart_to_level(level_id: String) -> void:
 	await move_to_level_instant(level_id)
 
 
-## Instant Moss setup — everything move_to_moss() does at the end, no fade timers.
+## Instant default-range setup — everything move_to_new_range(0) does at the end, no fade timers.
 func move_to_moss_instant() -> void:
-	await move_to_level_instant("moss")
+	await move_to_level_instant(gl_DataSet.get_default_range_name())
 
 
-## Instant range setup for moss / redd / glory / jetz — no fade timers.
-func move_to_level_instant(level_id: String) -> void:
-	level_id = level_id.to_lower()
+## Instant range setup by name or index — no fade timers.
+func move_to_level_instant(level_id) -> void:
+	if typeof(level_id) == TYPE_INT or typeof(level_id) == TYPE_FLOAT:
+		level_id = gl_DataSet.get_place_name(int(level_id))
+	else:
+		level_id = gl_DataSet.resolve_place_name(String(level_id))
 	var layout_scene := _layout_for_level(level_id)
 	if layout_scene == null:
 		push_error('RoundManager: unknown level "%s" for instant travel' % level_id)

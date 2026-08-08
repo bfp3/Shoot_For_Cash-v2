@@ -162,13 +162,34 @@ func _show_settings() -> void:
 func _focus_pause_root() -> void:
 	var resume := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/CancelMenu") as Control
 	var settings_btn := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/Settings") as Control
+	var title_btn := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/BackToTitle") as Control
 	var quit_btn := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/CloseGame") as Control
-	UiFocus.wire_vertical([resume, settings_btn, quit_btn])
+	UiFocus.wire_vertical([resume, settings_btn, title_btn, quit_btn])
 	UiFocus.grab_in(quit_control, resume)
 
 
 func _on_close_game_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_back_to_title_pressed() -> void:
+	# Smooth transition back to the title screen — no scene reload / full restart.
+	if GameSettings.is_resolution_pending():
+		GameSettings.revert_resolution()
+	animating = false
+	hide()
+	get_tree().paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	var round_manager := get_tree().get_first_node_in_group("round_manager")
+	if round_manager and round_manager.has_method("return_to_title"):
+		await round_manager.return_to_title()
+		return
+
+	# Fallback if round manager path is missing.
+	gl_PlayerState.reset_all()
+	await get_tree().process_frame
+	get_tree().reload_current_scene()
 
 
 func _on_cancel_menu_pressed() -> void:

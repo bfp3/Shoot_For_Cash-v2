@@ -31,8 +31,7 @@ func _setup_shop_mini_game() -> void:
 	_shop_mini_game = SHOP_MINI_GAME_SCENE.instantiate()
 	add_child(_shop_mini_game)
 	if _shop_mini_game.has_method("attach_to_shop"):
-		# Full-screen host, no shop header strip to clear.
-		_shop_mini_game.attach_to_shop(self, _mini_game_host, 0.0)
+		_shop_mini_game.attach_to_shop(self)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -65,22 +64,22 @@ func _on_intro_pressed() -> void:
 
 func _on_moss_pressed() -> void:
 	_close_mini_game_if_open()
-	RestarterScript.request_fast_travel("moss")
+	RestarterScript.request_fast_travel(gl_DataSet.get_place_name(0))
 
 
 func _on_redd_pressed() -> void:
 	_close_mini_game_if_open()
-	RestarterScript.request_fast_travel("redd")
+	RestarterScript.request_fast_travel(gl_DataSet.get_place_name(1))
 
 
 func _on_glory_pressed() -> void:
 	_close_mini_game_if_open()
-	RestarterScript.request_fast_travel("glory")
+	RestarterScript.request_fast_travel(gl_DataSet.get_place_name(2))
 
 
 func _on_testing_pressed() -> void:
 	_close_mini_game_if_open()
-	RestarterScript.request_fast_travel("jetz")
+	RestarterScript.request_fast_travel(gl_DataSet.get_testing_place_name())
 
 
 func _close_mini_game_if_open() -> void:

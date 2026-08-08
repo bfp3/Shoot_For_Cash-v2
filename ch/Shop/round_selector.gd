@@ -115,8 +115,16 @@ func update_locked() -> void:
 	if has_focus():
 		release_focus()
 	outer_ring.modulate = outerRingColour_default
+	outer_ring_2.modulate = Color.WHITE
 	icon_control.scale = Vector2.ONE / 3
 	arrow_indication.modulate.a = 0.0
+	round_number.text = stored_text
+	round_number.modulate = Color(1, 1, 1, 0)
+	one_hundred_percent_control.modulate.a = 0.0
+	cash_earned.modulate.a = 0.0
+	if tween_available:
+		tween_available.kill()
+		tween_available = null
 
 
 func update_available() -> void:

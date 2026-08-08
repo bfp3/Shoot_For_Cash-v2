@@ -195,8 +195,11 @@ data = PackedVector3Array(-0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_tej34"]
 data = PackedVector3Array(-0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_s470r"]
-points = PackedVector3Array(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5)
+[sub_resource type="BoxMesh" id="BoxMesh_6yul2"]
+size = Vector3(1, 10, 1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_08sf0"]
+data = PackedVector3Array(-0.5, 5, 0.5, 0.5, 5, 0.5, -0.5, -5, 0.5, 0.5, 5, 0.5, 0.5, -5, 0.5, -0.5, -5, 0.5, 0.5, 5, -0.5, -0.5, 5, -0.5, 0.5, -5, -0.5, -0.5, 5, -0.5, -0.5, -5, -0.5, 0.5, -5, -0.5, 0.5, 5, 0.5, 0.5, 5, -0.5, 0.5, -5, 0.5, 0.5, 5, -0.5, 0.5, -5, -0.5, 0.5, -5, 0.5, -0.5, 5, -0.5, -0.5, 5, 0.5, -0.5, -5, -0.5, -0.5, 5, 0.5, -0.5, -5, 0.5, -0.5, -5, -0.5, 0.5, 5, 0.5, -0.5, 5, 0.5, 0.5, 5, -0.5, -0.5, 5, 0.5, -0.5, 5, -0.5, 0.5, 5, -0.5, -0.5, -5, 0.5, 0.5, -5, 0.5, -0.5, -5, -0.5, 0.5, -5, 0.5, 0.5, -5, -0.5, -0.5, -5, -0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nwogu"]
 
@@ -456,7 +459,8 @@ curve = SubResource("Curve_08sf0")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.34202015, 0.9396926, 0, -0.9396926, 0.34202015, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50000006, 0, 0, 0)
+light_energy = 1.5
 light_bake_mode = 0
 shadow_opacity = 0.45
 directional_shadow_mode = 0
@@ -568,36 +572,28 @@ skeleton = NodePath("")
 shape = SubResource("ConcavePolygonShape3D_tej34")
 
 [node name="Left_tall_pillar7HIDDEN" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1106878613]
-transform = Transform3D(1, 0, 0, 0, 7.835, 0, 0, 0, 1, 15.399999, 3.5, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.399999, 3.5, 1)
 material_override = ExtResource("4_80w0q")
 cast_shadow = 0
 lod_bias = 3.0
-mesh = SubResource("ArrayMesh_yg5pk")
-skeleton = NodePath("")
+mesh = SubResource("BoxMesh_6yul2")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7HIDDEN" unique_id=346888207]
-collision_layer = 0
-collision_mask = 0
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7HIDDEN" unique_id=481356947]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7HIDDEN/StaticBody3D" unique_id=858862529]
-shape = SubResource("ConvexPolygonShape3D_s470r")
-disabled = true
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7HIDDEN/StaticBody3D" unique_id=1859702173]
+shape = SubResource("ConcavePolygonShape3D_08sf0")
 
-[node name="Left_tall_pillar8HIDDEN" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=432618852]
-transform = Transform3D(1, 0, 0, 0, 7.835, 0, 0, 0, 1, -3.6000013, 3, 1)
+[node name="Left_tall_pillar7HIDDEN2" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=476820152]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.549488, 3.5, 1)
 material_override = ExtResource("4_80w0q")
 cast_shadow = 0
 lod_bias = 3.0
-mesh = SubResource("ArrayMesh_yg5pk")
-skeleton = NodePath("")
+mesh = SubResource("BoxMesh_6yul2")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar8HIDDEN" unique_id=980150831]
-collision_layer = 0
-collision_mask = 0
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7HIDDEN2" unique_id=1625833535]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar8HIDDEN/StaticBody3D" unique_id=1181563749]
-shape = SubResource("ConvexPolygonShape3D_s470r")
-disabled = true
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar7HIDDEN2/StaticBody3D" unique_id=645260388]
+shape = SubResource("ConcavePolygonShape3D_08sf0")
 
 [node name="Right_tall_pillar_002" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=2100494882]
 transform = Transform3D(1, 0, 0, 0, 1.5, 0, 0, 0, 1, 17, -0.25, -0.234825)
@@ -809,7 +805,7 @@ cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
 
 [node name="roof" type="MeshInstance3D" parent="Boatmesh" unique_id=327879325]
-transform = Transform3D(-2, 8.742278e-08, 0, -1.7478564e-07, -0.99965733, 0.02617695, 4.5769233e-09, 0.02617695, 0.99965733, 0, 6, 20)
+transform = Transform3D(-2, 8.742278e-08, 0, -1.7478564e-07, -0.99965733, 0.02617695, 4.5769233e-09, 0.02617695, 0.99965733, 0, 10, 20)
 material_override = ExtResource("4_80w0q")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
@@ -852,6 +848,7 @@ mesh = SubResource("BoxMesh_s470r")
 [node name="Wind_trails" type="GPUParticles3D" parent="." unique_id=800666355]
 process_mode = 3
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 28)
+emitting = false
 amount = 10
 lifetime = 3.0
 preprocess = 0.5

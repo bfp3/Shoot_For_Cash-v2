@@ -161,17 +161,27 @@ func open_menu() -> void:
 	
 
 func _on_free_play_pressed() -> void:
-	# Soft-close start menu, then jump straight to the testing room (jetz).
+	# Soft-close start menu, then jump straight to the testing room.
 	if has_method("sfx_close_shop"):
 		sfx_close_shop()
 	hide()
 	current_state = State.INACTIVE
 
+	# Free Play skips the AddGun purchase — equip a gun so start_player() works.
+	if int(gl_PlayerState.dataset.get("power_gun", 0)) < 1:
+		gl_PlayerState.dataset.power_gun = 1
+	var round_manager := get_tree().get_first_node_in_group("round_manager")
+	if round_manager and round_manager.get("player"):
+		var p = round_manager.player
+		if p and p.get("player_gun") and p.player_gun.has_method("update_guns"):
+			p.player_gun.update_guns()
+
+	var test_room := gl_DataSet.get_testing_place_name()
 	var current := String(gl_PlayerState.dataset.level_name).to_lower()
-	if current == "jetz" or current == "test":
+	if gl_DataSet.is_testing_place(current):
 		return
 
-	gl_PlayerState.change_location("jetz")
+	gl_PlayerState.change_location(test_room)
 
 
 func gun_purchased() -> void:

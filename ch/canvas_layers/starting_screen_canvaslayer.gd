@@ -29,7 +29,8 @@ var default_pivot_offset := Vector2.ZERO
 @export var music_control : Node
 
 func _ready() -> void:
-	EventBus.instance.open_tally_card.connect(enter_state.bind(State.OPEN_MENU))
+	# Title/splash is only for the opening screen — do not open it when a tally card appears.
+	# (open_tally_card used to incorrectly trigger the start menu mid-run.)
 
 	# STORE DEFAULT TRANSFORMS
 	splash_screen_control.default_scale = splash_screen_control.scale
@@ -106,6 +107,34 @@ func opening_sfx() -> void:
 func update_inactive() -> void:
 	pass
 
+
+## Return from gameplay without replaying the Wormfood / title intro.
+func show_title_ready() -> void:
+	show()
+	menu_in_display = true
+	current_state = State.IN_MENU
+
+	if wormfood_logo:
+		wormfood_logo.hide()
+	copyright.modulate.a = 0.0
+	game_name.modulate.a = 1.0
+	game_name.scale = Vector2.ONE
+	game_title_background.modulate.a = 1.0
+	splash_screen_control.modulate.a = 1.0
+	if splash_screen_control.get("default_scale") != null:
+		splash_screen_control.scale = splash_screen_control.default_scale
+	else:
+		splash_screen_control.scale = Vector2.ONE
+	splash_screen_control.position = default_position
+	splash_screen_control.pivot_offset_ratio = default_pivot_offset
+	if background_balloons:
+		background_balloons.start = true
+
+	if music_control and music_control.has_method("start_opening_song"):
+		music_control.start_opening_song()
+
+	var start_btn := splash_screen_control.get_node_or_null("GameTitleBackground/StartGame") as Control
+	UiFocus.grab_in(splash_screen_control, start_btn)
 
 	
 func update_open_menu() -> void:

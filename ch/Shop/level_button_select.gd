@@ -81,6 +81,47 @@ func set_unlocked_visuals() -> void:
 	$TextureRect2.modulate = Color.WHITE
 	disabled = false
 	modulate = Color.WHITE
+	_refresh_completion_stamp(false)
+
+
+func mark_completed(animate: bool = true) -> void:
+	current_state = State.COMPLETE
+	level_locked = false
+	await _refresh_completion_stamp(animate)
+
+
+func _refresh_completion_stamp(animate: bool) -> void:
+	var stamp_root := get_node_or_null("100_percent") as Control
+	if stamp_root == null:
+		return
+	var stamp_label := stamp_root.get_node_or_null("RichTextLabel") as Control
+	var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
+	var completed := gl_PlayerState.is_place_completed(place) or current_state == State.COMPLETE
+	if not completed:
+		stamp_root.visible = false
+		stamp_root.modulate.a = 0.0
+		return
+
+	current_state = State.COMPLETE
+	stamp_root.visible = true
+	if not animate:
+		stamp_root.modulate.a = 1.0
+		if stamp_label:
+			stamp_label.scale = Vector2.ONE
+		return
+
+	stamp_root.modulate.a = 0.0
+	if stamp_label:
+		stamp_label.scale = Vector2.ONE * 3.0
+	var stamp_sfx := get_node_or_null("purchase") as AudioStreamPlayer
+	var tween := create_tween()
+	tween.tween_property(stamp_root, "modulate:a", 1.0, 0.2)
+	if stamp_label:
+		tween.parallel().tween_property(stamp_label, "scale", Vector2.ONE, 0.2)
+	if stamp_sfx:
+		tween.parallel().tween_callback(stamp_sfx.play.bind(0.05)).set_delay(0.15)
+	tween.tween_interval(0.35)
+	await tween.finished
 
 
 func _on_level_button_pressed() -> void:
@@ -96,11 +137,11 @@ func _on_level_button_pressed() -> void:
 		await main_control.select_level(level_name_lower_case)
 	elif round_manager:
 		# Fallback if map popup wiring is missing.
-		match level_name_lower_case:
-			'moss', 'redd', 'glory':
-				round_manager.travel_to_level(level_name_lower_case)
-			_:
-				print('other button pressed: ', level_name_lower_case)
+		var place := gl_DataSet.resolve_place_name(level_name_lower_case)
+		if gl_DataSet.has_place(place) and place != gl_DataSet.get_start_place_name():
+			round_manager.travel_to_level(place)
+		else:
+			print('other button pressed: ', level_name_lower_case)
 	
 	await get_tree().create_timer(0.3, false).timeout
 	$TextureProgressBar.value = 0.0

@@ -29,6 +29,10 @@ const SCOPE_EXPAND_MAX_SCALE := 1.85
 ## Current bullets loaded. Starts at power_max_ammo and is refilled via shop ammo packs.
 var shot_count := 0
 var max_ammo := 0
+## Separate magazine used only while a level-editor test round is active.
+var _level_editor_ammo_active := false
+var _level_editor_ammo := 99
+const LEVEL_EDITOR_AMMO_MAX := 99
 
 var game_lost := false
 
@@ -456,28 +460,44 @@ func handle_joystick(delta : float) -> void:
 	target_crosshair_position += joystick_motion
 
 func handle_keyboard_and_controller_input(delta: float) -> void:
-	var direction := Vector2(
-		Input.get_axis("left", "right"),
-		Input.get_axis("forward", "backward")
+	# Raw stick axes keep full 360° aim. InputMap deadzones on left/right/forward/backward
+	# snap diagonals to cardinals, so only use those for keyboard.
+	var stick := Vector2(
+		Input.get_joy_axis(0, JOY_AXIS_LEFT_X),
+		Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
 	)
-	
-	if direction == Vector2.ZERO:
-		return
-		
+	const STICK_DEADZONE := 0.12
+	var raw: Vector2
+	if stick.length() > STICK_DEADZONE:
+		raw = stick
+	else:
+		raw = Vector2(
+			Input.get_axis("left", "right"),
+			Input.get_axis("forward", "backward")
+		)
+	# Stick tilt scales speed (partial push = slower). Keys read as ±1 so stay full speed.
+	var magnitude := clampf(raw.length(), 0.0, 1.0)
+	var has_input := magnitude > STICK_DEADZONE
+
 	const keyboard_crosshair_speed := 1300.0
 	var speed := keyboard_crosshair_speed * GameSettings.crosshair_speed_multiplier()
 	if Input.is_action_pressed("sprint"):
 		speed *= 0.5
 
 	var target_velocity := Vector2.ZERO
-	if direction != Vector2.ZERO:
-		target_velocity = direction.normalized() * speed
+	if has_input:
+		# Mild curve: light tilts stay precise, full throw still hits max speed.
+		var strength := pow(magnitude, 1.35)
+		target_velocity = raw.normalized() * speed * strength
 
 	const ACCEL := 60.0
 	const DECEL := 18.0
-
-	var lerp_speed := ACCEL if direction != Vector2.ZERO else DECEL
+	var lerp_speed := ACCEL if has_input else DECEL
 	keyboard_velocity = keyboard_velocity.lerp(target_velocity, lerp_speed * delta)
+
+	if keyboard_velocity.length_squared() < 0.01 and not has_input:
+		keyboard_velocity = Vector2.ZERO
+		return
 
 	target_crosshair_position += keyboard_velocity * delta
 	
@@ -680,36 +700,42 @@ func _tween_scope_back_to_base() -> void:
 
 
 func get_max_ammo() -> int:
+	if _level_editor_ammo_active:
+		return LEVEL_EDITOR_AMMO_MAX
 	return int(gl_DataSet.get_value('power_max_ammo', gl_PlayerState.dataset.power_max_ammo))
 
 
-func get_ammo_pack_size() -> int:
-	return int(gl_DataSet.get_value('ammo_pack_size', 0))
+func get_displayed_ammo() -> int:
+	if _level_editor_ammo_active:
+		return _level_editor_ammo
+	return shot_count
 
 
 func is_ammo_full() -> bool:
-	return shot_count >= get_max_ammo()
+	return get_displayed_ammo() >= get_max_ammo()
 
 
 func _init_ammo() -> void:
 	max_ammo = get_max_ammo()
-	max_ammo = 50
 	shot_count = max_ammo
 	_refresh_ammo_display()
 
 
 func _refresh_ammo_display(animate := false) -> void:
+	var shown := get_displayed_ammo()
 	var hud := $CanvasLayer/HUD_bottom_corner/ShotRemaining
 	if hud and hud.has_method('set_ammo'):
-		hud.set_ammo(shot_count, animate)
+		hud.set_ammo(shown, animate)
 	else:
-		%ShotRemaining.text = str(shot_count).pad_zeros(2)
-		
+		%ShotRemaining.text = str(shown).pad_zeros(2)
+
 	%Crosshair.out_of_ammo_hide()
 
 
 ## Adds pack bullets up to max capacity. Returns how many were actually added.
 func add_ammo(amount: int, animate := true) -> int:
+	if _level_editor_ammo_active:
+		return 0
 	max_ammo = get_max_ammo()
 	var before := shot_count
 	shot_count = mini(shot_count + amount, max_ammo)
@@ -722,17 +748,63 @@ func add_ammo(amount: int, animate := true) -> int:
 func consume_ammo(amount: int = 1) -> bool:
 	if amount <= 0:
 		return true
+
+	if _level_editor_ammo_active:
+		if _level_editor_ammo < amount:
+			return false
+		_level_editor_ammo = maxi(_level_editor_ammo - amount, 0)
+		_refresh_ammo_display()
+		if _level_editor_ammo <= 0:
+			# Editor rounds keep a full separate mag — never block the test.
+			_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
+			_refresh_ammo_display()
+		return true
+
 	if shot_count < amount:
-		return false
+		if _is_in_testing_room():
+			_refill_regular_ammo_to_max()
+			if shot_count < amount:
+				return false
+		else:
+			return false
 
 	max_ammo = get_max_ammo()
 	shot_count = clampi(shot_count - amount, 0, max_ammo)
 	_refresh_ammo_display()
 
 	if shot_count <= 0:
-		out_of_ammo()
+		if _is_in_testing_room():
+			_refill_regular_ammo_to_max()
+		else:
+			out_of_ammo()
 
 	return true
+
+
+func _is_in_testing_room() -> bool:
+	return gl_DataSet.is_testing_place(String(gl_PlayerState.dataset.level_name))
+
+
+func _refill_regular_ammo_to_max() -> void:
+	max_ammo = get_max_ammo()
+	shot_count = max_ammo
+	_refresh_ammo_display()
+
+
+## Start a level-editor-only ammo pool (does not touch regular shot_count).
+func begin_level_editor_ammo(amount: int = LEVEL_EDITOR_AMMO_MAX) -> void:
+	_level_editor_ammo_active = true
+	_level_editor_ammo = maxi(amount, 1)
+	_refresh_ammo_display()
+
+
+func end_level_editor_ammo() -> void:
+	_level_editor_ammo_active = false
+	_refresh_ammo_display()
+
+
+func get_ammo_pack_size() -> int:
+	return int(gl_DataSet.get_value('ammo_pack_size', 0))
 
 
 func fire_weapon() -> void:
@@ -748,13 +820,19 @@ func fire_weapon() -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and not running_on_mobile:
 		return
 
-	if shot_count <= 0:
-		# Empty magazine: still allow shooting the early-exit retreat target.
-		if weapon_shooting.shoot_early_exit_if_aimed():
+	if get_displayed_ammo() <= 0:
+		if _is_in_testing_room() and not _level_editor_ammo_active:
+			_refill_regular_ammo_to_max()
+		elif _level_editor_ammo_active:
+			_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
+			_refresh_ammo_display()
+		else:
+			# Empty magazine: still allow shooting the early-exit retreat target.
+			if weapon_shooting.shoot_early_exit_if_aimed():
+				return
+			out_of_ammo()
+			weapon_shooting.play_missed_sounds()
 			return
-		out_of_ammo()
-		weapon_shooting.play_missed_sounds()
-		return
 	
 	#set_process(false)
 	#set_process_input(false)
@@ -796,19 +874,17 @@ func player_did_not_miss() -> void:
 	
 
 func _input(event: InputEvent) -> void:
-	
-	if Input.is_action_just_pressed('increase_scope_speed'):
-		GameSettings.bump_mouse_sensitivity(1)
-		$SFX/scopeSpeedAdjustSpeedSfx.play()
-		_notify_reticle_sensitivity_popup(event)
-		
-	if Input.is_action_just_pressed('decrease_scope_speed'):
-		GameSettings.bump_mouse_sensitivity(-1)
-		$SFX/scopeSpeedAdjustSpeedSfx.play()
-		_notify_reticle_sensitivity_popup(event)
+	# Reticle sensitivity only while actively playing a level (not title/shop).
+	if current_state == State.ACTIVE:
+		if Input.is_action_just_pressed('increase_scope_speed'):
+			GameSettings.bump_mouse_sensitivity(1)
+			$SFX/scopeSpeedAdjustSpeedSfx.play()
+			_notify_reticle_sensitivity_popup(event)
+		if Input.is_action_just_pressed('decrease_scope_speed'):
+			GameSettings.bump_mouse_sensitivity(-1)
+			$SFX/scopeSpeedAdjustSpeedSfx.play()
+			_notify_reticle_sensitivity_popup(event)
 
-	
-	
 	if current_state != State.ACTIVE:
 		return
 	
@@ -855,8 +931,11 @@ func start_player() -> void:
 		return
 	game_lost = false
 	weapon_shooting.shot_with_right_click = false
-	max_ammo = get_max_ammo()
-	shot_count = clampi(shot_count, 0, max_ammo)
+	if _level_editor_ammo_active:
+		_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
+	else:
+		max_ammo = get_max_ammo()
+		shot_count = clampi(shot_count, 0, max_ammo)
 	_refresh_ammo_display()
 	weapon_shooting.can_shoot(true)
 

@@ -1,6 +1,7 @@
 extends Control
 
 @onready var color_rect := $Background_control
+@onready var loading_text: RichTextLabel = $Background_control/Control/LoadingText
 
 @export_group("Transition")
 @export var slide_duration: float = 0.7
@@ -12,6 +13,7 @@ extends Control
 @export var debug_action := "ui_accept"
 
 var _toggled := false
+var _destination_place := ""
 
 
 func _ready() -> void:
@@ -33,8 +35,32 @@ func _unhandled_input(event: InputEvent) -> void:
 		_toggled = !_toggled
 
 
+## Call before next_level_start so the banner shows the real destination.
+## Text is applied when the transition actually starts — not immediately.
+func set_destination_place(place_id: String) -> void:
+	_destination_place = String(place_id).strip_edges()
+	if _destination_place.to_lower() != "start":
+		_destination_place = gl_DataSet.resolve_place_name(_destination_place)
+
+
+func _apply_loading_text() -> void:
+	if loading_text == null:
+		return
+	var place := _destination_place
+	if place.is_empty():
+		place = String(gl_PlayerState.dataset.level_name)
+	place = place.strip_edges()
+	if place.is_empty():
+		loading_text.text = "[wave]Loading"
+	elif place.to_lower() == "start":
+		loading_text.text = "[wave]To START"
+	else:
+		loading_text.text = "[wave]To %s" % gl_DataSet.resolve_place_name(place).to_upper()
+
+
 func next_level_start() -> void:
 	_reset_next_level()
+	_apply_loading_text()
 	var screen_height := get_viewport_rect().size.y
 
 	color_rect.position.y = screen_height

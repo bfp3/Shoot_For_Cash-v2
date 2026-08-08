@@ -175,3 +175,98 @@ func get_remaining_rocks() -> int:
 		return dataset_float[key][0]
 
 	return 0
+
+
+## --- Place / range name helpers (single source: dataset_string.place_name) ---
+
+## Ordered list of place ids: moss, redd, glory, jetz, …
+func get_place_names() -> PackedStringArray:
+	var raw: Array = dataset_string.get("place_name", [])
+	var out: PackedStringArray = PackedStringArray()
+	for entry in raw:
+		out.append(String(entry).to_lower())
+	return out
+
+
+func get_place_name(index: int) -> String:
+	var names := get_place_names()
+	if index < 0 or index >= names.size():
+		return ""
+	return names[index]
+
+
+func get_place_index(place_id: String) -> int:
+	place_id = place_id.to_lower()
+	# Alias: "test" → testing room (same index as jetz / place 3).
+	if place_id == "test":
+		place_id = get_testing_place_name()
+	var names := get_place_names()
+	for i in names.size():
+		if names[i] == place_id:
+			return i
+	return -1
+
+
+func has_place(place_id: String) -> bool:
+	return get_place_index(place_id) >= 0
+
+
+## Normalize aliases ("test") to the canonical place_name entry.
+func resolve_place_name(place_id: String) -> String:
+	place_id = place_id.to_lower()
+	if place_id == "test":
+		return get_testing_place_name()
+	var idx := get_place_index(place_id)
+	if idx < 0:
+		return place_id
+	return get_place_name(idx)
+
+
+func get_start_place_name() -> String:
+	var names := get_place_names()
+	for n in names:
+		if n == "start":
+			return n
+	return "start"
+
+
+## First playable range (index 0 in place_name, skipping "start" if it's first).
+func get_default_range_name() -> String:
+	var names := get_place_names()
+	for n in names:
+		if n != "start":
+			return n
+	return "moss"
+
+
+## Testing / free-play room — conventionally place_name index 3 ("jetz").
+func get_testing_place_name() -> String:
+	var names := get_place_names()
+	if names.size() > 3:
+		var candidate := names[3]
+		if candidate != "start":
+			return candidate
+	for n in names:
+		if n == "jetz" or n == "test":
+			return n
+	return get_default_range_name()
+
+
+func is_testing_place(place_id: String) -> bool:
+	place_id = resolve_place_name(place_id)
+	return place_id == get_testing_place_name() or place_id == "test"
+
+
+func get_wall_quote_key(place_id: String = "") -> String:
+	if place_id.is_empty():
+		place_id = String(gl_PlayerState.dataset.level_name)
+	place_id = resolve_place_name(place_id)
+	return "wall_quote_%s" % place_id
+
+
+func get_ticket_price_key(place_id: String) -> String:
+	return "price_ticket_%s" % resolve_place_name(place_id)
+
+
+func get_ticket_power_key(place_id: String) -> String:
+	return "power_ticket_%s" % resolve_place_name(place_id)

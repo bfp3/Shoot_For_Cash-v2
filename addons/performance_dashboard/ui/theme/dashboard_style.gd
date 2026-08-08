@@ -27,7 +27,7 @@ const TOGGLE_KEY := KEY_O
 const ARM_KEY := KEY_O
 ## ProjectSettings key — persistent master switch between runs.
 const SETTING_ENABLED := "performance_dashboard/enabled"
-const SETTING_ENABLED_DEFAULT := true
+const SETTING_ENABLED_DEFAULT := false
 
 
 static func status_color(current: float, target: float, higher_is_better: bool) -> Color:

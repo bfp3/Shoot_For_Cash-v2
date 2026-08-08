@@ -12,7 +12,7 @@ func clear_pending_fast_travel() -> void:
 
 
 func request_fast_travel(level_id: String) -> void:
-	pending_fast_travel_level = level_id.to_lower()
+	pending_fast_travel_level = gl_DataSet.resolve_place_name(level_id)
 	get_tree().change_scene_to_file("res://sc/Main.tscn")
 
 
@@ -37,7 +37,7 @@ func _input(event) -> void:
 
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.shift_pressed and event.keycode == KEY_M:
-			debug_jump_to_level("moss")
+			debug_jump_to_level(gl_DataSet.get_default_range_name())
 			return
 
 	# Prefer the event itself — is_action_just_pressed() is unreliable inside _input.
@@ -52,11 +52,11 @@ func _input(event) -> void:
 
 ## Instant range jump: land on the open shop menu — do not start the round.
 func debug_jump_to_moss() -> void:
-	await debug_jump_to_level("moss")
+	await debug_jump_to_level(gl_DataSet.get_default_range_name())
 
 
 func debug_jump_to_level(level_id: String) -> void:
-	level_id = level_id.to_lower()
+	level_id = gl_DataSet.resolve_place_name(level_id)
 	if _level_jump_busy:
 		return
 

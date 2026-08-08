@@ -2,9 +2,13 @@ extends Node
 
 var mouse_sensitivity := 1.0
 
+## Persistent meta across title / quit (completed ranges + per-range round index).
+const META_SAVE_PATH := "user://shoot_for_cash_progress.cfg"
+const META_SECTION := "progress"
+
 const RESTART_DATASET := {
 	"cash": 500,
-	"level_name": "moss",
+	"level_name": "moss", # overwritten in reset_level() from gl_DataSet default range
 	"tickets": 1,
 	"debug_add_cash": 1000,
 	
@@ -45,6 +49,9 @@ const RESTART_DATASET := {
 
 	"power_ticket_moss": 0,
 	"power_ticket_redd": 0,
+	"cents_total_earned": 0.0,
+	"completed_places": [],
+	"level_progress": {},
 }
 
 const DEFAULT_DATASET := {
@@ -89,6 +96,9 @@ const DEFAULT_DATASET := {
 
 	"power_ticket_moss": 0,
 	"power_ticket_redd": 0,
+	"cents_total_earned": 0.0,
+	"completed_places": [],
+	"level_progress": {},
 }
 
 var dataset: Dictionary = DEFAULT_DATASET.duplicate(true)
@@ -97,6 +107,11 @@ var round_finished := false
 
 var _log: Array=[]
 var _current_round_log: Array = []
+
+
+func _ready() -> void:
+	load_meta_progress()
+
 
 func next_round() -> void:
 	dataset.perfect_rounds = 0
@@ -279,6 +294,87 @@ func check_all_rocks_cleared() -> void:
 func update_total_winnings(grand_total : int) -> void:
 	dataset.total_winnings += grand_total
 
+
+func get_cents_total_earned() -> float:
+	return float(dataset.get("cents_total_earned", 0.0))
+
+
+func add_cents_total_earned(amount: float) -> void:
+	if amount <= 0.0:
+		return
+	dataset["cents_total_earned"] = get_cents_total_earned() + amount
+
+
+func get_completed_places() -> Array:
+	var places = dataset.get("completed_places", [])
+	return places if places is Array else []
+
+
+func is_place_completed(place_id: String) -> bool:
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	for p in get_completed_places():
+		if gl_DataSet.resolve_place_name(String(p)) == place_id:
+			return true
+	return false
+
+
+func mark_place_completed(place_id: String) -> void:
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	if place_id.is_empty() or place_id == gl_DataSet.get_start_place_name():
+		return
+	if is_place_completed(place_id):
+		save_meta_progress()
+		return
+	var places := get_completed_places().duplicate()
+	places.append(place_id)
+	dataset["completed_places"] = places
+	save_meta_progress()
+
+
+func set_level_progress_entry(place_id: String, entry: Dictionary) -> void:
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	if place_id.is_empty() or place_id == gl_DataSet.get_start_place_name() or place_id == "start":
+		return
+	var stored: Dictionary = {}
+	var raw = dataset.get("level_progress", {})
+	if raw is Dictionary:
+		stored = (raw as Dictionary).duplicate(true)
+	stored[place_id] = entry.duplicate(true)
+	dataset["level_progress"] = stored
+	save_meta_progress()
+
+
+func get_level_progress_entry(place_id: String) -> Dictionary:
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	var stored = dataset.get("level_progress", {})
+	if stored is Dictionary:
+		var entry = stored.get(place_id, {})
+		return entry if entry is Dictionary else {}
+	return {}
+
+
+func save_meta_progress() -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(META_SAVE_PATH) # ok if missing
+	cfg.set_value(META_SECTION, "completed_places", get_completed_places())
+	cfg.set_value(META_SECTION, "level_progress", dataset.get("level_progress", {}))
+	cfg.save(META_SAVE_PATH)
+
+
+func load_meta_progress() -> void:
+	if not FileAccess.file_exists(META_SAVE_PATH):
+		return
+	var cfg := ConfigFile.new()
+	if cfg.load(META_SAVE_PATH) != OK:
+		return
+	var places = cfg.get_value(META_SECTION, "completed_places", [])
+	if places is Array:
+		dataset["completed_places"] = places.duplicate()
+	var progress = cfg.get_value(META_SECTION, "level_progress", {})
+	if progress is Dictionary:
+		dataset["level_progress"] = (progress as Dictionary).duplicate(true)
+
+
 func log_buy(power_name:String, price:float, unit:int=1) -> bool:
 	
 	if not dataset.has(power_name):
@@ -364,16 +460,15 @@ func get_demo_stats() -> Dictionary:
 
 
 func change_location(_new_location : String) -> bool:
-	_new_location = _new_location.to_lower()
-	if _new_location == dataset.level_name:
+	_new_location = gl_DataSet.resolve_place_name(_new_location)
+	if _new_location == gl_DataSet.resolve_place_name(String(dataset.level_name)):
 		print('we are already here do not move')
 		return false
 
-	var location_names : Array = gl_DataSet.dataset_string["place_name"]
-	if not location_names.has(_new_location):
+	if not gl_DataSet.has_place(_new_location):
 		print('error in change location')
 		return false
-	if _new_location == 'start':
+	if _new_location == gl_DataSet.get_start_place_name() or _new_location == 'start':
 		print('error in change location - cannot travel to start')
 		return false
 
@@ -402,13 +497,36 @@ func buy_all_upgrades() -> void:
 	dataset.power_bullet_delay = 9
 
 func reset_all() -> void:
+	# Keep range completion / round progress across title returns.
+	var kept_places = get_completed_places().duplicate()
+	var kept_progress = dataset.get("level_progress", {})
+	if kept_progress is Dictionary:
+		kept_progress = (kept_progress as Dictionary).duplicate(true)
+	else:
+		kept_progress = {}
+
 	dataset = DEFAULT_DATASET.duplicate(true)
-	
+	dataset["completed_places"] = kept_places
+	dataset["level_progress"] = kept_progress
+
 	_log.clear()
 	_current_round_log.clear()
+	# Prefer disk copy if present (covers quit → relaunch edge cases).
+	load_meta_progress()
+
 
 func reset_level() -> void:
+	var kept_places = get_completed_places().duplicate()
+	var kept_progress = dataset.get("level_progress", {})
+	if kept_progress is Dictionary:
+		kept_progress = (kept_progress as Dictionary).duplicate(true)
+	else:
+		kept_progress = {}
+
 	dataset = RESTART_DATASET.duplicate(true)
-	
+	dataset.level_name = gl_DataSet.get_default_range_name()
+	dataset["completed_places"] = kept_places
+	dataset["level_progress"] = kept_progress
 	_log.clear()
 	_current_round_log.clear()
+	load_meta_progress()

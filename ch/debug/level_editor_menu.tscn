@@ -11,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 script = ExtResource("1_script")
 
 [node name="Dim" type="ColorRect" parent="." unique_id=627906894]
@@ -29,6 +30,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.25, 1.25)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="Cluster" type="Control" parent="Center" unique_id=1888002100]
@@ -172,6 +175,7 @@ vertical_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"RedRichText"
+theme_override_font_sizes/normal_font_size = 34
 bbcode_enabled = true
 text = "SHIFT + K = Toggle KEY"
 fit_content = true

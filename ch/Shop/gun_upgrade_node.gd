@@ -236,7 +236,13 @@ func reset_buttons_settings() -> void:
 
 	
 func _on_button_down() -> void:
-	
+	# Solo / gun already owned: reopen the map instead of silently no-oping.
+	if current_state == State.PURCHASED and upgrade_type == "gun":
+		var map_menu := get_tree().get_first_node_in_group("map_menu")
+		if map_menu and map_menu.has_method("open_pop_up"):
+			map_menu.open_pop_up()
+		return
+
 	if current_state != State.AVAILABLE && cost > 0:
 		shop_main_menu.purchase_denied_tween()
 		

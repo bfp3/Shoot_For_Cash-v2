@@ -204,7 +204,7 @@ func _apply_styles() -> void:
 	_script_edit.add_theme_color_override("caret_color", COLOR_RED)
 	if _font:
 		_script_edit.add_theme_font_override("font", _font)
-		_script_edit.add_theme_font_size_override("font_size", 22)
+		#_script_edit.add_theme_font_size_override("font_size", 22)
 		_title_label.add_theme_font_override("font", _font)
 		_test_button.add_theme_font_override("font", _font)
 		_back_button.add_theme_font_override("font", _font)
