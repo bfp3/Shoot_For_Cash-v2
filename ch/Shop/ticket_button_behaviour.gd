@@ -108,17 +108,19 @@ func _update_tickets() -> void:
 		var price_key := gl_DataSet.get_ticket_price_key(location_name)
 		# Legacy price keys (backwater/sodomi) if place was renamed in data.
 		if not gl_DataSet.dataset_float.has(price_key):
-			match place_index:
-				0:
-					price_key = 'price_ticket_moss'
-				1:
-					price_key = 'price_ticket_redd'
-				2:
-					price_key = 'price_ticket_glory'
-				3:
-					price_key = 'price_ticket_backwater'
-				4:
-					price_key = 'price_ticket_sodomi'
+				match place_index:
+					0:
+						price_key = 'price_ticket_moss'
+					1:
+						price_key = 'price_ticket_redd'
+					2:
+						price_key = 'price_ticket_glory'
+					3:
+						price_key = 'price_ticket_backwater'
+					4:
+						price_key = 'price_ticket_noir'
+					5:
+						price_key = 'price_ticket_vesper'
 		ticket_price = int(gl_DataSet.get_value(price_key, 0))
 
 	price_label.text = "$" + str(ticket_price)

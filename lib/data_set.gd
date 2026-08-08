@@ -40,10 +40,14 @@ var dataset_float : Dictionary = {
 	,'power_ticket_moss' 			: [0]
 	
 	,'power_ticket_redd' 			: [0]
+	,'power_ticket_noir' 			: [0]
+	,'power_ticket_vesper' 			: [0]
 	
 	,'price_ticket_moss' 		: [0]
 	,'price_ticket_redd' 		: [20000] #180
 	,'price_ticket_glory' 		: [1800]
+	,'price_ticket_noir' 		: [5000]
+	,'price_ticket_vesper' 		: [5000]
 	,'price_ticket_backwater' 	: [5000]
 	,'price_ticket_sodomi' 		: [5000]
 	
@@ -84,7 +88,7 @@ var dataset_float : Dictionary = {
 	}
 
 var dataset_string : Dictionary = {
-	 "place_name" 				: ['moss','redd','glory','jetz','blackwaters', 'sodomi', 'start']
+	 "place_name" 				: ['moss','redd','glory','jetz','noir', 'vesper', 'start']
 	
 	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']

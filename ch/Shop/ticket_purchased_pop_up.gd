@@ -12,6 +12,9 @@ var _selecting_level := false
 @onready var close_button: Button = $CloseMapButton
 @onready var moss_button: Control = $TreePanel/Buttons/Level_button_selector
 @onready var redd_button: Control = $TreePanel/Buttons/Level_button_selector2
+@onready var glory_button: Control = $TreePanel/Buttons/Level_button_selector3
+@onready var noir_button: Control = $TreePanel/Buttons/Level_button_selector4
+@onready var vesper_button: Control = $TreePanel/Buttons/Level_button_selector5
 
 
 func _ready() -> void:
@@ -79,37 +82,34 @@ func display_ticket() -> void:
 	await open_pop_up()
 
 
+func _map_level_buttons() -> Array:
+	return [moss_button, redd_button, glory_button, noir_button, vesper_button]
+
+
+func _unlock_map_button(button: Control) -> void:
+	if button == null:
+		return
+	button.visible = true
+	button.level_locked = false
+	if button.has_method('set_unlocked_visuals'):
+		button.set_unlocked_visuals()
+	elif button.get('current_state') != null and button.get('State') != null:
+		if button.current_state != button.State.UNLOCKED:
+			button.current_state = button.State.UNLOCKED
+			if button.get('level_name_label'):
+				button.level_name_label.text = "[wave]" + String(button.level_name).to_upper()
+
+
 func _refresh_level_buttons() -> void:
-	# Moss is always available after the opening purchase flow.
-	if moss_button:
-		moss_button.visible = true
-		moss_button.level_locked = false
-		if moss_button.has_method('set_unlocked_visuals'):
-			moss_button.set_unlocked_visuals()
-		elif moss_button.current_state != moss_button.State.UNLOCKED:
-			moss_button.current_state = moss_button.State.UNLOCKED
-			moss_button.level_name_label.text = "[wave]" + String(moss_button.level_name).to_upper()
-
-	# Redd is playable from the map once the player has left start.
-	if redd_button:
-		redd_button.visible = true
-		redd_button.level_locked = false
-		if redd_button.has_method('set_unlocked_visuals'):
-			redd_button.set_unlocked_visuals()
-		else:
-			redd_button.current_state = redd_button.State.UNLOCKED
-			redd_button.level_name_label.text = "[wave]" + String(redd_button.level_name).to_upper()
-			redd_button.level_name_label.add_theme_font_size_override("normal_font_size", 109)
-			if redd_button.has_node('HSeparator'):
-				redd_button.get_node('HSeparator').scale.x = 1.0
-
+	for button in _map_level_buttons():
+		_unlock_map_button(button)
 	_apply_completion_stamps(false)
 
 
 ## Stamp the place button that matches place_id (tally-card style when animate).
 func mark_place_completed(place_id: String, animate: bool = true) -> void:
 	place_id = gl_DataSet.resolve_place_name(place_id)
-	for button in [moss_button, redd_button]:
+	for button in _map_level_buttons():
 		if button == null:
 			continue
 		var button_place := gl_DataSet.resolve_place_name(String(button.level_name).to_lower())
@@ -122,7 +122,7 @@ func mark_place_completed(place_id: String, animate: bool = true) -> void:
 
 
 func _apply_completion_stamps(animate: bool) -> void:
-	for button in [moss_button, redd_button]:
+	for button in _map_level_buttons():
 		if button and button.has_method("_refresh_completion_stamp"):
 			button._refresh_completion_stamp(animate)
 

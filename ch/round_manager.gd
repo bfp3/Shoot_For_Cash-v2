@@ -6,7 +6,11 @@ const LEVEL_LAYOUT_00_OPENING_SCENE = preload('uid://88s7u86w4lfr')
 const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
 const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
 const LEVEL_LAYOUT_03_GLORY = preload('uid://cu16ohrbbd3rb')
+const LEVEL_LAYOUT_04_NOIR = preload("res://sc/All_level_layouts/level_layout_04_noir.tscn")
+const LEVEL_LAYOUT_05_VESPER = preload("res://sc/All_level_layouts/level_layout_05_vesper.tscn")
+
 #const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
+
 
 
 const LEVEL_FILE_PATH := 'res://sc/island-shipper.txt'
@@ -1130,6 +1134,10 @@ func _layout_for_level(level_id: String) -> PackedScene:
 			return LEVEL_LAYOUT_03_GLORY
 		3:
 			return LEVEL_LAYOUT_000_JETZ
+		4:
+			return LEVEL_LAYOUT_04_NOIR
+		5:
+			return LEVEL_LAYOUT_05_VESPER
 		_:
 			return null
 
