@@ -7,7 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="5_18iyv"]
 [ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="6_tx3k1"]
 
-[node name="MainLofi" type="Control"]
+[node name="MainLofi" type="Control" unique_id=1709058997]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,7 +16,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lofi")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=25556278]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,7 +25,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.921569, 0.878431, 0.847059, 1)
 
-[node name="MiniGameHost" type="Control" parent="."]
+[node name="MiniGameHost" type="Control" parent="." unique_id=1779262485]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,7 +34,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=40830579]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -42,34 +42,34 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBox" type="HBoxContainer" parent="Center"]
+[node name="HBox" type="HBoxContainer" parent="Center" unique_id=679999512]
 layout_mode = 2
 theme_override_constants/separation = 28
 
-[node name="LaunchPanel" type="PanelContainer" parent="Center/HBox"]
+[node name="LaunchPanel" type="PanelContainer" parent="Center/HBox" unique_id=2146100958]
 custom_minimum_size = Vector2(720, 760)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("2_panel")
 
-[node name="Margin" type="MarginContainer" parent="Center/HBox/LaunchPanel"]
+[node name="Margin" type="MarginContainer" parent="Center/HBox/LaunchPanel" unique_id=1319801092]
 layout_mode = 2
 theme_override_constants/margin_left = 36
 theme_override_constants/margin_top = 28
 theme_override_constants/margin_right = 36
 theme_override_constants/margin_bottom = 28
 
-[node name="VBox" type="VBoxContainer" parent="Center/HBox/LaunchPanel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Center/HBox/LaunchPanel/Margin" unique_id=138086766]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Title" type="RichTextLabel" parent="Center/HBox/LaunchPanel/Margin/VBox"]
+[node name="Title" type="RichTextLabel" parent="Center/HBox/LaunchPanel/Margin/VBox" unique_id=678813281]
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 64
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="Subtitle" type="RichTextLabel" parent="Center/HBox/LaunchPanel/Margin/VBox"]
+[node name="Subtitle" type="RichTextLabel" parent="Center/HBox/LaunchPanel/Margin/VBox" unique_id=1496882236]
 layout_mode = 2
 theme_type_variation = &"RedRichText"
 theme_override_font_sizes/normal_font_size = 140
@@ -78,11 +78,11 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Center/HBox/LaunchPanel/Margin/VBox"]
+[node name="Spacer" type="Control" parent="Center/HBox/LaunchPanel/Margin/VBox" unique_id=1028039732]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
-[node name="GoToIntro" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="GoToIntro" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" unique_id=413492721 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 80
@@ -94,7 +94,7 @@ purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="GoToMoss" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="GoToMoss" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" unique_id=766180069 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 80
@@ -106,7 +106,7 @@ purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="GoToRedd" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="GoToRedd" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" unique_id=1855811136 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 80
@@ -118,7 +118,7 @@ purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="GoToGlory" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="GoToGlory" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" unique_id=1484410572 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 80
@@ -130,7 +130,7 @@ purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="GoToTesting" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="GoToTesting" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" unique_id=1058297345 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 80
@@ -142,7 +142,8 @@ purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="GoToMiniGame" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="GoToMiniGame" type="Button" parent="Center/HBox/LaunchPanel/Margin/VBox" unique_id=1692252747 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+visible = false
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 80
@@ -154,23 +155,23 @@ purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="SessionPanel" type="PanelContainer" parent="Center/HBox"]
+[node name="SessionPanel" type="PanelContainer" parent="Center/HBox" unique_id=1096033278]
 custom_minimum_size = Vector2(420, 760)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("2_panel")
 
-[node name="Margin" type="MarginContainer" parent="Center/HBox/SessionPanel"]
+[node name="Margin" type="MarginContainer" parent="Center/HBox/SessionPanel" unique_id=364704220]
 layout_mode = 2
 theme_override_constants/margin_left = 28
 theme_override_constants/margin_top = 28
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 28
 
-[node name="VBox" type="VBoxContainer" parent="Center/HBox/SessionPanel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Center/HBox/SessionPanel/Margin" unique_id=1940025265]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="SessionTitle" type="RichTextLabel" parent="Center/HBox/SessionPanel/Margin/VBox"]
+[node name="SessionTitle" type="RichTextLabel" parent="Center/HBox/SessionPanel/Margin/VBox" unique_id=1024562971]
 layout_mode = 2
 theme_type_variation = &"RedRichText"
 theme_override_font_sizes/normal_font_size = 72
@@ -179,20 +180,20 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="SessionStatus" type="RichTextLabel" parent="Center/HBox/SessionPanel/Margin/VBox"]
+[node name="SessionStatus" type="RichTextLabel" parent="Center/HBox/SessionPanel/Margin/VBox" unique_id=360061554]
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
-bbcode_enabled = true
 theme_override_font_sizes/normal_font_size = 28
+bbcode_enabled = true
 text = "[center]Test Mode[/center]"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Center/HBox/SessionPanel/Margin/VBox"]
+[node name="Spacer" type="Control" parent="Center/HBox/SessionPanel/Margin/VBox" unique_id=1146950412]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 
-[node name="TestMode" type="Button" parent="Center/HBox/SessionPanel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="TestMode" type="Button" parent="Center/HBox/SessionPanel/Margin/VBox" unique_id=82965906 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 56
@@ -204,7 +205,7 @@ purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="ClearSave" type="Button" parent="Center/HBox/SessionPanel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="ClearSave" type="Button" parent="Center/HBox/SessionPanel/Margin/VBox" unique_id=1289180820 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 48
@@ -216,7 +217,7 @@ purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="LoadGame" type="Button" parent="Center/HBox/SessionPanel/Margin/VBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="LoadGame" type="Button" parent="Center/HBox/SessionPanel/Margin/VBox" unique_id=1143899402 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 56
@@ -228,7 +229,7 @@ purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="ConfirmClear" type="ColorRect" parent="."]
+[node name="ConfirmClear" type="ColorRect" parent="." unique_id=29533637]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -236,10 +237,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 color = Color(0.05, 0.05, 0.05, 0.72)
 
-[node name="Center" type="CenterContainer" parent="ConfirmClear"]
+[node name="Center" type="CenterContainer" parent="ConfirmClear" unique_id=835811987]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -247,76 +247,70 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="ConfirmClear/Center"]
+[node name="Panel" type="PanelContainer" parent="ConfirmClear/Center" unique_id=1756679280]
 custom_minimum_size = Vector2(640, 360)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("2_panel")
 
-[node name="Margin" type="MarginContainer" parent="ConfirmClear/Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="ConfirmClear/Center/Panel" unique_id=103832793]
 layout_mode = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 28
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 28
 
-[node name="VBox" type="VBoxContainer" parent="ConfirmClear/Center/Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="ConfirmClear/Center/Panel/Margin" unique_id=505115582]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="Prompt" type="RichTextLabel" parent="ConfirmClear/Center/Panel/Margin/VBox"]
+[node name="Prompt" type="RichTextLabel" parent="ConfirmClear/Center/Panel/Margin/VBox" unique_id=1581082015]
 layout_mode = 2
-bbcode_enabled = true
 theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
 text = "[center]Are You Sure?[/center]"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="HBox" type="HBoxContainer" parent="ConfirmClear/Center/Panel/Margin/VBox"]
+[node name="HBox" type="HBoxContainer" parent="ConfirmClear/Center/Panel/Margin/VBox" unique_id=1938336965]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="Yes" type="Button" parent="ConfirmClear/Center/Panel/Margin/VBox/HBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="Yes" type="Button" parent="ConfirmClear/Center/Panel/Margin/VBox/HBox" unique_id=611513749]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 56
 text = "Yes"
 script = ExtResource("3_r4124")
-focus_enter_sfx = NodePath("../../../../../../focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../focus_exit")
-purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="No" type="Button" parent="ConfirmClear/Center/Panel/Margin/VBox/HBox" node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="No" type="Button" parent="ConfirmClear/Center/Panel/Margin/VBox/HBox" unique_id=1550897432]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 56
 text = "No"
 script = ExtResource("3_r4124")
-focus_enter_sfx = NodePath("../../../../../../focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../focus_exit")
-purchase_sfx = NodePath("../../../../../../shop_open_sfx_01")
 wiggle_amount = 1.05
 using_customer_pivot_offset = true
 
-[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="."]
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="." unique_id=69088049]
 stream = ExtResource("4_42xgg")
 volume_db = -32.0
 
-[node name="focus_exit" type="AudioStreamPlayer" parent="."]
+[node name="focus_exit" type="AudioStreamPlayer" parent="." unique_id=739382906]
 stream = ExtResource("4_42xgg")
 volume_db = -50.0
 
-[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="."]
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="." unique_id=71846816]
 stream = ExtResource("5_18iyv")
 volume_db = -40.0
 pitch_scale = 2.0
 
-[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="."]
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="." unique_id=1300252714]
 stream = ExtResource("6_tx3k1")
 volume_db = -40.0
 pitch_scale = 1.5

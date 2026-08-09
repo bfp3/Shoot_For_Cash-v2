@@ -111,6 +111,7 @@ func _ensure_retro_effects_enabled(master_idx: int, enabled: bool) -> void:
 
 
 func _apply_retro_blend(blend: float, master_idx: int = -1) -> void:
+	return
 	if master_idx < 0:
 		master_idx = AudioServer.get_bus_index("Master")
 	if master_idx < 0:

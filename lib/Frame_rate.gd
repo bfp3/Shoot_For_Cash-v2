@@ -8,6 +8,10 @@ func _on_timer_timeout() -> void:
 	$Label.text = str(fps) + "\nDRAW CALLS: " + str(draw_calls)
 
 func _input(event: InputEvent) -> void:
-	if Input.is_key_label_pressed(KEY_0):
+	if !Engine.is_editor_hint():
+		set_process_input(false)
+		return
+	
+	if Input.is_action_just_pressed('toggle_draw_calls'):
 		visible = !visible
 #hi baby

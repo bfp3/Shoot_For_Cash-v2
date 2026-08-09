@@ -112,7 +112,7 @@ const SCOPE_EXPAND_MAX_SCALE := 2.0
 @export_range(1, 24, 1) var bullets_per_wave := 12
 @export var bullet_tick_color := Color(0.78, 0.02, 0.02, 0.85)
 @export_range(2.0, 16.0, 0.5) var bullet_tick_length := 7.0
-@export_range(1.0, 4.0, 0.1) var bullet_tick_width := 2.0
+const bullet_tick_width := 50.0
 @export_range(4.0, 40.0, 0.5) var bullet_tick_gap := 10.0
 
 const CREAM := Color(0.92156863, 0.8784314, 0.84705883, 1.0)
@@ -242,8 +242,8 @@ const GRID_LINE_COLOR := Color(0.78, 0.02, 0.02, 0.35)
 @export_range(0.05, 2.0, 0.01) var cherry_bounce := 0.85
 @export_range(0.05, 2.0, 0.01) var cherry_gravity_scale := 0.55
 @export var cherry_money := 0.25
-@export_range(30.0, 45.0, 0.5) var cherry_angle_min_deg := 30.0
-@export_range(30.0, 45.0, 0.5) var cherry_angle_max_deg := 45.0
+@export_range(10.0, 45.0, 0.5) var cherry_angle_min_deg := 30.0
+@export_range(10.0, 45.0, 0.5) var cherry_angle_max_deg := 45.0
 
 @export_group("Balloons")
 @export_range(0, 6, 1) var balloons_per_wave_max := 2
@@ -2142,8 +2142,8 @@ func _cleanup_fallen_rocks() -> void:
 			continue
 		if rock.pulsed and rock.position.y > wall_y + rock.radius + 40.0 and rock.linear_velocity.y > 0.0:
 			var fall_pos := rock.position
-			var mini := rock as ShopMiniRock
-			var kind: ShopMiniRock.RockKind = mini.kind if mini else ShopMiniRock.RockKind.BASIC
+			var mini_rock := rock as ShopMiniRock
+			var kind: ShopMiniRock.RockKind = mini_rock.kind if mini_rock else ShopMiniRock.RockKind.BASIC
 			_play_splash(fall_pos)
 			# Black rocks are hazards to avoid — letting them fall is success (no strike).
 			if kind != ShopMiniRock.RockKind.BLACK:
@@ -3581,7 +3581,7 @@ func _draw_overlay() -> void:
 		_draw_crosshair(_crosshair)
 	# Subtle aim circle matching current shrink radius.
 	var aim_c := _active_hud_color
-	_overlay.draw_arc(_crosshair, _current_target_radius, 0.0, TAU, 48, Color(aim_c.r, aim_c.g, aim_c.b, 0.25), 1.25, true)
+	_overlay.draw_arc(_crosshair, _current_target_radius, 0.0, TAU, 48, Color(aim_c.r, aim_c.g, aim_c.b, 0.25), 5.25, true)
 
 
 func _draw_aim_grid(area: Vector2) -> void:
@@ -3694,21 +3694,22 @@ func _draw_flashes() -> void:
 		var color := Color(_active_hud_color.r, _active_hud_color.g, _active_hud_color.b, alpha)
 		if flash.get("burst", false):
 			var r := (0.22 - t) * 90.0
-			_overlay.draw_arc(pos, maxf(r, CROSSHAIR_RADIUS - 5.0), 0.0, TAU, 18, color, 1.5, true)
+			_overlay.draw_arc(pos, maxf(r, CROSSHAIR_RADIUS - 5.0), 0.0, TAU, 18, color, 5.5, true)
 		#else:
 			#_overlay.draw_circle(pos, 3.0, color)
 
 
 func _draw_crosshair(pos: Vector2) -> void:
-	return
-	#var r := CROSSHAIR_RADIUS
+	#return
+	var r := CROSSHAIR_RADIUS
+	var tick_colour := Color("ffffff30")
 	#_overlay.draw_arc(pos, r, 0.0, TAU, 48, CROSSHAIR_RED, 2.0, true)
 	#_overlay.draw_circle(pos, 12.2, Color("ff000028"))
-	#var tick := 30.0
-	#_overlay.draw_line(pos + Vector2(0, -r - tick), pos + Vector2(0, -r), CROSSHAIR_RED, 2.0, true)
-	#_overlay.draw_line(pos + Vector2(0, r), pos + Vector2(0, r + tick), CROSSHAIR_RED, 2.0, true)
-	#_overlay.draw_line(pos + Vector2(-r - tick, 0), pos + Vector2(-r, 0), CROSSHAIR_RED, 2.0, true)
-	#_overlay.draw_line(pos + Vector2(r, 0), pos + Vector2(r + tick, 0), CROSSHAIR_RED, 2.0, true)
+	var tick := 300.0
+	_overlay.draw_line(pos + Vector2(0, -r - tick), pos + Vector2(0, -r - 70), tick_colour, 2.0, true)
+	_overlay.draw_line(pos + Vector2(0, r + 70), pos + Vector2(0, r + tick), tick_colour, 2.0, true)
+	_overlay.draw_line(pos + Vector2(-r - tick, 0), pos + Vector2(-r - 70, 0), tick_colour, 2.0, true)
+	_overlay.draw_line(pos + Vector2(r + 70, 0), pos + Vector2(r + tick, 0), tick_colour, 2.0, true)
 
 
 func crosshair_blink() -> void:

@@ -116,7 +116,7 @@ func warm_packed_scene(scene: PackedScene, label: String = "level assets") -> vo
 	_ensure_booth()
 	_overlay_set_visible(true)
 	_overlay_update(0, 1, "Compiling %s..." % label)
-	await _warm_scene_instance(scene, label)
+	_warm_scene_instance(scene, label)
 	await _settle()
 	_teardown_booth_contents()
 	if _camera:
@@ -368,7 +368,7 @@ func _execute_job(job: Dictionary) -> void:
 		"scene":
 			var packed := load(path) as PackedScene
 			if packed:
-				await _warm_scene_instance(packed, path.get_file())
+				_warm_scene_instance(packed, path.get_file())
 		"material":
 			var mat := load(path)
 			if mat is Material:

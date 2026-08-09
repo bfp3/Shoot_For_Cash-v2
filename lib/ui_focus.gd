@@ -107,7 +107,7 @@ func find_first_focusable(root: Node = null) -> Control:
 	return _find_first_under(tree_root)
 
 
-func wire_vertical(controls: Array, wrap := true) -> void:
+func wire_vertical(controls: Array, _wrap := true) -> void:
 	var usable: Array[Control] = []
 	for item in controls:
 		if item is Control and _can_focus(item as Control):
@@ -116,15 +116,15 @@ func wire_vertical(controls: Array, wrap := true) -> void:
 	if n < 2:
 		return
 	for i in n:
-		var prev_i := (i - 1 + n) % n if wrap else maxi(i - 1, 0)
-		var next_i := (i + 1) % n if wrap else mini(i + 1, n - 1)
+		var prev_i := (i - 1 + n) % n if _wrap else maxi(i - 1, 0)
+		var next_i := (i + 1) % n if _wrap else mini(i + 1, n - 1)
 		usable[i].focus_neighbor_top = usable[prev_i].get_path()
 		usable[i].focus_neighbor_bottom = usable[next_i].get_path()
 		usable[i].focus_previous = usable[prev_i].get_path()
 		usable[i].focus_next = usable[next_i].get_path()
 
 
-func wire_horizontal(controls: Array, wrap := true) -> void:
+func wire_horizontal(controls: Array, _wrap := true) -> void:
 	var usable: Array[Control] = []
 	for item in controls:
 		if item is Control and _can_focus(item as Control):
@@ -133,8 +133,8 @@ func wire_horizontal(controls: Array, wrap := true) -> void:
 	if n < 2:
 		return
 	for i in n:
-		var prev_i := (i - 1 + n) % n if wrap else maxi(i - 1, 0)
-		var next_i := (i + 1) % n if wrap else mini(i + 1, n - 1)
+		var prev_i := (i - 1 + n) % n if _wrap else maxi(i - 1, 0)
+		var next_i := (i + 1) % n if _wrap else mini(i + 1, n - 1)
 		usable[i].focus_neighbor_left = usable[prev_i].get_path()
 		usable[i].focus_neighbor_right = usable[next_i].get_path()
 		usable[i].focus_previous = usable[prev_i].get_path()

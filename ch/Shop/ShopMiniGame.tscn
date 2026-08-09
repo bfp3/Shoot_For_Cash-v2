@@ -215,6 +215,7 @@ blue_day_strike_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
 pillar_texture = ExtResource("25_pillar")
 pillar_collision_width_ratio = 0.15
 pillar_collision_height_ratio = 0.77
+wind_enabled = false
 wind_amount = 10
 wind_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
 wind_speed = 20.0
@@ -241,7 +242,10 @@ orange_apex_y_ratio = 0.7
 orange_blast_radius = 280.0
 orange_blast_duration = 0.8
 cherry_texture = ExtResource("4_abof3")
-cherry_launch_speed = 1500.0
+cherry_launch_speed = 1100.0
+cherry_bounce = 2.0
+cherry_angle_min_deg = 10.0
+cherry_angle_max_deg = 20.0
 smoke_can_money = 0.0
 fire_shake_strength = 2.5
 destroy_shake_strength = 5.0
@@ -664,17 +668,17 @@ vertical_alignment = 1
 
 [node name="take_damage_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=151976393]
 stream = ExtResource("5_dmg")
-volume_db = -20.0
+volume_db = -25.0
 max_polyphony = 4
 
 [node name="hitSound" type="AudioStreamPlayer" parent="SFX" unique_id=1141854931]
 stream = ExtResource("4_hit")
-volume_db = -35.0
+volume_db = -47.0
 max_polyphony = 2
 
 [node name="explosion_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=327818115]
 stream = ExtResource("6_expl")
-volume_db = -30.0
+volume_db = -35.0
 max_polyphony = 2
 
 [node name="Shoot_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=772083119]
@@ -704,21 +708,22 @@ volume_db = -30.0
 
 [node name="Flicker_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1597879859]
 stream = ExtResource("15_8xmsh")
-volume_db = -25.0
+volume_db = -30.0
 
 [node name="progress_rock_sound" type="AudioStreamPlayer" parent="SFX" unique_id=768257320]
 stream = ExtResource("15_8xmsh")
-volume_db = -22.0
+volume_db = -32.0
 pitch_scale = 0.85
 
 [node name="pitch_shift_rock_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1738269755]
 stream = ExtResource("15_8xmsh")
-volume_db = -16.0
+volume_db = -36.0
 pitch_scale = 0.85
 
 [node name="Pineapple_launch_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1062895011]
 stream = ExtResource("16_pine_launch")
-volume_db = -35.0
+volume_db = -39.0
+pitch_scale = 1.2
 max_polyphony = 3
 
 [node name="Pineapple_sound_hit" type="AudioStreamPlayer" parent="SFX" unique_id=1134337374]
@@ -728,12 +733,12 @@ max_polyphony = 3
 
 [node name="Pineapple_shot_explode" type="AudioStreamPlayer" parent="SFX" unique_id=1296044795]
 stream = ExtResource("15_8xmsh")
-volume_db = -24.0
+volume_db = -27.0
 max_polyphony = 2
 
 [node name="Pineapple_destroyed" type="AudioStreamPlayer" parent="SFX" unique_id=573309326]
 stream = ExtResource("18_pine_done")
-volume_db = -16.0
+volume_db = -26.0
 max_polyphony = 2
 
 [node name="MultiShotSFX" type="AudioStreamPlayer" parent="SFX" unique_id=978327423]
@@ -748,7 +753,7 @@ max_polyphony = 3
 
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=46656239]
 stream = ExtResource("15_8xmsh")
-volume_db = -10.0
+volume_db = -20.0
 pitch_scale = 0.7
 max_polyphony = 2
 
@@ -764,7 +769,8 @@ max_polyphony = 2
 
 [node name="WaveAnnounce" type="AudioStreamPlayer" parent="SFX" unique_id=1523379183]
 stream = ExtResource("24_wave")
-volume_db = -35.0
+volume_db = -50.0
+pitch_scale = 0.5
 
 [node name="TitleIntro" type="AudioStreamPlayer" parent="SFX" unique_id=2129660971]
 stream = ExtResource("19_multishot")

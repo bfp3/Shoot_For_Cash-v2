@@ -8,7 +8,7 @@ const MAIN_SCENE := "res://sc/Main.tscn"
 const SHOP_MINI_GAME_SCENE := preload("res://ch/Shop/ShopMiniGame.tscn")
 
 @onready var _launcher_panel: Control = $Center
-@onready var _mini_game_host: Control = $MiniGameHost
+#@onready var _mini_game_host: Control = $MiniGameHost
 @onready var _session_status: RichTextLabel = $Center/HBox/SessionPanel/Margin/VBox/SessionStatus
 @onready var _test_btn: Button = $Center/HBox/SessionPanel/Margin/VBox/TestMode
 @onready var _clear_btn: Button = $Center/HBox/SessionPanel/Margin/VBox/ClearSave

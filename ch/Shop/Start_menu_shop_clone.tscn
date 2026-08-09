@@ -234,17 +234,6 @@ focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
 wiggle_amount = 1.1
 
-[node name="Button2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/GridContainer" unique_id=1410574905]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
-theme_override_colors/font_disabled_color = Color(0.64, 0.6101333, 0.5888, 1)
-theme_override_font_sizes/font_size = 51
-theme_override_styles/normal = SubResource("StyleBoxFlat_ajb5j")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_vy88d")
-disabled = true
-text = "Multiplayer"
-
 [node name="Button3" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/GridContainer" unique_id=1004880074 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
@@ -257,6 +246,17 @@ script = ExtResource("4_jgqed")
 focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
 wiggle_amount = 1.1
+
+[node name="Button2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/GridContainer" unique_id=1410574905]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+theme_override_colors/font_disabled_color = Color(0.64, 0.6101333, 0.5888, 1)
+theme_override_font_sizes/font_size = 51
+theme_override_styles/normal = SubResource("StyleBoxFlat_ajb5j")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_vy88d")
+disabled = true
+text = "Multiplayer"
 
 [node name="Button4" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/GridContainer" unique_id=1532106151]
 custom_minimum_size = Vector2(100, 100)
