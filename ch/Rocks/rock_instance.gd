@@ -110,6 +110,8 @@ var ignores_x_out_of_bounds := false
 ## Set by RockManager once this rock has been inside the camera viewport.
 ## Off-screen spawns won't miss until they've entered play at least once.
 var has_entered_camera_view := false
+## Bumps to cancel a pending airborne rock–rock collision schedule.
+var _airborne_collision_token := 0
 
 
 
@@ -117,6 +119,11 @@ func _ready() -> void:
 	
 	start_pos = global_position
 	target_x_position = start_pos.x
+	# Own a unique physics material so bounce tweaks never leak across pooled rocks.
+	if physics_material_override != null:
+		physics_material_override = physics_material_override.duplicate()
+	else:
+		physics_material_override = PhysicsMaterial.new()
 	
 	await get_tree().create_timer(0.2).timeout
 	
@@ -256,6 +263,8 @@ func round_end_check_rock_status() -> void:
 
 func update_disabled() -> void:
 	update_gravity(1.0)
+	# Keep layer 1 for remaining interactions, but stop rock–rock bounce while parked.
+	_cancel_airborne_rock_collisions()
 	#await get_tree().create_timer(2.0).timeout
 	#disable_collision()
 	#remove_from_group('Target')
@@ -263,12 +272,52 @@ func update_disabled() -> void:
 
 
 func disable_collision() -> void:
+	_cancel_airborne_rock_collisions()
 	set_collision_layer_value(1, false)
 	$Explosion_area.monitoring = false
 	$Explosion_area/CollisionShape3D.disabled = true
 
 func enable_collision() -> void:
+	# Layer 1 only — rock–rock mask stays off until schedule_airborne_rock_collisions().
 	set_collision_layer_value(1, true)
+	set_collision_mask_value(1, false)
+
+
+## After launch settles: allow this rock to collide / bounce with other airborne rocks.
+## Safe to call during pulse — delay keeps dormant launch stacking from shoving neighbors.
+func schedule_airborne_rock_collisions(delay_sec: float, bounce: float) -> void:
+	_airborne_collision_token += 1
+	var token := _airborne_collision_token
+	set_collision_mask_value(1, false)
+
+	if delay_sec <= 0.0:
+		if current_state == State.ACTIVE and rock_activated:
+			_enable_airborne_rock_collisions(bounce)
+		return
+
+	get_tree().create_timer(delay_sec).timeout.connect(
+		func () -> void:
+			if token != _airborne_collision_token:
+				return
+			if current_state != State.ACTIVE or not rock_activated:
+				return
+			_enable_airborne_rock_collisions(bounce),
+		CONNECT_ONE_SHOT
+	)
+
+
+func _enable_airborne_rock_collisions(bounce: float) -> void:
+	set_collision_mask_value(1, true)
+	if physics_material_override == null:
+		physics_material_override = PhysicsMaterial.new()
+	physics_material_override.bounce = clampf(bounce, 0.0, 1.0)
+
+
+func _cancel_airborne_rock_collisions() -> void:
+	_airborne_collision_token += 1
+	set_collision_mask_value(1, false)
+	if physics_material_override != null:
+		physics_material_override.bounce = 0.0
 
 
 func update_gravity(_gravity_scale : float) -> void:
@@ -619,6 +668,7 @@ func reset_stats() -> void:
 	is_deactivated = false
 	ballistic_aim_active = false
 	_ballistic_in_descent = false
+	_cancel_airborne_rock_collisions()
 	global_position = start_pos
 	await get_tree().process_frame
 	
@@ -1045,8 +1095,7 @@ func play_destroy_sfx() -> void:
 
 func _on_start_falling_timer_timeout() -> void:
 	falling = true
-	#set_collision_layer_value(1, true)
-	#set_collision_mask_value(1, true)
+	# Rock–rock collision is scheduled after launch via schedule_airborne_rock_collisions().
 	
 	if rock_type == RockSize.SMOKECAN:
 		var damage_mesh = current_mesh.get_child(0) 

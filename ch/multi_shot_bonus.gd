@@ -69,26 +69,27 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 	tween.parallel().tween_property(multi_label, "outline_modulate:a", 0.0, 0.2)
 
 func check_if_within_zone(pos : float) -> int:
-	var zone_a_reward := 10
-	var zone_b_reward := 20
-	
-	bonus_cash_labels_zone_a = get_tree().get_first_node_in_group('zone_a')
-	bonus_cash_labels_zone_b = get_tree().get_first_node_in_group('zone_b')
-	
-	if pos > 3.3:
-		return 0
-	
-	if pos <= 3.3 && pos > 0.65:
-		bonus_cash_labels_zone_a.start()
-		return zone_a_reward
-		
-	if pos <= 0.65:
-		bonus_cash_labels_zone_b.start()
-		return zone_b_reward
-
-		
-	else:
-		return 0 
+	return -1
+	#var zone_a_reward := 10
+	#var zone_b_reward := 20
+	#
+	#bonus_cash_labels_zone_a = get_tree().get_first_node_in_group('zone_a')
+	#bonus_cash_labels_zone_b = get_tree().get_first_node_in_group('zone_b')
+	#
+	#if pos > 3.3:
+		#return 0
+	#
+	#if pos <= 3.3 && pos > 0.65:
+		#bonus_cash_labels_zone_a.start()
+		#return zone_a_reward
+		#
+	#if pos <= 0.65:
+		#bonus_cash_labels_zone_b.start()
+		#return zone_b_reward
+#
+		#
+	#else:
+		#return 0 
 
 func start_oranges(multiplier : int, _pos : Vector3) -> void:
 	var orange_container := get_tree().get_first_node_in_group('orange_container')

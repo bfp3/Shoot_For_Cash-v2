@@ -108,6 +108,15 @@ const BOUNDS_CHECK_INTERVAL := 0.1  # how often (seconds) to scan active rocks
 @export var oob_miss_feedback_enabled := true
 @export_range(0.0, 0.5, 0.005) var oob_miss_shake_amount := 0.16
 @export_range(0.02, 0.5, 0.01) var oob_miss_shake_duration := 0.1
+## After launch delay, airborne rocks collide and bounce off each other.
+## Off while dormant / preparing / during the pulse itself (see delay below).
+## Toggle on the Rocks / RockManager node in Main.tscn.
+@export var rock_rock_collisions_enabled := true
+## PhysicsMaterial bounce (0 = dead stop on contact, 1 = max restitution) once airborne.
+@export_range(0.0, 1.0, 0.05) var rock_rock_bounce := 0.35
+## Seconds after each rock's launch impulse before rock–rock collision turns on.
+## Keeps stacked / nearby launches from shoving each other during the pulse.
+@export_range(0.0, 2.0, 0.05) var rock_rock_collision_delay_sec := 0.4
 var _bounds_check_active := false
 var _bounds_check_accum := 0.0
 
@@ -903,6 +912,10 @@ func bounce_rocks() -> void:
 			body.begin_ballistic_aim_feel(aim_descent_linear_damp)
 			impulse = _build_launch_impulse(body, counter, upward_force, 0.0)
 		body.apply_central_impulse(impulse)
+
+		# Rock–rock only after the pulse impulse has cleared — not dormant, not mid-launch.
+		if rock_rock_collisions_enabled:
+			body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
 
 		counter += 1
 
