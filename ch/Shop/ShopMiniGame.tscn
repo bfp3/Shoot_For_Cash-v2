@@ -30,6 +30,7 @@
 [ext_resource type="AudioStream" uid="uid://dpovml0j5l2yy" path="res://sfx/Clock_tick.ogg" id="22_smoke_tick"]
 [ext_resource type="AudioStream" uid="uid://eqghtysjf3ig" path="res://sfx/Explosion.ogg" id="23_smoke_boom"]
 [ext_resource type="AudioStream" uid="uid://bphel0xwbrj6b" path="res://sfx/Points_added.ogg" id="24_wave"]
+[ext_resource type="Texture2D" uid="uid://bt0qwmkberjw1" path="res://res/ShootForCents/Pillar_single.png" id="25_pillar"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_rock"]
 friction = 0.4
@@ -211,6 +212,9 @@ moon_base_radius = 61.0
 night_strike_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 blue_day_crosshair_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 blue_day_strike_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+pillar_texture = ExtResource("25_pillar")
+pillar_collision_width_ratio = 0.15
+pillar_collision_height_ratio = 0.77
 wind_amount = 10
 wind_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
 wind_speed = 20.0

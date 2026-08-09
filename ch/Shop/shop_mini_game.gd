@@ -48,12 +48,48 @@ const SCOPE_EXPAND_MAX_SCALE := 2.0
 @export var blue_day_strike_color := Color(0.12, 0.28, 0.55, 1.0)
 
 @export_group("Pillars")
+@export var pillar_texture: Texture2D
 @export_range(0.005, 0.3, 0.001) var pillar_width_ratio := 0.115
 @export_range(0.0, 0.35, 0.001) var pillar_inset_ratio := 0.12
 @export_range(0.005, 0.3, 0.001) var night_pillar_width_ratio := 0.07
 @export_range(0.0, 0.35, 0.001) var night_pillar_inset_ratio := 0.2
 @export_range(0.005, 0.3, 0.001) var blue_day_pillar_width_ratio := 0.14
 @export_range(0.0, 0.35, 0.001) var blue_day_pillar_inset_ratio := 0.06
+## Fit sprite by slot height while keeping texture aspect (fixes squish).
+@export_range(0.5, 2.5, 0.01) var pillar_visual_height_scale := 1.05:
+	set(value):
+		pillar_visual_height_scale = value
+		_pillar_layout_dirty()
+## Move the whole pillar down (positive) / up (negative), as a fraction of play height.
+@export_range(-0.2, 0.2, 0.001) var pillar_visual_y_offset_ratio := 0.025:
+	set(value):
+		pillar_visual_y_offset_ratio = value
+		_pillar_layout_dirty()
+## Extra pixel nudge after the ratio offset (positive = down).
+@export var pillar_visual_y_offset_px := 0.0:
+	set(value):
+		pillar_visual_y_offset_px = value
+		_pillar_layout_dirty()
+## Collision width vs drawn sprite width (shaft is narrower than the rocky base).
+@export_range(0.15, 1.0, 0.01) var pillar_collision_width_ratio := 0.38:
+	set(value):
+		pillar_collision_width_ratio = value
+		_pillar_layout_dirty()
+## Collision height vs drawn sprite height (trim antenna / empty padding).
+@export_range(0.2, 1.0, 0.01) var pillar_collision_height_ratio := 0.72:
+	set(value):
+		pillar_collision_height_ratio = value
+		_pillar_layout_dirty()
+## Shift collision on the art; positive = lower on the sprite (fraction of drawn height).
+@export_range(-0.4, 0.4, 0.01) var pillar_collision_y_offset_ratio := 0.06:
+	set(value):
+		pillar_collision_y_offset_ratio = value
+		_pillar_layout_dirty()
+## Shift collision horizontally on the art; flips with the right pillar (fraction of drawn width).
+@export_range(-0.4, 0.4, 0.01) var pillar_collision_x_offset_ratio := 0.0:
+	set(value):
+		pillar_collision_x_offset_ratio = value
+		_pillar_layout_dirty()
 
 @export_group("Wind Particles")
 @export var wind_enabled := true
@@ -2988,13 +3024,21 @@ func _ensure_pillars() -> void:
 	if _physics_root == null:
 		return
 	if _pillar_left == null or not is_instance_valid(_pillar_left):
-		_pillar_left = _make_pillar_body("PillarLeft")
+		_pillar_left = _make_pillar_body("PillarLeft", false)
 	if _pillar_right == null or not is_instance_valid(_pillar_right):
-		_pillar_right = _make_pillar_body("PillarRight")
+		_pillar_right = _make_pillar_body("PillarRight", true)
 	_sync_pillars()
 
 
-func _make_pillar_body(p_name: String) -> StaticBody2D:
+func _pillar_layout_dirty() -> void:
+	if not is_node_ready():
+		return
+	if _pillar_left == null or _pillar_right == null:
+		return
+	_sync_pillars()
+
+
+func _make_pillar_body(p_name: String, flip_h: bool) -> StaticBody2D:
 	var body := StaticBody2D.new()
 	body.name = p_name
 	body.set_meta(PILLAR_META, true)
@@ -3005,6 +3049,14 @@ func _make_pillar_body(p_name: String) -> StaticBody2D:
 	var rect := RectangleShape2D.new()
 	shape_node.shape = rect
 	body.add_child(shape_node)
+	var sprite := Sprite2D.new()
+	sprite.name = "Sprite2D"
+	sprite.centered = true
+	sprite.flip_h = flip_h
+	if pillar_texture == null:
+		pillar_texture = load("res://res/ShootForCents/Pillar_single.png") as Texture2D
+	sprite.texture = pillar_texture
+	body.add_child(sprite)
 	if rock_physics_material:
 		body.physics_material_override = rock_physics_material
 	_physics_root.add_child(body)
@@ -3037,8 +3089,51 @@ func _set_pillar_rect(body: StaticBody2D, x: float, y: float, w: float, h: float
 	if rect == null:
 		rect = RectangleShape2D.new()
 		shape_node.shape = rect
-	rect.size = Vector2(w, h)
-	body.position = Vector2(x + w * 0.5, y + h * 0.5)
+
+	var sprite := body.get_node_or_null("Sprite2D") as Sprite2D
+	if sprite != null and sprite.texture == null and pillar_texture != null:
+		sprite.texture = pillar_texture
+
+	var slot_cx := x + w * 0.5
+	var area_h := _overlay.size.y if _overlay else h
+	var y_nudge := area_h * pillar_visual_y_offset_ratio + pillar_visual_y_offset_px
+	var slot_cy := y + h * 0.5 + y_nudge
+
+	# No texture: keep old stretched collision box so gameplay still works.
+	if sprite == null or sprite.texture == null:
+		if sprite:
+			sprite.visible = false
+		rect.size = Vector2(w, h)
+		shape_node.position = Vector2.ZERO
+		body.position = Vector2(slot_cx, slot_cy)
+		return
+
+	sprite.visible = true
+	var tex_size := sprite.texture.get_size()
+	if tex_size.x <= 0.0 or tex_size.y <= 0.0:
+		return
+
+	# Uniform scale from slot height — preserves pillar proportions (no squish).
+	var fit_scale := (h * pillar_visual_height_scale) / tex_size.y
+	sprite.scale = Vector2(fit_scale, fit_scale)
+
+	var drawn_w := tex_size.x * fit_scale
+	var drawn_h := tex_size.y * fit_scale
+	var col_w := maxf(drawn_w * pillar_collision_width_ratio, 4.0)
+	var col_h := maxf(drawn_h * pillar_collision_height_ratio, 4.0)
+	rect.size = Vector2(col_w, col_h)
+
+	var col_x := drawn_w * pillar_collision_x_offset_ratio
+	if sprite.flip_h:
+		col_x = -col_x
+	var col_y := drawn_h * pillar_collision_y_offset_ratio
+
+	# Body sits on the collision center; sprite is offset so the art stays where intended.
+	var sprite_center := Vector2(slot_cx, slot_cy)
+	var col_offset := Vector2(col_x, col_y)
+	body.position = sprite_center + col_offset
+	shape_node.position = Vector2.ZERO
+	sprite.position = -col_offset
 
 
 func _ensure_wind_particles() -> void:
@@ -3558,6 +3653,10 @@ func _draw_blast_rings() -> void:
 
 
 func _draw_pillars(area: Vector2, wall_y: float) -> void:
+	# Visuals come from Sprite2D on the physics pillars (Pillar_single.png).
+	# Keep the old line art only as a fallback when the texture is missing.
+	if pillar_texture != null:
+		return
 	var ratios := _current_pillar_ratios()
 	var pillar_w := area.x * ratios.x
 	var inset := area.x * ratios.y
