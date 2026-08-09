@@ -62,9 +62,12 @@ const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a c
 		broaden_columns = value
 		if is_node_ready():
 			sync_telegraph_column_positions()
+			sync_debug_visualiser()
 @export var DEFAULT_LAUNCH_WAIT_MS := 100
 ## Telegraph markers — defaults to $Columns2 under Rocks.
 @export var telegraph_columns: Node3D
+## Aim-grid debug overlays (Column1–8 / RowA–C). Defaults to $DebugVisualiser.
+@export var debug_visualiser: Node3D
 @export var telegraph_enabled := true
 @export var telegraph_blink_color := Color(1.0, 0.92, 0.2, 1.0)
 @export_range(0.05, 0.8, 0.01) var telegraph_blink_on_sec := 0.12
@@ -74,6 +77,12 @@ const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a c
 @export_range(-40.0, 6.0, 0.5) var telegraph_sfx_volume_db := -12.0
 ## Pitch rises with column index (1→low, 8→high). 0 = fixed pitch.
 @export_range(0.0, 0.2, 0.01) var telegraph_sfx_pitch_step := 0.06
+## Ghost spawn→aim path preview before the pulse (non-shootable).
+@export var path_telegraph_enabled := true
+## Total time budget for the full preview sequence (all rocks).
+@export_range(0.5, 5.0, 0.1) var path_telegraph_duration_sec := 2.0
+@export var path_telegraph_color := Color(1.0, 0.92, 0.25, 0.75)
+@export var path_telegraph_aim_color := Color(0.35, 1.0, 0.55, 0.85)
 var _telegraph_sfx_player: AudioStreamPlayer
 ## Resolved spawn columns for the current wave (launch order). Built in assign_manual_rock_positions.
 var _wave_spawn_columns: Array[int] = []
@@ -82,6 +91,14 @@ var _telegraph_token := 0
 var _telegraph_meshes: Array[MeshInstance3D] = []
 ## Base albedo per mesh instance id — restored after blinks
 var _telegraph_base_albedo: Dictionary = {}
+## Cached spawn→aim plan so telegraph preview matches the real launch.
+## Items: { spawn: Vector3, aim: Vector3, column: int, is_pigeon: bool }
+var _wave_telegraph_plan: Array = []
+var _path_telegraph_root: Node3D
+var _path_ghost_mat: StandardMaterial3D
+var _path_aim_mat: StandardMaterial3D
+var _path_trail_mat: StandardMaterial3D
+var _path_telegraph_tween: Tween
 ## Aim apex heights — same Y bands balloons use (A/B/C → 1/2/3).
 const AIM_LANE_Y := {
 	1: 7.0, #6.5
@@ -156,10 +173,13 @@ func _ready() -> void:
 			telegraph_columns = $Columns2
 		elif has_node("Columns"):
 			telegraph_columns = $Columns
+	if debug_visualiser == null and has_node("DebugVisualiser"):
+		debug_visualiser = $DebugVisualiser
 	_ensure_telegraph_sfx_player()
 	_cache_telegraph_meshes()
 	# Defer until a Camera3D is current so perspective sync can run.
 	call_deferred("sync_telegraph_column_positions")
+	call_deferred("sync_debug_visualiser")
 	EventBus.instance.egg_pulsed.connect(enter_state.bind(State.PULSE_ROCKS))
 	#EventBus.instance.all_rocks_destroyed.connect(all_rocks_destroyed)
 	EventBus.instance.detonate_sky_mines.connect(detonate_sky_mines)
@@ -194,7 +214,8 @@ func enter_state(new_state : State) -> void:
 			
 func update_inactive() -> void:
 	_bounds_check_active = false
-	_cancel_column_telegraph()
+	_cancel_wave_telegraph()
+	_wave_telegraph_plan.clear()
 	for i in $Container_1.get_children():
 		i.enter_state(i.State.INACTIVE)
 	
@@ -366,7 +387,8 @@ func update_prepare_rocks() -> void:
 		active_bodies[pointer].rock_type = _spawn_entry_to_rock_type(temp_rock_array[pointer])
 		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
 
-	start_column_telegraph()
+	_build_wave_telegraph_plan(active_bodies)
+	start_wave_telegraph()
 
 
 ## Slots still mid-flight must not be reclaimed for the next wave's sequence.
@@ -406,7 +428,7 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 
 
 func update_pulse_rocks() -> void:
-	_cancel_column_telegraph()
+	_cancel_wave_telegraph()
 	splash_zone.activate_splash_zone()
 
 	pick_convergence_point()
@@ -839,23 +861,303 @@ func _perspective_match_screen_x(
 	return origin.x + dir.x * t
 
 
-func start_column_telegraph() -> void:
-	_cancel_column_telegraph()
-	if not telegraph_enabled:
+## Keep $DebugVisualiser columns/rows aligned with column_to_x() and AIM_LANE_Y.
+## This overlay sits on the aim plane (Z≈23), so world X/Y match is correct (no perspective remap).
+func sync_debug_visualiser() -> void:
+	if debug_visualiser == null or not is_instance_valid(debug_visualiser):
+		if has_node("DebugVisualiser"):
+			debug_visualiser = $DebugVisualiser
+		else:
+			return
+
+	for col in range(1, COLUMN_COUNT + 1):
+		var col_node := debug_visualiser.get_node_or_null("Column%d" % col)
+		if col_node is Node3D:
+			var pos := (col_node as Node3D).global_position
+			pos.x = column_to_x(col)
+			(col_node as Node3D).global_position = pos
+
+	# RowA / RowA2 / RowA3 → aim rows 1/2/3 (A/B/C). Also accept RowB / RowC aliases.
+	var row_node_names := {
+		1: ["RowA", "Row1", "RowB1"],
+		2: ["RowA2", "RowB", "Row2"],
+		3: ["RowA3", "RowC", "Row3"],
+	}
+	for row in AIM_LANE_Y.keys():
+		var names: Array = row_node_names.get(int(row), [])
+		var lane_y: float = float(AIM_LANE_Y[row])
+		for node_name in names:
+			var row_node := debug_visualiser.get_node_or_null(str(node_name))
+			if row_node is Node3D:
+				var pos := (row_node as Node3D).global_position
+				pos.y = lane_y
+				(row_node as Node3D).global_position = pos
+				break
+
+
+func start_wave_telegraph() -> void:
+	_cancel_wave_telegraph()
+	if not telegraph_enabled and not path_telegraph_enabled:
 		return
-	if _resolve_telegraph_columns_node() == null:
-		return
-	sync_telegraph_column_positions()
-	telegraph_columns.visible = true
+	if _resolve_telegraph_columns_node() != null:
+		sync_telegraph_column_positions()
+		telegraph_columns.visible = true
 
 	_telegraph_token += 1
 	var token := _telegraph_token
-	_run_column_telegraph(token)
+	if path_telegraph_enabled:
+		_run_path_telegraph(token)
+	elif telegraph_enabled:
+		_run_column_telegraph(token)
+
+
+func start_column_telegraph() -> void:
+	# Back-compat alias.
+	start_wave_telegraph()
+
+
+func _cancel_wave_telegraph() -> void:
+	_telegraph_token += 1
+	if _path_telegraph_tween != null:
+		_path_telegraph_tween.kill()
+		_path_telegraph_tween = null
+	_restore_all_telegraph_colors()
+	_clear_path_telegraph_visuals()
 
 
 func _cancel_column_telegraph() -> void:
-	_telegraph_token += 1
-	_restore_all_telegraph_colors()
+	_cancel_wave_telegraph()
+
+
+func _build_wave_telegraph_plan(bodies: Array) -> void:
+	_wave_telegraph_plan.clear()
+	if bodies.is_empty() or rocks_limit <= 0:
+		return
+
+	_rebuild_wave_convergence_aim_columns(bodies)
+
+	for i in mini(rocks_limit, bodies.size()):
+		var body = bodies[i]
+		var entry = null
+		if i < manual_rock_sequence.size():
+			entry = manual_rock_sequence[i]
+
+		var spawn_column := 1
+		if i < _wave_spawn_columns.size():
+			spawn_column = _wave_spawn_columns[i]
+		else:
+			spawn_column = _x_to_nearest_column(body.target_x_position)
+
+		var spawn := Vector3(
+			body.target_x_position,
+			body.global_position.y,
+			body.global_position.z
+		)
+
+		var is_pigeon = body.rock_type == RockInstance.RockSize.SMALL_2
+		var aim_world: Vector3
+		if is_pigeon:
+			var aim := _resolve_aim_cell(entry)
+			aim_world = _pigeon_aim_world_point(aim.y, aim.x, spawn.y)
+		else:
+			var aim := _resolve_aim_cell(entry, true, spawn_column)
+			# Bake jitter once so preview and launch share the same target.
+			aim_world = _aim_cell_world_position(aim.x, aim.y, true)
+
+		_wave_telegraph_plan.append({
+			'spawn': spawn,
+			'aim': aim_world,
+			'column': spawn_column,
+			'is_pigeon': is_pigeon,
+		})
+
+
+func _ensure_path_telegraph_root() -> Node3D:
+	if _path_telegraph_root != null and is_instance_valid(_path_telegraph_root):
+		return _path_telegraph_root
+	_path_telegraph_root = Node3D.new()
+	_path_telegraph_root.name = "PathTelegraph"
+	add_child(_path_telegraph_root)
+	return _path_telegraph_root
+
+
+func _ensure_path_telegraph_materials() -> void:
+	if _path_ghost_mat == null:
+		_path_ghost_mat = _make_path_preview_material(path_telegraph_color, 2.5)
+	else:
+		_path_ghost_mat.albedo_color = path_telegraph_color
+		_path_ghost_mat.emission = path_telegraph_color
+	if _path_aim_mat == null:
+		_path_aim_mat = _make_path_preview_material(path_telegraph_aim_color, 3.5)
+	else:
+		_path_aim_mat.albedo_color = path_telegraph_aim_color
+		_path_aim_mat.emission = path_telegraph_aim_color
+	if _path_trail_mat == null:
+		var trail_col := path_telegraph_color
+		trail_col.a = 0.35
+		_path_trail_mat = _make_path_preview_material(trail_col, 1.2)
+
+
+func _make_path_preview_material(color: Color, emission_energy: float) -> StandardMaterial3D:
+	var mat := StandardMaterial3D.new()
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.albedo_color = color
+	mat.emission_enabled = true
+	mat.emission = Color(color.r, color.g, color.b)
+	mat.emission_energy_multiplier = emission_energy
+	mat.no_depth_test = true
+	mat.disable_receive_shadows = true
+	return mat
+
+
+func _clear_path_telegraph_visuals() -> void:
+	if _path_telegraph_root == null or not is_instance_valid(_path_telegraph_root):
+		return
+	for child in _path_telegraph_root.get_children():
+		child.queue_free()
+
+
+func _make_path_sphere(radius: float, mat: Material) -> MeshInstance3D:
+	var mesh_inst := MeshInstance3D.new()
+	var sphere := SphereMesh.new()
+	sphere.radius = radius
+	sphere.height = radius * 2.0
+	mesh_inst.mesh = sphere
+	mesh_inst.material_override = mat
+	mesh_inst.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# Visual only — never shootable / never a physics target.
+	return mesh_inst
+
+
+func _run_path_telegraph(token: int) -> void:
+	if _wave_telegraph_plan.is_empty():
+		if telegraph_enabled:
+			await _run_column_telegraph(token)
+		return
+
+	_ensure_path_telegraph_materials()
+	var root := _ensure_path_telegraph_root()
+	_clear_path_telegraph_visuals()
+
+	var count := _wave_telegraph_plan.size()
+	var budget := maxf(path_telegraph_duration_sec, 0.2)
+	var per_rock := budget / float(count)
+	# Leave a little gap between rocks so order is readable.
+	var move_sec := clampf(per_rock * 0.72, 0.08, 0.55)
+	var hold_sec := clampf(per_rock * 0.18, 0.04, 0.2)
+	var gap_sec := maxf(0.0, per_rock - move_sec - hold_sec)
+
+	for i in count:
+		if token != _telegraph_token:
+			return
+		_clear_path_telegraph_visuals()
+
+		var item: Dictionary = _wave_telegraph_plan[i]
+		var spawn: Vector3 = item.spawn
+		var aim: Vector3 = item.aim
+		var column: int = int(item.column)
+		var is_pigeon: bool = bool(item.is_pigeon)
+
+		if telegraph_enabled:
+			_blink_column_once_fire_and_forget(column, token)
+		_play_telegraph_sfx(column)
+
+		var ghost := _make_path_sphere(0.28, _path_ghost_mat)
+		root.add_child(ghost)
+		ghost.global_position = spawn
+
+		var aim_marker := _make_path_sphere(0.22, _path_aim_mat)
+		root.add_child(aim_marker)
+		aim_marker.global_position = aim
+		aim_marker.visible = true
+
+		var path_pts := _sample_telegraph_path(spawn, aim, is_pigeon, 10)
+		_spawn_path_trail_dots(root, path_pts)
+
+		if _path_telegraph_tween != null:
+			_path_telegraph_tween.kill()
+		_path_telegraph_tween = create_tween()
+		var tween := _path_telegraph_tween
+		tween.set_parallel(false)
+		for p in range(1, path_pts.size()):
+			var seg_t := move_sec / float(maxi(path_pts.size() - 1, 1))
+			tween.tween_property(ghost, "global_position", path_pts[p], seg_t)
+		tween.tween_interval(hold_sec)
+		await tween.finished
+		if _path_telegraph_tween == tween:
+			_path_telegraph_tween = null
+
+		if token != _telegraph_token:
+			return
+		if gap_sec > 0.0:
+			await get_tree().create_timer(gap_sec).timeout
+
+	if token == _telegraph_token:
+		_clear_path_telegraph_visuals()
+
+
+func _blink_column_once_fire_and_forget(column: int, token: int) -> void:
+	var mesh := _get_telegraph_mesh(column)
+	if mesh == null:
+		return
+	var mat := mesh.material_override as BaseMaterial3D
+	if mat == null:
+		_ensure_telegraph_material(mesh)
+		mat = mesh.material_override as BaseMaterial3D
+	if mat == null:
+		return
+	var base: Color = _telegraph_base_albedo.get(mesh.get_instance_id(), mat.albedo_color)
+	mat.albedo_color = telegraph_blink_color
+	get_tree().create_timer(telegraph_blink_on_sec).timeout.connect(
+		func () -> void:
+			if token != _telegraph_token:
+				return
+			if is_instance_valid(mesh) and mat:
+				mat.albedo_color = base,
+		CONNECT_ONE_SHOT
+	)
+
+
+func _sample_telegraph_path(from: Vector3, to: Vector3, is_pigeon: bool, samples: int) -> PackedVector3Array:
+	samples = maxi(samples, 2)
+	var pts := PackedVector3Array()
+	if is_pigeon:
+		for i in samples:
+			var u := float(i) / float(samples - 1)
+			pts.append(from.lerp(to, u))
+		return pts
+
+	var vel := BallisticAim.velocity_to_point(
+		from, to, -1.0, aim_launch_gravity_scale, aim_hang_time_sec
+	)
+	var g := BallisticAim.gravity_accel(aim_launch_gravity_scale)
+	var dy := to.y - from.y
+	var hang := maxf(aim_hang_time_sec, 0.0)
+	var flight_t: float
+	if dy > 0.01:
+		flight_t = sqrt(2.0 * dy / g) + hang
+	else:
+		var dist := from.distance_to(to)
+		flight_t = maxf(0.35, dist / 15.0) + hang
+	flight_t = maxf(flight_t, 0.001)
+
+	for i in samples:
+		var u := float(i) / float(samples - 1)
+		var ti := flight_t * u
+		pts.append(from + vel * ti + Vector3(0.0, -0.5 * g * ti * ti, 0.0))
+	# Snap end to exact aim so the ghost lands cleanly.
+	if pts.size() > 0:
+		pts[pts.size() - 1] = to
+	return pts
+
+
+func _spawn_path_trail_dots(root: Node3D, path_pts: PackedVector3Array) -> void:
+	# Skip first/last — ghost + aim marker cover those.
+	for i in range(1, path_pts.size() - 1):
+		var dot := _make_path_sphere(0.08, _path_trail_mat)
+		root.add_child(dot)
+		dot.global_position = path_pts[i]
 
 
 func _run_column_telegraph(token: int) -> void:
@@ -1155,7 +1457,9 @@ func bounce_rocks() -> void:
 			to_launch.append(body)
 
 	angle_bias = get_angle_bias()
-	_rebuild_wave_convergence_aim_columns(to_launch)
+	# Prefer the prepare-time plan so launch matches the telegraph preview.
+	if _wave_telegraph_plan.is_empty():
+		_rebuild_wave_convergence_aim_columns(to_launch)
 
 	var counter := 0
 
@@ -1196,16 +1500,17 @@ func bounce_rocks() -> void:
 ## `rock-pigeon 1` → spawn col 1, random aim cell on the fan.
 ## `rock-pigeon 1 A8` → spawn col 1, aim at col 8's distant point (row A height).
 func _pigeon_launch_impulse(body, rock_index: int, upward_force: float) -> Vector3:
-	var entry = null
-	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
-		entry = manual_rock_sequence[rock_index]
-
-	var aim := _resolve_aim_cell(entry)
-	var aim_row := aim.x
-	var aim_column := aim.y
+	var aim_point: Vector3
+	if rock_index >= 0 and rock_index < _wave_telegraph_plan.size():
+		aim_point = _wave_telegraph_plan[rock_index].aim
+	else:
+		var entry = null
+		if rock_index >= 0 and rock_index < manual_rock_sequence.size():
+			entry = manual_rock_sequence[rock_index]
+		var aim := _resolve_aim_cell(entry)
+		aim_point = _pigeon_aim_world_point(aim.y, aim.x, body.global_position.y)
 
 	var y_force: float = upward_force
-	var aim_point := _pigeon_aim_world_point(aim_column, aim_row, body.global_position.y)
 	var dx: float = aim_point.x - body.global_position.x
 	var dz: float = aim_point.z - body.global_position.z
 
@@ -1275,22 +1580,26 @@ func _x_to_nearest_column(x: float) -> int:
 
 ## Ballistic launch through the aim cell world point (e.g. A8 = (-7, 6.5, 23)).
 func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_variation: float) -> Vector3:
-	var entry = null
-	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
-		entry = manual_rock_sequence[rock_index]
+	var aim_pos: Vector3
+	if rock_index >= 0 and rock_index < _wave_telegraph_plan.size():
+		aim_pos = _wave_telegraph_plan[rock_index].aim
+	else:
+		var entry = null
+		if rock_index >= 0 and rock_index < manual_rock_sequence.size():
+			entry = manual_rock_sequence[rock_index]
+		var spawn_column := _x_to_nearest_column(body.target_x_position)
+		var aim := _resolve_aim_cell(entry, true, spawn_column)
+		aim_pos = _aim_cell_world_position(aim.x, aim.y, true)
+	return _aimed_launch_impulse_to_world(body, aim_pos)
 
-	var spawn_column := _x_to_nearest_column(body.target_x_position)
-	var aim := _resolve_aim_cell(entry, true, spawn_column)
-	return _aimed_launch_impulse(body, aim.x, aim.y)
 
-
-func _aim_cell_world_position(aim_row: int, aim_column: int) -> Vector3:
+func _aim_cell_world_position(aim_row: int, aim_column: int, apply_jitter: bool = true) -> Vector3:
 	var pos := Vector3(
 		column_to_x(aim_column),
 		float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1])),
 		AIM_PLANE_Z
 	)
-	if aim_offset > 0.0:
+	if apply_jitter and aim_offset > 0.0:
 		# Uniform disk in the aim plane (X/Y); Z stays on the board depth.
 		var angle := randf() * TAU
 		var radius := aim_offset * sqrt(randf())
@@ -1306,7 +1615,10 @@ func _launch_world_position(body) -> Vector3:
 
 ## Reverse-engineered impulse so every lane passes through the same aim world point.
 func _aimed_launch_impulse(body, aim_row: int, aim_column: int) -> Vector3:
-	var aim_pos := _aim_cell_world_position(aim_row, aim_column)
+	return _aimed_launch_impulse_to_world(body, _aim_cell_world_position(aim_row, aim_column, true))
+
+
+func _aimed_launch_impulse_to_world(body, aim_pos: Vector3) -> Vector3:
 	var start_pos := _launch_world_position(body)
 	return BallisticAim.impulse_to_point(
 		body, start_pos, aim_pos, -1.0, aim_launch_gravity_scale, aim_impulse_scale, aim_hang_time_sec

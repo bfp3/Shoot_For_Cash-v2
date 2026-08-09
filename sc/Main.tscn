@@ -84,13 +84,6 @@ stream_2/stream = ExtResource("22_8twtg")
 stream_3/stream = ExtResource("24_vwwt2")
 stream_4/stream = ExtResource("23_wtxnc")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5w5l"]
-shading_mode = 0
-
-[sub_resource type="BoxMesh" id="BoxMesh_r5w5l"]
-material = SubResource("StandardMaterial3D_r5w5l")
-size = Vector3(0.05, 30, 0.05)
-
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
 bake_interval = 5.0
 _data = {
@@ -102,6 +95,13 @@ point_count = 2
 [sub_resource type="Curve" id="Curve_7gshx"]
 _data = [Vector2(0, 0.846895), 0.0, -0.154856, 0, 0, Vector2(0.773371, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5w5l"]
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_r5w5l"]
+material = SubResource("StandardMaterial3D_r5w5l")
+size = Vector3(0.05, 30, 0.05)
 
 [sub_resource type="BoxMesh" id="BoxMesh_mdemw"]
 size = Vector3(0.108, 0.502, 0.007)
@@ -534,142 +534,6 @@ stream = ExtResource("17_shopm")
 volume_db = -20.0
 bus = &"MusicBus"
 
-[node name="DebugVisualiser" type="Node3D" parent="." unique_id=1321570169]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 23)
-visible = false
-
-[node name="Column1" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1494068997]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column1" unique_id=957156339]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "1"
-font_size = 363
-
-[node name="Column2" type="MeshInstance3D" parent="DebugVisualiser" unique_id=756792632]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column2" unique_id=776624174]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "2"
-font_size = 363
-
-[node name="Column3" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1204986257]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column3" unique_id=1781802579]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.49999976, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "3"
-font_size = 363
-
-[node name="Column4" type="MeshInstance3D" parent="DebugVisualiser" unique_id=876816692]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column4" unique_id=1949995617]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "4"
-font_size = 363
-
-[node name="Column5" type="MeshInstance3D" parent="DebugVisualiser" unique_id=663355396]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column5" unique_id=1623821103]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.50000006, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "5"
-font_size = 363
-
-[node name="Column6" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1317091329]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column6" unique_id=1951433967]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.49999976, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "6"
-font_size = 363
-
-[node name="Column7" type="MeshInstance3D" parent="DebugVisualiser" unique_id=866795825]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column7" unique_id=1837264852]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "7"
-font_size = 363
-
-[node name="Column8" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1471829065]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/Column8" unique_id=1414520683]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "8"
-font_size = 363
-
-[node name="RowA" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1554108687]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 6.5, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/RowA" unique_id=5275279]
-transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "A"
-font_size = 363
-
-[node name="RowA2" type="MeshInstance3D" parent="DebugVisualiser" unique_id=936778820]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 3.5, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/RowA2" unique_id=154806771]
-transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "B"
-font_size = 363
-
-[node name="RowA3" type="MeshInstance3D" parent="DebugVisualiser" unique_id=1764665298]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="DebugVisualiser/RowA3" unique_id=283320935]
-transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "C"
-font_size = 363
-
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1533254053]
 transform = Transform3D(-1, 6.859112e-09, 8.7153275e-08, 0, 0.99691725, -0.07845909, -8.742278e-08, -0.07845909, -0.99691725, 0, 0, 17.224)
 fov = 37.9
@@ -714,18 +578,160 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.4657, 0, 43.9932)
 [node name="8" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004108]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.1567, 0, 43.0337)
 
-[node name="Rocks" type="Node3D" parent="." unique_id=859468523 node_paths=PackedStringArray("pigeon_aim_markers", "telegraph_columns")]
+[node name="Rocks" type="Node3D" parent="." unique_id=859468523 node_paths=PackedStringArray("pigeon_aim_markers", "telegraph_columns", "debug_visualiser")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
 randomize_later_waves = false
 pigeon_aim_markers = NodePath("../PigeonAimMarkers")
-broaden_columns = 1.7890000000000001
 telegraph_columns = NodePath("Columns2")
+debug_visualiser = NodePath("DebugVisualiser")
+telegraph_enabled = false
 telegraph_blink_color = Color(1.8247963, 1.2783784, 0.39935833, 1)
 telegraph_blink_on_sec = 0.2
 telegraph_sfx_volume_db = -30.0
-aim_impulse_scale = 1.05
+path_telegraph_enabled = false
+aim_impulse_scale = 1.08
+aim_launch_gravity_scale = 1.0
 oob_miss_shake_amount = 0.5
+
+[node name="DebugVisualiser" type="Node3D" parent="Rocks" unique_id=1321570169]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.81, 0.25)
+visible = false
+
+[node name="Column1" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1494068997]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column1" unique_id=957156339]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "1"
+font_size = 363
+
+[node name="Column2" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=756792632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column2" unique_id=776624174]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "2"
+font_size = 363
+
+[node name="Column3" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1204986257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column3" unique_id=1781802579]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.49999976, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "3"
+font_size = 363
+
+[node name="Column4" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=876816692]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column4" unique_id=1949995617]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "4"
+font_size = 363
+
+[node name="Column5" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=663355396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column5" unique_id=1623821103]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.50000006, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "5"
+font_size = 363
+
+[node name="Column6" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1317091329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column6" unique_id=1951433967]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.49999976, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "6"
+font_size = 363
+
+[node name="Column7" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=866795825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column7" unique_id=1837264852]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "7"
+font_size = 363
+
+[node name="Column8" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1471829065]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column8" unique_id=1414520683]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "8"
+font_size = 363
+
+[node name="RowA" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1554108687]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 6.5, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/RowA" unique_id=5275279]
+transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
+visible = false
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "A"
+font_size = 363
+
+[node name="RowA2" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=936778820]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 3.5, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/RowA2" unique_id=154806771]
+transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
+visible = false
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "B"
+font_size = 363
+
+[node name="RowA3" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1764665298]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_r5w5l")
+
+[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/RowA3" unique_id=283320935]
+transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
+visible = false
+pixel_size = 0.0002
+no_depth_test = true
+fixed_size = true
+text = "C"
+font_size = 363
 
 [node name="Columns2" type="Node3D" parent="Rocks" unique_id=1595594875]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.232, -22.75)
