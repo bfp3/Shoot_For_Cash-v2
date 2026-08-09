@@ -127,6 +127,7 @@ func update_active() -> void:
 
 	$explosion_sfx.play()
 	$Smoke_quick.emitting = true
+	$Mesh/small_rock/GoldParticles.emitting = true
 	#apply_torque_impulse(Vector3.RIGHT * 3000.0)
 	
 	$Pineapple_launch_sound.play()
@@ -214,6 +215,7 @@ func reset_rock_back_on() -> void:
 
 func reset_stats() -> void:
 	#hide()
+	$Mesh/small_rock/GoldParticles.emitting = false
 	$Mesh.scale = Vector3.ONE
 	$Mesh.hide()
 	$hit_wall_timer.stop()

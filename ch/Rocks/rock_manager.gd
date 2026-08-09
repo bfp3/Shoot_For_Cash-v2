@@ -54,10 +54,34 @@ const COLUMN_1_X := 7.0 #18.0
 const COLUMN_STEP := 2.0 #4.0
 const COLUMN_COUNT := 8
 const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a column
-## Extra meters each column moves away from X=0.
-## 0 = default (7,5,3,1,-1,-3,-5,-7). 1 → (8,6,4,2,-2,-4,-6,-8).
-@export var broaden_columns := 0.0
+## Extra meters added to the spacing between every neighbouring column.
+## 0 = default step 2 → (7, 5, 3, 1, -1, -3, -5, -7).
+## 1 = step 3 → (10.5, 7.5, 4.5, 1.5, -1.5, -4.5, -7.5, -10.5).
+@export var broaden_columns := 0.0:
+	set(value):
+		broaden_columns = value
+		if is_node_ready():
+			sync_telegraph_column_positions()
 @export var DEFAULT_LAUNCH_WAIT_MS := 100
+## Telegraph markers — defaults to $Columns2 under Rocks.
+@export var telegraph_columns: Node3D
+@export var telegraph_enabled := true
+@export var telegraph_blink_color := Color(1.0, 0.92, 0.2, 1.0)
+@export_range(0.05, 0.8, 0.01) var telegraph_blink_on_sec := 0.12
+@export_range(0.05, 0.8, 0.01) var telegraph_blink_off_sec := 0.1
+@export_range(0.0, 1.0, 0.01) var telegraph_gap_between_rocks_sec := 0.06
+@export var telegraph_sfx: AudioStream = preload("res://sfx/ninja_flicker.ogg")
+@export_range(-40.0, 6.0, 0.5) var telegraph_sfx_volume_db := -12.0
+## Pitch rises with column index (1→low, 8→high). 0 = fixed pitch.
+@export_range(0.0, 0.2, 0.01) var telegraph_sfx_pitch_step := 0.06
+var _telegraph_sfx_player: AudioStreamPlayer
+## Resolved spawn columns for the current wave (launch order). Built in assign_manual_rock_positions.
+var _wave_spawn_columns: Array[int] = []
+var _telegraph_token := 0
+## MeshInstance3D per column index 1..COLUMN_COUNT
+var _telegraph_meshes: Array[MeshInstance3D] = []
+## Base albedo per mesh instance id — restored after blinks
+var _telegraph_base_albedo: Dictionary = {}
 ## Aim apex heights — same Y bands balloons use (A/B/C → 1/2/3).
 const AIM_LANE_Y := {
 	1: 7.0, #6.5
@@ -127,6 +151,15 @@ const _OOB_MISS_SPARKS = preload("uid://fsbgvpv0703x")
 # --------------------------------------------------------------------------
 
 func _ready() -> void:
+	if telegraph_columns == null:
+		if has_node("Columns2"):
+			telegraph_columns = $Columns2
+		elif has_node("Columns"):
+			telegraph_columns = $Columns
+	_ensure_telegraph_sfx_player()
+	_cache_telegraph_meshes()
+	# Defer until a Camera3D is current so perspective sync can run.
+	call_deferred("sync_telegraph_column_positions")
 	EventBus.instance.egg_pulsed.connect(enter_state.bind(State.PULSE_ROCKS))
 	#EventBus.instance.all_rocks_destroyed.connect(all_rocks_destroyed)
 	EventBus.instance.detonate_sky_mines.connect(detonate_sky_mines)
@@ -161,6 +194,7 @@ func enter_state(new_state : State) -> void:
 			
 func update_inactive() -> void:
 	_bounds_check_active = false
+	_cancel_column_telegraph()
 	for i in $Container_1.get_children():
 		i.enter_state(i.State.INACTIVE)
 	
@@ -332,6 +366,8 @@ func update_prepare_rocks() -> void:
 		active_bodies[pointer].rock_type = _spawn_entry_to_rock_type(temp_rock_array[pointer])
 		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
 
+	start_column_telegraph()
+
 
 ## Slots still mid-flight must not be reclaimed for the next wave's sequence.
 func _rock_slot_busy(body) -> bool:
@@ -370,6 +406,7 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 
 
 func update_pulse_rocks() -> void:
+	_cancel_column_telegraph()
 	splash_zone.activate_splash_zone()
 
 	pick_convergence_point()
@@ -641,16 +678,247 @@ func assign_rock_positions(bodies: Array) -> void:
 
 
 func column_to_x(column: int) -> float:
-	# Column 1 -> 7, column 2 -> 5, ... column 8 -> -7 (when broaden_columns == 0).
+	# Column 1 is rightmost (+), column 8 leftmost (-). Spacing is equal across all columns.
+	# broaden_columns adds to COLUMN_STEP so the whole fan widens uniformly from center.
 	column = column % 10
-	
+
 	var clamped_column := clampi(column, 1, COLUMN_COUNT)
 	if clamped_column != column:
 		push_warning("RockManager: column %d out of range [1, %d], clamped to %d." % [column, COLUMN_COUNT, clamped_column])
-	var base_x := COLUMN_1_X - float(clamped_column - 1) * COLUMN_STEP
-	if is_zero_approx(base_x):
-		return 0.0
-	return base_x + signf(base_x) * broaden_columns
+	var step := COLUMN_STEP + broaden_columns
+	var half_span := float(COLUMN_COUNT - 1) * 0.5 * step
+	return half_span - float(clamped_column - 1) * step
+
+
+# --- Column telegraph -------------------------------------------------------
+
+func _cache_telegraph_meshes() -> void:
+	_telegraph_meshes.clear()
+	_telegraph_meshes.resize(COLUMN_COUNT + 1)
+	_telegraph_base_albedo.clear()
+	if telegraph_columns == null:
+		return
+
+	# Prefer Column1…Column8 (root Columns / clean naming).
+	var numbered := 0
+	for col in range(1, COLUMN_COUNT + 1):
+		var node := telegraph_columns.get_node_or_null("Column%d" % col)
+		if node is MeshInstance3D:
+			_telegraph_meshes[col] = node
+			numbered += 1
+
+	# Legacy Rocks/$Columns naming: Column (=1), Column1 (=2), … Column7 (=8).
+	if numbered < COLUMN_COUNT:
+		for col in range(1, COLUMN_COUNT + 1):
+			if _telegraph_meshes[col] != null:
+				continue
+			var legacy_name := "Column" if col == 1 else ("Column%d" % (col - 1))
+			var legacy := telegraph_columns.get_node_or_null(legacy_name)
+			if legacy is MeshInstance3D:
+				_telegraph_meshes[col] = legacy
+
+	# Last resort: MeshInstance3D children in tree order.
+	if numbered < COLUMN_COUNT:
+		var idx := 1
+		for child in telegraph_columns.get_children():
+			if idx > COLUMN_COUNT:
+				break
+			if child is MeshInstance3D:
+				if _telegraph_meshes[idx] == null:
+					_telegraph_meshes[idx] = child
+				idx += 1
+
+	for col in range(1, COLUMN_COUNT + 1):
+		var mesh := _telegraph_meshes[col]
+		if mesh == null:
+			continue
+		_ensure_telegraph_material(mesh)
+
+
+func _ensure_telegraph_material(mesh: MeshInstance3D) -> void:
+	var mat: Material = mesh.material_override
+	if mat == null:
+		var active := mesh.get_active_material(0)
+		if active != null:
+			mat = active.duplicate()
+		else:
+			var std := StandardMaterial3D.new()
+			std.albedo_color = Color(0.55, 0.55, 0.55, 1.0)
+			mat = std
+	else:
+		mat = mat.duplicate()
+	mesh.material_override = mat
+	if mat is BaseMaterial3D:
+		_telegraph_base_albedo[mesh.get_instance_id()] = (mat as BaseMaterial3D).albedo_color
+
+
+func _resolve_telegraph_columns_node() -> Node3D:
+	if telegraph_columns != null and is_instance_valid(telegraph_columns):
+		return telegraph_columns
+	if has_node("Columns2"):
+		telegraph_columns = $Columns2
+		return telegraph_columns
+	if has_node("Columns"):
+		telegraph_columns = $Columns
+		return telegraph_columns
+	return null
+
+
+func _ensure_telegraph_sfx_player() -> void:
+	if _telegraph_sfx_player != null and is_instance_valid(_telegraph_sfx_player):
+		return
+	var existing := get_node_or_null("TelegraphSFX")
+	if existing is AudioStreamPlayer:
+		_telegraph_sfx_player = existing
+	else:
+		_telegraph_sfx_player = AudioStreamPlayer.new()
+		_telegraph_sfx_player.name = "TelegraphSFX"
+		_telegraph_sfx_player.max_polyphony = 4
+		add_child(_telegraph_sfx_player)
+	if telegraph_sfx != null:
+		_telegraph_sfx_player.stream = telegraph_sfx
+	_telegraph_sfx_player.volume_db = telegraph_sfx_volume_db
+
+
+func _play_telegraph_sfx(column: int) -> void:
+	_ensure_telegraph_sfx_player()
+	if _telegraph_sfx_player == null or telegraph_sfx == null:
+		return
+	if _telegraph_sfx_player.stream != telegraph_sfx:
+		_telegraph_sfx_player.stream = telegraph_sfx
+	_telegraph_sfx_player.volume_db = telegraph_sfx_volume_db
+	var base_pitch := 0.82
+	_telegraph_sfx_player.pitch_scale = base_pitch + float(clampi(column, 1, COLUMN_COUNT) - 1) * telegraph_sfx_pitch_step
+	_telegraph_sfx_player.play()
+
+
+## Keep telegraph markers visually aligned with rock columns from the camera.
+## Markers sit closer on Z than the spawn plane (~AIM_PLANE_Z), so matching world X
+## looks wrong on the sides. We match each rock column's screen-X onto the marker's
+## existing Y/Z (your perspective layout), and still follow broaden_columns / column_to_x.
+func sync_telegraph_column_positions() -> void:
+	if _resolve_telegraph_columns_node() == null:
+		return
+	if _telegraph_meshes.size() <= 1 or _telegraph_meshes[1] == null:
+		_cache_telegraph_meshes()
+
+	var camera := _get_bounds_camera()
+	for col in range(1, COLUMN_COUNT + 1):
+		var mesh := _get_telegraph_mesh(col)
+		if mesh == null:
+			continue
+		var pos := mesh.global_position
+		var rock_x := column_to_x(col)
+		if camera != null:
+			var rock_world := Vector3(rock_x, global_position.y, AIM_PLANE_Z)
+			pos.x = _perspective_match_screen_x(camera, rock_world, pos, rock_x)
+		# If no camera yet, leave the hand-tuned X alone.
+		mesh.global_position = pos
+
+
+## Find marker X so it shares the rock's screen-X while keeping marker Y/Z.
+func _perspective_match_screen_x(
+	camera: Camera3D,
+	rock_world: Vector3,
+	marker_pos: Vector3,
+	fallback_x: float
+) -> float:
+	if camera.is_position_behind(rock_world):
+		return fallback_x
+	var rock_screen := camera.unproject_position(rock_world)
+	var marker_screen := camera.unproject_position(marker_pos)
+	# Same horizontal as the rock column, same vertical as the existing marker.
+	var screen := Vector2(rock_screen.x, marker_screen.y)
+	var origin := camera.project_ray_origin(screen)
+	var dir := camera.project_ray_normal(screen)
+	if absf(dir.z) < 0.00001:
+		return fallback_x
+	var t := (marker_pos.z - origin.z) / dir.z
+	if t < 0.0:
+		return fallback_x
+	return origin.x + dir.x * t
+
+
+func start_column_telegraph() -> void:
+	_cancel_column_telegraph()
+	if not telegraph_enabled:
+		return
+	if _resolve_telegraph_columns_node() == null:
+		return
+	sync_telegraph_column_positions()
+	telegraph_columns.visible = true
+
+	_telegraph_token += 1
+	var token := _telegraph_token
+	_run_column_telegraph(token)
+
+
+func _cancel_column_telegraph() -> void:
+	_telegraph_token += 1
+	_restore_all_telegraph_colors()
+
+
+func _run_column_telegraph(token: int) -> void:
+	var order: Array[int] = []
+	var limit := mini(rocks_limit, _wave_spawn_columns.size())
+	for i in limit:
+		order.append(_wave_spawn_columns[i])
+
+	for column in order:
+		if token != _telegraph_token:
+			return
+		await _blink_column_twice(column, token)
+		if token != _telegraph_token:
+			return
+		if telegraph_gap_between_rocks_sec > 0.0:
+			await get_tree().create_timer(telegraph_gap_between_rocks_sec).timeout
+
+
+func _blink_column_twice(column: int, token: int) -> void:
+	var mesh := _get_telegraph_mesh(column)
+	if mesh == null:
+		return
+	var mat := mesh.material_override as BaseMaterial3D
+	if mat == null:
+		_ensure_telegraph_material(mesh)
+		mat = mesh.material_override as BaseMaterial3D
+	if mat == null:
+		return
+
+	var base: Color = _telegraph_base_albedo.get(mesh.get_instance_id(), mat.albedo_color)
+	for _i in 1:
+		if token != _telegraph_token:
+			mat.albedo_color = base
+			return
+		mat.albedo_color = telegraph_blink_color
+		_play_telegraph_sfx(column)
+		await get_tree().create_timer(telegraph_blink_on_sec).timeout
+		if token != _telegraph_token:
+			mat.albedo_color = base
+			return
+		mat.albedo_color = base
+		await get_tree().create_timer(telegraph_blink_off_sec).timeout
+
+
+func _get_telegraph_mesh(column: int) -> MeshInstance3D:
+	if column < 1 or column >= _telegraph_meshes.size():
+		return null
+	var mesh := _telegraph_meshes[column]
+	if mesh == null or not is_instance_valid(mesh):
+		return null
+	return mesh
+
+
+func _restore_all_telegraph_colors() -> void:
+	for col in range(1, COLUMN_COUNT + 1):
+		var mesh := _get_telegraph_mesh(col)
+		if mesh == null:
+			continue
+		var mat := mesh.material_override as BaseMaterial3D
+		if mat == null:
+			continue
+		var base: Color = _telegraph_base_albedo.get(mesh.get_instance_id(), mat.albedo_color)
+		mat.albedo_color = base
 
 
 func assign_manual_rock_positions(bodies: Array) -> void:
@@ -659,9 +927,11 @@ func assign_manual_rock_positions(bodies: Array) -> void:
 	
 	var column_counts := {}
 	var positions : Array[float] = []
+	_wave_spawn_columns.clear()
 	
 	for entry in manual_rock_sequence:
 		var column := _resolve_spawn_column(entry)
+		_wave_spawn_columns.append(column)
 		var base_x := column_to_x(column)
 		var occurrence : int = column_counts.get(column, 0)
 		column_counts[column] = occurrence + 1
