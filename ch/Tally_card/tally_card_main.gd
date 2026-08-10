@@ -31,7 +31,7 @@ var score_result : ScoreResult = ScoreResult.PARTIAL_SCORE
 var full_score := false
 
 @onready var reveal_skill_sfx: AudioStreamPlayer = $SFX/reveal_skill_sfx
-@export var round_manager : RoundManager
+var round_manager : RoundManager
 @export var cash_earned_label : RichTextLabel
 @export var total_cash_earned_label : RichTextLabel
 @export var test_mode := false
@@ -68,7 +68,9 @@ func _ready() -> void:
 	# STORE DEFAULT TRANSFORMS
 	default_scale = scale
 	default_position = position
-
+	
+	round_manager = get_tree().get_first_node_in_group('round_manager')
+	
 	# BOTTOM RIGHT PIVOT
 	default_pivot_offset = Vector2(0, size.y)
 	pivot_offset = default_pivot_offset

@@ -68,6 +68,14 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
+[sub_resource type="PrismMesh" id="PrismMesh_vjt1i"]
+left_to_right = 1.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_8uupg"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_rcr1f"]
+
 [node name="TicketPurchasedPopUp" type="Control" unique_id=309897566 groups=["map_menu"]]
 z_index = 2
 layout_mode = 3
@@ -198,6 +206,96 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="BossCashNeeded" type="Control" parent="TreePanel" unique_id=1304438989]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TreePanel/BossCashNeeded" unique_id=170995161]
+self_modulate = Color(1, 1, 1, 0.627451)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -673.0
+offset_top = -335.0
+offset_right = -183.99988
+offset_bottom = -231.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 54
+theme_override_font_sizes/italics_font_size = 248
+bbcode_enabled = true
+text = "ANCHOR ISLAND
+[font_size=40] $10,000[/font_size]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="TreePanel/BossCashNeeded/RichTextLabel" unique_id=1030900787]
+modulate = Color(0.92, 0.8770667, 0.8464, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -20.574524
+offset_right = 40.448914
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.79, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_xxttw")
+
+[node name="BonusCashLabel" type="RichTextLabel" parent="TreePanel/BossCashNeeded" unique_id=1015903615]
+visible = false
+layout_mode = 0
+offset_left = -25.308838
+offset_top = -98.84262
+offset_right = 175.69116
+offset_bottom = -0.84262085
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 30
+theme_override_font_sizes/bold_italics_font_size = 30
+theme_override_font_sizes/italics_font_size = 31
+bbcode_enabled = true
+text = "+$100"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="TreePanel/BossCashNeeded" unique_id=1288191714]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -383.0
+offset_top = -414.00006
+offset_right = -127.0
+offset_bottom = -158.00006
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.211, 0.211)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("7_8mvl6")
+flip_h = true
+
 [node name="MapOverlay" type="TextureRect" parent="TreePanel" unique_id=705275406]
 modulate = Color(0.47, 0.47, 0.47, 0.39215687)
 layout_mode = 1
@@ -228,9 +326,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 356.0
-offset_top = 315.0
+offset_top = 495.0
 offset_right = 612.0
-offset_bottom = 571.0
+offset_bottom = 678.0
 level_name = "Moss"
 level_locked = false
 main_control = NodePath("../../..")
@@ -242,10 +340,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 618.0
-offset_top = 167.0
-offset_right = 874.0
-offset_bottom = 423.0
+offset_left = 716.0
+offset_top = 148.0
+offset_right = 972.0
+offset_bottom = 331.0
 level_name = "Redd"
 level_locked = false
 main_control = NodePath("../../..")
@@ -257,10 +355,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 932.0
-offset_top = 106.0
-offset_right = 1188.0
-offset_bottom = 362.0
+offset_left = 1175.0
+offset_top = 339.0
+offset_right = 1431.0
+offset_bottom = 522.0
 level_name = "Glory"
 level_locked = false
 main_control = NodePath("../../..")
@@ -728,14 +826,245 @@ text = "x"
 autowrap_mode = 0
 horizontal_alignment = 1
 
+[node name="MapCashDisplay" type="Panel" parent="." unique_id=1161350278]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -570.0
+offset_top = -80.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="MapCashDisplay" unique_id=896105006]
+show_behind_parent = true
+layout_mode = 1
+anchor_left = 0.5877193
+anchor_top = -0.7757538
+anchor_right = 0.5877193
+anchor_bottom = -0.7757538
+offset_left = -101.0
+offset_right = -101.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="MapCashDisplay/Control" unique_id=1805355829]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_vjt1i")
+
+[node name="RightTriangle" type="MeshInstance2D" parent="MapCashDisplay/Control" unique_id=1508530695]
+visible = false
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+position = Vector2(203.00085, 5.242276e-06)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_8uupg")
+
+[node name="Square" type="MeshInstance2D" parent="MapCashDisplay/Control" unique_id=1540288283]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_rcr1f")
+
+[node name="MapCashBalanceLabel" type="RichTextLabel" parent="MapCashDisplay" unique_id=882290473]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.13859649
+anchor_top = -1.6
+anchor_right = 0.68245614
+anchor_bottom = 0.075
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_constants/shadow_outline_size = 133
+theme_override_constants/shadow_offset_x = 7
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 114
+bbcode_enabled = true
+text = "$500"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CashSubtitle" type="RichTextLabel" parent="MapCashDisplay" unique_id=1132104144]
+visible = false
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -26.5
+offset_top = -205.0
+offset_right = 127.5
+offset_bottom = -146.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.632, 0.632)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 2
+theme_type_variation = &"RedRichText"
+theme_override_constants/shadow_outline_size = 133
+theme_override_constants/shadow_offset_x = 7
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 54
+bbcode_enabled = true
+text = "C  A  S  H"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CashNeededDisplay" type="Control" parent="." unique_id=1977245152]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -80.0
+offset_right = 570.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="CashNeededDisplay" unique_id=466937642]
+show_behind_parent = true
+layout_mode = 1
+anchor_left = 0.5877193
+anchor_top = -0.7757538
+anchor_right = 0.5877193
+anchor_bottom = -0.7757538
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="CashNeededDisplay/Control" unique_id=2104600027]
+visible = false
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_vjt1i")
+
+[node name="RightTriangle" type="MeshInstance2D" parent="CashNeededDisplay/Control" unique_id=189155988]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(203.00085, 5.242276e-06)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_8uupg")
+
+[node name="Square" type="MeshInstance2D" parent="CashNeededDisplay/Control" unique_id=930392948]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_rcr1f")
+
+[node name="CashNeededAmountLabel" type="RichTextLabel" parent="CashNeededDisplay" unique_id=2144627278]
+unique_name_in_owner = true
+visible = false
+clip_contents = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.069298245
+anchor_top = -1.6
+anchor_right = 0.6412281
+anchor_bottom = 0.075
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(1.005, 0.5)
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_constants/shadow_outline_size = 133
+theme_override_constants/shadow_offset_x = 7
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 104
+bbcode_enabled = true
+text = "$10,000"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 2
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CashSubtitle" type="RichTextLabel" parent="CashNeededDisplay" unique_id=1858472542]
+visible = false
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -126.5
+offset_top = -205.0
+offset_right = 27.5
+offset_bottom = -146.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.632, 0.632)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 2
+theme_type_variation = &"RedRichText"
+theme_override_constants/shadow_outline_size = 133
+theme_override_constants/shadow_offset_x = 7
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 54
+bbcode_enabled = true
+text = "C  A  S  H   N E E D E D"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="CashNeededDisplay" unique_id=1236604716]
+layout_mode = 0
+offset_left = 100.0
+offset_right = 140.0
+offset_bottom = 40.0
+
 [node name="CloseMapButton" type="Button" parent="." unique_id=2017567355 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
-offset_left = 180.0
-offset_top = 104.0
-offset_right = 262.0
-offset_bottom = 164.0
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -60.0
+offset_right = 82.0
+grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 theme_override_font_sizes/font_size = 28
 icon_alignment = 1
 expand_icon = true
@@ -746,21 +1075,22 @@ purchase_sfx = NodePath("shop_open_sfx_01")
 wiggle_amount = 1.1
 
 [node name="CloseButtonIcon2" type="TextureRect" parent="CloseMapButton" unique_id=887776723]
-self_modulate = Color(0.75, 0.12000002, 0.14100002, 1)
+self_modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
+anchors_preset = 6
+anchor_left = 1.0
 anchor_top = 0.5
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -129.60632
-offset_top = -128.0
-offset_right = 126.39368
-offset_bottom = 128.0
-grow_horizontal = 2
+offset_left = 29.99997
+offset_top = -235.0
+offset_right = 285.99997
+offset_bottom = 21.0
+grow_horizontal = 0
 grow_vertical = 2
 scale = Vector2(0.175, 0.175)
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 texture = ExtResource("7_8mvl6")
 stretch_mode = 5
 
@@ -780,6 +1110,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.053, 1.053)
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 texture = ExtResource("7_8mvl6")
 stretch_mode = 5
 

@@ -160,6 +160,14 @@ func open_menu() -> void:
 	enter_state(State.OPEN_MENU)
 	
 
+func _on_solo_pressed() -> void:
+	# Solo opens the island map. Equip a gun if needed so travel/start works.
+	_ensure_gun_equipped()
+	var map_menu := _ensure_ticket_map()
+	if map_menu and map_menu.has_method("open_pop_up"):
+		map_menu.open_pop_up()
+
+
 func _on_free_play_pressed() -> void:
 	# Soft-close start menu, then jump straight to the testing room.
 	if has_method("sfx_close_shop"):
@@ -167,14 +175,7 @@ func _on_free_play_pressed() -> void:
 	hide()
 	current_state = State.INACTIVE
 
-	# Free Play skips the AddGun purchase — equip a gun so start_player() works.
-	if int(gl_PlayerState.dataset.get("power_gun", 0)) < 1:
-		gl_PlayerState.dataset.power_gun = 1
-	var round_manager := get_tree().get_first_node_in_group("round_manager")
-	if round_manager and round_manager.get("player"):
-		var p = round_manager.player
-		if p and p.get("player_gun") and p.player_gun.has_method("update_guns"):
-			p.player_gun.update_guns()
+	_ensure_gun_equipped()
 
 	var test_room := gl_DataSet.get_testing_place_name()
 	var current := String(gl_PlayerState.dataset.level_name).to_lower()
@@ -184,9 +185,27 @@ func _on_free_play_pressed() -> void:
 	gl_PlayerState.change_location(test_room)
 
 
+func _ensure_gun_equipped() -> void:
+	if int(gl_PlayerState.dataset.get("power_gun", 0)) < 1:
+		gl_PlayerState.dataset.power_gun = 1
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and rm.get("player"):
+		var p = rm.player
+		if p and p.get("player_gun") and p.player_gun.has_method("update_guns"):
+			p.player_gun.update_guns()
+
+
 func gun_purchased() -> void:
 	sfx_purchase_made()
-	%TicketPurchasedPopUp.open_pop_up()
+	var map_menu := _ensure_ticket_map()
+	if map_menu and map_menu.has_method("open_pop_up"):
+		map_menu.open_pop_up()
+
+func _ensure_ticket_map() -> Node:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_ticket_map"):
+		return menus.ensure_ticket_map()
+	return get_tree().get_first_node_in_group("map_menu")
 
 func purchase_denied_tween() -> void:
 	$SFX/purchase.play()
@@ -242,4 +261,6 @@ func restart() -> void:
 	
 	
 func ticket_purchased() -> void:
-	$TicketPurchasedPopUp.display_ticket()
+	var map_menu := _ensure_ticket_map()
+	if map_menu and map_menu.has_method("display_ticket"):
+		map_menu.display_ticket()

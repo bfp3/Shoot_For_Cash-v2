@@ -176,6 +176,9 @@ func _setup_mobile_pause_button() -> void:
 
 
 func _on_mobile_pause_pressed() -> void:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_pause"):
+		menus.ensure_pause()
 	var pause_menu = get_tree().get_first_node_in_group("pause_menu")
 	if pause_menu and pause_menu.has_method("open_menu"):
 		pause_menu.open_menu()

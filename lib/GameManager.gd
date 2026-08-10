@@ -1,3 +1,6 @@
+## Legacy level progression helper — NOT used by Main / Main-lofi.
+## Paths below point at old 100_levels assets and must stay off the Main load path.
+## Prefer RoundManager + sc/All_level_layouts/* instead.
 extends Node
 const RETRY_STAGE_ENVIRONMENT = preload('res://res/skyEnvironments/Retry_stage_environment.tres')
 @onready var world_env : WorldEnvironment # = get_tree().get_first_node_in_group('world_env')

@@ -1,17 +1,21 @@
 extends Node
 class_name RoundManager
 
-const LEVEL_LAYOUT_000_JETZ = preload("uid://ceklxgxfwiv1t")
-const LEVEL_LAYOUT_00_OPENING_SCENE = preload('uid://88s7u86w4lfr')
-const LEVEL_LAYOUT_01_MOSS = preload('uid://bc6weh2tp6rox')
-const LEVEL_LAYOUT_02_REDD = preload('uid://bbpjw4jqdvt5g')
-const LEVEL_LAYOUT_03_GLORY = preload('uid://cu16ohrbbd3rb')
-const LEVEL_LAYOUT_04_NOIR = preload("res://sc/All_level_layouts/level_layout_04_noir.tscn")
-const LEVEL_LAYOUT_05_VESPER = preload("res://sc/All_level_layouts/level_layout_05_vesper.tscn")
+## Level scenery paths — loaded on demand (never preload all islands into Main).
+## Keep these under sc/All_level_layouts only. Do NOT point at sc/2025_Levels/* giants.
+const LAYOUT_PATH_START := "res://sc/All_level_layouts/level_layout_00_start.tscn"
+const LAYOUT_PATH_BY_PLACE_INDEX := {
+	0: "res://sc/All_level_layouts/level_layout_01_moss.tscn",
+	1: "res://sc/All_level_layouts/level_layout_02_redd.tscn",
+	2: "res://sc/All_level_layouts/level_layout_03_glory.tscn",
+	3: "res://sc/All_level_layouts/level_layout_000_jetz.tscn",
+	4: "res://sc/All_level_layouts/level_layout_04_noir.tscn",
+	5: "res://sc/All_level_layouts/level_layout_05_vesper.tscn",
+}
 
-#const LEVEL_LAYOUT_03_GLORY = preload('uid://b3gni42s8751h')
-
-
+## Cached PackedScenes so revisiting Moss/Redd/etc. does not re-parse from disk.
+var _layout_cache: Dictionary = {} # path -> PackedScene
+var _layout_load_requested: Dictionary = {} # path -> true
 
 const LEVEL_FILE_PATH := 'res://sc/island-shipper.txt'
 const LEVEL_ISLAND_NAME := 'shipper'
@@ -968,6 +972,9 @@ func update_round_end() -> void:
 
 
 func update_tally_start() -> void:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_tally"):
+		menus.ensure_tally()
 	EventBus.instance.open_tally_card.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -1026,10 +1033,18 @@ func update_game_won() -> void:
 func move_to_start() -> void:
 	if level_layout.get_children().size() > 0:
 		level_layout.get_child(0).queue_free()
-	
-	var level_mesh = LEVEL_LAYOUT_00_OPENING_SCENE.instantiate()
+
+	# Sync load is fine here — only the start layout, not all islands.
+	var layout_scene := _get_cached_layout(LAYOUT_PATH_START)
+	if layout_scene == null:
+		push_error("RoundManager: failed to load start layout")
+		return
+	var level_mesh = layout_scene.instantiate()
+	var heavy := _detach_heavy_layout_nodes(level_mesh)
 	level_layout.add_child(level_mesh)
 	level_mesh.name = 'current_level_layout'
+	# Reattach ocean/env after the body is in the tree.
+	call_deferred("_reattach_heavy_layout_nodes", heavy)
 
 
 ## Smooth return to the title screen (no scene reload / Wormfood intro).
@@ -1146,36 +1161,103 @@ func return_to_title() -> void:
 	transitioning_worlds = false
 
 
-func _layout_for_level(level_id: String) -> PackedScene:
+func _layout_path_for_level(level_id: String) -> String:
 	## Layouts are bound to place_name *index* so renaming entries in
 	## gl_DataSet.dataset_string.place_name keeps the same scenery.
 	level_id = gl_DataSet.resolve_place_name(level_id)
 	var idx := gl_DataSet.get_place_index(level_id)
-	match idx:
-		0:
-			return LEVEL_LAYOUT_01_MOSS
-		1:
-			return LEVEL_LAYOUT_02_REDD
-		2:
-			return LEVEL_LAYOUT_03_GLORY
-		3:
-			return LEVEL_LAYOUT_000_JETZ
-		4:
-			return LEVEL_LAYOUT_04_NOIR
-		5:
-			return LEVEL_LAYOUT_05_VESPER
-		_:
-			return null
+	return String(LAYOUT_PATH_BY_PLACE_INDEX.get(idx, ""))
+
+
+func _layout_for_level(level_id: String) -> PackedScene:
+	var path := _layout_path_for_level(level_id)
+	if path.is_empty():
+		return null
+	return _get_cached_layout(path)
+
+
+func _request_layout_load(path: String) -> void:
+	if path.is_empty() or _layout_cache.has(path):
+		return
+	if _layout_load_requested.get(path, false):
+		return
+	_layout_load_requested[path] = true
+	var err := ResourceLoader.load_threaded_request(path, "PackedScene", true)
+	if err != OK:
+		# Fall back to sync path later via _get_cached_layout.
+		_layout_load_requested[path] = false
+
+
+func _get_cached_layout(path: String) -> PackedScene:
+	if _layout_cache.has(path):
+		return _layout_cache[path] as PackedScene
+	var packed := ResourceLoader.load(path, "PackedScene", ResourceLoader.CACHE_MODE_REUSE) as PackedScene
+	if packed:
+		_layout_cache[path] = packed
+	return packed
+
+
+func _await_layout_scene(path: String) -> PackedScene:
+	if path.is_empty():
+		return null
+	if _layout_cache.has(path):
+		return _layout_cache[path] as PackedScene
+
+	_request_layout_load(path)
+	var waited := 0
+	while waited < 600:
+		var status := ResourceLoader.load_threaded_get_status(path)
+		match status:
+			ResourceLoader.THREAD_LOAD_LOADED:
+				var packed := ResourceLoader.load_threaded_get(path) as PackedScene
+				if packed:
+					_layout_cache[path] = packed
+					return packed
+				break
+			ResourceLoader.THREAD_LOAD_FAILED, ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+				break
+			_:
+				await get_tree().process_frame
+				waited += 1
+	return _get_cached_layout(path)
+
+
+## Pull ocean / world-env out before add_child so first-frame shader compile
+## happens after the layout body is in (under the travel fade).
+func _detach_heavy_layout_nodes(layout: Node) -> Array:
+	var detached: Array = []
+	for child_name in ["OutsetOcean", "WorldEnvironment"]:
+		var node := layout.get_node_or_null(child_name)
+		if node == null:
+			continue
+		layout.remove_child(node)
+		detached.append({"parent": layout, "node": node})
+	return detached
+
+
+func _reattach_heavy_layout_nodes(detached: Array) -> void:
+	for item in detached:
+		var parent: Node = item.get("parent")
+		var node: Node = item.get("node")
+		if parent == null or node == null or not is_instance_valid(parent) or not is_instance_valid(node):
+			continue
+		parent.add_child(node)
 
 
 func _save_level_progress() -> void:
 	var level_id := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
 	if level_id == '' or level_id == gl_DataSet.get_start_place_name() or level_id == 'start':
 		return
+	var existing: Dictionary = {}
+	if _level_progress.has(level_id) and _level_progress[level_id] is Dictionary:
+		existing = (_level_progress[level_id] as Dictionary).duplicate(true)
+	else:
+		existing = gl_PlayerState.get_level_progress_entry(level_id)
 	var entry := {
 		'sequence_index': current_sequence_index,
 		'round': maxi(current_round, 1),
 		'player_round': int(gl_PlayerState.dataset.round),
+		'cash_earned': int(existing.get('cash_earned', gl_PlayerState.get_place_cash_earned(level_id))),
 	}
 	_level_progress[level_id] = entry
 	gl_PlayerState.set_level_progress_entry(level_id, entry)
@@ -1205,8 +1287,8 @@ func _restore_level_progress(level_id: String) -> void:
 ## Swap scenery + round data for a shooting range. Used for first arrival and mid-run map travel.
 func travel_to_level(level_id: String) -> void:
 	level_id = gl_DataSet.resolve_place_name(level_id)
-	var layout_scene := _layout_for_level(level_id)
-	if layout_scene == null:
+	var layout_path := _layout_path_for_level(level_id)
+	if layout_path.is_empty():
 		push_error('RoundManager: unknown level "%s"' % level_id)
 		return
 	if transitioning_worlds:
@@ -1217,6 +1299,9 @@ func travel_to_level(level_id: String) -> void:
 	var already_here := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name)) == level_id
 	if already_here:
 		return
+
+	# Kick layout load on a worker during the fade.
+	_request_layout_load(layout_path)
 
 	transitioning_worlds = true
 	_save_level_progress()
@@ -1267,12 +1352,21 @@ func travel_to_level(level_id: String) -> void:
 			child.queue_free()
 		await get_tree().process_frame
 
+	var layout_scene := await _await_layout_scene(layout_path)
+	if layout_scene == null:
+		push_error('RoundManager: failed to load layout for "%s"' % level_id)
+		transitioning_worlds = false
+		return
+
 	rocks_container.show()
 	var level_scenery = layout_scene.instantiate()
+	var heavy := _detach_heavy_layout_nodes(level_scenery)
 	level_layout.add_child(level_scenery)
 	level_scenery.name = 'current_level_layout'
 	# Let Compatibility/Web compile the new layout's pipelines under the fade.
 	await get_tree().process_frame
+	await get_tree().process_frame
+	_reattach_heavy_layout_nodes(heavy)
 	await get_tree().process_frame
 
 	await get_tree().create_timer(1.0, false).timeout
@@ -1399,6 +1493,10 @@ func start_game_over() -> void:
 	game_over_triggered = true
 	gl_PlayerState.mark_place_completed(place)
 
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_game_over"):
+		menus.ensure_game_over()
+
 	var game_over_menu = get_tree().get_first_node_in_group('game_over_screen')
 	if game_over_menu:
 		game_over_menu.update_open_menu()
@@ -1495,11 +1593,12 @@ func move_to_level_instant(level_id) -> void:
 		level_id = gl_DataSet.get_place_name(int(level_id))
 	else:
 		level_id = gl_DataSet.resolve_place_name(String(level_id))
-	var layout_scene := _layout_for_level(level_id)
-	if layout_scene == null:
+	var layout_path := _layout_path_for_level(level_id)
+	if layout_path.is_empty():
 		push_error('RoundManager: unknown level "%s" for instant travel' % level_id)
 		return
 
+	_request_layout_load(layout_path)
 	transitioning_worlds = true
 	player.display_hud()
 	gl_PlayerState.dataset["stage"] = 1
@@ -1517,12 +1616,20 @@ func move_to_level_instant(level_id) -> void:
 			child.queue_free()
 		await get_tree().process_frame
 
+	var layout_scene := await _await_layout_scene(layout_path)
+	if layout_scene == null:
+		push_error('RoundManager: failed to load layout for instant "%s"' % level_id)
+		transitioning_worlds = false
+		return
+
 	rocks_container.show()
 	var level_scenery = layout_scene.instantiate()
+	var heavy := _detach_heavy_layout_nodes(level_scenery)
 	level_layout.add_child(level_scenery)
 	level_scenery.name = 'current_level_layout'
 	await get_tree().process_frame
 	await get_tree().process_frame
+	_reattach_heavy_layout_nodes(heavy)
 
 	shop_main_menu.setup_shop_for_rounds()
 	shop_main_menu.update_place_label()

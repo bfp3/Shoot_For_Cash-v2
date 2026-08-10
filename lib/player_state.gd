@@ -193,12 +193,32 @@ func get_cash() -> Dictionary:
 	
 func add_cash(value : int) -> void:
 	dataset.cash = dataset.cash + value
+	if value > 0:
+		add_place_cash_earned(value)
 
 func subtract_penalties_from_cash() -> void:
 	dataset.cash = dataset.cash + dataset.fines
 
 func add_bonus(value : int) -> void:
 	dataset.bonus_cash = dataset.bonus_cash + value
+
+
+## Lifetime winnings while playing a place (map button display).
+func add_place_cash_earned(amount: int, place_id: String = "") -> void:
+	if amount <= 0:
+		return
+	if place_id.is_empty():
+		place_id = gl_DataSet.resolve_place_name(String(dataset.get("level_name", "")))
+	if place_id.is_empty() or place_id == gl_DataSet.get_start_place_name() or place_id == "start":
+		return
+	var entry := get_level_progress_entry(place_id)
+	entry["cash_earned"] = int(entry.get("cash_earned", 0)) + amount
+	set_level_progress_entry(place_id, entry)
+
+
+func get_place_cash_earned(place_id: String) -> int:
+	var entry := get_level_progress_entry(place_id)
+	return int(entry.get("cash_earned", 0))
 
 	
 func log_hit(item:String, item_type:String, value:int):

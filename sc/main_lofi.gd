@@ -5,7 +5,7 @@ extends Control
 ## Side panel: Test Mode (default, no disk save) / Clear Save / Load Game.
 
 const MAIN_SCENE := "res://sc/Main.tscn"
-const SHOP_MINI_GAME_SCENE := preload("res://ch/Shop/ShopMiniGame.tscn")
+const SHOP_MINI_GAME_SCENE_PATH := "res://ch/Shop/ShopMiniGame.tscn"
 
 @onready var _launcher_panel: Control = $Center
 #@onready var _mini_game_host: Control = $MiniGameHost
@@ -23,7 +23,6 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	gl_PlayerState.begin_test_session()
 	_refresh_session_ui()
-	_setup_shop_mini_game()
 	_confirm.hide()
 	var first_btn := $Center/HBox/LaunchPanel/Margin/VBox/GoToIntro as Control
 	UiFocus.wire_vertical([
@@ -40,8 +39,14 @@ func _ready() -> void:
 	UiFocus.grab_in(_launcher_panel, first_btn)
 
 
-func _setup_shop_mini_game() -> void:
-	_shop_mini_game = SHOP_MINI_GAME_SCENE.instantiate()
+func _ensure_shop_mini_game() -> void:
+	if _shop_mini_game != null and is_instance_valid(_shop_mini_game):
+		return
+	var packed := ResourceLoader.load(SHOP_MINI_GAME_SCENE_PATH, "PackedScene", ResourceLoader.CACHE_MODE_REUSE) as PackedScene
+	if packed == null:
+		push_warning("Main-lofi: failed to load ShopMiniGame")
+		return
+	_shop_mini_game = packed.instantiate()
 	add_child(_shop_mini_game)
 	if _shop_mini_game.has_method("attach_to_shop"):
 		_shop_mini_game.attach_to_shop(self)
@@ -107,6 +112,7 @@ func _on_confirm_no_pressed() -> void:
 
 
 func _toggle_shop_mini_game() -> void:
+	_ensure_shop_mini_game()
 	if _shop_mini_game == null or not _shop_mini_game.has_method("toggle"):
 		return
 	var opening := not bool(_shop_mini_game.get("is_open"))

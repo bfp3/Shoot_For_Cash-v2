@@ -194,16 +194,21 @@ func update_purchased() -> void:
 	complete_purchase()
 	$FreeParticles.emitting = false
 	
-	var map_menu := get_tree().get_first_node_in_group('map_menu')
-	if map_menu:
+	var map_menu := _ensure_ticket_map()
+	if map_menu and map_menu.has_method("open_pop_up"):
 		await get_tree().create_timer(0.85).timeout
 		map_menu.open_pop_up()
-		
 	else:
 		print("DID NOT found the map menu")
-	
-	
-	
+
+
+func _ensure_ticket_map() -> Node:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_ticket_map"):
+		return menus.ensure_ticket_map()
+	return get_tree().get_first_node_in_group("map_menu")
+		
+		
 func update_capped() -> void:
 	pass
 	
@@ -236,9 +241,9 @@ func reset_buttons_settings() -> void:
 
 	
 func _on_button_down() -> void:
-	# Solo / gun already owned: reopen the map instead of silently no-oping.
+	# Gun already owned: reopen the map instead of silently no-oping.
 	if current_state == State.PURCHASED and upgrade_type == "gun":
-		var map_menu := get_tree().get_first_node_in_group("map_menu")
+		var map_menu := _ensure_ticket_map()
 		if map_menu and map_menu.has_method("open_pop_up"):
 			map_menu.open_pop_up()
 		return

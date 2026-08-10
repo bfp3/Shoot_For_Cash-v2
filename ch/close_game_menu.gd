@@ -166,6 +166,9 @@ func _input(event: InputEvent) -> void:
 	
 	
 func _on_pressed() -> void:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_pause"):
+		menus.ensure_pause()
 	var pause_menu = get_tree().get_first_node_in_group('pause_menu')
 	if pause_menu:
 		pause_menu.start()

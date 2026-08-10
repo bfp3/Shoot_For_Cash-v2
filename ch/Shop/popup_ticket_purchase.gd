@@ -204,8 +204,14 @@ func complete_purchase() -> void:
 	if current_state != State.PURCHASED:
 		return
 	
-	
-	%TicketPurchasedPopUp.ticket_used()
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	var map_menu: Node = null
+	if menus and menus.has_method("ensure_ticket_map"):
+		map_menu = menus.ensure_ticket_map()
+	else:
+		map_menu = get_tree().get_first_node_in_group("map_menu")
+	if map_menu and map_menu.has_method("ticket_used"):
+		map_menu.ticket_used()
 	
 	var unpurchased_cont: VBoxContainer = $VBoxContainer
 	#purchase_sfx.play()

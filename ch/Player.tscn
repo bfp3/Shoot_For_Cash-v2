@@ -52,8 +52,6 @@
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="39_11n43"]
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="40_pivo4"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="41_k5tjv"]
-[ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="42_ms1v2"]
-[ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="43_vmtkp"]
 [ext_resource type="PackedScene" uid="uid://dbuyf4x33jxsi" path="res://ch/Player/hoodMesh.tscn" id="48_vmtkp"]
 
 [sub_resource type="Curve" id="Curve_emrcn"]
@@ -830,61 +828,6 @@ turbulence_influence_max = 1.0
 turbulence_influence_over_life = SubResource("CurveTexture_y08kl")
 
 [sub_resource type="QuadMesh" id="QuadMesh_rui0b"]
-
-[sub_resource type="Curve" id="Curve_7l2o1"]
-_data = [Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.48931625, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_dvhks"]
-curve = SubResource("Curve_7l2o1")
-
-[sub_resource type="Gradient" id="Gradient_1qwwb"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(0.22, 0.22, 0.22, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_8dlh1"]
-gradient = SubResource("Gradient_1qwwb")
-
-[sub_resource type="Curve" id="Curve_v6n2o"]
-_data = [Vector2(0, 0.775281), 0.0, 0.0, 0, 0, Vector2(0.0234742, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 4
-
-[sub_resource type="CurveTexture" id="CurveTexture_ofhad"]
-curve = SubResource("Curve_v6n2o")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nvq61"]
-emission_shape_scale = Vector3(0.6, 0.6, 0.6)
-emission_shape = 6
-emission_ring_axis = Vector3(0, 1, 0)
-emission_ring_height = 0.0
-emission_ring_radius = 0.0
-emission_ring_inner_radius = 0.5
-emission_ring_cone_angle = 90.0
-direction = Vector3(0, 1, 0)
-spread = 5.0
-angular_velocity_min = -1.6093254e-05
-angular_velocity_max = -1.6093254e-05
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_ofhad")
-color_ramp = SubResource("GradientTexture1D_8dlh1")
-alpha_curve = SubResource("CurveTexture_dvhks")
-anim_speed_min = 1.0
-anim_speed_max = 1.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5bweu"]
-transparency = 1
-shading_mode = 0
-vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("42_ms1v2")
-billboard_mode = 3
-billboard_keep_scale = true
-particles_anim_h_frames = 8
-particles_anim_v_frames = 8
-particles_anim_loop = false
-
-[sub_resource type="QuadMesh" id="QuadMesh_sqxov"]
-material = SubResource("StandardMaterial3D_5bweu")
-size = Vector2(2, 2)
 
 [node name="Player" type="Node3D" unique_id=1061800479 node_paths=PackedStringArray("weapon_shooting", "player_gun") groups=["Player"]]
 script = ExtResource("1_6ljxy")
@@ -2595,7 +2538,6 @@ unique_name_in_owner = true
 top_level = true
 script = ExtResource("38_lf8qf")
 delays = {
-&"Smoke_quick": 0.0,
 &"Sparks01": 0.0,
 &"upward_smoke_glow": 0.0
 }
@@ -2625,19 +2567,5 @@ explosiveness = 1.0
 visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_mlld6")
 draw_pass_1 = SubResource("QuadMesh_rui0b")
-
-[node name="Smoke_quick" type="GPUParticles3D" parent="ShootWallVFX" unique_id=391529345]
-transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, -0.5)
-visible = false
-cast_shadow = 0
-emitting = false
-amount = 1
-one_shot = true
-explosiveness = 1.0
-fixed_fps = 12
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_nvq61")
-draw_pass_1 = SubResource("QuadMesh_sqxov")
-script = ExtResource("43_vmtkp")
 
 [connection signal="timeout" from="Mouse_turning_SFX/StopTimer" to="Mouse_turning_SFX" method="_on_stop_timer_timeout"]

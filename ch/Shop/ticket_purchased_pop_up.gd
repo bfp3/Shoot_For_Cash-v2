@@ -15,6 +15,8 @@ var _selecting_level := false
 @onready var glory_button: Control = $TreePanel/Buttons/Level_button_selector3
 @onready var noir_button: Control = $TreePanel/Buttons/Level_button_selector4
 @onready var vesper_button: Control = $TreePanel/Buttons/Level_button_selector5
+@onready var map_cash_label: RichTextLabel = %MapCashBalanceLabel
+@onready var cash_needed_label: RichTextLabel = %CashNeededAmountLabel
 
 
 func _ready() -> void:
@@ -37,6 +39,7 @@ func open_pop_up() -> void:
 	_selecting_level = false
 	ticket_location = String(gl_PlayerState.dataset.level_name).to_lower()
 	_refresh_level_buttons()
+	_refresh_map_cash_labels()
 
 	modulate.a = 0.0
 	show()
@@ -86,6 +89,11 @@ func _map_level_buttons() -> Array:
 	return [moss_button, redd_button, glory_button, noir_button, vesper_button]
 
 
+## Demo map only shows Moss / Redd / Glory.
+func _map_visible_level_buttons() -> Array:
+	return [moss_button, redd_button, glory_button]
+
+
 func _unlock_map_button(button: Control) -> void:
 	if button == null:
 		return
@@ -101,9 +109,25 @@ func _unlock_map_button(button: Control) -> void:
 
 
 func _refresh_level_buttons() -> void:
-	for button in _map_level_buttons():
+	for button in [noir_button, vesper_button]:
+		if button:
+			button.visible = false
+	for button in _map_visible_level_buttons():
 		_unlock_map_button(button)
+		if button.has_method("refresh_map_progress"):
+			button.refresh_map_progress()
 	_apply_completion_stamps(false)
+
+
+func _refresh_map_cash_labels() -> void:
+	var cash := int(gl_PlayerState.dataset.cash)
+	if map_cash_label:
+		map_cash_label.text = "$" + str(cash)
+	var needed := int(gl_DataSet.get_value("cash_needed_next_island", 0))
+	if needed < 0:
+		needed = 10000
+	if cash_needed_label:
+		cash_needed_label.text = "$" + str(needed)
 
 
 ## Stamp the place button that matches place_id (tally-card style when animate).

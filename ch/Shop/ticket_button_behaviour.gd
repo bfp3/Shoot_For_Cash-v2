@@ -243,9 +243,18 @@ func _on_pressed() -> void:
 		TicketState.PURCHASED:
 			#ticket_travel_requested.emit(self)
 			
-			%TicketPurchasedPopUp.display_ticket()
+			var map_menu := _ensure_ticket_map()
+			if map_menu and map_menu.has_method("display_ticket"):
+				map_menu.display_ticket()
 			
 			
+func _ensure_ticket_map() -> Node:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_ticket_map"):
+		return menus.ensure_ticket_map()
+	return get_tree().get_first_node_in_group("map_menu")
+
+
 func purchase_ticket_special_effects() -> void:
 	shop_main_menu.sfx_purchase_made()
 	_play_purchase_effect()

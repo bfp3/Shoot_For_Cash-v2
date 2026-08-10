@@ -58,6 +58,10 @@ var dataset_float : Dictionary = {
 	
 	,"reward_perfect_round"	: [50,1000,1500]
 	,"price_play_round"		: [10,50,100]
+	## Map: cash required to unlock travel to the next island (shown as "Cash Needed").
+	,"cash_needed_next_island"	: [10000]
+	## Map: rounds shown as current/total on each island button.
+	,"map_rounds_per_island"	: [12]
 	
 	,"reward_all_pineapples"		: [100]
 	# Targets / Rocks

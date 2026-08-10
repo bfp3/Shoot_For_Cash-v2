@@ -1,6 +1,6 @@
 extends Control
 
-const SHOP_MINI_GAME_SCENE := preload("res://ch/Shop/ShopMiniGame.tscn")
+const SHOP_MINI_GAME_SCENE_PATH := "res://ch/Shop/ShopMiniGame.tscn"
 
 @export var round_manager : RoundManager
 @export var money_control : Node
@@ -81,7 +81,6 @@ func _ready() -> void:
 	
 	_setup_ammo_count_popup()
 	_setup_pause_label_popup()
-	_setup_shop_mini_game()
 	_setup_shop_extra_buttons()
 	_strip_non_interactive_focus(self)
 
@@ -103,6 +102,9 @@ func _setup_shop_extra_buttons() -> void:
 
 
 func _on_pause_game_button_pressed() -> void:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_pause"):
+		menus.ensure_pause()
 	var pause_menu = get_tree().get_first_node_in_group("pause_menu")
 	if pause_menu and pause_menu.has_method("open_menu"):
 		pause_menu.open_menu()
@@ -113,6 +115,7 @@ func _on_pause_game_button_pressed() -> void:
 func _on_shoot_for_cents_pressed() -> void:
 	if current_state != SkillState.IN_MENU and current_state != SkillState.OPEN_MENU:
 		return
+	_ensure_shop_mini_game()
 	if _shop_mini_game and _shop_mini_game.has_method("toggle"):
 		_shop_mini_game.toggle()
 	elif _shop_mini_game and _shop_mini_game.has_method("open"):
@@ -129,6 +132,9 @@ func ticket_purchased() -> void:
 
 ## Opens the island map popup (Moss / Redd select) from the shop.
 func open_map_menu() -> void:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_ticket_map"):
+		menus.ensure_ticket_map()
 	var map_menu := get_tree().get_first_node_in_group('map_menu')
 	if map_menu and map_menu.has_method('open_pop_up'):
 		map_menu.open_pop_up()
@@ -913,7 +919,7 @@ func gun_purchased() -> void:
 	#tween.tween_property(transport_tickets, "modulate:a", 1.0, 0.5)
 	#tween.parallel().tween_property($CenterContainer/MainPanel/VBoxContainer/UpgradeStats, "modulate:a", 1.0, 0.5)
 	
-	%TicketPurchasedPopUp.open_pop_up()
+	open_map_menu()
 
 func _on_re_roll_pressed() -> void:
 		
@@ -1088,14 +1094,20 @@ func update_cost_label() -> void:
 	cash_label.pivot_offset.x = cash_label.size.x * 0.5
 	
 func _setup_shop_mini_game() -> void:
-	var main_panel := get_node_or_null("CenterContainer/MainPanel") as Control
-	if main_panel == null:
-		push_warning("Shop: MainPanel missing — mini-game overlay skipped")
+	# Kept for compatibility; mini-game is created on first open.
+	pass
+
+
+func _ensure_shop_mini_game() -> void:
+	if _shop_mini_game != null and is_instance_valid(_shop_mini_game):
 		return
-	_shop_mini_game = SHOP_MINI_GAME_SCENE.instantiate()
+	var packed := ResourceLoader.load(SHOP_MINI_GAME_SCENE_PATH, "PackedScene", ResourceLoader.CACHE_MODE_REUSE) as PackedScene
+	if packed == null:
+		push_warning("Shop: failed to load ShopMiniGame")
+		return
+	_shop_mini_game = packed.instantiate()
 	add_child(_shop_mini_game)
 	if _shop_mini_game.has_method("attach_to_shop"):
-		# Fullscreen overlay (no shop-panel inset).
 		_shop_mini_game.attach_to_shop(self)
 
 
@@ -1109,6 +1121,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	#if event is InputEventKey and event.pressed and not event.echo:
 	if Input.is_action_just_pressed('select_button'):
 		if current_state == SkillState.IN_MENU or current_state == SkillState.OPEN_MENU:
+			_ensure_shop_mini_game()
 			if _shop_mini_game and _shop_mini_game.has_method("toggle"):
 				_shop_mini_game.toggle()
 				get_viewport().set_input_as_handled()

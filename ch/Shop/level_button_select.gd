@@ -18,6 +18,9 @@ var interaction_tween: Tween
 @onready var outer_ring: TextureRect = $OuterRing
 
 @onready var level_name_label: RichTextLabel = $level_name_label
+@onready var round_progress_label: RichTextLabel = %RoundProgressLabel
+#@onready var egg_silhouettes: HBoxContainer = %EggSilhouettes
+@onready var cash_earned_label: RichTextLabel = %CashEarnedLabel
 @export var level_name := 'Locked'
 
 @export var level_locked := true
@@ -46,7 +49,7 @@ func _ready() -> void:
 		current_state = State.UNLOCKED
 		level_name_label.text = "[wave]" + level_name.to_upper()
 		#level_name_label.modulate = Color('15181c')
-		level_name_label.add_theme_font_size_override("normal_font_size", 109)
+		#level_name_label.add_theme_font_size_override("normal_font_size", 109)
 		$HSeparator.scale.x = 1.0
 		
 		
@@ -56,32 +59,65 @@ func _ready() -> void:
 	if disabled:
 		modulate= Color("ababab59")
 		level_name_label.modulate = Color("1f1f1fff")
+
+	refresh_map_progress()
 	
 
 func set_locked_visuals() -> void:
 	current_state = State.LOCKED
 	#level_name_label.text = "Locked".to_upper()
 	level_name_label.text = ""
-	level_name_label.modulate = Color("dbcfc5ff")
-	level_name_label.add_theme_font_size_override("normal_font_size", 85)
+	#level_name_label.modulate = Color("dbcfc5ff")
+	#level_name_label.add_theme_font_size_override("normal_font_size", 85)
 	outer_ring.modulate = Color("c9a587ff")
 	$HSeparator.scale.x = 1.13
 	$TextureRect2.modulate = Color('d8c5b7')
 	current_state = State.LOCKED
+	_set_progress_hud_visible(false)
 
 
 func set_unlocked_visuals() -> void:
 	level_locked = false
 	current_state = State.UNLOCKED
 	level_name_label.text = "[wave]" + level_name.to_upper()
-	level_name_label.modulate = Color.WHITE
-	level_name_label.add_theme_font_size_override("normal_font_size", 109)
+	#level_name_label.modulate = Color.WHITE
+	#level_name_label.add_theme_font_size_override("normal_font_size", 109)
 	outer_ring.modulate = Color.WHITE
 	$HSeparator.scale.x = 1.0
 	$TextureRect2.modulate = Color.WHITE
 	disabled = false
 	modulate = Color.WHITE
+	_set_progress_hud_visible(true)
+	refresh_map_progress()
 	_refresh_completion_stamp(false)
+
+
+## Round counter, cash earned on this island, and uncollected egg silhouettes.
+func refresh_map_progress() -> void:
+	if level_locked or current_state == State.LOCKED:
+		_set_progress_hud_visible(false)
+		return
+	_set_progress_hud_visible(true)
+	var total := int(gl_DataSet.get_value("map_rounds_per_island", 0))
+	if total <= 0:
+		total = 12
+	# Placeholder until per-island round tracking drives the numerator.
+	var current_round := 1
+	if round_progress_label:
+		#round_progress_label.text = "%d/%d" % [current_round, total]
+		round_progress_label.text = str(current_round).pad_zeros(2)
+	var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
+
+	# Eggs stay blacked-out silhouettes until collection is wired up.
+
+
+func _set_progress_hud_visible(is_visible: bool) -> void:
+	if round_progress_label:
+		round_progress_label.visible = is_visible
+	#if egg_silhouettes:
+		#egg_silhouettes.visible = is_visible
+	if cash_earned_label:
+		cash_earned_label.visible = is_visible
 
 
 func mark_completed(animate: bool = true) -> void:
