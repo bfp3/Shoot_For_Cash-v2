@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_bc0l2"]
 [ext_resource type="Material" uid="uid://bg8ypxqsno1nc" path="res://res/damage_mesh_mat.tres" id="8_eq13p"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="8_tnjxo"]
+[ext_resource type="Material" uid="uid://hn35w2qwra5g" path="res://res/balloon_blue_mat.tres" id="11_8mu68"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="11_fao6x"]
 [ext_resource type="ArrayMesh" uid="uid://mk0dna4yesux" path="res://res/Rocks/smokebomb_mesh.tres" id="11_ltsxa"]
 [ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="13_gxoxp"]
@@ -127,6 +128,18 @@ material = SubResource("StandardMaterial3D_e1cj4")
 [sub_resource type="CylinderMesh" id="CylinderMesh_ltsxa"]
 height = 0.095
 radial_segments = 22
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q8tld"]
+emission_shape = 1
+emission_sphere_radius = 0.31
+spread = 180.0
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, 0, 0)
+scale_min = 0.099999994
+scale_max = 0.19999999
+scale_curve = SubResource("CurveTexture_0cvxb")
+color = Color(4.415934, 0, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2s6n3"]
 albedo_color = Color(0, 0, 0, 1)
@@ -1040,6 +1053,15 @@ physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.5
 angular_damp = 1.0
 script = ExtResource("1_bc0l2")
+avoider_arm_delay_sec = 1.25
+avoider_lifetime_sec = 8.0
+avoider_explodes_when_hitting_rock = true
+avoider_explodes_when_hitting_avoider = true
+chaser_flee_accel = 16.0
+chaser_max_speed_xy = 10.0
+chaser_arm_delay_sec = 1.0
+chaser_lock_time_sec = 1.4
+chaser_lock_torque = 1800.0
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=291819753]
 shape = SubResource("SphereShape3D_lrylr")
@@ -1198,6 +1220,35 @@ layers = 524289
 material_override = ExtResource("8_eq13p")
 cast_shadow = 0
 mesh = ExtResource("5_27dlh")
+
+[node name="RedParticles" type="GPUParticles3D" parent="Mesh/Red_rock" unique_id=258289539]
+unique_name_in_owner = true
+emitting = false
+amount = 10
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_q8tld")
+draw_pass_1 = SubResource("QuadMesh_ltsxa")
+
+[node name="blue_rock" type="MeshInstance3D" parent="Mesh" unique_id=1780174949]
+unique_name_in_owner = true
+layers = 524288
+material_override = ExtResource("11_8mu68")
+cast_shadow = 0
+mesh = ExtResource("5_27dlh")
+
+[node name="damage_mesh" type="MeshInstance3D" parent="Mesh/blue_rock" unique_id=1571369835]
+visible = false
+layers = 524289
+material_override = ExtResource("8_eq13p")
+cast_shadow = 0
+mesh = ExtResource("5_27dlh")
+
+[node name="RedParticles" type="GPUParticles3D" parent="Mesh/blue_rock" unique_id=1333201300]
+emitting = false
+amount = 10
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_q8tld")
+draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
 [node name="Hazard_large" type="MeshInstance3D" parent="Mesh" unique_id=463627822]
 unique_name_in_owner = true

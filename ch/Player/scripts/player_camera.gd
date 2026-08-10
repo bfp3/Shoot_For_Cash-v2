@@ -107,6 +107,50 @@ func shake_camera_impact() -> void:
 	await cam_shake_tween.finished
 	camera_shaking = false
 
+
+## Heavy multi-axis punch when a rock-avoider detonates on the crosshair.
+func shake_camera_avoider_hit() -> void:
+	if camera_stop_all_shaking:
+		return
+
+	camera_shaking = true
+	if cam_shake_tween:
+		cam_shake_tween.kill()
+
+	global_position = orig_pos
+	rotation_degrees = orig_rot
+
+	var rot_kick := maxf(shake_amount * magnitude_of_camera_shake * 8.0, 2.2)
+	var pos_kick := maxf(shoot_shake_amount * 3.5, 0.55)
+	var dur := maxf(temp_dur, 0.08)
+
+	cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", rot_kick, dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", -rot_kick * 0.85, dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:y", rot_kick * 0.35, dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "position:z", pos_kick, dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "position:y", -pos_kick * 0.35, dur).as_relative()
+
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", -rot_kick * 1.8, dur * 1.15).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", rot_kick * 1.6, dur * 1.15).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:y", -rot_kick * 0.55, dur * 1.15).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "position:x", pos_kick * 0.55, dur * 1.15).as_relative()
+
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", rot_kick * 1.1, dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", -rot_kick * 0.9, dur).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "position:x", -pos_kick * 0.4, dur).as_relative()
+
+	cam_shake_tween.tween_property(self, "rotation_degrees:x", -rot_kick * 0.55, dur * 0.9).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", rot_kick * 0.45, dur * 0.9).as_relative()
+
+	cam_shake_tween.tween_property(self, "rotation_degrees", orig_rot, 0.75)
+	cam_shake_tween.parallel().tween_property(self, "global_position", orig_pos, 0.75)
+
+	await cam_shake_tween.finished
+	camera_shaking = false
+
+
 func shake_camera_sky_mines() -> void:
 	var _shake_amount :float= clamp(1.1, -2.0, 2.0)
 	var _dur : float = 0.1

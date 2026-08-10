@@ -407,6 +407,10 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.RED_ROCK_ERROR
 			'smokecan':
 				return RockInstance.RockSize.SMOKECAN
+			'rock-avoider':
+				return RockInstance.RockSize.AVOIDER
+			'rock-chaser':
+				return RockInstance.RockSize.CHASER
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -424,6 +428,8 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-pigeon'
 		or cmd == 'red_rock_error'
 		or cmd == 'smokecan'
+		or cmd == 'rock-avoider'
+		or cmd == 'rock-chaser'
 	)
 
 
@@ -589,6 +595,8 @@ func _oob_miss_should_show_feedback(rock_type_name: String) -> bool:
 	if rock_type_name.contains("hazard"):
 		return false
 	if rock_type_name.contains("rock_type_8") or rock_type_name.contains("smokecan"):
+		return false
+	if rock_type_name.contains("rock_type_avoider") or rock_type_name.contains("avoider"):
 		return false
 	return true
 

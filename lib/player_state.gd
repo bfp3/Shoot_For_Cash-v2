@@ -293,6 +293,8 @@ func log_rocks(_total_rocks : int, rock_type_name : String) -> void:
 	# Smokecan — obstacle only (same as rock-black / hazard for wave clear).
 	if rock_type_name.contains('rock_type_8') or rock_type_name.contains('smokecan'):
 		return
+	if rock_type_name.contains('rock_type_avoider') or rock_type_name.contains('avoider'):
+		return
 	
 	dataset.total_rocks_in_round += 1
 	dataset.total_rocks_in_round_remaining += 1
@@ -305,11 +307,13 @@ func log_rock_missed(item : String = '') -> void:
 		return
 	if item.contains('rock_type_8') or item.contains('smokecan'):
 		return
+	if item.contains('rock_type_avoider') or item.contains('avoider'):
+		return
 
 	dataset.total_rocks_in_round_remaining -= 1
 	
 
-	if item.contains('rock_type_1'):
+	if item.contains('rock_type_1') or item.contains('rock_type_chaser'):
 		add_strike()
 		#return
 		

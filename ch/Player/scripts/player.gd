@@ -658,6 +658,15 @@ func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
 		weapon_shooting.power_bullet_speed = bullet_speed
 
 
+## Live reticle hit radius in screen pixels (shrink/expand updates Weapon_shooting).
+func get_current_crosshair_hit_radius() -> float:
+	if weapon_shooting and weapon_shooting.power_target_circle > 0.0:
+		return weapon_shooting.power_target_circle
+	if power_target_circle > 0.0:
+		return power_target_circle
+	return scope_base_target_circle if scope_base_target_circle > 0.0 else 40.0
+
+
 func _update_scope_hold(mode: ScopeMode, delta: float) -> void:
 	if not _is_holding_shoot or _scope_mode != mode:
 		_is_holding_shoot = true
@@ -1000,7 +1009,7 @@ func reset_mouse_pos() -> void:
 	var center : Vector2 = get_viewport().size / 2
 	center -= Vector2(20.0, 20.0)
 	center += Vector2(0.0, 140.0)
-	center += Vector2(0.0, 340.0)
+	#center += Vector2(0.0, 140.0)
 	var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	#tween.tween_interval(0.2)
 	tween.tween_property(self, "target_crosshair_position", center, 0.75)

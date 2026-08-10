@@ -214,7 +214,7 @@ func check_white_rocks() -> void:
 	bonuses_label.text = 'BONUSES'
 	bonuses_cash_label.text = ""
 	
-	grand_total_label.text = 'TOTAL WINNINGS'
+	grand_total_label.text = ''
 	grand_total_cash_label.text = ""
 	
 	start_sequence = true

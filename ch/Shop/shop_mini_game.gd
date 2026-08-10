@@ -782,6 +782,8 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == "rock-pigeon"
 		or cmd == "red_rock_error"
 		or cmd == "smokecan"
+		or cmd == "rock-avoider"
+		or cmd == "rock-chaser"
 	)
 
 
@@ -894,6 +896,10 @@ func _kind_from_spawn_cmd(cmd: String) -> ShopMiniRock.RockKind:
 			return ShopMiniRock.RockKind.BLACK
 		"red_rock_error":
 			return ShopMiniRock.RockKind.RED
+		"rock-avoider":
+			return ShopMiniRock.RockKind.AVOIDER
+		"rock-chaser":
+			return ShopMiniRock.RockKind.CHASER
 		_:
 			return ShopMiniRock.RockKind.BASIC
 
@@ -972,6 +978,7 @@ func _make_script_rock(entry: Dictionary, spawn_column: int, delay_sec: float, w
 	rock.yellow_particle_lifetime = yellow_particle_lifetime
 	rock.yellow_particle_speed = yellow_particle_speed
 	rock.yellow_particle_scale = yellow_particle_scale
+	rock.host = self
 	rock.setup(radius, _make_rock_outline(radius), kind)
 	rock.spawn_column = spawn_column
 	rock.spawn_entry = entry
@@ -1743,6 +1750,7 @@ func _prepare_rocks() -> void:
 		rock.yellow_particle_lifetime = yellow_particle_lifetime
 		rock.yellow_particle_speed = yellow_particle_speed
 		rock.yellow_particle_scale = yellow_particle_scale
+		rock.host = self
 		rock.setup(radius, _make_rock_outline(radius), kind)
 		var raw_x := area.x * column_t + _rng.randf_range(-18.0, 18.0)
 		rock.position = Vector2(
@@ -1843,6 +1851,8 @@ func _radius_for_kind(kind: ShopMiniRock.RockKind) -> float:
 			return _rng.randf_range(minf(black_rock_size_min, black_rock_size_max), maxf(black_rock_size_min, black_rock_size_max)) * size_scale * black_rock_size_scale
 		ShopMiniRock.RockKind.RED:
 			return _rng.randf_range(minf(red_rock_size_min, red_rock_size_max), maxf(red_rock_size_min, red_rock_size_max)) * size_scale * rock_size_scale
+		ShopMiniRock.RockKind.AVOIDER, ShopMiniRock.RockKind.CHASER:
+			return _rng.randf_range(minf(basic_rock_size_min, basic_rock_size_max), maxf(basic_rock_size_min, basic_rock_size_max)) * size_scale * rock_size_scale * 1.15
 		_:
 			return _rng.randf_range(minf(basic_rock_size_min, basic_rock_size_max), maxf(basic_rock_size_min, basic_rock_size_max)) * size_scale * rock_size_scale
 
@@ -2108,8 +2118,12 @@ func _make_rock_outline(radius: float) -> PackedVector2Array:
 func _alive_rock_count() -> int:
 	var count := 0
 	for rock in _rocks:
-		if is_instance_valid(rock) and not rock.hit:
-			count += 1
+		if not is_instance_valid(rock) or rock.hit:
+			continue
+		var mini := rock as ShopMiniRock
+		if mini and not mini.is_clearable_target():
+			continue
+		count += 1
 	return count
 
 
@@ -2145,8 +2159,8 @@ func _cleanup_fallen_rocks() -> void:
 			var mini_rock := rock as ShopMiniRock
 			var kind: ShopMiniRock.RockKind = mini_rock.kind if mini_rock else ShopMiniRock.RockKind.BASIC
 			_play_splash(fall_pos)
-			# Black rocks are hazards to avoid — letting them fall is success (no strike).
-			if kind != ShopMiniRock.RockKind.BLACK:
+			# Black / avoider falling away is fine — no strike. Chaser & basics miss = strike.
+			if mini_rock == null or mini_rock.counts_as_fall_strike():
 				_add_strike(true)
 			rock.queue_free()
 			continue
@@ -2430,6 +2444,15 @@ func _try_shoot() -> void:
 				continue
 			if rock.position.distance_to(_crosshair) > _current_target_radius:
 				continue
+			# Avoider: reticle overlap detonates with a strike (even on a shot).
+			if rock.kind == ShopMiniRock.RockKind.AVOIDER:
+				hit_any = true
+				on_shop_avoider_finished(rock, true)
+				_rocks.remove_at(i)
+				continue
+			# Chaser: ignore shots until fully locked.
+			if rock.kind == ShopMiniRock.RockKind.CHASER and not rock._chaser_locked:
+				continue
 			hit_any = true
 			var hit_pos := rock.position
 			var kind: ShopMiniRock.RockKind = rock.kind
@@ -2516,10 +2539,65 @@ func _on_rock_destroyed(rock: RigidBody2D, hit_pos: Vector2, kind: ShopMiniRock.
 		# Shooting a black rock is a hazard — money penalty + strike.
 		_add_money(-black_rock_penalty)
 		_add_strike()
+	elif kind == ShopMiniRock.RockKind.AVOIDER:
+		pass
 	else:
 		_add_money(money_per_destroy)
 	if is_instance_valid(rock):
 		rock.queue_free()
+
+
+func get_aim_crosshair() -> Vector2:
+	return _crosshair
+
+
+func get_aim_radius() -> float:
+	return _current_target_radius
+
+
+## Column 1–8 / row A–C play rectangle (above the wall) for rock-chasers.
+func get_chaser_play_bounds() -> Rect2:
+	var x1 := _column_to_x(1)
+	var x8 := _column_to_x(8)
+	var y_a := _row_to_y(1)
+	var y_c := _row_to_y(3)
+	var min_x := minf(x1, x8)
+	var max_x := maxf(x1, x8)
+	var min_y := minf(y_a, y_c)
+	var max_y := maxf(y_a, y_c)
+	# Keep a little room above the wall so they don't splash while dodging.
+	var wall_y := _overlay.size.y * WALL_Y_RATIO
+	max_y = minf(max_y, wall_y - 36.0)
+	return Rect2(Vector2(min_x, min_y), Vector2(maxf(max_x - min_x, 40.0), maxf(max_y - min_y, 40.0)))
+
+
+## Avoider finished: crosshair contact = strike + big shake; lifetime expire = quiet pop.
+func on_shop_avoider_finished(rock: ShopMiniRock, from_crosshair: bool) -> void:
+	if rock == null or not is_instance_valid(rock):
+		return
+	var hit_pos := rock.position
+	_rocks.erase(rock)
+	_play_destroy_sfx()
+	_play_aoe(hit_pos)
+	_shot_flashes.append({"pos": hit_pos, "t": 0.22, "burst": true})
+	if from_crosshair:
+		_add_shake(destroy_shake_strength * 2.4, destroy_shake_time * 1.6)
+		_add_vertical_strike_shake(strike_miss_shake_strength * 1.5, strike_miss_shake_time * 1.25)
+		_add_strike()
+	else:
+		_add_shake(destroy_shake_strength * 0.7, destroy_shake_time * 0.8)
+	rock.queue_free()
+
+
+## Avoider blew up another rock on contact — treat as a normal destroy (money).
+func on_shop_avoider_destroyed_rock(other: ShopMiniRock) -> void:
+	if other == null or not is_instance_valid(other) or other.hit:
+		return
+	var hit_pos := other.position
+	var kind := other.kind
+	other.mark_destroyed()
+	_rocks.erase(other)
+	_on_rock_destroyed(other, hit_pos, kind)
 
 
 func _on_fruit_flyaway_finished(fruit: ShopMiniFruit, destroyed: bool) -> void:
@@ -2625,6 +2703,14 @@ func _blast_intercept(entry: Dictionary) -> void:
 		hit_ids[rid] = true
 		var hit_pos := rock.position
 		var kind := rock.kind
+		if kind == ShopMiniRock.RockKind.AVOIDER:
+			rock.mark_destroyed()
+			_rocks.remove_at(i)
+			_play_destroy_sfx()
+			_play_aoe(hit_pos)
+			continue
+		if kind == ShopMiniRock.RockKind.CHASER and not rock._chaser_locked:
+			continue
 		rock.mark_destroyed()
 		_rocks.remove_at(i)
 		_on_rock_destroyed_by_blast(rock, hit_pos, kind)

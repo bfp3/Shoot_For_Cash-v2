@@ -77,6 +77,8 @@ var dataset_float : Dictionary = {
 	,"rock_type_4"			: [120,		30]
 	,"rock_type_8"			: [0,		1]
 	,"rock_type_9"			: [0,		1]
+	,"rock_type_avoider"	: [0,		1]
+	,"rock_type_chaser"		: [0,		1]
 	# Hazards
 	#,"hazard_type_1"		: [-100,	1]
 	,"hazard_type_2"		: [-20,		1]

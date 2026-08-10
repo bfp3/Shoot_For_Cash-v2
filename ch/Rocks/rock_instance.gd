@@ -37,7 +37,11 @@ enum RockSize {
 	HAZARD_SMALL,
 	MONEY_ROCK,
 	RED_ROCK_ERROR,
-	SMOKECAN
+	SMOKECAN,
+	## Homing hazard: steers toward the crosshair; reticle overlap = explode + strike.
+	AVOIDER,
+	## Flees the crosshair; must stay in scope for `chaser_lock_time_sec` before it can be shot.
+	CHASER,
 }
 
 enum State {
@@ -69,6 +73,7 @@ var rock_has_been_logged := false
 @onready var gold_rock: MeshInstance3D = %Gold_rock
 @onready var huge_rock: MeshInstance3D = %Huge_rock
 @onready var red_rock: MeshInstance3D = %Red_rock
+@onready var blue_rock: MeshInstance3D = %blue_rock
 @onready var smokecan: MeshInstance3D = %Smokecan
 
 @onready var hazard_large: MeshInstance3D = %Hazard_large
@@ -113,6 +118,44 @@ var has_entered_camera_view := false
 ## Bumps to cancel a pending airborne rock–rock collision schedule.
 var _airborne_collision_token := 0
 
+# --- Rock Avoider (rock-avoider) ---------------------------------------------
+@export_group("Rock Avoider")
+## How hard the avoider steers toward the crosshair (X/Y only).
+@export var avoider_seek_accel := 22.0
+## Caps horizontal/vertical chase speed so it stays readable.
+@export var avoider_max_speed_xy := 16.0
+## Delay after launch before seeking / overlap checks (avoids instant spawn kills).
+@export var avoider_arm_delay_sec := 0.45
+## How long the avoider stays alive before it explodes on its own (no strike).
+@export var avoider_lifetime_sec := 4.0
+## If true, avoider + rock both explode on contact. If false, only the other rock blows up.
+@export var avoider_explodes_when_hitting_rock := false
+## If true, two avoiders destroy each other on contact. If false, they pass through each other.
+@export var avoider_explodes_when_hitting_avoider := false
+var _avoider_armed := false
+var _avoider_arm_token := 0
+var _avoider_life_token := 0
+
+# --- Rock Chaser (rock-chaser) -----------------------------------------------
+@export_group("Rock Chaser")
+@export var chaser_flee_accel := 22.0
+@export var chaser_max_speed_xy := 16.0
+@export var chaser_arm_delay_sec := 0.35
+## How long the reticle must stay on the chaser before it becomes shootable.
+@export var chaser_lock_time_sec := 2.0
+## Padding inside the column 1–8 / row A–C play rectangle.
+@export var chaser_bounds_padding := 0.35
+## Gravity while dodging (near 0 keeps it in the lane band).
+@export var chaser_float_gravity := 0.04
+## One-shot spin impulse when the chaser locks (ready to shoot).
+@export var chaser_lock_torque := 18.0
+var _chaser_armed := false
+var _chaser_arm_token := 0
+var _chaser_lock_progress := 0.0
+var _chaser_locked := false
+var _chaser_saved_gravity := 0.12
+var _chaser_lock_pos := Vector3.ZERO
+var _chaser_lock_spin_applied := false
 
 
 func _ready() -> void:
@@ -124,6 +167,11 @@ func _ready() -> void:
 		physics_material_override = physics_material_override.duplicate()
 	else:
 		physics_material_override = PhysicsMaterial.new()
+
+	contact_monitor = true
+	max_contacts_reported = 8
+	if not body_entered.is_connected(_on_rock_body_entered):
+		body_entered.connect(_on_rock_body_entered)
 	
 	await get_tree().create_timer(0.2).timeout
 	
@@ -138,7 +186,13 @@ func begin_ballistic_aim_feel(descent_damp: float = 0.5) -> void:
 	linear_damp = 0.0
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
+	if current_state == State.ACTIVE and rock_activated:
+		if rock_type == RockSize.AVOIDER:
+			_update_avoider(delta)
+		elif rock_type == RockSize.CHASER:
+			_update_chaser(delta)
+
 	if not ballistic_aim_active or _ballistic_in_descent:
 		return
 	if current_state != State.ACTIVE:
@@ -190,8 +244,12 @@ func update_prepare_rock() -> void:
 	force_mult.shuffle()
 	await get_tree().process_frame
 	setup_rock_type()
-	# Hazards / smokecans are obstacles — not required to clear the round.
-	if rock_type_name != 'hazard_type_1' and rock_type != RockSize.SMOKECAN:
+	# Hazards / smokecans / avoiders are obstacles — not required to clear the round.
+	if (
+		rock_type_name != 'hazard_type_1'
+		and rock_type != RockSize.SMOKECAN
+		and rock_type != RockSize.AVOIDER
+	):
 		gl_PlayerState.log_rocks(1, rock_type_name)
 		
 	await get_tree().create_timer(0.2).timeout
@@ -203,13 +261,24 @@ func update_active() -> void:
 	
 	if  rock_type == RockSize.SMOKECAN:
 		constant_force.x = 0.5
-	
+	elif rock_type == RockSize.AVOIDER:
+		constant_force.x = 0.0
+		rotation_degrees = Vector3.ZERO
+	elif rock_type == RockSize.CHASER:
+		constant_force.x = 0.0
+		rotation_degrees = Vector3.ZERO
 	else:
 		constant_force.x = 0.01
 		rotation_degrees = Vector3.ZERO
 	
 	enable_collision()
 	add_to_rocks_round()
+	if rock_type == RockSize.AVOIDER:
+		_arm_avoider()
+		_start_avoider_lifetime()
+		_sync_avoider_collision_exceptions()
+	elif rock_type == RockSize.CHASER:
+		_arm_chaser()
 	
 	%launch_sound.pitch_scale = randf_range(3.0,3.2)
 	%launch_sound.play()
@@ -244,9 +313,14 @@ func round_end_check_rock_status() -> void:
 			pass
 			
 		State.ACTIVE:
-			# Black hazards / smokecans should keep falling or orange-drift motion
+			# Black hazards / smokecans / avoiders should keep falling or orange-drift motion
 			# across wave clears; only normal rocks get parked as DISABLED.
-			if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or rock_type == RockSize.SMOKECAN:
+			if (
+				rock_type == RockSize.HAZARD
+				or rock_type == RockSize.HAZARD_SMALL
+				or rock_type == RockSize.SMOKECAN
+				or rock_type == RockSize.AVOIDER
+			):
 				pass
 			else:
 				enter_state(State.DISABLED)
@@ -311,6 +385,8 @@ func _enable_airborne_rock_collisions(bounce: float) -> void:
 	if physics_material_override == null:
 		physics_material_override = PhysicsMaterial.new()
 	physics_material_override.bounce = clampf(bounce, 0.0, 1.0)
+	if rock_type == RockSize.AVOIDER:
+		_sync_avoider_collision_exceptions()
 
 
 func _cancel_airborne_rock_collisions() -> void:
@@ -340,6 +416,8 @@ func hide_all_meshes() -> void:
 	huge_rock.visible 			= false
 	hazard_large.visible 		= false
 	red_rock.visible			= false
+	if blue_rock:
+		blue_rock.visible		= false
 	smokecan.visible			= false
 
 
@@ -629,14 +707,75 @@ func setup_rock_type() -> void:
 			force_mult.clear()
 			force_mult = [0, 1]
 			force_mult_index = 0
-			
-		
-		
 
+		RockSize.AVOIDER:
+			# Homing hazard — chase the reticle; contact = strike. Not a clearable rock.
+			current_rock_type = "Rock Avoider"
+			rock_type_name = "rock_type_avoider"
+			var avoider_scale := Vector3.ONE * 0.35
+			var avoider_size := 1.35
+			$Mesh.scale = Vector3.ONE
+			health = 1
+			cash_value = 0
+			max_health = health
+			red_rock.visible = true
+			main_col.scale = Vector3.ONE * 0.125 * avoider_size * 1.5
+			current_mesh = red_rock
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = avoider_scale * avoider_size
+			rock_type_gravity_scale = 0.12
+			linear_damp = 0.35
+			force_mult.clear()
+			force_mult = [3, 4]
+			force_mult_index = 0
+			current_particles = $Mesh/Red_rock/GoldParticles if $Mesh/Red_rock.has_node("GoldParticles") else null
+			if current_particles:
+				current_particles.emitting = true
+			_avoider_armed = false
+
+		RockSize.CHASER:
+			current_rock_type = "Rock Chaser"
+			rock_type_name = "rock_type_chaser"
+			gl_PlayerState.log_white_rock()
+			var chaser_scale := Vector3.ONE * 0.35
+			var chaser_size := 1.35
+			$Mesh.scale = Vector3.ONE
+			health = 1
+			cash_value = 0
+			max_health = health
+			if blue_rock:
+				blue_rock.visible = true
+				current_mesh = blue_rock
+			else:
+				red_rock.visible = true
+				current_mesh = red_rock
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = chaser_scale * chaser_size
+			main_col.scale = Vector3.ONE * 0.125 * chaser_size
+			rock_type_gravity_scale = 0.12
+			linear_damp = 0.35
+			force_mult.clear()
+			force_mult = [3, 4]
+			force_mult_index = 0
+			_chaser_armed = false
+			_chaser_lock_progress = 0.0
+			_chaser_locked = false
+			if blue_rock and blue_rock.has_node("RedParticles"):
+				current_particles = blue_rock.get_node("RedParticles")
+				current_particles.emitting = true
 
 func reset_stats() -> void:
 	ignores_x_out_of_bounds = false
 	has_entered_camera_view = false
+	_avoider_armed = false
+	_avoider_arm_token += 1
+	_avoider_life_token += 1
+	_chaser_armed = false
+	_chaser_arm_token += 1
+	_chaser_lock_progress = 0.0
+	_chaser_locked = false
+	_chaser_lock_spin_applied = false
+	can_sleep = true
 	$Mesh.scale = Vector3.ONE
 	$Mesh.position = Vector3.ZERO
 	$Marked.hide()
@@ -855,6 +994,15 @@ func display_health_counter() -> void:
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:	
 	
 	#freeze_mine = true
+
+	# Reticle contact already detonates avoiders; if somehow shot, same strike path.
+	if rock_type == RockSize.AVOIDER:
+		_trigger_avoider_crosshair_contact()
+		return
+
+	# Chaser must be locked (held in scope) before shots count.
+	if rock_type == RockSize.CHASER and not _chaser_locked:
+		return
 	
 	if rock_type_name.contains("hazard_type"):
 		health -= 1
@@ -955,7 +1103,10 @@ func fly_off_into_distance() -> void:
 	
 func add_to_rocks_round() -> void:
 	play_piano_note()
-	add_to_group('Target')
+	# Avoiders punish reticle overlap — keep them out of the shootable Target group.
+	# Chasers join Target only after the lock timer completes.
+	if rock_type != RockSize.AVOIDER and rock_type != RockSize.CHASER:
+		add_to_group('Target')
 	%explosion_radius_mesh.hide()
 
 	# Hazards can never be gold
@@ -979,7 +1130,7 @@ func start_destroyed_process() -> void:
 	if rock_destroyed:
 		return
 
-	
+	%RedParticles.emitting = false
 	rock_activated = false
 	
 	if current_particles != null:
@@ -1369,4 +1520,434 @@ func play_piano_note() -> void:
 func out_of_bounds() -> void:
 	%hitSound.play()
 	%take_damage_sfx.play()
-		
+
+
+# --- Rock Avoider ------------------------------------------------------------
+
+func _arm_avoider() -> void:
+	_avoider_armed = false
+	_avoider_arm_token += 1
+	%RedParticles.emitting = true
+	var token := _avoider_arm_token
+	await get_tree().create_timer(avoider_arm_delay_sec).timeout
+	if token != _avoider_arm_token:
+		return
+	if current_state != State.ACTIVE or rock_type != RockSize.AVOIDER:
+		return
+	_avoider_armed = true
+	# Detect rock contacts for destroy-on-hit (independent of bounce toggle timing).
+	set_collision_mask_value(1, true)
+	_sync_avoider_collision_exceptions()
+
+
+func _start_avoider_lifetime() -> void:
+	_avoider_life_token += 1
+	var token := _avoider_life_token
+	var lifetime := maxf(avoider_lifetime_sec, 0.1)
+	await get_tree().create_timer(lifetime).timeout
+	if token != _avoider_life_token:
+		return
+	if current_state != State.ACTIVE or rock_type != RockSize.AVOIDER:
+		return
+	if not rock_activated:
+		return
+	_expire_avoider_lifetime()
+
+
+## Timed out without touching the reticle — pop with no strike.
+func _expire_avoider_lifetime() -> void:
+	if rock_type != RockSize.AVOIDER:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+
+	rock_activated = false
+	_avoider_armed = false
+	_avoider_arm_token += 1
+	_avoider_life_token += 1
+
+	remove_from_group("Target")
+	disable_collision()
+
+	if current_particles != null:
+		current_particles.emitting = false
+	if %TrailParticles != null:
+		%TrailParticles.emitting = false
+	var red := get_node_or_null("%RedParticles") as GPUParticles3D
+	if red:
+		red.emitting = false
+
+	expand_blast_radius()
+	play_destroy_sfx()
+	await was_hit_tween()
+	if current_state == State.ACTIVE:
+		enter_state(State.MISSED)
+
+
+func _update_avoider(delta: float) -> void:
+	if not _avoider_armed:
+		return
+
+	var aim_xy := _crosshair_world_xy_at_depth(global_position.z)
+	var to_aim := Vector2(aim_xy.x - global_position.x, aim_xy.y - global_position.y)
+	if to_aim.length_squared() > 0.0001:
+		var desired := to_aim.normalized() * avoider_max_speed_xy
+		var vel_xy := Vector2(linear_velocity.x, linear_velocity.y)
+		var steered := vel_xy.move_toward(desired, avoider_seek_accel * delta)
+		linear_velocity.x = steered.x
+		linear_velocity.y = steered.y
+		# Keep Z motion from the launch arc; do not steer on Z.
+
+	if _avoider_overlaps_crosshair():
+		_trigger_avoider_crosshair_contact()
+
+
+## Project the player's crosshair onto the rock's depth plane; return world X/Y only.
+func _crosshair_world_xy_at_depth(depth_z: float) -> Vector2:
+	var fallback := Vector2(global_position.x, global_position.y)
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null:
+		return fallback
+
+	var cam: Camera3D = null
+	if "camera_3d" in player and player.camera_3d is Camera3D:
+		cam = player.camera_3d
+	else:
+		cam = get_viewport().get_camera_3d()
+	if cam == null:
+		return fallback
+
+	var screen_pos := _player_crosshair_screen_pos(player)
+	var origin := cam.project_ray_origin(screen_pos)
+	var dir := cam.project_ray_normal(screen_pos)
+	if absf(dir.z) < 0.00001:
+		return fallback
+	var t := (depth_z - origin.z) / dir.z
+	if t < 0.0:
+		return fallback
+	return Vector2(origin.x + dir.x * t, origin.y + dir.y * t)
+
+
+func _player_crosshair_screen_pos(player: Node) -> Vector2:
+	# Prefer the same TextureRect the gun uses for hit tests.
+	var weapon = player.get("weapon_shooting")
+	if weapon and weapon.get("crosshair") is Control:
+		var rect: Control = weapon.crosshair
+		return rect.global_position
+
+	var crosshair: Control = player.get_node_or_null("%Crosshair") as Control
+	if crosshair:
+		return crosshair.global_position + (crosshair.size * 0.5)
+	return get_viewport().get_visible_rect().size * 0.5
+
+
+func _avoider_overlaps_crosshair() -> bool:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null:
+		return false
+	var cam: Camera3D = null
+	if "camera_3d" in player and player.camera_3d is Camera3D:
+		cam = player.camera_3d
+	else:
+		cam = get_viewport().get_camera_3d()
+	if cam == null or cam.is_position_behind(global_position):
+		return false
+
+	var rock_screen := cam.unproject_position(global_position)
+	var crosshair_screen := _player_crosshair_screen_pos(player)
+
+	var world_radius := 0.5
+	if main_col and main_col.shape is SphereShape3D:
+		world_radius = (main_col.shape as SphereShape3D).radius * main_col.scale.x
+	elif current_mesh:
+		world_radius = maxf(current_mesh.scale.x, 0.2) * 0.5
+
+	var edge_screen := cam.unproject_position(
+		global_position + cam.global_basis.x * world_radius
+	)
+	var screen_radius := rock_screen.distance_to(edge_screen)
+
+	# Use the live shrink/expand hit radius (weapon), not the resting upgrade value.
+	var hit_radius := _player_live_crosshair_hit_radius(player)
+
+	return rock_screen.distance_to(crosshair_screen) <= hit_radius + screen_radius
+
+
+## Matches what shooting uses: Weapon_shooting.power_target_circle updates while holding shrink/expand.
+func _player_live_crosshair_hit_radius(player: Node) -> float:
+	if player == null:
+		return 40.0
+	if player.has_method("get_current_crosshair_hit_radius"):
+		return float(player.get_current_crosshair_hit_radius())
+	var weapon = player.get("weapon_shooting")
+	if weapon and "power_target_circle" in weapon and float(weapon.power_target_circle) > 0.0:
+		return float(weapon.power_target_circle)
+	if "power_target_circle" in player and float(player.power_target_circle) > 0.0:
+		return float(player.power_target_circle)
+	return 40.0
+
+
+func _trigger_avoider_crosshair_contact() -> void:
+	if rock_type != RockSize.AVOIDER:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+
+	rock_activated = false
+	_avoider_armed = false
+	_avoider_arm_token += 1
+	_avoider_life_token += 1
+
+	remove_from_group("Target")
+	disable_collision()
+
+	if current_particles != null:
+		current_particles.emitting = false
+	if %TrailParticles != null:
+		%TrailParticles.emitting = false
+	var red := get_node_or_null("%RedParticles") as GPUParticles3D
+	if red:
+		red.emitting = false
+
+	expand_blast_radius()
+	play_destroy_sfx()
+	_shake_camera_avoider_hit()
+	gl_PlayerState.add_strike()
+	await was_hit_tween()
+	if current_state == State.ACTIVE:
+		enter_state(State.MISSED)
+
+
+func _shake_camera_avoider_hit() -> void:
+	var player_cam = get_tree().get_first_node_in_group("player_cam")
+	if player_cam and player_cam.has_method("shake_camera_avoider_hit"):
+		player_cam.shake_camera_avoider_hit()
+	elif player_cam and player_cam.has_method("shake_camera_impact"):
+		player_cam.shake_camera_impact()
+
+
+# --- Rock Chaser -------------------------------------------------------------
+
+func _arm_chaser() -> void:
+	_chaser_armed = false
+	_chaser_lock_progress = 0.0
+	_chaser_locked = false
+	_chaser_lock_spin_applied = false
+	remove_from_group("Target")
+	_chaser_saved_gravity = gravity_scale
+	_chaser_arm_token += 1
+	var token := _chaser_arm_token
+	await get_tree().create_timer(chaser_arm_delay_sec).timeout
+	if token != _chaser_arm_token:
+		return
+	if current_state != State.ACTIVE or rock_type != RockSize.CHASER:
+		return
+	_chaser_armed = true
+	ignores_x_out_of_bounds = true
+	ballistic_aim_active = false
+	gravity_scale = chaser_float_gravity
+	linear_damp = 0.8
+	# Snap into the play rectangle if launch overshot it.
+	_clamp_chaser_to_play_bounds(true)
+
+
+func _update_chaser(delta: float) -> void:
+	if not _chaser_armed:
+		return
+
+	# Locked = stop translating, keep spinning in place so it's obvious you can shoot.
+	if _chaser_locked:
+		linear_velocity = Vector3.ZERO
+		global_position = _chaser_lock_pos
+		gravity_scale = 0.0
+		_update_chaser_lock_progress(delta)
+		return
+
+	var bounds := _chaser_play_bounds()
+	var aim_xy := _crosshair_world_xy_at_depth(global_position.z)
+	var away := Vector2(global_position.x - aim_xy.x, global_position.y - aim_xy.y)
+	var desired := Vector2.ZERO
+	if away.length_squared() > 0.0001:
+		desired = away.normalized() * chaser_max_speed_xy
+
+	# Keep flight inside the column/row rectangle — slide along edges instead of escaping.
+	desired = _chaser_steer_inside_bounds(desired, bounds)
+
+	var vel_xy := Vector2(linear_velocity.x, linear_velocity.y)
+	var steered := vel_xy.move_toward(desired, chaser_flee_accel * delta)
+	linear_velocity.x = steered.x
+	linear_velocity.y = steered.y
+	linear_velocity.z = move_toward(linear_velocity.z, 0.0, chaser_flee_accel * delta)
+
+	_clamp_chaser_to_play_bounds(false)
+	_update_chaser_lock_progress(delta)
+
+
+func _update_chaser_lock_progress(delta: float) -> void:
+	if _avoider_overlaps_crosshair():
+		_chaser_lock_progress = minf(_chaser_lock_progress + delta, chaser_lock_time_sec)
+		if not _chaser_locked and _chaser_lock_progress >= chaser_lock_time_sec:
+			_begin_chaser_lock()
+	else:
+		_chaser_lock_progress = 0.0
+		if _chaser_locked:
+			_end_chaser_lock()
+
+
+func _begin_chaser_lock() -> void:
+	_chaser_locked = true
+	_chaser_lock_pos = global_position
+	linear_velocity = Vector3.ZERO
+	gravity_scale = 0.0
+	can_sleep = false
+	sleeping = false
+	if not is_in_group("Target"):
+		add_to_group("Target")
+	if not _chaser_lock_spin_applied:
+		_chaser_lock_spin_applied = true
+		var axis := Vector3(randf_range(-0.35, 0.35), 1.0, randf_range(-0.35, 0.35)).normalized()
+		apply_torque_impulse(axis * chaser_lock_torque)
+		angular_velocity = axis * chaser_lock_torque * 0.65
+
+
+func _end_chaser_lock() -> void:
+	_chaser_locked = false
+	_chaser_lock_spin_applied = false
+	remove_from_group("Target")
+	gravity_scale = chaser_float_gravity
+	can_sleep = true
+
+
+
+## Playable chase box: columns 1–8 on X, aim rows A–C on Y (at the rock's Z).
+func _chaser_play_bounds() -> Rect2:
+	var pad := chaser_bounds_padding
+	var mgr := _find_rock_manager()
+	if mgr:
+		var x_right: float = float(mgr.column_to_x(1))
+		var x_left: float = float(mgr.column_to_x(8))
+		var y_top: float = float(mgr.AIM_LANE_Y[1])
+		var y_bot: float = float(mgr.AIM_LANE_Y[3])
+		var min_x := minf(x_left, x_right) + pad
+		var max_x := maxf(x_left, x_right) - pad
+		var min_y := minf(y_bot, y_top) + pad
+		var max_y := maxf(y_bot, y_top) - pad
+		return Rect2(Vector2(min_x, min_y), Vector2(maxf(max_x - min_x, 0.5), maxf(max_y - min_y, 0.5)))
+	# Fallback if manager isn't found.
+	return Rect2(Vector2(-7.0 + pad, 0.5 + pad), Vector2(14.0 - pad * 2.0, 6.5 - pad * 2.0))
+
+
+func _find_rock_manager() -> RockManager:
+	var n := get_parent()
+	while n:
+		if n is RockManager:
+			return n as RockManager
+		n = n.get_parent()
+	return null
+
+
+func _chaser_steer_inside_bounds(desired: Vector2, bounds: Rect2) -> Vector2:
+	var pos := Vector2(global_position.x, global_position.y)
+	var edge := maxf(chaser_bounds_padding, 0.2)
+	var out := desired
+	if pos.x <= bounds.position.x + edge and out.x < 0.0:
+		out.x = absf(out.x)
+	elif pos.x >= bounds.end.x - edge and out.x > 0.0:
+		out.x = -absf(out.x)
+	if pos.y <= bounds.position.y + edge and out.y < 0.0:
+		out.y = absf(out.y)
+	elif pos.y >= bounds.end.y - edge and out.y > 0.0:
+		out.y = -absf(out.y)
+	# Prefer sliding along the wall when boxed into a corner.
+	if out.length_squared() < 0.0001:
+		out = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)).normalized() * chaser_max_speed_xy * 0.5
+	return out
+
+
+func _clamp_chaser_to_play_bounds(force_center_if_outside: bool) -> void:
+	var bounds := _chaser_play_bounds()
+	var pos := global_position
+	var was_out := not bounds.has_point(Vector2(pos.x, pos.y))
+	pos.x = clampf(pos.x, bounds.position.x, bounds.end.x)
+	pos.y = clampf(pos.y, bounds.position.y, bounds.end.y)
+	if force_center_if_outside and was_out:
+		pos.x = bounds.get_center().x
+		pos.y = bounds.get_center().y
+	global_position = pos
+	# Kill velocity that still pushes out of the box.
+	if is_equal_approx(pos.x, bounds.position.x) and linear_velocity.x < 0.0:
+		linear_velocity.x = 0.0
+	elif is_equal_approx(pos.x, bounds.end.x) and linear_velocity.x > 0.0:
+		linear_velocity.x = 0.0
+	if is_equal_approx(pos.y, bounds.position.y) and linear_velocity.y < 0.0:
+		linear_velocity.y = 0.0
+	elif is_equal_approx(pos.y, bounds.end.y) and linear_velocity.y > 0.0:
+		linear_velocity.y = 0.0
+
+
+func _on_rock_body_entered(body: Node) -> void:
+	if rock_type != RockSize.AVOIDER:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+	if body == self or body is not RockInstance:
+		return
+
+	var other: RockInstance = body
+	if other.current_state != State.ACTIVE or not other.rock_activated:
+		return
+
+	if other.rock_type == RockSize.AVOIDER:
+		if avoider_explodes_when_hitting_avoider:
+			_destroy_avoider_from_rock_collision(other)
+			_destroy_avoider_from_rock_collision(self)
+		return
+
+	# Avoider hit a normal / hazard / other rock — always blow up the other rock.
+	_destroy_rock_from_avoider_collision(other)
+	if avoider_explodes_when_hitting_rock:
+		_destroy_avoider_from_rock_collision(self)
+
+
+func _destroy_rock_from_avoider_collision(other: RockInstance) -> void:
+	if other == null or not is_instance_valid(other):
+		return
+	if other.current_state != State.ACTIVE or not other.rock_activated:
+		return
+	# Avoiders use the no-strike expire path, not a scored destroy.
+	if other.rock_type == RockSize.AVOIDER:
+		_destroy_avoider_from_rock_collision(other)
+		return
+	other.start_destroyed_process()
+
+
+## Avoider pop from rock/avoider contact — explode with no strike (unlike reticle contact).
+func _destroy_avoider_from_rock_collision(avoider: RockInstance) -> void:
+	if avoider == null or not is_instance_valid(avoider):
+		return
+	if avoider.rock_type != RockSize.AVOIDER:
+		return
+	if avoider.current_state != State.ACTIVE or not avoider.rock_activated:
+		return
+	avoider._expire_avoider_lifetime()
+
+
+## Pass-through vs collide for avoider↔avoider, based on `avoider_explodes_when_hitting_avoider`.
+func _sync_avoider_collision_exceptions() -> void:
+	if rock_type != RockSize.AVOIDER:
+		return
+	var parent := get_parent()
+	if parent == null:
+		return
+	for child in parent.get_children():
+		if child == self or child is not RockInstance:
+			continue
+		var other: RockInstance = child
+		if other.rock_type != RockSize.AVOIDER:
+			continue
+		if avoider_explodes_when_hitting_avoider:
+			remove_collision_exception_with(other)
+			other.remove_collision_exception_with(self)
+		else:
+			add_collision_exception_with(other)
+			other.add_collision_exception_with(self)
