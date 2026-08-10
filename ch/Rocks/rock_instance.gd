@@ -4,11 +4,18 @@ class_name RockInstance
 @onready var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
 
 @export var freeze_mine := false
+## Alt-gun freeze burst: how far the ice pulse reaches from the rock you shot.
+@export var freeze_burst_radius := 4.0
+## How long rocks stay frozen after being caught in the burst.
+@export var freeze_burst_duration := 1.0
+## Visual size of the freeze pulse (Explosion_area scale).
+@export var freeze_burst_visual_scale := 3.0
 var sky_mine_blast_radius := 5.0 #15.0
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 var start_exploding := false
 var pitch_adjustment := 0.02
+var _freeze_shot_pending := false
 
 var rock_type := 0
 
@@ -35,7 +42,6 @@ enum RockSize {
 	HAZARD,
 	HUGE,
 	HAZARD_SMALL,
-	MONEY_ROCK,
 	RED_ROCK_ERROR,
 	SMOKECAN,
 	## Homing hazard: steers toward the crosshair; reticle overlap = explode + strike.
@@ -58,7 +64,7 @@ var current_state : State = State.INACTIVE
 var rock_has_been_logged := false
 
 @onready var money_label_3d: Label3D = $Money_Label3D
-@onready var gold_label_3d: Label3D = $Gold_label3D
+
 @onready var damage_label_3d: Label3D = %Damage_Label3D
 @onready var health_remaining_label: Label3D = %Health_remaining_label
 
@@ -70,7 +76,6 @@ var rock_has_been_logged := false
 
 @onready var medium_rock: MeshInstance3D = %medium_rock
 @onready var large_rock: MeshInstance3D = %Large_rock
-@onready var gold_rock: MeshInstance3D = %Gold_rock
 @onready var huge_rock: MeshInstance3D = %Huge_rock
 @onready var red_rock: MeshInstance3D = %Red_rock
 @onready var blue_rock: MeshInstance3D = %blue_rock
@@ -189,9 +194,11 @@ func begin_ballistic_aim_feel(descent_damp: float = 0.5) -> void:
 func _physics_process(delta: float) -> void:
 	if current_state == State.ACTIVE and rock_activated:
 		if rock_type == RockSize.AVOIDER:
-			_update_avoider(delta)
+			if not _freeze_shot_pending:
+				_update_avoider(delta)
 		elif rock_type == RockSize.CHASER:
-			_update_chaser(delta)
+			if not _freeze_shot_pending:
+				_update_chaser(delta)
 
 	if not ballistic_aim_active or _ballistic_in_descent:
 		return
@@ -280,8 +287,8 @@ func update_active() -> void:
 	elif rock_type == RockSize.CHASER:
 		_arm_chaser()
 	
-	%launch_sound.pitch_scale = randf_range(3.0,3.2)
-	%launch_sound.play()
+	#%rock_launch_sound.pitch_scale = randf_range(3.0,3.2)
+	%rock_launch_sound.play()
 	
 
 
@@ -411,7 +418,6 @@ func hide_all_meshes() -> void:
 	small_rock.visible			= false
 	clay_pigeon.visible			= false
 	medium_rock.visible 		= false
-	gold_rock.visible			= false
 	large_rock.visible 			= false
 	huge_rock.visible 			= false
 	hazard_large.visible 		= false
@@ -807,6 +813,7 @@ func reset_stats() -> void:
 	is_deactivated = false
 	ballistic_aim_active = false
 	_ballistic_in_descent = false
+	_freeze_shot_pending = false
 	_cancel_airborne_rock_collisions()
 	global_position = start_pos
 	await get_tree().process_frame
@@ -828,6 +835,120 @@ func detonate_rock() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
 	if player_cam:
 		player_cam.shake_camera_sky_mines()
+
+
+## Alt-gun hit: pulse a small freeze radius; every rock inside gets iced.
+func apply_freeze_shot_effect(damage: int = 1, screen_offset: Vector2 = Vector2.ZERO) -> void:
+	if rock_destroyed or not rock_activated:
+		return
+
+	if rock_type_name.contains("hazard_type"):
+		health -= 1
+	else:
+		health -= damage
+	display_health_counter()
+	display_damage_counter(maxi(damage, 1))
+	play_hit_sfx()
+	apply_hit_reaction(screen_offset)
+
+	var should_destroy := health <= 0
+	release_freeze_burst()
+
+	if should_destroy:
+		await get_tree().create_timer(freeze_burst_duration, false).timeout
+		if is_instance_valid(self) and not rock_destroyed and rock_activated:
+			start_destroyed_process()
+
+
+## Small AOE ice pulse from this rock. Caught rocks (including avoiders) call apply_aoe_freeze().
+func release_freeze_burst() -> void:
+	_play_freeze_burst_visual()
+	if has_node("%Freeze_sfx"):
+		%Freeze_sfx.play()
+	elif has_node("%Freeze_sfx2"):
+		%Freeze_sfx2.play()
+
+	var origin := global_position
+	var radius_sq := freeze_burst_radius * freeze_burst_radius
+	# Prefer Target group, but also sweep RockInstance siblings so avoiders always count.
+	var candidates: Array = get_tree().get_nodes_in_group("Target")
+	var parent_rocks := get_parent()
+	if parent_rocks:
+		for child in parent_rocks.get_children():
+			if child is RockInstance and child not in candidates:
+				candidates.append(child)
+
+	for node in candidates:
+		if not is_instance_valid(node):
+			continue
+		if not (node is RockInstance):
+			continue
+		var rock := node as RockInstance
+		if rock.global_position.distance_squared_to(origin) > radius_sq:
+			continue
+		rock.apply_aoe_freeze(freeze_burst_duration)
+
+
+## Freeze this rock in place for duration, then thaw.
+## Avoiders / chasers also stop seeking while iced.
+func apply_aoe_freeze(duration: float = 1.0) -> void:
+	if _freeze_shot_pending or rock_destroyed or not rock_activated:
+		return
+	if current_state != State.ACTIVE:
+		return
+
+	_freeze_shot_pending = true
+	if has_node("Freeze"):
+		$Freeze.show()
+	if has_node("freeze_embers"):
+		$freeze_embers.emitting = true
+
+	freeze = true
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+	# Pause avoider lifetime so it can't expire mid-freeze.
+	if rock_type == RockSize.AVOIDER:
+		_avoider_life_token += 1
+
+	await get_tree().create_timer(duration, false).timeout
+
+	if not is_instance_valid(self):
+		return
+	_freeze_shot_pending = false
+	freeze = false
+	if has_node("Freeze"):
+		$Freeze.hide()
+	if has_node("freeze_embers"):
+		$freeze_embers.emitting = false
+
+	# Resume avoider lifetime after thaw.
+	if rock_type == RockSize.AVOIDER and rock_activated and current_state == State.ACTIVE:
+		_start_avoider_lifetime()
+
+
+func _play_freeze_burst_visual() -> void:
+	if not has_node("Explosion_area"):
+		return
+	var blast_node: Area3D = $Explosion_area
+	# Visual only — freeze is applied via distance check, not body_entered.
+	blast_node.monitoring = false
+	$Explosion_area/CollisionShape3D.disabled = true
+	blast_node.scale = Vector3.ONE
+	blast_node.show()
+	%explosion_radius_mesh.show()
+	%explosion_radius_mesh.transparency = 0.0
+	var tween := create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(blast_node, "scale", Vector3.ONE * freeze_burst_visual_scale, 0.28)
+	tween.parallel().tween_property(%explosion_radius_mesh, "transparency", 1.0, 0.28)
+	tween.tween_callback(func() -> void:
+		if not is_instance_valid(self):
+			return
+		blast_node.scale = Vector3.ONE
+		blast_node.hide()
+		%explosion_radius_mesh.transparency = 0.0
+		%explosion_radius_mesh.hide()
+	)
+
 
 func shake_camera() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
@@ -860,7 +981,7 @@ func apply_marked_ability() -> void:
 	
 	
 	await get_tree().create_timer(0.15).timeout
-	$marked_sfx.play()
+	%rock_marked_sfx.play()
 	
 	
 	await get_tree().create_timer(1.0).timeout
@@ -991,17 +1112,25 @@ func display_health_counter() -> void:
 			##return		
 		#hit_by_player(area.power_bullet_damage)
 		
-func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void:	
+func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_shot := false) -> void:	
 	
 	#freeze_mine = true
 
-	# Reticle contact already detonates avoiders; if somehow shot, same strike path.
+	# Avoiders: reticle/shot normally strikes — unless frozen, then you can shoot them out cleanly.
 	if rock_type == RockSize.AVOIDER:
+		if _freeze_shot_pending:
+			_destroy_frozen_avoider()
+			return
 		_trigger_avoider_crosshair_contact()
 		return
 
 	# Chaser must be locked (held in scope) before shots count.
 	if rock_type == RockSize.CHASER and not _chaser_locked:
+		return
+
+	## Alt weapon: release a freeze burst — nearby rocks ice up.
+	if freeze_shot:
+		await apply_freeze_shot_effect(damage, screen_offset)
 		return
 	
 	if rock_type_name.contains("hazard_type"):
@@ -1030,24 +1159,6 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 		apply_marked_ability()
 		play_hit_sfx()
 		return
-	
-	
-		
-	if rock_type_name == 'rock_type_3':
-		health -= 1
-		if health <= 0:
-			start_destroyed_process()
-		else:
-			money_label_3d.money_is_money(global_position, 1)
-			%gold_sfx.play()
-			play_hit_sfx()
-			apply_hit_reaction(screen_offset)
-			if damage > 0:
-				shrink_current_mesh()
-			
-			gl_PlayerState.add_cash(1)
-		return
-	
 
 	
 	if health > 0:
@@ -1061,8 +1172,8 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	if rock_type == RockSize.SMOKECAN:
 		apply_torque_impulse(Vector3.BACK * 100.0)
 		play_hit_sfx()
-		#%launch_sound.play()
-		%progress_rock_sound.play()
+		#%rock_launch_sound.play()
+		%rock_flicker_sfx.play()
 		%launched_into_distance_3d.play(0.25)
 		fly_off_into_distance()
 		var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
@@ -1074,7 +1185,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 	if rock_type == RockSize.HAZARD:
 		$Marked.show()
 		#$marked_embers.emitting = true
-		$marked_sfx.play()
+		%rock_marked_sfx.play()
 		apply_slow_linear_damp()
 		await get_tree().create_timer(1.5, false).timeout
 	
@@ -1144,7 +1255,7 @@ func start_destroyed_process() -> void:
 	enter_state(State.HIT)
 	
 	if rock_type == RockSize.SMALL:
-		%progress_rock_sound.play()
+		%rock_flicker_sfx.play()
 		#await get_tree().create_timer(0.1).timeout
 		get_parent().get_parent().get_node('pitch_shift_rock_sound').pitch_scale += 0.1
 		get_parent().get_parent().get_node('pitch_shift_rock_sound').play()
@@ -1172,6 +1283,8 @@ func start_destroyed_process() -> void:
 	
 	play_destroy_sfx()
 	$Marked.hide()
+	if has_node("Freeze"):
+		$Freeze.hide()
 
 	if cash_value > 0:
 		money_label_3d.money_is_money(global_position, cash_value)
@@ -1189,7 +1302,7 @@ func start_destroyed_process() -> void:
 	if rock_type == RockSize.HAZARD:
 		#$Marked.show()
 		##$marked_embers.emitting = true
-		#$marked_sfx.play()
+		#%rock_marked_sfx.play()
 		#apply_slow_linear_damp()
 		#await get_tree().create_timer(1.0).timeout
 		#
@@ -1225,20 +1338,20 @@ func start_destroyed_process() -> void:
 	$Mesh.position = Vector3.ZERO
 
 func play_hit_sfx() -> void:
-	$take_damage_sfx.volume_db = randf_range(-25.0, -20.0)
-	$take_damage_sfx.pitch_scale = randf_range(0.9, 1.2)
+	%rock_hit_sound.volume_db = randf_range(-25.0, -20.0)
+	%rock_hit_sound.pitch_scale = randf_range(0.9, 1.2)
 	await get_tree().create_timer(0.05).timeout
-	$take_damage_sfx.play(0.01)
+	%rock_hit_sound.play(0.01)
 	await get_tree().create_timer(0.1).timeout
-	$take_damage_sfx.play(0.02)
+	%rock_hit_sound.play(0.02)
 
 
 func play_destroy_sfx() -> void:
-	$take_damage_sfx.play(0.02)
+	%rock_hit_sound.play(0.02)
 	await get_tree().create_timer(0.1).timeout
-	$hitSound.play()
+	%rock_hitSound.play()
 	await get_tree().create_timer(0.1).timeout
-	$explosion_sfx.play()
+	%rock_explosion_sfx.play()
 
 
 
@@ -1297,14 +1410,20 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			body.current_rock_type = 'neutralised'
 			
 		if freeze_mine:
-			body.hit_by_player(0, Vector2.ZERO)
-			body.get_node('Freeze').show()
-			await get_tree().create_timer(0.25).timeout
-			body.freeze = true
-			await get_tree().create_timer(3.5).timeout
-			if body != null:
-				body.freeze = false
-				body.get_node('Freeze').hide()
+			# Prefer the shared freeze helper so avoiders ice instead of striking.
+			if body.has_method("apply_aoe_freeze"):
+				body.apply_aoe_freeze(3.5)
+			else:
+				body.hit_by_player(0, Vector2.ZERO)
+				if body.has_node("Freeze"):
+					body.get_node("Freeze").show()
+				await get_tree().create_timer(0.25).timeout
+				body.freeze = true
+				await get_tree().create_timer(3.5).timeout
+				if is_instance_valid(body):
+					body.freeze = false
+					if body.has_node("Freeze"):
+						body.get_node("Freeze").hide()
 				
 		else:
 			body.start_destroyed_process()
@@ -1400,7 +1519,6 @@ func smoke_particles() -> void:
 		$Hazard_AoE2.play_particles = true
 		
 	else:
-		# #region agent log
 		var _phys := global_position
 		var _interp := get_global_transform_interpolated().origin
 		var _expl_interp = $Explosion_area.get_global_transform_interpolated().origin
@@ -1408,44 +1526,25 @@ func smoke_particles() -> void:
 		$AoE.global_position = global_position
 		$AoE.play_particles = true
 
-		# #endregion
+
 
 
 func smoke_particles_duplicates() -> void:
-	var _new_particles : GPUParticles3D = $Smoke_quick #.duplicate()
+	var _new_particles : GPUParticles3D = $Smoke_quick
 
 	if !_new_particles:
 		return
 		
-	#_new_particles.add_to_group("smoke_particles")
 	_new_particles.emitting = true
-	#_new_particles.duplicate_particles = true
 	_new_particles.show()
-	#add_child(_new_particles)
-	#get_tree().get_current_scene().add_child(_new_particles)
 	_new_particles.global_position = global_position
-	# #region agent log
 
-	
-	var _new_sparks : GPUParticles3D = $Sparks01 #.duplicate()
+	var _new_sparks : GPUParticles3D = $Sparks01
 	if !_new_sparks:
 		return
 	_new_sparks.show()
-	#_new_sparks.finished.connect(_new_sparks.queue_free)
-	#get_tree().get_current_scene().add_child(_new_sparks)
 	_new_sparks.global_position = global_position
 	_new_sparks.emitting = true
-	
-	#var _new_sparks : GPUParticles3D = $Sparks01 #.duplicate()
-#
-	#if !_new_sparks:
-		#return
-		#
-	#_new_sparks.show()
-	#_new_sparks.global_position = global_position
-	#_new_sparks.emitting = true
-
-
 
 
 func hazard_smoke_particles_duplicates() -> void:
@@ -1518,8 +1617,8 @@ func play_piano_note() -> void:
 		
 
 func out_of_bounds() -> void:
-	%hitSound.play()
-	%take_damage_sfx.play()
+	%rock_hitSound.play()
+	%rock_hit_sound.play()
 
 
 # --- Rock Avoider ------------------------------------------------------------
@@ -1586,6 +1685,10 @@ func _expire_avoider_lifetime() -> void:
 
 func _update_avoider(delta: float) -> void:
 	if not _avoider_armed:
+		return
+	if _freeze_shot_pending:
+		linear_velocity = Vector3.ZERO
+		angular_velocity = Vector3.ZERO
 		return
 
 	var aim_xy := _crosshair_world_xy_at_depth(global_position.z)
@@ -1690,6 +1793,9 @@ func _player_live_crosshair_hit_radius(player: Node) -> float:
 func _trigger_avoider_crosshair_contact() -> void:
 	if rock_type != RockSize.AVOIDER:
 		return
+	# Frozen avoiders are inert — no strike from reticle touch.
+	if _freeze_shot_pending:
+		return
 	if current_state != State.ACTIVE or not rock_activated:
 		return
 
@@ -1716,6 +1822,24 @@ func _trigger_avoider_crosshair_contact() -> void:
 	await was_hit_tween()
 	if current_state == State.ACTIVE:
 		enter_state(State.MISSED)
+
+
+## Shoot a frozen avoider to destroy it with no strike (freeze disables the hazard).
+func _destroy_frozen_avoider() -> void:
+	if rock_type != RockSize.AVOIDER:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+
+	_freeze_shot_pending = false
+	freeze = false
+	if has_node("Freeze"):
+		$Freeze.hide()
+	if has_node("freeze_embers"):
+		$freeze_embers.emitting = false
+
+	play_hit_sfx()
+	_expire_avoider_lifetime()
 
 
 func _shake_camera_avoider_hit() -> void:

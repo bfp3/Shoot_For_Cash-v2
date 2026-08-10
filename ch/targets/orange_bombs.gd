@@ -14,7 +14,7 @@ extends Node3D
 @export var round_manager : RoundManager
 
 func launch_orange(pos : Vector3) -> void:
-	return
+	#return
 	var body : Node3D
 	for i in get_children():
 		if i.rock_activated == false:

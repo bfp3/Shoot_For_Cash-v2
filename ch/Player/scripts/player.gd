@@ -36,8 +36,24 @@ const SCOPE_EXPAND_MAX_SCALE := 1.85
 ## Resting upgrade values — restored when not holding shrink/expand.
 var _base_bullet_speed := 0.3
 var _base_gun_fire_rate := 0.35
+## True shop/upgrade values before alternate-weapon scales.
+var _upgrade_bullet_speed := 0.3
+var _upgrade_gun_fire_rate := 0.35
 
 @export var can_right_click_shoot := false
+
+@export_group("Alternate Weapon (Shift+G)")
+## Press Shift+G in-round to toggle this loadout on/off.
+@export var alt_weapon_enabled := true
+## Bullet scene used while the alt weapon is equipped. Edit Bullet_visual_alt.tscn for look.
+@export var alt_bullet_scene: PackedScene
+## Multiplies upgrade travel time. Lower = faster bullets.
+@export var alt_bullet_speed_scale := 0.72
+## Multiplies upgrade fire-rate cooldown. Lower = shoots again sooner.
+@export var alt_fire_rate_scale := 0.72
+@export var alt_crosshair_color := Color(0.12, 0.95, 0.82, 1.0)
+
+var using_alt_weapon := false
 
 ## Current bullets loaded. Starts at power_max_ammo and is refilled via shop ammo packs.
 var shot_count := 0
@@ -340,6 +356,8 @@ func _process(delta: float) -> void:
 		if mobile_controller.consume_fire_release():
 			fire_weapon()
 	else:
+		if Input.is_action_just_pressed("switch_weapon"):
+			toggle_alt_weapon()
 		if Input.is_action_just_released("shootWeapon"):
 			fire_weapon()
 
@@ -389,7 +407,13 @@ func update_gun_look() -> void:
 	#$Cam_pivot/Camera3D/Player_gun/mockGun3.look_at(target_pos, Vector3.UP, true)
 	
 	
-	$Cam_pivot/Camera3D/Player_gun/mockGun.look_at(target_pos, Vector3.UP, true)
+	# Aim whichever mesh is currently equipped (default or alt).
+	var active_gun: Node3D = null
+	if player_gun and player_gun.has_method("get_active_gun"):
+		active_gun = player_gun.get_active_gun()
+	if active_gun == null:
+		active_gun = $Cam_pivot/Camera3D/Player_gun/mockGun
+	active_gun.look_at(target_pos, Vector3.UP, true)
 	return
 	#if gl_PlayerState.dataset.power_gun == 1:
 #
@@ -533,22 +557,70 @@ func update_player_stats() -> void:
 	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
 
 	# Remember upgrade defaults so scope hold can temporarily override, then restore.
-	_base_bullet_speed = power_bullet_speed
-	_base_gun_fire_rate = power_gun_fire_rate
+	_upgrade_bullet_speed = power_bullet_speed
+	_upgrade_gun_fire_rate = power_gun_fire_rate
+	_rebuild_weapon_bases_from_upgrades()
 
 	#power_gun_fire_rate = 0.05
 	#power_bullet_speed = 0.01
 	#power_target_circle = 60.0
 	
-	player_gun.update_guns()
+	if player_gun and player_gun.has_method("set_weapon_slot"):
+		player_gun.set_weapon_slot(using_alt_weapon)
+	else:
+		player_gun.update_guns()
 
 	#full_power_mode()
 	
 	player_cash 		= settings.cash
 	current_round 		= settings.round
 	
+	_sync_weapon_bullet_scene()
 	weapon_shooting.apply_upgrades()
+	_refresh_crosshair_weapon_style()
 	update_stats_visually()
+
+
+func toggle_alt_weapon() -> void:
+	if not alt_weapon_enabled:
+		return
+	if current_state != State.ACTIVE and current_state != State.ROUND_FINISHED:
+		return
+	using_alt_weapon = not using_alt_weapon
+	if player_gun and player_gun.has_method("set_weapon_slot"):
+		player_gun.set_weapon_slot(using_alt_weapon)
+	_rebuild_weapon_bases_from_upgrades()
+	_sync_weapon_bullet_scene()
+	if weapon_shooting:
+		weapon_shooting.power_bullet_speed = power_bullet_speed
+	_refresh_crosshair_weapon_style()
+
+
+func _rebuild_weapon_bases_from_upgrades() -> void:
+	var speed := _upgrade_bullet_speed
+	var rate := _upgrade_gun_fire_rate
+	if using_alt_weapon:
+		speed *= alt_bullet_speed_scale
+		rate *= alt_fire_rate_scale
+	_base_bullet_speed = speed
+	_base_gun_fire_rate = rate
+	power_bullet_speed = speed
+	power_gun_fire_rate = rate
+	_apply_scope_shot_stats(speed, rate)
+
+
+func _sync_weapon_bullet_scene() -> void:
+	if weapon_shooting == null:
+		return
+	if using_alt_weapon and alt_bullet_scene:
+		weapon_shooting.set_active_bullet_scene(alt_bullet_scene)
+	else:
+		weapon_shooting.set_active_bullet_scene(null)
+
+
+func _refresh_crosshair_weapon_style() -> void:
+	if crosshair and crosshair.has_method("apply_weapon_style"):
+		crosshair.apply_weapon_style(using_alt_weapon, alt_crosshair_color)
 
 
 func full_power_mode() -> void:

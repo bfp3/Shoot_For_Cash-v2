@@ -23,6 +23,8 @@
 [ext_resource type="Script" uid="uid://1uqdupt170u1" path="res://ch/Player/scripts/player_gun.gd" id="13_mxtxj"]
 [ext_resource type="AudioStream" uid="uid://bywfw3hl3lt6o" path="res://sfx/reload_sound_01.ogg" id="14_3gdew"]
 [ext_resource type="Texture2D" uid="uid://dcbh2d4up4wjl" path="res://res/white_dented_texture2.png" id="14_5d6j6"]
+[ext_resource type="PackedScene" uid="uid://blmpv2r3v5nd3" path="res://ch/bullets_all/Bullet_visual_alt.tscn" id="14_altbullet"]
+[ext_resource type="PackedScene" uid="uid://brtw6kurd7ejg" path="res://ch/weapons/gun_alt.tscn" id="14_altgun"]
 [ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="14_f75d4"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="15_lf8qf"]
 [ext_resource type="AudioStream" uid="uid://c38iicjo31b7l" path="res://sfx/gun_combination_1.ogg" id="16_11n43"]
@@ -836,6 +838,8 @@ scope_shrink_bullet_speed_scale = 0.3
 scope_expand_bullet_speed_scale = 0.3
 scope_shrink_fire_rate_scale = 0.35
 scope_expand_fire_rate_scale = 0.35
+alt_weapon_enabled = false
+alt_bullet_scene = ExtResource("14_altbullet")
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
 
@@ -912,6 +916,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26, 0.059, -0.436)
 
 [node name="mockGun3" parent="Cam_pivot/Camera3D/Player_gun" unique_id=826154005 instance=ExtResource("14_f75d4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 0.059, -0.436)
+
+[node name="mockGunAlt" parent="Cam_pivot/Camera3D/Player_gun" unique_id=826154006 instance=ExtResource("14_altgun")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.059, -0.436)
+visible = false
+body_color = Color(1, 0.050000012, 0, 1)
 
 [node name="Base" type="Node3D" parent="Cam_pivot/Camera3D" unique_id=650256526]
 transform = Transform3D(-0.903, -2.3717582e-06, -3.0677309e-06, -2.6752487e-06, 0.8934483, 0.17741358, 1.8970371e-06, 0.13099302, -1.2100635, 0, -0.43970084, -0.63886774)

@@ -1314,7 +1314,7 @@ func _show_ammo_full_popup() -> void:
 	popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	popup.autowrap_mode = TextServer.AUTOWRAP_OFF
 	popup.add_theme_font_size_override('normal_font_size', 42)
-	popup.text = "[wave]Ammo is full"
+	popup.text = "[wave]Full!"
 	popup.modulate = Color(0.63, 0.006, 0.017, 0.0)
 	add_child(popup)
 

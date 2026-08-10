@@ -126,7 +126,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("2_rcr1f")
 
-[node name="TreePanel" type="Control" parent="." unique_id=36449042]
+[node name="Island1" type="Control" parent="." unique_id=36449042]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -137,7 +137,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="100_percent" type="Control" parent="TreePanel" unique_id=175400575]
+[node name="CurrentIslandLabel" type="Control" parent="Island1" unique_id=175400575]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 1
@@ -147,7 +147,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TreePanel/100_percent" unique_id=1065693873]
+[node name="CurrentIslandRichTextLabel" type="RichTextLabel" parent="Island1/CurrentIslandLabel" unique_id=1065693873]
 self_modulate = Color(1, 1, 1, 0.627451)
 clip_contents = false
 layout_mode = 1
@@ -174,7 +174,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="TreePanel/100_percent/RichTextLabel" unique_id=1607551687]
+[node name="Panel" type="Panel" parent="Island1/CurrentIslandLabel/CurrentIslandRichTextLabel" unique_id=1607551687]
 modulate = Color(0.92, 0.8770667, 0.8464, 1)
 show_behind_parent = true
 layout_mode = 1
@@ -187,26 +187,7 @@ scale = Vector2(0.79, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_xxttw")
 
-[node name="BonusCashLabel" type="RichTextLabel" parent="TreePanel/100_percent" unique_id=662738230]
-visible = false
-layout_mode = 0
-offset_left = -25.308838
-offset_top = -98.84262
-offset_right = 175.69116
-offset_bottom = -0.84262085
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/normal_font_size = 60
-theme_override_font_sizes/bold_font_size = 30
-theme_override_font_sizes/bold_italics_font_size = 30
-theme_override_font_sizes/italics_font_size = 31
-bbcode_enabled = true
-text = "+$100"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="BossCashNeeded" type="Control" parent="TreePanel" unique_id=1304438989]
+[node name="NextIslandLabel" type="Control" parent="Island1" unique_id=1304438989]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 1
@@ -216,7 +197,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TreePanel/BossCashNeeded" unique_id=170995161]
+[node name="NextIslandRichTextLabel" type="RichTextLabel" parent="Island1/NextIslandLabel" unique_id=170995161]
 self_modulate = Color(1, 1, 1, 0.627451)
 clip_contents = false
 layout_mode = 1
@@ -243,7 +224,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="TreePanel/BossCashNeeded/RichTextLabel" unique_id=1030900787]
+[node name="Panel" type="Panel" parent="Island1/NextIslandLabel/NextIslandRichTextLabel" unique_id=1030900787]
 modulate = Color(0.92, 0.8770667, 0.8464, 1)
 show_behind_parent = true
 layout_mode = 1
@@ -258,26 +239,7 @@ scale = Vector2(0.79, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_xxttw")
 
-[node name="BonusCashLabel" type="RichTextLabel" parent="TreePanel/BossCashNeeded" unique_id=1015903615]
-visible = false
-layout_mode = 0
-offset_left = -25.308838
-offset_top = -98.84262
-offset_right = 175.69116
-offset_bottom = -0.84262085
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/normal_font_size = 60
-theme_override_font_sizes/bold_font_size = 30
-theme_override_font_sizes/bold_italics_font_size = 30
-theme_override_font_sizes/italics_font_size = 31
-bbcode_enabled = true
-text = "+$100"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="TreePanel/BossCashNeeded" unique_id=1288191714]
+[node name="NextIslandButton" type="TextureButton" parent="Island1/NextIslandLabel" unique_id=713101984]
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 layout_mode = 1
 anchors_preset = 3
@@ -285,18 +247,40 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -383.0
-offset_top = -414.00006
-offset_right = -127.0
-offset_bottom = -158.00006
+offset_left = -373.0
+offset_top = -413.0
+offset_right = -117.0
+offset_bottom = -157.0
 grow_horizontal = 0
 grow_vertical = 0
-scale = Vector2(0.211, 0.211)
+scale = Vector2(0.282, 0.282)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("7_8mvl6")
+texture_normal = ExtResource("7_8mvl6")
+texture_pressed = ExtResource("7_8mvl6")
+texture_hover = ExtResource("7_8mvl6")
 flip_h = true
 
-[node name="MapOverlay" type="TextureRect" parent="TreePanel" unique_id=705275406]
+[node name="PreviousIslandButton" type="TextureButton" parent="Island1/NextIslandLabel" unique_id=1619063244]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -757.0001
+offset_top = -413.0
+offset_right = -501.00012
+offset_bottom = -157.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.282, 0.282)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture_normal = ExtResource("7_8mvl6")
+texture_pressed = ExtResource("7_8mvl6")
+texture_hover = ExtResource("7_8mvl6")
+
+[node name="MapOverlay" type="TextureRect" parent="Island1" unique_id=705275406]
 modulate = Color(0.47, 0.47, 0.47, 0.39215687)
 layout_mode = 1
 anchors_preset = 15
@@ -310,7 +294,7 @@ texture = ExtResource("3_soy43")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Buttons" type="Control" parent="TreePanel" unique_id=1362834187]
+[node name="Buttons" type="Control" parent="Island1" unique_id=1362834187]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -318,7 +302,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Level_button_selector" parent="TreePanel/Buttons" unique_id=2102660070 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+[node name="Level_button_selector" parent="Island1/Buttons" unique_id=2102660070 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -333,7 +317,7 @@ level_name = "Moss"
 level_locked = false
 main_control = NodePath("../../..")
 
-[node name="Level_button_selector2" parent="TreePanel/Buttons" unique_id=516604565 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+[node name="Level_button_selector2" parent="Island1/Buttons" unique_id=516604565 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -348,7 +332,7 @@ level_name = "Redd"
 level_locked = false
 main_control = NodePath("../../..")
 
-[node name="Level_button_selector3" parent="TreePanel/Buttons" unique_id=1192796621 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+[node name="Level_button_selector3" parent="Island1/Buttons" unique_id=1192796621 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -363,7 +347,7 @@ level_name = "Glory"
 level_locked = false
 main_control = NodePath("../../..")
 
-[node name="Level_button_selector4" parent="TreePanel/Buttons" unique_id=299777263 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+[node name="Level_button_selector4" parent="Island1/Buttons" unique_id=299777263 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 visible = false
 layout_mode = 0
 anchors_preset = 0
@@ -378,7 +362,7 @@ offset_bottom = 584.0
 level_name = "Noir"
 main_control = NodePath("../../..")
 
-[node name="Level_button_selector5" parent="TreePanel/Buttons" unique_id=1062796673 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+[node name="Level_button_selector5" parent="Island1/Buttons" unique_id=1062796673 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 visible = false
 layout_mode = 0
 anchors_preset = 0
@@ -393,7 +377,7 @@ offset_bottom = 745.0
 level_name = "Vesper"
 main_control = NodePath("../../..")
 
-[node name="ShipperIsland" type="RichTextLabel" parent="TreePanel/Buttons" unique_id=2102947909]
+[node name="ShipperIsland" type="RichTextLabel" parent="Island1/Buttons" unique_id=2102947909]
 visible = false
 clip_contents = false
 layout_mode = 1
@@ -417,7 +401,7 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="TreePanel/Buttons/ShipperIsland" unique_id=604455429]
+[node name="Panel" type="Panel" parent="Island1/Buttons/ShipperIsland" unique_id=604455429]
 modulate = Color(1, 1, 1, 0.38431373)
 show_behind_parent = true
 layout_mode = 1
@@ -430,7 +414,7 @@ scale = Vector2(1.105, 1.105)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_w6jbf")
 
-[node name="ShipperIsland2" type="RichTextLabel" parent="TreePanel/Buttons" unique_id=1467011621]
+[node name="ShipperIsland2" type="RichTextLabel" parent="Island1/Buttons" unique_id=1467011621]
 visible = false
 clip_contents = false
 layout_mode = 1
@@ -454,7 +438,7 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="TreePanel/Buttons/ShipperIsland2" unique_id=878361172]
+[node name="Panel" type="Panel" parent="Island1/Buttons/ShipperIsland2" unique_id=878361172]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -466,7 +450,7 @@ scale = Vector2(1.105, 1.105)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_w6jbf")
 
-[node name="MainPanel" type="PanelContainer" parent="TreePanel" unique_id=283713754]
+[node name="MainPanel" type="PanelContainer" parent="Island1" unique_id=283713754]
 visible = false
 custom_minimum_size = Vector2(800, 600)
 layout_mode = 1
@@ -479,7 +463,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("2_rcr1f")
 
-[node name="Control" type="Control" parent="TreePanel" unique_id=1275571051]
+[node name="Control" type="Control" parent="Island1" unique_id=1275571051]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -489,7 +473,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.23, 0.705)
 mouse_filter = 2
 
-[node name="ShipperIsland" type="RichTextLabel" parent="TreePanel/Control" unique_id=1672144171]
+[node name="ShipperIsland" type="RichTextLabel" parent="Island1/Control" unique_id=1672144171]
 visible = false
 clip_contents = false
 layout_mode = 1
@@ -512,7 +496,7 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="TreePanel/Control/ShipperIsland" unique_id=987984705]
+[node name="Panel" type="Panel" parent="Island1/Control/ShipperIsland" unique_id=987984705]
 visible = false
 show_behind_parent = true
 layout_mode = 1
@@ -525,7 +509,7 @@ scale = Vector2(1.105, 1.105)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_w6jbf")
 
-[node name="HSeparator" type="HSeparator" parent="TreePanel/Control/ShipperIsland" unique_id=815723527]
+[node name="HSeparator" type="HSeparator" parent="Island1/Control/ShipperIsland" unique_id=815723527]
 modulate = Color(0.63, 0.006299994, 0.016694842, 1)
 custom_minimum_size = Vector2(442.215, 0)
 layout_mode = 1
@@ -543,7 +527,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/separator = SubResource("StyleBoxLine_soy43")
 
-[node name="HSeparator2" type="HSeparator" parent="TreePanel/Control/ShipperIsland" unique_id=1762228458]
+[node name="HSeparator2" type="HSeparator" parent="Island1/Control/ShipperIsland" unique_id=1762228458]
 modulate = Color(0.63, 0.006299994, 0.016694842, 1)
 custom_minimum_size = Vector2(442.215, 0)
 layout_mode = 1
@@ -561,7 +545,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/separator = SubResource("StyleBoxLine_soy43")
 
-[node name="ShipperIsland2" type="RichTextLabel" parent="TreePanel/Control" unique_id=1015332280]
+[node name="ShipperIsland2" type="RichTextLabel" parent="Island1/Control" unique_id=1015332280]
 modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 clip_contents = false
 layout_mode = 1
@@ -587,7 +571,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 justification_flags = 162
 
-[node name="Control" type="Control" parent="TreePanel/Control" unique_id=1079193983]
+[node name="Control" type="Control" parent="Island1/Control" unique_id=1079193983]
 visible = false
 clip_contents = true
 custom_minimum_size = Vector2(400, 0)
@@ -605,7 +589,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
-[node name="Panel" type="Panel" parent="TreePanel/Control/Control" unique_id=1964716013]
+[node name="Panel" type="Panel" parent="Island1/Control/Control" unique_id=1964716013]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -622,7 +606,7 @@ rotation = -0.5235988
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_soy43")
 
-[node name="Panel3" type="Panel" parent="TreePanel/Control/Control" unique_id=2022095581]
+[node name="Panel3" type="Panel" parent="Island1/Control/Control" unique_id=2022095581]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -639,12 +623,12 @@ rotation = 0.5235988
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_soy43")
 
-[node name="CoatArms" parent="TreePanel/Control" unique_id=583002181 instance=ExtResource("6_8mvl6")]
+[node name="CoatArms" parent="Island1/Control" unique_id=583002181 instance=ExtResource("6_8mvl6")]
 layout_mode = 1
 offset_top = 200.00006
 offset_bottom = 456.00006
 
-[node name="Control2" type="Control" parent="TreePanel" unique_id=1227093502]
+[node name="Control2" type="Control" parent="Island1" unique_id=1227093502]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -657,7 +641,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.23, 0.705)
 mouse_filter = 2
 
-[node name="ShipperIsland" type="RichTextLabel" parent="TreePanel/Control2" unique_id=17830661]
+[node name="ShipperIsland" type="RichTextLabel" parent="Island1/Control2" unique_id=17830661]
 clip_contents = false
 layout_mode = 1
 anchors_preset = 7
@@ -679,7 +663,7 @@ fit_content = true
 autowrap_mode = 0
 vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="TreePanel/Control2/ShipperIsland" unique_id=1006724973]
+[node name="Panel" type="Panel" parent="Island1/Control2/ShipperIsland" unique_id=1006724973]
 visible = false
 show_behind_parent = true
 layout_mode = 1
@@ -692,7 +676,7 @@ scale = Vector2(1.105, 1.105)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_w6jbf")
 
-[node name="HSeparator" type="HSeparator" parent="TreePanel/Control2/ShipperIsland" unique_id=1006851852]
+[node name="HSeparator" type="HSeparator" parent="Island1/Control2/ShipperIsland" unique_id=1006851852]
 modulate = Color(0.63, 0.006299994, 0.016694842, 1)
 custom_minimum_size = Vector2(442.215, 0)
 layout_mode = 1
@@ -710,7 +694,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/separator = SubResource("StyleBoxLine_soy43")
 
-[node name="HSeparator2" type="HSeparator" parent="TreePanel/Control2/ShipperIsland" unique_id=1477913447]
+[node name="HSeparator2" type="HSeparator" parent="Island1/Control2/ShipperIsland" unique_id=1477913447]
 modulate = Color(0.63, 0.006299994, 0.016694842, 1)
 custom_minimum_size = Vector2(442.215, 0)
 layout_mode = 1
@@ -728,7 +712,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/separator = SubResource("StyleBoxLine_soy43")
 
-[node name="ShipperIsland2" type="RichTextLabel" parent="TreePanel/Control2" unique_id=170787166]
+[node name="ShipperIsland2" type="RichTextLabel" parent="Island1/Control2" unique_id=170787166]
 modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 clip_contents = false
 layout_mode = 1
@@ -754,7 +738,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 justification_flags = 162
 
-[node name="Control" type="Control" parent="TreePanel/Control2" unique_id=1602696874]
+[node name="Control" type="Control" parent="Island1/Control2" unique_id=1602696874]
 clip_contents = true
 custom_minimum_size = Vector2(400, 500)
 anchors_preset = 0
@@ -764,7 +748,7 @@ offset_right = 680.0
 offset_bottom = 1136.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
-[node name="Panel" type="Panel" parent="TreePanel/Control2/Control" unique_id=701104131]
+[node name="Panel" type="Panel" parent="Island1/Control2/Control" unique_id=701104131]
 custom_minimum_size = Vector2(400, 75)
 layout_mode = 0
 offset_left = 184.0
@@ -775,7 +759,7 @@ rotation = 0.5061455
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_soy43")
 
-[node name="Panel2" type="Panel" parent="TreePanel/Control2/Control" unique_id=175862722]
+[node name="Panel2" type="Panel" parent="Island1/Control2/Control" unique_id=175862722]
 custom_minimum_size = Vector2(400, 75)
 layout_mode = 0
 offset_left = -128.0

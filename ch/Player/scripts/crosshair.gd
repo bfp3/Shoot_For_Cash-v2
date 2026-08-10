@@ -31,6 +31,11 @@ var right_pos_x : float
 @export var transition_speed := 0.05
 var orig_pos := Vector2.ZERO
 
+var _weapon_style_cached := false
+var _default_inner_modulate := Color.WHITE
+var _default_outer_modulate := Color.WHITE
+var _default_line_colors: Dictionary = {}
+
 
 func _ready() -> void:
 	modulate = Color.TRANSPARENT
@@ -48,6 +53,37 @@ func _ready() -> void:
 #	EventBus.instance.wrapping_up_a_level.connect(_fade_out)
 	self.show()
 	$Panel.hide()
+	_cache_default_weapon_style()
+
+
+func _cache_default_weapon_style() -> void:
+	if _weapon_style_cached:
+		return
+	_weapon_style_cached = true
+	var inner := $Inner_scope/center_container as Control
+	var outer := $Large_outer_scope/center_container as Control
+	_default_inner_modulate = inner.modulate
+	_default_outer_modulate = outer.modulate
+	for line in [up, down, left, right]:
+		_default_line_colors[line] = line.default_color
+
+
+## Alt weapon reticle: same layout as default, color only.
+func apply_weapon_style(use_alt: bool, color: Color, _size_scale: float = 1.0, _arm_length_scale: float = 1.0, _rotate_45: bool = false) -> void:
+	_cache_default_weapon_style()
+	var inner := $Inner_scope/center_container as Control
+	var outer := $Large_outer_scope/center_container as Control
+	if not use_alt:
+		inner.modulate = _default_inner_modulate
+		outer.modulate = _default_outer_modulate
+		for line in [up, down, left, right]:
+			line.default_color = _default_line_colors.get(line, Color(1, 1, 1, 0.96))
+		return
+
+	inner.modulate = color
+	outer.modulate = color
+	for line in [up, down, left, right]:
+		line.default_color = color
 
 func _on_shop_entered() -> void:
 	if gl_PlayerState.dataset.power_gun == 0:

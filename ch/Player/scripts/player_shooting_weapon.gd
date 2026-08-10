@@ -35,6 +35,8 @@ var pitch_adjustment := 0.02
 
 var shooting_sky_mine := false
 var round_manager : RoundManager
+## Active projectile scene (default or alternate weapon).
+var active_bullet_scene: PackedScene = BULLET_VISUAL_1
 
 
 func _ready() -> void:
@@ -59,8 +61,15 @@ func apply_upgrades() -> void:
 	power_bullet_delay = 0.05
 	if gl_PlayerState.dataset.power_auto_fire > 0:
 		auto_fire = true
-	
-	current_bullet = BULLET_STAGE_1
+
+	if active_bullet_scene == null:
+		active_bullet_scene = BULLET_STAGE_1
+	current_bullet = active_bullet_scene
+
+
+func set_active_bullet_scene(scene: PackedScene) -> void:
+	active_bullet_scene = scene if scene else BULLET_VISUAL_1
+	current_bullet = active_bullet_scene
 	
 
 
@@ -239,11 +248,24 @@ func _cannot_shoot() -> void:
 func process_target_hit(target, damage, screen_offset) -> void:
 	await get_tree().create_timer(power_bullet_speed).timeout
 	if is_instance_valid(target):
-		target.hit_by_player(
-			damage,
-			screen_offset
-		)
-		
+		var freeze_shot := false
+		if player and player.get("using_alt_weapon") == true:
+			freeze_shot = true
+			
+		if target is RockInstance:
+			if target.has_method("hit_by_player"):
+				target.hit_by_player(
+					damage,
+					screen_offset,
+					freeze_shot
+				)
+		else:
+			if target.has_method("hit_by_player"):
+				target.hit_by_player(
+					damage,
+					screen_offset
+				)
+			
 
 
 
@@ -420,7 +442,8 @@ func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos 
 	if not free_shot and not player.consume_ammo(1):
 		return false
 
-	var new_bullet = BULLET_VISUAL_1.instantiate()
+	var bullet_scene: PackedScene = active_bullet_scene if active_bullet_scene else BULLET_VISUAL_1
+	var new_bullet = bullet_scene.instantiate()
 
 	if _target != null:
 		new_bullet.target_node = _target

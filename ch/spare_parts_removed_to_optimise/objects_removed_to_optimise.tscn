@@ -6,12 +6,18 @@
 [ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="5_yajia"]
 [ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="6_027sw"]
 [ext_resource type="Script" uid="uid://bns2a7l7rdc41" path="res://ch/targets/orange_bombs.gd" id="6_cg4l4"]
+[ext_resource type="PackedScene" uid="uid://b51vopusw334w" path="res://ch/Rocks/Rock_Instance.tscn" id="7_yajia"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_lcd3f"]
 bounce = 0.5
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_eftrv"]
 bounce = 0.5
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_kki7c"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_biuot"]
+friction = 0.0
 
 [node name="ObjectsRemovedToOptimise" type="Node3D" unique_id=183529928]
 
@@ -241,13 +247,10 @@ balloon_type = 3
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 2.5, 0)
 balloon_type = 3
 
-[node name="ProtectBalloonRound2" type="Node3D" parent="." unique_id=831787982 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager")]
+[node name="ProtectBalloonRound2" type="Node3D" parent="." unique_id=831787982]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 29)
 visible = false
 script = ExtResource("5_nqkvy")
-left_marker = NodePath("")
-right_marker = NodePath("")
-round_manager = NodePath("")
 pineapple_spawn_radius = 20.0
 pineapple_aim_offset = 6.0
 
@@ -371,11 +374,8 @@ physics_material_override = SubResource("PhysicsMaterial_eftrv")
 cash_value = 0
 force_multiplier = 1.0
 
-[node name="BonusOranges" type="Node3D" parent="." unique_id=50081695 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager")]
+[node name="BonusOranges" type="Node3D" parent="." unique_id=50081695]
 script = ExtResource("5_nqkvy")
-left_marker = NodePath("")
-right_marker = NodePath("")
-round_manager = NodePath("")
 oranges = true
 
 [node name="Orange" parent="BonusOranges" unique_id=871693613 instance=ExtResource("5_yajia")]
@@ -402,11 +402,8 @@ force_multiplier = 1.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
 force_multiplier = 1.0
 
-[node name="OrangeBombs" type="Node3D" parent="." unique_id=1671394937 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["orange_container"]]
+[node name="OrangeBombs" type="Node3D" parent="." unique_id=1671394937 groups=["orange_container"]]
 script = ExtResource("6_cg4l4")
-left_marker = NodePath("")
-right_marker = NodePath("")
-round_manager = NodePath("")
 
 [node name="Orange" parent="OrangeBombs" unique_id=1758214714 instance=ExtResource("5_yajia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -2.9, 23)
@@ -533,3 +530,167 @@ mass = 0.5
 gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
+
+[node name="Container_1" type="Node3D" parent="." unique_id=1413509813]
+
+[node name="Rock_Instance" parent="Container_1" unique_id=641614515 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4728577, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance2" parent="Container_1" unique_id=1817340858 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8336112, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_biuot")
+
+[node name="Rock_Instance3" parent="Container_1" unique_id=984380060 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.658868, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance4" parent="Container_1" unique_id=2041020335 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.798102, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance5" parent="Container_1" unique_id=1714083247 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5083055, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance6" parent="Container_1" unique_id=1072499490 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.63919, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance7" parent="Container_1" unique_id=882938934 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.451482, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance8" parent="Container_1" unique_id=1161354334 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5166283, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance9" parent="Container_1" unique_id=1055910750 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.997283, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance10" parent="Container_1" unique_id=1426743457 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4127793, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance11" parent="Container_1" unique_id=606788622 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6957083, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance12" parent="Container_1" unique_id=16413530 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4926226, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance13" parent="Container_1" unique_id=229982930 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.390077, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance14" parent="Container_1" unique_id=1469596794 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.036045, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance15" parent="Container_1" unique_id=1667958206 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3772593, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance16" parent="Container_1" unique_id=804194680 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance17" parent="Container_1" unique_id=4778776 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7047248, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance18" parent="Container_1" unique_id=798955574 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6097546, -2.89, 23.17)
+top_level = true
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance19" parent="Container_1" unique_id=1162150592 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance20" parent="Container_1" unique_id=1334680142 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4504056, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance21" parent="Container_1" unique_id=3602667 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5271425, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance22" parent="Container_1" unique_id=944050912 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1663885, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance23" parent="Container_1" unique_id=1320128593 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3411322, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance24" parent="Container_1" unique_id=435030687 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2018981, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance25" parent="Container_1" unique_id=287829202 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4916945, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance26" parent="Container_1" unique_id=1667715783 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3608098, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance27" parent="Container_1" unique_id=1929193011 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5485182, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance28" parent="Container_1" unique_id=531210954 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4833717, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance29" parent="Container_1" unique_id=399113400 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.002717, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance30" parent="Container_1" unique_id=79672042 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5872207, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance31" parent="Container_1" unique_id=1300374347 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3042917, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance32" parent="Container_1" unique_id=508992662 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5073776, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance33" parent="Container_1" unique_id=362062157 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.609923, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance34" parent="Container_1" unique_id=1710130408 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9639549, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance35" parent="Container_1" unique_id=1328484575 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.62274075, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance36" parent="Container_1" unique_id=1661393868 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3602629, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance37" parent="Container_1" unique_id=675361892 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.295275, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance38" parent="Container_1" unique_id=1895729878 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3902454, -2.89, 23.17)
+top_level = true
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance39" parent="Container_1" unique_id=999978787 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3602629, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Rock_Instance40" parent="Container_1" unique_id=2092788332 instance=ExtResource("7_yajia")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5495944, -0.08000016, 0.42000008)
+physics_material_override = SubResource("PhysicsMaterial_kki7c")

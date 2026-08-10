@@ -70,43 +70,6 @@ size = Vector3(0.05, 30, 0.05)
 [sub_resource type="BoxMesh" id="BoxMesh_mdemw"]
 size = Vector3(0.108, 0.502, 0.007)
 
-[sub_resource type="Animation" id="Animation_tnw34"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_nn6vd"]
-resource_name = "push_up"
-length = 0.4
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.16666667, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 5, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ec2we"]
-_data = {
-&"RESET": SubResource("Animation_tnw34"),
-&"push_up": SubResource("Animation_nn6vd")
-}
-
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ugpmk"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_fjxa8"]
@@ -170,44 +133,6 @@ uv1_triplanar = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_ymbdo"]
 size = Vector3(40, 0.1, 0.1)
-
-[sub_resource type="Animation" id="Animation_uuy6g"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("..:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_ygja6"]
-resource_name = "sailing_boat"
-length = 10.0
-loop_mode = 2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("..:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 10),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(1000, 0, 0), Vector3(-1000, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_n1xtn"]
-_data = {
-&"RESET": SubResource("Animation_uuy6g"),
-&"sailing_boat": SubResource("Animation_ygja6")
-}
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_taal3"]
 shader = ExtResource("28_ld44m")
@@ -727,11 +652,6 @@ material_override = ExtResource("74_vwwt2")
 mesh = SubResource("BoxMesh_mdemw")
 skeleton = NodePath("../../..")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Rocks" unique_id=1503410260]
-root_node = NodePath("../Shover")
-libraries/ = SubResource("AnimationLibrary_ec2we")
-speed_scale = 0.2
-
 [node name="Container_1" type="Node3D" parent="Rocks" unique_id=189760907]
 
 [node name="Rock_Instance" parent="Rocks/Container_1" unique_id=1089661090 instance=ExtResource("21_e0u1b")]
@@ -794,108 +714,6 @@ physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3772593, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
-[node name="Rock_Instance16" parent="Rocks/Container_1" unique_id=559020077 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance17" parent="Rocks/Container_1" unique_id=1641853172 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7047248, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance18" parent="Rocks/Container_1" unique_id=931775137 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6097546, -2.89, 23.17)
-top_level = true
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance19" parent="Rocks/Container_1" unique_id=202729113 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.639737, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance20" parent="Rocks/Container_1" unique_id=1000269966 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4504056, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance21" parent="Rocks/Container_1" unique_id=2125508842 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5271425, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance22" parent="Rocks/Container_1" unique_id=1578322430 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1663885, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance23" parent="Rocks/Container_1" unique_id=1625184715 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3411322, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance24" parent="Rocks/Container_1" unique_id=350188603 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2018981, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance25" parent="Rocks/Container_1" unique_id=1474058678 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4916945, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance26" parent="Rocks/Container_1" unique_id=752305719 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3608098, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance27" parent="Rocks/Container_1" unique_id=917312404 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5485182, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance28" parent="Rocks/Container_1" unique_id=207221846 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4833717, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance29" parent="Rocks/Container_1" unique_id=1378354028 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.002717, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance30" parent="Rocks/Container_1" unique_id=1390232069 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5872207, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance31" parent="Rocks/Container_1" unique_id=1517070973 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3042917, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance32" parent="Rocks/Container_1" unique_id=827979456 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5073776, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance33" parent="Rocks/Container_1" unique_id=1527090848 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.609923, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance34" parent="Rocks/Container_1" unique_id=324006732 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9639549, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance35" parent="Rocks/Container_1" unique_id=1820558471 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.62274075, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance36" parent="Rocks/Container_1" unique_id=628520885 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3602629, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance37" parent="Rocks/Container_1" unique_id=1237167454 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.295275, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance38" parent="Rocks/Container_1" unique_id=1582972785 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3902454, -2.89, 23.17)
-top_level = true
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance39" parent="Rocks/Container_1" unique_id=400853383 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3602629, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
-[node name="Rock_Instance40" parent="Rocks/Container_1" unique_id=632268749 instance=ExtResource("21_e0u1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5495944, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
-
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="Rocks" unique_id=951137588]
 stream = ExtResource("23_1i2h1")
 volume_db = -10.0
@@ -920,18 +738,6 @@ collision_mask = 7
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Rocks/Shover" unique_id=1619768210]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2012472, 0)
 shape = SubResource("BoxShape3D_ymbdo")
-debug_color = Color(0, 1, 0, 1)
-
-[node name="CollisionShape3D4" type="CollisionShape3D" parent="Rocks/Shover" unique_id=1565011847]
-transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, -20.699135, 3.0234952, -4.9721565)
-shape = SubResource("BoxShape3D_ymbdo")
-disabled = true
-debug_color = Color(0, 1, 0, 1)
-
-[node name="CollisionShape3D5" type="CollisionShape3D" parent="Rocks/Shover" unique_id=1086062209]
-transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 20.741976, 3.0234952, -4.9721565)
-shape = SubResource("BoxShape3D_ymbdo")
-disabled = true
 debug_color = Color(0, 1, 0, 1)
 
 [node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("23_ellt3")]
@@ -991,11 +797,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 23)
 material_override = SubResource("StandardMaterial3D_wv0tc")
 mesh = SubResource("BoxMesh_ymbdo")
 skeleton = NodePath("../..")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=391338382]
-root_node = NodePath("../Player")
-libraries/ = SubResource("AnimationLibrary_n1xtn")
-speed_scale = 0.005
 
 [node name="Level_Visual" type="Node3D" parent="." unique_id=1485757792]
 

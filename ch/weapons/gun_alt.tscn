@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://brtw6kurd7ejg"]
+
+[ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="1_gun"]
+[ext_resource type="Script" path="res://ch/weapons/gun_alt_look.gd" id="2_look"]
+
+[node name="mockGunAlt" instance=ExtResource("1_gun")]
+script = ExtResource("2_look")
+body_color = Color(0.06, 0.14, 0.16, 1)
+accent_color = Color(0.12, 0.95, 0.82, 1)
+accent_emission = 2.2
+mesh_scale = Vector3(1.08, 1.12, 1.2)

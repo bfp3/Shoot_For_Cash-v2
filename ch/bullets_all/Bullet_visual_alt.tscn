@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://blmpv2r3v5nd3"]
+
+[ext_resource type="Script" uid="uid://dj00n6x6akhht" path="res://ch/bullets_all/bullet_stage_1_visual.gd" id="1_te27o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_alt"]
+albedo_color = Color(0.1, 0.95, 0.82, 1)
+metallic = 0.35
+roughness = 0.15
+emission_enabled = true
+emission = Color(0.15, 1, 0.85, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_alt"]
+radius = 0.035
+height = 0.22
+radial_segments = 12
+rings = 4
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_alt"]
+radius = 0.03
+height = 0.16
+
+[node name="Mesh" type="Node3D"]
+script = ExtResource("1_te27o")
+
+[node name="Bullet_mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_alt")
+cast_shadow = 0
+mesh = SubResource("CapsuleMesh_alt")
+
+[node name="Trail" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.55, 0, 0, 0, -4.371139e-08, -0.55, 0, 1.8, -7.86805e-08, 0, 0, -0.12)
+material_override = SubResource("StandardMaterial3D_alt")
+cast_shadow = 0
+mesh = SubResource("CapsuleMesh_alt")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_mask = 3
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_alt")
