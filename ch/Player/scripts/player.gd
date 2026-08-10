@@ -516,8 +516,8 @@ func update_player_stats() -> void:
 	power_bullet_delay = set_power(settings, 'power_bullet_delay')
 	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
 
-	power_gun_fire_rate = 0.05
-	power_bullet_speed = 0.01
+	#power_gun_fire_rate = 0.05
+	#power_bullet_speed = 0.01
 	#power_target_circle = 60.0
 	
 	player_gun.update_guns()
@@ -601,19 +601,34 @@ func _on_scope_shrink_sfx_finished() -> void:
 func handle_scope_adjust(delta: float) -> void:
 	var shrink_held := false
 	var expand_held := false
+
 	if running_on_mobile:
-		# Left-half hold only — right-half aim never shrinks/expands scope.
 		shrink_held = mobile_controller.is_fire_held()
 	else:
 		shrink_held = Input.is_action_pressed("shootWeapon")
 		expand_held = Input.is_action_pressed("shoot_weapon_2")
 
+	# NORMAL
+	power_gun_fire_rate = 0.35
+	power_bullet_speed = 0.3
+
 	if shrink_held and _scope_mode != ScopeMode.EXPAND:
 		_update_scope_hold(ScopeMode.SHRINK, delta)
+
+		# Smaller scope = faster shooting + faster bullets
+		power_gun_fire_rate = 0.05
+		power_bullet_speed = 0.5
+
 	elif expand_held and _scope_mode != ScopeMode.SHRINK:
 		_update_scope_hold(ScopeMode.EXPAND, delta)
+
+		# Larger scope = slower shooting + slower bullets
+		power_gun_fire_rate = 2.0
+		power_bullet_speed = 2.1
+
 	elif _is_holding_shoot:
 		_release_scope_hold()
+
 
 
 func _update_scope_hold(mode: ScopeMode, delta: float) -> void:

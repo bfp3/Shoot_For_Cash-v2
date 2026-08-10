@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="3_ecf0a"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="4_ecf0a"]
 [ext_resource type="Script" uid="uid://dbbltr23d26u6" path="res://ch/Shop/money_label.gd" id="5_7r173"]
-[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="6_4k5lx"]
 [ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="6_cuwcq"]
 [ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="7_7r173"]
 [ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="9_3q72g"]
@@ -166,27 +165,6 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7r173"]
-bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-
-[sub_resource type="Gradient" id="Gradient_hi3s5"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0.55730337, 0.72808987)
-colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 0.68, 0.0067999936, 0.018019829, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_sgib8"]
-frequency = 0.085
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ta7gf"]
-height = 64
-noise = SubResource("FastNoiseLite_sgib8")
-color_ramp = SubResource("Gradient_hi3s5")
-seamless = true
-
-[sub_resource type="PrismMesh" id="PrismMesh_bux34"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iforg"]
 
@@ -829,67 +807,6 @@ scale = Vector2(1.25, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_cuwcq")
 
-[node name="BonusCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/100_percent" unique_id=1098716925]
-visible = false
-layout_mode = 0
-offset_left = -25.308838
-offset_top = -98.84262
-offset_right = 175.69116
-offset_bottom = -0.84262085
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/normal_font_size = 60
-theme_override_font_sizes/bold_font_size = 30
-theme_override_font_sizes/bold_italics_font_size = 30
-theme_override_font_sizes/italics_font_size = 31
-bbcode_enabled = true
-text = "+$100"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/100_percent" unique_id=1818337750]
-visible = false
-self_modulate = Color(1, 1, 1, 0.39215687)
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -228.5
-offset_top = 242.00003
-offset_right = 228.5
-offset_bottom = 510.00003
-grow_horizontal = 2
-grow_vertical = 2
-rotation = -0.34906584
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_type_variation = &"RedRichText"
-theme_override_font_sizes/normal_font_size = 35
-theme_override_font_sizes/italics_font_size = 248
-bbcode_enabled = true
-text = "[wave][i]100%"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-vertical_alignment = 1
-
-[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/MainPanel/100_percent/RichTextLabel2" unique_id=110949357]
-modulate = Color(0.92, 0.8770667, 0.8464, 0.47058824)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.25, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_styles/panel = SubResource("StyleBoxFlat_cuwcq")
-
 [node name="HSeparator5" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=1168585334]
 visible = false
 custom_minimum_size = Vector2(0, 30)
@@ -898,136 +815,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
-
-[node name="ColorRect" type="Panel" parent="CenterContainer/MainPanel/MainPanel" unique_id=313920766]
-visible = false
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_7r173")
-
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/MainPanel/ColorRect" unique_id=783302900]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -61.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("NoiseTexture2D_ta7gf")
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/MainPanel/ColorRect" unique_id=1073230442]
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-position = Vector2(364.97894, -20.139904)
-rotation = 3.1415925
-scale = Vector2(730.95734, 106)
-mesh = SubResource("PrismMesh_bux34")
-
-[node name="CircleEmblem" type="TextureRect" parent="CenterContainer/MainPanel/MainPanel/ColorRect" unique_id=1722118419]
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -74.5
-offset_right = 25.0
-offset_bottom = 18.5
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("6_4k5lx")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CircleEmblem3" type="TextureRect" parent="CenterContainer/MainPanel/MainPanel/ColorRect/CircleEmblem" unique_id=48192102]
-modulate = Color(0.77, 0.73406667, 0.7084, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -48.0
-offset_right = 25.0
-offset_bottom = 45.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.174, 1.174)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("6_4k5lx")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CircleEmblem2" type="TextureRect" parent="CenterContainer/MainPanel/MainPanel/ColorRect/CircleEmblem" unique_id=912216298]
-visible = false
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -46.5
-offset_right = 25.0
-offset_bottom = 46.5
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.1, 1.1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("6_4k5lx")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="GameName" type="Control" parent="CenterContainer/MainPanel/MainPanel/ColorRect" unique_id=2031810612]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -49.0
-offset_right = 20.0
-offset_bottom = -9.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="Giuseppes" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/ColorRect/GameName" unique_id=874255403]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.5
-offset_top = -31.0
-offset_right = 18.5
-offset_bottom = 35.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/default_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
-theme_override_font_sizes/normal_font_size = 30
-theme_override_font_sizes/italics_font_size = 60
-bbcode_enabled = true
-text = "W"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="CashHboxcontainer2" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1278365589]
 layout_mode = 2
@@ -1056,8 +843,10 @@ process_material = SubResource("ParticleProcessMaterial_q6qkh")
 
 [node name="GradeLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=408558362]
 unique_name_in_owner = true
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 69
 theme_override_font_sizes/bold_font_size = 26
 theme_override_font_sizes/bold_italics_font_size = 26
@@ -1071,9 +860,11 @@ horizontal_alignment = 1
 [node name="GradeLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=58268610]
 unique_name_in_owner = true
 visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 26
 theme_override_font_sizes/bold_font_size = 26
 theme_override_font_sizes/bold_italics_font_size = 26
@@ -1086,10 +877,12 @@ horizontal_alignment = 1
 
 [node name="GradeCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=905765579]
 unique_name_in_owner = true
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 clip_contents = false
 custom_minimum_size = Vector2(0, 169.82)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 70
 bbcode_enabled = true
 text = "$50"
@@ -1155,9 +948,42 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
 
-[node name="BonusesLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=1289664472]
+[node name="BonusesCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=263932816]
+unique_name_in_owner = true
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 70
+bbcode_enabled = true
+text = "TEST"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TotalLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=709325133]
+unique_name_in_owner = true
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/bold_italics_font_size = 26
+theme_override_font_sizes/italics_font_size = 26
+bbcode_enabled = true
+text = "C A S H"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="BonusesLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=1289664472]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 26
 theme_override_font_sizes/bold_font_size = 26
 theme_override_font_sizes/bold_italics_font_size = 26
@@ -1167,19 +993,6 @@ text = "[i]BONUSES[/i]"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
-
-[node name="BonusesCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=263932816]
-unique_name_in_owner = true
-clip_contents = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 70
-bbcode_enabled = true
-text = "TEST"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="VSeparator3" type="VSeparator" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=1769694785]
 visible = false
@@ -1247,22 +1060,6 @@ visible = false
 custom_minimum_size = Vector2(0, 217)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3q72g")
-
-[node name="TotalLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=709325133]
-unique_name_in_owner = true
-self_modulate = Color(0.08235294, 0.09411765, 0.10980392, 1)
-custom_minimum_size = Vector2(0, 170)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/bold_font_size = 26
-theme_override_font_sizes/bold_italics_font_size = 26
-theme_override_font_sizes/italics_font_size = 26
-bbcode_enabled = true
-text = "C A S H"
-fit_content = true
-horizontal_alignment = 1
 
 [node name="TotalCashCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=1643114876]
 unique_name_in_owner = true
@@ -1372,7 +1169,7 @@ pitch_scale = 1.1
 
 [node name="Fail_Label" type="RichTextLabel" parent="." unique_id=1930791002]
 unique_name_in_owner = true
-modulate = Color(0.55, 0.55, 0.55, 1)
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 clip_contents = false
 custom_minimum_size = Vector2(0, 169.82)
 layout_mode = 1
@@ -1388,6 +1185,7 @@ offset_bottom = 20.910034
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 100
 bbcode_enabled = true
 text = "$0"
