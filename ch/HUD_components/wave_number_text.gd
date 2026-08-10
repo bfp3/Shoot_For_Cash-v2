@@ -14,6 +14,7 @@ extends Control
 
 @onready var strike_panel: Panel = $Strike_system
 @onready var strike_label: RichTextLabel = $Strike_system/StrikeLabel
+@onready var strike_hud: Panel = $Strike_system2
 
 var wave_count := 0
 
@@ -21,6 +22,8 @@ const slide_distance := 560.0
 const fade_in_time := 0.15#0.35
 const hold_time := 0.6 #0.8
 const fade_out_time := 0.15
+## Total show/hide duration for the persistent strike indicators.
+const strike_hud_anim_time := 0.35
 
 var _original_position: Vector2
 var _original_modulate: Color
@@ -37,13 +40,15 @@ var _strike_panel_original_modulate : Color
 var clear_has_been_called_this_wave := false
 var result_has_been_shown_this_wave := false
 
-
 var strikes_int : int = 0
+var _strike_hud_tween: Tween
+var _strike_hud_visible := false
 
 
 
 func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(reset_each_wave)
+	EventBus.instance.open_shop.connect(hide_strike_hud)
 	_original_position = wave_panel.position
 	_original_modulate = wave_panel.modulate
 
@@ -55,6 +60,11 @@ func _ready() -> void:
 	
 	_strike_panel_original_position = strike_panel.position
 	_strike_panel_original_modulate = strike_panel.modulate
+
+	# Persistent strike row stays hidden until a round begins.
+	_set_strike_hud_hidden_immediate()
+	if has_node("Strike_system3"):
+		$Strike_system3.hide()
 	
 	end()
 	
@@ -65,6 +75,7 @@ func reset() -> void:
 	wave_count = 0
 	strike_label.text = ''
 	end()
+	show_strike_hud()
 
 func reset_each_wave() -> void:
 	clear_has_been_called_this_wave = false
@@ -234,6 +245,46 @@ func reset_strikes() -> void:
 		$Strike_system2.reset()
 
 
+func show_strike_hud() -> void:
+	if strike_hud == null:
+		return
+	if _strike_hud_tween and _strike_hud_tween.is_valid():
+		_strike_hud_tween.kill()
+	_strike_hud_visible = true
+	strike_hud.show()
+	strike_hud.modulate.a = 0.0
+	_strike_hud_tween = create_tween()
+	_strike_hud_tween.tween_property(strike_hud, "modulate:a", 1.0, strike_hud_anim_time)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+func hide_strike_hud() -> void:
+	if strike_hud == null:
+		return
+	if not _strike_hud_visible and not strike_hud.visible:
+		return
+	if _strike_hud_tween and _strike_hud_tween.is_valid():
+		_strike_hud_tween.kill()
+	_strike_hud_visible = false
+	_strike_hud_tween = create_tween()
+	_strike_hud_tween.tween_property(strike_hud, "modulate:a", 0.0, strike_hud_anim_time)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_strike_hud_tween.tween_callback(func() -> void:
+		if is_instance_valid(strike_hud) and not _strike_hud_visible:
+			strike_hud.hide()
+	)
+
+
+func _set_strike_hud_hidden_immediate() -> void:
+	if _strike_hud_tween and _strike_hud_tween.is_valid():
+		_strike_hud_tween.kill()
+	_strike_hud_visible = false
+	if strike_hud:
+		strike_hud.hide()
+		strike_hud.modulate.a = 0.0
+
+
 func restart() -> void:
 	reset_strikes()
+	_set_strike_hud_hidden_immediate()
 	end()

@@ -21,8 +21,11 @@ var _indicator_pulse := 0.0
 var _indicator_pos := Vector2.ZERO
 var _indicator_has_pos := false
 var _indicator_suppressed := false
+## Focus chevron only for controller users (hidden for keyboard/mouse).
+var _controller_ui_active := false
 const INDICATOR_SIZE := Vector2(56, 56)
 const INDICATOR_LERP_SPEED := 14.0
+const CONTROLLER_AXIS_THRESHOLD := 0.35
 
 
 func _ready() -> void:
@@ -52,6 +55,8 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	_update_controller_ui_from_event(event)
+
 	if not _should_offer_focus():
 		return
 	if not event.is_pressed() or event.is_echo():
@@ -63,6 +68,24 @@ func _input(event: InputEvent) -> void:
 	var target := find_first_focusable()
 	if target:
 		target.grab_focus()
+
+
+func _update_controller_ui_from_event(event: InputEvent) -> void:
+	if event is InputEventJoypadButton:
+		if event.pressed:
+			_controller_ui_active = true
+		return
+	if event is InputEventJoypadMotion:
+		if absf((event as InputEventJoypadMotion).axis_value) >= CONTROLLER_AXIS_THRESHOLD:
+			_controller_ui_active = true
+		return
+	# Keyboard / mouse takes over — hide the controller nav arrow.
+	if event is InputEventKey and event.pressed and not event.echo:
+		_controller_ui_active = false
+	elif event is InputEventMouseButton and event.pressed:
+		_controller_ui_active = false
+	elif event is InputEventMouseMotion and (event as InputEventMouseMotion).relative.length_squared() > 1.0:
+		_controller_ui_active = false
 
 
 func grab_in(root: Node, preferred: Control = null) -> void:
@@ -264,7 +287,7 @@ func _update_focus_indicator(delta: float) -> void:
 		return
 	_indicator_pulse += delta * 6.0
 
-	if _indicator_suppressed:
+	if _indicator_suppressed or not _controller_ui_active:
 		_indicator.visible = false
 		_indicator_has_pos = false
 		return

@@ -106,11 +106,11 @@ func start_fail_sequence() -> void:
 
 	#grade_cash_label.text = ""
 	grade_cash_label.text = ""
-	grade_cash_label.modulate = Color('a6a6a6ff')
+	grade_cash_label.modulate.a = 1.0
 	#grade_label.text = "[i]Try Again"
 	grade_label.text = ""
-	grade_label.modulate = Color("a6a6a6ff")
-	grade_cash_label.modulate = Color('a6a6a6ff')
+	grade_label.modulate.a = 1.0
+	grade_cash_label.modulate.a = 1.0
 
 	if gl_PlayerState.dataset.fines < 0:
 		fail_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
@@ -141,7 +141,7 @@ func start_perfect_sequence() -> void:
 	$SFX/shop_purchase_02.play()
 	$SFX/shop_purchase_01.play()
 	var dur := 0.33
-	grade_label.modulate = Color("ffc700ff")
+	grade_label.modulate.a = 1.0
 	grade_label.text = "[i][wave]Clear!"
 	
 	if gl_PlayerState.dataset.total_current_strikes <= 0:
@@ -151,7 +151,7 @@ func start_perfect_sequence() -> void:
 	
 	# 2. GRADE CASH LABEL
 	grade_cash_label.text = '$' + str(perfect_bonus)
-	grade_cash_label.modulate = Color("15181cff")
+	grade_cash_label.modulate.a = 1.0
 	gl_PlayerState.add_cash(perfect_bonus)
 
 	# decorative particle flourish, fires in the background (non-blocking)
@@ -207,7 +207,7 @@ func check_white_rocks() -> void:
 	fail_label.text = "$0"
 	grade_label.text = ""
 	grade_cash_label.text = ""
-	grade_cash_label.modulate = Color("42d100")
+	grade_cash_label.modulate.a = 1.0
 	
 	bonuses_label.text = 'BONUSES'
 	bonuses_cash_label.text = ""
@@ -285,7 +285,6 @@ func apply_bonus_cash() -> void:
 	#gl_PlayerState.add_bonus(bonus_cash)
 	bonuses_cash_label.show()
 	bonuses_cash_label.modulate.a = 1.0
-	bonuses_cash_label.modulate = Color("42d100ff")
 	bonuses_cash_label.text = "$" + str(bonus_cash)
 
 func update_open_menu() -> void:

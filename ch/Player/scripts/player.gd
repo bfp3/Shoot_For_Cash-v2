@@ -24,6 +24,19 @@ var _current_shrink_duration := 0.5
 ## Max scope size while holding right-click, as a multiple of resting radius (1.0 = no grow).
 const SCOPE_EXPAND_MAX_SCALE := 1.85
 
+@export_group('Scope Shot Modifiers')
+## Applied to upgraded base travel time while shrinking. Lower = faster bullets (travel seconds).
+@export var scope_shrink_bullet_speed_scale := 0.5
+## Applied to upgraded base travel time while expanding. Higher = slower bullets.
+@export var scope_expand_bullet_speed_scale := 7.0
+## Applied to upgraded base fire-rate cooldown while shrinking. Lower = faster fire.
+@export var scope_shrink_fire_rate_scale := 0.14
+## Applied to upgraded base fire-rate cooldown while expanding. Higher = slower fire.
+@export var scope_expand_fire_rate_scale := 5.7
+## Resting upgrade values — restored when not holding shrink/expand.
+var _base_bullet_speed := 0.3
+var _base_gun_fire_rate := 0.35
+
 @export var can_right_click_shoot := false
 
 ## Current bullets loaded. Starts at power_max_ammo and is refilled via shop ammo packs.
@@ -516,6 +529,10 @@ func update_player_stats() -> void:
 	power_bullet_delay = set_power(settings, 'power_bullet_delay')
 	power_gun_fire_rate = set_power(settings, 'power_gun_fire_rate')
 
+	# Remember upgrade defaults so scope hold can temporarily override, then restore.
+	_base_bullet_speed = power_bullet_speed
+	_base_gun_fire_rate = power_gun_fire_rate
+
 	#power_gun_fire_rate = 0.05
 	#power_bullet_speed = 0.01
 	#power_target_circle = 60.0
@@ -608,27 +625,34 @@ func handle_scope_adjust(delta: float) -> void:
 		shrink_held = Input.is_action_pressed("shootWeapon")
 		expand_held = Input.is_action_pressed("shoot_weapon_2")
 
-	# NORMAL
-	power_gun_fire_rate = 0.35
-	power_bullet_speed = 0.3
+	# Start from upgraded resting values (normal tap-fire).
+	var bullet_speed := _base_bullet_speed
+	var fire_rate := _base_gun_fire_rate
 
 	if shrink_held and _scope_mode != ScopeMode.EXPAND:
 		_update_scope_hold(ScopeMode.SHRINK, delta)
-
-		# Smaller scope = faster shooting + faster bullets
-		power_gun_fire_rate = 0.05
-		power_bullet_speed = 0.5
+		# Smaller scope = faster fire + faster bullets (lower travel time).
+		bullet_speed = _base_bullet_speed * scope_shrink_bullet_speed_scale
+		fire_rate = _base_gun_fire_rate * scope_shrink_fire_rate_scale
 
 	elif expand_held and _scope_mode != ScopeMode.SHRINK:
 		_update_scope_hold(ScopeMode.EXPAND, delta)
-
-		# Larger scope = slower shooting + slower bullets
-		power_gun_fire_rate = 2.0
-		power_bullet_speed = 2.1
+		# Larger scope = slower fire + slower bullets (higher travel time).
+		bullet_speed = _base_bullet_speed * scope_expand_bullet_speed_scale
+		fire_rate = _base_gun_fire_rate * scope_expand_fire_rate_scale
 
 	elif _is_holding_shoot:
 		_release_scope_hold()
 
+	_apply_scope_shot_stats(bullet_speed, fire_rate)
+
+
+## Keep Player + Weapon_shooting in sync. Bullets read weapon_shooting.power_bullet_speed.
+func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
+	power_bullet_speed = bullet_speed
+	power_gun_fire_rate = fire_rate
+	if weapon_shooting:
+		weapon_shooting.power_bullet_speed = bullet_speed
 
 
 func _update_scope_hold(mode: ScopeMode, delta: float) -> void:
@@ -969,10 +993,11 @@ func start_player() -> void:
 
 	
 func reset_mouse_pos() -> void:
+	print(' get_viewport().size / 2 ',  get_viewport().size / 2)
 	var center : Vector2 = get_viewport().size / 2
 	center -= Vector2(20.0, 20.0)
-	#center += Vector2(0.0, 140.0)
-	#center += Vector2(0.0, 140.0)
+	center += Vector2(0.0, 140.0)
+	center += Vector2(0.0, 340.0)
 	var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	#tween.tween_interval(0.2)
 	tween.tween_property(self, "target_crosshair_position", center, 0.75)

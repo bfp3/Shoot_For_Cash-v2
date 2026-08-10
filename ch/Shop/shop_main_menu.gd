@@ -89,12 +89,13 @@ func _ready() -> void:
 func _setup_shop_extra_buttons() -> void:
 	var pause_btn := get_node_or_null("%PauseGameButton") as Button
 	if pause_btn:
+		# "x" pause is mobile-only; desktop/console use the pause key / pause menu.
 		if OS.has_feature("mobile"):
-			pause_btn.hide()
-		else:
 			pause_btn.show()
 			if not pause_btn.pressed.is_connected(_on_pause_game_button_pressed):
 				pause_btn.pressed.connect(_on_pause_game_button_pressed)
+		else:
+			pause_btn.hide()
 
 	var cents_btn := get_node_or_null("%ShootForCentsButton") as Button
 	if cents_btn and not cents_btn.pressed.is_connected(_on_shoot_for_cents_pressed):
