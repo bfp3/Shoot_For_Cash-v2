@@ -9,14 +9,10 @@
 [ext_resource type="AudioStream" uid="uid://gil26ppbc8cw" path="res://sfx/ocean_waves_sfx_01.ogg" id="7_ec2we"]
 [ext_resource type="AudioStream" uid="uid://3rmv3hvteq4u" path="res://sfx/birds_noises.ogg" id="8_ec2we"]
 [ext_resource type="AudioStream" uid="uid://dkxi8y1efq8sc" path="res://sfx/Seagull - Sound Effect.ogg" id="9_ec2we"]
-[ext_resource type="AudioStream" uid="uid://5yop1b5wdhsj" path="res://sfx/Flag Flap.ogg" id="10_x7bet"]
 [ext_resource type="AudioStream" uid="uid://bdu3n1kaotsbp" path="res://sfx/windFull.ogg" id="12_ec2we"]
 [ext_resource type="AudioStream" uid="uid://bxdiqr7ros2p" path="res://sfx/night-noises.ogg" id="13_ec2we"]
-[ext_resource type="AudioStream" uid="uid://v7p2bicypxo7" path="res://sfx/oasisWorld.ogg" id="14_ec2we"]
-[ext_resource type="AudioStream" uid="uid://bne6g3faj2y0m" path="res://sfx/Windmill_YokoKanno.ogg" id="14_mdemw"]
 [ext_resource type="AudioStream" uid="uid://deuc7baq17txl" path="res://sfx/Windmill_Sunburst_Your_name.ogg" id="15_heewt"]
 [ext_resource type="AudioStream" uid="uid://bblf41t53etln" path="res://sfx/Windmill_Sprint.ogg" id="15_ymbdo"]
-[ext_resource type="AudioStream" uid="uid://bk6dsl4ownky8" path="res://sfx/USERSONG164.ogg" id="16_ec2we"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="17_lysu5"]
 [ext_resource type="AudioStream" uid="uid://bljoq1kmbgs2" path="res://sfx/shop_music.ogg" id="17_shopm"]
 [ext_resource type="AudioStream" uid="uid://yotbn67ks25f" path="res://sfx/spare_songs/Windmill_math_anim2.ogg" id="19_gf2tl"]
@@ -71,18 +67,18 @@
 [ext_resource type="Script" uid="uid://cw36fy6a37j1h" path="res://ch/bonus_rounds/bonus_target_manager.gd" id="71_3ga0b"]
 [ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="74_vwwt2"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
-[ext_resource type="Script" uid="uid://c2w53e8iak64g" path="res://ch/protect_balloon_round.gd" id="80_ufvrt"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 [ext_resource type="PackedScene" uid="uid://l8unrpfb1xjd" path="res://ch/targets/early_exit_target.tscn" id="82_exit"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_mdemw"]
 random_pitch = 1.0442737
-streams_count = 5
+streams_count = 6
 stream_0/stream = ExtResource("19_gf2tl")
 stream_1/stream = ExtResource("21_r5w5l")
 stream_2/stream = ExtResource("22_8twtg")
 stream_3/stream = ExtResource("24_vwwt2")
 stream_4/stream = ExtResource("23_wtxnc")
+stream_5/stream = ExtResource("15_heewt")
 
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
 bake_interval = 5.0
@@ -450,7 +446,7 @@ max_polyphony = 2
 
 [node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("current_song", "opening_song") groups=["level_music"]]
 script = ExtResource("3_r5w5l")
-current_song = NodePath("Windmill")
+current_song = NodePath("")
 opening_song = NodePath("Opening_song")
 background_music_vol_out_of_shop = -45.0
 
@@ -480,7 +476,6 @@ volume_db = -49.0
 autoplay = true
 
 [node name="Flag" type="AudioStreamPlayer" parent="Music" unique_id=537681908]
-stream = ExtResource("10_x7bet")
 volume_db = -45.0
 pitch_scale = 0.8
 
@@ -493,19 +488,11 @@ stream = ExtResource("13_ec2we")
 volume_db = -54.0
 
 [node name="Oasis" type="AudioStreamPlayer" parent="Music" unique_id=230623079]
-stream = ExtResource("14_ec2we")
 volume_db = -30.0
 bus = &"MusicBus"
 
 [node name="YokoKanno" type="AudioStreamPlayer" parent="Music" unique_id=1383563011]
-stream = ExtResource("14_mdemw")
 volume_db = -40.0
-bus = &"MusicBus"
-
-[node name="Windmill" type="AudioStreamPlayer" parent="Music" unique_id=109703835]
-stream = ExtResource("15_heewt")
-volume_db = -40.0
-pitch_scale = 0.85
 bus = &"MusicBus"
 
 [node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
@@ -514,7 +501,6 @@ volume_db = -35.0
 bus = &"MusicBus"
 
 [node name="EndingSong" type="AudioStreamPlayer" parent="Music" unique_id=468679081]
-stream = ExtResource("16_ec2we")
 volume_db = -20.0
 bus = &"MusicBus"
 
@@ -1775,69 +1761,6 @@ gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
-[node name="Orange10" parent="OrangeBombs" unique_id=1807680331 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange11" parent="OrangeBombs" unique_id=841986730 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange12" parent="OrangeBombs" unique_id=1207006714 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange13" parent="OrangeBombs" unique_id=1406135056 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange14" parent="OrangeBombs" unique_id=730338939 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange15" parent="OrangeBombs" unique_id=1386007576 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange16" parent="OrangeBombs" unique_id=980118628 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange17" parent="OrangeBombs" unique_id=526260460 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange18" parent="OrangeBombs" unique_id=1116110963 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
 [node name="OrangeBombsMarkers" type="Node3D" parent="." unique_id=104155927 groups=["pineapple_container"]]
 
 [node name="LeftMarker" type="Marker3D" parent="OrangeBombsMarkers" unique_id=637739805]
@@ -1860,99 +1783,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 22.5)
 script = ExtResource("63_nn6vd")
 
 [node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 7, 0)
 balloon_type = 3
 
-[node name="Balloon36" parent="Balloon_container" unique_id=121622778 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 6.5, 0)
+[node name="Balloon2" parent="Balloon_container" unique_id=121622778 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 7, 0)
 balloon_type = 3
 
-[node name="Balloon37" parent="Balloon_container" unique_id=446367018 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 6.5, 0)
+[node name="Balloon3" parent="Balloon_container" unique_id=1030168432 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 7, 0)
 balloon_type = 3
 
-[node name="Balloon38" parent="Balloon_container" unique_id=1427865315 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 6.5, 0)
-balloon_type = 3
-
-[node name="Balloon39" parent="Balloon_container" unique_id=929644005 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 6.5, 0)
-balloon_type = 3
-
-[node name="Balloon2" parent="Balloon_container" unique_id=623533942 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 6.5, 0)
-balloon_type = 3
-
-[node name="Balloon3" parent="Balloon_container" unique_id=852852036 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 6.5, 0)
-balloon_type = 3
-
-[node name="Balloon4" parent="Balloon_container" unique_id=2070994326 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 6.5, 0)
-balloon_type = 3
-
-[node name="Balloon5" parent="Balloon_container" unique_id=2070263698 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 4.5, 0)
-balloon_type = 3
-
-[node name="Balloon40" parent="Balloon_container" unique_id=2077006719 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4.5, 0)
-balloon_type = 3
-
-[node name="Balloon41" parent="Balloon_container" unique_id=205139417 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 4.5, 0)
-balloon_type = 3
-
-[node name="Balloon42" parent="Balloon_container" unique_id=1829464281 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 4.5, 0)
-balloon_type = 3
-
-[node name="Balloon43" parent="Balloon_container" unique_id=1641847154 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 4.5, 0)
-balloon_type = 3
-
-[node name="Balloon6" parent="Balloon_container" unique_id=171803747 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 4.5, 0)
-balloon_type = 3
-
-[node name="Balloon7" parent="Balloon_container" unique_id=125917615 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 4.5, 0)
-balloon_type = 3
-
-[node name="Balloon8" parent="Balloon_container" unique_id=373402023 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 4.5, 0)
-balloon_type = 3
-
-[node name="Balloon9" parent="Balloon_container" unique_id=1372233562 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 2.5, 0)
-balloon_type = 3
-
-[node name="Balloon44" parent="Balloon_container" unique_id=1327776496 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.5, 0)
-balloon_type = 3
-
-[node name="Balloon45" parent="Balloon_container" unique_id=1864918607 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.5, 0)
-balloon_type = 3
-
-[node name="Balloon46" parent="Balloon_container" unique_id=1907876183 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.5, 0)
-balloon_type = 3
-
-[node name="Balloon47" parent="Balloon_container" unique_id=337739173 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.5, 0)
-balloon_type = 3
-
-[node name="Balloon10" parent="Balloon_container" unique_id=966735137 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.5, 0)
-balloon_type = 3
-
-[node name="Balloon11" parent="Balloon_container" unique_id=934739129 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.5, 0)
-balloon_type = 3
-
-[node name="Balloon12" parent="Balloon_container" unique_id=1443890975 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 2.5, 0)
+[node name="Balloon4" parent="Balloon_container" unique_id=355297050 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 7, 0)
 balloon_type = 3
 
 [node name="Balloon_wait_positions" type="Node3D" parent="." unique_id=242094308]
@@ -2001,167 +1844,6 @@ pitch_scale = 2.0
 script = ExtResource("71_3ga0b")
 round_manager = NodePath("../Round_manager")
 patrol_seconds_per_leg = 6.0
-
-[node name="ProtectBalloonRound" type="Node3D" parent="." unique_id=919395476 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 29)
-visible = false
-script = ExtResource("80_ufvrt")
-left_marker = NodePath("../Pineapple_markers/LeftMarker")
-right_marker = NodePath("../Pineapple_markers/RightMarker")
-round_manager = NodePath("../Round_manager")
-pineapple_spawn_radius = 20.0
-pineapple_aim_offset = 6.0
-
-[node name="Pineapple" parent="ProtectBalloonRound" unique_id=1006380222 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple2" parent="ProtectBalloonRound" unique_id=1668376027 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple3" parent="ProtectBalloonRound" unique_id=2103192802 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple4" parent="ProtectBalloonRound" unique_id=451892461 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple5" parent="ProtectBalloonRound" unique_id=290828268 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple6" parent="ProtectBalloonRound" unique_id=303243617 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple7" parent="ProtectBalloonRound" unique_id=994962001 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple8" parent="ProtectBalloonRound" unique_id=7390425 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple9" parent="ProtectBalloonRound" unique_id=757592869 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple10" parent="ProtectBalloonRound" unique_id=1641751834 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple11" parent="ProtectBalloonRound" unique_id=180012257 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple12" parent="ProtectBalloonRound" unique_id=401306148 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple13" parent="ProtectBalloonRound" unique_id=761084936 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple14" parent="ProtectBalloonRound" unique_id=1678921644 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple15" parent="ProtectBalloonRound" unique_id=1145671455 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple16" parent="ProtectBalloonRound" unique_id=945048649 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple17" parent="ProtectBalloonRound" unique_id=110947239 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple18" parent="ProtectBalloonRound" unique_id=599895166 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple19" parent="ProtectBalloonRound" unique_id=624378008 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="Pineapple20" parent="ProtectBalloonRound" unique_id=1492971378 instance=ExtResource("68_14r73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-cash_value = 0
-force_multiplier = 1.0
-
-[node name="BonusOranges" type="Node3D" parent="." unique_id=774568452 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager")]
-script = ExtResource("80_ufvrt")
-left_marker = NodePath("../Pineapple_markers/LeftMarker")
-right_marker = NodePath("../Pineapple_markers/RightMarker")
-round_manager = NodePath("../Round_manager")
-oranges = true
-
-[node name="Orange" parent="BonusOranges" unique_id=1922213171 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -2.9, 23)
-force_multiplier = 1.0
-
-[node name="Orange2" parent="BonusOranges" unique_id=242187963 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -2.9, 23)
-force_multiplier = 1.0
-
-[node name="Orange3" parent="BonusOranges" unique_id=1809932125 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -2.9, 23)
-force_multiplier = 1.0
-
-[node name="Orange4" parent="BonusOranges" unique_id=1213627521 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -2.9, 23)
-force_multiplier = 1.0
-
-[node name="Orange5" parent="BonusOranges" unique_id=948107855 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -2.9, 23)
-force_multiplier = 1.0
-
-[node name="Orange6" parent="BonusOranges" unique_id=235237420 instance=ExtResource("69_swp41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
-force_multiplier = 1.0
 
 [connection signal="finished" from="Music/Randomiser" to="Music" method="_on_randomiser_finished"]
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]

@@ -14,35 +14,37 @@ const inactive_colour_back := Color('c60102')
 const active_colour_front := Color('940104')
 const active_colour_back := Color('dbc4b2')
 
-@export var reveal_time := 0.22
-@export var punch_scale := 1.35
-@export var move_distance := 75.0
-@export var move_time := 0.2
-@export var hold_time := 0.2
+## Duration of each half of the coin-flip (empty → edge, then edge → struck).
+@export var flip_half_time := 0.1
+## Slight vertical squash at the edge-on midpoint for a bit of 3D feel.
+@export var flip_edge_y_scale := 1.12
+@export var hold_time := 0.15
 
 var is_struck := false
 var _cross_modulate: Color
 var _cross_front_modulate: Color
 var _size_control_scale: Vector2
 var _active_tween: Tween
-var _original_position: Vector2
+
 
 func set_to_no_strike_colour() -> void:
 	back_circle.modulate = inactive_colour_back
 	front_most_circle.modulate = inactive_colour_front
 
+
 func set_to_strike_colour() -> void:
 	back_circle.modulate = active_colour_back
 	front_most_circle.modulate = active_colour_front
+
 
 func _ready() -> void:
 	_cross_modulate = cross.modulate
 	_cross_front_modulate = cross_front.modulate
 	_size_control_scale = size_control.scale
-	_original_position.y = position.y
-
 	miss_text_label.modulate.a = 0.0
 	set_to_no_strike_colour()
+	_hide_struck_face()
+
 
 func reveal_strike() -> void:
 	if is_struck:
@@ -50,52 +52,61 @@ func reveal_strike() -> void:
 	is_struck = true
 	_kill_tween()
 
-	set_to_strike_colour()
+	# Start on the empty face; swap contents at the edge-on midpoint.
+	set_to_no_strike_colour()
+	_hide_struck_face()
+	size_control.scale = _size_control_scale
 
-	cross.visible = true
-	cross_front.visible = true
-	cross.modulate.a = 0.0
-	cross_front.modulate.a = 0.0
-	size_control.scale = _size_control_scale * 0.55
-	position.y = _original_position.y
+	var edge_scale := Vector2(0.001, _size_control_scale.y * flip_edge_y_scale)
+	var half := maxf(flip_half_time, 0.01)
+	var up_height := 50.0
 
 	_active_tween = create_tween()
-	_active_tween.set_parallel(true)
-	_active_tween.tween_property(miss_text_label, "modulate:a", 1.0, reveal_time)
-	_active_tween.tween_property(self, "position:y", _original_position.y - move_distance, move_time)\
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_active_tween.tween_property(size_control, "scale", _size_control_scale * punch_scale, reveal_time * 0.55)\
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_active_tween.tween_property(cross, "modulate:a", _cross_modulate.a, reveal_time)
-	_active_tween.tween_property(cross_front, "modulate:a", _cross_front_modulate.a, reveal_time)
-	_active_tween.set_parallel(false)
-	_active_tween.tween_property(size_control, "scale", _size_control_scale, reveal_time * 0.45)\
+	# Flip empty face to edge-on.
+	_active_tween.tween_property(size_control, "scale", edge_scale, half)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		
+	_active_tween.parallel().tween_property(size_control, "position:y", -up_height, 0.1).as_relative()
+	# Swap to the struck face while it's a thin line.
+	_active_tween.tween_callback(_show_struck_face)
+	# Flip edge-on out to the struck face.
+	_active_tween.tween_property(size_control, "scale", _size_control_scale, half)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_active_tween.parallel().tween_property(miss_text_label, "modulate:a", 1.0, half)\
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_active_tween.tween_interval(hold_time)
-	_active_tween.tween_property(self, "position:y", _original_position.y, move_time)\
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	_active_tween.tween_property(size_control, "position:y", up_height, 0.1).as_relative()
+
+
+func _hide_struck_face() -> void:
+	cross.visible = false
+	cross_front.visible = false
+	cross.modulate.a = 0.0
+	cross_front.modulate.a = 0.0
+
+
+func _show_struck_face() -> void:
+	set_to_strike_colour()
+	cross.visible = true
+	cross_front.visible = true
+	cross.modulate.a = _cross_modulate.a
+	cross_front.modulate.a = _cross_front_modulate.a
+
 
 func reset() -> void:
 	_kill_tween()
 	is_struck = false
-	position.y = _original_position.y
 	miss_text_label.modulate.a = 0.0
-	cross.visible = false
-	cross_front.visible = false
-	cross.modulate = Color(_cross_modulate.r, _cross_modulate.g, _cross_modulate.b, 0.0)
-	cross_front.modulate = Color(
-		_cross_front_modulate.r,
-		_cross_front_modulate.g,
-		_cross_front_modulate.b,
-		0.0
-	)
+	_hide_struck_face()
 	size_control.scale = _size_control_scale
 	set_to_no_strike_colour()
+
 
 func _kill_tween() -> void:
 	if _active_tween and _active_tween.is_valid():
 		_active_tween.kill()
 	_active_tween = null
+
 
 func restart() -> void:
 	reset()
