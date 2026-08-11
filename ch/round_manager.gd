@@ -13,6 +13,11 @@ const LAYOUT_PATH_BY_PLACE_INDEX := {
 	5: "res://sc/All_level_layouts/level_layout_05_vesper.tscn",
 }
 
+## Boss arena layouts by overworld island index (0 = Shipper).
+const LAYOUT_PATH_BOSS_BY_ISLAND := {
+	0: "res://sc/All_level_layouts/level_layout_island_1_boss.tscn",
+}
+
 ## Cached PackedScenes so revisiting Moss/Redd/etc. does not re-parse from disk.
 var _layout_cache: Dictionary = {} # path -> PackedScene
 var _layout_load_requested: Dictionary = {} # path -> true
@@ -45,6 +50,12 @@ var player_failed := false
 var force_shop_open := false
 var in_display_text_prompt := false
 var player_can_progress := false
+
+## Boss survival mode — one looping round with a fixed timer.
+var _boss_mode := false
+var _boss_island_index := 0
+var _boss_timer_seconds := 120.0
+var _boss_looping := false
 
 # Set the instant we hit three strikes. Blocks any further state
 # transitions so nothing already "in flight" (awaits, etc.) can push
@@ -417,10 +428,48 @@ func finish_level_editor_test_round() -> void:
 
 ## Active shooting range key used when parsing LEVEL_FILE_PATH.
 func get_active_range_name() -> String:
+	if _boss_mode or String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
+		return "boss"
 	var range_id := String(gl_PlayerState.dataset.level_name).to_lower()
 	if range_id == '' or range_id == gl_DataSet.get_start_place_name() or range_id == 'start':
 		return gl_DataSet.get_default_range_name()
 	return gl_DataSet.resolve_place_name(range_id)
+
+
+func is_boss_mode() -> bool:
+	return _boss_mode
+
+
+## Seconds for RoundTimer when in boss mode; -1 = use normal power_time_upgrade.
+func get_active_timer_seconds() -> float:
+	if _boss_mode and _boss_timer_seconds > 0.0:
+		return _boss_timer_seconds
+	return -1.0
+
+
+func _refresh_boss_timer_from_parser() -> void:
+	var timer_ms := Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, "boss")
+	if timer_ms <= 0:
+		## Fallback: any island key ending in |boss (in case island token drifts).
+		for key in Parser.boss_timer_ms_by_range.keys():
+			if String(key).ends_with("|boss"):
+				timer_ms = int(Parser.boss_timer_ms_by_range[key])
+				if timer_ms > 0:
+					break
+	if timer_ms <= 0:
+		timer_ms = 120000
+	_boss_timer_seconds = float(timer_ms) / 1000.0
+
+
+func _apply_boss_timer_to_hud() -> void:
+	if not _boss_mode or round_timer == null:
+		return
+	if _boss_timer_seconds <= 0.0:
+		_refresh_boss_timer_from_parser()
+	round_timer.start_time = _boss_timer_seconds
+	round_timer.time_left = _boss_timer_seconds
+	if round_timer.has_method("update_text"):
+		round_timer.update_text()
 
 
 func load_level_sequence() -> void:
@@ -536,6 +585,10 @@ func check_if_rocks_still_in_air() -> void:
 	if gl_PlayerState.dataset.total_rocks_in_round_remaining > 0:
 		return
 
+	if _boss_mode:
+		_loop_boss_sequence()
+		return
+
 	wave_ending = true
 	stop_timer()
 	enter_state(RoundState.WAVE_END)
@@ -543,6 +596,11 @@ func check_if_rocks_still_in_air() -> void:
 func successful_round() -> void:
 	if wave_ending:
 		return
+	if _boss_mode:
+		## Clearing a loop of rocks does not win the boss — only surviving the timer does.
+		_loop_boss_sequence()
+		return
+
 	wave_ending = true
 
 	wave_progress_feedback.start_perfect()
@@ -570,6 +628,12 @@ func unsuccessful_round_locked() -> void:
 	success = false
 	EventBus.instance.end_round_rock_missed.emit()
 	%Splash_zone.deactivate_splash_zone()
+	## Stop staggered launches immediately (boss waits can be several seconds).
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+	if balloon_container:
+		balloon_container.end_round()
 	enter_state(RoundState.WAVE_END)
 
 
@@ -585,6 +649,7 @@ func abort_round_to_shop() -> void:
 	player_failed = true
 	force_shop_open = false
 	success = false
+	_boss_looping = false
 
 	stop_timer()
 	stop_player()
@@ -611,8 +676,9 @@ func round_timer_time_out() -> void:
 
 	stop_timer()
 
-
 	success = true
+	if _boss_mode:
+		player_failed = false
 	enter_state(RoundState.WAVE_END)
 
 	
@@ -679,7 +745,6 @@ func enter_state(new_state: RoundState) -> void:
 			update_start_menu()
 			
 func update_start_menu() -> void:
-	%Start_menu_shop_clone.open_menu()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	$Gold_sfx.pitch_scale = 0.7
 	rocks_container.reset_all_rocks()
@@ -689,6 +754,47 @@ func update_start_menu() -> void:
 		var rock_seq := update_rock_sequence()
 		if rock_seq != []:
 			balloon_container.add_balloon(rock_seq)
+
+	## Start menu removed from boot flow — open the island map directly.
+	_hide_start_menu_ui()
+	_ensure_gun_equipped_for_map()
+	_open_island_map_menu()
+
+
+func _hide_start_menu_ui() -> void:
+	var start_clone := get_node_or_null("%Start_menu_shop_clone") as Control
+	if start_clone == null:
+		start_clone = get_tree().get_first_node_in_group("start_menu_ui") as Control
+	if start_clone == null:
+		return
+	start_clone.hide()
+	if "current_state" in start_clone:
+		start_clone.current_state = start_clone.State.INACTIVE
+
+
+func _ensure_gun_equipped_for_map() -> void:
+	if int(gl_PlayerState.dataset.get("power_gun", 0)) < 1:
+		gl_PlayerState.dataset.power_gun = 1
+	if player and player.get("player_gun") and player.player_gun.has_method("update_guns"):
+		player.player_gun.update_guns()
+
+
+func _open_island_map_menu() -> void:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	var map_menu: Node = null
+	if menus and menus.has_method("ensure_ticket_map"):
+		map_menu = menus.ensure_ticket_map()
+	if map_menu == null:
+		map_menu = get_tree().get_first_node_in_group("map_menu")
+	if map_menu == null:
+		push_warning("RoundManager: MapIslandSelect missing — cannot open island map")
+		return
+	if map_menu is CanvasItem:
+		(map_menu as CanvasItem).z_index = 40
+	if map_menu.has_method("open_pop_up"):
+		map_menu.open_pop_up()
+	else:
+		push_warning("RoundManager: MapIslandSelect has no open_pop_up()")
 
 func update_round_inactive() -> void:
 	rocks_container.enter_state(rocks_container.State.INACTIVE)
@@ -776,10 +882,18 @@ func update_wave_start() -> void:
 
 	player.start_player()
 
-	if current_wave == 1:
-		round_timer.enter_state(round_timer.State.RESTARTING)
+	if _boss_mode:
+		_apply_boss_timer_to_hud()
+		if current_wave == 1:
+			round_timer.enter_state(round_timer.State.RESTARTING)
+		else:
+			round_timer.timer_rollup_sequence()
 	else:
-		round_timer.timer_rollup_sequence()
+		## Regular rounds: keep timer HUD hidden, but play the rollup SFX.
+		if round_timer:
+			round_timer.hide()
+			if round_timer.has_method("rollup_without_timer"):
+				round_timer.rollup_without_timer()
 
 	await get_tree().create_timer(0.75, false).timeout
 	if force_shop_open or _level_editor_finishing:
@@ -870,6 +984,10 @@ func update_rock_sequence() -> Array:
 
 
 func update_round_end() -> void:
+	if _boss_mode:
+		await _finish_boss_round()
+		return
+
 	if level_editor_test_active:
 		if is_bonus_type1_round() and bonus_target_manager and bonus_target_manager.has_method('resolve_bonus_round'):
 			var survived := not protect_bonus_failed and not player_failed
@@ -968,6 +1086,9 @@ func update_round_end() -> void:
 
 	current_wave = 0
 	balloon_container.end_round()
+	## Strikeout: let the miss moment breathe before the tally card.
+	if player_failed or int(gl_PlayerState.dataset.total_current_strikes) >= 3:
+		await get_tree().create_timer(1.0, false).timeout
 	enter_state(RoundState.TALLY_START)
 
 
@@ -1166,7 +1287,11 @@ func _layout_path_for_level(level_id: String) -> String:
 	## gl_DataSet.dataset_string.place_name keeps the same scenery.
 	level_id = gl_DataSet.resolve_place_name(level_id)
 	var idx := gl_DataSet.get_place_index(level_id)
-	return String(LAYOUT_PATH_BY_PLACE_INDEX.get(idx, ""))
+	if LAYOUT_PATH_BY_PLACE_INDEX.has(idx):
+		return String(LAYOUT_PATH_BY_PLACE_INDEX[idx])
+	## Unknown / placeholder ranges → testing room layout.
+	var jetz_idx := gl_DataSet.get_place_index(gl_DataSet.get_testing_place_name())
+	return String(LAYOUT_PATH_BY_PLACE_INDEX.get(jetz_idx, LAYOUT_PATH_BY_PLACE_INDEX.get(3, "")))
 
 
 func _layout_for_level(level_id: String) -> PackedScene:
@@ -1248,6 +1373,8 @@ func _save_level_progress() -> void:
 	var level_id := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
 	if level_id == '' or level_id == gl_DataSet.get_start_place_name() or level_id == 'start':
 		return
+	if String(gl_PlayerState.dataset.level_name).to_lower() == "boss" or level_id == "boss":
+		return
 	var existing: Dictionary = {}
 	if _level_progress.has(level_id) and _level_progress[level_id] is Dictionary:
 		existing = (_level_progress[level_id] as Dictionary).duplicate(true)
@@ -1258,6 +1385,7 @@ func _save_level_progress() -> void:
 		'round': maxi(current_round, 1),
 		'player_round': int(gl_PlayerState.dataset.round),
 		'cash_earned': int(existing.get('cash_earned', gl_PlayerState.get_place_cash_earned(level_id))),
+		'entered': true,
 	}
 	_level_progress[level_id] = entry
 	gl_PlayerState.set_level_progress_entry(level_id, entry)
@@ -1322,6 +1450,8 @@ func travel_to_level(level_id: String) -> void:
 	game_over_triggered = false
 	current_wave = 0
 	current_round_state = RoundState.INACTIVE
+	_boss_mode = false
+	_boss_looping = false
 
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -1337,6 +1467,8 @@ func travel_to_level(level_id: String) -> void:
 	if coming_from_start:
 		gl_PlayerState.dataset['stage'] = 1
 		gl_PlayerState.dataset['reroll_unlocked'] = 1
+	## Always stop intro music on any level travel (map → range, start → range, etc.).
+	if music_manager and music_manager.has_method("stop_opening_song"):
 		music_manager.stop_opening_song()
 
 	if scene_transition_screen.has_method('set_destination_place'):
@@ -1401,8 +1533,194 @@ func travel_to_level(level_id: String) -> void:
 		await get_tree().create_timer(3.0, false).timeout
 
 	transitioning_worlds = false
+	## Mark this place as entered so the map can show round progress.
+	_save_level_progress()
 	enter_state(RoundState.SHOP_START)
 	player.show_ammo_panel()
+
+
+## Boss survival fight for an overworld island (0 = Shipper → island_1_boss layout).
+func travel_to_boss(island_index: int = 0) -> void:
+	island_index = clampi(island_index, 0, maxi(gl_DataSet.get_island_count() - 1, 0))
+	var layout_path := String(LAYOUT_PATH_BOSS_BY_ISLAND.get(island_index, ""))
+	if layout_path.is_empty():
+		## Fallback: reuse island 1 boss arena until other islands have layouts.
+		layout_path = String(LAYOUT_PATH_BOSS_BY_ISLAND.get(0, ""))
+	if layout_path.is_empty():
+		push_error("RoundManager: no boss layout for island %d" % island_index)
+		return
+	if transitioning_worlds:
+		return
+
+	_request_layout_load(layout_path)
+	transitioning_worlds = true
+	_save_level_progress()
+	if music_manager and music_manager.has_method("stop_opening_song"):
+		music_manager.stop_opening_song()
+
+	if shop_main_menu and shop_main_menu.visible:
+		if shop_main_menu.has_method("soft_hide_for_level_editor"):
+			shop_main_menu.soft_hide_for_level_editor()
+		else:
+			shop_main_menu.hide()
+
+	var map_menu := get_tree().get_first_node_in_group("map_menu")
+	if map_menu and map_menu is CanvasItem and (map_menu as CanvasItem).visible:
+		if map_menu.has_method("close_pop_up"):
+			map_menu.close_pop_up()
+
+	stop_timer()
+	stop_player()
+	force_shop_open = false
+	wave_ending = false
+	player_failed = false
+	success = false
+	game_over_triggered = false
+	current_wave = 0
+	current_round_state = RoundState.INACTIVE
+	_boss_mode = true
+	_boss_island_index = island_index
+	_boss_looping = false
+
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+	if balloon_container and (balloon_container.started or balloon_container.balloons_in_play > 0):
+		await balloon_container.end_round()
+	if bonus_target_manager and bonus_target_manager.has_method("cleanup_bonus_round"):
+		bonus_target_manager.cleanup_bonus_round()
+
+	player.display_hud()
+	gl_PlayerState.dataset.level_name = "boss"
+
+	if scene_transition_screen.has_method("set_destination_place"):
+		scene_transition_screen.set_destination_place("boss")
+	scene_transition_screen.next_level_start()
+	await get_tree().create_timer(1.0, false).timeout
+
+	if level_layout.get_child_count() > 0:
+		for child in level_layout.get_children():
+			child.queue_free()
+		await get_tree().process_frame
+
+	var layout_scene := await _await_layout_scene(layout_path)
+	if layout_scene == null:
+		push_error("RoundManager: failed to load boss layout")
+		_boss_mode = false
+		transitioning_worlds = false
+		return
+
+	rocks_container.show()
+	## Grow the rock pool while the transition covers the screen (batched, no hitch).
+	if rocks_container and rocks_container.has_method("ensure_extra_rocks"):
+		await rocks_container.ensure_extra_rocks(80, 4)
+	var level_scenery = layout_scene.instantiate()
+	var heavy := _detach_heavy_layout_nodes(level_scenery)
+	level_layout.add_child(level_scenery)
+	level_scenery.name = "current_level_layout"
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_reattach_heavy_layout_nodes(heavy)
+	await get_tree().process_frame
+	await get_tree().create_timer(1.0, false).timeout
+
+	## Always reload so boss-timer / boss range data is fresh.
+	if not Parser.loadIslandFile(LEVEL_FILE_PATH):
+		push_error("RoundManager: failed to load level file for boss")
+	current_rock_sequence = Parser.get_rock_sequences(LEVEL_ISLAND_NAME, "boss")
+	current_sequence_index = 0
+	current_round = 1
+	gl_PlayerState.dataset.round = 1
+
+	_refresh_boss_timer_from_parser()
+	_apply_boss_timer_to_hud()
+
+	if current_rock_sequence.is_empty():
+		push_warning("RoundManager: boss range has no rounds in %s" % LEVEL_FILE_PATH)
+
+	if shop_main_menu:
+		shop_main_menu.setup_shop_for_rounds()
+		shop_main_menu.sync_rounds_to_progress(0, 1)
+		shop_main_menu.update_place_label()
+	wave_progress_feedback.show()
+	find_egg()
+
+	scene_transition_screen.next_level_finish()
+	place_name.update_place_name()
+	await get_tree().create_timer(0.75, false).timeout
+
+	transitioning_worlds = false
+	check_round_for_strikes()
+	player.show_ammo_panel()
+	## Open shop first so the boss challenge banner can be read before Play.
+	enter_state(RoundState.SHOP_START)
+
+
+func _loop_boss_sequence() -> void:
+	if not _boss_mode or wave_ending or player_failed or _boss_looping:
+		return
+	_boss_looping = true
+	var rock_seq := update_rock_sequence()
+	if rocks_container and not rock_seq.is_empty():
+		rocks_container.start_manual_rock_round(rock_seq)
+	_boss_looping = false
+
+
+func _finish_boss_round() -> void:
+	stop_timer()
+	stop_player()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_boss_looping = false
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+	if balloon_container:
+		balloon_container.end_round()
+
+	var failed := player_failed or not success
+	force_shop_open = false
+
+	await get_tree().create_timer(0.35, false).timeout
+
+	if failed:
+		## Retry from shop on the boss arena.
+		player_failed = false
+		success = false
+		current_wave = 0
+		current_sequence_index = 0
+		wave_ending = false
+		check_round_for_strikes()
+		enter_state(RoundState.SHOP_START)
+		return
+
+	## Survived the timer — award clear bonus, celebrate, unlock next island, then map.
+	var reward := gl_DataSet.get_boss_clear_reward(_boss_island_index)
+	if reward > 0:
+		gl_PlayerState.add_cash(reward)
+	gl_PlayerState.mark_boss_cleared(_boss_island_index)
+	## Beating the boss unlocks the next island (money was only the entry fee).
+	var next_island := _boss_island_index + 1
+	if next_island < gl_DataSet.get_island_count():
+		var unlocked := int(gl_PlayerState.dataset.get("unlocked_island_index", 0))
+		if next_island > unlocked:
+			gl_PlayerState.dataset["unlocked_island_index"] = next_island
+			gl_PlayerState.save_meta_progress()
+
+	$Gold_sfx.play()
+	if round_timer and round_timer.has_method("play_boss_cleared_celebration"):
+		await round_timer.play_boss_cleared_celebration()
+	else:
+		if wave_progress_feedback and wave_progress_feedback.has_method("start_perfect"):
+			wave_progress_feedback.start_perfect()
+		await get_tree().create_timer(1.25, false).timeout
+
+	_boss_mode = false
+	player_failed = false
+	success = false
+	current_wave = 0
+	wave_ending = false
+	enter_state(RoundState.INACTIVE)
+	_open_island_map_menu()
 
 
 ## Travel by place name or by index into gl_DataSet.place_name (0, 1, 2, …).
@@ -1433,7 +1751,7 @@ func move_to_redd() -> void:
 func move_to_glory() -> void:
 	await move_to_new_range(2)
 
-	
+
 func stop_player() -> void:
 	player.stop_player()
 

@@ -137,6 +137,9 @@ var _airborne_collision_token := 0
 @export var avoider_explodes_when_hitting_rock := false
 ## If true, two avoiders destroy each other on contact. If false, they pass through each other.
 @export var avoider_explodes_when_hitting_avoider := false
+## If true, avoider is culled when leaving camera bounds or hitting the splash zone.
+## If false, it keeps flying; StaticBody3D / rock contacts still explode as above.
+@export var avoider_destroys_on_out_of_bounds := true
 var _avoider_armed := false
 var _avoider_arm_token := 0
 var _avoider_life_token := 0
@@ -2014,7 +2017,15 @@ func _on_rock_body_entered(body: Node) -> void:
 		return
 	if current_state != State.ACTIVE or not rock_activated:
 		return
-	if body == self or body is not RockInstance:
+	if body == null or body == self:
+		return
+
+	## Walls / scenery: pop with no strike (same as lifetime expire).
+	if body is StaticBody3D:
+		_expire_avoider_lifetime()
+		return
+
+	if body is not RockInstance:
 		return
 
 	var other: RockInstance = body

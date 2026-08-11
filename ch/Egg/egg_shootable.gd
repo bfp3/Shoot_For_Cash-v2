@@ -1,10 +1,10 @@
 extends StaticBody3D
 ## Distant shootable egg — always active, no rock-round activation needed.
 
+var rock_activated := true
 var destroyed := false
 @export var health := 1
 @export var destroy_cleanup_delay := 2.2
-
 @onready var main_col: CollisionShape3D = $main_col
 
 func _ready() -> void:

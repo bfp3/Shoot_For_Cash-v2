@@ -38,6 +38,7 @@ var current_round := 0
 var player_cash := 0
 
 var _ammo_popup: Control
+var _boss_challenge_banner: RichTextLabel
 var _ammo_popup_tween: Tween
 var _ammo_popup_rest_scale := Vector2.ONE
 var _ammo_popup_rest_position := Vector2.ZERO
@@ -150,6 +151,63 @@ func update_place_label() -> void:
 			current_place = 'MOSS'
 		place_label.text = current_place
 	_refresh_background_completion_stamp(false)
+	_refresh_boss_challenge_banner()
+
+
+func _refresh_boss_challenge_banner() -> void:
+	var banner := _ensure_boss_challenge_banner()
+	var is_boss := false
+	if round_manager and round_manager.has_method("is_boss_mode"):
+		is_boss = bool(round_manager.is_boss_mode())
+	elif String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
+		is_boss = true
+	banner.visible = is_boss
+	if is_boss:
+		var seconds := 60
+		if round_manager and round_manager.has_method("get_active_timer_seconds"):
+			var s := float(round_manager.get_active_timer_seconds())
+			if s > 0.0:
+				seconds = int(round(s))
+		banner.text = "[center][wave]Survive %d Seconds[/wave][/center]" % seconds
+
+
+func _ensure_boss_challenge_banner() -> RichTextLabel:
+	if _boss_challenge_banner != null and is_instance_valid(_boss_challenge_banner):
+		return _boss_challenge_banner
+	var existing := get_node_or_null("CenterContainer/MainPanel/BackgroundImages/BossChallengeBanner") as RichTextLabel
+	if existing:
+		_boss_challenge_banner = existing
+		return _boss_challenge_banner
+
+	var parent := get_node_or_null("CenterContainer/MainPanel/BackgroundImages") as Control
+	if parent == null:
+		parent = get_node_or_null("CenterContainer/MainPanel") as Control
+	var banner := RichTextLabel.new()
+	banner.name = "BossChallengeBanner"
+	banner.bbcode_enabled = true
+	banner.fit_content = true
+	banner.scroll_active = false
+	banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	banner.z_index = 30
+	banner.visible = false
+	banner.set_anchors_preset(Control.PRESET_CENTER)
+	banner.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	banner.grow_vertical = Control.GROW_DIRECTION_BOTH
+	banner.offset_left = -280.0
+	banner.offset_top = -40.0
+	banner.offset_right = 280.0
+	banner.offset_bottom = 40.0
+	banner.add_theme_font_size_override("normal_font_size", 80)
+	banner.add_theme_color_override("default_color", Color(0.631, 0.008, 0.016, 1.0))
+	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	banner.text = "[center][wave]Survive 60 Seconds[/wave][/center]"
+	if parent:
+		parent.add_child(banner)
+	else:
+		add_child(banner)
+	_boss_challenge_banner = banner
+	return _boss_challenge_banner
 
 
 ## Tally-card style 100% stamp onto the shop background images after clearing a place.

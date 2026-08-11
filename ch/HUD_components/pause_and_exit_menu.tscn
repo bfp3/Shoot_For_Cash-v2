@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://dfaimwsnabqrt" path="res://ch/HUD_components/settings_menu.gd" id="10_settings"]
 [ext_resource type="Script" uid="uid://2td2u2syuhrd" path="res://ch/HUD_components/resolution_confirm_dialog.gd" id="11_confirm"]
 [ext_resource type="Script" uid="uid://be14gsgtq6uyc" path="res://ch/HUD_components/volume_dial.gd" id="12_dial"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="12_s7dml"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
 
@@ -183,6 +184,21 @@ focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
+[node name="HSeparatorMap" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=276767540]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
+
+[node name="OpenMap" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=2108000001 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+layout_mode = 2
+theme_type_variation = &"MenuUiButtons"
+theme_override_font_sizes/font_size = 96
+text = "Map"
+script = ExtResource("9_uy4i6")
+focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
+purchase_sfx = NodePath("../../../../../../../SFX/purchase")
+
 [node name="HSeparator5" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=29829569]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
@@ -198,7 +214,7 @@ focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
 purchase_sfx = NodePath("../../../../../../../SFX/purchase")
 
-[node name="HSeparatorBackToTitle" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer"]
+[node name="HSeparatorBackToTitle" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1520415323]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
@@ -223,6 +239,93 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.4
 theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
+
+[node name="CoatArms" type="Control" parent="Control/CenterContainer/QuitControl" unique_id=941030031]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -130.0
+offset_top = -480.0
+offset_right = 126.0
+offset_bottom = -224.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="CircleEmblem" type="TextureRect" parent="Control/CenterContainer/QuitControl/CoatArms" unique_id=994657817]
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -46.5
+offset_right = 25.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("12_s7dml")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem3" type="TextureRect" parent="Control/CenterContainer/QuitControl/CoatArms/CircleEmblem" unique_id=1630998206]
+modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -48.0
+offset_right = 25.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.174, 1.174)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("12_s7dml")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Insignia" type="RichTextLabel" parent="Control/CenterContainer/QuitControl/CoatArms" unique_id=1341869070]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.5
+offset_top = -33.0
+offset_right = 18.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.81, 0.621, 0.3564, 1)
+theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/normal_font_size = 86
+bbcode_enabled = true
+text = "M"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Settings_menu" type="Control" parent="Control" unique_id=103359054]
 unique_name_in_owner = true
@@ -524,6 +627,7 @@ text = "Revert"
 
 [connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="." method="_on_cancel_menu_pressed"]
 [connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/OpenMap" to="." method="_on_open_map_pressed"]
 [connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/BackToTitle" to="." method="_on_back_to_title_pressed"]
 [connection signal="pressed" from="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="." method="_on_close_game_pressed"]
 [connection signal="back_pressed" from="Control/Settings_menu" to="." method="_on_settings_back_pressed"]

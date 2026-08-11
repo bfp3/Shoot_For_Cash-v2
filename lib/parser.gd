@@ -3,6 +3,8 @@ extends Node
 class_name parser
 
 var data_set : Array = []
+## "island|range" -> boss timer duration in milliseconds (from `boss-timer`).
+var boss_timer_ms_by_range: Dictionary = {}
 
 func loadIslandFile(file_name : String) -> bool:
 	var file = FileAccess.open(file_name, FileAccess.READ)
@@ -14,6 +16,7 @@ func loadIslandFile(file_name : String) -> bool:
 
 func loadIsland(data : String) -> bool:
 	data_set.clear()
+	boss_timer_ms_by_range.clear()
 	
 	var ary : Array = data.split("\n", false)
 	
@@ -45,10 +48,27 @@ func loadIsland(data : String) -> bool:
 				range_name = token_list[1]	
 				round_no = 0
 
+			'boss':
+				## Bare `boss` heading acts like `range boss`.
+				range_name = 'boss'
+				round_no = 0
+
 			'round':
 				round_no += 1
 				
 			_:
+				## Tabs already stripped above; split on spaces for `boss-timer 60000`.
+				var tokens: Array = []
+				for p in token.split(" ", false):
+					var s := String(p).strip_edges()
+					if not s.is_empty():
+						tokens.append(s)
+				if tokens.is_empty():
+					continue
+				if String(tokens[0]).to_lower() == 'boss-timer' and tokens.size() > 1:
+					var ms := int(tokens[1])
+					boss_timer_ms_by_range['%s|%s' % [island_name, range_name]] = maxi(ms, 0)
+					continue
 				if round_no > 0:
 					data_set.push_back( [island_name,range_name,round_no,sanitise_token(token)] )
 					
@@ -70,6 +90,11 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 				if data_set[i][2] == round_no:
 					ary.push_back(data_set[i][3])
 	return ary
+
+
+## Boss survival duration in milliseconds for an island/range (0 if unset).
+func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
+	return int(boss_timer_ms_by_range.get("%s|%s" % [island_name, range_name], 0))
 
 
 ## Parses a single spawn line into a spawn dictionary.
@@ -115,6 +140,10 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'wait':
 			return _parse_wait_command(parts)
+
+		'boss-timer':
+			## Duration for boss survival rounds (milliseconds). Handled while loading the file.
+			return {'cmd': 'boss-timer', 'ms': int(parts[1]) if parts.size() > 1 else 0}
 
 		'repeat':
 			return _parse_repeat_command(parts)
@@ -426,6 +455,11 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 
 		if parsed_cmd == 'no-lives':
 			rounds[key].no_lives = true
+			continue
+
+		if parsed_cmd == 'boss-timer':
+			var ms := int(parsed.get('ms', 0))
+			boss_timer_ms_by_range['%s|%s' % [entry[0], entry[1]]] = maxi(ms, 0)
 			continue
 
 		if parsed_cmd == 'shuffle':

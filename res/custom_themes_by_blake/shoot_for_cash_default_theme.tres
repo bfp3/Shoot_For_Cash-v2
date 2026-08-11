@@ -50,6 +50,12 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5nbrp"]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nxrix"]
+bg_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dk8vw"]
 bg_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
 border_width_left = 4
@@ -109,6 +115,8 @@ MenuUiButtons/base_type = &"Button"
 MenuUiButtons/colors/font_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
 MenuUiButtons/colors/font_focus_color = Color(0, 0, 0, 1)
 MenuUiButtons/colors/font_hover_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+ProgressBar/styles/background = SubResource("StyleBoxFlat_5nbrp")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_nxrix")
 RedPanel/base_type = &"Panel"
 RedPanel/styles/panel = SubResource("StyleBoxFlat_dk8vw")
 RedRichText/base_type = &"RichTextLabel"

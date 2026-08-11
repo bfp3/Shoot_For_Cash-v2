@@ -1,7 +1,7 @@
 
 island shipper
-range moss
-		
+
+range moss	
 	round
 
 		shuffle
@@ -601,7 +601,6 @@ range jetz
 	
 	
 range noir
-	# Night range — darker rocks, tighter waves
 	round
 		shuffle
 		rock-black 1
@@ -735,7 +734,6 @@ range noir
 		repeat 3
 
 range vesper
-	# Sundown range — paced waves with warm-up delays
 	round
 		shuffle
 		rock 1
@@ -878,3 +876,118 @@ range vesper
 		balloon A7
 		balloon A8
 		repeat 3
+
+
+
+
+range boss
+	boss-timer 60000
+	round
+		rock 4 a4
+		wait 3000
+		rock 1 a4
+		wait 2500
+		
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
+		
+		rock
+		rock
+		wait 3000
+		rock
+		rock
+		wait 3000
+		
+		rock
+		rock
+		wait 1500
+		rock
+		rock
+		
+		wait 3000
+		
+		rock 1 a1
+		wait 0
+		rock 2 a2
+		wait 0
+		rock 3 a3
+		
+		wait 3000
+		
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		
+		wait 3000
+		rock
+		wait 4000
+		
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		
+		wait 3000
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		rock
+		wait 3000
+		
+		rock
+		wait 3000
+		
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+
+		

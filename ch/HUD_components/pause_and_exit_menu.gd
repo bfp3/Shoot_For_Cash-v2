@@ -162,14 +162,27 @@ func _show_settings() -> void:
 func _focus_pause_root() -> void:
 	var resume := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/CancelMenu") as Control
 	var settings_btn := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/Settings") as Control
+	var map_btn := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/OpenMap") as Control
 	var title_btn := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/BackToTitle") as Control
 	var quit_btn := quit_control.get_node_or_null("QuitMenu/HBoxContainer/VBoxContainer/CloseGame") as Control
-	UiFocus.wire_vertical([resume, settings_btn, title_btn, quit_btn])
+	UiFocus.wire_vertical([resume, settings_btn, map_btn, title_btn, quit_btn])
 	UiFocus.grab_in(quit_control, resume)
 
 
 func _on_close_game_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_open_map_pressed() -> void:
+	await close_menu()
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_ticket_map"):
+		menus.ensure_ticket_map()
+	var map_menu := get_tree().get_first_node_in_group("map_menu")
+	if map_menu and map_menu.has_method("open_pop_up"):
+		await map_menu.open_pop_up()
+	elif map_menu and map_menu.has_method("display_ticket"):
+		await map_menu.display_ticket()
 
 
 func _on_back_to_title_pressed() -> void:

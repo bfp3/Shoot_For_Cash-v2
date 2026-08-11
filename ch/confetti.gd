@@ -9,22 +9,19 @@ extends Node3D
 	
 
 func confetti() -> void:
-	pass
-	##$RandomSound11.play()
-	#await get_tree().create_timer(2.0).timeout
-	##$RandomSound1.play()
-	##await get_tree().create_timer(0.5).timeout
-	#
-	#for i in gpu_container.get_children():
-		#var new_particles = i
-		##new_particles.duplicate_particles = true
-		#new_particles.emitting = true
-		#new_particles.show()
-		
+	await get_tree().create_timer(2.0).timeout
+	if gpu_container == null:
+		return
+	for i in gpu_container.get_children():
+		if i is GPUParticles3D:
+			i.emitting = true
+			i.show()
+
 func start_confetti() -> void:
-	pass
-	#for i in gpu_container.get_children():
-		#var new_particles = i
-		#new_particles.emitting = true
-		#new_particles.show()
-		
+	if gpu_container == null:
+		return
+	for i in gpu_container.get_children():
+		if i is GPUParticles3D:
+			i.emitting = true
+			i.show()
+

@@ -2,11 +2,14 @@ extends Button
 
 enum State {
 	LOCKED,
-	UNLOCKED,
-	COMPLETE
+	## Never entered — name only, standard colours.
+	FRESH,
+	## Player has entered — show current round progress.
+	IN_PROGRESS,
+	COMPLETE,
 }
 
-var current_state : State = State.LOCKED
+var current_state : State = State.FRESH
 
 @export var focus_enter_sfx: AudioStreamPlayer
 @export var focus_exit_sfx: AudioStreamPlayer
@@ -19,103 +22,129 @@ var interaction_tween: Tween
 
 @onready var level_name_label: RichTextLabel = $level_name_label
 @onready var round_progress_label: RichTextLabel = %RoundProgressLabel
-#@onready var egg_silhouettes: HBoxContainer = %EggSilhouettes
-@onready var cash_earned_label: RichTextLabel = %CashEarnedLabel
+@onready var cash_earned_label: RichTextLabel = get_node_or_null("%CashEarnedLabel") as RichTextLabel
 @export var level_name := 'Locked'
 
 @export var level_locked := true
 @export var main_control : Control
+## Boss / single-round buttons can turn this off.
+@export var show_round_count := true
 
 var round_manager : RoundManager = null
 
 
 func _ready() -> void:
-
 	focus_mode = Control.FOCUS_ALL
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
 	pressed.connect(_on_pressed)
-
 	mouse_entered.connect(_on_focus_entered)
 	mouse_exited.connect(_on_focus_exited)
-
 	focus_entered.connect(_on_focus_entered)
 	focus_exited.connect(_on_focus_exited)
+	gui_input.connect(_on_gui_input)
 
 	if level_locked:
 		set_locked_visuals()
-
 	else:
-		current_state = State.UNLOCKED
-		level_name_label.text = "[wave]" + level_name.to_upper()
-		#level_name_label.modulate = Color('15181c')
-		#level_name_label.add_theme_font_size_override("normal_font_size", 109)
-		$HSeparator.scale.x = 1.0
-		
-		
+		refresh_map_progress()
+
 	self.pressed.connect(_on_level_button_pressed)
 	round_manager = get_tree().get_first_node_in_group('round_manager')
-	
+
 	if disabled:
-		modulate= Color("ababab59")
+		modulate = Color("ababab59")
 		level_name_label.modulate = Color("1f1f1fff")
 
-	refresh_map_progress()
-	
+
+## Right-click: force-complete this place for stamp testing.
+func _on_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
+		if place.is_empty() or place == gl_DataSet.get_start_place_name():
+			return
+		gl_PlayerState.mark_place_completed(place)
+		await mark_completed(true)
+		accept_event()
+
 
 func set_locked_visuals() -> void:
 	current_state = State.LOCKED
-	#level_name_label.text = "Locked".to_upper()
 	level_name_label.text = ""
-	#level_name_label.modulate = Color("dbcfc5ff")
-	#level_name_label.add_theme_font_size_override("normal_font_size", 85)
 	outer_ring.modulate = Color("c9a587ff")
 	$HSeparator.scale.x = 1.13
 	$TextureRect2.modulate = Color('d8c5b7')
-	current_state = State.LOCKED
 	_set_progress_hud_visible(false)
+	_hide_completion_stamp()
 
 
 func set_unlocked_visuals() -> void:
 	level_locked = false
-	current_state = State.UNLOCKED
-	level_name_label.text = "[wave]" + level_name.to_upper()
-	#level_name_label.modulate = Color.WHITE
-	#level_name_label.add_theme_font_size_override("normal_font_size", 109)
+	disabled = false
+	modulate = Color.WHITE
 	outer_ring.modulate = Color.WHITE
 	$HSeparator.scale.x = 1.0
 	$TextureRect2.modulate = Color.WHITE
-	disabled = false
-	modulate = Color.WHITE
-	_set_progress_hud_visible(true)
+	level_name_label.text = "[wave]" + level_name.to_upper()
 	refresh_map_progress()
-	_refresh_completion_stamp(false)
 
 
-## Round counter, cash earned on this island, and uncollected egg silhouettes.
+## Round counter, cash earned on this island, and completion stamp.
 func refresh_map_progress() -> void:
 	if level_locked or current_state == State.LOCKED:
 		_set_progress_hud_visible(false)
+		_hide_completion_stamp()
 		return
-	_set_progress_hud_visible(true)
-	var total := int(gl_DataSet.get_value("map_rounds_per_island", 0))
-	if total <= 0:
-		total = 12
-	# Placeholder until per-island round tracking drives the numerator.
-	var current_round := 1
-	if round_progress_label:
-		#round_progress_label.text = "%d/%d" % [current_round, total]
-		round_progress_label.text = str(current_round).pad_zeros(2)
-	var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
 
-	# Eggs stay blacked-out silhouettes until collection is wired up.
+	var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
+	var completed := gl_PlayerState.is_place_completed(place)
+	var entry := gl_PlayerState.get_level_progress_entry(place)
+	var has_entered := completed or not entry.is_empty() or bool(entry.get("entered", false))
+
+	level_name_label.text = "[wave]" + level_name.to_upper()
+
+	if completed:
+		current_state = State.COMPLETE
+		_set_progress_hud_visible(show_round_count)
+		_apply_round_progress_text(place, entry, true)
+		_refresh_completion_stamp(false)
+		_set_completed_gui()
+		return
+
+	if has_entered:
+		current_state = State.IN_PROGRESS
+		_set_progress_hud_visible(show_round_count)
+		_apply_round_progress_text(place, entry, false)
+		_hide_completion_stamp()
+		return
+
+	current_state = State.FRESH
+	_set_progress_hud_visible(false)
+	_hide_completion_stamp()
+
+
+func _apply_round_progress_text(place: String, entry: Dictionary, completed: bool) -> void:
+	if round_progress_label == null or not show_round_count:
+		if round_progress_label:
+			round_progress_label.visible = false
+		return
+
+	var total := _total_rounds_for_place(place)
+	var sequence_index := int(entry.get("sequence_index", 0))
+	## Round the player is up to (1-based). After 3 clears, sequence_index=3 → show 4/total.
+	var current_round := total if completed else clampi(sequence_index + 1, 1, total)
+	round_progress_label.text = "%d/%d" % [current_round, total]
+	round_progress_label.visible = true
+
+
+func _total_rounds_for_place(_place: String) -> int:
+	var total := int(gl_DataSet.get_value("map_rounds_per_island", 0))
+	return total if total > 0 else 12
 
 
 func _set_progress_hud_visible(is_visible: bool) -> void:
 	if round_progress_label:
-		round_progress_label.visible = is_visible
-	#if egg_silhouettes:
-		#egg_silhouettes.visible = is_visible
+		round_progress_label.visible = is_visible and show_round_count
 	if cash_earned_label:
 		cash_earned_label.visible = is_visible
 
@@ -123,7 +152,15 @@ func _set_progress_hud_visible(is_visible: bool) -> void:
 func mark_completed(animate: bool = true) -> void:
 	current_state = State.COMPLETE
 	level_locked = false
+	_set_completed_gui()
 	await _refresh_completion_stamp(animate)
+
+
+func _hide_completion_stamp() -> void:
+	var stamp_root := get_node_or_null("100_percent") as Control
+	if stamp_root:
+		stamp_root.visible = false
+		stamp_root.modulate.a = 0.0
 
 
 func _refresh_completion_stamp(animate: bool) -> void:
@@ -134,11 +171,11 @@ func _refresh_completion_stamp(animate: bool) -> void:
 	var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
 	var completed := gl_PlayerState.is_place_completed(place) or current_state == State.COMPLETE
 	if not completed:
-		stamp_root.visible = false
-		stamp_root.modulate.a = 0.0
+		_hide_completion_stamp()
 		return
 
 	current_state = State.COMPLETE
+	_set_completed_gui()
 	stamp_root.visible = true
 	if not animate:
 		stamp_root.modulate.a = 1.0
@@ -161,26 +198,25 @@ func _refresh_completion_stamp(animate: bool) -> void:
 
 
 func _on_level_button_pressed() -> void:
-	if level_locked:
+	if level_locked or current_state == State.LOCKED:
 		return
 
 	await fill_progress_bar()
-	
 	await get_tree().create_timer(0.6, false).timeout
-	
+
 	var level_name_lower_case: String = level_name.to_lower()
 	if main_control and main_control.has_method('select_level'):
 		await main_control.select_level(level_name_lower_case)
 	elif round_manager:
-		# Fallback if map popup wiring is missing.
 		var place := gl_DataSet.resolve_place_name(level_name_lower_case)
 		if gl_DataSet.has_place(place) and place != gl_DataSet.get_start_place_name():
 			round_manager.travel_to_level(place)
 		else:
 			print('other button pressed: ', level_name_lower_case)
-	
+
 	await get_tree().create_timer(0.3, false).timeout
 	$TextureProgressBar.value = 0.0
+
 
 func _on_pressed() -> void:
 	if pressed_sfx:
@@ -188,39 +224,29 @@ func _on_pressed() -> void:
 
 	if interaction_tween:
 		interaction_tween.kill()
-	
-	
-	var original_scale := scale
 
+	var original_scale := scale
 	interaction_tween = create_tween()
 	interaction_tween.set_trans(Tween.TRANS_SINE)
 	interaction_tween.set_ease(Tween.EASE_OUT)
-
 	interaction_tween.tween_property(self, "scale", original_scale * 0.85, 0.06)
 	interaction_tween.tween_property(self, "scale", original_scale, 0.08)
-	
-	
 	await interaction_tween.finished
+
 
 func fill_progress_bar() -> void:
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE)
 	tween.set_ease(Tween.EASE_OUT)
-
 	tween.tween_property($TextureProgressBar, "value", 100.0, 0.15)
-#
-	#tween.tween_interval(0.15)
 	await tween.finished
-	
-	
-	
+
+
 func _on_focus_entered() -> void:
 	if current_state == State.LOCKED:
 		return
-	
 	if focus_enter_sfx:
 		focus_enter_sfx.play()
-
 	z_index = 1
 	_play_wiggle(orig_scale.x + (orig_scale.x / 10))
 
@@ -228,10 +254,8 @@ func _on_focus_entered() -> void:
 func _on_focus_exited() -> void:
 	if current_state == State.LOCKED:
 		return
-		
 	if focus_exit_sfx:
 		focus_exit_sfx.play()
-
 	z_index = 0
 	_play_wiggle(orig_scale.x)
 
@@ -239,12 +263,9 @@ func _on_focus_exited() -> void:
 func _play_wiggle(target_scale: float) -> void:
 	if interaction_tween:
 		interaction_tween.kill()
-
 	interaction_tween = create_tween()
-
 	interaction_tween.set_trans(Tween.TRANS_SINE)
 	interaction_tween.set_ease(Tween.EASE_IN_OUT)
-
 	interaction_tween.tween_property(
 		self,
 		"scale",
@@ -252,6 +273,13 @@ func _play_wiggle(target_scale: float) -> void:
 		0.08
 	)
 
-	#interaction_tween.tween_property(self, "rotation_degrees", -2.0, 0.04)
-	#interaction_tween.tween_property(self, "rotation_degrees", 2.0, 0.08)
-	#interaction_tween.tween_property(self, "rotation_degrees", 0.0, 0.04)
+
+func _set_completed_gui() -> void:
+	var panel := get_node_or_null("Panel") as Control
+	var panel2 := get_node_or_null("Panel2") as Control
+	if panel:
+		panel.modulate = Color.WHITE
+		panel.theme_type_variation = "RedPanel"
+	if panel2:
+		panel2.modulate = Color.WHITE
+		panel2.theme_type_variation = "RedPanel"

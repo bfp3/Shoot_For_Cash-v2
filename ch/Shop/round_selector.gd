@@ -134,7 +134,7 @@ func update_available() -> void:
 	outer_ring.modulate = outerRingColour_active
 	round_number.modulate.a = 1.0
 	round_number.text = '[wave]' + stored_text
-	outer_ring_2.modulate = Color('940104')
+	outer_ring_2.modulate = Color('5e544b') 	#Color('940104')
 	round_number.modulate = Color("ffffffff")
 	#blink_tween()
 	icon_control.scale = Vector2.ONE

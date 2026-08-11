@@ -36,6 +36,11 @@ func _on_body_entered(body: Node3D) -> void:
 	if body.current_state == RockInstance.State.ACTIVE:
 		if body.rock_activated == false:
 			return
+		if body.rock_type == RockInstance.RockSize.AVOIDER and not body.avoider_destroys_on_out_of_bounds:
+			## Still splash for feedback, but keep the avoider alive.
+			splash_particles(body)
+			splash_sfx()
+			return
 		
 		splash_particles(body)
 		splash_sfx()

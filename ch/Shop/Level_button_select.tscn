@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cr1stfmu2rvl5" path="res://ch/Shop/level_button_select.gd" id="2_1oogj"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="2_35jhd"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_35jhd"]
+[ext_resource type="Theme" uid="uid://bjwkhgoiebh1q" path="res://res/custom_themes_by_blake/shoot_for_cash_default_theme.tres" id="4_307gy"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="4_a7lqs"]
 [ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="5_35jhd"]
 [ext_resource type="Texture2D" uid="uid://dtp2scu154yi6" path="res://unfiled/Decal_placeholders/Egg_2D_sprites/Egg_silhouette.png" id="6_egg"]
@@ -88,6 +89,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="Reticle" type="TextureRect" parent="Control" unique_id=395663996]
 modulate = Color(0.88, 0.84128004, 0.8096, 0.36078432)
@@ -216,7 +218,6 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="100_percent" unique_id=1957077702]
-self_modulate = Color(1, 1, 1, 0.78431374)
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -224,10 +225,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -101.694916
-offset_top = 64.97174
-offset_right = 355.30508
-offset_bottom = 332.97174
+offset_left = -217.51413
+offset_top = -28.248627
+offset_right = 239.48587
+offset_bottom = 239.75137
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -258,7 +259,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_1oogj")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="." unique_id=1552498213]
+[node name="TextureProgressBar" type="ProgressBar" parent="." unique_id=376036611]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -266,17 +267,16 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -128.0
-offset_top = -128.0
+offset_top = -76.5
 offset_right = 128.0
-offset_bottom = 128.0
+offset_bottom = 76.5
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture_under = ExtResource("3_35jhd")
-texture_progress = ExtResource("3_35jhd")
-tint_under = Color(1, 1, 1, 0)
-tint_progress = Color(0.78039217, 0.003921569, 0.007843138, 1)
+theme = ExtResource("4_307gy")
+value = 1.0
+show_percentage = false
 
 [node name="level_name_label" type="RichTextLabel" parent="." unique_id=1332746670]
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)

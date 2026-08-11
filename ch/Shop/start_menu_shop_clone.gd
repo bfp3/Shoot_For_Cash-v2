@@ -161,11 +161,23 @@ func open_menu() -> void:
 	
 
 func _on_solo_pressed() -> void:
-	# Solo opens the island map. Equip a gun if needed so travel/start works.
+	# Solo opens the island map. Hide start menu first so the map is not covered.
 	_ensure_gun_equipped()
+	if has_method("sfx_close_shop"):
+		sfx_close_shop()
+	hide()
+	current_state = State.INACTIVE
+
 	var map_menu := _ensure_ticket_map()
-	if map_menu and map_menu.has_method("open_pop_up"):
+	if map_menu == null:
+		push_warning("Start menu Solo: MapIslandSelect failed to load")
+		return
+	if map_menu is CanvasItem:
+		(map_menu as CanvasItem).z_index = 40
+	if map_menu.has_method("open_pop_up"):
 		map_menu.open_pop_up()
+	else:
+		push_warning("Start menu Solo: MapIslandSelect missing open_pop_up()")
 
 
 func _on_free_play_pressed() -> void:
@@ -197,7 +209,13 @@ func _ensure_gun_equipped() -> void:
 
 func gun_purchased() -> void:
 	sfx_purchase_made()
+	if has_method("sfx_close_shop"):
+		sfx_close_shop()
+	hide()
+	current_state = State.INACTIVE
 	var map_menu := _ensure_ticket_map()
+	if map_menu and map_menu is CanvasItem:
+		(map_menu as CanvasItem).z_index = 40
 	if map_menu and map_menu.has_method("open_pop_up"):
 		map_menu.open_pop_up()
 

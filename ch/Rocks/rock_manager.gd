@@ -26,6 +26,9 @@ const pigeon_aim_reference_depth := 45.0
 @export var pigeon_aim_markers: Node3D
 
 var rocks_limit := 0
+const ROCK_INSTANCE_SCENE := preload("res://ch/Rocks/Rock_Instance.tscn")
+## Extra pool rocks added once when entering the boss layout (batched across frames).
+var _boss_extra_rocks_added := false
 
 # --- Rock X-axis placement tuning ---------------------------------------
 const X_MAX := 10.0          # left-most bound
@@ -49,6 +52,8 @@ var _launch_delays_sec : Array = []
 ## Items: { "kind": "balloon"|"pineapple", "entry": Dictionary, "time_sec": float }
 var _timed_event_schedule : Array = []
 var _timed_event_epoch := 0
+## Bumped to cancel in-flight staggered launches (bounce_rocks awaits).
+var _launch_epoch := 0
 
 const COLUMN_1_X := 7.0 #18.0 
 const COLUMN_STEP := 2.0 #4.0
@@ -108,7 +113,7 @@ const AIM_LANE_Y := {
 ## World Z of the aim grid (balloon board is at Z ≈ 22.5; A8 ≈ Vector3(-7, 6.5, 22.5)).
 const AIM_PLANE_Z := 23.0
 ## Multiplier on computed aimed-launch impulse. 1.0 = exact ballistic solve; raise if rocks land short.
-@export_range(0.5, 2.0, 0.01) var aim_impulse_scale := 1.14
+@export_range(0.5, 2.0, 0.01) var aim_impulse_scale := 1.08
 ## Gravity during the aimed arc (higher = faster launch, sharper slowdown at apex). Must match impulse math.
 @export_range(0.05, 1.0, 0.01) var aim_launch_gravity_scale := 0.5
 ## Linear damp applied once the rock passes the apex and starts falling.
@@ -215,6 +220,7 @@ func enter_state(new_state : State) -> void:
 func update_inactive() -> void:
 	_bounds_check_active = false
 	_cancel_wave_telegraph()
+	_cancel_pending_launches()
 	_wave_telegraph_plan.clear()
 	for i in $Container_1.get_children():
 		i.enter_state(i.State.INACTIVE)
@@ -512,6 +518,8 @@ func check_rocks_out_of_bounds() -> void:
 			continue
 		# Explicit opt-out (e.g. smokecan fly-off) — not a camera miss.
 		if body.ignores_x_out_of_bounds:
+			continue
+		if body.rock_type == RockInstance.RockSize.AVOIDER and not body.avoider_destroys_on_out_of_bounds:
 			continue
 
 		var world_pos : Vector3 = body.global_position
@@ -1420,13 +1428,17 @@ func pick_convergence_point() -> void:
 func update_round_end() -> void:
 	_bounds_check_active = false
 	_timed_event_epoch += 1
+	_cancel_pending_launches()
 	$pitch_shift_rock_sound.pitch_scale = 0.85
 	#$pitch_shift_rock_sound.volume_db = -9.0
 	update_gravity(1.0)
 	for body in $Container_1.get_children():
 		body.round_end_check_rock_status()
-		
-	
+
+
+## Stop staggered `wait` launches mid-sequence (lose / abort / round end).
+func _cancel_pending_launches() -> void:
+	_launch_epoch += 1
 
 
 func detonate_sky_mines() -> void:
@@ -1469,9 +1481,13 @@ func bounce_rocks() -> void:
 	if _wave_telegraph_plan.is_empty():
 		_rebuild_wave_convergence_aim_columns(to_launch)
 
+	_launch_epoch += 1
+	var epoch := _launch_epoch
 	var counter := 0
 
 	for body in to_launch:
+		if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+			return
 		if counter >= rocks_limit:
 			break
 
@@ -1480,6 +1496,15 @@ func bounce_rocks() -> void:
 			var delay_sec: float = float(_launch_delays_sec[counter])
 			if delay_sec > 0.0:
 				await get_tree().create_timer(delay_sec).timeout
+				if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+					return
+
+		if body == null or not is_instance_valid(body):
+			counter += 1
+			continue
+		if body.current_state != body.State.PREPARE_ROCK:
+			counter += 1
+			continue
 
 		body.enter_state(body.State.ACTIVE)
 
@@ -1501,7 +1526,8 @@ func bounce_rocks() -> void:
 
 		counter += 1
 
-	spin_rocks(to_launch)
+	if epoch == _launch_epoch and current_state == State.PULSE_ROCKS:
+		spin_rocks(to_launch)
 
 
 ## Pigeons fly into the distance along the column fan (17° half-angle from world origin).
@@ -1659,6 +1685,30 @@ func reset_all_rocks() -> void:
 
 	for body in bodies:
 		body.enter_state(body.State.INACTIVE)
+
+
+## Instantiates extra inactive rocks into Container_1 across frames to avoid hitching.
+func ensure_extra_rocks(count: int = 80, per_frame: int = 4) -> void:
+	if count <= 0:
+		return
+	if _boss_extra_rocks_added:
+		return
+	_boss_extra_rocks_added = true
+
+	var container: Node3D = $Container_1
+	var remaining := count
+	while remaining > 0:
+		var batch := mini(per_frame, remaining)
+		for _i in batch:
+			var rock: Node = ROCK_INSTANCE_SCENE.instantiate()
+			container.add_child(rock)
+			if rock.has_method("enter_state"):
+				rock.enter_state(rock.State.INACTIVE)
+			if rock is Node3D:
+				(rock as Node3D).global_position = Vector3(0.0, -100.0, 0.0)
+		remaining -= batch
+		await get_tree().process_frame
+
 		
 func end_of_round() -> void:
 	enter_state(State.ROUND_END)

@@ -58,8 +58,14 @@ var dataset_float : Dictionary = {
 	
 	,"reward_perfect_round"	: [50,1000,1500]
 	,"price_play_round"		: [10,50,100]
-	## Map: cash required to unlock travel to the next island (shown as "Cash Needed").
-	,"cash_needed_next_island"	: [10000]
+	## Map: cash required to unlock island index+1 (Shipper→Anchor, Anchor→Squid, …).
+	## Edit these values to change unlock prices on the island map.
+	,"island_unlock_cost"		: [10000, 20, 30, 40]
+	## Cash required to enter each island's boss fight (index = island).
+	,"boss_unlock_cost"			: [10000, 20, 30, 40]
+	## Cash awarded when surviving a boss clear (index = island).
+	,"boss_clear_reward"		: [5000, 10000, 15000, 20000, 25000]
+	## Legacy single-value alias (cost to leave the first island). Prefer island_unlock_cost.
 	## Map: rounds shown as current/total on each island button.
 	,"map_rounds_per_island"	: [12]
 	
@@ -95,6 +101,16 @@ var dataset_float : Dictionary = {
 
 var dataset_string : Dictionary = {
 	 "place_name" 				: ['moss','redd','glory','jetz','noir', 'vesper', 'start']
+	## Overworld island display names (index 0 = starting island). Edit freely.
+	,"island_names"				: [
+		'Shipper Island',
+		'Anchor Island',
+		'Squid Island',
+		'Island 4',
+		'Island 5',
+	]
+	## Floating "not enough cash" text on the island map (Next / Anchor button).
+	,"map_earn_more_money_text"	: ["Earn More Money"]
 	
 	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']
@@ -280,3 +296,60 @@ func get_ticket_price_key(place_id: String) -> String:
 
 func get_ticket_power_key(place_id: String) -> String:
 	return "power_ticket_%s" % resolve_place_name(place_id)
+
+
+## --- Overworld island map helpers ---
+
+func get_island_names() -> PackedStringArray:
+	var raw: Array = dataset_string.get("island_names", [])
+	var out := PackedStringArray()
+	for entry in raw:
+		out.append(String(entry))
+	return out
+
+
+func get_island_name(index: int) -> String:
+	var names := get_island_names()
+	if index < 0 or index >= names.size():
+		return ""
+	return names[index]
+
+
+func get_island_count() -> int:
+	return get_island_names().size()
+
+
+## Cash required to unlock the island at `to_island_index` (must be >= 1).
+func get_island_unlock_cost(to_island_index: int) -> int:
+	if to_island_index <= 0:
+		return 0
+	var costs: Array = dataset_float.get("island_unlock_cost", [])
+	var cost_i := to_island_index - 1
+	if costs.is_empty():
+		return int(get_value("cash_needed_next_island", 0))
+	if cost_i >= costs.size():
+		cost_i = costs.size() - 1
+	return int(costs[cost_i])
+
+
+func get_map_earn_more_money_text() -> String:
+	var text := get_string("map_earn_more_money_text", 0)
+	if text.is_empty():
+		return "Earn More Money"
+	return text
+
+
+func get_boss_unlock_cost(island_index: int) -> int:
+	var costs: Array = dataset_float.get("boss_unlock_cost", [])
+	if costs.is_empty():
+		return 10000
+	var i := clampi(island_index, 0, costs.size() - 1)
+	return int(costs[i])
+
+
+func get_boss_clear_reward(island_index: int) -> int:
+	var rewards: Array = dataset_float.get("boss_clear_reward", [])
+	if rewards.is_empty():
+		return 5000
+	var i := clampi(island_index, 0, rewards.size() - 1)
+	return int(rewards[i])

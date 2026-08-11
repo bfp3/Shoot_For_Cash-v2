@@ -10,7 +10,7 @@ const MENU_SCENES := {
 	"intro": "res://ch/demo_end_screen/Intro_prompt.tscn",
 	"game_won": "res://ch/demo_end_screen/game_won_prompt.tscn",
 	"grand_total": "res://ch/demo_end_screen/Grand_total_prompt.tscn",
-	"ticket_map": "res://ch/Shop/ticket_purchased_pop_up.tscn",
+	"ticket_map": "res://ch/Shop/MapIslandSelect.tscn",
 }
 
 @export var canvas_layer_path: NodePath = ^"../MainGameCanvasLayer"
@@ -144,9 +144,10 @@ func _configure_instance(key: String, inst: Node) -> void:
 			if rm and "round_manager" in inst:
 				inst.set("round_manager", rm)
 		"ticket_map":
-			inst.name = "TicketPurchasedPopUp"
+			inst.name = "MapIslandSelect"
 			if inst is CanvasItem:
 				(inst as CanvasItem).visible = false
+				(inst as CanvasItem).z_index = 40
 			inst.set("unique_name_in_owner", true)
 			if start_menu and "game_start_menu" in inst:
 				inst.set("game_start_menu", start_menu)
