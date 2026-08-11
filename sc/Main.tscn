@@ -12,10 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://ch/Player.tscn" id="23_ellt3"]
 [ext_resource type="Script" uid="uid://cbcv8383lu5sl" path="res://ch/splash_zone.gd" id="24_dse8t"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="25_ibr3v"]
-[ext_resource type="Shader" uid="uid://d3ak3drqp32j5" path="res://res/Shaders/simplified_TV_shader.gdshader" id="28_ld44m"]
 [ext_resource type="AudioStream" uid="uid://b80q15yp4lvhc" path="res://sfx/water_splash_sfx_01.ogg" id="28_nq3ni"]
 [ext_resource type="PackedScene" uid="uid://b6o112wnsu6a" path="res://ch/canvas_layers/starting_screen_canvaslayer.tscn" id="29_c7cmr"]
-[ext_resource type="Script" uid="uid://d2hbdu3aenrpl" path="res://lib/tv_hud_shader.gd" id="29_f1f1n"]
 [ext_resource type="AudioStream" uid="uid://bwulgbjlr2hv5" path="res://sfx/water_splash_sfx_02.ogg" id="29_q3aq7"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="31_hwubp"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="34_v17ib"]
@@ -69,11 +67,6 @@ size = Vector3(0.05, 30, 0.05)
 
 [sub_resource type="BoxMesh" id="BoxMesh_mdemw"]
 size = Vector3(0.108, 0.502, 0.007)
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ugpmk"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_fjxa8"]
-friction = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ymbdo"]
 size = Vector3(40, 1, 9.025)
@@ -133,26 +126,6 @@ uv1_triplanar = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_ymbdo"]
 size = Vector3(40, 0.1, 0.1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_taal3"]
-shader = ExtResource("28_ld44m")
-shader_parameter/overlay = false
-shader_parameter/aberration = 0.00300004764250005
-shader_parameter/brightness = 1.0
-shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.34000001615
-shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.0
-shader_parameter/vignette_opacity = 0.800000038
-shader_parameter/scanlines_enabled = true
-shader_parameter/scanline_count = 30.0
-shader_parameter/scanline_opacity = 0.0
-shader_parameter/scanline_speed = 0.2
-shader_parameter/mask_enabled = false
-shader_parameter/mask_opacity = 0.24800001178
-shader_parameter/flicker_amount = 0.0
-
-[sub_resource type="CanvasTexture" id="CanvasTexture_67uld"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ec2we"]
 
@@ -308,7 +281,7 @@ player = NodePath("Player")
 round_manager = NodePath("Round_manager")
 start_cam = NodePath("Camera3D")
 round_timer = NodePath("MainGameCanvasLayer/Timer")
-HUD_CRT = NodePath("TV_hud")
+HUD_CRT = NodePath("")
 splash_screen = NodePath("SplashScreenCanvasLayer")
 music_manager = NodePath("Music")
 main_game_canvas = NodePath("MainGameCanvasLayer")
@@ -655,63 +628,48 @@ skeleton = NodePath("../../..")
 
 [node name="Rock_Instance" parent="Rocks/Container_1" unique_id=1089661090 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4728577, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance2" parent="Rocks/Container_1" unique_id=641614515 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8336112, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_fjxa8")
 
 [node name="Rock_Instance3" parent="Rocks/Container_1" unique_id=977217555 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.658868, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance4" parent="Rocks/Container_1" unique_id=614925084 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.798102, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance5" parent="Rocks/Container_1" unique_id=1804095401 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5083055, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance6" parent="Rocks/Container_1" unique_id=1648636095 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.63919, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance7" parent="Rocks/Container_1" unique_id=1588486015 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.451482, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance8" parent="Rocks/Container_1" unique_id=2122944651 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5166283, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance9" parent="Rocks/Container_1" unique_id=1306876008 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.997283, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance10" parent="Rocks/Container_1" unique_id=702490276 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4127793, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance11" parent="Rocks/Container_1" unique_id=1826283916 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6957083, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance12" parent="Rocks/Container_1" unique_id=1936738185 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4926226, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance13" parent="Rocks/Container_1" unique_id=511030969 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.390077, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance14" parent="Rocks/Container_1" unique_id=869067105 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.036045, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Rock_Instance15" parent="Rocks/Container_1" unique_id=221535877 instance=ExtResource("21_e0u1b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3772593, -0.08000016, 0.42000008)
-physics_material_override = SubResource("PhysicsMaterial_ugpmk")
 
 [node name="Gold_sfx" type="AudioStreamPlayer" parent="Rocks" unique_id=951137588]
 stream = ExtResource("23_1i2h1")
@@ -798,22 +756,6 @@ mesh = SubResource("BoxMesh_ymbdo")
 skeleton = NodePath("../..")
 
 [node name="Level_Visual" type="Node3D" parent="." unique_id=1485757792]
-
-[node name="TV_hud" type="TextureRect" parent="." unique_id=1738601225 groups=["TV_CRT_Filter"]]
-unique_name_in_owner = true
-visible = false
-z_index = 4096
-material = SubResource("ShaderMaterial_taal3")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = SubResource("CanvasTexture_67uld")
-script = ExtResource("29_f1f1n")
-start_up = true
-metadata/_edit_use_anchors_ = true
 
 [node name="SplashScreenCanvasLayer" parent="." unique_id=991233177 node_paths=PackedStringArray("round_manager", "music_control") instance=ExtResource("29_c7cmr")]
 visible = false
@@ -1070,6 +1012,7 @@ autostart = true
 
 [node name="Background_transition" type="Control" parent="." unique_id=605168212]
 unique_name_in_owner = true
+visible = false
 z_index = 4096
 layout_mode = 3
 anchors_preset = 15
@@ -1084,6 +1027,7 @@ slide_duration = 1.0
 transition = 1
 
 [node name="Background_control" type="Control" parent="Background_transition" unique_id=1050296865]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

@@ -26,6 +26,7 @@ color = Color(1, 1, 1, 1)
 thickness = 4
 
 [node name="Boss_button_selector" type="Button" unique_id=427300251 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "pressed_sfx")]
+clip_contents = true
 anchors_preset = -1
 anchor_left = 0.067
 anchor_top = 0.119
@@ -45,6 +46,7 @@ level_name = "Boss"
 show_round_count = false
 
 [node name="Control" type="Control" parent="." unique_id=970887774]
+visible = false
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -271,9 +273,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -94.0
-offset_top = -72.5
+offset_top = -40.5
 offset_right = 94.0
-offset_bottom = 23.5
+offset_bottom = 55.5
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -290,30 +292,44 @@ vertical_alignment = 1
 
 [node name="RoundProgressLabel" type="RichTextLabel" parent="." unique_id=1332746671]
 unique_name_in_owner = true
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -70.0
-offset_top = 18.0
-offset_right = 70.0
-offset_bottom = 58.0
+offset_left = -152.17154
+offset_top = -58.97895
+offset_right = 155.68625
+offset_bottom = 51.682495
 grow_horizontal = 2
 grow_vertical = 2
+rotation = -0.49408752
+scale = Vector2(0.784, 0.784)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/normal_font_size = 48
+theme_override_font_sizes/normal_font_size = 92
 bbcode_enabled = true
-text = "1/12"
+text = "$10,000"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="RoundProgressLabel" unique_id=1523297713]
+modulate = Color(1, 1, 1, 0.39215687)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -70.98169
+offset_right = 52.68582
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"RedPanel"
 
 [node name="EggSilhouettes" type="HBoxContainer" parent="." unique_id=1332746672]
 unique_name_in_owner = true

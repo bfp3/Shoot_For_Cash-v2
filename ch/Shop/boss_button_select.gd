@@ -79,8 +79,9 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 	level_locked = true
 	disabled = false ## Still clickable so player can see/refresh the locked message.
 	current_state = State.LOCKED
-	modulate = Color(0.75, 0.75, 0.75, 0.85)
-	level_name_label.text = "[pulse]" + boss_title_text.to_upper()
+	#modulate = Color(0.75, 0.75, 0.75, 0.85)
+	modulate = Color.WHITE
+	level_name_label.text = boss_title_text.to_upper()
 	outer_ring.modulate = Color("c9a587ff")
 	$TextureRect2.modulate = Color('d8c5b7')
 	_set_progress_hud_visible(false)
@@ -89,7 +90,7 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 		round_progress_label.visible = true
 		var msg := gl_DataSet.get_map_earn_more_money_text()
 		if msg.is_empty():
-			msg = "Earn More Money"
+			msg = ""
 		## Show earn-more copy + fee on the locked boss button.
 		round_progress_label.text = "%s\n%s" % [msg, _format_boss_cost(cost)]
 

@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://b51vopusw334w"]
 
 [ext_resource type="Script" uid="uid://cui6iwpjiyx4h" path="res://ch/Rocks/rock_instance.gd" id="1_bc0l2"]
+[ext_resource type="PhysicsMaterial" uid="uid://bwd2mjugdsfba" path="res://ch/Rocks/rock_physics_material.tres" id="1_p78v0"]
 [ext_resource type="Material" uid="uid://dnxuldiy8408d" path="res://res/small_rock_material.tres" id="4_beb3h"]
 [ext_resource type="Material" uid="uid://bwt1wtym017gd" path="res://res/gold_rock_mat.tres" id="4_w8aba"]
 [ext_resource type="ArrayMesh" uid="uid://lxbrgqaovv68" path="res://res/Rocks/rock_mesh_03.tres" id="5_27dlh"]
@@ -35,8 +36,6 @@
 [ext_resource type="AudioStream" uid="uid://dua25tojybkiv" path="res://sfx/6thInt.ogg" id="37_pbe1n"]
 [ext_resource type="AudioStream" uid="uid://c87df1ylycoq2" path="res://sfx/7thInt.ogg" id="38_qfsx3"]
 [ext_resource type="AudioStream" uid="uid://bqqq2qfwp0uw8" path="res://sfx/8thInt.ogg" id="39_20bhc"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lrylr"]
 radius = 0.305
@@ -928,7 +927,7 @@ turbulence_influence_over_life = SubResource("CurveTexture_27dlh")
 [node name="Rock_Instance" type="RigidBody3D" unique_id=641614515]
 collision_layer = 2
 collision_mask = 4
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
+physics_material_override = ExtResource("1_p78v0")
 linear_damp = 0.5
 angular_damp = 1.0
 script = ExtResource("1_bc0l2")

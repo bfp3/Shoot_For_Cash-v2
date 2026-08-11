@@ -68,7 +68,7 @@ func start_intro_process() -> void:
 	round_manager.enter_state(round_manager.RoundState.INACTIVE)
 	start_cam.current = true
 	round_timer.hide()
-	HUD_CRT.title_screen()
+	#HUD_CRT.title_screen()
 	player.title_screen_start()
 
 	await get_tree().create_timer(0.25).timeout
@@ -110,7 +110,7 @@ func start_game() -> void:
 	#await get_tree().create_timer(0.25).timeout
 	player.start_player()
 	#round_timer.show()
-	HUD_CRT.start_game()
+	#HUD_CRT.start_game()
 	#rocks_on_screen_counter.show()
 	
 	await get_tree().create_timer(0.25).timeout

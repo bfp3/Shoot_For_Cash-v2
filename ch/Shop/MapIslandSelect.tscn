@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="11_n61y1"]
 [ext_resource type="PackedScene" uid="uid://mmk21ngpuua6" path="res://ch/Shop/Level_button_select.tscn" id="12_ag0ht"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="12_bwvlo"]
+[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="12_sifde"]
 [ext_resource type="PackedScene" uid="uid://clo71bqgnnip8" path="res://ch/Shop/Boss_button_select.tscn" id="13_bossbtn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8mvl6"]
@@ -118,6 +119,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8mvl6")
 
 [node name="MainPanel2" type="PanelContainer" parent="." unique_id=829293957]
+visible = false
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 custom_minimum_size = Vector2(1550, 900)
 layout_mode = 0
@@ -354,7 +356,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Panel" type="Panel" parent="Island1/CurrentIslandLabel/CurrentIslandRichTextLabel" unique_id=1607551687]
-modulate = Color(0.92, 0.8770667, 0.8464, 1)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -468,9 +469,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 1408.0
-offset_top = 532.0
+offset_top = 661.0
 offset_right = 1664.0
-offset_bottom = 715.0
+offset_bottom = 844.0
 main_control = NodePath("../../..")
 
 [node name="MapOverlay" type="TextureRect" parent="Island1" unique_id=705275406]
@@ -535,10 +536,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 1175.0
-offset_top = 339.0
-offset_right = 1431.0
-offset_bottom = 522.0
+offset_left = 1079.0
+offset_top = 403.0
+offset_right = 1335.0
+offset_bottom = 586.0
 level_name = "Glory"
 level_locked = false
 main_control = NodePath("../../..")
@@ -1314,26 +1315,6 @@ focus_exit_sfx = NodePath("focus_exit")
 purchase_sfx = NodePath("shop_open_sfx_01")
 wiggle_amount = 1.1
 
-[node name="CloseButtonIcon2" type="TextureRect" parent="CloseMapButton" unique_id=887776723]
-self_modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -128.0
-offset_top = -128.0
-offset_right = 128.0
-offset_bottom = 128.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.175, 0.175)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("7_8mvl6")
-stretch_mode = 5
-
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="CloseMapButton" unique_id=520395201]
 stream = ExtResource("8_8uupg")
 volume_db = -32.0
@@ -1379,19 +1360,19 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -46.5
-offset_right = 25.0
-offset_bottom = 46.5
+offset_left = -64.0
+offset_top = -58.0
+offset_right = 64.0
+offset_bottom = 70.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("12_bwvlo")
-expand_mode = 1
+texture = ExtResource("12_sifde")
 stretch_mode = 5
 
 [node name="CircleEmblem3" type="TextureRect" parent="CloseMapButton/CoatArms/CircleEmblem" unique_id=220934762]
+visible = false
 modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
 show_behind_parent = true
 custom_minimum_size = Vector2(50, 50)
@@ -1415,6 +1396,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Insignia" type="RichTextLabel" parent="CloseMapButton/CoatArms" unique_id=1723705056]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
