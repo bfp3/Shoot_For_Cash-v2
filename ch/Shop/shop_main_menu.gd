@@ -158,31 +158,66 @@ func _format_cash_label(amount: int, waved: bool = true) -> String:
 
 
 func update_place_label() -> void:
+	var place_root := get_node_or_null('CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name') as CanvasItem
 	var place_label := get_node_or_null('CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name/PlaceLabel') as RichTextLabel
+	var is_boss := false
+	if round_manager and round_manager.has_method("is_boss_mode"):
+		is_boss = bool(round_manager.is_boss_mode())
+	elif String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
+		is_boss = true
+
+	if place_root:
+		place_root.visible = not is_boss
 	if place_label:
-		var current_place := String(gl_PlayerState.dataset.level_name).to_upper()
-		if current_place == 'START' or current_place.is_empty():
-			current_place = 'MOSS'
-		place_label.text = current_place
+		if is_boss:
+			place_label.text = ""
+		else:
+			var current_place := String(gl_PlayerState.dataset.level_name).to_upper()
+			if current_place == 'START' or current_place.is_empty():
+				current_place = 'MOSS'
+			place_label.text = current_place
 	_refresh_background_completion_stamp(false)
-	_refresh_boss_challenge_banner()
+	_refresh_place_challenge_banner()
 
 
-func _refresh_boss_challenge_banner() -> void:
+func _refresh_place_challenge_banner() -> void:
 	var banner := _ensure_boss_challenge_banner()
 	var is_boss := false
 	if round_manager and round_manager.has_method("is_boss_mode"):
 		is_boss = bool(round_manager.is_boss_mode())
 	elif String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
 		is_boss = true
-	banner.visible = is_boss
+
 	if is_boss:
+		banner.visible = true
 		var seconds := 60
 		if round_manager and round_manager.has_method("get_active_timer_seconds"):
 			var s := float(round_manager.get_active_timer_seconds())
 			if s > 0.0:
 				seconds = int(round(s))
-		banner.text = "[center][wave]HOLD OUT\n %d seconds[/wave][/center]" % seconds
+		var boss_fmt := gl_DataSet.get_string("shop_challenge_boss", 0)
+		if boss_fmt.is_empty():
+			boss_fmt = "HOLD OUT\n %d seconds"
+		banner.text = "[center][wave]%s[/wave][/center]" % (boss_fmt % seconds)
+		return
+
+	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	var idx := gl_DataSet.get_place_index(place)
+	if idx < 0:
+		banner.visible = false
+		banner.text = ""
+		return
+	var challenge := gl_DataSet.get_string("shop_challenge_text", idx)
+	if challenge.is_empty():
+		banner.visible = false
+		banner.text = ""
+		return
+	banner.visible = true
+	banner.text = "[center][wave]%s[/wave][/center]" % challenge
+
+
+func _refresh_boss_challenge_banner() -> void:
+	_refresh_place_challenge_banner()
 
 
 func _ensure_boss_challenge_banner() -> RichTextLabel:

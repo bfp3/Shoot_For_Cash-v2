@@ -169,14 +169,17 @@ func tween_fade_gold() -> void:
 
 
 func pineapple_is_pineapple() -> void:
-	var new_money_label: Label3D = self.duplicate()
+	await show_big_reward_popup(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
 
+
+## Large centered cash popup (all-pineapples / egg rewards).
+func show_big_reward_popup(amount: int, world_pos: Vector3 = Vector3(0, 5, 23)) -> void:
+	var new_money_label: Label3D = self.duplicate()
 	get_tree().get_current_scene().add_child(new_money_label)
 	new_money_label.font_size *= 3
 	new_money_label.top_level = true
-	new_money_label.text = "$" + str(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
-	new_money_label.global_position = Vector3(0, 5, 23)
-
+	new_money_label.text = "$" + str(amount)
+	new_money_label.global_position = world_pos
 	new_money_label.modulate = money_colour
 	new_money_label.outline_modulate = Color("262626")
 	new_money_label.show()

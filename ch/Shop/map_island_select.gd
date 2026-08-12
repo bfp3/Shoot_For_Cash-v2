@@ -13,6 +13,27 @@ const earn_more_money_text := "Earn More Cash"
 @export var island_change_sfx: AudioStreamPlayer
 
 @onready var boss_access_holdout: Control = $BossAccessHoldout
+@onready var island_unlocked_popup: Control = $IslandUnlockedPopup
+
+@export_group("Island Name Stamp")
+const island_name_stamp_duration := 0.2
+const island_name_stamp_start_scale := 8.0
+## Per-island label text colours (index = island). Empty = keep scene default.
+const island_name_text_colors: Array[Color] = [
+	Color("5e544b"),
+	Color("FFFFFF"),
+	Color("5e544b"),
+	Color("5e544b"),
+	Color("5e544b"),
+]
+## Per-island panel colours behind the island name.
+const island_name_panel_colors: Array[Color] = [
+	Color(0.859, 0.827, 0.8, 1),
+	Color(0.86, 0.723, 0.611, 1),
+	Color(0.921569, 0.878431, 0.847059, 1),
+	Color(0.921569, 0.878431, 0.847059, 1),
+	Color(0.921569, 0.878431, 0.847059, 1),
+]
 
 @export_group("Test Mode")
 ## Turn on manually, or leave off — auto-enables when you F6 this scene alone.
@@ -27,7 +48,6 @@ var _selecting_level := false
 var _viewing_island_index := 0
 var _island_pages: Array[Control] = []
 var _unlock_popup: Control
-var _unlock_popup_dismissed := false
 var _earn_more_popup_busy := false
 var _test_mode := false
 var _opening_pause_from_map := false
@@ -235,9 +255,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if _unlock_popup != null and is_instance_valid(_unlock_popup):
-		if event.is_pressed() and (event.is_action("ui_cancel") or event.is_action("controller_back_button")):
-			_dismiss_unlock_popup()
-			get_viewport().set_input_as_handled()
+		## Popup scene owns Esc / Close.
 		return
 	if not event.is_pressed() or event.is_echo():
 		return
@@ -396,6 +414,7 @@ func _fade_out_ammo_panel() -> void:
 func close_pop_up() -> void:
 	if not visible:
 		return
+	_force_close_unlock_popup()
 	if _test_mode:
 		## Keep map visible while testing this scene alone.
 		return
@@ -687,19 +706,16 @@ func _transition_to_island(index: int) -> void:
 	var fade_out_t := duration * out_ratio
 	var fade_in_t := duration * (1.0 - out_ratio)
 
-	if island_change_sfx:
-		island_change_sfx.play()
-	elif next_island_button and next_island_button.get("purchase_sfx"):
-		var sfx = next_island_button.get("purchase_sfx")
-		if sfx is AudioStreamPlayer:
-			(sfx as AudioStreamPlayer).play()
+	#if island_change_sfx:
+		#island_change_sfx.play()
+	
 
 	var from_index := _viewing_island_index
 	var from_targets := _island_fade_targets(from_index)
 	await _tween_targets_modulate_a(from_targets, 0.0, fade_out_t)
 
 	_show_island_page(index)
-	_refresh_island_labels()
+	_refresh_island_labels(true)
 	_refresh_map_cash_labels()
 	_refresh_nav_button_visibility()
 	_refresh_level_buttons()
@@ -743,10 +759,13 @@ func _format_cash(amount: int) -> String:
 	return CommonCode.format_money(amount)
 
 
-func _refresh_island_labels() -> void:
+func _refresh_island_labels(animate_name_stamp: bool = false) -> void:
 	var current_name := gl_DataSet.get_island_name(_viewing_island_index)
+	_apply_island_name_colors(_viewing_island_index)
 	if current_island_label:
 		current_island_label.text = current_name.to_upper()
+		if animate_name_stamp:
+			_play_island_name_stamp()
 
 	var last_i := maxi(gl_DataSet.get_island_count() - 1, 0)
 	if _viewing_island_index >= last_i:
@@ -763,6 +782,34 @@ func _refresh_island_labels() -> void:
 	if next_island_label:
 		next_island_label.text = "%s\n[font_size=40] %s[/font_size]" % [next_name.to_upper(), status_line]
 
+
+func _apply_island_name_colors(island_index: int) -> void:
+	if current_island_label == null:
+		return
+	if island_index >= 0 and island_index < island_name_text_colors.size():
+		current_island_label.self_modulate = island_name_text_colors[island_index]
+	var panel := current_island_label.get_node_or_null("Panel") as CanvasItem
+	if panel and island_index >= 0 and island_index < island_name_panel_colors.size():
+		panel.self_modulate = island_name_panel_colors[island_index]
+
+
+func _play_island_name_stamp() -> void:
+	if current_island_label == null:
+		return
+	var stamp_root := current_island_label.get_parent() as Control
+	if stamp_root == null:
+		stamp_root = current_island_label
+	var start_scale := maxf(island_name_stamp_start_scale, 1.0)
+	var dur := maxf(island_name_stamp_duration, 0.05)
+	#current_island_label.pivot_offset = current_island_label.size * 0.5
+	#stamp_root.pivot_offset = stamp_root.size * 0.5
+	stamp_root.scale = Vector2.ONE * start_scale
+	stamp_root.modulate.a = 0.0
+	var tween := create_tween()
+	tween.tween_property(stamp_root, "modulate:a", 1.0, dur)
+	tween.parallel().tween_property(stamp_root, "scale", Vector2.ONE, dur)
+	tween.parallel().tween_callback(island_change_sfx.play).set_delay(dur - 0.1)
+	
 
 func _refresh_map_cash_labels() -> void:
 	var cash := int(gl_PlayerState.dataset.cash)
@@ -938,12 +985,7 @@ func _try_enter_boss(progress_bar: Range = null) -> void:
 		_selecting_level = false
 		return
 
-	## Pay the boss entry fee.
-	if cost > 0:
-		gl_PlayerState.dataset.cash = cash - cost
-		if EventBus.instance.has_signal("purchase_made"):
-			EventBus.instance.purchase_made.emit("boss_entry")
-
+	## Must afford the listed cost to enter, but entry does not spend cash.
 	var rm := get_tree().get_first_node_in_group("round_manager")
 	if rm and "_reopen_shop_after_map" in rm:
 		rm._reopen_shop_after_map = false
@@ -1039,93 +1081,23 @@ func _show_earn_more_money_popup() -> void:
 	_earn_more_popup_busy = false
 
 
-func _dismiss_unlock_popup() -> void:
-	_unlock_popup_dismissed = true
+func _force_close_unlock_popup() -> void:
+	if island_unlocked_popup and island_unlocked_popup.has_method("force_close"):
+		island_unlocked_popup.force_close()
+	if _unlock_popup == island_unlocked_popup:
+		_unlock_popup = null
+	elif _unlock_popup != null and is_instance_valid(_unlock_popup) and _unlock_popup != boss_access_holdout:
+		_unlock_popup.queue_free()
+		_unlock_popup = null
 
 
 func _show_island_unlocked_popup(island_name: String) -> void:
-	if _unlock_popup and is_instance_valid(_unlock_popup) and _unlock_popup != boss_access_holdout:
-		_unlock_popup.queue_free()
+	if island_unlocked_popup == null:
+		push_warning("MapIslandSelect: IslandUnlockedPopup missing")
+		return
+	if _unlock_popup == boss_access_holdout:
 		_unlock_popup = null
-	elif _unlock_popup == boss_access_holdout:
-		_unlock_popup = null
-
-	_unlock_popup_dismissed = false
-
-	var dim := ColorRect.new()
-	dim.name = "IslandUnlockPopup"
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dim.color = Color(0.92, 0.877, 0.846, 0.416)
-	dim.z_index = 80
-	dim.mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(dim)
-	_unlock_popup = dim
-
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	dim.add_child(center)
-
-	var panel := Panel.new()
-	panel.custom_minimum_size = Vector2(520, 220)
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	center.add_child(panel)
-
-	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 24)
-	margin.add_theme_constant_override("margin_right", 24)
-	margin.add_theme_constant_override("margin_top", 24)
-	margin.add_theme_constant_override("margin_bottom", 24)
-	panel.add_child(margin)
-
-	var vbox := VBoxContainer.new()
-	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	vbox.add_theme_constant_override("separation", 20)
-	margin.add_child(vbox)
-
-	var label := RichTextLabel.new()
-	label.bbcode_enabled = true
-	label.fit_content = true
-	label.scroll_active = false
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.add_theme_font_size_override("normal_font_size", 72)
-	label.theme_type_variation = "WhiteRichText"
-	label.text = "[wave]%s[/wave]" % island_name + "\nUnlocked"
-	label.text.to_upper()
-	label.modulate = Color("5e544bff")
-	label.custom_minimum_size = Vector2(460, 0)
-	vbox.add_child(label)
-
-	var close_btn := Button.new()
-	close_btn.text = "Got it"
-	close_btn.custom_minimum_size = Vector2(160, 48)
-	close_btn.add_theme_font_size_override("font_size", 72)
-	close_btn.add_theme_color_override("font_color", Color("c70102ff"))
-	close_btn.focus_mode = Control.FOCUS_ALL
-	close_btn.mouse_filter = Control.MOUSE_FILTER_STOP
-	vbox.add_child(close_btn)
-
-	close_btn.pressed.connect(_dismiss_unlock_popup)
-	## Clicking the dim backdrop also dismisses.
-	dim.gui_input.connect(func (event: InputEvent) -> void:
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			_dismiss_unlock_popup()
-	)
-
-	await get_tree().process_frame
-	if is_instance_valid(close_btn):
-		close_btn.grab_focus()
-
-	while not _unlock_popup_dismissed and is_instance_valid(dim):
-		await get_tree().process_frame
-
-	if is_instance_valid(dim):
-		var fade := create_tween()
-		fade.tween_property(dim, "modulate:a", 0.0, 0.3)
-		await fade.finished
-		if is_instance_valid(dim):
-			dim.queue_free()
+	_unlock_popup = island_unlocked_popup
+	if island_unlocked_popup.has_method("play"):
+		await island_unlocked_popup.play(island_name)
 	_unlock_popup = null
-	_unlock_popup_dismissed = false

@@ -70,6 +70,7 @@ var dataset_float : Dictionary = {
 	,"map_rounds_per_island"	: [12]
 	
 	,"reward_all_pineapples"		: [100]
+	,"reward_egg"					: [300]
 	# Targets / Rocks
 	# item name, 			$value, 	health
 	,"pineapple"			: [10,		1]
@@ -111,6 +112,18 @@ var dataset_string : Dictionary = {
 	]
 	## Floating "not enough cash" text on the island map (Next / Anchor button).
 	,"map_earn_more_money_text"	: ["Earn More Money"]
+	## Shop challenge banner per place (parallel to place_name). Empty = hide banner.
+	,"shop_challenge_text"		: [
+		"ACCURACY for the WIN", ## moss
+		"", ## redd
+		"", ## glory
+		"", ## jetz
+		"", ## noir
+		"", ## vesper
+		"", ## start
+	]
+	## Boss shop banner. Use %d for hold-out seconds.
+	,"shop_challenge_boss"		: ["HOLD OUT\n %d seconds"]
 	
 	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']

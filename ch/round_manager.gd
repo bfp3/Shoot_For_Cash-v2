@@ -84,6 +84,10 @@ var _boss_open_map_after_tally := false
 var _boss_ceremony_island := -1
 ## Optional UI bar driven while a map travel loads a layout (0–100).
 var _travel_progress_bar: Range = null
+var _travel_progress_target := 0.0
+var _travel_progress_display := 0.0
+## Higher = snappier catch-up while still looking smooth.
+@export var travel_progress_smooth_speed := 120.0
 ## After shop MapButton → start + map, closing the map should reopen the shop.
 var _reopen_shop_after_map := false
 
@@ -221,6 +225,7 @@ func _apply_shuffle_modifier(enabled: bool) -> void:
 
 
 func _process(delta: float) -> void:
+	_update_travel_progress_smooth(delta)
 	_level_reload_poll_accum += delta
 	if _level_reload_poll_accum < LEVEL_RELOAD_POLL_INTERVAL:
 		return
@@ -1564,13 +1569,29 @@ func _await_layout_scene(path: String) -> PackedScene:
 
 
 func _set_travel_progress(fraction: float) -> void:
+	_travel_progress_target = clampf(fraction, 0.0, 1.0) * 100.0
 	if _travel_progress_bar == null or not is_instance_valid(_travel_progress_bar):
 		return
-	_travel_progress_bar.value = clampf(fraction, 0.0, 1.0) * 100.0
+	## Instant jump only for the very start / end so the bar never sticks short.
+	if _travel_progress_target <= 2.0 or _travel_progress_target >= 99.5:
+		_travel_progress_display = _travel_progress_target
+		_travel_progress_bar.value = _travel_progress_display
 
 
 func _clear_travel_progress_bar() -> void:
+	if _travel_progress_bar and is_instance_valid(_travel_progress_bar):
+		_travel_progress_bar.value = 100.0
 	_travel_progress_bar = null
+	_travel_progress_target = 0.0
+	_travel_progress_display = 0.0
+
+
+func _update_travel_progress_smooth(delta: float) -> void:
+	if _travel_progress_bar == null or not is_instance_valid(_travel_progress_bar):
+		return
+	var speed := maxf(travel_progress_smooth_speed, 1.0)
+	_travel_progress_display = move_toward(_travel_progress_display, _travel_progress_target, speed * delta)
+	_travel_progress_bar.value = _travel_progress_display
 
 
 ## Pull ocean out before add_child; strip any leftover WorldEnvironment (camera owns env now).
@@ -1698,6 +1719,10 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 		return
 
 	_travel_progress_bar = progress_bar
+	_travel_progress_display = 0.0
+	_travel_progress_target = 0.0
+	if progress_bar:
+		progress_bar.value = 0.0
 	_set_travel_progress(0.02)
 	CommonCode.apply_transition_blur()
 
@@ -1845,6 +1870,10 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 		return
 
 	_travel_progress_bar = progress_bar
+	_travel_progress_display = 0.0
+	_travel_progress_target = 0.0
+	if progress_bar:
+		progress_bar.value = 0.0
 	_set_travel_progress(0.02)
 	CommonCode.apply_transition_blur()
 	_request_layout_load(layout_path)

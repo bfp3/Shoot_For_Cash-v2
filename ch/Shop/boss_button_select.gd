@@ -11,12 +11,28 @@ enum BossState {
 
 @export var boss_island_index := 0
 var boss_state: BossState = BossState.LOCKED
+var _was_available := false
+var _available_pulse_tween: Tween
+
+@export_group("Available Pulse")
+## Shake / punch when the boss button first becomes affordable.
+@export var available_pulse_enabled := true
+@export_range(0.0, 20.0, 0.1) var available_shake_degrees := 5.0
+@export_range(1.0, 1.5, 0.01) var available_scale_punch := 1.12
+@export_range(0.1, 1.5, 0.01) var available_pulse_duration := 0.45
+@export_range(1, 6, 1) var available_shake_wiggles := 3
+## F6 this scene with this on to preview the pulse immediately.
+@export var test_play_available_pulse_on_ready := false
 
 
 func _ready() -> void:
 	show_round_count = false
+	level_name = "Boss"
 	super._ready()
 	refresh_boss_state()
+	if test_play_available_pulse_on_ready:
+		await get_tree().create_timer(0.35).timeout
+		play_available_pulse()
 
 
 func _on_gui_input(event: InputEvent) -> void:
@@ -58,7 +74,8 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 		current_state = State.COMPLETE
 		## Keep the same colours as Available — only swap cost label ↔ CLEAR stamp.
 		_apply_available_colours()
-
+		if level_name_label:
+			level_name_label.text = "[pulse]" + boss_title_text.to_upper()
 		_set_progress_hud_visible(false)
 		if animate_clear:
 			await play_clear_stamp_ceremony()
@@ -70,26 +87,33 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 		return
 
 	if can_afford:
+		var became_available := boss_state != BossState.AVAILABLE and not _was_available
 		boss_state = BossState.AVAILABLE
 		level_locked = false
 		disabled = false
 		current_state = State.IN_PROGRESS
 		_apply_available_colours()
-
+		if level_name_label:
+			level_name_label.text = "[pulse]" + boss_title_text.to_upper()
 		_set_progress_hud_visible(false)
 		_hide_completion_stamp()
 		if round_progress_label:
 			round_progress_label.visible = true
 			round_progress_label.modulate.a = 1.0
 			round_progress_label.text = _format_boss_cost(cost)
+		if became_available:
+			play_available_pulse()
+		_was_available = true
 		return
 
+	_was_available = false
 	boss_state = BossState.LOCKED
 	level_locked = true
 	disabled = false ## Still clickable so player can see/refresh the locked message.
 	current_state = State.LOCKED
 	modulate = Color.WHITE
-
+	if level_name_label:
+		level_name_label.text = boss_title_text.to_upper()
 
 	_set_progress_hud_visible(false)
 	_hide_completion_stamp()
@@ -102,6 +126,31 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 
 func _apply_available_colours() -> void:
 	modulate = Color.WHITE
+
+
+## Shake + scale punch when the boss fight becomes affordable.
+func play_available_pulse() -> void:
+	if not available_pulse_enabled:
+		return
+	if _available_pulse_tween:
+		_available_pulse_tween.kill()
+	var base_scale: Vector2 = orig_scale if orig_scale != Vector2.ZERO else scale
+	var base_rot := rotation_degrees
+	var dur := maxf(available_pulse_duration, 0.08)
+	var punch := maxf(available_scale_punch, 1.0)
+	var shake := available_shake_degrees
+	var wiggles := maxi(available_shake_wiggles, 1)
+	pivot_offset = size * 0.5
+	_available_pulse_tween = create_tween()
+	_available_pulse_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_available_pulse_tween.tween_property(self, "scale", base_scale * punch, dur * 0.35)
+	var step := (dur * 0.45) / float(wiggles * 2)
+	for i in wiggles:
+		var dir := 1.0 if (i % 2) == 0 else -1.0
+		_available_pulse_tween.tween_property(self, "rotation_degrees", base_rot + shake * dir, step)
+		_available_pulse_tween.tween_property(self, "rotation_degrees", base_rot - shake * dir * 0.6, step)
+	_available_pulse_tween.tween_property(self, "rotation_degrees", base_rot, dur * 0.1)
+	_available_pulse_tween.parallel().tween_property(self, "scale", base_scale, dur * 0.35)
 
 
 
