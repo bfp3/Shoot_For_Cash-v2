@@ -12,6 +12,8 @@ const earn_more_money_text := "Earn More Cash"
 @export_range(0.05, 0.95, 0.05) var island_transition_fade_out_ratio := 0.5
 @export var island_change_sfx: AudioStreamPlayer
 
+@onready var boss_access_holdout: Control = $BossAccessHoldout
+
 @export_group("Test Mode")
 ## Turn on manually, or leave off — auto-enables when you F6 this scene alone.
 @export var enable_test_mode := false
@@ -254,6 +256,8 @@ func open_pop_up() -> void:
 	_refresh_island_labels()
 	_refresh_map_cash_labels()
 	_refresh_nav_button_visibility()
+	CommonCode.apply_ui_overlay_blur()
+	_fade_out_ammo_panel()
 
 	modulate.a = 0.0
 	show()
@@ -267,6 +271,12 @@ func open_pop_up() -> void:
 		preferred = close_button
 	if preferred:
 		UiFocus.grab_in(self, preferred)
+
+
+func _fade_out_ammo_panel() -> void:
+	var player = get_tree().get_first_node_in_group("Player")
+	if player and player.has_method("fade_out_ammo_panel"):
+		player.fade_out_ammo_panel(0.33)
 
 
 func close_pop_up() -> void:
@@ -286,6 +296,10 @@ func close_pop_up() -> void:
 func _restore_focus_after_close() -> void:
 	if _opening_pause_from_map:
 		return
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and rm.has_method("consume_reopen_shop_after_map") and rm.consume_reopen_shop_after_map():
+		rm.enter_state(rm.RoundState.SHOP_START)
+		return
 	var shop := get_tree().get_first_node_in_group("shop_main_menu") as Control
 	if shop and shop.is_visible_in_tree():
 		UiFocus.grab_in(shop)
@@ -295,7 +309,6 @@ func _restore_focus_after_close() -> void:
 		return
 	if _selecting_level:
 		return
-	var rm := get_tree().get_first_node_in_group("round_manager")
 	if rm and "current_round_state" in rm and "RoundState" in rm:
 		if rm.current_round_state == rm.RoundState.START_START:
 			call_deferred("open_pop_up")
@@ -306,6 +319,11 @@ func _on_next_round_pressed() -> void:
 
 
 func _on_close_map_pressed() -> void:
+	## Bottom-left close always opens pause (not shop), even if we arrived via shop MapButton.
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and "_reopen_shop_after_map" in rm:
+		rm._reopen_shop_after_map = false
+
 	## Close map, then open the pause menu (don't auto-reopen the map).
 	_opening_pause_from_map = true
 	await close_pop_up()
@@ -320,6 +338,9 @@ func _open_pause_menu_from_map() -> void:
 	var pause_menu = get_tree().get_first_node_in_group("pause_menu")
 	if pause_menu == null:
 		return
+	## Resume should fade the map back in.
+	if "reopen_map_on_resume" in pause_menu:
+		pause_menu.reopen_map_on_resume = true
 	if pause_menu.has_method("open_menu"):
 		pause_menu.open_menu()
 	elif pause_menu.has_method("start"):
@@ -487,7 +508,46 @@ func _on_next_island_pressed() -> void:
 	await _transition_to_island(target)
 
 
-## Fade out → swap island page → fade in. Duration/ratio are exported above.
+## Island art to fade (Island1 keeps nav chrome; only MapOverlay/Buttons/Control fade).
+func _island_fade_targets(index: int) -> Array[CanvasItem]:
+	var targets: Array[CanvasItem] = []
+	if index < 0 or index >= _island_pages.size():
+		return targets
+	var page := _island_pages[index]
+	if page == null:
+		return targets
+	if index == 0:
+		for child_name in ["MapOverlay", "Buttons", "Control"]:
+			var n := page.get_node_or_null(child_name)
+			if n is CanvasItem:
+				targets.append(n as CanvasItem)
+		return targets
+	targets.append(page)
+	return targets
+
+
+func _set_targets_modulate_a(targets: Array[CanvasItem], a: float) -> void:
+	for t in targets:
+		if t == null or not is_instance_valid(t):
+			continue
+		var c := t.modulate
+		c.a = a
+		t.modulate = c
+
+
+func _tween_targets_modulate_a(targets: Array[CanvasItem], a: float, duration: float) -> void:
+	if targets.is_empty() or duration <= 0.0:
+		_set_targets_modulate_a(targets, a)
+		return
+	var tween := create_tween()
+	tween.set_parallel(true)
+	for t in targets:
+		if t and is_instance_valid(t):
+			tween.tween_property(t, "modulate:a", a, duration)
+	await tween.finished
+
+
+## Fade current island art out → swap page → fade next island art 0→1.
 func _transition_to_island(index: int) -> void:
 	if _island_transitioning:
 		return
@@ -500,6 +560,8 @@ func _transition_to_island(index: int) -> void:
 		return
 
 	_island_transitioning = true
+	## Keep map chrome / root fully visible — only island pages fade.
+	modulate.a = 1.0
 	var duration := maxf(island_transition_duration, 0.05)
 	var out_ratio := clampf(island_transition_fade_out_ratio, 0.05, 0.95)
 	var fade_out_t := duration * out_ratio
@@ -512,9 +574,9 @@ func _transition_to_island(index: int) -> void:
 		if sfx is AudioStreamPlayer:
 			(sfx as AudioStreamPlayer).play()
 
-	var tween_out := create_tween()
-	tween_out.tween_property(self, "modulate:a", 0.0, fade_out_t)
-	await tween_out.finished
+	var from_index := _viewing_island_index
+	var from_targets := _island_fade_targets(from_index)
+	await _tween_targets_modulate_a(from_targets, 0.0, fade_out_t)
 
 	_show_island_page(index)
 	_refresh_island_labels()
@@ -522,9 +584,12 @@ func _transition_to_island(index: int) -> void:
 	_refresh_nav_button_visibility()
 	_refresh_level_buttons()
 
-	var tween_in := create_tween()
-	tween_in.tween_property(self, "modulate:a", 1.0, fade_in_t)
-	await tween_in.finished
+	var to_targets := _island_fade_targets(index)
+	_set_targets_modulate_a(to_targets, 0.0)
+	await _tween_targets_modulate_a(to_targets, 1.0, fade_in_t)
+
+	## Reset hidden island so the next visit starts fully opaque.
+	_set_targets_modulate_a(from_targets, 1.0)
 	_island_transitioning = false
 
 
@@ -535,18 +600,27 @@ func notify_level_cleared() -> void:
 	_refresh_boss_button()
 
 
+## Large centered hold-out message when the boss fee can't be paid.
+func show_boss_access_holdout(cost: int = -1) -> void:
+	if cost < 0:
+		cost = gl_DataSet.get_boss_unlock_cost(_viewing_island_index)
+
+	## Don't free the authored scene instance — only clear other dynamic popups.
+	if _unlock_popup != null and is_instance_valid(_unlock_popup) and _unlock_popup != boss_access_holdout:
+		_unlock_popup.queue_free()
+		_unlock_popup = null
+
+	if boss_access_holdout == null:
+		return
+	_unlock_popup = boss_access_holdout
+	if boss_access_holdout.has_method("play"):
+		await boss_access_holdout.play(cost)
+	if _unlock_popup == boss_access_holdout:
+		_unlock_popup = null
+
+
 func _format_cash(amount: int) -> String:
-	var raw := str(absi(amount))
-	var out := ""
-	var count := 0
-	for i in range(raw.length() - 1, -1, -1):
-		if count > 0 and count % 3 == 0:
-			out = "," + out
-		out = raw[i] + out
-		count += 1
-	if amount < 0:
-		out = "-" + out
-	return "$" + out
+	return CommonCode.format_money(amount)
 
 
 func _refresh_island_labels() -> void:
@@ -714,6 +788,8 @@ func select_level(level_id: String, progress_bar: Range = null) -> void:
 
 	## Keep the map open while the layout loads; button progress bar tracks load.
 	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and "_reopen_shop_after_map" in rm:
+		rm._reopen_shop_after_map = false
 	if rm and rm.has_method("travel_to_level"):
 		await rm.travel_to_level(place, false, progress_bar)
 	else:
@@ -721,7 +797,7 @@ func select_level(level_id: String, progress_bar: Range = null) -> void:
 
 	if progress_bar and is_instance_valid(progress_bar):
 		progress_bar.value = 100.0
-	await close_pop_up()
+	await _finish_map_travel_then_open_shop()
 	_selecting_level = false
 
 
@@ -730,8 +806,8 @@ func _try_enter_boss(progress_bar: Range = null) -> void:
 	var cash := int(gl_PlayerState.dataset.cash)
 	if cash < cost:
 		_selecting_level = false
-		## Message is shown on the boss button itself — just refresh it.
 		_refresh_boss_button()
+		await show_boss_access_holdout(cost)
 		return
 
 	if _test_mode:
@@ -749,6 +825,8 @@ func _try_enter_boss(progress_bar: Range = null) -> void:
 			EventBus.instance.purchase_made.emit("boss_entry")
 
 	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and "_reopen_shop_after_map" in rm:
+		rm._reopen_shop_after_map = false
 	if rm and rm.has_method("travel_to_boss"):
 		await rm.travel_to_boss(_viewing_island_index, false, progress_bar)
 	else:
@@ -756,8 +834,30 @@ func _try_enter_boss(progress_bar: Range = null) -> void:
 
 	if progress_bar and is_instance_valid(progress_bar):
 		progress_bar.value = 100.0
-	await close_pop_up()
+	await _finish_map_travel_then_open_shop()
 	_selecting_level = false
+
+
+## Load finished  brief hold → longer pause → fade map → wait → open shop.
+## Tweak these three waits to change how long until the shop appears.
+@export_group("Map Shop Timing")
+@export var map_to_shop_hold_after_load := 0.25
+@export var map_to_shop_pause_before_fade := 1.0
+@export var map_to_shop_wait_after_fade := 0.5
+
+
+func _finish_map_travel_then_open_shop() -> void:
+	await get_tree().create_timer(map_to_shop_hold_after_load).timeout
+	await get_tree().create_timer(map_to_shop_pause_before_fade).timeout
+	await close_pop_up()
+	await get_tree().create_timer(map_to_shop_wait_after_fade).timeout
+
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and "RoundState" in rm:
+		rm.enter_state(rm.RoundState.SHOP_START)
+	var player = get_tree().get_first_node_in_group("Player")
+	if player and player.has_method("show_ammo_panel"):
+		player.show_ammo_panel()
 
 
 func _resolve_travel_place(level_id: String) -> String:
@@ -824,8 +924,10 @@ func _dismiss_unlock_popup() -> void:
 
 
 func _show_island_unlocked_popup(island_name: String) -> void:
-	if _unlock_popup and is_instance_valid(_unlock_popup):
+	if _unlock_popup and is_instance_valid(_unlock_popup) and _unlock_popup != boss_access_holdout:
 		_unlock_popup.queue_free()
+		_unlock_popup = null
+	elif _unlock_popup == boss_access_holdout:
 		_unlock_popup = null
 
 	_unlock_popup_dismissed = false

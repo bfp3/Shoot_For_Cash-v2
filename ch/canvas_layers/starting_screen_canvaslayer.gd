@@ -69,6 +69,7 @@ func enter_state(new_state: State) -> void:
 
 
 func update_start() -> void:
+	process_mode = Node.PROCESS_MODE_INHERIT
 	show()
 	copyright.modulate.a = 0.0
 	game_name.modulate.a = 0.0
@@ -90,13 +91,10 @@ func update_start() -> void:
 	tween.tween_interval(1.15)
 	tween.tween_property(game_title_background, "modulate:a", 1.0, 0.15)
 	await tween.finished
-	background_balloons.start = true
+	_resume_title_children()
 	var start_btn := splash_screen_control.get_node_or_null("GameTitleBackground/StartGame") as Control
 	UiFocus.grab_in(splash_screen_control, start_btn)
-	#tween.tween_interval(2.0)
-	#tween.tween_property(copyright, "modulate:a", 1.0, 1.5)
-	
-		
+
 func opening_sfx() -> void:
 	$SplashScreen_v2/SFX/shop_close_sfx_01.play()
 	$SplashScreen_v2/SFX/hud_click_1.play()
@@ -110,6 +108,7 @@ func update_inactive() -> void:
 
 ## Return from gameplay without replaying the Wormfood / title intro.
 func show_title_ready() -> void:
+	process_mode = Node.PROCESS_MODE_INHERIT
 	show()
 	menu_in_display = true
 	current_state = State.IN_MENU
@@ -127,8 +126,7 @@ func show_title_ready() -> void:
 		splash_screen_control.scale = Vector2.ONE
 	splash_screen_control.position = default_position
 	splash_screen_control.pivot_offset_ratio = default_pivot_offset
-	if background_balloons:
-		background_balloons.start = true
+	_resume_title_children()
 
 	if music_control and music_control.has_method("start_opening_song"):
 		music_control.start_opening_song()
@@ -142,6 +140,7 @@ func update_open_menu() -> void:
 		return
 	
 	menu_in_display = true
+	process_mode = Node.PROCESS_MODE_INHERIT
 
 	splash_screen_control.modulate.a = 0.0
 	splash_screen_control.scale = Vector2.ONE * 0.01
@@ -166,25 +165,73 @@ func update_open_menu() -> void:
 func update_close_menu() -> void:
 	$'..'.start_game()
 
-	splash_screen_control.pivot_offset_ratio = Vector2(0.5,1.155)
+	## Expand + fade out (instead of shrinking to the bottom corner).
+	splash_screen_control.pivot_offset_ratio = Vector2(0.5, 0.5)
 
 	var tween := create_tween()
-
-	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.set_trans(Tween.TRANS_CUBIC)
 	tween.set_ease(Tween.EASE_IN)
-	tween.parallel().tween_property(splash_screen_control, "scale", Vector2.ONE / 99, 0.4)
-	tween.parallel().tween_property(splash_screen_control, "modulate:a", 1.0, 0.18)
-	
+	tween.parallel().tween_property(splash_screen_control, "scale", Vector2.ONE * 1.65, 0.4)
+	tween.parallel().tween_property(splash_screen_control, "modulate:a", 0.0, 0.4)
 
 	await tween.finished
 
-	# PERFECT RESET AFTER CLOSE
-	scale = default_scale
+	## Reset so the next visit opens cleanly.
+	var restore_scale: Vector2 = Vector2.ONE
+	if splash_screen_control.get("default_scale") != null:
+		restore_scale = splash_screen_control.default_scale
+	splash_screen_control.scale = restore_scale
 	splash_screen_control.modulate.a = 1.0
 	splash_screen_control.position = default_position
+	splash_screen_control.pivot_offset_ratio = default_pivot_offset
+	game_name.scale = Vector2.ONE
+	game_name.modulate.a = 1.0
+	game_title_background.modulate.a = 1.0
 	menu_in_display = false
-	
+
+	_stop_title_children()
 	hide()
+	## Stop this canvas + inherited children (balloons, particles, anims) until title returns.
+	process_mode = Node.PROCESS_MODE_DISABLED
+
+
+func _stop_title_children() -> void:
+	if background_balloons:
+		background_balloons.start = false
+		background_balloons.set_process(false)
+		background_balloons.process_mode = Node.PROCESS_MODE_DISABLED
+	var particles := splash_screen_control.get_node_or_null("BackgroundParticles") as Node
+	if particles:
+		if particles is GPUParticles2D:
+			(particles as GPUParticles2D).emitting = false
+		particles.process_mode = Node.PROCESS_MODE_DISABLED
+	_pause_animation_players(splash_screen_control, true)
+
+
+func _resume_title_children() -> void:
+	if background_balloons:
+		background_balloons.process_mode = Node.PROCESS_MODE_INHERIT
+		background_balloons.set_process(true)
+		background_balloons.start = true
+	var particles := splash_screen_control.get_node_or_null("BackgroundParticles") as Node
+	if particles:
+		particles.process_mode = Node.PROCESS_MODE_INHERIT
+		if particles is GPUParticles2D:
+			(particles as GPUParticles2D).emitting = true
+	_pause_animation_players(splash_screen_control, false)
+
+
+func _pause_animation_players(root: Node, paused: bool) -> void:
+	if root == null:
+		return
+	for child in root.get_children():
+		if child is AnimationPlayer:
+			var ap := child as AnimationPlayer
+			if paused:
+				ap.pause()
+			elif not ap.is_playing():
+				pass
+		_pause_animation_players(child, paused)
 
 
 func notify_round_manager() -> void:

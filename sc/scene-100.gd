@@ -4,7 +4,6 @@ extends Node3D
 @export var player : Player
 
 @export var round_manager : RoundManager
-@export var start_cam : Camera3D
 @export var round_timer : Control
 @export var HUD_CRT : TextureRect
 @export var splash_screen : CanvasLayer
@@ -12,18 +11,30 @@ extends Node3D
 @export var music_manager : Node
 @export var main_game_canvas : CanvasLayer
 @export var move_speed := 5.0
+
+## Former Main.tscn title Camera3D world transform — player cam starts here, then eases to gameplay rest.
+## GDScript has no 12-float Transform3D ctor (that's .tscn only); use axis Vector3s.
+var TITLE_CAMERA_TRANSFORM := Transform3D(
+	Vector3(-1.0, 0.0, -8.742278e-08),
+	Vector3(6.859112e-09, 0.99691725, -0.07845909),
+	Vector3(8.7153275e-08, -0.07845909, -0.99691725),
+	Vector3(0.0, 0.0, 17.224)
+)
+
 var moving_camera := false
+var _player_cam_rest_global := Transform3D.IDENTITY
+var _has_cam_rest := false
+## First Start from cold boot does the title→gameplay swoop; later Starts keep the cam.
+var _title_camera_swoop_done := false
 
 
 func _ready() -> void:
 	await get_tree().process_frame
 	set_process(false)
 	main_game_canvas.hide()
+	_capture_player_cam_rest()
 
 	Parser.loadIslandFile('res://sc/island-shipper.txt')
-
-	# Compatibility / Web: compile shaders & particle pipelines before control.
-	#await ShaderWarmup.ensure_warmed()
 
 	var pending_level := RestarterScript.take_pending_fast_travel()
 	if pending_level != "":
@@ -39,80 +50,107 @@ func _ready() -> void:
 	else:
 		start_game_quick()
 
-		
+
 func _process(delta: float) -> void:
 	if moving_camera:
 		move_camera_to_player(delta)
-		
+
+
+func _get_player_cam() -> Camera3D:
+	return get_tree().get_first_node_in_group("player_cam") as Camera3D
+
+
+func _capture_player_cam_rest() -> void:
+	var cam := _get_player_cam()
+	if cam == null:
+		return
+	_player_cam_rest_global = cam.global_transform
+	_has_cam_rest = true
+
+
+## Put the player camera at the old title Camera3D pose (no separate Main camera).
+func apply_title_camera_pose() -> void:
+	var cam := _get_player_cam()
+	if cam == null:
+		return
+	if not _has_cam_rest:
+		_capture_player_cam_rest()
+	cam.global_transform = TITLE_CAMERA_TRANSFORM
+	cam.current = true
+
+
+func snap_player_camera_to_rest() -> void:
+	var cam := _get_player_cam()
+	if cam == null:
+		return
+	if not _has_cam_rest:
+		_capture_player_cam_rest()
+	cam.global_transform = _player_cam_rest_global
+	cam.current = true
+	moving_camera = false
+	set_process(false)
+
+
 func start_game_quick() -> void:
 	# Hide (do not free) so Back to Title can reopen Start.
 	if is_instance_valid(splash_screen):
 		splash_screen.hide()
 	main_game_canvas.show()
-	if is_instance_valid(start_cam):
-		start_cam.queue_free()
-		start_cam = null
-	HUD_CRT.crt_start_up()
+	snap_player_camera_to_rest()
+	if HUD_CRT and HUD_CRT.has_method("crt_start_up"):
+		HUD_CRT.crt_start_up()
 	round_manager.enter_state(round_manager.RoundState.SHOP_START)
 	await get_tree().create_timer(0.05).timeout
 	music_manager.start_bg_noise()
 	await get_tree().create_timer(0.25).timeout
-	#music_manager.start_bg_music()
 	player.start_player()
 
-	
 
-	
 func start_intro_process() -> void:
 	splash_screen.start()
 	round_manager.enter_state(round_manager.RoundState.INACTIVE)
-	start_cam.current = true
-	round_timer.hide()
-	#HUD_CRT.title_screen()
+	apply_title_camera_pose()
+	if round_timer:
+		round_timer.hide()
 	player.title_screen_start()
 
 	await get_tree().create_timer(0.25).timeout
 	music_manager.start_bg_noise()
-	
+
 	await get_tree().create_timer(1.75).timeout
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	
+
 
 func start_game() -> void:
 	player.title_screen_end()
 
-	# Already past the first title camera swoop (e.g. Back to Title → Start again).
-	if not is_instance_valid(start_cam):
+	## After Back to Title, keep whatever camera pose we already have.
+	if _title_camera_swoop_done:
 		moving_camera = false
 		set_process(false)
 		main_game_canvas.show()
 		round_manager.enter_state(round_manager.RoundState.START_START)
-		if player and player.has_method("start_player"):
-			player.start_player()
-		if HUD_CRT and HUD_CRT.has_method("start_game"):
-			HUD_CRT.start_game()
 		if is_instance_valid(splash_screen):
 			splash_screen.hide()
 		return
 
+	## First boot: ease player cam from title pose → gameplay rest.
+	if not _has_cam_rest:
+		_capture_player_cam_rest()
+	var cam := _get_player_cam()
+	if cam:
+		cam.global_transform = TITLE_CAMERA_TRANSFORM
+		cam.current = true
+
 	moving_camera = true
 	set_process(true)
-	# wait until camera is close enough
 	main_game_canvas.show()
-	#round_manager.enter_state(round_manager.RoundState.SHOP_START)
 	round_manager.enter_state(round_manager.RoundState.START_START)
 	while moving_camera:
 		await get_tree().process_frame
 
-
-	#music_manager.start_bg_music()
-	#await get_tree().create_timer(0.25).timeout
-	player.start_player()
-	#round_timer.show()
-	#HUD_CRT.start_game()
-	#rocks_on_screen_counter.show()
-	
+	_title_camera_swoop_done = true
 	await get_tree().create_timer(0.25).timeout
 	# Keep splash around so Back to Title can reopen it without a scene reload.
 	if is_instance_valid(splash_screen):
@@ -124,19 +162,13 @@ func debug_bootstrap_gameplay() -> void:
 	moving_camera = false
 	set_process(false)
 
-	# Hide splash — never free it (Back to Title needs show_title_ready).
 	if is_instance_valid(splash_screen):
 		splash_screen.hide()
 
 	if main_game_canvas:
 		main_game_canvas.show()
 
-	if is_instance_valid(start_cam):
-		var player_cam = get_tree().get_first_node_in_group("player_cam")
-		if player_cam:
-			player_cam.current = true
-		start_cam.queue_free()
-		start_cam = null
+	snap_player_camera_to_rest()
 
 	if HUD_CRT and HUD_CRT.has_method("crt_start_up"):
 		HUD_CRT.crt_start_up()
@@ -151,32 +183,27 @@ func debug_bootstrap_gameplay() -> void:
 			player.title_screen_end()
 		player.display_hud()
 
-	#if round_timer:
-		#round_timer.show()
-
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	await get_tree().process_frame
 
 
 func move_camera_to_player(delta: float) -> void:
-	var player_cam = get_tree().get_first_node_in_group("player_cam")
-
+	var player_cam := _get_player_cam()
 	if player_cam == null:
+		moving_camera = false
+		set_process(false)
 		return
 
-	# smooth follow
-	start_cam.global_transform = start_cam.global_transform.interpolate_with(
-		player_cam.global_transform,
+	if not _has_cam_rest:
+		_capture_player_cam_rest()
+
+	player_cam.global_transform = player_cam.global_transform.interpolate_with(
+		_player_cam_rest_global,
 		move_speed * delta
 	)
 
-	# stop when close enough
-	if start_cam.global_position.distance_to(player_cam.global_position) < 0.05:
-		start_cam.global_transform = player_cam.global_transform
+	if player_cam.global_position.distance_to(_player_cam_rest_global.origin) < 0.05:
+		player_cam.global_transform = _player_cam_rest_global
 		player_cam.current = true
 		set_process(false)
-		start_cam.queue_free()
 		moving_camera = false
-	
-
-		

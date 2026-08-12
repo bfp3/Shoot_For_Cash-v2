@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://dm7lbokrl31kc"]
+
+[ext_resource type="Script" uid="uid://c5vdqk08fpttr" path="res://ch/Shop/boss_access_holdout.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.78, 0.01, 0.02, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="BossAccessHoldout" type="Control" unique_id=1217549651]
+visible = false
+z_index = 90
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=1524726394]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.05, 0.06, 0.55)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1547236675]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="CenterContainer" unique_id=320529886]
+custom_minimum_size = Vector2(980, 280)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/Panel" unique_id=591409436]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 28
+
+[node name="MessageLabel" type="RichTextLabel" parent="CenterContainer/Panel/MarginContainer" unique_id=244079295]
+unique_name_in_owner = true
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+custom_minimum_size = Vector2(900, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+text = "[center][wave]YOU NEED $0[/wave][/center]"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1

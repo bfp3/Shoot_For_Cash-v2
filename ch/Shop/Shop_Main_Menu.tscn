@@ -2,25 +2,14 @@
 
 [ext_resource type="Script" uid="uid://dth8aeb528x78" path="res://ch/Shop/shop_main_menu.gd" id="1_wlak1"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_cn8lj"]
-[ext_resource type="PackedScene" uid="uid://cu0bay1llw7ua" path="res://unfiled/upgrade_tree/UpgradeNode.tscn" id="2_nn31g"]
-[ext_resource type="Theme" uid="uid://ucte2mmlvt5r" path="res://unfiled/Themes/ammo_manager_theme.tres" id="2_s82uk"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_y3o4g"]
-[ext_resource type="Texture2D" uid="uid://dc5ya1y3jy2xw" path="res://res/bullet_speed_upgrade_icon.png" id="4_lwcj2"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="5_lwcj2"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="5_vom4t"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_7j408"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="8_kvqbn"]
 [ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="8_tnodp"]
 [ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="10_ohn7f"]
-[ext_resource type="Texture2D" uid="uid://dk2p6y27c64hs" path="res://res/cooldown_reduction_upgrade_icon_128x128.png" id="12_pwib5"]
 [ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="12_xgu8n"]
-[ext_resource type="Texture2D" uid="uid://cuw4sgs22s23" path="res://res/sky_mine_icon_2.png" id="13_cn8lj"]
-[ext_resource type="PackedScene" uid="uid://ck6lfy3kh3eqy" path="res://ch/Shop/Upgrade_progress_component.tscn" id="13_onfim"]
-[ext_resource type="Texture2D" uid="uid://icyevci50hge" path="res://res/gun_icon_shop.png" id="13_xklyy"]
-[ext_resource type="Script" uid="uid://k67b4ujxorb3" path="res://ch/Shop/upgrade_progress_component.gd" id="14_r6l2h"]
-[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="14_sgib8"]
-[ext_resource type="Texture2D" uid="uid://bf8o6gnj6g1nc" path="res://res/time_upgrade_icon.png" id="14_xklyy"]
-[ext_resource type="Texture2D" uid="uid://gbka4yjc0p4k" path="res://res/bullet_texture.png" id="15_htvy6"]
 [ext_resource type="PackedScene" uid="uid://bnvrnccnsas5n" path="res://ch/Shop/PlayButton_v2.tscn" id="17_xklyy"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
 [ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="40_8mk8u"]
@@ -69,21 +58,6 @@ scale_curve = SubResource("CurveTexture_64t06")
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 alpha_curve = SubResource("CurveTexture_cn8lj")
 
-[sub_resource type="Gradient" id="Gradient_jv82y"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0.55505615, 0.72808987)
-colors = PackedColorArray(0.92156863, 0.8784314, 0.84705883, 1, 0.9, 0.858, 0.828, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_sgib8"]
-frequency = 0.0181
-offset = Vector3(93.7, 0, 0)
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_pwib5"]
-width = 256
-height = 256
-noise = SubResource("FastNoiseLite_sgib8")
-color_ramp = SubResource("Gradient_jv82y")
-
 [sub_resource type="Gradient" id="Gradient_tnodp"]
 offsets = PackedFloat32Array(0.008830011, 1)
 colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
@@ -91,25 +65,6 @@ colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
 [sub_resource type="Gradient" id="Gradient_ohn7f"]
 offsets = PackedFloat32Array(0.008830011, 1)
 colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tnodp"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(1100, 220, 1)
-initial_velocity_min = 1.0
-initial_velocity_max = 2.0
-gravity = Vector3(0, 0, 0)
-radial_accel_min = 0.99999774
-radial_accel_max = 4.9999976
-tangential_accel_min = -2.2351742e-06
-tangential_accel_max = -2.2351742e-06
-scale_min = 2.0
-scale_max = 8.0
-scale_curve = SubResource("CurveTexture_64t06")
-color = Color(0.91764706, 0.8666667, 0.8352941, 1)
-alpha_curve = SubResource("CurveTexture_cn8lj")
-hue_variation_min = -2.2351742e-08
-hue_variation_max = -2.2351742e-08
 
 [sub_resource type="Animation" id="Animation_tnodp"]
 length = 0.001
@@ -159,75 +114,6 @@ border_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 
-[sub_resource type="PrismMesh" id="PrismMesh_hmuk5"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ohn7f"]
-bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xgu8n"]
-bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.15, 0.15, 1)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ei2sf"]
-bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="Theme" id="Theme_vv4e8"]
-Button/styles/normal = SubResource("StyleBoxFlat_ohn7f")
-Panel/styles/panel = SubResource("StyleBoxFlat_xgu8n")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_ei2sf")
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tnodp"]
-bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.2125, 0.23, 0.25, 1)
-border_blend = true
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 4
-shadow_color = Color(1, 1, 1, 0.6)
-shadow_offset = Vector2(2.5, 2.5)
-anti_aliasing = false
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jv82y"]
 bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
 border_color = Color(0.3882353, 0.3882353, 0.3882353, 1)
@@ -235,38 +121,6 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
-
-[sub_resource type="Gradient" id="Gradient_sgib8"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0.55730337, 0.72808987)
-colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 0.68, 0.0067999936, 0.018019829, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_jv82y"]
-frequency = 0.0069
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_atgli"]
-height = 162
-noise = SubResource("FastNoiseLite_jv82y")
-color_ramp = SubResource("Gradient_sgib8")
-seamless = true
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn8lj"]
-bg_color = Color(0.09803922, 0.09803922, 0.11372549, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.45, 0.55, 0.7, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 10
-
-[sub_resource type="Theme" id="Theme_vrkmk"]
-Button/colors/font_color = Color(0.88, 0.88, 0.88, 0)
-Button/styles/hover = null
-Button/styles/normal = SubResource("StyleBoxFlat_cn8lj")
 
 [sub_resource type="PrismMesh" id="PrismMesh_sgib8"]
 left_to_right = 1.0
@@ -311,29 +165,6 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[sub_resource type="GDScript" id="GDScript_hi3s5"]
-script/source = "extends RichTextLabel
-
-var grand_total : int = 0
-var subtitle := 'WINNINGS\\n'.to_upper()
-
-func _ready() -> void:
-	text = subtitle + \"[color=#c70102]$0[/color]\"
-
-func add_to_total() -> void:
-	var round_bonus := int(gl_DataSet.get_value(\"reward_perfect_round\"))
-	var round_winnings := int(gl_PlayerState.dataset.bonus_cash - gl_PlayerState.dataset.fines + round_bonus)
-
-	gl_PlayerState.update_total_winnings(round_winnings)
-	grand_total = gl_PlayerState.dataset.total_winnings
-
-	text = subtitle + \"[color=#c70102]$\" + str(grand_total) + \"[/color]\"
-
-func restart() -> void:
-	grand_total = 0
-	text = subtitle + \"[color=#c70102]$0[/color]\"
-"
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sgib8"]
 bg_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 border_width_left = 4
@@ -346,21 +177,13 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nbtj3"]
-bg_color = Color(0.32, 0.32, 0.32, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.32, 0.2976, 0.22399999, 1)
-
 [sub_resource type="PrismMesh" id="PrismMesh_xklyy"]
 left_to_right = 1.0
 
+[sub_resource type="BoxMesh" id="BoxMesh_ohn7f"]
+
 [sub_resource type="PrismMesh" id="PrismMesh_tnodp"]
 left_to_right = 1.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_ohn7f"]
 
 [node name="Shop_Main_Menu" type="Control" unique_id=973405492 node_paths=PackedStringArray("reveal_skill_sfx") groups=["restartable", "shop_main_menu"]]
 layout_mode = 3
@@ -408,12 +231,6 @@ mouse_filter = 2
 [node name="TextureRect" type="Panel" parent="CenterContainer/MainPanel" unique_id=30652129]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_vom4t")
-
-[node name="WhiteSmokeyBG" type="TextureRect" parent="CenterContainer/MainPanel" unique_id=1410432704]
-visible = false
-layout_mode = 2
-texture = SubResource("NoiseTexture2D_pwib5")
-expand_mode = 1
 
 [node name="BackgroundImages" type="Control" parent="CenterContainer/MainPanel" unique_id=280148899]
 clip_contents = true
@@ -502,6 +319,7 @@ texture = ExtResource("8_tnodp")
 stretch_mode = 5
 
 [node name="center_container" type="Control" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=33514297]
+visible = false
 modulate = Color(1, 1, 1, 0.19607843)
 layout_mode = 1
 anchors_preset = 8
@@ -570,15 +388,8 @@ mouse_filter = 2
 texture = ExtResource("8_tnodp")
 stretch_mode = 5
 
-[node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1666275727]
-position = Vector2(480, 276.42572)
-amount = 50
-lifetime = 3.0
-fixed_fps = 10
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_tnodp")
-
 [node name="TextureRect6" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1028768478]
+visible = false
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
 layout_mode = 1
 anchors_preset = 15
@@ -701,7 +512,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Reticle" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=929043320]
-modulate = Color(0.9137255, 0.87058824, 0.8352941, 1)
+modulate = Color(0.91, 0.864955, 0.82809997, 0.11764706)
 show_behind_parent = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
@@ -799,16 +610,6 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_uucxj")
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1125389776]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-z_index = 1
-texture_filter = 6
-position = Vector2(489.50732, 62.884117)
-rotation = 3.1415925
-scale = Vector2(980.0137, 116.82727)
-mesh = SubResource("PrismMesh_hmuk5")
-
 [node name="Place_name" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=542050662]
 z_index = 1
 layout_mode = 1
@@ -846,25 +647,6 @@ autowrap_mode = 0
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name/PlaceLabel" unique_id=19904917]
-visible = false
-show_behind_parent = true
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -12.048065
-offset_bottom = -12.048065
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 3.1415927
-scale = Vector2(1.177, 1.245)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_vv4e8")
-theme_override_styles/panel = SubResource("StyleBoxFlat_tnodp")
-
 [node name="MapButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1819880088 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true
 self_modulate = Color(0.58, 0.0057999943, 0.015369854, 0)
@@ -888,7 +670,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_jv82y")
 script = ExtResource("3_y3o4g")
 focus_enter_sfx = NodePath("../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("shop_open_sfx_01")
+purchase_sfx = NodePath("")
 wiggle_amount = 1.6
 wiggle_amount_exit = 1.55
 
@@ -911,24 +693,6 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("12_xgu8n")
 stretch_mode = 5
 
-[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=1595216180]
-stream = ExtResource("26_bovdg")
-volume_db = -32.0
-
-[node name="focus_exit" type="AudioStreamPlayer" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=226639554]
-stream = ExtResource("26_bovdg")
-volume_db = -50.0
-
-[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=884433803]
-stream = ExtResource("47_gqw4q")
-volume_db = -40.0
-pitch_scale = 2.0
-
-[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=2039558574]
-stream = ExtResource("48_a8n1b")
-volume_db = -40.0
-pitch_scale = 1.5
-
 [node name="CoatArms" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=409353141 instance=ExtResource("8_kvqbn")]
 z_index = 1
 layout_mode = 1
@@ -943,490 +707,6 @@ custom_minimum_size = Vector2(50, 10)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
-
-[node name="TreePanel" type="Control" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1314206077]
-visible = false
-custom_minimum_size = Vector2(930, 0)
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=743938547]
-visible = false
-layout_mode = 0
-theme_override_constants/separation = 80
-alignment = 1
-
-[node name="TreeCanvas" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer" unique_id=1803195694]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="TargetCircle" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=2131731495 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
-unique_name_in_owner = true
-process_mode = 4
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 360.0
-offset_top = 190.0
-offset_right = 570.0
-offset_bottom = 286.0
-grow_horizontal = 1
-grow_vertical = 1
-disabled = true
-upgrade_icon = ExtResource("5_lwcj2")
-shop_main_menu = NodePath("../../../../../../..")
-upgrade_type = "target_circle"
-upgrade_name = "Reticle Size"
-
-[node name="GunFireRate" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1287420994 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
-unique_name_in_owner = true
-process_mode = 4
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 128.0
-offset_top = 28.0
-offset_right = 338.0
-offset_bottom = 124.0
-grow_horizontal = 1
-grow_vertical = 1
-disabled = true
-upgrade_icon = ExtResource("12_pwib5")
-shop_main_menu = NodePath("../../../../../../..")
-upgrade_type = "gun_fire_rate"
-upgrade_name = "Reload Rate"
-
-[node name="BulletSpeed" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1833548560 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
-unique_name_in_owner = true
-process_mode = 4
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 130.0
-offset_top = 190.0
-offset_right = 340.0
-offset_bottom = 286.0
-grow_horizontal = 1
-grow_vertical = 1
-disabled = true
-upgrade_icon = ExtResource("4_lwcj2")
-shop_main_menu = NodePath("../../../../../../..")
-upgrade_type = "bullet_speed"
-upgrade_name = "Bullet Speed"
-
-[node name="SkyMine" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=475193945 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
-unique_name_in_owner = true
-process_mode = 4
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 358.0
-offset_top = 30.0
-offset_right = 568.0
-offset_bottom = 126.0
-grow_horizontal = 1
-grow_vertical = 1
-disabled = true
-upgrade_icon = ExtResource("13_cn8lj")
-sky_mine = true
-shop_main_menu = NodePath("../../../../../../..")
-upgrade_type = "sky_mine"
-upgrade_name = "Sky Mine"
-
-[node name="TimeUpgrade" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1155153027 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
-unique_name_in_owner = true
-process_mode = 4
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 358.0
-offset_top = 30.0
-offset_right = 568.0
-offset_bottom = 126.0
-grow_horizontal = 1
-grow_vertical = 1
-disabled = true
-upgrade_icon = ExtResource("14_xklyy")
-shop_main_menu = NodePath("../../../../../../..")
-upgrade_type = "time_upgrade"
-upgrade_name = "Add Time"
-
-[node name="AddGun" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/HBoxContainer/TreeCanvas" unique_id=1770080767 node_paths=PackedStringArray("shop_main_menu") instance=ExtResource("2_nn31g")]
-unique_name_in_owner = true
-process_mode = 4
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 358.0
-offset_top = 30.0
-offset_right = 568.0
-offset_bottom = 126.0
-grow_horizontal = 1
-grow_vertical = 1
-disabled = true
-upgrade_icon = ExtResource("13_xklyy")
-guaranteed_until_purchased = true
-gun = true
-shop_main_menu = NodePath("../../../../../../..")
-hold_duration = 0.1
-upgrade_type = "gun"
-upgrade_name = "Weapon"
-
-[node name="AvailableUpgrades" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=499030465]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.085864864
-anchor_right = 1.0
-anchor_bottom = 0.9189189
-theme_override_constants/separation = 50
-alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=2043088047]
-unique_name_in_owner = true
-process_mode = 4
-visible = false
-layout_mode = 0
-offset_left = 863.0
-offset_top = 0.33328247
-offset_right = 963.0
-offset_bottom = 121.48831
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-disabled = true
-script = ExtResource("3_y3o4g")
-
-[node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1851249353]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -84.53125
-offset_top = -56.270844
-offset_right = 85.05875
-offset_bottom = 2.985157
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"RedPanel"
-
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound/Panel2" unique_id=506920231]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = SubResource("NoiseTexture2D_atgli")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Play_round_text" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1411659262]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/italics_font_size = 45
-bbcode_enabled = true
-text = "[i][wave][color=]PLAY
-[color=42d100]---"
-fit_content = true
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=560640138]
-visible = false
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 8.0
-offset_right = 100.0
-offset_bottom = 129.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_vrkmk")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_disabled_color = Color(0.88, 0.88, 0.88, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-
-[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" unique_id=1388172073]
-visible = false
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 8.0
-offset_right = 100.0
-offset_bottom = 129.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_vrkmk")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-
-[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=339193874]
-unique_name_in_owner = true
-process_mode = 4
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -49.99997
-offset_top = 55.08513
-offset_right = 50.0
-offset_bottom = 176.24016
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2, 2)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-disabled = true
-script = ExtResource("3_y3o4g")
-
-[node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=932649273]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -84.53125
-offset_top = -56.270844
-offset_right = 85.05875
-offset_bottom = -29.973892
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"RedPanel"
-
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2/Panel2" unique_id=118922201]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = SubResource("NoiseTexture2D_atgli")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Panel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=524556188]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -84.531265
-offset_top = 31.471893
-offset_right = 85.05873
-offset_bottom = 54.390793
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.525, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"RedPanel"
-
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2/Panel3" unique_id=1488161081]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = SubResource("NoiseTexture2D_atgli")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="NextRound" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=159442046]
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 8.0
-offset_right = 100.0
-offset_bottom = 129.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_vrkmk")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_disabled_color = Color(0.88, 0.88, 0.88, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-
-[node name="NextRound2" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=595246014]
-visible = false
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 8.0
-offset_right = 100.0
-offset_bottom = 129.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_vrkmk")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=413491091]
-modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.352, 0.352)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("14_sgib8")
-
-[node name="TextureRect2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1369892457]
-modulate = Color(0.86, 0.7674067, 0.6966, 0.24313726)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.852, 0.852)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("13_xklyy")
-
-[node name="Play_round_text" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" unique_id=1126813106]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_colors/default_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
-theme_override_colors/font_outline_color = Color(0.7, 0.6246333, 0.567, 1)
-theme_override_constants/outline_size = 1
-theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/italics_font_size = 36
-bbcode_enabled = true
-text = "[i][wave]PLAY"
-fit_content = true
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Reroll" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel" unique_id=1354737390]
-unique_name_in_owner = true
-process_mode = 4
-visible = false
-layout_mode = 0
-offset_left = 863.0
-offset_top = 128.33328
-offset_right = 963.0
-offset_bottom = 249.48831
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-disabled = true
-script = ExtResource("3_y3o4g")
-
-[node name="Reroll_label" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" unique_id=1127921913]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 36
-theme_override_font_sizes/italics_font_size = 32
-bbcode_enabled = true
-text = "Reroll"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="SpacePanel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1015178323]
 custom_minimum_size = Vector2(50, 284.29)
@@ -1448,8 +728,8 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = -6.4257813
-offset_bottom = -6.4257813
+offset_top = -1.6064758
+offset_bottom = -1.6064758
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.339, 1.257)
@@ -1485,9 +765,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -154.99997
-offset_top = -72.36548
+offset_top = -67.54617
 offset_right = 155.0
-offset_bottom = 61.63452
+offset_bottom = 66.45383
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -1501,104 +781,6 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/normal_font_size = 124
 bbcode_enabled = true
 text = "$500"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Cash_subtitle" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1366998873]
-unique_name_in_owner = true
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -63.172882
-offset_right = 64.0
-offset_bottom = -34.172882
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-focus_mode = 0
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 19
-theme_override_font_sizes/italics_font_size = 90
-bbcode_enabled = true
-text = "[wave]C     A     S     H"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CashBalanceLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=672175836]
-unique_name_in_owner = true
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -154.99997
-offset_top = -239.43372
-offset_right = 155.0
-offset_bottom = -105.433716
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-focus_mode = 0
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_constants/shadow_outline_size = 133
-theme_override_constants/shadow_offset_x = 7
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/normal_font_size = 124
-bbcode_enabled = true
-text = "$50,000"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Cash_subtitle2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=103258015]
-unique_name_in_owner = true
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -243.09259
-offset_right = 64.0
-offset_bottom = -214.09259
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-focus_mode = 0
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 19
-theme_override_font_sizes/italics_font_size = 90
-bbcode_enabled = true
-text = "D E B T"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -1734,24 +916,7 @@ focus_enter_sfx = NodePath("../../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../../SFX/focus_exit")
 pressed_sfx = NodePath("../../../../../../../../SFX/purchase")
 
-[node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1661126035]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-custom_minimum_size = Vector2(0, 90)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -0.8353195
-offset_bottom = 32.176445
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_xklyy")
-
 [node name="Panel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1065744192]
-visible = false
 custom_minimum_size = Vector2(0, 90)
 layout_mode = 1
 anchors_preset = 15
@@ -1765,291 +930,6 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xklyy")
-
-[node name="CoatArms2" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=1647909721]
-modulate = Color(1, 1, 1, 0.078431375)
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 303.6145
-offset_top = -112.50195
-offset_right = 559.6145
-offset_bottom = 143.49805
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.139, 1.139)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="Insignia" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/CoatArms2" unique_id=1723705056]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.5
-offset_top = -33.0
-offset_right = 18.5
-offset_bottom = 33.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_colors/default_color = Color(0.81, 0.621, 0.3564, 1)
-theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/normal_font_size = 86
-bbcode_enabled = true
-text = "W"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/CoatArms2" unique_id=16653932]
-show_behind_parent = true
-clip_contents = true
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 1
-anchor_left = 0.28828126
-anchor_top = 0.45434374
-anchor_right = 0.7117188
-anchor_bottom = 0.7253437
-offset_left = -145.8
-offset_top = -93.312
-offset_right = 145.79999
-offset_bottom = 93.31201
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.271, 0.271)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="CoatArms3" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=270775435]
-modulate = Color(1, 1, 1, 0.078431375)
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = -70.682755
-offset_top = -108.7229
-offset_right = 185.31725
-offset_bottom = 147.2771
-grow_vertical = 2
-scale = Vector2(1.139, 1.139)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="Insignia" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/CoatArms3" unique_id=2075078050]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.5
-offset_top = -33.0
-offset_right = 18.5
-offset_bottom = 33.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_colors/default_color = Color(0.81, 0.621, 0.3564, 1)
-theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/normal_font_size = 86
-bbcode_enabled = true
-text = "W"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/CoatArms3" unique_id=780610954]
-show_behind_parent = true
-clip_contents = true
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 1
-anchor_left = 0.28828126
-anchor_top = 0.45434374
-anchor_right = 0.7117188
-anchor_bottom = 0.7253437
-offset_left = -145.8
-offset_top = -93.312
-offset_right = 145.79999
-offset_bottom = 93.31201
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.271, 0.271)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="ScoreTotal" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=91302618 groups=["restartable"]]
-unique_name_in_owner = true
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 2.6592102
-offset_top = -27.001343
-offset_right = 97.15361
-offset_bottom = 62.998657
-grow_vertical = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_colors/default_color = Color(0.66, 0.50666004, 0.38940004, 1)
-theme_override_font_sizes/normal_font_size = 25
-bbcode_enabled = true
-text = "WINNINGS[color=#c70102]
-$122455"
-fit_content = true
-horizontal_alignment = 2
-vertical_alignment = 1
-script = SubResource("GDScript_hi3s5")
-
-[node name="BgPanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/ScoreTotal" unique_id=223331139]
-visible = false
-modulate = Color(0.8, 0.8, 0.8, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(250, 42)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -125.0
-offset_top = -21.0
-offset_right = 125.0
-offset_bottom = 21.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("5_vom4t")
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/ScoreTotal" unique_id=741251944]
-modulate = Color(1, 1, 1, 0.3372549)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -4.0
-offset_top = -2.666626
-offset_right = 36.0
-offset_bottom = 1.333374
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.402, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="ScoreTotal2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=781063997 groups=["restartable"]]
-unique_name_in_owner = true
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -110.49408
-offset_top = -34.333344
-offset_right = -15.999695
-offset_bottom = 55.66666
-grow_horizontal = 0
-grow_vertical = 2
-theme_override_font_sizes/normal_font_size = 19
-bbcode_enabled = true
-text = "[color=#c70102]
-$122455"
-fit_content = true
-horizontal_alignment = 2
-vertical_alignment = 1
-script = SubResource("GDScript_hi3s5")
-
-[node name="BgPanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/ScoreTotal2" unique_id=1096622578]
-visible = false
-modulate = Color(0.8, 0.8, 0.8, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(250, 42)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -125.0
-offset_top = -21.0
-offset_right = 125.0
-offset_bottom = 21.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("5_vom4t")
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/ScoreTotal2" unique_id=518453432]
-modulate = Color(1, 1, 1, 0.3372549)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -4.0
-offset_top = -2.666626
-offset_right = 36.0
-offset_bottom = 1.333374
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.402, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="VSeparator" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=453767486]
-visible = false
-modulate = Color(1, 1, 1, 0.3372549)
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 110.04022
-offset_top = -20.0
-offset_right = 114.04022
-offset_bottom = 20.0
-grow_vertical = 2
-scale = Vector2(1, 2.019)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="VSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=180300677]
-visible = false
-modulate = Color(1, 1, 1, 0.3372549)
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -111.82318
-offset_top = -51.759033
-offset_right = -107.82318
-offset_bottom = -11.759033
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(1, 2.019)
-pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="PlayButton" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector" unique_id=805831987 instance=ExtResource("17_xklyy")]
 unique_name_in_owner = true
@@ -2214,150 +1094,6 @@ theme_type_variation = &"MenuUiButtons"
 theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 theme_override_font_sizes/font_size = 26
 text = "Shoot for CENTS"
-
-[node name="UpgradeStats" type="CenterContainer" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1504735911]
-visible = false
-layout_mode = 2
-mouse_filter = 2
-
-[node name="MainPanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats" unique_id=1026120075]
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("5_vom4t")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel" unique_id=1224378386]
-custom_minimum_size = Vector2(716.19, 0)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="HSeparator" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer" unique_id=1657802100]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 28
-
-[node name="Upgrades_container" type="VBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer" unique_id=545998091]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 88
-
-[node name="Reticle Size" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=1277739787 instance=ExtResource("13_onfim")]
-layout_mode = 2
-upgrade_type = "target_circle"
-
-[node name="Reload Rate" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=1708239948 instance=ExtResource("13_onfim")]
-layout_mode = 2
-upgrade_type = "gun_fire_rate"
-
-[node name="Sky Mine" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container" unique_id=831104298 instance=ExtResource("13_onfim")]
-visible = false
-layout_mode = 2
-upgrade_type = "sky_mine"
-
-[node name="PurchaseHoldProgressBar" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine/Upgrade_Permanent_button/Control/UpgradePanel" parent_id_path=PackedInt32Array(831104298, 696861470) index="0" unique_id=380143476]
-theme_override_styles/background = SubResource("StyleBoxFlat_nbtj3")
-
-[node name="HSeparator2" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer" unique_id=10792476]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 214
-
-[node name="Upgrades_container2" type="VBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer" unique_id=1302621281]
-layout_mode = 2
-theme_override_constants/separation = 88
-
-[node name="Bullet Speed" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=1166499484 instance=ExtResource("13_onfim")]
-layout_mode = 2
-upgrade_type = "bullet_speed"
-
-[node name="Bullet Fire Rate" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=978555315 instance=ExtResource("13_onfim")]
-visible = false
-layout_mode = 2
-upgrade_type = "bullet_delay"
-
-[node name="Bullet Strength" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=170932053 instance=ExtResource("13_onfim")]
-layout_mode = 2
-upgrade_type = "bullet_damage"
-
-[node name="Bullets_per_round_Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=1805250448]
-visible = false
-custom_minimum_size = Vector2(0, 25.97)
-layout_mode = 2
-script = ExtResource("14_r6l2h")
-
-[node name="BulletsPerShot" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2/Bullets_per_round_Control" unique_id=310929007]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -25.0
-offset_top = 8.999971
-offset_right = 144.0
-offset_bottom = 35.520813
-grow_horizontal = 0
-grow_vertical = 0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-size_flags_vertical = 1
-theme = ExtResource("2_s82uk")
-theme_override_font_sizes/font_size = 19
-text = "Bullets Per Shot:"
-vertical_alignment = 1
-
-[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2/Bullets_per_round_Control/BulletsPerShot" unique_id=479227203]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.92200005
-anchor_bottom = 1.0
-offset_right = -8.887711
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.085, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-theme = ExtResource("2_s82uk")
-
-[node name="PanelContainer" type="PanelContainer" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2/Bullets_per_round_Control" unique_id=61238773]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 2.963
-anchor_top = 2.618
-anchor_right = 2.963
-anchor_bottom = 2.618
-offset_left = -336.002
-offset_top = 0.010543823
-offset_right = -41.002014
-offset_bottom = 29.010544
-tooltip_text = "Does nothing?!!"
-
-[node name="Bullets" type="HFlowContainer" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2/Bullets_per_round_Control/PanelContainer" unique_id=1975291865]
-custom_minimum_size = Vector2(0, 25)
-layout_mode = 2
-
-[node name="Icon" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2/Bullets_per_round_Control/PanelContainer/Bullets" unique_id=830491403]
-custom_minimum_size = Vector2(10, 25)
-layout_mode = 2
-size_flags_horizontal = 0
-texture = ExtResource("15_htvy6")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="Panel2" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container2" unique_id=1209005292]
-custom_minimum_size = Vector2(50, 44.415)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
-
-[node name="HSeparator3" type="VSeparator" parent="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer" unique_id=1442243143]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 24
 
 [node name="AddMoney" type="Button" parent="." unique_id=225417206]
 unique_name_in_owner = true
@@ -2559,7 +1295,7 @@ stream = ExtResource("46_i821l")
 volume_db = -30.0
 pitch_scale = 0.5
 
-[node name="CashNeededDisplay" type="Control" parent="." unique_id=407528663]
+[node name="GreyCornerPanel" type="Control" parent="." unique_id=407528663]
 unique_name_in_owner = true
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 80)
@@ -2574,7 +1310,7 @@ offset_bottom = -734.0
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="Control" type="Control" parent="CashNeededDisplay" unique_id=802783650]
+[node name="Control" type="Control" parent="GreyCornerPanel" unique_id=802783650]
 show_behind_parent = true
 layout_mode = 1
 anchor_left = 0.5877193
@@ -2592,27 +1328,33 @@ scale = Vector2(1.339, 1.257)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="LeftTriangle" type="MeshInstance2D" parent="CashNeededDisplay/Control" unique_id=647196796]
+[node name="LeftTriangle" type="MeshInstance2D" parent="GreyCornerPanel/Control" unique_id=647196796]
+visible = false
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 position = Vector2(-203.8343, 0)
 scale = Vector2(183.79362, -82)
 mesh = SubResource("PrismMesh_xklyy")
 
-[node name="RightTriangle" type="MeshInstance2D" parent="CashNeededDisplay/Control" unique_id=866341959]
-visible = false
+[node name="LeftTriangle2" type="MeshInstance2D" parent="GreyCornerPanel/Control" unique_id=891126588]
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
-position = Vector2(203.00085, 5.242276e-06)
-rotation = 3.1415925
-scale = Vector2(182.13904, 82)
-mesh = SubResource("PrismMesh_tnodp")
+position = Vector2(-82.101654, -3.0517578e-05)
+scale = Vector2(180, -82)
+mesh = SubResource("PrismMesh_xklyy")
 
-[node name="Square" type="MeshInstance2D" parent="CashNeededDisplay/Control" unique_id=1010427802]
+[node name="Square" type="MeshInstance2D" parent="GreyCornerPanel/Control" unique_id=1010427802]
+visible = false
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_ohn7f")
 
-[node name="CashNeededDisplay2" type="Control" parent="." unique_id=193936590]
+[node name="Square2" type="MeshInstance2D" parent="GreyCornerPanel/Control" unique_id=77453554]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(60.49286, 1.5258789e-05)
+scale = Vector2(105, 82)
+mesh = SubResource("BoxMesh_ohn7f")
+
+[node name="RedCornerPanel" type="Control" parent="." unique_id=193936590]
 unique_name_in_owner = true
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 80)
@@ -2627,7 +1369,7 @@ offset_bottom = -734.0
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="Control" type="Control" parent="CashNeededDisplay2" unique_id=1134019728]
+[node name="Control" type="Control" parent="RedCornerPanel" unique_id=1134019728]
 show_behind_parent = true
 layout_mode = 1
 anchor_left = 0.5877193
@@ -2645,30 +1387,27 @@ scale = Vector2(1.339, 1.257)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="LeftTriangle" type="MeshInstance2D" parent="CashNeededDisplay2/Control" unique_id=93005602]
+[node name="LeftTriangle" type="MeshInstance2D" parent="RedCornerPanel/Control" unique_id=93005602]
 visible = false
 modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 position = Vector2(-203.8343, 0)
 scale = Vector2(183.79362, -82)
 mesh = SubResource("PrismMesh_xklyy")
 
-[node name="RightTriangle" type="MeshInstance2D" parent="CashNeededDisplay2/Control" unique_id=1203907206]
+[node name="RightTriangle" type="MeshInstance2D" parent="RedCornerPanel/Control" unique_id=1203907206]
 modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 position = Vector2(203.00085, 5.242276e-06)
 rotation = 3.1415925
 scale = Vector2(182.13904, 82)
 mesh = SubResource("PrismMesh_tnodp")
 
-[node name="Square" type="MeshInstance2D" parent="CashNeededDisplay2/Control" unique_id=1714746617]
+[node name="Square" type="MeshInstance2D" parent="RedCornerPanel/Control" unique_id=1714746617]
 modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_ohn7f")
 
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="open_map_menu"]
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound" to="." method="play_round_button_pressed"]
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/NextRound2" to="." method="play_round_button_pressed"]
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TreePanel/Reroll" to="." method="_on_re_roll_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PlayButton" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo" to="." method="_on_buy_ammo_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]
@@ -2676,4 +1415,3 @@ mesh = SubResource("BoxMesh_ohn7f")
 [connection signal="pressed" from="ResetMoney" to="." method="_on_reset_money_pressed"]
 
 [editable path="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo"]
-[editable path="CenterContainer/MainPanel/VBoxContainer/UpgradeStats/MainPanel/HBoxContainer/Upgrades_container/Sky Mine"]

@@ -285,8 +285,8 @@ func shoot_target() -> void:
 	var double_power: bool = get_parent()._scope_at_min
 	var targets = get_targets_in_scope()
 
-	# If the retreat target is the closest aim, only shoot that — don't multi-hit rocks.
-	if not targets.is_empty() and targets[0].target.is_in_group('early_exit_target'):
+	# If a special mid-round target is the closest aim, only shoot that — don't multi-hit rocks.
+	if not targets.is_empty() and _is_special_midround_target(targets[0].target):
 		targets = [targets[0]]
 
 	var rock_count := 0
@@ -296,14 +296,14 @@ func shoot_target() -> void:
 		var target = target_data.target
 	
 	
-		if target.name.contains('Orange') or target.is_in_group('early_exit_target'):
+		if target.name.contains('Orange') or _is_special_midround_target(target):
 			pass
 		else:
 			rock_count += 1
 
 		
 		#if target is RockInstance:
-		if not target.is_in_group('early_exit_target'):
+		if not _is_special_midround_target(target):
 			rocks_to_destroy.append(target)
 
 	#if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
@@ -319,12 +319,16 @@ func shoot_target() -> void:
 			shoot_shootable_object(shootable_hit)
 		else:
 			shoot_bullet_without_target()
+			if player and player.has_method("register_accuracy_miss"):
+				player.register_accuracy_miss()
 		
 		shooting_sky_mine = false
 		return
 
 	$"../SFX/Flicker_sound".play()
 	get_parent().player_did_not_miss()
+	if player and player.has_method("register_accurate_shot"):
+		player.register_accurate_shot()
 
 	for target_data in targets:
 
@@ -400,20 +404,30 @@ func can_shoot(_can_shoot : bool) -> void:
 	can_fire_weapon = _can_shoot
 
 
-## Out-of-ammo path: fire only if the early-exit retreat target is in the reticle.
+## Out-of-ammo path: fire only if early-exit or ammo-reload is in the reticle.
 func shoot_early_exit_if_aimed() -> bool:
+	return shoot_special_midround_target_if_aimed()
+
+
+func _is_special_midround_target(target: Node) -> bool:
+	if target == null or not is_instance_valid(target):
+		return false
+	return target.is_in_group("early_exit_target") or target.is_in_group("ammo_reload_target")
+
+
+func shoot_special_midround_target_if_aimed() -> bool:
 	if !can_fire_weapon:
 		return false
 
 	var targets := get_targets_in_scope()
-	var exit_target: Node3D = null
+	var special_target: Node3D = null
 	for target_data in targets:
 		var target = target_data.target
-		if is_instance_valid(target) and target.is_in_group('early_exit_target'):
-			exit_target = target
+		if _is_special_midround_target(target):
+			special_target = target
 			break
 
-	if exit_target == null:
+	if special_target == null:
 		return false
 
 	round_manager.bullet_active = true
@@ -421,19 +435,21 @@ func shoot_early_exit_if_aimed() -> bool:
 
 	$"../SFX/Flicker_sound".play()
 	%Crosshair.crosshair_shake()
-	player_gun.get_barrel_position(exit_target.global_position.x)
+	player_gun.get_barrel_position(special_target.global_position.x)
 	player_camera.shake_camera_shooting()
 
-	if exit_target.has_method('start_bullet_to_target'):
-		exit_target.start_bullet_to_target()
+	if special_target.has_method("start_bullet_to_target"):
+		special_target.start_bullet_to_target()
 
-	if not spawn_projectile(exit_target, power_bullet_speed, Vector3.ZERO, true):
+	if not spawn_projectile(special_target, power_bullet_speed, Vector3.ZERO, true):
 		round_manager.bullet_active = false
 		return false
 
-	var rock_screen_pos = stable_camera.unproject_position(exit_target.global_position)
+	var rock_screen_pos = stable_camera.unproject_position(special_target.global_position)
 	var screen_offset = rock_screen_pos - crosshair.global_position
-	process_target_hit.call_deferred(exit_target, power_bullet_damage, screen_offset)
+	process_target_hit.call_deferred(special_target, power_bullet_damage, screen_offset)
+	if player and player.has_method("register_accurate_shot"):
+		player.register_accurate_shot()
 	return true
 	
 	

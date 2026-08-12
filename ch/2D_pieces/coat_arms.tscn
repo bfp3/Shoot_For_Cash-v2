@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://m8j4jk4exfys"]
 
-[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="1_hx5og"]
+[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="1_bjoeg"]
+[ext_resource type="Script" uid="uid://qm6b5nj0ms6n" path="res://lib/draw_circle_tool.gd" id="2_ohunf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hx5og"]
 content_margin_left = 0.0
@@ -31,8 +32,65 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
+[node name="Ring" type="Control" parent="." unique_id=1586711955]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 6.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.545, 0.545)
+script = ExtResource("2_ohunf")
+circle_radius = 40.0
+circle_color = Color(0, 0, 0, 1)
+circle_outline_width = 12.515
+
+[node name="Ring2" type="Control" parent="." unique_id=482284625]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.545, 0.545)
+script = ExtResource("2_ohunf")
+circle_radius = 40.0
+circle_color = Color(0.81, 0.621, 0.3564, 1)
+circle_outline_width = 12.515
+
 [node name="CircleEmblem" type="TextureRect" parent="." unique_id=712626264]
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+visible = false
+modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -21.834015
+offset_right = 25.0
+offset_bottom = 28.165985
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.062, 1.062)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("1_bjoeg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem3" type="TextureRect" parent="CircleEmblem" unique_id=220934762]
+show_behind_parent = true
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
 anchors_preset = 8
@@ -46,14 +104,14 @@ offset_right = 25.0
 offset_bottom = 46.5
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.956, 0.956)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("1_hx5og")
+texture = ExtResource("1_bjoeg")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CircleEmblem3" type="TextureRect" parent="CircleEmblem" unique_id=220934762]
-modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+[node name="CircleEmblem4" type="TextureRect" parent="CircleEmblem" unique_id=552813004]
 show_behind_parent = true
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
@@ -63,15 +121,37 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -25.0
-offset_top = -48.0
+offset_top = -46.5
 offset_right = 25.0
-offset_bottom = 45.0
+offset_bottom = 46.5
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.174, 1.174)
+scale = Vector2(0.909, 0.909)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("1_hx5og")
+texture = ExtResource("1_bjoeg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CircleEmblem5" type="TextureRect" parent="CircleEmblem" unique_id=1259115187]
+show_behind_parent = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -46.5
+offset_right = 25.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.865, 0.865)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("1_bjoeg")
 expand_mode = 1
 stretch_mode = 5
 
@@ -82,18 +162,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -18.5
-offset_top = -33.0
-offset_right = 18.5
-offset_bottom = 33.0
+offset_left = -27.0
+offset_top = -48.5
+offset_right = 27.0
+offset_bottom = 48.5
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.81, 0.621, 0.3564, 1)
-theme_override_colors/font_outline_color = Color(0.9, 0.8031, 0.729, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/normal_font_size = 86
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 89
 bbcode_enabled = true
 text = "W"
 fit_content = true

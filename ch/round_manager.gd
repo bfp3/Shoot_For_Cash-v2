@@ -18,6 +18,28 @@ const LAYOUT_PATH_BOSS_BY_ISLAND := {
 	0: "res://sc/All_level_layouts/level_layout_island_1_boss.tscn",
 }
 
+## Camera3D.environment resources per place / boss (layouts no longer carry WorldEnvironment).
+const ENV_PATH_BY_LEVEL := {
+	"start": "res://res/skyEnvironments/greyscale_world.tres",
+	"moss": "res://res/moss_env_v2.tres",
+	"redd": "res://res/world_env_redd.tres",
+	"glory": "res://res/skyEnvironments/Level_simple_art_style.tres",
+	"jetz": "res://res/skyEnvironments/greyscale_world.tres",
+	"noir": "res://res/start_04_world_env.tres",
+	"vesper": "res://res/start_05_world_env.tres",
+	"boss": "res://res/moss_env_v2.tres",
+}
+const ENV_PATH_BY_LAYOUT := {
+	LAYOUT_PATH_START: "res://res/skyEnvironments/greyscale_world.tres",
+	"res://sc/All_level_layouts/level_layout_01_moss.tscn": "res://res/moss_env_v2.tres",
+	"res://sc/All_level_layouts/level_layout_02_redd.tscn": "res://res/world_env_redd.tres",
+	"res://sc/All_level_layouts/level_layout_03_glory.tscn": "res://res/skyEnvironments/Level_simple_art_style.tres",
+	"res://sc/All_level_layouts/level_layout_000_jetz.tscn": "res://res/skyEnvironments/greyscale_world.tres",
+	"res://sc/All_level_layouts/level_layout_04_noir.tscn": "res://res/start_04_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_05_vesper.tscn": "res://res/start_05_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_island_1_boss.tscn": "res://res/moss_env_v2.tres",
+}
+
 ## Cached PackedScenes so revisiting Moss/Redd/etc. does not re-parse from disk.
 var _layout_cache: Dictionary = {} # path -> PackedScene
 var _layout_load_requested: Dictionary = {} # path -> true
@@ -60,6 +82,8 @@ var _boss_looping := false
 var _boss_open_map_after_tally := false
 ## Optional UI bar driven while a map travel loads a layout (0–100).
 var _travel_progress_bar: Range = null
+## After shop MapButton → start + map, closing the map should reopen the shop.
+var _reopen_shop_after_map := false
 
 # Set the instant we hit three strikes. Blocks any further state
 # transitions so nothing already "in flight" (awaits, etc.) can push
@@ -532,6 +556,16 @@ func check_round_for_strikes() -> void:
 	current_round = current_sequence_index + 1
 	wave_progress_feedback.reset_strikes()
 	gl_PlayerState.dataset.total_current_strikes = 0
+	if gl_PlayerState.has_method("set_max_strikes"):
+		gl_PlayerState.set_max_strikes(3)
+	if player and player.has_method("reset_accuracy_streak"):
+		player.reset_accuracy_streak()
+
+
+func _max_strikes() -> int:
+	if gl_PlayerState and gl_PlayerState.has_method("get_max_strikes"):
+		return gl_PlayerState.get_max_strikes()
+	return 3
 
 
 ## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` from the active sequence entry only.
@@ -799,6 +833,8 @@ func update_start_menu() -> void:
 	## Start menu removed from boot flow — open the island map directly.
 	_hide_start_menu_ui()
 	_ensure_gun_equipped_for_map()
+	if player and player.has_method("hide_ammo_panel_instant"):
+		player.hide_ammo_panel_instant()
 	_open_island_map_menu()
 
 
@@ -816,8 +852,12 @@ func _hide_start_menu_ui() -> void:
 func _ensure_gun_equipped_for_map() -> void:
 	if int(gl_PlayerState.dataset.get("power_gun", 0)) < 1:
 		gl_PlayerState.dataset.power_gun = 1
-	if player and player.get("player_gun") and player.player_gun.has_method("update_guns"):
-		player.player_gun.update_guns()
+	if player and player.get("player_gun"):
+		## Equip data, but keep the mesh hidden until Play.
+		if player.player_gun.has_method("update_guns"):
+			player.player_gun.update_guns()
+		if player.player_gun.has_method("hide_for_menus"):
+			player.player_gun.hide_for_menus()
 
 
 func _open_island_map_menu() -> void:
@@ -832,10 +872,76 @@ func _open_island_map_menu() -> void:
 		return
 	if map_menu is CanvasItem:
 		(map_menu as CanvasItem).z_index = 40
+	CommonCode.apply_ui_overlay_blur()
 	if map_menu.has_method("open_pop_up"):
 		map_menu.open_pop_up()
 	else:
 		push_warning("RoundManager: MapIslandSelect has no open_pop_up()")
+
+
+func _fade_boss_hud_before_map() -> void:
+	var wait_t := 0.0
+	if round_timer and round_timer.has_method("fade_out_timer"):
+		round_timer.fade_out_timer()
+		wait_t = maxf(wait_t, 0.45)
+	elif round_timer:
+		round_timer.hide()
+	if wave_progress_feedback and wave_progress_feedback.has_method("hide_strike_hud"):
+		wave_progress_feedback.hide_strike_hud()
+		wait_t = maxf(wait_t, 0.35)
+	if wait_t > 0.0:
+		await get_tree().create_timer(wait_t, false).timeout
+
+
+## Shop MapButton: return to the start island scenery, then open the map overlay.
+func return_to_start_with_map() -> void:
+	if transitioning_worlds:
+		return
+	CommonCode.apply_transition_blur()
+	transitioning_worlds = true
+	_reopen_shop_after_map = true
+
+	if shop_main_menu and shop_main_menu.visible:
+		if shop_main_menu.has_method("soft_hide_for_level_editor"):
+			shop_main_menu.soft_hide_for_level_editor()
+		else:
+			shop_main_menu.hide()
+
+	stop_timer()
+	stop_player()
+	force_shop_open = false
+	wave_ending = false
+	player_failed = false
+	success = false
+	_boss_mode = false
+	_boss_looping = false
+	current_wave = 0
+	current_round_state = RoundState.INACTIVE
+
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+	if balloon_container and (balloon_container.started or balloon_container.balloons_in_play > 0):
+		await balloon_container.end_round()
+
+	gl_PlayerState.dataset.level_name = gl_DataSet.get_start_place_name()
+	move_to_start()
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	if place_name and place_name.has_method("update_place_name"):
+		place_name.update_place_name()
+
+	transitioning_worlds = false
+	CommonCode.apply_ui_overlay_blur()
+	_open_island_map_menu()
+
+
+func consume_reopen_shop_after_map() -> bool:
+	if not _reopen_shop_after_map:
+		return false
+	_reopen_shop_after_map = false
+	return true
 
 func update_round_inactive() -> void:
 	rocks_container.enter_state(rocks_container.State.INACTIVE)
@@ -867,6 +973,7 @@ func update_round_start() -> void:
 	if gl_PlayerState.dataset.level_name == 'start':
 		return
 		
+	CommonCode.apply_gameplay_blur()
 	# Start playing the level's music
 	if current_round == 1:
 		music_manager.first_round()
@@ -876,6 +983,8 @@ func update_round_start() -> void:
 	wave_progress_feedback.reset()
 	
 	player.update_player_stats()
+	if player.has_method("ensure_ammo_panel_visible"):
+		player.ensure_ammo_panel_visible()
 	music_manager.shop_music_raise_volume()
 	enter_state(RoundState.WAVE_START)
 	
@@ -888,7 +997,7 @@ func update_wave_start() -> void:
 	if force_shop_open or _level_editor_finishing:
 		return
 	
-	if gl_PlayerState.dataset.total_current_strikes >= 3:
+	if gl_PlayerState.dataset.total_current_strikes >= _max_strikes():
 		wave_progress_feedback.start_miss()
 		unsuccessful_round_locked()
 		return
@@ -1039,7 +1148,7 @@ func update_round_end() -> void:
 	# Capture the round outcome now - `success` gets reset to false further
 	# down before we need to act on it again.
 	stop_timer()
-	if gl_PlayerState.dataset.total_current_strikes < 3:
+	if gl_PlayerState.dataset.total_current_strikes < _max_strikes():
 		success = true
 	var round_was_successful := success
 
@@ -1132,7 +1241,7 @@ func update_round_end() -> void:
 	current_wave = 0
 	balloon_container.end_round()
 	## Strikeout: let the miss moment breathe before the tally card.
-	if player_failed or int(gl_PlayerState.dataset.total_current_strikes) >= 3:
+	if player_failed or int(gl_PlayerState.dataset.total_current_strikes) >= _max_strikes():
 		await get_tree().create_timer(1.0, false).timeout
 	enter_state(RoundState.TALLY_START)
 
@@ -1141,6 +1250,9 @@ func update_tally_start() -> void:
 	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
 	if menus and menus.has_method("ensure_tally"):
 		menus.ensure_tally()
+	CommonCode.apply_ui_overlay_blur()
+	if player and player.has_method("ensure_ammo_panel_visible"):
+		player.ensure_ammo_panel_visible()
 	EventBus.instance.open_tally_card.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -1157,9 +1269,10 @@ func update_tally_end() -> void:
 	if game_over_triggered:
 		return
 
-	## Boss win: open the island map after the tally.
+	## Boss win: fade timer + strikes, then open the island map after the tally.
 	if _boss_open_map_after_tally:
 		_boss_open_map_after_tally = false
+		await _fade_boss_hud_before_map()
 		enter_state(RoundState.INACTIVE)
 		_open_island_map_menu()
 		return
@@ -1181,6 +1294,7 @@ func update_shop_start() -> void:
 	bonus_type_this_round = ""
 	protect_bonus_failed = false
 	_apply_shuffle_modifier(false)
+	CommonCode.apply_ui_overlay_blur()
 	EventBus.instance.open_shop.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	$Gold_sfx.pitch_scale = 0.7
@@ -1226,7 +1340,8 @@ func move_to_start() -> void:
 	var heavy := _detach_heavy_layout_nodes(level_mesh)
 	level_layout.add_child(level_mesh)
 	level_mesh.name = 'current_level_layout'
-	# Reattach ocean/env after the body is in the tree.
+	apply_level_environment("start", LAYOUT_PATH_START)
+	# Reattach ocean after the body is in the tree (WorldEnvironment is stripped).
 	call_deferred("_reattach_heavy_layout_nodes", heavy)
 
 
@@ -1312,6 +1427,8 @@ func return_to_title() -> void:
 
 	if player and player.has_method('title_screen_start'):
 		player.title_screen_start()
+	if player and player.has_method('hide_ammo_panel_instant'):
+		player.hide_ammo_panel_instant()
 
 	# Keep title hidden under the transition until it finishes.
 	var scene_mgr := get_tree().get_first_node_in_group('scene_manager')
@@ -1320,6 +1437,8 @@ func return_to_title() -> void:
 		splash = scene_mgr.splash_screen
 	if splash == null and scene_mgr:
 		splash = scene_mgr.get_node_or_null("SplashScreenCanvasLayer")
+
+	## Keep gameplay camera pose after Back to Title — do not snap back to intro cam.
 
 	if scene_mgr and is_instance_valid(scene_mgr.get("main_game_canvas")):
 		scene_mgr.main_game_canvas.hide()
@@ -1426,17 +1545,59 @@ func _clear_travel_progress_bar() -> void:
 	_travel_progress_bar = null
 
 
-## Pull ocean / world-env out before add_child so first-frame shader compile
-## happens after the layout body is in (under the travel fade).
+## Pull ocean out before add_child; strip any leftover WorldEnvironment (camera owns env now).
 func _detach_heavy_layout_nodes(layout: Node) -> Array:
 	var detached: Array = []
-	for child_name in ["OutsetOcean", "WorldEnvironment"]:
-		var node := layout.get_node_or_null(child_name)
-		if node == null:
-			continue
-		layout.remove_child(node)
-		detached.append({"parent": layout, "node": node})
+	var ocean := layout.get_node_or_null("OutsetOcean")
+	if ocean:
+		layout.remove_child(ocean)
+		detached.append({"parent": layout, "node": ocean})
+	## Layouts may still contain WorldEnvironment from older saves — remove so the camera env wins.
+	var world_env := layout.get_node_or_null("WorldEnvironment")
+	if world_env:
+		layout.remove_child(world_env)
+		world_env.queue_free()
+	## Also strip nested WorldEnvironment under Lighting/, etc.
+	_strip_world_environments_recursive(layout)
 	return detached
+
+
+func _strip_world_environments_recursive(node: Node) -> void:
+	var to_free: Array[Node] = []
+	for child in node.get_children():
+		if child is WorldEnvironment:
+			to_free.append(child)
+		else:
+			_strip_world_environments_recursive(child)
+	for we in to_free:
+		if we.get_parent():
+			we.get_parent().remove_child(we)
+		we.queue_free()
+
+
+func _environment_path_for_level(level_id: String, layout_path: String = "") -> String:
+	var key := gl_DataSet.resolve_place_name(level_id).to_lower()
+	if key.is_empty():
+		key = level_id.to_lower()
+	if key == "start" or key == gl_DataSet.get_start_place_name().to_lower():
+		key = "start"
+	if ENV_PATH_BY_LEVEL.has(key):
+		return String(ENV_PATH_BY_LEVEL[key])
+	if not layout_path.is_empty() and ENV_PATH_BY_LAYOUT.has(layout_path):
+		return String(ENV_PATH_BY_LAYOUT[layout_path])
+	return String(ENV_PATH_BY_LEVEL.get("moss", "res://res/moss_env_v2.tres"))
+
+
+## Switch the player Camera3D environment for the destination level.
+func apply_level_environment(level_id: String, layout_path: String = "") -> void:
+	var path := _environment_path_for_level(level_id, layout_path)
+	var cam = get_tree().get_first_node_in_group("player_cam")
+	if cam and cam.has_method("set_level_environment_from_path"):
+		cam.set_level_environment_from_path(path)
+	elif cam:
+		var env := load(path) as Environment
+		if env:
+			cam.set("environment", env)
 
 
 func _reattach_heavy_layout_nodes(detached: Array) -> void:
@@ -1510,6 +1671,7 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 
 	_travel_progress_bar = progress_bar
 	_set_travel_progress(0.02)
+	CommonCode.apply_transition_blur()
 
 	# Kick layout load on a worker during the fade / map progress.
 	_request_layout_load(layout_path)
@@ -1583,6 +1745,7 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	var heavy := _detach_heavy_layout_nodes(level_scenery)
 	level_layout.add_child(level_scenery)
 	level_scenery.name = 'current_level_layout'
+	apply_level_environment(level_id, layout_path)
 	# Let Compatibility/Web compile the new layout's pipelines under the fade.
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -1632,8 +1795,11 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	## Mark this place as entered so the map can show round progress.
 	_save_level_progress()
 	_clear_travel_progress_bar()
-	enter_state(RoundState.SHOP_START)
-	player.show_ammo_panel()
+	CommonCode.apply_ui_overlay_blur()
+	## Map travel (no overlay): shop + ammo open after the map's own exit timing.
+	if use_transition_overlay:
+		enter_state(RoundState.SHOP_START)
+		player.show_ammo_panel()
 
 
 ## Boss survival fight for an overworld island (0 = Shipper → island_1_boss layout).
@@ -1651,6 +1817,7 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 
 	_travel_progress_bar = progress_bar
 	_set_travel_progress(0.02)
+	CommonCode.apply_transition_blur()
 	_request_layout_load(layout_path)
 	transitioning_worlds = true
 	_save_level_progress()
@@ -1725,6 +1892,7 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	var heavy := _detach_heavy_layout_nodes(level_scenery)
 	level_layout.add_child(level_scenery)
 	level_scenery.name = "current_level_layout"
+	apply_level_environment("boss", layout_path)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_reattach_heavy_layout_nodes(heavy)
@@ -1766,9 +1934,11 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	transitioning_worlds = false
 	_clear_travel_progress_bar()
 	check_round_for_strikes()
-	player.show_ammo_panel()
-	## Open shop first so the boss challenge banner can be read before Play.
-	enter_state(RoundState.SHOP_START)
+	CommonCode.apply_ui_overlay_blur()
+	## Map travel (no overlay): shop + ammo open after the map's own exit timing.
+	if use_transition_overlay:
+		player.show_ammo_panel()
+		enter_state(RoundState.SHOP_START)
 
 
 func _loop_boss_sequence() -> void:
@@ -2060,6 +2230,7 @@ func move_to_level_instant(level_id) -> void:
 	var heavy := _detach_heavy_layout_nodes(level_scenery)
 	level_layout.add_child(level_scenery)
 	level_scenery.name = 'current_level_layout'
+	apply_level_environment(level_id, layout_path)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_reattach_heavy_layout_nodes(heavy)

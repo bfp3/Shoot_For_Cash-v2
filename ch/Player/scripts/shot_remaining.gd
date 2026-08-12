@@ -1,6 +1,6 @@
 extends Control
 
-@onready var ammo_label: RichTextLabel = $ShotRemaining
+@onready var ammo_label: RichTextLabel = %ShotRemainingLabel
 
 var _display_ammo := 0
 var _reload_tween: Tween

@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="6_cuwcq"]
 [ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="7_7r173"]
 [ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="9_3q72g"]
-[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="9_4k5lx"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="11_ta7gf"]
 [ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="12_bux34"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="13_ecf0a"]
@@ -54,23 +53,6 @@ scale_max = 10.0
 scale_curve = SubResource("CurveTexture_64t06")
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 alpha_curve = SubResource("CurveTexture_vhsx8")
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn8lj"]
-bg_color = Color(0.09803922, 0.09803922, 0.11372549, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.45, 0.55, 0.7, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 10
-
-[sub_resource type="Theme" id="Theme_cuwcq"]
-Button/styles/hover = null
-Button/styles/normal = SubResource("StyleBoxFlat_cn8lj")
 
 [sub_resource type="Curve" id="Curve_ecf0a"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -236,6 +218,22 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
+[sub_resource type="PrismMesh" id="PrismMesh_4k5lx"]
+left_to_right = 1.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_cuwcq"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_7r173"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_7r173"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ta7gf"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_bux34"]
+left_to_right = 1.0
+
 [sub_resource type="Animation" id="Animation_3q72g"]
 length = 0.001
 tracks/0/type = "value"
@@ -342,78 +340,8 @@ fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_yuebc")
 
-[node name="NextRound" type="Button" parent="." unique_id=1775923107]
-unique_name_in_owner = true
-visible = false
-z_index = 1
-custom_minimum_size = Vector2(0, 139.945)
-layout_mode = 0
-offset_left = 1218.0
-offset_top = 318.0
-offset_right = 1301.0
-offset_bottom = 363.0
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-script = ExtResource("9_4k5lx")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="NextRound" unique_id=2106889567]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 24.0
-offset_bottom = -19.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 26
-theme_override_font_sizes/italics_font_size = 26
-bbcode_enabled = true
-text = "[i][wave][color=ffc700]NEXT"
-fit_content = true
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="NextRound" type="Button" parent="NextRound" unique_id=1092947191]
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 8.0
-offset_right = 100.0
-offset_bottom = 129.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_cuwcq")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-
-[node name="NextRound2" type="Button" parent="NextRound" unique_id=1851161313]
-modulate = Color(0.23921569, 0.23921569, 0.23921569, 1)
-show_behind_parent = true
-layout_mode = 0
-offset_top = 8.0
-offset_right = 100.0
-offset_bottom = 129.15503
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_cuwcq")
-theme_override_colors/font_color = Color(1, 0.7833333, 0, 0)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 0)
-theme_override_font_sizes/font_size = 26
-text = "DONE"
-
 [node name="CenterContainer" type="MarginContainer" parent="." unique_id=721365468]
+custom_minimum_size = Vector2(1200, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -470,27 +398,6 @@ grow_vertical = 2
 scale = Vector2(0.15, 0.15)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("3_ecf0a")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="target" type="TextureRect" parent="CenterContainer/BackgroundControl" unique_id=799711403]
-self_modulate = Color(1, 1, 1, 0.3882353)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -258.01025
-offset_top = -271.0769
-offset_right = 253.98975
-offset_bottom = 240.9231
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 3.1415927
-scale = Vector2(1.45, 1.45)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("4_ecf0a")
 expand_mode = 1
 stretch_mode = 5
 
@@ -748,12 +655,14 @@ autoplay = &"rotation"
 speed_scale = 0.3
 
 [node name="TopRedPanel" type="Panel" parent="CenterContainer/MainPanel/MainPanel" unique_id=2081657472]
+self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 84.29)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_uucxj")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="CenterContainer/MainPanel/MainPanel/TopRedPanel" unique_id=1125389776]
+visible = false
 modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
 texture_filter = 6
 position = Vector2(484.48126, 44.729187)
@@ -1089,6 +998,171 @@ size_flags_vertical = 3
 theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
 
+[node name="RedBottomRight" type="Panel" parent="CenterContainer/MainPanel" unique_id=1515841314]
+unique_name_in_owner = true
+visible = false
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/RedBottomRight" unique_id=1340001515]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -145.00006
+offset_top = -50.00006
+offset_right = -145.00006
+offset_bottom = -50.00006
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/RedBottomRight/Control" unique_id=659931864]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+position = Vector2(-220.26447, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_4k5lx")
+
+[node name="RightTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/RedBottomRight/Control" unique_id=2021165155]
+visible = false
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+position = Vector2(203.00085, 5.242276e-06)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_cuwcq")
+
+[node name="Square" type="MeshInstance2D" parent="CenterContainer/MainPanel/RedBottomRight/Control" unique_id=1446708775]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+position = Vector2(-7.8964615, 1.192333e-06)
+rotation = 3.1415925
+scale = Vector2(240.79294, 82)
+mesh = SubResource("BoxMesh_7r173")
+
+[node name="GreyBottomLeft" type="Control" parent="CenterContainer/MainPanel" unique_id=582800959]
+unique_name_in_owner = true
+visible = false
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/GreyBottomLeft" unique_id=1123976643]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 151.0
+offset_top = -50.0
+offset_right = 151.0
+offset_bottom = -50.0
+grow_vertical = 0
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/GreyBottomLeft/Control" unique_id=2124611132]
+visible = false
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_4k5lx")
+
+[node name="RightTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/GreyBottomLeft/Control" unique_id=1085810717]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(203.00085, 5.242276e-06)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_cuwcq")
+
+[node name="Square" type="MeshInstance2D" parent="CenterContainer/MainPanel/GreyBottomLeft/Control" unique_id=828017141]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_7r173")
+
+[node name="GreyCornerPanel" type="Control" parent="CenterContainer/MainPanel" unique_id=963033442]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/GreyCornerPanel" unique_id=1492908372]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 0
+offset_left = 149.0
+offset_top = 49.0
+offset_right = 149.0
+offset_bottom = 49.0
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/GreyCornerPanel/Control" unique_id=135864726]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_7r173")
+
+[node name="Square" type="MeshInstance2D" parent="CenterContainer/MainPanel/GreyCornerPanel/Control" unique_id=1824600338]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_ta7gf")
+
+[node name="RedCornerPanel" type="Control" parent="CenterContainer/MainPanel" unique_id=567367946]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/RedCornerPanel" unique_id=576974713]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -149.0
+offset_top = 48.0
+offset_right = -149.0
+offset_bottom = 48.0
+grow_horizontal = 0
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/RedCornerPanel/Control" unique_id=1610636013]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_7r173")
+
+[node name="RightTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/RedCornerPanel/Control" unique_id=345573811]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(203.00085, 5.242276e-06)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_bux34")
+
+[node name="Square" type="MeshInstance2D" parent="CenterContainer/MainPanel/RedCornerPanel/Control" unique_id=237415506]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_ta7gf")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1059437881]
 libraries/ = SubResource("AnimationLibrary_cuwcq")
 
@@ -1194,5 +1268,3 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[connection signal="pressed" from="NextRound" to="." method="_on_shop_pressed"]

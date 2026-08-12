@@ -67,11 +67,11 @@ func _ready() -> void:
 	#pivot_offset = default_pivot_offset
 	pivot_offset_ratio = Vector2(0.5,1.5)
 	cash_label.modulate.a = 0.0
-	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
+
 	
 	hide()
 
-	all_skills = all_skills_container.get_children()
+	#all_skills = all_skills_container.get_children()
 
 	EventBus.instance.open_shop.connect(enter_state.bind(SkillState.OPEN_MENU))
 	#$NextRound.pressed.connect(enter_state.bind(SkillState.CLOSE_MENU))
@@ -79,8 +79,7 @@ func _ready() -> void:
 	#update_shop_labels()
 	cash_label.text = "$0"
 	
-	#$CenterContainer/MainPanel/VBoxContainer/Money_control.hide()
-	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.hide()
+
 	
 	_setup_ammo_count_popup()
 	_setup_pause_label_popup()
@@ -133,16 +132,27 @@ func ticket_purchased() -> void:
 	open_map_menu()
 
 
-## Opens the island map popup (Moss / Redd select) from the shop.
+## Opens the island map after returning to the start layout (beginning scenery).
 func open_map_menu() -> void:
+	if round_manager and round_manager.has_method("return_to_start_with_map"):
+		await round_manager.return_to_start_with_map()
+		return
 	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
 	if menus and menus.has_method("ensure_ticket_map"):
 		menus.ensure_ticket_map()
 	var map_menu := get_tree().get_first_node_in_group('map_menu')
 	if map_menu and map_menu.has_method('open_pop_up'):
+		CommonCode.apply_ui_overlay_blur()
 		map_menu.open_pop_up()
 	else:
 		push_warning('Shop: map menu missing')
+
+
+func _format_cash_label(amount: int, waved: bool = true) -> String:
+	var money := CommonCode.format_money(amount)
+	if waved:
+		return "[wave amp=2.0 freq=20.0 connected=1]%s" % money
+	return money
 
 
 func update_place_label() -> void:
@@ -170,7 +180,7 @@ func _refresh_boss_challenge_banner() -> void:
 			var s := float(round_manager.get_active_timer_seconds())
 			if s > 0.0:
 				seconds = int(round(s))
-		banner.text = "[center][wave]Survive %d Seconds[/wave][/center]" % seconds
+		banner.text = "[center][wave]HOLD OUT for %d Seconds[/wave][/center]" % seconds
 
 
 func _ensure_boss_challenge_banner() -> RichTextLabel:
@@ -203,7 +213,7 @@ func _ensure_boss_challenge_banner() -> RichTextLabel:
 	banner.add_theme_color_override("default_color", Color(0.631, 0.008, 0.016, 1.0))
 	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	banner.text = "[center][wave]Survive 60 Seconds[/wave][/center]"
+	banner.text = "[center][wave]HOLD OUT for 60 Seconds[/wave][/center]"
 	if parent:
 		parent.add_child(banner)
 	else:
@@ -332,7 +342,7 @@ func spawn_spent_cash_label(amount: int) -> void:
 
 	floating_label.global_position = cash_label.global_position
 	floating_label.size = cash_label.size
-	floating_label.text = "[color=#ff4444]-$" + str(amount) + "[/color]"
+	floating_label.text = "[color=#ff4444]-%s[/color]" % CommonCode.format_money(amount)
 	floating_label.modulate = Color(1, 1, 1, 1)
 	floating_label.show()
 
@@ -371,7 +381,7 @@ func _show_cents_winnings_float(dollars: int) -> void:
 	add_child(floating_label)
 	floating_label.global_position = cash_label.global_position
 	floating_label.size = cash_label.size
-	floating_label.text = "[color=#2ecc71]+$" + str(dollars) + "[/color]"
+	floating_label.text = "[color=#2ecc71]+%s[/color]" % CommonCode.format_money(dollars)
 	floating_label.modulate = Color(1, 1, 1, 1)
 	floating_label.show()
 	var start_pos := floating_label.global_position
@@ -392,7 +402,7 @@ func _roll_cash_from_to(from_cash: int, to_cash: int) -> void:
 	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_method(
 		func(value: float):
-			cash_label.text = "[wave amp=2.0 freq=20.0 connected=1]$" + str(int(value)),
+			cash_label.text = _format_cash_label(int(value)),
 		float(from_cash),
 		float(to_cash),
 		duration
@@ -609,7 +619,7 @@ func update_open_menu() -> void:
 	sfx_open_shop()
 	update_shop()
 	update_place_label()
-	%Play_round_text.text = "[i][wave][color=]PLAY\n[color=c70102]$" + str(int(gl_DataSet.get_value('price_play_round', 0)))
+	#%Play_round_text.text = "[i][wave][color=]PLAY\n[color=c70102]%s" % CommonCode.format_money(int(gl_DataSet.get_value('price_play_round', 0)))
 
 	
 	update_shop_labels()
@@ -636,7 +646,7 @@ func update_open_menu() -> void:
 	
 	await get_tree().create_timer(0.15, false).timeout
 	
-	await reveal_random_skills(0.05)
+	#await reveal_random_skills(0.05)
 
 	enter_state(SkillState.IN_MENU)
 	
@@ -648,10 +658,11 @@ func play_round_button_pressed() -> void:
 		focused.release_focus()
 
 	shake_shop()
-	reroll_button.hide()
+	if reroll_button:
+		reroll_button.hide()
 	%PlayButton.disabled = true
-	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
-	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
+	#$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
+	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
 	var play_round_cost = int(gl_DataSet.get_value('price_play_round', 0))
 	gl_PlayerState.log_buy('debug_add_cash', play_round_cost)
 	
@@ -731,9 +742,8 @@ func update_close_menu() -> void:
 	EventBus.instance.close_shop.emit()
 
 	#reroll_button.show()
-	$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 1.0
-	
-	$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 1.0
+	#$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 1.0
+	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 1.0
 	%PlayButton.modulate.a = 1.0
 	
 	if round_manager:
@@ -751,7 +761,7 @@ func roll_up_cash_first_round() -> void:
 	var target_cash: int = gl_PlayerState.dataset.cash
 
 	# Show "0" immediately, invisible, then fade in
-	cash_label.text = "[wave amp=2.0 freq=20.0 connected=1]$0"
+	cash_label.text = _format_cash_label(0)
 	cash_label.modulate.a = 0.0
 	cash_label.show()
 
@@ -769,7 +779,7 @@ func roll_up_cash_first_round() -> void:
 
 	tween.tween_method(
 		func(value: float):
-			cash_label.text = "[wave amp=2.0 freq=20.0 connected=1]$" + str(int(value)),
+			cash_label.text = _format_cash_label(int(value)),
 		0.0,
 		float(target_cash),
 		duration
@@ -948,9 +958,9 @@ func _wire_shop_focus_neighbors() -> void:
 	var cents_btn := get_node_or_null("%ShootForCentsButton") as Control
 
 	var upgrades: Array[Control] = []
-	for child in available_upgrades.get_children():
-		if child is Control and UiFocus.can_focus(child as Control):
-			upgrades.append(child as Control)
+	#for child in available_upgrades.get_children():
+		#if child is Control and UiFocus.can_focus(child as Control):
+			#upgrades.append(child as Control)
 
 	var rounds: Array[Control] = []
 	var round_row := get_node_or_null("CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer")
@@ -1069,7 +1079,7 @@ func _on_re_roll_pressed() -> void:
 	await get_tree().create_timer(0.05, false).timeout
 	
 	# Reveal new ones
-	await reveal_random_skills(0.05, true)
+	#await reveal_random_skills(0.05, true)
 	_wire_shop_focus_neighbors()
 
 	
@@ -1090,7 +1100,7 @@ func purchase_denied_tween() -> void:
 		
 
 func clear_available_skills() -> void:
-	
+	return
 	for skill in available_upgrades.get_children():
 		
 		# Reset visuals
@@ -1106,15 +1116,15 @@ func clear_available_skills() -> void:
 
 func update_shop_labels() -> void:
 	
-	cash_label.text = "[wave amp=2.0 freq=20.0 connected=1]$" + str(player_cash)
+	cash_label.text = _format_cash_label(player_cash)
 	update_cash_label_color()
 	update_cost_label()
-	
-	if price_reroll == 0:
-		reroll_button.get_child(0).text = "REROLL\n[wave][color=#c70102]FREE[/color]"
-
-	else:
-		reroll_button.get_child(0).text = "[wave]REROLL\n[color=#c70102]$" + str(price_reroll) + "[/color]"
+	return
+	#if price_reroll == 0:
+		#reroll_button.get_child(0).text = "REROLL\n[wave][color=#c70102]FREE[/color]"
+#
+	#else:
+		#reroll_button.get_child(0).text = "[wave]REROLL\n[color=#c70102]%s[/color]" % CommonCode.format_money(price_reroll)
 
 func sfx_purchase_made() -> void:
 	$SFX/shop_purchase_01.play()
@@ -1185,7 +1195,7 @@ func _on_max_out_powers_pressed() -> void:
 		skills.reset_buttons_settings()
 		
 func update_cost_label() -> void:
-	cash_label.text = "$" + str(player_cash)
+	cash_label.text = _format_cash_label(player_cash, false)
 	update_cash_label_color()
 	await get_tree().process_frame
 
@@ -1282,8 +1292,6 @@ func mark_round_as_cleared() -> void:
 	
 func mark_round_as_perfect() -> void:
 	var round_button_cont : HBoxContainer = 	$CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
-
-	%ScoreTotal.add_to_total()
 	
 	for i in round_button_cont.get_children():
 		

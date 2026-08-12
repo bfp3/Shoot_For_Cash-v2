@@ -42,6 +42,12 @@ var _upgrade_gun_fire_rate := 0.35
 
 @export var can_right_click_shoot := false
 
+@export_group("Accuracy Streak")
+## Progress bar near the bottom: +1 per accurate shot, miss resets. At max, bar resets and you gain a 4th strike slot (then take a strike).
+@export var accuracy_streak_enabled := false
+@export var accuracy_streak_max := 10
+@export var accuracy_streak_tween_time := 0.28
+
 @export_group("Alternate Weapon (Shift+G)")
 ## Press Shift+G in-round to toggle this loadout on/off.
 @export var alt_weapon_enabled := true
@@ -225,10 +231,13 @@ func update_inactive() -> void:
 	pass
 	
 func update_active() -> void:
-	pass
+	_sync_accuracy_bar_visibility()
 	
 	
 func update_round_finished() -> void:
+	if _accuracy_bar:
+		_accuracy_bar.hide()
+
 	weapon_shooting.time_ran_out = true
 	
 	reset_pos()
@@ -241,7 +250,8 @@ func update_round_finished() -> void:
 	weapon_shooting.time_ran_out = false
 	
 func update_in_shop() -> void:
-	pass
+	if _accuracy_bar:
+		_accuracy_bar.hide()
 	
 func update_pause() -> void:
 	pass
@@ -631,7 +641,7 @@ func full_power_mode() -> void:
 	power_gun_fire_rate = gl_DataSet.get_value('power_gun_fire_rate', 9)
 
 func update_stats_visually() -> void:
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.5, false).timeout
 	
 	#if gl_PlayerState.dataset.power_bullet_damage >= 1:
 		#$CanvasLayer/Crosshair/Inner_scope/Inner_scope3.show()
@@ -661,7 +671,7 @@ func hide_hud() -> void:
 
 func apply_sky_mine() -> void:
 	$CanvasLayer/HUD_bottom_corner/SkyMine.start()
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.5, false).timeout
 	$CanvasLayer/HUD_bottom_corner/SkyMine.start()
 	%Cooldown_progressBar3.self_modulate = Color('d10000')
 	$CanvasLayer/Crosshair/Inner_scope/center_container.modulate = Color('d10000')
@@ -846,11 +856,11 @@ func _init_ammo() -> void:
 
 func _refresh_ammo_display(animate := false) -> void:
 	var shown := get_displayed_ammo()
-	var hud := $CanvasLayer/HUD_bottom_corner/ShotRemaining
+	var hud := $CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining
 	if hud and hud.has_method('set_ammo'):
 		hud.set_ammo(shown, animate)
 	else:
-		%ShotRemaining.text = str(shown).pad_zeros(2)
+		%ShotRemainingLabel.text = str(shown).pad_zeros(2)
 
 	%Crosshair.out_of_ammo_hide()
 
@@ -950,11 +960,12 @@ func fire_weapon() -> void:
 			_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
 			_refresh_ammo_display()
 		else:
-			# Empty magazine: still allow shooting the early-exit retreat target.
-			if weapon_shooting.shoot_early_exit_if_aimed():
+			# Empty magazine: still allow shooting early-exit / ammo-reload targets.
+			if weapon_shooting.shoot_special_midround_target_if_aimed():
 				return
 			out_of_ammo()
 			weapon_shooting.play_missed_sounds()
+			register_accuracy_miss()
 			return
 	
 	#set_process(false)
@@ -993,6 +1004,108 @@ func player_did_not_miss() -> void:
 	while %Bullet_icon.value != 100.0:
 		await get_tree().process_frame
 	_is_currently_shooting = false
+
+
+# --- Accuracy streak bar -----------------------------------------------------
+var _accuracy_streak := 0
+var _accuracy_bar: ProgressBar
+var _accuracy_bar_tween: Tween
+var _accuracy_extra_strike_granted := false
+
+
+func _ensure_accuracy_bar() -> void:
+	if _accuracy_bar != null and is_instance_valid(_accuracy_bar):
+		return
+	var layer := get_node_or_null("CanvasLayer") as CanvasLayer
+	if layer == null:
+		return
+	var bar := ProgressBar.new()
+	bar.name = "AccuracyStreakBar"
+	bar.min_value = 0.0
+	bar.max_value = float(maxi(accuracy_streak_max, 1))
+	bar.value = 0.0
+	bar.show_percentage = false
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bar.custom_minimum_size = Vector2(420, 18)
+	bar.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	bar.offset_left = -210.0
+	bar.offset_right = 210.0
+	bar.offset_top = -96.0
+	bar.offset_bottom = -78.0
+	bar.modulate = Color(0.95, 0.85, 0.35, 0.95)
+	bar.visible = accuracy_streak_enabled
+	layer.add_child(bar)
+	_accuracy_bar = bar
+
+
+func _sync_accuracy_bar_visibility() -> void:
+	_ensure_accuracy_bar()
+	if _accuracy_bar:
+		_accuracy_bar.visible = accuracy_streak_enabled and current_state == State.ACTIVE
+
+
+func register_accurate_shot() -> void:
+	if not accuracy_streak_enabled:
+		return
+	if current_state != State.ACTIVE:
+		return
+	_ensure_accuracy_bar()
+	_accuracy_streak = mini(_accuracy_streak + 1, accuracy_streak_max)
+	_tween_accuracy_bar(float(_accuracy_streak))
+	if _accuracy_streak >= accuracy_streak_max:
+		_on_accuracy_streak_complete()
+
+
+func register_accuracy_miss() -> void:
+	if not accuracy_streak_enabled:
+		return
+	if _accuracy_streak <= 0:
+		return
+	_accuracy_streak = 0
+	_tween_accuracy_bar(0.0)
+
+
+func reset_accuracy_streak() -> void:
+	_accuracy_streak = 0
+	_accuracy_extra_strike_granted = false
+	if gl_PlayerState and gl_PlayerState.has_method("set_max_strikes"):
+		gl_PlayerState.set_max_strikes(3)
+	_ensure_accuracy_bar()
+	if _accuracy_bar:
+		if _accuracy_bar_tween:
+			_accuracy_bar_tween.kill()
+		_accuracy_bar.max_value = float(maxi(accuracy_streak_max, 1))
+		_accuracy_bar.value = 0.0
+	_sync_accuracy_bar_visibility()
+
+
+func _tween_accuracy_bar(to_value: float) -> void:
+	_ensure_accuracy_bar()
+	if _accuracy_bar == null:
+		return
+	_accuracy_bar.visible = accuracy_streak_enabled
+	if _accuracy_bar_tween:
+		_accuracy_bar_tween.kill()
+	_accuracy_bar_tween = create_tween()
+	_accuracy_bar_tween.tween_property(_accuracy_bar, "value", to_value, accuracy_streak_tween_time)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+func _on_accuracy_streak_complete() -> void:
+	## Grant a 4th strike slot once, then apply a strike — total allowed becomes 4.
+	if not _accuracy_extra_strike_granted:
+		_accuracy_extra_strike_granted = true
+		if gl_PlayerState.has_method("set_max_strikes"):
+			gl_PlayerState.set_max_strikes(4)
+		var rm = get_tree().get_first_node_in_group("round_manager")
+		if rm and rm.get("wave_progress_feedback"):
+			var wpf = rm.wave_progress_feedback
+			if wpf and wpf.has_method("ensure_extra_strike_slot"):
+				wpf.ensure_extra_strike_slot()
+
+	_accuracy_streak = 0
+	_tween_accuracy_bar(0.0)
+	gl_PlayerState.add_strike()
 	
 	
 
@@ -1035,16 +1148,22 @@ func title_screen_start() -> void:
 
 	
 func title_screen_end() -> void:
-	#reset_pos()
-	start_player()
+	## Leave the gun hidden until the player presses Play in a level shop.
+	if player_gun and player_gun.has_method("hide_for_menus"):
+		player_gun.hide_for_menus()
+	else:
+		stop_player()
 
 
 func stop_player() -> void:
-	player_gun.end_position()
+	if player_gun and player_gun.has_method("hide_for_menus"):
+		player_gun.hide_for_menus()
+	elif player_gun:
+		player_gun.end_position()
 	enter_state(State.ROUND_FINISHED)
 	weapon_shooting.can_shoot(false)
 	_scope_at_min = true
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.5, false).timeout
 	_scope_at_min = false
 	
 	
@@ -1062,19 +1181,22 @@ func start_player() -> void:
 	_refresh_ammo_display()
 	weapon_shooting.can_shoot(true)
 
-	%Cooldown_progressBar3.value = 100.0
 	%Bullet_icon.value  = 100.0
 	
-	#await get_tree().create_timer(0.5).timeout
-	player_gun.start_position()
+	CommonCode.apply_gameplay_blur()
+	if player_gun and player_gun.has_method("show_for_play"):
+		player_gun.show_for_play()
+	elif player_gun:
+		player_gun.start_position()
 	%Crosshair.cross_hair_fade_in()
 	#reset_mouse_pos()
 	
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.5, false).timeout
 	%Mouse_turning_SFX.unmute()
 	
 	enter_state(State.ACTIVE)
-
+	reset_accuracy_streak()
+	_sync_accuracy_bar_visibility()
 	
 func reset_mouse_pos() -> void:
 	print(' get_viewport().size / 2 ',  get_viewport().size / 2)
@@ -1099,7 +1221,7 @@ func perfect_score() -> void:
 	$SFX/PerfectScore4.play(0.5)
 	$SFX/Flicker_sound.play()
 	
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	# Effects once fully visible
 	pulse_shake_camera()
 
@@ -1121,6 +1243,54 @@ func round_finished(_round_finished : bool) -> void:
 func show_ammo_panel() -> void:
 	%HUD_bottom_corner.modulate.a = 0.0
 	%HUD_bottom_corner.show()
+	$CanvasLayer/HUD_bottom_corner/AmmoCorner.modulate.a = 0.0
+	$CanvasLayer/HUD_bottom_corner/AmmoCorner.show()
+	
 	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_interval(2.0)
+	#tween.tween_interval(0.2)
 	tween.tween_property(%HUD_bottom_corner, 'modulate:a', 1.0, 1.0)
+	tween.parallel().tween_property($CanvasLayer/HUD_bottom_corner/AmmoCorner, 'modulate:a', 1.0, 1.0)
+
+
+func fade_out_ammo_panel(duration: float = 0.33) -> void:
+	var hud := get_node_or_null("%HUD_bottom_corner") as CanvasItem
+	var ammo := get_node_or_null("CanvasLayer/HUD_bottom_corner/AmmoCorner") as CanvasItem
+	if hud == null and ammo == null:
+		return
+	var tween := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	if hud:
+		tween.tween_property(hud, "modulate:a", 0.0, duration)
+	if ammo:
+		if hud:
+			tween.parallel().tween_property(ammo, "modulate:a", 0.0, duration)
+		else:
+			tween.tween_property(ammo, "modulate:a", 0.0, duration)
+	tween.tween_callback(func() -> void:
+		if ammo:
+			ammo.hide()
+		if hud:
+			hud.hide()
+	)
+
+
+func hide_ammo_panel_instant() -> void:
+	var hud := get_node_or_null("%HUD_bottom_corner") as CanvasItem
+	var ammo := get_node_or_null("CanvasLayer/HUD_bottom_corner/AmmoCorner") as CanvasItem
+	if hud:
+		hud.modulate.a = 0.0
+		hud.hide()
+	if ammo:
+		ammo.modulate.a = 0.0
+		ammo.hide()
+
+
+## Shop / tally / gameplay — bullets visible without the delayed intro fade.
+func ensure_ammo_panel_visible() -> void:
+	var hud := get_node_or_null("%HUD_bottom_corner") as CanvasItem
+	var ammo := get_node_or_null("CanvasLayer/HUD_bottom_corner/AmmoCorner") as CanvasItem
+	if hud:
+		hud.show()
+		hud.modulate.a = 1.0
+	if ammo:
+		ammo.show()
+		ammo.modulate.a = 1.0

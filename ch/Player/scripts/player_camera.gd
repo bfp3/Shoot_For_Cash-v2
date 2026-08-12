@@ -28,6 +28,8 @@ func _ready() -> void:
 	
 	EventBus.instance.add_strike.connect(on_strike)
 	EventBus.instance.has_hit_three_strikes.connect(_on_three_strikes)
+	_ensure_dof_attrs()
+	apply_gameplay_blur()
 
 func on_strike() -> void:
 	pass
@@ -247,3 +249,118 @@ func little_camera_movement() -> void:
 func camera_sounds() -> void:
 	if camera_stop_all_shaking: return  # ✅ Added check
 	CommonCode.play_sound_instance_pitch_adjusted(CAMERA_WAKING_UP, -10.0, 1.0)
+
+
+# --- Depth of field blur (menus / travel / gameplay) -------------------------
+## Blur while shop, tally, pause, or map is up. Edit in the inspector.
+@export var UI_overlay_blur_amount := 0.2
+## Blur while travelling between levels.
+@export var transition_blur_amount := 1.0
+## Blur while actively playing a round.
+@export var gameplay_blur_amount := 0.0
+## Default tween time when switching blur amounts.
+@export var blur_tween_duration := 0.33
+
+var _dof_attrs: CameraAttributesPractical = null
+var _dof_default_amount := 0.0
+var _blur_tween: Tween
+var _env_cache: Dictionary = {} # path -> Environment
+
+
+func set_level_environment_from_path(path: String) -> void:
+	if path.is_empty():
+		return
+	var env: Environment = null
+	if _env_cache.has(path):
+		env = _env_cache[path] as Environment
+	else:
+		env = load(path) as Environment
+		if env:
+			_env_cache[path] = env
+	if env == null:
+		push_warning("PlayerCamera: failed to load environment '%s'" % path)
+		return
+	set("environment", env)
+
+
+func set_level_environment(env: Environment) -> void:
+	if env == null:
+		return
+	set("environment", env)
+
+
+func _ensure_dof_attrs() -> void:
+	if _dof_attrs != null and is_instance_valid(_dof_attrs):
+		return
+	## Use get/set so analyzers that miss Camera3D.attributes still parse cleanly.
+	var attrs: Variant = get("attributes")
+	if attrs is CameraAttributesPractical:
+		## Duplicate so we don't mutate the shared .tres on disk.
+		_dof_attrs = (attrs as CameraAttributesPractical).duplicate(true) as CameraAttributesPractical
+		set("attributes", _dof_attrs)
+		_dof_default_amount = _dof_attrs.dof_blur_amount
+		return
+	_dof_attrs = CameraAttributesPractical.new()
+	_dof_attrs.dof_blur_far_enabled = true
+	_dof_attrs.dof_blur_near_enabled = true
+	_dof_attrs.dof_blur_far_distance = 0.01
+	_dof_attrs.dof_blur_near_distance = 0.01
+	_dof_attrs.dof_blur_amount = 0.0
+	set("attributes", _dof_attrs)
+	_dof_default_amount = 0.0
+
+
+func _apply_dof_blur_amount(amount: float) -> void:
+	if _dof_attrs == null:
+		return
+	_dof_attrs.dof_blur_amount = maxf(amount, 0.0)
+	var on := _dof_attrs.dof_blur_amount > 0.001
+	if on:
+		_dof_attrs.dof_blur_far_enabled = true
+		_dof_attrs.dof_blur_near_enabled = true
+
+
+func set_dof_blur(amount: float) -> void:
+	_ensure_dof_attrs()
+	if _blur_tween:
+		_blur_tween.kill()
+		_blur_tween = null
+	_apply_dof_blur_amount(amount)
+
+
+## Smoothly tween DOF blur to `amount`. Pass duration < 0 to use blur_tween_duration.
+func tween_dof_blur(amount: float, duration: float = -1.0) -> void:
+	_ensure_dof_attrs()
+	if _dof_attrs == null:
+		return
+	if duration < 0.0:
+		duration = blur_tween_duration
+	var target := maxf(amount, 0.0)
+	if duration <= 0.0:
+		set_dof_blur(target)
+		return
+	if _blur_tween:
+		_blur_tween.kill()
+	## Turning blur on: enable DOF before the tween so the ramp is visible.
+	if target > 0.001:
+		_dof_attrs.dof_blur_far_enabled = true
+		_dof_attrs.dof_blur_near_enabled = true
+	_blur_tween = create_tween()
+	_blur_tween.tween_method(_apply_dof_blur_amount, _dof_attrs.dof_blur_amount, target, duration)
+
+
+func apply_ui_overlay_blur() -> void:
+	tween_dof_blur(UI_overlay_blur_amount)
+
+
+func apply_transition_blur() -> void:
+	tween_dof_blur(transition_blur_amount)
+
+
+func apply_gameplay_blur() -> void:
+	tween_dof_blur(gameplay_blur_amount)
+
+
+func reset_dof_blur_to_default() -> void:
+	_ensure_dof_attrs()
+	tween_dof_blur(_dof_default_amount)

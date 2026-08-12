@@ -12,6 +12,8 @@ extends CanvasLayer
 var active := false
 var animating := false
 var stored_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_VISIBLE
+## Set when pause was opened from the island map — Resume fades the map back in.
+var reopen_map_on_resume := false
 
 
 func _ready() -> void:
@@ -93,6 +95,7 @@ func open_menu() -> void:
 	show()
 
 	sfx_open_shop()
+	CommonCode.apply_ui_overlay_blur()
 
 	var backgroundColor := $Control/CenterContainer/ColorRect
 	backgroundColor.modulate.a = 0.0
@@ -132,6 +135,35 @@ func close_menu() -> void:
 		focused.release_focus()
 
 	animating = false
+	var should_reopen_map := reopen_map_on_resume
+	reopen_map_on_resume = false
+
+	## Restore blur for whatever UI/game state we returned to.
+	var shop := get_tree().get_first_node_in_group("shop_main_menu") as CanvasItem
+	var map_menu := get_tree().get_first_node_in_group("map_menu") as CanvasItem
+	var tally := get_tree().get_first_node_in_group("tally_card_menu") as CanvasItem
+	if (shop and shop.visible) or (map_menu and map_menu.visible) or (tally and tally.visible):
+		CommonCode.apply_ui_overlay_blur()
+	else:
+		var rm := get_tree().get_first_node_in_group("round_manager")
+		if rm and rm.has_method("_is_actively_playing_round") and rm._is_actively_playing_round():
+			CommonCode.apply_gameplay_blur()
+		else:
+			CommonCode.apply_ui_overlay_blur()
+
+	if should_reopen_map:
+		await _reopen_map_after_resume()
+
+
+func _reopen_map_after_resume() -> void:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_ticket_map"):
+		menus.ensure_ticket_map()
+	var map_menu := get_tree().get_first_node_in_group("map_menu")
+	if map_menu and map_menu.has_method("open_pop_up"):
+		await map_menu.open_pop_up()
+	elif map_menu and map_menu.has_method("display_ticket"):
+		await map_menu.display_ticket()
 
 
 func start() -> void:
@@ -174,6 +206,8 @@ func _on_close_game_pressed() -> void:
 
 
 func _on_open_map_pressed() -> void:
+	## Explicit Map button — don't also reopen via Resume flag.
+	reopen_map_on_resume = false
 	await close_menu()
 	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
 	if menus and menus.has_method("ensure_ticket_map"):
@@ -187,6 +221,7 @@ func _on_open_map_pressed() -> void:
 
 func _on_back_to_title_pressed() -> void:
 	# Smooth transition back to the title screen — no scene reload / full restart.
+	reopen_map_on_resume = false
 	if GameSettings.is_resolution_pending():
 		GameSettings.revert_resolution()
 	animating = false
@@ -206,7 +241,7 @@ func _on_back_to_title_pressed() -> void:
 
 
 func _on_cancel_menu_pressed() -> void:
-	close_menu()
+	await close_menu()
 
 
 func _on_settings_pressed() -> void:

@@ -364,3 +364,66 @@ func bird_fly_by() -> void:
 		birds.bird_fly_by()
 	await get_tree().create_timer(0.25).timeout
 	CommonCode.set_all_particles_blow_away(Vector3(0.0, 1.0, 5.0), 5.0)
+
+
+## Cash display: commas above $999; $100K / $1M style above $99,999.
+func format_money(amount: int) -> String:
+	var negative := amount < 0
+	var n := absi(amount)
+	var body := ""
+	if n >= 1_000_000:
+		var millions := float(n) / 1_000_000.0
+		if is_equal_approx(millions, roundf(millions)):
+			body = "%dM" % int(roundf(millions))
+		else:
+			body = "%.1fM" % millions
+			if body.ends_with(".0M"):
+				body = body.replace(".0M", "M")
+	elif n > 99999:
+		var thousands := float(n) / 1000.0
+		if is_equal_approx(thousands, roundf(thousands)):
+			body = "%dK" % int(roundf(thousands))
+		else:
+			body = "%.1fK" % thousands
+			if body.ends_with(".0K"):
+				body = body.replace(".0K", "K")
+	else:
+		body = _format_int_with_commas(n)
+	return ("-$" if negative else "$") + body
+
+
+func _format_int_with_commas(n: int) -> String:
+	var raw := str(n)
+	var out := ""
+	var count := 0
+	for i in range(raw.length() - 1, -1, -1):
+		if count > 0 and count % 3 == 0:
+			out = "," + out
+		out = raw[i] + out
+		count += 1
+	return out
+
+
+func get_player_camera():
+	var tree := get_tree()
+	if tree == null:
+		return null
+	return tree.get_first_node_in_group("player_cam")
+
+
+func apply_ui_overlay_blur() -> void:
+	var cam = get_player_camera()
+	if cam and cam.has_method("apply_ui_overlay_blur"):
+		cam.apply_ui_overlay_blur()
+
+
+func apply_transition_blur() -> void:
+	var cam = get_player_camera()
+	if cam and cam.has_method("apply_transition_blur"):
+		cam.apply_transition_blur()
+
+
+func apply_gameplay_blur() -> void:
+	var cam = get_player_camera()
+	if cam and cam.has_method("apply_gameplay_blur"):
+		cam.apply_gameplay_blur()

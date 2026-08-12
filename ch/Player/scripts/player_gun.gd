@@ -28,6 +28,7 @@ func _ready() -> void:
 		i.hide()
 	if gun_alt:
 		gun_alt.hide()
+	hide()
 
 
 func set_weapon_slot(use_alt: bool) -> void:
@@ -88,12 +89,31 @@ func get_barrel_position(pos_x : float = 0.0) -> Transform3D:
 
 
 func start_position() -> void:
+	show()
+	visible = true
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(self, "position:y", -0.665, 0.5)
 
 func end_position() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(self, "position:y", -1.335, 0.5)
+
+
+## Fully hide gun meshes (menus / title / map). Shown again on play via start_position.
+func hide_for_menus() -> void:
+	end_position()
+	hide()
+	for i in guns:
+		if i:
+			i.hide()
+	if gun_alt:
+		gun_alt.hide()
+
+
+func show_for_play() -> void:
+	show()
+	update_guns()
+	start_position()
 
 func play_sparks(barrel_pos : Marker3D) -> void:
 	var new_sparks = sparks_01.duplicate()

@@ -625,7 +625,7 @@ func setup_rock_type() -> void:
 			current_rock_type = "Rock Avoider"
 			rock_type_name = "rock_type_avoider"
 			var avoider_scale := Vector3.ONE * 0.35
-			var avoider_size := 1.35
+			var avoider_size := 1.5
 
 			health = 1
 			cash_value = 0

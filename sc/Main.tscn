@@ -44,6 +44,7 @@
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 [ext_resource type="PackedScene" uid="uid://l8unrpfb1xjd" path="res://ch/targets/early_exit_target.tscn" id="82_exit"]
+[ext_resource type="PackedScene" uid="uid://cammoreloadtgt01" path="res://ch/targets/ammo_reload_target.tscn" id="83_ammo"]
 [ext_resource type="Script" uid="uid://tyrtfghjsjni" path="res://lib/deferred_menu_loader.gd" id="def_menu_loader"]
 
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
@@ -274,14 +275,12 @@ scale_max = 0.19999999
 scale_curve = SubResource("CurveTexture_3gdew")
 alpha_curve = SubResource("CurveTexture_fuvvr")
 
-[node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "start_cam", "round_timer", "HUD_CRT", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
+[node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "round_timer", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
 intro_title_screen = true
 player = NodePath("Player")
 round_manager = NodePath("Round_manager")
-start_cam = NodePath("Camera3D")
 round_timer = NodePath("MainGameCanvasLayer/Timer")
-HUD_CRT = NodePath("")
 splash_screen = NodePath("SplashScreenCanvasLayer")
 music_manager = NodePath("Music")
 main_game_canvas = NodePath("MainGameCanvasLayer")
@@ -374,11 +373,6 @@ bus = &"MusicBus"
 [node name="Shop_Music" type="AudioStreamPlayer" parent="Music" unique_id=800541780]
 volume_db = -20.0
 bus = &"MusicBus"
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=1533254053]
-transform = Transform3D(-1, 6.859112e-09, 8.7153275e-08, 0, 0.99691725, -0.07845909, -8.742278e-08, -0.07845909, -0.99691725, 0, 0, 17.224)
-fov = 37.9
-far = 2000.0
 
 [node name="BirdsFlightPath" type="Path3D" parent="." unique_id=659428985]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
@@ -706,6 +700,9 @@ roundManager = NodePath("../Round_manager")
 
 [node name="EarlyExitTarget" parent="." unique_id=1222190939 instance=ExtResource("82_exit")]
 transform = Transform3D(0.266, 0, 0, 0, 0.266, 0, 0, 0, 0.266, -4.432, -2.214, 11.257)
+
+[node name="AmmoReloadTarget" parent="." instance=ExtResource("83_ammo")]
+transform = Transform3D(0.266, 0, 0, 0, 0.266, 0, 0, 0, 0.266, 4.432, -2.214, 11.257)
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
 unique_name_in_owner = true

@@ -292,7 +292,7 @@ func _on_start_button_pressed() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_IN).set_parallel()
 	#tween.tween_interval(0.75)
 	#tween.tween_property(curr_song, "pitch_scale", 0.01, 1.5)
-	tween.tween_property(curr_song, "volume_db", -7.0, 1.0).as_relative()
+	tween.tween_property(curr_song, "volume_db", -10.0, 1.0).as_relative()
 	await tween.finished
 
 

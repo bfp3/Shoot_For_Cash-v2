@@ -54,7 +54,8 @@ func set_state(new_state: UpgradeState, is_affordable: bool) -> void:
 
 
 func _on_focus_entered() -> void:
-
+	if disabled:
+		return
 	# Focus enter sound
 	if focus_enter_sfx:
 		focus_enter_sfx.play()
@@ -63,6 +64,9 @@ func _on_focus_entered() -> void:
 
 
 func _on_focus_exited() -> void:
+	if disabled:
+		return
+		
 	# Focus exit sound
 	if focus_exit_sfx:
 		focus_exit_sfx.play()

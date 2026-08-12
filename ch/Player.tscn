@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://wb58a1luc02y" path="res://ch/HUD_components/reticle_sensitivity_popup.gd" id="2_retsens"]
 [ext_resource type="Script" uid="uid://4a0w5mbutje7" path="res://ch/Player/mobile_controller.gd" id="2_vmtkp"]
 [ext_resource type="Environment" uid="uid://c2ydq6pe4fe5" path="res://res/moss_env_v2.tres" id="6_4gbdm"]
+[ext_resource type="CameraAttributesPractical" uid="uid://beg35rl711fns" path="res://ch/Camera/camera_atrributes.tres" id="7_rui0b"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_b1tng"]
 [ext_resource type="Script" uid="uid://b8ta6ry80sv7q" path="res://ch/inner_scope_2.gd" id="9_b1tng"]
 [ext_resource type="AudioStream" uid="uid://bk1svagr7yjcv" path="res://sfx/gunLocked.ogg" id="9_g6ubq"]
@@ -56,13 +57,6 @@
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="40_pivo4"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="41_k5tjv"]
 [ext_resource type="PackedScene" uid="uid://dbuyf4x33jxsi" path="res://ch/Player/hoodMesh.tscn" id="48_vmtkp"]
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_rui0b"]
-dof_blur_far_enabled = true
-dof_blur_far_distance = 0.01
-dof_blur_near_enabled = true
-dof_blur_near_distance = 0.01
-dof_blur_amount = 0.0
 
 [sub_resource type="Curve" id="Curve_emrcn"]
 _data = [Vector2(0, 0.460674), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -330,36 +324,6 @@ _data = {
 &"rotate_arrow": SubResource("Animation_k5tjv")
 }
 
-[sub_resource type="Curve" id="Curve_g6ubq"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_lf8qf"]
-curve = SubResource("Curve_g6ubq")
-
-[sub_resource type="Curve" id="Curve_bpx2c"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_11n43"]
-curve = SubResource("Curve_bpx2c")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_txfio"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 150.0
-initial_velocity_max = 300.0
-angular_velocity_min = -180.0
-angular_velocity_max = 180.0
-gravity = Vector3(0, 0, 0)
-scale_min = 10.0
-scale_max = 20.0
-scale_curve = SubResource("CurveTexture_11n43")
-color = Color(0.81960785, 0, 0, 1)
-alpha_curve = SubResource("CurveTexture_lf8qf")
-hue_variation_min = -0.050000023
-hue_variation_max = 0.049999975
-
 [sub_resource type="Curve" id="Curve_fuvvr"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
@@ -506,6 +470,36 @@ _data = {
 &"RESET": SubResource("Animation_txfio"),
 &"rot": SubResource("Animation_3gdew")
 }
+
+[sub_resource type="Curve" id="Curve_g6ubq"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_lf8qf"]
+curve = SubResource("Curve_g6ubq")
+
+[sub_resource type="Curve" id="Curve_bpx2c"]
+_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_11n43"]
+curve = SubResource("Curve_bpx2c")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_txfio"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 150.0
+initial_velocity_max = 300.0
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 0, 0)
+scale_min = 10.0
+scale_max = 20.0
+scale_curve = SubResource("CurveTexture_11n43")
+color = Color(0.81960785, 0, 0, 1)
+alpha_curve = SubResource("CurveTexture_lf8qf")
+hue_variation_min = -0.050000023
+hue_variation_max = 0.049999975
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5d6j6"]
 content_margin_left = 0.0
@@ -846,6 +840,7 @@ scope_shrink_bullet_speed_scale = 0.3
 scope_expand_bullet_speed_scale = 0.3
 scope_shrink_fire_rate_scale = 0.35
 scope_expand_fire_rate_scale = 0.35
+accuracy_streak_enabled = true
 alt_weapon_enabled = false
 alt_bullet_scene = ExtResource("14_altbullet")
 weapon_shooting = NodePath("Weapon_shooting")
@@ -867,8 +862,8 @@ script = ExtResource("10_kkix3")
 [node name="Camera3D" type="Camera3D" parent="Cam_pivot" unique_id=1699277447 groups=["player_cam"]]
 transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0, 0)
 environment = ExtResource("6_4gbdm")
-attributes = SubResource("CameraAttributesPractical_rui0b")
-fov = 37.9
+attributes = ExtResource("7_rui0b")
+fov = 37.0
 size = 0.05
 far = 1000.0
 script = ExtResource("10_n6ds6")
@@ -983,7 +978,7 @@ mesh = SubResource("CylinderMesh_ta18e")
 
 [node name="StableCamera" type="Camera3D" parent="." unique_id=1918680024]
 cull_mask = 1
-fov = 37.9
+fov = 37.0
 size = 0.05
 far = 5.0
 
@@ -1844,203 +1839,6 @@ grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="ShotRemaining" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=777895345]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = -130.0
-offset_right = 192.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.46, 0.46)
-pivot_offset_ratio = Vector2(1, 1)
-size_flags_horizontal = 4
-size_flags_vertical = 3
-mouse_filter = 2
-script = ExtResource("1_shotrem")
-
-[node name="SkyMineParticles2D" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1579610197]
-z_index = 3
-position = Vector2(71.91324, -72.56433)
-emitting = false
-amount = 30
-lifetime = 1.5
-one_shot = true
-explosiveness = 0.8
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_txfio")
-
-[node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1199603002]
-position = Vector2(70.010376, -75.84613)
-scale = Vector2(1.005127, 1.005127)
-emitting = false
-amount = 26
-one_shot = true
-explosiveness = 0.8
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_11n43")
-
-[node name="Panel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=566358932]
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -253.47815
-offset_top = -385.00024
-offset_right = 269.99988
-offset_bottom = 21.521606
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_pivo4")
-theme_override_styles/panel = ExtResource("29_fuvvr")
-
-[node name="Panel2" type="Panel" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining/Panel" unique_id=1207484984]
-self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -261.739
-offset_top = -203.26093
-offset_right = 261.739
-offset_bottom = 203.26093
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.04, 1.04)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_pivo4")
-theme_override_styles/panel = ExtResource("29_fuvvr")
-
-[node name="Bullet_icon" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1535013277]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 173.91284
-offset_top = -182.60828
-offset_right = 121.91284
-offset_bottom = -184.60828
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(3.285, 3.285)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_b1tng")
-stretch_mode = 5
-
-[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining/Bullet_icon" unique_id=1774314751 instance=ExtResource("33_ms1v2")]
-layout_mode = 1
-offset_left = -128.125
-offset_top = -94.00006
-offset_right = 127.875
-offset_bottom = 161.99994
-scale = Vector2(0.288, 0.288)
-
-[node name="ShotRemaining" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/ShotRemaining" unique_id=1658642522]
-unique_name_in_owner = true
-self_modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-z_index = 1
-clip_contents = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = -1.455
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1.1957245
-offset_top = 0.0634613
-offset_right = 243.80426
-offset_bottom = 61.913452
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.978, 0.935)
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_outline_size = 1
-theme_override_constants/outline_size = 0
-theme_override_font_sizes/normal_font_size = 292
-bbcode_enabled = true
-text = "50"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Bullet_icon2" type="TextureProgressBar" parent="CanvasLayer/HUD_bottom_corner" unique_id=1509279836]
-unique_name_in_owner = true
-modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 59.99991
-offset_top = -140.99986
-offset_right = 187.99991
-offset_bottom = -12.999863
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(1.6, 1.6)
-pivot_offset_ratio = Vector2(1, 1)
-mouse_filter = 2
-value = 100.0
-fill_mode = 3
-texture_under = ExtResource("8_b1tng")
-texture_progress = ExtResource("8_b1tng")
-tint_under = Color(1, 1, 1, 0.05882353)
-
-[node name="Bullet_icon" type="TextureProgressBar" parent="CanvasLayer/HUD_bottom_corner" unique_id=58604069]
-unique_name_in_owner = true
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 58.99997
-offset_top = -137.99988
-offset_right = 186.99997
-offset_bottom = -9.999878
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(1.6, 1.6)
-pivot_offset_ratio = Vector2(1, 1)
-mouse_filter = 2
-value = 100.0
-fill_mode = 3
-texture_under = ExtResource("8_b1tng")
-texture_progress = ExtResource("8_b1tng")
-tint_under = Color(1, 1, 1, 0.05882353)
-
-[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/Bullet_icon" unique_id=409353141 instance=ExtResource("33_ms1v2")]
-layout_mode = 1
-offset_left = -128.125
-offset_top = -94.00006
-offset_right = 127.875
-offset_bottom = 161.99994
-scale = Vector2(0.288, 0.288)
-
 [node name="TotalRocks" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=1526152981]
 visible = false
 layout_mode = 1
@@ -2443,6 +2241,214 @@ explosiveness = 0.8
 fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_11n43")
+
+[node name="AmmoCorner" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=434542291]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="ShotRemaining" type="Control" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner" unique_id=777895345]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -129.99998
+offset_right = 192.0
+offset_bottom = 1.5258789e-05
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.46, 0.46)
+pivot_offset_ratio = Vector2(1, 1)
+size_flags_horizontal = 4
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("1_shotrem")
+
+[node name="SkyMineParticles2D" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining" unique_id=1579610197]
+z_index = 3
+position = Vector2(71.91324, -72.56433)
+emitting = false
+amount = 30
+lifetime = 1.5
+one_shot = true
+explosiveness = 0.8
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_txfio")
+
+[node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining" unique_id=1199603002]
+position = Vector2(70.010376, -75.84613)
+scale = Vector2(1.005127, 1.005127)
+emitting = false
+amount = 26
+one_shot = true
+explosiveness = 0.8
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_11n43")
+
+[node name="Panel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining" unique_id=566358932]
+custom_minimum_size = Vector2(180, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -253.47815
+offset_top = -385.00024
+offset_right = 269.99988
+offset_bottom = 21.521606
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_pivo4")
+theme_override_styles/panel = ExtResource("29_fuvvr")
+
+[node name="Panel2" type="Panel" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining/Panel" unique_id=1207484984]
+self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(180, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -261.739
+offset_top = -203.26093
+offset_right = 261.739
+offset_bottom = 203.26093
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.04, 1.04)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_pivo4")
+theme_override_styles/panel = ExtResource("29_fuvvr")
+
+[node name="Bullet_icon" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining" unique_id=1535013277]
+visible = false
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 173.91284
+offset_top = -182.60828
+offset_right = 121.91284
+offset_bottom = -184.60828
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3.285, 3.285)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("8_b1tng")
+stretch_mode = 5
+
+[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining/Bullet_icon" unique_id=1774314751 instance=ExtResource("33_ms1v2")]
+layout_mode = 1
+offset_left = -128.125
+offset_top = -94.00006
+offset_right = 127.875
+offset_bottom = 161.99994
+scale = Vector2(0.288, 0.288)
+
+[node name="ShotRemainingLabel" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining" unique_id=1658642522]
+unique_name_in_owner = true
+self_modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+z_index = 1
+clip_contents = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = -1.455
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.1957245
+offset_top = 0.0634613
+offset_right = 243.80426
+offset_bottom = 61.913452
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.978, 0.935)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 1
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/normal_font_size = 292
+bbcode_enabled = true
+text = "50"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Bullet_icon2" type="TextureProgressBar" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner" unique_id=1509279836]
+unique_name_in_owner = true
+modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 59.99991
+offset_top = -140.99986
+offset_right = 187.99991
+offset_bottom = -12.999863
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(1.6, 1.6)
+pivot_offset_ratio = Vector2(1, 1)
+mouse_filter = 2
+value = 100.0
+fill_mode = 3
+texture_under = ExtResource("8_b1tng")
+texture_progress = ExtResource("8_b1tng")
+tint_under = Color(1, 1, 1, 0.05882353)
+
+[node name="Bullet_icon" type="TextureProgressBar" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner" unique_id=58604069]
+unique_name_in_owner = true
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 58.99997
+offset_top = -137.99986
+offset_right = 186.99997
+offset_bottom = -9.999863
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(1.6, 1.6)
+pivot_offset_ratio = Vector2(1, 1)
+mouse_filter = 2
+value = 100.0
+fill_mode = 3
+texture_under = ExtResource("8_b1tng")
+texture_progress = ExtResource("8_b1tng")
+tint_under = Color(1, 1, 1, 0.05882353)
+
+[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/Bullet_icon" unique_id=409353141 instance=ExtResource("33_ms1v2")]
+layout_mode = 1
+offset_left = -128.125
+offset_top = -94.00006
+offset_right = 127.875
+offset_bottom = 161.99994
+scale = Vector2(0.288, 0.288)
 
 [node name="ReticleSensitivityPopup" type="Control" parent="CanvasLayer" unique_id=2067706541]
 layout_mode = 3

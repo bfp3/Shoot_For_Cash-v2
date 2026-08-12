@@ -245,6 +245,11 @@ func reset_strikes() -> void:
 		$Strike_system2.reset()
 
 
+func ensure_extra_strike_slot() -> void:
+	if has_node("Strike_system2") and $Strike_system2.has_method("ensure_extra_strike_slot"):
+		$Strike_system2.ensure_extra_strike_slot()
+
+
 func show_strike_hud() -> void:
 	if strike_hud == null:
 		return

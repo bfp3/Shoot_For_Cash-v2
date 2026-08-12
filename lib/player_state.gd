@@ -344,11 +344,19 @@ func add_strike() -> void:
 			return
 
 	dataset.total_current_strikes += 1
-	if dataset.total_current_strikes >= 3:
+	var max_strikes := get_max_strikes()
+	if dataset.total_current_strikes >= max_strikes:
 		EventBus.instance.has_hit_three_strikes.emit()
-
 	else:
 		EventBus.instance.add_strike.emit()
+
+
+func get_max_strikes() -> int:
+	return maxi(int(dataset.get("max_strikes", 3)), 3)
+
+
+func set_max_strikes(value: int) -> void:
+	dataset["max_strikes"] = maxi(value, 3)
 	
 
 func check_all_rocks_cleared() -> void:

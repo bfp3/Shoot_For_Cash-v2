@@ -26,10 +26,13 @@ func _ready() -> void:
 	reset()
 
 func add_strike() -> void:
-	if strike_count > 2:
-		return
-
 	if _is_playing_finale:
+		return
+	var max_strikes := 3
+	if gl_PlayerState and gl_PlayerState.has_method("get_max_strikes"):
+		max_strikes = gl_PlayerState.get_max_strikes()
+	## Non-final strikes only (final uses has_hit_three_strikes).
+	if strike_count >= max_strikes - 1:
 		return
 	var indicator := _next_unstruck_indicator()
 	if indicator == null:
@@ -38,9 +41,23 @@ func add_strike() -> void:
 
 	indicator.reveal_strike()
 	if strike_sfx:
-		#strike_sfx.play()
-		#$StrikeSFX2.play()
 		$StrikeSFX3.play()
+
+
+func ensure_extra_strike_slot() -> void:
+	_cache_indicators()
+	if _indicators.size() >= 4:
+		return
+	if _indicators.is_empty():
+		return
+	var template := _indicators[0]
+	var clone := template.duplicate() as Control
+	if clone == null:
+		return
+	indicators_row.add_child(clone)
+	if clone.has_method("reset"):
+		clone.reset()
+	_cache_indicators()
 		
 func three_strikes() -> void:
 	if _is_playing_finale:
@@ -63,8 +80,19 @@ func reset() -> void:
 	indicators_row.position = _row_original_position
 	indicators_row.modulate = _row_original_modulate
 	indicators_row.scale = Vector2.ONE
+	_trim_to_base_strike_slots()
 	for indicator in _indicators:
 		indicator.reset()
+
+
+## Keep only the original 3 strike indicators after a round reset.
+func _trim_to_base_strike_slots(base_count: int = 3) -> void:
+	_cache_indicators()
+	while _indicators.size() > base_count:
+		var extra = _indicators.pop_back()
+		if extra and is_instance_valid(extra):
+			extra.queue_free()
+	_cache_indicators()
 
 func _play_three_strikes_sequence() -> void:
 	_is_playing_finale = true

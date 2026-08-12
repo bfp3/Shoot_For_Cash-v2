@@ -99,7 +99,7 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 
 
 func _format_boss_cost(cost: int) -> String:
-	return "$%s" % str(cost)
+	return CommonCode.format_money(cost)
 
 
 func _on_level_button_pressed() -> void:
@@ -108,8 +108,10 @@ func _on_level_button_pressed() -> void:
 		## Already cleared — still allow re-entry via map select (cash gate inside).
 		pass
 	elif boss_state == BossState.LOCKED:
-		## Locked messaging is already on this button — no floating popup.
-		if round_progress_label:
+		var cost := gl_DataSet.get_boss_unlock_cost(boss_island_index)
+		if main_control and main_control.has_method("show_boss_access_holdout"):
+			await main_control.show_boss_access_holdout(cost)
+		elif round_progress_label:
 			var tween := create_tween()
 			tween.tween_property(round_progress_label, "modulate", Color(1.0, 0.35, 0.25, 1.0), 0.08)
 			tween.tween_property(round_progress_label, "modulate", Color.WHITE, 0.2)
@@ -129,7 +131,7 @@ func _on_focus_entered() -> void:
 		focus_enter_sfx.play()
 	z_index = 1
 	_play_wiggle(orig_scale.x + (orig_scale.x / 10))
-	locked_fader(true)
+	#locked_fader(true)
 
 
 func _on_focus_exited() -> void:
@@ -137,7 +139,7 @@ func _on_focus_exited() -> void:
 		focus_exit_sfx.play()
 	z_index = 0
 	_play_wiggle(orig_scale.x)
-	locked_fader(false)
+	#locked_fader(false)
 	
 	
 func locked_fader(fade_in : bool = false) -> void:
