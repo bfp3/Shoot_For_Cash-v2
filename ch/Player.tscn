@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="2_kbm6s"]
 [ext_resource type="Script" uid="uid://wb58a1luc02y" path="res://ch/HUD_components/reticle_sensitivity_popup.gd" id="2_retsens"]
 [ext_resource type="Script" uid="uid://4a0w5mbutje7" path="res://ch/Player/mobile_controller.gd" id="2_vmtkp"]
+[ext_resource type="Environment" uid="uid://c2ydq6pe4fe5" path="res://res/moss_env_v2.tres" id="6_4gbdm"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_b1tng"]
 [ext_resource type="Script" uid="uid://b8ta6ry80sv7q" path="res://ch/inner_scope_2.gd" id="9_b1tng"]
 [ext_resource type="AudioStream" uid="uid://bk1svagr7yjcv" path="res://sfx/gunLocked.ogg" id="9_g6ubq"]
@@ -23,8 +24,8 @@
 [ext_resource type="Script" uid="uid://1uqdupt170u1" path="res://ch/Player/scripts/player_gun.gd" id="13_mxtxj"]
 [ext_resource type="AudioStream" uid="uid://bywfw3hl3lt6o" path="res://sfx/reload_sound_01.ogg" id="14_3gdew"]
 [ext_resource type="Texture2D" uid="uid://dcbh2d4up4wjl" path="res://res/white_dented_texture2.png" id="14_5d6j6"]
-[ext_resource type="PackedScene" uid="uid://blmpv2r3v5nd3" path="res://ch/bullets_all/Bullet_visual_alt.tscn" id="14_altbullet"]
-[ext_resource type="PackedScene" uid="uid://brtw6kurd7ejg" path="res://ch/weapons/gun_alt.tscn" id="14_altgun"]
+[ext_resource type="PackedScene" path="res://ch/bullets_all/Bullet_visual_alt.tscn" id="14_altbullet"]
+[ext_resource type="PackedScene" path="res://ch/weapons/gun_alt.tscn" id="14_altgun"]
 [ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="14_f75d4"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="15_lf8qf"]
 [ext_resource type="AudioStream" uid="uid://c38iicjo31b7l" path="res://sfx/gun_combination_1.ogg" id="16_11n43"]
@@ -55,6 +56,13 @@
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="40_pivo4"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="41_k5tjv"]
 [ext_resource type="PackedScene" uid="uid://dbuyf4x33jxsi" path="res://ch/Player/hoodMesh.tscn" id="48_vmtkp"]
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_rui0b"]
+dof_blur_far_enabled = true
+dof_blur_far_distance = 0.01
+dof_blur_near_enabled = true
+dof_blur_near_distance = 0.01
+dof_blur_amount = 0.0
 
 [sub_resource type="Curve" id="Curve_emrcn"]
 _data = [Vector2(0, 0.460674), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -858,9 +866,11 @@ script = ExtResource("10_kkix3")
 
 [node name="Camera3D" type="Camera3D" parent="Cam_pivot" unique_id=1699277447 groups=["player_cam"]]
 transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0, 0)
+environment = ExtResource("6_4gbdm")
+attributes = SubResource("CameraAttributesPractical_rui0b")
 fov = 37.9
 size = 0.05
-far = 1500.0
+far = 1000.0
 script = ExtResource("10_n6ds6")
 move_speed = 0.05
 shoot_shake_amount = 0.2

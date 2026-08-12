@@ -28,6 +28,9 @@ far_edge = 4000
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.36, 4.2, -333.782)
 script = ExtResource("17_eo2u3")
 
+[node name="ReddOcean" parent="." unique_id=1500749205 instance=ExtResource("1_5be5e")]
+transform = Transform3D(1, 0, 0, 0, 0.99945015, 0.033155177, 0, -0.033155177, 0.99945015, 3.36, 3.65, 333.782)
+
 [connection signal="updated_lod" from="OutsetOcean2/OceanSimple" to="OutsetOcean2" method="_on_ocean_simple_updated_lod"]
 
 [editable path="OutsetOcean"]

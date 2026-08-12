@@ -1,12 +1,55 @@
 [gd_scene format=3 uid="uid://clo71bqgnnip8"]
 
 [ext_resource type="Script" uid="uid://b2mbgcm54yrpd" path="res://ch/Shop/boss_button_select.gd" id="2_1oogj"]
+[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="2_lqres"]
 [ext_resource type="Texture2D" uid="uid://bt0qwmkberjw1" path="res://res/ShootForCents/Pillar_single.png" id="2_soqgw"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_35jhd"]
+[ext_resource type="Texture2D" uid="uid://cp255yy4k2lna" path="res://res/lock-svgrepo-com.png" id="4_2hpna"]
 [ext_resource type="Theme" uid="uid://bjwkhgoiebh1q" path="res://res/custom_themes_by_blake/shoot_for_cash_default_theme.tres" id="4_307gy"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="4_a7lqs"]
-[ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="5_35jhd"]
 [ext_resource type="Texture2D" uid="uid://dtp2scu154yi6" path="res://unfiled/Decal_placeholders/Egg_2D_sprites/Egg_silhouette.png" id="6_egg"]
+[ext_resource type="Texture2D" uid="uid://bve8f2h2pj1et" path="res://res/hold_out_icon.png" id="6_s3vw5"]
+[ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="8_lqres"]
+[ext_resource type="Texture2D" uid="uid://cg2gr8jrwder4" path="res://res/cross_icon.png" id="11_m8xhk"]
+
+[sub_resource type="Animation" id="Animation_m8xhk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_2cbtm"]
+resource_name = "spin"
+length = 3.0
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.283185307179586]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tru5e"]
+_data = {
+&"RESET": SubResource("Animation_m8xhk"),
+&"spin": SubResource("Animation_2cbtm")
+}
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1oogj"]
 bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
@@ -21,12 +64,22 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_35jhd"]
-color = Color(1, 1, 1, 1)
-thickness = 4
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m8xhk"]
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.082499996, 0.09441667, 0.11, 0.41568628)
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
 
 [node name="Boss_button_selector" type="Button" unique_id=427300251 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "pressed_sfx")]
-clip_contents = true
+self_modulate = Color(1, 1, 1, 0)
 anchors_preset = -1
 anchor_left = 0.067
 anchor_top = 0.119
@@ -36,6 +89,7 @@ offset_left = -128.64
 offset_top = -95.520004
 offset_right = 127.36
 offset_bottom = 87.479996
+rotation = -0.2617994
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_type_variation = &"UpgradeButton"
 script = ExtResource("2_1oogj")
@@ -46,8 +100,6 @@ level_name = "Boss"
 show_round_count = false
 
 [node name="Control" type="Control" parent="." unique_id=970887774]
-visible = false
-clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -57,7 +109,8 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="LevelIcon" type="TextureRect" parent="Control" unique_id=395663996]
-modulate = Color(0.88, 0.84128004, 0.8096, 0.36078432)
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
 anchors_preset = 8
@@ -65,20 +118,67 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -422.0
-offset_top = -471.50003
-offset_right = 602.0
-offset_bottom = 552.5
+offset_left = -403.0
+offset_top = -394.5
+offset_right = 621.0
+offset_bottom = 629.5
 grow_horizontal = 2
 grow_vertical = 2
 rotation = -0.05235988
 scale = Vector2(0.314, 0.314)
 pivot_offset_ratio = Vector2(0.5, 0.46)
 mouse_filter = 2
-texture = ExtResource("2_soqgw")
+texture = ExtResource("2_lqres")
+stretch_mode = 5
+
+[node name="LevelIcon3" type="TextureRect" parent="Control" unique_id=577223738]
+visible = false
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+show_behind_parent = true
+z_index = -1
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -511.0
+offset_top = -472.5
+offset_right = 513.0
+offset_bottom = 551.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.542, 0.542)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("2_lqres")
+stretch_mode = 5
+
+[node name="LevelIcon4" type="TextureRect" parent="Control" unique_id=1867145355]
+modulate = Color(0.92, 0.92, 0.92, 0.6156863)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -510.0
+offset_top = -475.5
+offset_right = 514.0
+offset_bottom = 548.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.257, 0.257)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("2_lqres")
 stretch_mode = 5
 
 [node name="LevelIcon2" type="TextureRect" parent="Control" unique_id=560745329]
+visible = false
 modulate = Color(0.88, 0.84128004, 0.8096, 0.36078432)
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
@@ -100,9 +200,29 @@ mouse_filter = 2
 texture = ExtResource("2_soqgw")
 stretch_mode = 5
 
+[node name="LevelIcon5" type="TextureRect" parent="Control" unique_id=1417947182]
+visible = false
+z_index = 10
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.7191696
+offset_top = -36.60605
+offset_right = 4.7191772
+offset_bottom = 36.39395
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.32, 0.32)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("4_2hpna")
+stretch_mode = 5
+
 [node name="Panel3" type="Panel" parent="." unique_id=363644148]
 visible = false
-custom_minimum_size = Vector2(37.87, 19.465)
+custom_minimum_size = Vector2(27.02, 19.465)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -117,18 +237,17 @@ rotation = 1.5707964
 
 [node name="Panel4" type="Panel" parent="." unique_id=228276096]
 visible = false
-custom_minimum_size = Vector2(37.87, 19.465)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 209.13023
-offset_top = 182.71829
-offset_right = -8.999771
-offset_bottom = 19.183289
+offset_left = 198.20268
+offset_top = 180.33896
+offset_right = -19.927322
+offset_bottom = 5.6203766
 grow_horizontal = 2
 grow_vertical = 2
-rotation = 1.5707964
+rotation = 1.7851866
 
 [node name="Panel" type="Panel" parent="." unique_id=1427145380]
 visible = false
@@ -155,15 +274,29 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="OuterRing" type="TextureRect" parent="." unique_id=1426147914]
-visible = false
-modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+modulate = Color(0.84705883, 0.77254903, 0.7176471, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.982, 0.982)
+scale = Vector2(1.4322423, 1.4322423)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("3_35jhd")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect3" type="TextureRect" parent="." unique_id=988190432]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.3286895, 1.3286895)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("3_35jhd")
@@ -171,20 +304,43 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="TextureRect2" type="TextureRect" parent="." unique_id=155314443]
-visible = false
-modulate = Color(0.88, 0.8286667, 0.792, 1)
+modulate = Color(0.8784314, 0.8392157, 0.80784315, 1)
+clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.911, 0.911)
+rotation = -0.12217305
+scale = Vector2(1.266, 1.266)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("3_35jhd")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Hourglass" type="TextureRect" parent="." unique_id=1801518724]
+modulate = Color(0.37, 0.33053333, 0.296, 0.1882353)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.907568
+offset_top = 71.61723
+offset_right = -10.907562
+offset_bottom = 71.61723
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("6_s3vw5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Hourglass" unique_id=734707753]
+libraries/ = SubResource("AnimationLibrary_tru5e")
+autoplay = &"spin"
 
 [node name="100_percent" type="Control" parent="." unique_id=1188003085]
 unique_name_in_owner = true
@@ -265,6 +421,7 @@ theme = ExtResource("4_307gy")
 show_percentage = false
 
 [node name="level_name_label" type="RichTextLabel" parent="." unique_id=1332746670]
+visible = false
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 layout_mode = 1
 anchors_preset = 8
@@ -272,19 +429,48 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -94.0
-offset_top = -40.5
-offset_right = 94.0
-offset_bottom = 55.5
+offset_left = -90.0
+offset_top = -110.5
+offset_right = 98.0
+offset_bottom = 111.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.19319096
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/font_outline_color = Color(1, 0.9533333, 0.92, 1)
+theme_override_font_sizes/normal_font_size = 62
+bbcode_enabled = true
+text = "HOLD
+
+OUT"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="level_name_label2" type="RichTextLabel" parent="." unique_id=1699900569]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -102.49613
+offset_top = -171.32722
+offset_right = 91.503876
+offset_bottom = 50.672775
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_colors/font_outline_color = Color(1, 0.9533333, 0.92, 1)
-theme_override_font_sizes/normal_font_size = 68
+theme_override_font_sizes/normal_font_size = 40
 bbcode_enabled = true
-text = "MOSS"
+text = "HOLD OUT"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -292,25 +478,26 @@ vertical_alignment = 1
 
 [node name="RoundProgressLabel" type="RichTextLabel" parent="." unique_id=1332746671]
 unique_name_in_owner = true
+z_index = 12
+clip_contents = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -152.17154
-offset_top = -58.97895
-offset_right = 155.68625
-offset_bottom = 51.682495
+offset_left = -126.5
+offset_top = -40.000004
+offset_right = 126.5
+offset_bottom = 40.0
 grow_horizontal = 2
 grow_vertical = 2
-rotation = -0.49408752
-scale = Vector2(0.784, 0.784)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/normal_font_size = 92
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 74
 bbcode_enabled = true
 text = "$10,000"
 fit_content = true
@@ -319,17 +506,19 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Panel" type="Panel" parent="RoundProgressLabel" unique_id=1523297713]
-modulate = Color(1, 1, 1, 0.39215687)
-show_behind_parent = true
+self_modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+z_index = -4
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -70.98169
-offset_right = 52.68582
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"RedPanel"
+scale = Vector2(0.916, 0.916)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"TimerPanel"
+theme_override_styles/panel = SubResource("StyleBoxFlat_m8xhk")
 
 [node name="EggSilhouettes" type="HBoxContainer" parent="." unique_id=1332746672]
 unique_name_in_owner = true
@@ -381,27 +570,6 @@ texture = ExtResource("6_egg")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HSeparator" type="HSeparator" parent="." unique_id=735061193]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-custom_minimum_size = Vector2(170, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -85.0
-offset_top = 48.0
-offset_right = 85.0
-offset_bottom = 52.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.13, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_35jhd")
-
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="." unique_id=1267045713]
 stream = ExtResource("4_a7lqs")
 volume_db = -32.0
@@ -411,6 +579,38 @@ stream = ExtResource("4_a7lqs")
 volume_db = -50.0
 
 [node name="purchase" type="AudioStreamPlayer" parent="." unique_id=38437267]
-stream = ExtResource("5_35jhd")
-volume_db = -40.0
-pitch_scale = 3.0
+stream = ExtResource("8_lqres")
+volume_db = -30.0
+pitch_scale = 0.5
+
+[node name="LockPop" type="Control" parent="." unique_id=1693359157]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Lock" type="TextureRect" parent="LockPop" unique_id=1657436275]
+self_modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
+z_index = 10
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.7191696
+offset_top = -36.60605
+offset_right = 4.7191772
+offset_bottom = 36.39395
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.605, 0.605)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("11_m8xhk")
+stretch_mode = 5

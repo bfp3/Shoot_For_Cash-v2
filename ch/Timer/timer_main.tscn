@@ -12,7 +12,6 @@
 [sub_resource type="PrismMesh" id="PrismMesh_5lc31"]
 
 [node name="Timer" type="Control" unique_id=779418741 groups=["round_timer"]]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,10 +90,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -368.0
-offset_top = -96.833435
-offset_right = -188.0
-offset_bottom = -19.0
+offset_left = -196.0
+offset_top = -102.833435
+offset_right = -16.0
+offset_bottom = -25.0
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(0.846, 0.835)
@@ -187,10 +186,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -390.0
-offset_top = -115.66675
-offset_right = -165.0
-offset_bottom = -4.0
+offset_left = -218.0
+offset_top = -121.66675
+offset_right = 7.0
+offset_bottom = -10.0
 grow_horizontal = 0
 grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -202,49 +201,6 @@ text = "Timer"
 fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="Panel2" type="Panel" parent="TimeLabel" unique_id=1725068137]
-visible = false
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -368.0
-offset_top = -96.833435
-offset_right = -188.0
-offset_bottom = -19.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.846, 0.835)
-pivot_offset_ratio = Vector2(0.5, 1)
-mouse_filter = 2
-theme_type_variation = &"TimerPanel"
-
-[node name="ColorRect3" type="ColorRect" parent="TimeLabel/Panel2" unique_id=1941930427]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -22.765137
-offset_bottom = 2.3952026
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.04, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-color = Color(0.78039217, 0.003921569, 0.007843138, 1)
-
-[node name="CoatArms" parent="TimeLabel/Panel2" unique_id=1688574279 instance=ExtResource("2_y73li")]
-modulate = Color(1, 1, 1, 0.19607843)
-layout_mode = 1
-offset_left = -128.0
-offset_top = -136.38318
-offset_right = 128.0
-offset_bottom = 119.61682
-scale = Vector2(1.248, 1.248)
 
 [node name="ReloadSound" type="AudioStreamPlayer" parent="." unique_id=928440455]
 stream = ExtResource("3_y73li")

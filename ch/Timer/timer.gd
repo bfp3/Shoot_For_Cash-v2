@@ -334,6 +334,7 @@ func _update_ticking_volume(seconds_left: float, delta: float) -> void:
 
 ## Boss win: slide timer to center, stamp CLEARED!, confetti, then return control.
 func play_boss_cleared_celebration() -> void:
+	return
 	show()
 	modulate.a = 1.0
 	set_process(false)

@@ -21,8 +21,10 @@ func _ready() -> void:
 
 
 func _on_gui_input(event: InputEvent) -> void:
-	## Right-click: force-clear this island's boss for stamp testing.
+	## Right-click: force-clear this island's boss (editor / debug builds only).
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		if not OS.is_debug_build():
+			return
 		gl_PlayerState.mark_boss_cleared(boss_island_index)
 		var next_island := boss_island_index + 1
 		if next_island < gl_DataSet.get_island_count():
@@ -31,7 +33,11 @@ func _on_gui_input(event: InputEvent) -> void:
 				gl_PlayerState.dataset["unlocked_island_index"] = next_island
 				gl_PlayerState.save_meta_progress()
 		refresh_boss_state(true)
+		if main_control and main_control.has_method("notify_level_cleared"):
+			main_control.notify_level_cleared()
 		accept_event()
+		return
+	if current_state == State.LOCKED:
 		return
 	## Left-click handled by Button.pressed → _on_level_button_pressed.
 
@@ -88,11 +94,8 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 	_hide_completion_stamp()
 	if round_progress_label:
 		round_progress_label.visible = true
-		var msg := gl_DataSet.get_map_earn_more_money_text()
-		if msg.is_empty():
-			msg = ""
-		## Show earn-more copy + fee on the locked boss button.
-		round_progress_label.text = "%s\n%s" % [msg, _format_boss_cost(cost)]
+		## Locked: show unlock cost only (no "earn more" copy).
+		round_progress_label.text = _format_boss_cost(cost)
 
 
 func _format_boss_cost(cost: int) -> String:
@@ -100,6 +103,7 @@ func _format_boss_cost(cost: int) -> String:
 
 
 func _on_level_button_pressed() -> void:
+	
 	if boss_state == BossState.CLEARED:
 		## Already cleared — still allow re-entry via map select (cash gate inside).
 		pass
@@ -111,12 +115,13 @@ func _on_level_button_pressed() -> void:
 			tween.tween_property(round_progress_label, "modulate", Color.WHITE, 0.2)
 		return
 
-	await fill_progress_bar()
-	await get_tree().create_timer(0.45, false).timeout
+	var progress_bar := $TextureProgressBar as Range
+	if progress_bar:
+		progress_bar.value = 0.0
 	if main_control and main_control.has_method("select_level"):
-		await main_control.select_level("boss")
-	await get_tree().create_timer(0.2, false).timeout
-	$TextureProgressBar.value = 0.0
+		await main_control.select_level("boss", progress_bar)
+	if progress_bar:
+		progress_bar.value = 0.0
 
 
 func _on_focus_entered() -> void:
@@ -124,6 +129,7 @@ func _on_focus_entered() -> void:
 		focus_enter_sfx.play()
 	z_index = 1
 	_play_wiggle(orig_scale.x + (orig_scale.x / 10))
+	locked_fader(true)
 
 
 func _on_focus_exited() -> void:
@@ -131,3 +137,14 @@ func _on_focus_exited() -> void:
 		focus_exit_sfx.play()
 	z_index = 0
 	_play_wiggle(orig_scale.x)
+	locked_fader(false)
+	
+	
+func locked_fader(fade_in : bool = false) -> void:
+	if fade_in:
+		var tween = create_tween()
+		tween.tween_property(%LockPop, "modulate:a", 0.8, 0.1)
+		
+	else:
+		var tween = create_tween()
+		tween.tween_property(%LockPop, "modulate:a", 0.0, 0.15)

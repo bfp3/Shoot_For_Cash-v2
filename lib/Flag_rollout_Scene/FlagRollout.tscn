@@ -1,19 +1,6 @@
 [gd_scene format=4 uid="uid://dee8qfh0jrlf1"]
 
-[ext_resource type="Script" uid="uid://f65tu6smfqsf" path="res://lib/Flag_rollout_Scene/flag_rollout.gd" id="1_wqy4d"]
-[ext_resource type="Shader" uid="uid://bkpjfaqbvhiu2" path="res://res/Shaders/FlagRollout.gdshader" id="2_3rkiy"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="2_g4jf7"]
-[ext_resource type="Texture2D" uid="uid://c0ckenxa3gjk5" path="res://unfiled/Lover_boys_flag/Lover Boys Flag.png" id="2_nmeqs"]
-[ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="5_clmyw"]
-[ext_resource type="AudioStream" uid="uid://bjvnouldqokaa" path="res://sfx/Arrow_release.ogg" id="6_hpt2k"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nmeqs"]
-render_priority = 0
-shader = ExtResource("2_3rkiy")
-shader_parameter/texture_albedo = ExtResource("2_nmeqs")
-shader_parameter/wave_speed = 2.5
-shader_parameter/wave_height = 0.05
-shader_parameter/wave_frequency = 1.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_3rkiy"]
 _surfaces = [{
@@ -26,134 +13,9 @@ _surfaces = [{
 "vertex_data": PackedByteArray("Lt5MMUjhrMAAAIC+8QQ1PkjhrMD1BDW+8QQ1PkjhrED1BDW+AACAPkjhrEAAAAAA8wQ1PkjhrEDzBDU+AAAAAEjhrEAAAAAA8wQ1PkjhrEDzBDU+AACAPkjhrEAAAAAAAACAPkjhrMAAAAAA8wQ1PkjhrEDzBDU+Lr07skjhrEAAAIA+AAAAAEjhrEAAAAAALr07skjhrEAAAIA+8wQ1PkjhrEDzBDU+8wQ1PkjhrMDzBDU+8QQ1PkjhrED1BDW+AACAPkjhrEAAAAAAAAAAAEjhrEAAAAAAAACAPkjhrEAAAAAA8QQ1PkjhrED1BDW+8QQ1PkjhrMD1BDW+Lt5MMUjhrEAAAIC+8QQ1PkjhrED1BDW+AAAAAEjhrEAAAAAA8QQ1PkjhrED1BDW+Lt5MMUjhrEAAAIC+Lt5MMUjhrMAAAIC+AACAPkjhrMAAAAAA8wQ1PkjhrMDzBDU+8wQ1PkjhrEDzBDU+Lr07skjhrMAAAIA+8wQ1PkjhrMDzBDU+AACAPkjhrMAAAAAA8wQ1PkjhrMDzBDU+Lr07skjhrMAAAIA+Lr07skjhrEAAAIA+8wQ1vkjhrMDzBDU+Lr07skjhrMAAAIA+AACAPkjhrMAAAAAA8QQ1PkjhrMD1BDW+AACAPkjhrMAAAAAAAACAPkjhrEAAAAAA8QQ1PkjhrMD1BDW+Lt5MMUjhrMAAAIC+AACAPkjhrMAAAAAAAACAvkjhrMAuvbuy9AQ1vkjhrMDyBDW+9AQ1vkjhrEDyBDW+Lt5MMUjhrMAAAIC+9AQ1vkjhrMDyBDW+AACAPkjhrMAAAAAALr07skjhrEAAAIA+8wQ1vkjhrEDzBDU+AAAAAEjhrEAAAAAA8wQ1vkjhrEDzBDU+Lr07skjhrEAAAIA+Lr07skjhrMAAAIA+8wQ1vkjhrEDzBDU+AACAvkjhrEAuvbuyAAAAAEjhrEAAAAAAAACAvkjhrEAuvbuy8wQ1vkjhrEDzBDU+8wQ1vkjhrMDzBDU+9AQ1vkjhrEDyBDW+Lt5MMUjhrEAAAIC+AAAAAEjhrEAAAAAALt5MMUjhrEAAAIC+9AQ1vkjhrEDyBDW+9AQ1vkjhrMDyBDW+AACAvkjhrEAuvbuy9AQ1vkjhrEDyBDW+AAAAAEjhrEAAAAAA9AQ1vkjhrEDyBDW+AACAvkjhrEAuvbuyAACAvkjhrMAuvbuyLr07skjhrMAAAIA+8wQ1vkjhrMDzBDU+8wQ1vkjhrEDzBDU+AACAvkjhrMAuvbuy8wQ1vkjhrMDzBDU+AACAPkjhrMAAAAAA8wQ1vkjhrMDzBDU+AACAvkjhrMAuvbuyAACAvkjhrEAuvbuy9AQ1vkjhrMDyBDW+Lt5MMUjhrMAAAIC+Lt5MMUjhrEAAAIC+9AQ1vkjhrMDyBDW+AACAvkjhrMAuvbuyAACAPkjhrMAAAAAA//938Hfw/7///ym3Kbf/v///1cjVyP+//3///4Ja/7//f///glr/v/9///+CWv+/1cj/f9VI/7///4aPho//v3fw/394cP+//3///30l/7//f///fSX/v/9///99Jf+/ho//f4cP/7/VyP9/1Uj/vym3/38pN/+//3///wAAvhL/f///AAC+Ev9///8AAL4S//+GjwAAwwf//9XIAABqJP//KbcAAJQb/3///wAAQS3/f///AABBLf9///8AAEEt///VyNXI/78AAHfw///Cx///d/B38P+/d/D/f3hw/78pt/9/KTf/v9XI/3/VSP+//38AAP///7//fwAA////v/9/AAD///+/Kbf/fyk3/794cP9/AADCx4aP/3+HD/+//38AAP///7//fwAA////v/9/AAD///+///8ptwAAlBt38P9////DB///ho8AAMMH/38AAP///7//fwAA////v/9/AAD///+/AACGj///O/gAANXI//+U2wAAKbf//2rk/38AAP///7//fwAA////v/9/AAD///+//3///wAAvdL/f///AAC90v9///8AAL3S1Uj/fwAAlNuGj/9/hw//v3hw/38AAMLH/3///wAAQO3/f///AABA7f9///8AAEDthw//fwAAO/jVSP9/AACU2yk3/38AAGrk/3///30l/z//f///fSX/P/9///99Jf8/AAB38P//wscAACm3//9q5AAA1cj//5Tb/3///4Ja/z//f///glr/P/9///+CWv8/AAApt///auSHD/9/AAA7+AAAho///zv4eHD/fwAAwscpN/9/AABq5NVI/38AAJTb/38AAP///7//fwAA////v/9/AAD///+/KTf/fwAAauQAAIaP//87+IcP/38AADv4AADVyP//lNv//3fwd/D/vwAAd/D//8LH/38AAP///7//fwAA////v/9/AAD///+/")
 }]
 
-[sub_resource type="Curve" id="Curve_yf6l7"]
-_data = [Vector2(0, 0.94382), 0.0, 0.0, 0, 0, Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.275676, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 4
-
-[sub_resource type="CurveTexture" id="CurveTexture_mafn0"]
-curve = SubResource("Curve_yf6l7")
-
-[sub_resource type="Curve" id="Curve_x53dl"]
-_limits = [-360.0, 360.0, 0.0, 1.0]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_6hb27"]
-curve = SubResource("Curve_x53dl")
-
-[sub_resource type="Gradient" id="Gradient_xbf60"]
-offsets = PackedFloat32Array(0.0145349, 1)
-colors = PackedColorArray(0.22, 0.22, 0.22, 1, 0.45, 0.45, 0.45, 0.286275)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_gkcsh"]
-gradient = SubResource("Gradient_xbf60")
-
-[sub_resource type="Curve" id="Curve_ihcgf"]
-_data = [Vector2(0, 0.775281), 0.0, 0.0, 0, 0, Vector2(0.0234742, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 4
-
-[sub_resource type="CurveTexture" id="CurveTexture_6iimy"]
-curve = SubResource("Curve_ihcgf")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4q4ny"]
-lifetime_randomness = 0.8
-emission_shape = 6
-emission_ring_axis = Vector3(0, 1, 0)
-emission_ring_height = 0.0
-emission_ring_radius = 0.0
-emission_ring_inner_radius = 0.5
-emission_ring_cone_angle = 90.0
-direction = Vector3(0, 1, 0)
-spread = 5.0
-angular_velocity_min = -30.0
-angular_velocity_max = 30.0
-angular_velocity_curve = SubResource("CurveTexture_6hb27")
-gravity = Vector3(0, 0, 0)
-scale_min = 0.1
-scale_max = 2.0
-scale_curve = SubResource("CurveTexture_6iimy")
-color_ramp = SubResource("GradientTexture1D_gkcsh")
-alpha_curve = SubResource("CurveTexture_mafn0")
-anim_speed_min = 1.0
-anim_speed_max = 1.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yf6l7"]
-transparency = 1
-vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("5_clmyw")
-billboard_mode = 3
-billboard_keep_scale = true
-particles_anim_h_frames = 8
-particles_anim_v_frames = 8
-particles_anim_loop = false
-
-[sub_resource type="QuadMesh" id="QuadMesh_xe7oc"]
-material = SubResource("StandardMaterial3D_yf6l7")
-size = Vector2(5, 5)
-
-[sub_resource type="GDScript" id="GDScript_3ytks"]
-script/source = "extends GPUParticles3D
-
-var duplicate_particles := false
-
-func _ready() -> void:
-	#if duplicate_particles:
-		#add_to_group(\"smoke_particles\")
-	one_shot = true
-	finished.connect(_on_finished)
-
-func _on_finished() -> void:
-	if duplicate_particles:
-		self.queue_free()
-
-func smoke_particles() -> void:
-	var new_particles = self #.duplicate()
-	if new_particles:
-		
-		#new_particles.add_to_group(\"smoke_particles\")
-		new_particles.duplicate_particles = true
-		new_particles.emitting = true
-		new_particles.show()
-		new_particles.reparent(get_tree().get_current_scene(), true)
-		#new_particles.global_position = global_position
-"
-
 [node name="FlagRollout" type="Node3D" unique_id=1149056858]
-script = ExtResource("1_wqy4d")
 
-[node name="Sprite3D" type="Sprite3D" parent="." unique_id=221527022]
-transform = Transform3D(1.487, 0, 0, 0, 1.185, 0, 0, 0, 1.185, 0.999, 0.865, 0)
-material_overlay = SubResource("ShaderMaterial_nmeqs")
-modulate = Color(1, 1, 1, 0)
-pixel_size = 0.001
-shaded = true
-texture_filter = 0
-texture = ExtResource("2_nmeqs")
-
-[node name="Post_mesh" type="Node3D" parent="." unique_id=1756752180]
-transform = Transform3D(0.175, 0, 0, 0, 0.3, 0, 0, 0, 0.2, 0, -1.3, 0)
-
-[node name="Post" type="MeshInstance3D" parent="Post_mesh" unique_id=1361529371]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.14286, 3.97358, 0)
+[node name="Post" type="MeshInstance3D" parent="." unique_id=1361529371]
+transform = Transform3D(0.175, 0, 0, 0, 0.3, 0, 0, 0, 0.2, 0, 0, 0)
 material_override = ExtResource("2_g4jf7")
 mesh = SubResource("ArrayMesh_3rkiy")
-
-[node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=755666306]
-transform = Transform3D(1, 0, 8.74226e-08, -8.74224e-08, -4.37113e-08, 0.999998, -3.76588e-13, -0.999998, -4.37113e-08, 0.8, 1.2, 0.3)
-emitting = false
-amount = 3
-lifetime = 5.0
-one_shot = true
-explosiveness = 1.0
-fixed_fps = 60
-visibility_aabb = AABB(-150, -50, -150, 300, 100, 300)
-local_coords = true
-draw_order = 3
-process_material = SubResource("ParticleProcessMaterial_4q4ny")
-draw_pass_1 = SubResource("QuadMesh_xe7oc")
-script = SubResource("GDScript_3ytks")
-
-[node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=134469253]
-stream = ExtResource("6_hpt2k")
-volume_db = -30.0
-pitch_scale = 0.1

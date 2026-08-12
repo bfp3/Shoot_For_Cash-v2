@@ -155,6 +155,11 @@ func _on_retry_pressed() -> void:
 
 	await update_close_menu()
 
+	var shop := get_tree().get_first_node_in_group("shop_main_menu")
+	## Hide stamp before shop opens so it doesn't flash before the animation.
+	if shop and shop.has_method("prepare_level_complete_stamp"):
+		shop.prepare_level_complete_stamp()
+
 	var round_manager := get_tree().get_first_node_in_group("round_manager")
 	if round_manager:
 		round_manager.game_over_triggered = false
@@ -162,7 +167,6 @@ func _on_retry_pressed() -> void:
 
 	# Let the shop finish opening, then stamp like a perfect-round tally card.
 	await get_tree().create_timer(0.55, false).timeout
-	var shop := get_tree().get_first_node_in_group("shop_main_menu")
 	if shop and shop.has_method("play_level_complete_stamp"):
 		await shop.play_level_complete_stamp(place)
 

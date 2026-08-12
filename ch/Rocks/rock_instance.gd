@@ -901,7 +901,7 @@ func apply_slow_linear_damp() -> void:
 	).normalized()
 
 	apply_torque_impulse(
-		torque_dir * force_mult[force_mult_index] * hit_torque_strength
+		torque_dir * hit_torque_strength
 	)
 	
 	var tween = create_tween().set_ease(Tween.EASE_OUT)

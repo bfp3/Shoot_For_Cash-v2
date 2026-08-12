@@ -57,14 +57,18 @@ func _ready() -> void:
 		level_name_label.modulate = Color("1f1f1fff")
 
 
-## Right-click: force-complete this place for stamp testing.
+## Right-click: force-complete this place for stamp testing (editor / debug builds only).
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		if not OS.is_debug_build():
+			return
 		var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
 		if place.is_empty() or place == gl_DataSet.get_start_place_name():
 			return
 		gl_PlayerState.mark_place_completed(place)
 		await mark_completed(true)
+		if main_control and main_control.has_method("notify_level_cleared"):
+			main_control.notify_level_cleared()
 		accept_event()
 
 
@@ -72,7 +76,7 @@ func set_locked_visuals() -> void:
 	current_state = State.LOCKED
 	level_name_label.text = ""
 	outer_ring.modulate = Color("c9a587ff")
-	$HSeparator.scale.x = 1.13
+
 	$TextureRect2.modulate = Color('d8c5b7')
 	_set_progress_hud_visible(false)
 	_hide_completion_stamp()
@@ -105,8 +109,10 @@ func refresh_map_progress() -> void:
 
 	if completed:
 		current_state = State.COMPLETE
-		_set_progress_hud_visible(show_round_count)
-		_apply_round_progress_text(place, entry, true)
+		## Finished levels: hide round counter; stamp shows CLEAR!
+		_set_progress_hud_visible(false)
+		if round_progress_label:
+			round_progress_label.visible = false
 		_refresh_completion_stamp(false)
 		_set_completed_gui()
 		return
@@ -114,7 +120,7 @@ func refresh_map_progress() -> void:
 	if has_entered:
 		current_state = State.IN_PROGRESS
 		_set_progress_hud_visible(show_round_count)
-		_apply_round_progress_text(place, entry, false)
+		_apply_round_progress_text(place, entry)
 		_hide_completion_stamp()
 		return
 
@@ -123,7 +129,7 @@ func refresh_map_progress() -> void:
 	_hide_completion_stamp()
 
 
-func _apply_round_progress_text(place: String, entry: Dictionary, completed: bool) -> void:
+func _apply_round_progress_text(place: String, entry: Dictionary) -> void:
 	if round_progress_label == null or not show_round_count:
 		if round_progress_label:
 			round_progress_label.visible = false
@@ -131,9 +137,9 @@ func _apply_round_progress_text(place: String, entry: Dictionary, completed: boo
 
 	var total := _total_rounds_for_place(place)
 	var sequence_index := int(entry.get("sequence_index", 0))
-	## Round the player is up to (1-based). After 3 clears, sequence_index=3 → show 4/total.
-	var current_round := total if completed else clampi(sequence_index + 1, 1, total)
-	round_progress_label.text = "%d/%d" % [current_round, total]
+	## Round the player is up to (1-based).
+	var current_round := clampi(sequence_index + 1, 1, maxi(total, 1))
+	round_progress_label.text = "ROUND: %d" % current_round
 	round_progress_label.visible = true
 
 
@@ -154,6 +160,8 @@ func mark_completed(animate: bool = true) -> void:
 	level_locked = false
 	_set_completed_gui()
 	await _refresh_completion_stamp(animate)
+	if main_control and main_control.has_method("notify_level_cleared"):
+		main_control.notify_level_cleared()
 
 
 func _hide_completion_stamp() -> void:
@@ -177,6 +185,8 @@ func _refresh_completion_stamp(animate: bool) -> void:
 	current_state = State.COMPLETE
 	_set_completed_gui()
 	stamp_root.visible = true
+	if stamp_label is RichTextLabel:
+		(stamp_label as RichTextLabel).text = "[wave]CLEAR!"
 	if not animate:
 		stamp_root.modulate.a = 1.0
 		if stamp_label:
@@ -186,7 +196,7 @@ func _refresh_completion_stamp(animate: bool) -> void:
 	stamp_root.modulate.a = 0.0
 	if stamp_label:
 		stamp_label.scale = Vector2.ONE * 3.0
-	var stamp_sfx := get_node_or_null("purchase") as AudioStreamPlayer
+	var stamp_sfx := $purchase as AudioStreamPlayer
 	var tween := create_tween()
 	tween.tween_property(stamp_root, "modulate:a", 1.0, 0.2)
 	if stamp_label:
@@ -201,21 +211,22 @@ func _on_level_button_pressed() -> void:
 	if level_locked or current_state == State.LOCKED:
 		return
 
-	await fill_progress_bar()
-	await get_tree().create_timer(0.6, false).timeout
+	var progress_bar := $TextureProgressBar as Range
+	if progress_bar:
+		progress_bar.value = 0.0
 
 	var level_name_lower_case: String = level_name.to_lower()
 	if main_control and main_control.has_method('select_level'):
-		await main_control.select_level(level_name_lower_case)
+		await main_control.select_level(level_name_lower_case, progress_bar)
 	elif round_manager:
 		var place := gl_DataSet.resolve_place_name(level_name_lower_case)
 		if gl_DataSet.has_place(place) and place != gl_DataSet.get_start_place_name():
-			round_manager.travel_to_level(place)
+			await round_manager.travel_to_level(place, true, progress_bar)
 		else:
 			print('other button pressed: ', level_name_lower_case)
 
-	await get_tree().create_timer(0.3, false).timeout
-	$TextureProgressBar.value = 0.0
+	if progress_bar:
+		progress_bar.value = 0.0
 
 
 func _on_pressed() -> void:

@@ -5,8 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_35jhd"]
 [ext_resource type="Theme" uid="uid://bjwkhgoiebh1q" path="res://res/custom_themes_by_blake/shoot_for_cash_default_theme.tres" id="4_307gy"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="4_a7lqs"]
-[ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="5_35jhd"]
 [ext_resource type="Texture2D" uid="uid://dtp2scu154yi6" path="res://unfiled/Decal_placeholders/Egg_2D_sprites/Egg_silhouette.png" id="6_egg"]
+[ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="7_307gy"]
 
 [sub_resource type="Animation" id="Animation_tnodp"]
 length = 0.001
@@ -146,7 +146,7 @@ grow_vertical = 2
 rotation = 1.5707964
 
 [node name="Panel" type="Panel" parent="." unique_id=1427145380]
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -157,7 +157,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel2" type="Panel" parent="." unique_id=786787343]
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -234,10 +234,9 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"RedRichText"
-theme_override_font_sizes/normal_font_size = 35
-theme_override_font_sizes/italics_font_size = 248
+theme_override_font_sizes/normal_font_size = 248
 bbcode_enabled = true
-text = "[wave][i]100%"
+text = "[wave]CLEAR!"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -297,6 +296,7 @@ mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_colors/font_outline_color = Color(1, 0.9533333, 0.92, 1)
 theme_override_font_sizes/normal_font_size = 68
+theme_override_font_sizes/italics_font_size = 68
 bbcode_enabled = true
 text = "MOSS"
 fit_content = true
@@ -411,6 +411,6 @@ stream = ExtResource("4_a7lqs")
 volume_db = -50.0
 
 [node name="purchase" type="AudioStreamPlayer" parent="." unique_id=38437267]
-stream = ExtResource("5_35jhd")
-volume_db = -40.0
-pitch_scale = 3.0
+stream = ExtResource("7_307gy")
+volume_db = -35.0
+pitch_scale = 0.5

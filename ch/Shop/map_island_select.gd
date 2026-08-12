@@ -5,6 +5,13 @@ extends Control
 ## Edit in data_set.gd → dataset_string.map_earn_more_money_text (fallback only).
 const earn_more_money_text := "Earn More Cash"
 
+@export_group("Island Transition")
+## Total fade-out + fade-in time when changing islands on the map.
+@export var island_transition_duration := 0.5
+## 0–1 portion of the duration spent fading out (remainder fades in).
+@export_range(0.05, 0.95, 0.05) var island_transition_fade_out_ratio := 0.5
+@export var island_change_sfx: AudioStreamPlayer
+
 @export_group("Test Mode")
 ## Turn on manually, or leave off — auto-enables when you F6 this scene alone.
 @export var enable_test_mode := false
@@ -22,6 +29,7 @@ var _unlock_popup_dismissed := false
 var _earn_more_popup_busy := false
 var _test_mode := false
 var _opening_pause_from_map := false
+var _island_transitioning := false
 
 @onready var close_button: Button = $CloseMapButton
 @onready var island1: Control = $Island1
@@ -407,11 +415,27 @@ func _show_island_page(index: int) -> void:
 
 func _refresh_nav_button_visibility() -> void:
 	var last_i := maxi(gl_DataSet.get_island_count() - 1, 0)
+	var unlocked := _unlocked_island_index()
+	## First island only, nothing else unlocked — hide both arrows.
+	if unlocked <= 0:
+		_set_nav_arrow_hidden(previous_island_button)
+		_set_nav_arrow_hidden(next_island_button)
+		return
+
 	var can_go_prev := _viewing_island_index > 0
-	var can_go_next := _viewing_island_index < last_i
-	## Always visible — inactive arrows are dulled + disabled (not hidden).
+	var can_go_next := _viewing_island_index < last_i and (_viewing_island_index + 1) <= unlocked
+	## Once another island is unlocked: both visible; inactive arrow stays dimmed.
 	_set_nav_arrow_active(previous_island_button, can_go_prev)
 	_set_nav_arrow_active(next_island_button, can_go_next)
+
+
+func _set_nav_arrow_hidden(button: BaseButton) -> void:
+	if button == null:
+		return
+	button.visible = false
+	button.disabled = true
+	button.modulate = Color(1.0, 1.0, 1.0, 0.35)
+	button.focus_mode = Control.FOCUS_NONE
 
 
 func _set_nav_arrow_active(button: BaseButton, active: bool) -> void:
@@ -427,19 +451,19 @@ func _set_nav_arrow_active(button: BaseButton, active: bool) -> void:
 func _on_previous_island_pressed() -> void:
 	if _unlock_popup != null and is_instance_valid(_unlock_popup):
 		return
+	if _island_transitioning:
+		return
 	if _viewing_island_index <= 0:
 		return
 	if previous_island_button and previous_island_button.disabled:
 		return
-	_show_island_page(_viewing_island_index - 1)
-	_refresh_island_labels()
-	_refresh_map_cash_labels()
-	_refresh_nav_button_visibility()
-	_refresh_level_buttons()
+	await _transition_to_island(_viewing_island_index - 1)
 
 
 func _on_next_island_pressed() -> void:
 	if _unlock_popup != null and is_instance_valid(_unlock_popup):
+		return
+	if _island_transitioning:
 		return
 	var last_i := maxi(gl_DataSet.get_island_count() - 1, 0)
 	if _viewing_island_index >= last_i:
@@ -449,11 +473,7 @@ func _on_next_island_pressed() -> void:
 	var unlocked := _unlocked_island_index()
 
 	if target <= unlocked:
-		_show_island_page(target)
-		_refresh_island_labels()
-		_refresh_map_cash_labels()
-		_refresh_nav_button_visibility()
-		_refresh_level_buttons()
+		await _transition_to_island(target)
 		return
 
 	## Next island unlocks by defeating this island's boss — not by cash.
@@ -464,11 +484,55 @@ func _on_next_island_pressed() -> void:
 	_set_unlocked_island_index(target)
 	gl_PlayerState.save_meta_progress()
 	await _show_island_unlocked_popup(gl_DataSet.get_island_name(target))
-	_show_island_page(target)
+	await _transition_to_island(target)
+
+
+## Fade out → swap island page → fade in. Duration/ratio are exported above.
+func _transition_to_island(index: int) -> void:
+	if _island_transitioning:
+		return
+	index = clampi(index, 0, maxi(_island_pages.size() - 1, 0))
+	if index == _viewing_island_index:
+		_refresh_island_labels()
+		_refresh_map_cash_labels()
+		_refresh_nav_button_visibility()
+		_refresh_level_buttons()
+		return
+
+	_island_transitioning = true
+	var duration := maxf(island_transition_duration, 0.05)
+	var out_ratio := clampf(island_transition_fade_out_ratio, 0.05, 0.95)
+	var fade_out_t := duration * out_ratio
+	var fade_in_t := duration * (1.0 - out_ratio)
+
+	if island_change_sfx:
+		island_change_sfx.play()
+	elif next_island_button and next_island_button.get("purchase_sfx"):
+		var sfx = next_island_button.get("purchase_sfx")
+		if sfx is AudioStreamPlayer:
+			(sfx as AudioStreamPlayer).play()
+
+	var tween_out := create_tween()
+	tween_out.tween_property(self, "modulate:a", 0.0, fade_out_t)
+	await tween_out.finished
+
+	_show_island_page(index)
 	_refresh_island_labels()
 	_refresh_map_cash_labels()
 	_refresh_nav_button_visibility()
 	_refresh_level_buttons()
+
+	var tween_in := create_tween()
+	tween_in.tween_property(self, "modulate:a", 1.0, fade_in_t)
+	await tween_in.finished
+	_island_transitioning = false
+
+
+## Level/boss clears can unlock nav — refresh next/prev visibility.
+func notify_level_cleared() -> void:
+	_refresh_nav_button_visibility()
+	_refresh_island_labels()
+	_refresh_boss_button()
 
 
 func _format_cash(amount: int) -> String:
@@ -598,8 +662,10 @@ func mark_place_completed(place_id: String, animate: bool = true) -> void:
 			continue
 		if button.has_method("mark_completed"):
 			await button.mark_completed(animate)
+		notify_level_cleared()
 		return
 	_apply_completion_stamps(false)
+	notify_level_cleared()
 
 
 func _apply_completion_stamps(animate: bool) -> void:
@@ -614,7 +680,7 @@ func _travel_place_for_button(button: Control) -> String:
 	return _place_from_level_name(String(button.level_name))
 
 
-func select_level(level_id: String) -> void:
+func select_level(level_id: String, progress_bar: Range = null) -> void:
 	if _selecting_level:
 		return
 	if _unlock_popup != null and is_instance_valid(_unlock_popup):
@@ -623,7 +689,7 @@ func select_level(level_id: String) -> void:
 	level_id = level_id.to_lower().strip_edges()
 
 	if level_id == "boss range" or level_id == "boss_range" or level_id == "boss":
-		await _try_enter_boss()
+		await _try_enter_boss(progress_bar)
 		return
 
 	var place := _resolve_travel_place(level_id)
@@ -640,19 +706,26 @@ func select_level(level_id: String) -> void:
 		_selecting_level = false
 		return
 
-	await close_pop_up()
-
-	var moved := gl_PlayerState.change_location(place)
-	if moved and game_start_menu and game_start_menu.visible:
+	if game_start_menu and game_start_menu.visible:
 		if game_start_menu.has_method("sfx_close_shop"):
 			game_start_menu.sfx_close_shop()
 		game_start_menu.hide()
 		game_start_menu.current_state = game_start_menu.State.INACTIVE
 
+	## Keep the map open while the layout loads; button progress bar tracks load.
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and rm.has_method("travel_to_level"):
+		await rm.travel_to_level(place, false, progress_bar)
+	else:
+		gl_PlayerState.change_location(place)
+
+	if progress_bar and is_instance_valid(progress_bar):
+		progress_bar.value = 100.0
+	await close_pop_up()
 	_selecting_level = false
 
 
-func _try_enter_boss() -> void:
+func _try_enter_boss(progress_bar: Range = null) -> void:
 	var cost := gl_DataSet.get_boss_unlock_cost(_viewing_island_index)
 	var cash := int(gl_PlayerState.dataset.cash)
 	if cash < cost:
@@ -675,12 +748,15 @@ func _try_enter_boss() -> void:
 		if EventBus.instance.has_signal("purchase_made"):
 			EventBus.instance.purchase_made.emit("boss_entry")
 
-	await close_pop_up()
 	var rm := get_tree().get_first_node_in_group("round_manager")
 	if rm and rm.has_method("travel_to_boss"):
-		rm.travel_to_boss(_viewing_island_index)
+		await rm.travel_to_boss(_viewing_island_index, false, progress_bar)
 	else:
 		push_warning("MapIslandSelect: round_manager.travel_to_boss missing")
+
+	if progress_bar and is_instance_valid(progress_bar):
+		progress_bar.value = 100.0
+	await close_pop_up()
 	_selecting_level = false
 
 

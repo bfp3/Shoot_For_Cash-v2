@@ -79,7 +79,7 @@ left_to_right = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_rcr1f"]
 
-[node name="MapIslandSelect" type="Control" unique_id=309897566 groups=["map_menu"]]
+[node name="MapIslandSelect" type="Control" unique_id=309897566 node_paths=PackedStringArray("island_change_sfx") groups=["map_menu"]]
 z_index = 2
 layout_mode = 3
 anchors_preset = 8
@@ -96,6 +96,11 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("1_vjt1i")
+island_change_sfx = NodePath("IslandChangeSfx")
+
+[node name="IslandChangeSfx" type="AudioStreamPlayer" parent="." unique_id=353748044]
+stream = ExtResource("9_vjt1i")
+volume_db = -8.0
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1761525488]
 z_index = -1
@@ -420,7 +425,7 @@ scale = Vector2(0.79, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxFlat_xxttw")
 
-[node name="NextIslandButton" type="TextureButton" parent="Island1/NextIslandLabel" unique_id=713101984]
+[node name="NextIslandButton" type="Button" parent="Island1/NextIslandLabel" unique_id=1112719488 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
 layout_mode = 1
 anchors_preset = -1
@@ -433,14 +438,19 @@ offset_top = -104.552
 offset_right = 97.552
 offset_bottom = 102.552
 grow_vertical = 0
+rotation = 3.1415927
 scale = Vector2(0.191, 0.191)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture_normal = ExtResource("7_8mvl6")
-texture_pressed = ExtResource("7_8mvl6")
-texture_hover = ExtResource("7_8mvl6")
-flip_h = true
+icon = ExtResource("7_8mvl6")
+flat = true
+script = ExtResource("11_n61y1")
+focus_enter_sfx = NodePath("../../../CloseMapButton/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../CloseMapButton/focus_exit")
+purchase_sfx = NodePath("../../../CloseMapButton/shop_open_sfx_01")
+wiggle_amount = 0.23
+wiggle_amount_exit = 0.191
 
-[node name="PreviousIslandButton" type="TextureButton" parent="Island1/NextIslandLabel" unique_id=1619063244]
+[node name="PreviousIslandButton" type="Button" parent="Island1/NextIslandLabel" unique_id=1800513038 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
 layout_mode = 1
 anchors_preset = -1
@@ -455,9 +465,14 @@ offset_bottom = 102.552
 grow_vertical = 0
 scale = Vector2(0.191, 0.191)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture_normal = ExtResource("7_8mvl6")
-texture_pressed = ExtResource("7_8mvl6")
-texture_hover = ExtResource("7_8mvl6")
+icon = ExtResource("7_8mvl6")
+flat = true
+script = ExtResource("11_n61y1")
+focus_enter_sfx = NodePath("../../../CloseMapButton/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../CloseMapButton/focus_exit")
+purchase_sfx = NodePath("../../../CloseMapButton/shop_open_sfx_01")
+wiggle_amount = 0.23
+wiggle_amount_exit = 0.191
 metadata/_edit_use_anchors_ = true
 
 [node name="BossRangeButton" parent="Island1/NextIslandLabel" unique_id=2105000001 node_paths=PackedStringArray("main_control") instance=ExtResource("13_bossbtn")]

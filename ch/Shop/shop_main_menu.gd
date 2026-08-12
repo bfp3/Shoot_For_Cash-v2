@@ -23,6 +23,8 @@ var reroll_index := 0
 var is_rerolling := false
 
 var all_skills : Array
+## When true, shop open won't flash the CLEAR! stamp before its animation plays.
+var _pending_level_complete_stamp := false
 
 enum SkillState {
 	INACTIVE,
@@ -210,16 +212,43 @@ func _ensure_boss_challenge_banner() -> RichTextLabel:
 	return _boss_challenge_banner
 
 
-## Tally-card style 100% stamp onto the shop background images after clearing a place.
+## Hide stamp until play_level_complete_stamp animates it in.
+func prepare_level_complete_stamp() -> void:
+	_pending_level_complete_stamp = true
+	var stamp_root := _get_background_complete_stamp()
+	if stamp_root == null:
+		return
+	stamp_root.visible = false
+	stamp_root.modulate.a = 0.0
+	var stamp_label := stamp_root.get_node_or_null("stampLabel") as Control
+	if stamp_label == null:
+		stamp_label = stamp_root.get_node_or_null("RichTextLabel") as Control
+	if stamp_label:
+		stamp_label.modulate.a = 1.0
+		stamp_label.scale = Vector2.ONE * 3.0
+
+
 func play_level_complete_stamp(_place_id: String = "") -> void:
 	var stamp_root := _get_background_complete_stamp()
 	if stamp_root == null:
 		return
-	var stamp_label := stamp_root.get_node_or_null("RichTextLabel") as Control
-	stamp_root.visible = true
+	var stamp_label := stamp_root.get_node_or_null("stampLabel") as Control
+	if stamp_label == null:
+		stamp_label = stamp_root.get_node_or_null("RichTextLabel") as Control
+	if stamp_label is RichTextLabel:
+		(stamp_label as RichTextLabel).text = "[wave]CLEAR!"
+
+	## Always start hidden so nothing flashes before the stamp animation.
+	_pending_level_complete_stamp = false
+	stamp_root.visible = false
 	stamp_root.modulate.a = 0.0
 	if stamp_label:
+		stamp_label.modulate.a = 1.0
 		stamp_label.scale = Vector2.ONE * 3.0
+	await get_tree().process_frame
+
+	stamp_root.visible = true
+	stamp_root.modulate.a = 0.0
 
 	var stamp_sfx := get_node_or_null("SFX/shop_purchase_01") as AudioStreamPlayer
 	var tween := create_tween()
@@ -231,7 +260,8 @@ func play_level_complete_stamp(_place_id: String = "") -> void:
 	tween.tween_property(self, "scale", default_scale * 0.998, 0.1)
 	tween.tween_property(self, "scale", default_scale, 0.05)
 	tween.tween_interval(0.85)
-	tween.tween_property(%stampLabel, "modulate:a",  0.2, 1.0)
+	if stamp_label:
+		tween.tween_property(stamp_label, "modulate:a", 0.2, 1.0)
 	await tween.finished
 
 
@@ -240,12 +270,22 @@ func _refresh_background_completion_stamp(_animate: bool = false) -> void:
 	var stamp_root := _get_background_complete_stamp()
 	if stamp_root == null:
 		return
+	## Don't flash the stamp early when the clear-screen flow is about to animate it.
+	if _pending_level_complete_stamp:
+		stamp_root.visible = false
+		stamp_root.modulate.a = 0.0
+		return
 	if gl_PlayerState.is_place_completed(place):
 		stamp_root.visible = true
 		stamp_root.modulate.a = 1.0
-		var stamp_label := stamp_root.get_node_or_null("RichTextLabel") as Control
+		var stamp_label := stamp_root.get_node_or_null("stampLabel") as Control
+		if stamp_label == null:
+			stamp_label = stamp_root.get_node_or_null("RichTextLabel") as Control
+		if stamp_label is RichTextLabel:
+			(stamp_label as RichTextLabel).text = "[wave]CLEAR!"
 		if stamp_label:
 			stamp_label.scale = Vector2.ONE
+			stamp_label.modulate.a = 1.0
 	else:
 		stamp_root.visible = false
 		stamp_root.modulate.a = 0.0

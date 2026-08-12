@@ -56,6 +56,10 @@ var _boss_mode := false
 var _boss_island_index := 0
 var _boss_timer_seconds := 120.0
 var _boss_looping := false
+## After a boss win tally, open the island map instead of the shop.
+var _boss_open_map_after_tally := false
+## Optional UI bar driven while a map travel loads a layout (0–100).
+var _travel_progress_bar: Range = null
 
 # Set the instant we hit three strikes. Blocks any further state
 # transitions so nothing already "in flight" (awaits, etc.) can push
@@ -143,6 +147,28 @@ func _ready() -> void:
 	EventBus.instance.add_strike.connect(handle_rock_missed)
 	#EventBus.instance.hazard_hit.connect(handle_rock_missed)
 	move_to_start()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("cancel_button"):
+		return
+	if not _is_actively_playing_round():
+		return
+	abort_round_to_shop()
+	get_viewport().set_input_as_handled()
+
+
+## True only while a live round/wave is in progress (not shop, tally, map, etc.).
+func _is_actively_playing_round() -> bool:
+	if wave_ending or game_over_triggered or transitioning_worlds:
+		return false
+	if level_editor_open or level_editor_test_active:
+		return false
+	match current_round_state:
+		RoundState.ROUND_START, RoundState.WAVE_START, RoundState.WAVE_END, RoundState.BONUS_ROUND, RoundState.CHECK_SCORE:
+			return true
+		_:
+			return false
 
 
 func _capture_rocks_randomize_baseline() -> void:
@@ -685,8 +711,23 @@ func round_timer_time_out() -> void:
 
 func check_prompts() -> void:
 	if current_sequence_index >= current_rock_sequence.size():
+		var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+		## Cleared ranges stay playable — clamp onto the last round and continue.
+		if gl_PlayerState.is_place_completed(place):
+			_clamp_sequence_index_for_replay()
+			return
 		start_game_over()
 		return
+
+
+## After 100% clear, keep Play working by replaying the last round (or any selected round).
+func _clamp_sequence_index_for_replay() -> void:
+	if current_rock_sequence.is_empty():
+		return
+	if current_sequence_index >= current_rock_sequence.size():
+		current_sequence_index = current_rock_sequence.size() - 1
+	current_round = current_sequence_index + 1
+	gl_PlayerState.dataset.round = current_round
 	
 
 func enter_state(new_state: RoundState) -> void:
@@ -1071,8 +1112,12 @@ func update_round_end() -> void:
 	protect_bonus_failed = false
 
 	if current_sequence_index >= current_rock_sequence.size():
-		start_game_over()
-		return
+		var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+		if gl_PlayerState.is_place_completed(place):
+			_clamp_sequence_index_for_replay()
+		else:
+			start_game_over()
+			return
 
 	stop_player()
 
@@ -1111,6 +1156,23 @@ func update_tally_end() -> void:
 	# Level-complete screen owns the next step — don't also open the shop underneath it.
 	if game_over_triggered:
 		return
+
+	## Boss win: open the island map after the tally.
+	if _boss_open_map_after_tally:
+		_boss_open_map_after_tally = false
+		enter_state(RoundState.INACTIVE)
+		_open_island_map_menu()
+		return
+
+	## Boss loss: reset strikes and return to the boss-arena shop for a retry.
+	if _boss_mode:
+		player_failed = false
+		success = false
+		current_wave = 0
+		current_sequence_index = 0
+		wave_ending = false
+		check_round_for_strikes()
+
 	enter_state(RoundState.SHOP_START)
 
 	
@@ -1326,17 +1388,23 @@ func _await_layout_scene(path: String) -> PackedScene:
 	if path.is_empty():
 		return null
 	if _layout_cache.has(path):
+		_set_travel_progress(0.55)
 		return _layout_cache[path] as PackedScene
 
 	_request_layout_load(path)
 	var waited := 0
 	while waited < 600:
-		var status := ResourceLoader.load_threaded_get_status(path)
+		var prog: Array = []
+		var status := ResourceLoader.load_threaded_get_status(path, prog)
+		if prog.size() > 0:
+			## Resource load fills roughly the first half of the travel bar.
+			_set_travel_progress(0.05 + clampf(float(prog[0]), 0.0, 1.0) * 0.5)
 		match status:
 			ResourceLoader.THREAD_LOAD_LOADED:
 				var packed := ResourceLoader.load_threaded_get(path) as PackedScene
 				if packed:
 					_layout_cache[path] = packed
+					_set_travel_progress(0.55)
 					return packed
 				break
 			ResourceLoader.THREAD_LOAD_FAILED, ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
@@ -1344,7 +1412,18 @@ func _await_layout_scene(path: String) -> PackedScene:
 			_:
 				await get_tree().process_frame
 				waited += 1
+	_set_travel_progress(0.55)
 	return _get_cached_layout(path)
+
+
+func _set_travel_progress(fraction: float) -> void:
+	if _travel_progress_bar == null or not is_instance_valid(_travel_progress_bar):
+		return
+	_travel_progress_bar.value = clampf(fraction, 0.0, 1.0) * 100.0
+
+
+func _clear_travel_progress_bar() -> void:
+	_travel_progress_bar = null
 
 
 ## Pull ocean / world-env out before add_child so first-frame shader compile
@@ -1413,7 +1492,8 @@ func _restore_level_progress(level_id: String) -> void:
 
 
 ## Swap scenery + round data for a shooting range. Used for first arrival and mid-run map travel.
-func travel_to_level(level_id: String) -> void:
+## use_transition_overlay: background travel banner/fade. Map button travel passes false and drives progress_bar instead.
+func travel_to_level(level_id: String, use_transition_overlay: bool = true, progress_bar: Range = null) -> void:
 	level_id = gl_DataSet.resolve_place_name(level_id)
 	var layout_path := _layout_path_for_level(level_id)
 	if layout_path.is_empty():
@@ -1428,7 +1508,10 @@ func travel_to_level(level_id: String) -> void:
 	if already_here:
 		return
 
-	# Kick layout load on a worker during the fade.
+	_travel_progress_bar = progress_bar
+	_set_travel_progress(0.02)
+
+	# Kick layout load on a worker during the fade / map progress.
 	_request_layout_load(layout_path)
 
 	transitioning_worlds = true
@@ -1452,6 +1535,7 @@ func travel_to_level(level_id: String) -> void:
 	current_round_state = RoundState.INACTIVE
 	_boss_mode = false
 	_boss_looping = false
+	_boss_open_map_after_tally = false
 
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -1463,6 +1547,7 @@ func travel_to_level(level_id: String) -> void:
 
 	player.display_hud()
 	gl_PlayerState.dataset.level_name = level_id
+	_set_travel_progress(0.08)
 
 	if coming_from_start:
 		gl_PlayerState.dataset['stage'] = 1
@@ -1471,14 +1556,15 @@ func travel_to_level(level_id: String) -> void:
 	if music_manager and music_manager.has_method("stop_opening_song"):
 		music_manager.stop_opening_song()
 
-	if scene_transition_screen.has_method('set_destination_place'):
-		scene_transition_screen.set_destination_place(level_id)
-	scene_transition_screen.next_level_start()
-	await get_tree().create_timer(1.0, false).timeout
-	if coming_from_start:
+	if use_transition_overlay:
+		if scene_transition_screen.has_method('set_destination_place'):
+			scene_transition_screen.set_destination_place(level_id)
+		scene_transition_screen.next_level_start()
 		await get_tree().create_timer(1.0, false).timeout
+		if coming_from_start:
+			await get_tree().create_timer(1.0, false).timeout
 
-	# Replace level layout under the fade.
+	# Replace level layout under the fade / map.
 	if level_layout.get_child_count() > 0:
 		for child in level_layout.get_children():
 			child.queue_free()
@@ -1488,8 +1574,10 @@ func travel_to_level(level_id: String) -> void:
 	if layout_scene == null:
 		push_error('RoundManager: failed to load layout for "%s"' % level_id)
 		transitioning_worlds = false
+		_clear_travel_progress_bar()
 		return
 
+	_set_travel_progress(0.7)
 	rocks_container.show()
 	var level_scenery = layout_scene.instantiate()
 	var heavy := _detach_heavy_layout_nodes(level_scenery)
@@ -1500,8 +1588,10 @@ func travel_to_level(level_id: String) -> void:
 	await get_tree().process_frame
 	_reattach_heavy_layout_nodes(heavy)
 	await get_tree().process_frame
+	_set_travel_progress(0.85)
 
-	await get_tree().create_timer(1.0, false).timeout
+	if use_transition_overlay:
+		await get_tree().create_timer(1.0, false).timeout
 
 	load_level_sequence()
 	_restore_level_progress(level_id)
@@ -1519,10 +1609,14 @@ func travel_to_level(level_id: String) -> void:
 	shop_main_menu.update_place_label()
 	wave_progress_feedback.show()
 	find_egg()
+	_set_travel_progress(0.95)
 
-	scene_transition_screen.next_level_finish()
-	place_name.update_place_name()
-	await get_tree().create_timer(1.0, false).timeout
+	if use_transition_overlay:
+		scene_transition_screen.next_level_finish()
+		place_name.update_place_name()
+		await get_tree().create_timer(1.0, false).timeout
+	else:
+		place_name.update_place_name()
 
 	if coming_from_start:
 		var player_balloon := get_node_or_null('../PlayerBalloon')
@@ -1530,17 +1624,20 @@ func travel_to_level(level_id: String) -> void:
 			player_balloon.add_balloon()
 		gl_PlayerState.dataset.tickets += 1
 		shop_main_menu.update_next_ticket()
-		await get_tree().create_timer(3.0, false).timeout
+		if use_transition_overlay:
+			await get_tree().create_timer(3.0, false).timeout
 
+	_set_travel_progress(1.0)
 	transitioning_worlds = false
 	## Mark this place as entered so the map can show round progress.
 	_save_level_progress()
+	_clear_travel_progress_bar()
 	enter_state(RoundState.SHOP_START)
 	player.show_ammo_panel()
 
 
 ## Boss survival fight for an overworld island (0 = Shipper → island_1_boss layout).
-func travel_to_boss(island_index: int = 0) -> void:
+func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, progress_bar: Range = null) -> void:
 	island_index = clampi(island_index, 0, maxi(gl_DataSet.get_island_count() - 1, 0))
 	var layout_path := String(LAYOUT_PATH_BOSS_BY_ISLAND.get(island_index, ""))
 	if layout_path.is_empty():
@@ -1552,6 +1649,8 @@ func travel_to_boss(island_index: int = 0) -> void:
 	if transitioning_worlds:
 		return
 
+	_travel_progress_bar = progress_bar
+	_set_travel_progress(0.02)
 	_request_layout_load(layout_path)
 	transitioning_worlds = true
 	_save_level_progress()
@@ -1564,10 +1663,12 @@ func travel_to_boss(island_index: int = 0) -> void:
 		else:
 			shop_main_menu.hide()
 
-	var map_menu := get_tree().get_first_node_in_group("map_menu")
-	if map_menu and map_menu is CanvasItem and (map_menu as CanvasItem).visible:
-		if map_menu.has_method("close_pop_up"):
-			map_menu.close_pop_up()
+	## Map stays open when travelling from a button progress bar; otherwise close it.
+	if use_transition_overlay:
+		var map_menu := get_tree().get_first_node_in_group("map_menu")
+		if map_menu and map_menu is CanvasItem and (map_menu as CanvasItem).visible:
+			if map_menu.has_method("close_pop_up"):
+				map_menu.close_pop_up()
 
 	stop_timer()
 	stop_player()
@@ -1581,6 +1682,7 @@ func travel_to_boss(island_index: int = 0) -> void:
 	_boss_mode = true
 	_boss_island_index = island_index
 	_boss_looping = false
+	_boss_open_map_after_tally = false
 
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -1592,11 +1694,13 @@ func travel_to_boss(island_index: int = 0) -> void:
 
 	player.display_hud()
 	gl_PlayerState.dataset.level_name = "boss"
+	_set_travel_progress(0.08)
 
-	if scene_transition_screen.has_method("set_destination_place"):
-		scene_transition_screen.set_destination_place("boss")
-	scene_transition_screen.next_level_start()
-	await get_tree().create_timer(1.0, false).timeout
+	if use_transition_overlay:
+		if scene_transition_screen.has_method("set_destination_place"):
+			scene_transition_screen.set_destination_place("boss")
+		scene_transition_screen.next_level_start()
+		await get_tree().create_timer(1.0, false).timeout
 
 	if level_layout.get_child_count() > 0:
 		for child in level_layout.get_children():
@@ -1608,12 +1712,15 @@ func travel_to_boss(island_index: int = 0) -> void:
 		push_error("RoundManager: failed to load boss layout")
 		_boss_mode = false
 		transitioning_worlds = false
+		_clear_travel_progress_bar()
 		return
 
+	_set_travel_progress(0.65)
 	rocks_container.show()
 	## Grow the rock pool while the transition covers the screen (batched, no hitch).
 	if rocks_container and rocks_container.has_method("ensure_extra_rocks"):
 		await rocks_container.ensure_extra_rocks(80, 4)
+	_set_travel_progress(0.78)
 	var level_scenery = layout_scene.instantiate()
 	var heavy := _detach_heavy_layout_nodes(level_scenery)
 	level_layout.add_child(level_scenery)
@@ -1622,7 +1729,9 @@ func travel_to_boss(island_index: int = 0) -> void:
 	await get_tree().process_frame
 	_reattach_heavy_layout_nodes(heavy)
 	await get_tree().process_frame
-	await get_tree().create_timer(1.0, false).timeout
+	if use_transition_overlay:
+		await get_tree().create_timer(1.0, false).timeout
+	_set_travel_progress(0.88)
 
 	## Always reload so boss-timer / boss range data is fresh.
 	if not Parser.loadIslandFile(LEVEL_FILE_PATH):
@@ -1644,12 +1753,18 @@ func travel_to_boss(island_index: int = 0) -> void:
 		shop_main_menu.update_place_label()
 	wave_progress_feedback.show()
 	find_egg()
+	_set_travel_progress(0.96)
 
-	scene_transition_screen.next_level_finish()
-	place_name.update_place_name()
-	await get_tree().create_timer(0.75, false).timeout
+	if use_transition_overlay:
+		scene_transition_screen.next_level_finish()
+		place_name.update_place_name()
+		await get_tree().create_timer(0.75, false).timeout
+	else:
+		place_name.update_place_name()
 
+	_set_travel_progress(1.0)
 	transitioning_worlds = false
+	_clear_travel_progress_bar()
 	check_round_for_strikes()
 	player.show_ammo_panel()
 	## Open shop first so the boss challenge banner can be read before Play.
@@ -1683,17 +1798,16 @@ func _finish_boss_round() -> void:
 	await get_tree().create_timer(0.35, false).timeout
 
 	if failed:
-		## Retry from shop on the boss arena.
-		player_failed = false
+		## Keep fail state for the tally card, then retry from shop after.
+		player_failed = true
 		success = false
 		current_wave = 0
 		current_sequence_index = 0
 		wave_ending = false
-		check_round_for_strikes()
-		enter_state(RoundState.SHOP_START)
+		enter_state(RoundState.TALLY_START)
 		return
 
-	## Survived the timer — award clear bonus, celebrate, unlock next island, then map.
+	## Survived the timer — award clear bonus, celebrate, unlock next island, then tally → map.
 	var reward := gl_DataSet.get_boss_clear_reward(_boss_island_index)
 	if reward > 0:
 		gl_PlayerState.add_cash(reward)
@@ -1715,12 +1829,12 @@ func _finish_boss_round() -> void:
 		await get_tree().create_timer(1.25, false).timeout
 
 	_boss_mode = false
+	_boss_open_map_after_tally = true
 	player_failed = false
-	success = false
+	success = true
 	current_wave = 0
 	wave_ending = false
-	enter_state(RoundState.INACTIVE)
-	_open_island_map_menu()
+	enter_state(RoundState.TALLY_START)
 
 
 ## Travel by place name or by index into gl_DataSet.place_name (0, 1, 2, …).
@@ -1800,9 +1914,10 @@ func start_game_over() -> void:
 		gl_PlayerState.dataset.round = current_round
 	_save_level_progress()
 
-	# Already cleared this range — show shop, not the clear screen again.
+	# Already cleared this range — stay in shop-ready replay mode (don't soft-lock Play).
 	if gl_PlayerState.is_place_completed(place):
 		game_over_triggered = false
+		_clamp_sequence_index_for_replay()
 		player.stop_player()
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		enter_state(RoundState.SHOP_START)

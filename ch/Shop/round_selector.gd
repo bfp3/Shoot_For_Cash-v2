@@ -166,6 +166,9 @@ func update_perfected() -> void:
 	cash_earned.modulate.a = 1.0
 
 	one_hundred_percent_control.modulate.a = 1.0
+	var perfected_label := one_hundred_percent_control.get_node_or_null("perfected_label") as RichTextLabel
+	if perfected_label:
+		perfected_label.text = "[wave]100%"
 	outer_ring.modulate = outerRingColour_levelCompleted
 	outer_ring_2.modulate = Color('ebe0d8')
 	round_number.modulate = Color("dbc4b2ff")

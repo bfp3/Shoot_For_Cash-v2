@@ -115,7 +115,7 @@ var dataset_string : Dictionary = {
 	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']
 	,"tooltip_auto_fire" 				: ['Just Point, No Click']
-	,"tooltip_sky_mine" 				: ["[i][wave]BOOM[/wave][/i]"]
+	,"tooltip_sky_mine" 				: ["[wave]BOOM[/wave]"]
 	,"tooltip_target_circle" 			: ["Do you even know what a Reticle is?"]
 	,"tooltip_gun_fire_rate"			: ["Faster Reload"]
 	,"tooltip_bullet_damage" 			: ["The Big One's Hurt"]
