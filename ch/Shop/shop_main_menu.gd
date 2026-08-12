@@ -182,7 +182,7 @@ func _refresh_boss_challenge_banner() -> void:
 			var s := float(round_manager.get_active_timer_seconds())
 			if s > 0.0:
 				seconds = int(round(s))
-		banner.text = "[center][wave]HOLD OUT for %d Seconds[/wave][/center]" % seconds
+		banner.text = "[center][wave]HOLD OUT\n %d seconds[/wave][/center]" % seconds
 
 
 func _ensure_boss_challenge_banner() -> RichTextLabel:
@@ -215,7 +215,7 @@ func _ensure_boss_challenge_banner() -> RichTextLabel:
 	banner.add_theme_color_override("default_color", Color(0.631, 0.008, 0.016, 1.0))
 	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	banner.text = "[center][wave]HOLD OUT for 60 Seconds[/wave][/center]"
+	banner.text = "[center][wave]HOLD OUT \n 60 seconds[/wave][/center]"
 	if parent:
 		parent.add_child(banner)
 	else:
@@ -860,11 +860,11 @@ func _focus_shop_controls() -> void:
 	var play_btn := get_node_or_null("%PlayButton") as Control
 	if play_btn and UiFocus.can_focus(play_btn):
 		preferred = play_btn
-	else:
-		for child in available_upgrades.get_children():
-			if child is Control and UiFocus.can_focus(child as Control):
-				preferred = child as Control
-				break
+	#else:
+		#for child in available_upgrades.get_children():
+			#if child is Control and UiFocus.can_focus(child as Control):
+				#preferred = child as Control
+				#break
 	if preferred == null:
 		var map_btn := get_node_or_null("%MapButton") as Control
 		if map_btn and UiFocus.can_focus(map_btn):

@@ -119,7 +119,7 @@ func start_fail_sequence() -> void:
 	bonuses_label.text = 'Fines'
 	bonuses_cash_label.modulate.a = 0.0
 	grand_total_cash_label.show()
-	grand_total_label.text = "Total Losses"
+	grand_total_label.text = ""
 	fail_label.show()
 	if abs(gl_PlayerState.dataset.fines) > 0:
 		grand_total_cash_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
@@ -147,7 +147,7 @@ func start_perfect_sequence() -> void:
 	grade_label.text = "[i][wave]Clear!"
 	
 	if gl_PlayerState.dataset.total_current_strikes <= 0:
-		grade_label.text = "[i][wave]PERFECT!"
+		grade_label.text = "[wave]PERFECT!"
 		
 	perfect_bonus = int(gl_DataSet.get_value('reward_perfect_round', 0))
 	
@@ -167,7 +167,7 @@ func start_perfect_sequence() -> void:
 	$SFX/shop_purchase_02.play()
 	apply_bonus_cash()
 	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned.modulate.a = 1.0
-	$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 0.0
+	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 0.0
 
 	grand_total_cash_label.modulate.a = 0.0
 	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))

@@ -10,7 +10,7 @@ var dataset_float : Dictionary = {
 	,"power_auto_fire" 					: [0, 1]
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-	,"power_target_circle"	: [40.0,80.0,120.0,160.0, 200.0, 240.0,280.0,380.0,420.0,460.0]
+	,"power_target_circle"	: [60.0,80.0,120.0,160.0, 200.0, 240.0,280.0,380.0,420.0,460.0]
 	#,"power_target_circle"	: [40.0,60.0,80.0,90.0,100.0,120.0, 130.0, 140.0,40.0,50.0]
 	#,"power_gun_fire_rate"	: [1.25, 1.0, 0.9,0.8,0.65,0.50,0.35,0.20,0.15,0.10, 0.05]
 	,"power_gun_fire_rate"	: [0.35,0.20,0.15,0.10, 0.05]
@@ -60,9 +60,9 @@ var dataset_float : Dictionary = {
 	,"price_play_round"		: [10,50,100]
 	## Map: cash required to unlock island index+1 (Shipper→Anchor, Anchor→Squid, …).
 	## Edit these values to change unlock prices on the island map.
-	,"island_unlock_cost"		: [2200, 5600, 30, 40]
+	,"island_unlock_cost"		: [2500, 5600, 30, 40]
 	## Cash required to enter each island's boss fight (index = island).
-	,"boss_unlock_cost"			: [2200, 5600, 30, 40]
+	,"boss_unlock_cost"			: [2500, 5600, 30, 40]
 	## Cash awarded when surviving a boss clear (index = island).
 	,"boss_clear_reward"		: [1000, 1000, 15000, 20000, 25000]
 	## Legacy single-value alias (cost to leave the first island). Prefer island_unlock_cost.

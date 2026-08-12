@@ -32,6 +32,8 @@ var _earn_more_popup_busy := false
 var _test_mode := false
 var _opening_pause_from_map := false
 var _island_transitioning := false
+## Blocks map buttons / close while the post-boss stamp plays.
+var _map_input_locked := false
 
 @onready var close_button: Button = $CloseMapButton
 @onready var island1: Control = $Island1
@@ -165,6 +167,8 @@ func _setup_nav_buttons() -> void:
 
 
 func _on_next_island_label_gui_input(event: InputEvent) -> void:
+	if _map_input_locked:
+		return
 	if _unlock_popup != null and is_instance_valid(_unlock_popup):
 		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -227,6 +231,9 @@ func _place_from_level_name(level_name: String) -> String:
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible or _selecting_level:
 		return
+	if _map_input_locked and _unlock_popup == null:
+		get_viewport().set_input_as_handled()
+		return
 	if _unlock_popup != null and is_instance_valid(_unlock_popup):
 		if event.is_pressed() and (event.is_action("ui_cancel") or event.is_action("controller_back_button")):
 			_dismiss_unlock_popup()
@@ -245,6 +252,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func open_pop_up() -> void:
 	_selecting_level = false
+	_map_input_locked = false
 	ticket_location = String(gl_PlayerState.dataset.level_name).to_lower()
 	_viewing_island_index = clampi(
 		int(gl_PlayerState.dataset.get("unlocked_island_index", 0)),
@@ -271,6 +279,112 @@ func open_pop_up() -> void:
 		preferred = close_button
 	if preferred:
 		UiFocus.grab_in(self, preferred)
+
+
+## After boss tally: stamp CLEAR on the boss button, unlock popup, then island transition.
+func open_pop_up_after_boss_clear(cleared_island: int) -> void:
+	_selecting_level = false
+	_map_input_locked = true
+	ticket_location = String(gl_PlayerState.dataset.level_name).to_lower()
+	_viewing_island_index = clampi(
+		cleared_island,
+		0,
+		maxi(gl_DataSet.get_island_count() - 1, 0)
+	)
+	_show_island_page(_viewing_island_index)
+	_refresh_level_buttons()
+	_refresh_island_labels()
+	_refresh_map_cash_labels()
+	_refresh_nav_button_visibility()
+	CommonCode.apply_ui_overlay_blur()
+	_fade_out_ammo_panel()
+	_set_map_chrome_interactive(false)
+
+	var boss := _boss_button()
+	if boss and boss.has_method("prepare_clear_ceremony_visuals"):
+		boss.set("boss_island_index", _viewing_island_index)
+		boss.prepare_clear_ceremony_visuals()
+
+	modulate.a = 0.0
+	show()
+	position = Vector2.ZERO
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var tween = create_tween()
+	tween.tween_property(self, "modulate:a", 1.0, 0.35)
+	await tween.finished
+
+	if boss and boss.has_method("play_clear_stamp_ceremony"):
+		await boss.play_clear_stamp_ceremony()
+	elif boss and boss.has_method("refresh_boss_state"):
+		await boss.refresh_boss_state(true)
+
+	await get_tree().create_timer(1.0).timeout
+
+	var next_island := _viewing_island_index + 1
+	var last_i := maxi(gl_DataSet.get_island_count() - 1, 0)
+	if next_island > last_i:
+		_map_input_locked = false
+		_set_map_chrome_interactive(true)
+		_refresh_nav_button_visibility()
+		_refresh_boss_button()
+		return
+
+	## Unlock popup can receive Close / Esc; rest of map stays locked until after transition.
+	_map_input_locked = false
+	var next_name := gl_DataSet.get_island_name(next_island)
+	await _show_island_unlocked_popup(next_name)
+
+	_map_input_locked = true
+	_set_map_chrome_interactive(false)
+
+	_set_unlocked_island_index(next_island)
+	gl_PlayerState.save_meta_progress()
+	_refresh_nav_button_visibility()
+	_refresh_island_labels()
+
+	await _transition_to_island(next_island)
+
+	_map_input_locked = false
+	_set_map_chrome_interactive(true)
+	_refresh_boss_button()
+	var preferred: Control = _first_visible_level_button()
+	if preferred == null:
+		preferred = close_button
+	if preferred:
+		UiFocus.grab_in(self, preferred)
+
+
+func _boss_button() -> Control:
+	return get_node_or_null("Island1/NextIslandLabel/BossRangeButton") as Control
+
+
+func _set_map_chrome_interactive(enabled: bool) -> void:
+	if close_button:
+		close_button.disabled = not enabled
+		close_button.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+	if next_island_button:
+		next_island_button.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+	if previous_island_button:
+		previous_island_button.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+	for button in _map_level_buttons():
+		if button == null:
+			continue
+		button.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+	var boss := _boss_button()
+	if boss:
+		boss.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+		if not enabled:
+			boss.disabled = true
+		else:
+			boss.disabled = false
+	if enabled:
+		_refresh_nav_button_visibility()
+	else:
+		if next_island_button:
+			next_island_button.disabled = true
+		if previous_island_button:
+			previous_island_button.disabled = true
 
 
 func _fade_out_ammo_panel() -> void:
@@ -319,6 +433,8 @@ func _on_next_round_pressed() -> void:
 
 
 func _on_close_map_pressed() -> void:
+	if _map_input_locked:
+		return
 	## Bottom-left close always opens pause (not shop), even if we arrived via shop MapButton.
 	var rm := get_tree().get_first_node_in_group("round_manager")
 	if rm and "_reopen_shop_after_map" in rm:
@@ -470,6 +586,8 @@ func _set_nav_arrow_active(button: BaseButton, active: bool) -> void:
 
 
 func _on_previous_island_pressed() -> void:
+	if _map_input_locked:
+		return
 	if _unlock_popup != null and is_instance_valid(_unlock_popup):
 		return
 	if _island_transitioning:
@@ -482,6 +600,8 @@ func _on_previous_island_pressed() -> void:
 
 
 func _on_next_island_pressed() -> void:
+	if _map_input_locked:
+		return
 	if _unlock_popup != null and is_instance_valid(_unlock_popup):
 		return
 	if _island_transitioning:
@@ -1001,6 +1121,10 @@ func _show_island_unlocked_popup(island_name: String) -> void:
 		await get_tree().process_frame
 
 	if is_instance_valid(dim):
-		dim.queue_free()
+		var fade := create_tween()
+		fade.tween_property(dim, "modulate:a", 0.0, 0.3)
+		await fade.finished
+		if is_instance_valid(dim):
+			dim.queue_free()
 	_unlock_popup = null
 	_unlock_popup_dismissed = false

@@ -80,6 +80,8 @@ var _boss_timer_seconds := 120.0
 var _boss_looping := false
 ## After a boss win tally, open the island map instead of the shop.
 var _boss_open_map_after_tally := false
+## Island whose boss was just cleared — map plays unlock ceremony on this page.
+var _boss_ceremony_island := -1
 ## Optional UI bar driven while a map travel loads a layout (0–100).
 var _travel_progress_bar: Range = null
 ## After shop MapButton → start + map, closing the map should reopen the shop.
@@ -882,6 +884,27 @@ func _open_island_map_menu() -> void:
 		push_warning("RoundManager: MapIslandSelect has no open_pop_up()")
 
 
+func _open_island_map_after_boss_clear(cleared_island: int) -> void:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	var map_menu: Node = null
+	if menus and menus.has_method("ensure_ticket_map"):
+		map_menu = menus.ensure_ticket_map()
+	if map_menu == null:
+		map_menu = get_tree().get_first_node_in_group("map_menu")
+	if map_menu == null:
+		push_warning("RoundManager: MapIslandSelect missing — cannot open island map")
+		return
+	if map_menu is CanvasItem:
+		(map_menu as CanvasItem).z_index = 40
+	CommonCode.apply_ui_overlay_blur()
+	if map_menu.has_method("open_pop_up_after_boss_clear"):
+		await map_menu.open_pop_up_after_boss_clear(cleared_island)
+	elif map_menu.has_method("open_pop_up"):
+		await map_menu.open_pop_up()
+	else:
+		push_warning("RoundManager: MapIslandSelect has no open_pop_up()")
+
+
 func _fade_boss_hud_before_map() -> void:
 	var wait_t := 0.0
 	if round_timer and round_timer.has_method("fade_out_timer"):
@@ -1275,9 +1298,11 @@ func update_tally_end() -> void:
 	## Boss win: fade timer + strikes, then open the island map after the tally.
 	if _boss_open_map_after_tally:
 		_boss_open_map_after_tally = false
+		var ceremony_island := _boss_ceremony_island
+		_boss_ceremony_island = -1
 		await _fade_boss_hud_before_map()
 		enter_state(RoundState.INACTIVE)
-		_open_island_map_menu()
+		await _open_island_map_after_boss_clear(ceremony_island)
 		return
 
 	## Boss loss: reset strikes and return to the boss-arena shop for a retry.
@@ -1701,6 +1726,7 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	_boss_mode = false
 	_boss_looping = false
 	_boss_open_map_after_tally = false
+	_boss_ceremony_island = -1
 
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -1853,6 +1879,7 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	_boss_island_index = island_index
 	_boss_looping = false
 	_boss_open_map_after_tally = false
+	_boss_ceremony_island = -1
 
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -1980,18 +2007,13 @@ func _finish_boss_round() -> void:
 		enter_state(RoundState.TALLY_START)
 		return
 
-	## Survived the timer — award clear bonus, celebrate, unlock next island, then tally → map.
+	## Survived the timer — award clear bonus, celebrate, then tally → map ceremony.
 	var reward := gl_DataSet.get_boss_clear_reward(_boss_island_index)
 	if reward > 0:
 		gl_PlayerState.add_cash(reward)
 	gl_PlayerState.mark_boss_cleared(_boss_island_index)
-	## Beating the boss unlocks the next island (money was only the entry fee).
-	var next_island := _boss_island_index + 1
-	if next_island < gl_DataSet.get_island_count():
-		var unlocked := int(gl_PlayerState.dataset.get("unlocked_island_index", 0))
-		if next_island > unlocked:
-			gl_PlayerState.dataset["unlocked_island_index"] = next_island
-			gl_PlayerState.save_meta_progress()
+	## Next-island unlock is granted during the map ceremony (after Close).
+	_boss_ceremony_island = _boss_island_index
 
 	$Gold_sfx.play()
 	if round_timer and round_timer.has_method("play_boss_cleared_celebration"):

@@ -260,11 +260,16 @@ func camera_sounds() -> void:
 @export var gameplay_blur_amount := 0.0
 ## Default tween time when switching blur amounts.
 @export var blur_tween_duration := 0.33
+## DOF amount while black-hazard smoke is on screen.
+const hazard_smoke_blur_amount := 0.1
+## How long hazard smoke blur lasts; each new black-rock destroy refreshes this window.
+@export var hazard_smoke_blur_duration := 5.0
 
 var _dof_attrs: CameraAttributesPractical = null
 var _dof_default_amount := 0.0
 var _blur_tween: Tween
 var _env_cache: Dictionary = {} # path -> Environment
+var _hazard_smoke_blur_token := 0
 
 
 func set_level_environment_from_path(path: String) -> void:
@@ -359,6 +364,30 @@ func apply_transition_blur() -> void:
 
 func apply_gameplay_blur() -> void:
 	tween_dof_blur(gameplay_blur_amount)
+
+
+## Black hazard smoke: blur to hazard_smoke_blur_amount, then restore after duration
+## unless another hazard smoke blur refreshes the timer.
+func apply_hazard_smoke_blur() -> void:
+	_hazard_smoke_blur_token += 1
+	var token := _hazard_smoke_blur_token
+	tween_dof_blur(hazard_smoke_blur_amount)
+	var wait := maxf(hazard_smoke_blur_duration, 0.01)
+	await get_tree().create_timer(wait).timeout
+	if token != _hazard_smoke_blur_token:
+		return
+	_restore_blur_after_hazard_smoke()
+
+
+func _restore_blur_after_hazard_smoke() -> void:
+	var shop := get_tree().get_first_node_in_group("shop_main_menu") as CanvasItem
+	var map_menu := get_tree().get_first_node_in_group("map_menu") as CanvasItem
+	var tally := get_tree().get_first_node_in_group("tally_card_menu") as CanvasItem
+	var pause := get_tree().get_first_node_in_group("pause_menu") as CanvasItem
+	if (shop and shop.visible) or (map_menu and map_menu.visible) or (tally and tally.visible) or (pause and pause.visible):
+		apply_ui_overlay_blur()
+	else:
+		apply_gameplay_blur()
 
 
 func reset_dof_blur_to_default() -> void:

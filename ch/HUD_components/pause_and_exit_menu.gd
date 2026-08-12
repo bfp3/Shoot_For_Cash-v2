@@ -100,7 +100,6 @@ func open_menu() -> void:
 	show()
 
 	sfx_open_shop()
-	CommonCode.apply_ui_overlay_blur()
 
 	var backgroundColor := $Control/CenterContainer/ColorRect
 	backgroundColor.modulate.a = 0.0
@@ -143,18 +142,12 @@ func close_menu() -> void:
 	var should_reopen_map := reopen_map_on_resume
 	reopen_map_on_resume = false
 
-	## Restore blur for whatever UI/game state we returned to.
+	## Pause itself does not blur. Only re-apply overlay blur if we return to shop/map/tally.
 	var shop := get_tree().get_first_node_in_group("shop_main_menu") as CanvasItem
 	var map_menu := get_tree().get_first_node_in_group("map_menu") as CanvasItem
 	var tally := get_tree().get_first_node_in_group("tally_card_menu") as CanvasItem
 	if (shop and shop.visible) or (map_menu and map_menu.visible) or (tally and tally.visible):
 		CommonCode.apply_ui_overlay_blur()
-	else:
-		var rm := get_tree().get_first_node_in_group("round_manager")
-		if rm and rm.has_method("_is_actively_playing_round") and rm._is_actively_playing_round():
-			CommonCode.apply_gameplay_blur()
-		else:
-			CommonCode.apply_ui_overlay_blur()
 
 	if should_reopen_map:
 		await _reopen_map_after_resume()

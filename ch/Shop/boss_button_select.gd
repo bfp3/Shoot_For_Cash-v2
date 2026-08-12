@@ -56,28 +56,32 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 		boss_state = BossState.CLEARED
 		level_locked = false
 		disabled = false
-		modulate = Color.WHITE
 		current_state = State.COMPLETE
-		level_name_label.text = " "
-		outer_ring.modulate = Color(1.0, 0.85, 0.35, 1.0)
-		$TextureRect2.modulate = Color.WHITE
+		## Keep the same colours as Available — only swap cost label ↔ CLEAR stamp.
+		_apply_available_colours()
+		level_name_label.text = "[pulse]" + boss_title_text.to_upper()
 		_set_progress_hud_visible(false)
-		await _refresh_completion_stamp(animate_clear)
+		if animate_clear:
+			await play_clear_stamp_ceremony()
+		else:
+			if round_progress_label:
+				round_progress_label.visible = false
+				round_progress_label.modulate.a = 1.0
+			await _refresh_completion_stamp(false)
 		return
 
 	if can_afford:
 		boss_state = BossState.AVAILABLE
 		level_locked = false
 		disabled = false
-		modulate = Color.WHITE
 		current_state = State.IN_PROGRESS
+		_apply_available_colours()
 		level_name_label.text = "[pulse]" + boss_title_text.to_upper()
-		outer_ring.modulate = Color(0.95, 0.35, 0.28, 1.0)
-		$TextureRect2.modulate = Color.WHITE
 		_set_progress_hud_visible(false)
 		_hide_completion_stamp()
 		if round_progress_label:
 			round_progress_label.visible = true
+			round_progress_label.modulate.a = 1.0
 			round_progress_label.text = _format_boss_cost(cost)
 		return
 
@@ -85,7 +89,6 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 	level_locked = true
 	disabled = false ## Still clickable so player can see/refresh the locked message.
 	current_state = State.LOCKED
-	#modulate = Color(0.75, 0.75, 0.75, 0.85)
 	modulate = Color.WHITE
 	level_name_label.text = boss_title_text.to_upper()
 	outer_ring.modulate = Color("c9a587ff")
@@ -94,8 +97,77 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 	_hide_completion_stamp()
 	if round_progress_label:
 		round_progress_label.visible = true
+		round_progress_label.modulate.a = 1.0
 		## Locked: show unlock cost only (no "earn more" copy).
 		round_progress_label.text = _format_boss_cost(cost)
+
+
+func _apply_available_colours() -> void:
+	modulate = Color.WHITE
+	outer_ring.modulate = Color(0.95, 0.35, 0.28, 1.0)
+	$TextureRect2.modulate = Color.WHITE
+
+
+## Show Available look + cost (stamp hidden) before the post-tally clear ceremony.
+func prepare_clear_ceremony_visuals() -> void:
+	boss_state = BossState.CLEARED
+	level_locked = false
+	disabled = true
+	current_state = State.COMPLETE
+	_apply_available_colours()
+	level_name_label.text = "[pulse]" + boss_title_text.to_upper()
+	_set_progress_hud_visible(false)
+	_hide_completion_stamp()
+	var cost := gl_DataSet.get_boss_unlock_cost(boss_island_index)
+	if round_progress_label:
+		round_progress_label.visible = true
+		round_progress_label.modulate.a = 1.0
+		round_progress_label.text = _format_boss_cost(cost)
+
+
+## Stamp in like the tally card while the cost label fades out.
+func play_clear_stamp_ceremony() -> void:
+	await _refresh_completion_stamp(true)
+	disabled = false
+
+
+## Boss clear stamp only — never retint panels/textures via `_set_completed_gui`.
+func _refresh_completion_stamp(animate: bool) -> void:
+	var stamp_root := get_node_or_null("100_percent") as Control
+	if stamp_root == null:
+		return
+	var stamp_label := stamp_root.get_node_or_null("RichTextLabel") as Control
+	stamp_root.visible = true
+	if stamp_label is RichTextLabel:
+		(stamp_label as RichTextLabel).text = "[wave]CLEAR!"
+	if not animate:
+		stamp_root.modulate.a = 1.0
+		if stamp_label:
+			stamp_label.scale = Vector2.ONE
+		if round_progress_label:
+			round_progress_label.visible = false
+			round_progress_label.modulate.a = 1.0
+		return
+
+	stamp_root.modulate.a = 0.0
+	if stamp_label:
+		stamp_label.scale = Vector2.ONE * 3.0
+	if round_progress_label:
+		round_progress_label.visible = true
+	var stamp_sfx := $purchase as AudioStreamPlayer
+	var tween := create_tween()
+	tween.tween_property(stamp_root, "modulate:a", 1.0, 0.2)
+	if stamp_label:
+		tween.parallel().tween_property(stamp_label, "scale", Vector2.ONE, 0.2)
+	if round_progress_label:
+		tween.parallel().tween_property(round_progress_label, "modulate:a", 0.0, 0.2)
+	if stamp_sfx:
+		tween.parallel().tween_callback(stamp_sfx.play.bind(0.05)).set_delay(0.15)
+	tween.tween_interval(0.35)
+	await tween.finished
+	if round_progress_label:
+		round_progress_label.visible = false
+		round_progress_label.modulate.a = 1.0
 
 
 func _format_boss_cost(cost: int) -> String:

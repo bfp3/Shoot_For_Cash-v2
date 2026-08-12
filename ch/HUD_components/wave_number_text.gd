@@ -117,7 +117,17 @@ func _wave_display_name(wave: int, total_waves: int) -> String:
 	return 'Wave %d' % wave
 
 func start_bonus() -> void:
-	wave_label.text = "[i][rainbow]Bonus Round"
+	wave_label.text = "[font_size=150]BONUS!"
+	
+	start_tween(wave_panel, _original_position, _original_modulate)
+	var flash_tween := create_tween()
+	flash_tween.set_loops(10)
+	flash_tween.tween_property(wave_label, "modulate:a", 0.0, 0.075)
+	flash_tween.tween_property(wave_label, "modulate:a", 1.0, 0.075)
+	await flash_tween.finished
+
+func Xstart_bonus() -> void:
+	wave_label.text = "[font_size=150]BONUS"
 	start_tween(wave_panel, _original_position, _original_modulate)
 	
 func start_clear() -> void:

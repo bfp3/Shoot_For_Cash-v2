@@ -72,8 +72,8 @@ func _ready() -> void:
 	_setup_target_laser_dots()
 
 
-func _process(delta: float) -> void:
-	_update_target_laser_dots(delta)
+#func _process(delta: float) -> void:
+	#_update_target_laser_dots(delta)
 
 
 func _setup_target_laser_dots() -> void:
@@ -95,6 +95,7 @@ func _setup_target_laser_dots() -> void:
 
 
 func _acquire_laser_dot(index: int) -> TextureRect:
+	return
 	while _laser_pool.size() <= index:
 		var dot: TextureRect
 		if red_dot:
@@ -144,6 +145,7 @@ func _camera_for_laser():
 
 
 func _update_target_laser_dots(delta: float) -> void:
+	return
 	var scoped := _get_scoped_targets()
 	var cam = _camera_for_laser()
 	var active_count := 0

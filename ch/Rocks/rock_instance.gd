@@ -123,6 +123,10 @@ var has_entered_camera_view := false
 ## Bumps to cancel a pending airborne rock–rock collision schedule.
 var _airborne_collision_token := 0
 
+@export_group("Hazard / Black Rock")
+## When true, destroying a black hazard that releases smoke blurs the player camera.
+@export var hazard_smoke_blurs_camera := true
+
 # --- Rock Avoider (rock-avoider) ---------------------------------------------
 @export_group("Rock Avoider")
 ## How hard the avoider steers toward the crosshair (X/Y only).
@@ -1204,7 +1208,7 @@ func start_destroyed_process() -> void:
 	
 		
 			
-	if rock_type == RockSize.HAZARD:
+	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 		#$Marked.show()
 		##$marked_embers.emitting = true
 		#%rock_marked_sfx.play()
@@ -1219,6 +1223,7 @@ func start_destroyed_process() -> void:
 		%hazard_hit_sound.play()
 		play_destroy_sfx()
 		EventBus.instance.hazard_hit.emit()
+		gl_PlayerState.add_strike()
 	
 	
 	if cash_value == 2:
@@ -1422,6 +1427,7 @@ func smoke_particles() -> void:
 	if rock_type_name.contains('hazard'):
 		$Hazard_AoE2.global_position = global_position
 		$Hazard_AoE2.play_particles = true
+		_try_apply_hazard_smoke_blur()
 		
 	else:
 		var _phys := global_position
@@ -1430,6 +1436,16 @@ func smoke_particles() -> void:
 		# #endregion
 		$AoE.global_position = global_position
 		$AoE.play_particles = true
+
+
+func _try_apply_hazard_smoke_blur() -> void:
+	if not hazard_smoke_blurs_camera:
+		return
+	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL:
+		return
+	var player_cam = get_tree().get_first_node_in_group("player_cam")
+	if player_cam and player_cam.has_method("apply_hazard_smoke_blur"):
+		player_cam.apply_hazard_smoke_blur()
 
 
 
@@ -1924,7 +1940,15 @@ func _on_rock_body_entered(body: Node) -> void:
 
 	## Walls / scenery: pop with no strike (same as lifetime expire).
 	if body is StaticBody3D:
+		_shake_camera_rock_collision()
 		_expire_avoider_lifetime()
+		return
+
+	## Orange pineapple: explode like a player shot (orange destroy already shakes).
+	if _is_orange_target(body):
+		_explode_orange_from_avoider(body)
+		if avoider_explodes_when_hitting_rock:
+			_destroy_avoider_from_rock_collision(self)
 		return
 
 	if body is not RockInstance:
@@ -1936,14 +1960,46 @@ func _on_rock_body_entered(body: Node) -> void:
 
 	if other.rock_type == RockSize.AVOIDER:
 		if avoider_explodes_when_hitting_avoider:
+			_shake_camera_rock_collision()
 			_destroy_avoider_from_rock_collision(other)
 			_destroy_avoider_from_rock_collision(self)
 		return
 
 	# Avoider hit a normal / hazard / other rock — always blow up the other rock.
+	# Rock `start_destroyed_process` already plays the rock-destroyed camera shake.
 	_destroy_rock_from_avoider_collision(other)
 	if avoider_explodes_when_hitting_rock:
 		_destroy_avoider_from_rock_collision(self)
+
+
+func _is_orange_target(body: Node) -> bool:
+	if body == null or not is_instance_valid(body):
+		return false
+	if body.is_in_group("pineapple"):
+		return true
+	return String(body.name).begins_with("Orange")
+
+
+func _explode_orange_from_avoider(body: Node) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	if "rock_activated" in body and not bool(body.rock_activated):
+		return
+	if "rock_destroyed" in body and bool(body.rock_destroyed):
+		return
+	if not body.has_method("hit_by_player"):
+		return
+	var dmg := 999
+	if "health" in body:
+		dmg = maxi(int(body.health), 1)
+	body.hit_by_player(dmg)
+
+
+## Same small punch as destroying a rock with a shot (not the heavy avoider-reticle shake).
+func _shake_camera_rock_collision() -> void:
+	var player_cam = get_tree().get_first_node_in_group("player_cam")
+	if player_cam and player_cam.has_method("shake_camera_rock_destroyed"):
+		player_cam.shake_camera_rock_destroyed()
 
 
 func _destroy_rock_from_avoider_collision(other: RockInstance) -> void:
