@@ -963,7 +963,7 @@ func _try_enter_boss(progress_bar: Range = null) -> void:
 @export_group("Map Shop Timing")
 @export var map_to_shop_hold_after_load := 0.25
 @export var map_to_shop_pause_before_fade := 1.0
-@export var map_to_shop_wait_after_fade := 0.5
+const map_to_shop_wait_after_fade := 0.25
 
 
 func _finish_map_travel_then_open_shop() -> void:
@@ -1066,7 +1066,7 @@ func _show_island_unlocked_popup(island_name: String) -> void:
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	dim.add_child(center)
 
-	var panel := PanelContainer.new()
+	var panel := Panel.new()
 	panel.custom_minimum_size = Vector2(520, 220)
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center.add_child(panel)
@@ -1092,13 +1092,14 @@ func _show_island_unlocked_popup(island_name: String) -> void:
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.add_theme_font_size_override("normal_font_size", 72)
 	label.theme_type_variation = "WhiteRichText"
-	label.text = "You've unlocked [wave]%s[/wave]" % island_name
-	label.modulate = Color("a10204ff")
+	label.text = "[wave]%s[/wave]" % island_name + "\nUnlocked"
+	label.text.to_upper()
+	label.modulate = Color("5e544bff")
 	label.custom_minimum_size = Vector2(460, 0)
 	vbox.add_child(label)
 
 	var close_btn := Button.new()
-	close_btn.text = "Close"
+	close_btn.text = "Got it"
 	close_btn.custom_minimum_size = Vector2(160, 48)
 	close_btn.add_theme_font_size_override("font_size", 72)
 	close_btn.add_theme_color_override("font_color", Color("c70102ff"))

@@ -18,7 +18,8 @@ var current_state : State = State.FRESH
 var interaction_tween: Tween
 
 @onready var orig_scale := self.scale
-@onready var outer_ring: TextureRect = $OuterRing
+@onready var outer_ring: TextureRect = $BadgeOuterRing
+@onready var badge_front: TextureRect = $BadgeFront
 
 @onready var level_name_label: RichTextLabel = $level_name_label
 @onready var round_progress_label: RichTextLabel = %RoundProgressLabel
@@ -54,7 +55,8 @@ func _ready() -> void:
 
 	if disabled:
 		modulate = Color("ababab59")
-		level_name_label.modulate = Color("1f1f1fff")
+		if level_name_label:
+			level_name_label.modulate = Color("1f1f1fff")
 
 
 ## Right-click: force-complete this place for stamp testing (editor / debug builds only).
@@ -74,10 +76,11 @@ func _on_gui_input(event: InputEvent) -> void:
 
 func set_locked_visuals() -> void:
 	current_state = State.LOCKED
-	level_name_label.text = ""
-	outer_ring.modulate = Color("c9a587ff")
+	if level_name_label:
+		level_name_label.text = ""
+	#outer_ring.modulate = Color("c9a587ff")
 
-	$TextureRect2.modulate = Color('d8c5b7')
+	#badge_front.modulate = Color('d8c5b7')
 	_set_progress_hud_visible(false)
 	_hide_completion_stamp()
 
@@ -86,10 +89,12 @@ func set_unlocked_visuals() -> void:
 	level_locked = false
 	disabled = false
 	modulate = Color.WHITE
-	outer_ring.modulate = Color.WHITE
+	#outer_ring.modulate = Color.WHITE
 	$HSeparator.scale.x = 1.0
-	$TextureRect2.modulate = Color.WHITE
-	level_name_label.text = "[wave]" + level_name.to_upper()
+	#badge_front.modulate = Color.WHITE
+	if level_name_label:
+		level_name_label.text = "[wave]" + level_name.to_upper()
+		
 	refresh_map_progress()
 
 
@@ -104,8 +109,8 @@ func refresh_map_progress() -> void:
 	var completed := gl_PlayerState.is_place_completed(place)
 	var entry := gl_PlayerState.get_level_progress_entry(place)
 	var has_entered := completed or not entry.is_empty() or bool(entry.get("entered", false))
-
-	level_name_label.text = "[wave]" + level_name.to_upper()
+	if level_name_label:
+		level_name_label.text = "[wave]" + level_name.to_upper()
 
 	if completed:
 		current_state = State.COMPLETE

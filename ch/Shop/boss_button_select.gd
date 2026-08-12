@@ -15,7 +15,6 @@ var boss_state: BossState = BossState.LOCKED
 
 func _ready() -> void:
 	show_round_count = false
-	level_name = "Boss"
 	super._ready()
 	refresh_boss_state()
 
@@ -59,7 +58,7 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 		current_state = State.COMPLETE
 		## Keep the same colours as Available — only swap cost label ↔ CLEAR stamp.
 		_apply_available_colours()
-		level_name_label.text = "[pulse]" + boss_title_text.to_upper()
+
 		_set_progress_hud_visible(false)
 		if animate_clear:
 			await play_clear_stamp_ceremony()
@@ -76,7 +75,7 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 		disabled = false
 		current_state = State.IN_PROGRESS
 		_apply_available_colours()
-		level_name_label.text = "[pulse]" + boss_title_text.to_upper()
+
 		_set_progress_hud_visible(false)
 		_hide_completion_stamp()
 		if round_progress_label:
@@ -90,9 +89,8 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 	disabled = false ## Still clickable so player can see/refresh the locked message.
 	current_state = State.LOCKED
 	modulate = Color.WHITE
-	level_name_label.text = boss_title_text.to_upper()
-	outer_ring.modulate = Color("c9a587ff")
-	$TextureRect2.modulate = Color('d8c5b7')
+
+
 	_set_progress_hud_visible(false)
 	_hide_completion_stamp()
 	if round_progress_label:
@@ -104,8 +102,8 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 
 func _apply_available_colours() -> void:
 	modulate = Color.WHITE
-	outer_ring.modulate = Color(0.95, 0.35, 0.28, 1.0)
-	$TextureRect2.modulate = Color.WHITE
+
+
 
 
 ## Show Available look + cost (stamp hidden) before the post-tally clear ceremony.
@@ -115,7 +113,8 @@ func prepare_clear_ceremony_visuals() -> void:
 	disabled = true
 	current_state = State.COMPLETE
 	_apply_available_colours()
-	level_name_label.text = "[pulse]" + boss_title_text.to_upper()
+	
+
 	_set_progress_hud_visible(false)
 	_hide_completion_stamp()
 	var cost := gl_DataSet.get_boss_unlock_cost(boss_island_index)
@@ -203,7 +202,7 @@ func _on_focus_entered() -> void:
 		focus_enter_sfx.play()
 	z_index = 1
 	_play_wiggle(orig_scale.x + (orig_scale.x / 10))
-	#locked_fader(true)
+
 
 
 func _on_focus_exited() -> void:
@@ -211,14 +210,3 @@ func _on_focus_exited() -> void:
 		focus_exit_sfx.play()
 	z_index = 0
 	_play_wiggle(orig_scale.x)
-	#locked_fader(false)
-	
-	
-func locked_fader(fade_in : bool = false) -> void:
-	if fade_in:
-		var tween = create_tween()
-		tween.tween_property(%LockPop, "modulate:a", 0.8, 0.1)
-		
-	else:
-		var tween = create_tween()
-		tween.tween_property(%LockPop, "modulate:a", 0.0, 0.15)
