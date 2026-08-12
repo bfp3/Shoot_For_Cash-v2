@@ -851,7 +851,7 @@ script = ExtResource("2_vmtkp")
 [node name="Weapon_shooting" type="Node3D" parent="." unique_id=2019545500 node_paths=PackedStringArray("player_camera", "stable_camera", "player_gun")]
 script = ExtResource("17_0locf")
 player_camera = NodePath("../Cam_pivot/Camera3D")
-stable_camera = NodePath("../StableCamera")
+stable_camera = NodePath("../Cam_pivot/Camera3D")
 player_gun = NodePath("../Cam_pivot/Camera3D/Player_gun")
 view_limit = 1500.0
 
@@ -1610,30 +1610,9 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.484, 0.484)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("9_ts3hu")
 expand_mode = 1
-
-[node name="blackTexture" type="TextureRect" parent="CanvasLayer/Crosshair/RedDot" unique_id=1781160138]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.0
-offset_top = -18.0
-offset_right = 18.0
-offset_bottom = 18.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.44, 1.44)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("9_ts3hu")
-expand_mode = 1
-stretch_mode = 4
 
 [node name="Inner_scope" type="Control" parent="CanvasLayer/Crosshair" unique_id=50226001]
 unique_name_in_owner = true
@@ -2312,7 +2291,8 @@ mouse_filter = 2
 theme = SubResource("Theme_pivo4")
 theme_override_styles/panel = ExtResource("29_fuvvr")
 
-[node name="Panel2" type="Panel" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining/Panel" unique_id=1207484984]
+[node name="RedBulletPanel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining/Panel" unique_id=1207484984]
+visible = false
 self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
 show_behind_parent = true
 custom_minimum_size = Vector2(180, 130)
@@ -2333,33 +2313,6 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme = SubResource("Theme_pivo4")
 theme_override_styles/panel = ExtResource("29_fuvvr")
-
-[node name="Bullet_icon" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining" unique_id=1535013277]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 173.91284
-offset_top = -182.60828
-offset_right = 121.91284
-offset_bottom = -184.60828
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(3.285, 3.285)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_b1tng")
-stretch_mode = 5
-
-[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining/Bullet_icon" unique_id=1774314751 instance=ExtResource("33_ms1v2")]
-layout_mode = 1
-offset_left = -128.125
-offset_top = -94.00006
-offset_right = 127.875
-offset_bottom = 161.99994
-scale = Vector2(0.288, 0.288)
 
 [node name="ShotRemainingLabel" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining" unique_id=1658642522]
 unique_name_in_owner = true

@@ -48,6 +48,11 @@ func _input(_event: InputEvent) -> void:
 		or Input.is_action_just_pressed("controller_back_button")
 	)
 
+	# Debug chat owns Escape while open — do not open/close pause.
+	var debug_chat := get_tree().get_first_node_in_group("debug_tool_chatbox")
+	if debug_chat and debug_chat.has_method("is_open") and debug_chat.is_open():
+		return
+
 	# Map popup owns Back / B / Escape while it's open (and pause isn't).
 	if not visible and (cancel or toggle_pause):
 		var map_menu := get_tree().get_first_node_in_group("map_menu")

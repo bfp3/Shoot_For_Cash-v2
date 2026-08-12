@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://iqfpl1b7jrlw"]
+
+[ext_resource type="Script" uid="uid://nusevjydvj8i" path="res://ch/HUD_components/debug_tool_chatbox.gd" id="1_script"]
+
+[node name="DebugToolChatbox" type="CanvasLayer" unique_id=2027737733]
+process_mode = 3
+layer = 100
+script = ExtResource("1_script")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=1340458380]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.049700003, 0.049700003, 0.07, 0.8627451)
+
+[node name="Panel" type="Control" parent="." unique_id=1682109987]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -693.0
+offset_right = 1102.0
+offset_bottom = -24.0
+grow_vertical = 0
+pivot_offset = Vector2(0, 296)
+
+[node name="HBox" type="HBoxContainer" parent="Panel" unique_id=235779138]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="ChatColumn" type="VBoxContainer" parent="Panel/HBox" unique_id=927173458]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Title" type="RichTextLabel" parent="Panel/HBox/ChatColumn" unique_id=1809786208]
+layout_mode = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "DEBUG CHAT (Shift+Space hold)"
+fit_content = true
+
+[node name="OutputLog" type="RichTextLabel" parent="Panel/HBox/ChatColumn" unique_id=2016152952]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 31
+bbcode_enabled = true
+fit_content = true
+
+[node name="CommandLine" type="LineEdit" parent="Panel/HBox/ChatColumn" unique_id=482278931]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 55
+placeholder_text = "type a command…"
+caret_blink = true
+
+[node name="HelpColumn" type="PanelContainer" parent="Panel/HBox" unique_id=995001393]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+
+[node name="HelpList" type="RichTextLabel" parent="Panel/HBox/HelpColumn" unique_id=1842675356]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 39
+bbcode_enabled = true
+fit_content = true

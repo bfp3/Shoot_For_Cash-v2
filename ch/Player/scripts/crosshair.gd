@@ -16,10 +16,21 @@ var inner_orig_scale : Vector2
 
 @export var rotating_crosshair_bool := false
 
+@export_group("Target Laser Dot")
+## One red laser/dot drawn on each Target currently inside the reticle.
+@export var target_laser_enabled := true
+## Edit colour / alpha of each lock-on laser dot.
+@export var target_laser_color := Color(1.0, 0.0, 0.0, 0.72)
+## Uniform scale of each dot (template: CanvasLayer/Crosshair/RedDot).
+@export var target_laser_scale := 0.42
+@export var target_laser_fade_speed := 16.0
+
 @onready var up = $Inner_scope/center_container/up
 @onready var down = $Inner_scope/center_container/down
 @onready var left = $Inner_scope/center_container/left
 @onready var right = $Inner_scope/center_container/right
+## Template only — cloned per locked rock; kept hidden at reticle center.
+@onready var red_dot: TextureRect = $RedDot
 
 var up_pos_y : float
 var down_pos_y : float
@@ -35,6 +46,10 @@ var _weapon_style_cached := false
 var _default_inner_modulate := Color.WHITE
 var _default_outer_modulate := Color.WHITE
 var _default_line_colors: Dictionary = {}
+
+var _laser_layer: Control
+var _laser_pool: Array[TextureRect] = []
+var _laser_alpha: Array[float] = []
 
 
 func _ready() -> void:
@@ -54,6 +69,119 @@ func _ready() -> void:
 	self.show()
 	$Panel.hide()
 	_cache_default_weapon_style()
+	_setup_target_laser_dots()
+
+
+func _process(delta: float) -> void:
+	_update_target_laser_dots(delta)
+
+
+func _setup_target_laser_dots() -> void:
+	## Keep the scene RedDot as a hidden template; live dots are clones on the rocks.
+	if red_dot:
+		red_dot.hide()
+		red_dot.modulate.a = 0.0
+
+	var canvas := get_parent()
+	if canvas == null:
+		return
+	_laser_layer = canvas.get_node_or_null("TargetLaserDots") as Control
+	if _laser_layer == null:
+		_laser_layer = Control.new()
+		_laser_layer.name = "TargetLaserDots"
+		_laser_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_laser_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		canvas.add_child(_laser_layer)
+
+
+func _acquire_laser_dot(index: int) -> TextureRect:
+	while _laser_pool.size() <= index:
+		var dot: TextureRect
+		if red_dot:
+			dot = red_dot.duplicate() as TextureRect
+		else:
+			dot = TextureRect.new()
+			dot.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			dot.custom_minimum_size = Vector2(40, 40)
+		dot.name = "TargetLaserDot_%d" % _laser_pool.size()
+		dot.visible = false
+		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		dot.top_level = true
+		dot.pivot_offset_ratio = Vector2(0.5, 0.5)
+		dot.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		if _laser_layer:
+			_laser_layer.add_child(dot)
+		else:
+			add_child(dot)
+		_laser_pool.append(dot)
+		_laser_alpha.append(0.0)
+	return _laser_pool[index]
+
+
+func _get_scoped_targets() -> Array:
+	if not target_laser_enabled:
+		return []
+	var player := get_parent().get_parent() if get_parent() else null
+	if player == null:
+		return []
+	if "current_state" in player and "State" in player:
+		if player.current_state != player.State.ACTIVE:
+			return []
+	var weapon = player.get("weapon_shooting")
+	if weapon == null or not weapon.has_method("get_targets_in_scope"):
+		return []
+	return weapon.get_targets_in_scope()
+
+
+func _camera_for_laser():
+	var player := get_parent().get_parent() if get_parent() else null
+	if player == null:
+		return null
+	var weapon = player.get("weapon_shooting")
+	if weapon and weapon.get("stable_camera"):
+		return weapon.stable_camera
+	return get_tree().get_first_node_in_group("player_cam")
+
+
+func _update_target_laser_dots(delta: float) -> void:
+	var scoped := _get_scoped_targets()
+	var cam = _camera_for_laser()
+	var active_count := 0
+
+	if target_laser_enabled and cam != null:
+		for entry in scoped:
+			var target = entry.get("target") if entry is Dictionary else null
+			if target == null or not is_instance_valid(target):
+				continue
+			if cam.is_position_behind(target.global_position):
+				continue
+			var screen_pos: Vector2 = cam.unproject_position(target.global_position)
+			var dot := _acquire_laser_dot(active_count)
+			_laser_alpha[active_count] = move_toward(
+				_laser_alpha[active_count], 1.0, target_laser_fade_speed * delta
+			)
+			dot.self_modulate = target_laser_color
+			dot.scale = Vector2.ONE * target_laser_scale
+			dot.modulate.a = _laser_alpha[active_count]
+			dot.visible = _laser_alpha[active_count] > 0.01
+			## Center the texture on the rock's screen position.
+			var half := (dot.size * dot.scale) * 0.5
+			if half == Vector2.ZERO:
+				half = Vector2(10, 10) * target_laser_scale
+			dot.global_position = screen_pos - half
+			active_count += 1
+
+	## Fade out / hide unused pool slots.
+	for i in _laser_pool.size():
+		if i < active_count:
+			continue
+		_laser_alpha[i] = move_toward(_laser_alpha[i], 0.0, target_laser_fade_speed * delta)
+		var unused := _laser_pool[i]
+		unused.modulate.a = _laser_alpha[i]
+		if _laser_alpha[i] <= 0.01:
+			unused.visible = false
+		else:
+			unused.visible = true
 
 
 func _cache_default_weapon_style() -> void:
@@ -316,14 +444,6 @@ func duplicate_inner_scope() -> void:
 	if is_instance_valid(duplicate):
 		_duplicate_scope.queue_free()
 
-func set_targeting_state(is_targeting: bool) -> void:
-	#print("YE")
-	return
-	#var color = target_color if is_targeting else default_color
-	#var large = $Large_outer_scope/center_container
-	##var small = $Inner_scope/center_container
-	#var small = $Inner_scope/blackTexture
-	#
-	#var tween = create_tween().set_ease(Tween.EASE_OUT)
-	#tween.tween_property(small, "modulate", color, transition_speed)
-	#tween.parallel().tween_property(large, "modulate", color, transition_speed)
+func set_targeting_state(_is_targeting: bool) -> void:
+	## Live lock-ons are driven by _update_target_laser_dots (one dot per rock in scope).
+	pass

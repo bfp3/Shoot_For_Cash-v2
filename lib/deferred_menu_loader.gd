@@ -11,6 +11,7 @@ const MENU_SCENES := {
 	"game_won": "res://ch/demo_end_screen/game_won_prompt.tscn",
 	"grand_total": "res://ch/demo_end_screen/Grand_total_prompt.tscn",
 	"ticket_map": "res://ch/Shop/MapIslandSelect.tscn",
+	"debug_chat": "res://ch/HUD_components/debug_tool_chatbox.tscn",
 }
 
 @export var canvas_layer_path: NodePath = ^"../MainGameCanvasLayer"
@@ -24,12 +25,17 @@ var _packed_cache: Dictionary = {} # path -> PackedScene
 func _ready() -> void:
 	add_to_group("deferred_menu_loader")
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	if OS.is_debug_build():
+		call_deferred("ensure_debug_chat")
 
 
 func _unhandled_input(_event: InputEvent) -> void:
 	# Until pause is instantiated, Escape/Pause would do nothing — bootstrap it here.
 	var toggle_pause := Input.is_action_just_pressed("escape") or Input.is_action_just_pressed("pause")
 	if not toggle_pause:
+		return
+	var debug_chat := get_tree().get_first_node_in_group("debug_tool_chatbox")
+	if debug_chat and debug_chat.has_method("is_open") and debug_chat.is_open():
 		return
 	if get_tree().get_first_node_in_group("pause_menu") != null:
 		return
@@ -76,6 +82,12 @@ func ensure_ticket_map() -> Control:
 	return ensure("ticket_map") as Control
 
 
+func ensure_debug_chat() -> Node:
+	if not OS.is_debug_build():
+		return null
+	return ensure("debug_chat")
+
+
 func _load_packed(path: String) -> PackedScene:
 	if _packed_cache.has(path):
 		return _packed_cache[path] as PackedScene
@@ -86,8 +98,8 @@ func _load_packed(path: String) -> PackedScene:
 
 
 func _parent_instance(key: String, inst: Node) -> void:
-	if key == "pause":
-		# Pause is a CanvasLayer sibling of Main content, not under the HUD canvas.
+	if key == "pause" or key == "debug_chat":
+		# Pause / debug chat are CanvasLayers beside Main content, not under HUD canvas.
 		get_parent().add_child(inst)
 		return
 	var canvas := get_node_or_null(canvas_layer_path)
@@ -115,6 +127,8 @@ func _configure_instance(key: String, inst: Node) -> void:
 				rm.set("tally_menu", inst)
 		"pause":
 			inst.name = "Settings_pause_menu"
+		"debug_chat":
+			inst.name = "DebugToolChatbox"
 		"demo_end":
 			inst.name = "DemoEndScreen"
 			if inst is CanvasItem:

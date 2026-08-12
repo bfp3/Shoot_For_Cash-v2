@@ -6,10 +6,12 @@ const SHOP_MINI_GAME_SCENE_PATH := "res://ch/Shop/ShopMiniGame.tscn"
 @export var money_control : Node
 @export var reveal_skill_sfx: AudioStreamPlayer
 @onready var cash_label: RichTextLabel = %CashBalanceLabel
-@onready var available_upgrades: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades
-@onready var reroll_button: Button = %Reroll
-@onready var all_skills_container: Control = %TreeCanvas
-
+#@onready var available_upgrades: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades
+#@onready var reroll_button: Button = %Reroll
+var available_upgrades
+var reroll_button
+var all_skills_container
+#@onready var all_skills_container: Control = %TreeCanvas
 @export var can_appear_when_maxed := false
 
 
@@ -833,87 +835,7 @@ func is_skill_maxed(skill) -> bool:
 
 	return current_level >= max_level
 
-func reveal_random_skills(_dur : float = 0.05, wait_reroll : bool = false) -> void:
 
-	clear_available_skills()
-	return
-	var _orig_pitch_scale : float = reveal_skill_sfx.pitch_scale
-
-	var selected_skills := []
-
-	# FIRST SHOP OPEN
-	if gl_PlayerState.dataset.round == 0:
-		for skill in all_skills:
-			if skill.name == "AddGun": # replace with your actual gun node name
-				selected_skills.append(skill)
-				break
-	
-	# NORMAL BEHAVIOUR
-	else:
-		var max_items_in_shop : int = gl_PlayerState.dataset.power_max_items_in_shop
-		
-		var guaranteed_skills := []
-		var random_pool := []
-
-		for skill in all_skills:
-
-			if skill.remove_from_shop:
-				continue
-
-			if is_skill_maxed(skill):
-				continue
-
-			if skill.guaranteed_until_purchased:
-				guaranteed_skills.append(skill)
-			else:
-				random_pool.append(skill)
-
-		random_pool.shuffle()
-
-		selected_skills = guaranteed_skills.duplicate()
-
-		while selected_skills.size() < max_items_in_shop and random_pool.size() > 0:
-			selected_skills.append(random_pool.pop_front())
-
-		selected_skills = selected_skills.slice(0, 3)
-	
-	# Reparent selected skills
-	for skill in selected_skills:
-
-		if skill.get_parent():
-			skill.get_parent().remove_child(skill)
-
-		available_upgrades.add_child(skill)
-
-		skill.reset_buttons_settings()
-		skill.show()
-		skill.modulate.a = 0.01
-		skill.scale = Vector2.ONE * 0.8
-		
-	
-	if wait_reroll:
-		await get_tree().create_timer(0.5, false).timeout
-	
-	# Reveal animation
-	for skill in selected_skills:
-
-		var tween := create_tween()
-		tween.set_trans(Tween.TRANS_CUBIC)
-		tween.set_ease(Tween.EASE_OUT)
-
-		reveal_skill_sfx.play()
-
-		tween.parallel().tween_property(skill, "modulate:a", 1.0, _dur)
-		tween.parallel().tween_property(skill, "scale", Vector2.ONE * 1.15, _dur)
-		tween.tween_property(skill, "scale", Vector2.ONE, _dur)
-		
-		await tween.finished
-
-		skill._update_visual_state()
-		skill.purchase_particles()
-		#reveal_skill_sfx.pitch_scale += 1.0
-
-	reveal_skill_sfx.pitch_scale = _orig_pitch_scale
 
 func update_in_menu() -> void:
 	roll_up_cash_first_round()
@@ -1099,19 +1021,6 @@ func purchase_denied_tween() -> void:
 	denied_tween.tween_property(self, "position:x", original_position.x, 0.05)
 		
 
-func clear_available_skills() -> void:
-	return
-	for skill in available_upgrades.get_children():
-		
-		# Reset visuals
-		skill.reset_buttons_settings()
-		skill.hide()
-		skill.modulate.a = 1.0
-		skill.scale = Vector2.ONE
-		
-		# Move back to storage container
-		available_upgrades.remove_child(skill)
-		all_skills_container.add_child(skill)
 
 
 func update_shop_labels() -> void:
@@ -1438,3 +1347,101 @@ func _show_ammo_full_popup() -> void:
 	tween.tween_property(popup, 'modulate:a', 0.0, 0.35)
 	await tween.finished
 	popup.queue_free()
+	
+	
+func reveal_random_skills(_dur : float = 0.05, wait_reroll : bool = false) -> void:
+
+	clear_available_skills()
+	return
+	#var _orig_pitch_scale : float = reveal_skill_sfx.pitch_scale
+#
+	#var selected_skills := []
+#
+	## FIRST SHOP OPEN
+	#if gl_PlayerState.dataset.round == 0:
+		#for skill in all_skills:
+			#if skill.name == "AddGun": # replace with your actual gun node name
+				#selected_skills.append(skill)
+				#break
+	#
+	## NORMAL BEHAVIOUR
+	#else:
+		#var max_items_in_shop : int = gl_PlayerState.dataset.power_max_items_in_shop
+		#
+		#var guaranteed_skills := []
+		#var random_pool := []
+#
+		#for skill in all_skills:
+#
+			#if skill.remove_from_shop:
+				#continue
+#
+			#if is_skill_maxed(skill):
+				#continue
+#
+			#if skill.guaranteed_until_purchased:
+				#guaranteed_skills.append(skill)
+			#else:
+				#random_pool.append(skill)
+#
+		#random_pool.shuffle()
+#
+		#selected_skills = guaranteed_skills.duplicate()
+#
+		#while selected_skills.size() < max_items_in_shop and random_pool.size() > 0:
+			#selected_skills.append(random_pool.pop_front())
+#
+		#selected_skills = selected_skills.slice(0, 3)
+	#
+	## Reparent selected skills
+	#for skill in selected_skills:
+#
+		#if skill.get_parent():
+			#skill.get_parent().remove_child(skill)
+#
+		#available_upgrades.add_child(skill)
+#
+		#skill.reset_buttons_settings()
+		#skill.show()
+		#skill.modulate.a = 0.01
+		#skill.scale = Vector2.ONE * 0.8
+		#
+	#
+	#if wait_reroll:
+		#await get_tree().create_timer(0.5, false).timeout
+	#
+	## Reveal animation
+	#for skill in selected_skills:
+#
+		#var tween := create_tween()
+		#tween.set_trans(Tween.TRANS_CUBIC)
+		#tween.set_ease(Tween.EASE_OUT)
+#
+		#reveal_skill_sfx.play()
+#
+		#tween.parallel().tween_property(skill, "modulate:a", 1.0, _dur)
+		#tween.parallel().tween_property(skill, "scale", Vector2.ONE * 1.15, _dur)
+		#tween.tween_property(skill, "scale", Vector2.ONE, _dur)
+		#
+		#await tween.finished
+#
+		#skill._update_visual_state()
+		#skill.purchase_particles()
+		##reveal_skill_sfx.pitch_scale += 1.0
+#
+	#reveal_skill_sfx.pitch_scale = _orig_pitch_scale
+	
+
+func clear_available_skills() -> void:
+	return
+	#for skill in available_upgrades.get_children():
+		#
+		## Reset visuals
+		#skill.reset_buttons_settings()
+		#skill.hide()
+		#skill.modulate.a = 1.0
+		#skill.scale = Vector2.ONE
+		#
+		## Move back to storage container
+		#available_upgrades.remove_child(skill)
+		#all_skills_container.add_child(skill)

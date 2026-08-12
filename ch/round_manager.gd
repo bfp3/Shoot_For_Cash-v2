@@ -124,6 +124,9 @@ var egg_pulse : Egg
 
 ## When true, missed rocks in the active round do not award strikes (`no-lives` keyword).
 var no_lives_this_round := false
+## Debug chat `no-lives` / `lives` — persists across rounds until toggled off.
+var debug_no_lives := false
+
 ## Active bonus subtype from the level file (`protect`, etc.). Empty = normal round.
 var bonus_type_this_round := ""
 ## Bonus target was destroyed during `bonus-type1` — no bonus cash, still advance.
@@ -590,7 +593,7 @@ func apply_current_round_modifiers() -> void:
 
 
 func is_current_round_no_lives() -> bool:
-	return no_lives_this_round
+	return no_lives_this_round or debug_no_lives
 
 
 func is_bonus_type1_round() -> bool:

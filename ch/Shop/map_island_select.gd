@@ -40,7 +40,7 @@ var _island_transitioning := false
 @onready var next_island_button: BaseButton = $Island1/NextIslandLabel/NextIslandButton
 @onready var previous_island_button: BaseButton = $Island1/NextIslandLabel/PreviousIslandButton
 @onready var map_cash_label: RichTextLabel = %MapCashBalanceLabel
-@onready var cash_needed_label: RichTextLabel = %CashNeededAmountLabel
+
 
 
 func _ready() -> void:

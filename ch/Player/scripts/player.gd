@@ -68,6 +68,8 @@ var max_ammo := 0
 var _level_editor_ammo_active := false
 var _level_editor_ammo := 99
 const LEVEL_EDITOR_AMMO_MAX := 99
+## Debug chat `no-ammo` — shots do not consume bullets.
+var debug_infinite_ammo := false
 
 var game_lost := false
 
@@ -308,13 +310,15 @@ func handle_pan_left_and_right(delta) -> void:
 
 func _process(delta: float) -> void:
 	
-	if OS.has_feature("editor") && !game_lost:
+	if (OS.has_feature("editor") or OS.is_debug_build()) and not game_lost:
 		if Input.is_action_pressed("middle_mouse"):
 			Engine.time_scale = 10.0
-			#Engine.time_scale = 0.25
 		if Input.is_action_just_released("middle_mouse"):
-			if Engine.time_scale != 1.0:
-				Engine.time_scale = 1.0
+			var restore := 1.0
+			var chat := get_tree().get_first_node_in_group("debug_tool_chatbox")
+			if chat != null and "base_time_scale" in chat:
+				restore = float(chat.base_time_scale)
+			Engine.time_scale = restore
 	
 	if current_state == State.IN_SHOP:
 		return 
@@ -883,6 +887,8 @@ func add_ammo(amount: int, animate := true) -> int:
 func consume_ammo(amount: int = 1) -> bool:
 	if amount <= 0:
 		return true
+	if debug_infinite_ammo:
+		return true
 
 	if _level_editor_ammo_active:
 		if _level_editor_ammo < amount:
@@ -955,7 +961,7 @@ func fire_weapon() -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and not running_on_mobile:
 		return
 
-	if get_displayed_ammo() <= 0:
+	if get_displayed_ammo() <= 0 and not debug_infinite_ammo:
 		if _is_in_testing_room() and not _level_editor_ammo_active:
 			_refill_regular_ammo_to_max()
 		elif _level_editor_ammo_active:

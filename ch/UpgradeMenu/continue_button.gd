@@ -54,6 +54,9 @@ func set_state(new_state: UpgradeState, is_affordable: bool) -> void:
 
 
 func _on_focus_entered() -> void:
+	if !is_inside_tree():
+		return
+		
 	if disabled:
 		return
 	# Focus enter sound
@@ -64,6 +67,8 @@ func _on_focus_entered() -> void:
 
 
 func _on_focus_exited() -> void:
+	if !is_inside_tree():
+		return
 	if disabled:
 		return
 		
