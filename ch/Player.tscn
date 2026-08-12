@@ -25,8 +25,8 @@
 [ext_resource type="Script" uid="uid://1uqdupt170u1" path="res://ch/Player/scripts/player_gun.gd" id="13_mxtxj"]
 [ext_resource type="AudioStream" uid="uid://bywfw3hl3lt6o" path="res://sfx/reload_sound_01.ogg" id="14_3gdew"]
 [ext_resource type="Texture2D" uid="uid://dcbh2d4up4wjl" path="res://res/white_dented_texture2.png" id="14_5d6j6"]
-[ext_resource type="PackedScene" path="res://ch/bullets_all/Bullet_visual_alt.tscn" id="14_altbullet"]
-[ext_resource type="PackedScene" path="res://ch/weapons/gun_alt.tscn" id="14_altgun"]
+[ext_resource type="PackedScene" uid="uid://blmpv2r3v5nd3" path="res://ch/bullets_all/Bullet_visual_alt.tscn" id="14_altbullet"]
+[ext_resource type="PackedScene" uid="uid://brtw6kurd7ejg" path="res://ch/weapons/gun_alt.tscn" id="14_altgun"]
 [ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="14_f75d4"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="15_lf8qf"]
 [ext_resource type="AudioStream" uid="uid://c38iicjo31b7l" path="res://sfx/gun_combination_1.ogg" id="16_11n43"]
@@ -840,7 +840,6 @@ scope_shrink_bullet_speed_scale = 0.3
 scope_expand_bullet_speed_scale = 0.3
 scope_shrink_fire_rate_scale = 0.35
 scope_expand_fire_rate_scale = 0.35
-accuracy_streak_enabled = true
 alt_weapon_enabled = false
 alt_bullet_scene = ExtResource("14_altbullet")
 weapon_shooting = NodePath("Weapon_shooting")

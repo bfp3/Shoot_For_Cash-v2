@@ -665,11 +665,11 @@ func play_round_button_pressed() -> void:
 	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
 	var play_round_cost = int(gl_DataSet.get_value('price_play_round', 0))
 	gl_PlayerState.log_buy('debug_add_cash', play_round_cost)
-	
+	var round_hbox := $CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
 	var tween := create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(purchase_made.bind('debug_add_cash'))
-	tween.tween_interval(0.4)
-	tween.tween_property(%RoundSelector, "modulate:a", 0.0, 0.15)
+	tween.tween_interval(0.15)
+	tween.tween_property(round_hbox, "modulate:a", 0.0, 0.15)
 
 	tween.tween_interval(0.8)
 	await tween.finished
@@ -681,7 +681,7 @@ func play_round_button_pressed() -> void:
 	update_close_menu()
 	await get_tree().create_timer(0.1, false).timeout
 	%PlayButton.disabled = false
-	%RoundSelector.modulate.a = 1.0
+	round_hbox.modulate.a = 1.0
 
 
 ## Hide shop for the debug level editor without firing CLOSE_MENU / SHOP_END.

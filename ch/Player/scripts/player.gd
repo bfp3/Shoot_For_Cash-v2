@@ -162,7 +162,9 @@ func _ready() -> void:
 		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 
 	%HUD_bottom_corner.hide()
-		
+	
+	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
+	
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)
 	EventBus.instance.end_round_rock_missed.connect(stop_player)

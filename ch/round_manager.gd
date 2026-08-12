@@ -1242,7 +1242,7 @@ func update_round_end() -> void:
 	balloon_container.end_round()
 	## Strikeout: let the miss moment breathe before the tally card.
 	if player_failed or int(gl_PlayerState.dataset.total_current_strikes) >= _max_strikes():
-		await get_tree().create_timer(1.0, false).timeout
+		await get_tree().create_timer(0.5, false).timeout
 	enter_state(RoundState.TALLY_START)
 
 

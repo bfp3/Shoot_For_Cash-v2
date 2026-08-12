@@ -196,15 +196,17 @@ linear_accel_min = 49.999996
 linear_accel_max = 150.0
 radial_accel_min = 49.999996
 radial_accel_max = 49.999996
-tangential_accel_min = -2.2351742e-06
-tangential_accel_max = -2.2351742e-06
+tangential_accel_min = 500.0
+tangential_accel_max = 500.0
+damping_min = 373.854
+damping_max = 800.00006
 scale_min = 5.0
 scale_max = 10.0
 scale_curve = SubResource("CurveTexture_64t06")
 color = Color(0.78039217, 0.003921569, 0.007843138, 1)
 alpha_curve = SubResource("CurveTexture_vhsx8")
-hue_variation_min = -2.2351742e-08
-hue_variation_max = -2.2351742e-08
+hue_variation_min = 0.99999994
+hue_variation_max = 0.99999994
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3q72g"]
 content_margin_left = 0.0
@@ -334,6 +336,7 @@ cash_earned_label = NodePath("CenterContainer/MainPanel/MainPanel/CashHboxcontai
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=685089417]
 position = Vector2(962, 551)
+emitting = false
 amount = 100
 lifetime = 2.0
 fixed_fps = 60
@@ -956,9 +959,10 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=151705255]
-position = Vector2(485.2461, 90.37421)
+position = Vector2(597.2461, 106.37421)
 emitting = false
 amount = 50
+lifetime = 1.5
 one_shot = true
 explosiveness = 0.9
 fixed_fps = 60

@@ -60,11 +60,11 @@ var dataset_float : Dictionary = {
 	,"price_play_round"		: [10,50,100]
 	## Map: cash required to unlock island index+1 (Shipper→Anchor, Anchor→Squid, …).
 	## Edit these values to change unlock prices on the island map.
-	,"island_unlock_cost"		: [10000, 20, 30, 40]
+	,"island_unlock_cost"		: [2200, 5600, 30, 40]
 	## Cash required to enter each island's boss fight (index = island).
-	,"boss_unlock_cost"			: [10000, 20, 30, 40]
+	,"boss_unlock_cost"			: [2200, 5600, 30, 40]
 	## Cash awarded when surviving a boss clear (index = island).
-	,"boss_clear_reward"		: [5000, 10000, 15000, 20000, 25000]
+	,"boss_clear_reward"		: [1000, 1000, 15000, 20000, 25000]
 	## Legacy single-value alias (cost to leave the first island). Prefer island_unlock_cost.
 	## Map: rounds shown as current/total on each island button.
 	,"map_rounds_per_island"	: [12]
@@ -75,7 +75,7 @@ var dataset_float : Dictionary = {
 	,"pineapple"			: [10,		1]
 	,"orange"				: [2,		1]
 	,"balloon_orange"		: [-30,		1]
-	,"hazard_type_1"		: [-100,	1]
+	,"hazard_type_1"		: [-10,	1]
 	
 	,"rock_type_1"			: [0,		1]
 	,"rock_type_2"			: [0,		3]
@@ -88,8 +88,8 @@ var dataset_float : Dictionary = {
 	# Hazards
 	#,"hazard_type_1"		: [-100,	1]
 	,"hazard_type_2"		: [-20,		1]
-	,"hazard_type_3"		: [-100,	1]
-	,"hazard_type_4"		: [-100,	1]	
+	,"hazard_type_3"		: [-10,	1]
+	,"hazard_type_4"		: [-10,	1]	
 	
 	,"seq_rocks_moss" 		: [
 		[2,2,8]

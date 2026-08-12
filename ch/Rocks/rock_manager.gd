@@ -1107,7 +1107,7 @@ func _run_path_telegraph(token: int) -> void:
 		if token != _telegraph_token:
 			return
 		if gap_sec > 0.0:
-			await get_tree().create_timer(gap_sec).timeout
+			await get_tree().create_timer(gap_sec, false).timeout
 
 	if token == _telegraph_token:
 		_clear_path_telegraph_visuals()
@@ -1189,7 +1189,7 @@ func _run_column_telegraph(token: int) -> void:
 		if token != _telegraph_token:
 			return
 		if telegraph_gap_between_rocks_sec > 0.0:
-			await get_tree().create_timer(telegraph_gap_between_rocks_sec).timeout
+			await get_tree().create_timer(telegraph_gap_between_rocks_sec, false).timeout
 
 
 func _blink_column_twice(column: int, token: int) -> void:
@@ -1210,12 +1210,12 @@ func _blink_column_twice(column: int, token: int) -> void:
 			return
 		mat.albedo_color = telegraph_blink_color
 		_play_telegraph_sfx(column)
-		await get_tree().create_timer(telegraph_blink_on_sec).timeout
+		await get_tree().create_timer(telegraph_blink_on_sec, false).timeout
 		if token != _telegraph_token:
 			mat.albedo_color = base
 			return
 		mat.albedo_color = base
-		await get_tree().create_timer(telegraph_blink_off_sec).timeout
+		await get_tree().create_timer(telegraph_blink_off_sec, false).timeout
 
 
 func _get_telegraph_mesh(column: int) -> MeshInstance3D:
@@ -1495,7 +1495,7 @@ func bounce_rocks() -> void:
 		if counter < _launch_delays_sec.size():
 			var delay_sec: float = float(_launch_delays_sec[counter])
 			if delay_sec > 0.0:
-				await get_tree().create_timer(delay_sec).timeout
+				await get_tree().create_timer(delay_sec, false).timeout
 				if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
 					return
 
@@ -1713,7 +1713,7 @@ func ensure_extra_rocks(count: int = 80, per_frame: int = 4) -> void:
 func end_of_round() -> void:
 	enter_state(State.ROUND_END)
 			
-func reset_rock_back_on() -> void:
+func XXreset_rock_back_on() -> void:
 	var bodies = $Container_1.get_children()
 	var counter := 0
 
@@ -1724,9 +1724,9 @@ func reset_rock_back_on() -> void:
 		counter += 1
 		if counter >= rocks_limit:
 			break
-		await get_tree().create_timer(0.2).timeout
+		await get_tree().create_timer(0.2, false).timeout
 	
-	await get_tree().create_timer(0.2).timeout
+	await get_tree().create_timer(0.2, false).timeout
 	splash_zone.reset_detected_bodies()
 	
 
