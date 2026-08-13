@@ -10,9 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://b830br7pig61j" path="res://res/Kenney_prototype_textures/Dark/texture_08.png" id="8_h8sxb"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="9_180ub"]
 
-[sub_resource type="QuadMesh" id="QuadMesh_k7lvh"]
-size = Vector2(19.91, 10)
-
 [sub_resource type="GDScript" id="GDScript_fwjsh"]
 script/source = "extends Node3D
 
@@ -701,12 +698,6 @@ sky_mode = 1
 unique_name_in_owner = true
 environment = ExtResource("2_qesvg")
 
-[node name="ShadowBlocker" type="MeshInstance3D" parent="." unique_id=580761885]
-transform = Transform3D(-2.585, 0, -1.509958e-07, 0, 1, 0, 3.9032415e-07, 0, -1, -2, -7.197, -18)
-lod_bias = 10.0
-mesh = SubResource("QuadMesh_k7lvh")
-skeleton = NodePath("../Boatmesh")
-
 [node name="Boatmesh" type="Node3D" parent="." unique_id=2030877919]
 
 [node name="FrontRotatingPillars" type="Node3D" parent="Boatmesh" unique_id=1752052653]
@@ -1177,18 +1168,6 @@ skeleton = NodePath("")
 
 [node name="Wall2" type="MeshInstance3D" parent="Boatmesh" unique_id=1930548052]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7, -8.545, 4)
-material_override = ExtResource("6_etjfo")
-mesh = SubResource("BoxMesh_sgswd")
-skeleton = NodePath("")
-
-[node name="Wall3" type="MeshInstance3D" parent="Boatmesh" unique_id=1641174601]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -14.700001, -8.545, -4.2999997)
-material_override = ExtResource("6_etjfo")
-mesh = SubResource("BoxMesh_sgswd")
-skeleton = NodePath("")
-
-[node name="Wall4" type="MeshInstance3D" parent="Boatmesh" unique_id=103390804]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.299999, -7, -4.5000014)
 material_override = ExtResource("6_etjfo")
 mesh = SubResource("BoxMesh_sgswd")
 skeleton = NodePath("")

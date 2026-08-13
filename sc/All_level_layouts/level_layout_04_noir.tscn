@@ -20,6 +20,43 @@
 [ext_resource type="Material" uid="uid://ig6l6depd7ao" path="res://res/hood_body_parts/main_body_3_material.tres" id="27_ejnqt"]
 [ext_resource type="Texture2D" uid="uid://dcbh2d4up4wjl" path="res://res/white_dented_texture2.png" id="28_oyq6x"]
 
+[sub_resource type="Gradient" id="Gradient_t0wp6"]
+offsets = PackedFloat32Array(0.016129032, 1)
+colors = PackedColorArray(0.63, 0.63, 0.63, 1, 0.99, 0.99, 0.99, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0oyo6"]
+noise_type = 3
+frequency = 0.0475
+fractal_type = 3
+fractal_octaves = 1
+domain_warp_enabled = true
+domain_warp_type = 2
+domain_warp_amplitude = 4.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mb6xv"]
+width = 64
+height = 64
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_0oyo6")
+color_ramp = SubResource("Gradient_t0wp6")
+invert = true
+as_normal_map = true
+bump_strength = 31.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_troag"]
+transparency = 1
+cull_mode = 1
+diffuse_mode = 3
+specular_mode = 2
+albedo_color = Color(1, 1, 1, 0.68235296)
+albedo_texture = ExtResource("21_fwjsh")
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.1
+normal_enabled = true
+normal_scale = 16.0
+normal_texture = SubResource("NoiseTexture2D_mb6xv")
+texture_repeat = false
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fwjsh"]
 albedo_color = Color(0.59, 0.53345835, 0.45429996, 1)
 uv1_scale = Vector3(22, 22, 22)
@@ -912,7 +949,8 @@ directional_shadow_blend_splits = true
 directional_shadow_max_distance = 520.0
 
 [node name="Moon" type="Sprite3D" parent="." unique_id=1627859436]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -96.815475, 73.33093, 500)
+transform = Transform3D(0.901, 0, 0, 0, 0.901, 0, 0, 0, 0.901, -96.764, 78.367, 500)
+material_override = SubResource("StandardMaterial3D_troag")
 modulate = Color(80.24026, 80.24026, 80.24026, 1)
 pixel_size = 0.25
 billboard = 1
