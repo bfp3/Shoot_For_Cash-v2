@@ -43,7 +43,6 @@
 [ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="74_vwwt2"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
-[ext_resource type="PackedScene" uid="uid://l8unrpfb1xjd" path="res://ch/targets/early_exit_target.tscn" id="82_exit"]
 [ext_resource type="PackedScene" uid="uid://cafj0iwnxs1k3" path="res://ch/targets/ammo_reload_target.tscn" id="83_ammo"]
 [ext_resource type="Script" uid="uid://tyrtfghjsjni" path="res://lib/deferred_menu_loader.gd" id="def_menu_loader"]
 
@@ -707,12 +706,8 @@ scope_shrink_duration = 0.1
 scope_shrink_delay_dur = 0.15
 roundManager = NodePath("../Round_manager")
 
-[node name="EarlyExitTarget" parent="." unique_id=1222190939 instance=ExtResource("82_exit")]
-transform = Transform3D(0.266, 0, 0, 0, 0.266, 0, 0, 0, 0.266, -4.432, -2.214, 11.257)
-visible = false
-
 [node name="AmmoReloadTarget" parent="." unique_id=1821285975 instance=ExtResource("83_ammo")]
-transform = Transform3D(0.266, 0, 0, 0, 0.266, 0, 0, 0, 0.266, 4.432, -2.214, 11.257)
+transform = Transform3D(0.446, 0, 0, 0, 0.446, 0, 0, 0, 0.446, 2.994, -1.959, 19.628)
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
 unique_name_in_owner = true

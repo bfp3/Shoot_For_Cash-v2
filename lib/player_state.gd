@@ -65,6 +65,8 @@ const RESTART_DATASET := {
 	"unlocked_island_index": 0,
 	## Island indices whose boss fight has been cleared.
 	"cleared_boss_islands": [],
+	## Island indices whose boss is permanently enterable (afforded once or cleared).
+	"unlocked_boss_islands": [],
 }
 
 const DEFAULT_DATASET := {
@@ -116,6 +118,8 @@ const DEFAULT_DATASET := {
 	"unlocked_island_index": 0,
 	## Island indices whose boss fight has been cleared.
 	"cleared_boss_islands": [],
+	## Island indices whose boss is permanently enterable (afforded once or cleared).
+	"unlocked_boss_islands": [],
 }
 
 var dataset: Dictionary = DEFAULT_DATASET.duplicate(true)
@@ -142,6 +146,7 @@ func begin_test_session() -> void:
 	dataset["level_progress"] = {}
 	dataset["unlocked_island_index"] = 0
 	dataset["cleared_boss_islands"] = []
+	dataset["unlocked_boss_islands"] = []
 
 
 ## Load Game: enable disk I/O and hydrate runtime from the save file.
@@ -413,10 +418,29 @@ func is_boss_cleared(island_index: int) -> bool:
 
 func mark_boss_cleared(island_index: int) -> void:
 	var cleared := get_cleared_boss_islands().duplicate()
-	if island_index in cleared:
+	if island_index not in cleared:
+		cleared.append(island_index)
+		dataset["cleared_boss_islands"] = cleared
+	mark_boss_unlocked(island_index)
+	save_meta_progress()
+
+
+func get_unlocked_boss_islands() -> Array:
+	var raw = dataset.get("unlocked_boss_islands", [])
+	return raw if raw is Array else []
+
+
+## Permanently enterable (cash gate passed once, or boss cleared).
+func is_boss_unlocked(island_index: int) -> bool:
+	return island_index in get_unlocked_boss_islands() or is_boss_cleared(island_index)
+
+
+func mark_boss_unlocked(island_index: int) -> void:
+	var unlocked := get_unlocked_boss_islands().duplicate()
+	if island_index in unlocked:
 		return
-	cleared.append(island_index)
-	dataset["cleared_boss_islands"] = cleared
+	unlocked.append(island_index)
+	dataset["unlocked_boss_islands"] = unlocked
 	save_meta_progress()
 
 
@@ -464,6 +488,7 @@ func save_meta_progress() -> void:
 	cfg.set_value(META_SECTION, "level_progress", dataset.get("level_progress", {}))
 	cfg.set_value(META_SECTION, "unlocked_island_index", int(dataset.get("unlocked_island_index", 0)))
 	cfg.set_value(META_SECTION, "cleared_boss_islands", get_cleared_boss_islands())
+	cfg.set_value(META_SECTION, "unlocked_boss_islands", get_unlocked_boss_islands())
 	cfg.save(META_SAVE_PATH)
 
 
@@ -489,6 +514,16 @@ func _load_meta_progress_from_disk() -> void:
 	var bosses = cfg.get_value(META_SECTION, "cleared_boss_islands", [])
 	if bosses is Array:
 		dataset["cleared_boss_islands"] = bosses.duplicate()
+	var unlocked_bosses = cfg.get_value(META_SECTION, "unlocked_boss_islands", [])
+	if unlocked_bosses is Array:
+		dataset["unlocked_boss_islands"] = unlocked_bosses.duplicate()
+	## Older saves: cleared bosses count as permanently unlocked.
+	var merged := get_unlocked_boss_islands().duplicate()
+	for i in get_cleared_boss_islands():
+		var idx := int(i)
+		if idx not in merged:
+			merged.append(idx)
+	dataset["unlocked_boss_islands"] = merged
 
 
 func log_buy(power_name:String, price:float, unit:int=1) -> bool:

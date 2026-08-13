@@ -8,31 +8,55 @@ enum BossState {
 	AVAILABLE,
 	CLEARED,
 }
+@onready var pulse_ring: TextureRect = $PulseRing
 
+@onready var outer_ring: TextureRect = $BadgeOuterRing
+@onready var badge_front: TextureRect = $BadgeFront
 @export var boss_island_index := 0
 var boss_state: BossState = BossState.LOCKED
 var _was_available := false
-var _available_pulse_tween: Tween
+var _idle_wiggle_tween: Tween
+var _idle_fx_active := false
+var _pulse_ring_accum := 0.0
+var _base_rotation_degrees := 0.0
+var _pulse_ring_base_scale := Vector2.ONE
 
-@export_group("Available Pulse")
-## Shake / punch when the boss button first becomes affordable.
-@export var available_pulse_enabled := true
-@export_range(0.0, 20.0, 0.1) var available_shake_degrees := 5.0
-@export_range(1.0, 1.5, 0.01) var available_scale_punch := 1.12
-@export_range(0.1, 1.5, 0.01) var available_pulse_duration := 0.45
-@export_range(1, 6, 1) var available_shake_wiggles := 3
-## F6 this scene with this on to preview the pulse immediately.
+@export_group("Available Idle")
+## Continuous wiggle + pulse rings while the boss is available.
+@export var available_idle_enabled := true
+@export_range(0.0, 20.0, 0.1) var available_shake_degrees := 2.5
+@export_range(0.05, 1.0, 0.01) var available_wiggle_half_period := 0.18
+@export_range(0.5, 10.0, 0.1) var pulse_ring_interval := 3.0
+@export var pulse_ring_start_modulate := Color(1, 1, 1, 0.7)
+@export_range(1.0, 5.0, 0.05) var pulse_ring_end_scale := 2.4
+@export_range(0.3, 4.0, 0.05) var pulse_ring_expand_duration := 1.5
+## F6 this scene with this on to preview idle FX immediately.
 @export var test_play_available_pulse_on_ready := false
 
 
 func _ready() -> void:
 	show_round_count = false
 	level_name = "Boss"
+	_base_rotation_degrees = rotation_degrees
+	if pulse_ring:
+		_pulse_ring_base_scale = pulse_ring.scale if pulse_ring.scale != Vector2.ZERO else Vector2.ONE
+		pulse_ring.visible = false
+		pulse_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	super._ready()
 	refresh_boss_state()
-	if test_play_available_pulse_on_ready:
+	## Editor-only preview: only pulse if this boss is actually affordable.
+	if test_play_available_pulse_on_ready and OS.has_feature("editor"):
 		await get_tree().create_timer(0.35).timeout
-		play_available_pulse()
+		refresh_boss_state()
+
+
+func _process(delta: float) -> void:
+	if not _idle_fx_active or not available_idle_enabled:
+		return
+	_pulse_ring_accum += delta
+	if _pulse_ring_accum >= pulse_ring_interval:
+		_pulse_ring_accum = 0.0
+		_spawn_pulse_ring()
 
 
 func _on_gui_input(event: InputEvent) -> void:
@@ -63,11 +87,18 @@ func refresh_map_progress() -> void:
 
 func refresh_boss_state(animate_clear: bool = false) -> void:
 	var cleared := gl_PlayerState.is_boss_cleared(boss_island_index)
+	var permanently_unlocked := gl_PlayerState.is_boss_unlocked(boss_island_index)
 	var cost := gl_DataSet.get_boss_unlock_cost(boss_island_index)
 	var cash := int(gl_PlayerState.dataset.cash)
 	var can_afford := cash >= cost
 
+	## First time you can afford it → permanent unlock (even if cash drops later).
+	if can_afford and not permanently_unlocked:
+		gl_PlayerState.mark_boss_unlocked(boss_island_index)
+		permanently_unlocked = true
+
 	if cleared:
+		_stop_available_idle()
 		boss_state = BossState.CLEARED
 		level_locked = false
 		disabled = false
@@ -86,8 +117,7 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 			await _refresh_completion_stamp(false)
 		return
 
-	if can_afford:
-		var became_available := boss_state != BossState.AVAILABLE and not _was_available
+	if permanently_unlocked:
 		boss_state = BossState.AVAILABLE
 		level_locked = false
 		disabled = false
@@ -101,12 +131,16 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 			round_progress_label.visible = true
 			round_progress_label.modulate.a = 1.0
 			round_progress_label.text = _format_boss_cost(cost)
-		if became_available:
-			play_available_pulse()
 		_was_available = true
+		## Pulse/wiggle only while they currently have the unlock cash.
+		if can_afford:
+			_start_available_idle()
+		else:
+			_stop_available_idle()
 		return
 
 	_was_available = false
+	_stop_available_idle()
 	boss_state = BossState.LOCKED
 	level_locked = true
 	disabled = false ## Still clickable so player can see/refresh the locked message.
@@ -114,7 +148,6 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 	modulate = Color.WHITE
 	if level_name_label:
 		level_name_label.text = boss_title_text.to_upper()
-
 	_set_progress_hud_visible(false)
 	_hide_completion_stamp()
 	if round_progress_label:
@@ -128,41 +161,73 @@ func _apply_available_colours() -> void:
 	modulate = Color.WHITE
 
 
-## Shake + scale punch when the boss fight becomes affordable.
-func play_available_pulse() -> void:
-	if not available_pulse_enabled:
+func _start_available_idle() -> void:
+	if not available_idle_enabled or not visible:
+		_stop_available_idle()
 		return
-	if _available_pulse_tween:
-		_available_pulse_tween.kill()
-	var base_scale: Vector2 = orig_scale if orig_scale != Vector2.ZERO else scale
-	var base_rot := rotation_degrees
-	var dur := maxf(available_pulse_duration, 0.08)
-	var punch := maxf(available_scale_punch, 1.0)
+	if _idle_fx_active:
+		return
+	_idle_fx_active = true
+	_pulse_ring_accum = pulse_ring_interval ## First ring soon after becoming available.
+	_start_wiggle_loop()
+
+
+func _stop_available_idle() -> void:
+	_idle_fx_active = false
+	_pulse_ring_accum = 0.0
+	if _idle_wiggle_tween:
+		_idle_wiggle_tween.kill()
+		_idle_wiggle_tween = null
+	rotation_degrees = _base_rotation_degrees
+
+
+func _start_wiggle_loop() -> void:
+	if _idle_wiggle_tween:
+		_idle_wiggle_tween.kill()
 	var shake := available_shake_degrees
-	var wiggles := maxi(available_shake_wiggles, 1)
-	pivot_offset = size * 0.5
-	_available_pulse_tween = create_tween()
-	_available_pulse_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_available_pulse_tween.tween_property(self, "scale", base_scale * punch, dur * 0.35)
-	var step := (dur * 0.45) / float(wiggles * 2)
-	for i in wiggles:
-		var dir := 1.0 if (i % 2) == 0 else -1.0
-		_available_pulse_tween.tween_property(self, "rotation_degrees", base_rot + shake * dir, step)
-		_available_pulse_tween.tween_property(self, "rotation_degrees", base_rot - shake * dir * 0.6, step)
-	_available_pulse_tween.tween_property(self, "rotation_degrees", base_rot, dur * 0.1)
-	_available_pulse_tween.parallel().tween_property(self, "scale", base_scale, dur * 0.35)
+	var half := maxf(available_wiggle_half_period, 0.05)
+	_idle_wiggle_tween = create_tween()
+	_idle_wiggle_tween.set_loops()
+	_idle_wiggle_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_idle_wiggle_tween.tween_property(self, "rotation_degrees", _base_rotation_degrees + shake, half)
+	_idle_wiggle_tween.tween_property(self, "rotation_degrees", _base_rotation_degrees - shake, half * 2.0)
+	_idle_wiggle_tween.tween_property(self, "rotation_degrees", _base_rotation_degrees, half)
 
 
+func _spawn_pulse_ring() -> void:
+	if pulse_ring == null or not is_instance_valid(pulse_ring):
+		return
+	var ring := pulse_ring.duplicate() as TextureRect
+	if ring == null:
+		return
+	add_child(ring)
+	## Keep rings under the badge art.
+	move_child(ring, 0)
+	ring.visible = true
+	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ring.modulate = pulse_ring_start_modulate
+	ring.scale = _pulse_ring_base_scale
+	var end_scale := _pulse_ring_base_scale * maxf(pulse_ring_end_scale, 1.0)
+	var end_mod := pulse_ring_start_modulate
+	end_mod.a = 0.0
+	var dur := maxf(pulse_ring_expand_duration, 0.1)
+	var tween := ring.create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(ring, "scale", end_scale, dur)
+	tween.tween_property(ring, "modulate", end_mod, dur)
+	tween.set_parallel(false)
+	tween.tween_callback(ring.queue_free)
 
 
 ## Show Available look + cost (stamp hidden) before the post-tally clear ceremony.
 func prepare_clear_ceremony_visuals() -> void:
+	_stop_available_idle()
 	boss_state = BossState.CLEARED
 	level_locked = false
 	disabled = true
 	current_state = State.COMPLETE
 	_apply_available_colours()
-	
 
 	_set_progress_hud_visible(false)
 	_hide_completion_stamp()
@@ -175,6 +240,7 @@ func prepare_clear_ceremony_visuals() -> void:
 
 ## Stamp in like the tally card while the cost label fades out.
 func play_clear_stamp_ceremony() -> void:
+	_stop_available_idle()
 	await _refresh_completion_stamp(true)
 	disabled = false
 
@@ -223,7 +289,6 @@ func _format_boss_cost(cost: int) -> String:
 
 
 func _on_level_button_pressed() -> void:
-	
 	if boss_state == BossState.CLEARED:
 		## Already cleared — still allow re-entry via map select (cash gate inside).
 		pass
@@ -253,9 +318,12 @@ func _on_focus_entered() -> void:
 	_play_wiggle(orig_scale.x + (orig_scale.x / 10))
 
 
-
 func _on_focus_exited() -> void:
 	if focus_exit_sfx:
 		focus_exit_sfx.play()
 	z_index = 0
 	_play_wiggle(orig_scale.x)
+
+
+func _exit_tree() -> void:
+	_stop_available_idle()

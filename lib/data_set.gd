@@ -60,11 +60,11 @@ var dataset_float : Dictionary = {
 	,"price_play_round"		: [10,50,100]
 	## Map: cash required to unlock island index+1 (Shipper→Anchor, Anchor→Squid, …).
 	## Edit these values to change unlock prices on the island map.
-	,"island_unlock_cost"		: [2500, 5600, 30, 40]
+	,"island_unlock_cost"		: [2500, 3500, 30, 40]
 	## Cash required to enter each island's boss fight (index = island).
-	,"boss_unlock_cost"			: [2500, 5600, 30, 40]
+	,"boss_unlock_cost"			: [2500, 3500, 30, 40]
 	## Cash awarded when surviving a boss clear (index = island).
-	,"boss_clear_reward"		: [1000, 1000, 15000, 20000, 25000]
+	,"boss_clear_reward"		: [600, 1000, 15000, 20000, 25000]
 	## Legacy single-value alias (cost to leave the first island). Prefer island_unlock_cost.
 	## Map: rounds shown as current/total on each island button.
 	,"map_rounds_per_island"	: [12]
@@ -114,7 +114,7 @@ var dataset_string : Dictionary = {
 	,"map_earn_more_money_text"	: ["Earn More Money"]
 	## Shop challenge banner per place (parallel to place_name). Empty = hide banner.
 	,"shop_challenge_text"		: [
-		"ACCURACY for the WIN", ## moss
+		"ACCURACY\nfor the WIN", ## moss
 		"", ## redd
 		"", ## glory
 		"", ## jetz

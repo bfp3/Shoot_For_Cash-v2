@@ -176,6 +176,10 @@ func update_place_label() -> void:
 			if current_place == 'START' or current_place.is_empty():
 				current_place = 'MOSS'
 			place_label.text = current_place
+	## Boss / HOLD OUT: hide the round counter strip entirely.
+	var round_selector := get_node_or_null("%RoundSelector") as CanvasItem
+	if round_selector:
+		round_selector.visible = not is_boss
 	_refresh_background_completion_stamp(false)
 	_refresh_place_challenge_banner()
 
@@ -1192,7 +1196,12 @@ func _input(event: InputEvent) -> void:
 		
 
 func setup_shop_for_rounds() -> void:
-	%RoundSelector.show()
+	var is_boss := false
+	if round_manager and round_manager.has_method("is_boss_mode"):
+		is_boss = bool(round_manager.is_boss_mode())
+	elif String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
+		is_boss = true
+	%RoundSelector.visible = not is_boss
 
 
 ## Rebuild round-button states from the restored sequence index for this range.

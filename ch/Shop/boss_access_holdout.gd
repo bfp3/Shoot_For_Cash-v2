@@ -31,7 +31,7 @@ func play(cost: int) -> void:
 
 	var money_text := CommonCode.format_money(cost)
 	if message_label:
-		message_label.text = "[center][wave]%s[/wave][/center]" % money_text + " NEEDED"
+		message_label.text = "[center][wave]YOU NEED %s[/wave][/center]" % money_text
 
 	modulate.a = 0.0
 	mouse_filter = Control.MOUSE_FILTER_STOP

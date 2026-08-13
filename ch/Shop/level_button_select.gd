@@ -18,8 +18,6 @@ var current_state : State = State.FRESH
 var interaction_tween: Tween
 
 @onready var orig_scale := self.scale
-@onready var outer_ring: TextureRect = $BadgeOuterRing
-@onready var badge_front: TextureRect = $BadgeFront
 
 @onready var level_name_label: RichTextLabel = $level_name_label
 @onready var round_progress_label: RichTextLabel = %RoundProgressLabel
@@ -90,8 +88,8 @@ func set_unlocked_visuals() -> void:
 	disabled = false
 	modulate = Color.WHITE
 	#outer_ring.modulate = Color.WHITE
-	$HSeparator.scale.x = 1.0
-	#badge_front.modulate = Color.WHITE
+
+	#badge_front.modulate = Color.WITE
 	if level_name_label:
 		level_name_label.text = "[wave]" + level_name.to_upper()
 		
@@ -122,6 +120,7 @@ func refresh_map_progress() -> void:
 		_set_completed_gui()
 		return
 
+	_clear_completed_gui()
 	if has_entered:
 		current_state = State.IN_PROGRESS
 		_set_progress_hud_visible(show_round_count)
@@ -299,3 +298,12 @@ func _set_completed_gui() -> void:
 	if panel2:
 		panel2.modulate = Color.WHITE
 		panel2.theme_type_variation = "RedPanel"
+
+
+func _clear_completed_gui() -> void:
+	var panel := get_node_or_null("Panel") as Control
+	var panel2 := get_node_or_null("Panel2") as Control
+	if panel:
+		panel.theme_type_variation = &""
+	if panel2:
+		panel2.theme_type_variation = &""

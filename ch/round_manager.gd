@@ -87,7 +87,10 @@ var _travel_progress_bar: Range = null
 var _travel_progress_target := 0.0
 var _travel_progress_display := 0.0
 ## Higher = snappier catch-up while still looking smooth.
-@export var travel_progress_smooth_speed := 120.0
+@export var travel_progress_smooth_speed := 180.0
+## While waiting on load, keep the bar crawling so hitch frames hurt less.
+@export var travel_progress_crawl_per_sec := 35.0
+@export var travel_progress_crawl_ceiling := 88.0
 ## After shop MapButton → start + map, closing the map should reopen the shop.
 var _reopen_shop_after_map := false
 
@@ -1589,9 +1592,26 @@ func _clear_travel_progress_bar() -> void:
 func _update_travel_progress_smooth(delta: float) -> void:
 	if _travel_progress_bar == null or not is_instance_valid(_travel_progress_bar):
 		return
+	## Soft crawl while a real target sits still (threaded load plateaus / long frames).
+	var soft_target := _travel_progress_target
+	if _travel_progress_target < 99.0 and _travel_progress_display < travel_progress_crawl_ceiling:
+		soft_target = maxf(
+			_travel_progress_target,
+			minf(_travel_progress_display + travel_progress_crawl_per_sec * delta, travel_progress_crawl_ceiling)
+		)
 	var speed := maxf(travel_progress_smooth_speed, 1.0)
-	_travel_progress_display = move_toward(_travel_progress_display, _travel_progress_target, speed * delta)
+	_travel_progress_display = move_toward(_travel_progress_display, soft_target, speed * delta)
 	_travel_progress_bar.value = _travel_progress_display
+
+
+## Let the bar visually catch up before a hitchy main-thread step (instantiate).
+func _await_travel_progress_near(value: float, timeout_sec: float = 0.85) -> void:
+	var elapsed := 0.0
+	while elapsed < timeout_sec and _travel_progress_bar != null and is_instance_valid(_travel_progress_bar):
+		if _travel_progress_display >= value - 0.5:
+			return
+		await get_tree().process_frame
+		elapsed += get_process_delta_time()
 
 
 ## Pull ocean out before add_child; strip any leftover WorldEnvironment (camera owns env now).
@@ -1793,7 +1813,9 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 		_clear_travel_progress_bar()
 		return
 
-	_set_travel_progress(0.7)
+	## Prefill the bar before instantiate hitch so freezes are less noticeable.
+	_set_travel_progress(0.88)
+	await _await_travel_progress_near(82.0, 0.9)
 	rocks_container.show()
 	var level_scenery = layout_scene.instantiate()
 	var heavy := _detach_heavy_layout_nodes(level_scenery)
@@ -1805,7 +1827,7 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	await get_tree().process_frame
 	_reattach_heavy_layout_nodes(heavy)
 	await get_tree().process_frame
-	_set_travel_progress(0.85)
+	_set_travel_progress(0.93)
 
 	if use_transition_overlay:
 		await get_tree().create_timer(1.0, false).timeout
@@ -1946,7 +1968,8 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	## Grow the rock pool while the transition covers the screen (batched, no hitch).
 	if rocks_container and rocks_container.has_method("ensure_extra_rocks"):
 		await rocks_container.ensure_extra_rocks(80, 4)
-	_set_travel_progress(0.78)
+	_set_travel_progress(0.88)
+	await _await_travel_progress_near(82.0, 0.9)
 	var level_scenery = layout_scene.instantiate()
 	var heavy := _detach_heavy_layout_nodes(level_scenery)
 	level_layout.add_child(level_scenery)
@@ -1958,7 +1981,7 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	await get_tree().process_frame
 	if use_transition_overlay:
 		await get_tree().create_timer(1.0, false).timeout
-	_set_travel_progress(0.88)
+	_set_travel_progress(0.93)
 
 	## Always reload so boss-timer / boss range data is fresh.
 	if not Parser.loadIslandFile(LEVEL_FILE_PATH):

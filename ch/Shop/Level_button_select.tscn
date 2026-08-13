@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_35jhd"]
 [ext_resource type="Theme" uid="uid://bjwkhgoiebh1q" path="res://res/custom_themes_by_blake/shoot_for_cash_default_theme.tres" id="4_307gy"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="4_a7lqs"]
-[ext_resource type="Texture2D" uid="uid://dtp2scu154yi6" path="res://unfiled/Decal_placeholders/Egg_2D_sprites/Egg_silhouette.png" id="6_egg"]
 [ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="7_307gy"]
 
 [sub_resource type="Animation" id="Animation_tnodp"]
@@ -60,10 +59,6 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_35jhd"]
-color = Color(1, 1, 1, 1)
-thickness = 4
-
 [node name="Level_button_selector" type="Button" unique_id=427300251 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "pressed_sfx")]
 anchors_preset = -1
 anchor_left = 0.067
@@ -117,30 +112,28 @@ libraries/ = SubResource("AnimationLibrary_307gy")
 autoplay = &"rotation"
 speed_scale = 0.8
 
-[node name="Panel3" type="Panel" parent="." unique_id=363644148]
-custom_minimum_size = Vector2(37.87, 19.465)
+[node name="legs" type="Panel" parent="." unique_id=228276096]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 57.340965
-offset_top = 182.29684
-offset_right = -160.78903
-offset_bottom = 18.76184
+offset_left = 201.946
+offset_top = 180.71829
+offset_right = -38.300583
+offset_bottom = 9.999054
 grow_horizontal = 2
 grow_vertical = 2
 rotation = 1.5707964
 
-[node name="Panel4" type="Panel" parent="." unique_id=228276096]
-custom_minimum_size = Vector2(37.87, 19.465)
+[node name="legs2" type="Panel" parent="." unique_id=954672519]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 209.13023
-offset_top = 182.71829
-offset_right = -8.999771
-offset_bottom = 19.183289
+offset_left = 57.946
+offset_top = 180.71829
+offset_right = -182.30058
+offset_bottom = 9.999054
 grow_horizontal = 2
 grow_vertical = 2
 rotation = 1.5707964
@@ -201,7 +194,6 @@ stretch_mode = 5
 
 [node name="100_percent" type="Control" parent="." unique_id=1188003085]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -218,6 +210,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="100_percent" unique_id=1957077702]
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -330,77 +323,6 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="EggSilhouettes" type="HBoxContainer" parent="." unique_id=1332746672]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -54.0
-offset_top = 58.0
-offset_right = 54.0
-offset_bottom = 94.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_constants/separation = 6
-alignment = 1
-
-[node name="Egg1" type="TextureRect" parent="EggSilhouettes" unique_id=1332746673]
-modulate = Color(0.05, 0.05, 0.05, 0.9)
-custom_minimum_size = Vector2(30, 36)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("6_egg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Egg2" type="TextureRect" parent="EggSilhouettes" unique_id=1332746674]
-modulate = Color(0.05, 0.05, 0.05, 0.9)
-custom_minimum_size = Vector2(30, 36)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("6_egg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Egg3" type="TextureRect" parent="EggSilhouettes" unique_id=1332746675]
-modulate = Color(0.05, 0.05, 0.05, 0.9)
-custom_minimum_size = Vector2(30, 36)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("6_egg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="HSeparator" type="HSeparator" parent="." unique_id=735061193]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-custom_minimum_size = Vector2(170, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -85.0
-offset_top = 48.0
-offset_right = 85.0
-offset_bottom = 52.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.13, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_35jhd")
 
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="." unique_id=1267045713]
 stream = ExtResource("4_a7lqs")

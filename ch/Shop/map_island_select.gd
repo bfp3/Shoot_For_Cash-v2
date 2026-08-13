@@ -161,6 +161,13 @@ func _fix_click_blockers() -> void:
 	if boss:
 		boss.mouse_filter = Control.MOUSE_FILTER_STOP
 		boss.z_index = 21
+	for page in _island_pages:
+		if page == null:
+			continue
+		var page_boss := _find_boss_on_page(page)
+		if page_boss and page_boss != boss:
+			page_boss.mouse_filter = Control.MOUSE_FILTER_STOP
+			page_boss.z_index = 21
 
 
 func _set_mouse_ignore_recursive(node: Control, include_self: bool = true) -> void:
@@ -208,18 +215,55 @@ func _collect_island_pages() -> void:
 
 
 func _wire_all_level_buttons() -> void:
-	for page in _island_pages:
+	for i in _island_pages.size():
+		var page := _island_pages[i]
 		if page == null:
 			continue
 		var buttons_root := page.get_node_or_null("Buttons")
-		if buttons_root == null:
-			continue
-		for child in buttons_root.get_children():
-			if child is Control and child.get("level_name") != null:
-				_wire_level_button(child)
-	var boss := get_node_or_null("Island1/NextIslandLabel/BossRangeButton") as Control
-	if boss:
-		_wire_level_button(boss)
+		if buttons_root:
+			for child in buttons_root.get_children():
+				if child is Control and child.get("level_name") != null:
+					if _is_boss_button(child):
+						continue
+					_wire_level_button(child)
+		var boss := _boss_button_for_island(i)
+		if boss:
+			boss.set("boss_island_index", i)
+			_wire_level_button(boss)
+
+
+func _is_boss_button(btn: Control) -> bool:
+	if btn == null:
+		return false
+	if String(btn.name) == "BossRangeButton":
+		return true
+	var script: Script = btn.get_script()
+	return script != null and String(script.resource_path).ends_with("boss_button_select.gd")
+
+
+func _find_boss_on_page(page: Control) -> Control:
+	if page == null:
+		return null
+	for path in ["BossRangeButton", "NextIslandLabel/BossRangeButton", "Buttons/BossRangeButton"]:
+		var n := page.get_node_or_null(path) as Control
+		if n and _is_boss_button(n):
+			return n
+	return null
+
+
+func _boss_button_for_island(island_index: int) -> Control:
+	if island_index < 0 or island_index >= _island_pages.size():
+		return null
+	return _find_boss_on_page(_island_pages[island_index])
+
+
+func _all_boss_buttons() -> Array[Control]:
+	var out: Array[Control] = []
+	for i in _island_pages.size():
+		var boss := _boss_button_for_island(i)
+		if boss and not out.has(boss):
+			out.append(boss)
+	return out
 
 
 func _wire_level_button(btn: Control) -> void:
@@ -227,9 +271,8 @@ func _wire_level_button(btn: Control) -> void:
 	btn.z_index = maxi(int(btn.z_index), 9)
 	var place := _place_from_level_name(String(btn.get("level_name")))
 	btn.set_meta("travel_place", place)
-	## Boss buttons manage their own lock/available/cleared states.
-	if String(btn.name) == "BossRangeButton" or btn.get_script() and String(btn.get_script().resource_path).ends_with("boss_button_select.gd"):
-		btn.set("boss_island_index", _viewing_island_index)
+	## Boss buttons keep a fixed island index — do not rewrite to viewing island.
+	if _is_boss_button(btn):
 		if btn.has_method("refresh_boss_state"):
 			btn.call_deferred("refresh_boss_state")
 		return
@@ -374,7 +417,7 @@ func open_pop_up_after_boss_clear(cleared_island: int) -> void:
 
 
 func _boss_button() -> Control:
-	return get_node_or_null("Island1/NextIslandLabel/BossRangeButton") as Control
+	return _boss_button_for_island(_viewing_island_index)
 
 
 func _set_map_chrome_interactive(enabled: bool) -> void:
@@ -389,13 +432,11 @@ func _set_map_chrome_interactive(enabled: bool) -> void:
 		if button == null:
 			continue
 		button.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
-	var boss := _boss_button()
-	if boss:
+	for boss in _all_boss_buttons():
+		if boss == null:
+			continue
 		boss.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
-		if not enabled:
-			boss.disabled = true
-		else:
-			boss.disabled = false
+		boss.disabled = not enabled
 	if enabled:
 		_refresh_nav_button_visibility()
 	else:
@@ -536,6 +577,8 @@ func _show_island_page(index: int) -> void:
 		if page:
 			page.visible = (i == _viewing_island_index)
 
+	_apply_map_overlay_visibility(_viewing_island_index)
+
 	## Nav chrome lives under Island1 — keep it visible while browsing other islands.
 	var current_wrap := get_node_or_null("Island1/CurrentIslandLabel") as Control
 	var next_wrap := get_node_or_null("Island1/NextIslandLabel") as Control
@@ -567,6 +610,12 @@ func _show_island_page(index: int) -> void:
 			buttons2.visible = true
 		if decor2:
 			decor2.visible = true
+
+	## One boss button per island — only the viewed island's boss is shown.
+	for i in _island_pages.size():
+		var boss := _boss_button_for_island(i)
+		if boss:
+			boss.visible = (i == _viewing_island_index)
 
 
 func _refresh_nav_button_visibility() -> void:
@@ -647,7 +696,7 @@ func _on_next_island_pressed() -> void:
 	await _transition_to_island(target)
 
 
-## Island art to fade (Island1 keeps nav chrome; only MapOverlay/Buttons/Control fade).
+## Island button chrome to fade. Root MapOverlay / MapOverlay2 are faded separately.
 func _island_fade_targets(index: int) -> Array[CanvasItem]:
 	var targets: Array[CanvasItem] = []
 	if index < 0 or index >= _island_pages.size():
@@ -656,13 +705,44 @@ func _island_fade_targets(index: int) -> Array[CanvasItem]:
 	if page == null:
 		return targets
 	if index == 0:
-		for child_name in ["MapOverlay", "Buttons", "Control"]:
+		for child_name in ["Buttons", "Control"]:
 			var n := page.get_node_or_null(child_name)
 			if n is CanvasItem:
 				targets.append(n as CanvasItem)
 		return targets
 	targets.append(page)
 	return targets
+
+
+## Root MapOverlay = island 0, MapOverlay2 = island 1, MapOverlay3 = island 2, …
+func _map_overlay_for_island(index: int) -> CanvasItem:
+	if index <= 0:
+		return get_node_or_null("MapOverlay") as CanvasItem
+	return get_node_or_null("MapOverlay%d" % (index + 1)) as CanvasItem
+
+
+func _all_map_overlays() -> Array[CanvasItem]:
+	var out: Array[CanvasItem] = []
+	var first := get_node_or_null("MapOverlay") as CanvasItem
+	if first:
+		out.append(first)
+	for i in range(2, 12):
+		var n := get_node_or_null("MapOverlay%d" % i) as CanvasItem
+		if n:
+			out.append(n)
+	return out
+
+
+func _apply_map_overlay_visibility(active_index: int) -> void:
+	var active := _map_overlay_for_island(active_index)
+	for overlay in _all_map_overlays():
+		if overlay == null:
+			continue
+		var is_active := overlay == active
+		overlay.visible = is_active
+		var c := overlay.modulate
+		c.a = 1.0 if is_active else 0.0
+		overlay.modulate = c
 
 
 func _set_targets_modulate_a(targets: Array[CanvasItem], a: float) -> void:
@@ -699,22 +779,36 @@ func _transition_to_island(index: int) -> void:
 		return
 
 	_island_transitioning = true
-	## Keep map chrome / root fully visible — only island pages fade.
+	## Keep map chrome / root fully visible — only island pages + map overlays fade.
 	modulate.a = 1.0
 	var duration := maxf(island_transition_duration, 0.05)
 	var out_ratio := clampf(island_transition_fade_out_ratio, 0.05, 0.95)
 	var fade_out_t := duration * out_ratio
 	var fade_in_t := duration * (1.0 - out_ratio)
 
-	#if island_change_sfx:
-		#island_change_sfx.play()
-	
+	#i
 
 	var from_index := _viewing_island_index
 	var from_targets := _island_fade_targets(from_index)
-	await _tween_targets_modulate_a(from_targets, 0.0, fade_out_t)
+	var from_overlay := _map_overlay_for_island(from_index)
+	var to_overlay := _map_overlay_for_island(index)
+
+	var fade_out_list: Array[CanvasItem] = []
+	fade_out_list.append_array(from_targets)
+	if from_overlay:
+		fade_out_list.append(from_overlay)
+	await _tween_targets_modulate_a(fade_out_list, 0.0, fade_out_t)
 
 	_show_island_page(index)
+	## Destination overlay fades in from 0 (show_island_page would force opaque).
+	if to_overlay:
+		to_overlay.visible = true
+		var oc := to_overlay.modulate
+		oc.a = 0.0
+		to_overlay.modulate = oc
+	if from_overlay and from_overlay != to_overlay:
+		from_overlay.visible = false
+
 	_refresh_island_labels(true)
 	_refresh_map_cash_labels()
 	_refresh_nav_button_visibility()
@@ -722,7 +816,11 @@ func _transition_to_island(index: int) -> void:
 
 	var to_targets := _island_fade_targets(index)
 	_set_targets_modulate_a(to_targets, 0.0)
-	await _tween_targets_modulate_a(to_targets, 1.0, fade_in_t)
+	var fade_in_list: Array[CanvasItem] = []
+	fade_in_list.append_array(to_targets)
+	if to_overlay:
+		fade_in_list.append(to_overlay)
+	await _tween_targets_modulate_a(fade_in_list, 1.0, fade_in_t)
 
 	## Reset hidden island so the next visit starts fully opaque.
 	_set_targets_modulate_a(from_targets, 1.0)
@@ -870,15 +968,21 @@ func _refresh_level_buttons() -> void:
 
 
 func _refresh_boss_button() -> void:
-	var boss := get_node_or_null("Island1/NextIslandLabel/BossRangeButton") as Control
-	if boss == null:
-		return
-	boss.set("main_control", self)
-	boss.set("boss_island_index", _viewing_island_index)
-	if boss.has_method("refresh_boss_state"):
-		boss.refresh_boss_state(false)
-	elif boss.has_method("refresh_map_progress"):
-		boss.refresh_map_progress()
+	for i in _island_pages.size():
+		var boss := _boss_button_for_island(i)
+		if boss == null:
+			continue
+		boss.set("main_control", self)
+		boss.set("boss_island_index", i)
+		var on_page := (i == _viewing_island_index)
+		boss.visible = on_page
+		if on_page:
+			if boss.has_method("refresh_boss_state"):
+				boss.refresh_boss_state(false)
+			elif boss.has_method("refresh_map_progress"):
+				boss.refresh_map_progress()
+		elif boss.has_method("_stop_available_idle"):
+			boss._stop_available_idle()
 
 
 func _unlock_map_button(button: Control) -> void:
@@ -971,21 +1075,27 @@ func select_level(level_id: String, progress_bar: Range = null) -> void:
 func _try_enter_boss(progress_bar: Range = null) -> void:
 	var cost := gl_DataSet.get_boss_unlock_cost(_viewing_island_index)
 	var cash := int(gl_PlayerState.dataset.cash)
-	if cash < cost:
+	var unlocked := gl_PlayerState.is_boss_unlocked(_viewing_island_index) \
+		or gl_PlayerState.is_boss_cleared(_viewing_island_index)
+
+	if not unlocked and cash < cost:
 		_selecting_level = false
 		_refresh_boss_button()
 		await show_boss_access_holdout(cost)
 		return
 
+	## First successful afford (or prior unlock) → permanent access, no cash spent.
+	if not unlocked and cash >= cost:
+		gl_PlayerState.mark_boss_unlocked(_viewing_island_index)
+
 	if _test_mode:
 		print(
-			"MapIslandSelect TEST: boss ready (island=%s cost=%s cash=%s)"
-			% [_viewing_island_index, cost, cash]
+			"MapIslandSelect TEST: boss ready (island=%s cost=%s cash=%s unlocked=%s)"
+			% [_viewing_island_index, cost, cash, unlocked]
 		)
 		_selecting_level = false
 		return
 
-	## Must afford the listed cost to enter, but entry does not spend cash.
 	var rm := get_tree().get_first_node_in_group("round_manager")
 	if rm and "_reopen_shop_after_map" in rm:
 		rm._reopen_shop_after_map = false
@@ -1026,7 +1136,7 @@ func _resolve_travel_place(level_id: String) -> String:
 	for button in _map_level_buttons():
 		if button and String(button.level_name).to_lower() == level_id:
 			return _travel_place_for_button(button)
-	var boss := get_node_or_null("Island1/NextIslandLabel/BossRangeButton")
+	var boss := _boss_button()
 	if boss and String(boss.get("level_name")).to_lower() == level_id:
 		return "boss"
 	return _place_from_level_name(level_id)

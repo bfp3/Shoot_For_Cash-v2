@@ -20,7 +20,7 @@ func start():
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_interval(1.0)
 	tween.tween_property(wormfood_logo, "modulate:a", 1.0, 0.5)
-	tween.tween_property(copyright, "modulate:a", 1.0, 0.5)
+	tween.parallel().tween_property(copyright, "modulate:a", 1.0, 0.5)
 	tween.tween_interval(1.0)
 	tween.tween_property(wmf_logo, "modulate:a", 1.0, 0.35)
 	tween.parallel().tween_property(wmf_logo, "scale", Vector2.ONE, 0.35)

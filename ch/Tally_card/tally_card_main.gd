@@ -23,11 +23,6 @@ enum ScoreResult {
 var start_sequence := false
 var score_result : ScoreResult = ScoreResult.PARTIAL_SCORE
 
-#@onready var hazard_mine: HBoxContainer = $CenterContainer/MainPanel/MainPanel/Item_List2/Panel/ScrollContainer/SalvageTable/Mine
-
-#@onready var score_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks/NumberLabel #$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/TotalRocks/NumberLabel
-@onready var penalties_number_label: RichTextLabel = $CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines/NumberLabel
-
 var full_score := false
 
 @onready var reveal_skill_sfx: AudioStreamPlayer = $SFX/reveal_skill_sfx
@@ -144,7 +139,7 @@ func start_perfect_sequence() -> void:
 	$SFX/shop_purchase_01.play()
 	var dur := 0.33
 	grade_label.modulate.a = 1.0
-	grade_label.text = "[i][wave]Clear!"
+	grade_label.text = "[wave]WON"
 	
 	if gl_PlayerState.dataset.total_current_strikes <= 0:
 		grade_label.text = "[wave]PERFECT!"
@@ -425,20 +420,7 @@ func sfx_close_tally() -> void:
 	$SFX/hud_click_3.play()
 	$SFX/low_humming.stop()
 
-func blink_penalty_red() -> void:
-	var _original_color := penalties_number_label.self_modulate
 
-	for i in 3:
-		penalties_number_label.self_modulate = Color("aa000050")
-		$SFX/purchase.play() # replace with your preferred penalty SFX
-
-		await get_tree().create_timer(0.08, false).timeout
-
-		penalties_number_label.self_modulate = Color("d10000")
-
-		await get_tree().create_timer(0.08, false).timeout
-
-	penalties_number_label.self_modulate = Color("d10000")
 
 func _on_shop_pressed() -> void:
 	enter_state(State.CLOSE_MENU)
