@@ -1,6 +1,6 @@
 [gd_resource type="Environment" format=3 uid="uid://bbpbvdfbygo6n"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_noir"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2s1bb"]
 sky_top_color = Color(0.02, 0.04, 0.12, 1)
 sky_horizon_color = Color(0.08, 0.12, 0.28, 1)
 sky_curve = 0.12
@@ -8,36 +8,33 @@ ground_bottom_color = Color(0.03, 0.04, 0.07, 1)
 ground_horizon_color = Color(0.06, 0.1, 0.2, 1)
 ground_curve = 0.08
 sun_angle_max = 8.0
-sun_curve = 0.35
-energy_multiplier = 0.55
+sun_curve = 0.00046850697
 
-[sub_resource type="Sky" id="Sky_noir"]
-sky_material = SubResource("ProceduralSkyMaterial_noir")
+[sub_resource type="Sky" id="Sky_pwpvp"]
+sky_material = SubResource("ProceduralSkyMaterial_2s1bb")
 
 [resource]
 background_mode = 2
-sky = SubResource("Sky_noir")
+background_energy_multiplier = 4.2
+sky = SubResource("Sky_pwpvp")
 ambient_light_source = 2
 ambient_light_color = Color(0.35, 0.45, 0.75, 1)
 ambient_light_sky_contribution = 0.55
 ambient_light_energy = 0.35
 reflected_light_source = 1
-tonemap_mode = 2
+tonemap_mode = 4
 tonemap_exposure = 0.92
 tonemap_white = 5.0
-ssao_enabled = true
 ssao_radius = 1.4
 ssao_intensity = 2.8
-ssil_enabled = true
 ssil_intensity = 0.7
 glow_enabled = true
 glow_levels/3 = 1.0
 glow_levels/4 = 0.6
-glow_intensity = 0.45
-glow_strength = 0.95
-glow_bloom = 0.12
+glow_intensity = 0.1
+glow_strength = 0.4
+glow_blend_mode = 0
 glow_hdr_threshold = 0.7
-fog_enabled = true
 fog_mode = 1
 fog_light_color = Color(0.12, 0.18, 0.35, 1)
 fog_light_energy = 0.45
@@ -48,7 +45,6 @@ fog_sky_affect = 0.35
 fog_depth_curve = 0.9
 fog_depth_begin = 35.0
 fog_depth_end = 380.0
-volumetric_fog_enabled = true
 volumetric_fog_density = 0.012
 volumetric_fog_albedo = Color(0.15, 0.2, 0.35, 1)
 volumetric_fog_emission = Color(0.2, 0.3, 0.55, 1)
@@ -57,6 +53,6 @@ volumetric_fog_length = 160.0
 volumetric_fog_ambient_inject = 0.35
 volumetric_fog_sky_affect = 0.25
 adjustment_enabled = true
-adjustment_brightness = 0.95
-adjustment_contrast = 1.12
-adjustment_saturation = 0.92
+adjustment_brightness = 1.4
+adjustment_contrast = 1.1
+adjustment_saturation = 1.1

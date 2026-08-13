@@ -2,9 +2,14 @@
 
 [ext_resource type="Script" uid="uid://cr1stfmu2rvl5" path="res://ch/Shop/level_button_select.gd" id="2_1oogj"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="2_35jhd"]
+[ext_resource type="Texture2D" uid="uid://cutf4enyo80rk" path="res://level_preview_cards/moss_preview2.png" id="2_i6isu"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_35jhd"]
+[ext_resource type="Texture2D" uid="uid://4ur5q1tbclhs" path="res://level_preview_cards/redd_preview2.png" id="3_fnr5o"]
 [ext_resource type="Theme" uid="uid://bjwkhgoiebh1q" path="res://res/custom_themes_by_blake/shoot_for_cash_default_theme.tres" id="4_307gy"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="4_a7lqs"]
+[ext_resource type="Texture2D" uid="uid://crrffpfgogh5w" path="res://level_preview_cards/noir_preview.png" id="4_d0lhs"]
+[ext_resource type="Texture2D" uid="uid://dbv54nxmdtdyo" path="res://level_preview_cards/glory_preview.png" id="5_d0lhs"]
+[ext_resource type="Texture2D" uid="uid://b3dbvef7efbqx" path="res://level_preview_cards/jetz_preview.png" id="6_vbwgr"]
 [ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="7_307gy"]
 
 [sub_resource type="Animation" id="Animation_tnodp"]
@@ -76,7 +81,231 @@ focus_enter_sfx = NodePath("focus_enter_sfx")
 focus_exit_sfx = NodePath("focus_exit")
 pressed_sfx = NodePath("purchase")
 
+[node name="MossPreview" type="TextureRect" parent="." unique_id=1029366476]
+visible = false
+modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0056523085
+anchor_top = 0.17748643
+anchor_right = 0.99434763
+anchor_bottom = 0.9208746
+offset_left = -226.94699
+offset_top = -121.98002
+offset_right = 226.947
+offset_bottom = 121.98001
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.358, 0.358)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("2_i6isu")
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="MossPreview" unique_id=1029854976]
+modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -90.38547
+offset_bottom = -381.34088
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel2" type="Panel" parent="MossPreview" unique_id=380376556]
+modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 381.3407
+offset_bottom = 38.659637
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ReddPreview" type="TextureRect" parent="." unique_id=421106123]
+visible = false
+modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -708.0
+offset_top = -364.0
+offset_right = 708.0
+offset_bottom = 394.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.154, 0.154)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("3_fnr5o")
+
+[node name="Panel" type="Panel" parent="ReddPreview" unique_id=1310297579]
+modulate = Color(0.40392157, 0.2509804, 0.14509805, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -220.25537
+offset_bottom = -999.7206
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TextureRectOverlays"
+
+[node name="Panel2" type="Panel" parent="ReddPreview" unique_id=1537658656]
+modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 863.3572
+offset_right = -11.324585
+offset_bottom = 19.759766
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TextureRectOverlays"
+
+[node name="NoirPreview" type="TextureRect" parent="." unique_id=663037032]
+visible = false
+modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -225.5
+offset_top = -89.5
+offset_right = 225.5
+offset_bottom = 107.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.358, 0.358)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("4_d0lhs")
+
+[node name="Panel3" type="Panel" parent="NoirPreview" unique_id=754595993]
+modulate = Color(0.16862746, 0.18039216, 0.2, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.6201644
+offset_top = -79.88083
+offset_right = -2.6201782
+offset_bottom = -400.2207
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TextureRectOverlays"
+
+[node name="Panel4" type="Panel" parent="NoirPreview" unique_id=1903955961]
+modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
+self_modulate = Color(0.15686275, 0.15686275, 0.16862746, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.6201644
+offset_top = 400.22034
+offset_right = -2.6201782
+offset_bottom = 29.946838
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TextureRectOverlays"
+
+[node name="GloryPreview" type="TextureRect" parent="." unique_id=195563274]
+visible = false
+modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -708.0
+offset_top = -363.0
+offset_right = 708.0
+offset_bottom = 395.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.154, 0.154)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("5_d0lhs")
+
+[node name="Panel3" type="Panel" parent="GloryPreview" unique_id=181464901]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.6201649
+offset_top = -222.73816
+offset_right = -2.6201172
+offset_bottom = -1090.63
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TextureRectOverlays"
+
+[node name="Panel4" type="Panel" parent="GloryPreview" unique_id=1960331123]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.831289
+offset_top = 837.3833
+offset_right = -4.8310547
+offset_bottom = 13.266235
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TextureRectOverlays"
+
+[node name="JetzPreview" type="TextureRect" parent="." unique_id=1506194856]
+visible = false
+modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -923.5
+offset_top = -249.5
+offset_right = 923.5
+offset_bottom = 315.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.123, 0.123)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("6_vbwgr")
+
+[node name="Panel3" type="Panel" parent="JetzPreview" unique_id=669118224]
+modulate = Color(0.16862746, 0.18039216, 0.2, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.6201649
+offset_top = -643.9009
+offset_right = -2.6201172
+offset_bottom = -964.2407
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TextureRectOverlays"
+
+[node name="Panel4" type="Panel" parent="JetzPreview" unique_id=1577828626]
+modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
+self_modulate = Color(0.15686275, 0.15686275, 0.16862746, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.6201649
+offset_top = 678.8782
+offset_right = -2.6201172
+offset_bottom = 100.573975
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TextureRectOverlays"
+
 [node name="Control" type="Control" parent="." unique_id=970887774]
+visible = false
+modulate = Color(1, 1, 1, 0.3254902)
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -139,6 +368,7 @@ grow_vertical = 2
 rotation = 1.5707964
 
 [node name="Panel" type="Panel" parent="." unique_id=1427145380]
+visible = false
 modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -150,6 +380,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel2" type="Panel" parent="." unique_id=786787343]
+visible = false
 modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
 layout_mode = 1
 anchors_preset = 15

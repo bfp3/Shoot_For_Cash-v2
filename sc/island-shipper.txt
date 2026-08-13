@@ -174,6 +174,7 @@ range redd
 
 	# Round 4 — Cross-lane aiming lesson (left → right)
 	round
+		smokecan
 		rock 1 A4
 		wait 300
 		rock 1 A6
@@ -196,6 +197,7 @@ range redd
 
 	# Round 6 — Twin aims from both edges
 	round
+		smokecan
 		balloon A1
 		balloon A8
 		rock 1 A8
@@ -221,6 +223,7 @@ range redd
 
 	# Round 8 — Hazard sandwich + low skim
 	round
+		smokecan
 		rock-black 3
 		wait 180
 		rock 1 C5
@@ -251,6 +254,7 @@ range redd
 
 	# Round 10 — Sweeping stair + staggered waits
 	round
+		smokecan
 		rock 1 A3
 		wait 100
 		rock 2 A4
@@ -288,6 +292,7 @@ range redd
 
 	# Round 12 — Redd finale: dense crossfire
 	round
+		smokecan
 		balloon A1
 		balloon A2
 		balloon A7
@@ -310,10 +315,6 @@ range redd
 		wait 70
 		rock 5 A3
 		wait 2000
-		rock 1 C8
-		wait 70
-		rock 8 C1
-		wait 3000
 		
 		rock 3 a3
 		rock 6 a6
@@ -322,6 +323,16 @@ range redd
 		
 		rock-black 4
 		rock 3 
+		
+		rock-black 1 a4
+		rock-black 2 a4
+		rock-black 3 a4
+		rock-black 4 a4
+		rock-black 5 a4
+		rock-black 6 a4
+		rock-black 7 a4
+		rock-black 8 a4
+		wait 3000
 		
 		wait 3000
 		rock-black 5 a5
@@ -601,128 +612,192 @@ range jetz
 	
 	
 range noir
+	# Pair-focused range: wait 0 between twins → easy doubles / oranges (don't shoot them!).
+
+	# Round 1 — Easy mid-lane pairs
 	round
-		shuffle
-		rock-black 1
-		rock-black 3
+		rock 3
+		wait 0
+		rock 5
+		wait 1600
 		rock 2
-		wait 1800
+		wait 0
+		rock 4
 		repeat 3
 
+	# Round 2 — Side pairs + a balloon tease
 	round
 		balloon A2
-		rock-black 1
 		rock 1
-		rock-black 3
+		wait 0
 		rock 3
+		wait 1400
+		rock 6
+		wait 0
+		rock 8
 		repeat 3
 
+	# Round 3 — Crossing pairs
 	round
 		balloon A1
 		balloon A3
-		rock-black 3
+		rock 2
+		wait 0
+		rock 7
+		wait 1200
 		rock 3
-		rock-black 1
-		rock-black 2
-		repeat 3
-
-	round
-		rock-black 6
+		wait 0
 		rock 6
-		rock-black 5
-		rock-black 6
 		repeat 3
 
+	# Round 4 — Low skim twins
 	round
-		balloon A2
-		rock-black 2
-		rock 3
-		rock-black 4
-		rock 5
-		repeat 3
-
-	round
-		balloon A2
-		rock 3
-		rock-black 4
-		rock 5
-		rock-black 6
-		rock-black 3
-		repeat 3
-
-	round
-		rock-black 1
-		rock 1
-		rock-black 3
-		rock 3
-		rock-black 5
-		rock 5
-		rock-black 7
+		rock 6
+		wait 0
 		rock 7
-		repeat 3
-
-	round
-		rock-black 8
-		rock-black 7
+		wait 1100
+		rock 5
+		wait 0
 		rock 8
-		rock 7
-		rock-black 8
-		rock-black 7
 		repeat 3
 
+	# Round 5 — Hazard paired with a white (tempting double)
+	round
+		balloon A2
+		rock 2
+		wait 0
+		rock 4
+		wait 1000
+		rock-black 5
+		wait 0
+		rock 7
+		repeat 3
+
+	# Round 6 — Triple pair cadence
+	round
+		balloon A2
+		rock 3
+		wait 0
+		rock 4
+		wait 900
+		rock 5
+		wait 0
+		rock 6
+		wait 900
+		rock-black 3
+		wait 0
+		rock 8
+		repeat 3
+
+	# Round 7 — Edge twins racing inward
+	round
+		rock 1
+		wait 0
+		rock 2
+		wait 800
+		rock 7
+		wait 0
+		rock 8
+		wait 800
+		rock 3
+		wait 0
+		rock 6
+		repeat 3
+
+	# Round 8 — Black/white twins (double = orange temptation)
+	round
+		rock-black 8
+		wait 0
+		rock 7
+		wait 750
+		rock 8
+		wait 0
+		rock-black 7
+		wait 750
+		rock 4
+		wait 0
+		rock 5
+		repeat 3
+
+	# Round 9 — Wide pairs from both edges
 	round
 		balloon A1
 		balloon A2
 		balloon A7
 		balloon A8
-		rock-black 1
-		rock-black 7
 		rock 1
+		wait 0
 		rock 8
+		wait 700
+		rock-black 1
+		wait 0
+		rock-black 7
 		repeat 3
 
+	# Round 10 — Rapid mid pairs
 	round
-		rock-black 3
-		rock 4
-		rock-black 5
-		rock 6
-		rock-black 7
-		rock 7
-		rock 6
-		rock 5
-		rock 4
 		rock 3
-		repeat 3
-
-	round
-		rock-black 1
-		rock-black 8
-		rock 2
-		rock 7
-		rock-black 3
-		rock 6
+		wait 0
 		rock 4
+		wait 650
 		rock 5
-		rock-black 1
-		rock-black 2
-		rock-black 3
-		rock-black 4
-		rock-black 5
-		rock-black 6
-		rock-black 7
-		rock-black 8
+		wait 0
+		rock 6
+		wait 650
+		rock 4
+		wait 0
+		rock 5
+		wait 650
+		rock 3
+		wait 0
+		rock 6
 		repeat 3
 
+	# Round 11 — Dense twin volley + black hangers
+	round
+		rock 1
+		wait 0
+		rock 8
+		wait 600
+		rock 2
+		wait 0
+		rock 7
+		wait 600
+		rock 3
+		wait 0
+		rock 6
+		wait 600
+		rock 4
+		wait 0
+		rock 5
+		wait 600
+		rock-black 1
+		wait 0
+		rock-black 2
+		wait 0
+		rock-black 3
+		wait 0
+		rock-black 4
+		repeat 3
+
+	# Round 12 — Finale: relentless pairs
 	round
 		rock-black 2
+		wait 0
 		rock 4
+		wait 550
 		rock-black 4
+		wait 0
 		rock 6
+		wait 550
 		rock-black 6
+		wait 0
 		rock 8
-		rock-black 8
+		wait 550
+		rock 7
+		wait 0
 		rock 8
-		rock-black 7
+		wait 550
 		balloon A1
 		balloon A2
 		balloon A3

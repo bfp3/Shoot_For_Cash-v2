@@ -415,9 +415,17 @@ func start_destroyed_process() -> void:
 	remove_from_group('Target')
 
 	play_destroy_sfx()
-		
-	gl_PlayerState.add_bonus(cash_value)
-	money_label_3d.money_is_money(global_position, cash_value)
+
+	## Special challenge (e.g. Noir): shooting an orange fails the round immediately.
+	var challenge_fail := false
+	if round_manager and round_manager.has_method("has_active_special_challenge"):
+		challenge_fail = bool(round_manager.has_active_special_challenge("no_shoot_oranges"))
+	if challenge_fail:
+		if round_manager.has_method("on_special_challenge_orange_shot"):
+			round_manager.on_special_challenge_orange_shot()
+	else:
+		gl_PlayerState.add_bonus(cash_value)
+		money_label_3d.money_is_money(global_position, cash_value)
 	
 
 	is_deactivated = true

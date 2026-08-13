@@ -1,6 +1,16 @@
-[gd_scene format=3 uid="uid://bkv68w68dt7cw"]
+[gd_scene format=3 uid="uid://dlufcdgthrwbs"]
 
-[ext_resource type="Script" uid="uid://ccp4hr06f52me" path="res://lib/global_color_palet.gd" id="1_qn8r3"]
+[sub_resource type="GDScript" id="GDScript_el65g"]
+script/source = "extends Node
+
+# This is the global color palet for the game.
+
+@export var Global_color_white : Color = Color('ffffff')
+@export var Global_color_money : Color = Color('42d100')
+@export var Global_color_red : Color = Color('d10000')
+@export var Global_color_orange : Color = Color('ff7700')
+@export var Global_color_grey : Color = Color('808080')
+"
 
 [node name="Global_ColorPalet" type="Node" unique_id=315105511]
-script = ExtResource("1_qn8r3")
+script = SubResource("GDScript_el65g")

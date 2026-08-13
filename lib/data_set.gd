@@ -118,7 +118,18 @@ var dataset_string : Dictionary = {
 		"", ## redd
 		"", ## glory
 		"", ## jetz
-		"", ## noir
+		"Don't Shoot [color=#ff8c00]Oranges[/color]", ## noir
+		"", ## vesper
+		"", ## start
+	]
+	## Runtime special challenge ids per place (parallel to place_name). Empty = none.
+	## Known ids: no_shoot_oranges
+	,"special_challenge"		: [
+		"", ## moss
+		"", ## redd
+		"", ## glory
+		"", ## jetz
+		"no_shoot_oranges", ## noir
 		"", ## vesper
 		"", ## start
 	]
@@ -309,6 +320,23 @@ func get_ticket_price_key(place_id: String) -> String:
 
 func get_ticket_power_key(place_id: String) -> String:
 	return "power_ticket_%s" % resolve_place_name(place_id)
+
+
+## Special challenge id for a place (e.g. "no_shoot_oranges"). Empty = none.
+func get_special_challenge(place_id: String = "") -> String:
+	if place_id.is_empty():
+		place_id = String(gl_PlayerState.dataset.level_name)
+	place_id = resolve_place_name(place_id)
+	var idx := get_place_index(place_id)
+	if idx < 0:
+		return ""
+	return String(get_string("special_challenge", idx)).strip_edges()
+
+
+func has_special_challenge(challenge_id: String, place_id: String = "") -> bool:
+	if challenge_id.is_empty():
+		return false
+	return get_special_challenge(place_id) == challenge_id
 
 
 ## --- Overworld island map helpers ---

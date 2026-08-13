@@ -108,12 +108,14 @@ func refresh_boss_state(animate_clear: bool = false) -> void:
 		if level_name_label:
 			level_name_label.text = "[pulse]" + boss_title_text.to_upper()
 		_set_progress_hud_visible(false)
+		## Cleared: keep cost label visible alongside the CLEAR stamp.
+		if round_progress_label:
+			round_progress_label.visible = true
+			round_progress_label.modulate.a = 1.0
+			round_progress_label.text = _format_boss_cost(cost)
 		if animate_clear:
 			await play_clear_stamp_ceremony()
 		else:
-			if round_progress_label:
-				round_progress_label.visible = false
-				round_progress_label.modulate.a = 1.0
 			await _refresh_completion_stamp(false)
 		return
 
@@ -254,13 +256,15 @@ func _refresh_completion_stamp(animate: bool) -> void:
 	stamp_root.visible = true
 	if stamp_label is RichTextLabel:
 		(stamp_label as RichTextLabel).text = "[wave]CLEAR!"
+	var cost := gl_DataSet.get_boss_unlock_cost(boss_island_index)
 	if not animate:
 		stamp_root.modulate.a = 1.0
 		if stamp_label:
 			stamp_label.scale = Vector2.ONE
 		if round_progress_label:
-			round_progress_label.visible = false
+			round_progress_label.visible = true
 			round_progress_label.modulate.a = 1.0
+			round_progress_label.text = _format_boss_cost(cost)
 		return
 
 	stamp_root.modulate.a = 0.0
@@ -268,19 +272,19 @@ func _refresh_completion_stamp(animate: bool) -> void:
 		stamp_label.scale = Vector2.ONE * 3.0
 	if round_progress_label:
 		round_progress_label.visible = true
+		round_progress_label.modulate.a = 1.0
+		round_progress_label.text = _format_boss_cost(cost)
 	var stamp_sfx := $purchase as AudioStreamPlayer
 	var tween := create_tween()
 	tween.tween_property(stamp_root, "modulate:a", 1.0, 0.2)
 	if stamp_label:
 		tween.parallel().tween_property(stamp_label, "scale", Vector2.ONE, 0.2)
-	if round_progress_label:
-		tween.parallel().tween_property(round_progress_label, "modulate:a", 0.0, 0.2)
 	if stamp_sfx:
 		tween.parallel().tween_callback(stamp_sfx.play.bind(0.05)).set_delay(0.15)
 	tween.tween_interval(0.35)
 	await tween.finished
 	if round_progress_label:
-		round_progress_label.visible = false
+		round_progress_label.visible = true
 		round_progress_label.modulate.a = 1.0
 
 

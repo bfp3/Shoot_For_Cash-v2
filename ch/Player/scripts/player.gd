@@ -179,7 +179,7 @@ func _ready() -> void:
 	
 	_init_ammo()
 	
-	%Bullet_icon.hide()
+	#%Bullet_icon.hide()
 	%Auto_fire.hide()
 	$CanvasLayer/HUD_bottom_corner/TotalRocks.hide()
 	$CanvasLayer/HUD_bottom_corner/PineappleRound.hide()

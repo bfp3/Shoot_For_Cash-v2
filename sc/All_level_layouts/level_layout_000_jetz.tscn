@@ -277,45 +277,6 @@ data = PackedVector3Array(0.4071, 0.5, -0.4071, -0.4071, 0.5, 0.4071, -0.4071, 0
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_freui"]
 data = PackedVector3Array(-0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5)
 
-[sub_resource type="Animation" id="Animation_6yul2"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(5.9705915, 4.7398953, 2.8500004)]
-}
-
-[sub_resource type="Animation" id="Animation_08sf0"]
-resource_name = "updown"
-length = 5.0
-loop_mode = 2
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(5.9705915, 4.7398953, 2.8500004), Vector3(5.971, 0.93, 2.85)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_80w0q"]
-_data = {
-&"RESET": SubResource("Animation_6yul2"),
-&"updown": SubResource("Animation_08sf0")
-}
-
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_p0x6b"]
 data = PackedVector3Array(0.4071, 0.5, -0.4071, -0.4071, 0.5, 0.4071, -0.4071, 0.5, -0.4071, 0.4071, 0.5, -0.4071, 0.4071, 0.5, 0.4071, -0.4071, 0.5, 0.4071, 0.5, -0.5, -0.5, 0.5, 0.4071, 0.5, 0.5, 0.4071, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.4071, 0.5, -0.5, -0.5, 0.5, -0.5, 0.4071, -0.5, -0.5, 0.4071, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.4071, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.4071, -0.5, -0.5, 0.4071, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.4071, -0.5, -0.4071, 0.5, 0.4071, -0.5, 0.4071, -0.5, -0.4071, 0.5, -0.4071, -0.4071, 0.5, 0.4071, -0.5, 0.4071, 0.5, -0.5, 0.4071, -0.5, -0.4071, 0.5, -0.4071, 0.5, 0.4071, -0.5, 0.4071, 0.5, -0.4071, -0.4071, 0.5, -0.4071, -0.5, 0.4071, -0.5, 0.5, 0.4071, -0.5, 0.4071, 0.5, -0.4071, 0.5, 0.4071, 0.5, 0.4071, 0.5, 0.4071, 0.4071, 0.5, -0.4071, 0.5, 0.4071, -0.5, 0.5, 0.4071, 0.5, 0.4071, 0.5, 0.4071, -0.5, 0.4071, 0.5, -0.4071, 0.5, 0.4071, 0.4071, 0.5, 0.4071, 0.5, 0.4071, 0.5, -0.5, 0.4071, 0.5, 0.5, -0.5, 0.5, -0.5, 0.4071, 0.5, 0.5, 0.4071, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.4071, 0.5)
 
@@ -439,6 +400,19 @@ size = Vector3(27, 1, 39)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_6yul2"]
 data = PackedVector3Array(-14, 0.5, 19.5, 14, 0.5, 19.5, -14, -0.5, 19.5, 14, 0.5, 19.5, 14, -0.5, 19.5, -14, -0.5, 19.5, 14, 0.5, -19.5, -14, 0.5, -19.5, 14, -0.5, -19.5, -14, 0.5, -19.5, -14, -0.5, -19.5, 14, -0.5, -19.5, 14, 0.5, 19.5, 14, 0.5, -19.5, 14, -0.5, 19.5, 14, 0.5, -19.5, 14, -0.5, -19.5, 14, -0.5, 19.5, -14, 0.5, -19.5, -14, 0.5, 19.5, -14, -0.5, -19.5, -14, 0.5, 19.5, -14, -0.5, 19.5, -14, -0.5, -19.5, 14, 0.5, 19.5, -14, 0.5, 19.5, 14, 0.5, -19.5, -14, 0.5, 19.5, -14, 0.5, -19.5, 14, 0.5, -19.5, -14, -0.5, 19.5, 14, -0.5, 19.5, -14, -0.5, -19.5, 14, -0.5, 19.5, 14, -0.5, -19.5, -14, -0.5, -19.5)
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6yul2"]
+load_path = "res://.godot/imported/texture_08.png-b099234d176d59630442262e90cb2cfd.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_08sf0"]
+albedo_color = Color(0.29, 0.29, 0.29, 1)
+albedo_texture = SubResource("CompressedTexture2D_6yul2")
+metallic_specular = 0.0
+uv1_scale = Vector3(0.1, 0.1, 0.1)
+uv1_offset = Vector3(-0.2, 0, 0)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 5
+
 [sub_resource type="BoxMesh" id="BoxMesh_s470r"]
 size = Vector3(0.108, 0.502, 0.007)
 
@@ -515,6 +489,7 @@ environment = ExtResource("1_80w0q")
 
 [node name="Emblem_3D" type="Node3D" parent="." unique_id=1742034845]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 0.2, 0.99999845, -2.07, 19.571293)
+visible = false
 metadata/_edit_group_ = true
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D" unique_id=1172860492]
@@ -543,8 +518,14 @@ material_override = ExtResource("4_80w0q")
 mesh = SubResource("ArrayMesh_cl50v")
 skeleton = NodePath("")
 
-[node name="Cube_003" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=986967924]
-transform = Transform3D(0.351, 0, 0, 0, 0.463, 0, 0, 0, 0.562, -5.79, -0.773, -0.07600021)
+[node name="Cube_002" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=645558246]
+transform = Transform3D(5.505, 0, 0, 0, 0.33, 0, 0, 0, 0.4, -9.945, 12.212, 7.656)
+material_override = ExtResource("4_80w0q")
+mesh = SubResource("ArrayMesh_cl50v")
+skeleton = NodePath("")
+
+[node name="Cube_008" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=140713228]
+transform = Transform3D(0.456, 0, 0, 0, 0.33, 0, 0, 0, 0.4, -7.797, 11.564, 7.656)
 material_override = ExtResource("4_80w0q")
 mesh = SubResource("ArrayMesh_cl50v")
 skeleton = NodePath("")
@@ -680,35 +661,6 @@ skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar8/StaticBody3D" unique_id=325168090]
 shape = SubResource("ConcavePolygonShape3D_freui")
-
-[node name="Right_tall_pillar9" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1755519081]
-transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, 5.9705915, 4.7398953, 2.8500004)
-material_override = ExtResource("4_80w0q")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_fyjqt")
-skeleton = NodePath("")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar9" unique_id=37896645]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar9/StaticBody3D" unique_id=1768394328]
-shape = SubResource("ConcavePolygonShape3D_freui")
-
-[node name="Right_tall_pillar12" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar9" unique_id=2127582671]
-transform = Transform3D(-4.371139e-08, -3, 0, 0.33333334, -4.371139e-08, 0, 0, 0, 1, 0, 3.4809113e-05, 0.010000229)
-material_override = ExtResource("4_80w0q")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_fyjqt")
-skeleton = NodePath("")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar9/Right_tall_pillar12" unique_id=620160265]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar9/Right_tall_pillar12/StaticBody3D" unique_id=2035061359]
-shape = SubResource("ConcavePolygonShape3D_freui")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Boatmesh/Brick_wall_2/Right_tall_pillar9" unique_id=567784040]
-libraries/ = SubResource("AnimationLibrary_80w0q")
-autoplay = &"updown"
-speed_scale = 2.0
 
 [node name="Right_tall_pillar11" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1608439515]
 transform = Transform3D(1, 0, 0, 0, 11, 0, 0, 0, 1, -6.0329847, -1.5339665, 2.8500004)
@@ -891,7 +843,7 @@ cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
 
 [node name="roof" type="MeshInstance3D" parent="Boatmesh" unique_id=327879325]
-transform = Transform3D(-2, 8.742278e-08, 0, -1.7478564e-07, -0.99965733, 0.02617695, 4.5769233e-09, 0.02617695, 0.99965733, 0, 10, 20)
+transform = Transform3D(-2, 8.742278e-08, 0, -1.7478564e-07, -0.99965733, 0.02617695, 4.5769233e-09, 0.02617695, 0.99965733, 0, 10, 6.265)
 material_override = ExtResource("4_80w0q")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
@@ -901,6 +853,19 @@ collision_layer = 0
 collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/roof/StaticBody3D" unique_id=1654987170]
+shape = SubResource("ConcavePolygonShape3D_6yul2")
+
+[node name="roof2" type="MeshInstance3D" parent="Boatmesh" unique_id=655654819]
+transform = Transform3D(-1, 5.435849e-08, 0, -1.5094406e-07, -0.35987666, 0.00214651, 3.9526094e-09, 0.009423702, 0.081971906, 0, 10.114, 26.574)
+material_override = SubResource("StandardMaterial3D_08sf0")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_3vvr1")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/roof2" unique_id=619156734]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/roof2/StaticBody3D" unique_id=436088540]
 shape = SubResource("ConcavePolygonShape3D_6yul2")
 
 [node name="Egg" parent="Boatmesh" unique_id=2127545510 instance=ExtResource("10_uulno")]

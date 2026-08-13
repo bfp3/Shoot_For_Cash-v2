@@ -22,14 +22,45 @@ var interaction_tween: Tween
 @onready var level_name_label: RichTextLabel = $level_name_label
 @onready var round_progress_label: RichTextLabel = %RoundProgressLabel
 @onready var cash_earned_label: RichTextLabel = get_node_or_null("%CashEarnedLabel") as RichTextLabel
-@export var level_name := 'Locked'
+@export var level_name := 'Locked':
+	set(value):
+		level_name = value
+		if is_node_ready():
+			_apply_level_preview()
+			_apply_font_mode()
 
 @export var level_locked := true
 @export var main_control : Control
 ## Boss / single-round buttons can turn this off.
 @export var show_round_count := true
 
+@export_group("Font Mode")
+## When true, keep the scene's dark brown font colours. When false, use light_mode_font_modulate.
+@export var dark_mode := true:
+	set(value):
+		dark_mode = value
+		if is_node_ready():
+			_apply_font_mode()
+## Used for level name + round progress when dark_mode is off.
+@export var light_mode_font_modulate := Color.WHITE:
+	set(value):
+		light_mode_font_modulate = value
+		if is_node_ready() and not dark_mode:
+			_apply_font_mode()
+
 var round_manager : RoundManager = null
+var _dark_level_name_modulate := Color(0.36862746, 0.32941177, 0.29411766, 1)
+var _dark_round_progress_modulate := Color(0.36862746, 0.32941177, 0.29411766, 1)
+var _active_preview: CanvasItem = null
+
+const _PREVIEW_NODE_NAMES := {
+	"moss": "MossPreview",
+	"redd": "ReddPreview",
+	"noir": "NoirPreview",
+	"glory": "GloryPreview",
+	"vesper": "VesperPreview",
+	"jetz": "JetzPreview",
+}
 
 
 func _ready() -> void:
@@ -42,6 +73,14 @@ func _ready() -> void:
 	focus_entered.connect(_on_focus_entered)
 	focus_exited.connect(_on_focus_exited)
 	gui_input.connect(_on_gui_input)
+
+	if level_name_label:
+		_dark_level_name_modulate = level_name_label.modulate
+	if round_progress_label:
+		_dark_round_progress_modulate = round_progress_label.modulate
+
+	_apply_level_preview()
+	_apply_font_mode()
 
 	if level_locked:
 		set_locked_visuals()
@@ -76,24 +115,49 @@ func set_locked_visuals() -> void:
 	current_state = State.LOCKED
 	if level_name_label:
 		level_name_label.text = ""
-	#outer_ring.modulate = Color("c9a587ff")
-
-	#badge_front.modulate = Color('d8c5b7')
 	_set_progress_hud_visible(false)
 	_hide_completion_stamp()
+	_apply_level_preview()
 
 
 func set_unlocked_visuals() -> void:
 	level_locked = false
 	disabled = false
 	modulate = Color.WHITE
-	#outer_ring.modulate = Color.WHITE
-
-	#badge_front.modulate = Color.WITE
 	if level_name_label:
 		level_name_label.text = "[wave]" + level_name.to_upper()
-		
+	_apply_level_preview()
+	_apply_font_mode()
 	refresh_map_progress()
+
+
+## Show only the preview card that matches this button's level.
+func _apply_level_preview() -> void:
+	var place := String(level_name).to_lower().strip_edges()
+	if gl_DataSet:
+		place = gl_DataSet.resolve_place_name(place)
+	var target_name := String(_PREVIEW_NODE_NAMES.get(place, ""))
+	_active_preview = null
+
+	for child in get_children():
+		if not (child is CanvasItem):
+			continue
+		var child_name := String(child.name)
+		if not child_name.ends_with("Preview"):
+			continue
+		var show_it := (not level_locked) and (child_name == target_name)
+		(child as CanvasItem).visible = show_it
+		if show_it:
+			_active_preview = child as CanvasItem
+
+
+func _apply_font_mode() -> void:
+	var col := _dark_level_name_modulate if dark_mode else light_mode_font_modulate
+	var round_col := _dark_round_progress_modulate if dark_mode else light_mode_font_modulate
+	if level_name_label:
+		level_name_label.modulate = col
+	if round_progress_label:
+		round_progress_label.modulate = round_col
 
 
 ## Round counter, cash earned on this island, and completion stamp.
@@ -101,6 +165,7 @@ func refresh_map_progress() -> void:
 	if level_locked or current_state == State.LOCKED:
 		_set_progress_hud_visible(false)
 		_hide_completion_stamp()
+		_apply_level_preview()
 		return
 
 	var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
@@ -109,6 +174,8 @@ func refresh_map_progress() -> void:
 	var has_entered := completed or not entry.is_empty() or bool(entry.get("entered", false))
 	if level_name_label:
 		level_name_label.text = "[wave]" + level_name.to_upper()
+	_apply_level_preview()
+	_apply_font_mode()
 
 	if completed:
 		current_state = State.COMPLETE
@@ -145,6 +212,7 @@ func _apply_round_progress_text(place: String, entry: Dictionary) -> void:
 	var current_round := clampi(sequence_index + 1, 1, maxi(total, 1))
 	round_progress_label.text = "ROUND: %d" % current_round
 	round_progress_label.visible = true
+	_apply_font_mode()
 
 
 func _total_rounds_for_place(_place: String) -> int:
@@ -190,7 +258,7 @@ func _refresh_completion_stamp(animate: bool) -> void:
 	_set_completed_gui()
 	stamp_root.visible = true
 	if stamp_label is RichTextLabel:
-		(stamp_label as RichTextLabel).text = "[wave]CLEAR!"
+		(stamp_label as RichTextLabel).text = "[wave]CLEAR"
 	if not animate:
 		stamp_root.modulate.a = 1.0
 		if stamp_label:
@@ -289,21 +357,26 @@ func _play_wiggle(target_scale: float) -> void:
 	)
 
 
+func _preview_overlay_panels() -> Array[Control]:
+	var out: Array[Control] = []
+	var root: Node = _active_preview if _active_preview else self
+	for child in root.get_children():
+		if child is Panel:
+			out.append(child as Control)
+	## Legacy root panels (if any remain).
+	for name in ["Panel", "Panel2"]:
+		var n := get_node_or_null(name) as Control
+		if n and not out.has(n):
+			out.append(n)
+	return out
+
+
 func _set_completed_gui() -> void:
-	var panel := get_node_or_null("Panel") as Control
-	var panel2 := get_node_or_null("Panel2") as Control
-	if panel:
+	for panel in _preview_overlay_panels():
 		panel.modulate = Color.WHITE
 		panel.theme_type_variation = "RedPanel"
-	if panel2:
-		panel2.modulate = Color.WHITE
-		panel2.theme_type_variation = "RedPanel"
 
 
 func _clear_completed_gui() -> void:
-	var panel := get_node_or_null("Panel") as Control
-	var panel2 := get_node_or_null("Panel2") as Control
-	if panel:
+	for panel in _preview_overlay_panels():
 		panel.theme_type_variation = &""
-	if panel2:
-		panel2.theme_type_variation = &""

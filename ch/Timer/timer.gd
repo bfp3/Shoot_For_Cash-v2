@@ -1,5 +1,5 @@
-class_name RoundTimer extends Control
-
+extends Control
+class_name RoundTimer
 @onready var round_manager : RoundManager = get_tree().get_current_scene().get_node_or_null('Round_manager')
 
 enum State {
@@ -258,17 +258,15 @@ func _add_additional_time(additional_time : float = 0.0) -> void:
 	
 	if additional_time > 0.0:
 		time_left += additional_time
-		timer_label.modulate = GlobalColorPalet.Global_color_orange
 		await get_tree().create_timer(0.2, false).timeout
-		timer_label.modulate = GlobalColorPalet.Global_color_white
 		return
 	
 	var _rand_chance : int  = randi_range(0,2)
 	if _rand_chance == 0:
 		time_left += additional_increment
-		timer_label.modulate = GlobalColorPalet.Global_color_orange
+
 		await get_tree().create_timer(0.2, false).timeout
-		timer_label.modulate = GlobalColorPalet.Global_color_white
+
 
 
 func update_round_manager() -> void:

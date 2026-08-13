@@ -610,6 +610,27 @@ func is_bonus_type1_round() -> bool:
 	return bonus_type_this_round == 'type1'
 
 
+func get_active_special_challenge() -> String:
+	return gl_DataSet.get_special_challenge(String(gl_PlayerState.dataset.level_name))
+
+
+func has_active_special_challenge(challenge_id: String) -> bool:
+	return gl_DataSet.has_special_challenge(challenge_id, String(gl_PlayerState.dataset.level_name))
+
+
+## Noir (and similar): shooting an orange instantly fills strikes and aborts the round.
+func on_special_challenge_orange_shot() -> void:
+	if not has_active_special_challenge("no_shoot_oranges"):
+		return
+	if player_failed or wave_ending or game_over_triggered:
+		return
+	var max_strikes := 3
+	if gl_PlayerState and gl_PlayerState.has_method("get_max_strikes"):
+		max_strikes = gl_PlayerState.get_max_strikes()
+	gl_PlayerState.dataset.total_current_strikes = max_strikes
+	EventBus.instance.has_hit_three_strikes.emit()
+
+
 ## Bonus target destroyed — end the wave early with no bonus cash (still progress the round).
 func on_bonus_type1_failed() -> void:
 	if protect_bonus_failed or wave_ending:

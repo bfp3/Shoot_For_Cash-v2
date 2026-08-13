@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="3_soy43"]
 [ext_resource type="Texture2D" uid="uid://bt0qwmkberjw1" path="res://res/ShootForCents/Pillar_single.png" id="5_d4yoe"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="6_8mvl6"]
+[ext_resource type="Texture2D" uid="uid://4ur5q1tbclhs" path="res://level_preview_cards/redd_preview2.png" id="6_fddk0"]
 [ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="7_8mvl6"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="8_8uupg"]
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="9_vjt1i"]
@@ -128,6 +129,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="TextureRect" type="TextureRect" parent="MapOverlay" unique_id=1101785416]
+visible = false
 modulate = Color(1, 1, 1, 0.28235295)
 layout_mode = 1
 anchors_preset = 8
@@ -146,6 +148,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("5_d4yoe")
 
 [node name="TextureRect3" type="TextureRect" parent="MapOverlay" unique_id=1529362327]
+visible = false
 modulate = Color(1, 1, 1, 0.28235295)
 layout_mode = 1
 anchors_preset = 8
@@ -197,6 +200,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="TextureRect2" type="TextureRect" parent="MapOverlay2" unique_id=1095557938]
+visible = false
 modulate = Color(0.1, 0.1, 0.1, 1)
 self_modulate = Color(1, 1, 1, 0.61960787)
 layout_mode = 1
@@ -214,6 +218,25 @@ grow_vertical = 2
 scale = Vector2(0.32, 0.32)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("5_d4yoe")
+
+[node name="TextureRect3" type="TextureRect" parent="MapOverlay2" unique_id=1311785948]
+modulate = Color(0.1, 0.1, 0.1, 1)
+self_modulate = Color(1, 1, 1, 0.32941177)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1119.0004
+offset_top = -328.5713
+offset_right = 552.99963
+offset_bottom = 695.4282
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.32, 0.32)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("6_fddk0")
 
 [node name="SelectRangeIcon" type="Control" parent="." unique_id=1275571051]
 layout_mode = 1
@@ -422,8 +445,8 @@ offset_right = 1664.0
 offset_bottom = 844.0
 grow_horizontal = 1
 grow_vertical = 1
-boss_island_index = 0
 main_control = NodePath("../../..")
+dark_mode = false
 
 [node name="Buttons" type="Control" parent="Island1" unique_id=1362834187]
 z_index = 8
@@ -476,9 +499,11 @@ offset_left = 1079.0
 offset_top = 403.0
 offset_right = 1335.0
 offset_bottom = 586.0
-level_name = "Glory"
+level_name = "Noir"
 level_locked = false
 main_control = NodePath("../../..")
+dark_mode = false
+light_mode_font_modulate = Color(0.78, 0.78, 0.78, 1)
 
 [node name="Island2" type="Control" parent="." unique_id=2106000200]
 visible = false
@@ -511,7 +536,7 @@ offset_left = 996.0
 offset_top = 552.0
 offset_right = 1252.0
 offset_bottom = 735.0
-level_name = "Noir"
+level_name = "Glory"
 level_locked = false
 main_control = NodePath("../../..")
 
@@ -552,12 +577,19 @@ visible = false
 z_index = 21
 layout_mode = 0
 anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
 offset_left = 1408.0
 offset_top = 661.0
 offset_right = 1664.0
 offset_bottom = 844.0
+grow_horizontal = 1
+grow_vertical = 1
 boss_island_index = 1
 main_control = NodePath("..")
+dark_mode = false
 
 [node name="Island3" type="Control" parent="." unique_id=2106000300]
 visible = false
@@ -580,21 +612,24 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Level_button_selector" parent="Island3/Buttons" unique_id=2106000311 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 400.0
-offset_top = 280.0
-offset_right = 656.0
-offset_bottom = 463.0
-level_name = "Range 7"
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -91.5
+offset_right = 128.0
+offset_bottom = 91.5
+grow_horizontal = 2
+grow_vertical = 2
+level_name = "Jetz"
 level_locked = false
 main_control = NodePath("../../..")
 
 [node name="Level_button_selector2" parent="Island3/Buttons" unique_id=2106000312 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+visible = false
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -610,6 +645,7 @@ level_locked = false
 main_control = NodePath("../../..")
 
 [node name="Level_button_selector3" parent="Island3/Buttons" unique_id=2106000313 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
+visible = false
 layout_mode = 0
 anchors_preset = 0
 anchor_left = 0.0
@@ -946,9 +982,11 @@ texture = ExtResource("12_sifde")
 stretch_mode = 5
 
 [node name="BossAccessHoldout" parent="." unique_id=568236334 instance=ExtResource("14_holdout")]
+visible = false
 layout_mode = 1
 
 [node name="IslandUnlockedPopup" parent="." unique_id=315523017 instance=ExtResource("15_unlock")]
+visible = false
 layout_mode = 1
 
 [connection signal="pressed" from="CloseMapButton" to="." method="_on_close_map_pressed"]
