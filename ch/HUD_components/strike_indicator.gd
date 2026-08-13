@@ -9,8 +9,8 @@ extends Control
 @onready var back_circle: TextureRect = %BackCircle
 @onready var front_most_circle: TextureRect = %FrontMostCircle
 
-const inactive_colour_front := Color('ebe0d8')
-const inactive_colour_back := Color('c60102')
+const inactive_colour_front := Color('ebe0d828') #Color('ebe0d8')
+const inactive_colour_back := Color('dbc4b2') # Color('c60102')
 const active_colour_front := Color('940104')
 const active_colour_back := Color('dbc4b2')
 

@@ -13,9 +13,10 @@ const LAYOUT_PATH_BY_PLACE_INDEX := {
 	5: "res://sc/All_level_layouts/level_layout_05_vesper.tscn",
 }
 
-## Boss arena layouts by overworld island index (0 = Shipper).
+## Boss arena layouts by overworld island index (0 = Shipper, 1 = Anchor, …).
 const LAYOUT_PATH_BOSS_BY_ISLAND := {
 	0: "res://sc/All_level_layouts/level_layout_island_1_boss.tscn",
+	1: "res://sc/All_level_layouts/level_layout_island_2_boss.tscn",
 }
 
 ## Camera3D.environment resources per place / boss (layouts no longer carry WorldEnvironment).
@@ -28,6 +29,7 @@ const ENV_PATH_BY_LEVEL := {
 	"noir": "res://res/start_04_world_env.tres",
 	"vesper": "res://res/start_05_world_env.tres",
 	"boss": "res://res/moss_env_v2.tres",
+	"boss-2": "res://res/skyEnvironments/greyscale_world.tres",
 }
 const ENV_PATH_BY_LAYOUT := {
 	LAYOUT_PATH_START: "res://res/skyEnvironments/greyscale_world.tres",
@@ -38,6 +40,7 @@ const ENV_PATH_BY_LAYOUT := {
 	"res://sc/All_level_layouts/level_layout_04_noir.tscn": "res://res/start_04_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_05_vesper.tscn": "res://res/start_05_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_island_1_boss.tscn": "res://res/moss_env_v2.tres",
+	"res://sc/All_level_layouts/level_layout_island_2_boss.tscn": "res://res/skyEnvironments/greyscale_world.tres",
 }
 
 ## Cached PackedScenes so revisiting Moss/Redd/etc. does not re-parse from disk.
@@ -491,12 +494,25 @@ func finish_level_editor_test_round() -> void:
 
 ## Active shooting range key used when parsing LEVEL_FILE_PATH.
 func get_active_range_name() -> String:
-	if _boss_mode or String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
-		return "boss"
 	var range_id := String(gl_PlayerState.dataset.level_name).to_lower()
+	if _boss_mode:
+		return _boss_range_name(_boss_island_index)
+	if range_id.begins_with("boss"):
+		if range_id == "boss range" or range_id == "boss_range":
+			return "boss"
+		return range_id
 	if range_id == '' or range_id == gl_DataSet.get_start_place_name() or range_id == 'start':
 		return gl_DataSet.get_default_range_name()
 	return gl_DataSet.resolve_place_name(range_id)
+
+
+## island 0 → "boss", island 1 → "boss-2", island 2 → "boss-3", …
+func _boss_range_name(island_index: int = -1) -> String:
+	if island_index < 0:
+		island_index = _boss_island_index
+	if island_index <= 0:
+		return "boss"
+	return "boss-%d" % (island_index + 1)
 
 
 func is_boss_mode() -> bool:
@@ -511,11 +527,16 @@ func get_active_timer_seconds() -> float:
 
 
 func _refresh_boss_timer_from_parser() -> void:
-	var timer_ms := Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, "boss")
+	var range_id := _boss_range_name(_boss_island_index)
+	var timer_ms := Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, range_id)
+	if timer_ms <= 0 and range_id != "boss":
+		## Fallback to classic boss timer if boss-N has none yet.
+		timer_ms = Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, "boss")
 	if timer_ms <= 0:
-		## Fallback: any island key ending in |boss (in case island token drifts).
+		## Fallback: any island key ending in |boss / |boss-N.
 		for key in Parser.boss_timer_ms_by_range.keys():
-			if String(key).ends_with("|boss"):
+			var key_s := String(key)
+			if key_s.ends_with("|%s" % range_id) or key_s.ends_with("|boss"):
 				timer_ms = int(Parser.boss_timer_ms_by_range[key])
 				if timer_ms > 0:
 					break
@@ -622,12 +643,32 @@ func has_active_special_challenge(challenge_id: String) -> bool:
 func on_special_challenge_orange_shot() -> void:
 	if not has_active_special_challenge("no_shoot_oranges"):
 		return
-	if player_failed or wave_ending or game_over_triggered:
+	_fail_special_challenge()
+
+
+## Glory (and similar): scoring a double / multi instantly fills strikes and aborts the round.
+func on_special_challenge_double() -> void:
+	if not has_active_special_challenge("no_doubles"):
 		return
+	_fail_special_challenge()
+
+
+func _fail_special_challenge() -> void:
+	if player_failed or game_over_triggered:
+		return
+	## May fire after rocks clear (wave already ending as a success) — convert to a fail.
 	var max_strikes := 3
 	if gl_PlayerState and gl_PlayerState.has_method("get_max_strikes"):
 		max_strikes = gl_PlayerState.get_max_strikes()
 	gl_PlayerState.dataset.total_current_strikes = max_strikes
+	success = false
+	player_failed = true
+	wave_ending = true
+	force_shop_open = false
+	stop_timer()
+	stop_player()
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
 	EventBus.instance.has_hit_three_strikes.emit()
 
 
@@ -1703,7 +1744,8 @@ func _save_level_progress() -> void:
 	var level_id := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
 	if level_id == '' or level_id == gl_DataSet.get_start_place_name() or level_id == 'start':
 		return
-	if String(gl_PlayerState.dataset.level_name).to_lower() == "boss" or level_id == "boss":
+	var level_name_l := String(gl_PlayerState.dataset.level_name).to_lower()
+	if level_name_l.begins_with("boss") or String(level_id).begins_with("boss"):
 		return
 	var existing: Dictionary = {}
 	if _level_progress.has(level_id) and _level_progress[level_id] is Dictionary:
@@ -1899,7 +1941,7 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 		player.show_ammo_panel()
 
 
-## Boss survival fight for an overworld island (0 = Shipper → island_1_boss layout).
+## Boss survival fight for an overworld island (0 → island_1_boss + range boss, 1 → island_2_boss + range boss-2).
 func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, progress_bar: Range = null) -> void:
 	island_index = clampi(island_index, 0, maxi(gl_DataSet.get_island_count() - 1, 0))
 	var layout_path := String(LAYOUT_PATH_BOSS_BY_ISLAND.get(island_index, ""))
@@ -1962,12 +2004,13 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 		bonus_target_manager.cleanup_bonus_round()
 
 	player.display_hud()
-	gl_PlayerState.dataset.level_name = "boss"
+	var boss_range := _boss_range_name(island_index)
+	gl_PlayerState.dataset.level_name = boss_range
 	_set_travel_progress(0.08)
 
 	if use_transition_overlay:
 		if scene_transition_screen.has_method("set_destination_place"):
-			scene_transition_screen.set_destination_place("boss")
+			scene_transition_screen.set_destination_place(boss_range)
 		scene_transition_screen.next_level_start()
 		await get_tree().create_timer(1.0, false).timeout
 
@@ -1995,7 +2038,7 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	var heavy := _detach_heavy_layout_nodes(level_scenery)
 	level_layout.add_child(level_scenery)
 	level_scenery.name = "current_level_layout"
-	apply_level_environment("boss", layout_path)
+	apply_level_environment(boss_range, layout_path)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_reattach_heavy_layout_nodes(heavy)
@@ -2007,7 +2050,10 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	## Always reload so boss-timer / boss range data is fresh.
 	if not Parser.loadIslandFile(LEVEL_FILE_PATH):
 		push_error("RoundManager: failed to load level file for boss")
-	current_rock_sequence = Parser.get_rock_sequences(LEVEL_ISLAND_NAME, "boss")
+	current_rock_sequence = Parser.get_rock_sequences(LEVEL_ISLAND_NAME, boss_range)
+	if current_rock_sequence.is_empty() and boss_range != "boss":
+		push_warning('RoundManager: no rounds for "%s"; falling back to "boss"' % boss_range)
+		current_rock_sequence = Parser.get_rock_sequences(LEVEL_ISLAND_NAME, "boss")
 	current_sequence_index = 0
 	current_round = 1
 	gl_PlayerState.dataset.round = 1

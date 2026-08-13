@@ -394,6 +394,12 @@ func shoot_target() -> void:
 		shooting_sky_mine = false
 
 	if rocks_to_destroy.size() >= 2 && !shot_with_right_click:
+		## Glory: fail as soon as a double is scored (don't wait for clear / wave end).
+		if rock_count >= 2 and round_manager and round_manager.has_method("has_active_special_challenge") \
+			and bool(round_manager.has_active_special_challenge("no_doubles")):
+			if round_manager.has_method("on_special_challenge_double"):
+				round_manager.on_special_challenge_double()
+			return
 		await wait_for_all_rocks_destroyed(rocks_to_destroy)
 		if gl_PlayerState.dataset.total_hazards > 0:
 			return
@@ -653,6 +659,13 @@ func activate_multishot_bonus(rock_count: int) -> void:
 	print('called a mULTI')
 	if gl_PlayerState.dataset.total_hazards > 0:
 		return
+
+	## Glory special challenge: any double / multi fails the round.
+	if rock_count >= 2 and round_manager and round_manager.has_method("on_special_challenge_double"):
+		if round_manager.has_method("has_active_special_challenge") \
+			and bool(round_manager.has_active_special_challenge("no_doubles")):
+			round_manager.on_special_challenge_double()
+			return
 	
 	var multi_shot := get_tree().get_first_node_in_group('multi_shot')
 	multi_shot.multi_shot(rock_count, temp_label_pos)

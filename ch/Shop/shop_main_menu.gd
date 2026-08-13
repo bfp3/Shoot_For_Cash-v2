@@ -1,6 +1,7 @@
 extends Control
 
 const SHOP_MINI_GAME_SCENE_PATH := "res://ch/Shop/ShopMiniGame.tscn"
+const SHOP_PANEL_STYLEBOX := preload("res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres")
 
 @export var round_manager : RoundManager
 @export var money_control : Node
@@ -163,7 +164,7 @@ func update_place_label() -> void:
 	var is_boss := false
 	if round_manager and round_manager.has_method("is_boss_mode"):
 		is_boss = bool(round_manager.is_boss_mode())
-	elif String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
+	elif String(gl_PlayerState.dataset.level_name).to_lower().begins_with("boss"):
 		is_boss = true
 
 	if place_root:
@@ -178,8 +179,18 @@ func update_place_label() -> void:
 			place_label.text = current_place
 	## Boss / HOLD OUT: keep RoundSelector chrome, hide only the round buttons.
 	_apply_round_selector_boss_mode(is_boss)
+	_apply_shop_panel_shadow_for_place()
 	_refresh_background_completion_stamp(false)
 	_refresh_place_challenge_banner()
+
+
+func _apply_shop_panel_shadow_for_place() -> void:
+	var style := SHOP_PANEL_STYLEBOX as StyleBoxFlat
+	if style == null:
+		return
+	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	## Dark ranges: light panel shadow for contrast.
+	style.shadow_size = 1 if (place == "redd" or place == "noir") else 0
 
 
 func _refresh_place_challenge_banner() -> void:
@@ -187,7 +198,7 @@ func _refresh_place_challenge_banner() -> void:
 	var is_boss := false
 	if round_manager and round_manager.has_method("is_boss_mode"):
 		is_boss = bool(round_manager.is_boss_mode())
-	elif String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
+	elif String(gl_PlayerState.dataset.level_name).to_lower().begins_with("boss"):
 		is_boss = true
 
 	if is_boss:
@@ -1198,7 +1209,7 @@ func setup_shop_for_rounds() -> void:
 	var is_boss := false
 	if round_manager and round_manager.has_method("is_boss_mode"):
 		is_boss = bool(round_manager.is_boss_mode())
-	elif String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
+	elif String(gl_PlayerState.dataset.level_name).to_lower().begins_with("boss"):
 		is_boss = true
 	_apply_round_selector_boss_mode(is_boss)
 
@@ -1222,7 +1233,7 @@ func sync_rounds_to_progress(sequence_index: int, total_rounds: int) -> void:
 	var is_boss := false
 	if round_manager and round_manager.has_method("is_boss_mode"):
 		is_boss = bool(round_manager.is_boss_mode())
-	elif String(gl_PlayerState.dataset.level_name).to_lower() == "boss":
+	elif String(gl_PlayerState.dataset.level_name).to_lower().begins_with("boss"):
 		is_boss = true
 	if is_boss:
 		_apply_round_selector_boss_mode(true)

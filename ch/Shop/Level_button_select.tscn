@@ -83,7 +83,7 @@ pressed_sfx = NodePath("purchase")
 
 [node name="MossPreview" type="TextureRect" parent="." unique_id=1029366476]
 visible = false
-modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+show_behind_parent = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.0056523085
@@ -103,6 +103,7 @@ stretch_mode = 5
 metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="MossPreview" unique_id=1029854976]
+visible = false
 modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -119,14 +120,14 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 381.3407
-offset_bottom = 38.659637
+offset_top = 378.5475
+offset_bottom = 35.866425
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ReddPreview" type="TextureRect" parent="." unique_id=421106123]
 visible = false
-modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -142,6 +143,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("3_fnr5o")
 
 [node name="Panel" type="Panel" parent="ReddPreview" unique_id=1310297579]
+visible = false
 modulate = Color(0.40392157, 0.2509804, 0.14509805, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -168,7 +170,7 @@ theme_type_variation = &"TextureRectOverlays"
 
 [node name="NoirPreview" type="TextureRect" parent="." unique_id=663037032]
 visible = false
-modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -184,6 +186,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("4_d0lhs")
 
 [node name="Panel3" type="Panel" parent="NoirPreview" unique_id=754595993]
+visible = false
 modulate = Color(0.16862746, 0.18039216, 0.2, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -214,7 +217,7 @@ theme_type_variation = &"TextureRectOverlays"
 
 [node name="GloryPreview" type="TextureRect" parent="." unique_id=195563274]
 visible = false
-modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -230,6 +233,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("5_d0lhs")
 
 [node name="Panel3" type="Panel" parent="GloryPreview" unique_id=181464901]
+visible = false
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -259,7 +263,7 @@ theme_type_variation = &"TextureRectOverlays"
 
 [node name="JetzPreview" type="TextureRect" parent="." unique_id=1506194856]
 visible = false
-modulate = Color(0.27, 0.27, 0.27, 0.25490198)
+show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -275,6 +279,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("6_vbwgr")
 
 [node name="Panel3" type="Panel" parent="JetzPreview" unique_id=669118224]
+visible = false
 modulate = Color(0.16862746, 0.18039216, 0.2, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -483,6 +488,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_1oogj")
 
 [node name="TextureProgressBar" type="ProgressBar" parent="." unique_id=376036611]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

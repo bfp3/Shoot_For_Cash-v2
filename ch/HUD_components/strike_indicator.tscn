@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="1_6lhy0"]
 [ext_resource type="Script" uid="uid://di5rb4jfu01f" path="res://ch/HUD_components/strike_indicator.gd" id="1_trv68"]
 [ext_resource type="Texture2D" uid="uid://cg2gr8jrwder4" path="res://res/cross_icon.png" id="2_trv68"]
+[ext_resource type="Texture2D" uid="uid://dt7escr207fom" path="res://res/ring256.png" id="4_5hxnl"]
 
 [node name="StrikeIndicator" type="Control" unique_id=337672201]
 layout_mode = 3
@@ -140,7 +141,7 @@ offset_bottom = 126.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("1_6lhy0")
+texture = ExtResource("4_5hxnl")
 
 [node name="BackCircle" type="TextureRect" parent="Control/Circle" unique_id=1584825883]
 unique_name_in_owner = true
@@ -159,11 +160,11 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.003, 1.003)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("1_6lhy0")
+texture = ExtResource("4_5hxnl")
 
 [node name="FrontMostCircle" type="TextureRect" parent="Control/Circle" unique_id=520737568]
 unique_name_in_owner = true
-modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

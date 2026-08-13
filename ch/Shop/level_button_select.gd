@@ -48,10 +48,24 @@ var interaction_tween: Tween
 		if is_node_ready() and not dark_mode:
 			_apply_font_mode()
 
+@export_group("Preview Image")
+## Desaturate preview textures in-engine (no need to reimport gray PNGs).
+@export var preview_grayscale := true:
+	set(value):
+		preview_grayscale = value
+		if is_node_ready():
+			_apply_preview_grayscale()
+@export_range(0.0, 1.0, 0.01) var preview_grayscale_amount := 1.0:
+	set(value):
+		preview_grayscale_amount = value
+		if is_node_ready():
+			_apply_preview_grayscale()
+
 var round_manager : RoundManager = null
 var _dark_level_name_modulate := Color(0.36862746, 0.32941177, 0.29411766, 1)
 var _dark_round_progress_modulate := Color(0.36862746, 0.32941177, 0.29411766, 1)
 var _active_preview: CanvasItem = null
+var _grayscale_shader: Shader = preload("res://ch/Shop/level_preview_grayscale.gdshader")
 
 const _PREVIEW_NODE_NAMES := {
 	"moss": "MossPreview",
@@ -80,12 +94,15 @@ func _ready() -> void:
 		_dark_round_progress_modulate = round_progress_label.modulate
 
 	_apply_level_preview()
+	_apply_preview_grayscale()
 	_apply_font_mode()
 
 	if level_locked:
 		set_locked_visuals()
 	else:
 		refresh_map_progress()
+	## Re-apply after unlock refresh so materials stick on map instances.
+	call_deferred("_apply_preview_grayscale")
 
 	self.pressed.connect(_on_level_button_pressed)
 	round_manager = get_tree().get_first_node_in_group('round_manager')
@@ -149,6 +166,25 @@ func _apply_level_preview() -> void:
 		(child as CanvasItem).visible = show_it
 		if show_it:
 			_active_preview = child as CanvasItem
+
+	_apply_preview_grayscale()
+
+
+func _apply_preview_grayscale() -> void:
+	for child in get_children():
+		if not (child is TextureRect):
+			continue
+		if not String(child.name).ends_with("Preview"):
+			continue
+		var rect := child as TextureRect
+		if not preview_grayscale or preview_grayscale_amount <= 0.0:
+			rect.material = null
+			continue
+		## Always use a unique material instance so parameter edits stick.
+		var mat := ShaderMaterial.new()
+		mat.shader = _grayscale_shader
+		mat.set_shader_parameter("amount", clampf(preview_grayscale_amount, 0.0, 1.0))
+		rect.material = mat
 
 
 func _apply_font_mode() -> void:

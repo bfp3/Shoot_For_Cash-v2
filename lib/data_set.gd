@@ -116,18 +116,18 @@ var dataset_string : Dictionary = {
 	,"shop_challenge_text"		: [
 		"ACCURACY\nfor the WIN", ## moss
 		"", ## redd
-		"", ## glory
+		"No Doubles", ## glory
 		"", ## jetz
 		"Don't Shoot [color=#ff8c00]Oranges[/color]", ## noir
 		"", ## vesper
 		"", ## start
 	]
 	## Runtime special challenge ids per place (parallel to place_name). Empty = none.
-	## Known ids: no_shoot_oranges
+	## Known ids: no_shoot_oranges, no_doubles
 	,"special_challenge"		: [
 		"", ## moss
 		"", ## redd
-		"", ## glory
+		"no_doubles", ## glory
 		"", ## jetz
 		"no_shoot_oranges", ## noir
 		"", ## vesper
@@ -322,7 +322,7 @@ func get_ticket_power_key(place_id: String) -> String:
 	return "power_ticket_%s" % resolve_place_name(place_id)
 
 
-## Special challenge id for a place (e.g. "no_shoot_oranges"). Empty = none.
+## Special challenge id for a place (e.g. "no_shoot_oranges", "no_doubles"). Empty = none.
 func get_special_challenge(place_id: String = "") -> String:
 	if place_id.is_empty():
 		place_id = String(gl_PlayerState.dataset.level_name)
