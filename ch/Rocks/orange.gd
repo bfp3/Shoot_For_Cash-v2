@@ -97,9 +97,16 @@ func start_falling() -> void:
 	start_destroyed_process(false, false)
 
 
-## Called by RoundManager with a stagger between oranges at round end.
 func force_end_of_round_explode() -> void:
-	start_falling()
+	## Round wrap: explode in place without blast cash. Safe to call on every live orange.
+	if current_state == State.HIT:
+		return
+	if not rock_activated:
+		return
+	## Must be clear so destroy / VFX path isn't skipped by a stale flag.
+	rock_destroyed = false
+	is_deactivated = false
+	start_destroyed_process(false, false)
 
 func enter_state(new_state : State) -> void:
 
@@ -160,7 +167,7 @@ func update_active() -> void:
 	#apply_torque_impulse(Vector3.RIGHT * 1000.0)
 	apply_torque_impulse(Vector3.UP * 1000.0)
 	
-	$Pineapple_launch_sound.play()
+	$launch_sound.play()
 	
 	#await get_tree().create_timer(2.0,false).timeout
 	#update_gravity(1.0)
@@ -422,6 +429,7 @@ func start_destroyed_process(expand_blast: bool = true, award_cash: bool = true)
 		return
 		
 	_award_cash_on_hit = award_cash
+	rock_destroyed = true
 	
 	if expand_blast:
 		expand_blast_radius()
@@ -429,7 +437,6 @@ func start_destroyed_process(expand_blast: bool = true, award_cash: bool = true)
 	
 	#$Mesh/Yellow_particles.emitting = true
 	rock_activated = false
-	#rock_destroyed = true
 	freeze = true
 	enter_state(State.HIT)
 	
@@ -657,19 +664,8 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 
 	
 	if body is RockInstance:
-		if body.rock_type == body.RockSize.HAZARD:
-			#body.rock_type_name= 'rock_type_1'
-			#body.rock_type = body.RockSize.SMALL
-			body.cash_value = 2
-			body.ignores_x_out_of_bounds = true
-			#var strength : float = [2.0,3.0].pick_random()
-			var impulse_dir = fly_away_from_player()
-			body.apply_central_impulse(impulse_dir)
-			#body.apply_central_impulse(global_position - body.global_position * -4.0)
-			#body.apply_central_impulse(body.global_position - global_position * -strength)
-			#return
-			await get_tree().create_timer(randf_range(1.6, 2.0), false).timeout
-			body.start_destroyed_process()
+		if body.rock_type == body.RockSize.HAZARD or body.rock_type == body.RockSize.HAZARD_SMALL:
+			_neutralize_black_rock_from_orange(body)
 			return
 
 		# Pineapples / non-basic rocks: no staggered chain — keep existing short delay.
@@ -691,6 +687,31 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		#body.hit_by_player(100, Vector2.ZERO)
 		
 		
+func _neutralize_black_rock_from_orange(body: RockInstance) -> void:
+	## Orange hit a black rock: never award a strike. Two modes via RoundManager flag.
+	body._orange_neutralized_hazard = true
+	body.cash_value = 2
+	body.ignores_x_out_of_bounds = true
+
+	var instant := false
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm != null:
+		instant = bool(rm.get("orange_black_rock_instant_explode"))
+
+	if instant:
+		## Explode in place for $2 — no fly-off, no hazard fail particles.
+		if is_instance_valid(body):
+			body.start_destroyed_process()
+		return
+
+	## Blow away, then explode in the distance (still no strike / no fail particles).
+	var impulse_dir = fly_away_from_player()
+	body.apply_central_impulse(impulse_dir)
+	await get_tree().create_timer(randf_range(1.6, 2.0), false).timeout
+	if is_instance_valid(body):
+		body.start_destroyed_process()
+
+
 func fly_away_from_player() -> Vector3:
 	var strength : float = [4.0].pick_random()
 	

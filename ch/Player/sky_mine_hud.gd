@@ -4,11 +4,6 @@ var tween_blinking : Tween = null
 var active := false
 @onready var texture: TextureRect = $Texture
 
-func _ready() -> void:
-	EventBus.instance.purchase_made.connect(update)
-	
-func update(_string : String) -> void:
-		%SkyMineLabel.text = str(gl_PlayerState.dataset.power_sky_mine)
 
 func start() -> void:
 	show()
@@ -45,9 +40,7 @@ func fade_modulate_tween() -> void:
 	hide()
 	
 func stop() -> void:
-	%SkyMineLabel.text = str(gl_PlayerState.dataset.power_sky_mine)
-	if gl_PlayerState.dataset.power_sky_mine > 0:
-		return
+
 	active = false
 	#show()
 	#%SkyMineLabel.show()

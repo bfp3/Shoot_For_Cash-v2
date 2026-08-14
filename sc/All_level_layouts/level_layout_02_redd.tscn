@@ -1,7 +1,6 @@
 [gd_scene format=4 uid="uid://bbpjw4jqdvt5g"]
 
 [ext_resource type="PackedScene" uid="uid://c3mxy8tvyd34a" path="res://unfiled/Blender_custom_assets/brick_fountain_2.glb" id="4_cuk85"]
-[ext_resource type="Shader" uid="uid://bmrn11o7r2l76" path="res://res/Shaders/water.gdshader" id="5_08twk"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="6_h8207"]
 [ext_resource type="Material" uid="uid://wjavjdaqqsvj" path="res://res/UI_brown_mat.tres" id="7_1u8u4"]
 [ext_resource type="Texture2D" uid="uid://b830br7pig61j" path="res://res/Kenney_prototype_textures/Dark/texture_08.png" id="8_ku1sk"]
@@ -534,46 +533,6 @@ size = Vector3(28, 1, 39)
 [sub_resource type="BoxShape3D" id="BoxShape3D_3vvr1"]
 size = Vector3(27, 1, 39)
 
-[sub_resource type="BoxMesh" id="BoxMesh_sgswd"]
-size = Vector3(1, 14, 31)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_2y37d"]
-top_radius = 4.0
-bottom_radius = 4.0
-height = 1.0
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_0l7iu"]
-noise_type = 3
-fractal_type = 2
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_08twk"]
-noise = SubResource("FastNoiseLite_0l7iu")
-seamless = true
-as_normal_map = true
-bump_strength = 1.5
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_pstrt"]
-noise_type = 3
-fractal_type = 2
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h8207"]
-noise = SubResource("FastNoiseLite_pstrt")
-seamless = true
-as_normal_map = true
-bump_strength = 1.5
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_45qhx"]
-render_priority = 0
-shader = ExtResource("5_08twk")
-shader_parameter/albedo = Color(0, 0.2175, 0.29, 1)
-shader_parameter/metallic = 1.0
-shader_parameter/roughness = 0.5
-shader_parameter/texture_normal = SubResource("NoiseTexture2D_08twk")
-shader_parameter/texture_normal2 = SubResource("NoiseTexture2D_h8207")
-shader_parameter/wave_direction = Vector2(0.5, 0)
-shader_parameter/wave_direction2 = Vector2(0, 1)
-shader_parameter/time_scale = 0.005
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_otgop"]
 resource_name = "Material"
 cull_mode = 2
@@ -619,43 +578,6 @@ text = "Good habits
 stinky"
 font_size = 14
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_3msr0"]
-top_radius = 4.0
-bottom_radius = 4.0
-height = 1.0
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_rvqpm"]
-noise_type = 3
-fractal_type = 2
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gooii"]
-noise = SubResource("FastNoiseLite_rvqpm")
-seamless = true
-as_normal_map = true
-bump_strength = 1.5
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_n1dh2"]
-noise_type = 3
-fractal_type = 2
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mqp0g"]
-noise = SubResource("FastNoiseLite_n1dh2")
-seamless = true
-as_normal_map = true
-bump_strength = 1.5
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_mj5ye"]
-render_priority = 0
-shader = ExtResource("5_08twk")
-shader_parameter/albedo = Color(0, 0.75, 1, 1)
-shader_parameter/metallic = 0.0
-shader_parameter/roughness = 0.02
-shader_parameter/texture_normal = SubResource("NoiseTexture2D_gooii")
-shader_parameter/texture_normal2 = SubResource("NoiseTexture2D_mqp0g")
-shader_parameter/wave_direction = Vector2(0.5, 0)
-shader_parameter/wave_direction2 = Vector2(0, 1)
-shader_parameter/time_scale = 0.005
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_rvqpm"]
 size = Vector2(150, 330)
 subdivide_width = 24
@@ -673,15 +595,14 @@ shadow_enabled = true
 directional_shadow_max_distance = 25.0
 
 [node name="Egg" parent="." unique_id=2127545510 instance=ExtResource("9_2gv54")]
-transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -11.014841, 0.811255, 20.154352)
-visible = false
+transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, 10.036, 0.811, 20.099)
 
 [node name="Boatmesh" type="Node3D" parent="." unique_id=2030877919]
 
 [node name="brick_fountain_2" parent="Boatmesh" unique_id=2052265067 instance=ExtResource("4_cuk85")]
 transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, 4.73, -2.505, 11.775)
 
-[node name="Cube_001" parent="Boatmesh/brick_fountain_2" index="0" unique_id=1174922097]
+[node name="Cube_001" parent="Boatmesh/brick_fountain_2" index="0" unique_id=1800679336]
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 mesh = SubResource("ArrayMesh_ogtj0")
@@ -871,35 +792,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.345, 0)
 shape = SubResource("BoxShape3D_3vvr1")
 debug_color = Color(1, 0, 0.016666412, 1)
 
-[node name="Wall" type="MeshInstance3D" parent="Boatmesh" unique_id=426395273]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, -7, 5.2)
-material_override = ExtResource("6_h8207")
-mesh = SubResource("BoxMesh_sgswd")
-skeleton = NodePath("")
-
-[node name="Wall2" type="MeshInstance3D" parent="Boatmesh" unique_id=1930548052]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.7, -8.545, 4)
-material_override = ExtResource("6_h8207")
-mesh = SubResource("BoxMesh_sgswd")
-skeleton = NodePath("")
-
-[node name="Pool_of_water2" type="Node3D" parent="Boatmesh" unique_id=456748934]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.65000063, -4.225, -6.7)
-
-[node name="WaterMesh2" type="MeshInstance3D" parent="Boatmesh/Pool_of_water2" unique_id=1103696874]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17, 0)
-layers = 131073
-mesh = SubResource("CylinderMesh_2y37d")
-surface_material_override/0 = SubResource("ShaderMaterial_45qhx")
-
-[node name="brick_fountain_3" parent="Boatmesh" unique_id=142482850 instance=ExtResource("4_cuk85")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.70000064, -2.505, -6.675)
-
-[node name="Cube_001" parent="Boatmesh/brick_fountain_3" index="0" unique_id=1174922097]
-transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
-material_override = SubResource("StandardMaterial3D_qt5sv")
-mesh = SubResource("ArrayMesh_ogtj0")
-
 [node name="Map" type="Node3D" parent="." unique_id=1641481069]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.875, 255)
 
@@ -938,16 +830,8 @@ material_override = ExtResource("6_h8207")
 mesh = SubResource("ArrayMesh_mhcn0")
 skeleton = NodePath("")
 
-[node name="tallBaseContainer" type="Node3D" parent="." unique_id=781075094]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -1.3000001, 0)
-
-[node name="T_Pileon3" parent="tallBaseContainer" unique_id=27188474 instance=ExtResource("20_56nw2")]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -15.757999, 0.26, 19.949999)
-visible = false
-
-[node name="T_Pileon6" parent="tallBaseContainer" unique_id=119070699 instance=ExtResource("20_56nw2")]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 3.617, 2.46, 19.02)
+[node name="T_Pileon" parent="." unique_id=119070699 instance=ExtResource("20_56nw2")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 8.617001, 1.16, 19.02)
 
 [node name="Quotes" type="MeshInstance3D" parent="." unique_id=158341983]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.6, -2.075928, 11.2873335)
@@ -956,17 +840,8 @@ skeleton = NodePath("")
 script = ExtResource("23_08twk")
 wall_quote_index = "wall_quote_redd"
 
-[node name="Pool_of_water3" type="Node3D" parent="." unique_id=1002944446]
-transform = Transform3D(8.36, 0, 0, 0, 9.315, 0, 0, 0, 9.315, -6.27, -20.905, 67.616)
-
-[node name="WaterMesh2" type="MeshInstance3D" parent="Pool_of_water3" unique_id=456113451]
-transform = Transform3D(2.03, 0, 0, 0, 1.199, 0, 0, 0, 2.03, 2.14, 1.103, 5.155)
-layers = 131073
-mesh = SubResource("CylinderMesh_3msr0")
-surface_material_override/0 = SubResource("ShaderMaterial_mj5ye")
-
 [node name="SimpleWater" type="Node3D" parent="." unique_id=110315488]
-transform = Transform3D(1, 0, 0, 0, 0.99999845, -0.0017453283, 0, 0.0017453283, 0.99999845, 3.36, -4.946, 182.81036)
+transform = Transform3D(2.025, 0, 0, 0, 0.98999846, -0.0017278751, 0, 0.0017278751, 0.98999846, 3.36, -5.111, 182.81)
 script = ExtResource("10_rvqpm")
 water_size = Vector2(150, 330)
 subdivide = 24
@@ -977,4 +852,3 @@ material_override = ExtResource("11_n1dh2")
 mesh = SubResource("PlaneMesh_rvqpm")
 
 [editable path="Boatmesh/brick_fountain_2"]
-[editable path="Boatmesh/brick_fountain_3"]

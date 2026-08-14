@@ -286,6 +286,7 @@ main_game_canvas = NodePath("MainGameCanvasLayer")
 
 [node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("player", "scene_transition_screen", "shop_main_menu", "round_timer", "place_name", "rocks_container", "music_manager", "birds", "balloon_container", "blue_balloon", "bonus_target_manager", "level_layout", "wave_progress_indication", "wave_progress_feedback") groups=["restartable", "round_manager"]]
 script = ExtResource("2_wtxnc")
+orange_black_rock_instant_explode = true
 player = NodePath("../Player")
 scene_transition_screen = NodePath("../Background_transition")
 shop_main_menu = NodePath("../MainGameCanvasLayer/Shop_Main_Menu")
@@ -343,20 +344,8 @@ volume_db = -23.0
 [node name="NightNoises" type="AudioStreamPlayer" parent="Music" unique_id=1949811683]
 volume_db = -54.0
 
-[node name="Oasis" type="AudioStreamPlayer" parent="Music" unique_id=230623079]
-volume_db = -30.0
-bus = &"MusicBus"
-
-[node name="YokoKanno" type="AudioStreamPlayer" parent="Music" unique_id=1383563011]
-volume_db = -40.0
-bus = &"MusicBus"
-
 [node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
 volume_db = -35.0
-bus = &"MusicBus"
-
-[node name="EndingSong" type="AudioStreamPlayer" parent="Music" unique_id=468679081]
-volume_db = -20.0
 bus = &"MusicBus"
 
 [node name="PerfectPineappleRound" type="AudioStreamPlayer" parent="Music" unique_id=1838793762]
@@ -364,10 +353,6 @@ unique_name_in_owner = true
 stream = ExtResource("17_lysu5")
 volume_db = -30.0
 pitch_scale = 0.9
-
-[node name="Randomiser" type="AudioStreamPlayer" parent="Music" unique_id=1748658751]
-volume_db = -45.0
-bus = &"MusicBus"
 
 [node name="Shop_Music" type="AudioStreamPlayer" parent="Music" unique_id=800541780]
 volume_db = -20.0
@@ -424,6 +409,7 @@ telegraph_blink_color = Color(1.8247963, 1.2783784, 0.39935833, 1)
 telegraph_blink_on_sec = 0.2
 telegraph_sfx_volume_db = -30.0
 path_telegraph_enabled = false
+aim_launch_gravity_scale = 1.0
 oob_miss_shake_amount = 0.5
 
 [node name="DebugVisualiser" type="Node3D" parent="Rocks" unique_id=1321570169]
@@ -1585,7 +1571,6 @@ script = ExtResource("71_3ga0b")
 round_manager = NodePath("../Round_manager")
 patrol_seconds_per_leg = 6.0
 
-[connection signal="finished" from="Music/Randomiser" to="Music" method="_on_randomiser_finished"]
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="MainGameCanvasLayer/QuitMenu" method="_on_cancel_menu_pressed"]

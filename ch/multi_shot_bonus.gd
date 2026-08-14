@@ -93,7 +93,8 @@ func check_if_within_zone(pos : float) -> int:
 
 func start_oranges(multiplier : int, _pos : Vector3) -> void:
 	var orange_container := get_tree().get_first_node_in_group('orange_container')
-	for i in range(multiplier - 1):
-		
-		orange_container.launch_orange(_pos)
-		await get_tree().create_timer(0.5).timeout
+	orange_container.launch_orange(_pos)
+	#for i in range(multiplier - 1):
+		#
+		#orange_container.launch_orange(_pos)
+		#await get_tree().create_timer(0.5).timeout

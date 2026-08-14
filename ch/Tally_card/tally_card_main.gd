@@ -133,16 +133,21 @@ func start_fail_sequence() -> void:
 
 	if gl_PlayerState.dataset.fines < 0:
 		fail_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
-	bonuses_label.text = 'Fines'
-	bonuses_cash_label.modulate.a = 0.0
+	## Keep / show cash earned during the failed round (banked in update_tally_end).
+	var earned := int(gl_PlayerState.dataset.bonus_cash)
+	var fines := int(gl_PlayerState.dataset.fines)
+	bonuses_label.text = 'BONUSES'
+	bonuses_cash_label.modulate.a = 1.0
+	bonuses_cash_label.show()
+	bonuses_cash_label.text = "$" + str(earned)
 	grand_total_cash_label.show()
 	grand_total_label.text = ""
 	fail_label.show()
-	if abs(gl_PlayerState.dataset.fines) > 0:
-		grand_total_cash_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
-		
+	var net := earned + fines ## fines are negative
+	if net < 0:
+		grand_total_cash_label.text = "-$" + str(abs(net))
 	else:
-		grand_total_cash_label.text = "$0"
+		grand_total_cash_label.text = "$" + str(net)
 		
 	bonuses_label.show()
 

@@ -214,43 +214,6 @@ func apply_weapon_style(use_alt: bool, color: Color, _size_scale: float = 1.0, _
 	for line in [up, down, left, right]:
 		line.default_color = color
 
-func _on_shop_entered() -> void:
-	if gl_PlayerState.dataset.power_gun == 0:
-		return
-		
-	await get_tree().create_timer(0.85).timeout
-
-	orig_pos = global_position
-	%Large_outer_scope.hide()
-	$Panel.show()
-
-	var target_pos: Vector2
-	if gl_PlayerState.dataset.power_target_circle > 4:
-		target_pos = Vector2(1605.0, 212.0)
-		$Panel.hide()
-	else:
-		target_pos = Vector2(1525.0, 212.0)
-
-	global_position = target_pos + Vector2(0, 20) # start slightly lower
-
-
-	modulate.a = 0.0
-	$Inner_scope.modulate.a = 0.0
-
-	var tween = create_tween()
-	tween.set_trans(Tween.TRANS_SINE)
-	tween.set_ease(Tween.EASE_OUT)
-
-	tween.parallel().tween_property(self, "global_position", target_pos, 0.4)
-	tween.parallel().tween_property(self, "modulate:a", 1.0, 0.4)
-	tween.parallel().tween_property($Inner_scope, "modulate:a", 1.0, 0.4)
-	
-func _on_shop_finished() -> void:
-	modulate = Color.TRANSPARENT
-	$Inner_scope.modulate = Color('ffffff42')
-	global_position = orig_pos
-	%Large_outer_scope.show()
-	$Panel.hide()
 
 func _fade_out() -> void:
 	var tween = create_tween()
@@ -259,8 +222,6 @@ func _fade_out() -> void:
 
 
 func crosshair_shake() -> void:
-
-
 	crosshair_inner_tween()
 	crosshair_shooting_something()
 	#outer_crosshair_rotation_tween()
@@ -376,7 +337,7 @@ func crosshair_shooting_something() -> void:
 
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(self, "modulate", Color.ORANGE ,0.1)
-	tween.tween_property(self, "modulate", Color.WHITE, 0.1)
+	tween.tween_property(self, "modulate", Color.WHITE, 0.3)
 
 func crosshair_nothing_to_shoot() -> void:
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
@@ -403,27 +364,10 @@ func out_of_ammo_hide() -> void:
 
 	
 func crosshair_fade_out_mode() -> void:
-	
-	#var outer_scope : Control = %Large_outer_scope
-	#var inner_scope : Control = %Inner_scope
-	var round_end_label : Label = $OutOfTimeLabel
-	
-	round_end_label.modulate = Color.TRANSPARENT
-	round_end_label.show()
-	
+
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(self, "modulate", Color('ffffff00'),0.25)
-	#tween.tween_property(round_end_label, "modulate", Color('ffffff23'),0.25)
-	#tween.tween_property(outer_scope, "modulate", Color('FFFFFF00'),0.25)
-	#tween.parallel().tween_property(inner_scope, "modulate", Color('FFFFFF00'),0.25)
 	await tween.finished
-	
-	
-	#var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
-	#tween.tween_property(self, "modulate", Color('FFFFFF00'),0.25)
-	#await tween.finished
-
-
 
 func duplicate_inner_scope() -> void:
 	var original: Control = $Inner_scope

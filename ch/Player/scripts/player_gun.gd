@@ -3,8 +3,6 @@ extends Node3D
 @onready var sparks_01: GPUParticles3D = %gunEmbers
 
 @onready var gun: Node3D = $mockGun
-@onready var gun_2: Node3D = $mockGun2
-@onready var gun_3: Node3D = $mockGun3
 @onready var gun_alt: Node3D = get_node_or_null("mockGunAlt")
 
 @export var gun_recoil := 0.2
@@ -23,7 +21,7 @@ var using_alt_weapon := false
 
 func _ready() -> void:
 	end_position()
-	guns = [$mockGun, gun_2, gun_3]
+	guns = [$mockGun]
 	for i in guns:
 		i.hide()
 	if gun_alt:
@@ -67,11 +65,6 @@ func get_active_gun() -> Node3D:
 func get_barrel_position(pos_x : float = 0.0) -> Transform3D:
 	if using_alt_weapon and gun_alt:
 		current_gun = gun_alt
-	elif amount_of_guns > 1:
-		if pos_x > 0:
-			current_gun = gun_3
-		else:
-			current_gun = gun_2
 
 	var barrel_pos : Marker3D = current_gun.get_node("bullet_marker_pos")
 

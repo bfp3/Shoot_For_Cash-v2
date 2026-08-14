@@ -6,7 +6,7 @@ var dataset_float : Dictionary = {
 
 	"power_bonus_round_pineapples" 	: [0, 1]
 	,"power_max_ammo"				: [99]
-	,"ammo_pack_size"				: [12]
+	,"ammo_pack_size"				: [52]
 	,"power_auto_fire" 					: [0, 1]
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -78,7 +78,7 @@ var dataset_float : Dictionary = {
 	,"balloon_orange"		: [-30,		1]
 	,"hazard_type_1"		: [-10,	1]
 	
-	,"rock_type_1"			: [0,		1]
+	,"rock_type_1"			: [2,		1]
 	,"rock_type_2"			: [0,		3]
 	,"rock_type_3"			: [20,		15]
 	,"rock_type_4"			: [120,		30]

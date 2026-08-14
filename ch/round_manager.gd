@@ -103,6 +103,9 @@ var _travel_progress_display := 0.0
 ## While waiting on load, keep the bar crawling so hitch frames hurt less.
 @export var travel_progress_crawl_per_sec := 35.0
 @export var travel_progress_crawl_ceiling := 88.0
+## false = orange blows black rocks away then they explode (no strike).
+## true = orange instantly explodes black rocks for $2 (no fly-off, no fail particles).
+@export var orange_black_rock_instant_explode := false
 ## After shop MapButton → start + map, closing the map should reopen the shop.
 var _reopen_shop_after_map := false
 
@@ -448,13 +451,8 @@ func finish_level_editor_test_round() -> void:
 		rocks_container.reset_all_rocks()
 
 	# Explode any oranges still in play so they don't carry into the next test.
-	if orange_active > 0:
-		await explode_active_oranges_staggered()
-		var orange_wait := 0.0
-		while orange_active > 0 and orange_wait < 3.0:
-			await get_tree().process_frame
-			orange_wait += get_process_delta_time()
-		orange_active = 0
+	await _await_post_win_orange_settle()
+	await explode_active_oranges_staggered()
 	EventBus.instance.oranges_start_falling.emit()
 
 	await get_tree().create_timer(0.2, false).timeout
@@ -643,8 +641,37 @@ func bonus_oranges() -> void:
 	bonus_oranges_ready = true
 
 
-## Explode every still-active orange with 0.1s between each (end of round).
-func explode_active_oranges_staggered() -> void:
+## Brief pause after a win so a last-shot double can finish spawning its orange
+## before we explode leftovers / open the tally.
+@export var post_win_orange_settle_sec := 0.4
+## Delay between each end-of-round orange explode kickoff.
+@export var orange_end_explode_stagger_sec := 0.15
+
+
+## Wait until orange_active stops climbing (late multi-shot spawns) or timeout.
+func _await_post_win_orange_settle() -> void:
+	var settle_budget := maxf(post_win_orange_settle_sec, 0.15)
+	var elapsed := 0.0
+	var last_count := orange_active
+	var stable := 0.0
+	## Always give at least a couple frames for deferred launch_orange calls.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	while elapsed < settle_budget:
+		await get_tree().process_frame
+		var dt := get_process_delta_time()
+		elapsed += dt
+		if orange_active != last_count:
+			last_count = orange_active
+			stable = 0.0
+		else:
+			stable += dt
+		## Count stable briefly after a minimum wait → safe to explode.
+		if elapsed >= 0.2 and stable >= 0.12:
+			break
+
+
+func _collect_active_oranges() -> Array:
 	var oranges: Array = []
 	for container in get_tree().get_nodes_in_group("orange_container"):
 		if not is_instance_valid(container):
@@ -652,14 +679,44 @@ func explode_active_oranges_staggered() -> void:
 		for child in container.get_children():
 			if not is_instance_valid(child):
 				continue
-			if child.has_method("force_end_of_round_explode") and bool(child.get("rock_activated")):
+			if not child.has_method("force_end_of_round_explode"):
+				continue
+			if bool(child.get("rock_activated")):
 				oranges.append(child)
+	return oranges
+
+
+## Explode every still-active orange with a stagger between each (end of round).
+## Does not wait for full VFX — only staggers the kickoff so each one actually starts.
+func explode_active_oranges_staggered() -> void:
+	var oranges := _collect_active_oranges()
+	## If a spawn landed mid-collect, grab again once.
+	if oranges.size() < orange_active:
+		await get_tree().process_frame
+		oranges = _collect_active_oranges()
+
+	var stagger := maxf(orange_end_explode_stagger_sec, 0.05)
 	for i in oranges.size():
-		if i > 0:
-			await get_tree().create_timer(0.1, false).timeout
 		var orange = oranges[i]
+		if is_instance_valid(orange) and bool(orange.get("rock_activated")):
+			orange.force_end_of_round_explode()
+			## Let the destroy coroutine pass its first frame (mesh/VFX start).
+			await get_tree().process_frame
+		if i < oranges.size() - 1:
+			await get_tree().create_timer(stagger, false).timeout
+
+	## Any stragglers that activated during the stagger (rare) — kick once more.
+	var leftovers := _collect_active_oranges()
+	for i in leftovers.size():
+		var orange = leftovers[i]
 		if is_instance_valid(orange):
 			orange.force_end_of_round_explode()
+			await get_tree().process_frame
+		if i < leftovers.size() - 1:
+			await get_tree().create_timer(stagger, false).timeout
+
+	## Round wrap no longer waits for orange VFX to finish.
+	orange_active = 0
 
 	
 func check_round_for_strikes() -> void:
@@ -1410,6 +1467,8 @@ func update_round_end() -> void:
 		player_can_progress = true
 	
 	
+	## Fire remaining oranges; settle first so a last-shot double's orange is included.
+	await _await_post_win_orange_settle()
 	await explode_active_oranges_staggered()
 	EventBus.instance.oranges_start_falling.emit()
 	await get_tree().create_timer(1.0, false).timeout
@@ -1422,15 +1481,7 @@ func update_round_end() -> void:
 		
 	while bonus_oranges_ready:
 		await get_tree().process_frame
-	
-	
-	
-	var orange_wait := 0.0
-	while orange_active > 0 and success and orange_wait < 5.0:
-		await get_tree().process_frame
-		orange_wait += get_process_delta_time()
-	
-		
+
 	orange_active = 0
 		
 	if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
@@ -1493,9 +1544,8 @@ func update_tally_start() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func update_tally_end() -> void:
-	## Endless (Jetz): keep bonus cash even after strikeout.
-	if not player_failed or is_endless_mode():
-		gl_PlayerState.add_cash(gl_PlayerState.dataset.bonus_cash)
+	## Keep money earned during the round even after a 3-strike fail.
+	gl_PlayerState.add_cash(gl_PlayerState.dataset.bonus_cash)
 	
 	check_prompts()
 	
@@ -1727,7 +1777,8 @@ func _request_layout_load(path: String) -> void:
 	if _layout_load_requested.get(path, false):
 		return
 	_layout_load_requested[path] = true
-	var err := ResourceLoader.load_threaded_request(path, "PackedScene", true)
+	## use_sub_threads=false: true races/crashes on mobile (Godot 4.6).
+	var err := ResourceLoader.load_threaded_request(path, "PackedScene", false)
 	if err != OK:
 		# Fall back to sync path later via _get_cached_layout.
 		_layout_load_requested[path] = false
@@ -2000,9 +2051,9 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 		if scene_transition_screen.has_method('set_destination_place'):
 			scene_transition_screen.set_destination_place(level_id)
 		scene_transition_screen.next_level_start()
-		await get_tree().create_timer(1.0, false).timeout
-		if coming_from_start:
-			await get_tree().create_timer(1.0, false).timeout
+		#await get_tree().create_timer(1.0, false).timeout
+		#if coming_from_start:
+			#await get_tree().create_timer(1.0, false).timeout
 
 	# Replace level layout under the fade / map.
 	if level_layout.get_child_count() > 0:
@@ -2033,8 +2084,8 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	await get_tree().process_frame
 	_set_travel_progress(0.93)
 
-	if use_transition_overlay:
-		await get_tree().create_timer(1.0, false).timeout
+	#if use_transition_overlay:
+		#await get_tree().create_timer(1.0, false).timeout
 
 	load_level_sequence()
 	_restore_level_progress(level_id)
@@ -2054,12 +2105,8 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	find_egg()
 	_set_travel_progress(0.95)
 
-	if use_transition_overlay:
-		scene_transition_screen.next_level_finish()
-		place_name.update_place_name()
-		await get_tree().create_timer(1.0, false).timeout
-	else:
-		place_name.update_place_name()
+
+	place_name.update_place_name()
 
 	if coming_from_start:
 		var player_balloon := get_node_or_null('../PlayerBalloon')
@@ -2067,8 +2114,8 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 			player_balloon.add_balloon()
 		gl_PlayerState.dataset.tickets += 1
 		shop_main_menu.update_next_ticket()
-		if use_transition_overlay:
-			await get_tree().create_timer(3.0, false).timeout
+		#if use_transition_overlay:
+			#await get_tree().create_timer(3.0, false).timeout
 
 	_set_travel_progress(1.0)
 	transitioning_worlds = false
@@ -2149,11 +2196,7 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	gl_PlayerState.dataset.level_name = boss_range
 	_set_travel_progress(0.08)
 
-	if use_transition_overlay:
-		if scene_transition_screen.has_method("set_destination_place"):
-			scene_transition_screen.set_destination_place(boss_range)
-		scene_transition_screen.next_level_start()
-		await get_tree().create_timer(1.0, false).timeout
+
 
 	if level_layout.get_child_count() > 0:
 		for child in level_layout.get_children():

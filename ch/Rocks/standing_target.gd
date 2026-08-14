@@ -649,9 +649,25 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 	
 	if body is RockInstance:
 		if body.rock_type == body.RockSize.HAZARD:
-			body.rock_type_name= 'rock_type_1'
-			body.rock_type = body.RockSize.SMALL
+			body._orange_neutralized_hazard = true
 			body.cash_value = 2
+			body.ignores_x_out_of_bounds = true
+
+			var instant := false
+			var rm := get_tree().get_first_node_in_group("round_manager")
+			if rm != null:
+				instant = bool(rm.get("orange_black_rock_instant_explode"))
+
+			if instant:
+				body.start_destroyed_process()
+				return
+
+			var strength : float = [2.0,3.0].pick_random()
+			body.apply_central_impulse(body.global_position - global_position * -strength)
+			await get_tree().create_timer(randf_range(1.2, 2.0)).timeout
+			if is_instance_valid(body):
+				body.start_destroyed_process()
+			return
 
 		# Blasted into the distance — don't count side-rail X as a miss.
 		body.ignores_x_out_of_bounds = true

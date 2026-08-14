@@ -180,10 +180,7 @@ func _ready() -> void:
 	_init_ammo()
 	
 	#%Bullet_icon.hide()
-	%Auto_fire.hide()
-	$CanvasLayer/HUD_bottom_corner/TotalRocks.hide()
-	$CanvasLayer/HUD_bottom_corner/PineappleRound.hide()
-	$CanvasLayer/HUD_bottom_corner/SkyMine.hide()
+
 	EventBus.instance.egg_pulsed.connect(pulse_shake_camera)
 	start_rotation = rotation_degrees
 	_setup_mobile_pause_button()
@@ -580,7 +577,7 @@ func update_player_stats() -> void:
 
 	#power_gun_fire_rate = 0.05
 	#power_bullet_speed = 0.01
-	#power_target_circle = 60.0
+
 	
 	if player_gun and player_gun.has_method("set_weapon_slot"):
 		player_gun.set_weapon_slot(using_alt_weapon)
@@ -742,6 +739,7 @@ func handle_scope_adjust(delta: float) -> void:
 ## Keep Player + Weapon_shooting in sync. Bullets read weapon_shooting.power_bullet_speed.
 func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
 	power_bullet_speed = bullet_speed
+	bullet_speed = 0.25
 	power_gun_fire_rate = fire_rate
 	if weapon_shooting:
 		weapon_shooting.power_bullet_speed = bullet_speed

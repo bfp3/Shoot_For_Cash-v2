@@ -76,7 +76,7 @@ var rock_has_been_logged := false
 
 @onready var medium_rock: MeshInstance3D = %medium_rock
 @onready var large_rock: MeshInstance3D = %Large_rock
-@onready var huge_rock: MeshInstance3D = %Huge_rock
+
 @onready var red_rock: MeshInstance3D = %Red_rock
 @onready var blue_rock: MeshInstance3D = %blue_rock
 @onready var smokecan: MeshInstance3D = %Smokecan
@@ -128,6 +128,9 @@ var _airborne_collision_token := 0
 @export_group("Hazard / Black Rock")
 ## When true, destroying a black hazard that releases smoke blurs the player camera.
 @export var hazard_smoke_blurs_camera := true
+## Set when an orange neutralized this black rock (blow-away or instant explode).
+## Prevents strikes and hazard fail particles on the follow-up destroy.
+var _orange_neutralized_hazard := false
 
 # --- Rock Avoider (rock-avoider) ---------------------------------------------
 @export_group("Rock Avoider")
@@ -196,7 +199,7 @@ func _ready() -> void:
 	if not body_entered.is_connected(_on_rock_body_entered):
 		body_entered.connect(_on_rock_body_entered)
 	
-	await get_tree().create_timer(0.2).timeout
+	await get_tree().create_timer(0.2, false).timeout
 	
 	#EventBus.instance.all_rocks_destroyed.connect(hazard_disappear)
 	enter_state(State.INACTIVE)
@@ -280,7 +283,7 @@ func update_prepare_rock() -> void:
 	):
 		gl_PlayerState.log_rocks(1, rock_type_name)
 		
-	await get_tree().create_timer(0.2).timeout
+	await get_tree().create_timer(0.2, false).timeout
 	global_position.x = target_x_position
 	
 func update_active() -> void:
@@ -290,15 +293,16 @@ func update_active() -> void:
 	if  rock_type == RockSize.SMOKECAN:
 		constant_force.x = 0.5
 	elif rock_type == RockSize.AVOIDER:
-		constant_force.x = 0.0
+		constant_force.x = 1.5
 		rotation_degrees = Vector3.ZERO
 	elif rock_type == RockSize.CHASER:
-		constant_force.x = 0.0
+		constant_force.x = 1.5
 		rotation_degrees = Vector3.ZERO
 	else:
 		constant_force.x = 0.01
 		rotation_degrees = Vector3.ZERO
-	
+		apply_torque_impulse(Vector3.LEFT * 1500)
+		
 	enable_collision()
 	add_to_rocks_round()
 	if rock_type == RockSize.AVOIDER:
@@ -321,7 +325,7 @@ func update_hit() -> void:
 	update_gravity(1.0)
 	#linear_velocity = Vector3.ZERO
 	gravity_scale = 0.0
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	disable_collision()
 	
 
@@ -432,10 +436,10 @@ func update_gravity(_gravity_scale : float) -> void:
 		#gravity_scale = _gravity_scale
 		gravity_scale = 0.15
 		#linear_damp = 0.0
-		await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.1, false).timeout
 	
 	if rock_activated:
-		await get_tree().create_timer(1.5).timeout
+		await get_tree().create_timer(1.5, false).timeout
 		linear_damp = 0.0
 
 func hide_all_meshes() -> void:
@@ -443,7 +447,7 @@ func hide_all_meshes() -> void:
 	clay_pigeon.visible			= false
 	medium_rock.visible 		= false
 	large_rock.visible 			= false
-	huge_rock.visible 			= false
+
 	hazard_large.visible 		= false
 	red_rock.visible			= false
 	if blue_rock:
@@ -501,7 +505,7 @@ func setup_rock_type() -> void:
 			current_particles.amount += 1
 			current_particles.amount -= 1
 			current_particles.emitting = true
-			#%TrailParticles.emitting = true
+
 		
 		
 		RockSize.SMALL_2:
@@ -528,7 +532,7 @@ func setup_rock_type() -> void:
 			current_particles.amount += 1
 			current_particles.amount -= 1
 			current_particles.emitting = true
-			#%TrailParticles.emitting = true
+	
 		
 		# Rock Type 4
 		RockSize.HAZARD:
@@ -548,23 +552,6 @@ func setup_rock_type() -> void:
 			current_mesh.scale  = Vector3.ONE * 0.625
 			max_health = health
 			rock_type_gravity_scale = 0.1
-
-
-
-		
-		RockSize.HUGE:
-			current_rock_type 	= "Red Rock"
-			rock_type_name 		= "rock_type_4"
-			health 				= int(gl_DataSet.get_value("rock_type_4", 1))
-			cash_value 			= int(gl_DataSet.get_value("rock_type_4", 0))
-			huge_rock.visible 	= true
-			main_col.scale 		= Vector3.ONE * 0.3
-			current_mesh 		= huge_rock
-			assign_random_mesh(current_mesh)
-			current_mesh.scale  = Vector3.ONE * 0.7
-			max_health = health
-			rock_type_gravity_scale = 0.8
-
 
 			
 		RockSize.HAZARD_SMALL:
@@ -703,6 +690,7 @@ func setup_rock_type() -> void:
 func reset_stats() -> void:
 	ignores_x_out_of_bounds = false
 	_hazard_strike_from_direct_shot = false
+	_orange_neutralized_hazard = false
 	has_entered_camera_view = false
 	_avoider_armed = false
 	_avoider_arm_token += 1
@@ -913,11 +901,11 @@ func apply_marked_ability() -> void:
 
 	
 	
-	await get_tree().create_timer(0.15).timeout
+	await get_tree().create_timer(0.15, false).timeout
 	%rock_marked_sfx.play()
 	
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	detonate_rock()
 	
 	
@@ -995,37 +983,7 @@ func get_hit_force_direction(
 
 	return force_dir.normalized()
 
-func shrink_current_mesh() -> void:
-	if current_mesh.scale <= Vector3.ONE * 0.3:
-		current_mesh.get_node('damage_mesh').show()
-		await get_tree().create_timer(0.08).timeout
-		current_mesh.get_node('damage_mesh').hide()
-		gravity_scale = rock_type_gravity_scale
-		return
-		
-	if current_mesh:
-		var original_scale := current_mesh.scale
-		current_mesh.get_node('damage_mesh').show()
-		var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
-		tween.tween_property(
-			current_mesh,
-			"scale",
-			original_scale * 0.85,
-			0.08
-		)
-
-		#tween.tween_property(
-			#current_mesh,
-			#"scale",
-			#original_scale,
-			#0.12
-		#)
-		
-		await tween.finished
-		current_mesh.get_node('damage_mesh').hide()
-	
-	gravity_scale = rock_type_gravity_scale
 	
 func display_damage_counter(_damage_output : int) -> void:
 	%Damage_Label3D.damage_is_damage(global_position, _damage_output)
@@ -1183,9 +1141,7 @@ func start_destroyed_process() -> void:
 	
 	if current_particles != null:
 		current_particles.emitting = false
-	
-	if %TrailParticles != null:
-		%TrailParticles.emitting = false
+
 	
 	#if player_has_marked_rock == false:
 	expand_blast_radius()
@@ -1248,19 +1204,17 @@ func start_destroyed_process() -> void:
 		
 		if cash_value < 0:
 			money_label_3d.money_is_money(global_position, cash_value)
+		## Positive cash already shown above via cash_value > 0.
 
-		## Direct shots already struck above; blast/indirect destroys still strike here.
-		if not _hazard_strike_from_direct_shot:
+		## Direct shots already struck above; orange-neutralized blacks never strike.
+		## Blast/indirect destroys of live hazards still strike here.
+		if not _hazard_strike_from_direct_shot and not _orange_neutralized_hazard:
 			%hazard_hit_sound.play()
 			play_destroy_sfx()
 			EventBus.instance.hazard_hit.emit()
 			_set_strike_feedback_origin_here()
 			gl_PlayerState.add_strike()
 		_hazard_strike_from_direct_shot = false
-	
-	
-	if cash_value == 2:
-		hazard_aoe_delayed()
 	
 	if rock_type == RockSize.SMOKECAN:
 		%hazard_hit_sound.play()
@@ -1283,17 +1237,17 @@ func start_destroyed_process() -> void:
 func play_hit_sfx() -> void:
 	%rock_hit_sound.volume_db = randf_range(-25.0, -20.0)
 	%rock_hit_sound.pitch_scale = randf_range(0.9, 1.2)
-	await get_tree().create_timer(0.05).timeout
+	await get_tree().create_timer(0.05, false).timeout
 	%rock_hit_sound.play(0.01)
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	%rock_hit_sound.play(0.02)
 
 
 func play_destroy_sfx() -> void:
 	%rock_hit_sound.play(0.02)
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	%rock_hitSound.play()
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	%rock_explosion_sfx.play()
 
 
@@ -1326,7 +1280,8 @@ func assign_random_mesh(mesh_instance: MeshInstance3D) -> void:
 		
 	var rand_selection = ROCK_MESHES.pick_random()
 	mesh_instance.mesh = rand_selection
-	mesh_instance.get_child(0).mesh = rand_selection
+	if mesh_instance.has_node('damage_mesh'):
+		mesh_instance.get_child(0).mesh = rand_selection
 
 
 func _on_explosion_area_body_entered(body: Node3D) -> void:
@@ -1360,9 +1315,9 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 				body.hit_by_player(0, Vector2.ZERO)
 				if body.has_node("Freeze"):
 					body.get_node("Freeze").show()
-				await get_tree().create_timer(0.25).timeout
+				await get_tree().create_timer(0.25, false).timeout
 				body.freeze = true
-				await get_tree().create_timer(3.5).timeout
+				await get_tree().create_timer(3.5, false).timeout
 				if is_instance_valid(body):
 					body.freeze = false
 					if body.has_node("Freeze"):
@@ -1458,9 +1413,14 @@ func smoke_particles() -> void:
 		%Smokecan_AoE.play_particles = true
 		
 	if rock_type_name.contains('hazard'):
-		$Hazard_AoE2.global_position = global_position
-		$Hazard_AoE2.play_particles = true
-		_try_apply_hazard_smoke_blur()
+		## Orange-neutralized blacks: normal rock burst only — no hazard fail particles.
+		if _orange_neutralized_hazard:
+			$AoE.global_position = global_position
+			$AoE.play_particles = true
+		else:
+			$Hazard_AoE2.global_position = global_position
+			$Hazard_AoE2.play_particles = true
+			_try_apply_hazard_smoke_blur()
 		
 	else:
 		var _phys := global_position
@@ -1613,7 +1573,7 @@ func _arm_avoider() -> void:
 	_avoider_arm_token += 1
 	%RedParticles.emitting = true
 	var token := _avoider_arm_token
-	await get_tree().create_timer(avoider_arm_delay_sec).timeout
+	await get_tree().create_timer(avoider_arm_delay_sec, false).timeout
 	if token != _avoider_arm_token:
 		return
 	if current_state != State.ACTIVE or rock_type != RockSize.AVOIDER:
@@ -1659,8 +1619,7 @@ func _expire_avoider_lifetime() -> void:
 
 	if current_particles != null:
 		current_particles.emitting = false
-	if %TrailParticles != null:
-		%TrailParticles.emitting = false
+
 	var red := get_node_or_null("%RedParticles") as GPUParticles3D
 	if red:
 		red.emitting = false
@@ -1808,8 +1767,7 @@ func _trigger_avoider_crosshair_contact() -> void:
 
 	if current_particles != null:
 		current_particles.emitting = false
-	if %TrailParticles != null:
-		%TrailParticles.emitting = false
+
 	var red := get_node_or_null("%RedParticles") as GPUParticles3D
 	if red:
 		red.emitting = false
@@ -1861,7 +1819,7 @@ func _arm_chaser() -> void:
 	_chaser_saved_gravity = gravity_scale
 	_chaser_arm_token += 1
 	var token := _chaser_arm_token
-	await get_tree().create_timer(chaser_arm_delay_sec).timeout
+	await get_tree().create_timer(chaser_arm_delay_sec, false).timeout
 	if token != _chaser_arm_token:
 		return
 	if current_state != State.ACTIVE or rock_type != RockSize.CHASER:

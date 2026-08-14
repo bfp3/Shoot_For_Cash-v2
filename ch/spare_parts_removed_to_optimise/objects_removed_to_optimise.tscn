@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://by12j21lfklp1"]
+[gd_scene format=4 uid="uid://by12j21lfklp1"]
 
 [ext_resource type="Script" uid="uid://dv0lm0lx1nico" path="res://ch/Balllons/balloon_container.gd" id="3_yroj7"]
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="4_cg4l4"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="6_027sw"]
 [ext_resource type="Script" uid="uid://bns2a7l7rdc41" path="res://ch/targets/orange_bombs.gd" id="6_cg4l4"]
 [ext_resource type="PackedScene" uid="uid://b51vopusw334w" path="res://ch/Rocks/Rock_Instance.tscn" id="7_yajia"]
+[ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="8_eftrv"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_lcd3f"]
 bounce = 0.5
@@ -18,6 +19,75 @@ bounce = 0.5
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_biuot"]
 friction = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m2vc2"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_gam4m"]
+_surfaces = [{
+"aabb": AABB(-0.5, -0.5, -0.5, 2, 1, 1),
+"format": 34896613377,
+"index_count": 72,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAACAAEAAwAEAAEABQAAAAIAAwAAAAUABAAGAAIABQACAAYABQAEAAYAAwAHAAQAAwAFAAcABQAHAAQABwAGAAQABwAFAAYACAAGAAQABwAIAAQACAAJAAYABwAKAAgACgAJAAgABwAFAAsABwALAAoACwAFAAYACgALAAkACwAGAAkA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 12,
+"vertex_data": PackedByteArray("AAAAAP//AAAAAP//AAAAAAAA/////wAAAAAAAAAAAAD/f///AAAAAP9/AAD//wAA/3//////AAD/fwAAAAAAAP////8AAAAA////////AAD//wAAAAAAAP//AAD//wAA")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_kki7c"]
+resource_name = "Brick_wall_1_Cube_016"
+_surfaces = [{
+"aabb": AABB(-0.5, -0.5, -0.5, 2, 1, 1),
+"attribute_data": PackedByteArray("/1////+f/7//n////1//v/9f/7//n/9//5//v/9f/3//X/9//5//P/+f/3//X/8//1//P/+fAAD/n/8//18AAP8f/3//X/8//1//f/8f/z//n/9//9//P//f/3//n/8//1////+f/7//n////1//v/9f/7//n/9//5//v/9f/3//X/9//5//P/+f/3//X/8//1//P/+fAAD/n/8//18AAP8f/3//X/8//1//f/8f/z//n/9//9//P//f/3//n/8/"),
+"format": 34896613399,
+"index_count": 72,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEAFAAVABYAFAAXABUAGAAZABoAGAAbABkAHAAdAB4AHAAfAB0AIAAhACIAIAAjACEAJAAlACYAJAAnACUAKAApACoAKAArACkALAAtAC4ALAAvAC0A"),
+"material": SubResource("StandardMaterial3D_m2vc2"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 48,
+"vertex_data": PackedByteArray("AAAAAP//VNUAAP//AABU1QAA/////1TVAAAAAAAAVNUAAAAAAAD///9///8AAP//AAD//wAA////fwAAAAD///9/AAAAAFTV/3//////VNX/f///AABU1f9/AAD//1TV/38AAP///78AAP//////v/9///////+/AAAAAP///78AAAAAAAD/v/9/AAD///+//38AAAAA/78AAAAA////v/9///8AAP//AAD///////8AAP//AAD///9//////////38AAP//VNX/f///AABU1f9//////1TV/38AAAAAVNX/fwAAAAD///////8AAP///3///wAA/////wAAAAD/////AAAAAFTV////////VNX/////AABU1f//AAD//1TV//8AAP///7//f///////v/////////+//38AAP///7//fwAAAAD/v///AAD///+///8AAAAA/7//fwAA////v/////8AAP///3//////////f///AAD/////////////VNVU1VTVVNVU1VTVVNVU1f+//7//v/+//7//v/+//7+qKqoqqiqqKqoqqiqqKqoq/////////////////////wAA/38AAP9/AAD/fwAA/3//f/+//3//v/9//7//f/+/VNVU1VTVVNVU1VTVVNVU1f+//7//v/+//7//v/+//7+qKqoqqiqqKqoqqiqqKqoq/////////////////////wAA/38AAP9/AAD/fwAA/3//f/+//3//v/9//7//f/+/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_gam4m")
+
+[sub_resource type="Animation" id="Animation_odeyd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_vla5s"]
+resource_name = "sailboat"
+length = 120.066666
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 120),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(65, 0.5, 0), Vector3(-432, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_biuot"]
+_data = {
+&"RESET": SubResource("Animation_odeyd"),
+&"sailboat": SubResource("Animation_vla5s")
+}
 
 [node name="ObjectsRemovedToOptimise" type="Node3D" unique_id=183529928]
 
@@ -694,3 +764,340 @@ physics_material_override = SubResource("PhysicsMaterial_kki7c")
 [node name="Rock_Instance40" parent="Container_1" unique_id=2092788332 instance=ExtResource("7_yajia")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5495944, -0.08000016, 0.42000008)
 physics_material_override = SubResource("PhysicsMaterial_kki7c")
+
+[node name="Moving_nodes" type="Node3D" parent="." unique_id=109611021]
+
+[node name="Cube_013" type="MeshInstance3D" parent="Moving_nodes" unique_id=449441346]
+transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 91.45, -4.3450003, 145.99)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_014" type="MeshInstance3D" parent="Moving_nodes" unique_id=473114700]
+transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 89.104996, -4.3450003, 211.65)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_015" type="MeshInstance3D" parent="Moving_nodes" unique_id=2073941498]
+transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 96.14, -4.3450003, 188.2)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_016" type="MeshInstance3D" parent="Moving_nodes" unique_id=800683237]
+transform = Transform3D(8.961117e-15, 2.0500642e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500642e-07, 96.14, -4.3450003, 183.28339)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_017" type="MeshInstance3D" parent="Moving_nodes" unique_id=374371216]
+transform = Transform3D(8.961117e-15, 2.0500642e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500642e-07, 89.104996, -4.3450003, 221.27248)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_021" type="MeshInstance3D" parent="Moving_nodes" unique_id=231470805]
+transform = Transform3D(8.961115e-15, 2.0500642e-07, -4.69, 4.69, -2.0500642e-07, 0, -2.0500642e-07, -4.69, -2.0500642e-07, 121.935, -4.3450003, 214.23747)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_018" type="MeshInstance3D" parent="Moving_nodes" unique_id=1493898677]
+transform = Transform3D(8.961117e-15, 2.0500642e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500642e-07, 96.14, -4.3450003, 239.79001)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_019" type="MeshInstance3D" parent="Moving_nodes" unique_id=737464491]
+transform = Transform3D(8.961115e-15, 2.0500642e-07, -4.69, 4.69, -2.0500642e-07, 0, -2.0500642e-07, -4.69, -2.0500642e-07, 100.83, -4.3450003, 141.3)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_023" type="MeshInstance3D" parent="Moving_nodes" unique_id=1850507451]
+transform = Transform3D(-2.0500643e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500643e-07, 75.59104, -4.3450003, 141.3)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_022" type="MeshInstance3D" parent="Moving_nodes" unique_id=1149938204]
+transform = Transform3D(8.961124e-15, 2.0500651e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500651e-07, -11.120209, -4.3450003, 155.72726)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_020" type="MeshInstance3D" parent="Moving_nodes" unique_id=1204884951]
+transform = Transform3D(-4.69, 4.100129e-07, 2.0500646e-07, -2.0500646e-07, 8.961136e-15, -4.69, -4.100129e-07, -4.69, 8.961117e-15, 96.14, -4.3450003, 141.3)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_024" type="MeshInstance3D" parent="Moving_nodes" unique_id=1484650024]
+transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 145.01512, -4.3450003, 124.51192)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_025" type="MeshInstance3D" parent="Moving_nodes" unique_id=547199870]
+transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 142.67012, -4.3450003, 190.1719)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_026" type="MeshInstance3D" parent="Moving_nodes" unique_id=363741050]
+transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 149.70512, -4.3450003, 166.72191)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_027" type="MeshInstance3D" parent="Moving_nodes" unique_id=1893986315]
+transform = Transform3D(8.961117e-15, 2.0500642e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500642e-07, 149.70512, -4.3450003, 161.8053)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_028" type="MeshInstance3D" parent="Moving_nodes" unique_id=216434397]
+transform = Transform3D(8.961117e-15, 2.0500642e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500642e-07, 142.67012, -4.3450003, 199.79439)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_029" type="MeshInstance3D" parent="Moving_nodes" unique_id=111934029]
+transform = Transform3D(8.961115e-15, 2.0500642e-07, -4.69, 4.69, -2.0500642e-07, 0, -2.0500642e-07, -4.69, -2.0500642e-07, 175.50012, -4.3450003, 192.75938)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_030" type="MeshInstance3D" parent="Moving_nodes" unique_id=494607138]
+transform = Transform3D(8.961117e-15, 2.0500642e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500642e-07, 149.70512, -4.3450003, 218.31192)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_031" type="MeshInstance3D" parent="Moving_nodes" unique_id=766225839]
+transform = Transform3D(8.961115e-15, 2.0500642e-07, -4.69, 4.69, -2.0500642e-07, 0, -2.0500642e-07, -4.69, -2.0500642e-07, 154.39513, -4.3450003, 119.821915)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_032" type="MeshInstance3D" parent="Moving_nodes" unique_id=1179652725]
+transform = Transform3D(-2.0500643e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500643e-07, 129.15616, -4.3450003, 119.821915)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_033" type="MeshInstance3D" parent="Moving_nodes" unique_id=1294392664]
+transform = Transform3D(8.961124e-15, 2.0500651e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500651e-07, 42.444916, -4.3450003, 134.24918)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_034" type="MeshInstance3D" parent="Moving_nodes" unique_id=624646114]
+transform = Transform3D(-4.69, 4.100129e-07, 2.0500646e-07, -2.0500646e-07, 8.961136e-15, -4.69, -4.100129e-07, -4.69, 8.961117e-15, 149.70512, -4.3450003, 119.821915)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_035" type="MeshInstance3D" parent="Moving_nodes" unique_id=1771091626]
+transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 225.99072, -3.9171438, 152.11476)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_036" type="MeshInstance3D" parent="Moving_nodes" unique_id=2066913096]
+transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 223.64575, -3.9171438, 217.77475)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_037" type="MeshInstance3D" parent="Moving_nodes" unique_id=1093467364]
+transform = Transform3D(-2.0500642e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500642e-07, 230.68073, -3.9171438, 194.32475)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_038" type="MeshInstance3D" parent="Moving_nodes" unique_id=1158680650]
+transform = Transform3D(8.961117e-15, 2.0500642e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500642e-07, 230.68073, -3.9171438, 189.40814)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_039" type="MeshInstance3D" parent="Moving_nodes" unique_id=984038267]
+transform = Transform3D(8.961117e-15, 2.0500642e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500642e-07, 223.64575, -3.9171438, 227.39723)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_040" type="MeshInstance3D" parent="Moving_nodes" unique_id=288086659]
+transform = Transform3D(8.961115e-15, 2.0500642e-07, -4.69, 4.69, -2.0500642e-07, 0, -2.0500642e-07, -4.69, -2.0500642e-07, 256.47574, -3.9171438, 220.36223)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_041" type="MeshInstance3D" parent="Moving_nodes" unique_id=1122880062]
+transform = Transform3D(8.961117e-15, 2.0500642e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500642e-07, 230.68073, -3.9171438, 245.91476)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_042" type="MeshInstance3D" parent="Moving_nodes" unique_id=1055427496]
+transform = Transform3D(8.961115e-15, 2.0500642e-07, -4.69, 4.69, -2.0500642e-07, 0, -2.0500642e-07, -4.69, -2.0500642e-07, 235.37073, -3.9171438, 147.42476)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_043" type="MeshInstance3D" parent="Moving_nodes" unique_id=788107279]
+transform = Transform3D(-2.0500643e-07, 0, -4.69, 0, 4.69, 0, 4.69, 0, -2.0500643e-07, 210.13177, -3.9171438, 147.42476)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_044" type="MeshInstance3D" parent="Moving_nodes" unique_id=85797457]
+transform = Transform3D(8.961124e-15, 2.0500651e-07, -4.69, 4.69, -2.0500646e-07, 0, -2.0500646e-07, -4.69, -2.0500651e-07, 123.42053, -3.9171438, 161.85202)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_045" type="MeshInstance3D" parent="Moving_nodes" unique_id=815525824]
+transform = Transform3D(-4.69, 4.100129e-07, 2.0500646e-07, -2.0500646e-07, 8.961136e-15, -4.69, -4.100129e-07, -4.69, 8.961117e-15, 230.68073, -3.9171438, 147.42476)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_046" type="MeshInstance3D" parent="Moving_nodes" unique_id=1763339892]
+transform = Transform3D(0.75081223, 0, -4.629512, 0, 4.69, 0, 4.629512, 0, 0.75081223, 218.29239, -3.9171438, 117.87491)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_047" type="MeshInstance3D" parent="Moving_nodes" unique_id=489626045]
+transform = Transform3D(0.75081223, 0, -4.629512, 0, 4.69, 0, 4.629512, 0, 0.75081223, 226.48904, -3.9171438, 183.06346)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_048" type="MeshInstance3D" parent="Moving_nodes" unique_id=216027517]
+transform = Transform3D(0.75081223, 0, -4.629512, 0, 4.69, 0, 4.629512, 0, 0.75081223, 229.67923, -3.9171438, 158.78969)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_049" type="MeshInstance3D" parent="Moving_nodes" unique_id=2056012819]
+transform = Transform3D(-3.2819052e-08, -0.75081223, -4.629512, 4.69, -2.0500647e-07, -1.7214751e-21, -2.0236246e-07, -4.629512, 0.75081223, 228.89212, -3.9171438, 153.9365)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_050" type="MeshInstance3D" parent="Moving_nodes" unique_id=1000069749]
+transform = Transform3D(-3.2819052e-08, -0.75081223, -4.629512, 4.69, -2.0500647e-07, -1.7214751e-21, -2.0236246e-07, -4.629512, 0.75081223, 228.02948, -3.9171438, 192.56184)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_051" type="MeshInstance3D" parent="Moving_nodes" unique_id=84747164]
+transform = Transform3D(-3.2819045e-08, -0.75081223, -4.629512, 4.69, -2.0500643e-07, -1.7214751e-21, -2.0236241e-07, -4.629512, 0.75081223, 259.30984, -3.9171438, 180.36188)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_052" type="MeshInstance3D" parent="Moving_nodes" unique_id=91478627]
+transform = Transform3D(-3.2819052e-08, -0.75081223, -4.629512, 4.69, -2.0500647e-07, -1.7214751e-21, -2.0236246e-07, -4.629512, 0.75081223, 237.93814, -3.9171438, 209.71434)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_053" type="MeshInstance3D" parent="Moving_nodes" unique_id=1017621472]
+transform = Transform3D(-3.2819045e-08, -0.75081223, -4.629512, 4.69, -2.0500643e-07, -1.7214751e-21, -2.0236241e-07, -4.629512, 0.75081223, 226.8006, -3.9171438, 111.743774)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_054" type="MeshInstance3D" parent="Moving_nodes" unique_id=216323791]
+transform = Transform3D(0.75081223, 0, -4.629512, 0, 4.69, 0, 4.629512, 0, 0.75081223, 201.88718, -3.9171438, 115.78421)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_055" type="MeshInstance3D" parent="Moving_nodes" unique_id=710900691]
+transform = Transform3D(-3.2819052e-08, -0.75081223, -4.629512, 4.69, -2.0500647e-07, -7.2832945e-22, -2.0236246e-07, -4.629512, 0.75081223, 118.60388, -3.9171438, 143.90683)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_056" type="MeshInstance3D" parent="Moving_nodes" unique_id=383958913]
+transform = Transform3D(-4.629512, -0.750812, 2.0236246e-07, -2.0500647e-07, 8.961138e-15, -4.69, 0.750812, -4.629512, -3.2819056e-08, 222.17108, -3.9171438, 112.49458)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_057" type="MeshInstance3D" parent="Moving_nodes" unique_id=881664997]
+transform = Transform3D(2.2548378, 0, -4.629512, 0, 4.69, 0, 13.903342, 0, 0.7508121, 270.41278, -3.9171438, 134.16533)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_058" type="MeshInstance3D" parent="Moving_nodes" unique_id=287560785]
+transform = Transform3D(2.2548378, 0, -4.629512, 0, 4.69, 0, 13.903342, 0, 0.7508121, 278.60944, -3.9171438, 199.35388)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_059" type="MeshInstance3D" parent="Moving_nodes" unique_id=1614861272]
+transform = Transform3D(2.2548378, 0, -4.629512, 0, 4.69, 0, 13.903342, 0, 0.7508121, 281.79962, -3.9171438, 175.08011)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_060" type="MeshInstance3D" parent="Moving_nodes" unique_id=299328997]
+transform = Transform3D(-9.856207e-08, -0.7508121, -4.629512, 14.085, -2.0500642e-07, 3.552712e-15, -6.077344e-07, -4.629512, 0.7508121, 281.0125, -3.9171438, 170.22691)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_061" type="MeshInstance3D" parent="Moving_nodes" unique_id=1280526110]
+transform = Transform3D(-9.856207e-08, -0.7508121, -4.629512, 14.085, -2.0500642e-07, 3.552712e-15, -6.077344e-07, -4.629512, 0.7508121, 280.14987, -3.9171438, 208.85226)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_062" type="MeshInstance3D" parent="Moving_nodes" unique_id=1236687706]
+transform = Transform3D(-9.856206e-08, -0.7508121, -4.629512, 14.085, -2.0500642e-07, 7.1054257e-15, -6.077344e-07, -4.629512, 0.7508121, 311.43024, -3.9171438, 196.6523)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_063" type="MeshInstance3D" parent="Moving_nodes" unique_id=1827879202]
+transform = Transform3D(-9.856207e-08, -0.7508121, -4.629512, 14.085, -2.0500642e-07, 3.552712e-15, -6.077344e-07, -4.629512, 0.7508121, 290.05853, -3.9171438, 226.00476)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_064" type="MeshInstance3D" parent="Moving_nodes" unique_id=1169131471]
+transform = Transform3D(-9.856206e-08, -0.7508121, -4.629512, 14.085, -2.0500642e-07, 7.1054257e-15, -6.077344e-07, -4.629512, 0.7508121, 278.921, -3.9171438, 128.0342)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_065" type="MeshInstance3D" parent="Moving_nodes" unique_id=257442078]
+transform = Transform3D(2.2548378, 0, -4.629512, 0, 4.69, 0, 13.903342, 0, 0.7508121, 254.00757, -3.9171438, 132.07463)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_066" type="MeshInstance3D" parent="Moving_nodes" unique_id=1751971214]
+transform = Transform3D(-9.856207e-08, -0.7508121, -4.629512, 14.085, -2.0500642e-07, 3.5527128e-15, -6.077344e-07, -4.629512, 0.7508121, 170.72427, -3.9171438, 160.19725)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="Cube_067" type="MeshInstance3D" parent="Moving_nodes" unique_id=1217214107]
+transform = Transform3D(-13.903342, -0.7508119, 3.281903e-08, 0, -2.0500642e-07, -4.69, 2.254837, -4.629512, 2.023624e-07, 274.29147, -3.9171438, 128.785)
+material_override = ExtResource("8_eftrv")
+mesh = SubResource("ArrayMesh_kki7c")
+skeleton = NodePath("")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Moving_nodes" unique_id=1419319816]
+libraries/ = SubResource("AnimationLibrary_biuot")
+autoplay = &"sailboat"
+speed_scale = 0.2

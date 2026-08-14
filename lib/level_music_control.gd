@@ -2,11 +2,10 @@ extends Node
 
 @onready var birds: AudioStreamPlayer = $Birds
 @onready var night_noises: AudioStreamPlayer = $NightNoises
-@onready var oasis: AudioStreamPlayer = $Oasis
-@onready var ending_song: AudioStreamPlayer = $EndingSong
+
 @onready var wind_noises: AudioStreamPlayer = $WindNoises
 @onready var shop_music: AudioStreamPlayer = $Shop_Music
-# Stores each song's original/default volume
+
 var default_volume_map : Dictionary = {}
 
 @export var current_song : AudioStreamPlayer
@@ -31,13 +30,13 @@ const STREAM_PATHS := {
 	"PerfectPineappleRound": "res://sfx/one_hundred_percent.ogg",
 }
 
-const RANDOMISER_STREAM_PATHS := [
-	"res://sfx/spare_songs/Windmill_math_anim2.ogg",
-	"res://sfx/spare_songs/aa_joyful_chess.ogg",
-	"res://sfx/spare_songs/aa_joyful_frog.ogg",
-	"res://sfx/spare_songs/aa_joyful_matchmakers.ogg",
-	"res://sfx/Windmill_Sunburst_Your_name.ogg",
-]
+#const RANDOMISER_STREAM_PATHS := [
+	#"res://sfx/spare_songs/Windmill_math_anim2.ogg",
+	#"res://sfx/spare_songs/aa_joyful_chess.ogg",
+	#"res://sfx/spare_songs/aa_joyful_frog.ogg",
+	#"res://sfx/spare_songs/aa_joyful_matchmakers.ogg",
+	#"res://sfx/Windmill_Sunburst_Your_name.ogg",
+#]
 
 var _audio_ready := false
 var _pending_stream_loads: Dictionary = {} # path -> [AudioStreamPlayer]
@@ -63,11 +62,11 @@ func _begin_threaded_audio_loads() -> void:
 		if player == null:
 			continue
 		_queue_stream_load(path, player)
-
-	var randomiser := get_node_or_null("Randomiser") as AudioStreamPlayer
-	if randomiser:
-		for path in RANDOMISER_STREAM_PATHS:
-			_queue_stream_load(path, randomiser, true)
+#
+	#var randomiser := get_node_or_null("Randomiser") as AudioStreamPlayer
+	#if randomiser:
+		#for path in RANDOMISER_STREAM_PATHS:
+			#_queue_stream_load(path, randomiser, true)
 
 	set_process(true)
 
@@ -75,7 +74,8 @@ func _begin_threaded_audio_loads() -> void:
 func _queue_stream_load(path: String, player: AudioStreamPlayer, for_randomiser := false) -> void:
 	if not _pending_stream_loads.has(path):
 		_pending_stream_loads[path] = []
-		ResourceLoader.load_threaded_request(path, "AudioStream", true)
+		## use_sub_threads=false: true races/crashes on mobile (Godot 4.6).
+		ResourceLoader.load_threaded_request(path, "AudioStream", false)
 	_pending_stream_loads[path].append({"player": player, "randomiser": for_randomiser})
 
 
@@ -149,11 +149,7 @@ func default_volumes() -> void:
 	var songs : Array[AudioStreamPlayer] = [
 		birds,
 		night_noises,
-		oasis,
-
 		wind_noises,
-
-		ending_song
 	]
 	
 	for song in songs:

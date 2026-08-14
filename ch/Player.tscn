@@ -8,7 +8,6 @@
 [ext_resource type="Environment" uid="uid://c2ydq6pe4fe5" path="res://res/moss_env_v2.tres" id="6_4gbdm"]
 [ext_resource type="CameraAttributesPractical" uid="uid://beg35rl711fns" path="res://ch/Camera/camera_atrributes.tres" id="7_rui0b"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_b1tng"]
-[ext_resource type="Script" uid="uid://b8ta6ry80sv7q" path="res://ch/inner_scope_2.gd" id="9_b1tng"]
 [ext_resource type="AudioStream" uid="uid://bk1svagr7yjcv" path="res://sfx/gunLocked.ogg" id="9_g6ubq"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="9_ts3hu"]
 [ext_resource type="AudioStream" uid="uid://xuojfr4w7ox3" path="res://sfx/Gun_SFX_attempt_2.ogg" id="10_bpx2c"]
@@ -28,31 +27,19 @@
 [ext_resource type="AudioStream" uid="uid://c38iicjo31b7l" path="res://sfx/gun_combination_1.ogg" id="16_11n43"]
 [ext_resource type="Script" uid="uid://dekncurcyax44" path="res://ch/Player/scripts/player_shooting_weapon.gd" id="17_0locf"]
 [ext_resource type="AudioStream" uid="uid://ckdsaljox4iwt" path="res://sfx/Random_sound_1.ogg" id="17_pivo4"]
-[ext_resource type="Texture2D" uid="uid://mxvorteyq2i1" path="res://res/segmented_ring.png" id="18_emrcn"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="18_k5tjv"]
 [ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="19_11n43"]
-[ext_resource type="FontFile" uid="uid://hwtrvtud8cr4" path="res://unfiled/Fonts/kenney_kenney-fonts/Fonts/Kenney Mini Square Mono.ttf" id="19_iph0b"]
 [ext_resource type="AudioStream" uid="uid://3tos28iojxib" path="res://sfx/Hovercraft_turning_SFX_left_v3.ogg" id="20_g6ubq"]
 [ext_resource type="AudioStream" uid="uid://cya8lm4w3l6hi" path="res://sfx/Hovercraft_turning_SFX_right_v3.ogg" id="21_bpx2c"]
 [ext_resource type="Script" uid="uid://bmye3h6jry1bf" path="res://ch/Player/scripts/mouse_turning_sfx_script.gd" id="24_b1tng"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_l3uax"]
-[ext_resource type="Script" uid="uid://c4ks6vo5kbwh5" path="res://ch/Player/sky_mine_hud.gd" id="29_f75d4"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="29_fuvvr"]
-[ext_resource type="Script" uid="uid://c66tdaw8j27r3" path="res://ch/HUD_components/total_rocks.gd" id="29_mxtxj"]
-[ext_resource type="Texture2D" uid="uid://co5kt5dx3ohnd" path="res://res/arrow_texture.png" id="30_pivo4"]
 [ext_resource type="Script" uid="uid://ic0ihkbt12jp" path="res://lib/Debug Tools/reticle_size_debug.gd" id="31_xfuv4"]
-[ext_resource type="Script" uid="uid://lbyemwcvc6j3" path="res://ch/Player/auto_fire.gd" id="32_hv0dl"]
-[ext_resource type="Texture2D" uid="uid://bhcsop5mnbl8g" path="res://unfiled/Decal_placeholders/pineapple_emoji.png" id="33_1tjj5"]
-[ext_resource type="Script" uid="uid://dkgy3x0fuv70v" path="res://ch/Player/pineapple_round_hud.gd" id="33_lf8qf"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="33_ms1v2"]
-[ext_resource type="Texture2D" uid="uid://cxk0yxen5f6sp" path="res://unfiled/Decal_placeholders/pineapple_1024x1024.png" id="34_11n43"]
-[ext_resource type="Texture2D" uid="uid://cdibh2x081m8m" path="res://res/auto_fire_icon.png" id="34_fuvvr"]
-[ext_resource type="Texture2D" uid="uid://celcha768vcmg" path="res://res/sky_mine_icon.png" id="35_bpx2c"]
 [ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="38_lf8qf"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="39_11n43"]
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="40_pivo4"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="41_k5tjv"]
-[ext_resource type="PackedScene" uid="uid://dbuyf4x33jxsi" path="res://ch/Player/hoodMesh.tscn" id="48_vmtkp"]
 
 [sub_resource type="Curve" id="Curve_emrcn"]
 _data = [Vector2(0, 0.460674), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -195,95 +182,56 @@ turbulence_influence_over_life = SubResource("CurveTexture_aqenm")
 
 [sub_resource type="QuadMesh" id="QuadMesh_bpx2c"]
 
-[sub_resource type="Gradient" id="Gradient_j58se"]
-offsets = PackedFloat32Array(0, 0.0969163)
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
-
-[sub_resource type="Animation" id="Animation_a6gj3"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-
-[sub_resource type="Animation" id="Animation_fu325"]
-resource_name = "new_animation"
-length = 3.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 6.283185307179586]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_isobx"]
-_data = {
-&"RESET": SubResource("Animation_a6gj3"),
-&"new_animation": SubResource("Animation_fu325")
-}
-
-[sub_resource type="LabelSettings" id="LabelSettings_hv0dl"]
-font = ExtResource("19_iph0b")
-font_size = 50
-outline_size = 4
-outline_color = Color(0, 0, 0, 1)
-shadow_size = 3
-
 [sub_resource type="Gradient" id="Gradient_dpvnf"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
 [sub_resource type="Animation" id="Animation_pivo4"]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("../Arrow_control:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
 
 [sub_resource type="Animation" id="Animation_k5tjv"]
 resource_name = "rotate_arrow"
 length = 3.0333333
 loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("../Arrow_control:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 3.0333333),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 6.283185307179586]
-}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ms1v2"]
 _data = {
 &"RESET": SubResource("Animation_pivo4"),
 &"rotate_arrow": SubResource("Animation_k5tjv")
 }
+
+[sub_resource type="Gradient" id="Gradient_j58se"]
+offsets = PackedFloat32Array(0, 0.0969163)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="Curve" id="Curve_g6ubq"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_lf8qf"]
+curve = SubResource("Curve_g6ubq")
+
+[sub_resource type="Curve" id="Curve_bpx2c"]
+_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_11n43"]
+curve = SubResource("Curve_bpx2c")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_txfio"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 150.0
+initial_velocity_max = 300.0
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+gravity = Vector3(0, 0, 0)
+scale_min = 10.0
+scale_max = 20.0
+scale_curve = SubResource("CurveTexture_11n43")
+color = Color(0.81960785, 0, 0, 1)
+alpha_curve = SubResource("CurveTexture_lf8qf")
+hue_variation_min = -0.050000023
+hue_variation_max = 0.049999975
 
 [sub_resource type="Curve" id="Curve_fuvvr"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -366,101 +314,6 @@ shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 Button/styles/normal = SubResource("StyleBoxFlat_pivo4")
 Panel/styles/panel = SubResource("StyleBoxFlat_k5tjv")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_ms1v2")
-
-[sub_resource type="Curve" id="Curve_pivo4"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_fuvvr"]
-curve = SubResource("Curve_pivo4")
-
-[sub_resource type="Curve" id="Curve_k5tjv"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_3gdew"]
-curve = SubResource("Curve_k5tjv")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ms1v2"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 150.0
-initial_velocity_max = 300.0
-angular_velocity_min = -180.0
-angular_velocity_max = 180.0
-gravity = Vector3(0, 0, 0)
-scale_min = 0.099999994
-scale_max = 0.19999999
-scale_curve = SubResource("CurveTexture_3gdew")
-alpha_curve = SubResource("CurveTexture_fuvvr")
-
-[sub_resource type="Animation" id="Animation_txfio"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(1.665, 1.67)]
-}
-
-[sub_resource type="Animation" id="Animation_3gdew"]
-resource_name = "rot"
-length = 0.3
-loop_mode = 2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(1.5, 1.5), Vector2(1.7, 1.7)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_lf8qf"]
-_data = {
-&"RESET": SubResource("Animation_txfio"),
-&"rot": SubResource("Animation_3gdew")
-}
-
-[sub_resource type="Curve" id="Curve_g6ubq"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_lf8qf"]
-curve = SubResource("Curve_g6ubq")
-
-[sub_resource type="Curve" id="Curve_bpx2c"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_11n43"]
-curve = SubResource("Curve_bpx2c")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_txfio"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 150.0
-initial_velocity_max = 300.0
-angular_velocity_min = -180.0
-angular_velocity_max = 180.0
-gravity = Vector3(0, 0, 0)
-scale_min = 10.0
-scale_max = 20.0
-scale_curve = SubResource("CurveTexture_11n43")
-color = Color(0.81960785, 0, 0, 1)
-alpha_curve = SubResource("CurveTexture_lf8qf")
-hue_variation_min = -0.050000023
-hue_variation_max = 0.049999975
 
 [sub_resource type="Shader" id="Shader_qfoqq"]
 code = "shader_type spatial;
@@ -823,10 +676,6 @@ unique_name_in_owner = true
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.665, -1.07)
 script = ExtResource("13_mxtxj")
 
-[node name="HoodMesh" parent="Cam_pivot/Camera3D/Player_gun" unique_id=623382488 instance=ExtResource("48_vmtkp")]
-transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, -0.52, 0)
-visible = false
-
 [node name="Sparks01" type="GPUParticles3D" parent="Cam_pivot/Camera3D/Player_gun" unique_id=1763354739]
 transform = Transform3D(-1, 0, -8.766586e-08, 0, 0.99999994, 0, 8.766587e-08, 0, -1.0000001, -1.2284135e-06, -1.1920929e-07, 14.392311)
 emitting = false
@@ -844,7 +693,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.059, -0.436)
 unique_name_in_owner = true
 process_mode = 4
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.577387e-07, 0.24256486, 1.8043203)
-visible = false
 shadow_enabled = true
 spot_range = 20.0
 spot_angle = 2.3
@@ -856,19 +704,13 @@ transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0
 material_override = SubResource("StandardMaterial3D_rpy68")
 emitting = false
 amount = 25
-lifetime = 0.09999999999999999
+lifetime = 0.1
 one_shot = true
 explosiveness = 1.0
 fixed_fps = 60
 visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_g6ubq")
 draw_pass_1 = SubResource("QuadMesh_bpx2c")
-
-[node name="mockGun2" parent="Cam_pivot/Camera3D/Player_gun" unique_id=459703774 instance=ExtResource("14_f75d4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26, 0.059, -0.436)
-
-[node name="mockGun3" parent="Cam_pivot/Camera3D/Player_gun" unique_id=826154005 instance=ExtResource("14_f75d4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 0.059, -0.436)
 
 [node name="mockGunAlt" parent="Cam_pivot/Camera3D/Player_gun" unique_id=826154006 instance=ExtResource("14_altgun")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.059, -0.436)
@@ -1014,329 +856,6 @@ texture = ExtResource("9_ts3hu")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Multiscopes" type="Control" parent="CanvasLayer" unique_id=1349190258]
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="Inner_scope2" type="Control" parent="CanvasLayer/Multiscopes" unique_id=1779607612]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -20.0
-offset_right = -60.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 0.7853982
-pivot_offset_ratio = Vector2(0.5, 0.5)
-script = ExtResource("9_b1tng")
-movement_speed = 500.0
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Multiscopes/Inner_scope2" unique_id=399138812]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.4375
-anchor_top = 0.4375
-anchor_right = 0.5625
-anchor_bottom = 0.5625
-offset_left = -17.5
-offset_top = -17.5
-offset_right = 17.5
-offset_bottom = 17.5
-scale = Vector2(0.09, 0.09)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("9_ts3hu")
-expand_mode = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/Multiscopes/Inner_scope2" unique_id=806275877]
-visible = false
-modulate = Color(0.24, 0.24, 0.24, 1)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.4375
-anchor_top = 0.4375
-anchor_right = 0.5625
-anchor_bottom = 0.5625
-offset_left = -17.5
-offset_top = -17.5
-offset_right = 17.5
-offset_bottom = 17.5
-scale = Vector2(0.95, 0.95)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("9_ts3hu")
-expand_mode = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="center_container" type="Control" parent="CanvasLayer/Multiscopes/Inner_scope2" unique_id=1864189896]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-metadata/_edit_use_anchors_ = true
-
-[node name="up" type="Line2D" parent="CanvasLayer/Multiscopes/Inner_scope2/center_container" unique_id=1276987272]
-position = Vector2(20, 0)
-points = PackedVector2Array(0, 0, 0, 10)
-width = 4.0
-default_color = Color(1, 1, 1, 0.960784)
-gradient = SubResource("Gradient_j58se")
-
-[node name="down" type="Line2D" parent="CanvasLayer/Multiscopes/Inner_scope2/center_container" unique_id=158182344]
-position = Vector2(20, 0)
-points = PackedVector2Array(0, 40, 0, 30)
-width = 4.0
-default_color = Color(1, 1, 1, 0.960784)
-gradient = SubResource("Gradient_j58se")
-
-[node name="left" type="Line2D" parent="CanvasLayer/Multiscopes/Inner_scope2/center_container" unique_id=1196528056]
-points = PackedVector2Array(0, 20, 10, 20)
-width = 4.0
-gradient = SubResource("Gradient_j58se")
-
-[node name="right" type="Line2D" parent="CanvasLayer/Multiscopes/Inner_scope2/center_container" unique_id=139054339]
-points = PackedVector2Array(40, 20, 30, 20)
-width = 4.0
-gradient = SubResource("Gradient_j58se")
-
-[node name="blackTexture" type="TextureRect" parent="CanvasLayer/Multiscopes/Inner_scope2" unique_id=187259150]
-modulate = Color(1, 1, 1, 0.133333)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.0
-offset_top = -18.0
-offset_right = 18.0
-offset_bottom = 18.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.325, 0.325)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("9_ts3hu")
-expand_mode = 1
-stretch_mode = 4
-
-[node name="Cooldown_progressBar3" type="TextureProgressBar" parent="CanvasLayer/Multiscopes/Inner_scope2" unique_id=926132281]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1000.0
-offset_top = -1000.0
-offset_right = 1000.0
-offset_bottom = 1000.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.02, 0.02)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-value = 100.0
-fill_mode = 4
-texture_under = ExtResource("2_kbm6s")
-texture_progress = ExtResource("2_kbm6s")
-tint_under = Color(1, 1, 1, 0.05882353)
-
-[node name="Inner_scope3" type="Control" parent="CanvasLayer/Multiscopes" unique_id=902789770]
-unique_name_in_owner = true
-visible = false
-modulate = Color(1, 1, 1, 0.25882354)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 0.7853982
-scale = Vector2(1.16, 1.16)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Multiscopes/Inner_scope3" unique_id=941409467]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.4375
-anchor_top = 0.4375
-anchor_right = 0.5625
-anchor_bottom = 0.5625
-offset_left = -17.5
-offset_top = -17.5
-offset_right = 17.5
-offset_bottom = 17.5
-scale = Vector2(0.09, 0.09)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("9_ts3hu")
-expand_mode = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/Multiscopes/Inner_scope3" unique_id=1520987021]
-modulate = Color(0.24, 0.24, 0.24, 1)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.4375
-anchor_top = 0.4375
-anchor_right = 0.5625
-anchor_bottom = 0.5625
-offset_left = -17.5
-offset_top = -17.5
-offset_right = 17.5
-offset_bottom = 17.5
-scale = Vector2(0.95, 0.95)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("9_ts3hu")
-expand_mode = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/Multiscopes/Inner_scope3" unique_id=959321510]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.83000004
-anchor_top = -0.8300002
-anchor_right = 1.8299999
-anchor_bottom = 1.8300003
-offset_left = 33.2
-offset_top = 33.20001
-offset_right = -33.199997
-offset_bottom = -33.200005
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2.66, 2.66)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("2_kbm6s")
-expand_mode = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="center_container" type="Control" parent="CanvasLayer/Multiscopes/Inner_scope3" unique_id=332085230]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-metadata/_edit_use_anchors_ = true
-
-[node name="up" type="Line2D" parent="CanvasLayer/Multiscopes/Inner_scope3/center_container" unique_id=41181198]
-position = Vector2(20, 0)
-points = PackedVector2Array(0, 0, 0, 10)
-width = 4.0
-default_color = Color(1, 1, 1, 0.960784)
-gradient = SubResource("Gradient_j58se")
-
-[node name="down" type="Line2D" parent="CanvasLayer/Multiscopes/Inner_scope3/center_container" unique_id=2104515292]
-position = Vector2(20, 0)
-points = PackedVector2Array(0, 40, 0, 30)
-width = 4.0
-default_color = Color(1, 1, 1, 0.960784)
-gradient = SubResource("Gradient_j58se")
-
-[node name="left" type="Line2D" parent="CanvasLayer/Multiscopes/Inner_scope3/center_container" unique_id=1615702808]
-points = PackedVector2Array(0, 20, 10, 20)
-width = 4.0
-gradient = SubResource("Gradient_j58se")
-
-[node name="right" type="Line2D" parent="CanvasLayer/Multiscopes/Inner_scope3/center_container" unique_id=1516275727]
-points = PackedVector2Array(40, 20, 30, 20)
-width = 4.0
-gradient = SubResource("Gradient_j58se")
-
-[node name="blackTexture" type="TextureRect" parent="CanvasLayer/Multiscopes/Inner_scope3" unique_id=1032614966]
-modulate = Color(1, 1, 1, 0.133333)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -18.0
-offset_top = -18.0
-offset_right = 18.0
-offset_bottom = 18.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.325, 0.325)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("9_ts3hu")
-expand_mode = 1
-stretch_mode = 4
-
-[node name="Cooldown_progressBar" type="TextureProgressBar" parent="CanvasLayer/Multiscopes/Inner_scope3" unique_id=1232258054]
-visible = false
-modulate = Color(1, 1, 1, 0.24313726)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -512.0
-offset_right = 512.0
-offset_bottom = 512.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.111, 0.111)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-value = 100.0
-fill_mode = 4
-texture_under = ExtResource("18_emrcn")
-texture_progress = ExtResource("18_emrcn")
-tint_under = Color(1, 1, 1, 0.05882353)
-
-[node name="Cooldown_progressBar3" type="TextureProgressBar" parent="CanvasLayer/Multiscopes/Inner_scope3" unique_id=354809817]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1000.0
-offset_top = -1000.0
-offset_right = 1000.0
-offset_bottom = 1000.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.02, 0.02)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-value = 100.0
-fill_mode = 4
-texture_under = ExtResource("2_kbm6s")
-texture_progress = ExtResource("2_kbm6s")
-tint_under = Color(1, 1, 1, 0.05882353)
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Multiscopes" unique_id=1885834739]
-libraries/ = SubResource("AnimationLibrary_isobx")
-
 [node name="Crosshair" type="Control" parent="CanvasLayer" unique_id=44491024 groups=["HUD_crosshair"]]
 unique_name_in_owner = true
 layout_mode = 3
@@ -1371,76 +890,6 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = ExtResource("29_fuvvr")
-
-[node name="OutOfTimeLabel" type="Label" parent="CanvasLayer/Crosshair" unique_id=652058433]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -143.0
-offset_top = -47.833405
-offset_right = 195.0
-offset_bottom = 15.166595
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.5, 1.5)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-text = "ROUND END"
-label_settings = SubResource("LabelSettings_hv0dl")
-horizontal_alignment = 1
-
-[node name="Arrow_control" type="Control" parent="CanvasLayer/Crosshair" unique_id=81441767]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -19.999973
-offset_top = -20.000004
-offset_right = 20.000027
-offset_bottom = 19.999996
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="Arrow_height" type="TextureRect" parent="CanvasLayer/Crosshair/Arrow_control" unique_id=1371760284]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -32.000027
-offset_top = -80.000015
-offset_right = 31.999973
-offset_bottom = -16.000011
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.37, 0.37)
-pivot_offset_ratio = Vector2(0.5, 0.93)
-texture = ExtResource("30_pivo4")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Shadow" type="TextureRect" parent="CanvasLayer/Crosshair/Arrow_control/Arrow_height" unique_id=689984914]
-modulate = Color(0, 0, 0, 1)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.08, 1.08)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("30_pivo4")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="Large_outer_scope" type="Control" parent="CanvasLayer/Crosshair" unique_id=60949367]
 unique_name_in_owner = true
@@ -1496,7 +945,6 @@ gradient = SubResource("Gradient_dpvnf")
 texture_mode = 2
 
 [node name="RedDot" type="TextureRect" parent="CanvasLayer/Crosshair" unique_id=979867009]
-visible = false
 self_modulate = Color(1, 0, 0, 0.5803922)
 layout_mode = 1
 anchors_preset = 8
@@ -1567,26 +1015,6 @@ offset_bottom = 17.5
 scale = Vector2(0.95, 0.95)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("9_ts3hu")
-expand_mode = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=256446628]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.83000004
-anchor_top = -0.8300002
-anchor_right = 1.8299999
-anchor_bottom = 1.8300003
-offset_left = 33.2
-offset_top = 33.20001
-offset_right = -33.199997
-offset_bottom = -33.200005
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2.66, 2.66)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("2_kbm6s")
 expand_mode = 1
 metadata/_edit_use_anchors_ = true
 
@@ -1716,409 +1144,6 @@ anchor_bottom = 1.0
 grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-
-[node name="TotalRocks" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=1526152981]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -180.0
-offset_top = -130.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.46, 0.46)
-pivot_offset_ratio = Vector2(1, 1)
-size_flags_horizontal = 4
-size_flags_vertical = 3
-mouse_filter = 2
-script = ExtResource("29_mxtxj")
-use_incrementing_counter = true
-on_tally_sheet = true
-
-[node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/TotalRocks" unique_id=1489176079]
-unique_name_in_owner = true
-position = Vector2(-118.6853, -118.89014)
-scale = Vector2(1.005127, 1.005127)
-emitting = false
-amount = 25
-one_shot = true
-explosiveness = 0.8
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_11n43")
-
-[node name="Panel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/TotalRocks" unique_id=1809673453]
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -298.6958
-offset_top = -249.78271
-offset_right = -118.6958
-offset_bottom = -119.782715
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme = SubResource("Theme_pivo4")
-theme_override_styles/panel = ExtResource("29_fuvvr")
-
-[node name="NumberLabel" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/TotalRocks" unique_id=1943427424]
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -308.6958
-offset_top = -259.7827
-offset_right = -108.6958
-offset_bottom = -109.782715
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-theme_override_font_sizes/normal_font_size = 92
-theme_override_font_sizes/italics_font_size = 42
-bbcode_enabled = true
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="PineappleRound" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=983699861]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -180.0
-offset_top = -130.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.46, 0.46)
-pivot_offset_ratio = Vector2(1, 1)
-size_flags_horizontal = 4
-size_flags_vertical = 3
-mouse_filter = 2
-script = ExtResource("33_lf8qf")
-
-[node name="PineappleParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/PineappleRound" unique_id=1089582733]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(-314.3479, 19.348206)
-emitting = false
-amount = 10
-texture = ExtResource("34_11n43")
-lifetime = 1.5
-one_shot = true
-explosiveness = 0.8
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_ms1v2")
-
-[node name="Panel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/PineappleRound" unique_id=1174165967]
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -485.6521
-offset_top = -110.65198
-offset_right = -305.6521
-offset_bottom = 19.348022
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme = SubResource("Theme_pivo4")
-theme_override_styles/panel = ExtResource("29_fuvvr")
-
-[node name="PineappleTexture" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/PineappleRound" unique_id=591734289]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -457.0653
-offset_top = -97.825806
-offset_right = -329.89124
-offset_bottom = 2.1741943
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 0.04363323
-scale = Vector2(1.385, 1.385)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-mouse_filter = 2
-texture = ExtResource("33_1tjj5")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PineappleTexture2" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/PineappleRound/PineappleTexture" unique_id=1938013303]
-modulate = Color(0, 0, 0, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -63.587036
-offset_top = -50.0
-offset_right = 63.587036
-offset_bottom = 50.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.05, 1.05)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-mouse_filter = 2
-texture = ExtResource("33_1tjj5")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Auto_fire" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=1756179398]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -180.0
-offset_top = -130.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.46, 0.46)
-pivot_offset_ratio = Vector2(1, 1)
-size_flags_horizontal = 4
-size_flags_vertical = 3
-mouse_filter = 2
-script = ExtResource("32_hv0dl")
-
-[node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/Auto_fire" unique_id=478757491]
-position = Vector2(-305.64185, -118.89026)
-scale = Vector2(1.005127, 1.005127)
-emitting = false
-amount = 25
-one_shot = true
-explosiveness = 0.8
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_11n43")
-
-[node name="Panel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/Auto_fire" unique_id=1636442434]
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -485.6521
-offset_top = -249.78247
-offset_right = -305.6521
-offset_bottom = -119.78247
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme = SubResource("Theme_pivo4")
-theme_override_styles/panel = ExtResource("29_fuvvr")
-
-[node name="NumberLabel2" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/Auto_fire" unique_id=903164787]
-modulate = Color(0.7, 0.7, 0.7, 1)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -459.23914
-offset_top = -228.26038
-offset_right = -332.06506
-offset_bottom = -128.26038
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.665, 1.67)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-mouse_filter = 2
-texture = ExtResource("34_fuvvr")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="NumberLabel3" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/Auto_fire/NumberLabel2" unique_id=757094854]
-modulate = Color(0, 0, 0, 1)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -63.587036
-offset_top = -50.0
-offset_right = 63.587036
-offset_bottom = 50.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.15, 1.15)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-mouse_filter = 2
-texture = ExtResource("34_fuvvr")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/HUD_bottom_corner/Auto_fire/NumberLabel2" unique_id=500300005]
-libraries/ = SubResource("AnimationLibrary_lf8qf")
-autoplay = &"rot"
-
-[node name="SkyMine" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=1320149650]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -180.0
-offset_top = -130.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.46, 0.46)
-pivot_offset_ratio = Vector2(1, 1)
-size_flags_horizontal = 4
-size_flags_vertical = 3
-mouse_filter = 2
-script = ExtResource("29_f75d4")
-
-[node name="Panel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=1322593718]
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -298.6958
-offset_top = -110.65173
-offset_right = -118.6958
-offset_bottom = 19.348267
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_pivo4")
-theme_override_styles/panel = ExtResource("29_fuvvr")
-
-[node name="Texture" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=1615080593]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -272.28284
-offset_top = -86.95557
-offset_right = -145.10875
-offset_bottom = 13.044434
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2.935, 2.935)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-mouse_filter = 2
-texture = ExtResource("35_bpx2c")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Texture2" type="TextureRect" parent="CanvasLayer/HUD_bottom_corner/SkyMine/Texture" unique_id=1472582693]
-modulate = Color(0, 0, 0, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -63.587036
-offset_top = -50.0
-offset_right = 63.587036
-offset_bottom = 50.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.05, 1.05)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 3
-mouse_filter = 2
-texture = ExtResource("35_bpx2c")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="SkyMineLabel" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=1334393879]
-unique_name_in_owner = true
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -207.06555
-offset_top = -134.78162
-offset_right = -79.89148
-offset_bottom = -34.781616
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_outline_size = 1
-theme_override_constants/outline_size = 0
-theme_override_font_sizes/normal_font_size = 60
-theme_override_font_sizes/bold_font_size = 50
-theme_override_font_sizes/bold_italics_font_size = 50
-theme_override_font_sizes/italics_font_size = 71
-bbcode_enabled = true
-text = "1"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SkyMineParticles2D" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=1749942014]
-z_index = 3
-position = Vector2(-116.782715, 23.522583)
-emitting = false
-amount = 30
-lifetime = 1.5
-one_shot = true
-explosiveness = 0.8
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_txfio")
-
-[node name="perfectScoreParticles" type="GPUParticles2D" parent="CanvasLayer/HUD_bottom_corner/SkyMine" unique_id=27718769]
-position = Vector2(-118.6853, 20.240479)
-scale = Vector2(1.005127, 1.005127)
-emitting = false
-amount = 26
-one_shot = true
-explosiveness = 0.8
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_11n43")
 
 [node name="AmmoCorner" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=434542291]
 layout_mode = 1

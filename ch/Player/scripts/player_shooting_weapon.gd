@@ -246,7 +246,7 @@ func _cannot_shoot() -> void:
 	process_mode = Node.PROCESS_MODE_DISABLED
 	
 func process_target_hit(target, damage, screen_offset) -> void:
-	await get_tree().create_timer(power_bullet_speed).timeout
+	await get_tree().create_timer(power_bullet_speed, false).timeout
 	if is_instance_valid(target):
 		var freeze_shot := false
 		if player and player.get("using_alt_weapon") == true:
@@ -386,7 +386,7 @@ func shoot_target() -> void:
 		if shooting_sky_mine:
 			delay += 0.5
 
-		await get_tree().create_timer(delay).timeout
+		await get_tree().create_timer(delay, false).timeout
 		if shooting_sky_mine:
 			shooting_sky_mine = false
 			break
@@ -487,34 +487,6 @@ func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos 
 	return true
 
 
-func Xspawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO) -> void:
-
-			
-	#var new_bullet = current_bullet.instantiate()
-	var new_bullet = BULLET_VISUAL_1.instantiate()
-	if _target != null:
-		new_bullet.target_node = _target
-	else:
-		new_bullet.target_node = null
-		_target = null
-	
-	new_bullet.power_bullet_speed = power_bullet_speed
-	#new_bullet.power_bullet_damage = power_bullet_damage
-	
-	get_tree().get_current_scene().add_child(new_bullet)
-	
-	#var player_gun = get_tree().get_nodes_in_group('player_gun')[0]
-	#
-	new_bullet.global_transform = player_gun.get_barrel_position()
-
-	
-
-	#new_bullet.bullet_setup(_target, result_pos, 0.0)
-	new_bullet.bullet_setup(_target, _power_bullet_speed)
-	
-	#await get_tree().create_timer(await_time).timeout
-	
-
 
 func play_accurate_sounds() -> void:
 	return
@@ -551,7 +523,7 @@ func shoot_bullet_without_target() -> void:
 	#%cannot_shoot_sfx.play(0.91)
 	#$"../SFX/Flicker_sound".play()
 	play_missed_sounds()
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	create_shot_instance(ON_TARGET_SFX, -35.0, 0.65 + pitch_adjustment)
 	%Crosshair.crosshair_shake()
 	player_camera.shake_camera_shooting()
@@ -622,7 +594,7 @@ func shoot_shootable_object(hit: Dictionary) -> void:
 	process_shootable_hit.call_deferred(hit_position, hit_normal)
 
 func process_shootable_hit(hit_position: Vector3, hit_normal: Vector3) -> void:
-	await get_tree().create_timer(power_bullet_speed).timeout
+	await get_tree().create_timer(power_bullet_speed, false).timeout
 	explode_at_point(hit_position, hit_normal)
 
 
@@ -656,7 +628,7 @@ func wait_for_all_rocks_destroyed(rocks: Array) -> void:
 	
 func activate_multishot_bonus(rock_count: int) -> void:
 	
-	print('called a mULTI')
+	print('called a Multi')
 	if gl_PlayerState.dataset.total_hazards > 0:
 		return
 
