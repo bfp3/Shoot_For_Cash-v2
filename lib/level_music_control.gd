@@ -36,7 +36,6 @@ const RANDOMISER_STREAM_PATHS := [
 	"res://sfx/spare_songs/aa_joyful_chess.ogg",
 	"res://sfx/spare_songs/aa_joyful_frog.ogg",
 	"res://sfx/spare_songs/aa_joyful_matchmakers.ogg",
-	"res://sfx/Windmill_Sunburst_NOT_IN_USE.ogg",
 	"res://sfx/Windmill_Sunburst_Your_name.ogg",
 ]
 
@@ -252,17 +251,17 @@ func first_round() -> void:
 	return
 	
 	
-	var curr_song : AudioStreamPlayer = current_song
-	var orig_vol = curr_song.volume_db
-	var _pitch_scale = curr_song.pitch_scale
-	curr_song.volume_db = -80.0
-	curr_song.pitch_scale = 0.1
-	var tween = create_tween().set_ease(Tween.EASE_IN).set_parallel()
-	tween.tween_interval(0.75)
-	tween.tween_property(curr_song, "pitch_scale", _pitch_scale, 1.5)
-	tween.tween_property(curr_song, "volume_db", orig_vol, 1.5)
-	tween.tween_property(curr_song, "playing", true, 0.1).set_delay(0.1)
-	await tween.finished
+	#var curr_song : AudioStreamPlayer = current_song
+	#var orig_vol = curr_song.volume_db
+	#var _pitch_scale = curr_song.pitch_scale
+	#curr_song.volume_db = -80.0
+	#curr_song.pitch_scale = 0.1
+	#var tween = create_tween().set_ease(Tween.EASE_IN).set_parallel()
+	#tween.tween_interval(0.75)
+	#tween.tween_property(curr_song, "pitch_scale", _pitch_scale, 1.5)
+	#tween.tween_property(curr_song, "volume_db", orig_vol, 1.5)
+	#tween.tween_property(curr_song, "playing", true, 0.1).set_delay(0.1)
+	#await tween.finished
 	
 func start_opening_song() -> void:
 	

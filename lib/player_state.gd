@@ -479,6 +479,30 @@ func get_level_progress_entry(place_id: String) -> Dictionary:
 	return {}
 
 
+## Best endless survival time for a place (seconds). 0 = never recorded.
+func get_endless_best_seconds(place_id: String = "") -> float:
+	if place_id.is_empty():
+		place_id = gl_DataSet.get_testing_place_name()
+	var entry := get_level_progress_entry(place_id)
+	return float(entry.get("endless_best_sec", 0.0))
+
+
+## Records a run if it beats the stored best. Returns the new best.
+func record_endless_best_seconds(seconds: float, place_id: String = "") -> float:
+	if seconds <= 0.0:
+		return get_endless_best_seconds(place_id)
+	if place_id.is_empty():
+		place_id = gl_DataSet.get_testing_place_name()
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	var entry := get_level_progress_entry(place_id)
+	var best := float(entry.get("endless_best_sec", 0.0))
+	if seconds > best:
+		best = seconds
+		entry["endless_best_sec"] = best
+		set_level_progress_entry(place_id, entry)
+	return best
+
+
 func save_meta_progress() -> void:
 	if not is_persist_enabled():
 		return

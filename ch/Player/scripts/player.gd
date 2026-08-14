@@ -310,7 +310,8 @@ func handle_pan_left_and_right(delta) -> void:
 
 func _process(delta: float) -> void:
 	
-	if (OS.has_feature("editor") or OS.is_debug_build()) and not game_lost:
+	#if (OS.has_feature("editor") or OS.is_debug_build()) and not game_lost:
+	if not game_lost:
 		if Input.is_action_pressed("middle_mouse"):
 			Engine.time_scale = 10.0
 		if Input.is_action_just_released("middle_mouse"):

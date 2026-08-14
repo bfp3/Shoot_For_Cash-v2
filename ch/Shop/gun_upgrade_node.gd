@@ -293,8 +293,7 @@ func complete_purchase() -> void:
 	shop_main_menu.purchase_made(upgrade_type)
 	
 	hold_duration = 0.15
-	
-	var unpurchased_cont: VBoxContainer = $VBoxContainer
+
 	disabled = true
 	await get_tree().create_timer(0.1).timeout
 	%Purchased.modulate.a = 0.0
@@ -337,7 +336,7 @@ func remove_gun() -> void:
 
 func _on_focus_entered() -> void:
 	#var bbcode_des : String = "[rainbow][shake]" + description + "[/shake][/rainbow]"
-	var bbcode_des : String = "" + tooltip_description
+	#var _bbcode_des : String = "" + tooltip_description
 	#var bbcode_des : String = "[shake rate=5.0 level=5 connected=1]" + description + "[/shake]"
 	#if tooltip:
 		#tooltip._toggle_tooltip(true, bbcode_des)

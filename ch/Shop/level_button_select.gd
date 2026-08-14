@@ -256,11 +256,11 @@ func _total_rounds_for_place(_place: String) -> int:
 	return total if total > 0 else 12
 
 
-func _set_progress_hud_visible(is_visible: bool) -> void:
+func _set_progress_hud_visible(_is_visible: bool) -> void:
 	if round_progress_label:
-		round_progress_label.visible = is_visible and show_round_count
+		round_progress_label.visible = _is_visible and show_round_count
 	if cash_earned_label:
-		cash_earned_label.visible = is_visible
+		cash_earned_label.visible = _is_visible
 
 
 func mark_completed(animate: bool = true) -> void:
@@ -400,8 +400,8 @@ func _preview_overlay_panels() -> Array[Control]:
 		if child is Panel:
 			out.append(child as Control)
 	## Legacy root panels (if any remain).
-	for name in ["Panel", "Panel2"]:
-		var n := get_node_or_null(name) as Control
+	for _name in ["Panel", "Panel2"]:
+		var n := get_node_or_null(_name) as Control
 		if n and not out.has(n):
 			out.append(n)
 	return out

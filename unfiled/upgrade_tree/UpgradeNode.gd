@@ -416,7 +416,7 @@ func remove_gun() -> void:
 
 func _on_focus_entered() -> void:
 	#var bbcode_des : String = "[rainbow][shake]" + description + "[/shake][/rainbow]"
-	var bbcode_des : String = "" + tooltip_description
+	#var bbcode_des : String = "" + tooltip_description
 	#var bbcode_des : String = "[shake rate=5.0 level=5 connected=1]" + description + "[/shake]"
 	#if tooltip:
 		#tooltip._toggle_tooltip(true, bbcode_des)
@@ -515,13 +515,13 @@ func _update_visual_state() -> void:
 			border = Color(0.251, 0.275, 0.314, 1.0)
 			self.modulate = Color('FFFFFF')
 
-	var hover_boost := is_hovered() or has_focus()
-
-	var normal_style := _make_style(base, border, 2)
-	var hover_style := _make_style(base.lightened(0.10), border.lightened(0.15), 3)
-	var pressed_style := _make_style(base.darkened(0.07), border, 3)
-	var focus_style := _make_style(base.lightened(0.15), Color(0.95, 0.95, 1.0, 1.0), 3)
-	var disabled_style := _make_style(base.darkened(0.20), border.darkened(0.25), 2)
+	#var hover_boost := is_hovered() or has_focus()
+#
+	#var normal_style := _make_style(base, border, 2)
+	#var hover_style := _make_style(base.lightened(0.10), border.lightened(0.15), 3)
+	#var pressed_style := _make_style(base.darkened(0.07), border, 3)
+	#var focus_style := _make_style(base.lightened(0.15), Color(0.95, 0.95, 1.0, 1.0), 3)
+	#var disabled_style := _make_style(base.darkened(0.20), border.darkened(0.25), 2)
 
 	#add_theme_stylebox_override("normal", hover_style if hover_boost else normal_style)
 	#add_theme_stylebox_override("hover", hover_style)

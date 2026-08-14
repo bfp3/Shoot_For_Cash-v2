@@ -1,6 +1,9 @@
 extends Node
 class_name RoundManager
 
+## TEMP publish flag — set true again after the export build to restore the level editor.
+const ENABLE_LEVEL_EDITOR := false
+
 ## Level scenery paths — loaded on demand (never preload all islands into Main).
 ## Keep these under sc/All_level_layouts only. Do NOT point at sc/2025_Levels/* giants.
 const LAYOUT_PATH_START := "res://sc/All_level_layouts/level_layout_00_start.tscn"
@@ -273,6 +276,8 @@ func register_level_editor(menu: Control) -> void:
 ## Open level editor from shop / start menu (debug). Soft-closes menus without starting a round.
 ## Returns true if the editor opened (caller should consume the toggle key).
 func open_level_editor_from_shop() -> bool:
+	if not ENABLE_LEVEL_EDITOR:
+		return false
 	if not OS.is_debug_build():
 		return false
 	if level_editor_test_active or level_editor_open:
@@ -320,6 +325,8 @@ func exit_level_editor_to_shop() -> void:
 
 ## Parse editor text as island test / range test / round, then play that one round.
 func begin_level_editor_test(text: String) -> void:
+	if not ENABLE_LEVEL_EDITOR:
+		return
 	if not OS.is_debug_build():
 		return
 	if level_editor_test_active or _level_editor_finishing:
@@ -440,14 +447,15 @@ func finish_level_editor_test_round() -> void:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
 		rocks_container.reset_all_rocks()
 
-	# Drop any oranges still in play so they don't carry into the next test.
+	# Explode any oranges still in play so they don't carry into the next test.
 	if orange_active > 0:
-		EventBus.instance.oranges_start_falling.emit()
+		await explode_active_oranges_staggered()
 		var orange_wait := 0.0
 		while orange_active > 0 and orange_wait < 3.0:
 			await get_tree().process_frame
 			orange_wait += get_process_delta_time()
 		orange_active = 0
+	EventBus.instance.oranges_start_falling.emit()
 
 	await get_tree().create_timer(0.2, false).timeout
 
@@ -532,12 +540,12 @@ func is_endless_mode() -> bool:
 	return place == gl_DataSet.get_testing_place_name().to_lower() or place == "jetz" or place == "test"
 
 
-## Seconds survived in endless mode (for tally). -1 if not endless.
+## Seconds survived in endless mode (for tally). -1 if not endless / no run.
 func get_endless_elapsed_seconds() -> float:
-	if not is_endless_mode():
-		return -1.0
 	if _endless_elapsed_sec > 0.0:
 		return _endless_elapsed_sec
+	if not is_endless_mode():
+		return -1.0
 	if round_timer and round_timer.has_method("get_elapsed_seconds"):
 		return float(round_timer.get_elapsed_seconds())
 	return 0.0
@@ -546,8 +554,23 @@ func get_endless_elapsed_seconds() -> float:
 func _snapshot_endless_elapsed() -> void:
 	if not is_endless_mode():
 		return
+	var t := 0.0
 	if round_timer and round_timer.has_method("get_elapsed_seconds"):
-		_endless_elapsed_sec = float(round_timer.get_elapsed_seconds())
+		t = float(round_timer.get_elapsed_seconds())
+	## Never overwrite a good snapshot with 0 after stop_timer clears count-up.
+	if t > _endless_elapsed_sec:
+		_endless_elapsed_sec = t
+
+
+func record_endless_run_result() -> void:
+	if not is_endless_mode():
+		return
+	_snapshot_endless_elapsed()
+	var lived := _endless_elapsed_sec
+	if lived <= 0.0:
+		return
+	if gl_PlayerState.has_method("record_endless_best_seconds"):
+		gl_PlayerState.record_endless_best_seconds(lived, String(gl_PlayerState.dataset.level_name))
 
 
 ## Seconds for RoundTimer when in boss mode; -1 = use normal power_time_upgrade.
@@ -618,6 +641,25 @@ func load_level_sequence() -> void:
 
 func bonus_oranges() -> void:
 	bonus_oranges_ready = true
+
+
+## Explode every still-active orange with 0.1s between each (end of round).
+func explode_active_oranges_staggered() -> void:
+	var oranges: Array = []
+	for container in get_tree().get_nodes_in_group("orange_container"):
+		if not is_instance_valid(container):
+			continue
+		for child in container.get_children():
+			if not is_instance_valid(child):
+				continue
+			if child.has_method("force_end_of_round_explode") and bool(child.get("rock_activated")):
+				oranges.append(child)
+	for i in oranges.size():
+		if i > 0:
+			await get_tree().create_timer(0.1, false).timeout
+		var orange = oranges[i]
+		if is_instance_valid(orange):
+			orange.force_end_of_round_explode()
 
 	
 func check_round_for_strikes() -> void:
@@ -753,6 +795,7 @@ func handle_three_strikes() -> void:
 	player_failed = true
 	success = false
 	_snapshot_endless_elapsed()
+	record_endless_run_result()
 
 	stop_timer()
 	stop_player()
@@ -818,6 +861,7 @@ func unsuccessful_round() -> void:
 
 func unsuccessful_round_locked() -> void:
 	_snapshot_endless_elapsed()
+	record_endless_run_result()
 	stop_timer()
 	player_failed = true
 	force_shop_open = true
@@ -1366,6 +1410,7 @@ func update_round_end() -> void:
 		player_can_progress = true
 	
 	
+	await explode_active_oranges_staggered()
 	EventBus.instance.oranges_start_falling.emit()
 	await get_tree().create_timer(1.0, false).timeout
 	
@@ -1380,8 +1425,10 @@ func update_round_end() -> void:
 	
 	
 	
-	while orange_active > 0 && success:
+	var orange_wait := 0.0
+	while orange_active > 0 and success and orange_wait < 5.0:
 		await get_tree().process_frame
+		orange_wait += get_process_delta_time()
 	
 		
 	orange_active = 0

@@ -84,6 +84,11 @@ func get_script_text() -> String:
 
 
 func open_menu() -> void:
+	if not RoundManager.ENABLE_LEVEL_EDITOR:
+		## Publish builds: editor entry is disabled (see RoundManager.ENABLE_LEVEL_EDITOR).
+		return
+	if not OS.is_debug_build():
+		return
 	if _busy:
 		return
 	_is_open = true
@@ -343,7 +348,7 @@ func _on_back_pressed() -> void:
 	_busy = true
 	close_menu()
 	if round_manager and round_manager.has_method("exit_level_editor_to_shop"):
-		await round_manager.exit_level_editor_to_shop()
+		round_manager.exit_level_editor_to_shop()
 	elif shop_main_menu and shop_main_menu.has_method("soft_show_from_level_editor"):
 		shop_main_menu.soft_show_from_level_editor()
 	_busy = false

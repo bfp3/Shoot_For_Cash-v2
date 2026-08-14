@@ -75,7 +75,7 @@ func _ready() -> void:
 	
 	start_pos = global_position
 	
-	EventBus.instance.oranges_start_falling.connect(start_falling)
+	# End-of-round explode is driven by RoundManager with a stagger (not EventBus).
 	EventBus.instance.open_shop.connect(update_disabled)
 	await get_tree().create_timer(0.2).timeout
 	
@@ -87,14 +87,20 @@ func _ready() -> void:
 
 func start_falling() -> void:
 	## End-of-round cleanup: explode like a shot, but skip blast radius (and cash).
-	if rock_destroyed or current_state == State.HIT or current_state == State.INACTIVE:
+	## Note: launch uses update_active() without enter_state(ACTIVE), so state may
+	## still be INACTIVE while rock_activated is true — don't gate on state alone.
+	if rock_destroyed or current_state == State.HIT:
 		return
 	if not rock_activated:
 		return
 	rock_destroyed = true
 	start_destroyed_process(false, false)
-	
-	
+
+
+## Called by RoundManager with a stagger between oranges at round end.
+func force_end_of_round_explode() -> void:
+	start_falling()
+
 func enter_state(new_state : State) -> void:
 
 	current_state = new_state

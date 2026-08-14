@@ -1,5 +1,8 @@
 extends Control
 
+## TEMP publish flag — set true again after the export build to restore Shoot for Cents.
+const ENABLE_SHOOT_FOR_CENTS := false
+
 const SHOP_MINI_GAME_SCENE_PATH := "res://ch/Shop/ShopMiniGame.tscn"
 const SHOP_PANEL_STYLEBOX := preload("res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres")
 
@@ -102,8 +105,11 @@ func _setup_shop_extra_buttons() -> void:
 			pause_btn.hide()
 
 	var cents_btn := get_node_or_null("%ShootForCentsButton") as Button
-	if cents_btn and not cents_btn.pressed.is_connected(_on_shoot_for_cents_pressed):
-		cents_btn.pressed.connect(_on_shoot_for_cents_pressed)
+	if cents_btn:
+		cents_btn.visible = ENABLE_SHOOT_FOR_CENTS
+		cents_btn.disabled = not ENABLE_SHOOT_FOR_CENTS
+		if ENABLE_SHOOT_FOR_CENTS and not cents_btn.pressed.is_connected(_on_shoot_for_cents_pressed):
+			cents_btn.pressed.connect(_on_shoot_for_cents_pressed)
 
 
 func _on_pause_game_button_pressed() -> void:
@@ -118,6 +124,8 @@ func _on_pause_game_button_pressed() -> void:
 
 
 func _on_shoot_for_cents_pressed() -> void:
+	if not ENABLE_SHOOT_FOR_CENTS:
+		return
 	if current_state != SkillState.IN_MENU and current_state != SkillState.OPEN_MENU:
 		return
 	_ensure_shop_mini_game()
@@ -220,6 +228,18 @@ func _refresh_place_challenge_banner() -> void:
 		banner.visible = false
 		banner.text = ""
 		return
+
+	## Jetz endless: show best survival time once the player has a recorded run.
+	if gl_DataSet.is_testing_place(place) or place.to_lower() == "jetz":
+		var best := 0.0
+		if gl_PlayerState.has_method("get_endless_best_seconds"):
+			best = float(gl_PlayerState.get_endless_best_seconds(place))
+		if best > 0.0:
+			banner.visible = true
+			var time_txt := _format_endless_best_time(best)
+			banner.text = "[center][wave]BEST TIME\n%s[/wave][/center]" % time_txt
+			return
+
 	var challenge := gl_DataSet.get_string("shop_challenge_text", idx)
 	if challenge.is_empty():
 		banner.visible = false
@@ -227,6 +247,14 @@ func _refresh_place_challenge_banner() -> void:
 		return
 	banner.visible = true
 	banner.text = "[center][wave]%s[/wave][/center]" % challenge
+
+
+func _format_endless_best_time(seconds: float) -> String:
+	if round_manager and round_manager.get("round_timer") and round_manager.round_timer.has_method("format_time"):
+		return String(round_manager.round_timer.format_time(seconds))
+	var whole := int(maxf(seconds, 0.0))
+	var hundredths := int((maxf(seconds, 0.0) - float(whole)) * 100.0)
+	return "%d:%02d" % [whole, hundredths]
 
 
 func _refresh_boss_challenge_banner() -> void:
@@ -669,6 +697,7 @@ func update_open_menu() -> void:
 	sfx_open_shop()
 	update_shop()
 	update_place_label()
+	_refresh_place_challenge_banner()
 	#%Play_round_text.text = "[i][wave][color=]PLAY\n[color=c70102]%s" % CommonCode.format_money(int(gl_DataSet.get_value('price_play_round', 0)))
 
 	
@@ -1164,6 +1193,8 @@ func _setup_shop_mini_game() -> void:
 
 
 func _ensure_shop_mini_game() -> void:
+	if not ENABLE_SHOOT_FOR_CENTS:
+		return
 	if _shop_mini_game != null and is_instance_valid(_shop_mini_game):
 		return
 	var packed := ResourceLoader.load(SHOP_MINI_GAME_SCENE_PATH, "PackedScene", ResourceLoader.CACHE_MODE_REUSE) as PackedScene
@@ -1184,6 +1215,8 @@ func _close_shop_mini_game() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	#
 	#if event is InputEventKey and event.pressed and not event.echo:
+	if not ENABLE_SHOOT_FOR_CENTS:
+		return
 	if Input.is_action_just_pressed('select_button'):
 		if current_state == SkillState.IN_MENU or current_state == SkillState.OPEN_MENU:
 			_ensure_shop_mini_game()

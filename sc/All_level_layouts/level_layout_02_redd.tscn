@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://b830br7pig61j" path="res://res/Kenney_prototype_textures/Dark/texture_08.png" id="8_ku1sk"]
 [ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="9_2gv54"]
 [ext_resource type="Material" uid="uid://cveh5nihfpulr" path="res://res/pileon_clay_material.tres" id="9_08twk"]
+[ext_resource type="Script" uid="uid://cwee1r4c8ea3p" path="res://ch/SimpleWater/simple_water.gd" id="10_rvqpm"]
+[ext_resource type="Material" uid="uid://cg2tfxiei8rx" path="res://ch/SimpleWater/simple_water_material.tres" id="11_n1dh2"]
 [ext_resource type="PackedScene" uid="uid://bynwchnbyxiue" path="res://ch/environment_decoration/T_pileon.tscn" id="20_56nw2"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="23_08twk"]
 
@@ -654,6 +656,11 @@ shader_parameter/wave_direction = Vector2(0.5, 0)
 shader_parameter/wave_direction2 = Vector2(0, 1)
 shader_parameter/time_scale = 0.005
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_rvqpm"]
+size = Vector2(150, 330)
+subdivide_width = 24
+subdivide_depth = 24
+
 [node name="Redd" type="Node3D" unique_id=229302118]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1725409465 groups=["directional_light"]]
@@ -957,6 +964,17 @@ transform = Transform3D(2.03, 0, 0, 0, 1.199, 0, 0, 0, 2.03, 2.14, 1.103, 5.155)
 layers = 131073
 mesh = SubResource("CylinderMesh_3msr0")
 surface_material_override/0 = SubResource("ShaderMaterial_mj5ye")
+
+[node name="SimpleWater" type="Node3D" parent="." unique_id=110315488]
+transform = Transform3D(1, 0, 0, 0, 0.99999845, -0.0017453283, 0, 0.0017453283, 0.99999845, 3.36, -4.946, 182.81036)
+script = ExtResource("10_rvqpm")
+water_size = Vector2(150, 330)
+subdivide = 24
+metadata/_custom_type_script = "uid://cwee1r4c8ea3p"
+
+[node name="Mesh" type="MeshInstance3D" parent="SimpleWater" unique_id=592310934]
+material_override = ExtResource("11_n1dh2")
+mesh = SubResource("PlaneMesh_rvqpm")
 
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_3"]

@@ -40,6 +40,7 @@ func _ready() -> void:
 
 
 func _ensure_shop_mini_game() -> void:
+	return
 	if _shop_mini_game != null and is_instance_valid(_shop_mini_game):
 		return
 	var packed := ResourceLoader.load(SHOP_MINI_GAME_SCENE_PATH, "PackedScene", ResourceLoader.CACHE_MODE_REUSE) as PackedScene

@@ -112,31 +112,31 @@ func _ensure_retro_effects_enabled(master_idx: int, enabled: bool) -> void:
 
 func _apply_retro_blend(blend: float, master_idx: int = -1) -> void:
 	return
-	if master_idx < 0:
-		master_idx = AudioServer.get_bus_index("Master")
-	if master_idx < 0:
-		return
-
-	var t := clampf(blend, 0.0, 1.0)
-	AudioServer.set_bus_volume_db(
-		master_idx,
-		lerpf(_normal_master_volume_db(), retro_master_volume_db, t)
-	)
-
-	var highpass := AudioServer.get_bus_effect(master_idx, MASTER_BUS_IDX_HIGHPASS) as AudioEffectHighPassFilter
-	if highpass:
-		highpass.cutoff_hz = lerpf(RETRO_HIGHPASS_OFF_HZ, retro_highpass_cutoff_hz, t)
-		highpass.resonance = lerpf(0.5, retro_highpass_resonance, t)
-
-	var reverb := AudioServer.get_bus_effect(master_idx, MASTER_BUS_IDX_REVERB) as AudioEffectReverb
-	if reverb:
-		reverb.wet = lerpf(0.0, retro_reverb_wet, t)
-		reverb.dry = lerpf(1.0, retro_reverb_dry, t)
-
-	var chorus := AudioServer.get_bus_effect(master_idx, MASTER_BUS_IDX_CHORUS) as AudioEffectChorus
-	if chorus:
-		chorus.wet = lerpf(0.0, retro_chorus_wet, t)
-		chorus.dry = lerpf(1.0, retro_chorus_dry, t)
+	#if master_idx < 0:
+		#master_idx = AudioServer.get_bus_index("Master")
+	#if master_idx < 0:
+		#return
+#
+	#var t := clampf(blend, 0.0, 1.0)
+	#AudioServer.set_bus_volume_db(
+		#master_idx,
+		#lerpf(_normal_master_volume_db(), retro_master_volume_db, t)
+	#)
+#
+	#var highpass := AudioServer.get_bus_effect(master_idx, MASTER_BUS_IDX_HIGHPASS) as AudioEffectHighPassFilter
+	#if highpass:
+		#highpass.cutoff_hz = lerpf(RETRO_HIGHPASS_OFF_HZ, retro_highpass_cutoff_hz, t)
+		#highpass.resonance = lerpf(0.5, retro_highpass_resonance, t)
+#
+	#var reverb := AudioServer.get_bus_effect(master_idx, MASTER_BUS_IDX_REVERB) as AudioEffectReverb
+	#if reverb:
+		#reverb.wet = lerpf(0.0, retro_reverb_wet, t)
+		#reverb.dry = lerpf(1.0, retro_reverb_dry, t)
+#
+	#var chorus := AudioServer.get_bus_effect(master_idx, MASTER_BUS_IDX_CHORUS) as AudioEffectChorus
+	#if chorus:
+		#chorus.wet = lerpf(0.0, retro_chorus_wet, t)
+		#chorus.dry = lerpf(1.0, retro_chorus_dry, t)
 
 
 

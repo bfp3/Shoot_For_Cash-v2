@@ -145,7 +145,7 @@ func _run_warmup() -> void:
 
 	var batch_count := 0
 	for job in jobs:
-		await _execute_job(job)
+		_execute_job(job)
 		done += 1
 		batch_count += 1
 		progress.emit(done, total, str(job.get("label", "")))

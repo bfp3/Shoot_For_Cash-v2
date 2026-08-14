@@ -364,28 +364,28 @@ func _draw_edit_dial() -> void:
 
 func _draw_dial_on(target: Control, draw_size: Vector2, width: float, show_focus: bool, _label_size: int) -> void:
 	var center := draw_size * 0.5
-	var radius := mini(draw_size.x, draw_size.y) * 0.5 - 4.0
+	var _radius := mini(draw_size.x, draw_size.y) * 0.5 - 4.0
 	var track := Color(0.21, 0.23, 0.25, 0.35)
 	var fill := Color(0.78, 0.004, 0.008, 1.0)
 	var knob := Color(0.92, 0.88, 0.85, 1.0)
 	var ink := Color(0.08, 0.09, 0.11, 1.0)
 
-	target.draw_circle(center, radius, track)
-	target.draw_arc(center, radius - width * 0.5, -PI * 0.5, -PI * 0.5 + TAU, 64, Color(0.21, 0.23, 0.25, 0.55), width, true)
+	target.draw_circle(center, _radius, track)
+	target.draw_arc(center, _radius - width * 0.5, -PI * 0.5, -PI * 0.5 + TAU, 64, Color(0.21, 0.23, 0.25, 0.55), width, true)
 
 	var t := 0.0
 	if max_value > min_value:
 		t = (value - min_value) / (max_value - min_value)
 	var end_angle := -PI * 0.5 + TAU * t
 	if t > 0.001:
-		target.draw_arc(center, radius - width * 0.5, -PI * 0.5, end_angle, 64, fill, width, true)
+		target.draw_arc(center, _radius - width * 0.5, -PI * 0.5, end_angle, 64, fill, width, true)
 
-	var inner_r := radius - width - 4.0
+	var inner_r := _radius - width - 4.0
 	target.draw_circle(center, maxf(inner_r, 8.0), knob)
 	target.draw_arc(center, maxf(inner_r, 8.0), 0.0, TAU, 48, ink, 2.0 if not show_focus else 3.5, true)
 	if show_focus:
-		target.draw_arc(center, radius + 2.0, 0.0, TAU, 48, fill, 3.0, true)
+		target.draw_arc(center, _radius + 2.0, 0.0, TAU, 48, fill, 3.0, true)
 
-	var tick_pos := center + Vector2(cos(end_angle), sin(end_angle)) * (radius - width * 0.5)
+	var tick_pos := center + Vector2(cos(end_angle), sin(end_angle)) * (_radius - width * 0.5)
 	target.draw_circle(tick_pos, 6.0 if target == self else 10.0, fill)
 	target.draw_circle(tick_pos, 3.0 if target == self else 5.0, knob)

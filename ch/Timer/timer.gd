@@ -26,6 +26,8 @@ var _timer_paused := false
 var _pause_toggle_locked := false
 ## Endless mode: count up from 0 instead of counting down.
 var count_up := false
+## Last count-up elapsed, kept after stop so tally can still read it.
+var _last_count_up_elapsed := 0.0
 
 @export_group("Timer SFX")
 @onready var timer_ticking_sfx: AudioStreamPlayer = $TimerTickingSFX
@@ -57,6 +59,7 @@ func _process(delta: float) -> void:
 
 	if count_up:
 		time_left += delta
+		_last_count_up_elapsed = time_left
 		update_text()
 		return
 	
@@ -112,6 +115,7 @@ func start_count_up() -> void:
 	count_up = true
 	time_left = 0.0
 	start_time = 0.0
+	_last_count_up_elapsed = 0.0
 	sent_signal = false
 	show()
 	modulate.a = 1.0
@@ -125,7 +129,9 @@ func start_count_up() -> void:
 
 func get_elapsed_seconds() -> float:
 	if count_up:
-		return maxf(time_left, 0.0)
+		return maxf(time_left, _last_count_up_elapsed)
+	if _last_count_up_elapsed > 0.0:
+		return _last_count_up_elapsed
 	return maxf(start_time - time_left, 0.0)
 
 func enter_state(new_state: State) -> void:
@@ -283,6 +289,8 @@ func update_resume_timer() -> void:
 	
 
 func stop_timer() -> void:
+	if count_up:
+		_last_count_up_elapsed = maxf(_last_count_up_elapsed, time_left)
 	enter_state(State.INACTIVE)
 	count_up = false
 	timer_ticking_sfx.stop()
@@ -367,113 +375,6 @@ func _update_ticking_volume(seconds_left: float, delta: float) -> void:
 		target_pitch,
 		delta * ticking_sfx_smooth_speed
 	)
-
-
-## Boss win: slide timer to center, stamp CLEARED!, confetti, then return control.
-func play_boss_cleared_celebration() -> void:
-	return
-	show()
-	modulate.a = 1.0
-	set_process(false)
-	time_left = 0.0
-	if timer_label:
-		timer_label.text = "[wave]CLEARED!"
-		timer_label.modulate = Color.WHITE
-
-	var rest_pos := position
-	var rest_scale := scale
-	var viewport_size := get_viewport().get_visible_rect().size
-	var target_pos := Vector2(
-		(viewport_size.x - size.x * scale.x) * 0.5,
-		(viewport_size.y - size.y * scale.y) * 0.35
-	)
-
-	var stamp := _ensure_cleared_stamp()
-	stamp.visible = true
-	stamp.modulate.a = 0.0
-	stamp.scale = Vector2.ONE * 3.0
-
-	var confetti := _ensure_cleared_confetti()
-	confetti.emitting = false
-
-	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_property(self, "position", target_pos, 0.45)
-	tween.parallel().tween_property(self, "scale", rest_scale * 1.35, 0.45)
-	await tween.finished
-
-	var stamp_tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	stamp_tween.tween_property(stamp, "modulate:a", 1.0, 0.2)
-	stamp_tween.parallel().tween_property(stamp, "scale", Vector2.ONE, 0.25)
-	confetti.restart()
-	confetti.emitting = true
-	await stamp_tween.finished
-	await get_tree().create_timer(1.6, false).timeout
-
-	confetti.emitting = false
-	stamp.visible = false
-	position = rest_pos
-	scale = rest_scale
-	if timer_label:
-		timer_label.text = format_time(0.0)
-
-
-func _ensure_cleared_stamp() -> Control:
-	var stamp := get_node_or_null("ClearedStamp") as Control
-	if stamp:
-		return stamp
-	stamp = Control.new()
-	stamp.name = "ClearedStamp"
-	stamp.set_anchors_preset(Control.PRESET_CENTER)
-	stamp.size = Vector2(320, 120)
-	stamp.position = Vector2(-160, -40)
-	stamp.pivot_offset_ratio = Vector2(0.5,0.5)
-	stamp.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	stamp.z_index = 20
-	var label := RichTextLabel.new()
-	label.name = "StampLabel"
-	label.bbcode_enabled = true
-	label.fit_content = true
-	label.scroll_active = false
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.autowrap_mode = TextServer.AUTOWRAP_OFF
-	label.set_anchors_preset(Control.PRESET_FULL_RECT)
-	label.add_theme_font_size_override("normal_font_size", 284)
-	label.add_theme_color_override("default_color", Color(0.631, 0.008, 0.016, 1.0))
-	label.text = "[wave]100%"
-	label.pivot_offset_ratio = Vector2(0.5,0.5)
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	stamp.add_child(label)
-	add_child(stamp)
-	return stamp
-
-
-func _ensure_cleared_confetti() -> CPUParticles2D:
-	var confetti := get_node_or_null("ClearedConfetti") as CPUParticles2D
-	if confetti:
-		return confetti
-	confetti = CPUParticles2D.new()
-	confetti.name = "ClearedConfetti"
-	confetti.z_index = 19
-	confetti.position = Vector2(size.x * 0.5, size.y * 0.35)
-	confetti.amount = 64
-	confetti.lifetime = 1.4
-	confetti.one_shot = true
-	confetti.explosiveness = 0.92
-	confetti.direction = Vector2(0, -1)
-	confetti.spread = 180.0
-	confetti.initial_velocity_min = 180.0
-	confetti.initial_velocity_max = 420.0
-	confetti.gravity = Vector2(0, 480)
-	confetti.scale_amount_min = 3.0
-	confetti.scale_amount_max = 7.0
-	confetti.color = Color(0.95, 0.2, 0.15, 1.0)
-	
-	confetti.emitting = false
-	add_child(confetti)
-	return confetti
-
 
 
 

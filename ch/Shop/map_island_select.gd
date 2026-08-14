@@ -557,9 +557,9 @@ func _show_beat_boss_popup() -> void:
 	add_child(popup)
 
 	await get_tree().process_frame
-	var anchor: Control = next_island_button if next_island_button else next_island_label
-	if anchor:
-		var center := anchor.get_global_rect().get_center()
+	var _anchor: Control = next_island_button if next_island_button else next_island_label
+	if _anchor:
+		var center := _anchor.get_global_rect().get_center()
 		popup.global_position = center - popup.size * 0.5 + Vector2(0, -80)
 	var tween := create_tween()
 	tween.tween_property(popup, "modulate:a", 1.0, 0.2)
@@ -1171,10 +1171,10 @@ func _show_earn_more_money_popup() -> void:
 	add_child(popup)
 
 	await get_tree().process_frame
-	var anchor: Control = next_island_button if next_island_button else next_island_label
+	var _anchor: Control = next_island_button if next_island_button else next_island_label
 	var start_pos := Vector2.ZERO
-	if anchor:
-		start_pos = anchor.global_position + (anchor.size * anchor.scale * 0.5)
+	if _anchor:
+		start_pos = _anchor.global_position + (_anchor.size * _anchor.scale * 0.5)
 		start_pos.x -= popup.size.x * 0.5
 		start_pos.y -= 40.0
 	else:

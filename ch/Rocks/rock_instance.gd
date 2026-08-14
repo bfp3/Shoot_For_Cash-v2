@@ -149,6 +149,9 @@ var _airborne_collision_token := 0
 ## If true, avoider is culled when leaving camera bounds or hitting the splash zone.
 ## If false, it keeps flying; StaticBody3D / rock contacts still explode as above.
 @export var avoider_destroys_on_out_of_bounds := true
+## Lock avoiders to this world Z so they share a collision plane with other rocks.
+@export var avoider_lock_z := 23.0
+var _avoider_plane_z := 23.0
 var _avoider_armed := false
 var _avoider_arm_token := 0
 var _avoider_life_token := 0
@@ -209,6 +212,9 @@ func begin_ballistic_aim_feel(descent_damp: float = 0.5) -> void:
 func _physics_process(delta: float) -> void:
 	if current_state == State.ACTIVE and rock_activated:
 		if rock_type == RockSize.AVOIDER:
+			## Always pin depth so collisions stay on the rock plane.
+			linear_velocity.z = 0.0
+			global_position.z = _avoider_plane_z
 			if not _freeze_shot_pending:
 				_update_avoider(delta)
 		elif rock_type == RockSize.CHASER:
@@ -296,6 +302,9 @@ func update_active() -> void:
 	enable_collision()
 	add_to_rocks_round()
 	if rock_type == RockSize.AVOIDER:
+		_avoider_plane_z = avoider_lock_z
+		global_position.z = _avoider_plane_z
+		linear_velocity.z = 0.0
 		_arm_avoider()
 		_start_avoider_lifetime()
 		_sync_avoider_collision_exceptions()
@@ -637,7 +646,7 @@ func setup_rock_type() -> void:
 			current_rock_type = "Rock Avoider"
 			rock_type_name = "rock_type_avoider"
 			var avoider_scale := Vector3.ONE * 0.35
-			var avoider_size := 1.5
+			var avoider_size := 1.8
 
 			health = 1
 			cash_value = 0
@@ -658,6 +667,8 @@ func setup_rock_type() -> void:
 			_avoider_armed = false
 			_avoider_has_seek_target = false
 			_avoider_retarget_timer = 0.0
+			_avoider_plane_z = avoider_lock_z
+			global_position.z = _avoider_plane_z
 
 		RockSize.CHASER:
 			current_rock_type = "Rock Chaser"
@@ -1685,7 +1696,9 @@ func _update_avoider(delta: float) -> void:
 		var steered := vel_xy.move_toward(desired, avoider_seek_accel * delta)
 		linear_velocity.x = steered.x
 		linear_velocity.y = steered.y
-		# Keep Z motion from the launch arc; do not steer on Z.
+		## Pin to the spawn depth plane — no Z drift from launch / collisions.
+		linear_velocity.z = 0.0
+		global_position.z = _avoider_plane_z
 
 	if _avoider_overlaps_crosshair():
 		_trigger_avoider_crosshair_contact()
