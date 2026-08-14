@@ -117,6 +117,8 @@ var _ballistic_descent_damp := 0.5
 var _ballistic_in_descent := false
 ## When true, camera out-of-bounds does not count as a miss (e.g. smokecan fly-off).
 var ignores_x_out_of_bounds := false
+## Direct player shot already applied the black-rock strike (don't strike again on explode).
+var _hazard_strike_from_direct_shot := false
 ## Set by RockManager once this rock has been inside the camera viewport.
 ## Off-screen spawns won't miss until they've entered play at least once.
 var has_entered_camera_view := false
@@ -135,6 +137,9 @@ var _airborne_collision_token := 0
 @export var avoider_max_speed_xy := 16.0
 ## Delay after launch before seeking / overlap checks (avoids instant spawn kills).
 @export var avoider_arm_delay_sec := 0.45
+## How long the avoider keeps chasing its last aim point before sampling the crosshair again.
+## 0 = track every frame (old behaviour). Raise for a delayed / laggy retarget.
+@export var avoider_retarget_delay_sec := 0.35
 ## How long the avoider stays alive before it explodes on its own (no strike).
 @export var avoider_lifetime_sec := 4.0
 ## If true, avoider + rock both explode on contact. If false, only the other rock blows up.
@@ -147,6 +152,9 @@ var _airborne_collision_token := 0
 var _avoider_armed := false
 var _avoider_arm_token := 0
 var _avoider_life_token := 0
+var _avoider_seek_xy := Vector2.ZERO
+var _avoider_has_seek_target := false
+var _avoider_retarget_timer := 0.0
 
 # --- Rock Chaser (rock-chaser) -----------------------------------------------
 @export_group("Rock Chaser")
@@ -648,6 +656,8 @@ func setup_rock_type() -> void:
 			if current_particles:
 				current_particles.emitting = true
 			_avoider_armed = false
+			_avoider_has_seek_target = false
+			_avoider_retarget_timer = 0.0
 
 		RockSize.CHASER:
 			current_rock_type = "Rock Chaser"
@@ -681,10 +691,13 @@ func setup_rock_type() -> void:
 
 func reset_stats() -> void:
 	ignores_x_out_of_bounds = false
+	_hazard_strike_from_direct_shot = false
 	has_entered_camera_view = false
 	_avoider_armed = false
 	_avoider_arm_token += 1
 	_avoider_life_token += 1
+	_avoider_has_seek_target = false
+	_avoider_retarget_timer = 0.0
 	_chaser_armed = false
 	_chaser_arm_token += 1
 	_chaser_lock_progress = 0.0
@@ -1091,6 +1104,10 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 		
 	#Rock Destroyed Process
 	
+	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
+		## Strike immediately on a direct shot — don't wait for the explode delay.
+		_apply_direct_hazard_strike()
+
 	if rock_type == RockSize.HAZARD:
 		$Marked.show()
 		#$marked_embers.emitting = true
@@ -1166,8 +1183,9 @@ func start_destroyed_process() -> void:
 	if rock_type == RockSize.SMALL:
 		%rock_flicker_sfx.play()
 		#await get_tree().create_timer(0.1).timeout
-		get_parent().get_parent().get_node('pitch_shift_rock_sound').pitch_scale += 0.1
-		get_parent().get_parent().get_node('pitch_shift_rock_sound').play()
+		var pitching_up_sfx : AudioStreamPlayer = get_parent().get_parent().get_node('pitch_shift_rock_sound')
+		pitching_up_sfx.pitch_scale = clamp(pitching_up_sfx.pitch_scale + 0.1, 0.5, 1.2)
+		pitching_up_sfx.play()
 
 	
 	# This is to score bonus cash for shooting rocks beneath the Cash Zones / ZoneA, ZoneB
@@ -1219,11 +1237,15 @@ func start_destroyed_process() -> void:
 		
 		if cash_value < 0:
 			money_label_3d.money_is_money(global_position, cash_value)
-		
-		%hazard_hit_sound.play()
-		play_destroy_sfx()
-		EventBus.instance.hazard_hit.emit()
-		gl_PlayerState.add_strike()
+
+		## Direct shots already struck above; blast/indirect destroys still strike here.
+		if not _hazard_strike_from_direct_shot:
+			%hazard_hit_sound.play()
+			play_destroy_sfx()
+			EventBus.instance.hazard_hit.emit()
+			_set_strike_feedback_origin_here()
+			gl_PlayerState.add_strike()
+		_hazard_strike_from_direct_shot = false
 	
 	
 	if cash_value == 2:
@@ -1509,6 +1531,10 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 		sound_instance.queue_free()
 
 func play_piano_note() -> void:
+	$PianoNotes/launch_flick.pitch_scale = randf_range(0.8,0.9)
+	$PianoNotes/launch_flick.play()
+	
+	
 	match global_position.x:
 		-7.0:
 			$"PianoNotes/1".play()
@@ -1539,13 +1565,40 @@ func play_piano_note() -> void:
 
 func out_of_bounds() -> void:
 	%rock_hitSound.play()
-	%rock_hit_sound.play()
+	%outofBoundsSFX.play()
+
+
+## Same impact sting used when a rock leaves play — also used for any strike.
+func play_strike_impact_sfx() -> void:
+	out_of_bounds()
+
+
+func _apply_direct_hazard_strike() -> void:
+	if _hazard_strike_from_direct_shot:
+		return
+	_hazard_strike_from_direct_shot = true
+	%hazard_hit_sound.play()
+	EventBus.instance.hazard_hit.emit()
+	_set_strike_feedback_origin_here()
+	gl_PlayerState.add_strike()
+
+
+func _set_strike_feedback_origin_here() -> void:
+	var rocks_container = null
+	if round_manager:
+		rocks_container = round_manager.get("rocks_container")
+	if rocks_container == null:
+		rocks_container = get_tree().get_first_node_in_group("rocks_container")
+	if rocks_container and rocks_container.has_method("set_strike_feedback_origin"):
+		rocks_container.set_strike_feedback_origin(global_position)
 
 
 # --- Rock Avoider ------------------------------------------------------------
 
 func _arm_avoider() -> void:
 	_avoider_armed = false
+	_avoider_has_seek_target = false
+	_avoider_retarget_timer = 0.0
 	_avoider_arm_token += 1
 	%RedParticles.emitting = true
 	var token := _avoider_arm_token
@@ -1555,6 +1608,10 @@ func _arm_avoider() -> void:
 	if current_state != State.ACTIVE or rock_type != RockSize.AVOIDER:
 		return
 	_avoider_armed = true
+	## First sample immediately once armed; later samples wait for retarget delay.
+	_avoider_seek_xy = _crosshair_world_xy_at_depth(global_position.z)
+	_avoider_has_seek_target = true
+	_avoider_retarget_timer = maxf(avoider_retarget_delay_sec, 0.0)
 	# Detect rock contacts for destroy-on-hit (independent of bounce toggle timing).
 	set_collision_mask_value(1, true)
 	_sync_avoider_collision_exceptions()
@@ -1612,8 +1669,16 @@ func _update_avoider(delta: float) -> void:
 		angular_velocity = Vector3.ZERO
 		return
 
-	var aim_xy := _crosshair_world_xy_at_depth(global_position.z)
-	var to_aim := Vector2(aim_xy.x - global_position.x, aim_xy.y - global_position.y)
+	_avoider_retarget_timer -= delta
+	if not _avoider_has_seek_target or _avoider_retarget_timer <= 0.0:
+		_avoider_seek_xy = _crosshair_world_xy_at_depth(global_position.z)
+		_avoider_has_seek_target = true
+		_avoider_retarget_timer = maxf(avoider_retarget_delay_sec, 0.0)
+
+	var to_aim := Vector2(
+		_avoider_seek_xy.x - global_position.x,
+		_avoider_seek_xy.y - global_position.y
+	)
 	if to_aim.length_squared() > 0.0001:
 		var desired := to_aim.normalized() * avoider_max_speed_xy
 		var vel_xy := Vector2(linear_velocity.x, linear_velocity.y)
@@ -1739,6 +1804,7 @@ func _trigger_avoider_crosshair_contact() -> void:
 	expand_blast_radius()
 	play_destroy_sfx()
 	_shake_camera_avoider_hit()
+	_set_strike_feedback_origin_here()
 	gl_PlayerState.add_strike()
 	await was_hit_tween()
 	if current_state == State.ACTIVE:

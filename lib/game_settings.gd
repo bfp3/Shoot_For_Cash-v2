@@ -212,17 +212,29 @@ func apply_music_volume(percent: float) -> void:
 ## Shared display string for Settings + in-game popup ("1 / 10").
 func sensitivity_display_text(level: int = -1) -> String:
 	var stage := mouse_sensitivity_level if level < 0 else clampi(level, MOUSE_SENS_MIN_LEVEL, MOUSE_SENS_MAX_LEVEL)
-	return "%d[color=800000][font_size=50]/%d" % [stage, MOUSE_SENS_MAX_LEVEL]
+	return "%d[color=FFFFFF][font_size=50]/%d" % [stage, MOUSE_SENS_MAX_LEVEL]
 
 
-## Multiplier for keyboard / controller crosshair speed (stage 1 == 1.0).
+## Multiplier for keyboard / controller crosshair speed.
+## Levels stay 1–10, but each step is half the old +1 jump (1.0, 1.5, … 5.5).
 func crosshair_speed_multiplier() -> float:
-	return float(mouse_sensitivity_level)
+	return _sensitivity_multiplier(mouse_sensitivity_level)
 
 
-## Absolute Master bus dB for the current Master Volume setting (for systems like retro FX).
-func effective_master_volume_db() -> float:
-	return _percent_to_db(master_volume_percent, _master_baseline_db)
+## Screen-space look delta: same feel at any resolution / monitor size.
+func mouse_look_delta(relative: Vector2) -> Vector2:
+	var viewport := get_viewport()
+	var height := 1080.0
+	if viewport:
+		height = maxf(viewport.get_visible_rect().size.y, 1.0)
+	var sens := _sensitivity_multiplier(mouse_sensitivity_level)
+	return relative / height * MOUSE_LOOK_BASE * sens
+
+
+func _sensitivity_multiplier(level: int) -> float:
+	var stage := clampi(level, MOUSE_SENS_MIN_LEVEL, MOUSE_SENS_MAX_LEVEL)
+	## Level 1 = 1.0 (old baseline). Each level adds +0.5 instead of +1.0.
+	return 1.0 + float(stage - 1) * 0.5
 
 
 ## Try a new resolution. Shows confirm UI via signals; auto-reverts after 15s.
@@ -310,14 +322,9 @@ func max_fps_index() -> int:
 	return 0
 
 
-## Screen-space look delta: same feel at any resolution / monitor size.
-func mouse_look_delta(relative: Vector2) -> Vector2:
-	var viewport := get_viewport()
-	var height := 1080.0
-	if viewport:
-		height = maxf(viewport.get_visible_rect().size.y, 1.0)
-	var sens := float(mouse_sensitivity_level)
-	return relative / height * MOUSE_LOOK_BASE * sens
+## Absolute Master bus dB for the current Master Volume setting (for systems like retro FX).
+func effective_master_volume_db() -> float:
+	return _percent_to_db(master_volume_percent, _master_baseline_db)
 
 
 func _apply_window_resolution(size: Vector2i, force_windowed: bool) -> void:

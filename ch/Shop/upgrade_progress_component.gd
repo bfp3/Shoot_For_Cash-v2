@@ -48,11 +48,11 @@ func start_upgrade_tween() -> void:
 	var bar: ProgressBar = progress_bar_container.get_child(current_upgrade_level)
 	
 	var tween := create_tween()
-	tween.tween_property($Control/UpgradePanel, "modulate", GlobalColorPalet.Global_color_money, 0.2)
+	tween.tween_property($Control/UpgradePanel, "modulate", Color.LIME_GREEN, 0.2)
 	tween.tween_interval(0.3)
 	tween.tween_property(bar, "value", 100, 0.3)
 	tween.tween_interval(0.2)
-	tween.tween_property($Control/UpgradePanel, "modulate", GlobalColorPalet.Global_color_white, 1.0)
+	tween.tween_property($Control/UpgradePanel, "modulate", Color.ANTIQUE_WHITE, 1.0)
 
 	await tween.finished
 	return

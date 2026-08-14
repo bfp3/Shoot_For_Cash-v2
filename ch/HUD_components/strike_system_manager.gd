@@ -77,12 +77,20 @@ func reset() -> void:
 	_kill_tween()
 	_is_playing_finale = false
 	strike_count = 0
-	indicators_row.position = _row_original_position
+	restore_row_position()
 	indicators_row.modulate = _row_original_modulate
 	indicators_row.scale = Vector2.ONE
 	_trim_to_base_strike_slots()
 	for indicator in _indicators:
 		indicator.reset()
+
+
+func restore_row_position() -> void:
+	_kill_tween()
+	if indicators_row:
+		indicators_row.position = _row_original_position
+		indicators_row.scale = Vector2.ONE
+		indicators_row.modulate = _row_original_modulate
 
 
 ## Keep only the original 3 strike indicators after a round reset.

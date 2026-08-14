@@ -109,6 +109,28 @@ func start_fail_sequence() -> void:
 	grade_label.modulate.a = 1.0
 	grade_cash_label.modulate.a = 1.0
 
+	## Endless (Jetz): show survival time + keep/show bonuses earned.
+	var endless := false
+	var survived := 0.0
+	if round_manager and round_manager.has_method("is_endless_mode"):
+		endless = bool(round_manager.is_endless_mode())
+	if endless and round_manager.has_method("get_endless_elapsed_seconds"):
+		survived = float(round_manager.get_endless_elapsed_seconds())
+
+	if endless:
+		grade_label.text = "[wave]LASTED"
+		grade_cash_label.text = _format_survival_time(survived)
+		bonuses_label.text = 'BONUSES'
+		bonuses_cash_label.modulate.a = 1.0
+		bonuses_cash_label.show()
+		bonuses_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash))
+		fail_label.hide()
+		grand_total_cash_label.show()
+		grand_total_label.text = ""
+		grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash))
+		bonuses_label.show()
+		return
+
 	if gl_PlayerState.dataset.fines < 0:
 		fail_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
 	bonuses_label.text = 'Fines'
@@ -126,6 +148,14 @@ func start_fail_sequence() -> void:
 
 
 	return
+
+
+func _format_survival_time(seconds: float) -> String:
+	if round_manager and round_manager.get("round_timer") and round_manager.round_timer.has_method("format_time"):
+		return String(round_manager.round_timer.format_time(seconds))
+	var whole := int(maxf(seconds, 0.0))
+	var hundredths := int((maxf(seconds, 0.0) - float(whole)) * 100.0)
+	return "%d:%02d" % [whole, hundredths]
 
 	
 	

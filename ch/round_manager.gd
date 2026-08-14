@@ -28,8 +28,8 @@ const ENV_PATH_BY_LEVEL := {
 	"jetz": "res://res/skyEnvironments/greyscale_world.tres",
 	"noir": "res://res/start_04_world_env.tres",
 	"vesper": "res://res/start_05_world_env.tres",
-	"boss": "res://res/moss_env_v2.tres",
-	"boss-2": "res://res/skyEnvironments/greyscale_world.tres",
+	"boss": "res://res/skyEnvironments/boss_1_world_env.tres",
+	"boss-2": "res://res/skyEnvironments/boss_2_world_env.tres",
 }
 const ENV_PATH_BY_LAYOUT := {
 	LAYOUT_PATH_START: "res://res/skyEnvironments/greyscale_world.tres",
@@ -39,8 +39,8 @@ const ENV_PATH_BY_LAYOUT := {
 	"res://sc/All_level_layouts/level_layout_000_jetz.tscn": "res://res/skyEnvironments/greyscale_world.tres",
 	"res://sc/All_level_layouts/level_layout_04_noir.tscn": "res://res/start_04_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_05_vesper.tscn": "res://res/start_05_world_env.tres",
-	"res://sc/All_level_layouts/level_layout_island_1_boss.tscn": "res://res/moss_env_v2.tres",
-	"res://sc/All_level_layouts/level_layout_island_2_boss.tscn": "res://res/skyEnvironments/greyscale_world.tres",
+	"res://sc/All_level_layouts/level_layout_island_1_boss.tscn": "res://res/skyEnvironments/boss_1_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_island_2_boss.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
 }
 
 ## Cached PackedScenes so revisiting Moss/Redd/etc. does not re-parse from disk.
@@ -87,6 +87,12 @@ var _boss_open_map_after_tally := false
 var _boss_ceremony_island := -1
 ## Optional UI bar driven while a map travel loads a layout (0–100).
 var _travel_progress_bar: Range = null
+## Glory "6 Shots Only": weapon-fire count this round (not magazine ammo).
+var _shots_fired_this_round := 0
+const SIX_SHOTS_LIMIT := 6
+## Endless (Jetz): keep looping rocks; count-up survival timer.
+var _endless_looping := false
+var _endless_elapsed_sec := 0.0
 var _travel_progress_target := 0.0
 var _travel_progress_display := 0.0
 ## Higher = snappier catch-up while still looking smooth.
@@ -519,8 +525,36 @@ func is_boss_mode() -> bool:
 	return _boss_mode
 
 
+func is_endless_mode() -> bool:
+	if _boss_mode:
+		return false
+	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name)).to_lower()
+	return place == gl_DataSet.get_testing_place_name().to_lower() or place == "jetz" or place == "test"
+
+
+## Seconds survived in endless mode (for tally). -1 if not endless.
+func get_endless_elapsed_seconds() -> float:
+	if not is_endless_mode():
+		return -1.0
+	if _endless_elapsed_sec > 0.0:
+		return _endless_elapsed_sec
+	if round_timer and round_timer.has_method("get_elapsed_seconds"):
+		return float(round_timer.get_elapsed_seconds())
+	return 0.0
+
+
+func _snapshot_endless_elapsed() -> void:
+	if not is_endless_mode():
+		return
+	if round_timer and round_timer.has_method("get_elapsed_seconds"):
+		_endless_elapsed_sec = float(round_timer.get_elapsed_seconds())
+
+
 ## Seconds for RoundTimer when in boss mode; -1 = use normal power_time_upgrade.
+## Endless returns 0 to signal count-up mode (no duration limit).
 func get_active_timer_seconds() -> float:
+	if is_endless_mode():
+		return 0.0
 	if _boss_mode and _boss_timer_seconds > 0.0:
 		return _boss_timer_seconds
 	return -1.0
@@ -639,6 +673,23 @@ func has_active_special_challenge(challenge_id: String) -> bool:
 	return gl_DataSet.has_special_challenge(challenge_id, String(gl_PlayerState.dataset.level_name))
 
 
+## Returns false when Glory six-shot limit is reached (weapon must not fire).
+## Bonus pineapple round is exempt — only main waves are limited.
+func try_register_weapon_shot() -> bool:
+	if not has_active_special_challenge("six_shots_only"):
+		return true
+	if pineapple_mode:
+		return true
+	if _shots_fired_this_round >= SIX_SHOTS_LIMIT:
+		return false
+	_shots_fired_this_round += 1
+	return true
+
+
+func reset_shots_fired_this_round() -> void:
+	_shots_fired_this_round = 0
+
+
 ## Noir (and similar): shooting an orange instantly fills strikes and aborts the round.
 func on_special_challenge_orange_shot() -> void:
 	if not has_active_special_challenge("no_shoot_oranges"):
@@ -646,7 +697,7 @@ func on_special_challenge_orange_shot() -> void:
 	_fail_special_challenge()
 
 
-## Glory (and similar): scoring a double / multi instantly fills strikes and aborts the round.
+## Legacy: scoring a double / multi instantly fills strikes (no longer used by Glory).
 func on_special_challenge_double() -> void:
 	if not has_active_special_challenge("no_doubles"):
 		return
@@ -701,6 +752,7 @@ func handle_three_strikes() -> void:
 	wave_ending = true
 	player_failed = true
 	success = false
+	_snapshot_endless_elapsed()
 
 	stop_timer()
 	stop_player()
@@ -724,6 +776,10 @@ func check_if_rocks_still_in_air() -> void:
 		_loop_boss_sequence()
 		return
 
+	if is_endless_mode():
+		_loop_endless_sequence()
+		return
+
 	wave_ending = true
 	stop_timer()
 	enter_state(RoundState.WAVE_END)
@@ -734,6 +790,10 @@ func successful_round() -> void:
 	if _boss_mode:
 		## Clearing a loop of rocks does not win the boss — only surviving the timer does.
 		_loop_boss_sequence()
+		return
+
+	if is_endless_mode():
+		_loop_endless_sequence()
 		return
 
 	wave_ending = true
@@ -757,6 +817,7 @@ func unsuccessful_round() -> void:
 
 
 func unsuccessful_round_locked() -> void:
+	_snapshot_endless_elapsed()
 	stop_timer()
 	player_failed = true
 	force_shop_open = true
@@ -1061,6 +1122,9 @@ func update_round_start() -> void:
 	player_failed = false
 	bonus_oranges_ready = false
 	current_wave = 0
+	_shots_fired_this_round = 0
+	_endless_elapsed_sec = 0.0
+	_endless_looping = false
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
 	apply_current_round_modifiers()
@@ -1086,7 +1150,12 @@ func update_round_start() -> void:
 	
 
 func update_wave_start() -> void:
-	wave_progress_feedback.start()
+	if is_endless_mode():
+		## Endless: no wave banners — just keep the strike HUD ready.
+		if wave_progress_feedback and wave_progress_feedback.has_method("show_strike_hud"):
+			wave_progress_feedback.show_strike_hud()
+	else:
+		wave_progress_feedback.start()
 	
 	
 	await get_tree().create_timer(0.1, false).timeout
@@ -1134,6 +1203,14 @@ func update_wave_start() -> void:
 			round_timer.enter_state(round_timer.State.RESTARTING)
 		else:
 			round_timer.timer_rollup_sequence()
+	elif is_endless_mode():
+		## Count-up survival timer — no time limit.
+		if round_timer:
+			if round_timer.has_method("start_count_up"):
+				round_timer.start_count_up()
+			else:
+				round_timer.show()
+				round_timer.enter_state(round_timer.State.RUNNING)
 	else:
 		## Regular rounds: keep timer HUD hidden, but play the rollup SFX.
 		if round_timer:
@@ -1178,6 +1255,9 @@ func update_check_score() -> void:
 ## Waves for the active round — built from `repeat` sections (see parser).
 func get_current_round_wave_count() -> int:
 	const DEFAULT_WAVES := 1
+	## Endless mode ignores shipper repeats — continuous rock loops instead.
+	if is_endless_mode():
+		return DEFAULT_WAVES
 	if current_rock_sequence.is_empty():
 		return DEFAULT_WAVES
 	if current_sequence_index >= current_rock_sequence.size():
@@ -1327,12 +1407,25 @@ func update_round_end() -> void:
 	stop_player()
 
 	if round_was_successful:
-		current_sequence_index += 1
-		player_can_progress = false
-		shop_main_menu.mark_round_as_perfect()
-		shop_main_menu.increase_round_available()
-		birds.start_birds()
-		_save_level_progress()
+		var played_index := current_sequence_index
+		var level_id := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+		var prev_frontier := played_index
+		if not is_endless_mode():
+			var existing: Dictionary = {}
+			if _level_progress.has(level_id) and _level_progress[level_id] is Dictionary:
+				existing = _level_progress[level_id] as Dictionary
+			else:
+				existing = gl_PlayerState.get_level_progress_entry(level_id)
+			prev_frontier = int(existing.get("sequence_index", played_index))
+			## Never regress the frontier on a replay win; only advance when clearing the edge.
+			current_sequence_index = maxi(prev_frontier, played_index + 1)
+			player_can_progress = false
+			shop_main_menu.mark_round_as_perfect(played_index)
+			shop_main_menu.increase_round_available(played_index)
+			birds.start_birds()
+			_save_level_progress()
+		else:
+			player_can_progress = false
 
 	current_wave = 0
 	balloon_container.end_round()
@@ -1353,7 +1446,8 @@ func update_tally_start() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func update_tally_end() -> void:
-	if !player_failed:
+	## Endless (Jetz): keep bonus cash even after strikeout.
+	if not player_failed or is_endless_mode():
 		gl_PlayerState.add_cash(gl_PlayerState.dataset.bonus_cash)
 	
 	check_prompts()
@@ -2097,7 +2191,26 @@ func _loop_boss_sequence() -> void:
 	var rock_seq := update_rock_sequence()
 	if rocks_container and not rock_seq.is_empty():
 		rocks_container.start_manual_rock_round(rock_seq)
+		## Mid-hold-out loops don't get a fresh egg pulse — launch immediately.
+		rocks_container.enter_state(rocks_container.State.PULSE_ROCKS)
 	_boss_looping = false
+
+
+func _loop_endless_sequence() -> void:
+	if not is_endless_mode() or wave_ending or player_failed or _endless_looping:
+		return
+	_endless_looping = true
+	if current_rock_sequence.is_empty():
+		_endless_looping = false
+		return
+	## Keep feeding rocks like boss hold-out — cycle shipper rounds continuously.
+	current_sequence_index = (current_sequence_index + 1) % current_rock_sequence.size()
+	current_round = current_sequence_index + 1
+	var rock_seq := update_rock_sequence()
+	if rocks_container and not rock_seq.is_empty():
+		rocks_container.start_manual_rock_round(rock_seq)
+		rocks_container.enter_state(rocks_container.State.PULSE_ROCKS)
+	_endless_looping = false
 
 
 func _finish_boss_round() -> void:

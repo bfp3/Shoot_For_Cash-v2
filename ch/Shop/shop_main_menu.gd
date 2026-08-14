@@ -1276,18 +1276,34 @@ func mark_round_as_cleared() -> void:
 			else:
 				break
 	
-func mark_round_as_perfect() -> void:
+func mark_round_as_perfect(played_index: int = -1) -> void:
 	var round_button_cont : HBoxContainer = 	$CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
-	
-	for i in round_button_cont.get_children():
-		
+	var buttons := round_button_cont.get_children()
+	if played_index >= 0 and played_index < buttons.size():
+		var btn = buttons[played_index]
+		if btn and btn.has_method("enter_state"):
+			btn.enter_state(btn.State.PERFECTED)
+		return
+
+	for i in buttons:
 		if i.current_state == i.State.AVAILABLE: # || i.current_state == i.State.CLEARED:
 			i.enter_state(i.State.PERFECTED)
+			break
 			
 
-func increase_round_available() -> void:
-	var round_button_cont : HBoxContainer = 	$CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer	
-	for i in round_button_cont.get_children():
+func increase_round_available(played_index: int = -1) -> void:
+	var round_button_cont : HBoxContainer = 	$CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
+	var buttons := round_button_cont.get_children()
+	## Only unlock the round immediately after the one just cleared (never jump ahead on replay).
+	if played_index >= 0:
+		var next_index := played_index + 1
+		if next_index < buttons.size():
+			var next_btn = buttons[next_index]
+			if next_btn and next_btn.has_method("enter_state") and next_btn.current_state == next_btn.State.LOCKED:
+				next_btn.enter_state(next_btn.State.AVAILABLE)
+		return
+
+	for i in buttons:
 		if i.current_state != i.State.LOCKED:
 			continue
 		else:

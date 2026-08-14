@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bsimplewater01"]
+
+[ext_resource type="Script" path="res://ch/SimpleWater/simple_water.gd" id="1_sw"]
+[ext_resource type="Material" path="res://ch/SimpleWater/simple_water_material.tres" id="2_mat"]
+
+[node name="SimpleWater" type="Node3D"]
+script = ExtResource("1_sw")
+water_size = Vector2(500, 500)
+subdivide = 72
+water_material = ExtResource("2_mat")

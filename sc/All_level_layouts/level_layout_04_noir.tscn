@@ -1,6 +1,5 @@
 [gd_scene format=4 uid="uid://bmr7xtedl58te"]
 
-[ext_resource type="Environment" uid="uid://bbpbvdfbygo6n" path="res://res/start_04_world_env.tres" id="1_1thcr"]
 [ext_resource type="Material" uid="uid://bwdcwnn0arat1" path="res://res/moss_pad_floor_material.tres" id="2_mossfloor"]
 [ext_resource type="Material" uid="uid://biyawm8nwgiiq" path="res://res/moss_level_white_material.tres" id="3_fwjsh"]
 [ext_resource type="PackedScene" uid="uid://c3mxy8tvyd34a" path="res://unfiled/Blender_custom_assets/brick_fountain_2.glb" id="4_1vd3e"]
@@ -48,7 +47,7 @@ transparency = 1
 cull_mode = 1
 diffuse_mode = 3
 specular_mode = 2
-albedo_color = Color(1, 1, 1, 0.68235296)
+albedo_color = Color(1, 1, 1, 0.40392157)
 albedo_texture = ExtResource("21_fwjsh")
 emission = Color(1, 1, 1, 1)
 emission_energy_multiplier = 0.1
@@ -949,16 +948,11 @@ directional_shadow_blend_splits = true
 directional_shadow_max_distance = 520.0
 
 [node name="Moon" type="Sprite3D" parent="." unique_id=1627859436]
-transform = Transform3D(0.901, 0, 0, 0, 0.901, 0, 0, 0, 0.901, -96.764, 78.367, 500)
+transform = Transform3D(0.873, 0, 0, 0, 0.873, 0, 0, 0, 0.873, -97.409, 77.872, 500)
 material_override = SubResource("StandardMaterial3D_troag")
-modulate = Color(80.24026, 80.24026, 80.24026, 1)
 pixel_size = 0.25
 billboard = 1
 texture = ExtResource("21_fwjsh")
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2106927033 groups=["world_env"]]
-unique_name_in_owner = true
-environment = ExtResource("1_1thcr")
 
 [node name="Emblem_3D2" type="Node3D" parent="." unique_id=1742034845]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 0.2, -9.400002, -0.11349544, 19.617315)

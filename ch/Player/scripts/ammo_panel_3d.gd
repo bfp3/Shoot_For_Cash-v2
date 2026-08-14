@@ -149,7 +149,11 @@ func reload_ammo(amount: int, temp_bullets : int, temp_reserve : int) -> void:
 		ammo_container.add_child(new_ammo)
 		new_ammo.show()
 		if !first_reload:
-			reload_sound.play()
+			## Audible chamber tick in sync with each bullet slot filling.
+			if reload_sound:
+				reload_sound.volume_db = -4.0
+				reload_sound.pitch_scale = randf_range(0.95, 1.08)
+				reload_sound.play()
 		temp_bullets += 1
 		temp_reserve -= 1
 		reserve_label_animation()
@@ -260,6 +264,15 @@ func reloading_phase() -> void:
 	var dur : float = 0.25
 	$reloading_movement_sfx.pitch_scale = 4.5
 	$reloading_movement_sfx.play()
+
+	## Mid-level reload: slide "RELOADING" across like wave text.
+	if not first_reload:
+		var rm = get_tree().get_first_node_in_group("round_manager")
+		var wave_feedback = null
+		if rm:
+			wave_feedback = rm.get("wave_progress_feedback")
+		if wave_feedback and wave_feedback.has_method("start_reloading"):
+			wave_feedback.start_reloading()
 	
 	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_ELASTIC)
 	tween.tween_property(self, "position:y", -20.0, dur).as_relative()

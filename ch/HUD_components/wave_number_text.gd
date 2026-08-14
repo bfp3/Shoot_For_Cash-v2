@@ -74,6 +74,9 @@ func reset() -> void:
 	result_has_been_shown_this_wave = false
 	wave_count = 0
 	strike_label.text = ''
+	## Kill mid-flight strike tweens and pin panels back to their home positions.
+	_restore_strike_panel_position()
+	reset_strikes()
 	end()
 	show_strike_hud()
 
@@ -125,6 +128,16 @@ func start_bonus() -> void:
 	flash_tween.tween_property(wave_label, "modulate:a", 0.0, 0.075)
 	flash_tween.tween_property(wave_label, "modulate:a", 1.0, 0.075)
 	await flash_tween.finished
+
+
+func start_reloading() -> void:
+	show()
+	if wave_panel:
+		wave_panel.show()
+	wave_label.text = "[font_size=120]RELOADING"
+	wave_label.modulate.a = 1.0
+	start_tween(wave_panel, _original_position, _original_modulate)
+
 
 func Xstart_bonus() -> void:
 	wave_label.text = "[font_size=150]BONUS"
@@ -251,8 +264,23 @@ func end() -> void:
 func reset_strikes() -> void:
 	strikes_int = 0
 	strike_label.text = ''
+	_restore_strike_panel_position()
 	if has_node("Strike_system2") and $Strike_system2.has_method("reset"):
 		$Strike_system2.reset()
+
+
+func _restore_strike_panel_position() -> void:
+	## Strike flash panel can end mid-tween with a bad Y if a round restarts early.
+	if strike_panel:
+		strike_panel.position = _strike_panel_original_position
+		strike_panel.modulate = Color(
+			_strike_panel_original_modulate.r,
+			_strike_panel_original_modulate.g,
+			_strike_panel_original_modulate.b,
+			0.0
+		)
+	if strike_hud and strike_hud.has_method("restore_row_position"):
+		strike_hud.restore_row_position()
 
 
 func ensure_extra_strike_slot() -> void:
@@ -263,6 +291,7 @@ func ensure_extra_strike_slot() -> void:
 func show_strike_hud() -> void:
 	if strike_hud == null:
 		return
+	_restore_strike_panel_position()
 	if _strike_hud_tween and _strike_hud_tween.is_valid():
 		_strike_hud_tween.kill()
 	_strike_hud_visible = true

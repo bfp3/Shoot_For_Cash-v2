@@ -17,9 +17,8 @@
 [ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="17_snbl5"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="18_v0xb0"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="21_fwjsh"]
-[ext_resource type="Script" uid="uid://c7ynowu6kwn7d" path="res://addons/boujie_water_shader/prefabs/ocean_prefab.gd" id="22_2svof"]
-[ext_resource type="Material" uid="uid://cvnsu7lttsfsh" path="res://addons/boujie_water_shader/prefabs/outset_ocean_material.tres" id="23_u0cw1"]
-[ext_resource type="Script" uid="uid://by76ummufi43j" path="res://ch/spare_parts_removed_to_optimise/ocean_simplified.gd" id="24_qy441"]
+[ext_resource type="Script" uid="uid://cwee1r4c8ea3p" path="res://ch/SimpleWater/simple_water.gd" id="21_x8ffe"]
+[ext_resource type="Material" uid="uid://cg2tfxiei8rx" path="res://ch/SimpleWater/simple_water_material.tres" id="22_1vd3e"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_k7lvh"]
 size = Vector2(19.91, 10)
@@ -75,15 +74,6 @@ data = PackedVector3Array(-1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_74xva"]
 data = PackedVector3Array(-1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, -1.087, 0, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -3.2609, -1.087, -1.087, -3.2609, 1.087, 0, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -1.087, -1.087, 0, -1.087, 1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, 1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -3.2609, 1.087, 0, -1.087, -1.087, 0, -1.087, 1.087, 1.087, -3.2609, -1.087, 1.087, -3.2609, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -3.2609, 1.087, 0, -1.087, 1.087, 1.087, -1.087, 1.087)
-
-[sub_resource type="GDScript" id="GDScript_fwjsh"]
-script/source = "extends Node3D
-
-#@export var speed := 2.0
-#
-#func _physics_process(delta: float) -> void:
-	#rotate_y(speed * delta)
-"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x8ffe"]
 shading_mode = 0
@@ -866,6 +856,11 @@ shadow_mesh = SubResource("ArrayMesh_pnf6a")
 [sub_resource type="BoxMesh" id="BoxMesh_s470r"]
 size = Vector3(0.108, 0.502, 0.007)
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_md1in"]
+size = Vector2(150, 500)
+subdivide_width = 24
+subdivide_depth = 24
+
 [node name="Moss" type="Node3D" unique_id=229302118]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
@@ -975,7 +970,6 @@ shape = SubResource("ConcavePolygonShape3D_74xva")
 
 [node name="FrontRotatingPillars" type="Node3D" parent="Boatmesh" unique_id=1752052653]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0, 11.743492)
-script = SubResource("GDScript_fwjsh")
 
 [node name="Quotes" type="MeshInstance3D" parent="Boatmesh/FrontRotatingPillars" unique_id=10351786]
 transform = Transform3D(-1.32, 0, -1.9931447e-07, 0, 1.32, 0, 1.9931447e-07, 0, -1.32, 0, -2.291, -0.4429016)
@@ -2175,30 +2169,12 @@ transform = Transform3D(-63.741, -1.6094643e-06, 1.3350298e-13, 0, -4.659197e-07
 mesh = SubResource("PlaneMesh_dhqys")
 skeleton = NodePath("../..")
 
-[node name="DirtDecal3" type="Decal" parent="." unique_id=999983740]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.175, -3, 9.850001)
-visible = false
-size = Vector3(15, 5, 10)
-texture_albedo = ExtResource("16_k7lvh")
-modulate = Color(1, 1, 1, 0.4627451)
-normal_fade = 0.5
-cull_mask = 1048559
-
 [node name="DirtDecal4" type="Decal" parent="." unique_id=896342778]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.825, -3, 9.850001)
 size = Vector3(15, 5, 10)
 texture_albedo = ExtResource("16_k7lvh")
 modulate = Color(1, 1, 1, 0.4627451)
 normal_fade = 0.5
-cull_mask = 1048559
-
-[node name="CrackedDecal2" type="Decal" parent="." unique_id=1451928163]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -1.4, 18.282236)
-visible = false
-size = Vector3(20, 1.26, 20)
-texture_albedo = ExtResource("17_snbl5")
-modulate = Color(0.49, 0.49, 0.49, 0.16862746)
-normal_fade = 0.999
 cull_mask = 1048559
 
 [node name="CrackedDecal4" type="Decal" parent="." unique_id=1305340188]
@@ -2364,20 +2340,16 @@ pixel_size = 0.85
 billboard = 1
 texture = ExtResource("21_fwjsh")
 
-[node name="OutsetOcean" type="Node3D" parent="." unique_id=941254550]
-process_mode = 3
-transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 3.36, -4.4, 333.782)
-script = ExtResource("22_2svof")
-material = ExtResource("23_u0cw1")
-levels_of_detail = 5
-unit_size = 2.0
-far_edge = 4000
+[node name="SimpleWater" type="Node3D" parent="." unique_id=1041667159]
+transform = Transform3D(1, 0, 0, 0, 0.99999845, -0.0017453283, 0, 0.0017453283, 0.99999845, 3.36, -4.171, 291.05365)
+script = ExtResource("21_x8ffe")
+water_size = Vector2(150, 500)
+subdivide = 24
+metadata/_custom_type_script = "uid://cwee1r4c8ea3p"
 
-[node name="OceanSimple" type="Node3D" parent="OutsetOcean" unique_id=1972191110]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.36, 0, -333.782)
-script = ExtResource("24_qy441")
-
-[connection signal="updated_lod" from="OutsetOcean/OceanSimple" to="OutsetOcean" method="_on_ocean_simple_updated_lod"]
+[node name="Mesh" type="MeshInstance3D" parent="SimpleWater" unique_id=650506395]
+material_override = ExtResource("22_1vd3e")
+mesh = SubResource("PlaneMesh_md1in")
 
 [editable path="Boatmesh/FrontRotatingPillars/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

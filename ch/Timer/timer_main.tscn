@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://csc7dstgv81nb"]
 
 [ext_resource type="Script" uid="uid://bj6vqqcmj70lv" path="res://ch/Timer/timer.gd" id="1_5lc31"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_l7mi1"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="2_y73li"]
 [ext_resource type="AudioStream" uid="uid://bywfw3hl3lt6o" path="res://sfx/reload_sound_01.ogg" id="3_y73li"]
 [ext_resource type="AudioStream" uid="uid://deypwoaiih1g2" path="res://sfx/Clock_ticking.ogg" id="4_y73li"]
@@ -91,72 +92,25 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -196.0
-offset_top = -102.833435
+offset_top = -122.84253
 offset_right = -16.0
-offset_bottom = -25.0
+offset_bottom = -21.046143
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(0.846, 0.835)
 pivot_offset_ratio = Vector2(0.5, 1)
 mouse_filter = 2
 theme_type_variation = &"TimerPanel"
-
-[node name="ColorRect" type="ColorRect" parent="Panel2" unique_id=771231447]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -57.48633
-offset_bottom = -57.48633
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.98, 0.05)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-color = Color(0.78039217, 0.003921569, 0.007843138, 1)
-
-[node name="ColorRect2" type="ColorRect" parent="Panel2" unique_id=1305085279]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 67.05505
-offset_bottom = -5.988037
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.968, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-color = Color(0.78039217, 0.003921569, 0.007843138, 1)
-
-[node name="ColorRect3" type="ColorRect" parent="Panel2" unique_id=1891823168]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -22.765137
-offset_bottom = 2.3952026
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.04, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-color = Color(0.78039217, 0.003921569, 0.007843138, 1)
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="Panel2" unique_id=630350848]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-position = Vector2(89.270996, 8.024998)
-scale = Vector2(179.255, -13.95)
-mesh = SubResource("PrismMesh_5lc31")
+theme_override_styles/panel = ExtResource("2_l7mi1")
 
 [node name="CoatArms" parent="Panel2" unique_id=409353141 instance=ExtResource("2_y73li")]
+visible = false
 modulate = Color(1, 1, 1, 0.19607843)
 layout_mode = 1
 offset_left = -128.0
-offset_top = -136.38318
+offset_top = -126.80249
 offset_right = 128.0
-offset_bottom = 119.61682
+offset_bottom = 129.19751
 scale = Vector2(1.248, 1.248)
 
 [node name="TimeLabelX" type="RichTextLabel" parent="." unique_id=121956160]
@@ -194,7 +148,6 @@ grow_horizontal = 0
 grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_type_variation = &"WhiteRichText"
-theme_override_colors/default_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
 theme_override_font_sizes/normal_font_size = 70
 bbcode_enabled = true
 text = "Timer"

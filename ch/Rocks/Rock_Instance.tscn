@@ -1581,6 +1581,11 @@ pitch_scale = 2.0
 
 [node name="PianoNotes" type="Node" parent="." unique_id=1296907689]
 
+[node name="launch_flick" type="AudioStreamPlayer" parent="PianoNotes" unique_id=2127211158]
+stream = ExtResource("30_8mu68")
+volume_db = -29.0
+pitch_scale = 0.8
+
 [node name="1" type="AudioStreamPlayer" parent="PianoNotes" unique_id=858664464]
 stream = ExtResource("32_ltsxa")
 volume_db = -50.0
@@ -1638,7 +1643,14 @@ pitch_scale = 0.5
 [node name="rock_hit_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1867904270]
 unique_name_in_owner = true
 stream = ExtResource("14_gxoxp")
-volume_db = -20.0
+volume_db = -23.0
+max_polyphony = 2
+
+[node name="outofBoundsSFX" type="AudioStreamPlayer" parent="SFX" unique_id=1563598438]
+unique_name_in_owner = true
+stream = ExtResource("14_gxoxp")
+volume_db = -33.0
+pitch_scale = 1.1
 max_polyphony = 2
 
 [node name="rock_marked_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=454048543]

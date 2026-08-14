@@ -3,11 +3,8 @@
 [ext_resource type="Script" uid="uid://dth8aeb528x78" path="res://ch/Shop/shop_main_menu.gd" id="1_wlak1"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_cn8lj"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_y3o4g"]
-[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="5_lwcj2"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="5_vom4t"]
-[ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="8_7j408"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="8_kvqbn"]
-[ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="8_tnodp"]
 [ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="10_ohn7f"]
 [ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="12_xgu8n"]
 [ext_resource type="PackedScene" uid="uid://bnvrnccnsas5n" path="res://ch/Shop/PlayButton_v2.tscn" id="17_xklyy"]
@@ -58,14 +55,6 @@ scale_curve = SubResource("CurveTexture_64t06")
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 alpha_curve = SubResource("CurveTexture_cn8lj")
 
-[sub_resource type="Gradient" id="Gradient_tnodp"]
-offsets = PackedFloat32Array(0.008830011, 1)
-colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
-
-[sub_resource type="Gradient" id="Gradient_ohn7f"]
-offsets = PackedFloat32Array(0.008830011, 1)
-colors = PackedColorArray(0.78039217, 0.003921569, 0.007843138, 1, 1, 1, 1, 0)
-
 [sub_resource type="Animation" id="Animation_tnodp"]
 length = 0.001
 tracks/0/type = "value"
@@ -105,8 +94,6 @@ _data = {
 &"rotation": SubResource("Animation_ohn7f")
 }
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uucxj"]
 bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
 border_width_left = 477
@@ -121,6 +108,8 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
 [sub_resource type="PrismMesh" id="PrismMesh_sgib8"]
 left_to_right = 1.0
@@ -237,20 +226,6 @@ clip_contents = true
 layout_mode = 2
 mouse_filter = 2
 
-[node name="TextureRect2" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1174213666]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
-layout_mode = 0
-offset_left = 867.32544
-offset_top = 399.4008
-offset_right = 995.32544
-offset_bottom = 527.40076
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
-
 [node name="100_percent" type="Control" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=226200865]
 unique_name_in_owner = true
 visible = false
@@ -300,212 +275,6 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MapBackground" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=903028086]
-visible = false
-modulate = Color(0.86, 0.7674067, 0.6966, 0.078431375)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1024.0
-offset_top = -934.8433
-offset_right = 1024.0
-offset_bottom = 1113.1567
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.555, 0.555)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_tnodp")
-stretch_mode = 5
-
-[node name="center_container" type="Control" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=33514297]
-visible = false
-modulate = Color(1, 1, 1, 0.19607843)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 3.0517578e-05
-offset_top = -0.8031616
-offset_right = 3.0517578e-05
-offset_bottom = -0.8031616
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="left" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=150314236]
-position = Vector2(0, -23.293152)
-points = PackedVector2Array(0, 0, -230, 0)
-width = 1.178
-gradient = SubResource("Gradient_tnodp")
-texture_mode = 2
-joint_mode = 2
-
-[node name="right" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=2087370666]
-position = Vector2(0, -23.293152)
-points = PackedVector2Array(0, 0, 230, 0)
-width = 1.178
-gradient = SubResource("Gradient_ohn7f")
-texture_mode = 2
-joint_mode = 2
-
-[node name="right2" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=724262866]
-position = Vector2(0, -23.293152)
-points = PackedVector2Array(0, 0, 0, 230)
-width = 1.178
-gradient = SubResource("Gradient_ohn7f")
-texture_mode = 2
-joint_mode = 2
-
-[node name="right3" type="Line2D" parent="CenterContainer/MainPanel/BackgroundImages/center_container" unique_id=300482887]
-position = Vector2(0, -23.293152)
-points = PackedVector2Array(0, 0, 0, -230)
-width = 1.178
-gradient = SubResource("Gradient_ohn7f")
-texture_mode = 2
-joint_mode = 2
-
-[node name="MapBackground2" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=2127128880]
-visible = false
-modulate = Color(0.86, 0.7674067, 0.6966, 0.078431375)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1024.0
-offset_top = -1114.7628
-offset_right = 1024.0
-offset_bottom = 933.2372
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.555, 0.555)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_tnodp")
-stretch_mode = 5
-
-[node name="TextureRect8" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=134847440]
-visible = false
-modulate = Color(0.92, 0.8770667, 0.8464, 0.078431375)
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-offset_left = 109.23706
-offset_top = 128.514
-offset_right = 237.23706
-offset_bottom = 256.514
-scale = Vector2(2.426, 2.426)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("5_lwcj2")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=753410049]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
-layout_mode = 0
-offset_left = 809.1975
-offset_top = 399.4008
-offset_right = 937.1975
-offset_bottom = 527.40076
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet2" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1514939702]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
-layout_mode = 0
-offset_left = 64.32913
-offset_top = 399.4008
-offset_right = 192.32913
-offset_bottom = 527.40076
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet3" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=155023758]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
-layout_mode = 0
-offset_left = 6.2012177
-offset_top = 399.4008
-offset_right = 134.20122
-offset_bottom = 527.40076
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet4" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=216451405]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
-layout_mode = 0
-offset_left = 777.069
-offset_top = 161.64972
-offset_right = 905.069
-offset_bottom = 289.64972
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet5" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1089751225]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
-layout_mode = 0
-offset_left = 642.6423
-offset_top = 161.64972
-offset_right = 770.6423
-offset_bottom = 289.64972
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet6" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=309223957]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
-layout_mode = 0
-offset_left = 584.51465
-offset_top = 161.64972
-offset_right = 712.51465
-offset_bottom = 289.64972
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Bullet7" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=810202729]
-visible = false
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 0.15686275)
-layout_mode = 0
-offset_left = 584.51465
-offset_top = 161.64972
-offset_right = 712.51465
-offset_bottom = 289.64972
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("8_7j408")
-expand_mode = 1
-stretch_mode = 5
-
 [node name="Reticle" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=929043320]
 modulate = Color(0.91, 0.864955, 0.82809997, 0.11764706)
 show_behind_parent = true
@@ -533,72 +302,9 @@ libraries/ = SubResource("AnimationLibrary_xgu8n")
 autoplay = &"rotation"
 speed_scale = 0.8
 
-[node name="Reticle3" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=1910278677]
-visible = false
-modulate = Color(0.91, 0.864955, 0.82809997, 0.2901961)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -170.63449
-offset_top = -622.04016
-offset_right = 853.3655
-offset_bottom = 401.95984
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.335, 0.335)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("10_ohn7f")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle3" unique_id=1034292794]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-speed_scale = 0.5
-
-[node name="Reticle5" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=11549405]
-visible = false
-modulate = Color(0.91, 0.864955, 0.82809997, 0.2901961)
-show_behind_parent = true
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -883.88745
-offset_top = -377.8635
-offset_right = 140.11255
-offset_bottom = 646.1365
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.335, 0.335)
-pivot_offset_ratio = Vector2(0.5, 0.46)
-mouse_filter = 2
-texture = ExtResource("10_ohn7f")
-stretch_mode = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/BackgroundImages/Reticle5" unique_id=603015917]
-libraries/ = SubResource("AnimationLibrary_xgu8n")
-autoplay = &"rotation"
-speed_scale = 0.3
-
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=582425009]
 layout_mode = 2
 theme_override_constants/separation = 0
-
-[node name="SpacePanel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=763162626]
-visible = false
-custom_minimum_size = Vector2(50, 20)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="TopRedPanel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=2081657472]
 self_modulate = Color(1, 1, 1, 0)

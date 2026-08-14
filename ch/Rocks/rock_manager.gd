@@ -188,6 +188,9 @@ func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(enter_state.bind(State.PULSE_ROCKS))
 	#EventBus.instance.all_rocks_destroyed.connect(all_rocks_destroyed)
 	EventBus.instance.detonate_sky_mines.connect(detonate_sky_mines)
+	## Same camera/particles sting as an OOB miss — play on every strike.
+	EventBus.instance.add_strike.connect(play_strike_feedback)
+	EventBus.instance.has_hit_three_strikes.connect(play_strike_feedback)
 	enter_state(current_state)
 
 func _process(delta: float) -> void:
@@ -579,6 +582,11 @@ func _get_camera_miss_side(camera: Camera3D, world_pos: Vector3, viewport_size: 
 	return OobSide.NONE
 
 
+## Pending world position for the next strike spark/shake (rock location).
+var _pending_strike_feedback_pos := Vector3.ZERO
+var _has_pending_strike_feedback_pos := false
+
+
 func deactivate_out_of_bounds_rock(body: RockInstance, side: OobSide = OobSide.NONE) -> void:
 	if body.current_state != RockInstance.State.ACTIVE:
 		return
@@ -589,14 +597,72 @@ func deactivate_out_of_bounds_rock(body: RockInstance, side: OobSide = OobSide.N
 	var missed_rock_type_name: String = body.rock_type_name
 	var miss_pos: Vector3 = body.global_position
 	body.rock_activated = false
-	if body.has_method('out_of_bounds'):
+	## Strike-worthy only — black rocks leave quietly (no OOB hit sting).
+	if _oob_miss_should_show_feedback(missed_rock_type_name) and body.has_method('out_of_bounds'):
 		body.out_of_bounds()
 	body.enter_state(body.State.MISSED)
+	if _oob_miss_causes_strike(missed_rock_type_name):
+		set_strike_feedback_origin(miss_pos)
 	gl_PlayerState.log_rock_missed(missed_rock_type_name)
 
-	# Strike / miss feedback (skip hazards & smokecans — they don't count as OOB strikes).
-	if oob_miss_feedback_enabled and _oob_miss_should_show_feedback(missed_rock_type_name):
+	# Non-clearable exits (black / smokecan / avoider) can leave remaining at 0 forever.
+	if not _oob_miss_should_show_feedback(missed_rock_type_name) \
+			or missed_rock_type_name.contains("hazard"):
+		call_deferred("check_wave_clear_if_no_live_rocks")
+
+	# Strike / miss feedback. Must-hit OOB strikes get this via EventBus.add_strike instead
+	# (avoids doubling the shake/particles).
+	if oob_miss_feedback_enabled and _oob_miss_should_show_feedback(missed_rock_type_name) \
+			and not _oob_miss_causes_strike(missed_rock_type_name):
 		_play_oob_miss_feedback(miss_pos, side)
+
+
+func _oob_miss_causes_strike(rock_type_name: String) -> bool:
+	return rock_type_name.contains("rock_type_1") or rock_type_name.contains("rock_type_chaser")
+
+
+func set_strike_feedback_origin(world_pos: Vector3) -> void:
+	_pending_strike_feedback_pos = world_pos
+	_has_pending_strike_feedback_pos = true
+
+
+## Universal strike sting (same as a must-hit rock leaving play).
+func play_strike_feedback(_a = null, _b = null) -> void:
+	if not oob_miss_feedback_enabled:
+		return
+	var pos := _default_strike_feedback_world_pos()
+	if _has_pending_strike_feedback_pos:
+		pos = _pending_strike_feedback_pos
+		_has_pending_strike_feedback_pos = false
+	_play_oob_miss_feedback(pos, OobSide.NONE)
+
+
+func _default_strike_feedback_world_pos() -> Vector3:
+	var cam := _get_bounds_camera()
+	if cam:
+		return cam.global_position + (-cam.global_transform.basis.z) * 18.0
+	return Vector3.ZERO
+
+
+## After black-only (etc.) leave play: if nothing clearable is left in the air, advance.
+func check_wave_clear_if_no_live_rocks() -> void:
+	if gl_PlayerState.dataset.total_rocks_in_round_remaining > 0:
+		return
+	if _any_live_round_rocks():
+		return
+	gl_PlayerState.check_all_rocks_cleared()
+
+
+func _any_live_round_rocks() -> bool:
+	for body in $Container_1.get_children():
+		if not (body is RockInstance):
+			continue
+		## Still waiting to launch this wave.
+		if body.current_state == body.State.PREPARE_ROCK:
+			return true
+		if body.rock_activated and body.current_state == body.State.ACTIVE:
+			return true
+	return false
 
 
 func _oob_miss_should_show_feedback(rock_type_name: String) -> bool:

@@ -24,6 +24,8 @@ var additional_increment := 1.0
 
 var _timer_paused := false
 var _pause_toggle_locked := false
+## Endless mode: count up from 0 instead of counting down.
+var count_up := false
 
 @export_group("Timer SFX")
 @onready var timer_ticking_sfx: AudioStreamPlayer = $TimerTickingSFX
@@ -52,6 +54,11 @@ func _process(delta: float) -> void:
 	if current_state != State.RUNNING:
 		set_process(false)
 		return
+
+	if count_up:
+		time_left += delta
+		update_text()
+		return
 	
 	time_left -= delta
 	update_text()
@@ -77,11 +84,16 @@ func ran_out_of_time() -> void:
 func start_timer_on_pulse() -> void:
 	if round_manager == null or not is_instance_valid(round_manager):
 		round_manager = get_tree().get_first_node_in_group("round_manager")
+	## Endless: count-up survival clock.
+	if round_manager and round_manager.has_method("is_endless_mode") and round_manager.is_endless_mode():
+		start_count_up()
+		return
 	## Regular rounds don't run the countdown HUD — boss only.
 	if round_manager and round_manager.has_method("is_boss_mode") and not round_manager.is_boss_mode():
 		hide()
 		return
 	## Boss duration must stick even if rollup raced or used the upgrade timer.
+	count_up = false
 	if round_manager and round_manager.has_method("get_active_timer_seconds"):
 		var override_seconds := float(round_manager.get_active_timer_seconds())
 		if override_seconds > 0.0:
@@ -90,6 +102,31 @@ func start_timer_on_pulse() -> void:
 			update_text()
 	timer_ticking_sfx.volume_db = -80.0
 	enter_state(State.RUNNING)
+
+
+func start_count_up() -> void:
+	## Don't reset if already counting (wave start + egg pulse both may call).
+	if count_up and current_state == State.RUNNING:
+		show()
+		return
+	count_up = true
+	time_left = 0.0
+	start_time = 0.0
+	sent_signal = false
+	show()
+	modulate.a = 1.0
+	if timer_label:
+		timer_label.modulate = Color.WHITE
+	update_text()
+	if timer_ticking_sfx:
+		timer_ticking_sfx.volume_db = -80.0
+	enter_state(State.RUNNING)
+
+
+func get_elapsed_seconds() -> float:
+	if count_up:
+		return maxf(time_left, 0.0)
+	return maxf(start_time - time_left, 0.0)
 
 func enter_state(new_state: State) -> void:
 	current_state = new_state
@@ -158,6 +195,7 @@ func update_restarting() -> void:
 	if timer_label:
 		timer_label.modulate = Color.WHITE
 	sent_signal = false
+	count_up = false
 	var override_seconds := -1.0
 	if round_manager and round_manager.has_method("get_active_timer_seconds"):
 		override_seconds = float(round_manager.get_active_timer_seconds())
@@ -246,6 +284,7 @@ func update_resume_timer() -> void:
 
 func stop_timer() -> void:
 	enter_state(State.INACTIVE)
+	count_up = false
 	timer_ticking_sfx.stop()
 	update_text()
 	#display_out_of_time()

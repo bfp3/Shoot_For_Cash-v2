@@ -15,16 +15,12 @@
 [ext_resource type="Script" uid="uid://bh2xro2ru0ok0" path="res://ch/Player/scripts/crosshair.gd" id="10_hwyif"]
 [ext_resource type="Script" uid="uid://lqvwdyu058t8" path="res://ch/Player/scripts/cam_pivot.gd" id="10_kkix3"]
 [ext_resource type="Script" uid="uid://snu7cq0wsbqk" path="res://ch/Player/scripts/player_camera.gd" id="10_n6ds6"]
-[ext_resource type="Material" uid="uid://du6stho3eesie" path="res://res/hood_body_parts/main_body_material.tres" id="11_ej0ny"]
 [ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="11_txfio"]
-[ext_resource type="Material" uid="uid://csum6kiahh4u8" path="res://res/hood_body_parts/main_body_2_material.tres" id="12_crcb6"]
 [ext_resource type="AudioStream" uid="uid://bx66frfw01x0d" path="res://sfx/gun-whit-ay-yah.ogg" id="12_fuvvr"]
 [ext_resource type="AudioStream" uid="uid://bicv070p4lp8j" path="res://sfx/Shoot_sfx_1.ogg" id="13_1tjj5"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="13_isobx"]
-[ext_resource type="Material" uid="uid://ig6l6depd7ao" path="res://res/hood_body_parts/main_body_3_material.tres" id="13_l3uax"]
 [ext_resource type="Script" uid="uid://1uqdupt170u1" path="res://ch/Player/scripts/player_gun.gd" id="13_mxtxj"]
 [ext_resource type="AudioStream" uid="uid://bywfw3hl3lt6o" path="res://sfx/reload_sound_01.ogg" id="14_3gdew"]
-[ext_resource type="Texture2D" uid="uid://dcbh2d4up4wjl" path="res://res/white_dented_texture2.png" id="14_5d6j6"]
 [ext_resource type="PackedScene" uid="uid://blmpv2r3v5nd3" path="res://ch/bullets_all/Bullet_visual_alt.tscn" id="14_altbullet"]
 [ext_resource type="PackedScene" uid="uid://brtw6kurd7ejg" path="res://ch/weapons/gun_alt.tscn" id="14_altgun"]
 [ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="14_f75d4"]
@@ -198,41 +194,6 @@ turbulence_influence_max = 1.0
 turbulence_influence_over_life = SubResource("CurveTexture_aqenm")
 
 [sub_resource type="QuadMesh" id="QuadMesh_bpx2c"]
-
-[sub_resource type="TextMesh" id="TextMesh_4gbdm"]
-text = "♣"
-font_size = 63
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_rui0b"]
-top_radius = 0.51
-bottom_radius = 0.51
-height = 0.09
-radial_segments = 24
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_5b161"]
-top_radius = 0.435
-bottom_radius = 0.435
-height = 0.12
-radial_segments = 24
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_0upqd"]
-top_radius = 0.35
-bottom_radius = 0.35
-height = 0.12
-radial_segments = 24
-cap_bottom = false
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_ta18e"]
-top_radius = 0.33
-bottom_radius = 0.33
-height = 0.12
-radial_segments = 13
-cap_bottom = false
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p0lsl"]
-shading_mode = 0
-albedo_color = Color(0.43, 0.25212333, 0.11609999, 1)
-albedo_texture = ExtResource("14_5d6j6")
 
 [sub_resource type="Gradient" id="Gradient_j58se"]
 offsets = PackedFloat32Array(0, 0.0969163)
@@ -500,18 +461,6 @@ color = Color(0.81960785, 0, 0, 1)
 alpha_curve = SubResource("CurveTexture_lf8qf")
 hue_variation_min = -0.050000023
 hue_variation_max = 0.049999975
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5d6j6"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
 
 [sub_resource type="Shader" id="Shader_qfoqq"]
 code = "shader_type spatial;
@@ -893,21 +842,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.059, -0.436)
 
 [node name="GunSpotlight" type="SpotLight3D" parent="Cam_pivot/Camera3D/Player_gun/mockGun" unique_id=1305914277]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+process_mode = 4
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.577387e-07, 0.24256486, 1.8043203)
 visible = false
 shadow_enabled = true
-spot_range = 35.0
-spot_attenuation = 0.0
-spot_angle = 6.81
-spot_angle_attenuation = 1e-05
+spot_range = 20.0
+spot_angle = 2.3
+spot_angle_attenuation = 0.18820307
 
 [node name="gunEmbers" type="GPUParticles3D" parent="Cam_pivot/Camera3D/Player_gun/mockGun" unique_id=471194883]
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0.237, 1.842)
 material_override = SubResource("StandardMaterial3D_rpy68")
 emitting = false
-amount = 30
-lifetime = 0.25
+amount = 25
+lifetime = 0.09999999999999999
 one_shot = true
 explosiveness = 1.0
 fixed_fps = 60
@@ -925,55 +874,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 0.059, -0.436)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.059, -0.436)
 visible = false
 body_color = Color(1, 0.050000012, 0, 1)
-
-[node name="Base" type="Node3D" parent="Cam_pivot/Camera3D" unique_id=650256526]
-transform = Transform3D(-0.903, -2.3717582e-06, -3.0677309e-06, -2.6752487e-06, 0.8934483, 0.17741358, 1.8970371e-06, 0.13099302, -1.2100635, 0, -0.43970084, -0.63886774)
-visible = false
-
-[node name="suit_mesh" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=1665813197]
-transform = Transform3D(1, 2.2737368e-13, -2.2737368e-13, 1.2789769e-13, -4.4703484e-08, -1, 0, 1, -4.4703484e-08, 7.1054274e-14, 0.09611361, -0.05000001)
-material_override = ExtResource("11_ej0ny")
-mesh = SubResource("TextMesh_4gbdm")
-
-[node name="suit_mesh2" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=174629730]
-transform = Transform3D(-1, -5.157786e-06, -2.2545397e-13, 0, -4.371139e-08, 1, -5.157786e-06, 1, 4.371139e-08, 4.7030557e-07, -0.11100112, -0.098455414)
-material_override = ExtResource("11_ej0ny")
-mesh = SubResource("TextMesh_4gbdm")
-
-[node name="Hearts_base_colour2" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=464835868]
-transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 0, 0, 0)
-material_override = ExtResource("11_ej0ny")
-mesh = SubResource("CylinderMesh_rui0b")
-
-[node name="White_inner_colour" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=2106614360]
-transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 6.3948846e-14, 0.025000002, 3.7252903e-09)
-material_override = ExtResource("12_crcb6")
-mesh = SubResource("CylinderMesh_5b161")
-
-[node name="White_inner_colour3" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=1155388222]
-transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 7.1054274e-14, 0.037368104, 0)
-material_override = ExtResource("13_l3uax")
-mesh = SubResource("CylinderMesh_0upqd")
-
-[node name="White_inner_colour4" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=1182045130]
-transform = Transform3D(1, 3.410605e-13, 2.2737368e-13, 1.2789769e-13, 1, 0, 0, 0, 1, 2.1316282e-14, 0.054009996, 0)
-material_override = ExtResource("12_crcb6")
-mesh = SubResource("CylinderMesh_ta18e")
-
-[node name="White_inner_colour2" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=2046488019]
-transform = Transform3D(-1, 8.742177e-08, -5.070367e-06, -8.7422904e-08, -1, -1.3075962e-11, -5.0703666e-06, -1.2632706e-11, 1, 4.5595915e-08, -0.023822945, 3.7252499e-09)
-material_override = ExtResource("11_ej0ny")
-mesh = SubResource("CylinderMesh_5b161")
-
-[node name="White_inner_colour5" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=879393785]
-transform = Transform3D(-1, 8.742177e-08, -5.070367e-06, -8.7422904e-08, -1, -1.3075962e-11, -5.0703666e-06, -1.2632706e-11, 1, 4.6677314e-08, -0.036191076, -1.1427064e-13)
-material_override = ExtResource("13_l3uax")
-mesh = SubResource("CylinderMesh_0upqd")
-
-[node name="White_inner_colour6" type="MeshInstance3D" parent="Cam_pivot/Camera3D/Base" unique_id=885068819]
-transform = Transform3D(-1, 8.742177e-08, -5.070367e-06, -8.7422904e-08, -1, -1.3075962e-11, -5.0703666e-06, -1.2632706e-11, 1, 4.8132037e-08, -0.05283294, -2.1754254e-13)
-material_override = SubResource("StandardMaterial3D_p0lsl")
-mesh = SubResource("CylinderMesh_ta18e")
 
 [node name="StableCamera" type="Camera3D" parent="." unique_id=1918680024]
 cull_mask = 1
@@ -2221,7 +2121,6 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_11n43")
 
 [node name="AmmoCorner" type="Control" parent="CanvasLayer/HUD_bottom_corner" unique_id=434542291]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2291,29 +2190,6 @@ mouse_filter = 2
 theme = SubResource("Theme_pivo4")
 theme_override_styles/panel = ExtResource("29_fuvvr")
 
-[node name="RedBulletPanel" type="Panel" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining/Panel" unique_id=1207484984]
-visible = false
-self_modulate = Color(0.78039217, 0.003921569, 0.007843138, 1)
-show_behind_parent = true
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -261.739
-offset_top = -203.26093
-offset_right = 261.739
-offset_bottom = 203.26093
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.04, 1.04)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_pivo4")
-theme_override_styles/panel = ExtResource("29_fuvvr")
-
 [node name="ShotRemainingLabel" type="RichTextLabel" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining" unique_id=1658642522]
 unique_name_in_owner = true
 z_index = 1
@@ -2345,6 +2221,17 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining" unique_id=409353141 instance=ExtResource("33_ms1v2")]
+layout_mode = 1
+offset_left = -6.385956
+offset_top = -407.04614
+offset_right = 249.61404
+offset_bottom = -151.04614
+scale = Vector2(1.425, 1.425)
+
+[node name="Insignia" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining/CoatArms" index="3" unique_id=1723705056]
+theme_override_colors/default_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
 
 [node name="Bullet_icon2" type="TextureProgressBar" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner" unique_id=1509279836]
 unique_name_in_owner = true
@@ -2394,7 +2281,8 @@ texture_under = ExtResource("8_b1tng")
 texture_progress = ExtResource("8_b1tng")
 tint_under = Color(1, 1, 1, 0.05882353)
 
-[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/Bullet_icon" unique_id=409353141 instance=ExtResource("33_ms1v2")]
+[node name="CoatArms" parent="CanvasLayer/HUD_bottom_corner/AmmoCorner/Bullet_icon" unique_id=1396046132 instance=ExtResource("33_ms1v2")]
+visible = false
 layout_mode = 1
 offset_left = -128.125
 offset_top = -94.00006
@@ -2426,7 +2314,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_5d6j6")
+theme_override_styles/panel = ExtResource("29_fuvvr")
 
 [node name="Margin" type="MarginContainer" parent="CanvasLayer/ReticleSensitivityPopup/Panel" unique_id=1545577186]
 layout_mode = 2
@@ -2442,7 +2330,7 @@ theme_override_constants/separation = 6
 [node name="ReticleSensTitle" type="RichTextLabel" parent="CanvasLayer/ReticleSensitivityPopup/Panel/Margin/VBox" unique_id=765759503]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"RedRichText"
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 48
 bbcode_enabled = true
 text = "Reticle Sensitivity"
@@ -2473,6 +2361,7 @@ vertical_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 81
 bbcode_enabled = true
 text = "1[color=800000][font_size=50]/10"
@@ -2546,3 +2435,5 @@ process_material = SubResource("ParticleProcessMaterial_mlld6")
 draw_pass_1 = SubResource("QuadMesh_rui0b")
 
 [connection signal="timeout" from="Mouse_turning_SFX/StopTimer" to="Mouse_turning_SFX" method="_on_stop_timer_timeout"]
+
+[editable path="CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining/CoatArms"]

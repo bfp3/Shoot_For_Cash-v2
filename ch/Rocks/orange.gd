@@ -4,6 +4,8 @@ const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
 var cash_value := 0
 var original_cash_value := 0
+## When false, HIT state skips log_hit / cash (end-of-round explode cleanup).
+var _award_cash_on_hit := true
 
 
 
@@ -84,11 +86,13 @@ func _ready() -> void:
 	original_cash_value = cash_value
 
 func start_falling() -> void:
-	#apply_hit_reaction(Vector2.UP)
-	disable_collision()
-	await get_tree().create_timer(0.15).timeout
-	update_gravity(1.0)
-	linear_damp = 0.0
+	## End-of-round cleanup: explode like a shot, but skip blast radius (and cash).
+	if rock_destroyed or current_state == State.HIT or current_state == State.INACTIVE:
+		return
+	if not rock_activated:
+		return
+	rock_destroyed = true
+	start_destroyed_process(false, false)
 	
 	
 func enter_state(new_state : State) -> void:
@@ -162,7 +166,8 @@ func update_hit() -> void:
 	%GoldParticless.emitting = false
 	$Pineapple_sound_hit.play()
 	disable_collision()
-	gl_PlayerState.log_hit('orange', 'orange', cash_value)
+	if _award_cash_on_hit:
+		gl_PlayerState.log_hit('orange', 'orange', cash_value)
 	$Pineapple_shot_explode.play()
 	
 	await get_tree().create_timer(0.3).timeout
@@ -277,7 +282,20 @@ func was_hit_tween() -> void:
 	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
 	await tween.finished
 
-	
+
+func _cleanup_after_end_of_round_explode() -> void:
+	if has_node("%explosion_radius_mesh"):
+		%explosion_radius_mesh.hide()
+		%explosion_radius_mesh.transparency = 1.0
+	if has_node("Mesh"):
+		$Mesh.hide()
+	if current_mesh and is_instance_valid(current_mesh):
+		current_mesh.hide()
+	global_position = start_pos
+	freeze = true
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+
 
 func shake_camera() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
@@ -392,13 +410,15 @@ func bounce_rocks() -> void:
 	#update_gravity(0.0)
 	global_position = start_pos
 
-func start_destroyed_process() -> void:
+func start_destroyed_process(expand_blast: bool = true, award_cash: bool = true) -> void:
 
 	if !rock_activated:
 		return
 		
+	_award_cash_on_hit = award_cash
 	
-	expand_blast_radius()
+	if expand_blast:
+		expand_blast_radius()
 	_blow_nearby_smoke()
 	
 	#$Mesh/Yellow_particles.emitting = true
@@ -418,21 +438,22 @@ func start_destroyed_process() -> void:
 
 	## Special challenge (e.g. Noir): shooting an orange fails the round immediately.
 	var challenge_fail := false
-	if round_manager and round_manager.has_method("has_active_special_challenge"):
+	if award_cash and round_manager and round_manager.has_method("has_active_special_challenge"):
 		challenge_fail = bool(round_manager.has_active_special_challenge("no_shoot_oranges"))
-	if challenge_fail:
-		if round_manager.has_method("on_special_challenge_orange_shot"):
-			round_manager.on_special_challenge_orange_shot()
-	else:
-		gl_PlayerState.add_bonus(cash_value)
-		money_label_3d.money_is_money(global_position, cash_value)
+	if award_cash:
+		if challenge_fail:
+			if round_manager.has_method("on_special_challenge_orange_shot"):
+				round_manager.on_special_challenge_orange_shot()
+		else:
+			gl_PlayerState.add_bonus(cash_value)
+			money_label_3d.money_is_money(global_position, cash_value)
 	
 
 	is_deactivated = true
 	#$Mesh.hide()
 	#freeze = true
 	
-	was_hit_tween()
+	await was_hit_tween()
 	
 #
 	#var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
@@ -440,6 +461,12 @@ func start_destroyed_process() -> void:
 	#await tween.finished
 
 	shake_camera()
+
+	## End-of-round explode: park/hide so the blast mesh isn't left floating in the sky.
+	if not award_cash:
+		_cleanup_after_end_of_round_explode()
+	
+	_award_cash_on_hit = true
 	
 
 func play_hit_sfx() -> void:

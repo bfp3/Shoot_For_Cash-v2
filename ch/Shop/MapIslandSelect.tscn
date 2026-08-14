@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bia8r4n1kfwrp" path="res://ch/Shop/map_island_select.gd" id="1_vjt1i"]
 [ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="2_5gg26"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_rcr1f"]
-[ext_resource type="Texture2D" uid="uid://45ktok6rri3c" path="res://res/map_overworld_2048.png" id="3_soy43"]
+[ext_resource type="Texture2D" uid="uid://btygbepxpw7jk" path="res://res/TEMP FILE DELETE/map_overworld.png" id="4_fddk0"]
 [ext_resource type="Texture2D" uid="uid://bt0qwmkberjw1" path="res://res/ShootForCents/Pillar_single.png" id="5_d4yoe"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="6_8mvl6"]
 [ext_resource type="Texture2D" uid="uid://4ur5q1tbclhs" path="res://level_preview_cards/redd_preview2.png" id="6_fddk0"]
@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="12_sifde"]
 [ext_resource type="PackedScene" uid="uid://clo71bqgnnip8" path="res://ch/Shop/Boss_button_select.tscn" id="13_bossbtn"]
 [ext_resource type="PackedScene" uid="uid://dm7lbokrl31kc" path="res://ch/Shop/BossAccessHoldout.tscn" id="14_holdout"]
-[ext_resource type="PackedScene" path="res://ch/Shop/IslandUnlockedPopup.tscn" id="15_unlock"]
+[ext_resource type="PackedScene" uid="uid://df42cd4rwuv17" path="res://ch/Shop/IslandUnlockedPopup.tscn" id="15_unlock"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8mvl6"]
 bg_color = Color(0.92, 0.87952006, 0.8464, 1)
@@ -124,7 +124,7 @@ grow_vertical = 2
 scale = Vector2(1.4, 1.4)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("3_soy43")
+texture = ExtResource("4_fddk0")
 expand_mode = 1
 stretch_mode = 5
 
@@ -195,7 +195,7 @@ grow_vertical = 2
 scale = Vector2(1.4, 1.4)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-texture = ExtResource("3_soy43")
+texture = ExtResource("4_fddk0")
 expand_mode = 1
 stretch_mode = 5
 
@@ -472,7 +472,6 @@ offset_bottom = 678.0
 level_name = "Moss"
 level_locked = false
 main_control = NodePath("../../..")
-preview_grayscale_amount = 1.0
 
 [node name="Level_button_selector2" parent="Island1/Buttons" unique_id=516604565 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
@@ -488,7 +487,6 @@ offset_bottom = 331.0
 level_name = "Redd"
 level_locked = false
 main_control = NodePath("../../..")
-preview_grayscale_amount = 1.0
 
 [node name="Level_button_selector3" parent="Island1/Buttons" unique_id=1192796621 node_paths=PackedStringArray("main_control") instance=ExtResource("12_ag0ht")]
 layout_mode = 0
@@ -506,7 +504,6 @@ level_locked = false
 main_control = NodePath("../../..")
 dark_mode = false
 light_mode_font_modulate = Color(0.78, 0.78, 0.78, 1)
-preview_grayscale_amount = 1.0
 
 [node name="Island2" type="Control" parent="." unique_id=2106000200]
 visible = false

@@ -975,6 +975,12 @@ func fire_weapon() -> void:
 			weapon_shooting.play_missed_sounds()
 			register_accuracy_miss()
 			return
+
+	## Glory: 6 weapon fires per round (not magazine ammo).
+	var rm = get_tree().get_first_node_in_group("round_manager")
+	if rm and rm.has_method("try_register_weapon_shot") and not bool(rm.try_register_weapon_shot()):
+		weapon_shooting.play_missed_sounds()
+		return
 	
 	#set_process(false)
 	#set_process_input(false)

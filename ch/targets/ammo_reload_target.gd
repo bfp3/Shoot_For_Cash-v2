@@ -79,8 +79,18 @@ func _apply_ammo_reload() -> void:
 	var pack := 12
 	if player.has_method("get_ammo_pack_size"):
 		pack = int(player.get_ammo_pack_size())
+	_show_reloading_banner()
 	if player.has_method("add_ammo"):
 		player.add_ammo(pack, true)
+
+
+func _show_reloading_banner() -> void:
+	var rm = get_tree().get_first_node_in_group("round_manager")
+	var wave_feedback = null
+	if rm:
+		wave_feedback = rm.get("wave_progress_feedback")
+	if wave_feedback and wave_feedback.has_method("start_reloading"):
+		wave_feedback.start_reloading()
 
 
 func _play_hit_feedback() -> void:

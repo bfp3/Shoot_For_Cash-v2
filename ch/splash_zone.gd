@@ -43,14 +43,31 @@ func _on_body_entered(body: Node3D) -> void:
 			return
 		
 		splash_particles(body)
-		splash_sfx()
-
+		## Soft water splash only for black rocks — no strike sting / OOB hit SFX.
 		var missed_rock_type_name : String = body.rock_type_name
+		var is_hazard := missed_rock_type_name.contains("hazard")
+		if not is_hazard:
+			splash_sfx()
+
 		body.rock_activated = false
+		## Strike-worthy only — black rocks skip the OOB impact sting.
+		if not is_hazard and body.has_method("out_of_bounds"):
+			body.out_of_bounds()
 		body.enter_state(RockInstance.State.MISSED)
+
+		var rocks_container = null
+		if round_manager:
+			rocks_container = round_manager.get("rocks_container")
+		if rocks_container == null:
+			rocks_container = get_tree().get_first_node_in_group("rocks_container")
+		if not is_hazard and rocks_container and rocks_container.has_method("set_strike_feedback_origin"):
+			rocks_container.set_strike_feedback_origin(body.global_position)
+
 		gl_PlayerState.log_rock_missed(missed_rock_type_name)
 
-		if missed_rock_type_name.contains('hazard'):
+		if is_hazard:
+			if rocks_container and rocks_container.has_method("check_wave_clear_if_no_live_rocks"):
+				rocks_container.call_deferred("check_wave_clear_if_no_live_rocks")
 			return
 
 
