@@ -48,7 +48,7 @@ var _waiting_to_focus := false
 
 
 func _ready() -> void:
-	if not OS.is_debug_build():
+	if not RoundManager.is_level_editor_available():
 		queue_free()
 		return
 
@@ -84,10 +84,7 @@ func get_script_text() -> String:
 
 
 func open_menu() -> void:
-	if not RoundManager.ENABLE_LEVEL_EDITOR:
-		## Publish builds: editor entry is disabled (see RoundManager.ENABLE_LEVEL_EDITOR).
-		return
-	if not OS.is_debug_build():
+	if not RoundManager.is_level_editor_available():
 		return
 	if _busy:
 		return
@@ -285,7 +282,7 @@ func _style_action_button(button: Button, primary: bool) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if not OS.is_debug_build() or not _is_open:
+	if not RoundManager.is_level_editor_available() or not _is_open:
 		return
 	# While open, Shift+K toggles the keys help panel (does not close the editor).
 	if event.is_action_pressed("toggle_key_editor") and not event.is_echo():
@@ -294,7 +291,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not OS.is_debug_build():
+	if not RoundManager.is_level_editor_available():
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:

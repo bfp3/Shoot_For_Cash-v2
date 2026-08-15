@@ -1,8 +1,5 @@
 extends Node
 
-## TEMP publish flag — set true again after the export build to restore the level editor.
-const ENABLE_LEVEL_EDITOR := false
-
 ## Debug-only Moss skip (Shift+M). Never runs in exported builds.
 var _level_jump_busy := false
 
@@ -44,7 +41,7 @@ func _input(event) -> void:
 			return
 
 	# Prefer the event itself — is_action_just_pressed() is unreliable inside _input.
-	if not ENABLE_LEVEL_EDITOR:
+	if not RoundManager.is_level_editor_available():
 		return
 	var toggle_editor = (
 		event.is_action_pressed("toggle_key_editor")
@@ -113,12 +110,14 @@ func debug_jump_to_level(level_id: String) -> void:
 ## Debug: open level editor from the shop / start menu (closes menu UI, does not start a round).
 ## Returns true only when the editor actually opened (so the toggle key can be consumed).
 func debug_open_level_editor() -> bool:
-	if not ENABLE_LEVEL_EDITOR:
+
+	if not RoundManager.is_level_editor_available():
 		return false
-	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	var round_manager : RoundManager = get_tree().get_first_node_in_group("round_manager")
 	if round_manager == null:
 		push_warning("DEBUG level editor: round_manager not found")
 		return false
+	
 	if round_manager.has_method("open_level_editor_from_shop"):
 		return bool(round_manager.open_level_editor_from_shop())
 	return false

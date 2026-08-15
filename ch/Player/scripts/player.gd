@@ -97,8 +97,8 @@ var player_cash : int
 var current_round : int
 
 @onready var gun_center: Node3D = $Cam_pivot/Camera3D/Player_gun/mockGun
-@onready var gun_right : Node3D = $Cam_pivot/Camera3D/Player_gun/mockGun2
-@onready var gun_left : Node3D = $Cam_pivot/Camera3D/Player_gun/mockGun
+#@onready var gun_right : Node3D = $Cam_pivot/Camera3D/Player_gun/mockGun2
+#@onready var gun_left : Node3D = $Cam_pivot/Camera3D/Player_gun/mockGun
 
 @export var roundManager : RoundManager
 @export var weapon_shooting : Node3D

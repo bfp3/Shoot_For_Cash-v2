@@ -1,7 +1,6 @@
 extends Node3D
 
 @onready var crosshair: TextureRect = $'../CanvasLayer/Crosshair/Inner_scope/TextureRect'
-@onready var crosshair_left: TextureRect = $'../CanvasLayer/Multiscopes/Inner_scope2/TextureRect'
 @onready var current_bullet = BULLET_STAGE_1
 
 @export var player_camera : Camera3D

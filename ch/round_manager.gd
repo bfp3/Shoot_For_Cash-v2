@@ -1,8 +1,9 @@
 extends Node
 class_name RoundManager
 
-## TEMP publish flag — set true again after the export build to restore the level editor.
-const ENABLE_LEVEL_EDITOR := false
+## Level editor is only available inside the Godot editor (never in exported builds).
+static func is_level_editor_available() -> bool:
+	return OS.has_feature("editor")
 
 ## Level scenery paths — loaded on demand (never preload all islands into Main).
 ## Keep these under sc/All_level_layouts only. Do NOT point at sc/2025_Levels/* giants.
@@ -279,16 +280,16 @@ func register_level_editor(menu: Control) -> void:
 ## Open level editor from shop / start menu (debug). Soft-closes menus without starting a round.
 ## Returns true if the editor opened (caller should consume the toggle key).
 func open_level_editor_from_shop() -> bool:
-	if not ENABLE_LEVEL_EDITOR:
+	
+	if not is_level_editor_available():
 		return false
-	if not OS.is_debug_build():
-		return false
+	
 	if level_editor_test_active or level_editor_open:
 		return false
 	if level_editor_menu == null:
 		push_warning("RoundManager: level editor menu missing")
 		return false
-
+	
 	var start_menu := get_tree().get_first_node_in_group("start_menu_ui") as Control
 	var shop_open := shop_main_menu != null and shop_main_menu.visible
 	var start_open := start_menu != null and start_menu.visible
@@ -309,7 +310,7 @@ func open_level_editor_from_shop() -> bool:
 		start_menu.hide()
 		if "current_state" in start_menu:
 			start_menu.current_state = start_menu.State.INACTIVE
-
+	
 	level_editor_menu.open_menu()
 	return true
 
@@ -328,9 +329,7 @@ func exit_level_editor_to_shop() -> void:
 
 ## Parse editor text as island test / range test / round, then play that one round.
 func begin_level_editor_test(text: String) -> void:
-	if not ENABLE_LEVEL_EDITOR:
-		return
-	if not OS.is_debug_build():
+	if not is_level_editor_available():
 		return
 	if level_editor_test_active or _level_editor_finishing:
 		return
