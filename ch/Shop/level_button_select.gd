@@ -113,10 +113,10 @@ func _ready() -> void:
 			level_name_label.modulate = Color("1f1f1fff")
 
 
-## Right-click: force-complete this place for stamp testing (editor / debug builds only).
+## Right-click: force-complete this place for stamp testing (Godot editor builds only).
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		if not OS.is_debug_build():
+		if not OS.has_feature("editor"):
 			return
 		var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
 		if place.is_empty() or place == gl_DataSet.get_start_place_name():

@@ -60,9 +60,9 @@ func _process(delta: float) -> void:
 
 
 func _on_gui_input(event: InputEvent) -> void:
-	## Right-click: force-clear this island's boss (editor / debug builds only).
+	## Right-click: force-clear this island's boss (Godot editor builds only).
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		if not OS.is_debug_build():
+		if not OS.has_feature("editor"):
 			return
 		gl_PlayerState.mark_boss_cleared(boss_island_index)
 		var next_island := boss_island_index + 1
