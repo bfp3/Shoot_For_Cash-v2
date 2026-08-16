@@ -3,9 +3,22 @@ extends Node
 var mouse_sensitivity := 1.0
 
 ## Persistent meta across title / quit (completed ranges + per-range round index).
-## Only written/read when persist_mode == LOAD (Load Game on Quick Start).
+## Written/read when persist_mode == LOAD (Load Game on Quick Start, or any exported build).
 const META_SAVE_PATH := "user://shoot_for_cash_progress.cfg"
 const META_SECTION := "progress"
+
+## Dataset keys stored for mid-run resume (money, upgrades, tickets, location).
+const RUN_SAVE_KEYS: Array[String] = [
+	"cash",
+	"level_name",
+	"round",
+	"total_winnings",
+	"cents_total_earned",
+	"tickets",
+	"reroll",
+	"reroll_unlocked",
+	"ammo_packs_bought",
+]
 
 enum PersistMode {
 	TEST, ## Default while developing — session memory only, no disk I/O.
@@ -131,8 +144,17 @@ var _current_round_log: Array = []
 
 
 func _ready() -> void:
-	# Test Mode by default — do not pull disk progress on boot.
-	persist_mode = PersistMode.TEST
+	## Exported builds always persist mid-run progress. Editor stays Test Mode by default.
+	if is_export_build():
+		persist_mode = PersistMode.LOAD
+		_load_meta_progress_from_disk()
+	else:
+		persist_mode = PersistMode.TEST
+
+
+## True outside the Godot editor (exported debug + release).
+func is_export_build() -> bool:
+	return not OS.has_feature("editor")
 
 
 func is_persist_enabled() -> bool:
@@ -165,6 +187,11 @@ func has_meta_save_file() -> bool:
 func clear_meta_progress() -> void:
 	dataset["completed_places"] = []
 	dataset["level_progress"] = {}
+	dataset["unlocked_island_index"] = 0
+	dataset["cleared_boss_islands"] = []
+	dataset["unlocked_boss_islands"] = []
+	if dataset.has("shot_count"):
+		dataset.erase("shot_count")
 	if FileAccess.file_exists(META_SAVE_PATH):
 		var abs_path := ProjectSettings.globalize_path(META_SAVE_PATH)
 		DirAccess.remove_absolute(abs_path)
@@ -513,7 +540,50 @@ func save_meta_progress() -> void:
 	cfg.set_value(META_SECTION, "unlocked_island_index", int(dataset.get("unlocked_island_index", 0)))
 	cfg.set_value(META_SECTION, "cleared_boss_islands", get_cleared_boss_islands())
 	cfg.set_value(META_SECTION, "unlocked_boss_islands", get_unlocked_boss_islands())
+	_write_run_checkpoint_to_cfg(cfg)
 	cfg.save(META_SAVE_PATH)
+
+
+## Export-only: write a full mid-run checkpoint after a round finishes (post-tally cash bank).
+func save_run_checkpoint_after_round() -> void:
+	if not is_export_build():
+		return
+	persist_mode = PersistMode.LOAD
+	_sync_shot_count_from_player()
+	save_meta_progress()
+
+
+func _write_run_checkpoint_to_cfg(cfg: ConfigFile) -> void:
+	for key in RUN_SAVE_KEYS:
+		if dataset.has(key):
+			cfg.set_value(META_SECTION, key, dataset[key])
+	for key in dataset.keys():
+		var key_s := String(key)
+		if key_s.begins_with("power_"):
+			cfg.set_value(META_SECTION, key_s, dataset[key])
+	## Prefer live magazine; fall back to last stored checkpoint.
+	var live_ammo := _read_live_shot_count()
+	if live_ammo >= 0:
+		dataset["shot_count"] = live_ammo
+		cfg.set_value(META_SECTION, "shot_count", live_ammo)
+	elif dataset.has("shot_count"):
+		cfg.set_value(META_SECTION, "shot_count", int(dataset.shot_count))
+
+
+func _sync_shot_count_from_player() -> void:
+	var live := _read_live_shot_count()
+	if live >= 0:
+		dataset["shot_count"] = live
+
+
+func _read_live_shot_count() -> int:
+	var tree := get_tree()
+	if tree == null:
+		return int(dataset.get("shot_count", -1))
+	var player := tree.get_first_node_in_group("Player")
+	if player != null and "shot_count" in player:
+		return int(player.shot_count)
+	return int(dataset.get("shot_count", -1))
 
 
 func load_meta_progress() -> void:
@@ -548,6 +618,22 @@ func _load_meta_progress_from_disk() -> void:
 		if idx not in merged:
 			merged.append(idx)
 	dataset["unlocked_boss_islands"] = merged
+	_load_run_checkpoint_from_cfg(cfg)
+
+
+func _load_run_checkpoint_from_cfg(cfg: ConfigFile) -> void:
+	for key in RUN_SAVE_KEYS:
+		if not cfg.has_section_key(META_SECTION, key):
+			continue
+		dataset[key] = cfg.get_value(META_SECTION, key)
+	## Restore any power_* keys present in the save (including tickets).
+	if cfg.has_section(META_SECTION):
+		for key in cfg.get_section_keys(META_SECTION):
+			var key_s := String(key)
+			if key_s.begins_with("power_"):
+				dataset[key_s] = cfg.get_value(META_SECTION, key_s)
+	if cfg.has_section_key(META_SECTION, "shot_count"):
+		dataset["shot_count"] = int(cfg.get_value(META_SECTION, "shot_count", -1))
 
 
 func log_buy(power_name:String, price:float, unit:int=1) -> bool:

@@ -200,7 +200,7 @@ func raise_shop_menu_music() -> void:
 
 ## Fade out the dedicated shop-menu track.
 func lower_shop_menu_music() -> void:
-	return
+	
 	if shop_music == null:
 		return
 	var tween := create_tween()

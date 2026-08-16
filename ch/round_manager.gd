@@ -1630,6 +1630,9 @@ func update_tally_start() -> void:
 func update_tally_end() -> void:
 	## Keep money earned during the round even after a 3-strike fail.
 	gl_PlayerState.add_cash(gl_PlayerState.dataset.bonus_cash)
+	## Exported builds: checkpoint money / ammo / round frontier / islands after each round.
+	if not level_editor_test_active and gl_PlayerState.has_method("save_run_checkpoint_after_round"):
+		gl_PlayerState.save_run_checkpoint_after_round()
 	
 	check_prompts()
 	

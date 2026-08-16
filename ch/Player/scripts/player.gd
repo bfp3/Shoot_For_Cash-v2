@@ -208,6 +208,7 @@ func _ready() -> void:
 	tween_scope(_inner_scope_scale_for_radius(start_radius), 0.33)
 	
 	_init_ammo()
+	update_player_stats()
 	
 	#%Bullet_icon.hide()
 
@@ -340,8 +341,8 @@ func handle_pan_left_and_right(delta) -> void:
 
 func _process(delta: float) -> void:
 	
-	#if (OS.has_feature("editor") or OS.is_debug_build()) and not game_lost:
-	if not game_lost:
+	if (OS.has_feature("editor") or OS.is_debug_build()) and not game_lost:
+	#if not game_lost:
 		if Input.is_action_pressed("middle_mouse"):
 			Engine.time_scale = 10.0
 		if Input.is_action_just_released("middle_mouse"):
@@ -1004,7 +1005,11 @@ func is_ammo_full() -> bool:
 
 func _init_ammo() -> void:
 	max_ammo = get_max_ammo()
-	shot_count = max_ammo
+	## Export resume: restore magazine from checkpoint when present.
+	if gl_PlayerState.dataset.has("shot_count"):
+		shot_count = clampi(int(gl_PlayerState.dataset.shot_count), 0, max_ammo)
+	else:
+		shot_count = max_ammo
 	_refresh_ammo_display()
 
 
