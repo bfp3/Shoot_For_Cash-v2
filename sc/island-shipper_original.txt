@@ -1,20 +1,25 @@
 island shipper
-range moss
-
+range moss	
 	round
-		rock 1 A1
-		rock 3 C3
+
+		shuffle
+		rock 1
+		rock 3
+		wait 2000
 		repeat 3
 
+
 	round
-		balloon A1
+		balloon A2
 		rock 1
 		rock 1
 		rock 3
 		rock 3
 		repeat 3
 
+
 	round
+
 		balloon A1
 		balloon A3
 		rock 3
@@ -23,6 +28,7 @@ range moss
 		rock-black 2
 		repeat 3
 
+
 	round
 		rock 6
 		rock 6
@@ -30,7 +36,9 @@ range moss
 		rock-black 6
 		repeat 3
 
+
 	round
+		
 		balloon A2
 		rock 2
 		rock 3
@@ -46,6 +54,7 @@ range moss
 		rock 6
 		rock-black 3
 		repeat 3
+
 
 	round
 		rock 1
@@ -132,15 +141,18 @@ range moss
 		repeat 3
 
 range redd
-	# Round 1 — Warm-up: two slow, straight shots
+	# Round 1
 	round
 		rock 3
 		wait 400
 		rock 6
 		repeat 2
 
-	# Round 2 — Gentle pairs across the lane
+	# Round 2
 	round
+		smokecan 1
+		smokecan 2
+		wait 
 		rock 2
 		rock 4
 		wait 250
@@ -148,7 +160,7 @@ range redd
 		rock 7
 		repeat 3
 
-	# Round 3 — First balloon + a slow aimed climb
+	# Round 3
 	round
 		balloon A4
 		rock 4 A4
@@ -157,8 +169,9 @@ range redd
 		rock 5
 		repeat 3
 
-	# Round 4 — Cross-lane aiming lesson (left → right)
+	# Round 4
 	round
+		smokecan
 		rock 1 A4
 		wait 300
 		rock 1 A6
@@ -166,8 +179,10 @@ range redd
 		rock 1 A8
 		repeat 3
 
-	# Round 5 — First hazard: clear whites, avoid the rock-black
+	# Round 5 
 	round
+		smokecan 1
+		smokecan 2
 		rock 2
 		rock 4
 		wait 200
@@ -177,8 +192,9 @@ range redd
 		rock 8
 		repeat 3
 
-	# Round 6 — Twin aims from both edges
+	# Round 6
 	round
+		smokecan
 		balloon A1
 		balloon A8
 		rock 1 A8
@@ -189,7 +205,7 @@ range redd
 		rock 5
 		repeat 3
 
-	# Round 7 — Faster cadence, mid-height aims
+	# Round 7
 	round
 		rock 2 B4
 		wait 150
@@ -202,21 +218,22 @@ range redd
 		rock 5 B3
 		repeat 3
 
-	# Round 8 — Hazard sandwich + low skim
+	# Round 8
 	round
+		smokecan
 		rock-black 3
-		wait 180
-		rock 1 C5
-		wait 120
-		rock 8 C4
 		wait 180
 		rock-black 6
 		wait 150
 		rock 4
 		rock 5
+		wait 2000
+		rock 1 b4
+		wait 0
+		rock 8 b4
 		repeat 3
 
-	# Round 9 — Balloon pressure + mirrored volleys
+	# Round 9
 	round
 		balloon A2
 		balloon A7
@@ -232,8 +249,9 @@ range redd
 		rock-black 5
 		repeat 3
 
-	# Round 10 — Sweeping stair + staggered waits
+	# Round 10
 	round
+		smokecan
 		rock 1 A3
 		wait 100
 		rock 2 A4
@@ -247,9 +265,9 @@ range redd
 		rock 6 A8
 		wait 200
 		rock-black 8
-		repeat 4
+		repeat 3
 
-	# Round 11 — Chaos grid: aims, hazards, balloons
+	# Round 11
 	round
 		balloon A1
 		balloon A4
@@ -264,17 +282,19 @@ range redd
 		rock 6 B3
 		wait 100
 		rock-black 7
-		rock 4 C7
+		rock 4 B7
 		wait 100
-		rock 5 C2
+		rock 5 B2
 		repeat 4
 
-	# Round 12 — Redd finale: dense crossfire
+	# Round 12
 	round
+		smokecan
 		balloon A1
 		balloon A2
 		balloon A7
 		balloon A8
+		
 		rock 1 A8
 		wait 90
 		rock 8 A1
@@ -286,208 +306,458 @@ range redd
 		rock 7 B2
 		wait 80
 		rock-black 6
-		wait 80
+		wait 3000
+		
 		rock 4 A6
 		wait 70
 		rock 5 A3
-		wait 70
-		rock 1 C8
-		wait 70
-		rock 8 C1
-		wait 100
+		wait 2000
+		
+		rock 3 a3
+		rock 6 a6
+		
+		wait 3000
+		
 		rock-black 4
-		rock-black 5
-		rock 3
-		rock 6
-		repeat 5
-
-	# Round 13 — Redd medley: every movement in one pass
+		rock 3 
+		
+		rock-black 1 a4
+		rock-black 2 a4
+		rock-black 3 a4
+		rock-black 4 a4
+		rock-black 5 a4
+		rock-black 6 a4
+		rock-black 7 a4
+		rock-black 8 a4
+		wait 3000
+		
+		wait 3000
+		rock-black 5 a5
+		rock 5 a5
+		
+		
+		
+range glory
+	# Round 1
 	round
-		# I — warm-up
-		rock 3
-		wait 450
-		rock 6
-		wait 700
+		rock 3 a3
+		wait 1000
+		rock 8 a8
+		wait 1000
+		rock
+		wait 0
+		rock
+		wait 0
+		rock
+		wait 1000
+		rock 4 a4
+		wait 200
+		rock 4 a4
 
-		# II — gentle pairs
-		rock 2
-		rock 4
-		wait 280
-		rock 5
-		rock 7
-		wait 700
 
-		# III — balloon + aimed climb
-		balloon A4
-		rock 4 A4
-		wait 380
-		rock 3
-		rock 5
-		wait 700
+	# Round 2
+	round
+		rock 1 a8
+		wait 1000
+		rock 8 a1
+		wait 2000
+		rock 8 a4
+		wait 0
+		rock 1 a4
+		wait 2000
+		rock-black
+		wait 2000
+		rock 4 a4
+		rock 4 a4
+		wait 200
+		rock 4 a4
+		rock 4 a4
 
-		# IV — left → right aim climb
+	# Round 3
+	round
+		balloon c3
+		balloon c6
+		rock
+		rock
+		rock
+		rock
+		rock
+		rock
+		rock
+		rock
+
+
+	# Round 4
+	round
 		rock 1 A4
-		wait 320
+		wait 300
 		rock 1 A6
-		wait 320
+		wait 300
 		rock 1 A8
-		wait 750
-
-		# V — first hazard
-		rock 2
-		rock 4
-		wait 220
-		rock-black 5
-		wait 220
-		rock 7
-		rock 8
-		wait 750
-
-		# VI — twin edge aims
-		balloon A1
-		balloon A8
-		rock 1 A8
+		wait 2500
+		rock 8 A5
+		wait 300
+		rock 8 A3
 		wait 300
 		rock 8 A1
-		wait 220
+		wait 2000
+		rock 4 a4
+		rock 4 b4
+
+	# Round 5
+	round
+		rock 2
 		rock 4
-		rock 5
-		wait 700
-
-		# VII — mid-height B aims
-		rock 2 B4
-		wait 160
-		rock 7 B5
-		wait 160
-		rock 3
-		rock 6
-		wait 160
-		rock 4 B6
-		rock 5 B3
-		wait 700
-
-		# VIII — hazard sandwich + low skim
-		rock-black 3
 		wait 200
-		rock 1 C5
-		wait 140
-		rock 8 C4
-		wait 200
-		rock-black 6
-		wait 160
-		rock 4
-		rock 5
-		wait 750
-
-		# IX — mirrored volleys
-		balloon A2
-		balloon A7
-		rock 2 A7
-		wait 170
-		rock 7 A2
-		wait 150
-		rock 3 A6
-		wait 150
-		rock 6 A3
-		wait 130
-		rock-black 4
 		rock-black 5
-		wait 750
+		wait 200
+		rock 7
+		rock 8
 
-		# X — sweeping stair
-		rock 1 A3
-		wait 120
-		rock 2 A4
-		wait 120
-		rock 3 A5
-		wait 120
-		rock 4 A6
-		wait 120
-		rock 5 A7
-		wait 120
-		rock 6 A8
-		wait 220
-		rock-black 8
-		wait 800
+	# Round 6
+	round
+		rock
+		wait 5000
+		rock
+		wait 5000
+		rock
+		wait 0
+		rock
+		wait 0
+		rock
+		wait 0
+		rock
+		wait 6000
+		rock 1 a8
+		
 
-		# XI — chaos grid
-		balloon A4
-		rock 1 A8
-		wait 120
-		rock 8 A1
-		wait 120
-		rock-black 2
-		rock 3 B6
-		wait 110
-		rock 6 B3
-		wait 110
-		rock-black 7
-		rock 4 C7
-		wait 110
-		rock 5 C2
-		wait 850
+	# Round 7
+	round
+		rock 2 c3
+		wait 2000
+		rock 2 c4
+		wait 2000
+		rock-black
+		rock-black
+		wait 2000
+		rock 6 c6
+		wait 2000
+		rock 6 c4
 
-		# XII — finale crossfire
+	# Round 8
+	round
+		rock 1 b3
+		wait 2000
+		rock 2 b4
+		wait 2000
+		rock 1 b3
+		wait 2000
+		rock 2 b4
+		rock-black 3 a3
+		rock-black 5 a5
+		wait 2000
+		smokecan
+		smokecan
+		smokecan
+		wait 2000
+		
+		rock 2 c6
+
+
+	# Round 9
+	round
+		rock 1 b3
+		wait 2000
+		smokecan
+		smokecan
+		smokecan
+		wait 3000
+		rock 1 b3
+		wait 2000
+		rock 2 b4
+		rock-black 3 a3
+		rock-black 5 a5
+		wait 2000
+		rock 2 a3
+
+	# Round 10
+	round
+		rock 1 a8
+		wait 2000
+		smokecan 1 a8
+
+		wait 3000
+		
+		rock 8 a1
+		smokecan 8 a1
+		wait 2000
+		smokecan
+		wait 2000
+		smokecan
+		wait 1000
+		rock 3 a5
+		wait 0
+		rock 6 a5
+
+	# Round 11
+	round
+		rock ? a4
+		rock ? a4
+		rock ? a4
+		rock ? a4
+		rock ? a4
+		rock ? a4
+		rock ? a4
+		rock ? a4
+
+	# Round 12
+	round
 		balloon A1
 		balloon A2
 		balloon A7
 		balloon A8
+		
 		rock 1 A8
-		wait 100
+		wait 90
 		rock 8 A1
-		wait 100
+		wait 90
 		rock-black 3
-		wait 90
+		wait 80
 		rock 2 B7
-		wait 90
+		wait 80
 		rock 7 B2
-		wait 90
+		wait 80
 		rock-black 6
-		wait 90
+		wait 3000
+		
 		rock 4 A6
-		wait 80
+		wait 70
 		rock 5 A3
-		wait 80
-		rock 1 C8
-		wait 80
-		rock 8 C1
-		wait 120
-		rock-black 4
-		rock-black 5
-		rock 3
-		rock 6
-		repeat 1
+
+		wait 3000
 		
+		wait 3000
 		
+		rock 3 
+		
+
+
 	
 range noir
 	round
-		shuffle
-		rock-black 1
-		rock-black 3
+		rock 3
+		wait 0
+		rock 5
+		wait 1600
 		rock 2
-		wait 1800
+		wait 0
+		rock 4
 		repeat 3
 
 	round
 		balloon A2
-		rock-black 1
 		rock 1
+		wait 0
+		rock 3
+		wait 1400
+		rock 6
+		wait 0
+		rock 8
+		repeat 3
+
+	round
+		balloon A1
+		balloon A3
+		rock 2
+		wait 0
+		rock 7
+		wait 1200
+		rock 3
+		wait 0
+		rock 6
+		repeat 3
+
+	round
+		rock 6
+		wait 0
+		rock 7
+		wait 1100
+		rock 5
+		wait 0
+		rock 8
+		repeat 3
+
+	round
+		balloon A2
+		rock 2
+		wait 0
+		rock 4
+		wait 1000
+		rock-black 5
+		wait 0
+		rock 7
+		repeat 3
+
+	round
+		balloon A2
+		rock 3
+		wait 0
+		rock 4
+		wait 900
+		rock 5
+		wait 0
+		rock 6
+		wait 900
 		rock-black 3
+		wait 0
+		rock 8
+		repeat 3
+
+	round
+		rock 1
+		wait 0
+		rock 2
+		wait 800
+		rock 7
+		wait 0
+		rock 8
+		wait 800
+		rock 3
+		wait 0
+		rock 6
+		repeat 3
+
+	round
+		rock-black 8
+		wait 0
+		rock 7
+		wait 750
+		rock 8
+		wait 0
+		rock-black 7
+		wait 750
+		rock 4
+		wait 0
+		rock 5
+		repeat 3
+
+	round
+		balloon A1
+		balloon A2
+		balloon A7
+		balloon A8
+		rock 1
+		wait 0
+		rock 8
+		wait 700
+		rock-black 1
+		wait 0
+		rock-black 7
+		repeat 3
+
+	round
+		rock 3
+		wait 0
+		rock 4
+		wait 650
+		rock 5
+		wait 0
+		rock 6
+		wait 650
+		rock 4
+		wait 0
+		rock 5
+		wait 650
+		rock 3
+		wait 0
+		rock 6
+		repeat 3
+
+
+	round
+		rock 1
+		wait 0
+		rock 8
+		wait 600
+		rock 2
+		wait 0
+		rock 7
+		wait 600
+		rock 3
+		wait 0
+		rock 6
+		wait 600
+		rock 4
+		wait 0
+		rock 5
+		wait 600
+		rock-black 1
+		wait 0
+		rock-black 2
+		wait 0
+		rock-black 3
+		wait 0
+		rock-black 4
+		repeat 3
+
+
+	round
+		rock-black 2
+		wait 0
+		rock 4
+		wait 550
+		rock-black 4
+		wait 0
+		rock 6
+		wait 550
+		rock-black 6
+		wait 0
+		rock 8
+		wait 550
+		rock 7
+		wait 0
+		rock 8
+		wait 550
+		balloon A1
+		balloon A2
+		balloon A3
+		balloon A4
+		balloon A5
+		balloon A6
+		balloon A7
+		balloon A8
+		repeat 3
+
+range vesper
+	round
+		shuffle
+		rock 1
+		rock 3
+		wait 2200
+		repeat 3
+
+	round
+		balloon A2
+		rock 1
+		wait 300
+		rock 1
+		rock 3
 		rock 3
 		repeat 3
 
 	round
 		balloon A1
 		balloon A3
-		rock-black 3
 		rock 3
-		rock-black 1
+		wait 250
+		rock 3
+		rock 1
 		rock-black 2
 		repeat 3
 
 	round
-		rock-black 6
+		rock 6
+		wait 400
 		rock 6
 		rock-black 5
 		rock-black 6
@@ -495,38 +765,42 @@ range noir
 
 	round
 		balloon A2
-		rock-black 2
+		rock 2
 		rock 3
-		rock-black 4
+		wait 200
+		rock 4
 		rock 5
 		repeat 3
 
 	round
 		balloon A2
 		rock 3
-		rock-black 4
+		rock 4
 		rock 5
-		rock-black 6
+		rock 6
+		wait 350
 		rock-black 3
 		repeat 3
 
 	round
-		rock-black 1
 		rock 1
-		rock-black 3
+		rock 1
 		rock 3
-		rock-black 5
+		rock 3
+		wait 300
 		rock 5
-		rock-black 7
+		rock 5
+		rock 7
 		rock 7
 		repeat 3
 
 	round
 		rock-black 8
-		rock-black 7
+		rock 7
+		wait 250
 		rock 8
 		rock 7
-		rock-black 8
+		rock 8
 		rock-black 7
 		repeat 3
 
@@ -537,16 +811,18 @@ range noir
 		balloon A8
 		rock-black 1
 		rock-black 7
+		wait 200
 		rock 1
 		rock 8
 		repeat 3
 
 	round
-		rock-black 3
+		rock 3
 		rock 4
-		rock-black 5
+		rock 5
 		rock 6
-		rock-black 7
+		wait 400
+		rock 7
 		rock 7
 		rock 6
 		rock 5
@@ -555,11 +831,12 @@ range noir
 		repeat 3
 
 	round
-		rock-black 1
-		rock-black 8
+		rock 1
+		rock 8
 		rock 2
 		rock 7
-		rock-black 3
+		wait 300
+		rock 3
 		rock 6
 		rock 4
 		rock 5
@@ -578,9 +855,11 @@ range noir
 		rock 4
 		rock-black 4
 		rock 6
+		wait 350
 		rock-black 6
 		rock 8
-		rock-black 8
+		rock 8
+		rock 8
 		rock 8
 		rock-black 7
 		balloon A1
@@ -592,3 +871,641 @@ range noir
 		balloon A7
 		balloon A8
 		repeat 3
+
+
+
+
+range boss
+	boss-timer 60000
+	round
+		rock 4 a4
+		wait 3000
+		rock 1 a4
+		wait 2500
+		
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
+		
+		rock
+		rock
+		wait 3000
+		rock
+		rock
+		wait 3000
+		
+		rock
+		rock
+		wait 1500
+		rock
+		rock
+		
+		wait 3000
+		
+		rock 1 a1
+		wait 0
+		rock 2 a2
+		wait 0
+		rock 3 a3
+		
+		wait 3000
+		
+		smokecan 1 a1
+		rock 8 a8
+		
+		wait 3000
+		rock
+		wait 4000
+		
+		rock 1 a1
+		smokecan 8 a8
+		
+		wait 3000
+		smokecan 1 a1
+		rock 8 a8
+		wait 0
+		rock 4 a8
+		wait 3000
+		
+		rock
+		wait 3000
+		
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		smokecan 1 a8
+		wait 2000
+		
+		rock-black 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-black 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		smokecan 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		smokecan 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-black 1 a7
+		
+		
+		
+		
+range boss-2
+	boss-timer 90000
+	round
+		rock 4 a4
+		wait 3000
+		rock 1 a4
+		wait 2500
+		
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
+		
+		rock
+		rock
+		wait 3000
+		rock
+		rock
+		wait 3000
+		
+		rock
+		rock
+		wait 1500
+		rock
+		rock
+		
+		wait 3000
+		
+		rock 1 a1
+		wait 0
+		rock 2 a2
+		wait 0
+		rock 3 a3
+		
+		wait 3000
+		
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		
+		wait 3000
+		rock
+		wait 4000
+		
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		
+		wait 3000
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		rock
+		wait 3000
+		
+		rock
+		wait 3000
+		
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		
+		smokecan
+		smokecan
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		rock
+		rock
+
+		smokecan
+		wait 3000
+		smokecan
+		smokecan
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		wait 4000
+		
+		rock
+		
+		wait 4000
+		
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		
+		
+		
+		
+range jetz
+	round
+		rock 4 a4
+		wait 3000
+		rock 1 a4
+		wait 2500
+		
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
+		
+		rock
+		rock
+		wait 3000
+		rock
+		rock
+		wait 3000
+		
+		rock
+		rock
+		wait 1500
+		rock
+		rock
+		
+		wait 3000
+		
+		rock 1 a1
+		wait 0
+		rock 2 a2
+		wait 0
+		rock 3 a3
+		
+		wait 3000
+		
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		
+		wait 3000
+		rock
+		wait 4000
+		
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		
+		wait 3000
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		rock
+		wait 3000
+		
+		rock
+		wait 3000
+		
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		
+		smokecan
+		smokecan
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		rock
+		rock
+
+		smokecan
+		wait 3000
+		smokecan
+		smokecan
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		wait 4000
+		
+		rock
+		
+		wait 4000
+		
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		
+		rock 4 a4
+		wait 3000
+		rock 1 a4
+		wait 2500
+		
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
+		
+		rock
+		rock
+		wait 3000
+		rock
+		rock
+		wait 3000
+		
+		rock
+		rock
+		wait 1500
+		rock
+		rock
+		
+		wait 3000
+		
+		rock 1 a1
+		wait 0
+		rock 2 a2
+		wait 0
+		rock 3 a3
+		
+		wait 3000
+		
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		
+		wait 3000
+		rock
+		wait 4000
+		
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		
+		wait 3000
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		rock
+		wait 3000
+		
+		rock
+		wait 3000
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-avoider 1 a7
+		
+		smokecan
+		smokecan
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		rock
+		rock
+
+		smokecan
+		wait 3000
+		smokecan
+		smokecan
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		wait 4000
+		
+		rock
+		
+		wait 4000
+		
+		rock-avoider
+		wait
+		rock-avoider
+		wait
+		rock-avoider
+		wait
+		rock-avoider
+		wait
+		rock-avoider
+		wait
+		rock-avoider
+		wait 4000
+		rock
+	
+		repeat 99

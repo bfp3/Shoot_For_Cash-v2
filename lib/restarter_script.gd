@@ -50,6 +50,11 @@ func _input(event) -> void:
 	if toggle_editor and not event.is_echo():
 		if debug_open_level_editor():
 			get_viewport().set_input_as_handled()
+		return
+
+	if event.is_action_pressed("toggle_round_editor") and not event.is_echo():
+		if debug_open_round_editor():
+			get_viewport().set_input_as_handled()
 
 
 ## Instant range jump: land on the open shop menu — do not start the round.
@@ -120,6 +125,18 @@ func debug_open_level_editor() -> bool:
 	
 	if round_manager.has_method("open_level_editor_from_shop"):
 		return bool(round_manager.open_level_editor_from_shop())
+	return false
+
+
+func debug_open_round_editor() -> bool:
+	if not RoundManager.is_level_editor_available():
+		return false
+	var round_manager: RoundManager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager == null:
+		push_warning("DEBUG round editor: round_manager not found")
+		return false
+	if round_manager.has_method("open_round_editor_from_shop"):
+		return bool(round_manager.open_round_editor_from_shop())
 	return false
 
 

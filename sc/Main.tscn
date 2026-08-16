@@ -43,6 +43,7 @@
 [ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="74_vwwt2"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
+[ext_resource type="PackedScene" path="res://ch/debug/round_editor_menu.tscn" id="81_rounded"]
 [ext_resource type="PackedScene" uid="uid://cafj0iwnxs1k3" path="res://ch/targets/ammo_reload_target.tscn" id="83_ammo"]
 [ext_resource type="Script" uid="uid://tyrtfghjsjni" path="res://lib/deferred_menu_loader.gd" id="def_menu_loader"]
 
@@ -1018,6 +1019,12 @@ round_manager = NodePath("../../Round_manager")
 money_control = NodePath("../Money_labels")
 
 [node name="LevelEditorMenu" parent="MainGameCanvasLayer" unique_id=1888001001 node_paths=PackedStringArray("round_manager", "shop_main_menu") instance=ExtResource("81_lvled")]
+unique_name_in_owner = true
+visible = false
+round_manager = NodePath("../../Round_manager")
+shop_main_menu = NodePath("../Shop_Main_Menu")
+
+[node name="RoundEditorMenu" parent="MainGameCanvasLayer" unique_id=1888001002 node_paths=PackedStringArray("round_manager", "shop_main_menu") instance=ExtResource("81_rounded")]
 unique_name_in_owner = true
 visible = false
 round_manager = NodePath("../../Round_manager")

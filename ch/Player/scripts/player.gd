@@ -127,6 +127,32 @@ var pan_speed: float = 8.0
 
 var joystick_sensitivity := 500.0
 
+## Fine aim via controller right stick / gyro (left stick / WASD stay at ~1300 px/s).
+@export_group("Right Stick Crosshair")
+## Pixels per second at full right-stick (or equivalent gyro) tilt.
+@export var right_stick_crosshair_speed := 320.0
+## Ignore stick / gyro noise below this magnitude (0–1 after normalizing).
+@export_range(0.05, 0.5, 0.01) var right_stick_deadzone := 0.15
+## Higher = lighter tilts move slower / more precise (1 = linear).
+@export_range(1.0, 3.0, 0.05) var right_stick_response_curve := 1.6
+## How quickly fine aim ramps up / settles (higher = snappier).
+@export var right_stick_accel := 40.0
+@export var right_stick_decel := 22.0
+## If true, also scales with the in-game reticle sensitivity setting.
+@export var right_stick_uses_sensitivity_setting := true
+
+@export_subgroup("Gyro")
+## Move the crosshair with controller gyroscope (DualSense / Switch-style pads).
+## Requires Godot 4.7+ joypad motion APIs; safely disabled on 4.6.
+@export var gyro_aim_enabled := true
+## Angular speed (rad/s) treated as "full stick" — matches right-stick max speed.
+@export_range(0.5, 8.0, 0.05) var gyro_full_tilt_rad_per_sec := 2.0
+@export var gyro_invert_x := false
+@export var gyro_invert_y := false
+## Brief still-calibration when a gyro pad connects (set controller down / hold steady).
+@export var gyro_auto_calibrate_on_connect := true
+@export_range(0.25, 3.0, 0.05) var gyro_calibrate_seconds := 1.0
+
 const light_colour := Color('FFFFFF')
 const light_intensity := 2.0
 
@@ -136,6 +162,10 @@ var start_rotation : Vector3
 var target_crosshair_position: Vector2 = Vector2(980, 540)
 var crosshair_position := Vector2.ZERO
 var crosshair_lag_speed := 11.0  # Higher = faster catch-up
+var _right_stick_velocity := Vector2.ZERO
+var _gyro_velocity := Vector2.ZERO
+var _gyro_device := -1
+var _gyro_calibrating := false
 
 var crosshair_move_left_limit := 660
 var crosshair_move_right_limit := 1260
@@ -184,6 +214,9 @@ func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(pulse_shake_camera)
 	start_rotation = rotation_degrees
 	_setup_mobile_pause_button()
+	if not running_on_mobile:
+		Input.joy_connection_changed.connect(_on_joy_connection_changed_for_gyro)
+		_refresh_gyro_device(true)
 
 
 func _setup_mobile_pause_button() -> void:
@@ -387,6 +420,8 @@ func _process(delta: float) -> void:
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
 	handle_keyboard_and_controller_input(delta)
+	handle_right_stick_crosshair(delta)
+	handle_gyro_crosshair(delta)
 	update_gun_look()
 	
 	#handle_pan_keyboard(delta)
@@ -554,9 +589,123 @@ func handle_keyboard_and_controller_input(delta: float) -> void:
 		return
 
 	target_crosshair_position += keyboard_velocity * delta
-	
-	
-	
+
+
+## Slow precision aim from the right stick (stacks with gyro / left stick / WASD / mouse).
+func handle_right_stick_crosshair(delta: float) -> void:
+	if running_on_mobile:
+		return
+
+	var stick := Vector2(
+		Input.get_joy_axis(0, JOY_AXIS_RIGHT_X),
+		Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
+	)
+	_right_stick_velocity = _fine_aim_integrate(stick, _right_stick_velocity, delta)
+	target_crosshair_position += _right_stick_velocity * delta
+
+
+## Controller gyro aim — same speed / curve / deadzone as the right stick.
+## Native joypad gyro APIs ship in Godot 4.7+; on 4.6 this no-ops safely.
+func handle_gyro_crosshair(delta: float) -> void:
+	if running_on_mobile or not gyro_aim_enabled:
+		_gyro_velocity = Vector2.ZERO
+		return
+	if not _joy_motion_api_available():
+		_gyro_velocity = Vector2.ZERO
+		return
+	if _gyro_device < 0 or _gyro_calibrating:
+		_gyro_velocity = Vector2.ZERO
+		return
+	if not bool(Input.call("is_joy_motion_sensors_calibrated", _gyro_device)):
+		_gyro_velocity = Vector2.ZERO
+		return
+
+	var stick := _gyro_as_stick(_gyro_device)
+	_gyro_velocity = _fine_aim_integrate(stick, _gyro_velocity, delta)
+	target_crosshair_position += _gyro_velocity * delta
+
+
+## Shared right-stick / gyro velocity integration (same speeds for both).
+func _fine_aim_integrate(stick: Vector2, current: Vector2, delta: float) -> Vector2:
+	var magnitude := clampf(stick.length(), 0.0, 1.0)
+	var has_input := magnitude > right_stick_deadzone
+
+	var speed := right_stick_crosshair_speed
+	if right_stick_uses_sensitivity_setting:
+		speed *= GameSettings.crosshair_speed_multiplier()
+
+	var target_velocity := Vector2.ZERO
+	if has_input:
+		var strength := pow(magnitude, right_stick_response_curve)
+		target_velocity = stick.normalized() * speed * strength
+
+	var lerp_speed := right_stick_accel if has_input else right_stick_decel
+	current = current.lerp(target_velocity, lerp_speed * delta)
+	if current.length_squared() < 0.01 and not has_input:
+		return Vector2.ZERO
+	return current
+
+
+## Map joypad gyro (rad/s) into the same -1..1 stick space the right stick uses.
+func _gyro_as_stick(device: int) -> Vector2:
+	var gyro: Vector3 = Input.call("get_joy_gyroscope", device)
+	var full := maxf(gyro_full_tilt_rad_per_sec, 0.01)
+	# Yaw → screen X, pitch → screen Y (Godot: +gyro is counter-clockwise).
+	var stick := Vector2(-gyro.y, -gyro.x) / full
+	if gyro_invert_x:
+		stick.x = -stick.x
+	if gyro_invert_y:
+		stick.y = -stick.y
+	return stick.limit_length(1.0)
+
+
+func _joy_motion_api_available() -> bool:
+	return (
+		Input.has_method("has_joy_motion_sensors")
+		and Input.has_method("set_joy_motion_sensors_enabled")
+		and Input.has_method("get_joy_gyroscope")
+		and Input.has_method("is_joy_motion_sensors_calibrated")
+		and Input.has_method("start_joy_motion_sensors_calibration")
+		and Input.has_method("stop_joy_motion_sensors_calibration")
+	)
+
+
+func _on_joy_connection_changed_for_gyro(_device: int, _connected: bool) -> void:
+	_refresh_gyro_device(true)
+
+
+func _refresh_gyro_device(calibrate_if_needed: bool) -> void:
+	if running_on_mobile or not gyro_aim_enabled or not _joy_motion_api_available():
+		_gyro_device = -1
+		_gyro_velocity = Vector2.ZERO
+		return
+
+	var found := -1
+	for device in Input.get_connected_joypads():
+		if bool(Input.call("has_joy_motion_sensors", device)):
+			found = int(device)
+			break
+	_gyro_device = found
+	if _gyro_device < 0:
+		return
+
+	Input.call("set_joy_motion_sensors_enabled", _gyro_device, true)
+	if calibrate_if_needed and gyro_auto_calibrate_on_connect:
+		if not bool(Input.call("is_joy_motion_sensors_calibrated", _gyro_device)):
+			_calibrate_gyro_device(_gyro_device)
+
+
+func _calibrate_gyro_device(device: int) -> void:
+	if _gyro_calibrating or not _joy_motion_api_available():
+		return
+	_gyro_calibrating = true
+	Input.call("start_joy_motion_sensors_calibration", device)
+	await get_tree().create_timer(gyro_calibrate_seconds).timeout
+	if is_instance_valid(self) and device == _gyro_device and _joy_motion_api_available():
+		Input.call("stop_joy_motion_sensors_calibration", device)
+	_gyro_calibrating = false
+
+
 func set_power(settings:Dictionary, setting_name:String)-> float:
 	return gl_DataSet.get_value(setting_name, settings[setting_name])
 

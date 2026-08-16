@@ -63,9 +63,13 @@ var _level_reload_poll_accum := 0.0
 
 ## Debug level editor (press D from shop). One-round sandbox under island/range `test`.
 var level_editor_menu: Control = null
+var round_editor_menu: Control = null
 var level_editor_open := false
+var round_editor_open := false
 var level_editor_test_active := false
 var _level_editor_finishing := false
+## Which editor to reopen after a test round: "level" | "round"
+var _editor_test_return := "level"
 var _saved_rock_sequence: Array = []
 var _saved_sequence_index := 0
 var _saved_player_round := 0
@@ -277,6 +281,10 @@ func register_level_editor(menu: Control) -> void:
 	level_editor_menu = menu
 
 
+func register_round_editor(menu: Control) -> void:
+	round_editor_menu = menu
+
+
 ## Open level editor from shop / start menu (debug). Soft-closes menus without starting a round.
 ## Returns true if the editor opened (caller should consume the toggle key).
 func open_level_editor_from_shop() -> bool:
@@ -284,7 +292,7 @@ func open_level_editor_from_shop() -> bool:
 	if not is_level_editor_available():
 		return false
 	
-	if level_editor_test_active or level_editor_open:
+	if level_editor_test_active or level_editor_open or round_editor_open:
 		return false
 	if level_editor_menu == null:
 		push_warning("RoundManager: level editor menu missing")
@@ -315,6 +323,52 @@ func open_level_editor_from_shop() -> bool:
 	return true
 
 
+## Open round editor (Shift+F). Requires being on a range that exists in island-shipper.txt.
+## Press again while open to close (toggle).
+func open_round_editor_from_shop() -> bool:
+	if not is_level_editor_available():
+		return false
+	if level_editor_test_active or level_editor_open:
+		return false
+	if round_editor_open:
+		exit_round_editor_to_shop()
+		return true
+	if round_editor_menu == null:
+		push_warning("RoundManager: round editor menu missing")
+		return false
+
+	var range_id := get_active_range_name().to_lower()
+	var place := String(gl_PlayerState.dataset.level_name).to_lower()
+	if place.is_empty() or place == "start" or place == gl_DataSet.get_start_place_name():
+		push_warning("Round editor: travel into a range first")
+		return false
+	if not Parser.file_has_range(LEVEL_FILE_PATH, range_id):
+		push_warning("Round editor: range '%s' not found in %s" % [range_id, LEVEL_FILE_PATH])
+		return false
+
+	var start_menu := get_tree().get_first_node_in_group("start_menu_ui") as Control
+	var shop_open := shop_main_menu != null and shop_main_menu.visible
+	var start_open := start_menu != null and start_menu.visible
+	if not shop_open and not start_open:
+		if current_round_state != RoundState.SHOP_START and current_round_state != RoundState.INACTIVE:
+			return false
+
+	round_editor_open = true
+	if shop_open and shop_main_menu.has_method("soft_hide_for_level_editor"):
+		shop_main_menu.soft_hide_for_level_editor()
+	elif shop_open:
+		shop_main_menu.hide()
+	if start_open:
+		if start_menu.has_method("sfx_close_shop"):
+			start_menu.sfx_close_shop()
+		start_menu.hide()
+		if "current_state" in start_menu:
+			start_menu.current_state = start_menu.State.INACTIVE
+
+	round_editor_menu.open_menu()
+	return true
+
+
 ## BACK from editor → resume shop without advancing the round.
 func exit_level_editor_to_shop() -> void:
 	level_editor_open = false
@@ -327,8 +381,30 @@ func exit_level_editor_to_shop() -> void:
 		EventBus.instance.open_shop.emit()
 
 
+func exit_round_editor_to_shop() -> void:
+	round_editor_open = false
+	if round_editor_menu and round_editor_menu.has_method("close_menu"):
+		round_editor_menu.close_menu()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if shop_main_menu and shop_main_menu.has_method("soft_show_from_level_editor"):
+		shop_main_menu.soft_show_from_level_editor()
+	elif shop_main_menu:
+		EventBus.instance.open_shop.emit()
+
+
 ## Parse editor text as island test / range test / round, then play that one round.
 func begin_level_editor_test(text: String) -> void:
+	_editor_test_return = "level"
+	await _begin_editor_test_round(text)
+
+
+func begin_round_editor_test(text: String) -> void:
+	_editor_test_return = "round"
+	round_editor_open = false
+	await _begin_editor_test_round(text)
+
+
+func _begin_editor_test_round(text: String) -> void:
 	if not is_level_editor_available():
 		return
 	if level_editor_test_active or _level_editor_finishing:
@@ -342,9 +418,7 @@ func begin_level_editor_test(text: String) -> void:
 	)
 	if spawns.is_empty() and not is_bonus_only:
 		push_warning("Level editor: no spawn commands parsed — returning to editor")
-		level_editor_open = true
-		if level_editor_menu:
-			level_editor_menu.open_menu()
+		_reopen_editor_after_test()
 		return
 
 	_saved_rock_sequence = current_rock_sequence.duplicate(true)
@@ -357,6 +431,7 @@ func begin_level_editor_test(text: String) -> void:
 	current_wave = 0
 	current_round = 1
 	level_editor_open = false
+	round_editor_open = false
 	level_editor_test_active = true
 	_reset_level_editor_round_runtime()
 
@@ -494,13 +569,23 @@ func finish_level_editor_test_round() -> void:
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	current_round_state = RoundState.SHOP_START
-	level_editor_open = true
 	_level_editor_finishing = false
+	_reopen_editor_after_test()
 
+
+func _reopen_editor_after_test() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if _editor_test_return == "round" and round_editor_menu:
+		round_editor_open = true
+		level_editor_open = false
+		round_editor_menu.open_menu()
+		return
 	if level_editor_menu:
+		level_editor_open = true
+		round_editor_open = false
 		level_editor_menu.open_menu()
-	else:
-		exit_level_editor_to_shop()
+		return
+	exit_level_editor_to_shop()
 
 
 ## Active shooting range key used when parsing LEVEL_FILE_PATH.

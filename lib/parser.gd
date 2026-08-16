@@ -775,3 +775,214 @@ func getCommand(_str : String) -> Dictionary:
 		result.params = ary[2]
 			
 	return result
+
+
+# --- Round editor file helpers (island-shipper.txt surgical edit) ---------------
+
+func _file_line_token(line: String) -> String:
+	return line.replace("\t", "").strip_edges()
+
+
+func _is_range_header(token: String, range_name: String = "") -> bool:
+	if token == "boss" or token.begins_with("boss "):
+		return range_name.is_empty() or range_name == "boss"
+	if token.begins_with("range "):
+		var parts := token.split(" ", false)
+		if parts.size() < 2:
+			return false
+		return range_name.is_empty() or String(parts[1]).to_lower() == range_name.to_lower()
+	return false
+
+
+func _range_name_from_header(token: String) -> String:
+	if token == "boss" or token.begins_with("boss "):
+		return "boss"
+	if token.begins_with("range "):
+		var parts := token.split(" ", false)
+		if parts.size() >= 2:
+			return String(parts[1]).to_lower()
+	return ""
+
+
+## Ordered range names found in a level file (e.g. moss, redd, …).
+func list_ranges_in_file(file_path: String) -> PackedStringArray:
+	var out: PackedStringArray = []
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	if file == null:
+		return out
+	var lines := file.get_as_text().split("\n")
+	for raw in lines:
+		var token := _file_line_token(String(raw))
+		if token.is_empty() or token.begins_with("#"):
+			continue
+		if _is_range_header(token):
+			var name := _range_name_from_header(token)
+			if not name.is_empty() and not out.has(name):
+				out.append(name)
+	return out
+
+
+func file_has_range(file_path: String, range_name: String) -> bool:
+	range_name = range_name.to_lower()
+	for name in list_ranges_in_file(file_path):
+		if String(name).to_lower() == range_name:
+			return true
+	return false
+
+
+## How many `round` headings exist under a range in the file.
+func count_rounds_in_file(file_path: String, range_name: String) -> int:
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	if file == null:
+		return 0
+	var lines := file.get_as_text().split("\n")
+	var in_range := false
+	var count := 0
+	range_name = range_name.to_lower()
+	for raw in lines:
+		var token := _file_line_token(String(raw))
+		if token.is_empty():
+			continue
+		if token.begins_with("island "):
+			in_range = false
+			continue
+		if _is_range_header(token):
+			in_range = _range_name_from_header(token) == range_name
+			continue
+		if not in_range:
+			continue
+		if token == "round":
+			count += 1
+	return count
+
+
+## Inclusive header index + exclusive end index for a round body inside `lines`.
+## Returns Vector2i(-1, -1) if missing.
+func _find_round_span(lines: PackedStringArray, range_name: String, round_no: int) -> Vector2i:
+	range_name = range_name.to_lower()
+	var in_range := false
+	var seen := 0
+	var header := -1
+	for i in lines.size():
+		var token := _file_line_token(String(lines[i]))
+		if token.begins_with("island "):
+			if header >= 0:
+				return Vector2i(header, i)
+			in_range = false
+			continue
+		if _is_range_header(token):
+			if header >= 0:
+				return Vector2i(header, i)
+			in_range = _range_name_from_header(token) == range_name
+			continue
+		if not in_range:
+			continue
+		if token == "round":
+			seen += 1
+			if header >= 0:
+				return Vector2i(header, i)
+			if seen == round_no:
+				header = i
+	if header >= 0:
+		return Vector2i(header, lines.size())
+	return Vector2i(-1, -1)
+
+
+## Raw round body for the TextEdit (tabs stripped from each line; blanks kept).
+func get_raw_round_body(file_path: String, range_name: String, round_no: int) -> String:
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	if file == null:
+		return ""
+	var lines := file.get_as_text().split("\n")
+	var span := _find_round_span(lines, range_name, round_no)
+	if span.x < 0:
+		return ""
+	var body_lines: PackedStringArray = []
+	for i in range(span.x + 1, span.y):
+		var raw := String(lines[i])
+		var token := _file_line_token(raw)
+		## Stop early if a new range somehow appears without matching end logic.
+		if _is_range_header(token) or token.begins_with("island "):
+			break
+		## Preserve blank lines; strip leading tabs from commands/comments.
+		if raw.strip_edges().is_empty():
+			body_lines.append("")
+		else:
+			body_lines.append(raw.lstrip("\t"))
+	## Trim trailing blank lines for a cleaner editor default.
+	while body_lines.size() > 0 and String(body_lines[body_lines.size() - 1]).strip_edges().is_empty():
+		body_lines.remove_at(body_lines.size() - 1)
+	return "\n".join(body_lines)
+
+
+## Apply many round body edits in one write.
+## `edits`: Array of { "range": String, "round": int, "body": String }
+func write_round_edits(file_path: String, edits: Array) -> bool:
+	if edits.is_empty():
+		return true
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	if file == null:
+		push_error("parser: could not open '%s' for round edit" % file_path)
+		return false
+	var text := file.get_as_text()
+	## Preserve whether the original ended with a trailing newline.
+	var had_trailing_nl := text.ends_with("\n")
+	var lines: PackedStringArray = text.split("\n")
+	## split() keeps a trailing empty element when text ends with \n — drop it for editing.
+	if had_trailing_nl and lines.size() > 0 and String(lines[lines.size() - 1]).is_empty():
+		lines.remove_at(lines.size() - 1)
+
+	## Sort by span start descending so earlier indices stay valid.
+	var jobs: Array = []
+	for edit in edits:
+		if typeof(edit) != TYPE_DICTIONARY:
+			continue
+		var range_name := String(edit.get("range", "")).to_lower()
+		var round_no := int(edit.get("round", 0))
+		var body := String(edit.get("body", ""))
+		if range_name.is_empty() or round_no <= 0:
+			continue
+		var span := _find_round_span(lines, range_name, round_no)
+		if span.x < 0:
+			push_error("parser: missing range '%s' round %d in %s" % [range_name, round_no, file_path])
+			continue
+		jobs.append({"span": span, "body": body})
+	jobs.sort_custom(func(a, b): return int(a.span.x) > int(b.span.x))
+
+	for job in jobs:
+		var span: Vector2i = job.span
+		var body_text: String = String(job.body)
+		var new_body: PackedStringArray = []
+		for raw_line in body_text.replace("\r\n", "\n").replace("\r", "\n").split("\n"):
+			var line := String(raw_line)
+			if line.strip_edges().is_empty():
+				new_body.append("")
+			else:
+				## Body commands use two tabs under `\tround`.
+				new_body.append("\t\t" + line.lstrip("\t"))
+		## If body ended with \n, split leaves a trailing "" — keep one trailing blank max.
+		while new_body.size() > 1 and String(new_body[new_body.size() - 1]).is_empty() and String(new_body[new_body.size() - 2]).is_empty():
+			new_body.remove_at(new_body.size() - 1)
+		## Rebuild: keep header at span.x, replace body, keep from span.y onward.
+		var rebuilt: PackedStringArray = []
+		for i in range(0, span.x + 1):
+			rebuilt.append(String(lines[i]))
+		for bl in new_body:
+			rebuilt.append(bl)
+		for i in range(span.y, lines.size()):
+			rebuilt.append(String(lines[i]))
+		lines = rebuilt
+
+	var out := "\n".join(lines)
+	if had_trailing_nl and not out.ends_with("\n"):
+		out += "\n"
+	var abs_path := ProjectSettings.globalize_path(file_path)
+	var write := FileAccess.open(abs_path, FileAccess.WRITE)
+	if write == null:
+		## Fallback: try res path directly (editor often allows it).
+		write = FileAccess.open(file_path, FileAccess.WRITE)
+	if write == null:
+		push_error("parser: could not write '%s'" % file_path)
+		return false
+	write.store_string(out)
+	return true

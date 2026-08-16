@@ -1,81 +1,125 @@
 island shipper
 range moss	
 	round
-
-		shuffle
+		shuffle 
 		rock 1
 		rock 3
 		wait 2000
 		repeat 3
-
-
 	round
-		balloon A2
 		rock 1
-		rock 1
+		wait 0
 		rock 3
+		wait 1000
 		rock 3
-		repeat 3
+		wait 0
+		rock 5
+		repeat 2
 
+		rock 6 a6
+		wait 0
+		rock 8 a6
+		wait 1000
+		rock 1 A1
+		wait 0
+		rock 3 A1
+
+		wait 1500
+
+		rock 6 a5
+		wait 0
+		rock 4 a5
 
 	round
+		rock 2 a8
+		wait 1000
+		rock 7 a1
+		repeat 2
 
-		balloon A1
-		balloon A3
-		rock 3
-		rock 3
-		rock 1
-		rock-black 2
-		repeat 3
-
-
-	round
-		rock 6
-		rock 6
-		rock-black 5
-		rock-black 6
-		repeat 3
-
-
-	round
+		rock 2 a8
+		wait 0
+		rock 7 a1
+		wait 2500
+		rock 2 a8
+		wait 0
+		rock 7 a1
 		
+	round
+		rock 1 a1
+		rock 2 a2
+		rock 3 a3
+		wait 2200
+
+		rock 6 a6
+		rock 7 a7
+		rock 8 a8
+		wait 2200
+
+		rock 1 a8
+		rock 8 a8
+
+		wait 2200
+
+		rock 8 a1
+		rock 1 a1
+		
+	round
+		shuffle
+
 		balloon A2
-		rock 2
-		rock 3
-		rock 4
-		rock 5
+		rock 2 a2
+		wait 3300
+		rock 6 a2
+		wait 3300
 		repeat 3
+		
+	round
+		balloon A6
+		balloon B6
+		rock 3 a6
+		rock 4 a6
+		wait 2200
+		rock 5 a6
+
+		repeat 3
+	round
+		balloon b4
+		balloon b5
+		balloon b6
+
+		rock 1 a4
+		wait 3000
+		rock 6 a4
+		wait 2500
+		rock 3 a4
+		wait 2000
+		rock 8 a8
+		wait 1000
+		rock 1 a1
+		wait 500
+		rock 5
+		wait 500
+		balloon a5
+		balloon a6
+		wait 6000
+		rock 1 a5
+		wait 3000
+		rock 2 a5
+		wait 2000
+		rock 3 a5
+		wait 1000
+		rock 4 a5
+		wait 500
+		rock 6 a5
+		wait 1000
+		rock 7 a5
+		rock 8 a5
 
 	round
-		balloon A2
-		rock 3
-		rock 4
-		rock 5
-		rock 6
-		rock-black 3
+		shuffle
+		rock-black 4 a4
+		rock 3 a4
 		repeat 3
-
-
-	round
-		rock 1
-		rock 1
-		rock 3
-		rock 3
-		rock 5
-		rock 5
-		rock 7
-		rock 7
-		repeat 3
-
-	round
-		rock-black 8
-		rock 7
-		rock 8
-		rock 7
-		rock 8
-		rock-black 7
-		repeat 3
-
 	round
 		balloon A1
 		balloon A2
@@ -120,26 +164,47 @@ range moss
 		repeat 3
 
 	round
-		rock-black 2
-		rock 4
-		rock-black 4
-		rock 6
+		shuffle
+		balloon A1
+		balloon A2
+		balloon c4
+		balloon A7
+		balloon A8
+
+		rock-black 2 a2
+		wait 500
+		rock 2 a2
+		wait 2000
+
+		rock-black 4 a4
+		wait 500
+		rock 4 a4
+		wait 2000
+
+		rock-black 1 a8
+		wait 500
+		rock 1 a8
+		wait 2000
+
 		rock-black 6
 		rock 8
 		rock 8
 		rock 8
 		rock 8
-		rock-black 7
-		balloon A1
-		balloon A2
-		balloon A3
-		balloon A4
-		balloon A5
-		balloon A6
-		balloon A7
-		balloon A8
-		repeat 3
 
+		wait 4000
+
+		rock 4 b4
+		wait 500
+		rock 4 b4
+		wait 500
+		rock 4 b4
+		wait 1000
+		rock 1 a4
+		wait 0
+		rock 8 a4
+		wait 0
+		rock 4 a4
 range redd
 	# Round 1
 	round
@@ -167,9 +232,11 @@ range redd
 		wait 350
 		rock 3
 		rock 5
+		wait 2000
+		smokecan 1
+		smokecan 8
 		repeat 3
 
-	# Round 4
 	round
 		smokecan
 		rock 1 A4
@@ -285,9 +352,8 @@ range redd
 		rock 4 B7
 		wait 100
 		rock 5 B2
-		repeat 4
+		repeat 3
 
-	# Round 12
 	round
 		smokecan
 		balloon A1
@@ -353,9 +419,6 @@ range glory
 		rock 4 a4
 		wait 200
 		rock 4 a4
-
-
-	# Round 2
 	round
 		rock 1 a8
 		wait 1000
@@ -373,7 +436,6 @@ range glory
 		rock 4 a4
 		rock 4 a4
 
-	# Round 3
 	round
 		balloon c3
 		balloon c6
@@ -385,9 +447,6 @@ range glory
 		rock
 		rock
 		rock
-
-
-	# Round 4
 	round
 		rock 1 A4
 		wait 300
@@ -404,7 +463,6 @@ range glory
 		rock 4 a4
 		rock 4 b4
 
-	# Round 5
 	round
 		rock 2
 		rock 4
@@ -414,7 +472,6 @@ range glory
 		rock 7
 		rock 8
 
-	# Round 6
 	round
 		rock
 		wait 5000
@@ -429,9 +486,7 @@ range glory
 		rock
 		wait 6000
 		rock 1 a8
-		
 
-	# Round 7
 	round
 		rock 2 c3
 		wait 2000
@@ -444,7 +499,6 @@ range glory
 		wait 2000
 		rock 6 c4
 
-	# Round 8
 	round
 		rock 1 b3
 		wait 2000
@@ -460,11 +514,9 @@ range glory
 		smokecan
 		smokecan
 		wait 2000
-		
+
 		rock 2 c6
 
-
-	# Round 9
 	round
 		rock 1 b3
 		wait 2000
@@ -480,14 +532,13 @@ range glory
 		wait 2000
 		rock 2 a3
 
-	# Round 10
 	round
 		rock 1 a8
 		wait 2000
 		smokecan 1 a8
 
 		wait 3000
-		
+
 		rock 8 a1
 		smokecan 8 a1
 		wait 2000
@@ -499,7 +550,6 @@ range glory
 		wait 0
 		rock 6 a5
 
-	# Round 11
 	round
 		rock ? a4
 		rock ? a4
@@ -510,7 +560,6 @@ range glory
 		rock ? a4
 		rock ? a4
 
-	# Round 12
 	round
 		balloon A1
 		balloon A2

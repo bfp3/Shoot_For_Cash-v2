@@ -1592,7 +1592,7 @@ func _start_avoider_lifetime() -> void:
 	_avoider_life_token += 1
 	var token := _avoider_life_token
 	var lifetime := maxf(avoider_lifetime_sec, 0.1)
-	await get_tree().create_timer(lifetime).timeout
+	await get_tree().create_timer(lifetime, false).timeout
 	if token != _avoider_life_token:
 		return
 	if current_state != State.ACTIVE or rock_type != RockSize.AVOIDER:

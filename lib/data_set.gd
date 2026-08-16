@@ -6,7 +6,7 @@ var dataset_float : Dictionary = {
 
 	"power_bonus_round_pineapples" 	: [0, 1]
 	,"power_max_ammo"				: [99]
-	,"ammo_pack_size"				: [52]
+	,"ammo_pack_size"				: [12]
 	,"power_auto_fire" 					: [0, 1]
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

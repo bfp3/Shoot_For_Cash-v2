@@ -13,6 +13,23 @@ const SCOPE_EXPAND_MAX_SCALE := 2.0
 @export_group("Scope Expand (Right Click)")
 ## How large the crosshair can grow while holding right-click (fraction of full size).
 
+@export_group("Right Stick Crosshair")
+## Pixels per second at full right-stick (or equivalent gyro) tilt.
+@export var right_stick_crosshair_speed := 320.0
+@export_range(0.05, 0.5, 0.01) var right_stick_deadzone := 0.15
+@export_range(1.0, 3.0, 0.05) var right_stick_response_curve := 1.6
+@export var right_stick_accel := 40.0
+@export var right_stick_decel := 22.0
+@export var right_stick_uses_sensitivity_setting := true
+
+@export_subgroup("Gyro")
+@export var gyro_aim_enabled := true
+@export_range(0.5, 8.0, 0.05) var gyro_full_tilt_rad_per_sec := 2.0
+@export var gyro_invert_x := false
+@export var gyro_invert_y := false
+@export var gyro_auto_calibrate_on_connect := true
+@export_range(0.25, 3.0, 0.05) var gyro_calibrate_seconds := 1.0
+
 @export_group("Scenery")
 @export var cloud_color := Color(1.0, 1.0, 1.0, 0.18)
 @export_range(0.0, 120.0, 1.0) var cloud_pan_speed := 28.0
@@ -283,6 +300,11 @@ var is_open := false
 var _intro_active := false
 var _crosshair := Vector2.ZERO
 var _aim_velocity := Vector2.ZERO
+var _right_stick_velocity := Vector2.ZERO
+var _gyro_velocity := Vector2.ZERO
+var _gyro_device := -1
+var _gyro_calibrating := false
+var _gyro_joy_signal_connected := false
 var _wave_phase := 0.0
 var _cloud_pan := 0.0
 var _wave_timer := 0.0
@@ -464,6 +486,7 @@ func _ready() -> void:
 	_bullets = bullets_per_wave
 	set_process(false)
 	set_process_input(false)
+	_ensure_gyro_joy_signal()
 
 
 func _ensure_default_physics_material() -> void:
@@ -561,6 +584,7 @@ func open() -> void:
 	if is_open:
 		return
 	is_open = true
+	_ensure_gyro_joy_signal()
 	CommonCode.set_master_bus_retro_fx(true)
 	_stored_mouse_mode = Input.mouse_mode
 	_session_money = 0.0
@@ -1211,6 +1235,8 @@ func _reset_run() -> void:
 	_strikes = 0
 	_money = 0.0
 	_aim_velocity = Vector2.ZERO
+	_right_stick_velocity = Vector2.ZERO
+	_gyro_velocity = Vector2.ZERO
 	_shake_trauma = 0.0
 	_shake_strength = 0.0
 	_shake_time = 0.0
@@ -1399,6 +1425,8 @@ func _process(delta: float) -> void:
 	_update_sky_transition(delta)
 	if not _game_over:
 		_handle_keyboard_and_controller_aim(delta)
+		_handle_right_stick_crosshair(delta)
+		_handle_gyro_crosshair(delta)
 		_handle_shoot_actions()
 		_handle_scope_adjust(delta)
 	_update_flashes(delta)
@@ -1505,6 +1533,122 @@ func _handle_keyboard_and_controller_aim(delta: float) -> void:
 	_crosshair += _aim_velocity * delta
 	_clamp_crosshair()
 	_update_crosshair_node()
+
+
+## Slow precision aim from the right stick (stacks with gyro / left stick / WASD / mouse).
+func _handle_right_stick_crosshair(delta: float) -> void:
+	var stick := Vector2(
+		Input.get_joy_axis(0, JOY_AXIS_RIGHT_X),
+		Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
+	)
+	_right_stick_velocity = _fine_aim_integrate(stick, _right_stick_velocity, delta)
+	_crosshair += _right_stick_velocity * delta
+	_clamp_crosshair()
+	_update_crosshair_node()
+
+
+func _handle_gyro_crosshair(delta: float) -> void:
+	if not gyro_aim_enabled or not _joy_motion_api_available():
+		_gyro_velocity = Vector2.ZERO
+		return
+	if _gyro_device < 0 or _gyro_calibrating:
+		_gyro_velocity = Vector2.ZERO
+		return
+	if not bool(Input.call("is_joy_motion_sensors_calibrated", _gyro_device)):
+		_gyro_velocity = Vector2.ZERO
+		return
+
+	var stick := _gyro_as_stick(_gyro_device)
+	_gyro_velocity = _fine_aim_integrate(stick, _gyro_velocity, delta)
+	_crosshair += _gyro_velocity * delta
+	_clamp_crosshair()
+	_update_crosshair_node()
+
+
+func _fine_aim_integrate(stick: Vector2, current: Vector2, delta: float) -> Vector2:
+	var magnitude := clampf(stick.length(), 0.0, 1.0)
+	var has_input := magnitude > right_stick_deadzone
+
+	var speed := right_stick_crosshair_speed
+	if right_stick_uses_sensitivity_setting:
+		speed *= GameSettings.crosshair_speed_multiplier()
+
+	var target_velocity := Vector2.ZERO
+	if has_input:
+		var strength := pow(magnitude, right_stick_response_curve)
+		target_velocity = stick.normalized() * speed * strength
+
+	var lerp_speed := right_stick_accel if has_input else right_stick_decel
+	current = current.lerp(target_velocity, lerp_speed * delta)
+	if current.length_squared() < 0.01 and not has_input:
+		return Vector2.ZERO
+	return current
+
+
+func _gyro_as_stick(device: int) -> Vector2:
+	var gyro: Vector3 = Input.call("get_joy_gyroscope", device)
+	var full := maxf(gyro_full_tilt_rad_per_sec, 0.01)
+	var stick := Vector2(-gyro.y, -gyro.x) / full
+	if gyro_invert_x:
+		stick.x = -stick.x
+	if gyro_invert_y:
+		stick.y = -stick.y
+	return stick.limit_length(1.0)
+
+
+func _joy_motion_api_available() -> bool:
+	return (
+		Input.has_method("has_joy_motion_sensors")
+		and Input.has_method("set_joy_motion_sensors_enabled")
+		and Input.has_method("get_joy_gyroscope")
+		and Input.has_method("is_joy_motion_sensors_calibrated")
+		and Input.has_method("start_joy_motion_sensors_calibration")
+		and Input.has_method("stop_joy_motion_sensors_calibration")
+	)
+
+
+func _ensure_gyro_joy_signal() -> void:
+	if _gyro_joy_signal_connected:
+		return
+	Input.joy_connection_changed.connect(_on_joy_connection_changed_for_gyro)
+	_gyro_joy_signal_connected = true
+	_refresh_gyro_device(true)
+
+
+func _on_joy_connection_changed_for_gyro(_device: int, _connected: bool) -> void:
+	_refresh_gyro_device(true)
+
+
+func _refresh_gyro_device(calibrate_if_needed: bool) -> void:
+	if not gyro_aim_enabled or not _joy_motion_api_available():
+		_gyro_device = -1
+		_gyro_velocity = Vector2.ZERO
+		return
+
+	var found := -1
+	for device in Input.get_connected_joypads():
+		if bool(Input.call("has_joy_motion_sensors", device)):
+			found = int(device)
+			break
+	_gyro_device = found
+	if _gyro_device < 0:
+		return
+
+	Input.call("set_joy_motion_sensors_enabled", _gyro_device, true)
+	if calibrate_if_needed and gyro_auto_calibrate_on_connect:
+		if not bool(Input.call("is_joy_motion_sensors_calibrated", _gyro_device)):
+			_calibrate_gyro_device(_gyro_device)
+
+
+func _calibrate_gyro_device(device: int) -> void:
+	if _gyro_calibrating or not _joy_motion_api_available():
+		return
+	_gyro_calibrating = true
+	Input.call("start_joy_motion_sensors_calibration", device)
+	await get_tree().create_timer(gyro_calibrate_seconds).timeout
+	if is_instance_valid(self) and device == _gyro_device and _joy_motion_api_available():
+		Input.call("stop_joy_motion_sensors_calibration", device)
+	_gyro_calibrating = false
 
 
 ## Fire / scope via the same InputMap actions as the main game (mouse, Space, A, X, etc.).
