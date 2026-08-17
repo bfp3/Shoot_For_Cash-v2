@@ -449,7 +449,7 @@ func start_destroyed_process(expand_blast: bool = true, award_cash: bool = true)
 
 	play_destroy_sfx()
 
-	## Special challenge (e.g. Noir): shooting an orange fails the round immediately.
+	## Special challenge (e.g. Noir): shooting an orange = strike, no bonus cash.
 	var challenge_fail := false
 	if award_cash and round_manager and round_manager.has_method("has_active_special_challenge"):
 		challenge_fail = bool(round_manager.has_active_special_challenge("no_shoot_oranges"))

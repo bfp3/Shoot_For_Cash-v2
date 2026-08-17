@@ -1,5 +1,6 @@
 extends Control
 ## Range-cleared reward popup: title + clear bonus → cash rollup → ammo refill → map stamp.
+## Editor test: Shift+C replays this sequence only (no map / no permanent clear).
 
 
 enum State {
@@ -9,18 +10,21 @@ enum State {
 }
 var current_state: State = State.INACTIVE
 
+const STEP_DELAY_SEC := 1.0
+
 var default_scale := Vector2.ONE
 var default_position := Vector2.ZERO
 var default_pivot_offset := Vector2.ZERO
 
 var _sequence_busy := false
+var _preview_mode := false
 var _cleared_place := ""
 var _clear_bonus := 0
 var _display_cash := 0
 
 @onready var cash_balance_label: RichTextLabel = %CashBalanceLabel
-
 @onready var _text_box: RichTextLabel = %TextBOX
+@onready var _money_control: Control = get_node_or_null("CenterContainer/MainPanel/MainPanel/Money_control") as Control
 @onready var _retry_button: Button = find_child("Retry", true, false) as Button
 
 
@@ -33,6 +37,7 @@ func _ready() -> void:
 		_retry_button.visible = false
 		_retry_button.disabled = true
 	_ensure_cash_roll_sfx()
+	_ensure_stamp_sfx()
 	hide()
 
 
@@ -47,12 +52,37 @@ func enter_state(new_state: State) -> void:
 			await update_close_menu()
 
 
+## Editor-only: replay the reward UI without marking clear / opening the map.
+func play_test_preview(place_id: String = "") -> void:
+	if not OS.has_feature("editor"):
+		return
+	if _sequence_busy:
+		return
+	_preview_mode = true
+	if place_id.is_empty():
+		place_id = gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	if place_id.is_empty() or place_id == "start":
+		place_id = gl_DataSet.get_default_range_name()
+	## Spend some ammo so the refill roll-up is visible while iterating.
+	_prepare_preview_ammo()
+	await _run_sequence(place_id, true)
+	_preview_mode = false
+
+
 ## Entry point from RoundManager.start_game_over().
 func update_open_menu() -> void:
+	await _run_sequence(
+		gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name)),
+		false
+	)
+
+
+func _run_sequence(place_id: String, preview: bool) -> void:
 	if _sequence_busy:
 		return
 	_sequence_busy = true
-	_cleared_place = gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	_preview_mode = preview
+	_cleared_place = gl_DataSet.resolve_place_name(place_id)
 	_clear_bonus = _resolve_clear_bonus(_cleared_place)
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -64,7 +94,11 @@ func update_open_menu() -> void:
 	position = default_position
 	pivot_offset = default_pivot_offset
 	show()
+
+	## Step 1 — title + bonus text, cash total visible immediately.
 	_prepare_title_text()
+	_show_cash_balance_immediate(int(gl_PlayerState.dataset.cash))
+	_play_stamp_sfx()
 
 	var open_tween := create_tween()
 	open_tween.set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
@@ -72,12 +106,37 @@ func update_open_menu() -> void:
 	open_tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
 	await open_tween.finished
 
-	await get_tree().create_timer(0.55, false).timeout
-	await _play_cash_and_ammo_sequence()
-	await get_tree().create_timer(0.5, false).timeout
+	await get_tree().create_timer(STEP_DELAY_SEC, false).timeout
+
+	## Step 2 — bank clear bonus and roll CashBalanceLabel up.
+	var cash_before := int(gl_PlayerState.dataset.cash)
+	_display_cash = cash_before
+	_set_cash_balance_label(cash_before)
+	if _clear_bonus > 0 and not preview:
+		gl_PlayerState.add_cash(_clear_bonus)
+	elif _clear_bonus > 0 and preview:
+		## Preview still rolls visually; do not permanently bank (spam-friendly).
+		pass
+	var cash_after := cash_before + _clear_bonus if preview else int(gl_PlayerState.dataset.cash)
+	await _roll_cash_balance(cash_before, cash_after)
+
+	await get_tree().create_timer(STEP_DELAY_SEC, false).timeout
+
+	## Step 3 — roll ammo up to max (same pacing as shop ammo purchase).
+	await _refill_player_ammo_animated()
+	_set_title_ammo_refilled()
+	_play_stamp_sfx()
+	_play_ammo_refill_sfx()
+	if not preview and gl_PlayerState.has_method("save_run_checkpoint_after_round"):
+		gl_PlayerState.save_run_checkpoint_after_round()
+
+	await get_tree().create_timer(STEP_DELAY_SEC, false).timeout
+
 	await update_close_menu()
-	await _finish_to_map()
+	if not preview:
+		await _finish_to_map()
 	_sequence_busy = false
+	_preview_mode = false
 
 
 func update_close_menu() -> void:
@@ -100,80 +159,78 @@ func _prepare_title_text() -> void:
 	if particles:
 		particles.emitting = true
 	var title := _range_display_title(_cleared_place)
-	var bonus_line := "Clear Bonus Cash: [color=#a10204]%s[/color]" % CommonCode.format_money(_clear_bonus)
 	_text_box.text = (
-		"[pulse][color=#a10204]%s: CLEARED[/color][/pulse]\n%s"
-		% [title, bonus_line]
+		"[pulse][color=#a10204]%s: CLEARED[/color][/pulse]\nClear Bonus Cash: [color=#a10204]%s[/color]"
+		% [title, CommonCode.format_money(_clear_bonus)]
 	)
 
 
-func _play_cash_and_ammo_sequence() -> void:
-	var cash_before := int(gl_PlayerState.dataset.cash)
-	_display_cash = cash_before
-	_set_body_text(_build_body_text(cash_before, false))
-
-	await get_tree().create_timer(0.35, false).timeout
-
-	## Bank clear bonus, then roll the on-screen total up.
-	if _clear_bonus > 0:
-		gl_PlayerState.add_cash(_clear_bonus)
-	var cash_after := int(gl_PlayerState.dataset.cash)
-	await _roll_cash_display(cash_before, cash_after)
-
-	await get_tree().create_timer(0.25, false).timeout
-	_refill_player_ammo()
-	_set_body_text(_build_body_text(cash_after, true))
-	_play_ammo_refill_sfx()
-	if gl_PlayerState.has_method("save_run_checkpoint_after_round"):
-		gl_PlayerState.save_run_checkpoint_after_round()
-
-
-func _build_body_text(cash_amount: int, ammo_refilled: bool) -> String:
+func _set_title_ammo_refilled() -> void:
 	var title := _range_display_title(_cleared_place)
-	var lines: PackedStringArray = [
-		"[pulse][color=#a10204]%s: CLEARED[/color][/pulse]" % title,
-		"Clear Bonus Cash: [color=#a10204]%s[/color]" % CommonCode.format_money(_clear_bonus),
-		"",
-		"Cash: [wave amp=2.0 freq=20.0 connected=1][color=#a10204]%s[/color][/wave]" % CommonCode.format_money(cash_amount),
-	]
-	if ammo_refilled:
-		lines.append("Ammo: [color=#a10204]REFILLED[/color]")
-	return "\n".join(lines)
+	_text_box.text = (
+		"[pulse][color=#a10204]%s: CLEARED[/color][/pulse]\nClear Bonus Cash: [color=#a10204]%s[/color]\nAmmo: [color=#a10204]REFILLED[/color]"
+		% [title, CommonCode.format_money(_clear_bonus)]
+	)
 
 
-func _set_body_text(bbcode: String) -> void:
-	if _text_box:
-		_text_box.text = bbcode
+func _show_cash_balance_immediate(amount: int) -> void:
+	if _money_control:
+		_money_control.visible = true
+		_money_control.modulate.a = 1.0
+	_display_cash = amount
+	_set_cash_balance_label(amount)
 
 
-func _roll_cash_display(from_cash: int, to_cash: int) -> void:
+func _set_cash_balance_label(amount: int) -> void:
+	if cash_balance_label == null:
+		return
+	cash_balance_label.text = "[rainbow][wave amp=2.0 freq=20.0 connected=1]%s" % CommonCode.format_money(amount)
+
+
+func _roll_cash_balance(from_cash: int, to_cash: int) -> void:
+	if cash_balance_label == null:
+		return
 	var duration := clampf(absf(float(to_cash - from_cash)) / 80.0, 0.45, 1.6)
 	_play_cash_roll_sfx(duration)
 	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_method(
 		func(value: float):
 			_display_cash = int(value)
-			_set_body_text(_build_body_text(_display_cash, false)),
+			_set_cash_balance_label(_display_cash),
 		float(from_cash),
 		float(to_cash),
 		duration
 	)
 	await tween.finished
 	_display_cash = to_cash
-	_set_body_text(_build_body_text(to_cash, false))
+	_set_cash_balance_label(to_cash)
 
 
-func _refill_player_ammo() -> void:
+func _refill_player_ammo_animated() -> void:
 	var player := get_tree().get_first_node_in_group("Player")
 	if player == null:
 		return
-	if player.has_method("refill_ammo_to_max"):
+	if player.has_method("refill_ammo_to_max_animated"):
+		await player.refill_ammo_to_max_animated()
+	elif player.has_method("refill_ammo_to_max"):
 		player.refill_ammo_to_max(true)
-	elif player.has_method("_refill_regular_ammo_to_max"):
-		player._refill_regular_ammo_to_max()
-	## Keep checkpoint ammo in sync for export saves.
+		await get_tree().create_timer(0.6, false).timeout
 	if "shot_count" in player:
 		gl_PlayerState.dataset["shot_count"] = int(player.shot_count)
+
+
+func _prepare_preview_ammo() -> void:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null:
+		return
+	var max_ammo := 12
+	if player.has_method("get_max_ammo"):
+		max_ammo = maxi(int(player.get_max_ammo()), 1)
+	## Leave about a third so the fill animation is obvious.
+	if "shot_count" in player:
+		player.shot_count = maxi(maxi(max_ammo / 3, 1), 0)
+		if player.has_method("_refresh_ammo_display"):
+			player._refresh_ammo_display(false)
 
 
 func _finish_to_map() -> void:
@@ -211,6 +268,24 @@ func _ensure_cash_roll_sfx() -> void:
 	$SFX.add_child(sfx)
 
 
+func _ensure_stamp_sfx() -> void:
+	if has_node("SFX/Stamp_sfx"):
+		return
+	var sfx := AudioStreamPlayer.new()
+	sfx.name = "Stamp_sfx"
+	sfx.stream = load("res://sfx/stamp_sfx.ogg")
+	sfx.volume_db = -33.0
+	$SFX.add_child(sfx)
+
+
+func _play_stamp_sfx() -> void:
+	if has_node("SFX/Stamp_sfx"):
+		$SFX/Stamp_sfx.volume_db = -30.0
+		$SFX/Stamp_sfx.play(0.05)
+	elif has_node("SFX/shop_purchase_01"):
+		$SFX/shop_purchase_01.play()
+
+
 func _play_cash_roll_sfx(duration: float) -> void:
 	if has_node("SFX/shop_coin_sfx_01"):
 		$SFX/shop_coin_sfx_01.play()
@@ -245,9 +320,9 @@ func sfx_close_menu() -> void:
 	$SFX/low_humming.stop()
 
 
-## Legacy button path (hidden) — keep as manual escape if re-enabled.
 func _on_retry_pressed() -> void:
 	if _sequence_busy:
 		return
 	await update_close_menu()
-	await _finish_to_map()
+	if not _preview_mode:
+		await _finish_to_map()

@@ -135,9 +135,15 @@ var _airborne_collision_token := 0
 @export_group("Hazard / Black Rock")
 ## When true, destroying a black hazard that releases smoke blurs the player camera.
 @export var hazard_smoke_blurs_camera := true
+## If true, black rocks strike (and explode) when the crosshair overlaps them — like avoiders, but without seeking the reticle.
+@export var hazard_strike_on_crosshair_overlap := false
+## Delay after launch before crosshair overlap can strike (avoids instant spawn kills).
+@export_range(0.0, 3.0, 0.05) var hazard_crosshair_arm_delay_sec := 0.45
 ## Set when an orange neutralized this black rock (blow-away or instant explode).
 ## Prevents strikes and hazard fail particles on the follow-up destroy.
 var _orange_neutralized_hazard := false
+var _hazard_crosshair_armed := false
+var _hazard_crosshair_arm_token := 0
 
 @export_group("Aim Hold Bonus (Basic Rock)")
 ## While the crosshair overlaps a basic rock, add this much cash every interval (paid only if shot).
@@ -244,6 +250,10 @@ func _physics_process(delta: float) -> void:
 				_update_chaser(delta)
 		elif rock_type == RockSize.SMALL:
 			_update_aim_hold_bonus(delta)
+		elif hazard_strike_on_crosshair_overlap and (
+			rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL
+		):
+			_update_hazard_crosshair_overlap()
 
 	if not ballistic_aim_active or _ballistic_in_descent:
 		return
@@ -335,6 +345,10 @@ func update_active() -> void:
 		_sync_avoider_collision_exceptions()
 	elif rock_type == RockSize.CHASER:
 		_arm_chaser()
+	elif hazard_strike_on_crosshair_overlap and (
+		rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL
+	):
+		_arm_hazard_crosshair()
 	
 	#%rock_launch_sound.pitch_scale = randf_range(3.0,3.2)
 	%rock_launch_sound.play()
@@ -714,6 +728,8 @@ func reset_stats() -> void:
 	ignores_x_out_of_bounds = false
 	_hazard_strike_from_direct_shot = false
 	_orange_neutralized_hazard = false
+	_hazard_crosshair_armed = false
+	_hazard_crosshair_arm_token += 1
 	has_entered_camera_view = false
 	_avoider_armed = false
 	_avoider_arm_token += 1
@@ -1576,6 +1592,50 @@ func _apply_direct_hazard_strike() -> void:
 	EventBus.instance.hazard_hit.emit()
 	_set_strike_feedback_origin_here()
 	gl_PlayerState.add_strike()
+
+
+func _arm_hazard_crosshair() -> void:
+	_hazard_crosshair_armed = false
+	_hazard_crosshair_arm_token += 1
+	var token := _hazard_crosshair_arm_token
+	await get_tree().create_timer(maxf(hazard_crosshair_arm_delay_sec, 0.0), false).timeout
+	if token != _hazard_crosshair_arm_token:
+		return
+	if current_state != State.ACTIVE:
+		return
+	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL:
+		return
+	if not hazard_strike_on_crosshair_overlap:
+		return
+	_hazard_crosshair_armed = true
+
+
+func _update_hazard_crosshair_overlap() -> void:
+	if not _hazard_crosshair_armed:
+		return
+	if _orange_neutralized_hazard or _freeze_shot_pending:
+		return
+	if _avoider_overlaps_crosshair():
+		_trigger_hazard_crosshair_contact()
+
+
+## Black-rock reticle contact: same strike + destroy as a direct shot, no seek motion.
+func _trigger_hazard_crosshair_contact() -> void:
+	if not hazard_strike_on_crosshair_overlap:
+		return
+	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL:
+		return
+	if _orange_neutralized_hazard:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+
+	_hazard_crosshair_armed = false
+	_hazard_crosshair_arm_token += 1
+	## Same strike path as shooting a black rock (prevents a second strike in destroy).
+	_apply_direct_hazard_strike()
+	_shake_camera_avoider_hit()
+	start_destroyed_process()
 
 
 func _set_strike_feedback_origin_here() -> void:

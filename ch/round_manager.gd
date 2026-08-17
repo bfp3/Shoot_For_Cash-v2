@@ -876,11 +876,13 @@ func reset_shots_fired_this_round() -> void:
 	_shots_fired_this_round = 0
 
 
-## Noir (and similar): shooting an orange instantly fills strikes and aborts the round.
+## Noir (and similar): shooting an orange costs a strike (no bonus cash).
 func on_special_challenge_orange_shot() -> void:
 	if not has_active_special_challenge("no_shoot_oranges"):
 		return
-	_fail_special_challenge()
+	if player_failed or game_over_triggered:
+		return
+	gl_PlayerState.add_strike()
 
 
 ## Legacy: scoring a double / multi instantly fills strikes (no longer used by Glory).

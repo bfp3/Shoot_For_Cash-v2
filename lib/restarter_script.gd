@@ -47,6 +47,11 @@ func _input(event) -> void:
 		if event.shift_pressed and event.keycode == KEY_M:
 			debug_jump_to_level(gl_DataSet.get_default_range_name())
 			return
+		## Shift+C — replay range-clear reward popup (editor / debug only).
+		if event.shift_pressed and event.keycode == KEY_C:
+			if debug_preview_range_clear_reward():
+				get_viewport().set_input_as_handled()
+			return
 
 	# Prefer the event itself — is_action_just_pressed() is unreliable inside _input.
 	if not RoundManager.is_level_editor_available():
@@ -146,6 +151,21 @@ func debug_open_round_editor() -> bool:
 	if round_manager.has_method("open_round_editor_from_shop"):
 		return bool(round_manager.open_round_editor_from_shop())
 	return false
+
+
+## Shift+C: open the range-clear reward UI in preview mode (no map stamp / no permanent cash).
+func debug_preview_range_clear_reward() -> bool:
+	if not OS.has_feature("editor") and not OS.is_debug_build():
+		return false
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_game_over"):
+		menus.ensure_game_over()
+	var game_over := get_tree().get_first_node_in_group("game_over_screen")
+	if game_over == null or not game_over.has_method("play_test_preview"):
+		push_warning("DEBUG range clear preview: game_over_screen missing play_test_preview")
+		return false
+	game_over.play_test_preview()
+	return true
 
 
 func _is_start_menu_shop(node: Node) -> bool:

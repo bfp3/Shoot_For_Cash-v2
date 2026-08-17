@@ -56,6 +56,13 @@ func play_reload_fill(from_amount: int, to_amount: int) -> void:
 		_reload_tween.tween_property(ammo_label, "scale", base_scale, 0.12)
 
 
+## Awaitable version used by range-clear reward / previews.
+func await_reload_fill(from_amount: int, to_amount: int) -> void:
+	play_reload_fill(from_amount, to_amount)
+	if _reload_tween != null and is_instance_valid(_reload_tween) and _reload_tween.is_running():
+		await _reload_tween.finished
+
+
 func _set_display_ammo(value: float) -> void:
 	var next := int(round(value))
 	if next != _last_tick_ammo:

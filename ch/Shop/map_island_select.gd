@@ -438,11 +438,12 @@ func open_pop_up_after_range_clear(place_id: String) -> void:
 
 	## Prepare the level button for an animated CLEAR stamp (like boss clear).
 	var level_btn := _level_button_for_place(place_id)
-	if level_btn and level_btn.has_method("_hide_completion_stamp"):
+	if level_btn and level_btn.has_method("prepare_clear_ceremony_visuals"):
+		level_btn.prepare_clear_ceremony_visuals()
+	elif level_btn and level_btn.has_method("_hide_completion_stamp"):
 		level_btn._hide_completion_stamp()
-		level_btn.current_state = level_btn.State.COMPLETE
-		if level_btn.has_method("_set_completed_gui"):
-			level_btn._set_completed_gui()
+		if level_btn.has_method("_clear_completed_gui"):
+			level_btn._clear_completed_gui()
 
 	modulate.a = 0.0
 	show()
@@ -453,7 +454,11 @@ func open_pop_up_after_range_clear(place_id: String) -> void:
 	tween.tween_property(self, "modulate:a", 1.0, 0.35)
 	await tween.finished
 
+	## Let the player read the map before the CLEAR stamp lands.
+	await get_tree().create_timer(1.0, false).timeout
 	await mark_place_completed(place_id, true)
+	if level_btn:
+		level_btn.disabled = false
 	await get_tree().create_timer(0.75, false).timeout
 
 	_map_input_locked = false

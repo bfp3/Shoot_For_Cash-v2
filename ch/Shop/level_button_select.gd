@@ -279,6 +279,21 @@ func mark_completed(animate: bool = true) -> void:
 		main_control.notify_level_cleared()
 
 
+## Pre-stamp look after a range clear: keep the unfinished card until the ceremony.
+func prepare_clear_ceremony_visuals() -> void:
+	level_locked = false
+	disabled = true
+	current_state = State.IN_PROGRESS
+	_clear_completed_gui()
+	_hide_completion_stamp()
+	_set_progress_hud_visible(show_round_count)
+	var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
+	var entry := gl_PlayerState.get_level_progress_entry(place)
+	_apply_round_progress_text(place, entry)
+	_apply_level_preview()
+	_apply_font_mode()
+
+
 func _hide_completion_stamp() -> void:
 	var stamp_root := get_node_or_null("100_percent") as Control
 	if stamp_root:

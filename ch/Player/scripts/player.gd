@@ -861,8 +861,8 @@ func handle_scope_adjust(delta: float) -> void:
 	if running_on_mobile:
 		shrink_held = mobile_controller.is_fire_held()
 	else:
-		shrink_held = Input.is_action_pressed("shootWeapon")
-		expand_held = Input.is_action_pressed("shoot_weapon_2")
+		expand_held = Input.is_action_pressed("shootWeapon")
+		shrink_held = Input.is_action_pressed("shoot_weapon_2")
 
 	# Start from upgraded resting values (normal tap-fire).
 	var bullet_speed := _base_bullet_speed
@@ -889,7 +889,7 @@ func handle_scope_adjust(delta: float) -> void:
 ## Keep Player + Weapon_shooting in sync. Bullets read weapon_shooting.power_bullet_speed.
 func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
 	power_bullet_speed = bullet_speed
-	bullet_speed = 0.25
+	bullet_speed = [0.1,0.25,0.3].pick_random()
 	power_gun_fire_rate = fire_rate
 	if weapon_shooting:
 		weapon_shooting.power_bullet_speed = bullet_speed
@@ -1087,9 +1087,25 @@ func _refill_regular_ammo_to_max() -> void:
 
 ## Public full magazine refill (range-clear reward, etc.).
 func refill_ammo_to_max(animate := true) -> void:
-	_refill_regular_ammo_to_max()
-	if animate:
+	max_ammo = get_max_ammo()
+	var before := shot_count
+	shot_count = max_ammo
+	_refresh_ammo_display(animate and before != shot_count)
+
+
+## Awaitable full refill that rolls the HUD like a shop ammo purchase.
+func refill_ammo_to_max_animated() -> void:
+	max_ammo = get_max_ammo()
+	var before := shot_count
+	shot_count = max_ammo
+	var hud := $CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining
+	if hud and hud.has_method("await_reload_fill"):
+		## Make sure HUD is visible during the clear reward.
+		ensure_ammo_panel_visible()
+		await hud.await_reload_fill(before, shot_count)
+	else:
 		_refresh_ammo_display(true)
+		await get_tree().create_timer(0.5, false).timeout
 
 
 ## Start a level-editor-only ammo pool (does not touch regular shot_count).
