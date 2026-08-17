@@ -1,112 +1,34 @@
 island shipper
 range moss	
 	round
-		# This takes 50 seconds to complete
-		# Start with a single rock
-
-		rock 1 a1
-		wait 2500
-
-		rock 4 A4
-		wait 2500
-
-		rock 8 a8
+		shuffle 
+		rock 1
+		rock 3
 		wait 2000
-
-		rock 1 a1
-		rock 4 a4
-		rock 8 a8
-		wait 4000
-
-		# Single rocks going diagonally
-		rock 2 a6
-		wait 2000
-		rock 6 a2
-		wait 2000
-		rock 1 a4
-		wait 2000
-		rock 2 a6
-		wait 4000
-
-		# Single rocks faster
-		rock 
-		wait 2000
-		rock
-		wait 1000
-		rock
-		wait 2000
-		rock 6 a6
-		rock 7 a7
-		rock 8 a8
-		wait 3000
-
-		rock
-		wait 500
-		rock
-		wait 500
-		rock
-		wait 500
-		rock
-		wait 1000
-		rock 1 a1
-		rock 2 a2
-		rock 3 a3
-		wait 2000
-		rock
-		wait 5000
-		rock 4 a4
-		rock 4 a4
-		rock 4 a4
-		rock 4 a4
-		rock 4 a4
-		rock 4 a4
-
-
-		wait 2500
-		rock 1 a5
-		wait 0
-		rock 3 a5
-		wait 0
-		rock 5 a5
-		wait 0
-		rock 7 a5
+		repeat 3
 	round
-		  # Single rocks that are trickier to hit
-		rock 1 a1
+		rock 1
+		wait 0
+		rock 3
 		wait 1000
+		rock 3
+		wait 0
+		rock 5
+		repeat 2
+
 		rock 6 a6
-		rock 7 a7
-		rock 8 a8
-
-		wait 2500
-
-		rock 1 a1
-		rock 4 a4
-		rock 8 a8
+		wait 0
+		rock 8 a6
+		wait 1000
+		rock 1 A1
+		wait 0
+		rock 3 A1
 
 		wait 1500
-		rock 1 a1
-		rock 2 a2
-		rock 3 a3
 
-		wait 1500
-		rock 2 a2
-		rock 5 a5
-		rock 8 a8
-
-
-		wait 4000
-		rock 8 a8
-		rock 4 a4
-		wait 2000
-		rock 7 a7
-		rock 3 a3
-
-		wait 2000
-		rock 3 a3
-		rock 4 a4
-		rock 5 a5
-		rock 6 a6
+		rock 6 a5
+		wait 0
+		rock 4 a5
 
 	round
 		rock 2 a8

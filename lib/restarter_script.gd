@@ -23,7 +23,8 @@ func take_pending_fast_travel() -> String:
 
 
 func _input(event) -> void:
-	if event.is_action_pressed("restart"):
+	if event.is_action_pressed("restart") && (OS.has_feature("editor") or OS.is_debug_build()):
+	#if event.is_action_pressed("restart") && Engine.is_editor_hint():
 		get_tree().call_group("restartable", "restart")
 		gl_PlayerState.reset_all()
 		if get_tree().paused:
