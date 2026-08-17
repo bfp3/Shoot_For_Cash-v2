@@ -1085,6 +1085,13 @@ func _refill_regular_ammo_to_max() -> void:
 	_refresh_ammo_display()
 
 
+## Public full magazine refill (range-clear reward, etc.).
+func refill_ammo_to_max(animate := true) -> void:
+	_refill_regular_ammo_to_max()
+	if animate:
+		_refresh_ammo_display(true)
+
+
 ## Start a level-editor-only ammo pool (does not touch regular shot_count).
 func begin_level_editor_ammo(amount: int = LEVEL_EDITOR_AMMO_MAX) -> void:
 	_level_editor_ammo_active = true

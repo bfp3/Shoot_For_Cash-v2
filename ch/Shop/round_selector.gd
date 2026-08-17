@@ -110,6 +110,7 @@ func enter_state(new_state: State) -> void:
 
 
 func update_locked() -> void:
+	await get_tree().create_timer(0.5, false).timeout
 	disabled = true
 	focus_mode = Control.FOCUS_NONE
 	if has_focus():
@@ -128,6 +129,7 @@ func update_locked() -> void:
 
 
 func update_available() -> void:
+	await get_tree().create_timer(0.5, false).timeout
 	disabled = false
 	focus_mode = Control.FOCUS_ALL
 	arrow_indication.modulate.a = 1.0

@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://mtqsnjnmst05" path="res://ch/demo_end_screen/demo_end_screen.gd" id="1_oemdq"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_npx21"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_syari"]
-[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_oy0ks"]
 [ext_resource type="AudioStream" uid="uid://bk6dsl4ownky8" path="res://sfx/USERSONG164.ogg" id="10_0frxg"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="11_wqpn7"]
 [ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="12_thlnd"]
@@ -49,78 +48,15 @@ alpha_curve = SubResource("CurveTexture_syari")
 hue_variation_min = -0.050000023
 hue_variation_max = 0.049999975
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r5w5l"]
-bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8twtg"]
-bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.15, 0.15, 1)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ga0b"]
-bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="Theme" id="Theme_syari"]
-Button/styles/normal = SubResource("StyleBoxFlat_r5w5l")
-Panel/styles/panel = SubResource("StyleBoxFlat_8twtg")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_3ga0b")
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wbnky"]
-bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.2125, 0.23, 0.25, 1)
-border_blend = true
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 4
-shadow_color = Color(1, 1, 1, 0.6)
-shadow_offset = Vector2(2.5, 2.5)
-anti_aliasing = false
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1teaa"]
+[sub_resource type="PrismMesh" id="PrismMesh_k81lf"]
+left_to_right = 1.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_6m6o7"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_syari"]
 
 [sub_resource type="Animation" id="Animation_3q72g"]
 length = 0.001
@@ -246,19 +182,81 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_qe654")
 
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=785012210]
-custom_minimum_size = Vector2(250, 312.06)
+custom_minimum_size = Vector2(780, 600)
 layout_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = ExtResource("2_npx21")
 
-[node name="Place_name" type="Control" parent="CenterContainer/MainPanel" unique_id=1770834565]
-visible = false
-z_index = 1
+[node name="MainPanel" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=461386074]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 268
+
+[node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/MainPanel" unique_id=5093305]
+custom_minimum_size = Vector2(590, 280)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
+
+[node name="TextBOX" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/SpacePanel4" unique_id=1353853436]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 56
+bbcode_enabled = true
+text = "[pulse][color=#a10204]ALL CLEAR[/color][/pulse]
+Cash Won [color=#a10204]$2097[/color]"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Money_control" type="Panel" parent="CenterContainer/MainPanel/MainPanel" unique_id=590454692]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="PlaceLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/Place_name" unique_id=345973141]
-visible = false
+[node name="Control" type="Control" parent="CenterContainer/MainPanel/MainPanel/Money_control" unique_id=245793384]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -1.6064758
+offset_bottom = -1.6064758
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RightTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/MainPanel/Money_control/Control" unique_id=819486769]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(203.526, 0)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_k81lf")
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/MainPanel/Money_control/Control" unique_id=1081157088]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(-204.229, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_6m6o7")
+
+[node name="Square" type="MeshInstance2D" parent="CenterContainer/MainPanel/MainPanel/Money_control/Control" unique_id=975069758]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_syari")
+
+[node name="CashBalanceLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/Money_control" unique_id=1283393766]
+unique_name_in_owner = true
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -266,115 +264,28 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -97.0
-offset_top = -131.06155
-offset_right = 97.0
-offset_bottom = -70.061554
+offset_left = -154.99997
+offset_top = -67.54617
+offset_right = 155.0
+offset_bottom = 66.45383
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/default_color = Color(0.64705884, 0.101960786, 0.12156863, 1)
-theme_override_font_sizes/normal_font_size = 53
-bbcode_enabled = true
-text = "MOSS"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/Place_name/PlaceLabel" unique_id=1360187634]
-visible = false
-show_behind_parent = true
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -12.048065
-offset_bottom = -12.048065
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 3.1415927
-scale = Vector2(1.177, 1.245)
-pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+focus_mode = 0
 mouse_filter = 2
-theme = SubResource("Theme_syari")
-theme_override_styles/panel = SubResource("StyleBoxFlat_wbnky")
-
-[node name="MainPanel" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=461386074]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="HSeparator6" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=293657851]
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
-
-[node name="ButtonsHBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1750056005]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer" unique_id=1423245519]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SpacePanel4" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=5093305]
-custom_minimum_size = Vector2(590, 137.625)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
-
-[node name="TextBOX" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/SpacePanel4" unique_id=1353853436]
-unique_name_in_owner = true
-clip_contents = false
-layout_mode = 0
-offset_top = -86.87692
-offset_right = 592.0
-offset_bottom = 125.12308
-theme_override_font_sizes/normal_font_size = 48
-theme_override_font_sizes/italics_font_size = 48
+theme_type_variation = &"WhiteRichText"
+theme_override_constants/shadow_outline_size = 133
+theme_override_constants/shadow_offset_x = 7
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 124
 bbcode_enabled = true
-text = "
-
-[i][pulse][color=#a10204]ALL CLEAR[/color][/pulse][/i]
-Cash Won [color=#a10204]$2097[/color]"
+text = "$500"
 fit_content = true
+scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=628323630]
-layout_mode = 2
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=132084556]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
-
-[node name="Retry" type="Button" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=1519659985 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 66
-text = "Close"
-script = ExtResource("3_oy0ks")
-focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
-purchase_sfx = NodePath("../../../../../../../SFX/purchase")
-
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer" unique_id=955168107]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/separator = SubResource("StyleBoxEmpty_1teaa")
-
-[node name="SpacePanel3" type="Panel" parent="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer" unique_id=1390965522]
-custom_minimum_size = Vector2(592.975, 6.955)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_s82uk")
 
 [node name="SFX" type="Node" parent="." unique_id=818937010]
 
@@ -450,5 +361,3 @@ pitch_scale = 2.0
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1059437881]
 libraries/ = SubResource("AnimationLibrary_cuwcq")
 autoplay = &"light_wobble"
-
-[connection signal="pressed" from="CenterContainer/MainPanel/MainPanel/ButtonsHBoxContainer/VBoxContainer/HBoxContainer/Retry" to="." method="_on_retry_pressed"]

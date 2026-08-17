@@ -251,7 +251,14 @@ func _apply_round_progress_text(place: String, entry: Dictionary) -> void:
 	_apply_font_mode()
 
 
-func _total_rounds_for_place(_place: String) -> int:
+func _total_rounds_for_place(place: String) -> int:
+	place = gl_DataSet.resolve_place_name(place)
+	var file_path := "res://sc/island-shipper.txt"
+	if Parser.has_method("count_rounds_in_file"):
+		var from_file := Parser.count_rounds_in_file(file_path, place)
+		if from_file > 0:
+			return from_file
+	## Fallback if the range isn't in the shipper file yet.
 	var total := int(gl_DataSet.get_value("map_rounds_per_island", 0))
 	return total if total > 0 else 12
 

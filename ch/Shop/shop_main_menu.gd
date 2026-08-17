@@ -1327,20 +1327,30 @@ func mark_round_as_perfect(played_index: int = -1) -> void:
 func increase_round_available(played_index: int = -1) -> void:
 	var round_button_cont : HBoxContainer = 	$CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
 	var buttons := round_button_cont.get_children()
+	var total_rounds := 0
+	if round_manager and "current_rock_sequence" in round_manager:
+		total_rounds = int(round_manager.current_rock_sequence.size())
 	## Only unlock the round immediately after the one just cleared (never jump ahead on replay).
 	if played_index >= 0:
 		var next_index := played_index + 1
+		if total_rounds > 0 and next_index >= total_rounds:
+			return
 		if next_index < buttons.size():
 			var next_btn = buttons[next_index]
 			if next_btn and next_btn.has_method("enter_state") and next_btn.current_state == next_btn.State.LOCKED:
+				next_btn.visible = true
 				next_btn.enter_state(next_btn.State.AVAILABLE)
 		return
 
-	for i in buttons:
-		if i.current_state != i.State.LOCKED:
+	for i in buttons.size():
+		var btn = buttons[i]
+		if total_rounds > 0 and i >= total_rounds:
+			break
+		if btn.current_state != btn.State.LOCKED:
 			continue
 		else:
-			i.enter_state(i.State.AVAILABLE)
+			btn.visible = true
+			btn.enter_state(btn.State.AVAILABLE)
 			break
 	
 func restart() -> void:

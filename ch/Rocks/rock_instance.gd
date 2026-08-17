@@ -24,6 +24,7 @@ var current_particles : GPUParticles3D = null
 const ROCK_01 = preload('uid://c2pmyrm3e4ty5')
 const ROCK_02 = preload('uid://84ianb3xwjp7')
 const ROCK_03 = preload('uid://lxbrgqaovv68')
+const AIM_BONUS_SFX = preload('uid://d2xxjh7ysnnfr')
 
 
 
@@ -92,6 +93,12 @@ var tween_sight_icon : Tween = null
 
 var cash_value := 0
 var current_cash_multiplier := 1
+## Aim-hold bonus on basic rocks: extra $ stacked while reticle overlaps (paid only on shoot).
+var _aim_bonus_extra := 0
+var _aim_bonus_hold_accum := 0.0
+var _aim_bonus_off_timer := 0.0
+var _aim_bonus_mesh_base_scale := Vector3.ONE
+var _aim_bonus_scale_tween: Tween
 var rock_activated := false
 
 var force_mult : Array = [3,4]
@@ -131,6 +138,18 @@ var _airborne_collision_token := 0
 ## Set when an orange neutralized this black rock (blow-away or instant explode).
 ## Prevents strikes and hazard fail particles on the follow-up destroy.
 var _orange_neutralized_hazard := false
+
+@export_group("Aim Hold Bonus (Basic Rock)")
+## While the crosshair overlaps a basic rock, add this much cash every interval (paid only if shot).
+@export var aim_bonus_enabled := true
+@export_range(0.1, 5.0, 0.05) var aim_bonus_interval_sec := 1.0
+@export var aim_bonus_cash_per_tick := 1
+## Brief leave without pausing the hold timer (seconds).
+@export_range(0.0, 1.0, 0.05) var aim_bonus_leave_grace_sec := 0.35
+@export var aim_bonus_torque := 650.0
+@export_range(1.0, 1.5, 0.01) var aim_bonus_scale_punch := 1.14
+@export_range(0.05, 0.5, 0.01) var aim_bonus_scale_punch_sec := 0.12
+@export var aim_bonus_sfx_volume_db := -18.0
 
 # --- Rock Avoider (rock-avoider) ---------------------------------------------
 @export_group("Rock Avoider")
@@ -223,6 +242,8 @@ func _physics_process(delta: float) -> void:
 		elif rock_type == RockSize.CHASER:
 			if not _freeze_shot_pending:
 				_update_chaser(delta)
+		elif rock_type == RockSize.SMALL:
+			_update_aim_hold_bonus(delta)
 
 	if not ballistic_aim_active or _ballistic_in_descent:
 		return
@@ -505,6 +526,8 @@ func setup_rock_type() -> void:
 			current_particles.amount += 1
 			current_particles.amount -= 1
 			current_particles.emitting = true
+			_reset_aim_hold_bonus()
+			_aim_bonus_mesh_base_scale = current_mesh.scale
 
 		
 		
@@ -721,6 +744,7 @@ func reset_stats() -> void:
 	rock_type_name = ""
 	health = 0
 	cash_value = 0
+	_reset_aim_hold_bonus()
 	linear_damp = 0.5
 	rock_has_been_logged = false
 	
@@ -1746,6 +1770,77 @@ func _player_live_crosshair_hit_radius(player: Node) -> float:
 	if "power_target_circle" in player and float(player.power_target_circle) > 0.0:
 		return float(player.power_target_circle)
 	return 40.0
+
+
+func _reset_aim_hold_bonus() -> void:
+	_aim_bonus_extra = 0
+	_aim_bonus_hold_accum = 0.0
+	_aim_bonus_off_timer = 0.0
+	if _aim_bonus_scale_tween:
+		_aim_bonus_scale_tween.kill()
+		_aim_bonus_scale_tween = null
+
+
+## Basic rock only: charge +$1 per second of reticle overlap (graceful if you briefly leave).
+## Bonus is kept on the rock and only banked when you destroy it with a shot.
+func _update_aim_hold_bonus(delta: float) -> void:
+	if not aim_bonus_enabled or rock_destroyed or not rock_activated:
+		return
+	if rock_type != RockSize.SMALL:
+		return
+
+	var overlapping := _avoider_overlaps_crosshair()
+	if overlapping:
+		_aim_bonus_off_timer = 0.0
+	else:
+		_aim_bonus_off_timer += delta
+		if _aim_bonus_off_timer > aim_bonus_leave_grace_sec:
+			return
+
+	_aim_bonus_hold_accum += delta
+	var interval := maxf(aim_bonus_interval_sec, 0.05)
+	while _aim_bonus_hold_accum >= interval:
+		_aim_bonus_hold_accum -= interval
+		_apply_aim_hold_bonus_tick()
+
+
+func _apply_aim_hold_bonus_tick() -> void:
+	var add := maxi(aim_bonus_cash_per_tick, 0)
+	if add <= 0:
+		return
+	_aim_bonus_extra += add
+	cash_value += add
+	_play_aim_hold_bonus_feedback()
+
+
+func _play_aim_hold_bonus_feedback() -> void:
+	## Spin impulse so the rock visibly reacts.
+	var axis := Vector3(
+		randf_range(-1.0, 1.0),
+		randf_range(0.35, 1.0),
+		randf_range(-1.0, 1.0)
+	).normalized()
+	apply_torque_impulse(axis * aim_bonus_torque)
+
+	if current_mesh:
+		if _aim_bonus_scale_tween:
+			_aim_bonus_scale_tween.kill()
+		var base := _aim_bonus_mesh_base_scale
+		if base == Vector3.ZERO:
+			base = current_mesh.scale
+			_aim_bonus_mesh_base_scale = base
+		var punch := base * aim_bonus_scale_punch
+		_aim_bonus_scale_tween = create_tween()
+		_aim_bonus_scale_tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		_aim_bonus_scale_tween.tween_property(current_mesh, "scale", punch, aim_bonus_scale_punch_sec * 0.45)
+		_aim_bonus_scale_tween.tween_property(current_mesh, "scale", base, aim_bonus_scale_punch_sec * 0.55)
+		_aim_bonus_scale_tween.tween_callback($%cash_bonus_sfx.play.bind(0.05))
+
+	#create_shot_instance(
+		#AIM_BONUS_SFX,
+		#aim_bonus_sfx_volume_db,
+		#randf_range(0.95, 1.15)
+	#)
 
 
 func _trigger_avoider_crosshair_contact() -> void:

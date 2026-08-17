@@ -24,7 +24,14 @@ func take_pending_fast_travel() -> String:
 
 func _input(event) -> void:
 	if event.is_action_pressed("restart") && (OS.has_feature("editor") or OS.is_debug_build()):
-	#if event.is_action_pressed("restart") && Engine.is_editor_hint():
+		## Shift+R is easy to hit while typing in the level / round editor TextEdit.
+		var round_manager: RoundManager = get_tree().get_first_node_in_group("round_manager") as RoundManager
+		if round_manager != null and (
+			round_manager.level_editor_open
+			or round_manager.round_editor_open
+			or round_manager.level_editor_test_active
+		):
+			return
 		get_tree().call_group("restartable", "restart")
 		gl_PlayerState.reset_all()
 		if get_tree().paused:

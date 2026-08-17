@@ -416,6 +416,79 @@ func open_pop_up_after_boss_clear(cleared_island: int) -> void:
 		UiFocus.grab_in(self, preferred)
 
 
+## After clearing a shooting range: open map on that island and play the CLEAR stamp.
+func open_pop_up_after_range_clear(place_id: String) -> void:
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	_selecting_level = false
+	_map_input_locked = true
+	ticket_location = place_id
+
+	var island_i := _island_index_for_place(place_id)
+	if island_i < 0:
+		island_i = int(gl_PlayerState.dataset.get("unlocked_island_index", 0))
+	_viewing_island_index = clampi(island_i, 0, maxi(_island_pages.size() - 1, 0))
+	_show_island_page(_viewing_island_index)
+	_refresh_level_buttons()
+	_refresh_island_labels()
+	_refresh_map_cash_labels()
+	_refresh_nav_button_visibility()
+	CommonCode.apply_ui_overlay_blur()
+	_fade_out_ammo_panel()
+	_set_map_chrome_interactive(false)
+
+	## Prepare the level button for an animated CLEAR stamp (like boss clear).
+	var level_btn := _level_button_for_place(place_id)
+	if level_btn and level_btn.has_method("_hide_completion_stamp"):
+		level_btn._hide_completion_stamp()
+		level_btn.current_state = level_btn.State.COMPLETE
+		if level_btn.has_method("_set_completed_gui"):
+			level_btn._set_completed_gui()
+
+	modulate.a = 0.0
+	show()
+	position = Vector2.ZERO
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var tween := create_tween()
+	tween.tween_property(self, "modulate:a", 1.0, 0.35)
+	await tween.finished
+
+	await mark_place_completed(place_id, true)
+	await get_tree().create_timer(0.75, false).timeout
+
+	_map_input_locked = false
+	_set_map_chrome_interactive(true)
+	_refresh_boss_button()
+	var preferred: Control = level_btn if level_btn and level_btn.visible else _first_visible_level_button()
+	if preferred == null:
+		preferred = close_button
+	if preferred:
+		UiFocus.grab_in(self, preferred)
+
+
+func _island_index_for_place(place_id: String) -> int:
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	for i in _island_pages.size():
+		var page := _island_pages[i]
+		if page == null:
+			continue
+		for child in page.get_children():
+			if child is Control and child.has_method("mark_completed"):
+				if _travel_place_for_button(child as Control) == place_id:
+					return i
+	return -1
+
+
+func _level_button_for_place(place_id: String) -> Control:
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	for button in _map_level_buttons():
+		if button == null:
+			continue
+		if _travel_place_for_button(button) == place_id:
+			return button
+	return null
+
+
 func _boss_button() -> Control:
 	return _boss_button_for_island(_viewing_island_index)
 

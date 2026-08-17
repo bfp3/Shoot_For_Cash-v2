@@ -26,6 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="21_y4gyo"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="22_63gdt"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="30_8mu68"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="31_s0kjy"]
 [ext_resource type="AudioStream" uid="uid://cp1bi14xcue2e" path="res://sfx/a#_startInt.ogg" id="32_ltsxa"]
 [ext_resource type="AudioStream" uid="uid://cwd4ue861klyx" path="res://sfx/2ndInt.ogg" id="33_8mu68"]
 [ext_resource type="AudioStream" uid="uid://b8jsfrc6gqwd" path="res://sfx/3rdInt.ogg" id="34_q8tld"]
@@ -912,6 +913,12 @@ angular_damp = 1.0
 script = ExtResource("1_bc0l2")
 freeze_burst_duration = 1.5
 hazard_smoke_blurs_camera = false
+aim_bonus_enabled = false
+aim_bonus_interval_sec = 0.35
+aim_bonus_cash_per_tick = 2
+aim_bonus_leave_grace_sec = 1.0
+aim_bonus_scale_punch = 1.5
+aim_bonus_sfx_volume_db = -26.0
 avoider_arm_delay_sec = 1.25
 avoider_retarget_delay_sec = 0.15
 avoider_lifetime_sec = 8.0
@@ -1503,6 +1510,12 @@ bus = &"ReverbBus"
 unique_name_in_owner = true
 stream = ExtResource("13_gxoxp")
 volume_db = -35.0
+max_polyphony = 2
+
+[node name="cash_bonus_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=23327474]
+unique_name_in_owner = true
+stream = ExtResource("31_s0kjy")
+volume_db = -30.0
 max_polyphony = 2
 
 [node name="hazard_hit_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1736702722]

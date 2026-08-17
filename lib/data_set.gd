@@ -68,6 +68,8 @@ var dataset_float : Dictionary = {
 	## Legacy single-value alias (cost to leave the first island). Prefer island_unlock_cost.
 	## Map: rounds shown as current/total on each island button.
 	,"map_rounds_per_island"	: [12]
+	## Cash awarded when fully clearing a shooting range (moss, redd, …).
+	,"range_clear_reward"		: [1200]
 	
 	,"reward_all_pineapples"		: [100]
 	,"reward_egg"					: [300]
@@ -394,3 +396,8 @@ func get_boss_clear_reward(island_index: int) -> int:
 		return 5000
 	var i := clampi(island_index, 0, rewards.size() - 1)
 	return int(rewards[i])
+
+
+## Flat clear bonus for finishing every round in a shooting range.
+func get_range_clear_reward(_place_id: String = "") -> int:
+	return int(get_value("range_clear_reward", 0))

@@ -26,9 +26,11 @@ const STREAM_PATHS := {
 	"WindNoises": "res://sfx/windFull.ogg",
 	"NightNoises": "res://sfx/night-noises.ogg",
 	"Opening_song": "res://sfx/Windmill_Sprint.ogg",
-	"Shop_Music": "res://sfx/shop_music.ogg",
+	#"Shop_Music": "res://sfx/shop_music.ogg",
+	"Shop_Music": "res://sfx/USERSONG164.ogg",
 	"PerfectPineappleRound": "res://sfx/one_hundred_percent.ogg",
 }
+
 
 #const RANDOMISER_STREAM_PATHS := [
 	#"res://sfx/spare_songs/Windmill_math_anim2.ogg",

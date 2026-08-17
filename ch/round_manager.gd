@@ -720,6 +720,9 @@ func load_level_sequence() -> void:
 				range_id,
 				current_rock_sequence.size(),
 			])
+		## Keep shop round buttons aligned with the live shipper round count.
+		if shop_main_menu and shop_main_menu.visible and shop_main_menu.has_method("sync_rounds_to_progress"):
+			shop_main_menu.sync_rounds_to_progress(current_sequence_index, current_rock_sequence.size())
 
 func bonus_oranges() -> void:
 	bonus_oranges_ready = true
@@ -1071,6 +1074,7 @@ func check_prompts() -> void:
 		if gl_PlayerState.is_place_completed(place):
 			_clamp_sequence_index_for_replay()
 			return
+		## Fire-and-forget async clear sequence (popup owns the next steps).
 		start_game_over()
 		return
 
@@ -1583,7 +1587,7 @@ func update_round_end() -> void:
 		if gl_PlayerState.is_place_completed(place):
 			_clamp_sequence_index_for_replay()
 		else:
-			start_game_over()
+			await start_game_over()
 			return
 
 	stop_player()
@@ -2534,14 +2538,45 @@ func start_game_over() -> void:
 	if menus and menus.has_method("ensure_game_over"):
 		menus.ensure_game_over()
 
-	var game_over_menu = get_tree().get_first_node_in_group('game_over_screen')
-	if game_over_menu:
-		game_over_menu.update_open_menu()
-	else:
-		print('cannot find game over')
-
 	player.stop_player()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	var game_over_menu = get_tree().get_first_node_in_group('game_over_screen')
+	if game_over_menu and game_over_menu.has_method("update_open_menu"):
+		await game_over_menu.update_open_menu()
+	else:
+		push_warning('RoundManager: game over screen missing')
+		game_over_triggered = false
+		enter_state(RoundState.SHOP_START)
+
+
+## After range-clear reward popup closes — open map and stamp the cleared place.
+func open_island_map_after_range_clear(place_id: String) -> void:
+	place_id = gl_DataSet.resolve_place_name(place_id)
+	game_over_triggered = false
+	enter_state(RoundState.INACTIVE)
+
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	var map_menu: Node = null
+	if menus and menus.has_method("ensure_ticket_map"):
+		map_menu = menus.ensure_ticket_map()
+	if map_menu == null:
+		map_menu = get_tree().get_first_node_in_group("map_menu")
+	if map_menu == null:
+		push_warning("RoundManager: MapIslandSelect missing — cannot open island map after range clear")
+		enter_state(RoundState.SHOP_START)
+		return
+	if map_menu is CanvasItem:
+		(map_menu as CanvasItem).z_index = 40
+	CommonCode.apply_ui_overlay_blur()
+	if map_menu.has_method("open_pop_up_after_range_clear"):
+		await map_menu.open_pop_up_after_range_clear(place_id)
+	elif map_menu.has_method("open_pop_up"):
+		await map_menu.open_pop_up()
+		if map_menu.has_method("mark_place_completed"):
+			await map_menu.mark_place_completed(place_id, true)
+	else:
+		enter_state(RoundState.SHOP_START)
 
 
 func restart() -> void:
