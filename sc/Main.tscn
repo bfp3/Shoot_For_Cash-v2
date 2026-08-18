@@ -17,7 +17,6 @@
 [ext_resource type="AudioStream" uid="uid://bwulgbjlr2hv5" path="res://sfx/water_splash_sfx_02.ogg" id="29_q3aq7"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="31_hwubp"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="34_v17ib"]
-[ext_resource type="PackedScene" uid="uid://cl0yh38bqfqd3" path="res://ch/Shop/Start_menu_shop_clone.tscn" id="37_0tjmb"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="47_wtxnc"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="49_24t6b"]
 [ext_resource type="Shader" uid="uid://b0w47e61vj8md" path="res://res/Shaders/transitionshader.gdshader" id="49_2300m"]
@@ -1009,10 +1008,6 @@ mouse_filter = 2
 [node name="Wave_Text" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1851310312 instance=ExtResource("66_fjxa8")]
 visible = false
 layout_mode = 1
-
-[node name="Start_menu_shop_clone" parent="MainGameCanvasLayer" unique_id=973405492 node_paths=PackedStringArray("round_manager") instance=ExtResource("37_0tjmb")]
-unique_name_in_owner = true
-round_manager = NodePath("../../Round_manager")
 
 [node name="Shop_Main_Menu" parent="MainGameCanvasLayer" unique_id=1034704471 node_paths=PackedStringArray("round_manager", "money_control") instance=ExtResource("64_83tjn")]
 unique_name_in_owner = true

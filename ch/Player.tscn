@@ -646,9 +646,8 @@ alt_weapon_enabled = false
 alt_bullet_scene = ExtResource("14_altbullet")
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
-
-[node name="MobileControl" type="Node" parent="." unique_id=770032217]
-script = ExtResource("2_vmtkp")
+gyro_aim_enabled = false
+gyro_auto_calibrate_on_connect = false
 
 [node name="Weapon_shooting" type="Node3D" parent="." unique_id=2019545500 node_paths=PackedStringArray("player_camera", "stable_camera", "player_gun")]
 script = ExtResource("17_0locf")
@@ -1423,6 +1422,9 @@ grow_horizontal = 0
 theme_type_variation = &"MenuUiButtons"
 theme_override_font_sizes/font_size = 28
 text = "Pause"
+
+[node name="MobileControl" type="Node" parent="." unique_id=770032217]
+script = ExtResource("2_vmtkp")
 
 [node name="ShootWallVFX" type="Node3D" parent="." unique_id=252782032]
 unique_name_in_owner = true
