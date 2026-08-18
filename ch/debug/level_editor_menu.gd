@@ -23,6 +23,8 @@ const COMMAND_BUTTONS: PackedStringArray = [
 	"repeat",
 	"shuffle",
 	"no-lives",
+	"difficulty-hard",
+	"difficulty-expert",
 	"surprise-me",
 	"bonus-type1",
 	"bonus-target",

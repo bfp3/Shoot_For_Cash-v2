@@ -39,6 +39,8 @@ var _base_gun_fire_rate := 0.35
 ## True shop/upgrade values before alternate-weapon scales.
 var _upgrade_bullet_speed := 0.3
 var _upgrade_gun_fire_rate := 0.35
+## `difficulty-hard` / `difficulty-expert` override. -1 = use upgrades.
+var _difficulty_bullet_speed := -1.0
 
 @export var can_right_click_shoot := false
 
@@ -723,6 +725,8 @@ func update_player_stats() -> void:
 	# Remember upgrade defaults so scope hold can temporarily override, then restore.
 	_upgrade_bullet_speed = power_bullet_speed
 	_upgrade_gun_fire_rate = power_gun_fire_rate
+	if _difficulty_bullet_speed > 0.0:
+		_upgrade_bullet_speed = _difficulty_bullet_speed
 	_rebuild_weapon_bases_from_upgrades()
 
 	#power_gun_fire_rate = 0.05
@@ -771,6 +775,19 @@ func _rebuild_weapon_bases_from_upgrades() -> void:
 	power_bullet_speed = speed
 	power_gun_fire_rate = rate
 	_apply_scope_shot_stats(speed, rate)
+
+
+func set_difficulty_bullet_speed(value: float) -> void:
+	_difficulty_bullet_speed = value
+	_upgrade_bullet_speed = value
+	_rebuild_weapon_bases_from_upgrades()
+
+
+func clear_difficulty_bullet_speed() -> void:
+	if _difficulty_bullet_speed < 0.0:
+		return
+	_difficulty_bullet_speed = -1.0
+	update_player_stats()
 
 
 func _sync_weapon_bullet_scene() -> void:

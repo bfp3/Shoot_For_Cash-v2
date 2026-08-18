@@ -119,6 +119,8 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 ##   Commands after a `repeat` start the next section / next set of waves.
 ##   Example: `rock 2` / `repeat 3` / `rock 4` / `repeat 2` → 5 waves total.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
+## difficulty-hard / difficulty hard: heavier rock gravity (2.0) and bullet travel 0.1.
+## difficulty-expert / difficulty expert: heavier rock gravity (3.0) and bullet travel 0.1.
 ## shuffle: {cmd} — this round only; later waves randomise rock columns.
 ## surprise-me: {cmd} — replace this round's spawns with a random generated sequence.
 ## bonus-type1 / bonus type1: marks the round as bonus type 1 (no strikes).
@@ -170,6 +172,21 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'no-lives':
 			return {'cmd': 'no-lives'}
+
+		'difficulty-hard':
+			return {'cmd': 'difficulty-hard'}
+
+		'difficulty-expert':
+			return {'cmd': 'difficulty-expert'}
+
+		'difficulty':
+			if parts.size() > 1:
+				var level := String(parts[1]).strip_edges().to_lower()
+				if level.begins_with('difficulty-'):
+					level = level.substr(11)
+				return {'cmd': 'difficulty-%s' % level}
+			push_warning("parser: 'difficulty' needs hard or expert")
+			return {'cmd': 'difficulty-hard'}
 
 		'shuffle':
 			return {'cmd': 'shuffle'}
@@ -427,6 +444,7 @@ func parse_round_text(text: String) -> Dictionary:
 			"bonus": "",
 			"bonus_targets": [],
 			"shuffle": false,
+			"difficulty": "",
 		}
 	return sequences[0]
 
@@ -457,6 +475,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				'bonus_targets': [],
 				'shuffle': false,
 				'surprise': false,
+				'difficulty': '',
 				# Temporary while parsing — removed by `_finalize_round_repeats`.
 				'_pending': [],
 				'_sections': [],
@@ -479,6 +498,21 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 
 		if parsed_cmd == 'no-lives':
 			rounds[key].no_lives = true
+			continue
+
+		if parsed_cmd == 'difficulty-hard':
+			if String(rounds[key].get('difficulty', '')) != 'expert':
+				rounds[key].difficulty = 'hard'
+			continue
+
+		if parsed_cmd == 'difficulty-expert':
+			rounds[key].difficulty = 'expert'
+			continue
+
+		if parsed_cmd.begins_with('difficulty-') and parsed_cmd.length() > 11:
+			var level := parsed_cmd.substr(11)
+			if level == 'expert' or String(rounds[key].get('difficulty', '')) != 'expert':
+				rounds[key].difficulty = level
 			continue
 
 		if parsed_cmd == 'boss-timer':
@@ -673,6 +707,9 @@ func surprise_round_to_text(round_data: Dictionary) -> String:
 		lines.append('no-lives')
 	if bool(round_data.get('shuffle', false)):
 		lines.append('shuffle')
+	var difficulty := String(round_data.get('difficulty', ''))
+	if difficulty == 'hard' or difficulty == 'expert':
+		lines.append('difficulty-%s' % difficulty)
 
 	# Prefer structured waves when present (multi-section rounds).
 	var waves: Array = round_data.get('waves', [])

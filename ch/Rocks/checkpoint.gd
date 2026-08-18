@@ -4,7 +4,8 @@ extends "res://ch/Rocks/balloon.gd"
 
 const REST_POS := Vector3(0.0, 3.5, 22.5)
 const SPAWN_POS := Vector3(0.0, -12.0, 26.0)
-const ARRIVE_DURATION := 2.4
+## Seconds to rise from SPAWN_POS to REST_POS. Lower = faster.
+const ARRIVE_DURATION := 1.0
 const BOB_DISTANCE := 0.28
 const BOB_DURATION := 1.35
 

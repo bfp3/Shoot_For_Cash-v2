@@ -310,7 +310,13 @@ func reset_strikes() -> void:
 
 
 func play_checkpoint_strike_clear() -> void:
-	if strike_hud and strike_hud.has_method("play_checkpoint_clear_sequence"):
+	if strike_hud and strike_hud.has_method("checkpoint_move_to_center"):
+		await strike_hud.checkpoint_move_to_center()
+	if strike_hud and strike_hud.has_method("checkpoint_clear_struck"):
+		await strike_hud.checkpoint_clear_struck()
+	if strike_hud and strike_hud.has_method("checkpoint_return_home"):
+		await strike_hud.checkpoint_return_home()
+	elif strike_hud and strike_hud.has_method("play_checkpoint_clear_sequence"):
 		await strike_hud.play_checkpoint_clear_sequence()
 	strikes_int = 0
 	strike_label.text = ''

@@ -14,6 +14,10 @@ var _displayed_pool := 0.0
 var _roll_tween: Tween
 var _visible_for_round := false
 var _animating_settle := false
+var _ceremony_lock := false
+var _move_tween: Tween
+var _pool_layout: Dictionary = {}
+var _banked_layout: Dictionary = {}
 
 
 func _ready() -> void:
@@ -26,6 +30,7 @@ func _ready() -> void:
 	_set_pool_text(0)
 	if banked_label:
 		banked_label.modulate.a = 0.0
+	call_deferred("_cache_scene_layout")
 	hide()
 
 	if EventBus.instance:
@@ -39,8 +44,10 @@ func _ready() -> void:
 
 func show_for_round() -> void:
 	_visible_for_round = true
+	_ceremony_lock = false
 	_animating_settle = false
 	_kill_roll()
+	_restore_scene_layout()
 	_displayed_pool = float(int(gl_PlayerState.dataset.get("bonus_cash", 0)))
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(int(_displayed_pool))
@@ -52,20 +59,24 @@ func show_for_round() -> void:
 
 func hide_for_menus() -> void:
 	_visible_for_round = false
+	_ceremony_lock = false
 	_animating_settle = false
 	_kill_roll()
+	_restore_scene_layout()
 	_set_pool_color(COLOR_POOL)
 	hide()
 
 
 func _on_pool_changed(new_amount: int) -> void:
-	if not _visible_for_round or _animating_settle:
+	if not _visible_for_round or _animating_settle or _ceremony_lock:
 		return
 	_set_pool_color(COLOR_POOL)
 	_roll_pool_to(new_amount)
 
 
 func _on_pool_banked(amount: int, previous_cash: int, new_total_cash: int) -> void:
+	if _ceremony_lock:
+		return
 	if not _visible_for_round:
 		return
 	_animating_settle = true
@@ -148,3 +159,158 @@ func _kill_roll() -> void:
 	if _roll_tween and _roll_tween.is_valid():
 		_roll_tween.kill()
 	_roll_tween = null
+
+
+func begin_checkpoint_ceremony() -> void:
+	_ceremony_lock = true
+	_animating_settle = true
+	_cache_scene_layout()
+
+
+func end_checkpoint_ceremony() -> void:
+	_ceremony_lock = false
+	_animating_settle = false
+	_restore_scene_layout()
+
+
+func checkpoint_move_to_center() -> void:
+	if not _visible_for_round or pool_label == null:
+		return
+	_cache_scene_layout()
+	_kill_move()
+	var pool_home := _top_left(pool_label)
+	var target_pool := _checkpoint_center_for(pool_label)
+	var delta := target_pool - pool_home
+	if banked_label:
+		banked_label.text = "$%d" % int(gl_PlayerState.dataset.get("cash", 0))
+		banked_label.modulate = Color(COLOR_BANK.r, COLOR_BANK.g, COLOR_BANK.b, 0.0)
+	_move_tween = create_tween()
+	_move_tween.set_parallel(true)
+	_tween_offsets_to(_move_tween, pool_label, target_pool, 0.35)
+	if banked_label:
+		_tween_offsets_to(_move_tween, banked_label, _top_left(banked_label) + delta, 0.35)
+		if _displayed_pool > 0.0:
+			_move_tween.tween_property(banked_label, "modulate:a", 1.0, 0.28)
+	await _move_tween.finished
+
+
+func checkpoint_play_bank(amount: int, previous_cash: int, new_total_cash: int) -> void:
+	if not _visible_for_round:
+		return
+	_set_pool_color(COLOR_BANK)
+	if coin_sfx and amount > 0:
+		coin_sfx.play()
+	_punch_label()
+	if amount > 0 and banked_label and previous_cash != new_total_cash:
+		banked_label.text = "$%d" % previous_cash
+		banked_label.modulate = Color(COLOR_BANK.r, COLOR_BANK.g, COLOR_BANK.b, 1.0)
+		var bank_tween := create_tween()
+		bank_tween.tween_method(_set_banked_text, float(previous_cash), float(new_total_cash), 0.45)\
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		bank_tween.tween_interval(0.28)
+		_roll_pool_to(0, 0.45)
+		await bank_tween.finished
+	else:
+		_roll_pool_to(0, 0.35)
+		await get_tree().create_timer(0.4, false).timeout
+	_set_pool_color(COLOR_POOL)
+
+
+func checkpoint_return_home() -> void:
+	_kill_move()
+	_move_tween = create_tween()
+	_move_tween.set_parallel(true)
+	if pool_label and not _pool_layout.is_empty():
+		_tween_layout_to(_move_tween, pool_label, _pool_layout, 0.3)
+	if banked_label and not _banked_layout.is_empty():
+		_tween_layout_to(_move_tween, banked_label, _banked_layout, 0.3)
+		_move_tween.tween_property(banked_label, "modulate:a", 0.0, 0.25)
+	await _move_tween.finished
+	_restore_scene_layout()
+
+
+func _cache_scene_layout() -> void:
+	if pool_label and _pool_layout.is_empty():
+		_pool_layout = _snapshot_layout(pool_label)
+	if banked_label and _banked_layout.is_empty():
+		_banked_layout = _snapshot_layout(banked_label)
+
+
+func _snapshot_layout(ctrl: Control) -> Dictionary:
+	return {
+		"anchor_left": ctrl.anchor_left,
+		"anchor_top": ctrl.anchor_top,
+		"anchor_right": ctrl.anchor_right,
+		"anchor_bottom": ctrl.anchor_bottom,
+		"offset_left": ctrl.offset_left,
+		"offset_top": ctrl.offset_top,
+		"offset_right": ctrl.offset_right,
+		"offset_bottom": ctrl.offset_bottom,
+	}
+
+
+func _apply_layout(ctrl: Control, snap: Dictionary) -> void:
+	if ctrl == null or snap.is_empty():
+		return
+	ctrl.anchor_left = float(snap.anchor_left)
+	ctrl.anchor_top = float(snap.anchor_top)
+	ctrl.anchor_right = float(snap.anchor_right)
+	ctrl.anchor_bottom = float(snap.anchor_bottom)
+	ctrl.offset_left = float(snap.offset_left)
+	ctrl.offset_top = float(snap.offset_top)
+	ctrl.offset_right = float(snap.offset_right)
+	ctrl.offset_bottom = float(snap.offset_bottom)
+
+
+func _restore_scene_layout() -> void:
+	_kill_move()
+	_apply_layout(pool_label, _pool_layout)
+	_apply_layout(banked_label, _banked_layout)
+	if banked_label:
+		banked_label.modulate.a = 0.0
+
+
+func _top_left(ctrl: Control) -> Vector2:
+	return Vector2(
+		size.x * ctrl.anchor_left + ctrl.offset_left,
+		size.y * ctrl.anchor_top + ctrl.offset_top
+	)
+
+
+func _checkpoint_center_for(label: Control) -> Vector2:
+	var area := size
+	if area.x <= 1.0 or area.y <= 1.0:
+		area = get_viewport_rect().size
+	var pos := (area - label.size) * 0.5
+	pos.y += 118.0
+	return pos
+
+
+func _tween_offsets_to(tween: Tween, ctrl: Control, desired_tl: Vector2, duration: float) -> void:
+	var w := ctrl.size.x
+	var h := ctrl.size.y
+	var ol := desired_tl.x - size.x * ctrl.anchor_left
+	var ot := desired_tl.y - size.y * ctrl.anchor_top
+	var oright := desired_tl.x + w - size.x * ctrl.anchor_right
+	var ob := desired_tl.y + h - size.y * ctrl.anchor_bottom
+	tween.tween_property(ctrl, "offset_left", ol, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(ctrl, "offset_top", ot, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(ctrl, "offset_right", oright, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(ctrl, "offset_bottom", ob, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+func _tween_layout_to(tween: Tween, ctrl: Control, snap: Dictionary, duration: float) -> void:
+	tween.tween_property(ctrl, "offset_left", float(snap.offset_left), duration)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(ctrl, "offset_top", float(snap.offset_top), duration)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(ctrl, "offset_right", float(snap.offset_right), duration)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(ctrl, "offset_bottom", float(snap.offset_bottom), duration)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+
+
+func _kill_move() -> void:
+	if _move_tween and _move_tween.is_valid():
+		_move_tween.kill()
+	_move_tween = null

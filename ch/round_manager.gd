@@ -162,6 +162,8 @@ var egg_pulse : Egg
 var no_lives_this_round := false
 ## Debug chat `no-lives` / `lives` — persists across rounds until toggled off.
 var debug_no_lives := false
+## `difficulty-hard` / `difficulty-expert` for the active range.
+var difficulty_this_round := ""
 
 ## Active bonus subtype from the level file (`protect`, etc.). Empty = normal round.
 var bonus_type_this_round := ""
@@ -561,8 +563,10 @@ func finish_level_editor_test_round() -> void:
 	game_over_triggered = false
 	no_lives_this_round = false
 	bonus_type_this_round = ""
+	difficulty_this_round = ""
 	protect_bonus_failed = false
 	_apply_shuffle_modifier(false)
+	_apply_difficulty_runtime()
 	gl_PlayerState.dataset.total_current_strikes = 0
 	gl_PlayerState.round_finished = false
 	if wave_progress_feedback and wave_progress_feedback.has_method("reset_strikes"):
@@ -865,9 +869,46 @@ func on_checkpoint_shot() -> void:
 		if rocks_container and rocks_container.has_method("get_sequence_cursor"):
 			set_script_checkpoint(int(rocks_container.get_sequence_cursor()))
 		_save_level_progress()
+
+	var money = get_tree().get_first_node_in_group("money_manager")
+	var pool_amount := int(gl_PlayerState.dataset.get("bonus_cash", 0))
+	var previous_cash := int(gl_PlayerState.dataset.get("cash", 0))
+	if money and money.has_method("begin_checkpoint_ceremony"):
+		money.begin_checkpoint_ceremony()
+
+	var strike_hud = null
+	if wave_progress_feedback and "strike_hud" in wave_progress_feedback:
+		strike_hud = wave_progress_feedback.strike_hud
+
+	if money and money.has_method("checkpoint_move_to_center"):
+		if strike_hud and strike_hud.has_method("checkpoint_move_to_center"):
+			strike_hud.checkpoint_move_to_center()
+		await money.checkpoint_move_to_center()
+	elif strike_hud and strike_hud.has_method("checkpoint_move_to_center"):
+		await strike_hud.checkpoint_move_to_center()
+
 	_bank_round_cash_pool()
-	if wave_progress_feedback and wave_progress_feedback.has_method("play_checkpoint_strike_clear"):
-		await wave_progress_feedback.play_checkpoint_strike_clear()
+	var new_total_cash := int(gl_PlayerState.dataset.get("cash", 0))
+	if money and money.has_method("checkpoint_play_bank"):
+		await money.checkpoint_play_bank(pool_amount, previous_cash, new_total_cash)
+
+	if strike_hud and strike_hud.has_method("checkpoint_clear_struck"):
+		await strike_hud.checkpoint_clear_struck()
+
+	if money and money.has_method("checkpoint_return_home"):
+		if strike_hud and strike_hud.has_method("checkpoint_return_home"):
+			strike_hud.checkpoint_return_home()
+		await money.checkpoint_return_home()
+	elif strike_hud and strike_hud.has_method("checkpoint_return_home"):
+		await strike_hud.checkpoint_return_home()
+
+	if money and money.has_method("end_checkpoint_ceremony"):
+		money.end_checkpoint_ceremony()
+	if wave_progress_feedback:
+		wave_progress_feedback.strikes_int = 0
+		if wave_progress_feedback.strike_label:
+			wave_progress_feedback.strike_label.text = ""
+
 	check_round_for_strikes()
 	if rocks_container and rocks_container.has_method("end_checkpoint_hold"):
 		rocks_container.end_checkpoint_hold()
@@ -902,25 +943,44 @@ func _hide_round_cash_hud() -> void:
 		hud.hide_for_menus()
 
 
-## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` from the active sequence entry only.
+## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-hard` from the active sequence entry only.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
 	bonus_type_this_round = ""
+	difficulty_this_round = ""
 	protect_bonus_failed = false
 	_apply_shuffle_modifier(false)
 	if current_rock_sequence.is_empty():
+		_apply_difficulty_runtime()
 		return
 	if current_sequence_index < 0 or current_sequence_index >= current_rock_sequence.size():
+		_apply_difficulty_runtime()
 		return
 	var round_data = current_rock_sequence[current_sequence_index]
 	if round_data is Dictionary:
 		bonus_type_this_round = String(round_data.get('bonus', ''))
 		no_lives_this_round = bool(round_data.get('no_lives', false)) or bonus_type_this_round != ""
+		difficulty_this_round = String(round_data.get('difficulty', '')).to_lower()
 		_apply_shuffle_modifier(bool(round_data.get('shuffle', false)))
 		if no_lives_this_round:
 			print('RoundManager: no-lives active for this round only')
 		if bonus_type_this_round != "":
 			print('RoundManager: bonus-%s active for this round' % bonus_type_this_round)
+		if difficulty_this_round != "":
+			print('RoundManager: difficulty-%s active for this round' % difficulty_this_round)
+	_apply_difficulty_runtime()
+
+
+func _apply_difficulty_runtime() -> void:
+	if rocks_container and rocks_container.has_method("set_difficulty_gravity"):
+		rocks_container.set_difficulty_gravity(difficulty_this_round)
+	if player == null:
+		return
+	if difficulty_this_round == "hard" or difficulty_this_round == "expert":
+		if player.has_method("set_difficulty_bullet_speed"):
+			player.set_difficulty_bullet_speed(0.1)
+	elif player.has_method("clear_difficulty_bullet_speed"):
+		player.clear_difficulty_bullet_speed()
 
 
 func is_current_round_no_lives() -> bool:
@@ -1431,6 +1491,7 @@ func update_round_start() -> void:
 	wave_progress_feedback.reset()
 	
 	player.update_player_stats()
+	_apply_difficulty_runtime()
 	if player.has_method("ensure_ammo_panel_visible"):
 		player.ensure_ammo_panel_visible()
 	music_manager.shop_music_raise_volume()
@@ -1822,8 +1883,10 @@ func update_tally_end() -> void:
 func update_shop_start() -> void:
 	no_lives_this_round = false
 	bonus_type_this_round = ""
+	difficulty_this_round = ""
 	protect_bonus_failed = false
 	_apply_shuffle_modifier(false)
+	_apply_difficulty_runtime()
 	CommonCode.apply_ui_overlay_blur()
 	EventBus.instance.open_shop.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

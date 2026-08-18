@@ -118,6 +118,7 @@ const AIM_PLANE_Z := 23.0
 @export_range(0.5, 2.0, 0.01) var aim_impulse_scale := 1.08
 ## Gravity during the aimed arc (higher = faster launch, sharper slowdown at apex). Must match impulse math.
 @export_range(0.05, 4.0, 0.01) var aim_launch_gravity_scale := 0.5
+var _base_aim_launch_gravity_scale := 0.5
 ## Linear damp applied once the rock passes the apex and starts falling.
 @export_range(0.0, 2.0, 0.05) var aim_descent_linear_damp := 0.5
 ## Extra seconds added to the ascent before passing the aim cell (0 = tight apex; try ~0.5 for old hang).
@@ -187,6 +188,7 @@ const _OOB_MISS_SPARKS = preload("uid://fsbgvpv0703x")
 # --------------------------------------------------------------------------
 
 func _ready() -> void:
+	_base_aim_launch_gravity_scale = aim_launch_gravity_scale
 	if telegraph_columns == null:
 		if has_node("Columns2"):
 			telegraph_columns = $Columns2
@@ -206,6 +208,16 @@ func _ready() -> void:
 	EventBus.instance.add_strike.connect(play_strike_feedback)
 	EventBus.instance.has_hit_three_strikes.connect(play_strike_feedback)
 	enter_state(current_state)
+
+
+func set_difficulty_gravity(difficulty: String) -> void:
+	match String(difficulty).to_lower():
+		"hard":
+			aim_launch_gravity_scale = 2.0
+		"expert":
+			aim_launch_gravity_scale = 3.0
+		_:
+			aim_launch_gravity_scale = _base_aim_launch_gravity_scale
 
 func _process(delta: float) -> void:
 	if _waiting_until_clear and not _checkpoint_hold and not _advancing_sequence:

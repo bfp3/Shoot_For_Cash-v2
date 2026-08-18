@@ -65,24 +65,8 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_aaxe5")
 
-[node name="Panel" type="Panel" parent="." unique_id=1053188580]
-custom_minimum_size = Vector2(180, 130)
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 1508.0
-offset_top = -317.52197
-offset_right = 2031.478
-offset_bottom = 89.0
-grow_vertical = 0
-scale = Vector2(0.46, 0.46)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_24e6o")
-theme_override_styles/panel = ExtResource("2_6hiqh")
-
 [node name="BankedLabel" type="RichTextLabel" parent="." unique_id=1123567456]
+modulate = Color(0.69, 0.69, 0.69, 1)
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -97,15 +81,18 @@ grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
+theme_override_constants/outline_size = 2
 theme_override_fonts/normal_font = ExtResource("2_font")
-theme_override_font_sizes/normal_font_size = 132
+theme_override_font_sizes/normal_font_size = 74
 bbcode_enabled = true
 text = "$0"
 fit_content = true
 scroll_active = false
 horizontal_alignment = 2
+vertical_alignment = 2
 
 [node name="PoolLabel" type="RichTextLabel" parent="." unique_id=433932978]
+clip_contents = false
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -129,6 +116,24 @@ fit_content = true
 scroll_active = false
 horizontal_alignment = 2
 
+[node name="Panel" type="Panel" parent="PoolLabel" unique_id=1053188580]
+show_behind_parent = true
+custom_minimum_size = Vector2(180, 130)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -300.52197
+offset_right = 547.478
+offset_bottom = 106.0
+grow_vertical = 0
+scale = Vector2(0.46, 0.46)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_24e6o")
+theme_override_styles/panel = ExtResource("2_6hiqh")
+
 [node name="CoinSfx" type="AudioStreamPlayer" parent="." unique_id=1197223894]
 stream = ExtResource("3_coin")
-volume_db = -8.0
+volume_db = -28.0
