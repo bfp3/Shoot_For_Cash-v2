@@ -203,7 +203,10 @@ func _on_pressed() -> void:
 		pressed_sfx.play()
 
 	var sequence_index := get_index()
-	round_manager.current_sequence_index = sequence_index
+	if round_manager and round_manager.has_method("select_sequence_index"):
+		round_manager.select_sequence_index(sequence_index)
+	else:
+		round_manager.current_sequence_index = sequence_index
 
 	if interaction_tween:
 		interaction_tween.kill()

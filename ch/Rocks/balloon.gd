@@ -113,7 +113,8 @@ func configure_balloon_colour() -> void:
 	var balloon_mesh : MeshInstance3D = $Mesh/small_rock2
 	match balloon_type:
 		BalloonType.WHITE:
-			balloon_mesh.material_override = BALLOON_WHITE_MAT
+			#balloon_mesh.material_override = BALLOON_WHITE_MAT
+			balloon_mesh.material_override = BALLOON_BLUE_MAT
 			original_penalty_amount = penalty_amount
 			#$Decal_Container.show()
 			
@@ -401,6 +402,8 @@ func start_destroyed_process() -> void:
 	set_collision_layer_value(1, false)
 	is_deactivated = true
 
+	_leave_play_and_notify_sequence()
+
 	
 	was_hit_tween()
 	
@@ -414,7 +417,18 @@ func start_destroyed_process() -> void:
 	if balloon_type == BalloonType.RED:
 		get_parent().add_balloon_back_into_list(self)
 
-	
+
+func _leave_play_and_notify_sequence() -> void:
+	var parent := get_parent()
+	if parent and parent.has_method("note_balloon_left_play"):
+		parent.note_balloon_left_play()
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager == null:
+		return
+	var rocks = round_manager.get("rocks_container")
+	if rocks and rocks.has_method("notify_clearable_destroyed"):
+		rocks.notify_clearable_destroyed()
+
 	
 func play_hit_sfx() -> void:
 	$take_damage_sfx.volume_db = randf_range(-25.0, -20.0)
@@ -569,6 +583,7 @@ func rock_pop_balloon() -> void:
 		remove_from_group('Target')
 	
 	is_deactivated = true
+	_leave_play_and_notify_sequence()
 	
 	was_hit_tween()
 	

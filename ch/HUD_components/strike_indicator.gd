@@ -78,6 +78,38 @@ func reveal_strike() -> void:
 	_active_tween.tween_property(size_control, "position:y", up_height, 0.1).as_relative()
 
 
+func conceal_strike() -> void:
+	if not is_struck:
+		return
+	_kill_tween()
+
+	set_to_strike_colour()
+	cross.visible = true
+	cross_front.visible = true
+	cross.modulate.a = _cross_modulate.a
+	cross_front.modulate.a = _cross_front_modulate.a
+	size_control.scale = _size_control_scale
+
+	var edge_scale := Vector2(0.001, _size_control_scale.y * flip_edge_y_scale)
+	var half := maxf(flip_half_time, 0.01)
+	var up_height := 50.0
+
+	_active_tween = create_tween()
+	_active_tween.tween_property(size_control, "scale", edge_scale, half)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	_active_tween.parallel().tween_property(miss_text_label, "modulate:a", 0.0, half)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_active_tween.parallel().tween_property(size_control, "position:y", -up_height, 0.1).as_relative()
+	_active_tween.tween_callback(_hide_struck_face)
+	_active_tween.tween_callback(set_to_no_strike_colour)
+	_active_tween.tween_property(size_control, "scale", _size_control_scale, half)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_active_tween.parallel().tween_property(size_control, "position:y", up_height, 0.1).as_relative()
+	await _active_tween.finished
+	is_struck = false
+	miss_text_label.modulate.a = 0.0
+
+
 func _hide_struck_face() -> void:
 	cross.visible = false
 	cross_front.visible = false

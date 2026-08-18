@@ -102,6 +102,58 @@ func _trim_to_base_strike_slots(base_count: int = 3) -> void:
 			extra.queue_free()
 	_cache_indicators()
 
+## Balloon-check: fly the row to centre, flip off each strike, then return home.
+func play_checkpoint_clear_sequence() -> void:
+	if _is_playing_finale:
+		return
+	_is_playing_finale = true
+	_kill_tween()
+	_cache_indicators()
+	indicators_row.pivot_offset = indicators_row.size * 0.5
+
+	var center_pos := _get_center_position()
+	_active_tween = create_tween()
+	_active_tween.tween_interval(0.12)
+	_active_tween.tween_property(indicators_row, "position", center_pos, move_to_center_time)\
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_active_tween.parallel().tween_property(indicators_row, "scale", Vector2(1.35, 1.35), move_to_center_time)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_active_tween.tween_interval(0.12)
+	await _active_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	var struck: Array[StrikeIndicator] = []
+	for i in range(_indicators.size() - 1, -1, -1):
+		if _indicators[i].is_struck:
+			struck.append(_indicators[i])
+	for indicator in struck:
+		if not is_instance_valid(indicator):
+			continue
+		if has_node("StrikeSFX3"):
+			$StrikeSFX3.play()
+		elif strike_sfx:
+			strike_sfx.play()
+		if indicator.has_method("conceal_strike"):
+			await indicator.conceal_strike()
+		else:
+			indicator.reset()
+		strike_count = maxi(strike_count - 1, 0)
+
+	await get_tree().create_timer(0.18, false).timeout
+	if not is_instance_valid(self):
+		return
+
+	indicators_row.pivot_offset = indicators_row.size * 0.5
+	_active_tween = create_tween()
+	_active_tween.tween_property(indicators_row, "position", _row_original_position, return_time)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	_active_tween.parallel().tween_property(indicators_row, "scale", Vector2.ONE, return_time)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	await _active_tween.finished
+	reset()
+
+
 func _play_three_strikes_sequence() -> void:
 	_is_playing_finale = true
 	_kill_tween()

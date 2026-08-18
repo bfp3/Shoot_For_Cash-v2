@@ -132,6 +132,13 @@ var pineapple_mode := false
 ## Keys are level ids (`moss`, `redd`); values are { sequence_index, round }.
 var _level_progress: Dictionary = {}
 
+## Skip the WAVE_START round banner after a checkpoint already showed it.
+var _skip_next_wave_banner := false
+## True while a checkpoint shot is being processed.
+var _checkpoint_advancing := false
+## Resume spawn index inside the current range after a checkpoint was shot.
+var _script_checkpoint_resume: Dictionary = {}
+
 @export var player : Player
 @export var scene_transition_screen : Control 
 @export var shop_main_menu : Control
@@ -467,8 +474,13 @@ func _reset_level_editor_round_runtime() -> void:
 	pineapple_mode = false
 	bonus_type_this_round = ""
 	protect_bonus_failed = false
+	_skip_next_wave_banner = false
+	_checkpoint_advancing = false
+	_script_checkpoint_resume = {}
 
 	gl_PlayerState.round_finished = false
+	gl_PlayerState.cash_banked_this_round = 0
+	gl_PlayerState.dataset.bonus_cash = 0
 	gl_PlayerState.dataset.total_current_strikes = 0
 	gl_PlayerState.dataset.total_rocks_in_round = 0
 	gl_PlayerState.dataset.total_rocks_in_round_remaining = 0
@@ -822,6 +834,74 @@ func _max_strikes() -> int:
 	return 3
 
 
+func get_current_range_round_count() -> int:
+	return maxi(current_rock_sequence.size(), 1)
+
+
+func select_sequence_index(index: int) -> void:
+	current_sequence_index = index
+
+
+func get_resume_spawn_index() -> int:
+	return maxi(int(_script_checkpoint_resume.get("spawn_index", 0)), 0)
+
+
+func clear_script_checkpoint() -> void:
+	_script_checkpoint_resume = {}
+
+
+func set_script_checkpoint(spawn_index: int) -> void:
+	_script_checkpoint_resume = {"spawn_index": maxi(spawn_index, 0)}
+
+
+## Player shot the balloon-check: save this script cursor as the fail-resume
+## point, clear strikes, and bank the round cash pool. Does not jump rounds.
+func on_checkpoint_shot() -> void:
+	if _checkpoint_advancing or player_failed or game_over_triggered:
+		return
+	_checkpoint_advancing = true
+
+	if not _is_editor_playtest():
+		if rocks_container and rocks_container.has_method("get_sequence_cursor"):
+			set_script_checkpoint(int(rocks_container.get_sequence_cursor()))
+		_save_level_progress()
+	_bank_round_cash_pool()
+	if wave_progress_feedback and wave_progress_feedback.has_method("play_checkpoint_strike_clear"):
+		await wave_progress_feedback.play_checkpoint_strike_clear()
+	check_round_for_strikes()
+	if rocks_container and rocks_container.has_method("end_checkpoint_hold"):
+		rocks_container.end_checkpoint_hold()
+	if wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
+		wave_progress_feedback.play_named_banner("CHECKPOINT")
+	_checkpoint_advancing = false
+
+
+func _is_editor_playtest() -> bool:
+	return level_editor_test_active or level_editor_open or round_editor_open
+
+
+func _bank_round_cash_pool() -> void:
+	if gl_PlayerState and gl_PlayerState.has_method("bank_cash_pool"):
+		gl_PlayerState.bank_cash_pool(not _is_editor_playtest())
+
+
+func _forfeit_round_cash_pool() -> void:
+	if gl_PlayerState and gl_PlayerState.has_method("forfeit_cash_pool"):
+		gl_PlayerState.forfeit_cash_pool()
+
+
+func _show_round_cash_hud() -> void:
+	var hud = get_tree().get_first_node_in_group("money_manager")
+	if hud and hud.has_method("show_for_round"):
+		hud.show_for_round()
+
+
+func _hide_round_cash_hud() -> void:
+	var hud = get_tree().get_first_node_in_group("money_manager")
+	if hud and hud.has_method("hide_for_menus"):
+		hud.hide_for_menus()
+
+
 ## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` from the active sequence entry only.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
@@ -961,6 +1041,13 @@ func check_if_rocks_still_in_air() -> void:
 	if gl_PlayerState.dataset.total_rocks_in_round_remaining > 0:
 		return
 
+	if rocks_container and rocks_container.has_method("try_continue_sequence"):
+		if rocks_container.try_continue_sequence():
+			return
+	if rocks_container and rocks_container.has_method("is_holding_wave"):
+		if rocks_container.is_holding_wave():
+			return
+
 	if _boss_mode:
 		_loop_boss_sequence()
 		return
@@ -976,6 +1063,12 @@ func check_if_rocks_still_in_air() -> void:
 func successful_round() -> void:
 	if wave_ending:
 		return
+	if rocks_container and rocks_container.has_method("try_continue_sequence"):
+		if rocks_container.try_continue_sequence():
+			return
+	if rocks_container and rocks_container.has_method("is_holding_wave"):
+		if rocks_container.is_holding_wave():
+			return
 	if _boss_mode:
 		## Clearing a loop of rocks does not win the boss — only surviving the timer does.
 		_loop_boss_sequence()
@@ -1020,6 +1113,7 @@ func unsuccessful_round_locked() -> void:
 		rocks_container.reset_all_rocks()
 	if balloon_container:
 		balloon_container.end_round()
+	_forfeit_round_cash_pool()
 	enter_state(RoundState.WAVE_END)
 
 
@@ -1047,6 +1141,7 @@ func abort_round_to_shop() -> void:
 
 	if balloon_container:
 		balloon_container.end_round()
+	_forfeit_round_cash_pool()
 
 	music_manager.shop_music_lower_volume()
 	current_wave = 0
@@ -1089,6 +1184,7 @@ func _clamp_sequence_index_for_replay() -> void:
 		current_sequence_index = current_rock_sequence.size() - 1
 	current_round = current_sequence_index + 1
 	gl_PlayerState.dataset.round = current_round
+	clear_script_checkpoint()
 	
 
 func enter_state(new_state: RoundState) -> void:
@@ -1319,6 +1415,7 @@ func update_round_start() -> void:
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
 	apply_current_round_modifiers()
+	_show_round_cash_hud()
 	
 	# If we are in the starting world, don't continue further
 	if gl_PlayerState.dataset.level_name == 'start':
@@ -1341,12 +1438,22 @@ func update_round_start() -> void:
 	
 
 func update_wave_start() -> void:
+	var resume_index := 0 if (_boss_mode or is_endless_mode()) else get_resume_spawn_index()
 	if is_endless_mode():
 		## Endless: no wave banners — just keep the strike HUD ready.
 		if wave_progress_feedback and wave_progress_feedback.has_method("show_strike_hud"):
 			wave_progress_feedback.show_strike_hud()
-	else:
-		wave_progress_feedback.start()
+	elif current_wave == 0 and not _skip_next_wave_banner:
+		if resume_index > 0 and wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
+			await wave_progress_feedback.play_named_banner("CHECKPOINT")
+		else:
+			var total := get_current_range_round_count()
+			var round_no := current_sequence_index + 1
+			if wave_progress_feedback and wave_progress_feedback.has_method("show_round_banner"):
+				wave_progress_feedback.show_round_banner(round_no, total)
+			else:
+				wave_progress_feedback.start()
+	_skip_next_wave_banner = false
 	
 	
 	await get_tree().create_timer(0.1, false).timeout
@@ -1380,7 +1487,7 @@ func update_wave_start() -> void:
 	if current_wave == 1:
 		var rock_seq := update_rock_sequence()
 		# Always prepare (even empty) so bonus-type1 target-only rounds don't hang on old rock state.
-		rocks_container.start_manual_rock_round(rock_seq)
+		rocks_container.start_manual_rock_round(rock_seq, resume_index)
 		
 	else:
 		var rock_seq := update_rock_sequence()
@@ -1444,23 +1551,24 @@ func update_check_score() -> void:
 
 
 ## Waves for the active round — built from `repeat` sections (see parser).
+## A range plays as one continuous round; `repeat` sections are flattened in-line.
 func get_current_round_wave_count() -> int:
 	const DEFAULT_WAVES := 1
 	## Endless mode ignores shipper repeats — continuous rock loops instead.
 	if is_endless_mode():
 		return DEFAULT_WAVES
-	if current_rock_sequence.is_empty():
+	if _boss_mode:
+		if current_rock_sequence.is_empty():
+			return DEFAULT_WAVES
+		if current_sequence_index >= current_rock_sequence.size():
+			return DEFAULT_WAVES
+		var round_data = current_rock_sequence[current_sequence_index]
+		if round_data is Dictionary:
+			var waves = round_data.get('waves', [])
+			if waves is Array and not waves.is_empty():
+				return waves.size()
+			return maxi(int(round_data.get('repeat', DEFAULT_WAVES)), 1)
 		return DEFAULT_WAVES
-	if current_sequence_index >= current_rock_sequence.size():
-		return DEFAULT_WAVES
-
-	var round_data = current_rock_sequence[current_sequence_index]
-	if round_data is Dictionary:
-		var waves = round_data.get('waves', [])
-		if waves is Array and not waves.is_empty():
-			return waves.size()
-		return maxi(int(round_data.get('repeat', DEFAULT_WAVES)), 1)
-
 	return DEFAULT_WAVES
 
 
@@ -1475,6 +1583,9 @@ func update_rock_sequence() -> Array:
 		return []
 
 	var round_data = current_rock_sequence[current_sequence_index]
+	if not (_boss_mode or is_endless_mode()):
+		return _flatten_round_spawns(round_data)
+
 	var source: Array = []
 	if round_data is Dictionary:
 		var waves = round_data.get('waves', [])
@@ -1489,7 +1600,10 @@ func update_rock_sequence() -> Array:
 	else:
 		return []
 
-	# Deep-copy spawn dicts so wave shuffles don't mutate the level data.
+	return _copy_spawn_list(source)
+
+
+func _copy_spawn_list(source: Array) -> Array:
 	var copy: Array = []
 	for entry in source:
 		if entry is Dictionary:
@@ -1497,6 +1611,31 @@ func update_rock_sequence() -> Array:
 		else:
 			copy.append(entry)
 	return copy
+
+
+## Play a whole range as one script. `repeat` sections stay in order, with
+## `wait until clear` between copies so the next section cannot overlap.
+func _flatten_round_spawns(round_data) -> Array:
+	if round_data is Array:
+		return _copy_spawn_list(round_data)
+	if not (round_data is Dictionary):
+		return []
+	var waves = round_data.get('waves', [])
+	if not (waves is Array) or waves.is_empty():
+		return _copy_spawn_list(round_data.get('spawns', []))
+	var out: Array = []
+	for i in waves.size():
+		var wave = waves[i]
+		if not (wave is Array):
+			continue
+		if i > 0:
+			var last_cmd := ""
+			if not out.is_empty() and out.back() is Dictionary:
+				last_cmd = String(out.back().get('cmd', '')).to_lower()
+			if last_cmd != 'wait-until-clear':
+				out.append({'cmd': 'wait-until-clear'})
+		out.append_array(_copy_spawn_list(wave))
+	return out
 
 
 
@@ -1573,8 +1712,11 @@ func update_round_end() -> void:
 		await get_tree().process_frame
 
 	orange_active = 0
-		
-	if gl_PlayerState.dataset.power_bonus_round_pineapples > 0:
+
+	if round_was_successful:
+		_bank_round_cash_pool()
+	else:
+		_forfeit_round_cash_pool()
 		EventBus.instance.pineapple_round_used.emit()
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
 
@@ -1611,9 +1753,12 @@ func update_round_end() -> void:
 			shop_main_menu.mark_round_as_perfect(played_index)
 			shop_main_menu.increase_round_available(played_index)
 			birds.start_birds()
+			clear_script_checkpoint()
 			_save_level_progress()
 		else:
 			player_can_progress = false
+	elif player_failed:
+		_save_level_progress()
 
 	current_wave = 0
 	balloon_container.end_round()
@@ -1634,8 +1779,11 @@ func update_tally_start() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func update_tally_end() -> void:
-	## Keep money earned during the round even after a 3-strike fail.
-	gl_PlayerState.add_cash(gl_PlayerState.dataset.bonus_cash)
+	## Remaining pool is already banked on a win, or forfeited on a 3-strike fail.
+	if player_failed or int(gl_PlayerState.dataset.total_current_strikes) >= _max_strikes():
+		_forfeit_round_cash_pool()
+	else:
+		_bank_round_cash_pool()
 	## Exported builds: checkpoint money / ammo / round frontier / islands after each round.
 	if not level_editor_test_active and gl_PlayerState.has_method("save_run_checkpoint_after_round"):
 		gl_PlayerState.save_run_checkpoint_after_round()
@@ -1685,6 +1833,9 @@ func update_shop_start() -> void:
 	# Add Balloons from Array into the Level during the SHOP phase
 	if current_round > 0:
 		var rock_seq := update_rock_sequence()
+		var resume := get_resume_spawn_index()
+		if resume > 0 and resume < rock_seq.size():
+			rock_seq = rock_seq.slice(resume)
 		if rock_seq != []:
 			balloon_container.add_balloon(rock_seq)
 	
@@ -2043,6 +2194,7 @@ func _save_level_progress() -> void:
 		'player_round': int(gl_PlayerState.dataset.round),
 		'cash_earned': int(existing.get('cash_earned', gl_PlayerState.get_place_cash_earned(level_id))),
 		'entered': true,
+		'script_checkpoint': _script_checkpoint_resume.duplicate(true),
 	}
 	_level_progress[level_id] = entry
 	gl_PlayerState.set_level_progress_entry(level_id, entry)
@@ -2059,14 +2211,21 @@ func _restore_level_progress(level_id: String) -> void:
 			current_sequence_index = current_rock_sequence.size()
 			current_round = current_sequence_index
 			gl_PlayerState.dataset.round = current_round
+			clear_script_checkpoint()
 			return
 		current_sequence_index = 0
 		current_round = 1
 		gl_PlayerState.dataset.round = 1
+		clear_script_checkpoint()
 		return
 	current_sequence_index = int(saved.get('sequence_index', 0))
 	current_round = int(saved.get('round', maxi(current_sequence_index + 1, 1)))
 	gl_PlayerState.dataset.round = int(saved.get('player_round', current_round))
+	var saved_checkpoint = saved.get('script_checkpoint', {})
+	if saved_checkpoint is Dictionary:
+		_script_checkpoint_resume = (saved_checkpoint as Dictionary).duplicate(true)
+	else:
+		_script_checkpoint_resume = {}
 
 
 ## Swap scenery + round data for a shooting range. Used for first arrival and mid-run map travel.
@@ -2552,11 +2711,12 @@ func start_game_over() -> void:
 		enter_state(RoundState.SHOP_START)
 
 
-## After range-clear reward popup closes — open map and stamp the cleared place.
+## After range-clear reward popup closes — go to start, then open the map and stamp the place.
 func open_island_map_after_range_clear(place_id: String) -> void:
 	place_id = gl_DataSet.resolve_place_name(place_id)
 	game_over_triggered = false
 	enter_state(RoundState.INACTIVE)
+	await _arrive_at_start_for_map()
 
 	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
 	var map_menu: Node = null
@@ -2579,6 +2739,45 @@ func open_island_map_after_range_clear(place_id: String) -> void:
 			await map_menu.mark_place_completed(place_id, true)
 	else:
 		enter_state(RoundState.SHOP_START)
+
+
+func _arrive_at_start_for_map() -> void:
+	transitioning_worlds = true
+	stop_timer()
+	stop_player()
+
+	if shop_main_menu and shop_main_menu.visible:
+		if shop_main_menu.has_method("soft_hide_for_level_editor"):
+			shop_main_menu.soft_hide_for_level_editor()
+		else:
+			shop_main_menu.hide()
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+	if balloon_container and (balloon_container.started or balloon_container.balloons_in_play > 0):
+		await balloon_container.end_round()
+	if bonus_target_manager and bonus_target_manager.has_method("cleanup_bonus_round"):
+		bonus_target_manager.cleanup_bonus_round()
+
+	if scene_transition_screen and scene_transition_screen.has_method("set_destination_place"):
+		scene_transition_screen.set_destination_place("start")
+	if scene_transition_screen and scene_transition_screen.has_method("next_level_start"):
+		await scene_transition_screen.next_level_start()
+
+	gl_PlayerState.dataset.level_name = gl_DataSet.get_start_place_name()
+	move_to_start()
+	if rocks_container:
+		rocks_container.hide()
+	if wave_progress_feedback:
+		wave_progress_feedback.hide()
+	if place_name and place_name.has_method("update_place_name"):
+		place_name.update_place_name()
+	await get_tree().process_frame
+
+	if scene_transition_screen and scene_transition_screen.has_method("next_level_finish"):
+		await scene_transition_screen.next_level_finish()
+
+	transitioning_worlds = false
 
 
 func restart() -> void:

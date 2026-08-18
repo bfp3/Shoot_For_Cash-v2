@@ -77,7 +77,7 @@ var dataset_float : Dictionary = {
 	# item name, 			$value, 	health
 	,"pineapple"			: [10,		1]
 	,"orange"				: [2,		1]
-	,"balloon_orange"		: [-30,		1]
+	,"balloon_orange"		: [-10,		1]
 	,"hazard_type_1"		: [-10,	1]
 	
 	,"rock_type_1"			: [2,		1]

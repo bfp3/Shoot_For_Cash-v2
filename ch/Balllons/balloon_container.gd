@@ -115,7 +115,7 @@ func _balloons_before_first_wait(sequence: Array) -> Array:
 	for entry in sequence:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
-			if cmd == 'wait':
+			if cmd == 'wait' or cmd == 'wait-until-clear':
 				break
 			if cmd == 'balloon':
 				intro.append(entry)
@@ -245,10 +245,12 @@ func add_balloon_back_into_list(_balloon: StaticBody3D) -> void:
 	if !is_instance_valid(_balloon):
 		return
 
-	balloons_in_play = clamp(balloons_in_play - 1, 0, get_children().size())
-
 	await get_tree().create_timer(4.0, false).timeout
 	_balloon.behind_player = true
 	_balloon.hide()
 	_balloon.global_position.z = _balloon.start_pos.z - 27.0
 	move_child(_balloon, get_child_count() - 1)
+
+
+func note_balloon_left_play() -> void:
+	balloons_in_play = clamp(balloons_in_play - 1, 0, get_children().size())

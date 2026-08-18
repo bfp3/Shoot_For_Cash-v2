@@ -123,18 +123,23 @@ func start_fail_sequence() -> void:
 		bonuses_label.text = 'BONUSES'
 		bonuses_cash_label.modulate.a = 1.0
 		bonuses_cash_label.show()
-		bonuses_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash))
+		var kept := int(gl_PlayerState.get_round_cash_kept()) if gl_PlayerState.has_method("get_round_cash_kept") else int(gl_PlayerState.dataset.bonus_cash)
+		bonuses_cash_label.text = "$" + str(kept)
 		fail_label.hide()
 		grand_total_cash_label.show()
 		grand_total_label.text = ""
-		grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash))
+		grand_total_cash_label.text = "$" + str(kept)
 		bonuses_label.show()
 		return
 
 	if gl_PlayerState.dataset.fines < 0:
 		fail_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
-	## Keep / show cash earned during the failed round (banked in update_tally_end).
-	var earned := int(gl_PlayerState.dataset.bonus_cash)
+	## Checkpoint-banked cash is already in the wallet. Unbanked pool is forfeited.
+	var earned := 0
+	if gl_PlayerState.has_method("get_round_cash_kept"):
+		earned = int(gl_PlayerState.get_round_cash_kept())
+	else:
+		earned = int(gl_PlayerState.dataset.bonus_cash)
 	var fines := int(gl_PlayerState.dataset.fines)
 	bonuses_label.text = 'BONUSES'
 	bonuses_cash_label.modulate.a = 1.0
@@ -200,7 +205,10 @@ func start_perfect_sequence() -> void:
 	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 0.0
 
 	grand_total_cash_label.modulate.a = 0.0
-	grand_total_cash_label.text = "$" + str(int(gl_PlayerState.dataset.bonus_cash + perfect_bonus - gl_PlayerState.dataset.fines))
+	var kept := int(gl_PlayerState.dataset.bonus_cash)
+	if gl_PlayerState.has_method("get_round_cash_kept"):
+		kept = int(gl_PlayerState.get_round_cash_kept())
+	grand_total_cash_label.text = "$" + str(int(kept + perfect_bonus - gl_PlayerState.dataset.fines))
 	grand_total_cash_label.pivot_offset_ratio = Vector2(0.5,0.5)
 	#await get_tree().create_timer(0.5, false).timeout
 
@@ -313,7 +321,9 @@ func perfect_particles() -> void:
 
 
 func apply_bonus_cash() -> void:
-	var bonus_cash = gl_PlayerState.dataset.bonus_cash
+	var bonus_cash = int(gl_PlayerState.dataset.bonus_cash)
+	if gl_PlayerState.has_method("get_round_cash_kept"):
+		bonus_cash = int(gl_PlayerState.get_round_cash_kept())
 	#gl_PlayerState.add_bonus(bonus_cash)
 	bonuses_cash_label.show()
 	bonuses_cash_label.modulate.a = 1.0

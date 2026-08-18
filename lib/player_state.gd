@@ -138,6 +138,8 @@ const DEFAULT_DATASET := {
 var dataset: Dictionary = DEFAULT_DATASET.duplicate(true)
 
 var round_finished := false
+## Unbanked round pool that has already been cashed into `dataset.cash` this round.
+var cash_banked_this_round := 0
 
 var _log: Array=[]
 var _current_round_log: Array = []
@@ -210,6 +212,7 @@ func next_round() -> void:
 	dataset.total_pineapples_destroyed = 0
 	dataset.total_rocks_in_round_remaining = 0
 	dataset.bonus_cash_this_round = 0
+	cash_banked_this_round = 0
 	round_finished = false
 	_current_round_log.clear()
 	
@@ -242,7 +245,46 @@ func subtract_penalties_from_cash() -> void:
 	dataset.cash = dataset.cash + dataset.fines
 
 func add_bonus(value : int) -> void:
-	dataset.bonus_cash = dataset.bonus_cash + value
+	if value <= 0:
+		dataset.bonus_cash = dataset.bonus_cash + value
+		return
+	add_to_cash_pool(value)
+
+
+func add_to_cash_pool(value: int) -> void:
+	if value == 0:
+		return
+	dataset.bonus_cash = int(dataset.bonus_cash) + value
+	if EventBus.instance:
+		EventBus.instance.cash_pool_changed.emit(int(dataset.bonus_cash))
+
+
+func get_round_cash_kept() -> int:
+	return cash_banked_this_round + int(dataset.bonus_cash)
+
+
+func bank_cash_pool(apply_to_wallet: bool = true) -> int:
+	var amount := int(dataset.bonus_cash)
+	dataset.bonus_cash = 0
+	if amount <= 0:
+		return 0
+	var previous_cash := int(dataset.cash)
+	if apply_to_wallet:
+		add_cash(amount)
+		cash_banked_this_round += amount
+	if EventBus.instance:
+		EventBus.instance.cash_pool_banked.emit(amount, previous_cash, int(dataset.cash))
+	return amount
+
+
+func forfeit_cash_pool() -> int:
+	var amount := int(dataset.bonus_cash)
+	dataset.bonus_cash = 0
+	if amount <= 0:
+		return 0
+	if EventBus.instance:
+		EventBus.instance.cash_pool_forfeited.emit(amount)
+	return amount
 
 
 ## Lifetime winnings while playing a place (map button display).
@@ -274,7 +316,7 @@ func log_hit(item:String, item_type:String, value:int):
 	if value < 0:
 		dataset.fines = dataset.fines + value
 	else:
-		dataset.bonus_cash = dataset.bonus_cash + value
+		add_to_cash_pool(value)
 		
 	var d: Dictionary = {
 		"round": dataset.round
@@ -397,6 +439,13 @@ func check_all_rocks_cleared() -> void:
 
 	if dataset.total_rocks_in_round_remaining > 0:
 		return
+
+	var round_manager = get_tree().get_first_node_in_group('round_manager')
+	if round_manager != null:
+		var rocks = round_manager.get("rocks_container")
+		if rocks != null and rocks.has_method("try_continue_sequence"):
+			if rocks.try_continue_sequence():
+				return
 
 	round_finished = true
 

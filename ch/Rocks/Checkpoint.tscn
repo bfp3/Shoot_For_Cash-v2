@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://ca23ac3kc4wdk"]
+
+[ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="1_balloon"]
+[ext_resource type="Script" uid="uid://1nciv6xvqfrj" path="res://ch/Rocks/checkpoint.gd" id="2_script"]
+[ext_resource type="Material" uid="uid://hn35w2qwra5g" path="res://res/balloon_blue_mat.tres" id="3_o2rg3"]
+
+[node name="Checkpoint" unique_id=397951874 instance=ExtResource("1_balloon")]
+script = ExtResource("2_script")
+balloon_type = 1
+
+[node name="small_rock2" parent="Mesh" parent_id_path=PackedInt32Array(950426368) index="0" unique_id=2102516094]
+material_override = ExtResource("3_o2rg3")
+
+[node name="Label3D" parent="Mesh/small_rock2/Decal3" parent_id_path=PackedInt32Array(270295909) index="0" unique_id=2109645227]
+pixel_size = 0.0025
+text = "C"
+font_size = 200

@@ -228,7 +228,6 @@ mouse_filter = 2
 
 [node name="100_percent" type="Control" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=226200865]
 unique_name_in_owner = true
-visible = false
 modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(250, 250)
 layout_mode = 1
@@ -248,17 +247,18 @@ mouse_filter = 2
 
 [node name="stampLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/BackgroundImages/100_percent" unique_id=1682981167]
 unique_name_in_owner = true
+visible = false
 clip_contents = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -80.00003
-offset_right = 180.0
-offset_bottom = 119.99997
+anchors_preset = -1
+anchor_left = 0.4608153
+anchor_top = -0.6312108
+anchor_right = 3.4693053
+anchor_bottom = 0.71169215
+offset_left = 196.06125
+offset_top = 67.86287
+offset_right = -196.06122
+offset_bottom = -67.86287
 grow_horizontal = 2
 grow_vertical = 2
 rotation = -0.08726646
@@ -266,7 +266,7 @@ scale = Vector2(2, 2)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"RedRichText"
-theme_override_font_sizes/normal_font_size = 150
+theme_override_font_sizes/normal_font_size = 80
 bbcode_enabled = true
 text = "[wave]CLEAR!"
 fit_content = true
@@ -274,6 +274,7 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Reticle" type="TextureRect" parent="CenterContainer/MainPanel/BackgroundImages" unique_id=929043320]
 modulate = Color(0.91, 0.864955, 0.82809997, 0.11764706)
@@ -530,6 +531,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer" unique_id=1296682477]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 1
 alignment = 1

@@ -185,8 +185,8 @@ func update_place_label() -> void:
 			if current_place == 'START' or current_place.is_empty():
 				current_place = 'MOSS'
 			place_label.text = current_place
-	## Boss / HOLD OUT: keep RoundSelector chrome, hide only the round buttons.
-	_apply_round_selector_boss_mode(is_boss)
+	## Round number buttons are retired — keep Play / Ammo / Pause, hide the selector row.
+	_hide_round_selector_buttons()
 	_apply_shop_panel_shadow_for_place()
 	_refresh_background_completion_stamp(false)
 	_refresh_place_challenge_banner()
@@ -1239,25 +1239,24 @@ func _input(event: InputEvent) -> void:
 
 func setup_shop_for_rounds() -> void:
 	%RoundSelector.show()
-	var is_boss := false
-	if round_manager and round_manager.has_method("is_boss_mode"):
-		is_boss = bool(round_manager.is_boss_mode())
-	elif String(gl_PlayerState.dataset.level_name).to_lower().begins_with("boss"):
-		is_boss = true
-	_apply_round_selector_boss_mode(is_boss)
+	_hide_round_selector_buttons()
 
 
-func _apply_round_selector_boss_mode(is_boss: bool) -> void:
+func _hide_round_selector_buttons() -> void:
+	var panel := get_node_or_null("CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel") as CanvasItem
+	if panel:
+		panel.show()
+	var panel3 := get_node_or_null("CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel3") as CanvasItem
+	if panel3:
+		panel3.show()
+	var round_button_cont := get_node_or_null("CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer") as CanvasItem
+	if round_button_cont:
+		round_button_cont.hide()
+
+
+func _apply_round_selector_boss_mode(_is_boss: bool) -> void:
 	%RoundSelector.show()
-	var round_button_cont: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
-	if round_button_cont == null:
-		return
-	## Boss: hide the button row; keep the RoundSelector container/panel visible.
-	round_button_cont.visible = not is_boss
-	if is_boss:
-		for btn in round_button_cont.get_children():
-			if btn is CanvasItem:
-				(btn as CanvasItem).visible = false
+	_hide_round_selector_buttons()
 
 
 ## Rebuild round-button states from the restored sequence index for this range.
@@ -1294,6 +1293,7 @@ func sync_rounds_to_progress(sequence_index: int, total_rounds: int) -> void:
 			btn.enter_state(btn.State.AVAILABLE)
 		else:
 			btn.enter_state(btn.State.LOCKED)
+	_hide_round_selector_buttons()
 
 
 func mark_round_as_cleared() -> void:

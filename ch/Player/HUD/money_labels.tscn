@@ -1,12 +1,59 @@
 [gd_scene format=3 uid="uid://dy6clm2tp8825"]
 
 [ext_resource type="Script" uid="uid://dtms7614f6vnv" path="res://ch/Money/money_labels.gd" id="1_aaxe5"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_6hiqh"]
+[ext_resource type="FontFile" uid="uid://ch8oru3korcdf" path="res://res/marlbo.ttf" id="2_font"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="3_coin"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_aaxe5"]
-font_size = 80
-font_color = Color(0.25882354, 0.81960785, 0, 1)
-outline_size = 10
-outline_color = Color(0.42, 0.42, 0.42, 0.392157)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pivo4"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k5tjv"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ms1v2"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="Theme" id="Theme_24e6o"]
+Button/styles/normal = SubResource("StyleBoxFlat_pivo4")
+Panel/styles/panel = SubResource("StyleBoxFlat_k5tjv")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_ms1v2")
 
 [node name="Money_labels" type="Control" unique_id=2075768694 groups=["money_manager"]]
 layout_mode = 3
@@ -18,23 +65,70 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_aaxe5")
 
-[node name="Label3D" type="Label" parent="." unique_id=1118549578]
-visible = false
+[node name="Panel" type="Panel" parent="." unique_id=1053188580]
+custom_minimum_size = Vector2(180, 130)
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.7294428
-anchor_top = 0.85265046
-anchor_right = 0.818474
-anchor_bottom = 0.98654705
-offset_left = 19.46997
-offset_top = 16.470825
-offset_right = -19.46997
-offset_bottom = -16.470825
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 1508.0
+offset_top = -317.52197
+offset_right = 2031.478
+offset_bottom = 89.0
+grow_vertical = 0
+scale = Vector2(0.46, 0.46)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_24e6o")
+theme_override_styles/panel = ExtResource("2_6hiqh")
+
+[node name="BankedLabel" type="RichTextLabel" parent="." unique_id=1123567456]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -436.0
+offset_top = -268.0
+offset_right = -44.0
+offset_bottom = -125.0
 grow_horizontal = 0
 grow_vertical = 0
-scale = Vector2(1.295, 1.295)
-pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_fonts/normal_font = ExtResource("2_font")
+theme_override_font_sizes/normal_font_size = 132
+bbcode_enabled = true
 text = "$0"
-label_settings = SubResource("LabelSettings_aaxe5")
-vertical_alignment = 1
-metadata/_edit_use_anchors_ = true
+fit_content = true
+scroll_active = false
+horizontal_alignment = 2
+
+[node name="PoolLabel" type="RichTextLabel" parent="." unique_id=433932978]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -436.0
+offset_top = -152.0
+offset_right = -44.0
+offset_bottom = -9.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset = Vector2(392, 88)
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.921569, 0.878431, 0.847059, 1)
+theme_override_fonts/normal_font = ExtResource("2_font")
+theme_override_font_sizes/normal_font_size = 132
+bbcode_enabled = true
+text = "$0"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 2
+
+[node name="CoinSfx" type="AudioStreamPlayer" parent="." unique_id=1197223894]
+stream = ExtResource("3_coin")
+volume_db = -8.0

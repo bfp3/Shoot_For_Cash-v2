@@ -61,6 +61,7 @@ enum State {
 }
 
 var current_state : State = State.INACTIVE
+var _pool_setup_token := 0
 
 var rock_has_been_logged := false
 
@@ -300,11 +301,18 @@ func update_inactive() -> void:
 	# EventBus.instance.rock_created.emit()
 	
 func update_prepare_rock() -> void:
+	var token := _pool_setup_token
 	reset_stats()
+	if token != _pool_setup_token:
+		return
 	await get_tree().process_frame
+	if token != _pool_setup_token or current_state != State.PREPARE_ROCK:
+		return
 	hide_all_meshes()
 	force_mult.shuffle()
 	await get_tree().process_frame
+	if token != _pool_setup_token or current_state != State.PREPARE_ROCK:
+		return
 	setup_rock_type()
 	# Hazards / smokecans / avoiders are obstacles — not required to clear the round.
 	if (
@@ -315,6 +323,8 @@ func update_prepare_rock() -> void:
 		gl_PlayerState.log_rocks(1, rock_type_name)
 		
 	await get_tree().create_timer(0.2, false).timeout
+	if token != _pool_setup_token or current_state != State.PREPARE_ROCK:
+		return
 	global_position.x = target_x_position
 	
 func update_active() -> void:
@@ -357,10 +367,13 @@ func update_active() -> void:
 
 
 func update_hit() -> void:
+	var token := _pool_setup_token
 	update_gravity(1.0)
 	#linear_velocity = Vector3.ZERO
 	gravity_scale = 0.0
 	await get_tree().create_timer(1.0, false).timeout
+	if token != _pool_setup_token or current_state != State.HIT:
+		return
 	disable_collision()
 	
 
@@ -369,6 +382,7 @@ func update_missed() -> void:
 	remove_from_group('Target')
 	rock_destroyed = true
 	reset_stats()
+	release_to_pool()
 
 func round_end_check_rock_status() -> void:
 	
@@ -725,6 +739,7 @@ func setup_rock_type() -> void:
 				current_particles.emitting = true
 
 func reset_stats() -> void:
+	var token := _pool_setup_token
 	ignores_x_out_of_bounds = false
 	_hazard_strike_from_direct_shot = false
 	_orange_neutralized_hazard = false
@@ -750,7 +765,8 @@ func reset_stats() -> void:
 	start_exploding = false
 	
 	await get_tree().process_frame
-	
+	if token != _pool_setup_token:
+		return
 
 	pitch_adjustment = 0.02
 	
@@ -778,6 +794,8 @@ func reset_stats() -> void:
 	_cancel_airborne_rock_collisions()
 	global_position = start_pos
 	await get_tree().process_frame
+	if token != _pool_setup_token:
+		return
 	
 	$Mesh.show()
 
@@ -787,6 +805,53 @@ func was_hit_tween() -> void:
 	tween.tween_callback(smoke_particles)
 	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
 	await tween.finished
+
+
+## Return this instance to the 36-rock pool so a later spawn can reuse it.
+func release_to_pool() -> void:
+	if current_state == State.INACTIVE:
+		return
+	_pool_setup_token += 1
+	disable_collision()
+	remove_from_group("Target")
+	rock_activated = false
+	rock_destroyed = true
+	_cancel_airborne_rock_collisions()
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+	if has_node("Mesh"):
+		$Mesh.scale = Vector3.ONE
+	enter_state(State.INACTIVE)
+	global_position = start_pos
+
+
+## Claim an inactive pool rock for a later launch without the async PREPARE wait.
+func setup_for_pool_launch(new_type: int, spawn_x: float) -> void:
+	_pool_setup_token += 1
+	disable_collision()
+	remove_from_group("Target")
+	rock_activated = false
+	rock_destroyed = false
+	rock_has_been_logged = false
+	is_deactivated = false
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+	gravity_scale = rock_type_gravity_scale
+	if has_node("Mesh"):
+		$Mesh.scale = Vector3.ONE
+		$Mesh.position = Vector3.ZERO
+	rock_type = new_type
+	target_x_position = spawn_x
+	hide_all_meshes()
+	setup_rock_type()
+	if (
+		rock_type_name != 'hazard_type_1'
+		and rock_type != RockSize.SMOKECAN
+		and rock_type != RockSize.AVOIDER
+	):
+		gl_PlayerState.log_rocks(1, rock_type_name)
+	global_position = Vector3(spawn_x, start_pos.y, start_pos.z)
+	current_state = State.PREPARE_ROCK
 
 	
 func detonate_rock() -> void:
@@ -1178,6 +1243,9 @@ func start_destroyed_process() -> void:
 
 	%RedParticles.emitting = false
 	rock_activated = false
+	var rm := _find_rock_manager()
+	if rm and rm.has_method("notify_clearable_destroyed"):
+		rm.notify_clearable_destroyed()
 	
 	if current_particles != null:
 		current_particles.emitting = false
@@ -1186,6 +1254,7 @@ func start_destroyed_process() -> void:
 	#if player_has_marked_rock == false:
 	expand_blast_radius()
 	enter_state(State.HIT)
+	var destroyed_as_hazard := rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL
 	
 	if rock_type == RockSize.SMALL:
 		%rock_flicker_sfx.play()
@@ -1233,7 +1302,10 @@ func start_destroyed_process() -> void:
 	
 		
 			
-	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
+	if current_state != State.HIT:
+		return
+
+	if destroyed_as_hazard:
 		#$Marked.show()
 		##$marked_embers.emitting = true
 		#%rock_marked_sfx.play()
@@ -1258,21 +1330,15 @@ func start_destroyed_process() -> void:
 	
 	if rock_type == RockSize.SMOKECAN:
 		%hazard_hit_sound.play()
-		
-	was_hit_tween()
-	
 
-	#var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
-	#tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
-	#await tween.finished
-	
 	if !player_has_marked_rock:
 		shake_camera()
-	
-	
-
 	round_manager.bullet_active = false
-	$Mesh.position = Vector3.ZERO
+
+	if current_state == State.HIT:
+		await was_hit_tween()
+		if current_state == State.HIT:
+			release_to_pool()
 
 func play_hit_sfx() -> void:
 	%rock_hit_sound.volume_db = randf_range(-25.0, -20.0)

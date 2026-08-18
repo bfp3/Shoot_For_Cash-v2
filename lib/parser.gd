@@ -105,6 +105,15 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 ##   `rock A4` is invalid — column must be a number or `?` before the aim cell.
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
 ## wait: {cmd, ms} — delay before the next rock; defaults to 1000ms.
+## wait until clear / wait-until-clear: {cmd} — hold the next command until
+##   nothing is still active in the level (rocks, balloons, pineapples,
+##   smokecans, balloon-checks, bonus targets). Oranges are ignored. A miss
+##   does not skip this wait. Objects count as gone as soon as their destroy
+##   process starts (do not wait for pop tweens).
+## balloon-check / balloon check: {cmd} — spawn a checkpoint balloon. Shooting
+##   it saves this script cursor as the resume point after a strike-out.
+##   It does not jump rounds or reset strikes. `checkpoint` is accepted as an alias.
+##   If no balloon-check has been shot, fail restarts the range from the beginning.
 ## repeat: {cmd, count} — closes a wave section that plays as `count` separate waves.
 ##   Bare `repeat` / `repeat 1` / `repeat 2` → 2 waves. `repeat N` (N ≥ 2) → N waves.
 ##   Commands after a `repeat` start the next section / next set of waves.
@@ -133,13 +142,24 @@ func parse_spawn_command(token: String) -> Dictionary:
 			return _parse_rock_command(cmd, parts)
 
 		'balloon':
+			if parts.size() > 1 and String(parts[1]).strip_edges().to_lower() == 'check':
+				return {'cmd': 'balloon-check'}
 			return _parse_balloon_command(parts)
+
+		'balloon-check':
+			return {'cmd': 'balloon-check'}
 
 		'bonus-target':
 			return _parse_bonus_target_command(parts)
 
 		'wait':
 			return _parse_wait_command(parts)
+
+		'wait-until-clear':
+			return {'cmd': 'wait-until-clear'}
+
+		'checkpoint':
+			return {'cmd': 'balloon-check'}
 
 		'boss-timer':
 			## Duration for boss survival rounds (milliseconds). Handled while loading the file.
@@ -260,8 +280,11 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	return result
 
 
-## wait → 100ms. wait 600 → 600ms. Values below 0 clamp to 0.
+## wait → 1000ms. wait 600 → 600ms. Values below 0 clamp to 0.
+## wait until clear / wait until → hold until nothing is still active in the level.
 func _parse_wait_command(parts: PackedStringArray) -> Dictionary:
+	if parts.size() > 1 and String(parts[1]).strip_edges().to_lower() == 'until':
+		return {'cmd': 'wait-until-clear'}
 	var ms := DEFAULT_WAIT_MS
 	if parts.size() > 1 and String(parts[1]).is_valid_int():
 		ms = maxi(int(parts[1]), 0)
@@ -408,7 +431,8 @@ func parse_round_text(text: String) -> Dictionary:
 	return sequences[0]
 
 
-## Builds one round dict per round, in file order:
+## Builds one sequence dict per shooting range (all `round` headings in that range
+## are merged). File order is kept.
 ## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"type1"|...,
 ##   "bonus_targets": [{ "waypoints": [{row, column}, ...] }, ...], "shuffle": bool }
 ## Pass an empty island_name to include every island in the loaded file.
@@ -423,7 +447,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 		if range_name != '' and entry[1] != range_name:
 			continue
 
-		var key := '%s|%s|%d' % [entry[0], entry[1], entry[2]]
+		var key := '%s|%s' % [entry[0], entry[1]]
 		if not rounds.has(key):
 			rounds[key] = {
 				'spawns': [],
@@ -696,6 +720,10 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 	match cmd:
 		'wait':
 			return 'wait %d' % int(entry.get('ms', DEFAULT_WAIT_MS))
+		'wait-until-clear':
+			return 'wait until clear'
+		'balloon-check', 'checkpoint':
+			return 'balloon-check'
 		'balloon':
 			var brow := int(entry.get('row', RANDOM_SLOT))
 			var bcol := int(entry.get('column', RANDOM_SLOT))

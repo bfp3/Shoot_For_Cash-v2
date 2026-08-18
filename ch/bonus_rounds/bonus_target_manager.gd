@@ -139,7 +139,7 @@ func resolve_bonus_round(survived: bool) -> void:
 		var amount := reward_cash
 		if amount <= 0:
 			amount = int(gl_DataSet.get_value('reward_perfect_round'))
-		gl_PlayerState.dataset.bonus_cash += amount
+		gl_PlayerState.add_to_cash_pool(amount)
 		var label_target: StaticBody3D = _slots[0].get('target') if _slots.size() > 0 else null
 		if label_target and is_instance_valid(label_target):
 			var label = label_target.get('money_label_3d')

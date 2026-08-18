@@ -27,6 +27,7 @@ const pigeon_aim_reference_depth := 45.0
 
 var rocks_limit := 0
 const ROCK_INSTANCE_SCENE := preload("res://ch/Rocks/Rock_Instance.tscn")
+const CHECKPOINT_SCENE := preload("res://ch/Rocks/Checkpoint.tscn")
 ## Extra pool rocks added once when entering the boss layout (batched across frames).
 var _boss_extra_rocks_added := false
 
@@ -52,6 +53,7 @@ var _launch_delays_sec : Array = []
 ## Items: { "kind": "balloon"|"pineapple", "entry": Dictionary, "time_sec": float }
 var _timed_event_schedule : Array = []
 var _timed_event_epoch := 0
+var _timed_events_running := false
 ## Bumped to cancel in-flight staggered launches (bounce_rocks awaits).
 var _launch_epoch := 0
 
@@ -166,6 +168,18 @@ const BOUNDS_CHECK_INTERVAL := 0.1  # how often (seconds) to scan active rocks
 var _bounds_check_active := false
 var _bounds_check_accum := 0.0
 
+## Intra-wave script cursor: `wait until clear` / `balloon-check`.
+var _full_wave_sequence: Array = []
+var _sequence_cursor := 0
+var _sequence_active := false
+var _waiting_until_clear := false
+var _checkpoint_hold := false
+var _auto_pulse_next_beat := false
+var _force_mid_round_balloons := false
+var _advancing_sequence := false
+var _active_checkpoint: Node = null
+var _stream_launches_remaining := 0
+
 enum OobSide { NONE, LEFT, RIGHT, BOTTOM, BEHIND }
 
 const _OOB_MISS_SMOKE := preload("res://res/Particles/Smoke_particles/SmokeQuick.tscn")
@@ -194,6 +208,11 @@ func _ready() -> void:
 	enter_state(current_state)
 
 func _process(delta: float) -> void:
+	if _waiting_until_clear and not _checkpoint_hold and not _advancing_sequence:
+		if current_state != State.INACTIVE and current_state != State.ROUND_END:
+			if _sky_is_clear_for_sequence():
+				try_continue_sequence()
+
 	if not _bounds_check_active:
 		return
 	
@@ -222,6 +241,7 @@ func enter_state(new_state : State) -> void:
 			
 func update_inactive() -> void:
 	_bounds_check_active = false
+	_cancel_sequence()
 	_cancel_wave_telegraph()
 	_cancel_pending_launches()
 	_wave_telegraph_plan.clear()
@@ -230,7 +250,92 @@ func update_inactive() -> void:
 	
 
 # This is the start of arranging the rocks.
-func start_manual_rock_round(sequence: Array) -> void:
+func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
+	_full_wave_sequence = sequence.duplicate(true)
+	_sequence_cursor = clampi(resume_index, 0, _full_wave_sequence.size())
+	_sequence_active = true
+	_waiting_until_clear = false
+	_checkpoint_hold = false
+	_auto_pulse_next_beat = false
+	_force_mid_round_balloons = resume_index > 0
+	_timed_events_running = false
+	_stream_launches_remaining = 0
+	_launch_next_sequence_beat()
+
+
+func _sequence_cmd_at(index: int) -> String:
+	if index < 0 or index >= _full_wave_sequence.size():
+		return ""
+	var entry = _full_wave_sequence[index]
+	if entry is Dictionary:
+		return String(entry.get("cmd", "")).to_lower()
+	return ""
+
+
+func _is_balloon_check_cmd(cmd: String) -> bool:
+	return cmd == "balloon-check" or cmd == "checkpoint"
+
+
+func _is_sequence_barrier_cmd(cmd: String) -> bool:
+	return cmd == "wait-until-clear" or _is_balloon_check_cmd(cmd)
+
+
+func _launch_next_sequence_beat() -> void:
+	if not _sequence_active:
+		return
+
+	while _sequence_cursor < _full_wave_sequence.size():
+		var cmd := _sequence_cmd_at(_sequence_cursor)
+		if cmd == "wait-until-clear":
+			_sequence_cursor += 1
+			if not _sky_is_clear_for_sequence():
+				_waiting_until_clear = true
+				return
+			continue
+		if _is_balloon_check_cmd(cmd):
+			_sequence_cursor += 1
+			_spawn_checkpoint_balloon()
+			_waiting_until_clear = true
+			return
+
+		var beat := _collect_next_beat()
+		if not _beat_has_work(beat):
+			continue
+		_begin_beat(beat)
+		_waiting_until_clear = true
+		return
+
+	_sequence_active = false
+	if not _sky_is_clear_for_sequence():
+		_waiting_until_clear = true
+	else:
+		_waiting_until_clear = false
+
+
+func _collect_next_beat() -> Array:
+	var beat: Array = []
+	while _sequence_cursor < _full_wave_sequence.size():
+		var cmd := _sequence_cmd_at(_sequence_cursor)
+		if _is_sequence_barrier_cmd(cmd):
+			break
+		beat.append(_full_wave_sequence[_sequence_cursor])
+		_sequence_cursor += 1
+	return beat
+
+
+func _beat_has_work(beat: Array) -> bool:
+	for entry in beat:
+		if entry is Dictionary:
+			var cmd := String(entry.get("cmd", "")).to_lower()
+			if _is_launchable_spawn_cmd(cmd) or cmd == "balloon" or cmd == "pineapple":
+				return true
+			continue
+		if typeof(entry) == TYPE_INT and int(entry) < 300:
+			return true
+	return false
+
+
+func _begin_beat(sequence: Array) -> void:
 	var rocks: Array = []
 	var delays_sec: Array = []
 	var pending_wait_ms = null
@@ -274,6 +379,162 @@ func start_manual_rock_round(sequence: Array) -> void:
 	enter_state(State.PREPARE_ROCKS)
 
 
+func _script_has_more_commands() -> bool:
+	return _sequence_cursor < _full_wave_sequence.size()
+
+
+## Called when remaining rocks hit 0. Returns true if the wave must stay open.
+func try_continue_sequence() -> bool:
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager != null:
+		if bool(round_manager.get("wave_ending")) or bool(round_manager.get("player_failed")) or bool(round_manager.get("game_over_triggered")):
+			_sequence_active = false
+			_waiting_until_clear = false
+			return false
+	if _script_has_more_commands():
+		_sequence_active = true
+	if current_state == State.INACTIVE or current_state == State.ROUND_END:
+		if not _script_has_more_commands() and not _waiting_until_clear and not _checkpoint_hold:
+			_sequence_active = false
+			_waiting_until_clear = false
+			return false
+	if _checkpoint_hold:
+		return true
+	if _advancing_sequence:
+		return _sequence_active or _waiting_until_clear or _checkpoint_hold or _script_has_more_commands()
+	if not _sky_is_clear_for_sequence():
+		_waiting_until_clear = true
+		return true
+
+	if not _sequence_active and not _waiting_until_clear:
+		return _has_live_checkpoint() or _script_has_more_commands()
+
+	if not _sequence_active:
+		_waiting_until_clear = false
+		return _script_has_more_commands()
+
+	_waiting_until_clear = false
+	_auto_pulse_next_beat = true
+	_advancing_sequence = true
+	_launch_next_sequence_beat()
+	_advancing_sequence = false
+	if _sequence_active or _waiting_until_clear or _checkpoint_hold or _has_live_checkpoint() or _script_has_more_commands():
+		return true
+	if not _sky_is_clear_for_sequence():
+		return true
+	return false
+
+
+func _sky_is_clear_for_sequence() -> bool:
+	if _checkpoint_hold:
+		return false
+	if _has_live_checkpoint():
+		return false
+	if _timed_events_running:
+		return false
+	if _stream_launches_remaining > 0:
+		return false
+	if _any_live_round_rocks():
+		return false
+	if _any_live_balloons():
+		return false
+	if _any_live_pineapples():
+		return false
+	if _any_live_bonus_targets():
+		return false
+	return true
+
+
+func is_holding_wave() -> bool:
+	if _script_has_more_commands():
+		return true
+	if _sequence_active or _waiting_until_clear or _checkpoint_hold:
+		return true
+	if _has_live_checkpoint():
+		return true
+	return not _sky_is_clear_for_sequence()
+
+
+func get_sequence_cursor() -> int:
+	return _sequence_cursor
+
+
+func _has_live_checkpoint() -> bool:
+	if _active_checkpoint != null and is_instance_valid(_active_checkpoint):
+		if _active_checkpoint.has_method("is_blocking_sky"):
+			return bool(_active_checkpoint.is_blocking_sky())
+		return true
+	return false
+
+
+func _spawn_checkpoint_balloon() -> void:
+	_dismiss_checkpoint()
+	var host := get_tree().get_first_node_in_group("checkpoint_container")
+	if host == null:
+		host = get_tree().current_scene
+	if host == null:
+		host = self
+	var checkpoint: Node = CHECKPOINT_SCENE.instantiate()
+	host.add_child(checkpoint)
+	_active_checkpoint = checkpoint
+	_checkpoint_hold = true
+	if checkpoint.has_method("arrive_from_below"):
+		checkpoint.arrive_from_below()
+
+
+func _dismiss_checkpoint() -> void:
+	if _active_checkpoint != null and is_instance_valid(_active_checkpoint):
+		if _active_checkpoint.has_method("dismiss_without_shot"):
+			_active_checkpoint.dismiss_without_shot()
+		elif is_instance_valid(_active_checkpoint):
+			_active_checkpoint.queue_free()
+	_active_checkpoint = null
+
+
+func _cancel_sequence() -> void:
+	_sequence_active = false
+	_waiting_until_clear = false
+	_checkpoint_hold = false
+	_auto_pulse_next_beat = false
+	_advancing_sequence = false
+	_timed_events_running = false
+	_stream_launches_remaining = 0
+	_dismiss_checkpoint()
+
+
+func begin_checkpoint_hold() -> void:
+	_checkpoint_hold = true
+	_waiting_until_clear = true
+
+
+func notify_clearable_destroyed() -> void:
+	if _advancing_sequence:
+		return
+	if not _waiting_until_clear and not _checkpoint_hold:
+		return
+	try_continue_sequence()
+
+
+## Checkpoint was shot — stop treating it as a live hold. Sequence continues via end_checkpoint_hold.
+func finish_checkpoint_round() -> void:
+	_checkpoint_hold = false
+	_sequence_active = false
+	_waiting_until_clear = false
+	_auto_pulse_next_beat = false
+	_advancing_sequence = false
+	_active_checkpoint = null
+
+
+func end_checkpoint_hold() -> void:
+	_checkpoint_hold = false
+	_active_checkpoint = null
+	if _script_has_more_commands():
+		_sequence_active = true
+	if _sequence_active:
+		_waiting_until_clear = true
+		try_continue_sequence()
+
+
 ## Mid-round balloons (after a `wait`) and pineapples share the rock absolute timeline.
 ## Pending waits are NOT consumed by balloons/pineapples (rock stagger stays unchanged).
 func _build_timed_event_schedule(sequence: Array) -> Array:
@@ -286,13 +547,16 @@ func _build_timed_event_schedule(sequence: Array) -> Array:
 	for entry in sequence:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
-			if cmd == 'wait':
+			if cmd == 'wait' or cmd == 'wait-until-clear':
 				seen_wait = true
-				pending_wait_ms = int(entry.get('ms', DEFAULT_LAUNCH_WAIT_MS))
+				if cmd == 'wait':
+					pending_wait_ms = int(entry.get('ms', DEFAULT_LAUNCH_WAIT_MS))
 				continue
 
 			if cmd == 'balloon':
-				if seen_wait:
+				# Shop already spawned balloons that appear before the first wait.
+				# Continuation / post-wait beats must still fly them in.
+				if seen_wait or _auto_pulse_next_beat or _force_mid_round_balloons:
 					var balloon_extra := 0.0
 					if pending_wait_ms != null:
 						balloon_extra = float(pending_wait_ms) / 1000.0
@@ -366,31 +630,28 @@ func update_prepare_rocks() -> void:
 	var container_children := $Container_1.get_children()
 	var available_bodies : Array = []
 
-	# Leave in-flight rocks alone (ACTIVE / DISABLED) so black hazards can keep
-	# falling or drifting from orange hits while the next wave prepares.
+	# Leave in-flight / dying rocks alone so the 36-slot pool can recycle them later.
 	for i in container_children:
 		if _rock_slot_busy(i):
 			continue
 		available_bodies.append(i)
 
-	rocks_limit = mini(temp_rock_array.size(), available_bodies.size())
-	if temp_rock_array.size() > available_bodies.size():
-		push_warning(
-			"Rock sequence needs %d rocks but only %d free slots (others still in flight)."
-			% [temp_rock_array.size(), available_bodies.size()]
-		)
+	# Telegraph / first-pulse preview uses whatever is free now.
+	# bounce_rocks streams the rest of the beat as slots open.
+	var preview_count := mini(temp_rock_array.size(), available_bodies.size())
+	rocks_limit = preview_count
 
 	var active_bodies : Array = []
 	for i in available_bodies.size():
 		var body = available_bodies[i]
-		if i < rocks_limit:
+		if i < preview_count:
 			active_bodies.append(body)
 		else:
 			body.enter_state(body.State.INACTIVE)
 
 	assign_manual_rock_positions(active_bodies)
 
-	for pointer in rocks_limit:
+	for pointer in preview_count:
 		if pointer >= active_bodies.size():
 			break
 		active_bodies[pointer].rock_type = _spawn_entry_to_rock_type(temp_rock_array[pointer])
@@ -398,11 +659,20 @@ func update_prepare_rocks() -> void:
 
 	_build_wave_telegraph_plan(active_bodies)
 	start_wave_telegraph()
+	if _auto_pulse_next_beat:
+		_auto_pulse_next_beat = false
+		_pulse_continuation_beat()
 
 
-## Slots still mid-flight must not be reclaimed for the next wave's sequence.
+func _pulse_continuation_beat() -> void:
+	await get_tree().create_timer(0.4, false).timeout
+	if current_state == State.PREPARE_ROCKS:
+		enter_state(State.PULSE_ROCKS)
+
+
+## Slots still mid-flight or dying must not be reclaimed for the next beat.
 func _rock_slot_busy(body) -> bool:
-	return body.current_state == body.State.ACTIVE or body.current_state == body.State.DISABLED
+	return body.current_state != body.State.INACTIVE
 
 
 func _spawn_entry_to_rock_type(entry) -> int:
@@ -457,6 +727,7 @@ func update_pulse_rocks() -> void:
 
 func _run_timed_event_spawns() -> void:
 	if _timed_event_schedule.is_empty():
+		_timed_events_running = false
 		return
 
 	var balloon_container := get_tree().get_first_node_in_group('balloon_container')
@@ -468,13 +739,16 @@ func _run_timed_event_spawns() -> void:
 
 	_timed_event_epoch += 1
 	var epoch := _timed_event_epoch
+	_timed_events_running = true
 	var schedule: Array = _timed_event_schedule.duplicate(true)
 	var elapsed := 0.0
 
 	for item in schedule:
 		if epoch != _timed_event_epoch:
+			_timed_events_running = false
 			return
 		if current_state != State.PULSE_ROCKS:
+			_timed_events_running = false
 			return
 
 		var time_sec: float = float(item.get('time_sec', 0.0))
@@ -484,8 +758,10 @@ func _run_timed_event_spawns() -> void:
 			elapsed += wait_for
 
 		if epoch != _timed_event_epoch:
+			_timed_events_running = false
 			return
 		if current_state != State.PULSE_ROCKS:
+			_timed_events_running = false
 			return
 
 		var kind: String = String(item.get('kind', ''))
@@ -500,6 +776,9 @@ func _run_timed_event_spawns() -> void:
 			'pineapple':
 				if pineapple_launcher and pineapple_launcher.has_method('launch_from_spawn_entry'):
 					pineapple_launcher.launch_from_spawn_entry(entry)
+
+	if epoch == _timed_event_epoch:
+		_timed_events_running = false
 
 
 func check_rocks_out_of_bounds() -> void:
@@ -662,6 +941,49 @@ func _any_live_round_rocks() -> bool:
 			return true
 		if body.rock_activated and body.current_state == body.State.ACTIVE:
 			return true
+	return false
+
+
+func _any_live_balloons() -> bool:
+	var host := get_tree().get_first_node_in_group("balloon_container")
+	if host == null:
+		return false
+	for child in host.get_children():
+		if not (child is StaticBody3D):
+			continue
+		if bool(child.get("behind_player")):
+			continue
+		if bool(child.get("rock_activated")):
+			return true
+	return false
+
+
+func _any_live_pineapples() -> bool:
+	for node in get_tree().get_nodes_in_group("pineapple_container"):
+		for child in node.get_children():
+			if child is RigidBody3D and bool(child.get("rock_activated")):
+				return true
+	return false
+
+
+func _any_live_oranges() -> bool:
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager != null and int(round_manager.get("orange_active")) > 0:
+		return true
+	for container in get_tree().get_nodes_in_group("orange_container"):
+		for child in container.get_children():
+			if child != null and is_instance_valid(child) and bool(child.get("rock_activated")):
+				return true
+	return false
+
+
+func _any_live_bonus_targets() -> bool:
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager == null:
+		return false
+	var bonus = round_manager.get("bonus_target_manager")
+	if bonus != null and bonus.has_method("is_active") and bool(bonus.is_active()):
+		return true
 	return false
 
 
@@ -1494,6 +1816,7 @@ func pick_convergence_point() -> void:
 func update_round_end() -> void:
 	_bounds_check_active = false
 	_timed_event_epoch += 1
+	_cancel_sequence()
 	_cancel_pending_launches()
 	$pitch_shift_rock_sound.pitch_scale = 0.85
 	#$pitch_shift_rock_sound.volume_db = -9.0
@@ -1535,65 +1858,119 @@ func get_angle_bias() -> float:
 	return 10.0
 	
 func bounce_rocks() -> void:
-	var bodies = $Container_1.get_children()
-	# Only launch rocks prepared for this wave — leave lingering ACTIVE hazards alone.
-	var to_launch: Array = []
-	for body in bodies:
-		if body.current_state == body.State.PREPARE_ROCK:
-			to_launch.append(body)
-
 	angle_bias = get_angle_bias()
 	# Prefer the prepare-time plan so launch matches the telegraph preview.
 	if _wave_telegraph_plan.is_empty():
-		_rebuild_wave_convergence_aim_columns(to_launch)
+		var prepared: Array = []
+		for body in $Container_1.get_children():
+			if body.current_state == body.State.PREPARE_ROCK:
+				prepared.append(body)
+		_rebuild_wave_convergence_aim_columns(prepared)
 
 	_launch_epoch += 1
 	var epoch := _launch_epoch
-	var counter := 0
+	var prepared_queue: Array = []
+	for body in $Container_1.get_children():
+		if body.current_state == body.State.PREPARE_ROCK:
+			prepared_queue.append(body)
 
-	for body in to_launch:
+	_stream_launches_remaining = manual_rock_sequence.size()
+	var launched: Array = []
+
+	for index in manual_rock_sequence.size():
 		if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+			_stream_launches_remaining = 0
 			return
-		if counter >= rocks_limit:
-			break
 
-		# Delay before this rock (from `wait` markers; default 100ms between rocks).
-		if counter < _launch_delays_sec.size():
-			var delay_sec: float = float(_launch_delays_sec[counter])
+		if index < _launch_delays_sec.size():
+			var delay_sec: float = float(_launch_delays_sec[index])
 			if delay_sec > 0.0:
 				await get_tree().create_timer(delay_sec, false).timeout
 				if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+					_stream_launches_remaining = 0
 					return
 
-		if body == null or not is_instance_valid(body):
-			counter += 1
+		var body = null
+		if index < prepared_queue.size():
+			var preview = prepared_queue[index]
+			if preview != null and is_instance_valid(preview) and preview.current_state == preview.State.PREPARE_ROCK:
+				body = preview
+		if body == null:
+			body = await _acquire_pool_rock(epoch)
+		if body == null:
+			_stream_launches_remaining = maxi(_stream_launches_remaining - 1, 0)
 			continue
+
 		if body.current_state != body.State.PREPARE_ROCK:
-			counter += 1
-			continue
+			_configure_stream_rock(body, index)
 
-		body.enter_state(body.State.ACTIVE)
-
-		var upward_force = 10.0
-		var impulse: Vector3
-		if body.rock_type == RockInstance.RockSize.SMALL_2:
-			body.bounce_rocks()
-			upward_force = upward_force * rock_pigeon_upward_force
-			impulse = _pigeon_launch_impulse(body, counter, upward_force)
-		else:
-			BallisticAim.configure_body_for_ballistic_launch(body, aim_launch_gravity_scale)
-			body.begin_ballistic_aim_feel(aim_descent_linear_damp)
-			impulse = _build_launch_impulse(body, counter, upward_force, 0.0)
-		body.apply_central_impulse(impulse)
-
-		# Rock–rock only after the pulse impulse has cleared — not dormant, not mid-launch.
-		if rock_rock_collisions_enabled:
-			body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
-
-		counter += 1
+		_launch_stream_rock(body, index)
+		launched.append(body)
+		_stream_launches_remaining = maxi(_stream_launches_remaining - 1, 0)
 
 	if epoch == _launch_epoch and current_state == State.PULSE_ROCKS:
-		spin_rocks(to_launch)
+		spin_rocks(launched)
+
+
+func _acquire_pool_rock(epoch: int):
+	while true:
+		if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+			return null
+		var slot = _find_free_pool_rock()
+		if slot != null:
+			return slot
+		await get_tree().process_frame
+
+
+func _find_free_pool_rock():
+	var fallback = null
+	for body in $Container_1.get_children():
+		if not (body is RockInstance):
+			continue
+		if body.current_state == body.State.INACTIVE:
+			return body
+		# Parked leftovers from a previous wave — safe to recycle if nothing inactive is left.
+		if fallback == null and body.current_state == body.State.DISABLED:
+			fallback = body
+	return fallback
+
+
+func _configure_stream_rock(body, rock_index: int) -> void:
+	var entry = null
+	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
+		entry = manual_rock_sequence[rock_index]
+	var column := _resolve_spawn_column(entry)
+	var spawn_x := column_to_x(column)
+	if rock_index < _wave_spawn_columns.size():
+		column = _wave_spawn_columns[rock_index]
+		spawn_x = column_to_x(column)
+	if body.has_method("setup_for_pool_launch"):
+		body.setup_for_pool_launch(_spawn_entry_to_rock_type(entry), spawn_x)
+	else:
+		body.rock_type = _spawn_entry_to_rock_type(entry)
+		body.target_x_position = spawn_x
+		body.enter_state(body.State.PREPARE_ROCK)
+
+
+func _launch_stream_rock(body, counter: int) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	body.enter_state(body.State.ACTIVE)
+
+	var upward_force = 10.0
+	var impulse: Vector3
+	if body.rock_type == RockInstance.RockSize.SMALL_2:
+		body.bounce_rocks()
+		upward_force = upward_force * rock_pigeon_upward_force
+		impulse = _pigeon_launch_impulse(body, counter, upward_force)
+	else:
+		BallisticAim.configure_body_for_ballistic_launch(body, aim_launch_gravity_scale)
+		body.begin_ballistic_aim_feel(aim_descent_linear_damp)
+		impulse = _build_launch_impulse(body, counter, upward_force, 0.0)
+	body.apply_central_impulse(impulse)
+
+	if rock_rock_collisions_enabled:
+		body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
 
 
 ## Pigeons fly into the distance along the column fan (17° half-angle from world origin).
@@ -1747,6 +2124,7 @@ func update_gravity(_gravity_scale : float) -> void:
 		#await get_tree().create_timer(0.01).timeout
 
 func reset_all_rocks() -> void:
+	_cancel_sequence()
 	var bodies = $Container_1.get_children()
 
 	for body in bodies:
@@ -1806,8 +2184,10 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
-			# Keep wait markers in place so launch stagger survives wave shuffles.
-			if cmd == 'wait':
+			# Keep wait / sequence barriers in place so launch stagger and balloon-checks survive shuffles.
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd):
+				continue
+			if cmd == 'balloon' or cmd == 'pineapple':
 				continue
 			if not _is_launchable_spawn_cmd(cmd):
 				_sequence.remove_at(idx)

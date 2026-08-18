@@ -91,6 +91,26 @@ func start() -> void:
 	start_tween(wave_panel, _original_position, _original_modulate)
 
 
+func start_at(round_number: int) -> void:
+	wave_count = maxi(round_number - 1, 0)
+	start()
+
+
+func show_round_banner(round_number: int, total_rounds: int = -1) -> void:
+	if total_rounds < 1:
+		total_rounds = _total_range_rounds()
+	wave_count = maxi(round_number, 1)
+	wave_label.text = "[i]%s" % _wave_display_name(wave_count, total_rounds)
+	start_tween(wave_panel, _original_position, _original_modulate)
+
+
+func _total_range_rounds() -> int:
+	var round_manager := get_tree().get_first_node_in_group('round_manager')
+	if round_manager and round_manager.has_method('get_current_range_round_count'):
+		return maxi(int(round_manager.get_current_range_round_count()), 1)
+	return _total_waves_in_round()
+
+
 func _total_waves_in_round() -> int:
 	var round_manager := get_tree().get_first_node_in_group('round_manager')
 	if round_manager and round_manager.has_method('get_current_round_wave_count'):
@@ -98,11 +118,15 @@ func _total_waves_in_round() -> int:
 	return 3
 
 
-## First–Ninth for waves 1–9; "Wave N" from 10 up. Last wave is always Final Wave.
+## First–Ninth for rounds 1–9; "Round N" from 10 up.
+## Last banner is "Final Round" only when there is more than one round/wave.
 func _wave_display_name(wave: int, total_waves: int) -> String:
-	if wave >= total_waves:
-		return 'Final Wave'
+	if total_waves > 1 and wave >= total_waves:
+		return 'Final Round'
+	return _ordinal_round_name(wave)
 
+
+func _ordinal_round_name(wave: int) -> String:
 	const ORDINALS := [
 		'First',
 		'Second',
@@ -115,9 +139,26 @@ func _wave_display_name(wave: int, total_waves: int) -> String:
 		'Ninth',
 	]
 	if wave >= 1 and wave <= ORDINALS.size():
-		return '%s Wave' % ORDINALS[wave - 1]
+		return '%s Round' % ORDINALS[wave - 1]
+	return 'Round %d' % wave
 
-	return 'Wave %d' % wave
+
+## Checkpoint pop: "CHECKPOINT" banner, then the next ordinal round banner.
+func play_checkpoint_sequence(next_round_number: int, total_rounds: int = -1) -> void:
+	await play_named_banner("CHECKPOINT")
+	if total_rounds < 1:
+		total_rounds = _total_range_rounds()
+	wave_count = maxi(next_round_number, 1)
+	await play_named_banner(_wave_display_name(wave_count, total_rounds))
+
+
+func play_named_banner(text: String) -> void:
+	show()
+	if wave_panel:
+		wave_panel.show()
+	wave_label.text = "[i]%s" % text
+	wave_label.modulate.a = 1.0
+	await start_tween(wave_panel, _original_position, _original_modulate)
 
 func start_bonus() -> void:
 	wave_label.text = "[font_size=150]BONUS!"
@@ -153,9 +194,7 @@ func start_clear() -> void:
 	result_has_been_shown_this_wave = true
 	clear_has_been_called_this_wave = true
 	
-	clear_text_label.text = "[i]Wave Clear!"
-	if wave_count >= _total_waves_in_round():
-		clear_text_label.text = "[i]Round Clear!"
+	clear_text_label.text = "[i]Round Clear!"
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
 
 func add_strike() -> void:
@@ -221,6 +260,7 @@ func start_tween(panel: Control, original_position: Vector2, original_modulate: 
 	tween.tween_property(panel, "modulate:a", 0.0, fade_out_time)
 	tween.parallel().tween_property(panel, "position:x", 200.0, fade_out_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).as_relative()
 	tween.parallel().tween_callback(fade_in_sfx.play.bind(0.5))
+	await tween.finished
 	
 	
 	
@@ -267,6 +307,13 @@ func reset_strikes() -> void:
 	_restore_strike_panel_position()
 	if has_node("Strike_system2") and $Strike_system2.has_method("reset"):
 		$Strike_system2.reset()
+
+
+func play_checkpoint_strike_clear() -> void:
+	if strike_hud and strike_hud.has_method("play_checkpoint_clear_sequence"):
+		await strike_hud.play_checkpoint_clear_sequence()
+	strikes_int = 0
+	strike_label.text = ''
 
 
 func _restore_strike_panel_position() -> void:

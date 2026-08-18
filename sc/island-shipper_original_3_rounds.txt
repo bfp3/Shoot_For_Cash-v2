@@ -1,45 +1,40 @@
 island shipper
-range moss
+range moss	
 	round
 		# Moss Round 1: Start with a single rock
 		# This takes 50 seconds to complete
-
-		#balloon a4
+		
+		balloon a4
 		rock 1 a1
 		wait until clear
 		rock-black 2
-		rock 8
-		wait until clear
-		balloon-check
-
-
-
+		
+	round
+		# Moss Round 2: Single rocks that are trickier to hit
 		rock 1 a1
-		wait until clear
-		rock 1 a1
-		wait until clear
+		wait 1000
 		rock 6 a6
 		rock 7 a7
 		rock 8 a8
 
-		wait until clear
+		wait 2500
 
 		rock 1 a1
 		rock 4 a4
 		rock 8 a8
 
-		wait until clear
+		wait 1500
 		rock 1 a1
 		rock 2 a2
 		rock 3 a3
 
-		wait until clear
+		wait 1500
 		rock 2 a2
 		rock 5 a5
 		rock 8 a8
-		wait until clear
 
 
+		wait 4000
 		rock 8 a8
 		rock 4 a4
 		wait 2000
@@ -52,9 +47,8 @@ range moss
 		rock 4 a4
 		rock 5 a5
 		rock 6 a6
-		balloon-check
 
-		#wait 4000
+		wait 4000
 		rock 2 a6
 		wait 0
 		rock 6 a6
@@ -73,9 +67,9 @@ range moss
 		wait 0
 		rock 6 a6
 		wait until clear
-		balloon-check
-
-		#round
+		checkpoint
+		
+	round
 		rock-black 2 b2
 		wait 1000
 		rock-black 7 b7
@@ -120,14 +114,14 @@ range moss
 		wait 0
 		rock-black 4 a4
 		wait until clear
+		checkpoint
 range redd
 	# Round 1
 	round
-		smokecan 1
-		smokecan 2
+		rock 3
 		wait 400
 		rock 6
-		wait until clear
+		repeat 2
 
 		# Round 2
 		#round
@@ -139,7 +133,7 @@ range redd
 		wait 250
 		rock 5
 		rock 7
-
+		repeat 3
 
 		# Round 3
 		#round
@@ -151,8 +145,7 @@ range redd
 		wait 2000
 		smokecan 1
 		smokecan 8
-		wait until clear
-		balloon-check
+		repeat 3
 
 		#round
 		smokecan
@@ -164,10 +157,8 @@ range redd
 		repeat 3
 
 		wait until clear
-		balloon-check
-
-
-
+		checkpoint
+	round
 		# Round 5 
 		#round
 		smokecan 1
@@ -224,10 +215,8 @@ range redd
 		rock 4
 
 		wait until clear
-		balloon-check
-
-
-
+		checkpoint
+	round
 		# Round 9
 		#round
 		rock 2 a5
@@ -328,9 +317,7 @@ range redd
 		rock 3 a4
 
 		wait until clear
-
-
-
+		checkpoint
 range glory
 	# Round 1
 	round
@@ -348,7 +335,7 @@ range glory
 		wait 200
 		rock 4 a4
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		rock 1 a8
 		wait 1000
@@ -367,7 +354,7 @@ range glory
 		rock 4 a4
 
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		balloon c3
 		balloon c6
@@ -380,7 +367,7 @@ range glory
 		rock
 		rock
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		rock 1 A4
 		wait 300
@@ -398,7 +385,7 @@ range glory
 		rock 4 b4
 
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		rock 2
 		rock 4
@@ -409,7 +396,7 @@ range glory
 		rock 8
 
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		rock
 		wait 5000
@@ -426,7 +413,7 @@ range glory
 		rock 1 a8
 
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		rock 2 c3
 		wait 2000
@@ -440,7 +427,7 @@ range glory
 		rock 6 c4
 
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		rock 1 b3
 		wait 2000
@@ -460,7 +447,7 @@ range glory
 		rock 2 c6
 
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		rock 1 b3
 		wait 2000
@@ -477,7 +464,7 @@ range glory
 		rock 2 a3
 
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		rock 1 a8
 		wait 2000
@@ -497,7 +484,7 @@ range glory
 		rock 6 a5
 
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		rock ? a4
 		rock ? a4
@@ -509,7 +496,7 @@ range glory
 		rock ? a4
 
 		wait until clear
-		balloon-check
+		checkpoint
 	round
 		balloon A1
 		balloon A2
@@ -537,9 +524,13 @@ range glory
 		
 		wait 3000
 		
-		rock 3 	
-		wait until clear
+		rock 3 
+		
 
+
+	
+		wait until clear
+		checkpoint
 range noir
 	round
 		rock 3
@@ -725,8 +716,11 @@ range noir
 		balloon A8
 		repeat 3
 
-		wait until clear
 
+
+
+		wait until clear
+		checkpoint
 range boss
 	boss-timer 60000
 	round
@@ -836,8 +830,12 @@ range boss
 		wait 2000
 		
 		rock-black 1 a7
+		
+		
+		
+		
 		wait until clear
-
+		checkpoint
 range boss-2
 	boss-timer 90000
 	round
@@ -1012,9 +1010,12 @@ range boss-2
 		red-avoider
 		wait
 		red-avoider
-	
+		
+		
+		
+		
 		wait until clear
-
+		checkpoint
 range jetz
 	round
 		rock 4 a4
@@ -1356,5 +1357,7 @@ range jetz
 		rock-avoider
 		wait 4000
 		rock
-		wait until clear
+	
 		repeat 99
+		wait until clear
+		checkpoint
