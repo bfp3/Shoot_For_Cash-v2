@@ -62,6 +62,7 @@ func arrive_from_below() -> void:
 
 func _start_bob() -> void:
 	_stop_bob()
+	#$Checkpoint.play()
 	_bob_tween = create_tween()
 	_bob_tween.set_ease(Tween.EASE_IN_OUT)
 	_bob_tween.set_trans(Tween.TRANS_SINE)
@@ -107,6 +108,7 @@ func start_destroyed_process() -> void:
 func _consume_by_player() -> void:
 	if _consumed:
 		return
+	$Checkpoint.play()
 	_consumed = true
 	rock_activated = false
 	_stop_bob()

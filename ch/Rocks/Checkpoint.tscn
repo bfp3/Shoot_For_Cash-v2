@@ -2,16 +2,46 @@
 
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="1_balloon"]
 [ext_resource type="Script" uid="uid://1nciv6xvqfrj" path="res://ch/Rocks/checkpoint.gd" id="2_script"]
-[ext_resource type="Material" uid="uid://hn35w2qwra5g" path="res://res/balloon_blue_mat.tres" id="3_o2rg3"]
+[ext_resource type="Material" uid="uid://bcrtdxo7t4poh" path="res://res/red_balloon_mat_2.tres" id="3_o2rg3"]
+[ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="4_lwyt0"]
 
 [node name="Checkpoint" unique_id=397951874 instance=ExtResource("1_balloon")]
 script = ExtResource("2_script")
 balloon_type = 1
 
 [node name="small_rock2" parent="Mesh" parent_id_path=PackedInt32Array(950426368) index="0" unique_id=2102516094]
+transform = Transform3D(1.705, 0, 0, 0, 1.705, 0, 0, 0, 1.705, 0, 0.123, 0)
 material_override = ExtResource("3_o2rg3")
 
-[node name="Label3D" parent="Mesh/small_rock2/Decal3" parent_id_path=PackedInt32Array(270295909) index="0" unique_id=2109645227]
-pixel_size = 0.0025
+[node name="string" parent="Mesh/small_rock2" index="0" unique_id=2071839589]
+visible = false
+
+[node name="string2" parent="Mesh/small_rock2" index="1" unique_id=1080372080]
+visible = false
+
+[node name="string3" parent="Mesh/small_rock2" index="2" unique_id=527435349]
+visible = false
+
+[node name="Decal" parent="Mesh/small_rock2" index="3" unique_id=425748152]
+modulate = Color(1, 0.7176471, 0, 1)
+
+[node name="Decal2" parent="Mesh/small_rock2" index="4" unique_id=382183238]
+modulate = Color(1, 1, 1, 1)
+
+[node name="Decal3" parent="Mesh/small_rock2" index="5" unique_id=270295909]
+modulate = Color(1, 0.7176471, 0, 1)
+
+[node name="Label3D" parent="Mesh/small_rock2/Decal3" index="0" unique_id=2109645227]
+transform = Transform3D(3.7140346e-08, 1.0207043, -0.24035415, 7.37836e-08, 0.14534025, 1.6879736, 1.705, -2.8523768e-08, -6.7811115e-08, -0.011225283, 0.06383178, 0)
+pixel_size = 0.003
+modulate = Color(0.89, 0.8653767, 0.15130001, 1)
+outline_modulate = Color(0, 0, 0, 1)
 text = "C"
 font_size = 200
+outline_size = 24
+
+[node name="Checkpoint" type="AudioStreamPlayer" parent="." index="16" unique_id=1932517619]
+stream = ExtResource("4_lwyt0")
+volume_db = -42.0
+pitch_scale = 1.2
+bus = &"ReverbBus"

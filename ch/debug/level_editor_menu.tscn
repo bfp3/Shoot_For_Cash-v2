@@ -76,13 +76,17 @@ chases the crosshair — keep the reticle off it or take a strike
 [color=#C70102]rock-chaser[/color] / [color=#C70102]rock-chaser 3 A2[/color]
 flees the reticle — hold aim on it for 2s, then shoot
 
-[color=#C70102]wait[/color] / [color=#C70102]wait 200[/color] delay before next action default 1000ms
+[color=#C70102]wait[/color]
+hold the next command until live rocks / pineapples / balloon-checks are gone (oranges and balloons ignored)
 
-[color=#C70102]wait until clear[/color]
-hold the next command until live rocks / balloons / pineapples are gone (oranges ignored)
+[color=#C70102]wait 200[/color]
+delay that many milliseconds before the next rock
 
 [color=#C70102]balloon-check[/color]
-appears until shot — saves progress so a strike-out resumes from here (does not start a new round)
+appears until shot — saves progress so a strike-out resumes from here (does not start a new round, does not send balloons away)
+
+[color=#C70102]clear[/color]
+send leftover balloons away (+$10 each)
 
 [color=#C70102]repeat[/color] / [color=#C70102]repeat 3[/color]
 section = N separate waves
@@ -93,6 +97,10 @@ multiple repeats = more waves
 place a balloon (bare = random)
 
 [color=#C70102]no-lives[/color] no strikes this round
+
+[color=#C70102]difficulty-easy[/color] lighter rock gravity
+
+[color=#C70102]difficulty-normal[/color] default rock gravity
 
 [color=#C70102]difficulty-hard[/color] heavier rock gravity, faster bullets
 

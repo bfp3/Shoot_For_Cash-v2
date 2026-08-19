@@ -36,7 +36,7 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 	var data = MULTI_SHOT_DATA[multiplier]
 
 	#gl_PlayerState.add_cash(data.reward)
-	gl_PlayerState.add_to_cash_pool(data.reward)
+	gl_PlayerState.add_to_cash_pool(data.reward, pos)
 
 	#multi_label.text = "%s SHOT\n%d$" % [data.name, data.reward]
 	#multi_label.text = data.name

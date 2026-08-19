@@ -294,6 +294,22 @@ func set_level_environment(env: Environment) -> void:
 	set("environment", env)
 
 
+func dim_final_round_environment(amount: float, duration: float) -> void:
+	var env := get("environment") as Environment
+	if env == null:
+		return
+	var working := env.duplicate() as Environment
+	if working == null:
+		return
+	set("environment", working)
+	var ambient_to := maxf(working.ambient_light_energy - amount, 0.0)
+	var bg_to := maxf(working.background_energy_multiplier - amount, 0.0)
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(working, "ambient_light_energy", ambient_to, duration)
+	tween.tween_property(working, "background_energy_multiplier", bg_to, duration)
+
+
 func _ensure_dof_attrs() -> void:
 	if _dof_attrs != null and is_instance_valid(_dof_attrs):
 		return

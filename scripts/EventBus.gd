@@ -32,6 +32,8 @@ signal update_money()
 signal cash_pool_changed(new_amount)
 signal cash_pool_banked(amount, previous_cash, new_total_cash)
 signal cash_pool_forfeited(amount)
+## World position of the last cash-pool gain (rock / target). INF if unknown.
+var cash_gain_world_origin := Vector3.INF
 
 signal actor_event()
 

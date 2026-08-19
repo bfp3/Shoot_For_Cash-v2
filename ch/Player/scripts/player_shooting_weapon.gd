@@ -27,8 +27,6 @@ var power_bullet_delay := 0.5
 var shot_with_right_click := false
 var temp_label_pos := Vector3.ZERO
 
-
-var auto_fire := false
 var current_xray_targets : Array = []
 var pitch_adjustment := 0.02
 
@@ -58,8 +56,7 @@ func apply_upgrades() -> void:
 	power_bullet_damage = player.power_bullet_damage
 	#power_bullet_delay = player.power_bullet_delay
 	power_bullet_delay = 0.05
-	if gl_PlayerState.dataset.power_auto_fire > 0:
-		auto_fire = true
+
 
 	if active_bullet_scene == null:
 		active_bullet_scene = BULLET_STAGE_1
@@ -516,8 +513,6 @@ func play_missed_sounds() -> void:
 	%cannot_shoot_sfx.play(0.91)
 
 func shoot_bullet_without_target() -> void:
-	if auto_fire:
-		return
 	
 	#%cannot_shoot_sfx.play(0.91)
 	#$"../SFX/Flicker_sound".play()

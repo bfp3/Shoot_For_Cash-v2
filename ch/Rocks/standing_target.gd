@@ -180,7 +180,7 @@ func update_hit() -> void:
 	%GoldParticles.emitting = false
 	$Pineapple_sound_hit.play()
 	disable_collision()
-	gl_PlayerState.log_hit('orange', 'orange', cash_value)
+	gl_PlayerState.log_hit('orange', 'orange', cash_value, global_position)
 	$Pineapple_shot_explode.play()
 	
 	await get_tree().create_timer(0.3).timeout

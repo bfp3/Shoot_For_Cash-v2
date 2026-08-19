@@ -47,6 +47,12 @@ const ENV_PATH_BY_LAYOUT := {
 	"res://sc/All_level_layouts/level_layout_island_2_boss.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
 }
 
+const FINAL_ROUND_ATMOSPHERE_SEC := 5.0
+const FINAL_ROUND_LIGHT_DIM := 0.3
+var _final_atmosphere_tween: Tween
+var _final_light_snapshot: Array = []
+var _final_world_env_snapshot: Array = []
+
 ## Cached PackedScenes so revisiting Moss/Redd/etc. does not re-parse from disk.
 var _layout_cache: Dictionary = {} # path -> PackedScene
 var _layout_load_requested: Dictionary = {} # path -> true
@@ -162,7 +168,7 @@ var egg_pulse : Egg
 var no_lives_this_round := false
 ## Debug chat `no-lives` / `lives` — persists across rounds until toggled off.
 var debug_no_lives := false
-## `difficulty-hard` / `difficulty-expert` for the active range.
+## `difficulty-easy` / `difficulty-normal` / `difficulty-hard` / `difficulty-expert` for the active range.
 var difficulty_this_round := ""
 
 ## Active bonus subtype from the level file (`protect`, etc.). Empty = normal round.
@@ -943,7 +949,7 @@ func _hide_round_cash_hud() -> void:
 		hud.hide_for_menus()
 
 
-## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-hard` from the active sequence entry only.
+## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-easy` from the active sequence entry only.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
 	bonus_type_this_round = ""
@@ -1077,6 +1083,7 @@ func handle_rock_missed() -> void:
 # Three strikes = instant loss. This short-circuits the round/wave state
 # machine entirely rather than routing through WAVE_END/ROUND_END.
 func handle_three_strikes() -> void:
+	restore_final_round_atmosphere()
 	wave_ending = true
 	player_failed = true
 	success = false
@@ -1592,10 +1599,16 @@ func update_wave_start() -> void:
 	if force_shop_open or _level_editor_finishing:
 		return
 	
-	if egg_pulse:
-		egg_pulse.activate_flash()
+	play_pulse_sound()
 		
 	EventBus.instance.egg_pulsed.emit()
+	
+
+
+func play_pulse_sound() -> void:
+	$EggPulseSfx.play()
+	await get_tree().create_timer(0.1, false).timeout
+	$EggPulseSfxReverse.play()
 	
 	
 func update_wave_end() -> void:
@@ -1675,7 +1688,7 @@ func _copy_spawn_list(source: Array) -> Array:
 
 
 ## Play a whole range as one script. `repeat` sections stay in order, with
-## `wait until clear` between copies so the next section cannot overlap.
+## `wait` (until clear) between copies so the next section cannot overlap.
 func _flatten_round_spawns(round_data) -> Array:
 	if round_data is Array:
 		return _copy_spawn_list(round_data)
@@ -1701,6 +1714,7 @@ func _flatten_round_spawns(round_data) -> Array:
 
 
 func update_round_end() -> void:
+	restore_final_round_atmosphere()
 	if _boss_mode:
 		await _finish_boss_round()
 		return
@@ -2220,6 +2234,7 @@ func _environment_path_for_level(level_id: String, layout_path: String = "") -> 
 
 ## Switch the player Camera3D environment for the destination level.
 func apply_level_environment(level_id: String, layout_path: String = "") -> void:
+	restore_final_round_atmosphere(false)
 	var path := _environment_path_for_level(level_id, layout_path)
 	var cam = get_tree().get_first_node_in_group("player_cam")
 	if cam and cam.has_method("set_level_environment_from_path"):
@@ -2228,6 +2243,75 @@ func apply_level_environment(level_id: String, layout_path: String = "") -> void
 		var env := load(path) as Environment
 		if env:
 			cam.set("environment", env)
+
+
+func play_final_round_atmosphere() -> void:
+	_snapshot_final_round_lights()
+	if _final_atmosphere_tween and _final_atmosphere_tween.is_valid():
+		_final_atmosphere_tween.kill()
+	_final_atmosphere_tween = create_tween()
+	_final_atmosphere_tween.set_parallel(true)
+	for item in _final_light_snapshot:
+		var light = item.get("light")
+		if light == null or not is_instance_valid(light):
+			continue
+		var from_energy := float(item.get("energy", light.light_energy))
+		var to_energy := maxf(from_energy - FINAL_ROUND_LIGHT_DIM, 0.0)
+		_final_atmosphere_tween.tween_property(light, "light_energy", to_energy, FINAL_ROUND_ATMOSPHERE_SEC)
+	var cam = get_tree().get_first_node_in_group("player_cam")
+	if cam and cam.has_method("dim_final_round_environment"):
+		cam.dim_final_round_environment(FINAL_ROUND_LIGHT_DIM, FINAL_ROUND_ATMOSPHERE_SEC)
+	for we in get_tree().get_nodes_in_group("world_env"):
+		if not (we is WorldEnvironment) or we.environment == null:
+			continue
+		_final_world_env_snapshot.append({
+			"node": we,
+			"env": we.environment,
+		})
+		var working := we.environment.duplicate() as Environment
+		if working == null:
+			continue
+		we.environment = working
+		var ambient_to := maxf(working.ambient_light_energy - FINAL_ROUND_LIGHT_DIM, 0.0)
+		var bg_to := maxf(working.background_energy_multiplier - FINAL_ROUND_LIGHT_DIM, 0.0)
+		_final_atmosphere_tween.tween_property(working, "ambient_light_energy", ambient_to, FINAL_ROUND_ATMOSPHERE_SEC)
+		_final_atmosphere_tween.tween_property(working, "background_energy_multiplier", bg_to, FINAL_ROUND_ATMOSPHERE_SEC)
+	await get_tree().create_timer(FINAL_ROUND_ATMOSPHERE_SEC, false).timeout
+
+
+func restore_final_round_atmosphere(reapply_env: bool = true) -> void:
+	if _final_atmosphere_tween and _final_atmosphere_tween.is_valid():
+		_final_atmosphere_tween.kill()
+	_final_atmosphere_tween = null
+	for item in _final_light_snapshot:
+		var light = item.get("light")
+		if light == null or not is_instance_valid(light):
+			continue
+		light.light_energy = float(item.get("energy", light.light_energy))
+	_final_light_snapshot.clear()
+	for item in _final_world_env_snapshot:
+		var node = item.get("node")
+		if node == null or not is_instance_valid(node):
+			continue
+		node.environment = item.get("env")
+	_final_world_env_snapshot.clear()
+	if reapply_env:
+		var level_id := String(gl_PlayerState.dataset.get("level_name", ""))
+		var path := _environment_path_for_level(level_id)
+		var cam = get_tree().get_first_node_in_group("player_cam")
+		if cam and cam.has_method("set_level_environment_from_path"):
+			cam.set_level_environment_from_path(path)
+
+
+func _snapshot_final_round_lights() -> void:
+	_final_light_snapshot.clear()
+	_final_world_env_snapshot.clear()
+	for light in get_tree().get_nodes_in_group("directional_light"):
+		if light is DirectionalLight3D:
+			_final_light_snapshot.append({
+				"light": light,
+				"energy": light.light_energy,
+			})
 
 
 func _reattach_heavy_layout_nodes(detached: Array) -> void:
@@ -2362,13 +2446,6 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	if music_manager and music_manager.has_method("stop_opening_song"):
 		music_manager.stop_opening_song()
 
-	if use_transition_overlay:
-		if scene_transition_screen.has_method('set_destination_place'):
-			scene_transition_screen.set_destination_place(level_id)
-		scene_transition_screen.next_level_start()
-		#await get_tree().create_timer(1.0, false).timeout
-		#if coming_from_start:
-			#await get_tree().create_timer(1.0, false).timeout
 
 	# Replace level layout under the fade / map.
 	if level_layout.get_child_count() > 0:

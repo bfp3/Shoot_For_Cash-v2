@@ -1,16 +1,26 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://bcrtdxo7t4poh"]
 
-[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="1_s0ccv"]
+[sub_resource type="Gradient" id="Gradient_jqb7k"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.54214126, 0.84749454)
+colors = PackedColorArray(1, 0.9666667, 0, 1, 1, 0.9333334, 0, 1, 1, 0.9333334, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_s0ccv"]
+gradient = SubResource("Gradient_jqb7k")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [resource]
 transparency = 2
-alpha_scissor_threshold = 0.5
+alpha_scissor_threshold = 0.2
 alpha_antialiasing_mode = 0
-albedo_color = Color(0.83, 0.33200002, 0, 1)
-albedo_texture = ExtResource("1_s0ccv")
-roughness = 0.5
-emission_enabled = true
-uv1_scale = Vector3(15, 15, 15)
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(1.353256, 1.353256, 1.353256, 1)
+albedo_texture = SubResource("GradientTexture2D_s0ccv")
+roughness = 0.6
+emission = Color(1, 0.9333334, 0, 1)
+uv1_scale = Vector3(20.008, 9.06, 9.06)
 uv1_triplanar_sharpness = 68.13666
 stencil_flags = 2
 stencil_color = Color(1, 0.9533333, 0.92, 1)

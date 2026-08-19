@@ -35,11 +35,11 @@ const SCOPE_EXPAND_MAX_SCALE := 1.85
 @export var scope_expand_fire_rate_scale := 5.7
 ## Resting upgrade values — restored when not holding shrink/expand.
 var _base_bullet_speed := 0.3
-var _base_gun_fire_rate := 0.35
+var _base_gun_fire_rate := 0.1
 ## True shop/upgrade values before alternate-weapon scales.
 var _upgrade_bullet_speed := 0.3
 var _upgrade_gun_fire_rate := 0.35
-## `difficulty-hard` / `difficulty-expert` override. -1 = use upgrades.
+## `difficulty-*` override. -1 = use upgrades.
 var _difficulty_bullet_speed := -1.0
 
 @export var can_right_click_shoot := false
@@ -855,8 +855,6 @@ func remove_sky_mine() -> void:
 	$CanvasLayer/Crosshair/Inner_scope/center_container.modulate = Color('FFFFFF')
 
 
-func apply_auto_fire() -> void:
-	%Auto_fire.start()
 
 func tween_scope(_scale_multiplier : float, _dur : float = 0.75) -> void:
 	scope_base_scale = _scale_multiplier

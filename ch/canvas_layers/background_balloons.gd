@@ -12,27 +12,28 @@ extends Control
 @onready var balloons_2: TextureRect = $Balloons2
 @onready var balloons_3: TextureRect = $Balloons3
 
-var rotation_amount := 0.1
-var rotation_direction := true
 var start := false
+
+func _ready() -> void:
+	balloon_rotation_tween()
 
 func _process(delta: float) -> void:
 	if !start:
 		return
 
-	rotation_amount = 0.1
-	if rotation_direction:
-		self.rotation += rotation_amount * delta
-		if rotation >= 0.2:
-			rotation_direction = false
-	else:
-		self.rotation -= rotation_amount * delta
-		if rotation <= -0.2:
-			rotation_direction = true
-
 	move_balloon(balloons, balloon_1_speed, delta)
 	move_balloon(balloons_2, balloon_2_speed, delta)
 	move_balloon(balloons_3, balloon_3_speed, delta)
+
+func balloon_rotation_tween() -> void:
+	var dur := randf_range(2.0, 2.2)
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, "rotation", -0.25, dur)
+	tween.tween_property(self, "rotation", 0.25, dur)
+	await tween.finished
+	
+	
+	balloon_rotation_tween()
 
 func move_balloon(balloon: TextureRect, speed: float, delta: float) -> void:
 	balloon.position.y -= speed * delta

@@ -55,7 +55,7 @@ const RESTART_DATASET := {
 	
 	"power_bonus_round_pineapples": 0,
 	
-	"power_auto_fire" : 0,
+
 	"power_balloon_buster" : 0,
 	"power_max_items_in_shop" : 3,
 	"power_time_upgrade" : 0,
@@ -108,7 +108,6 @@ const DEFAULT_DATASET := {
 	
 	"power_bonus_round_pineapples": 0,
 	
-	"power_auto_fire" : 0,
 	"power_balloon_buster" : 0,
 	"power_max_items_in_shop" : 3,
 	"power_time_upgrade" : 0,
@@ -251,11 +250,12 @@ func add_bonus(value : int) -> void:
 	add_to_cash_pool(value)
 
 
-func add_to_cash_pool(value: int) -> void:
+func add_to_cash_pool(value: int, world_origin: Vector3 = Vector3.INF) -> void:
 	if value == 0:
 		return
 	dataset.bonus_cash = int(dataset.bonus_cash) + value
 	if EventBus.instance:
+		EventBus.instance.cash_gain_world_origin = world_origin
 		EventBus.instance.cash_pool_changed.emit(int(dataset.bonus_cash))
 
 
@@ -305,7 +305,7 @@ func get_place_cash_earned(place_id: String) -> int:
 	return int(entry.get("cash_earned", 0))
 
 	
-func log_hit(item:String, item_type:String, value:int):
+func log_hit(item:String, item_type:String, value:int, world_origin: Vector3 = Vector3.INF):
 	var rock_data : Dictionary = gl_DataSet.dataset_float
 	if not rock_data.has(item):
 		printt('error in log hit: ', " ITEM:", item , " ITEM TYPE:", item_type )
@@ -316,7 +316,7 @@ func log_hit(item:String, item_type:String, value:int):
 	if value < 0:
 		dataset.fines = dataset.fines + value
 	else:
-		add_to_cash_pool(value)
+		add_to_cash_pool(value, world_origin)
 		
 	var d: Dictionary = {
 		"round": dataset.round

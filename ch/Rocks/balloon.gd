@@ -7,6 +7,7 @@ const BALLOON_WHITE_MAT = preload('uid://bwa2khv4jv2fv')
 const BALLOON_ORANGE_MAT = preload('uid://bg5auabbq8fo8')
 const BALLOON_RED_MAT = preload('uid://c5lrichw3wfce')
 const BALLOON_GREY_MAT = preload('uid://dgrbglmgp2fad')
+const BALLOON_YELLOW_MAT = preload('uid://bcrtdxo7t4poh')
 
 var pitch_adjustment := 0.02
 
@@ -61,6 +62,9 @@ enum State {
 }
 @export var pulse_magnitude := 0.8
 var behind_player := true
+var occupy_row := -1
+var occupy_column := -1
+var slot_tween: Tween
 var current_state : State
 
 
@@ -109,12 +113,13 @@ func _ready() -> void:
 
 
 
+
 func configure_balloon_colour() -> void:
 	var balloon_mesh : MeshInstance3D = $Mesh/small_rock2
 	match balloon_type:
 		BalloonType.WHITE:
 			#balloon_mesh.material_override = BALLOON_WHITE_MAT
-			balloon_mesh.material_override = BALLOON_BLUE_MAT
+			balloon_mesh.material_override = BALLOON_YELLOW_MAT
 			original_penalty_amount = penalty_amount
 			#$Decal_Container.show()
 			
@@ -134,7 +139,7 @@ func configure_balloon_colour() -> void:
 			original_penalty_amount = penalty_amount
 			
 		BalloonType.BLUE:
-			#balloon_mesh.material_override = BALLOON_BLUE_MAT
+			balloon_mesh.material_override = BALLOON_YELLOW_MAT
 			penalty_amount = 0
 			original_penalty_amount = penalty_amount
 			
@@ -346,11 +351,11 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 			disable_collision()
 			
 		BalloonType.WHITE:
-			gl_PlayerState.log_hit(rock_type_name, current_rock_type, 0)
+			_apply_script_balloon_shot()
 			start_destroyed_process()
 
 		BalloonType.RED:
-			gl_PlayerState.log_hit('hazard_type_1', 'balloon', -30)
+			_apply_script_balloon_shot()
 			#EventBus.instance.hazard_hit.emit()
 			start_destroyed_process()
 			
@@ -393,7 +398,7 @@ func start_destroyed_process() -> void:
 		cash_value = balloon_carrier_penalty
 
 	
-	if balloon_type == BalloonType.RED:
+	if balloon_type == BalloonType.RED and not _script_balloon_uses_container_rules():
 		cash_value = int(gl_DataSet.get_value('balloon_orange', 0))
 		print("balloon value is ", cash_value)
 		money_label_3d.money_is_money(global_position, cash_value)
@@ -419,6 +424,9 @@ func start_destroyed_process() -> void:
 
 
 func _leave_play_and_notify_sequence() -> void:
+	occupy_row = -1
+	occupy_column = -1
+	kill_slot_tween()
 	var parent := get_parent()
 	if parent and parent.has_method("note_balloon_left_play"):
 		parent.note_balloon_left_play()
@@ -443,12 +451,16 @@ func play_destroy_sfx() -> void:
 	$take_damage_sfx.play(0.02)
 
 func move_balloon_in_front_of_player() -> void:
+
+	$balloon_blowing_up.play()
+	$move_balloon.play()
+	
 	start_gentle_pan()
 	$Mesh.scale = Vector3.ONE
 	rock_activated = true
 	rock_destroyed = false
 	add_to_group('Target')
-	%Marked.hide()
+
 	$AnimationPlayer.play('idle')
 	player_has_marked_balloon = false
 	chain_penalty = 2
@@ -459,10 +471,10 @@ func move_balloon_in_front_of_player() -> void:
 		start_pos = orig_start_pos
 		behind_player = false
 		show()
-		await get_tree().create_timer(1.5).timeout
-		$balloon_blowing_up.play()
-		await get_tree().create_timer(1.5).timeout
-		$move_balloon.play()
+		#await get_tree().create_timer(1.5).timeout
+		#$balloon_blowing_up.play()
+		#await get_tree().create_timer(1.5).timeout
+		#$move_balloon.play()
 	
 	else:
 		behind_player = false
@@ -714,8 +726,60 @@ func _sky_mine_hit_after_delay(target: Node, delay: float, _chain_penalty: int) 
 			target.sky_mine_blast()
 
 
+func _script_balloon_uses_container_rules() -> bool:
+	var host := get_parent()
+	return host != null and ("shooting_balloon_gives_strike" in host)
+
+
+func _apply_script_balloon_shot() -> void:
+	if not _script_balloon_uses_container_rules():
+		if balloon_type == BalloonType.RED:
+			gl_PlayerState.log_hit('hazard_type_1', 'balloon', -30)
+		else:
+			gl_PlayerState.log_hit(rock_type_name, current_rock_type, 0)
+		return
+	var as_strike := bool(get_parent().shooting_balloon_gives_strike)
+	if as_strike:
+		gl_PlayerState.add_strike()
+	else:
+		gl_PlayerState.log_hit(rock_type_name, current_rock_type, -10)
+
+
+func kill_slot_tween() -> void:
+	if slot_tween and slot_tween.is_valid():
+		slot_tween.kill()
+	slot_tween = null
+
+
+func drift_away_for_checkpoint() -> void:
+	if not rock_activated:
+		return
+	kill_slot_tween()
+	occupy_row = -1
+	occupy_column = -1
+	rock_activated = false
+	stop_gentle_pan()
+	disable_collision()
+	if is_in_group('Target'):
+		remove_from_group('Target')
+	set_collision_layer_value(1, false)
+	is_deactivated = true
+	_leave_play_and_notify_sequence()
+	var tween := create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self, "global_position:z", 4.0, 3.0).as_relative()
+	tween.parallel().tween_property(self, "global_position:y", 15.0, 3.5)
+	tween.parallel().tween_property(self, "global_position:x", -6.0, 3.5).as_relative()
+	await tween.finished
+	var host := get_parent()
+	if host and host.has_method("add_balloon_back_into_list"):
+		host.add_balloon_back_into_list(self)
+
+
 func end_of_the_round_pop_balloon(_added_cash : int) -> void:
 
+	kill_slot_tween()
+	occupy_row = -1
+	occupy_column = -1
 	rock_activated = false
 	stop_gentle_pan()
 	disable_collision()

@@ -20,7 +20,7 @@ const island_name_stamp_duration := 0.2
 const island_name_stamp_start_scale := 8.0
 ## Per-island label text colours (index = island). Empty = keep scene default.
 const island_name_text_colors: Array[Color] = [
-	Color("5e544b"),
+	Color("ffffffff"),
 	Color("FFFFFF"),
 	Color("5e544b"),
 	Color("5e544b"),
@@ -28,7 +28,7 @@ const island_name_text_colors: Array[Color] = [
 ]
 ## Per-island panel colours behind the island name.
 const island_name_panel_colors: Array[Color] = [
-	Color(0.859, 0.827, 0.8, 1),
+	Color("5e544b"),
 	Color(0.86, 0.723, 0.611, 1),
 	Color(0.921569, 0.878431, 0.847059, 1),
 	Color(0.921569, 0.878431, 0.847059, 1),

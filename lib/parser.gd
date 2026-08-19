@@ -104,23 +104,28 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
 ##   `rock A4` is invalid — column must be a number or `?` before the aim cell.
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
-## wait: {cmd, ms} — delay before the next rock; defaults to 1000ms.
-## wait until clear / wait-until-clear: {cmd} — hold the next command until
-##   nothing is still active in the level (rocks, balloons, pineapples,
-##   smokecans, balloon-checks, bonus targets). Oranges are ignored. A miss
+## wait: {cmd} — hold until the sky is clear (same as old `wait until clear`).
+## wait 0 / wait 600: {cmd, ms} — delay that many milliseconds before the next rock.
+## wait until clear / wait-until-clear: still accepted as an alias of bare `wait`.
+##   Hold the next command until live rocks / pineapples / smokecans / balloon-checks
+##   / bonus targets are gone. Oranges and regular balloons are ignored. A miss
 ##   does not skip this wait. Objects count as gone as soon as their destroy
 ##   process starts (do not wait for pop tweens).
 ## balloon-check / balloon check: {cmd} — spawn a checkpoint balloon. Shooting
 ##   it saves this script cursor as the resume point after a strike-out.
-##   It does not jump rounds or reset strikes. `checkpoint` is accepted as an alias.
+##   It does not jump rounds, reset strikes, or send leftover balloons away.
+##   `checkpoint` is accepted as an alias.
 ##   If no balloon-check has been shot, fail restarts the range from the beginning.
+## clear: {cmd} — send all live round balloons away (+$10 each). Does not pop
+##   a balloon-check. `wait clear` is still wait-until-clear, not this command.
 ## repeat: {cmd, count} — closes a wave section that plays as `count` separate waves.
 ##   Bare `repeat` / `repeat 1` / `repeat 2` → 2 waves. `repeat N` (N ≥ 2) → N waves.
 ##   Commands after a `repeat` start the next section / next set of waves.
 ##   Example: `rock 2` / `repeat 3` / `rock 4` / `repeat 2` → 5 waves total.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
-## difficulty-hard / difficulty hard: heavier rock gravity (2.0) and bullet travel 0.1.
-## difficulty-expert / difficulty expert: heavier rock gravity (3.0) and bullet travel 0.1.
+## difficulty-easy / difficulty-normal / difficulty-hard / difficulty-expert:
+##   stored on the range as `difficulty`. Gravity: easy 0.5, normal 1.0, hard 1.5, expert 2.25.
+##   hard / expert also set bullet travel to 0.1. `difficulty hard` form is accepted.
 ## shuffle: {cmd} — this round only; later waves randomise rock columns.
 ## surprise-me: {cmd} — replace this round's spawns with a random generated sequence.
 ## bonus-type1 / bonus type1: marks the round as bonus type 1 (no strikes).
@@ -151,6 +156,9 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'balloon-check':
 			return {'cmd': 'balloon-check'}
 
+		'clear':
+			return {'cmd': 'clear'}
+
 		'bonus-target':
 			return _parse_bonus_target_command(parts)
 
@@ -172,7 +180,13 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'no-lives':
 			return {'cmd': 'no-lives'}
-
+		
+		'difficulty-easy':
+			return {'cmd': 'difficulty-easy'}
+		
+		'difficulty-normal':
+			return {'cmd': 'difficulty-normal'}
+		
 		'difficulty-hard':
 			return {'cmd': 'difficulty-hard'}
 
@@ -185,7 +199,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 				if level.begins_with('difficulty-'):
 					level = level.substr(11)
 				return {'cmd': 'difficulty-%s' % level}
-			push_warning("parser: 'difficulty' needs hard or expert")
+			push_warning("parser: 'difficulty' needs easy, normal, hard, or expert")
 			return {'cmd': 'difficulty-hard'}
 
 		'shuffle':
@@ -297,18 +311,20 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	return result
 
 
-## wait → 1000ms. wait 600 → 600ms. Values below 0 clamp to 0.
-## wait until clear / wait until → hold until nothing is still active in the level.
+## Bare `wait` → wait until clear. `wait 600` → 600ms. `wait until` still works.
+## Values below 0 clamp to 0.
 func _parse_wait_command(parts: PackedStringArray) -> Dictionary:
-	if parts.size() > 1 and String(parts[1]).strip_edges().to_lower() == 'until':
+	if parts.size() <= 1:
 		return {'cmd': 'wait-until-clear'}
-	var ms := DEFAULT_WAIT_MS
-	if parts.size() > 1 and String(parts[1]).is_valid_int():
-		ms = maxi(int(parts[1]), 0)
-	return {
-		'cmd': 'wait',
-		'ms': ms,
-	}
+	var token := String(parts[1]).strip_edges().to_lower()
+	if token == 'until' or token == 'until-clear' or token == 'clear':
+		return {'cmd': 'wait-until-clear'}
+	if token.is_valid_int():
+		return {
+			'cmd': 'wait',
+			'ms': maxi(int(token), 0),
+		}
+	return {'cmd': 'wait-until-clear'}
 
 
 ## Wave-section count. Bare / 1 / 2 → 2 waves of that section. `repeat N` (N ≥ 2) → N waves.
@@ -708,7 +724,7 @@ func surprise_round_to_text(round_data: Dictionary) -> String:
 	if bool(round_data.get('shuffle', false)):
 		lines.append('shuffle')
 	var difficulty := String(round_data.get('difficulty', ''))
-	if difficulty == 'hard' or difficulty == 'expert':
+	if not difficulty.is_empty():
 		lines.append('difficulty-%s' % difficulty)
 
 	# Prefer structured waves when present (multi-section rounds).
@@ -758,9 +774,11 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 		'wait':
 			return 'wait %d' % int(entry.get('ms', DEFAULT_WAIT_MS))
 		'wait-until-clear':
-			return 'wait until clear'
+			return 'wait'
 		'balloon-check', 'checkpoint':
 			return 'balloon-check'
+		'clear':
+			return 'clear'
 		'balloon':
 			var brow := int(entry.get('row', RANDOM_SLOT))
 			var bcol := int(entry.get('column', RANDOM_SLOT))

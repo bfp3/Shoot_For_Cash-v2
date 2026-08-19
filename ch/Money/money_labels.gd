@@ -11,6 +11,7 @@ const COLOR_LOSE := Color("C70102")
 @onready var coin_sfx: AudioStreamPlayer = $CoinSfx
 
 var _displayed_pool := 0.0
+var _tracked_pool := 0
 var _roll_tween: Tween
 var _visible_for_round := false
 var _animating_settle := false
@@ -28,8 +29,7 @@ func _ready() -> void:
 		banked_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(0)
-	if banked_label:
-		banked_label.modulate.a = 0.0
+	_refresh_banked_total()
 	call_deferred("_cache_scene_layout")
 	hide()
 
@@ -40,6 +40,7 @@ func _ready() -> void:
 		EventBus.instance.open_tally_card.connect(hide_for_menus)
 		EventBus.instance.open_shop.connect(hide_for_menus)
 		EventBus.instance.egg_pulsed.connect(show_for_round)
+		EventBus.instance.update_money.connect(_refresh_banked_total)
 
 
 func show_for_round() -> void:
@@ -48,11 +49,11 @@ func show_for_round() -> void:
 	_animating_settle = false
 	_kill_roll()
 	_restore_scene_layout()
-	_displayed_pool = float(int(gl_PlayerState.dataset.get("bonus_cash", 0)))
+	_tracked_pool = int(gl_PlayerState.dataset.get("bonus_cash", 0))
+	_displayed_pool = float(_tracked_pool)
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(int(_displayed_pool))
-	if banked_label:
-		banked_label.modulate.a = 0.0
+	_refresh_banked_total()
 	show()
 	modulate.a = 1.0
 
@@ -68,10 +69,19 @@ func hide_for_menus() -> void:
 
 
 func _on_pool_changed(new_amount: int) -> void:
+	var delta := new_amount - _tracked_pool
+	_tracked_pool = new_amount
+	var origin := Vector3.INF
+	if EventBus.instance:
+		origin = EventBus.instance.cash_gain_world_origin
+		EventBus.instance.cash_gain_world_origin = Vector3.INF
 	if not _visible_for_round or _animating_settle or _ceremony_lock:
 		return
 	_set_pool_color(COLOR_POOL)
-	_roll_pool_to(new_amount)
+	if delta > 0:
+		_play_gain_chip_then_roll(delta, origin)
+	else:
+		_roll_pool_to(new_amount)
 
 
 func _on_pool_banked(amount: int, previous_cash: int, new_total_cash: int) -> void:
@@ -81,6 +91,7 @@ func _on_pool_banked(amount: int, previous_cash: int, new_total_cash: int) -> vo
 		return
 	_animating_settle = true
 	_kill_roll()
+	_tracked_pool = 0
 	_set_pool_color(COLOR_BANK)
 	if coin_sfx:
 		coin_sfx.play()
@@ -89,10 +100,74 @@ func _on_pool_banked(amount: int, previous_cash: int, new_total_cash: int) -> vo
 		banked_label.modulate = Color(COLOR_BANK.r, COLOR_BANK.g, COLOR_BANK.b, 1.0)
 		var tween := create_tween()
 		tween.tween_method(_set_banked_text, float(previous_cash), float(new_total_cash), 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		tween.tween_interval(0.35)
-		tween.tween_property(banked_label, "modulate:a", 0.0, 0.25)
 	_punch_label()
 	_roll_pool_to(0, 0.4, _finish_settle_to_pool_color)
+
+
+func _play_gain_chip_then_roll(delta: int, world_origin: Vector3 = Vector3.INF) -> void:
+	await _spawn_gain_chip(delta, world_origin)
+	if not _visible_for_round or _ceremony_lock or _animating_settle:
+		return
+	_roll_pool_to(_tracked_pool)
+
+
+func _spawn_gain_chip(amount: int, world_origin: Vector3 = Vector3.INF) -> void:
+	if pool_label == null:
+		return
+	var chip := Label.new()
+	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.text = "$%d" % amount
+	chip.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	chip.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	var font := pool_label.get_theme_font("normal_font")
+	if font:
+		chip.add_theme_font_override("font", font)
+	chip.add_theme_font_size_override("font_size", 72)
+	chip.add_theme_color_override("font_color", COLOR_POOL)
+	chip.add_theme_constant_override("outline_size", 2)
+	chip.add_theme_color_override("font_outline_color", Color(0.08, 0.06, 0.04, 0.85))
+	add_child(chip)
+	chip.reset_size()
+	var dest := _pool_corner_for_chip(chip)
+	var start := _screen_pos_from_world(world_origin)
+	if not start.is_finite():
+		start = dest + Vector2(-40.0, -80.0)
+	else:
+		start -= chip.size * 0.5
+	chip.global_position = start
+	chip.modulate.a = 1.0
+	var tween := create_tween()
+	tween.tween_property(chip, "global_position", dest, 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tween.finished
+	var fade := create_tween()
+	fade.tween_property(chip, "modulate:a", 0.0, 0.12)
+	await fade.finished
+	if is_instance_valid(chip):
+		chip.queue_free()
+
+
+func _pool_corner_for_chip(chip: Control) -> Vector2:
+	## Land on the bottom-right of the pool number, not the centre of the wide label.
+	var rect := pool_label.get_global_rect()
+	return Vector2(rect.end.x - chip.size.x, rect.end.y - chip.size.y)
+
+
+func _screen_pos_from_world(world_origin: Vector3) -> Vector2:
+	if not world_origin.is_finite():
+		return Vector2.INF
+	var cam := get_viewport().get_camera_3d()
+	if cam == null:
+		return Vector2.INF
+	if cam.is_position_behind(world_origin):
+		return Vector2.INF
+	return cam.unproject_position(world_origin)
+
+
+func _refresh_banked_total() -> void:
+	if banked_label == null:
+		return
+	banked_label.text = "$%d" % int(gl_PlayerState.dataset.get("cash", 0))
+	banked_label.modulate = Color(COLOR_BANK.r, COLOR_BANK.g, COLOR_BANK.b, 1.0)
 
 
 func _on_pool_forfeited(_amount: int) -> void:
@@ -100,6 +175,7 @@ func _on_pool_forfeited(_amount: int) -> void:
 		return
 	_animating_settle = true
 	_kill_roll()
+	_tracked_pool = 0
 	_set_pool_color(COLOR_LOSE)
 	_punch_label()
 	_roll_pool_to(0, 0.35, _finish_settle_to_pool_color)
@@ -183,20 +259,19 @@ func checkpoint_move_to_center() -> void:
 	var delta := target_pool - pool_home
 	if banked_label:
 		banked_label.text = "$%d" % int(gl_PlayerState.dataset.get("cash", 0))
-		banked_label.modulate = Color(COLOR_BANK.r, COLOR_BANK.g, COLOR_BANK.b, 0.0)
+		banked_label.modulate = Color(COLOR_BANK.r, COLOR_BANK.g, COLOR_BANK.b, 1.0)
 	_move_tween = create_tween()
 	_move_tween.set_parallel(true)
 	_tween_offsets_to(_move_tween, pool_label, target_pool, 0.35)
 	if banked_label:
 		_tween_offsets_to(_move_tween, banked_label, _top_left(banked_label) + delta, 0.35)
-		if _displayed_pool > 0.0:
-			_move_tween.tween_property(banked_label, "modulate:a", 1.0, 0.28)
 	await _move_tween.finished
 
 
 func checkpoint_play_bank(amount: int, previous_cash: int, new_total_cash: int) -> void:
 	if not _visible_for_round:
 		return
+	_tracked_pool = 0
 	_set_pool_color(COLOR_BANK)
 	if coin_sfx and amount > 0:
 		coin_sfx.play()
@@ -224,7 +299,6 @@ func checkpoint_return_home() -> void:
 		_tween_layout_to(_move_tween, pool_label, _pool_layout, 0.3)
 	if banked_label and not _banked_layout.is_empty():
 		_tween_layout_to(_move_tween, banked_label, _banked_layout, 0.3)
-		_move_tween.tween_property(banked_label, "modulate:a", 0.0, 0.25)
 	await _move_tween.finished
 	_restore_scene_layout()
 
@@ -266,8 +340,7 @@ func _restore_scene_layout() -> void:
 	_kill_move()
 	_apply_layout(pool_label, _pool_layout)
 	_apply_layout(banked_label, _banked_layout)
-	if banked_label:
-		banked_label.modulate.a = 0.0
+	_refresh_banked_total()
 
 
 func _top_left(ctrl: Control) -> Vector2:

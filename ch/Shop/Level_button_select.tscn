@@ -83,20 +83,21 @@ pressed_sfx = NodePath("purchase")
 
 [node name="MossPreview" type="TextureRect" parent="." unique_id=1029366476]
 visible = false
+modulate = Color(0, 0, 0, 1)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.0056523085
-anchor_top = 0.17748643
-anchor_right = 0.99434763
-anchor_bottom = 0.9208746
+anchor_left = -1.9533321
+anchor_top = -1.2104918
+anchor_right = 2.953332
+anchor_bottom = 2.4837158
 offset_left = -226.94699
 offset_top = -121.98002
 offset_right = 226.947
 offset_bottom = 121.98001
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.358, 0.358)
+scale = Vector2(0.147, 0.147)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("2_i6isu")
 stretch_mode = 5
@@ -115,13 +116,14 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel2" type="Panel" parent="MossPreview" unique_id=380376556]
-modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
+visible = false
+modulate = Color(0, 0, 0, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 378.5475
-offset_bottom = 35.866425
+offset_top = 912.3806
+offset_bottom = 90.28821
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -175,13 +177,13 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -225.5
-offset_top = -89.5
-offset_right = 225.5
-offset_bottom = 107.5
+offset_left = -831.0
+offset_top = -282.5
+offset_right = 831.0
+offset_bottom = 354.5
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.358, 0.358)
+scale = Vector2(0.131, 0.131)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("4_d0lhs")
 
@@ -201,6 +203,7 @@ grow_vertical = 2
 theme_type_variation = &"TextureRectOverlays"
 
 [node name="Panel4" type="Panel" parent="NoirPreview" unique_id=1903955961]
+visible = false
 modulate = Color(0.34117648, 0.2901961, 0.2509804, 1)
 self_modulate = Color(0.15686275, 0.15686275, 0.16862746, 1)
 layout_mode = 1

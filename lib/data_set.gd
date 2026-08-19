@@ -6,8 +6,7 @@ var dataset_float : Dictionary = {
 
 	"power_bonus_round_pineapples" 	: [0, 1]
 	,"power_max_ammo"				: [99]
-	,"ammo_pack_size"				: [12]
-	,"power_auto_fire" 					: [0, 1]
+	,"ammo_pack_size"				: [99]
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 	,"power_target_circle"	: [60.0,80.0,120.0,160.0, 200.0, 240.0,280.0,380.0,420.0,460.0]
@@ -23,7 +22,7 @@ var dataset_float : Dictionary = {
 	,'power_time_upgrade' 	: [10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]		
 	
 	
-	,"price_max_ammo"				: [10]
+	,"price_max_ammo"				: [100]
 	,"price_target_circle"			: [700,700,700,700,700,700,700,700,700,700]
 	,"price_gun_fire_rate"			: [500, 500,500,500,500,500,500,500,500,500]
 	,"price_bullet_damage" 			: [400,400,400,400,400,400,400,400,400,400]
@@ -34,8 +33,6 @@ var dataset_float : Dictionary = {
 	,"price_balloon_buster"			: [3, 6, 12, 56,125,400,800.1200,2400]
 	,'price_time_upgrade' 			: [500,500,500,500,500,500,500,500]
 	,"price_bonus_round_pineapples" : [200]
-	,"price_auto_fire" 				: [135]
-	,"price_max_items_in_shop" 		: [2,10,30]
 	
 	,'power_ticket_moss' 			: [0]
 	
@@ -140,7 +137,6 @@ var dataset_string : Dictionary = {
 	
 	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']
-	,"tooltip_auto_fire" 				: ['Just Point, No Click']
 	,"tooltip_sky_mine" 				: ["[wave]BOOM[/wave]"]
 	,"tooltip_target_circle" 			: ["Do you even know what a Reticle is?"]
 	,"tooltip_gun_fire_rate"			: ["Faster Reload"]

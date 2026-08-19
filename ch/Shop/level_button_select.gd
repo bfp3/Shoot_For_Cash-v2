@@ -140,7 +140,7 @@ func set_locked_visuals() -> void:
 func set_unlocked_visuals() -> void:
 	level_locked = false
 	disabled = false
-	modulate = Color.WHITE
+	modulate = Color("5e544bff")
 	if level_name_label:
 		level_name_label.text = "[wave]" + level_name.to_upper()
 	_apply_level_preview()
@@ -393,6 +393,9 @@ func _on_focus_entered() -> void:
 
 
 func _on_focus_exited() -> void:
+	if !is_node_ready():
+		return
+	
 	if current_state == State.LOCKED:
 		return
 	if focus_exit_sfx:

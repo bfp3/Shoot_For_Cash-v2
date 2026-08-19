@@ -169,7 +169,7 @@ const BOUNDS_CHECK_INTERVAL := 0.1  # how often (seconds) to scan active rocks
 var _bounds_check_active := false
 var _bounds_check_accum := 0.0
 
-## Intra-wave script cursor: `wait until clear` / `balloon-check`.
+## Intra-wave script cursor: `wait` (until clear) / `balloon-check` / `clear`.
 var _full_wave_sequence: Array = []
 var _sequence_cursor := 0
 var _sequence_active := false
@@ -180,6 +180,9 @@ var _force_mid_round_balloons := false
 var _advancing_sequence := false
 var _active_checkpoint: Node = null
 var _stream_launches_remaining := 0
+var _consumed_sequence_barrier := false
+var _final_atmosphere_played := false
+var _final_atmosphere_playing := false
 
 enum OobSide { NONE, LEFT, RIGHT, BOTTOM, BEHIND }
 
@@ -212,15 +215,19 @@ func _ready() -> void:
 
 func set_difficulty_gravity(difficulty: String) -> void:
 	match String(difficulty).to_lower():
+		"easy":
+			aim_launch_gravity_scale = 0.5
+		"normal":
+			aim_launch_gravity_scale = 1.0
 		"hard":
-			aim_launch_gravity_scale = 2.0
+			aim_launch_gravity_scale = 1.5
 		"expert":
-			aim_launch_gravity_scale = 3.0
+			aim_launch_gravity_scale = 2.25
 		_:
 			aim_launch_gravity_scale = _base_aim_launch_gravity_scale
 
 func _process(delta: float) -> void:
-	if _waiting_until_clear and not _checkpoint_hold and not _advancing_sequence:
+	if _waiting_until_clear and not _checkpoint_hold and not _advancing_sequence and not _final_atmosphere_playing:
 		if current_state != State.INACTIVE and current_state != State.ROUND_END:
 			if _sky_is_clear_for_sequence():
 				try_continue_sequence()
@@ -272,6 +279,9 @@ func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
 	_force_mid_round_balloons = resume_index > 0
 	_timed_events_running = false
 	_stream_launches_remaining = 0
+	_consumed_sequence_barrier = resume_index > 0
+	_final_atmosphere_played = false
+	_final_atmosphere_playing = false
 	_launch_next_sequence_beat()
 
 
@@ -288,6 +298,10 @@ func _is_balloon_check_cmd(cmd: String) -> bool:
 	return cmd == "balloon-check" or cmd == "checkpoint"
 
 
+func _is_clear_cmd(cmd: String) -> bool:
+	return cmd == "clear"
+
+
 func _is_sequence_barrier_cmd(cmd: String) -> bool:
 	return cmd == "wait-until-clear" or _is_balloon_check_cmd(cmd)
 
@@ -300,12 +314,19 @@ func _launch_next_sequence_beat() -> void:
 		var cmd := _sequence_cmd_at(_sequence_cursor)
 		if cmd == "wait-until-clear":
 			_sequence_cursor += 1
+			_consumed_sequence_barrier = true
 			if not _sky_is_clear_for_sequence():
 				_waiting_until_clear = true
 				return
 			continue
+		if _is_clear_cmd(cmd):
+			_sequence_cursor += 1
+			_consumed_sequence_barrier = true
+			_clear_live_balloons()
+			continue
 		if _is_balloon_check_cmd(cmd):
 			_sequence_cursor += 1
+			_consumed_sequence_barrier = true
 			_spawn_checkpoint_balloon()
 			_waiting_until_clear = true
 			return
@@ -313,6 +334,16 @@ func _launch_next_sequence_beat() -> void:
 		var beat := _collect_next_beat()
 		if not _beat_has_work(beat):
 			continue
+		if _should_play_final_atmosphere():
+			_waiting_until_clear = true
+			_final_atmosphere_playing = true
+			var rm = get_tree().get_first_node_in_group("round_manager")
+			if rm and rm.has_method("play_final_round_atmosphere"):
+				await rm.play_final_round_atmosphere()
+			_final_atmosphere_played = true
+			_final_atmosphere_playing = false
+			if not _sequence_active:
+				return
 		_begin_beat(beat)
 		_waiting_until_clear = true
 		return
@@ -328,7 +359,7 @@ func _collect_next_beat() -> Array:
 	var beat: Array = []
 	while _sequence_cursor < _full_wave_sequence.size():
 		var cmd := _sequence_cmd_at(_sequence_cursor)
-		if _is_sequence_barrier_cmd(cmd):
+		if _is_sequence_barrier_cmd(cmd) or _is_clear_cmd(cmd):
 			break
 		beat.append(_full_wave_sequence[_sequence_cursor])
 		_sequence_cursor += 1
@@ -363,7 +394,10 @@ func _begin_beat(sequence: Array) -> void:
 				continue
 
 			if is_first_rock:
-				delays_sec.append(0.0)
+				if pending_wait_ms == null:
+					delays_sec.append(0.0)
+				else:
+					delays_sec.append(float(int(pending_wait_ms)) / 1000.0)
 				is_first_rock = false
 			else:
 				var wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
@@ -377,7 +411,10 @@ func _begin_beat(sequence: Array) -> void:
 			if entry >= 300:
 				continue
 			if is_first_rock:
-				delays_sec.append(0.0)
+				if pending_wait_ms == null:
+					delays_sec.append(0.0)
+				else:
+					delays_sec.append(float(int(pending_wait_ms)) / 1000.0)
 				is_first_rock = false
 			else:
 				var legacy_wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
@@ -397,6 +434,8 @@ func _script_has_more_commands() -> bool:
 
 ## Called when remaining rocks hit 0. Returns true if the wave must stay open.
 func try_continue_sequence() -> bool:
+	if _final_atmosphere_playing:
+		return true
 	var round_manager = get_tree().get_first_node_in_group("round_manager")
 	if round_manager != null:
 		if bool(round_manager.get("wave_ending")) or bool(round_manager.get("player_failed")) or bool(round_manager.get("game_over_triggered")):
@@ -447,8 +486,6 @@ func _sky_is_clear_for_sequence() -> bool:
 	if _stream_launches_remaining > 0:
 		return false
 	if _any_live_round_rocks():
-		return false
-	if _any_live_balloons():
 		return false
 	if _any_live_pineapples():
 		return false
@@ -503,6 +540,36 @@ func _dismiss_checkpoint() -> void:
 	_active_checkpoint = null
 
 
+func _should_play_final_atmosphere() -> bool:
+	if _final_atmosphere_played or _final_atmosphere_playing:
+		return false
+	if not _consumed_sequence_barrier:
+		return false
+	for i in range(_sequence_cursor, _full_wave_sequence.size()):
+		if _is_sequence_barrier_cmd(_sequence_cmd_at(i)):
+			return false
+	return true
+
+
+func _clear_live_balloons() -> void:
+	var host := get_tree().get_first_node_in_group("balloon_container")
+	if host != null and host.has_method("clear_live_balloons"):
+		host.clear_live_balloons()
+		return
+	if host == null:
+		return
+	for child in host.get_children():
+		if not (child is StaticBody3D):
+			continue
+		if bool(child.get("behind_player")):
+			continue
+		if not bool(child.get("rock_activated")):
+			continue
+		gl_PlayerState.add_to_cash_pool(10, child.global_position)
+		if child.has_method("drift_away_for_checkpoint"):
+			child.drift_away_for_checkpoint()
+
+
 func _cancel_sequence() -> void:
 	_sequence_active = false
 	_waiting_until_clear = false
@@ -511,6 +578,7 @@ func _cancel_sequence() -> void:
 	_advancing_sequence = false
 	_timed_events_running = false
 	_stream_launches_remaining = 0
+	_final_atmosphere_playing = false
 	_dismiss_checkpoint()
 
 
@@ -542,9 +610,14 @@ func end_checkpoint_hold() -> void:
 	_active_checkpoint = null
 	if _script_has_more_commands():
 		_sequence_active = true
-	if _sequence_active:
 		_waiting_until_clear = true
-		try_continue_sequence()
+		if try_continue_sequence():
+			return
+	_sequence_active = false
+	_waiting_until_clear = false
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager and round_manager.has_method("check_if_rocks_still_in_air"):
+		round_manager.check_if_rocks_still_in_air()
 
 
 ## Mid-round balloons (after a `wait`) and pineapples share the rock absolute timeline.
@@ -595,6 +668,8 @@ func _build_timed_event_schedule(sequence: Array) -> Array:
 
 			if is_first_rock:
 				is_first_rock = false
+				if pending_wait_ms != null:
+					abs_t += float(int(pending_wait_ms)) / 1000.0
 			else:
 				var wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
 				abs_t += float(wait_ms) / 1000.0
@@ -628,6 +703,8 @@ func _build_timed_event_schedule(sequence: Array) -> Array:
 				continue
 			if is_first_rock:
 				is_first_rock = false
+				if pending_wait_ms != null:
+					abs_t += float(int(pending_wait_ms)) / 1000.0
 			else:
 				var legacy_wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
 				abs_t += float(legacy_wait_ms) / 1000.0
@@ -1385,6 +1462,7 @@ func _build_wave_telegraph_plan(bodies: Array) -> void:
 			'aim': aim_world,
 			'column': spawn_column,
 			'is_pigeon': is_pigeon,
+			'gravity_scale': _aim_launch_gravity_for(body),
 		})
 
 
@@ -1488,7 +1566,9 @@ func _run_path_telegraph(token: int) -> void:
 		aim_marker.global_position = aim
 		aim_marker.visible = true
 
-		var path_pts := _sample_telegraph_path(spawn, aim, is_pigeon, 10)
+		var path_pts := _sample_telegraph_path(
+			spawn, aim, is_pigeon, 10, float(item.get("gravity_scale", aim_launch_gravity_scale))
+		)
 		_spawn_path_trail_dots(root, path_pts)
 
 		if _path_telegraph_tween != null:
@@ -1535,7 +1615,9 @@ func _blink_column_once_fire_and_forget(column: int, token: int) -> void:
 	)
 
 
-func _sample_telegraph_path(from: Vector3, to: Vector3, is_pigeon: bool, samples: int) -> PackedVector3Array:
+func _sample_telegraph_path(
+	from: Vector3, to: Vector3, is_pigeon: bool, samples: int, gravity_scale: float = -1.0
+) -> PackedVector3Array:
 	samples = maxi(samples, 2)
 	var pts := PackedVector3Array()
 	if is_pigeon:
@@ -1544,10 +1626,11 @@ func _sample_telegraph_path(from: Vector3, to: Vector3, is_pigeon: bool, samples
 			pts.append(from.lerp(to, u))
 		return pts
 
+	var g_scale := aim_launch_gravity_scale if gravity_scale < 0.0 else gravity_scale
 	var vel := BallisticAim.velocity_to_point(
-		from, to, -1.0, aim_launch_gravity_scale, aim_hang_time_sec
+		from, to, -1.0, g_scale, aim_hang_time_sec
 	)
-	var g := BallisticAim.gravity_accel(aim_launch_gravity_scale)
+	var g := BallisticAim.gravity_accel(g_scale)
 	var dy := to.y - from.y
 	var hang := maxf(aim_hang_time_sec, 0.0)
 	var flight_t: float
@@ -1976,7 +2059,8 @@ func _launch_stream_rock(body, counter: int) -> void:
 		upward_force = upward_force * rock_pigeon_upward_force
 		impulse = _pigeon_launch_impulse(body, counter, upward_force)
 	else:
-		BallisticAim.configure_body_for_ballistic_launch(body, aim_launch_gravity_scale)
+		var launch_g := _aim_launch_gravity_for(body)
+		BallisticAim.configure_body_for_ballistic_launch(body, launch_g)
 		body.begin_ballistic_aim_feel(aim_descent_linear_damp)
 		impulse = _build_launch_impulse(body, counter, upward_force, 0.0)
 	body.apply_central_impulse(impulse)
@@ -2110,8 +2194,15 @@ func _aimed_launch_impulse(body, aim_row: int, aim_column: int) -> Vector3:
 func _aimed_launch_impulse_to_world(body, aim_pos: Vector3) -> Vector3:
 	var start_pos := _launch_world_position(body)
 	return BallisticAim.impulse_to_point(
-		body, start_pos, aim_pos, -1.0, aim_launch_gravity_scale, aim_impulse_scale, aim_hang_time_sec
+		body, start_pos, aim_pos, -1.0, _aim_launch_gravity_for(body), aim_impulse_scale, aim_hang_time_sec
 	)
+
+
+## Red-avoiders always launch at gravity 1.0, ignoring difficulty.
+func _aim_launch_gravity_for(body) -> float:
+	if body != null and is_instance_valid(body) and body.rock_type == RockInstance.RockSize.AVOIDER:
+		return 1.0
+	return aim_launch_gravity_scale
 
 
 func spin_rocks(bodies: Array = []) -> void:
@@ -2196,8 +2287,8 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
-			# Keep wait / sequence barriers in place so launch stagger and balloon-checks survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd):
+			# Keep wait / sequence barriers in place so launch stagger, balloon-checks, and clear survive shuffles.
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_clear_cmd(cmd):
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue

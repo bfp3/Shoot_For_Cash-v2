@@ -69,7 +69,7 @@ func _ready() -> void:
 		upgrade_icon_shadow.texture = upgrade_icon
 		%Upgrade_Icon_shadow2.texture = upgrade_icon
 		
-	if upgrade_type.contains('sky') || upgrade_type.contains('pineapple') || upgrade_type.contains('auto_fire'):
+	if upgrade_type.contains('sky') || upgrade_type.contains('pineapple'):
 		%Upgrade_Icon.self_modulate = Color.WHITE
 	
 	
@@ -350,10 +350,6 @@ func complete_purchase() -> void:
 			return
 		# else: fall through to normal "purchased" behaviour below
 
-	elif upgrade_type.contains('auto_fire'):
-		var get_player = get_tree().get_first_node_in_group('Player')
-		if get_player:
-			get_player.apply_auto_fire()
 			
 	elif upgrade_type.contains('pineapple'):
 		EventBus.instance.pineapple_round_bought.emit()

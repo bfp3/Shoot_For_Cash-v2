@@ -1279,7 +1279,7 @@ func start_destroyed_process() -> void:
 	if !rock_has_been_logged:
 		rock_has_been_logged = true
 
-		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value)
+		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value, global_position)
 			
 	
 	remove_from_group('Target')
@@ -1733,9 +1733,59 @@ func _arm_avoider() -> void:
 	_avoider_seek_xy = _crosshair_world_xy_at_depth(global_position.z)
 	_avoider_has_seek_target = true
 	_avoider_retarget_timer = maxf(avoider_retarget_delay_sec, 0.0)
+	_emit_avoider_hone_particles()
 	# Detect rock contacts for destroy-on-hit (independent of bounce toggle timing).
 	set_collision_mask_value(1, true)
 	_sync_avoider_collision_exceptions()
+
+
+## One-shot copy of Main.tscn's red-avoiders_particles; frees itself after the burst.
+func _emit_avoider_hone_particles() -> void:
+	var template := _find_avoider_particle_template()
+	if template == null:
+		return
+	var burst := template.duplicate() as GPUParticles3D
+	if burst == null:
+		return
+	var host := template.get_parent()
+	if host == null or not is_instance_valid(host):
+		host = get_tree().current_scene
+	if host == null:
+		burst.free()
+		return
+	host.add_child(burst)
+	if burst.is_in_group("red_avoider_arm_particles"):
+		burst.remove_from_group("red_avoider_arm_particles")
+	burst.name = "red-avoiders_particles_burst"
+	burst.top_level = true
+	burst.global_position = global_position
+	burst.one_shot = true
+	burst.emitting = false
+	burst.restart()
+	burst.emitting = true
+	var cleaned := {"done": false}
+	var cleanup := func() -> void:
+		if cleaned.done:
+			return
+		cleaned.done = true
+		if is_instance_valid(burst):
+			burst.emitting = false
+			burst.queue_free()
+	if burst.has_signal("finished"):
+		burst.finished.connect(cleanup, CONNECT_ONE_SHOT)
+	var tree := get_tree()
+	if tree:
+		tree.create_timer(burst.lifetime + 0.5, false).timeout.connect(cleanup)
+
+
+func _find_avoider_particle_template() -> GPUParticles3D:
+	var grouped := get_tree().get_first_node_in_group("red_avoider_arm_particles")
+	if grouped is GPUParticles3D:
+		return grouped
+	var scene := get_tree().current_scene
+	if scene:
+		return scene.find_child("red-avoiders_particles", true, false) as GPUParticles3D
+	return null
 
 
 func _start_avoider_lifetime() -> void:

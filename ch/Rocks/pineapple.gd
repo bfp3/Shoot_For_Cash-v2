@@ -142,7 +142,7 @@ func update_hit() -> void:
 	set_collision_layer_value(1, false)
 	set_collision_mask_value(1, false)
 	#disable_collision()
-	gl_PlayerState.log_hit('pineapple', 'pineapple', cash_value)
+	gl_PlayerState.log_hit('pineapple', 'pineapple', cash_value, global_position)
 	
 	
 func update_missed() -> void:
