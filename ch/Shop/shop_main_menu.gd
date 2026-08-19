@@ -472,7 +472,7 @@ func _show_cents_winnings_float(dollars: int) -> void:
 
 
 func _roll_cash_from_to(from_cash: int, to_cash: int) -> void:
-	return
+	#return
 	if cash_label == null:
 		return
 	cash_label.show()
@@ -835,11 +835,11 @@ func update_close_menu() -> void:
 		
 		
 func roll_up_cash_first_round() -> void:
-	cash_label.show()
-	cash_label.modulate.a = 1.0
-	cash_label.text = _format_cash_label(0)
-	update_cost_label()
-	return
+	#cash_label.show()
+	#cash_label.modulate.a = 1.0
+	#cash_label.text = _format_cash_label(0)
+	#update_cost_label()
+	#return
 	if gl_PlayerState.dataset.power_gun < 1:
 		return
 

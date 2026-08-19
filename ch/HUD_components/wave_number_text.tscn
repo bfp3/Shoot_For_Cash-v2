@@ -8,7 +8,10 @@
 [ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="4_strike"]
 [ext_resource type="AudioStream" uid="uid://cy68fbqqsasku" path="res://sfx/Egg_Damaged_7.ogg" id="5_0l5f6"]
 [ext_resource type="AudioStream" uid="uid://cm8btuv4pdotl" path="res://sfx/pineapple_shake_1.ogg" id="6_sqkat"]
-[ext_resource type="AudioStream" uid="uid://bjvnouldqokaa" path="res://sfx/Arrow_release.ogg" id="7_yxk46"]
+[ext_resource type="AudioStream" uid="uid://df54h63pg1d5g" path="res://sfx/Egg_Damaged_8_crack_at_end.ogg" id="7_cawda"]
+[ext_resource type="AudioStream" uid="uid://dw5rhkjwjalcu" path="res://sfx/strike_sound_02.ogg" id="8_7vldn"]
+[ext_resource type="Script" uid="uid://c4xnr2pda43id" path="res://ch/HUD_components/make_strike_noticeable.gd" id="11_jd1q6"]
+[ext_resource type="Texture2D" uid="uid://drvjio7oxqunn" path="res://res/ring512.png" id="12_452ec"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txfio"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
@@ -340,9 +343,22 @@ stream = ExtResource("4_strike")
 volume_db = -25.0
 
 [node name="StrikeSFX3" type="AudioStreamPlayer" parent="Strike_system2" unique_id=856188911]
-stream = ExtResource("7_yxk46")
-volume_db = -40.0
+stream = ExtResource("7_cawda")
+volume_db = -20.0
 pitch_scale = 0.3
+bus = &"Panning Left"
+
+[node name="StrikeSFX4" type="AudioStreamPlayer" parent="Strike_system2" unique_id=1387350508]
+stream = ExtResource("8_7vldn")
+volume_db = -30.0
+pitch_scale = 0.8
+bus = &"Panning Left"
+
+[node name="StrikeSFX5" type="AudioStreamPlayer" parent="Strike_system2" unique_id=670708002]
+stream = ExtResource("8_7vldn")
+volume_db = -30.0
+pitch_scale = 0.6
+bus = &"Panning Left"
 
 [node name="ThreeStrikesSFX" type="AudioStreamPlayer" parent="Strike_system2" unique_id=491621169]
 stream = ExtResource("6_sqkat")
@@ -351,3 +367,30 @@ volume_db = -18.0
 [node name="FadeInSFX" type="AudioStreamPlayer" parent="." unique_id=786524765]
 stream = ExtResource("3_tjyxn")
 volume_db = -45.0
+
+[node name="MakeStrikeNoticeable" type="Control" parent="." unique_id=1284891526]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+script = ExtResource("11_jd1q6")
+
+[node name="RingTexture" type="TextureRect" parent="MakeStrikeNoticeable" unique_id=1221360175]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -256.0
+offset_top = -256.0
+offset_right = 256.0
+offset_bottom = 256.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.01, 0.01)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("12_452ec")

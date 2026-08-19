@@ -6,7 +6,7 @@ extends Control
 @onready var black_screen: Control = $BlackScreen
 
 @onready var wormfood_logo: Control = $WormfoodLogoContainer
-@onready var presents: RichTextLabel = %Presents
+
 @onready var copyright: RichTextLabel = $WormfoodLogoContainer/Copyright
 @onready var wmf_logo: Control = %WMFLogo
 
@@ -15,7 +15,7 @@ func start():
 	copyright.modulate.a = 0.0
 	wmf_logo.scale = Vector2.ONE * 10.0
 	wormfood_logo.modulate.a = 0.0
-	presents.modulate.a = 0.0
+
 	wmf_logo.modulate.a = 0.0
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_interval(1.0)

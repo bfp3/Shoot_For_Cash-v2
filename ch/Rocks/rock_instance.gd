@@ -1641,7 +1641,7 @@ func play_piano_note() -> void:
 		
 
 func out_of_bounds() -> void:
-	%rock_hitSound.play()
+	#%rock_hitSound.play()
 	%outofBoundsSFX.play()
 
 

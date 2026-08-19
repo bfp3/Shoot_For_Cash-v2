@@ -1,6 +1,10 @@
 class_name StrikeIndicator
 extends Control
 
+@onready var circle_duplicate: TextureRect = $Control/CircleDuplicate
+
+
+
 @onready var miss_text_label: RichTextLabel = $MissTextLabel
 @onready var size_control: Control = $Control
 @onready var cross: TextureRect = $Control/CrossFront/Cross
@@ -76,8 +80,13 @@ func reveal_strike() -> void:
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_active_tween.tween_interval(hold_time)
 	_active_tween.tween_property(size_control, "position:y", up_height, 0.1).as_relative()
-
-
+	
+	for i in range(4):
+		_active_tween.tween_property(size_control, 'visible', false, 0.1)
+		_active_tween.tween_property(size_control, 'visible', true, 0.1)
+	_active_tween.tween_property(size_control, 'visible', false, 0.2)
+	_active_tween.tween_property(size_control, 'visible', true, 0.2)
+	
 func conceal_strike() -> void:
 	if not is_struck:
 		return

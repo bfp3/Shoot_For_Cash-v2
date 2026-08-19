@@ -38,10 +38,14 @@ func add_strike() -> void:
 	if indicator == null:
 		return
 	strike_count += 1
-
+	
+	$'../MakeStrikeNoticeable'.start()
+	
 	indicator.reveal_strike()
 	if strike_sfx:
 		$StrikeSFX3.play()
+		$StrikeSFX4.play()
+		$StrikeSFX5.play()
 
 
 func ensure_extra_strike_slot() -> void:
@@ -66,6 +70,8 @@ func three_strikes() -> void:
 	#strike_sfx.play()
 	#$StrikeSFX2.play()
 	$StrikeSFX3.play()
+	$StrikeSFX4.play()
+	$StrikeSFX5.play()
 	# Ensure every indicator is shown (3rd strike only emits this signal).
 	for indicator in _indicators:
 		if not indicator.is_struck:
