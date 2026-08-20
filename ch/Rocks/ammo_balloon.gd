@@ -27,11 +27,8 @@ func configure_from_entry(entry: Dictionary) -> void:
 	ammo_amount = maxi(amount, 0)
 	
 	var balloon_mesh : MeshInstance3D = $Mesh/small_rock2
-	match balloon_type:
-		BalloonType.WHITE:
+	balloon_mesh.material_override = CAMO_MATERIAL
 
-			balloon_mesh.material_override = BALLOON_RED_MAT
-	balloon_mesh.scale
 	var price := int(entry.get("price", -1))
 	if price < 0:
 		price = int(gl_DataSet.get_value("price_ammo", 0))
@@ -55,24 +52,11 @@ func hit_by_player(damage: int, _screen_offset: Vector2 = Vector2.ZERO) -> void:
 		return
 	if not visible and has_node("Mesh") and $Mesh.visible == false:
 		return
-	if not _player_can_buy_ammo():
-		return
 	if _grant_on_pop and not _can_afford():
 		_play_reject()
 		return
 	health -= damage
 	_consume_by_player()
-
-
-func _player_can_buy_ammo() -> bool:
-	var rm = get_tree().get_first_node_in_group("round_manager")
-	if rm and rm.has_method("is_checkpoint_ceremony") and bool(rm.is_checkpoint_ceremony()):
-		return false
-	var player = get_tree().get_first_node_in_group("Player")
-	if player and "current_state" in player and "State" in player:
-		if player.current_state != player.State.ACTIVE:
-			return false
-	return true
 
 
 func _can_afford() -> bool:
@@ -110,8 +94,8 @@ func _consume_by_player() -> void:
 
 	if _grant_on_pop:
 		_grant_ammo_purchase()
-		if has_node("Checkpoint"):
-			$Checkpoint.play()
+		#if has_node("Checkpoint"):
+			#$Checkpoint.play()
 	if has_node("pop_balloon"):
 		$pop_balloon.pitch_scale = randf_range(0.95, 1.1)
 		$pop_balloon.play()
@@ -143,12 +127,13 @@ func _grant_ammo_purchase() -> void:
 
 
 func _refresh_labels() -> void:
-	if _amount_label:
-		_amount_label.text = str(ammo_amount)
-		_amount_label.show()
-	if _price_label:
-		_price_label.text = CommonCode.format_money(ammo_price)
-		_price_label.show()
+	return
+	#if _amount_label:
+		#_amount_label.text = str(ammo_amount)
+		#_amount_label.show()
+	#if _price_label:
+		#_price_label.text = CommonCode.format_money(ammo_price)
+		#_price_label.show()
 
 
 func _hide_labels() -> void:

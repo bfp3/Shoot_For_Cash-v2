@@ -1,0 +1,35 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cte0j125svd7e"]
+
+[sub_resource type="Gradient" id="Gradient_qc1bg"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.37585422, 0.476082)
+colors = PackedColorArray(0.1333332, 1, 0, 1, 1, 0.90000004, 0, 1, 0.25, 0.17083333, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3f87c"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_pu8iu"]
+noise = SubResource("FastNoiseLite_3f87c")
+color_ramp = SubResource("Gradient_qc1bg")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kv1o7"]
+render_priority = 1
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.01
+stencil_mode = 3
+stencil_flags = 1
+stencil_compare = 5
+metadata/_stencil_owned = true
+
+[resource]
+next_pass = SubResource("StandardMaterial3D_kv1o7")
+albedo_texture = SubResource("NoiseTexture2D_pu8iu")
+metallic = 0.8
+roughness = 0.22
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_offset = Vector3(0.25, 0.25, 0.25)
+uv1_triplanar = true
+stencil_mode = 1
+stencil_flags = 2

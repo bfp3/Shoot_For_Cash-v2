@@ -8,7 +8,7 @@ const BALLOON_ORANGE_MAT = preload('uid://bg5auabbq8fo8')
 const BALLOON_RED_MAT = preload('uid://c5lrichw3wfce')
 const BALLOON_GREY_MAT = preload('uid://dgrbglmgp2fad')
 const BALLOON_YELLOW_MAT = preload('uid://bcrtdxo7t4poh')
-
+const CAMO_MATERIAL = preload('uid://cte0j125svd7e')
 var pitch_adjustment := 0.02
 
 @onready var balloon_blowing_up: AudioStreamPlayer = $balloon_blowing_up

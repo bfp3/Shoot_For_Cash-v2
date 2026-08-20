@@ -873,7 +873,6 @@ func on_checkpoint_shot() -> void:
 	if _checkpoint_advancing or player_failed or game_over_triggered:
 		return
 	_checkpoint_advancing = true
-	stop_player()
 
 	if not _is_editor_playtest():
 		if rocks_container and rocks_container.has_method("get_sequence_cursor"):
@@ -923,8 +922,6 @@ func on_checkpoint_shot() -> void:
 	_checkpoint_advancing = false
 	if rocks_container and rocks_container.has_method("flush_pending_ammo"):
 		rocks_container.flush_pending_ammo()
-	if player and player.has_method("start_player"):
-		await player.start_player()
 	if rocks_container and rocks_container.has_method("end_checkpoint_hold"):
 		rocks_container.end_checkpoint_hold()
 	if wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
@@ -947,6 +944,13 @@ func _bank_round_cash_pool() -> void:
 func _forfeit_round_cash_pool() -> void:
 	if gl_PlayerState and gl_PlayerState.has_method("forfeit_cash_pool"):
 		gl_PlayerState.forfeit_cash_pool()
+
+
+## Checkpoint cash is already in the wallet. Clear range HUD counters so the
+## next attempt starts Pool and Banked at $0.
+func _reset_range_banked_after_loss() -> void:
+	if gl_PlayerState and gl_PlayerState.has_method("reset_range_banked_cash"):
+		gl_PlayerState.reset_range_banked_cash()
 
 
 func _show_round_cash_hud() -> void:
@@ -1199,6 +1203,7 @@ func unsuccessful_round_locked(skip_tally: bool = false) -> void:
 		balloon_container.end_round()
 	_forfeit_round_cash_pool()
 	if skip_tally:
+		_reset_range_banked_after_loss()
 		_return_to_shop_after_strikeout()
 		return
 	enter_state(RoundState.WAVE_END)
@@ -1247,6 +1252,7 @@ func abort_round_to_shop() -> void:
 	if balloon_container:
 		balloon_container.end_round()
 	_forfeit_round_cash_pool()
+	_reset_range_banked_after_loss()
 
 	music_manager.shop_music_lower_volume()
 	current_wave = 0
@@ -1887,6 +1893,7 @@ func update_tally_end() -> void:
 	## Remaining pool is already banked on a win, or forfeited on a 3-strike fail.
 	if player_failed or int(gl_PlayerState.dataset.total_current_strikes) >= _max_strikes():
 		_forfeit_round_cash_pool()
+		_reset_range_banked_after_loss()
 	else:
 		_bank_round_cash_pool()
 	## Exported builds: checkpoint money / ammo / round frontier / islands after each round.

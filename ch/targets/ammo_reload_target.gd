@@ -43,13 +43,6 @@ func start_bullet_to_target() -> void:
 func hit_by_player(_damage: int, _screen_offset: Vector2 = Vector2.ZERO) -> void:
 	if _busy:
 		return
-	var rm = get_tree().get_first_node_in_group("round_manager")
-	if rm and rm.has_method("is_checkpoint_ceremony") and bool(rm.is_checkpoint_ceremony()):
-		return
-	var player = get_tree().get_first_node_in_group("Player")
-	if player and "current_state" in player and "State" in player:
-		if player.current_state != player.State.ACTIVE:
-			return
 	_busy = true
 
 	if is_in_group("Target"):
