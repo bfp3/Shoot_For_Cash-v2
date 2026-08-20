@@ -904,7 +904,8 @@ func handle_scope_adjust(delta: float) -> void:
 ## Keep Player + Weapon_shooting in sync. Bullets read weapon_shooting.power_bullet_speed.
 func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
 	power_bullet_speed = bullet_speed
-	bullet_speed = [0.1,0.25,0.3].pick_random()
+	#bullet_speed = [0.1,0.25,0.3].pick_random()
+	bullet_speed = 0.05
 	power_gun_fire_rate = fire_rate
 	if weapon_shooting:
 		weapon_shooting.power_bullet_speed = bullet_speed

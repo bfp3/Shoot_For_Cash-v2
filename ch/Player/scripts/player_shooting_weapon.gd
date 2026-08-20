@@ -414,7 +414,7 @@ func shoot_early_exit_if_aimed() -> bool:
 func _is_special_midround_target(target: Node) -> bool:
 	if target == null or not is_instance_valid(target):
 		return false
-	return target.is_in_group("early_exit_target") or target.is_in_group("ammo_reload_target")
+	return target.is_in_group("early_exit_target") or target.is_in_group("ammo_reload_target") or target.is_in_group("ammo_balloon")
 
 
 func shoot_special_midround_target_if_aimed() -> bool:

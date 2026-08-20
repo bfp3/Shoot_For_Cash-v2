@@ -47,9 +47,9 @@ func _input(event) -> void:
 		if event.shift_pressed and event.keycode == KEY_M:
 			debug_jump_to_level(gl_DataSet.get_default_range_name())
 			return
-		## Shift+C — replay range-clear reward popup (editor / debug only).
+		## Shift+C — replay the range-clear tally (GREAT WORK / banked / winnings → map).
 		if event.shift_pressed and event.keycode == KEY_C:
-			if debug_preview_range_clear_reward():
+			if debug_preview_win_sequence():
 				get_viewport().set_input_as_handled()
 			return
 
@@ -151,6 +151,29 @@ func debug_open_round_editor() -> bool:
 	if round_manager.has_method("open_round_editor_from_shop"):
 		return bool(round_manager.open_round_editor_from_shop())
 	return false
+
+
+## Shift+C: play the range-clear tally (GREAT WORK / CASH BANKED / WINNINGS) then fly into map cash.
+func debug_preview_win_sequence() -> bool:
+	if not OS.has_feature("editor") and not OS.is_debug_build():
+		return false
+	var round_manager: RoundManager = get_tree().get_first_node_in_group("round_manager") as RoundManager
+	if round_manager != null and (
+		round_manager.level_editor_open
+		or round_manager.round_editor_open
+	):
+		return false
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_tally"):
+		menus.ensure_tally()
+	if menus and menus.has_method("ensure_ticket_map"):
+		menus.ensure_ticket_map()
+	var tally := get_tree().get_first_node_in_group("tally_card_menu")
+	if tally == null or not tally.has_method("play_test_win_sequence"):
+		push_warning("DEBUG win sequence: tally card missing play_test_win_sequence")
+		return false
+	tally.play_test_win_sequence()
+	return true
 
 
 ## Shift+C: open the range-clear reward UI in preview mode (no map stamp / no permanent cash).

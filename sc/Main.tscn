@@ -803,7 +803,8 @@ scope_shrink_delay_dur = 0.15
 roundManager = NodePath("../Round_manager")
 
 [node name="AmmoReloadTarget" parent="." unique_id=1821285975 instance=ExtResource("83_ammo")]
-transform = Transform3D(0.446, 0, 0, 0, 0.446, 0, 0, 0, 0.446, 2.994, -1.959, 19.628)
+transform = Transform3D(0.446, 0, 0, 0, 0.446, 0, 0, 0, 0.446, 2.994, -21.959, 19.628)
+visible = false
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
 unique_name_in_owner = true
@@ -1374,9 +1375,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.163108)
 material_override = SubResource("StandardMaterial3D_fra7e")
 cast_shadow = 0
 emitting = false
-amount = 50
-lifetime = 2.0
+amount = 15
 one_shot = true
+speed_scale = 2.0
 explosiveness = 1.0
 fixed_fps = 60
 visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)

@@ -111,18 +111,28 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 ##   / bonus targets are gone. Oranges and regular balloons are ignored. A miss
 ##   does not skip this wait. Objects count as gone as soon as their destroy
 ##   process starts (do not wait for pop tweens).
-## balloon-check / balloon check: {cmd} — spawn a checkpoint balloon. Shooting
-##   it saves this script cursor as the resume point after a strike-out.
+## balloon-check / balloon check / balloon-check A4: {cmd, row, column}.
+##   Bare command uses the default centre rest pose. A cell parks it on the balloon grid.
+##   Shooting it saves this script cursor as the resume point after a strike-out.
 ##   It does not jump rounds, reset strikes, or send leftover balloons away.
 ##   `checkpoint` is accepted as an alias.
 ##   If no balloon-check has been shot, fail restarts the range from the beginning.
+## ammo / ammo 16 / ammo 69 $100 / ammo C8 / ammo C8 16 99:
+##   {cmd, row, column, amount, price}. Bare parks at C6.
+##   Amount omitted → power_ammo. Price omitted → price_ammo.
+##   `$N` or a second number is the cash cost. Distinct from `clear ammo`.
 ## clear: {cmd} — send all live round balloons away (+$10 each). Does not pop
 ##   a balloon-check. `wait clear` is still wait-until-clear, not this command.
+## clear balloon A4: {cmd: clear-balloon, row, column} — same drift/pay for one cell.
+## clear ammo: {cmd: clear-ammo} — pop leftover ammo balloons with no ammo and no charge.
 ## repeat: {cmd, count} — closes a wave section that plays as `count` separate waves.
 ##   Bare `repeat` / `repeat 1` / `repeat 2` → 2 waves. `repeat N` (N ≥ 2) → N waves.
 ##   Commands after a `repeat` start the next section / next set of waves.
 ##   Example: `rock 2` / `repeat 3` / `rock 4` / `repeat 2` → 5 waves total.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
+## pineapples: {cmd} — this round only; if you still have no strikes when the
+##   last rock is shot, a pineapple bonus round starts before balloon-check.
+##   Distinct from the `pineapple` spawn command.
 ## difficulty-easy / difficulty-normal / difficulty-hard / difficulty-expert:
 ##   stored on the range as `difficulty`. Gravity: easy 0.5, normal 1.0, hard 1.5, expert 2.25.
 ##   hard / expert also set bullet travel to 0.1. `difficulty hard` form is accepted.
@@ -150,14 +160,17 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'balloon':
 			if parts.size() > 1 and String(parts[1]).strip_edges().to_lower() == 'check':
-				return {'cmd': 'balloon-check'}
+				return _parse_balloon_check_command(parts)
 			return _parse_balloon_command(parts)
 
 		'balloon-check':
-			return {'cmd': 'balloon-check'}
+			return _parse_balloon_check_command(parts)
+
+		'ammo':
+			return _parse_ammo_command(parts)
 
 		'clear':
-			return {'cmd': 'clear'}
+			return _parse_clear_command(parts)
 
 		'bonus-target':
 			return _parse_bonus_target_command(parts)
@@ -169,7 +182,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 			return {'cmd': 'wait-until-clear'}
 
 		'checkpoint':
-			return {'cmd': 'balloon-check'}
+			return _parse_balloon_check_command(parts)
 
 		'boss-timer':
 			## Duration for boss survival rounds (milliseconds). Handled while loading the file.
@@ -180,6 +193,9 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'no-lives':
 			return {'cmd': 'no-lives'}
+
+		'pineapples':
+			return {'cmd': 'pineapples'}
 		
 		'difficulty-easy':
 			return {'cmd': 'difficulty-easy'}
@@ -338,6 +354,97 @@ func _parse_repeat_command(parts: PackedStringArray) -> Dictionary:
 	}
 
 
+## clear / clear balloon A4 / clear ammo. Bare `clear` = all live round balloons.
+## `clear balloon A4` = only that cell (no-op if empty). Does not pop a balloon-check.
+## `clear ammo` = pop leftover ammo balloons with no ammo and no charge.
+func _parse_clear_command(parts: PackedStringArray) -> Dictionary:
+	var result := {
+		'cmd': 'clear',
+		'row': RANDOM_SLOT,
+		'column': RANDOM_SLOT,
+	}
+	var i := 1
+	if i < parts.size():
+		var next := String(parts[i]).strip_edges().to_lower()
+		if next == 'ammo':
+			return {'cmd': 'clear-ammo'}
+		if next == 'balloon':
+			result.cmd = 'clear-balloon'
+			i += 1
+	if i < parts.size():
+		var parsed_cell := _parse_balloon_cell(String(parts[i]).strip_edges())
+		if not parsed_cell.is_empty():
+			result.cmd = 'clear-balloon'
+			result.row = parsed_cell.row
+			result.column = parsed_cell.column
+	return result
+
+
+## balloon-check / balloon check / checkpoint, optional cell (A4). Bare = default rest pose.
+func _parse_balloon_check_command(parts: PackedStringArray) -> Dictionary:
+	var result := {
+		'cmd': 'balloon-check',
+		'row': RANDOM_SLOT,
+		'column': RANDOM_SLOT,
+	}
+	for i in range(1, parts.size()):
+		var token := String(parts[i]).strip_edges()
+		if token.to_lower() == 'check':
+			continue
+		var parsed_cell := _parse_balloon_cell(token)
+		if not parsed_cell.is_empty():
+			result.row = parsed_cell.row
+			result.column = parsed_cell.column
+			break
+	return result
+
+
+const DEFAULT_AMMO_ROW := 3
+const DEFAULT_AMMO_COLUMN := 6
+
+
+## ammo / ammo 16 / ammo 69 $100 / ammo C8 / ammo C8 16 99
+## Default cell C6. First integer = ammo amount. `$N` or second integer = price.
+## Omitted amount/price stay -1 so gameplay uses power_ammo / price_ammo.
+func _parse_ammo_command(parts: PackedStringArray) -> Dictionary:
+	var result := {
+		'cmd': 'ammo',
+		'row': DEFAULT_AMMO_ROW,
+		'column': DEFAULT_AMMO_COLUMN,
+		'amount': -1,
+		'price': -1,
+	}
+	for i in range(1, parts.size()):
+		var token := String(parts[i]).strip_edges()
+		if token.is_empty():
+			continue
+		var cell := _parse_balloon_cell(token)
+		if not cell.is_empty():
+			result.row = cell.row
+			result.column = cell.column
+			continue
+		var price := _parse_money_token(token)
+		if price >= 0:
+			result.price = price
+			continue
+		if token.is_valid_int():
+			var value := int(token)
+			if int(result.amount) < 0:
+				result.amount = value
+			elif int(result.price) < 0:
+				result.price = value
+	return result
+
+
+func _parse_money_token(token: String) -> int:
+	var t := token.strip_edges()
+	if t.begins_with('$'):
+		t = t.substr(1).strip_edges()
+		if t.is_valid_int():
+			return maxi(int(t), 0)
+	return -1
+
+
 ## balloon → balloon ? (random cell). balloon A1 / a1 → that cell. balloon ? → random.
 ## Extra trailing params are stored on 'param' and ignored by gameplay.
 func _parse_balloon_command(parts: PackedStringArray) -> Dictionary:
@@ -460,6 +567,7 @@ func parse_round_text(text: String) -> Dictionary:
 			"bonus": "",
 			"bonus_targets": [],
 			"shuffle": false,
+			"pineapples": false,
 			"difficulty": "",
 		}
 	return sequences[0]
@@ -468,7 +576,8 @@ func parse_round_text(text: String) -> Dictionary:
 ## Builds one sequence dict per shooting range (all `round` headings in that range
 ## are merged). File order is kept.
 ## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"type1"|...,
-##   "bonus_targets": [{ "waypoints": [{row, column}, ...] }, ...], "shuffle": bool }
+##   "bonus_targets": [{ "waypoints": [{row, column}, ...] }, ...], "shuffle": bool,
+##   "pineapples": bool }
 ## Pass an empty island_name to include every island in the loaded file.
 ## Pass range_name (e.g. "moss", "redd") to only include that shooting range.
 func get_rock_sequences(island_name: String = '', range_name: String = '') -> Array:
@@ -490,6 +599,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				'bonus': '',
 				'bonus_targets': [],
 				'shuffle': false,
+				'pineapples': false,
 				'surprise': false,
 				'difficulty': '',
 				# Temporary while parsing — removed by `_finalize_round_repeats`.
@@ -514,6 +624,11 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 
 		if parsed_cmd == 'no-lives':
 			rounds[key].no_lives = true
+			continue
+
+		if parsed_cmd == 'pineapples':
+			rounds[key].pineapples = true
+			rounds[key]._pending.append(parsed)
 			continue
 
 		if parsed_cmd == 'difficulty-hard':
@@ -775,10 +890,40 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return 'wait %d' % int(entry.get('ms', DEFAULT_WAIT_MS))
 		'wait-until-clear':
 			return 'wait'
+		'pineapples':
+			return 'pineapples'
 		'balloon-check', 'checkpoint':
-			return 'balloon-check'
+			var crow := int(entry.get('row', RANDOM_SLOT))
+			var ccol := int(entry.get('column', RANDOM_SLOT))
+			if crow < 1 or ccol < 1:
+				return 'balloon-check'
+			var check_letter = ['', 'A', 'B', 'C'][clampi(crow, 1, 3)]
+			return 'balloon-check %s%d' % [check_letter, ccol]
+		'ammo':
+			var bits: PackedStringArray = ['ammo']
+			var arow := int(entry.get('row', DEFAULT_AMMO_ROW))
+			var acol := int(entry.get('column', DEFAULT_AMMO_COLUMN))
+			if arow != DEFAULT_AMMO_ROW or acol != DEFAULT_AMMO_COLUMN:
+				var ammo_letter = ['', 'A', 'B', 'C'][clampi(arow, 1, 3)]
+				bits.append('%s%d' % [ammo_letter, acol])
+			var ammo_amount := int(entry.get('amount', -1))
+			if ammo_amount >= 0:
+				bits.append(str(ammo_amount))
+			var ammo_price := int(entry.get('price', -1))
+			if ammo_price >= 0:
+				bits.append('$%d' % ammo_price)
+			return ' '.join(bits)
 		'clear':
 			return 'clear'
+		'clear-ammo':
+			return 'clear ammo'
+		'clear-balloon':
+			var clrow := int(entry.get('row', RANDOM_SLOT))
+			var clcol := int(entry.get('column', RANDOM_SLOT))
+			if clrow < 1 or clcol < 1:
+				return 'clear balloon'
+			var clear_letter = ['', 'A', 'B', 'C'][clampi(clrow, 1, 3)]
+			return 'clear balloon %s%d' % [clear_letter, clcol]
 		'balloon':
 			var brow := int(entry.get('row', RANDOM_SLOT))
 			var bcol := int(entry.get('column', RANDOM_SLOT))

@@ -488,6 +488,8 @@ func _reset_level_editor_round_runtime() -> void:
 
 	gl_PlayerState.round_finished = false
 	gl_PlayerState.cash_banked_this_round = 0
+	if gl_PlayerState.has_method("reset_range_banked_cash"):
+		gl_PlayerState.reset_range_banked_cash()
 	gl_PlayerState.dataset.bonus_cash = 0
 	gl_PlayerState.dataset.total_current_strikes = 0
 	gl_PlayerState.dataset.total_rocks_in_round = 0
@@ -513,6 +515,7 @@ func abort_level_editor_test() -> void:
 	force_shop_open = true
 	player_failed = true
 	success = false
+	pineapple_mode = false
 	stop_timer()
 	stop_player()
 	if player and player.has_method("end_level_editor_ammo"):
@@ -870,6 +873,7 @@ func on_checkpoint_shot() -> void:
 	if _checkpoint_advancing or player_failed or game_over_triggered:
 		return
 	_checkpoint_advancing = true
+	stop_player()
 
 	if not _is_editor_playtest():
 		if rocks_container and rocks_container.has_method("get_sequence_cursor"):
@@ -916,15 +920,23 @@ func on_checkpoint_shot() -> void:
 			wave_progress_feedback.strike_label.text = ""
 
 	check_round_for_strikes()
+	_checkpoint_advancing = false
+	if rocks_container and rocks_container.has_method("flush_pending_ammo"):
+		rocks_container.flush_pending_ammo()
+	if player and player.has_method("start_player"):
+		await player.start_player()
 	if rocks_container and rocks_container.has_method("end_checkpoint_hold"):
 		rocks_container.end_checkpoint_hold()
 	if wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
 		wave_progress_feedback.play_named_banner("CHECKPOINT")
-	_checkpoint_advancing = false
 
 
 func _is_editor_playtest() -> bool:
 	return level_editor_test_active or level_editor_open or round_editor_open
+
+
+func is_checkpoint_ceremony() -> bool:
+	return _checkpoint_advancing
 
 
 func _bank_round_cash_pool() -> void:
@@ -1093,13 +1105,18 @@ func handle_three_strikes() -> void:
 	stop_timer()
 	stop_player()
 	
-	
-	await get_tree().create_timer(0.3, false).timeout
+	var strike_hud = null
+	if wave_progress_feedback and "strike_hud" in wave_progress_feedback:
+		strike_hud = wave_progress_feedback.strike_hud
+	if strike_hud and strike_hud.has_method("wait_until_finale_finished"):
+		await strike_hud.wait_until_finale_finished()
+	else:
+		await get_tree().create_timer(2.0, false).timeout
 	
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	wave_progress_feedback.start_miss()
 	wave_ending = true
-	unsuccessful_round_locked()
+	unsuccessful_round_locked(not level_editor_test_active)
 
 func check_if_rocks_still_in_air() -> void:
 	if wave_ending:
@@ -1165,7 +1182,7 @@ func unsuccessful_round() -> void:
 
 
 
-func unsuccessful_round_locked() -> void:
+func unsuccessful_round_locked(skip_tally: bool = false) -> void:
 	_snapshot_endless_elapsed()
 	record_endless_run_result()
 	stop_timer()
@@ -1181,7 +1198,28 @@ func unsuccessful_round_locked() -> void:
 	if balloon_container:
 		balloon_container.end_round()
 	_forfeit_round_cash_pool()
+	if skip_tally:
+		_return_to_shop_after_strikeout()
+		return
 	enter_state(RoundState.WAVE_END)
+
+
+## Strike-out: skip the tally card and reopen the shop (same cleanup as a fail).
+func _return_to_shop_after_strikeout() -> void:
+	force_shop_open = false
+	current_wave = 0
+	_save_level_progress()
+	if music_manager and music_manager.has_method("shop_music_lower_volume"):
+		music_manager.shop_music_lower_volume()
+	if _boss_mode:
+		player_failed = false
+		success = false
+		current_sequence_index = 0
+		wave_ending = false
+		check_round_for_strikes()
+	stop_player()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	enter_state(RoundState.SHOP_START)
 
 
 ## Player shot the early-exit target — bail out of the round and reopen the shop.
@@ -1237,10 +1275,19 @@ func check_prompts() -> void:
 		## Cleared ranges stay playable — clamp onto the last round and continue.
 		if gl_PlayerState.is_place_completed(place):
 			_clamp_sequence_index_for_replay()
-			return
-		## Fire-and-forget async clear sequence (popup owns the next steps).
-		start_game_over()
-		return
+
+
+func is_range_clear_win_tally() -> bool:
+	if player_failed or _boss_mode or level_editor_test_active:
+		return false
+	if current_rock_sequence.is_empty():
+		return false
+	if current_sequence_index < current_rock_sequence.size():
+		return false
+	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	if place.is_empty() or place == "start":
+		return false
+	return not gl_PlayerState.is_place_completed(place)
 
 
 ## After 100% clear, keep Play working by replaying the last round (or any selected round).
@@ -1751,22 +1798,10 @@ func update_round_end() -> void:
 	bullet_active_counter = 0.0
 	
 	# Only check PASS/PERFECT if the round wasn't cut short by a failure
-	# Protect bonus rounds skip the post-round pineapple perfect bonus.
 	if round_was_successful and not is_bonus_type1_round():
 		player_can_progress = true
 
 		perfect_score_feedback()
-				
-		if gl_PlayerState.dataset.total_current_strikes <= 0:
-
-			wave_progress_feedback.start_bonus()
-			
-			player.round_finished(false)
-			pineapple_mode = true
-			
-			pineapple_round()
-			while pineapple_mode:
-				await get_tree().process_frame
 	elif round_was_successful:
 		player_can_progress = true
 	
@@ -1805,9 +1840,6 @@ func update_round_end() -> void:
 		var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
 		if gl_PlayerState.is_place_completed(place):
 			_clamp_sequence_index_for_replay()
-		else:
-			await start_game_over()
-			return
 
 	stop_player()
 
@@ -1837,9 +1869,7 @@ func update_round_end() -> void:
 
 	current_wave = 0
 	balloon_container.end_round()
-	## Strikeout: let the miss moment breathe before the tally card.
-	if player_failed or int(gl_PlayerState.dataset.total_current_strikes) >= _max_strikes():
-		await get_tree().create_timer(0.5, false).timeout
+	## Strikeout pause already played on the strike HUD; tally can open.
 	enter_state(RoundState.TALLY_START)
 
 
@@ -1863,11 +1893,25 @@ func update_tally_end() -> void:
 	if not level_editor_test_active and gl_PlayerState.has_method("save_run_checkpoint_after_round"):
 		gl_PlayerState.save_run_checkpoint_after_round()
 	
-	check_prompts()
-	
 	while in_display_text_prompt:
 		await get_tree().process_frame
-	
+
+	## First-time range clear: tally + perfect already played — go to start and stamp the map.
+	if not player_failed and not _boss_mode and not level_editor_test_active:
+		var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+		if current_rock_sequence.size() > 0 and current_sequence_index >= current_rock_sequence.size():
+			if gl_PlayerState.is_place_completed(place):
+				_clamp_sequence_index_for_replay()
+			else:
+				gl_PlayerState.mark_place_completed(place)
+				_save_level_progress()
+				var held_winnings := 0
+				var tally := get_tree().get_first_node_in_group("tally_card_menu")
+				if tally and "pending_winnings" in tally:
+					held_winnings = int(tally.pending_winnings)
+				await open_island_map_after_range_clear(place, held_winnings)
+				return
+
 	# Level-complete screen owns the next step — don't also open the shop underneath it.
 	if game_over_triggered:
 		return
@@ -2437,6 +2481,8 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 
 	player.display_hud()
 	gl_PlayerState.dataset.level_name = level_id
+	if gl_PlayerState.has_method("reset_range_banked_cash"):
+		gl_PlayerState.reset_range_banked_cash()
 	_set_travel_progress(0.08)
 
 	if coming_from_start:
@@ -2813,6 +2859,28 @@ func pineapple_round() -> void:
 	EventBus.instance.pineapple_round_used.emit()
 
 
+## Scripted `pineapples` keyword: bonus round after the last rock, before balloon-check.
+## Requires zero strikes. Does nothing if the opportunity was already spent this range.
+func try_scripted_pineapple_round() -> void:
+	if pineapple_mode:
+		return
+	if is_bonus_type1_round():
+		return
+	if player_failed or wave_ending or game_over_triggered:
+		return
+	if gl_PlayerState.dataset.total_current_strikes > 0:
+		return
+
+	gl_PlayerState.dataset.total_pineapples_destroyed = 0
+	if wave_progress_feedback and wave_progress_feedback.has_method("start_bonus"):
+		wave_progress_feedback.start_bonus()
+	if player:
+		player.round_finished(false)
+	pineapple_mode = true
+	await pineapple_round()
+	pineapple_mode = false
+
+
 func start_game_over() -> void:
 	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
 
@@ -2851,12 +2919,12 @@ func start_game_over() -> void:
 		enter_state(RoundState.SHOP_START)
 
 
-## After range-clear reward popup closes — go to start, then open the map and stamp the place.
-func open_island_map_after_range_clear(place_id: String) -> void:
+## After range-clear tally: go to start, open the map, then fly WINNINGS into map cash.
+func open_island_map_after_range_clear(place_id: String, held_winnings: int = 0) -> void:
 	place_id = gl_DataSet.resolve_place_name(place_id)
 	game_over_triggered = false
 	enter_state(RoundState.INACTIVE)
-	await _arrive_at_start_for_map()
+	await _arrive_at_start_for_map(false)
 
 	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
 	var map_menu: Node = null
@@ -2872,7 +2940,7 @@ func open_island_map_after_range_clear(place_id: String) -> void:
 		(map_menu as CanvasItem).z_index = 40
 	CommonCode.apply_ui_overlay_blur()
 	if map_menu.has_method("open_pop_up_after_range_clear"):
-		await map_menu.open_pop_up_after_range_clear(place_id)
+		await map_menu.open_pop_up_after_range_clear(place_id, held_winnings)
 	elif map_menu.has_method("open_pop_up"):
 		await map_menu.open_pop_up()
 		if map_menu.has_method("mark_place_completed"):
@@ -2881,7 +2949,7 @@ func open_island_map_after_range_clear(place_id: String) -> void:
 		enter_state(RoundState.SHOP_START)
 
 
-func _arrive_at_start_for_map() -> void:
+func _arrive_at_start_for_map(use_transition: bool = true) -> void:
 	transitioning_worlds = true
 	stop_timer()
 	stop_player()
@@ -2901,7 +2969,7 @@ func _arrive_at_start_for_map() -> void:
 
 	if scene_transition_screen and scene_transition_screen.has_method("set_destination_place"):
 		scene_transition_screen.set_destination_place("start")
-	if scene_transition_screen and scene_transition_screen.has_method("next_level_start"):
+	if use_transition and scene_transition_screen and scene_transition_screen.has_method("next_level_start"):
 		await scene_transition_screen.next_level_start()
 
 	gl_PlayerState.dataset.level_name = gl_DataSet.get_start_place_name()
@@ -2914,7 +2982,7 @@ func _arrive_at_start_for_map() -> void:
 		place_name.update_place_name()
 	await get_tree().process_frame
 
-	if scene_transition_screen and scene_transition_screen.has_method("next_level_finish"):
+	if use_transition and scene_transition_screen and scene_transition_screen.has_method("next_level_finish"):
 		await scene_transition_screen.next_level_finish()
 
 	transitioning_worlds = false
@@ -3018,6 +3086,8 @@ func move_to_level_instant(level_id) -> void:
 	gl_PlayerState.dataset["reroll_unlocked"] = 1
 	gl_PlayerState.dataset["round"] = 1
 	gl_PlayerState.dataset["level_name"] = level_id
+	if gl_PlayerState.has_method("reset_range_banked_cash"):
+		gl_PlayerState.reset_range_banked_cash()
 	music_manager.stop_opening_song()
 
 	# Keep transition overlay off-screen (no slide animation).

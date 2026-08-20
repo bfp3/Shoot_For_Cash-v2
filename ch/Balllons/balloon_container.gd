@@ -48,6 +48,10 @@ func balloon_lane_to_y(lane: int) -> float:
 		return LANE_Y[1]
 	return LANE_Y[lane]
 
+
+func balloon_cell_world_position(row: int, column: int) -> Vector3:
+	return Vector3(balloon_column_to_x(column), balloon_lane_to_y(row), BALLOON_Z_FRONT)
+
 func add_balloon(_balloon_array : Array) -> void:
 	# Only balloons that appear before the first `wait` arrive at round/shop start.
 	# Balloons after a wait are spawned mid-round by RockManager.
@@ -121,7 +125,7 @@ func _balloons_before_first_wait(sequence: Array) -> Array:
 	for entry in sequence:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
-			if cmd == 'wait' or cmd == 'wait-until-clear' or cmd == 'clear':
+			if cmd == 'wait' or cmd == 'wait-until-clear' or cmd == 'clear' or cmd == 'clear-balloon':
 				break
 			if cmd == 'balloon':
 				intro.append(entry)
@@ -171,9 +175,9 @@ func _spawn_one_balloon(row: int, column: int, stagger_sec: float = 0.5, approac
 	var target_x := balloon_column_to_x(column)
 	var target_y := balloon_lane_to_y(row)
 
-	var occupant := _balloon_occupying_slot(row, column)
-	if occupant and occupant.has_method("drift_away_for_checkpoint"):
-		occupant.drift_away_for_checkpoint()
+	## Cell already has a live balloon — keep it, do not drift it away or spawn a replacement.
+	if _balloon_occupying_slot(row, column):
+		return
 
 	var balloon := _get_next_available_balloon()
 	if balloon == null:
@@ -218,6 +222,16 @@ func clear_live_balloons() -> void:
 		gl_PlayerState.add_to_cash_pool(10, child.global_position)
 		if child.has_method("drift_away_for_checkpoint"):
 			child.drift_away_for_checkpoint()
+
+
+## Drift the live balloon occupying this grid cell, if any. Same +$10 as `clear`.
+func clear_balloon_at(row: int, column: int) -> void:
+	var balloon := _balloon_occupying_slot(row, column)
+	if balloon == null:
+		return
+	gl_PlayerState.add_to_cash_pool(10, balloon.global_position)
+	if balloon.has_method("drift_away_for_checkpoint"):
+		balloon.drift_away_for_checkpoint()
 
 
 func _balloon_occupying_slot(row: int, column: int) -> StaticBody3D:

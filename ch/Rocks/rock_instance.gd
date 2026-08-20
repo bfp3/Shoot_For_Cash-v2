@@ -1091,8 +1091,9 @@ func get_hit_force_direction(
 
 	
 func display_damage_counter(_damage_output : int) -> void:
-	%Damage_Label3D.damage_is_damage(global_position, _damage_output)
-	pass
+	return
+	#%Damage_Label3D.damage_is_damage(global_position, _damage_output)
+	#pass
 
 func display_health_counter() -> void:
 	pass
@@ -1289,8 +1290,8 @@ func start_destroyed_process() -> void:
 	if has_node("Freeze"):
 		$Freeze.hide()
 
-	if cash_value > 0:
-		money_label_3d.money_is_money(global_position, cash_value)
+	#if cash_value > 0:
+		#money_label_3d.money_is_money(global_position, cash_value)
 		
 	
 			

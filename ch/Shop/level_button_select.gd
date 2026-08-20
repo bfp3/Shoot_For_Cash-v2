@@ -215,10 +215,8 @@ func refresh_map_progress() -> void:
 
 	if completed:
 		current_state = State.COMPLETE
-		## Finished levels: hide round counter; stamp shows CLEAR!
+		## Finished levels: stamp shows CLEAR!
 		_set_progress_hud_visible(false)
-		if round_progress_label:
-			round_progress_label.visible = false
 		_refresh_completion_stamp(false)
 		_set_completed_gui()
 		return
@@ -226,8 +224,7 @@ func refresh_map_progress() -> void:
 	_clear_completed_gui()
 	if has_entered:
 		current_state = State.IN_PROGRESS
-		_set_progress_hud_visible(show_round_count)
-		_apply_round_progress_text(place, entry)
+		_set_progress_hud_visible(true)
 		_hide_completion_stamp()
 		return
 
@@ -236,19 +233,9 @@ func refresh_map_progress() -> void:
 	_hide_completion_stamp()
 
 
-func _apply_round_progress_text(place: String, entry: Dictionary) -> void:
-	if round_progress_label == null or not show_round_count:
-		if round_progress_label:
-			round_progress_label.visible = false
-		return
-
-	var total := _total_rounds_for_place(place)
-	var sequence_index := int(entry.get("sequence_index", 0))
-	## Round the player is up to (1-based).
-	var current_round := clampi(sequence_index + 1, 1, maxi(total, 1))
-	round_progress_label.text = "ROUND: %d" % current_round
-	round_progress_label.visible = true
-	_apply_font_mode()
+func _apply_round_progress_text(_place: String, _entry: Dictionary) -> void:
+	if round_progress_label:
+		round_progress_label.visible = false
 
 
 func _total_rounds_for_place(place: String) -> int:
@@ -265,7 +252,7 @@ func _total_rounds_for_place(place: String) -> int:
 
 func _set_progress_hud_visible(_is_visible: bool) -> void:
 	if round_progress_label:
-		round_progress_label.visible = _is_visible and show_round_count
+		round_progress_label.visible = false
 	if cash_earned_label:
 		cash_earned_label.visible = _is_visible
 
@@ -286,10 +273,9 @@ func prepare_clear_ceremony_visuals() -> void:
 	current_state = State.IN_PROGRESS
 	_clear_completed_gui()
 	_hide_completion_stamp()
-	_set_progress_hud_visible(show_round_count)
+	_set_progress_hud_visible(true)
 	var place := gl_DataSet.resolve_place_name(String(level_name).to_lower())
-	var entry := gl_PlayerState.get_level_progress_entry(place)
-	_apply_round_progress_text(place, entry)
+	var _entry := gl_PlayerState.get_level_progress_entry(place)
 	_apply_level_preview()
 	_apply_font_mode()
 
@@ -299,6 +285,7 @@ func _hide_completion_stamp() -> void:
 	if stamp_root:
 		stamp_root.visible = false
 		stamp_root.modulate.a = 0.0
+	
 
 
 func _refresh_completion_stamp(animate: bool) -> void:
@@ -311,6 +298,9 @@ func _refresh_completion_stamp(animate: bool) -> void:
 	if not completed:
 		_hide_completion_stamp()
 		return
+		
+	var tween = create_tween()
+	tween.tween_property(self, "modulate", Color.WHITE, 0.5)
 
 	current_state = State.COMPLETE
 	_set_completed_gui()
@@ -327,8 +317,8 @@ func _refresh_completion_stamp(animate: bool) -> void:
 	if stamp_label:
 		stamp_label.scale = Vector2.ONE * 3.0
 	var stamp_sfx := $purchase as AudioStreamPlayer
-	var tween := create_tween()
-	tween.tween_property(stamp_root, "modulate:a", 1.0, 0.2)
+	var tween2 := create_tween()
+	tween2.tween_property(stamp_root, "modulate:a", 1.0, 0.2)
 	if stamp_label:
 		tween.parallel().tween_property(stamp_label, "scale", Vector2.ONE, 0.2)
 	if stamp_sfx:

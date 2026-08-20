@@ -4,6 +4,8 @@
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_6hiqh"]
 [ext_resource type="FontFile" uid="uid://ch8oru3korcdf" path="res://res/marlbo.ttf" id="2_font"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="3_coin"]
+[ext_resource type="AudioStream" uid="uid://b0arllxttckmg" path="res://sfx/cash_money_kaching.ogg" id="4_kaching"]
+[ext_resource type="AudioStream" uid="uid://dbfc71l56cdct" path="res://sfx/cash-money-kaching.ogg" id="5_kaching2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pivo4"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
@@ -56,6 +58,7 @@ Panel/styles/panel = SubResource("StyleBoxFlat_k5tjv")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_ms1v2")
 
 [node name="Money_labels" type="Control" unique_id=2075768694 groups=["money_manager"]]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -106,7 +109,7 @@ grow_horizontal = 0
 grow_vertical = 0
 pivot_offset = Vector2(392, 88)
 mouse_filter = 2
-theme_override_colors/default_color = Color(0.921569, 0.878431, 0.847059, 1)
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 theme_override_fonts/normal_font = ExtResource("2_font")
 theme_override_font_sizes/normal_font_size = 132
 bbcode_enabled = true
@@ -136,3 +139,11 @@ theme_override_styles/panel = ExtResource("2_6hiqh")
 [node name="CoinSfx" type="AudioStreamPlayer" parent="." unique_id=1197223894]
 stream = ExtResource("3_coin")
 volume_db = -28.0
+
+[node name="KachingSfx" type="AudioStreamPlayer" parent="." unique_id=1462301251]
+stream = ExtResource("4_kaching")
+volume_db = -80.0
+
+[node name="KachingSfx2" type="AudioStreamPlayer" parent="." unique_id=1462301252]
+stream = ExtResource("5_kaching2")
+volume_db = -30.0

@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="1_balloon"]
 [ext_resource type="Script" uid="uid://1nciv6xvqfrj" path="res://ch/Rocks/checkpoint.gd" id="2_script"]
 [ext_resource type="Material" uid="uid://bcrtdxo7t4poh" path="res://res/red_balloon_mat_2.tres" id="3_o2rg3"]
+[ext_resource type="Texture2D" uid="uid://drvjio7oxqunn" path="res://res/ring512.png" id="4_7wlsc"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="4_lwyt0"]
 
 [node name="Checkpoint" unique_id=397951874 instance=ExtResource("1_balloon")]
@@ -23,22 +24,62 @@ visible = false
 visible = false
 
 [node name="Decal" parent="Mesh/small_rock2" index="3" unique_id=425748152]
-modulate = Color(1, 0.7176471, 0, 1)
+transform = Transform3D(-4.3711392e-08, -1, 0, 1, -4.3711392e-08, 0, 0, 0, 1, -0.07572806, -0.10355409, 0)
+visible = true
+size = Vector3(0.25, 1.099, 0.25)
+texture_albedo = ExtResource("4_7wlsc")
+modulate = Color(0, 0, 0, 1)
 
 [node name="Decal2" parent="Mesh/small_rock2" index="4" unique_id=382183238]
-modulate = Color(1, 1, 1, 1)
+transform = Transform3D(-4.3711392e-08, -1, 0, 1, -4.3711392e-08, 0, 0, 0, 1, -0.07572806, -0.10355409, 0)
+size = Vector3(0.4, 1.099, 0.4)
+texture_albedo = ExtResource("4_7wlsc")
+modulate = Color(1.8247963, 1.8247963, 0.72008187, 1)
 
 [node name="Decal3" parent="Mesh/small_rock2" index="5" unique_id=270295909]
-modulate = Color(1, 0.7176471, 0, 1)
+transform = Transform3D(-4.3711392e-08, -1, 0, 1, -4.3711392e-08, 0, 0, 0, 1, -0.08603482, -0.10355409, 0)
+visible = true
+size = Vector3(0.15, 1.099, 0.15)
+texture_albedo = ExtResource("4_7wlsc")
+modulate = Color(0, 0, 0, 1)
 
 [node name="Label3D" parent="Mesh/small_rock2/Decal3" index="0" unique_id=2109645227]
 transform = Transform3D(3.7140346e-08, 1.0207043, -0.24035415, 7.37836e-08, 0.14534025, 1.6879736, 1.705, -2.8523768e-08, -6.7811115e-08, -0.011225283, 0.06383178, 0)
+visible = false
 pixel_size = 0.003
 modulate = Color(0.89, 0.8653767, 0.15130001, 1)
 outline_modulate = Color(0, 0, 0, 1)
 text = "C"
 font_size = 200
 outline_size = 24
+
+[node name="Decal4" type="Decal" parent="Mesh/small_rock2" index="6" unique_id=574486487]
+transform = Transform3D(-4.3711392e-08, -1, 0, 1, -4.3711392e-08, 0, 0, 0, 1, -0.08603482, -0.10355409, 0)
+visible = false
+layers = 16384
+sorting_offset = 3.0
+size = Vector3(0.5, 1.099, 0.5)
+texture_albedo = ExtResource("4_7wlsc")
+modulate = Color(0.6666667, 0.6666667, 0.6666667, 1)
+upper_fade = 0.016322825
+lower_fade = 0.005384526
+cull_mask = 1048574
+
+[node name="Decal5" type="Decal" parent="Mesh/small_rock2" index="7" unique_id=1661729405]
+transform = Transform3D(-4.3711392e-08, -1, 0, 1, -4.3711392e-08, 0, 0, 0, 1, -0.08603482, -0.10355409, 0)
+visible = false
+layers = 16384
+sorting_offset = 3.0
+size = Vector3(0.4, 1.099, 0.4)
+texture_albedo = ExtResource("4_7wlsc")
+modulate = Color(0, 0, 0, 1)
+upper_fade = 0.016322825
+lower_fade = 0.005384526
+cull_mask = 1048574
+
+[node name="AoE" parent="." index="13" unique_id=2099865106]
+transform = Transform3D(0.5882353, 0, 0, 0, 0.5882353, 0, 0, 0, 0.5882353, 0, 0, 0)
+top_level = false
 
 [node name="Checkpoint" type="AudioStreamPlayer" parent="." index="16" unique_id=1932517619]
 stream = ExtResource("4_lwyt0")

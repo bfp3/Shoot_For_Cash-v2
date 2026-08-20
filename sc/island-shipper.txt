@@ -1,9 +1,11 @@
 island shipper
 range moss
+
 	
 	round
+		pineapples
 		# Singles
-
+		#difficulty-hard
 		#1
 		rock 4 a4
 		wait
@@ -19,103 +21,125 @@ range moss
 		wait
 		rock 2 a2
 		wait
+		rock 1 a1
+		wait
 		rock 3 a3
+		wait
+		rock 1 a1
 		wait
 		rock 4 a4
 		wait
-		rock 5 a5
-		wait 
-		rock 6 a6
-		wait 
-		rock 5 a5
+		rock 1 a1
 		wait
-		balloon b8
+		balloon a4
 		balloon a8
 		wait 2200
 
 
 		#3
-		rock 3 a3
+		rock 1 a1
 		wait 1000
 		rock 2 a2
 		wait 1000
-		rock 7 a7
-		wait 1000
-		rock 5 a5
+		rock 3 a3
 		wait 1000
 		rock 4 a4
-		wait 1000
-		rock 1 a1
-		wait 400
-		rock 3 a3
-		wait 400
-		rock 2 a2
-		wait 400
+		wait 3000
+		rock 8 a8
+		wait 500
 		rock 7 a7
+		wait 500
+		rock 6 a6
+		wait 500
+		rock 5 a5
+		wait 500
+		rock 4 a4
+		wait
+		clear
+		wait 3000
+		rock 1 a1
 		wait
 
+		ammo
 		balloon-check
+		clear ammo
 	round
+		pineapples
 		# Singles in Twos
 
 		#1
-		rock 4 a4
+		rock 5 a5
+		rock 5 a5
+		wait
 		rock 4 a4
 		wait
-		rock 1 a1
-		rock 1 a1
+		wait 2000
+		rock 6 a6
+		rock 6 a6
+		wait 1000
+		rock 7 a7
 		wait
-		rock 6 a6
-		rock 6 a6
+
+		rock 3 a3
+		rock 3 a3
+		wait 1000
+		rock 4 a4
 		wait
 		balloon b4
 		wait 1800
 
 		#2
-		rock 1 a1
-		rock 1 a1
+		rock 7 a7
+		rock 7 a7
 		wait
-		rock 2 a2
-		rock 2 a2
-		wait
-		rock 3 a3
-		rock 3 a3
-		wait
-		rock 4 a4
-		rock 4 a4
-		wait
-		rock 5 a5
-		rock 5 a5
-		wait 
 		rock 6 a6
-		rock 6 a6
-		wait 
-		rock 5 a5
-		rock 5 a5
+		wait 0
+		rock 8 a8
 		wait
-		balloon a4
 
+		rock 2 a2
+		rock 2 a2
+		wait 1000
+		rock 1 a1
+		wait 0
+		rock 3 a3
+		wait
+		balloon a3
+		wait 500
+		balloon a5
 		wait 2200
 
 
 		#3
-		rock 3 a3
-		rock 3 a3
-		wait 1000
-		rock 2 a2
-		rock 2 a2
-		wait 1000
-		rock 7 a7
-		rock 7 a7
-		wait 1000
-		rock 5 a5
-		rock 5 a5
-		wait 1000
-		rock 4 a4
-		rock 4 a4
-		wait 1000
 		rock 1 a1
 		rock 1 a1
+		wait
+
+		rock 8 a8
+		rock 8 a8
+		wait
+
+		rock 4 a4
+		rock 4 a4
+		wait
+		rock 2 a2
+		wait 1500
+		rock 7 a7
+		wait 1500
+		rock 3 a3
+		wait 0
+		rock 5 a5
+		wait
+
+		rock 4 a4
+		rock 4 a4
+		wait 2000
+		rock 5 a5
+		rock 5 a5
+		wait 2000
+		rock 6 a6
+		rock 6 a6
+		wait 2000
 		wait 400
 		rock 3 a3
 		rock 3 a3
@@ -126,11 +150,14 @@ range moss
 		rock 7 a7
 		rock 7 a7
 		wait
+		clear
 		wait 2000
+
+
 		balloon-check
 	round
 		# Singles - two at a time different lanes + balloon wall
-
+		pineapples
 		#1
 		rock 4 a4
 		wait 0
@@ -216,11 +243,23 @@ range moss
 		wait
 
 		wait 3500
-		balloon-check
+		ammo c3
+		balloon-check a3
+		clear ammo
 	round
 		# side to side - singles
+		# carry over balloons from last round
+		pineapples
+		balloon a4
+		balloon b4
+		balloon c4
+		balloon a6
+		balloon b6
+		balloon c6
+
 		#1
 
+		wait 3000
 		rock 2 a6
 		wait
 
@@ -234,10 +273,11 @@ range moss
 		rock 1 a6
 		wait
 
-		balloon a1
-		balloon a8
+		balloon a2
+		balloon b2
+		balloon c2
 
-		wait 1800
+		wait 2200
 
 		#2
 		rock 2 a6
@@ -247,43 +287,53 @@ range moss
 		rock 1 a6
 		rock 6 a1
 		wait
-
+		
+		wait 2000
 		rock 4 a8
 		rock 8 a3
 		wait
 
-		balloon a2
-		balloon a7
+		balloon a1
+		balloon b1
+		balloon c1
 		wait 1800
 
 		#3
-		rock 4 a6
+		rock 4 a7
+		wait 1500
 		rock 8 a6
 		wait 1500
 		rock 6 a8
+		wait 1500
 		rock 8 a8
 		wait 1200
 		rock 6 a6
+		wait 1500
 		rock 8 a6
 		wait 1200
 		rock 8 a3
+		wait 1500
+		wait 1500
 		rock 3 a3
-		wait 1200
+		wait 100
 		rock 2 a2
+		wait 100
 		rock 4 a4
 		wait 5500
 
-		rock 2 a4
-		rock 4 a4
-		rock 6 a4
-		rock 8 a4
+		rock 4 a7
 
 		wait
+		clear
+		wait 2000
+		ammo
 		balloon-check
+		clear ammo
 	round
 		# Dad's one
-		#1
 
+		#1
+		pineapples
 		rock 5 a2
 		rock 5 a3
 		rock 5 a5
@@ -339,12 +389,14 @@ range moss
 		rock 7 a5
 
 		wait
+		clear
+		wait 2000
+		ammo
 		balloon-check
-
+		clear ammo
 	round
 		# doubles and triples + go to row B and c
-
-
+		pineapples
 		#1
 		rock 1 b1
 		wait 1000
@@ -399,69 +451,13 @@ range moss
 		rock 5 a5
 		rock 7 a7
 		wait
-	round
-		rock 1 a1
-		wait until clear
-		rock 1 a1
-		wait until clear
-		rock 6 a6
-		rock 7 a7
-		rock 8 a8
-
-		wait until clear
-
-		rock 1 a1
-		rock 4 a4
-		rock 8 a8
-
-		wait until clear
-		rock 1 a1
-		rock 2 a2
-		rock 3 a3
-
-		wait until clear
-		rock 2 a2
-		rock 5 a5
-		rock 8 a8
-		wait until clear
-
-		round
-		rock 8 a8
-		rock 4 a4
-		wait 2000
-
-		rock 7 a7
-		rock 3 a3
-		wait 2000
-
-		rock 3 a3
-		rock 4 a4
-		rock 5 a5
-		rock 6 a6
+		ammo
 		balloon-check
-
-		#wait 4000
-		rock 2 a6
-		wait 0
-		rock 6 a6
-
-		wait 2000
-		rock 2 a2
-		wait 0
-		rock 6 a2
-		wait 2000
-
-		rock 2 a2
-		wait 0
-		rock 6 a2
-		wait 0
-		rock 2 a6
-		wait 0
-		rock 6 a6
-		wait until clear
-		balloon-check
-
+		clear ammo
 	round
+		# introduce black rocks
+		pineapples
+		# unfinished
 		rock-black 2 b2
 		wait 1000
 		rock-black 7 b7
@@ -505,38 +501,204 @@ range moss
 		rock 2 a5
 		wait 0
 		rock-black 4 a4
-		wait until clear
+		wait
+		clear
+		balloon-check
+		round
+		# pre-finale, super short, and give player oranges
+
+		pineapples
+		rock 2 a2
+		rock 2 a2
+		wait 3000
+
+		rock 7 a7
+		rock 7 a7
+		wait
+		clear
+		wait 2000
+		balloon-check
 	
-	round
 	
+	
+	# MC
 	round
-		#just idea - in the works
+		# balloon grid finale - close to rocks
+		pineapples
+		balloon b1
+		balloon b2
+		balloon b3
+		balloon b4
+		balloon b5
+		balloon b6
+		balloon b7
+		balloon b8
+
+		balloon a4
+		balloon a5
+		balloon c4
+		balloon c5
+
+		wait 2000
+
+		#1
+		rock 2 a2
+		wait
+
+		rock 6 a6
+		wait
+
+		rock 6 c6
+		wait
+
+		rock 2 c2
+		wait
+
+		balloon a1
+		balloon b1
+		balloon c1
+		wait 2200
+
 
 		#2
-		rock 1 a1
-		rock 1 a1
-		wait
 		rock 2 a2
-		rock 2 a2
-		wait
-		rock 3 a3
 		rock 3 a3
 		wait
-		rock 4 a4
-		rock 4 a4
-		wait
-		rock 5 a5
-		rock 5 a5
-		wait 
-		rock 6 a6
-		rock 6 a6
-		wait 
-		rock 5 a5
-		rock 5 a5
-		wait
-		balloon a4
 
-		wait 2200
+		rock 2 c2
+		rock 3 c3
+		wait
+
+		rock 6 c6
+		rock 8 c8
+		wait
+
+		rock 6 a6
+		rock 8 a8
+		wait
+
+		balloon a8
+		wait 250
+		balloon b8
+		wait 250
+		balloon c8
+		wait 3200
+
+
+		#3
+		rock 2 a2
+		rock 3 a3
+		wait 2000
+
+		rock 2 c2
+		rock 3 c3
+		wait 2000
+
+		rock 6 c6
+		rock 7 c7
+		wait 2000
+
+		rock 6 a6
+		rock 7 a7
+		wait 2000
+
+		rock 2 c2
+		wait 500
+		rock 2 a2
+		wait 2000
+
+		rock 3 a3
+		wait 500
+		rock 3 c3
+		wait 2000
+
+		rock 7 a7
+		rock 3 c3
+		wait 4000
+
+		clear balloon a1
+		wait 2000
+		rock 
+		wait
+
+		clear balloon a6
+		wait 2000
+		rock 
+		wait
+
+		clear balloon b4
+		wait 2000
+		rock 
+		wait
+
+		clear balloon a8
+		clear balloon c8
+		wait 2000
+		rock 
+		wait
+
+		clear balloon b2
+		clear balloon b3
+		clear balloon b4
+		clear balloon b5
+		clear balloon a4
+		wait 4000
+		rock 4 a4
+		wait
+
+		wait
+		clear
+		wait 2000
+		balloon-check
+		
+		
+		round
+		
+		rock 1 a1
+		wait 3000
+		rock 5 a5
+		wait 3000
+		rock 4 a4
+		wait 3000
+		rock 8 b8
+		wait 3000
+
+		# space
+		balloon a5
+		wait 3000
+
+
+		rock-black 4 c4
+		wait 3000
+
+		rock 1 a1
+		wait 1000
+		rock 2 b2
+		wait 2000
+
+		rock 5 a5
+		wait 1500
+		rock 4 c4
+		wait 1500
+
+		rock 4 b4
+		wait 1500
+		rock 3 a3
+		wait 1500
+
+		rock 8 b8
+		wait 1000
+		rock 7 b7
+		wait 2000
+
+		wait 3000
+
+
+	round
+	round
+	
+	
+
 range redd
 	# Round 1
 	round

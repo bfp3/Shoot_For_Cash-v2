@@ -4,14 +4,14 @@ extends TextureRect
 @onready var rock_small_2: TextureRect 	= $RockSmall2 	# 0.074 scale
  
 
-func _ready() -> void:
-	get_viewport().use_hdr_2d
-	rock_scale_tween(rock_large)
-	rock_scale_tween(rock_small, 0.121, 0.1)
-	rock_scale_tween(rock_small_2, 0.074, 0.06)
-	rock_rotation_tween(rock_large)
-	rock_rotation_tween(rock_small)
-	rock_rotation_tween(rock_small_2)
+#func _ready() -> void:
+	#
+	#rock_scale_tween(rock_large)
+	#rock_scale_tween(rock_small, 0.121, 0.1)
+	#rock_scale_tween(rock_small_2, 0.074, 0.06)
+	#rock_rotation_tween(rock_large)
+	#rock_rotation_tween(rock_small)
+	#rock_rotation_tween(rock_small_2)
 
 func rock_scale_tween(_rock_node : TextureRect, start_scale : float = 0.2, end_scale : float = 0.18) -> void:
 	var dur := randf_range(1.5, 1.7)

@@ -1,4 +1,5 @@
 class_name TallyCard extends Control
+@onready var winnings_label: RichTextLabel = %Winnings_label
 
 var perfect_bonus := 0
 var pass_bonus := -1
@@ -56,6 +57,13 @@ var default_pivot_offset := Vector2.ZERO
 var total_cash_earned : int = 0
 var total_penalties_earned : int = 0
 
+## Range-clear tally: keep the WINNINGS figure on screen into the map overlay.
+var pending_winnings := 0
+var _win_keep_winnings := false
+var _winnings_fly: RichTextLabel = null
+var _center: Control
+var _preview_win_busy := false
+
 
 func _ready() -> void:
 	EventBus.instance.open_tally_card.connect(enter_state.bind(State.OPEN_MENU))
@@ -71,6 +79,8 @@ func _ready() -> void:
 	pivot_offset = default_pivot_offset
 
 	hide()
+	_hide_sequence_labels()
+	_center = get_node_or_null("CenterContainer") as Control
 
 	if test_mode:
 		enter_state(State.OPEN_MENU)
@@ -101,13 +111,12 @@ func update_inactive() -> void:
 
 func start_fail_sequence() -> void:
 
-	#grade_cash_label.text = ""
 	grade_cash_label.text = ""
+	grade_cash_label.show()
 	grade_cash_label.modulate.a = 1.0
-	#grade_label.text = "[i]Try Again"
 	grade_label.text = ""
+	grade_label.show()
 	grade_label.modulate.a = 1.0
-	grade_cash_label.modulate.a = 1.0
 
 	## Endless (Jetz): show survival time + keep/show bonuses earned.
 	var endless := false
@@ -120,16 +129,18 @@ func start_fail_sequence() -> void:
 	if endless:
 		grade_label.text = "[wave]LASTED"
 		grade_cash_label.text = _format_survival_time(survived)
-		bonuses_label.text = 'BONUSES'
+		bonuses_label.text = 'CASH BANKED'
+		bonuses_label.show()
+		bonuses_label.modulate.a = 1.0
 		bonuses_cash_label.modulate.a = 1.0
 		bonuses_cash_label.show()
 		var kept := int(gl_PlayerState.get_round_cash_kept()) if gl_PlayerState.has_method("get_round_cash_kept") else int(gl_PlayerState.dataset.bonus_cash)
 		bonuses_cash_label.text = "$" + str(kept)
 		fail_label.hide()
 		grand_total_cash_label.show()
+		grand_total_cash_label.modulate.a = 1.0
 		grand_total_label.text = ""
 		grand_total_cash_label.text = "$" + str(kept)
-		bonuses_label.show()
 		return
 
 	if gl_PlayerState.dataset.fines < 0:
@@ -141,11 +152,14 @@ func start_fail_sequence() -> void:
 	else:
 		earned = int(gl_PlayerState.dataset.bonus_cash)
 	var fines := int(gl_PlayerState.dataset.fines)
-	bonuses_label.text = 'BONUSES'
+	bonuses_label.text = 'CASH BANKED'
+	bonuses_label.show()
+	bonuses_label.modulate.a = 1.0
 	bonuses_cash_label.modulate.a = 1.0
 	bonuses_cash_label.show()
 	bonuses_cash_label.text = "$" + str(earned)
 	grand_total_cash_label.show()
+	grand_total_cash_label.modulate.a = 1.0
 	grand_total_label.text = ""
 	fail_label.show()
 	var net := earned + fines ## fines are negative
@@ -153,9 +167,6 @@ func start_fail_sequence() -> void:
 		grand_total_cash_label.text = "-$" + str(abs(net))
 	else:
 		grand_total_cash_label.text = "$" + str(net)
-		
-	bonuses_label.show()
-
 
 	return
 
@@ -178,6 +189,7 @@ func start_perfect_sequence() -> void:
 	$SFX/shop_purchase_02.play()
 	$SFX/shop_purchase_01.play()
 	var dur := 0.33
+	grade_label.show()
 	grade_label.modulate.a = 1.0
 	grade_label.text = "[wave]WON"
 	
@@ -187,12 +199,14 @@ func start_perfect_sequence() -> void:
 	perfect_bonus = int(gl_DataSet.get_value('reward_perfect_round', 0))
 	
 	# 2. GRADE CASH LABEL
+	grade_cash_label.show()
 	grade_cash_label.text = '$' + str(perfect_bonus)
 	grade_cash_label.modulate.a = 1.0
 	gl_PlayerState.add_cash(perfect_bonus)
 
 	# decorative particle flourish, fires in the background (non-blocking)
 	
+	grand_total_cash_label.show()
 	grand_total_cash_label.modulate.a = 1.0
 	# PAUSE
 	await get_tree().create_timer(0.25, false).timeout
@@ -238,63 +252,230 @@ func start_perfect_sequence() -> void:
 	return
 
 
+func start_win_sequence() -> void:
+	_win_keep_winnings = true
+	pending_winnings = 0
+	_clear_win_row_text()
+
+	var clear_bonus := 0
+	if gl_DataSet.has_method("get_range_clear_reward"):
+		var place := ""
+		if gl_PlayerState:
+			place = gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+		clear_bonus = int(gl_DataSet.get_range_clear_reward(place))
+	else:
+		clear_bonus = int(gl_DataSet.get_value("range_clear_reward", 0))
+
+	var banked := 0
+	if gl_PlayerState and "cash_banked_this_range" in gl_PlayerState:
+		banked = int(gl_PlayerState.cash_banked_this_range)
+	elif gl_PlayerState and gl_PlayerState.has_method("get_round_cash_kept"):
+		banked = int(gl_PlayerState.get_round_cash_kept())
+	pending_winnings = clear_bonus + banked
+
+	if clear_bonus > 0:
+		gl_PlayerState.add_cash(clear_bonus)
+
+	await get_tree().create_timer(0.5, false).timeout
+	$SFX/shop_purchase_02.play()
+	$SFX/shop_purchase_01.play()
+	await _reveal_win_row(grade_label, grade_cash_label, "[wave]GREAT WORK", _money_text(clear_bonus))
+
+	await get_tree().create_timer(0.5, false).timeout
+	$SFX/shop_purchase_02.play()
+	await _reveal_win_row(bonuses_label, bonuses_cash_label, "CASH BANKED", _money_text(banked))
+
+	await get_tree().create_timer(0.5, false).timeout
+	$SFX/shop_purchase_02.play()
+	$SFX/shop_purchase_01.play()
+	grand_total_cash_label.pivot_offset_ratio = Vector2(0.5, 0.5)
+	await _reveal_win_row(winnings_label, grand_total_cash_label, "WINNINGS", _money_text(pending_winnings))
+
+	var punch := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	punch.tween_property(grand_total_cash_label, "scale", Vector2.ONE * 1.1, 0.15)
+	punch.parallel().tween_property($CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles, "emitting", true, 0.1)
+	punch.tween_property(grand_total_cash_label, "scale", Vector2.ONE, 0.15)
+	await punch.finished
+	return
+
+
+## Editor / debug: Shift+C — run the range-clear tally then fly WINNINGS into map cash (no map stamp).
+func play_test_win_sequence() -> void:
+	if _preview_win_busy:
+		return
+	if not OS.has_feature("editor") and not OS.is_debug_build():
+		return
+	_preview_win_busy = true
+	menu_in_display = false
+	_win_keep_winnings = false
+	pending_winnings = 0
+	_free_winnings_fly()
+	z_index = 10
+	if _center:
+		_center.show()
+		_center.modulate.a = 1.0
+	scale = default_scale
+	modulate.a = 0.0
+	position = default_position
+	pivot_offset = default_pivot_offset
+	_hide_sequence_labels()
+	sfx_open_tally()
+	show()
+	var open_tween := create_tween()
+	open_tween.set_trans(Tween.TRANS_LINEAR)
+	open_tween.set_ease(Tween.EASE_OUT)
+	open_tween.parallel().tween_property(self, "scale", default_scale, 0.3)
+	open_tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
+	await open_tween.finished
+	await start_win_sequence()
+	await get_tree().create_timer(1.0, false).timeout
+	await update_close_menu()
+	var held := pending_winnings
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	var map_menu: Node = null
+	if menus and menus.has_method("ensure_ticket_map"):
+		map_menu = menus.ensure_ticket_map()
+	if map_menu == null:
+		map_menu = get_tree().get_first_node_in_group("map_menu")
+	if map_menu and map_menu.has_method("preview_winnings_from_tally"):
+		await map_menu.preview_winnings_from_tally(held, self)
+	elif map_cash_exists(map_menu):
+		await fly_winnings_to_map(map_menu.get_node("%MapCashBalanceLabel"))
+	else:
+		_cleanup_winnings_overlay()
+	_preview_win_busy = false
+
+
+func map_cash_exists(map_menu: Node) -> bool:
+	return map_menu != null and map_menu.get_node_or_null("%MapCashBalanceLabel") != null
+
+
+func _hide_sequence_labels() -> void:
+	for label in [
+		grade_label, grade_cash_label,
+		bonuses_label, bonuses_cash_label,
+		grand_total_label, grand_total_cash_label,
+		winnings_label,
+	]:
+		if label == null:
+			continue
+		label.hide()
+		label.modulate.a = 0.0
+	if fail_label:
+		fail_label.hide()
+	var stamp := get_node_or_null("%100_percent") as CanvasItem
+	if stamp:
+		stamp.modulate.a = 0.0
+		stamp.hide()
+
+
+func _clear_win_row_text() -> void:
+	_hide_sequence_labels()
+
+
+func _reveal_win_row(title: Control, amount: Control, title_text: String, amount_text: String) -> void:
+	if title:
+		title.text = title_text
+		title.modulate.a = 0.0
+		title.show()
+	if amount:
+		amount.text = amount_text
+		amount.modulate.a = 0.0
+		amount.show()
+	var tween := create_tween().set_parallel(true)
+	if title:
+		tween.tween_property(title, "modulate:a", 1.0, 0.2)
+	if amount:
+		tween.tween_property(amount, "modulate:a", 1.0, 0.2)
+	await tween.finished
+
+
+func _money_text(amount: int) -> String:
+	return CommonCode.format_money(amount)
+
+
+func fly_winnings_to_map(map_cash: Control) -> void:
+	if not is_instance_valid(_winnings_fly) or map_cash == null or not is_instance_valid(map_cash):
+		_cleanup_winnings_overlay()
+		return
+	var from_center := _winnings_fly.global_position + _winnings_fly.size * 0.5
+	var to_center := map_cash.global_position + map_cash.size * 0.5
+	var dest := _winnings_fly.global_position + (to_center - from_center)
+	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(_winnings_fly, "global_position", dest, 0.55)
+	tween.parallel().tween_property(_winnings_fly, "scale", Vector2.ONE * 0.45, 0.55)
+	await tween.finished
+	if is_instance_valid(_winnings_fly):
+		var pop := create_tween()
+		pop.tween_property(_winnings_fly, "modulate:a", 0.0, 0.12)
+		await pop.finished
+	_cleanup_winnings_overlay()
+
+
+func _lift_winnings_overlay() -> void:
+	_free_winnings_fly()
+	if grand_total_cash_label == null:
+		return
+	var fly := grand_total_cash_label.duplicate() as RichTextLabel
+	if fly == null:
+		return
+	fly.name = "WinningsFlyLabel"
+	fly.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fly.z_index = 80
+	fly.top_level = true
+	add_child(fly)
+	fly.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	fly.global_position = grand_total_cash_label.global_position
+	fly.size = grand_total_cash_label.size
+	fly.pivot_offset = fly.size * 0.5
+	fly.text = _money_text(pending_winnings)
+	fly.modulate.a = 1.0
+	_winnings_fly = fly
+	grand_total_cash_label.modulate.a = 0.0
+	z_index = 50
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
+func _cleanup_winnings_overlay() -> void:
+	_free_winnings_fly()
+	_win_keep_winnings = false
+	pending_winnings = 0
+	z_index = 10
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	if _center:
+		_center.show()
+		_center.modulate.a = 1.0
+	hide()
+
+
+func _free_winnings_fly() -> void:
+	if is_instance_valid(_winnings_fly):
+		_winnings_fly.queue_free()
+	_winnings_fly = null
+
+
 
 func check_white_rocks() -> void:
-	
-	grand_total_label.show()
-	bonuses_label.show()
-	fail_label.hide()
+	_hide_sequence_labels()
 	fail_label.text = "$0"
-	grade_label.text = ""
-	grade_cash_label.text = ""
-	grade_cash_label.modulate.a = 1.0
-	
-	bonuses_label.text = 'BONUSES'
-	bonuses_cash_label.text = ""
-	
-	grand_total_label.text = ''
-	grand_total_cash_label.text = ""
 	
 	start_sequence = true
 	
 	gl_PlayerState.subtract_penalties_from_cash()
 	
-	#
-	#if gl_PlayerState.dataset.total_hazards > 0:
-		#start_fail_sequence()
-		#start_sequence = false
-		#return
-		
 	if gl_PlayerState.dataset.total_current_strikes >= 3:
 		start_fail_sequence()
 		start_sequence = false
 		return
-		
-	#if white_rocks > 0 && gl_PlayerState.dataset.perfect_rounds < 3:
-		#start_fail_sequence()
-		#start_sequence = false
-		#return
-		
-	else:
-		await start_perfect_sequence()
+
+	if _is_range_clear_win():
+		await start_win_sequence()
 		start_sequence = false
 		return
-		
-	#elif white_rocks == 0 && gl_PlayerState.dataset.perfect_rounds >= 3:
-		#await start_perfect_sequence()
-		#start_sequence = false
-		#return
-		
-	#elif white_rocks == 0:
-		#await start_pass_sequence()
-		#start_sequence = false
-		#
-		#return
-		
-	#else:
-		#%GradeLabel.text = ""
-		#print('Some other condition was met')
-		#start_sequence = false
+
+	await start_perfect_sequence()
+	start_sequence = false
+	return
 
 func perfect_particles() -> void:
 	
@@ -304,6 +485,9 @@ func perfect_particles() -> void:
 	#await get_tree().create_timer(0.25, false).timeout
 	
 	$SFX/perfect_score.play()
+	var stamp_root := %'100_percent' as CanvasItem
+	if stamp_root:
+		stamp_root.show()
 	var stamp := $'CenterContainer/MainPanel/MainPanel/100_percent/RichTextLabel'
 	stamp.scale = Vector2.ONE * 3.0
 	var tween = create_tween()
@@ -320,6 +504,12 @@ func perfect_particles() -> void:
 	await tween.finished
 
 
+func _is_range_clear_win() -> bool:
+	if round_manager and round_manager.has_method("is_range_clear_win_tally"):
+		return bool(round_manager.is_range_clear_win_tally())
+	return false
+
+
 func apply_bonus_cash() -> void:
 	var bonus_cash = int(gl_PlayerState.dataset.bonus_cash)
 	if gl_PlayerState.has_method("get_round_cash_kept"):
@@ -328,10 +518,22 @@ func apply_bonus_cash() -> void:
 	bonuses_cash_label.show()
 	bonuses_cash_label.modulate.a = 1.0
 	bonuses_cash_label.text = "$" + str(bonus_cash)
+	if bonuses_label:
+		bonuses_label.show()
+		bonuses_label.modulate.a = 1.0
+		bonuses_label.text = "CASH BANKED"
 
 func update_open_menu() -> void:
 	if menu_in_display:
 		return
+
+	_win_keep_winnings = false
+	pending_winnings = 0
+	z_index = 10
+	if _center:
+		_center.show()
+		_center.modulate.a = 1.0
+	_hide_sequence_labels()
 	
 	check_white_rocks()
 	menu_in_display = true
@@ -370,10 +572,23 @@ func update_open_menu() -> void:
 	_on_shop_pressed()
 		
 func update_close_menu() -> void:
-	
-	
-	# ENSURE PIVOT IS CORRECT
 	pivot_offset = default_pivot_offset
+	sfx_close_tally()
+
+	if _win_keep_winnings:
+		_lift_winnings_overlay()
+		await get_tree().process_frame
+		if _center:
+			var fade := create_tween()
+			fade.set_trans(Tween.TRANS_LINEAR)
+			fade.set_ease(Tween.EASE_IN)
+			fade.tween_property(_center, "modulate:a", 0.0, 0.28)
+			await fade.finished
+			_center.hide()
+			_center.modulate.a = 1.0
+		menu_in_display = false
+		updating_stats = false
+		return
 
 	var tween := create_tween()
 
@@ -468,5 +683,7 @@ func sfx_close_tally() -> void:
 
 
 func _on_shop_pressed() -> void:
-	enter_state(State.CLOSE_MENU)
-	round_manager.enter_state(round_manager.RoundState.TALLY_END)
+	current_state = State.CLOSE_MENU
+	await update_close_menu()
+	if round_manager:
+		round_manager.enter_state(round_manager.RoundState.TALLY_END)

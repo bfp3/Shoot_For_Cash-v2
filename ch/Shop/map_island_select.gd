@@ -63,6 +63,9 @@ var _map_input_locked := false
 @onready var previous_island_button: BaseButton = $Island1/NextIslandLabel/PreviousIslandButton
 @onready var map_cash_label: RichTextLabel = %MapCashBalanceLabel
 
+var _last_map_cash_shown := -1
+var _map_cash_tween: Tween
+
 
 
 func _ready() -> void:
@@ -323,7 +326,7 @@ func open_pop_up() -> void:
 	_show_island_page(_viewing_island_index)
 	_refresh_level_buttons()
 	_refresh_island_labels()
-	_refresh_map_cash_labels()
+	_refresh_map_cash_labels(true)
 	_refresh_nav_button_visibility()
 	CommonCode.apply_ui_overlay_blur()
 	_fade_out_ammo_panel()
@@ -355,7 +358,7 @@ func open_pop_up_after_boss_clear(cleared_island: int) -> void:
 	_show_island_page(_viewing_island_index)
 	_refresh_level_buttons()
 	_refresh_island_labels()
-	_refresh_map_cash_labels()
+	_refresh_map_cash_labels(true)
 	_refresh_nav_button_visibility()
 	CommonCode.apply_ui_overlay_blur()
 	_fade_out_ammo_panel()
@@ -417,7 +420,8 @@ func open_pop_up_after_boss_clear(cleared_island: int) -> void:
 
 
 ## After clearing a shooting range: open map on that island and play the CLEAR stamp.
-func open_pop_up_after_range_clear(place_id: String) -> void:
+## `held_winnings` is shown on the tally overlay and flies into MapCashBalanceLabel.
+func open_pop_up_after_range_clear(place_id: String, held_winnings: int = 0) -> void:
 	place_id = gl_DataSet.resolve_place_name(place_id)
 	_selecting_level = false
 	_map_input_locked = true
@@ -430,7 +434,11 @@ func open_pop_up_after_range_clear(place_id: String) -> void:
 	_show_island_page(_viewing_island_index)
 	_refresh_level_buttons()
 	_refresh_island_labels()
-	_refresh_map_cash_labels()
+	var cash := int(gl_PlayerState.dataset.cash)
+	if held_winnings > 0:
+		_snap_map_cash(maxi(cash - held_winnings, 0))
+	else:
+		_refresh_map_cash_labels(true)
 	_refresh_nav_button_visibility()
 	CommonCode.apply_ui_overlay_blur()
 	_fade_out_ammo_panel()
@@ -454,6 +462,12 @@ func open_pop_up_after_range_clear(place_id: String) -> void:
 	tween.tween_property(self, "modulate:a", 1.0, 0.35)
 	await tween.finished
 
+	if held_winnings > 0:
+		var tally := get_tree().get_first_node_in_group("tally_card_menu")
+		if tally and tally.has_method("fly_winnings_to_map") and map_cash_label:
+			await tally.fly_winnings_to_map(map_cash_label)
+		await _roll_map_cash(_last_map_cash_shown, cash)
+
 	## Let the player read the map before the CLEAR stamp lands.
 	await get_tree().create_timer(1.0, false).timeout
 	await mark_place_completed(place_id, true)
@@ -465,6 +479,46 @@ func open_pop_up_after_range_clear(place_id: String) -> void:
 	_set_map_chrome_interactive(true)
 	_refresh_boss_button()
 	var preferred: Control = level_btn if level_btn and level_btn.visible else _first_visible_level_button()
+	if preferred == null:
+		preferred = close_button
+	if preferred:
+		UiFocus.grab_in(self, preferred)
+
+
+## Debug Shift+C: show the map under the tally WINNINGS overlay, fly cash in, roll. No CLEAR stamp.
+func preview_winnings_from_tally(held_winnings: int, tally: Node) -> void:
+	_selecting_level = false
+	_map_input_locked = true
+	_viewing_island_index = clampi(
+		int(gl_PlayerState.dataset.get("unlocked_island_index", 0)),
+		0,
+		maxi(_island_pages.size() - 1, 0)
+	)
+	_show_island_page(_viewing_island_index)
+	_refresh_level_buttons()
+	_refresh_island_labels()
+	_refresh_nav_button_visibility()
+	var cash := int(gl_PlayerState.dataset.cash)
+	if held_winnings > 0:
+		_snap_map_cash(maxi(cash - held_winnings, 0))
+	else:
+		_snap_map_cash(cash)
+	CommonCode.apply_ui_overlay_blur()
+	z_index = 40
+	modulate.a = 0.0
+	show()
+	position = Vector2.ZERO
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var tween := create_tween()
+	tween.tween_property(self, "modulate:a", 1.0, 0.35)
+	await tween.finished
+	if held_winnings > 0 and tally and tally.has_method("fly_winnings_to_map") and map_cash_label:
+		await tally.fly_winnings_to_map(map_cash_label)
+		await _roll_map_cash(_last_map_cash_shown, cash)
+	_map_input_locked = false
+	_set_map_chrome_interactive(true)
+	var preferred: Control = _first_visible_level_button()
 	if preferred == null:
 		preferred = close_button
 	if preferred:
@@ -987,16 +1041,59 @@ func _play_island_name_stamp() -> void:
 	tween.parallel().tween_callback(island_change_sfx.play).set_delay(dur - 0.1)
 	
 
-func _refresh_map_cash_labels() -> void:
+func _refresh_map_cash_labels(animate_roll: bool = false) -> void:
 	var cash := int(gl_PlayerState.dataset.cash)
-	if map_cash_label:
-		map_cash_label.text = _format_cash(cash)
+	if map_cash_label == null:
+		_last_map_cash_shown = cash
+		return
+	var from := _last_map_cash_shown
+	if from < 0:
+		from = cash
+	if animate_roll and cash > from:
+		_roll_map_cash(from, cash)
+	else:
+		_snap_map_cash(cash)
 	## Earn-more / cash-needed messaging lives on the boss button now.
 	#var cash_needed_display := get_node_or_null("CashNeededDisplay") as CanvasItem
 	#if cash_needed_display:
 		#cash_needed_display.visible = false
 	#if cash_needed_label:
 		#cash_needed_label.visible = false
+
+
+func _snap_map_cash(cash: int) -> void:
+	if _map_cash_tween and _map_cash_tween.is_valid():
+		_map_cash_tween.kill()
+	_map_cash_tween = null
+	_last_map_cash_shown = cash
+	if map_cash_label:
+		map_cash_label.text = _format_cash(cash)
+
+
+func _roll_map_cash(from_cash: int, to_cash: int) -> void:
+	if map_cash_label == null:
+		_last_map_cash_shown = to_cash
+		return
+	if _map_cash_tween and _map_cash_tween.is_valid():
+		_map_cash_tween.kill()
+	if to_cash <= from_cash:
+		_snap_map_cash(to_cash)
+		return
+	map_cash_label.text = _format_cash(from_cash)
+	var duration := clampf(absf(float(to_cash - from_cash)) / 80.0, 0.35, 1.4)
+	_map_cash_tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_map_cash_tween.tween_method(
+		func(value: float) -> void:
+			if map_cash_label:
+				map_cash_label.text = _format_cash(int(value)),
+		float(from_cash),
+		float(to_cash),
+		duration
+	)
+	await _map_cash_tween.finished
+	_last_map_cash_shown = to_cash
+	if map_cash_label:
+		map_cash_label.text = _format_cash(to_cash)
 
 
 func _map_level_buttons() -> Array:

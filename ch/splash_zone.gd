@@ -7,11 +7,14 @@ extends Area3D
 var detected_bodies: Array[Node3D] = []
 
 @export var round_manager : RoundManager
-#func _ready() -> void:
-	#await get_tree().create_timer(1.0).timeout
-	#monitoring = true
-	#monitorable = true 
 
+
+func _ready() -> void:
+	$splash_sfx_01.volume_db = -80.0
+	$splash_sfx_02.volume_db = -80.0
+	await get_tree().create_timer(3.0, false).timeout
+	$splash_sfx_01.volume_db = -18.0
+	$splash_sfx_02.volume_db = -18.0
 
 func _on_body_entered(body: Node3D) -> void:
 	if body.name.contains('Balloon'):

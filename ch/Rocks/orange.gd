@@ -459,7 +459,7 @@ func start_destroyed_process(expand_blast: bool = true, award_cash: bool = true)
 				round_manager.on_special_challenge_orange_shot()
 		else:
 			gl_PlayerState.add_bonus(cash_value)
-			money_label_3d.money_is_money(global_position, cash_value)
+			#money_label_3d.money_is_money(global_position, cash_value)
 	
 
 	is_deactivated = true
@@ -584,7 +584,7 @@ func hit_out_of_bounds() -> void:
 
 	# Penalize instead of reward
 	gl_PlayerState.log_hit('orange', 'orange', 0)
-	money_label_3d.money_is_money(global_position, 0)
+	#money_label_3d.money_is_money(global_position, 0)
 
 
 	is_deactivated = true

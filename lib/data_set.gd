@@ -7,6 +7,7 @@ var dataset_float : Dictionary = {
 	"power_bonus_round_pineapples" 	: [0, 1]
 	,"power_max_ammo"				: [99]
 	,"ammo_pack_size"				: [99]
+	,"power_ammo"					: [99]
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 	,"power_target_circle"	: [60.0,80.0,120.0,160.0, 200.0, 240.0,280.0,380.0,420.0,460.0]
@@ -22,7 +23,8 @@ var dataset_float : Dictionary = {
 	,'power_time_upgrade' 	: [10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]		
 	
 	
-	,"price_max_ammo"				: [100]
+	,"price_max_ammo"				: [10]
+	,"price_ammo"					: [100]
 	,"price_target_circle"			: [700,700,700,700,700,700,700,700,700,700]
 	,"price_gun_fire_rate"			: [500, 500,500,500,500,500,500,500,500,500]
 	,"price_bullet_damage" 			: [400,400,400,400,400,400,400,400,400,400]

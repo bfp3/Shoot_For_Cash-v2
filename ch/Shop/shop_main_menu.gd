@@ -266,6 +266,7 @@ func _ensure_boss_challenge_banner() -> RichTextLabel:
 		return _boss_challenge_banner
 	var existing := get_node_or_null("CenterContainer/MainPanel/BackgroundImages/BossChallengeBanner") as RichTextLabel
 	if existing:
+		existing.add_theme_color_override("default_color", Color("5e544b"))
 		_boss_challenge_banner = existing
 		return _boss_challenge_banner
 
@@ -288,7 +289,7 @@ func _ensure_boss_challenge_banner() -> RichTextLabel:
 	banner.offset_right = 280.0
 	banner.offset_bottom = 40.0
 	banner.add_theme_font_size_override("normal_font_size", 80)
-	banner.add_theme_color_override("default_color", Color(0.631, 0.008, 0.016, 1.0))
+	banner.add_theme_color_override("default_color", Color("5e544b"))
 	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	banner.text = "[center][wave]HOLD OUT \n 60 seconds[/wave][/center]"
@@ -737,6 +738,12 @@ func play_round_button_pressed() -> void:
 	if focused:
 		focused.release_focus()
 
+	var player := get_tree().get_first_node_in_group('Player') as Player
+	if player and player.has_method("refill_ammo_to_max_animated"):
+		player.refill_ammo_to_max_animated()
+	elif player and player.has_method("refill_ammo_to_max"):
+		player.refill_ammo_to_max(true)
+
 	shake_shop()
 	if reroll_button:
 		reroll_button.hide()
@@ -835,11 +842,11 @@ func update_close_menu() -> void:
 		
 		
 func roll_up_cash_first_round() -> void:
-	#cash_label.show()
-	#cash_label.modulate.a = 1.0
-	#cash_label.text = _format_cash_label(0)
-	#update_cost_label()
-	#return
+	cash_label.show()
+	cash_label.modulate.a = 1.0
+	cash_label.text = _format_cash_label(0)
+	update_cost_label()
+	return
 	if gl_PlayerState.dataset.power_gun < 1:
 		return
 

@@ -243,8 +243,8 @@ func update_disabled() -> void:
 
 
 func disable_collision() -> void:
-	set_collision_layer_value(1, false)
-	set_collision_layer_value(2, false)
+	set_collision_layer_value(19, false)
+	set_collision_layer_value(20, false)
 	$main_col.disabled = true
 	if %balloon_area:
 		%balloon_area.set_deferred("monitoring", false)
@@ -252,8 +252,8 @@ func disable_collision() -> void:
 func enable_collision() -> void:
 	$main_col.disabled = false
 	
-	set_collision_layer_value(1, true)
-	set_collision_layer_value(2, true)
+	set_collision_layer_value(19, true)
+	set_collision_layer_value(20, true)
 
 	if %balloon_area:
 		%balloon_area.set_deferred("monitoring", true)
@@ -305,7 +305,6 @@ func reset_stats() -> void:
 
 func was_hit_tween() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
-	tween.tween_callback(smoke_particles)
 	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
 	await tween.finished
 
@@ -344,7 +343,6 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 			#await get_tree().process_frame
 			rock_pop_balloon()
 			play_destroy_sfx()
-			smoke_particles()
 			$pop_balloon_soft.play()
 			#global_position = start_pos
 			#$Mesh.hide()
@@ -365,7 +363,6 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO) -> void
 			
 		BalloonType.GREY:
 			play_destroy_sfx()
-			smoke_particles()
 			$pop_balloon_soft.play()
 			#global_position = start_pos
 			get_parent().get_parent().carrier_balloon_popped()
@@ -404,12 +401,12 @@ func start_destroyed_process() -> void:
 		money_label_3d.money_is_money(global_position, cash_value)
 
 		
-	set_collision_layer_value(1, false)
+	set_collision_layer_value(19, false)
 	is_deactivated = true
 
 	_leave_play_and_notify_sequence()
 
-	
+	smoke_particles()
 	was_hit_tween()
 	
 	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
@@ -740,6 +737,12 @@ func _apply_script_balloon_shot() -> void:
 		return
 	var as_strike := bool(get_parent().shooting_balloon_gives_strike)
 	if as_strike:
+		var rocks = null
+		var round_manager = get_tree().get_first_node_in_group("round_manager")
+		if round_manager:
+			rocks = round_manager.get("rocks_container")
+		if rocks and rocks.has_method("suppress_next_strike_feedback"):
+			rocks.suppress_next_strike_feedback()
 		gl_PlayerState.add_strike()
 	else:
 		gl_PlayerState.log_hit(rock_type_name, current_rock_type, -10)
@@ -762,7 +765,7 @@ func drift_away_for_checkpoint() -> void:
 	disable_collision()
 	if is_in_group('Target'):
 		remove_from_group('Target')
-	set_collision_layer_value(1, false)
+	set_collision_layer_value(19, false)
 	is_deactivated = true
 	_leave_play_and_notify_sequence()
 	var tween := create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
@@ -787,7 +790,7 @@ func end_of_the_round_pop_balloon(_added_cash : int) -> void:
 	if is_in_group('Target'):
 		remove_from_group('Target')
 
-	set_collision_layer_value(1, false)
+	set_collision_layer_value(19, false)
 	is_deactivated = true
 
 	# Reward instead of penalize: always +$1 regardless of balloon_type/penalty_amount.

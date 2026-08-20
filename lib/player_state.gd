@@ -139,6 +139,8 @@ var dataset: Dictionary = DEFAULT_DATASET.duplicate(true)
 var round_finished := false
 ## Unbanked round pool that has already been cashed into `dataset.cash` this round.
 var cash_banked_this_round := 0
+## Cash banked at checkpoints / round-end so far this shooting range (HUD BankedLabel).
+var cash_banked_this_range := 0
 
 var _log: Array=[]
 var _current_round_log: Array = []
@@ -250,17 +252,21 @@ func add_bonus(value : int) -> void:
 	add_to_cash_pool(value)
 
 
-func add_to_cash_pool(value: int, world_origin: Vector3 = Vector3.INF) -> void:
+func add_to_cash_pool(value: int, _world_origin: Vector3 = Vector3.INF) -> void:
 	if value == 0:
 		return
 	dataset.bonus_cash = int(dataset.bonus_cash) + value
 	if EventBus.instance:
-		EventBus.instance.cash_gain_world_origin = world_origin
 		EventBus.instance.cash_pool_changed.emit(int(dataset.bonus_cash))
 
 
 func get_round_cash_kept() -> int:
-	return cash_banked_this_round + int(dataset.bonus_cash)
+	return cash_banked_this_range + int(dataset.bonus_cash)
+
+
+func reset_range_banked_cash() -> void:
+	cash_banked_this_range = 0
+	cash_banked_this_round = 0
 
 
 func bank_cash_pool(apply_to_wallet: bool = true) -> int:
@@ -269,9 +275,10 @@ func bank_cash_pool(apply_to_wallet: bool = true) -> int:
 	if amount <= 0:
 		return 0
 	var previous_cash := int(dataset.cash)
+	cash_banked_this_round += amount
+	cash_banked_this_range += amount
 	if apply_to_wallet:
 		add_cash(amount)
-		cash_banked_this_round += amount
 	if EventBus.instance:
 		EventBus.instance.cash_pool_banked.emit(amount, previous_cash, int(dataset.cash))
 	return amount
@@ -821,6 +828,7 @@ func reset_all() -> void:
 
 	_log.clear()
 	_current_round_log.clear()
+	reset_range_banked_cash()
 	# Only overlay disk when Load Game is active.
 	if is_persist_enabled():
 		load_meta_progress()
@@ -840,5 +848,6 @@ func reset_level() -> void:
 	dataset["level_progress"] = kept_progress
 	_log.clear()
 	_current_round_log.clear()
+	reset_range_banked_cash()
 	if is_persist_enabled():
 		load_meta_progress()

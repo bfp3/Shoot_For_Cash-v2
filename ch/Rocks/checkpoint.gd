@@ -12,6 +12,7 @@ const BOB_DURATION := 1.35
 var _bob_tween: Tween
 var _arrived := false
 var _consumed := false
+var _rest_pos := REST_POS
 
 
 func _ready() -> void:
@@ -27,12 +28,14 @@ func _ready() -> void:
 	set_process_input(false)
 	
 
-func arrive_from_below() -> void:
+func arrive_from_below(rest: Vector3 = REST_POS) -> void:
 	_consumed = false
 	_arrived = false
-	global_position = SPAWN_POS
-	start_pos = REST_POS
-	orig_start_pos = REST_POS
+	_rest_pos = rest if rest.is_finite() else REST_POS
+	var spawn := Vector3(_rest_pos.x, SPAWN_POS.y, SPAWN_POS.z)
+	global_position = spawn
+	start_pos = _rest_pos
+	orig_start_pos = _rest_pos
 	behind_player = false
 	scale = Vector3.ONE * 1.7
 	show()
@@ -50,7 +53,7 @@ func arrive_from_below() -> void:
 	var tween := create_tween()
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_SINE)
-	tween.tween_property(self, "global_position", REST_POS, ARRIVE_DURATION)
+	tween.tween_property(self, "global_position", _rest_pos, ARRIVE_DURATION)
 	await tween.finished
 	if _consumed or not is_instance_valid(self):
 		return
@@ -67,8 +70,8 @@ func _start_bob() -> void:
 	_bob_tween.set_ease(Tween.EASE_IN_OUT)
 	_bob_tween.set_trans(Tween.TRANS_SINE)
 	_bob_tween.set_loops()
-	_bob_tween.tween_property(self, "global_position:y", REST_POS.y + BOB_DISTANCE, BOB_DURATION)
-	_bob_tween.tween_property(self, "global_position:y", REST_POS.y - BOB_DISTANCE, BOB_DURATION)
+	_bob_tween.tween_property(self, "global_position:y", _rest_pos.y + BOB_DISTANCE, BOB_DURATION)
+	_bob_tween.tween_property(self, "global_position:y", _rest_pos.y - BOB_DISTANCE, BOB_DURATION)
 
 
 func _stop_bob() -> void:
@@ -102,6 +105,7 @@ func _on_area_3d_body_entered(_body: Node3D) -> void:
 
 func start_destroyed_process() -> void:
 	## Ignore generic hazard destroy — balloon-check only pops from a player shot.
+	smoke_particles()
 	return
 
 

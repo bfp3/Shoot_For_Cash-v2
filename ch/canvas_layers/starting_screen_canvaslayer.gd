@@ -86,7 +86,7 @@ func update_start() -> void:
 	tween.tween_property(game_name, "modulate:a", 1.0, 0.15)
 	tween.parallel().tween_property(game_name, "scale", Vector2.ONE * 1.25, 0.15)
 	tween.parallel().tween_callback(opening_sfx)
-	tween.tween_callback(CommonCode.apply_transition_blur)
+	#tween.tween_callback(CommonCode.apply_transition_blur)
 	tween.tween_property(game_name, "scale", Vector2.ONE * 1.0, 0.15)
 	tween.tween_interval(1.15)
 	tween.tween_property(game_title_background, "modulate:a", 1.0, 0.15)

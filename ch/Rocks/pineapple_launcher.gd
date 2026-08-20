@@ -26,6 +26,7 @@ const STRAIGHT_UP_FORCE := 15.0
 
 
 func start_bonus_round() -> void:
+	%PerfectPineappleRound.play(0.5)
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
 	%PerfectParticles.emitting = true
 	%PerfectParticles2.emitting = true

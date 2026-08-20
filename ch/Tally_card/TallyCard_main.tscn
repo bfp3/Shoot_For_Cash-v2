@@ -456,6 +456,7 @@ process_material = SubResource("ParticleProcessMaterial_q6qkh")
 
 [node name="GradeLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=408558362]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 1)
 layout_mode = 0
 offset_right = 1196.0
@@ -474,6 +475,7 @@ vertical_alignment = 1
 
 [node name="GradeCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=905765579]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 0.78431374)
 clip_contents = false
 custom_minimum_size = Vector2(0, 169.82)
@@ -502,6 +504,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
 
 [node name="BonusesCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=263932816]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 0.78431374)
 clip_contents = false
 layout_mode = 2
@@ -517,6 +520,7 @@ vertical_alignment = 1
 
 [node name="TotalLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=709325133]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 0.78431374)
 custom_minimum_size = Vector2(0, 170)
 layout_mode = 2
@@ -529,21 +533,21 @@ fit_content = true
 horizontal_alignment = 1
 
 [node name="BonusesLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=1289664472]
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 1)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 57
 bbcode_enabled = true
-text = "[i]BONUSES[/i]"
+text = "CASH BANKED"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="CashOut" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=313444988]
+[node name="CashOut" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=222821136]
 custom_minimum_size = Vector2(200, 128)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=151705255]
 position = Vector2(597.2461, 106.37421)
@@ -556,12 +560,41 @@ fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_bux34")
 
-[node name="TotalCashCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=1643114876]
+[node name="Winnings_label" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=692688040]
 unique_name_in_owner = true
+visible = false
 self_modulate = Color(0.37, 0.33053333, 0.296, 0.8039216)
 clip_contents = false
 custom_minimum_size = Vector2(182.13, 150)
-layout_mode = 2
+layout_mode = 0
+offset_left = 276.0
+offset_top = -40.0
+offset_right = 922.0
+offset_bottom = 177.0
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/font_outline_color = Color(0.28, 0.28, 0.28, 1)
+theme_override_constants/shadow_outline_size = 10
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 72
+bbcode_enabled = true
+text = "WINNINGS"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="TotalCashCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=1643114876]
+unique_name_in_owner = true
+visible = false
+self_modulate = Color(0.37, 0.33053333, 0.296, 0.8039216)
+clip_contents = false
+custom_minimum_size = Vector2(182.13, 150)
+layout_mode = 0
+offset_left = 507.0
+offset_top = 8.0
+offset_right = 689.13
+offset_bottom = 225.0
 size_flags_horizontal = 6
 size_flags_vertical = 4
 theme_type_variation = &"WhiteRichText"
@@ -577,7 +610,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Panel" type="Panel" parent="CenterContainer/MainPanel/MainPanel/CashOut/TotalCashCashLabel" unique_id=977247020]
-visible = false
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
