@@ -2479,6 +2479,19 @@ func _aim_cell_world_position(aim_row: int, aim_column: int, apply_jitter: bool 
 	return pos
 
 
+## Exact aim-grid world point (A1–C8). No jitter — for crosshair lock / UI.
+func aim_cell_world_position(aim_row: int, aim_column: int) -> Vector3:
+	return _aim_cell_world_position(aim_row, aim_column, false)
+
+
+func aim_grid_row_count() -> int:
+	return AIM_LANE_Y.size()
+
+
+func aim_grid_column_count() -> int:
+	return COLUMN_COUNT
+
+
 ## Launch position: column X is assigned in prepare; Y/Z come from the rock instance.
 func _launch_world_position(body) -> Vector3:
 	return Vector3(body.target_x_position, body.global_position.y, body.global_position.z)

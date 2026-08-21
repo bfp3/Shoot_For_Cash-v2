@@ -13,26 +13,26 @@ var keyboard_velocity := Vector2.ZERO
 @export_group('Scope Shrink While Holding')
 @onready var scope_shrink_sfx : AudioStreamPlayer = $SFX/ScopeShrink
 @export var scope_shrink_sfx_min_pitch := 1.0
-@export var scope_shrink_sfx_max_pitch := 1.5
-@export var scope_shrink_duration := 0.5          # total seconds to fully shrink, regardless of starting size
+@export var scope_shrink_sfx_max_pitch := 50.0
+const scope_shrink_duration := 0.35 #0.5          # total seconds to fully shrink, regardless of starting size
 @export var scope_shrink_large_bonus := 0.2        # extra seconds tacked on for very large scopes
-@export var scope_shrink_reference_circle := 60.0  # "normal" size; circles above this scale toward the bonus
+const scope_shrink_reference_circle := 60.0  # "normal" size; circles above this scale toward the bonus
 var _current_shrink_duration := 0.5
-@export var scope_min_target_circle := 20.0
+const scope_min_target_circle := 30.0 #20.0
 @export var scope_return_duration := 0.3
 @export var scope_shrink_delay_dur := 0.4
 ## Max scope size while holding right-click, as a multiple of resting radius (1.0 = no grow).
-const SCOPE_EXPAND_MAX_SCALE := 1.85
+const SCOPE_EXPAND_MAX_SCALE := 1.5 #1.85
 
 @export_group('Scope Shot Modifiers')
 ## Applied to upgraded base travel time while shrinking. Lower = faster bullets (travel seconds).
-@export var scope_shrink_bullet_speed_scale := 0.5
+@export var scope_shrink_bullet_speed_scale := 0.3
 ## Applied to upgraded base travel time while expanding. Higher = slower bullets.
-@export var scope_expand_bullet_speed_scale := 7.0
+@export var scope_expand_bullet_speed_scale := 0.3
 ## Applied to upgraded base fire-rate cooldown while shrinking. Lower = faster fire.
-@export var scope_shrink_fire_rate_scale := 0.14
+@export var scope_shrink_fire_rate_scale := 0.2
 ## Applied to upgraded base fire-rate cooldown while expanding. Higher = slower fire.
-@export var scope_expand_fire_rate_scale := 5.7
+@export var scope_expand_fire_rate_scale := 0.2
 ## Resting upgrade values — restored when not holding shrink/expand.
 var _base_bullet_speed := 0.3
 var _base_gun_fire_rate := 0.1
@@ -155,9 +155,21 @@ var joystick_sensitivity := 500.0
 @export var gyro_auto_calibrate_on_connect := true
 @export_range(0.25, 3.0, 0.05) var gyro_calibrate_seconds := 1.0
 
+@export_group("Grid Aim")
+## When false, keyboard / left stick / D-pad keep free aim. When true, they step between A1–C8 grid cells.
+@export var grid_aim_enabled := false
+## Screen pixels per second while sliding the crosshair between grid cells.
+@export var grid_aim_move_speed := 1800.0
+
 const light_colour := Color('FFFFFF')
 const light_intensity := 2.0
 
+## Crosshair Control is 40×40; gun aim uses global_position + this offset (center).
+const CROSSHAIR_CENTER_OFFSET := Vector2(20.0, 20.0)
+const GRID_AIM_ON_CELL_PX := 36.0
+const GRID_AIM_REPEAT_INITIAL_SEC := 0.32
+const GRID_AIM_REPEAT_RATE_SEC := 0.11
+const GRID_AIM_STICK_DEADZONE := 0.55
 
 var start_rotation : Vector3
 
@@ -168,6 +180,18 @@ var _right_stick_velocity := Vector2.ZERO
 var _gyro_velocity := Vector2.ZERO
 var _gyro_device := -1
 var _gyro_calibrating := false
+
+## Grid aim lock (A=1…C=3 rows, columns 1…8). Active only while `grid_aim_enabled`.
+var _grid_aim_row := 2
+var _grid_aim_column := 4
+var _grid_aim_has_cell := false
+var _grid_aim_moving := false
+var _grid_aim_screen_target := Vector2.ZERO
+var _grid_aim_hold_dir := Vector2.ZERO
+var _grid_aim_repeat_timer := 0.0
+var _grid_aim_stick_dir := Vector2i.ZERO
+var _grid_aim_dpad_dir := Vector2i.ZERO
+var _grid_rock_manager: RockManager
 
 var crosshair_move_left_limit := 660
 var crosshair_move_right_limit := 1260
@@ -397,8 +421,14 @@ func _process(delta: float) -> void:
 	if running_on_mobile:
 		target_crosshair_position += mobile_controller.get_crosshair_motion()
 
+	# Keyboard / left stick / D-pad before reticle push so grid slides apply this frame.
+	handle_keyboard_and_controller_input(delta)
+
 	crosshair.position = target_crosshair_position
-	crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
+	if grid_aim_enabled and _grid_aim_moving:
+		crosshair_position = target_crosshair_position
+	else:
+		crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
 	%Crosshair.global_position = crosshair_position
 
 	# Desktop: InputMap shoot / scope. Mobile: left-half touch only (ignore emulated mouse).
@@ -422,7 +452,6 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
-	handle_keyboard_and_controller_input(delta)
 	handle_right_stick_crosshair(delta)
 	handle_gyro_crosshair(delta)
 	update_gun_look()
@@ -431,7 +460,7 @@ func _process(delta: float) -> void:
 	
 func update_gun_look() -> void:
 
-	var screen_pos = crosshair.global_position + Vector2(20.0,20.0)
+	var screen_pos = crosshair.global_position + CROSSHAIR_CENTER_OFFSET
 
 	# Ray from camera through crosshair
 	var ray_origin = camera_3d.project_ray_origin(screen_pos)
@@ -552,6 +581,10 @@ func handle_joystick(delta : float) -> void:
 	target_crosshair_position += joystick_motion
 
 func handle_keyboard_and_controller_input(delta: float) -> void:
+	if grid_aim_enabled:
+		_handle_grid_aim_input(delta)
+		return
+
 	# Raw stick axes keep full 360° aim. InputMap deadzones on left/right/forward/backward
 	# snap diagonals to cardinals, so only use those for keyboard.
 	var stick := Vector2(
@@ -594,6 +627,256 @@ func handle_keyboard_and_controller_input(delta: float) -> void:
 	target_crosshair_position += keyboard_velocity * delta
 
 
+## Discrete A1–C8 aim: WASD / left stick / D-pad step cells; crosshair eases between them.
+func _handle_grid_aim_input(delta: float) -> void:
+	keyboard_velocity = Vector2.ZERO
+
+	var step_dir := _poll_grid_aim_step_dir(delta)
+	if step_dir != Vector2.ZERO:
+		_grid_aim_apply_step(step_dir)
+
+	if not _grid_aim_moving:
+		return
+
+	_refresh_grid_aim_screen_target()
+	var speed := maxf(grid_aim_move_speed, 1.0)
+	target_crosshair_position = target_crosshair_position.move_toward(
+		_grid_aim_screen_target, speed * delta
+	)
+	# Keep visual lag from fighting the intentional slide.
+	crosshair_position = crosshair_position.move_toward(_grid_aim_screen_target, speed * delta)
+	if target_crosshair_position.distance_to(_grid_aim_screen_target) <= 0.75:
+		target_crosshair_position = _grid_aim_screen_target
+		crosshair_position = _grid_aim_screen_target
+		_grid_aim_moving = false
+
+
+func _poll_grid_aim_step_dir(delta: float) -> Vector2:
+	var pressed := _grid_aim_held_screen_dir()
+
+	var stick := Vector2(
+		Input.get_joy_axis(0, JOY_AXIS_LEFT_X),
+		Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
+	)
+	var stick_active := stick.length() >= GRID_AIM_STICK_DEADZONE
+
+	# Fresh press — skip action just_pressed while the stick is tilted so we don't
+	# double-fire (InputMap deadzone edge + our stick edge).
+	var edge := Vector2.ZERO
+	if not stick_active:
+		if Input.is_action_just_pressed("right") or Input.is_action_just_pressed("ui_right"):
+			edge.x += 1.0
+		if Input.is_action_just_pressed("left") or Input.is_action_just_pressed("ui_left"):
+			edge.x -= 1.0
+		if Input.is_action_just_pressed("backward") or Input.is_action_just_pressed("ui_down"):
+			edge.y += 1.0
+		if Input.is_action_just_pressed("forward") or Input.is_action_just_pressed("ui_up"):
+			edge.y -= 1.0
+
+	var stick_dir := Vector2i.ZERO
+	if stick_active:
+		if absf(stick.x) >= absf(stick.y):
+			stick_dir.x = 1 if stick.x > 0.0 else -1
+		else:
+			stick_dir.y = 1 if stick.y > 0.0 else -1
+	if stick_dir != _grid_aim_stick_dir:
+		_grid_aim_stick_dir = stick_dir
+		if stick_dir != Vector2i.ZERO:
+			edge = Vector2(stick_dir)
+
+	var dpad := _grid_aim_dpad_vector()
+	if dpad != _grid_aim_dpad_dir:
+		_grid_aim_dpad_dir = dpad
+		if dpad != Vector2i.ZERO:
+			edge = Vector2(dpad)
+
+	if edge != Vector2.ZERO:
+		_grid_aim_hold_dir = _cardinalize_screen_dir(edge)
+		_grid_aim_repeat_timer = GRID_AIM_REPEAT_INITIAL_SEC
+		return _grid_aim_hold_dir
+
+	# Hold-to-repeat while a direction stays held.
+	if pressed == Vector2.ZERO:
+		_grid_aim_hold_dir = Vector2.ZERO
+		_grid_aim_repeat_timer = 0.0
+		return Vector2.ZERO
+
+	var hold := _cardinalize_screen_dir(pressed)
+	if hold != _grid_aim_hold_dir:
+		_grid_aim_hold_dir = hold
+		_grid_aim_repeat_timer = GRID_AIM_REPEAT_INITIAL_SEC
+		return hold
+
+	_grid_aim_repeat_timer -= delta
+	if _grid_aim_repeat_timer <= 0.0:
+		_grid_aim_repeat_timer = GRID_AIM_REPEAT_RATE_SEC
+		return hold
+	return Vector2.ZERO
+
+
+func _grid_aim_held_screen_dir() -> Vector2:
+	var dir := Vector2(
+		Input.get_axis("left", "right"),
+		Input.get_axis("forward", "backward")
+	)
+	# Arrow keys / default UI actions (often where D-pad lands).
+	dir.x += Input.get_axis("ui_left", "ui_right")
+	dir.y += Input.get_axis("ui_up", "ui_down")
+	var dpad := _grid_aim_dpad_vector()
+	dir += Vector2(dpad)
+	var stick := Vector2(
+		Input.get_joy_axis(0, JOY_AXIS_LEFT_X),
+		Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
+	)
+	if stick.length() >= GRID_AIM_STICK_DEADZONE:
+		dir = stick
+	return dir
+
+
+func _grid_aim_dpad_vector() -> Vector2i:
+	var x := 0
+	var y := 0
+	if Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_RIGHT):
+		x += 1
+	if Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_LEFT):
+		x -= 1
+	if Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_DOWN):
+		y += 1
+	if Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_UP):
+		y -= 1
+	if x != 0 and y != 0:
+		# Prefer the stronger axis when both are somehow held.
+		if absf(Input.get_joy_axis(0, JOY_AXIS_LEFT_X)) >= absf(Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)):
+			y = 0
+		else:
+			x = 0
+	return Vector2i(x, y)
+
+
+func _cardinalize_screen_dir(dir: Vector2) -> Vector2:
+	if dir.length_squared() < 0.0001:
+		return Vector2.ZERO
+	if absf(dir.x) >= absf(dir.y):
+		return Vector2(signf(dir.x), 0.0)
+	return Vector2(0.0, signf(dir.y))
+
+
+func _grid_aim_apply_step(screen_dir: Vector2) -> void:
+	var rocks := _get_rock_manager()
+	if rocks == null:
+		return
+
+	var dest := _resolve_grid_aim_destination(rocks, screen_dir)
+	_grid_aim_row = dest.x
+	_grid_aim_column = dest.y
+	_grid_aim_has_cell = true
+	_grid_aim_moving = true
+	_refresh_grid_aim_screen_target()
+
+
+func _resolve_grid_aim_destination(rocks: RockManager, screen_dir: Vector2) -> Vector2i:
+	var aim := _aim_screen_center()
+	var dir := _cardinalize_screen_dir(screen_dir)
+	if dir == Vector2.ZERO:
+		return _nearest_grid_cell(rocks, aim)
+
+	# Prefer the locked cell while sliding / sitting on it; otherwise the nearest to the reticle.
+	var from := _nearest_grid_cell(rocks, aim)
+	if _grid_aim_has_cell:
+		var locked_screen := _grid_cell_aim_screen(rocks, _grid_aim_row, _grid_aim_column)
+		if _grid_aim_moving or aim.distance_to(locked_screen) <= GRID_AIM_ON_CELL_PX:
+			from = Vector2i(_grid_aim_row, _grid_aim_column)
+
+	# From that cell, apply the input (right → B4 becomes B5).
+	return _grid_step_from_cell(rocks, from.x, from.y, dir)
+
+
+## Index step: right → +column (B4→B5), left → −column, up → toward A, down → toward C.
+func _grid_step_from_cell(
+	rocks: RockManager, row: int, column: int, screen_dir: Vector2
+) -> Vector2i:
+	var next_row := row
+	var next_col := column
+	if screen_dir.x > 0.0:
+		next_col += 1
+	elif screen_dir.x < 0.0:
+		next_col -= 1
+	elif screen_dir.y > 0.0:
+		next_row += 1
+	elif screen_dir.y < 0.0:
+		next_row -= 1
+
+	next_row = clampi(next_row, 1, rocks.aim_grid_row_count())
+	next_col = clampi(next_col, 1, rocks.aim_grid_column_count())
+	return Vector2i(next_row, next_col)
+
+
+func _nearest_grid_cell(rocks: RockManager, from_screen: Vector2) -> Vector2i:
+	var best := Vector2i(2, 4)
+	var best_dist := INF
+	var row_count := rocks.aim_grid_row_count()
+	var col_count := rocks.aim_grid_column_count()
+
+	for row in range(1, row_count + 1):
+		for col in range(1, col_count + 1):
+			var dist := from_screen.distance_to(_grid_cell_aim_screen(rocks, row, col))
+			if dist < best_dist:
+				best_dist = dist
+				best = Vector2i(row, col)
+	return best
+
+
+func _aim_screen_center() -> Vector2:
+	# Prefer the visible reticle; fall back to the logical target.
+	if crosshair != null:
+		return crosshair.global_position + CROSSHAIR_CENTER_OFFSET
+	return target_crosshair_position + CROSSHAIR_CENTER_OFFSET
+
+
+func _grid_cell_aim_screen(rocks: RockManager, row: int, column: int) -> Vector2:
+	var world := rocks.aim_cell_world_position(row, column)
+	return camera_3d.unproject_position(world)
+
+
+func _refresh_grid_aim_screen_target() -> void:
+	var rocks := _get_rock_manager()
+	if rocks == null or not _grid_aim_has_cell:
+		return
+	_grid_aim_screen_target = (
+		_grid_cell_aim_screen(rocks, _grid_aim_row, _grid_aim_column) - CROSSHAIR_CENTER_OFFSET
+	)
+
+
+func _clear_grid_aim_lock() -> void:
+	_grid_aim_has_cell = false
+	_grid_aim_moving = false
+	_grid_aim_hold_dir = Vector2.ZERO
+	_grid_aim_repeat_timer = 0.0
+
+
+func _get_rock_manager() -> RockManager:
+	if _grid_rock_manager != null and is_instance_valid(_grid_rock_manager):
+		return _grid_rock_manager
+
+	var rm = roundManager
+	if rm == null:
+		rm = get_tree().get_first_node_in_group("round_manager")
+	if rm != null:
+		var rocks = rm.get("rocks_container")
+		if rocks is RockManager:
+			_grid_rock_manager = rocks
+			return _grid_rock_manager
+
+	var scene := get_tree().current_scene
+	if scene != null:
+		var node := scene.get_node_or_null("Rocks")
+		if node is RockManager:
+			_grid_rock_manager = node
+			return _grid_rock_manager
+
+	return null
+
+
 ## Slow precision aim from the right stick (stacks with gyro / left stick / WASD / mouse).
 func handle_right_stick_crosshair(delta: float) -> void:
 	if running_on_mobile:
@@ -604,6 +887,8 @@ func handle_right_stick_crosshair(delta: float) -> void:
 		Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
 	)
 	_right_stick_velocity = _fine_aim_integrate(stick, _right_stick_velocity, delta)
+	if grid_aim_enabled and _right_stick_velocity.length_squared() > 0.01:
+		_clear_grid_aim_lock()
 	target_crosshair_position += _right_stick_velocity * delta
 
 
@@ -625,6 +910,8 @@ func handle_gyro_crosshair(delta: float) -> void:
 
 	var stick := _gyro_as_stick(_gyro_device)
 	_gyro_velocity = _fine_aim_integrate(stick, _gyro_velocity, delta)
+	if grid_aim_enabled and _gyro_velocity.length_squared() > 0.01:
+		_clear_grid_aim_lock()
 	target_crosshair_position += _gyro_velocity * delta
 
 
@@ -1332,6 +1619,8 @@ func _input(event: InputEvent) -> void:
 	
 	if !running_on_mobile and event is InputEventMouseMotion:
 		# Resolution-independent look: same screen-fraction motion on any monitor.
+		if grid_aim_enabled:
+			_clear_grid_aim_lock()
 		target_crosshair_position += GameSettings.mouse_look_delta(event.relative)
 
 

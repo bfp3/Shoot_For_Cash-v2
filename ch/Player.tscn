@@ -637,18 +637,14 @@ turbulence_influence_over_life = SubResource("CurveTexture_y08kl")
 
 [node name="Player" type="Node3D" unique_id=1061800479 node_paths=PackedStringArray("weapon_shooting", "player_gun") groups=["Player"]]
 script = ExtResource("1_6ljxy")
-scope_shrink_sfx_max_pitch = 50.0
-scope_min_target_circle = 30.0
-scope_shrink_bullet_speed_scale = 0.3
-scope_expand_bullet_speed_scale = 0.3
-scope_shrink_fire_rate_scale = 0.35
-scope_expand_fire_rate_scale = 0.35
 alt_weapon_enabled = false
 alt_bullet_scene = ExtResource("14_altbullet")
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
 gyro_aim_enabled = false
 gyro_auto_calibrate_on_connect = false
+grid_aim_enabled = true
+grid_aim_move_speed = 3600.0
 
 [node name="Weapon_shooting" type="Node3D" parent="." unique_id=2019545500 node_paths=PackedStringArray("player_camera", "stable_camera", "player_gun")]
 script = ExtResource("17_0locf")
