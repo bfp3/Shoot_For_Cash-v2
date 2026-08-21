@@ -173,6 +173,9 @@ var _bounds_check_accum := 0.0
 ## Intra-wave script cursor: `wait` (until clear) / `balloon-check` / `clear`.
 var _full_wave_sequence: Array = []
 var _sequence_cursor := 0
+## Active scriptor `sfx-play` instances, keyed by file stem (e.g. Windmill_YokoKanno).
+var _script_sfx_players: Dictionary = {}
+var _script_sfx_fade_tokens: Dictionary = {}
 var _sequence_active := false
 var _waiting_until_clear := false
 var _checkpoint_hold := false
@@ -386,10 +389,10 @@ func _launch_next_sequence_beat() -> void:
 			_sequence_cursor += 1
 			_arm_pineapple_opportunity()
 			continue
-		if cmd == "music-start" or cmd == "music-stop":
-			var music_entry = _full_wave_sequence[_sequence_cursor]
+		if cmd == "sfx-play" or cmd == "sfx-stop":
+			var sfx_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
-			_handle_music_command(music_entry)
+			_handle_sfx_command(sfx_entry)
 			continue
 		if cmd == "ammo":
 			var ammo_entry = _full_wave_sequence[_sequence_cursor]
@@ -461,8 +464,8 @@ func _collect_next_beat() -> Array:
 			_arm_pineapple_opportunity()
 			_sequence_cursor += 1
 			continue
-		if cmd == "music-start" or cmd == "music-stop":
-			_handle_music_command(_full_wave_sequence[_sequence_cursor])
+		if cmd == "sfx-play" or cmd == "sfx-stop":
+			_handle_sfx_command(_full_wave_sequence[_sequence_cursor])
 			_sequence_cursor += 1
 			continue
 		if cmd == "ammo" or _is_sequence_barrier_cmd(cmd) or _is_clear_cmd(cmd):
@@ -819,25 +822,110 @@ func _handle_clear_command(entry) -> void:
 	_clear_live_balloons()
 
 
-func _handle_music_command(entry) -> void:
+func _handle_sfx_command(entry) -> void:
 	if entry == null or not (entry is Dictionary):
 		return
 	var cmd := String(entry.get("cmd", "")).to_lower()
-	var song_name := String(entry.get("name", "")).strip_edges()
-	if song_name.is_empty():
-		push_warning("RockManager: %s needs a Music child name (e.g. Opening_song)" % cmd)
+	var sfx_name := String(entry.get("name", "")).strip_edges()
+	if sfx_name.is_empty():
+		push_warning("RockManager: %s needs a file name under res://sfx/ (e.g. Windmill_YokoKanno)" % cmd)
 		return
-	var music := get_tree().get_first_node_in_group("level_music")
-	if music == null:
-		push_warning("RockManager: no Music node in group 'level_music'")
+	if cmd == "sfx-play":
+		_script_sfx_play(sfx_name, float(entry.get("volume_db", -20.0)))
 		return
-	if cmd == "music-start":
-		if music.has_method("script_start_music"):
-			music.script_start_music(song_name)
+	if cmd == "sfx-stop":
+		_script_sfx_stop(sfx_name, float(entry.get("fade_sec", 3.0)))
+
+
+func _script_sfx_play(sfx_name: String, volume_db: float) -> void:
+	var key := sfx_name.get_file().get_basename()
+	# Restart if the same cue is already playing.
+	if _script_sfx_players.has(key):
+		var existing = _script_sfx_players[key]
+		if is_instance_valid(existing):
+			existing.stop()
+			existing.queue_free()
+		_script_sfx_players.erase(key)
+	_script_sfx_fade_tokens[key] = int(_script_sfx_fade_tokens.get(key, 0)) + 1
+
+	var stream := _load_sfx_stream(sfx_name)
+	if stream == null:
+		push_warning("RockManager: could not load sfx '%s' from res://sfx/" % sfx_name)
 		return
-	if cmd == "music-stop":
-		if music.has_method("script_stop_music"):
-			music.script_stop_music(song_name, 3.0)
+
+	var player := AudioStreamPlayer.new()
+	player.name = "ScriptSfx_%s" % key
+	player.stream = stream
+	player.volume_db = volume_db
+	player.bus = &"MusicBus"
+	add_child(player)
+	_script_sfx_players[key] = player
+	player.finished.connect(func() -> void:
+		if _script_sfx_players.get(key) == player:
+			_script_sfx_players.erase(key)
+		if is_instance_valid(player):
+			player.queue_free()
+	)
+	player.play()
+
+
+func _script_sfx_stop(sfx_name: String, fade_sec: float) -> void:
+	var key := sfx_name.get_file().get_basename()
+	if not _script_sfx_players.has(key):
+		return
+	var player: AudioStreamPlayer = _script_sfx_players[key]
+	if not is_instance_valid(player):
+		_script_sfx_players.erase(key)
+		return
+
+	var token := int(_script_sfx_fade_tokens.get(key, 0)) + 1
+	_script_sfx_fade_tokens[key] = token
+	var dur := maxf(fade_sec, 0.0)
+	if dur <= 0.001:
+		_script_sfx_players.erase(key)
+		player.stop()
+		player.queue_free()
+		return
+
+	var tween := create_tween().set_ease(Tween.EASE_IN)
+	tween.tween_property(player, "volume_db", -80.0, dur)
+	await tween.finished
+	if int(_script_sfx_fade_tokens.get(key, 0)) != token:
+		return
+	if _script_sfx_players.get(key) == player:
+		_script_sfx_players.erase(key)
+	if is_instance_valid(player):
+		player.stop()
+		player.queue_free()
+
+
+func _load_sfx_stream(sfx_name: String) -> AudioStream:
+	var stem := String(sfx_name).strip_edges()
+	if stem.is_empty():
+		return null
+	# Allow `Windmill_YokoKanno`, `Windmill_YokoKanno.ogg`, or a subpath under sfx/.
+	var candidates: PackedStringArray = []
+	if stem.begins_with("res://"):
+		candidates.append(stem)
+	else:
+		var base := stem
+		if base.begins_with("sfx/"):
+			base = base.substr(4)
+		var has_ext := base.contains(".")
+		if has_ext:
+			candidates.append("res://sfx/%s" % base)
+		else:
+			for ext in [".ogg", ".wav", ".mp3"]:
+				candidates.append("res://sfx/%s%s" % [base, ext])
+			for ext in [".ogg", ".wav", ".mp3"]:
+				candidates.append("res://sfx/spare_songs/%s%s" % [base, ext])
+
+	for path in candidates:
+		if ResourceLoader.exists(path):
+			var res := load(path)
+			if res is AudioStream:
+				return res
+	return null
 
 
 func _clear_balloon_at(row: int, column: int) -> void:
@@ -1528,9 +1616,22 @@ func column_to_x(column: int) -> float:
 	var clamped_column := clampi(column, 1, COLUMN_COUNT)
 	if clamped_column != column:
 		push_warning("RockManager: column %d out of range [1, %d], clamped to %d." % [column, COLUMN_COUNT, clamped_column])
+	return _column_to_x_unclamped(clamped_column)
+
+
+## Aim / crosshair X. Supports side lanes: column 0 (outside 1) and 9 (outside 8).
+func column_to_x_for_aim(column: int) -> float:
+	return _column_to_x_unclamped(column)
+
+
+func _column_to_x_unclamped(column: int) -> float:
 	var step := COLUMN_STEP + broaden_columns
 	var half_span := float(COLUMN_COUNT - 1) * 0.5 * step
-	return half_span - float(clamped_column - 1) * step
+	if column < 1:
+		return half_span + step * float(1 - column)
+	if column > COLUMN_COUNT:
+		return -half_span - step * float(column - COLUMN_COUNT)
+	return half_span - float(column - 1) * step
 
 
 # --- Column telegraph -------------------------------------------------------
@@ -2501,7 +2602,7 @@ func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_varia
 
 func _aim_cell_world_position(aim_row: int, aim_column: int, apply_jitter: bool = true) -> Vector3:
 	var pos := Vector3(
-		column_to_x(aim_column),
+		column_to_x_for_aim(aim_column),
 		float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1])),
 		AIM_PLANE_Z
 	)
@@ -2514,7 +2615,7 @@ func _aim_cell_world_position(aim_row: int, aim_column: int, apply_jitter: bool 
 	return pos
 
 
-## Exact aim-grid world point (A1–C8). No jitter — for crosshair lock / UI.
+## Exact aim-grid world point (A1–C8, plus optional side lanes 0 / 9). No jitter.
 func aim_cell_world_position(aim_row: int, aim_column: int) -> Vector3:
 	return _aim_cell_world_position(aim_row, aim_column, false)
 
@@ -2525,6 +2626,13 @@ func aim_grid_row_count() -> int:
 
 func aim_grid_column_count() -> int:
 	return COLUMN_COUNT
+
+
+## Inclusive min/max column indices for crosshair grid (adds 0 and 9 when side lanes on).
+func aim_grid_column_bounds(include_side_lanes: bool) -> Vector2i:
+	if include_side_lanes:
+		return Vector2i(0, COLUMN_COUNT + 1)
+	return Vector2i(1, COLUMN_COUNT)
 
 
 ## Launch position: column X is assigned in prepare; Y/Z come from the rock instance.
@@ -2634,7 +2742,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
 			# Keep wait / sequence barriers in place so launch stagger, balloon-checks, and clear survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'music-start' or cmd == 'music-stop':
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'sfx-play' or cmd == 'sfx-stop':
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue

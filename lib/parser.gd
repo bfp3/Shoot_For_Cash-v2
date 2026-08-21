@@ -135,8 +135,10 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 ##   Distinct from the `pineapple` spawn command.
 ## strikes N: {cmd, count} — this round only; player can take N strikes (default 3).
 ##   Example: `strikes 5`.
-## music-start Name / music-stop Name: {cmd, name} — play or fade-out (3s) a child
-##   AudioStreamPlayer under the main scene `$Music` node (e.g. `Opening_song`).
+## sfx-play Name volume_db: {cmd, name, volume_db} — play `res://sfx/Name.ogg` (etc.)
+##   at the given volume. Example: `sfx-play Windmill_YokoKanno -30.0`.
+## sfx-stop Name fade_sec: {cmd, name, fade_sec} — fade that sfx-play instance out over
+##   fade_sec seconds, then stop and free it. Example: `sfx-stop Windmill_YokoKanno 3.0`.
 ## difficulty-easy / difficulty-normal / difficulty-hard / difficulty-expert:
 ##   stored on the range as `difficulty`. Gravity: easy 0.5, normal 1.0, hard 1.5, expert 2.25.
 ##   hard / expert also set bullet travel to 0.1. `difficulty hard` form is accepted.
@@ -207,13 +209,19 @@ func parse_spawn_command(token: String) -> Dictionary:
 				strike_count = maxi(int(parts[1]), 1)
 			return {'cmd': 'strikes', 'count': strike_count}
 
-		'music-start':
-			var start_name := String(parts[1]).strip_edges() if parts.size() > 1 else ''
-			return {'cmd': 'music-start', 'name': start_name}
+		'sfx-play':
+			var play_name := String(parts[1]).strip_edges() if parts.size() > 1 else ''
+			var play_vol := -20.0
+			if parts.size() > 2:
+				play_vol = float(parts[2])
+			return {'cmd': 'sfx-play', 'name': play_name, 'volume_db': play_vol}
 
-		'music-stop':
+		'sfx-stop':
 			var stop_name := String(parts[1]).strip_edges() if parts.size() > 1 else ''
-			return {'cmd': 'music-stop', 'name': stop_name}
+			var fade_sec := 3.0
+			if parts.size() > 2:
+				fade_sec = float(parts[2])
+			return {'cmd': 'sfx-stop', 'name': stop_name, 'fade_sec': fade_sec}
 		
 		'difficulty-easy':
 			return {'cmd': 'difficulty-easy'}
@@ -655,7 +663,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			rounds[key]._pending.append(parsed)
 			continue
 
-		if parsed_cmd == 'music-start' or parsed_cmd == 'music-stop':
+		if parsed_cmd == 'sfx-play' or parsed_cmd == 'sfx-stop':
 			# Mid-round cues — stay in the spawn timeline like ammo / pineapples.
 			rounds[key]._pending.append(parsed)
 			continue

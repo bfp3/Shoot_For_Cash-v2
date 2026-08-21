@@ -160,8 +160,8 @@ var joystick_sensitivity := 500.0
 @export var grid_aim_enabled := false
 ## Screen pixels per second while sliding the crosshair between grid cells.
 @export var grid_aim_move_speed := 1800.0
-## When true, left on column 1 wraps to column 8 (A1→A8) and right on 8 wraps to 1.
-@export var grid_aim_wrap_horizontal := false
+## Extra vertical lanes just outside columns 1 and 8 (same A/B/C heights) for the reticle.
+@export var grid_aim_side_lanes := true
 
 const light_colour := Color('FFFFFF')
 const light_intensity := 2.0
@@ -183,7 +183,7 @@ var _gyro_velocity := Vector2.ZERO
 var _gyro_device := -1
 var _gyro_calibrating := false
 
-## Grid aim lock (A=1…C=3 rows, columns 1…8). Active only while `grid_aim_enabled`.
+## Grid aim lock (rows A=1…C=3; columns 1…8, plus optional side lanes 0 / 9).
 var _grid_aim_row := 2
 var _grid_aim_column := 4
 var _grid_aim_has_cell := false
@@ -794,6 +794,7 @@ func _resolve_grid_aim_destination(rocks: RockManager, screen_dir: Vector2) -> V
 
 
 ## Index step: right → +column (B4→B5), left → −column, up → toward A, down → toward C.
+## With side lanes: column 0 sits outside 1, column 9 outside 8.
 func _grid_step_from_cell(
 	rocks: RockManager, row: int, column: int, screen_dir: Vector2
 ) -> Vector2i:
@@ -809,25 +810,27 @@ func _grid_step_from_cell(
 		next_row -= 1
 
 	next_row = clampi(next_row, 1, rocks.aim_grid_row_count())
-	var col_count := rocks.aim_grid_column_count()
-	if grid_aim_wrap_horizontal:
-		if next_col < 1:
-			next_col = col_count
-		elif next_col > col_count:
-			next_col = 1
-	else:
-		next_col = clampi(next_col, 1, col_count)
+	var bounds := _grid_aim_column_bounds(rocks)
+	next_col = clampi(next_col, bounds.x, bounds.y)
 	return Vector2i(next_row, next_col)
+
+
+func _grid_aim_column_bounds(rocks: RockManager) -> Vector2i:
+	if rocks.has_method("aim_grid_column_bounds"):
+		return rocks.aim_grid_column_bounds(grid_aim_side_lanes)
+	if grid_aim_side_lanes:
+		return Vector2i(0, rocks.aim_grid_column_count() + 1)
+	return Vector2i(1, rocks.aim_grid_column_count())
 
 
 func _nearest_grid_cell(rocks: RockManager, from_screen: Vector2) -> Vector2i:
 	var best := Vector2i(2, 4)
 	var best_dist := INF
 	var row_count := rocks.aim_grid_row_count()
-	var col_count := rocks.aim_grid_column_count()
+	var bounds := _grid_aim_column_bounds(rocks)
 
 	for row in range(1, row_count + 1):
-		for col in range(1, col_count + 1):
+		for col in range(bounds.x, bounds.y + 1):
 			var dist := from_screen.distance_to(_grid_cell_aim_screen(rocks, row, col))
 			if dist < best_dist:
 				best_dist = dist

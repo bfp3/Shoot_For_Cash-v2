@@ -309,8 +309,17 @@ func _on_test_pressed() -> void:
 		push_warning("Round editor: round_manager missing")
 		_busy = false
 		return
-	var text := _script_edit.text
-	print("========== ROUND EDITOR TEST (%s round %d) ==========" % [_current_range, _current_round])
+	var text := _get_test_script_text()
+	if text.strip_edges().is_empty():
+		push_warning("Round editor: nothing to test (empty selection / round)")
+		_busy = false
+		return
+	var selection_only := _has_nonempty_selection()
+	print("========== ROUND EDITOR TEST (%s round %d%s) ==========" % [
+		_current_range,
+		_current_round,
+		" — selection" if selection_only else "",
+	])
 	print(text)
 	print("=====================================================")
 	close_menu()
@@ -319,6 +328,20 @@ func _on_test_pressed() -> void:
 	elif round_manager.has_method("begin_level_editor_test"):
 		await round_manager.begin_level_editor_test(text)
 	_busy = false
+
+
+## Prefer the current TextEdit selection so you can TEST a snippet of the round.
+func _get_test_script_text() -> String:
+	if _has_nonempty_selection():
+		return _script_edit.get_selected_text()
+	return _script_edit.text
+
+
+func _has_nonempty_selection() -> bool:
+	if _script_edit == null:
+		return false
+	var selected := _script_edit.get_selected_text()
+	return not selected.strip_edges().is_empty()
 
 
 func _on_back_pressed() -> void:
