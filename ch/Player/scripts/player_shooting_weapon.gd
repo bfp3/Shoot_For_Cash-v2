@@ -290,17 +290,11 @@ func shoot_target() -> void:
 
 	for target_data in targets:
 		var target = target_data.target
-	
-	
-		if target.name.contains('Orange') or _is_special_midround_target(target):
-			pass
-		else:
-			rock_count += 1
-
-		
-		#if target is RockInstance:
-		if not _is_special_midround_target(target):
-			rocks_to_destroy.append(target)
+		# Balloons / oranges / ammo / balloon-check do not count toward multi-shot.
+		if not _counts_for_multishot(target):
+			continue
+		rock_count += 1
+		rocks_to_destroy.append(target)
 
 	#if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
 		#shooting_sky_mine = true
@@ -414,7 +408,17 @@ func shoot_early_exit_if_aimed() -> bool:
 func _is_special_midround_target(target: Node) -> bool:
 	if target == null or not is_instance_valid(target):
 		return false
-	return target.is_in_group("early_exit_target") or target.is_in_group("ammo_reload_target") or target.is_in_group("ammo_balloon")
+	return target.is_in_group("early_exit_target") or target.is_in_group("ammo_reload_target") or target.is_in_group("ammo_balloon") or target.is_in_group("checkpoint")
+
+
+func _counts_for_multishot(target: Node) -> bool:
+	if target == null or not is_instance_valid(target):
+		return false
+	if _is_special_midround_target(target):
+		return false
+	if target is RockInstance:
+		return true
+	return false
 
 
 func shoot_special_midround_target_if_aimed() -> bool:

@@ -9,11 +9,12 @@ extends Node3D
 ## How far behind the rest position balloons spawn (world Z).
 @export var spawn_distance := 12.0
 ## Stagger between intro balloons at round/shop start.
-@export var intro_stagger := 0.15
+@export var intro_stagger := 0.1
 var balloons_in_play := 0
 var started := false
 const BALLOON_Z_FRONT := 22.5
 const BALLOON_SCENE := preload("res://ch/Rocks/Balloon.tscn")
+const BALLOON_STAGGER_SEC := 0.1
 
 # Column 1 -> -7, column 2 -> -5, ... column 8 -> 7 (mirrored vs RockManager)
 const BALLOON_COLUMN_1_X := 7.0
@@ -108,7 +109,7 @@ func add_balloon(_balloon_array : Array) -> void:
 		started = false
 		return
 
-	var duration := intro_stagger
+	var duration := BALLOON_STAGGER_SEC
 
 	for placement in placements:
 		var row := int(placement.row)
@@ -146,13 +147,13 @@ func spawn_balloon_entry(entry: Dictionary) -> void:
 	if bool(entry.get('all', false)):
 		for row in LANE_Y.keys():
 			for column in range(1, BALLOON_COLUMN_COUNT + 1):
-				await _spawn_one_balloon(int(row), column, intro_stagger, approach_duration)
+				await _spawn_one_balloon(int(row), column, BALLOON_STAGGER_SEC, approach_duration)
 		return
 
 	await _spawn_one_balloon(
 		_resolve_balloon_row(entry),
 		_resolve_balloon_column(entry),
-		0.0,
+		BALLOON_STAGGER_SEC,
 		approach_duration
 	)
 
@@ -172,12 +173,12 @@ func _resolve_balloon_column(entry: Dictionary) -> int:
 
 
 func _spawn_one_balloon(row: int, column: int, stagger_sec: float = 0.5, approach_duration: float = 3.5) -> void:
-	var target_x := balloon_column_to_x(column)
-	var target_y := balloon_lane_to_y(row)
-
-	## Cell already has a live balloon — keep it, do not drift it away or spawn a replacement.
+	## Cell already has a live balloon or one flying in/out — ignore this request.
 	if _balloon_occupying_slot(row, column):
 		return
+
+	var target_x := balloon_column_to_x(column)
+	var target_y := balloon_lane_to_y(row)
 
 	var balloon := _get_next_available_balloon()
 	if balloon == null:
@@ -191,6 +192,8 @@ func _spawn_one_balloon(row: int, column: int, stagger_sec: float = 0.5, approac
 	balloon.occupy_row = row
 	balloon.occupy_column = column
 	balloon.behind_player = false
+	if "transition_locked" in balloon:
+		balloon.transition_locked = true
 	balloon.show()
 	balloon.global_position.x = target_x
 	balloon.global_position.y = target_y
@@ -205,29 +208,46 @@ func _spawn_one_balloon(row: int, column: int, stagger_sec: float = 0.5, approac
 	if spawn_start_delay > 0.0:
 		balloon.slot_tween.tween_interval(spawn_start_delay)
 	balloon.slot_tween.tween_property(balloon, "global_position:z", BALLOON_Z_FRONT, maxf(approach_duration, 0.05))
+	balloon.slot_tween.finished.connect(func():
+		if is_instance_valid(balloon) and "transition_locked" in balloon:
+			balloon.transition_locked = false
+	, CONNECT_ONE_SHOT)
 
-	if stagger_sec > 0.0:
-		await get_tree().create_timer(stagger_sec, false).timeout
+	var pause := stagger_sec if stagger_sec > 0.0 else BALLOON_STAGGER_SEC
+	if pause > 0.0:
+		await get_tree().create_timer(pause, false).timeout
 
 
 ## Send every live round balloon away. Each leftover awards +$10 into the cash pool.
 func clear_live_balloons() -> void:
+	var exiting: Array = []
 	for child in get_children():
 		if not (child is StaticBody3D):
 			continue
 		if bool(child.get("behind_player")):
 			continue
+		if bool(child.get("transition_locked")):
+			continue
 		if not bool(child.get("rock_activated")):
 			continue
-		gl_PlayerState.add_to_cash_pool(10, child.global_position)
-		if child.has_method("drift_away_for_checkpoint"):
-			child.drift_away_for_checkpoint()
+		exiting.append(child)
+	for i in exiting.size():
+		var balloon = exiting[i]
+		if balloon == null or not is_instance_valid(balloon):
+			continue
+		gl_PlayerState.add_to_cash_pool(10, balloon.global_position)
+		if balloon.has_method("drift_away_for_checkpoint"):
+			balloon.drift_away_for_checkpoint()
+		if i < exiting.size() - 1:
+			await get_tree().create_timer(BALLOON_STAGGER_SEC, false).timeout
 
 
 ## Drift the live balloon occupying this grid cell, if any. Same +$10 as `clear`.
 func clear_balloon_at(row: int, column: int) -> void:
 	var balloon := _balloon_occupying_slot(row, column)
 	if balloon == null:
+		return
+	if bool(balloon.get("transition_locked")):
 		return
 	gl_PlayerState.add_to_cash_pool(10, balloon.global_position)
 	if balloon.has_method("drift_away_for_checkpoint"):
@@ -242,10 +262,10 @@ func _balloon_occupying_slot(row: int, column: int) -> StaticBody3D:
 			continue
 		if bool(child.get("behind_player")):
 			continue
-		if not bool(child.get("rock_activated")):
-			continue
 		if int(child.get("occupy_row")) == row and int(child.get("occupy_column")) == column:
 			return child
+		if not bool(child.get("rock_activated")) and not bool(child.get("transition_locked")):
+			continue
 		var pos: Vector3 = child.global_position
 		if absf(pos.x - target_x) < 0.75 and absf(pos.y - target_y) < 0.75:
 			return child
@@ -254,7 +274,7 @@ func _balloon_occupying_slot(row: int, column: int) -> StaticBody3D:
 
 func _get_next_available_balloon() -> StaticBody3D:
 	for i in get_children():
-		if i is StaticBody3D and i.behind_player:
+		if i is StaticBody3D and i.behind_player and not bool(i.get("transition_locked")):
 			return i
 	return null
 
@@ -306,15 +326,17 @@ func add_bonuses() -> void:
 func end_round() -> void:
 	#await add_bonuses()
 	started = false
-	var counter := 0
-	var dur := 0.3
-	var dur_increment := 0.05
+	var live: Array = []
 	for i in get_children():
 		if i is StaticBody3D and not i.behind_player:
-			counter += 1
-			i.end_of_the_round_pop_balloon(counter)
-			await get_tree().create_timer(dur, false).timeout
-			dur = clamp(dur - dur_increment, 0.05,dur)
+			live.append(i)
+	for i in live.size():
+		var balloon = live[i]
+		if balloon == null or not is_instance_valid(balloon):
+			continue
+		balloon.end_of_the_round_pop_balloon(i + 1)
+		if i < live.size() - 1:
+			await get_tree().create_timer(BALLOON_STAGGER_SEC, false).timeout
 
 
 func add_balloon_back_into_list(_balloon: StaticBody3D) -> void:

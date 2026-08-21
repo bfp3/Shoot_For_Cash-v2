@@ -65,6 +65,8 @@ var behind_player := true
 var occupy_row := -1
 var occupy_column := -1
 var slot_tween: Tween
+## True while flying in or out — ignore extra spawn/clear requests.
+var transition_locked := false
 var current_state : State
 
 
@@ -403,6 +405,9 @@ func start_destroyed_process() -> void:
 		
 	set_collision_layer_value(19, false)
 	is_deactivated = true
+	occupy_row = -1
+	occupy_column = -1
+	transition_locked = false
 
 	_leave_play_and_notify_sequence()
 
@@ -421,8 +426,6 @@ func start_destroyed_process() -> void:
 
 
 func _leave_play_and_notify_sequence() -> void:
-	occupy_row = -1
-	occupy_column = -1
 	kill_slot_tween()
 	var parent := get_parent()
 	if parent and parent.has_method("note_balloon_left_play"):
@@ -755,11 +758,10 @@ func kill_slot_tween() -> void:
 
 
 func drift_away_for_checkpoint() -> void:
-	if not rock_activated:
+	if transition_locked or not rock_activated:
 		return
+	transition_locked = true
 	kill_slot_tween()
-	occupy_row = -1
-	occupy_column = -1
 	rock_activated = false
 	stop_gentle_pan()
 	disable_collision()
@@ -773,16 +775,21 @@ func drift_away_for_checkpoint() -> void:
 	tween.parallel().tween_property(self, "global_position:y", 15.0, 3.5)
 	tween.parallel().tween_property(self, "global_position:x", -6.0, 3.5).as_relative()
 	await tween.finished
+	occupy_row = -1
+	occupy_column = -1
+	transition_locked = false
 	var host := get_parent()
 	if host and host.has_method("add_balloon_back_into_list"):
 		host.add_balloon_back_into_list(self)
 
 
 func end_of_the_round_pop_balloon(_added_cash : int) -> void:
-
+	if behind_player:
+		return
+	if not rock_activated and transition_locked:
+		return
+	transition_locked = true
 	kill_slot_tween()
-	occupy_row = -1
-	occupy_column = -1
 	rock_activated = false
 	stop_gentle_pan()
 	disable_collision()
@@ -802,7 +809,10 @@ func end_of_the_round_pop_balloon(_added_cash : int) -> void:
 	tween.parallel().tween_property(self, "global_position:y", 15.0, 3.5) #.as_relative()
 	tween.parallel().tween_property(self, "global_position:x", -6.0, 3.5).as_relative()
 	await tween.finished
-	
+	occupy_row = -1
+	occupy_column = -1
+	transition_locked = false
+
 	if balloon_type == BalloonType.RED:
 		get_parent().add_balloon_back_into_list(self)
 	else:

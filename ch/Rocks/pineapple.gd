@@ -5,7 +5,7 @@ const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 var	did_not_get_all_pineapples := false
 
 @export var cash_value := 3
-var original_cash_value := 3
+var original_cash_value := 30
 @export var force_multiplier := 1.5
 var pitch_adjustment := 0.02
 var taken_hit = false

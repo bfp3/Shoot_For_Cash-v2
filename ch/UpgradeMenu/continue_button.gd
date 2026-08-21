@@ -27,17 +27,18 @@ func _ready() -> void:
 
 	focus_mode = Control.FOCUS_ALL
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	
+	if using_customer_pivot_offset:
+		pivot_offset_ratio = custom_pivot_offset_ratio
 
+	
+	await get_tree().process_frame
+	
 	mouse_entered.connect(_on_focus_entered)
 	mouse_exited.connect(_on_focus_exited)
 
 	focus_entered.connect(_on_focus_entered)
 	focus_exited.connect(_on_focus_exited)
-	
-	if using_customer_pivot_offset:
-		pivot_offset_ratio = custom_pivot_offset_ratio
-
-
 
 func set_state(new_state: UpgradeState, is_affordable: bool) -> void:
 	state = new_state

@@ -339,14 +339,13 @@ func open_level_editor_from_shop() -> bool:
 
 
 ## Open round editor (Shift+F). Requires being on a range that exists in island-shipper.txt.
-## Press again while open to close (toggle).
+## Only the Back button closes it — Shift+F while open does nothing.
 func open_round_editor_from_shop() -> bool:
 	if not is_level_editor_available():
 		return false
 	if level_editor_test_active or level_editor_open:
 		return false
 	if round_editor_open:
-		exit_round_editor_to_shop()
 		return true
 	if round_editor_menu == null:
 		push_warning("RoundManager: round editor menu missing")
@@ -518,6 +517,8 @@ func abort_level_editor_test() -> void:
 	pineapple_mode = false
 	stop_timer()
 	stop_player()
+	_bank_round_cash_pool(true)
+	_reset_range_banked_after_loss()
 	if player and player.has_method("end_level_editor_ammo"):
 		player.end_level_editor_ammo()
 	if rocks_container:
@@ -936,9 +937,9 @@ func is_checkpoint_ceremony() -> bool:
 	return _checkpoint_advancing
 
 
-func _bank_round_cash_pool() -> void:
+func _bank_round_cash_pool(force_wallet: bool = false) -> void:
 	if gl_PlayerState and gl_PlayerState.has_method("bank_cash_pool"):
-		gl_PlayerState.bank_cash_pool(not _is_editor_playtest())
+		gl_PlayerState.bank_cash_pool(force_wallet or not _is_editor_playtest())
 
 
 func _forfeit_round_cash_pool() -> void:
@@ -1251,7 +1252,7 @@ func abort_round_to_shop() -> void:
 
 	if balloon_container:
 		balloon_container.end_round()
-	_forfeit_round_cash_pool()
+	_bank_round_cash_pool(true)
 	_reset_range_banked_after_loss()
 
 	music_manager.shop_music_lower_volume()

@@ -337,6 +337,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not RoundManager.is_level_editor_available() or not _is_open:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
+		if event.shift_pressed and (event.keycode == KEY_F or event.physical_keycode == KEY_F):
+			get_viewport().set_input_as_handled()
+			return
 		if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
 			if event.shift_pressed:
 				_on_test_pressed()
@@ -347,6 +350,9 @@ func _on_script_gui_input(event: InputEvent) -> void:
 	if not _is_open:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
+		if event.shift_pressed and (event.keycode == KEY_F or event.physical_keycode == KEY_F):
+			_script_edit.accept_event()
+			return
 		if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
 			if event.shift_pressed:
 				_on_test_pressed()

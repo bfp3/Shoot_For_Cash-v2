@@ -29,6 +29,9 @@ func _ready() -> void:
 	
 
 func arrive_from_below(rest: Vector3 = REST_POS) -> void:
+	if transition_locked:
+		return
+	transition_locked = true
 	_consumed = false
 	_arrived = false
 	_rest_pos = rest if rest.is_finite() else REST_POS
@@ -56,7 +59,9 @@ func arrive_from_below(rest: Vector3 = REST_POS) -> void:
 	tween.tween_property(self, "global_position", _rest_pos, ARRIVE_DURATION)
 	await tween.finished
 	if _consumed or not is_instance_valid(self):
+		transition_locked = false
 		return
+	transition_locked = false
 	_arrived = true
 	_start_bob()
 	if has_node("AnimationPlayer"):

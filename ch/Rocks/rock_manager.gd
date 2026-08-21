@@ -189,6 +189,10 @@ var _pineapple_opportunity_armed := false
 var _pineapple_round_playing := false
 var _launched_rocks_this_sequence := false
 var _pending_ammo_entries: Array = []
+## True while a timed `wait N` is sleeping so sky-clear does not skip it.
+var _sequence_delay_active := false
+## `wait` after the last rock in a beat — applied before the next command.
+var _pending_sequence_delay_sec := 0.0
 
 enum OobSide { NONE, LEFT, RIGHT, BOTTOM, BEHIND }
 
@@ -233,7 +237,7 @@ func set_difficulty_gravity(difficulty: String) -> void:
 			aim_launch_gravity_scale = _base_aim_launch_gravity_scale
 
 func _process(delta: float) -> void:
-	if _waiting_until_clear and not _checkpoint_hold and not _advancing_sequence and not _final_atmosphere_playing and not _pineapple_round_playing:
+	if _waiting_until_clear and not _checkpoint_hold and not _advancing_sequence and not _final_atmosphere_playing and not _pineapple_round_playing and not _sequence_delay_active:
 		if current_state != State.INACTIVE and current_state != State.ROUND_END:
 			if _sky_is_clear_for_sequence():
 				try_continue_sequence()
@@ -290,6 +294,8 @@ func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
 	_final_atmosphere_playing = false
 	_pineapple_opportunity_armed = false
 	_pineapple_round_playing = false
+	_sequence_delay_active = false
+	_pending_sequence_delay_sec = 0.0
 	_launched_rocks_this_sequence = false
 	_pending_ammo_entries.clear()
 	_launch_next_sequence_beat()
@@ -343,8 +349,32 @@ func _launch_next_sequence_beat() -> void:
 	if not _sequence_active:
 		return
 
+	if _pending_sequence_delay_sec > 0.0:
+		var delay_sec := _pending_sequence_delay_sec
+		_pending_sequence_delay_sec = 0.0
+		_sequence_delay_active = true
+		_waiting_until_clear = true
+		await get_tree().create_timer(delay_sec, false).timeout
+		_sequence_delay_active = false
+		if not _sequence_active:
+			return
+
 	while _sequence_cursor < _full_wave_sequence.size():
 		var cmd := _sequence_cmd_at(_sequence_cursor)
+		if cmd == "wait":
+			var wait_entry = _full_wave_sequence[_sequence_cursor]
+			_sequence_cursor += 1
+			var wait_ms := 0
+			if wait_entry is Dictionary:
+				wait_ms = maxi(int(wait_entry.get("ms", 0)), 0)
+			if wait_ms > 0:
+				_sequence_delay_active = true
+				_waiting_until_clear = true
+				await get_tree().create_timer(float(wait_ms) / 1000.0, false).timeout
+				_sequence_delay_active = false
+				if not _sequence_active:
+					return
+			continue
 		if cmd == "wait-until-clear":
 			_sequence_cursor += 1
 			_consumed_sequence_barrier = true
@@ -387,6 +417,14 @@ func _launch_next_sequence_beat() -> void:
 
 		var beat := _collect_next_beat()
 		if not _beat_has_work(beat):
+			var wait_sec := _beat_standalone_wait_sec(beat)
+			if wait_sec > 0.0:
+				_sequence_delay_active = true
+				_waiting_until_clear = true
+				await get_tree().create_timer(wait_sec, false).timeout
+				_sequence_delay_active = false
+				if not _sequence_active:
+					return
 			continue
 		if _should_play_final_atmosphere():
 			_waiting_until_clear = true
@@ -399,6 +437,7 @@ func _launch_next_sequence_beat() -> void:
 			if not _sequence_active:
 				return
 		_begin_beat(beat)
+		_pending_sequence_delay_sec = _beat_trailing_wait_sec(beat)
 		_waiting_until_clear = true
 		return
 
@@ -434,6 +473,36 @@ func _beat_has_work(beat: Array) -> bool:
 		if typeof(entry) == TYPE_INT and int(entry) < 300:
 			return true
 	return false
+
+
+func _beat_standalone_wait_sec(beat: Array) -> float:
+	var total := 0.0
+	for entry in beat:
+		if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "wait":
+			total += float(maxi(int(entry.get("ms", 0)), 0)) / 1000.0
+	return total
+
+
+func _beat_trailing_wait_sec(beat: Array) -> float:
+	var last_work := -1
+	for i in beat.size():
+		if _beat_entry_is_work(beat[i]):
+			last_work = i
+	if last_work < 0:
+		return 0.0
+	var total := 0.0
+	for i in range(last_work + 1, beat.size()):
+		var entry = beat[i]
+		if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "wait":
+			total += float(maxi(int(entry.get("ms", 0)), 0)) / 1000.0
+	return total
+
+
+func _beat_entry_is_work(entry) -> bool:
+	if entry is Dictionary:
+		var cmd := String(entry.get("cmd", "")).to_lower()
+		return _is_launchable_spawn_cmd(cmd) or cmd == "balloon" or cmd == "pineapple"
+	return typeof(entry) == TYPE_INT and int(entry) < 300
 
 
 func _begin_beat(sequence: Array) -> void:
@@ -494,7 +563,7 @@ func _script_has_more_commands() -> bool:
 
 ## Called when remaining rocks hit 0. Returns true if the wave must stay open.
 func try_continue_sequence() -> bool:
-	if _final_atmosphere_playing or _pineapple_round_playing:
+	if _final_atmosphere_playing or _pineapple_round_playing or _sequence_delay_active:
 		return true
 	var round_manager = get_tree().get_first_node_in_group("round_manager")
 	if round_manager != null:
@@ -543,6 +612,8 @@ func _sky_is_clear_for_sequence() -> bool:
 		return false
 	if _pineapple_round_playing:
 		return false
+	if _sequence_delay_active:
+		return false
 	if _has_live_checkpoint():
 		return false
 	if _timed_events_running:
@@ -583,6 +654,9 @@ func _has_live_checkpoint() -> bool:
 
 
 func _spawn_checkpoint_balloon(entry = null) -> void:
+	if _active_checkpoint != null and is_instance_valid(_active_checkpoint):
+		if bool(_active_checkpoint.get("transition_locked")):
+			return
 	_dismiss_checkpoint()
 	var host := get_tree().get_first_node_in_group("checkpoint_container")
 	if host == null:
@@ -662,6 +736,21 @@ func flush_pending_ammo() -> void:
 
 
 func _spawn_ammo_balloon(entry = null) -> void:
+	var row := 3
+	var column := 6
+	if entry is Dictionary:
+		row = int(entry.get("row", 3))
+		column = int(entry.get("column", 6))
+		if row < 1:
+			row = 3
+		if column < 1:
+			column = 6
+	for node in get_tree().get_nodes_in_group("ammo_balloon"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if int(node.get("occupy_row")) != row or int(node.get("occupy_column")) != column:
+			continue
+		return
 	var host := get_tree().get_first_node_in_group("checkpoint_container")
 	if host == null:
 		host = get_tree().current_scene
@@ -773,6 +862,8 @@ func _cancel_sequence() -> void:
 	_final_atmosphere_playing = false
 	_pineapple_opportunity_armed = false
 	_pineapple_round_playing = false
+	_sequence_delay_active = false
+	_pending_sequence_delay_sec = 0.0
 	_launched_rocks_this_sequence = false
 	_dismiss_checkpoint()
 	_dismiss_ammo_balloons()
@@ -785,7 +876,7 @@ func begin_checkpoint_hold() -> void:
 
 
 func notify_clearable_destroyed() -> void:
-	if _advancing_sequence:
+	if _advancing_sequence or _sequence_delay_active:
 		return
 	if not _waiting_until_clear and not _checkpoint_hold:
 		return
