@@ -390,6 +390,15 @@ func shoot_target() -> void:
 			if round_manager.has_method("on_special_challenge_double"):
 				round_manager.on_special_challenge_double()
 			return
+		# Midpoint of the rocks at the moment of the multi (before destroy VFX moves them).
+		var hit_sum := Vector3.ZERO
+		var hit_count := 0
+		for rock in rocks_to_destroy:
+			if is_instance_valid(rock):
+				hit_sum += rock.global_position
+				hit_count += 1
+		if hit_count > 0:
+			temp_label_pos = hit_sum / float(hit_count)
 		await wait_for_all_rocks_destroyed(rocks_to_destroy)
 		if gl_PlayerState.dataset.total_hazards > 0:
 			return
@@ -614,11 +623,11 @@ func wait_for_all_rocks_destroyed(rocks: Array) -> void:
 		var remaining := 0
 
 		for rock in rocks:
+			if not is_instance_valid(rock):
+				continue
 			if rock.rock_activated:
 				remaining += 1
-		
-			temp_label_pos = rock.global_position
-			
+
 		if remaining == 0:
 			return
 

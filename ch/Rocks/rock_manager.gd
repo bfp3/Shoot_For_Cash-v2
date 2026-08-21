@@ -386,6 +386,11 @@ func _launch_next_sequence_beat() -> void:
 			_sequence_cursor += 1
 			_arm_pineapple_opportunity()
 			continue
+		if cmd == "music-start" or cmd == "music-stop":
+			var music_entry = _full_wave_sequence[_sequence_cursor]
+			_sequence_cursor += 1
+			_handle_music_command(music_entry)
+			continue
 		if cmd == "ammo":
 			var ammo_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
@@ -454,6 +459,10 @@ func _collect_next_beat() -> Array:
 		var cmd := _sequence_cmd_at(_sequence_cursor)
 		if cmd == "pineapples":
 			_arm_pineapple_opportunity()
+			_sequence_cursor += 1
+			continue
+		if cmd == "music-start" or cmd == "music-stop":
+			_handle_music_command(_full_wave_sequence[_sequence_cursor])
 			_sequence_cursor += 1
 			continue
 		if cmd == "ammo" or _is_sequence_barrier_cmd(cmd) or _is_clear_cmd(cmd):
@@ -808,6 +817,27 @@ func _handle_clear_command(entry) -> void:
 			_clear_balloon_at(row, column)
 		return
 	_clear_live_balloons()
+
+
+func _handle_music_command(entry) -> void:
+	if entry == null or not (entry is Dictionary):
+		return
+	var cmd := String(entry.get("cmd", "")).to_lower()
+	var song_name := String(entry.get("name", "")).strip_edges()
+	if song_name.is_empty():
+		push_warning("RockManager: %s needs a Music child name (e.g. Opening_song)" % cmd)
+		return
+	var music := get_tree().get_first_node_in_group("level_music")
+	if music == null:
+		push_warning("RockManager: no Music node in group 'level_music'")
+		return
+	if cmd == "music-start":
+		if music.has_method("script_start_music"):
+			music.script_start_music(song_name)
+		return
+	if cmd == "music-stop":
+		if music.has_method("script_stop_music"):
+			music.script_stop_music(song_name, 3.0)
 
 
 func _clear_balloon_at(row: int, column: int) -> void:
@@ -2449,6 +2479,11 @@ func _x_to_nearest_column(x: float) -> int:
 	return best
 
 
+## World X of the aim-grid column nearest to `x`.
+func nearest_column_x(x: float) -> float:
+	return column_to_x(_x_to_nearest_column(x))
+
+
 ## Ballistic launch through the aim cell world point (e.g. A8 = (-7, 6.5, 23)).
 func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_variation: float) -> Vector3:
 	var aim_pos: Vector3
@@ -2599,7 +2634,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
 			# Keep wait / sequence barriers in place so launch stagger, balloon-checks, and clear survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo':
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'music-start' or cmd == 'music-stop':
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue

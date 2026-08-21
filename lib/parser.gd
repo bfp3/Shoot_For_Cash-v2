@@ -133,6 +133,10 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 ## pineapples: {cmd} — this round only; if you still have no strikes when the
 ##   last rock is shot, a pineapple bonus round starts before balloon-check.
 ##   Distinct from the `pineapple` spawn command.
+## strikes N: {cmd, count} — this round only; player can take N strikes (default 3).
+##   Example: `strikes 5`.
+## music-start Name / music-stop Name: {cmd, name} — play or fade-out (3s) a child
+##   AudioStreamPlayer under the main scene `$Music` node (e.g. `Opening_song`).
 ## difficulty-easy / difficulty-normal / difficulty-hard / difficulty-expert:
 ##   stored on the range as `difficulty`. Gravity: easy 0.5, normal 1.0, hard 1.5, expert 2.25.
 ##   hard / expert also set bullet travel to 0.1. `difficulty hard` form is accepted.
@@ -196,6 +200,20 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'pineapples':
 			return {'cmd': 'pineapples'}
+
+		'strikes':
+			var strike_count := 3
+			if parts.size() > 1:
+				strike_count = maxi(int(parts[1]), 1)
+			return {'cmd': 'strikes', 'count': strike_count}
+
+		'music-start':
+			var start_name := String(parts[1]).strip_edges() if parts.size() > 1 else ''
+			return {'cmd': 'music-start', 'name': start_name}
+
+		'music-stop':
+			var stop_name := String(parts[1]).strip_edges() if parts.size() > 1 else ''
+			return {'cmd': 'music-stop', 'name': stop_name}
 		
 		'difficulty-easy':
 			return {'cmd': 'difficulty-easy'}
@@ -569,6 +587,7 @@ func parse_round_text(text: String) -> Dictionary:
 			"shuffle": false,
 			"pineapples": false,
 			"difficulty": "",
+			"max_strikes": 3,
 		}
 	return sequences[0]
 
@@ -602,6 +621,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				'pineapples': false,
 				'surprise': false,
 				'difficulty': '',
+				'max_strikes': 3,
 				# Temporary while parsing — removed by `_finalize_round_repeats`.
 				'_pending': [],
 				'_sections': [],
@@ -626,8 +646,17 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			rounds[key].no_lives = true
 			continue
 
+		if parsed_cmd == 'strikes':
+			rounds[key].max_strikes = maxi(int(parsed.get('count', 3)), 1)
+			continue
+
 		if parsed_cmd == 'pineapples':
 			rounds[key].pineapples = true
+			rounds[key]._pending.append(parsed)
+			continue
+
+		if parsed_cmd == 'music-start' or parsed_cmd == 'music-stop':
+			# Mid-round cues — stay in the spawn timeline like ammo / pineapples.
 			rounds[key]._pending.append(parsed)
 			continue
 
@@ -838,6 +867,9 @@ func surprise_round_to_text(round_data: Dictionary) -> String:
 		lines.append('no-lives')
 	if bool(round_data.get('shuffle', false)):
 		lines.append('shuffle')
+	var max_strikes := int(round_data.get('max_strikes', 3))
+	if max_strikes != 3:
+		lines.append('strikes %d' % max_strikes)
 	var difficulty := String(round_data.get('difficulty', ''))
 	if not difficulty.is_empty():
 		lines.append('difficulty-%s' % difficulty)

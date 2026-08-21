@@ -2,6 +2,11 @@ extends RigidBody3D
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 
+## When true, multi-shot oranges rise to the hit / midpoint Y instead of a fixed apex.
+@export var aim_apex_at_hit_height := true
+## When true, spawn X snaps to the nearest aim-grid column.
+@export var snap_x_to_nearest_column := true
+
 var cash_value := 0
 var original_cash_value := 0
 ## When false, HIT state skips log_hit / cash (end-of-round explode cleanup).
@@ -68,6 +73,54 @@ var start_pos : Vector3
 var current_rock_type : String = ""
 var rock_type_name : String = ""
 var falling := false
+
+## Soft apex lock for multi-shot launches (world Y). INF = disabled.
+var _apex_target_y := INF
+var _apex_lock_active := false
+
+
+func _physics_process(_delta: float) -> void:
+	if not _apex_lock_active or not rock_activated or falling or rock_destroyed:
+		return
+	if global_position.y < _apex_target_y:
+		return
+	# Hold at the hit height until the fall timer kicks in — keep the soft hover feel.
+	global_position.y = _apex_target_y
+	if linear_velocity.y > 0.0:
+		linear_velocity.y = 0.0
+
+
+## Configure apex / column targeting for a multi-shot spawn. Call after update_active.
+func configure_multi_launch(hit_pos: Vector3) -> void:
+	_apex_lock_active = false
+	_apex_target_y = INF
+
+	var spawn_x := hit_pos.x
+	if snap_x_to_nearest_column:
+		var rocks := _get_rock_manager()
+		if rocks != null and rocks.has_method("nearest_column_x"):
+			spawn_x = rocks.nearest_column_x(hit_pos.x)
+
+	global_position.x = spawn_x
+	global_position.z = hit_pos.z
+
+	if aim_apex_at_hit_height:
+		_apex_target_y = hit_pos.y
+		_apex_lock_active = true
+
+
+func _get_rock_manager() -> RockManager:
+	var rm = get_tree().get_first_node_in_group("round_manager")
+	if rm != null:
+		var rocks = rm.get("rocks_container")
+		if rocks is RockManager:
+			return rocks
+	var scene := get_tree().current_scene
+	if scene != null:
+		var node := scene.get_node_or_null("Rocks")
+		if node is RockManager:
+			return node
+	return null
 
 
 
@@ -152,7 +205,10 @@ func update_active() -> void:
 	#update_gravity(0.0)
 	update_gravity(0.01)
 	global_position = start_pos
-	global_position.x = randi_range(-8,8)
+	# X is set by the launcher (multi-shot hit / column snap). Keep a mild random only
+	# when neither new targeting export is on.
+	if not aim_apex_at_hit_height and not snap_x_to_nearest_column:
+		global_position.x = randi_range(-8, 8)
 	health = 1
 	linear_damp = 5.0
 	orange_mesh.show()
@@ -286,6 +342,8 @@ func reset_stats() -> void:
 	falling = false
 	rock_destroyed = false
 	is_deactivated = false
+	_apex_lock_active = false
+	_apex_target_y = INF
 	global_position = start_pos
 
 
@@ -501,6 +559,7 @@ func play_destroy_sfx() -> void:
 
 func _on_start_falling_timer_timeout() -> void:
 	falling = true
+	_apex_lock_active = false
 	linear_damp = 0.0
 
 func smoke_particles() -> void:

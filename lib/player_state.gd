@@ -432,12 +432,12 @@ func add_strike() -> void:
 		EventBus.instance.add_strike.emit()
 
 
-func get_max_strikes() -> int:
-	return maxi(int(dataset.get("max_strikes", 3)), 3)
-
-
 func set_max_strikes(value: int) -> void:
-	dataset["max_strikes"] = maxi(value, 3)
+	dataset["max_strikes"] = maxi(value, 1)
+
+
+func get_max_strikes() -> int:
+	return maxi(int(dataset.get("max_strikes", 3)), 1)
 	
 
 func check_all_rocks_cleared() -> void:

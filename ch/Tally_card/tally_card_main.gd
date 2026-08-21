@@ -463,7 +463,10 @@ func check_white_rocks() -> void:
 	
 	gl_PlayerState.subtract_penalties_from_cash()
 	
-	if gl_PlayerState.dataset.total_current_strikes >= 3:
+	var max_strikes := 3
+	if gl_PlayerState.has_method("get_max_strikes"):
+		max_strikes = gl_PlayerState.get_max_strikes()
+	if gl_PlayerState.dataset.total_current_strikes >= max_strikes:
 		start_fail_sequence()
 		start_sequence = false
 		return

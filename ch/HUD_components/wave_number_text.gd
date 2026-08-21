@@ -199,7 +199,10 @@ func start_clear() -> void:
 
 func add_strike() -> void:
 	strikes_int += 1
-	if strikes_int > 3:
+	var max_strikes := 3
+	if gl_PlayerState and gl_PlayerState.has_method("get_max_strikes"):
+		max_strikes = gl_PlayerState.get_max_strikes()
+	if strikes_int > max_strikes:
 		#strike_label.text = 'X X X'
 		return
 

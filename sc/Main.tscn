@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cxk0yxen5f6sp" path="res://unfiled/Decal_placeholders/pineapple_1024x1024.png" id="3_wv0tc"]
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="4_fra7e"]
 [ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="5_no853"]
+[ext_resource type="AudioStream" uid="uid://b6da3lywd7cys" path="res://sfx/USERSONG166.ogg" id="8_no853"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="17_lysu5"]
 [ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="19_gu7ia"]
 [ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="20_l8wgb"]
@@ -405,6 +406,11 @@ volume_db = -54.0
 volume_db = -35.0
 bus = &"MusicBus"
 
+[node name="BalloonsGoing" type="AudioStreamPlayer" parent="Music" unique_id=176486947]
+stream = ExtResource("8_no853")
+volume_db = -30.0
+bus = &"MusicBus"
+
 [node name="PerfectPineappleRound" type="AudioStreamPlayer" parent="Music" unique_id=1838793762]
 unique_name_in_owner = true
 stream = ExtResource("17_lysu5")
@@ -798,8 +804,6 @@ debug_color = Color(0, 1, 0, 1)
 [node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("23_ellt3")]
 unique_name_in_owner = true
 transform = Transform3D(-1, -1.4472306e-08, -1.5030065e-07, 0, 0.9953962, -0.09584575, 1.509958e-07, -0.09584575, -0.9953962, 0, -0.875, 0.5)
-scope_shrink_duration = 0.1
-scope_shrink_delay_dur = 0.15
 roundManager = NodePath("../Round_manager")
 
 [node name="AmmoReloadTarget" parent="." unique_id=1821285975 instance=ExtResource("83_ammo")]

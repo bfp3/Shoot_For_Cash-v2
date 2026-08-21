@@ -14,10 +14,10 @@ var keyboard_velocity := Vector2.ZERO
 @onready var scope_shrink_sfx : AudioStreamPlayer = $SFX/ScopeShrink
 @export var scope_shrink_sfx_min_pitch := 1.0
 @export var scope_shrink_sfx_max_pitch := 50.0
-const scope_shrink_duration := 0.35 #0.5          # total seconds to fully shrink, regardless of starting size
+const scope_shrink_duration := 0.1 #0.5          # total seconds to fully shrink, regardless of starting size
 @export var scope_shrink_large_bonus := 0.2        # extra seconds tacked on for very large scopes
 const scope_shrink_reference_circle := 60.0  # "normal" size; circles above this scale toward the bonus
-var _current_shrink_duration := 0.5
+@export var _current_shrink_duration := 0.15
 const scope_min_target_circle := 30.0 #20.0
 @export var scope_return_duration := 0.3
 @export var scope_shrink_delay_dur := 0.4
@@ -160,6 +160,8 @@ var joystick_sensitivity := 500.0
 @export var grid_aim_enabled := false
 ## Screen pixels per second while sliding the crosshair between grid cells.
 @export var grid_aim_move_speed := 1800.0
+## When true, left on column 1 wraps to column 8 (A1→A8) and right on 8 wraps to 1.
+@export var grid_aim_wrap_horizontal := false
 
 const light_colour := Color('FFFFFF')
 const light_intensity := 2.0
@@ -807,7 +809,14 @@ func _grid_step_from_cell(
 		next_row -= 1
 
 	next_row = clampi(next_row, 1, rocks.aim_grid_row_count())
-	next_col = clampi(next_col, 1, rocks.aim_grid_column_count())
+	var col_count := rocks.aim_grid_column_count()
+	if grid_aim_wrap_horizontal:
+		if next_col < 1:
+			next_col = col_count
+		elif next_col > col_count:
+			next_col = 1
+	else:
+		next_col = clampi(next_col, 1, col_count)
 	return Vector2i(next_row, next_col)
 
 

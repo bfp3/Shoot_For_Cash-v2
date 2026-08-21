@@ -24,18 +24,22 @@ func launch_orange(pos : Vector3) -> void:
 	if body == null:
 		return
 	body.update_active()
+
+	if body.has_method("configure_multi_launch"):
+		body.configure_multi_launch(pos)
+	else:
+		body.global_position.x = pos.x
+		body.global_position.z = pos.z
 	
 	#if sideways:
 	body.exit_side = body.ExitSide.TOP
-	# Original vertical/sideways launch
-	body.global_position.x = pos.x
-	
-	# this allows it to spawn in the distance
-	body.global_position.z = pos.z
 	
 	round_manager.orange_active += 1
 	
 	var x_variation = randf_range(-1.0, 1.0)
+	# Keep a little horizontal drift unless column-snap is locking X to a lane.
+	if body.get("snap_x_to_nearest_column") == true:
+		x_variation = 0.0
 	#var upward_force = randf_range(9.5, 10.0)
 	
 	var upward_force = 30.0

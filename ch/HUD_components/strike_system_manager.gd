@@ -52,18 +52,25 @@ func add_strike() -> void:
 
 
 func ensure_extra_strike_slot() -> void:
+	ensure_strike_slots(4)
+
+
+## Grow or shrink the strike indicator row to match this round's max strikes.
+func ensure_strike_slots(count: int) -> void:
 	_cache_indicators()
-	if _indicators.size() >= 4:
-		return
+	var target := maxi(count, 1)
 	if _indicators.is_empty():
 		return
-	var template := _indicators[0]
-	var clone := template.duplicate() as Control
-	if clone == null:
-		return
-	indicators_row.add_child(clone)
-	if clone.has_method("reset"):
-		clone.reset()
+	while _indicators.size() < target:
+		var template := _indicators[0]
+		var clone := template.duplicate() as Control
+		if clone == null:
+			break
+		indicators_row.add_child(clone)
+		if clone.has_method("reset"):
+			clone.reset()
+		_cache_indicators()
+	_trim_to_base_strike_slots(target)
 	_cache_indicators()
 		
 func three_strikes() -> void:
@@ -90,7 +97,11 @@ func reset() -> void:
 	restore_row_position()
 	indicators_row.modulate = _row_original_modulate
 	indicators_row.scale = Vector2.ONE
-	_trim_to_base_strike_slots()
+	var base := 3
+	if gl_PlayerState and gl_PlayerState.has_method("get_max_strikes"):
+		base = gl_PlayerState.get_max_strikes()
+	_trim_to_base_strike_slots(base)
+	ensure_strike_slots(base)
 	for indicator in _indicators:
 		indicator.reset()
 

@@ -836,8 +836,13 @@ func check_round_for_strikes() -> void:
 	current_round = current_sequence_index + 1
 	wave_progress_feedback.reset_strikes()
 	gl_PlayerState.dataset.total_current_strikes = 0
-	if gl_PlayerState.has_method("set_max_strikes"):
-		gl_PlayerState.set_max_strikes(3)
+	# Restore this round's strike cap (default 3, or `strikes N` from the script).
+	var strikes := 3
+	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
+		var round_data = current_rock_sequence[current_sequence_index]
+		if round_data is Dictionary:
+			strikes = int(round_data.get('max_strikes', 3))
+	_apply_round_max_strikes(strikes)
 	if player and player.has_method("reset_accuracy_streak"):
 		player.reset_accuracy_streak()
 
@@ -966,13 +971,14 @@ func _hide_round_cash_hud() -> void:
 		hud.hide_for_menus()
 
 
-## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-easy` from the active sequence entry only.
+## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-easy` / `strikes N` from the active sequence entry only.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
 	bonus_type_this_round = ""
 	difficulty_this_round = ""
 	protect_bonus_failed = false
 	_apply_shuffle_modifier(false)
+	_apply_round_max_strikes(3)
 	if current_rock_sequence.is_empty():
 		_apply_difficulty_runtime()
 		return
@@ -985,6 +991,7 @@ func apply_current_round_modifiers() -> void:
 		no_lives_this_round = bool(round_data.get('no_lives', false)) or bonus_type_this_round != ""
 		difficulty_this_round = String(round_data.get('difficulty', '')).to_lower()
 		_apply_shuffle_modifier(bool(round_data.get('shuffle', false)))
+		_apply_round_max_strikes(int(round_data.get('max_strikes', 3)))
 		if no_lives_this_round:
 			print('RoundManager: no-lives active for this round only')
 		if bonus_type_this_round != "":
@@ -992,6 +999,19 @@ func apply_current_round_modifiers() -> void:
 		if difficulty_this_round != "":
 			print('RoundManager: difficulty-%s active for this round' % difficulty_this_round)
 	_apply_difficulty_runtime()
+
+
+func _apply_round_max_strikes(count: int) -> void:
+	var strikes := maxi(count, 1)
+	if gl_PlayerState and gl_PlayerState.has_method("set_max_strikes"):
+		gl_PlayerState.set_max_strikes(strikes)
+	var strike_hud = null
+	if wave_progress_feedback and "strike_hud" in wave_progress_feedback:
+		strike_hud = wave_progress_feedback.strike_hud
+	if strike_hud != null and strike_hud.has_method("ensure_strike_slots"):
+		strike_hud.ensure_strike_slots(strikes)
+	if strikes != 3:
+		print('RoundManager: strikes %d for this round' % strikes)
 
 
 func _apply_difficulty_runtime() -> void:
