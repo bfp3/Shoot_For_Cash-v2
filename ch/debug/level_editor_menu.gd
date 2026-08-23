@@ -14,6 +14,7 @@ const COMMAND_BUTTONS: PackedStringArray = [
 	"rock-pigeon",
 	"rock-avoider",
 	"rock-chaser",
+	"rock-juggle",
 	"smokecan",
 	"pineapple",
 	"balloon",

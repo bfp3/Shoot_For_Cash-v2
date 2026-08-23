@@ -44,6 +44,11 @@ func _on_body_entered(body: Node3D) -> void:
 			splash_particles(body)
 			splash_sfx()
 			return
+		## Juggle rocks are independent — splash visuals only, no miss / strike / despawn.
+		if body.rock_type == RockInstance.RockSize.JUGGLE:
+			splash_particles(body)
+			splash_sfx()
+			return
 		
 		splash_particles(body)
 		## Soft water splash only for black rocks — no strike sting / OOB hit SFX.

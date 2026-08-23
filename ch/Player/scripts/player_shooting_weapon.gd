@@ -69,10 +69,11 @@ func set_active_bullet_scene(scene: PackedScene) -> void:
 	
 
 
-func get_targets_in_scope() -> Array:
-	
+func get_targets_in_scope(screen_center: Variant = null, circle_radius: float = -1.0, report_blocked_los: bool = true) -> Array:
 	var max_check_distance := view_limit
 	var targets_in_scope: Array = []
+	var aim_center: Vector2 = crosshair.global_position if screen_center == null else screen_center
+	var aim_radius: float = power_target_circle if circle_radius < 0.0 else circle_radius
 
 	var targets = get_tree().get_nodes_in_group("Target")
 
@@ -91,21 +92,16 @@ func get_targets_in_scope() -> Array:
 			continue
 			
 		if !has_line_of_sight(target):
-			%Crosshair.cannot_shoot_obstacle_in_way()
+			if report_blocked_los:
+				%Crosshair.cannot_shoot_obstacle_in_way()
 			continue
 
 		var screen_pos = stable_camera.unproject_position(target.global_position)
-
-		# Distance from scope center to rock center
-		var center_dist = screen_pos.distance_to(crosshair.global_position)
-
-		#var left_dist = screen_pos.distance_to(crosshair.global_position)
-		#if crosshair_left.visible:
-			#left_dist = screen_pos.distance_to(crosshair_left.global_position)
-		#var closest_dist = min(center_dist, left_dist)
-		var closest_dist = center_dist
+		var closest_dist = screen_pos.distance_to(aim_center)
 
 		# Calculate the rock's radius on screen
+		if not ("main_col" in target) or target.main_col == null:
+			continue
 		var world_scale: Vector3 = target.main_col.global_transform.basis.get_scale()
 		var world_radius: float = world_scale.x * 0.5
 
@@ -115,16 +111,12 @@ func get_targets_in_scope() -> Array:
 
 		var screen_radius = screen_pos.distance_to(edge_screen_pos)
 
-		var scope_hit = "center"
-		#if left_dist < center_dist:
-			#scope_hit = "left"
-
 		# Circle overlap test
-		if closest_dist <= power_target_circle + screen_radius:
+		if closest_dist <= aim_radius + screen_radius:
 			targets_in_scope.append({
 				"target": target,
 				"distance": closest_dist,
-				"scope_hit": scope_hit
+				"scope_hit": "center"
 			})
 
 	targets_in_scope.sort_custom(func(a, b):
@@ -132,6 +124,24 @@ func get_targets_in_scope() -> Array:
 	)
 
 	return targets_in_scope
+
+
+## Instant hit as if the gun fired at `aim_center` (used by planted crosshair traps).
+func apply_planted_scope_hit(target: Node3D, aim_center: Vector2) -> void:
+	if not is_instance_valid(target) or not target.has_method("hit_by_player"):
+		return
+	var damage := power_bullet_damage
+	var freeze_shot := false
+	if player and player.get("using_alt_weapon") == true:
+		freeze_shot = true
+	var rock_screen_pos := stable_camera.unproject_position(target.global_position)
+	var screen_offset := rock_screen_pos - aim_center
+	if target.has_method("start_bullet_to_target"):
+		target.start_bullet_to_target()
+	if target is RockInstance:
+		target.hit_by_player(damage, screen_offset, freeze_shot)
+	else:
+		target.hit_by_player(damage, screen_offset)
 
 func has_line_of_sight(target: Node3D) -> bool:
 	var origin = stable_camera.global_position

@@ -163,6 +163,10 @@ var joystick_sensitivity := 500.0
 ## Extra vertical lanes just outside columns 1 and 8 (same A/B/C heights) for the reticle.
 @export var grid_aim_side_lanes := true
 
+@export_group("Planted Crosshair")
+## When true, fire-release plants a crosshair trap instead of shooting. Overlap = hit; expires after 7s. Max 5.
+@export var plant_crosshair_on_fire := false
+
 const light_colour := Color('FFFFFF')
 const light_intensity := 2.0
 
@@ -1472,19 +1476,21 @@ func fire_weapon() -> void:
 	if rm and rm.has_method("try_register_weapon_shot") and not bool(rm.try_register_weapon_shot()):
 		weapon_shooting.play_missed_sounds()
 		return
-	
-	#set_process(false)
-	#set_process_input(false)
+
+	if plant_crosshair_on_fire:
+		if not debug_infinite_ammo and not consume_ammo(1):
+			out_of_ammo()
+			weapon_shooting.play_missed_sounds()
+			register_accuracy_miss()
+			return
+		if not %Crosshair.plant_crosshair_trap():
+			weapon_shooting.play_missed_sounds()
+			return
+		player_did_not_miss()
+		return
+
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
-	
-	#$CanvasLayer/Crosshair/RedDot.hide()
-	
-	#await get_tree().create_timer(0.25).timeout
-	#set_process_input(true)
-	#set_process(true)
-	
-	#%Crosshair.duplicate_inner_scope()
 	
 
 func out_of_ammo() -> void:

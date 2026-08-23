@@ -1185,6 +1185,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.AVOIDER
 			'rock-chaser':
 				return RockInstance.RockSize.CHASER
+			'rock-juggle':
+				return RockInstance.RockSize.JUGGLE
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -1204,6 +1206,7 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'smokecan'
 		or cmd == 'rock-avoider'
 		or cmd == 'rock-chaser'
+		or cmd == 'rock-juggle'
 	)
 
 
@@ -1440,6 +1443,9 @@ func check_wave_clear_if_no_live_rocks() -> void:
 func _any_live_round_rocks() -> bool:
 	for body in $Container_1.get_children():
 		if not (body is RockInstance):
+			continue
+		## Juggle rocks run independently — never block wait / wait-until-clear.
+		if body.rock_type == RockInstance.RockSize.JUGGLE:
 			continue
 		## Still waiting to launch this wave.
 		if body.current_state == body.State.PREPARE_ROCK:

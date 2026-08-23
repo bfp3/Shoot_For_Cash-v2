@@ -400,6 +400,8 @@ func log_rock_missed(item : String = '') -> void:
 		return
 	if item.contains('rock_type_avoider') or item.contains('avoider'):
 		return
+	if item.contains('rock_type_juggle') or item.contains('juggle'):
+		return
 
 	dataset.total_rocks_in_round_remaining -= 1
 	

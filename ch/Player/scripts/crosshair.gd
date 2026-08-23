@@ -51,6 +51,11 @@ var _laser_layer: Control
 var _laser_pool: Array[TextureRect] = []
 var _laser_alpha: Array[float] = []
 
+const PLANTED_CROSSHAIR_MAX := 5
+const PLANTED_CROSSHAIR_LIFETIME_SEC := 7.0
+## Planted traps: { "node": Control, "aim": Vector2, "age": float, "radius": float, "dissipating": bool }
+var _planted_crosshairs: Array[Dictionary] = []
+
 
 func _ready() -> void:
 	modulate = Color.TRANSPARENT
@@ -70,10 +75,12 @@ func _ready() -> void:
 	$Panel.hide()
 	_cache_default_weapon_style()
 	_setup_target_laser_dots()
+	set_process(true)
 
 
-#func _process(delta: float) -> void:
+func _process(delta: float) -> void:
 	#_update_target_laser_dots(delta)
+	_update_planted_crosshairs(delta)
 
 
 func _setup_target_laser_dots() -> void:
@@ -369,25 +376,116 @@ func crosshair_fade_out_mode() -> void:
 	tween.tween_property(self, "modulate", Color('ffffff00'),0.25)
 	await tween.finished
 
-func duplicate_inner_scope() -> void:
+func plant_crosshair_trap() -> bool:
 	var original: Control = $Inner_scope
-	var _duplicate_scope: Control = original.duplicate()
+	if original == null:
+		return false
 
-	# Add it somewhere outside the original hierarchy
-	get_tree().current_scene.add_child(_duplicate_scope)
+	while _planted_crosshairs.size() >= PLANTED_CROSSHAIR_MAX:
+		_dissipate_planted_crosshair(0, false)
 
-	# Keep it exactly where it currently is
-	_duplicate_scope.global_position = original.global_position
-	#duplicate.global_rotation = original.global_rotation
-	_duplicate_scope.scale = original.scale
+	var plant: Control = original.duplicate() as Control
+	if plant == null:
+		return false
 
-	# Make it independent of its parent
-	_duplicate_scope.top_level = true
+	var host := get_parent()
+	if host == null:
+		plant.queue_free()
+		return false
 
-	await get_tree().create_timer(5.0).timeout
+	host.add_child(plant)
+	plant.top_level = true
+	plant.global_position = original.global_position
+	plant.scale = original.scale
+	plant.modulate = Color(1.0, 0.85, 0.45, 0.92)
+	plant.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	## Disable cooldown bar / anim on the planted copy.
+	var cooldown := plant.get_node_or_null("Cooldown_progressBar3")
+	if cooldown:
+		cooldown.hide()
+	var anim := plant.get_node_or_null("AnimationPlayer")
+	if anim:
+		anim.stop()
 
-	if is_instance_valid(duplicate):
-		_duplicate_scope.queue_free()
+	var aim_tex := plant.get_node_or_null("TextureRect") as Control
+	var aim_pos: Vector2 = aim_tex.global_position if aim_tex else plant.global_position
+	var weapon = _weapon_for_plants()
+	var radius: float = weapon.power_target_circle if weapon else 60.0
+
+	_planted_crosshairs.append({
+		"node": plant,
+		"aim": aim_pos,
+		"age": 0.0,
+		"radius": radius,
+		"dissipating": false,
+	})
+	return true
+
+
+func _weapon_for_plants():
+	var player := get_parent().get_parent() if get_parent() else null
+	if player == null:
+		return null
+	return player.get("weapon_shooting")
+
+
+func _update_planted_crosshairs(delta: float) -> void:
+	if _planted_crosshairs.is_empty():
+		return
+
+	var weapon = _weapon_for_plants()
+	var i := 0
+	while i < _planted_crosshairs.size():
+		var entry: Dictionary = _planted_crosshairs[i]
+		var plant: Control = entry.get("node")
+		if plant == null or not is_instance_valid(plant):
+			_planted_crosshairs.remove_at(i)
+			continue
+		if bool(entry.get("dissipating", false)):
+			i += 1
+			continue
+
+		entry["age"] = float(entry.get("age", 0.0)) + delta
+		if float(entry["age"]) >= PLANTED_CROSSHAIR_LIFETIME_SEC:
+			_dissipate_planted_crosshair(i, true)
+			continue
+
+		if weapon and weapon.has_method("get_targets_in_scope"):
+			var aim: Vector2 = entry.get("aim", plant.global_position)
+			var radius: float = float(entry.get("radius", 60.0))
+			var hits: Array = weapon.get_targets_in_scope(aim, radius, false)
+			if not hits.is_empty():
+				var hit_target = hits[0].get("target")
+				if is_instance_valid(hit_target) and weapon.has_method("apply_planted_scope_hit"):
+					weapon.apply_planted_scope_hit(hit_target, aim)
+				_dissipate_planted_crosshair(i, true)
+				continue
+
+		_planted_crosshairs[i] = entry
+		i += 1
+
+
+func _dissipate_planted_crosshair(index: int, animate: bool) -> void:
+	if index < 0 or index >= _planted_crosshairs.size():
+		return
+	var entry: Dictionary = _planted_crosshairs[index]
+	var plant: Control = entry.get("node")
+	_planted_crosshairs.remove_at(index)
+	if plant == null or not is_instance_valid(plant):
+		return
+	if not animate:
+		plant.queue_free()
+		return
+	entry["dissipating"] = true
+	var tween := create_tween()
+	tween.tween_property(plant, "modulate:a", 0.0, 0.22)
+	tween.tween_property(plant, "scale", plant.scale * 1.35, 0.22)
+	tween.tween_callback(plant.queue_free)
+
+
+func duplicate_inner_scope() -> void:
+	plant_crosshair_trap()
+
 
 func set_targeting_state(_is_targeting: bool) -> void:
 	## Live lock-ons are driven by _update_target_laser_dots (one dot per rock in scope).

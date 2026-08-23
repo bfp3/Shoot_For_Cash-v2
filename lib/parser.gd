@@ -98,7 +98,7 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / smokecan / pineapple / red_rock_error:
+## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / smokecan / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
@@ -157,7 +157,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'red_rock_error', 'smokecan':
+		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'red_rock_error', 'smokecan':
 			return _parse_rock_command(cmd, parts)
 
 		'pineapple':
@@ -294,7 +294,7 @@ func _is_random_token(token: String) -> bool:
 	return token.strip_edges() == '?'
 
 
-## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / smokecan / pineapple / red_rock_error
+## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / smokecan / pineapple / red_rock_error
 ##   rock          → rock ? ?   (random column, aim row A + random aim column)
 ##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
@@ -971,7 +971,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'smokecan', 'red_rock_error':
+		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'smokecan', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))
 			var ac := int(entry.get('aim_column', RANDOM_SLOT))

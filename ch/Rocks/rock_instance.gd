@@ -49,6 +49,8 @@ enum RockSize {
 	AVOIDER,
 	## Flees the crosshair; must stay in scope for `chaser_lock_time_sec` before it can be shot.
 	CHASER,
+	## Independent tank rock: health 100; ignored by wait-clear / splash miss / OOB strike.
+	JUGGLE,
 }
 
 enum State {
@@ -158,6 +160,15 @@ var _hazard_crosshair_arm_token := 0
 @export_range(0.05, 0.5, 0.01) var aim_bonus_scale_punch_sec := 0.12
 @export var aim_bonus_sfx_volume_db := -18.0
 
+@export_group("Destroy On Crosshair Overlap (Basic Rock)")
+## If true, a standard (SMALL) rock is destroyed when the reticle overlaps — no shot needed.
+@export var destroy_on_crosshair_overlap := false
+## Delay after launch before overlap can destroy (avoids instant spawn pops).
+@export_range(0.0, 3.0, 0.05) var destroy_on_crosshair_arm_delay_sec := 0.15
+
+var _destroy_on_crosshair_armed := false
+var _destroy_on_crosshair_arm_token := 0
+
 # --- Rock Avoider (rock-avoider) ---------------------------------------------
 @export_group("Rock Avoider")
 ## How hard the avoider steers toward the crosshair (X/Y only).
@@ -251,6 +262,7 @@ func _physics_process(delta: float) -> void:
 				_update_chaser(delta)
 		elif rock_type == RockSize.SMALL:
 			_update_aim_hold_bonus(delta)
+			_update_destroy_on_crosshair_overlap()
 		elif hazard_strike_on_crosshair_overlap and (
 			rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL
 		):
@@ -314,11 +326,12 @@ func update_prepare_rock() -> void:
 	if token != _pool_setup_token or current_state != State.PREPARE_ROCK:
 		return
 	setup_rock_type()
-	# Hazards / smokecans / avoiders are obstacles — not required to clear the round.
+	# Hazards / smokecans / avoiders / juggle are obstacles — not required to clear the round.
 	if (
 		rock_type_name != 'hazard_type_1'
 		and rock_type != RockSize.SMOKECAN
 		and rock_type != RockSize.AVOIDER
+		and rock_type != RockSize.JUGGLE
 	):
 		gl_PlayerState.log_rocks(1, rock_type_name)
 		
@@ -359,6 +372,8 @@ func update_active() -> void:
 		rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL
 	):
 		_arm_hazard_crosshair()
+	elif rock_type == RockSize.SMALL and destroy_on_crosshair_overlap:
+		_arm_destroy_on_crosshair()
 	
 	#%rock_launch_sound.pitch_scale = randf_range(3.0,3.2)
 	%rock_launch_sound.play()
@@ -738,6 +753,34 @@ func setup_rock_type() -> void:
 				current_particles = blue_rock.get_node("RedParticles")
 				current_particles.emitting = true
 
+		RockSize.JUGGLE:
+			## High-HP rock that does not block wait-until-clear or count as a splash/OOB miss.
+			current_rock_type = "Rock Juggle"
+			rock_type_name = "rock_type_juggle"
+			var juggle_scale := Vector3.ONE * 0.45
+			var juggle_size := 1.6
+			health = 100
+			cash_value = 0
+			max_health = health
+			if medium_rock:
+				medium_rock.visible = true
+				current_mesh = medium_rock
+			else:
+				small_rock.visible = true
+				current_mesh = small_rock
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = juggle_scale * juggle_size
+			main_col.scale = Vector3.ONE * 0.125 * juggle_size
+			rock_type_gravity_scale = 0.12
+			linear_damp = 0.4
+			force_mult.clear()
+			force_mult = [3, 4]
+			force_mult_index = 0
+			ignores_x_out_of_bounds = true
+			if current_mesh.has_node("GoldParticles"):
+				current_particles = current_mesh.get_node("GoldParticles")
+				current_particles.emitting = true
+
 func reset_stats() -> void:
 	var token := _pool_setup_token
 	ignores_x_out_of_bounds = false
@@ -745,6 +788,8 @@ func reset_stats() -> void:
 	_orange_neutralized_hazard = false
 	_hazard_crosshair_armed = false
 	_hazard_crosshair_arm_token += 1
+	_destroy_on_crosshair_armed = false
+	_destroy_on_crosshair_arm_token += 1
 	has_entered_camera_view = false
 	_avoider_armed = false
 	_avoider_arm_token += 1
@@ -1979,6 +2024,40 @@ func _update_aim_hold_bonus(delta: float) -> void:
 	while _aim_bonus_hold_accum >= interval:
 		_aim_bonus_hold_accum -= interval
 		_apply_aim_hold_bonus_tick()
+
+
+func _arm_destroy_on_crosshair() -> void:
+	_destroy_on_crosshair_armed = false
+	_destroy_on_crosshair_arm_token += 1
+	var token := _destroy_on_crosshair_arm_token
+	var delay := maxf(destroy_on_crosshair_arm_delay_sec, 0.0)
+	if delay > 0.0:
+		await get_tree().create_timer(delay, false).timeout
+	if token != _destroy_on_crosshair_arm_token:
+		return
+	if current_state != State.ACTIVE or rock_type != RockSize.SMALL:
+		return
+	if not destroy_on_crosshair_overlap:
+		return
+	_destroy_on_crosshair_armed = true
+
+
+func _update_destroy_on_crosshair_overlap() -> void:
+	if not destroy_on_crosshair_overlap:
+		return
+	if not _destroy_on_crosshair_armed:
+		return
+	if rock_destroyed or not rock_activated:
+		return
+	if rock_type != RockSize.SMALL:
+		return
+	if _freeze_shot_pending:
+		return
+	if not _avoider_overlaps_crosshair():
+		return
+	_destroy_on_crosshair_armed = false
+	_destroy_on_crosshair_arm_token += 1
+	start_destroyed_process()
 
 
 func _apply_aim_hold_bonus_tick() -> void:

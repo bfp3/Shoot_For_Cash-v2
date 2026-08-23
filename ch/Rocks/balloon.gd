@@ -46,6 +46,15 @@ enum BalloonType {
 var original_penalty_amount := 0
 var default_balloon_type : BalloonType
 
+@export_group("Pop On Crosshair Overlap")
+## If true, this balloon pops when the reticle overlaps — no shot needed.
+@export var pop_on_crosshair_overlap := false
+## Delay after becoming active before overlap can pop (avoids instant pops on spawn).
+@export_range(0.0, 3.0, 0.05) var pop_on_crosshair_arm_delay_sec := 0.15
+
+var _pop_on_crosshair_armed := false
+var _pop_on_crosshair_arm_token := 0
+
 ## When true (bonus-protect), rocks/pineapples popping this BLUE balloon fail the bonus.
 var protect_mode := false
 
@@ -207,6 +216,99 @@ func update_active() -> void:
 	#global_position = start_pos
 	health = 1
 	$Mesh.show()
+	if pop_on_crosshair_overlap:
+		_arm_pop_on_crosshair()
+
+
+func _process(_delta: float) -> void:
+	if not pop_on_crosshair_overlap:
+		return
+	if not _pop_on_crosshair_armed:
+		return
+	if not rock_activated or rock_destroyed or is_deactivated:
+		return
+	if current_state != State.ACTIVE:
+		return
+	if transition_locked:
+		return
+	if not visible or not $Mesh.visible:
+		return
+	if not _balloon_overlaps_crosshair():
+		return
+	_pop_on_crosshair_armed = false
+	_pop_on_crosshair_arm_token += 1
+	# Same outcome as a normal shot for this balloon type.
+	hit_by_player(1)
+
+
+func _arm_pop_on_crosshair() -> void:
+	_pop_on_crosshair_armed = false
+	_pop_on_crosshair_arm_token += 1
+	var token := _pop_on_crosshair_arm_token
+	var delay := maxf(pop_on_crosshair_arm_delay_sec, 0.0)
+	if delay > 0.0:
+		await get_tree().create_timer(delay, false).timeout
+	if token != _pop_on_crosshair_arm_token:
+		return
+	if not rock_activated or current_state != State.ACTIVE:
+		return
+	if not pop_on_crosshair_overlap:
+		return
+	_pop_on_crosshair_armed = true
+
+
+func _balloon_overlaps_crosshair() -> bool:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null:
+		return false
+	var cam: Camera3D = null
+	if "camera_3d" in player and player.camera_3d is Camera3D:
+		cam = player.camera_3d
+	else:
+		cam = get_viewport().get_camera_3d()
+	if cam == null or cam.is_position_behind(global_position):
+		return false
+
+	var balloon_screen := cam.unproject_position(global_position)
+	var crosshair_screen := _player_crosshair_screen_pos(player)
+
+	var world_radius := 0.5
+	if main_col and main_col.shape is SphereShape3D:
+		world_radius = (main_col.shape as SphereShape3D).radius * main_col.scale.x
+	elif current_mesh:
+		world_radius = maxf(current_mesh.scale.x, 0.2) * 0.5
+
+	var edge_screen := cam.unproject_position(
+		global_position + cam.global_basis.x * world_radius
+	)
+	var screen_radius := balloon_screen.distance_to(edge_screen)
+	var hit_radius := _player_live_crosshair_hit_radius(player)
+	return balloon_screen.distance_to(crosshair_screen) <= hit_radius + screen_radius
+
+
+func _player_crosshair_screen_pos(player: Node) -> Vector2:
+	var weapon = player.get("weapon_shooting")
+	if weapon and weapon.get("crosshair") is Control:
+		var rect: Control = weapon.crosshair
+		return rect.global_position + Vector2(20.0, 20.0)
+	var crosshair: Control = player.get_node_or_null("%Crosshair") as Control
+	if crosshair:
+		return crosshair.global_position + (crosshair.size * 0.5)
+	return get_viewport().get_visible_rect().size * 0.5
+
+
+func _player_live_crosshair_hit_radius(player: Node) -> float:
+	if player == null:
+		return 40.0
+	if player.has_method("get_current_crosshair_hit_radius"):
+		return float(player.get_current_crosshair_hit_radius())
+	var weapon = player.get("weapon_shooting")
+	if weapon and "power_target_circle" in weapon and float(weapon.power_target_circle) > 0.0:
+		return float(weapon.power_target_circle)
+	if "power_target_circle" in player and float(player.power_target_circle) > 0.0:
+		return float(player.power_target_circle)
+	return 40.0
+
 	
 func update_hit() -> void:
 	
@@ -302,6 +404,8 @@ func reset_stats() -> void:
 	falling = false
 	rock_destroyed = false
 	is_deactivated = false
+	_pop_on_crosshair_armed = false
+	_pop_on_crosshair_arm_token += 1
 	#global_position = start_pos
 
 
