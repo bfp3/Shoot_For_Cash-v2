@@ -91,10 +91,11 @@ func start_timer_on_pulse() -> void:
 	if round_manager and round_manager.has_method("is_endless_mode") and round_manager.is_endless_mode():
 		start_count_up()
 		return
-	## Regular rounds don't run the countdown HUD — boss only.
-	if round_manager and round_manager.has_method("is_boss_mode") and not round_manager.is_boss_mode():
-		hide()
-		return
+	## Regular rounds don't run the countdown HUD — hold-out / boss only.
+	if round_manager and round_manager.has_method("get_active_timer_seconds"):
+		if float(round_manager.get_active_timer_seconds()) <= 0.0:
+			hide()
+			return
 	## Boss duration must stick even if rollup raced or used the upgrade timer.
 	count_up = false
 	if round_manager and round_manager.has_method("get_active_timer_seconds"):

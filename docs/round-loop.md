@@ -40,7 +40,7 @@ Range clear (last round of a place, first time): tally, then island map + unlock
 
 ## How a round ends
 
-- **Clear:** `EventBus.instance.all_rocks_destroyed` → `successful_round()` → `WAVE_END`. Boss/endless ignore this and loop spawns.
+- **Clear:** `EventBus.instance.all_rocks_destroyed` → `successful_round()` → `WAVE_END`. Boss / hold-out / endless ignore this and loop spawns.
 - **Miss / strike:** `EventBus.instance.add_strike` → strike HUD. At max strikes, `has_hit_three_strikes` → `handle_three_strikes()` → `unsuccessful_round_locked()`.
 - **Strikeout:** forfeit unbanked pool, subtract range-banked from wallet, **keep multiplier**, skip tally, reopen shop (`_return_to_shop_after_strikeout()`).
 - **Cancel:** in-round cancel action → `abort_round_to_shop()`.
@@ -58,11 +58,12 @@ Script commands. Default poses: BANK CASH left (`-2.8, 3.5, 22.5`), +1 Multiplie
 - Script: `sc/island-shipper.txt` (`LEVEL_FILE_PATH`). Parser fills `current_rock_sequence`.
 - Layouts: `LAYOUT_PATH_BY_PLACE_INDEX` / `LAYOUT_PATH_BOSS_BY_ISLAND` → `sc/All_level_layouts/level_layout_*.tscn`.
 - Environments: `ENV_PATH_BY_LEVEL` on the camera, not inside the layout.
-- Round modifiers on the sequence dict: `no_lives`, `bonus` (e.g. protect), `shuffle`, `difficulty`, `max_strikes`.
+- Round modifiers on the sequence dict: `no_lives`, `bonus` (e.g. protect), `shuffle`, `difficulty`, `max_strikes`, `hold_out_ms`.
 
 ## Special modes
 
-- **Boss:** looping rocks, survival timer. Win = timer, not clearing rocks. After tally, island map.
+- **Hold-out (`hold out 90000`):** looping rocks, countdown timer in milliseconds. Win = timer, not clearing rocks. Works on any range, including boss. `boss-timer` is still accepted as an alias.
+- **Boss:** hold-out in a boss arena. After tally, island map.
 - **Endless:** looping rocks, count-up timer, no wave banners.
 - **Level / round editor (D from shop, editor only):** sandbox under island `test`; does not write wallet unless forced.
 

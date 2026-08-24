@@ -4,8 +4,9 @@ range moss
 	
 	round
 		pineapples
+		hold out 90000
 		# Singles
-		#difficulty-hard
+		difficulty-hard
 		#1
 		
 
@@ -78,11 +79,8 @@ range moss
 		wait
 
 		ammo
-		balloon-mult
-		balloon-bank
-		balloon-check
-		clear ammo
-	round
+
+	
 		# Singles in Twos - with oranges
 
 		#Link
@@ -145,11 +143,8 @@ range moss
 		clear
 		wait 2000
 		ammo
-		balloon-mult
-		balloon-bank
-		balloon-check
-		clear ammo
-	round
+
+	
 		# Orange 2 - Orange Blast Radius - keep short
 
 
@@ -244,10 +239,7 @@ range moss
 
 		wait 2000
 		ammo
-		balloon-mult
-		balloon-bank
-		balloon-check
-		clear ammo
+
 	round
 		# Orange 3 - leave oranges for later // expand on idea
 
@@ -1376,265 +1368,120 @@ range moss
 		balloon-mult
 		balloon-bank
 		balloon-check
+
 range redd
-	# Round 1
+	hold out 60000
 	round
-
-		# Black rocks 1  -
-		pineapples
-		# unfinished
-		rock-black 2 b2
-		wait 1000
-		rock-black 7 b7
-		wait 1200
-		rock-black 4 b4
-
-		wait 2500
-		rock 2 a5
-		wait 500
-		rock 2 a5
-		wait 0
-		rock-black 4 a4
-
-		wait 2000
-		rock 7 a1
-		wait 2500
-		rock 6 a8
-		wait 0
-		rock 7 a4
-
-		wait 2000
-		rock 1 a7
-		wait 2500
-		rock 3 a1
-		wait 0
-		rock 4 a7
-
-		wait 2500
-		rock 6 a8
-		wait 500
+		difficulty-hard
+		rock 4 a4
+		wait 3000
 		rock 1 a4
-		wait 0
-		rock-black 3 a3
-
-		wait 1000
-		rock 1 a4
-		wait 0
-		rock-black 3 a3
-
-		wait 500
-		rock 2 a5
-		wait 0
-		rock-black 4 a4
-		wait
-		clear
-		balloon-mult
-		balloon-bank
-		balloon-check
-		smokecan 1
-		smokecan 2
-		wait 400
-		rock 6
-		wait until clear
-
-		# Round 2
-		#round
-		smokecan 1
-		smokecan 2
-		wait 
-		rock 2
-		rock 4
-		wait 250
-		rock 5
-		rock 7
-
-
-		# Round 3
-		#round
-		balloon A4
-		rock 4 A4
-		wait 350
-		rock 3
-		rock 5
-		wait 2000
-		smokecan 1
-		smokecan 8
-		wait until clear
-		balloon-mult
-		balloon-bank
-		balloon-check
-		#round
-		smokecan
-		rock 1 A4
-		wait 300
-		rock 1 A6
-		wait 300
-		rock 1 A8
-		repeat 3
-
-		wait until clear
-		balloon-mult
-		balloon-bank
-		balloon-check
-		# Round 5 
-		#round
-		smokecan 1
-		smokecan 2
-		smokecan 4
-		smokecan 7
-		smokecan 8
-		wait 3000
-		rock 2
-		rock 4
-		rock 7
-		wait 3000
-
-		# Round 6
-		#round
-		smokecan
-
-		rock 1 b1
-		wait 780
-		rock 8 b8
-		wait 2000
-		rock 4
-		rock 5
-		wait 1500
-		# Round 7
-		rock 2 B4
-		wait 150
-		rock 7 B5
 		wait 2500
-		rock 4 B6
-		rock 5 B3
+		
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
+		
+		rock
+		rock
 		wait 3000
-
-		# Round 8
-		#round
-		smokecan
-		wait 2000
-		rock-black 3 b3
-		rock-black 6 b6
-		wait 2000
-		rock 4
-		rock 5
-		wait 2000
-		rock 1 b4
-		wait 0
-		rock 8 b4
-		wait 2000
-		rock-black 1 b1
-		wait 400
-		rock-black 3 b3
-		wait 400
-		rock-black 6 b6
-		wait 2500
-		rock 4
-
-		wait until clear
-		balloon-mult
-		balloon-bank
-		balloon-check
-		# Round 9
-		#round
-		rock 2 a5
-		wait 0
-		rock-black 4 a4
-
+		rock
+		rock
 		wait 3000
-
-		rock 1 a5
-		wait 0
-		rock-black 4 a4
+		
+		rock
+		rock
+		wait 1500
+		rock
+		rock
+		
 		wait 3000
-
-
-		rock-black 4 b4
-		rock-black 5 b5
-		wait 500
-		rock 7 A5
-		wait 140
-		rock 3 A6
-		repeat 2
-
-		# Round 10
-
-		smokecan
-		rock 1 A3
-		wait 100
-		rock 2 A4
-		wait 100
-		rock 3 A5
-		wait 3500
-
-		rock 4 A6
-		wait 100
-		rock 5 A7
-		wait 100
-		rock 6 A8
-		wait 800
-		rock-black 8 b4
-		repeat 2
-
-		# Round 11
-		#round
-		rock-black 2
-		rock-black 7
-		wait 1500
-		rock 3 B6
-
-		wait 2000
-		rock-black 2
-		rock-black 7
-		wait 1500
-		wait 100
-		rock 5 B4
-		repeat 2
-
-
-		#round
-		smokecan
-
-		rock 1 A6
-		wait 1500
-		rock 8 A4
-		wait 1500
-		rock-black 3
-		wait 80
-		rock 2 B4
-		wait 80
-
-
-		rock-black 6
-		wait 3500
-
-
-
-		rock 4 A6
-		wait 70
-		rock-black 5 A3
-		wait 2000
-
+		
+		rock 1 a1
+		wait 0
+		rock 2 a2
+		wait 0
 		rock 3 a3
-		rock 6 a6
-
+		
 		wait 3000
-
-		rock-black 4
-
-
-		rock-black 1 a4
-		rock-black 2 a4
-		rock-black 3 a4
-		rock-black 4 a4
-		rock-black 5 a4
-		rock-black 6 a4
-		rock-black 7 a4
-		rock-black 8 a4
+		
+		smokecan 1 a1
+		rock 8 a8
+		
+		wait 3000
+		rock
+		wait 4000
+		
+		rock 1 a1
+		smokecan 8 a8
+		
+		wait 3000
+		smokecan 1 a1
+		rock 8 a8
+		wait 0
+		rock 4 a8
+		wait 3000
+		
+		rock
+		wait 3000
+		
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
 		wait 1000
-		rock 3 a4
-
+		smokecan 1 a8
+		wait 2000
+		
+		rock-black 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-black 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		smokecan 1 a7
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		smokecan 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		
+		rock-black 1 a7
 		wait until clear
+	
+	
 range glory
 	# Round 1
 	round
@@ -2054,7 +1901,7 @@ range noir
 		wait until clear
 
 range boss
-	boss-timer 60000
+	hold out 60000
 	round
 		rock 4 a4
 		wait 3000
@@ -2165,7 +2012,7 @@ range boss
 		wait until clear
 
 range boss-2
-	boss-timer 90000
+	hold out 90000
 	round
 		#difficulty-expert
 		rock 4 a4

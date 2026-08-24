@@ -3,7 +3,7 @@ extends Node
 class_name parser
 
 var data_set : Array = []
-## "island|range" -> boss timer duration in milliseconds (from `boss-timer`).
+## "island|range" -> hold-out duration in milliseconds (`hold out 90000` / `boss-timer`).
 var boss_timer_ms_by_range: Dictionary = {}
 
 func loadIslandFile(file_name : String) -> bool:
@@ -57,7 +57,7 @@ func loadIsland(data : String) -> bool:
 				round_no += 1
 				
 			_:
-				## Tabs already stripped above; split on spaces for `boss-timer 60000`.
+				## Tabs already stripped above; split on spaces for `hold out 90000`.
 				var tokens: Array = []
 				for p in token.split(" ", false):
 					var s := String(p).strip_edges()
@@ -65,9 +65,9 @@ func loadIsland(data : String) -> bool:
 						tokens.append(s)
 				if tokens.is_empty():
 					continue
-				if String(tokens[0]).to_lower() == 'boss-timer' and tokens.size() > 1:
-					var ms := int(tokens[1])
-					boss_timer_ms_by_range['%s|%s' % [island_name, range_name]] = maxi(ms, 0)
+				var hold_ms := _hold_out_ms_from_tokens(tokens)
+				if hold_ms >= 0:
+					boss_timer_ms_by_range['%s|%s' % [island_name, range_name]] = hold_ms
 					continue
 				if round_no > 0:
 					data_set.push_back( [island_name,range_name,round_no,sanitise_token(token)] )
@@ -92,9 +92,25 @@ func getRound(island_name : String, range_name : String, round_no : int) -> Arra
 	return ary
 
 
-## Boss survival duration in milliseconds for an island/range (0 if unset).
+## Hold-out / boss survival duration in milliseconds for an island/range (0 if unset).
 func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 	return int(boss_timer_ms_by_range.get("%s|%s" % [island_name, range_name], 0))
+
+
+## `hold out 90000`, `hold-out 90000`, or `boss-timer 90000`. Returns ms, or -1 if not that command.
+func _hold_out_ms_from_tokens(tokens) -> int:
+	if tokens == null or tokens.size() == 0:
+		return -1
+	var first := String(tokens[0]).to_lower()
+	if first == "boss-timer" or first == "hold-out":
+		if tokens.size() > 1:
+			return maxi(int(tokens[1]), 0)
+		return 0
+	if first == "hold" and tokens.size() > 1 and String(tokens[1]).to_lower() == "out":
+		if tokens.size() > 2:
+			return maxi(int(tokens[2]), 0)
+		return 0
+	return -1
 
 
 ## Parses a single spawn line into a spawn dictionary.
@@ -145,6 +161,9 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 ## difficulty-easy / difficulty-normal / difficulty-hard / difficulty-expert:
 ##   stored on the range as `difficulty`. Gravity: easy 0.5, normal 1.0, hard 1.5, expert 2.25.
 ##   hard / expert also set bullet travel to 0.1. `difficulty hard` form is accepted.
+## hold out 90000 / hold-out 90000 / boss-timer 90000: {cmd: hold-out, ms}.
+##   Range- or round-level survival timer in milliseconds. Same as a boss hold-out:
+##   rocks loop and the round lasts until the timer hits 0.
 ## shuffle: {cmd} — this round only; later waves randomise rock columns.
 ## surprise-me: {cmd} — replace this round's spawns with a random generated sequence.
 ## bonus-type1 / bonus type1: marks the round as bonus type 1 (no strikes).
@@ -208,9 +227,22 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'ladder':
 			return {'cmd': 'ladder'}
 
-		'boss-timer':
-			## Duration for boss survival rounds (milliseconds). Handled while loading the file.
-			return {'cmd': 'boss-timer', 'ms': int(parts[1]) if parts.size() > 1 else 0}
+		'hold':
+			var hold_ms := _hold_out_ms_from_tokens(parts)
+			if hold_ms >= 0:
+				return {'cmd': 'hold-out', 'ms': hold_ms}
+			push_warning("parser: unknown spawn command '%s' — using red_rock_error" % token)
+			return {
+				'cmd': 'red_rock_error',
+				'column': 3,
+				'aim_row': 3,
+				'aim_column': 3,
+				'param': token,
+			}
+
+		'hold-out', 'boss-timer':
+			## Survival duration in milliseconds. Handled while loading the file / round dict.
+			return {'cmd': 'hold-out', 'ms': int(parts[1]) if parts.size() > 1 else 0}
 
 		'repeat':
 			return _parse_repeat_command(parts)
@@ -603,11 +635,13 @@ func parse_round_text(text: String) -> Dictionary:
 	if body != "":
 		wrapped += body + "\n"
 
-	# Don't clobber the live island-shipper dataset.
+	# Don't clobber the live island-shipper dataset / hold-out timers.
 	var backup: Array = data_set.duplicate(true)
+	var backup_timers: Dictionary = boss_timer_ms_by_range.duplicate(true)
 	loadIsland(wrapped)
 	var sequences: Array = get_rock_sequences("test")
 	data_set = backup
+	boss_timer_ms_by_range = backup_timers
 
 	if sequences.is_empty():
 		return {
@@ -620,6 +654,7 @@ func parse_round_text(text: String) -> Dictionary:
 			"pineapples": false,
 			"difficulty": "",
 			"max_strikes": 3,
+			"hold_out_ms": 0,
 		}
 	return sequences[0]
 
@@ -628,7 +663,7 @@ func parse_round_text(text: String) -> Dictionary:
 ## are merged). File order is kept.
 ## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"type1"|...,
 ##   "bonus_targets": [{ "waypoints": [{row, column}, ...] }, ...], "shuffle": bool,
-##   "pineapples": bool }
+##   "pineapples": bool, "hold_out_ms": int }
 ## Pass an empty island_name to include every island in the loaded file.
 ## Pass range_name (e.g. "moss", "redd") to only include that shooting range.
 func get_rock_sequences(island_name: String = '', range_name: String = '') -> Array:
@@ -654,6 +689,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				'surprise': false,
 				'difficulty': '',
 				'max_strikes': 3,
+				'hold_out_ms': 0,
 				# Temporary while parsing — removed by `_finalize_round_repeats`.
 				'_pending': [],
 				'_sections': [],
@@ -707,8 +743,9 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				rounds[key].difficulty = level
 			continue
 
-		if parsed_cmd == 'boss-timer':
+		if parsed_cmd == 'hold-out' or parsed_cmd == 'boss-timer':
 			var ms := int(parsed.get('ms', 0))
+			rounds[key].hold_out_ms = maxi(ms, 0)
 			boss_timer_ms_by_range['%s|%s' % [entry[0], entry[1]]] = maxi(ms, 0)
 			continue
 
@@ -743,6 +780,9 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 		if bool(rounds[key].get('surprise', false)):
 			_apply_surprise_me(rounds[key])
 		_finalize_bonus_round(rounds[key])
+		var range_ms := int(boss_timer_ms_by_range.get(key, 0))
+		if range_ms > 0:
+			rounds[key].hold_out_ms = range_ms
 		sequences.append(rounds[key])
 	return sequences
 

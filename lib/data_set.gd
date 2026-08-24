@@ -75,9 +75,9 @@ var dataset_float : Dictionary = {
 	# Targets / Rocks
 	# item name, 			$value, 	health
 	,"pineapple"			: [10,		1]
-	,"orange"				: [2,		1]
-	,"balloon_orange"		: [-10,		1]
-	,"hazard_type_1"		: [-10,	1]
+	,"orange"				: [0,		1]
+	,"balloon_orange"		: [0,		1]
+	,"hazard_type_1"		: [0,		1]
 	
 	,"rock_type_1"			: [2,		1]
 	,"rock_type_2"			: [0,		3]
@@ -119,7 +119,7 @@ var dataset_string : Dictionary = {
 		'Shipper Island',
 		'Anchor Island',
 		'Squid Island',
-		'Island 4',
+		'Pelican Island',
 		'Island 5',
 	]
 	## Floating "not enough cash" text on the island map (Next / Anchor button).

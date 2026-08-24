@@ -53,6 +53,8 @@ var _live_chips: Array[Control] = []
 
 
 func _ready() -> void:
+	hide()
+	return
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if pool_label:
 		pool_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -78,6 +80,7 @@ func _ready() -> void:
 
 
 func show_for_round() -> void:
+	return
 	_visible_for_round = true
 	_ceremony_lock = false
 	_animating_settle = false

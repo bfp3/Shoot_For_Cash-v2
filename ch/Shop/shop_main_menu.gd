@@ -213,13 +213,15 @@ func _apply_shop_panel_shadow_for_place() -> void:
 
 func _refresh_place_challenge_banner() -> void:
 	var banner := _ensure_boss_challenge_banner()
-	var is_boss := false
-	if round_manager and round_manager.has_method("is_boss_mode"):
-		is_boss = bool(round_manager.is_boss_mode())
+	var is_hold_out := false
+	if round_manager and round_manager.has_method("is_hold_out_round"):
+		is_hold_out = bool(round_manager.is_hold_out_round())
+	elif round_manager and round_manager.has_method("is_boss_mode"):
+		is_hold_out = bool(round_manager.is_boss_mode())
 	elif String(gl_PlayerState.dataset.level_name).to_lower().begins_with("boss"):
-		is_boss = true
+		is_hold_out = true
 
-	if is_boss:
+	if is_hold_out:
 		banner.visible = true
 		var seconds := 60
 		if round_manager and round_manager.has_method("get_active_timer_seconds"):

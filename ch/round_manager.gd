@@ -641,6 +641,23 @@ func is_boss_mode() -> bool:
 	return _boss_mode
 
 
+## True for boss arenas and any range/round with `hold out <ms>` in the level script.
+func is_hold_out_round() -> bool:
+	if _boss_mode:
+		return true
+	return _get_current_hold_out_ms() > 0
+
+
+func _get_current_hold_out_ms() -> int:
+	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
+		var round_data = current_rock_sequence[current_sequence_index]
+		if round_data is Dictionary:
+			var ms := int(round_data.get("hold_out_ms", 0))
+			if ms > 0:
+				return ms
+	return Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, get_active_range_name())
+
+
 func is_endless_mode() -> bool:
 	if _boss_mode:
 		return false
@@ -681,37 +698,42 @@ func record_endless_run_result() -> void:
 		gl_PlayerState.record_endless_best_seconds(lived, String(gl_PlayerState.dataset.level_name))
 
 
-## Seconds for RoundTimer when in boss mode; -1 = use normal power_time_upgrade.
+## Seconds for RoundTimer when this round is a hold-out; -1 = use normal power_time_upgrade.
 ## Endless returns 0 to signal count-up mode (no duration limit).
 func get_active_timer_seconds() -> float:
 	if is_endless_mode():
 		return 0.0
-	if _boss_mode and _boss_timer_seconds > 0.0:
-		return _boss_timer_seconds
+	if is_hold_out_round():
+		if _boss_timer_seconds <= 0.0:
+			_refresh_boss_timer_from_parser()
+		if _boss_timer_seconds > 0.0:
+			return _boss_timer_seconds
 	return -1.0
 
 
 func _refresh_boss_timer_from_parser() -> void:
-	var range_id := _boss_range_name(_boss_island_index)
-	var timer_ms := Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, range_id)
-	if timer_ms <= 0 and range_id != "boss":
-		## Fallback to classic boss timer if boss-N has none yet.
-		timer_ms = Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, "boss")
-	if timer_ms <= 0:
-		## Fallback: any island key ending in |boss / |boss-N.
-		for key in Parser.boss_timer_ms_by_range.keys():
-			var key_s := String(key)
-			if key_s.ends_with("|%s" % range_id) or key_s.ends_with("|boss"):
-				timer_ms = int(Parser.boss_timer_ms_by_range[key])
-				if timer_ms > 0:
-					break
-	if timer_ms <= 0:
-		timer_ms = 120000
+	var timer_ms := _get_current_hold_out_ms()
+	if timer_ms <= 0 and _boss_mode:
+		var range_id := _boss_range_name(_boss_island_index)
+		timer_ms = Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, range_id)
+		if timer_ms <= 0 and range_id != "boss":
+			## Fallback to classic boss timer if boss-N has none yet.
+			timer_ms = Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, "boss")
+		if timer_ms <= 0:
+			## Fallback: any island key ending in |boss / |boss-N.
+			for key in Parser.boss_timer_ms_by_range.keys():
+				var key_s := String(key)
+				if key_s.ends_with("|%s" % range_id) or key_s.ends_with("|boss"):
+					timer_ms = int(Parser.boss_timer_ms_by_range[key])
+					if timer_ms > 0:
+						break
+		if timer_ms <= 0:
+			timer_ms = 120000
 	_boss_timer_seconds = float(timer_ms) / 1000.0
 
 
 func _apply_boss_timer_to_hud() -> void:
-	if not _boss_mode or round_timer == null:
+	if not is_hold_out_round() or round_timer == null:
 		return
 	if _boss_timer_seconds <= 0.0:
 		_refresh_boss_timer_from_parser()
@@ -749,6 +771,8 @@ func load_level_sequence() -> void:
 		## Keep shop round buttons aligned with the live shipper round count.
 		if shop_main_menu and shop_main_menu.visible and shop_main_menu.has_method("sync_rounds_to_progress"):
 			shop_main_menu.sync_rounds_to_progress(current_sequence_index, current_rock_sequence.size())
+
+	_refresh_boss_timer_from_parser()
 
 func bonus_oranges() -> void:
 	bonus_oranges_ready = true
@@ -1076,7 +1100,11 @@ func apply_current_round_modifiers() -> void:
 			print('RoundManager: bonus-%s active for this round' % bonus_type_this_round)
 		if difficulty_this_round != "":
 			print('RoundManager: difficulty-%s active for this round' % difficulty_this_round)
+		var hold_ms := int(round_data.get('hold_out_ms', 0))
+		if hold_ms > 0:
+			print('RoundManager: hold out %d ms for this round' % hold_ms)
 	_apply_difficulty_runtime()
+	_refresh_boss_timer_from_parser()
 
 
 func _apply_round_max_strikes(count: int) -> void:
@@ -1235,7 +1263,7 @@ func check_if_rocks_still_in_air() -> void:
 		if rocks_container.is_holding_wave():
 			return
 
-	if _boss_mode:
+	if is_hold_out_round():
 		_loop_boss_sequence()
 		return
 
@@ -1256,8 +1284,8 @@ func successful_round() -> void:
 	if rocks_container and rocks_container.has_method("is_holding_wave"):
 		if rocks_container.is_holding_wave():
 			return
-	if _boss_mode:
-		## Clearing a loop of rocks does not win the boss — only surviving the timer does.
+	if is_hold_out_round():
+		## Clearing a loop of rocks does not win a hold-out — only surviving the timer does.
 		_loop_boss_sequence()
 		return
 
@@ -1369,7 +1397,7 @@ func round_timer_time_out() -> void:
 	stop_timer()
 
 	success = true
-	if _boss_mode:
+	if is_hold_out_round():
 		player_failed = false
 	enter_state(RoundState.WAVE_END)
 
@@ -1659,7 +1687,7 @@ func update_round_start() -> void:
 	
 
 func update_wave_start() -> void:
-	var resume_index := 0 if (_boss_mode or is_endless_mode()) else get_resume_spawn_index()
+	var resume_index := 0 if (is_hold_out_round() or is_endless_mode()) else get_resume_spawn_index()
 	if is_endless_mode():
 		## Endless: no wave banners — just keep the strike HUD ready.
 		if wave_progress_feedback and wave_progress_feedback.has_method("show_strike_hud"):
@@ -1716,7 +1744,7 @@ func update_wave_start() -> void:
 
 	player.start_player()
 
-	if _boss_mode:
+	if is_hold_out_round():
 		_apply_boss_timer_to_hud()
 		if current_wave == 1:
 			round_timer.enter_state(round_timer.State.RESTARTING)
@@ -2777,7 +2805,7 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 		await get_tree().create_timer(1.0, false).timeout
 	_set_travel_progress(0.93)
 
-	## Always reload so boss-timer / boss range data is fresh.
+	## Always reload so hold-out / boss range data is fresh.
 	if not Parser.loadIslandFile(LEVEL_FILE_PATH):
 		push_error("RoundManager: failed to load level file for boss")
 	current_rock_sequence = Parser.get_rock_sequences(LEVEL_ISLAND_NAME, boss_range)
@@ -2821,7 +2849,7 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 
 
 func _loop_boss_sequence() -> void:
-	if not _boss_mode or wave_ending or player_failed or _boss_looping:
+	if not is_hold_out_round() or wave_ending or player_failed or _boss_looping:
 		return
 	_boss_looping = true
 	var rock_seq := update_rock_sequence()
