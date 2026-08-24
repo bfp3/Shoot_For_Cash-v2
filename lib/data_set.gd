@@ -87,6 +87,17 @@ var dataset_float : Dictionary = {
 	,"rock_type_9"			: [0,		1]
 	,"rock_type_avoider"	: [0,		1]
 	,"rock_type_chaser"		: [0,		1]
+	## Grey rock: $1, 1 health. Misses do not strike.
+	,"rock_type_grey"		: [1,		1]
+	## Mothership: [bonus cash, hits to destroy].
+	,"mothership_reward"	: [35,		3]
+	## Shop range-target cash shown when entering a place.
+	,"range_target_moss"	: [1000]
+	,"range_target_redd"	: [2500]
+	,"range_target_glory"	: [4000]
+	,"range_target_jetz"	: [6000]
+	,"range_target_noir"	: [8000]
+	,"range_target_vesper"	: [10000]
 	# Hazards
 	#,"hazard_type_1"		: [-100,	1]
 	,"hazard_type_2"		: [-20,		1]
@@ -316,6 +327,18 @@ func get_wall_quote_key(place_id: String = "") -> String:
 
 func get_ticket_price_key(place_id: String) -> String:
 	return "price_ticket_%s" % resolve_place_name(place_id)
+
+
+func get_range_target_key(place_id: String) -> String:
+	return "range_target_%s" % resolve_place_name(place_id)
+
+
+func get_range_target(place_id: String = "") -> int:
+	if place_id.is_empty():
+		place_id = String(gl_PlayerState.dataset.level_name)
+	var key := get_range_target_key(place_id)
+	var value := int(get_value(key, 0))
+	return maxi(value, 0)
 
 
 func get_ticket_power_key(place_id: String) -> String:

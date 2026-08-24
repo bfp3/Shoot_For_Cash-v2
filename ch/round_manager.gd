@@ -874,7 +874,7 @@ func set_script_checkpoint(spawn_index: int) -> void:
 
 
 ## Player shot the balloon-check: save this script cursor as the fail-resume
-## point, clear strikes, and bank the round cash pool. Does not jump rounds.
+## point and clear strikes. Does not bank the round cash pool.
 func on_checkpoint_shot() -> void:
 	if _checkpoint_advancing or player_failed or game_over_triggered:
 		return
@@ -886,8 +886,6 @@ func on_checkpoint_shot() -> void:
 		_save_level_progress()
 
 	var money = get_tree().get_first_node_in_group("money_manager")
-	var pool_amount := int(gl_PlayerState.dataset.get("bonus_cash", 0))
-	var previous_cash := int(gl_PlayerState.dataset.get("cash", 0))
 	if money and money.has_method("begin_checkpoint_ceremony"):
 		money.begin_checkpoint_ceremony()
 
@@ -902,11 +900,7 @@ func on_checkpoint_shot() -> void:
 	elif strike_hud and strike_hud.has_method("checkpoint_move_to_center"):
 		await strike_hud.checkpoint_move_to_center()
 
-	_bank_round_cash_pool()
-	var new_total_cash := int(gl_PlayerState.dataset.get("cash", 0))
-	if money and money.has_method("checkpoint_play_bank"):
-		await money.checkpoint_play_bank(pool_amount, previous_cash, new_total_cash)
-
+	# Money bank is the end-of-round ladder pair — checkpoint only saves progress / clears strikes.
 	if strike_hud and strike_hud.has_method("checkpoint_clear_struck"):
 		await strike_hud.checkpoint_clear_struck()
 
@@ -957,6 +951,90 @@ func _forfeit_round_cash_pool() -> void:
 func _reset_range_banked_after_loss() -> void:
 	if gl_PlayerState and gl_PlayerState.has_method("reset_range_banked_cash"):
 		gl_PlayerState.reset_range_banked_cash()
+
+
+func apply_ladder_choice(kind: String) -> void:
+	if String(kind) == "bank":
+		_bank_round_cash_pool()
+		if gl_PlayerState.has_method("reset_cash_multiplier"):
+			gl_PlayerState.reset_cash_multiplier()
+	elif String(kind) == "multiply":
+		if gl_PlayerState.has_method("increase_cash_multiplier"):
+			gl_PlayerState.increase_cash_multiplier()
+
+
+func _offer_ladder_choice(force_show: bool = false) -> void:
+	if _boss_mode:
+		if not force_show:
+			_bank_round_cash_pool()
+		return
+	if not force_show and (_is_editor_playtest() or is_bonus_type1_round()):
+		_bank_round_cash_pool()
+		return
+
+	var scene := load("res://ch/Rocks/Checkpoint.tscn") as PackedScene
+	var script := load("res://ch/Rocks/ladder_choice_balloon.gd") as Script
+	if scene == null or script == null:
+		_bank_round_cash_pool()
+		return
+
+	var host := get_tree().get_first_node_in_group("checkpoint_container")
+	if host == null:
+		host = get_tree().current_scene
+	if host == null:
+		_bank_round_cash_pool()
+		return
+
+	var chosen := {"kind": ""}
+	var balloons: Array[Node] = []
+	var on_choice := func(kind: String) -> void:
+		if String(chosen.kind) != "":
+			return
+		chosen.kind = kind
+		for other in balloons:
+			if is_instance_valid(other) and other.has_method("dismiss_without_shot"):
+				other.dismiss_without_shot()
+
+	var bank := scene.instantiate()
+	bank.set_script(script)
+	bank.set("choice_kind", "bank")
+	host.add_child(bank)
+	if bank.has_signal("ladder_choice_taken"):
+		bank.ladder_choice_taken.connect(on_choice)
+	if bank.has_method("arrive_from_below"):
+		bank.arrive_from_below(Vector3(-2.8, 3.5, 22.5))
+	balloons.append(bank)
+
+	var multi := scene.instantiate()
+	multi.set_script(script)
+	multi.set("choice_kind", "multiply")
+	host.add_child(multi)
+	if multi.has_signal("ladder_choice_taken"):
+		multi.ladder_choice_taken.connect(on_choice)
+	if multi.has_method("arrive_from_below"):
+		multi.arrive_from_below(Vector3(2.8, 3.5, 22.5))
+	balloons.append(multi)
+
+	while String(chosen.kind) == "" and is_instance_valid(self):
+		if player_failed or force_shop_open or game_over_triggered:
+			break
+		var live := 0
+		for balloon in balloons:
+			if is_instance_valid(balloon):
+				live += 1
+		if live == 0:
+			break
+		await get_tree().process_frame
+
+	if String(chosen.kind) == "bank":
+		_bank_round_cash_pool()
+		if gl_PlayerState.has_method("reset_cash_multiplier"):
+			gl_PlayerState.reset_cash_multiplier()
+	elif String(chosen.kind) == "multiply":
+		if gl_PlayerState.has_method("increase_cash_multiplier"):
+			gl_PlayerState.increase_cash_multiplier()
+	else:
+		_bank_round_cash_pool()
 
 
 func _show_round_cash_hud() -> void:
@@ -1224,7 +1302,8 @@ func unsuccessful_round_locked(skip_tally: bool = false) -> void:
 		balloon_container.end_round()
 	_forfeit_round_cash_pool()
 	if skip_tally:
-		_reset_range_banked_after_loss()
+		if gl_PlayerState.has_method("lose_range_banked_cash"):
+			gl_PlayerState.lose_range_banked_cash()
 		_return_to_shop_after_strikeout()
 		return
 	enter_state(RoundState.WAVE_END)
@@ -1850,9 +1929,7 @@ func update_round_end() -> void:
 
 	orange_active = 0
 
-	if round_was_successful:
-		_bank_round_cash_pool()
-	else:
+	if not round_was_successful:
 		_forfeit_round_cash_pool()
 		EventBus.instance.pineapple_round_used.emit()
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
@@ -1914,9 +1991,12 @@ func update_tally_end() -> void:
 	## Remaining pool is already banked on a win, or forfeited on a 3-strike fail.
 	if player_failed or int(gl_PlayerState.dataset.total_current_strikes) >= _max_strikes():
 		_forfeit_round_cash_pool()
-		_reset_range_banked_after_loss()
+		if gl_PlayerState.has_method("lose_range_banked_cash"):
+			gl_PlayerState.lose_range_banked_cash()
+		else:
+			_reset_range_banked_after_loss()
 	else:
-		_bank_round_cash_pool()
+		pass
 	## Exported builds: checkpoint money / ammo / round frontier / islands after each round.
 	if not level_editor_test_active and gl_PlayerState.has_method("save_run_checkpoint_after_round"):
 		gl_PlayerState.save_run_checkpoint_after_round()

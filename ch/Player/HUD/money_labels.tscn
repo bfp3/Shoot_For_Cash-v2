@@ -58,7 +58,6 @@ Panel/styles/panel = SubResource("StyleBoxFlat_k5tjv")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_ms1v2")
 
 [node name="Money_labels" type="Control" unique_id=2075768694 groups=["money_manager"]]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -67,6 +66,33 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_aaxe5")
+
+[node name="MultiplierLabel" type="RichTextLabel" parent="." unique_id=111020114]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -564.0
+offset_top = -241.0
+offset_right = -172.0
+offset_bottom = 22.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/font_outline_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/normal_font = ExtResource("2_font")
+theme_override_font_sizes/normal_font_size = 243
+bbcode_enabled = true
+text = "[rainbow]x2"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="BankedLabel" type="RichTextLabel" parent="." unique_id=1123567456]
 layout_mode = 1
@@ -88,6 +114,31 @@ theme_override_fonts/normal_font = ExtResource("2_font")
 theme_override_font_sizes/normal_font_size = 74
 bbcode_enabled = true
 text = "$0"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="BankedLabel2" type="RichTextLabel" parent="." unique_id=130190943]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -436.0
+offset_top = -340.0
+offset_right = -44.0
+offset_bottom = -197.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_constants/outline_size = 2
+theme_override_fonts/normal_font = ExtResource("2_font")
+theme_override_font_sizes/normal_font_size = 74
+bbcode_enabled = true
+text = "Target: $1,000"
 fit_content = true
 scroll_active = false
 horizontal_alignment = 2

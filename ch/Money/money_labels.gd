@@ -2,7 +2,8 @@
 extends Control
 ## Bottom-right round cash HUD.
 ## PoolLabel = unbanked cash this round. BankedLabel = cash banked so far this range
-## (checkpoint balloon or successful round end). Forfeited pool on a 3-strike fail.
+## (end-of-round BANK balloon). MultiplierLabel = current ladder multiplier.
+## Strikeout forfeits the pool and subtracts banked cash; the multiplier is kept.
 ##
 ## Gain chips spawn `gain_chip_start_height_px` above PoolLabel and tween down
 ## into it. Tune height / speed on this node. Inspector: Test Cash Chip.
@@ -13,6 +14,7 @@ const COLOR_LOSE := Color("C70102")
 
 @onready var pool_label: RichTextLabel = $PoolLabel
 @onready var banked_label: RichTextLabel = $BankedLabel
+@onready var multiplier_label: RichTextLabel = $MultiplierLabel
 @onready var coin_sfx: AudioStreamPlayer = $CoinSfx
 @onready var kaching_sfx: AudioStreamPlayer = $KachingSfx
 @onready var kaching_sfx_2: AudioStreamPlayer = $KachingSfx2
@@ -56,6 +58,8 @@ func _ready() -> void:
 		pool_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if banked_label:
 		banked_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if multiplier_label:
+		multiplier_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(0)
 	_refresh_banked_total()
@@ -66,6 +70,8 @@ func _ready() -> void:
 		EventBus.instance.cash_pool_changed.connect(_on_pool_changed)
 		EventBus.instance.cash_pool_banked.connect(_on_pool_banked)
 		EventBus.instance.cash_pool_forfeited.connect(_on_pool_forfeited)
+		if EventBus.instance.has_signal("cash_multiplier_changed"):
+			EventBus.instance.cash_multiplier_changed.connect(_on_multiplier_changed)
 		EventBus.instance.open_tally_card.connect(hide_for_menus)
 		EventBus.instance.open_shop.connect(hide_for_menus)
 		EventBus.instance.egg_pulsed.connect(show_for_round)
@@ -84,8 +90,24 @@ func show_for_round() -> void:
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(int(_displayed_pool))
 	_set_banked_text(float(_tracked_banked))
+	_refresh_multiplier()
 	show()
 	modulate.a = 1.0
+
+
+func _on_multiplier_changed(_new_multiplier: int = 0) -> void:
+	_refresh_multiplier()
+
+
+func _refresh_multiplier() -> void:
+	if multiplier_label == null:
+		return
+	var mult := 2
+	if gl_PlayerState and gl_PlayerState.has_method("get_cash_multiplier"):
+		mult = int(gl_PlayerState.get_cash_multiplier())
+	elif gl_PlayerState:
+		mult = int(gl_PlayerState.get("cash_multiplier"))
+	multiplier_label.text = "x%d" % maxi(mult, 1)
 
 
 func hide_for_menus() -> void:

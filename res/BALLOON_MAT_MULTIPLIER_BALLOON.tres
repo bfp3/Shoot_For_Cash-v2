@@ -1,0 +1,38 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c4yaglnwrc7wp"]
+
+[sub_resource type="Gradient" id="Gradient_vgjap"]
+colors = PackedColorArray(0, 1, 0, 1, 1, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pflxu"]
+gradient = SubResource("Gradient_vgjap")
+fill_from = Vector2(0.4871795, 0.4957265)
+fill_to = Vector2(0.53418803, 0.4871795)
+repeat = 2
+
+[sub_resource type="Gradient" id="Gradient_nxt3y"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.522222)
+colors = PackedColorArray(0.73, 0.73, 0.73, 1, 0.68, 0.68, 0.68, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_s77kv"]
+frequency = 0.0014
+domain_warp_enabled = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6hgdg"]
+width = 500
+height = 500
+noise = SubResource("FastNoiseLite_s77kv")
+color_ramp = SubResource("Gradient_nxt3y")
+seamless = true
+
+[resource]
+diffuse_mode = 1
+specular_mode = 1
+albedo_texture = SubResource("GradientTexture2D_pflxu")
+metallic = 0.25
+roughness = 0.0
+emission = Color(0.737255, 0.239216, 0, 1)
+emission_energy_multiplier = 15.78
+normal_scale = 0.3
+normal_texture = SubResource("NoiseTexture2D_6hgdg")
+uv1_triplanar = true

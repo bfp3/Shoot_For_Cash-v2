@@ -20,8 +20,6 @@
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="13_isobx"]
 [ext_resource type="Script" uid="uid://1uqdupt170u1" path="res://ch/Player/scripts/player_gun.gd" id="13_mxtxj"]
 [ext_resource type="AudioStream" uid="uid://bywfw3hl3lt6o" path="res://sfx/reload_sound_01.ogg" id="14_3gdew"]
-[ext_resource type="PackedScene" uid="uid://blmpv2r3v5nd3" path="res://ch/bullets_all/Bullet_visual_alt.tscn" id="14_altbullet"]
-[ext_resource type="PackedScene" uid="uid://brtw6kurd7ejg" path="res://ch/weapons/gun_alt.tscn" id="14_altgun"]
 [ext_resource type="PackedScene" uid="uid://slic61syofs7" path="res://ch/weapons/gun.tscn" id="14_f75d4"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="15_lf8qf"]
 [ext_resource type="AudioStream" uid="uid://c38iicjo31b7l" path="res://sfx/gun_combination_1.ogg" id="16_11n43"]
@@ -642,13 +640,8 @@ scope_shrink_delay_dur = 0.15
 scope_shrink_bullet_speed_scale = 0.35
 scope_expand_bullet_speed_scale = 0.35
 scope_shrink_fire_rate_scale = 0.8
-alt_weapon_enabled = false
-alt_bullet_scene = ExtResource("14_altbullet")
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
-gyro_aim_enabled = false
-gyro_full_tilt_rad_per_sec = 1.0
-gyro_auto_calibrate_on_connect = false
 grid_aim_enabled = true
 grid_aim_move_speed = 3600.0
 
@@ -680,6 +673,7 @@ script = ExtResource("13_mxtxj")
 
 [node name="Sparks01" type="GPUParticles3D" parent="Cam_pivot/Camera3D/Player_gun" unique_id=1763354739]
 transform = Transform3D(-1, 0, -8.766586e-08, 0, 0.99999994, 0, 8.766587e-08, 0, -1.0000001, -1.2284135e-06, -1.1920929e-07, 14.392311)
+cast_shadow = 0
 emitting = false
 amount = 10
 lifetime = 0.15000000000000002
@@ -704,6 +698,7 @@ spot_angle_attenuation = 0.18820307
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0.237, 1.842)
 material_override = SubResource("StandardMaterial3D_rpy68")
+cast_shadow = 0
 emitting = false
 amount = 25
 lifetime = 0.1
@@ -713,11 +708,6 @@ fixed_fps = 60
 visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_g6ubq")
 draw_pass_1 = SubResource("QuadMesh_bpx2c")
-
-[node name="mockGunAlt" parent="Cam_pivot/Camera3D/Player_gun" unique_id=826154006 instance=ExtResource("14_altgun")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.059, -0.436)
-visible = false
-body_color = Color(1, 0.050000012, 0, 1)
 
 [node name="StableCamera" type="Camera3D" parent="." unique_id=1918680024]
 cull_mask = 1

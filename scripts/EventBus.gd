@@ -32,6 +32,7 @@ signal update_money()
 signal cash_pool_changed(new_amount)
 signal cash_pool_banked(amount, previous_cash, new_total_cash)
 signal cash_pool_forfeited(amount)
+signal cash_multiplier_changed(new_multiplier)
 
 signal actor_event()
 

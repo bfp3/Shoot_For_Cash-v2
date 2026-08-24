@@ -157,7 +157,7 @@ _data = {
 top_radius = 0.2
 bottom_radius = 0.2
 height = 0.97
-radial_segments = 18
+radial_segments = 6
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ltsxa"]
 albedo_color = Color(0.88, 0.88, 0.88, 1)
@@ -960,6 +960,7 @@ cast_shadow = 0
 mesh = ExtResource("5_27dlh")
 
 [node name="GoldParticles" type="GPUParticles3D" parent="Mesh/small_rock" unique_id=1639505190]
+cast_shadow = 0
 emitting = false
 amount = 5
 fixed_fps = 60
@@ -974,6 +975,7 @@ cast_shadow = 0
 mesh = SubResource("CylinderMesh_ltsxa")
 
 [node name="GoldParticles" type="GPUParticles3D" parent="Mesh/clay_pigeon" unique_id=2105579488]
+cast_shadow = 0
 emitting = false
 amount = 3
 fixed_fps = 60
@@ -1004,6 +1006,7 @@ mesh = ExtResource("5_27dlh")
 
 [node name="RedParticles" type="GPUParticles3D" parent="Mesh/Red_rock" unique_id=258289539]
 unique_name_in_owner = true
+cast_shadow = 0
 emitting = false
 amount = 10
 fixed_fps = 60
@@ -1018,6 +1021,7 @@ cast_shadow = 0
 mesh = ExtResource("5_27dlh")
 
 [node name="RedParticles" type="GPUParticles3D" parent="Mesh/blue_rock" unique_id=1333201300]
+cast_shadow = 0
 emitting = false
 amount = 10
 fixed_fps = 60

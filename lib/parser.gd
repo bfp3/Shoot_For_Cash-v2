@@ -98,11 +98,12 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / smokecan / pineapple / red_rock_error:
+## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / mothership / smokecan / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
 ##   `rock A4` is invalid — column must be a number or `?` before the aim cell.
+##   `rock-grey` is $1 and does not strike on miss. `mothership` flees the player for bonus cash.
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
 ## wait: {cmd} — hold until the sky is clear (same as old `wait until clear`).
 ## wait 0 / wait 600: {cmd, ms} — delay that many milliseconds before the next rock.
@@ -117,6 +118,8 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 ##   It does not jump rounds, reset strikes, or send leftover balloons away.
 ##   `checkpoint` is accepted as an alias.
 ##   If no balloon-check has been shot, fail restarts the range from the beginning.
+## balloon-mult / balloon-bank: {cmd}. BANK CASH (left) vs +1 Multiplier (right).
+##   Shoot one; the other leaves. Place both next to `balloon-check` so they appear together.
 ## ammo / ammo 16 / ammo 69 $100 / ammo C8 / ammo C8 16 99:
 ##   {cmd, row, column, amount, price}. Bare parks at C6.
 ##   Amount omitted → power_ammo. Price omitted → price_ammo.
@@ -157,7 +160,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'red_rock_error', 'smokecan':
+		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'red_rock_error', 'smokecan':
 			return _parse_rock_command(cmd, parts)
 
 		'pineapple':
@@ -165,12 +168,24 @@ func parse_spawn_command(token: String) -> Dictionary:
 			return _parse_rock_command(cmd, parts)
 
 		'balloon':
-			if parts.size() > 1 and String(parts[1]).strip_edges().to_lower() == 'check':
-				return _parse_balloon_check_command(parts)
+			if parts.size() > 1:
+				var balloon_extra := String(parts[1]).strip_edges().to_lower()
+				if balloon_extra == 'check':
+					return _parse_balloon_check_command(parts)
+				if balloon_extra == 'mult' or balloon_extra == 'multiply':
+					return _parse_ladder_balloon_command('balloon-mult', parts)
+				if balloon_extra == 'bank':
+					return _parse_ladder_balloon_command('balloon-bank', parts)
 			return _parse_balloon_command(parts)
 
 		'balloon-check':
 			return _parse_balloon_check_command(parts)
+
+		'balloon-mult', 'balloon-multiply':
+			return _parse_ladder_balloon_command('balloon-mult', parts)
+
+		'balloon-bank':
+			return _parse_ladder_balloon_command('balloon-bank', parts)
 
 		'ammo':
 			return _parse_ammo_command(parts)
@@ -189,6 +204,9 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'checkpoint':
 			return _parse_balloon_check_command(parts)
+
+		'ladder':
+			return {'cmd': 'ladder'}
 
 		'boss-timer':
 			## Duration for boss survival rounds (milliseconds). Handled while loading the file.
@@ -294,7 +312,7 @@ func _is_random_token(token: String) -> bool:
 	return token.strip_edges() == '?'
 
 
-## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / smokecan / pineapple / red_rock_error
+## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / mothership / smokecan / pineapple / red_rock_error
 ##   rock          → rock ? ?   (random column, aim row A + random aim column)
 ##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
@@ -422,6 +440,12 @@ func _parse_balloon_check_command(parts: PackedStringArray) -> Dictionary:
 			result.row = parsed_cell.row
 			result.column = parsed_cell.column
 			break
+	return result
+
+
+func _parse_ladder_balloon_command(cmd: String, parts: PackedStringArray) -> Dictionary:
+	var result := _parse_balloon_check_command(parts)
+	result.cmd = cmd
 	return result
 
 
@@ -939,6 +963,12 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon-check'
 			var check_letter = ['', 'A', 'B', 'C'][clampi(crow, 1, 3)]
 			return 'balloon-check %s%d' % [check_letter, ccol]
+		'ladder':
+			return 'ladder'
+		'balloon-mult', 'balloon-multiply':
+			return 'balloon-mult'
+		'balloon-bank':
+			return 'balloon-bank'
 		'ammo':
 			var bits: PackedStringArray = ['ammo']
 			var arow := int(entry.get('row', DEFAULT_AMMO_ROW))
@@ -971,7 +1001,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'smokecan', 'red_rock_error':
+		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'smokecan', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))
 			var ac := int(entry.get('aim_column', RANDOM_SLOT))

@@ -1,8 +1,5 @@
 [gd_scene format=3 uid="uid://slic61syofs7"]
 
-[ext_resource type="Material" uid="uid://ddadbpcv1ve5d" path="res://res/Kenney_prototype_textures/Material_override/Black_texture.tres" id="1_0k0dw"]
-[ext_resource type="Texture2D" uid="uid://bcvk6h5k84n3h" path="res://res/moss_shop.png" id="2_mqmh4"]
-
 [sub_resource type="Animation" id="Animation_8a00f"]
 length = 0.001
 tracks/0/type = "value"
@@ -99,20 +96,6 @@ bottom_radius = 0.2
 height = 2.655
 radial_segments = 8
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8343t"]
-albedo_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
-metallic = 0.8
-roughness = 0.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8a00f"]
-albedo_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bf2sn"]
-albedo_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_byku7"]
-albedo_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
-
 [sub_resource type="CylinderMesh" id="CylinderMesh_mqmh4"]
 top_radius = 0.12
 bottom_radius = 0.12
@@ -136,16 +119,8 @@ albedo_color = Color(0.247059, 0.270588, 0.290196, 1)
 metallic = 0.8
 roughness = 0.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cfto5"]
-albedo_color = Color(0.643137, 0.709804, 0.784314, 1)
-metallic = 0.9
-roughness = 0.0
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_yk86m"]
-top_radius = 0.15
-bottom_radius = 0.1
-height = 0.2
-radial_segments = 18
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_byku7"]
+albedo_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_hjpow"]
 top_radius = 0.13
@@ -167,54 +142,6 @@ ring_segments = 8
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=327544690]
 libraries/ = SubResource("AnimationLibrary_byku7")
 speed_scale = 0.5
-
-[node name="OrigBlue" type="MeshInstance3D" parent="." unique_id=993976170]
-transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
-visible = false
-material_override = SubResource("StandardMaterial3D_mqmh4")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_8xld4")
-skeleton = NodePath("../top")
-
-[node name="DarkBlue2" type="MeshInstance3D" parent="." unique_id=1810354394]
-transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
-visible = false
-material_override = SubResource("StandardMaterial3D_8343t")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_8xld4")
-skeleton = NodePath("../top")
-
-[node name="Red" type="MeshInstance3D" parent="." unique_id=1174891118]
-transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
-visible = false
-material_override = SubResource("StandardMaterial3D_8343t")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_8xld4")
-skeleton = NodePath("../top")
-
-[node name="DarkRed" type="MeshInstance3D" parent="." unique_id=225884749]
-transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
-visible = false
-material_override = SubResource("StandardMaterial3D_8a00f")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_8xld4")
-skeleton = NodePath("../top")
-
-[node name="Cream" type="MeshInstance3D" parent="." unique_id=1034737317]
-transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
-visible = false
-material_override = SubResource("StandardMaterial3D_bf2sn")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_8xld4")
-skeleton = NodePath("../top")
-
-[node name="LightCream" type="MeshInstance3D" parent="." unique_id=233244387]
-transform = Transform3D(0.23758787, 4.30173e-09, 0.23758787, 0.23758787, -1.0385296e-08, -0.23758787, 4.30173e-09, 0.336, -1.0385296e-08, 0, 0.24, 0.43848)
-visible = false
-material_override = SubResource("StandardMaterial3D_byku7")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_8xld4")
-skeleton = NodePath("../top")
 
 [node name="top" type="Node3D" parent="." unique_id=1806577118]
 transform = Transform3D(0.336, 0, 0, 0, 0.336, 0, 0, 0, 0.336, 0, -0.096, 0.714)
@@ -260,14 +187,6 @@ cast_shadow = 0
 mesh = SubResource("CylinderMesh_8343t")
 skeleton = NodePath("../..")
 
-[node name="glass" type="MeshInstance3D" parent="top" unique_id=845464674]
-transform = Transform3D(1.333, 0, 0, 0, -0.0234734, 1.33279, 0, -1.33279, -0.0234734, 0, 0.998, -1.944)
-visible = false
-material_override = SubResource("StandardMaterial3D_cfto5")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_yk86m")
-skeleton = NodePath("../..")
-
 [node name="bump" type="MeshInstance3D" parent="top" unique_id=1118438067]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35292, -0.87785)
 material_override = SubResource("StandardMaterial3D_byku7")
@@ -282,48 +201,12 @@ cast_shadow = 0
 mesh = SubResource("CylinderMesh_eumxl")
 skeleton = NodePath("../..")
 
-[node name="notch3" type="MeshInstance3D" parent="top/notch" unique_id=2038708832]
-transform = Transform3D(-9.8350625e-09, 2.2, 0, -0.225, -9.616505e-08, 0, 0, 0, 0.225, 0.24, -0.195, 1.01)
-visible = false
-material_override = SubResource("StandardMaterial3D_ebno1")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_eumxl")
-skeleton = NodePath("../../..")
-
-[node name="bump2" type="MeshInstance3D" parent="top" unique_id=168706208]
-transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0.65487504, 1.0003452)
-visible = false
-material_override = ExtResource("1_0k0dw")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_hjpow")
-skeleton = NodePath("../..")
-
-[node name="notch2" type="MeshInstance3D" parent="top" unique_id=75636597]
-transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0.78139496, 0.9971502)
-visible = false
-material_override = SubResource("StandardMaterial3D_ebno1")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_eumxl")
-skeleton = NodePath("../..")
-
 [node name="eyeRubber" type="MeshInstance3D" parent="top" unique_id=633418753]
 transform = Transform3D(1, 0, 0, 0, -1.31134e-07, -1, 0, 3, -4.37114e-08, 0, 1, -2)
 material_override = SubResource("StandardMaterial3D_r5uma")
 cast_shadow = 0
 mesh = SubResource("TorusMesh_nxho2")
 skeleton = NodePath("../..")
-
-[node name="Decal" type="Decal" parent="." unique_id=1867217433]
-transform = Transform3D(-4.371139e-08, 0.9998477, -0.017452296, 0, -0.017452296, -0.9998477, -1, -4.370473e-08, 7.628641e-10, 0.056, 0.263, 0.678)
-visible = false
-size = Vector3(0.2, 0.079, 0.2)
-texture_albedo = ExtResource("2_mqmh4")
-
-[node name="Decal2" type="Decal" parent="." unique_id=1306200974]
-transform = Transform3D(-1, -8.740946e-08, 1.5257282e-09, 5.5511148e-17, -0.017452296, -0.9998477, 8.742278e-08, -0.9998477, 0.017452296, 0.045, 0.337, 0.378)
-visible = false
-size = Vector3(0.05, 0.079, 0.05)
-texture_albedo = ExtResource("2_mqmh4")
 
 [node name="bullet_marker_pos" type="Marker3D" parent="." unique_id=166836894]
 transform = Transform3D(1, 0, 3.7550926e-08, 0, 1, 0, -3.7550926e-08, 0, 1, 0, 0.23773086, 1.7953424)

@@ -181,15 +181,25 @@ func update_place_label() -> void:
 		if is_boss:
 			place_label.text = ""
 		else:
-			var current_place := String(gl_PlayerState.dataset.level_name).to_upper()
-			if current_place == 'START' or current_place.is_empty():
-				current_place = 'MOSS'
-			place_label.text = current_place
+			var place_id := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+			var display := place_id.to_upper()
+			if display.is_empty() or display.to_lower() == "start":
+				display = "MOSS"
+			place_label.text = display
 	## Round number buttons are retired — keep Play / Ammo / Pause, hide the selector row.
 	_hide_round_selector_buttons()
 	_apply_shop_panel_shadow_for_place()
 	_refresh_background_completion_stamp(false)
 	_refresh_place_challenge_banner()
+
+
+func _format_range_target_cash(amount: int) -> String:
+	var s := str(absi(amount))
+	var out := ""
+	while s.length() > 3:
+		out = "," + s.substr(s.length() - 3, 3) + out
+		s = s.substr(0, s.length() - 3)
+	return s + out
 
 
 func _apply_shop_panel_shadow_for_place() -> void:

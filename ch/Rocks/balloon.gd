@@ -8,6 +8,8 @@ const BALLOON_ORANGE_MAT = preload('uid://bg5auabbq8fo8')
 const BALLOON_RED_MAT = preload('uid://c5lrichw3wfce')
 const BALLOON_GREY_MAT = preload('uid://dgrbglmgp2fad')
 const BALLOON_YELLOW_MAT = preload('uid://bcrtdxo7t4poh')
+const BALLOON_MAT_BANK_BALLOON = preload('res://res/BALLOON_MAT_BANK_BALLOON.tres')
+const BALLOON_MAT_MULTIPLIER_BALLOON = preload('res://res/BALLOON_MAT_MULTIPLIER_BALLOON.tres')
 const CAMO_MATERIAL = preload('uid://cte0j125svd7e')
 var pitch_adjustment := 0.02
 
@@ -47,7 +49,7 @@ var original_penalty_amount := 0
 var default_balloon_type : BalloonType
 
 @export_group("Pop On Crosshair Overlap")
-## If true, this balloon pops when the reticle overlaps — no shot needed.
+## Local fallback only. The Player scene "Crosshair Destroy On Overlap / Balloons" flag is the live toggle.
 @export var pop_on_crosshair_overlap := false
 ## Delay after becoming active before overlap can pop (avoids instant pops on spawn).
 @export_range(0.0, 3.0, 0.05) var pop_on_crosshair_arm_delay_sec := 0.15
@@ -216,12 +218,19 @@ func update_active() -> void:
 	#global_position = start_pos
 	health = 1
 	$Mesh.show()
-	if pop_on_crosshair_overlap:
+	if _wants_pop_on_crosshair_overlap():
 		_arm_pop_on_crosshair()
 
 
+func _wants_pop_on_crosshair_overlap() -> bool:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player != null and player.has_method("wants_crosshair_destroy_on_overlap"):
+		return bool(player.wants_crosshair_destroy_on_overlap("balloons"))
+	return pop_on_crosshair_overlap
+
+
 func _process(_delta: float) -> void:
-	if not pop_on_crosshair_overlap:
+	if not _wants_pop_on_crosshair_overlap():
 		return
 	if not _pop_on_crosshair_armed:
 		return
@@ -252,7 +261,7 @@ func _arm_pop_on_crosshair() -> void:
 		return
 	if not rock_activated or current_state != State.ACTIVE:
 		return
-	if not pop_on_crosshair_overlap:
+	if not _wants_pop_on_crosshair_overlap():
 		return
 	_pop_on_crosshair_armed = true
 

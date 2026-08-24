@@ -139,8 +139,11 @@ var dataset: Dictionary = DEFAULT_DATASET.duplicate(true)
 var round_finished := false
 ## Unbanked round pool that has already been cashed into `dataset.cash` this round.
 var cash_banked_this_round := 0
-## Cash banked at checkpoints / round-end so far this shooting range (HUD BankedLabel).
+## Cash banked at the end-of-round BANK balloon so far this shooting range (HUD BankedLabel).
 var cash_banked_this_range := 0
+## Ladder multiplier applied when cash enters the unbanked pool. Banking resets to 2.
+const DEFAULT_CASH_MULTIPLIER := 2
+var cash_multiplier := DEFAULT_CASH_MULTIPLIER
 
 var _log: Array=[]
 var _current_round_log: Array = []
@@ -255,6 +258,8 @@ func add_bonus(value : int) -> void:
 func add_to_cash_pool(value: int, _world_origin: Vector3 = Vector3.INF) -> void:
 	if value == 0:
 		return
+	if value > 0:
+		value *= get_cash_multiplier()
 	dataset.bonus_cash = int(dataset.bonus_cash) + value
 	if EventBus.instance:
 		EventBus.instance.cash_pool_changed.emit(int(dataset.bonus_cash))
@@ -267,6 +272,36 @@ func get_round_cash_kept() -> int:
 func reset_range_banked_cash() -> void:
 	cash_banked_this_range = 0
 	cash_banked_this_round = 0
+
+
+func get_cash_multiplier() -> int:
+	return maxi(cash_multiplier, 1)
+
+
+func set_cash_multiplier(value: int) -> void:
+	cash_multiplier = maxi(value, 1)
+	if EventBus.instance and EventBus.instance.has_signal("cash_multiplier_changed"):
+		EventBus.instance.cash_multiplier_changed.emit(cash_multiplier)
+
+
+func increase_cash_multiplier(by: int = 1) -> void:
+	set_cash_multiplier(get_cash_multiplier() + by)
+
+
+func reset_cash_multiplier() -> void:
+	set_cash_multiplier(DEFAULT_CASH_MULTIPLIER)
+
+
+## Strikeout: subtract range-banked cash from the wallet. Multiplier is kept.
+func lose_range_banked_cash() -> int:
+	var amount := cash_banked_this_range
+	reset_range_banked_cash()
+	if amount <= 0:
+		return 0
+	dataset.cash = maxi(int(dataset.cash) - amount, 0)
+	if EventBus.instance:
+		EventBus.instance.update_money.emit()
+	return amount
 
 
 func bank_cash_pool(apply_to_wallet: bool = true) -> int:
@@ -354,6 +389,9 @@ func log_hit(item:String, item_type:String, value:int, world_origin: Vector3 = V
 	# Smokecans are obstacles only — do not gate round progress.
 	elif item.contains('rock_type_8') or item.contains('smokecan'):
 		return
+
+	elif item.contains('mothership'):
+		return
 		
 		
 	elif item.contains('pineapple'):
@@ -386,6 +424,8 @@ func log_rocks(_total_rocks : int, rock_type_name : String) -> void:
 		return
 	if rock_type_name.contains('rock_type_avoider') or rock_type_name.contains('avoider'):
 		return
+	if rock_type_name.contains('mothership'):
+		return
 	
 	dataset.total_rocks_in_round += 1
 	dataset.total_rocks_in_round_remaining += 1
@@ -402,11 +442,13 @@ func log_rock_missed(item : String = '') -> void:
 		return
 	if item.contains('rock_type_juggle') or item.contains('juggle'):
 		return
+	if item.contains('mothership'):
+		return
 
 	dataset.total_rocks_in_round_remaining -= 1
 	
 
-	if item.contains('rock_type_1') or item.contains('rock_type_chaser'):
+	if item.contains('rock_type_1'):
 		add_strike()
 		#return
 		

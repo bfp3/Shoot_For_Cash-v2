@@ -51,6 +51,10 @@ enum RockSize {
 	CHASER,
 	## Independent tank rock: health 100; ignored by wait-clear / splash miss / OOB strike.
 	JUGGLE,
+	## $1 rock: counts toward wave clear, but missing it does not strike.
+	GREY,
+	## Flees the reticle and bounces in the playfield. Bonus cash on destroy. Not compulsory.
+	MOTHERSHIP,
 }
 
 enum State {
@@ -88,6 +92,8 @@ var rock_has_been_logged := false
 @onready var hazard_large: MeshInstance3D = %Hazard_large
 
 @onready var current_mesh: MeshInstance3D = small_rock
+## Scene-file visual materials so grey/mothership tints never wipe yellow rocks.
+var _mesh_original_overrides: Dictionary = {}
 
 
 var hit_torque_strength := 5.0
@@ -138,7 +144,7 @@ var _airborne_collision_token := 0
 @export_group("Hazard / Black Rock")
 ## When true, destroying a black hazard that releases smoke blurs the player camera.
 @export var hazard_smoke_blurs_camera := true
-## If true, black rocks strike (and explode) when the crosshair overlaps them — like avoiders, but without seeking the reticle.
+## Local fallback only. The Player scene "Crosshair Destroy On Overlap / Hazards" flag is the live toggle.
 @export var hazard_strike_on_crosshair_overlap := false
 ## Delay after launch before crosshair overlap can strike (avoids instant spawn kills).
 @export_range(0.0, 3.0, 0.05) var hazard_crosshair_arm_delay_sec := 0.45
@@ -161,7 +167,7 @@ var _hazard_crosshair_arm_token := 0
 @export var aim_bonus_sfx_volume_db := -18.0
 
 @export_group("Destroy On Crosshair Overlap (Basic Rock)")
-## If true, a standard (SMALL) rock is destroyed when the reticle overlaps — no shot needed.
+## Local fallback only. The Player scene "Crosshair Destroy On Overlap / Rocks" flag is the live toggle.
 @export var destroy_on_crosshair_overlap := false
 ## Delay after launch before overlap can destroy (avoids instant spawn pops).
 @export_range(0.0, 3.0, 0.05) var destroy_on_crosshair_arm_delay_sec := 0.15
@@ -222,7 +228,7 @@ var _chaser_lock_spin_applied := false
 
 
 func _ready() -> void:
-	
+	_cache_mesh_original_overrides()
 	start_pos = global_position
 	target_x_position = start_pos.x
 	# Own a unique physics material so bounce tweaks never leak across pooled rocks.
@@ -260,12 +266,16 @@ func _physics_process(delta: float) -> void:
 		elif rock_type == RockSize.CHASER:
 			if not _freeze_shot_pending:
 				_update_chaser(delta)
-		elif rock_type == RockSize.SMALL:
-			_update_aim_hold_bonus(delta)
+		elif rock_type == RockSize.MOTHERSHIP:
+			linear_velocity.z = 0.0
+			global_position.z = _avoider_plane_z
+			if not _freeze_shot_pending:
+				_update_mothership(delta)
+		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY:
+			if rock_type == RockSize.SMALL:
+				_update_aim_hold_bonus(delta)
 			_update_destroy_on_crosshair_overlap()
-		elif hazard_strike_on_crosshair_overlap and (
-			rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL
-		):
+		elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 			_update_hazard_crosshair_overlap()
 
 	if not ballistic_aim_active or _ballistic_in_descent:
@@ -332,6 +342,7 @@ func update_prepare_rock() -> void:
 		and rock_type != RockSize.SMOKECAN
 		and rock_type != RockSize.AVOIDER
 		and rock_type != RockSize.JUGGLE
+		and rock_type != RockSize.MOTHERSHIP
 	):
 		gl_PlayerState.log_rocks(1, rock_type_name)
 		
@@ -368,12 +379,18 @@ func update_active() -> void:
 		_sync_avoider_collision_exceptions()
 	elif rock_type == RockSize.CHASER:
 		_arm_chaser()
-	elif hazard_strike_on_crosshair_overlap and (
-		rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL
-	):
-		_arm_hazard_crosshair()
-	elif rock_type == RockSize.SMALL and destroy_on_crosshair_overlap:
-		_arm_destroy_on_crosshair()
+	elif rock_type == RockSize.MOTHERSHIP:
+		_avoider_plane_z = avoider_lock_z
+		global_position.z = _avoider_plane_z
+		linear_velocity.z = 0.0
+		gravity_scale = 0.0
+		_arm_mothership()
+	elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
+		if _player_wants_overlap_destroy("hazards"):
+			_arm_hazard_crosshair()
+	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY:
+		if _player_wants_overlap_destroy("rocks"):
+			_arm_destroy_on_crosshair()
 	
 	#%rock_launch_sound.pitch_scale = randf_range(3.0,3.2)
 	%rock_launch_sound.play()
@@ -506,23 +523,50 @@ func update_gravity(_gravity_scale : float) -> void:
 		await get_tree().create_timer(1.5, false).timeout
 		linear_damp = 0.0
 
-func hide_all_meshes() -> void:
-	small_rock.visible			= false
-	clay_pigeon.visible			= false
-	medium_rock.visible 		= false
-	large_rock.visible 			= false
+func _visual_meshes() -> Array:
+	return [small_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, blue_rock, smokecan]
 
-	hazard_large.visible 		= false
-	red_rock.visible			= false
-	if blue_rock:
-		blue_rock.visible		= false
-	smokecan.visible			= false
+
+func _cache_mesh_original_overrides() -> void:
+	if not _mesh_original_overrides.is_empty():
+		return
+	for mesh in _visual_meshes():
+		if mesh == null:
+			continue
+		_mesh_original_overrides[mesh] = mesh.material_override
+
+
+func hide_all_meshes() -> void:
+	_cache_mesh_original_overrides()
+	for mesh in [small_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, blue_rock, smokecan]:
+		if mesh == null:
+			continue
+		mesh.visible = false
+		if _mesh_original_overrides.has(mesh):
+			mesh.material_override = _mesh_original_overrides[mesh]
 
 
 
 
 func reset_rock_back_on() -> void:
 	enter_state(State.MISSED)
+
+
+func _tint_mesh(color: Color) -> void:
+	if current_mesh == null:
+		return
+	_cache_mesh_original_overrides()
+	var src = _mesh_original_overrides.get(current_mesh)
+	if src is BaseMaterial3D:
+		var tinted: BaseMaterial3D = src.duplicate()
+		tinted.albedo_color = color
+		current_mesh.material_override = tinted
+		return
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = color
+	mat.roughness = 0.88
+	mat.metallic = 0.08
+	current_mesh.material_override = mat
 
 
 func setup_rock_type() -> void:
@@ -780,6 +824,55 @@ func setup_rock_type() -> void:
 			if current_mesh.has_node("GoldParticles"):
 				current_particles = current_mesh.get_node("GoldParticles")
 				current_particles.emitting = true
+
+		RockSize.GREY:
+			current_rock_type = "Grey Rock"
+			rock_type_name = "rock_type_grey"
+			var grey_health := int(gl_DataSet.get_value("rock_type_grey", 1))
+			var grey_cash := int(gl_DataSet.get_value("rock_type_grey", 0))
+			health = maxi(grey_health, 1)
+			cash_value = grey_cash
+			max_health = health
+			small_rock.visible = true
+			current_mesh = small_rock
+			assign_random_mesh(current_mesh)
+			_tint_mesh(Color(0.52, 0.52, 0.55))
+			current_mesh.scale = Vector3.ONE * 0.42
+			main_col.scale = Vector3.ONE * 0.125 * 1.2
+			rock_type_gravity_scale = 0.1
+			force_mult.clear()
+			force_mult = [3, 4]
+			force_mult_index = 0
+
+		RockSize.MOTHERSHIP:
+			current_rock_type = "Mothership"
+			rock_type_name = "mothership_reward"
+			health = maxi(int(gl_DataSet.get_value("mothership_reward", 1)), 1)
+			cash_value = int(gl_DataSet.get_value("mothership_reward", 0))
+			max_health = health
+			if large_rock:
+				large_rock.visible = true
+				current_mesh = large_rock
+			elif medium_rock:
+				medium_rock.visible = true
+				current_mesh = medium_rock
+			else:
+				small_rock.visible = true
+				current_mesh = small_rock
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = Vector3.ONE * 0.7
+			main_col.scale = Vector3.ONE * 0.22
+			rock_type_gravity_scale = 0.0
+			gravity_scale = 0.0
+			linear_damp = 0.2
+			force_mult.clear()
+			force_mult = [3, 4]
+			force_mult_index = 0
+			ignores_x_out_of_bounds = true
+			if current_mesh.has_node("GoldParticles"):
+				current_particles = current_mesh.get_node("GoldParticles")
+				current_particles.emitting = true
+			_tint_mesh(Color(0.62, 0.42, 0.18))
 
 func reset_stats() -> void:
 	var token := _pool_setup_token
@@ -1717,7 +1810,7 @@ func _arm_hazard_crosshair() -> void:
 		return
 	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL:
 		return
-	if not hazard_strike_on_crosshair_overlap:
+	if not _player_wants_overlap_destroy("hazards"):
 		return
 	_hazard_crosshair_armed = true
 
@@ -1733,7 +1826,7 @@ func _update_hazard_crosshair_overlap() -> void:
 
 ## Black-rock reticle contact: same strike + destroy as a direct shot, no seek motion.
 func _trigger_hazard_crosshair_contact() -> void:
-	if not hazard_strike_on_crosshair_overlap:
+	if not _player_wants_overlap_destroy("hazards"):
 		return
 	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL:
 		return
@@ -1909,6 +2002,67 @@ func _update_avoider(delta: float) -> void:
 		_trigger_avoider_crosshair_contact()
 
 
+func _arm_mothership() -> void:
+	_avoider_armed = false
+	_avoider_has_seek_target = false
+	_avoider_retarget_timer = 0.0
+	_avoider_arm_token += 1
+	var token := _avoider_arm_token
+	await get_tree().create_timer(avoider_arm_delay_sec, false).timeout
+	if token != _avoider_arm_token:
+		return
+	if current_state != State.ACTIVE or rock_type != RockSize.MOTHERSHIP:
+		return
+	_avoider_armed = true
+	linear_velocity = Vector3(randf_range(-6.0, 6.0), randf_range(2.0, 8.0), 0.0)
+
+
+func _update_mothership(delta: float) -> void:
+	if not _avoider_armed:
+		return
+	if _freeze_shot_pending:
+		linear_velocity = Vector3.ZERO
+		angular_velocity = Vector3.ZERO
+		return
+
+	_avoider_retarget_timer -= delta
+	if not _avoider_has_seek_target or _avoider_retarget_timer <= 0.0:
+		_avoider_seek_xy = _crosshair_world_xy_at_depth(global_position.z)
+		_avoider_has_seek_target = true
+		_avoider_retarget_timer = maxf(avoider_retarget_delay_sec, 0.0)
+
+	var away := Vector2(
+		global_position.x - _avoider_seek_xy.x,
+		global_position.y - _avoider_seek_xy.y
+	)
+	if away.length_squared() < 0.01:
+		away = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0))
+	var desired := away.normalized() * avoider_max_speed_xy
+	var vel_xy := Vector2(linear_velocity.x, linear_velocity.y)
+	var steered := vel_xy.move_toward(desired, avoider_seek_accel * delta)
+	linear_velocity.x = steered.x
+	linear_velocity.y = steered.y
+	linear_velocity.z = 0.0
+	global_position.z = _avoider_plane_z
+
+	const MIN_X := -7.5
+	const MAX_X := 7.5
+	const MIN_Y := 0.5
+	const MAX_Y := 8.5
+	if global_position.x < MIN_X:
+		global_position.x = MIN_X
+		linear_velocity.x = absf(linear_velocity.x)
+	elif global_position.x > MAX_X:
+		global_position.x = MAX_X
+		linear_velocity.x = -absf(linear_velocity.x)
+	if global_position.y < MIN_Y:
+		global_position.y = MIN_Y
+		linear_velocity.y = absf(linear_velocity.y)
+	elif global_position.y > MAX_Y:
+		global_position.y = MAX_Y
+		linear_velocity.y = -absf(linear_velocity.y)
+
+
 ## Project the player's crosshair onto the rock's depth plane; return world X/Y only.
 func _crosshair_world_xy_at_depth(depth_z: float) -> Vector2:
 	var fallback := Vector2(global_position.x, global_position.y)
@@ -2026,6 +2180,17 @@ func _update_aim_hold_bonus(delta: float) -> void:
 		_apply_aim_hold_bonus_tick()
 
 
+func _player_wants_overlap_destroy(kind: String) -> bool:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player != null and player.has_method("wants_crosshair_destroy_on_overlap"):
+		return bool(player.wants_crosshair_destroy_on_overlap(kind))
+	if kind == "rocks":
+		return destroy_on_crosshair_overlap
+	if kind == "hazards":
+		return hazard_strike_on_crosshair_overlap
+	return false
+
+
 func _arm_destroy_on_crosshair() -> void:
 	_destroy_on_crosshair_armed = false
 	_destroy_on_crosshair_arm_token += 1
@@ -2035,21 +2200,23 @@ func _arm_destroy_on_crosshair() -> void:
 		await get_tree().create_timer(delay, false).timeout
 	if token != _destroy_on_crosshair_arm_token:
 		return
-	if current_state != State.ACTIVE or rock_type != RockSize.SMALL:
+	if current_state != State.ACTIVE:
 		return
-	if not destroy_on_crosshair_overlap:
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY:
+		return
+	if not _player_wants_overlap_destroy("rocks"):
 		return
 	_destroy_on_crosshair_armed = true
 
 
 func _update_destroy_on_crosshair_overlap() -> void:
-	if not destroy_on_crosshair_overlap:
+	if not _player_wants_overlap_destroy("rocks"):
 		return
 	if not _destroy_on_crosshair_armed:
 		return
 	if rock_destroyed or not rock_activated:
 		return
-	if rock_type != RockSize.SMALL:
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY:
 		return
 	if _freeze_shot_pending:
 		return

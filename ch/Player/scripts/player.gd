@@ -50,18 +50,24 @@ var _difficulty_bullet_speed := -1.0
 @export var accuracy_streak_max := 10
 @export var accuracy_streak_tween_time := 0.28
 
-@export_group("Alternate Weapon (Shift+G)")
-## Press Shift+G in-round to toggle this loadout on/off.
-@export var alt_weapon_enabled := true
-## Bullet scene used while the alt weapon is equipped. Edit Bullet_visual_alt.tscn for look.
-@export var alt_bullet_scene: PackedScene
-## Multiplies upgrade travel time. Lower = faster bullets.
-@export var alt_bullet_speed_scale := 0.72
-## Multiplies upgrade fire-rate cooldown. Lower = shoots again sooner.
-@export var alt_fire_rate_scale := 0.72
-@export var alt_crosshair_color := Color(0.12, 0.95, 0.82, 1.0)
+@export_group("Crosshair Destroy On Overlap")
+## When true, overlapping the reticle pops balloons without a shot.
+@export var crosshair_destroy_on_overlap_balloons := false
+## When true, overlapping the reticle destroys standard / grey rocks without a shot.
+@export var crosshair_destroy_on_overlap_rocks := false
+## When true, overlapping the reticle destroys black hazard rocks. Red avoiders still use their own overlap explode.
+@export var crosshair_destroy_on_overlap_hazards := false
 
-var using_alt_weapon := false
+func wants_crosshair_destroy_on_overlap(kind: String) -> bool:
+	match kind:
+		"balloons":
+			return crosshair_destroy_on_overlap_balloons
+		"rocks":
+			return crosshair_destroy_on_overlap_rocks
+		"hazards":
+			return crosshair_destroy_on_overlap_hazards
+		_:
+			return false
 
 ## Current bullets loaded. Starts at power_max_ammo and is refilled via shop ammo packs.
 var shot_count := 0
@@ -129,32 +135,6 @@ var pan_speed: float = 8.0
 
 var joystick_sensitivity := 500.0
 
-## Fine aim via controller right stick / gyro (left stick / WASD stay at ~1300 px/s).
-@export_group("Right Stick Crosshair")
-## Pixels per second at full right-stick (or equivalent gyro) tilt.
-@export var right_stick_crosshair_speed := 320.0
-## Ignore stick / gyro noise below this magnitude (0–1 after normalizing).
-@export_range(0.05, 0.5, 0.01) var right_stick_deadzone := 0.15
-## Higher = lighter tilts move slower / more precise (1 = linear).
-@export_range(1.0, 3.0, 0.05) var right_stick_response_curve := 1.6
-## How quickly fine aim ramps up / settles (higher = snappier).
-@export var right_stick_accel := 40.0
-@export var right_stick_decel := 22.0
-## If true, also scales with the in-game reticle sensitivity setting.
-@export var right_stick_uses_sensitivity_setting := true
-
-@export_subgroup("Gyro")
-## Move the crosshair with controller gyroscope (DualSense / Switch-style pads).
-## Requires Godot 4.7+ joypad motion APIs; safely disabled on 4.6.
-@export var gyro_aim_enabled := true
-## Angular speed (rad/s) treated as "full stick" — matches right-stick max speed.
-@export_range(0.5, 8.0, 0.05) var gyro_full_tilt_rad_per_sec := 2.0
-@export var gyro_invert_x := false
-@export var gyro_invert_y := false
-## Brief still-calibration when a gyro pad connects (set controller down / hold steady).
-@export var gyro_auto_calibrate_on_connect := true
-@export_range(0.25, 3.0, 0.05) var gyro_calibrate_seconds := 1.0
-
 @export_group("Grid Aim")
 ## When false, keyboard / left stick / D-pad keep free aim. When true, they step between A1–C8 grid cells.
 @export var grid_aim_enabled := false
@@ -182,10 +162,6 @@ var start_rotation : Vector3
 var target_crosshair_position: Vector2 = Vector2(980, 540)
 var crosshair_position := Vector2.ZERO
 var crosshair_lag_speed := 11.0  # Higher = faster catch-up
-var _right_stick_velocity := Vector2.ZERO
-var _gyro_velocity := Vector2.ZERO
-var _gyro_device := -1
-var _gyro_calibrating := false
 
 ## Grid aim lock (rows A=1…C=3; columns 1…8, plus optional side lanes 0 / 9).
 var _grid_aim_row := 2
@@ -247,9 +223,6 @@ func _ready() -> void:
 	EventBus.instance.egg_pulsed.connect(pulse_shake_camera)
 	start_rotation = rotation_degrees
 	_setup_mobile_pause_button()
-	if not running_on_mobile:
-		Input.joy_connection_changed.connect(_on_joy_connection_changed_for_gyro)
-		_refresh_gyro_device(true)
 
 
 func _setup_mobile_pause_button() -> void:
@@ -442,8 +415,6 @@ func _process(delta: float) -> void:
 		if mobile_controller.consume_fire_release():
 			fire_weapon()
 	else:
-		if Input.is_action_just_pressed("switch_weapon"):
-			toggle_alt_weapon()
 		if Input.is_action_just_released("shootWeapon"):
 			fire_weapon()
 
@@ -458,8 +429,6 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_up_and_down(delta)
 	#handle_pan_left_and_right(delta)
-	handle_right_stick_crosshair(delta)
-	handle_gyro_crosshair(delta)
 	update_gun_look()
 	
 	#handle_pan_keyboard(delta)
@@ -610,16 +579,11 @@ func handle_keyboard_and_controller_input(delta: float) -> void:
 	var magnitude := clampf(raw.length(), 0.0, 1.0)
 	var has_input := magnitude > STICK_DEADZONE
 
-	const keyboard_crosshair_speed := 1300.0
-	var speed := keyboard_crosshair_speed * GameSettings.crosshair_speed_multiplier()
-	if Input.is_action_pressed("sprint"):
-		speed *= 0.5
-
 	var target_velocity := Vector2.ZERO
 	if has_input:
 		# Mild curve: light tilts stay precise, full throw still hits max speed.
 		var strength := pow(magnitude, 1.35)
-		target_velocity = raw.normalized() * speed * strength
+		target_velocity = raw.normalized() * strength
 
 	const ACCEL := 60.0
 	const DECEL := 18.0
@@ -893,125 +857,6 @@ func _get_rock_manager() -> RockManager:
 	return null
 
 
-## Slow precision aim from the right stick (stacks with gyro / left stick / WASD / mouse).
-func handle_right_stick_crosshair(delta: float) -> void:
-	if running_on_mobile:
-		return
-
-	var stick := Vector2(
-		Input.get_joy_axis(0, JOY_AXIS_RIGHT_X),
-		Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
-	)
-	_right_stick_velocity = _fine_aim_integrate(stick, _right_stick_velocity, delta)
-	if grid_aim_enabled and _right_stick_velocity.length_squared() > 0.01:
-		_clear_grid_aim_lock()
-	target_crosshair_position += _right_stick_velocity * delta
-
-
-## Controller gyro aim — same speed / curve / deadzone as the right stick.
-## Native joypad gyro APIs ship in Godot 4.7+; on 4.6 this no-ops safely.
-func handle_gyro_crosshair(delta: float) -> void:
-	if running_on_mobile or not gyro_aim_enabled:
-		_gyro_velocity = Vector2.ZERO
-		return
-	if not _joy_motion_api_available():
-		_gyro_velocity = Vector2.ZERO
-		return
-	if _gyro_device < 0 or _gyro_calibrating:
-		_gyro_velocity = Vector2.ZERO
-		return
-	if not bool(Input.call("is_joy_motion_sensors_calibrated", _gyro_device)):
-		_gyro_velocity = Vector2.ZERO
-		return
-
-	var stick := _gyro_as_stick(_gyro_device)
-	_gyro_velocity = _fine_aim_integrate(stick, _gyro_velocity, delta)
-	if grid_aim_enabled and _gyro_velocity.length_squared() > 0.01:
-		_clear_grid_aim_lock()
-	target_crosshair_position += _gyro_velocity * delta
-
-
-## Shared right-stick / gyro velocity integration (same speeds for both).
-func _fine_aim_integrate(stick: Vector2, current: Vector2, delta: float) -> Vector2:
-	var magnitude := clampf(stick.length(), 0.0, 1.0)
-	var has_input := magnitude > right_stick_deadzone
-
-	var speed := right_stick_crosshair_speed
-	if right_stick_uses_sensitivity_setting:
-		speed *= GameSettings.crosshair_speed_multiplier()
-
-	var target_velocity := Vector2.ZERO
-	if has_input:
-		var strength := pow(magnitude, right_stick_response_curve)
-		target_velocity = stick.normalized() * speed * strength
-
-	var lerp_speed := right_stick_accel if has_input else right_stick_decel
-	current = current.lerp(target_velocity, lerp_speed * delta)
-	if current.length_squared() < 0.01 and not has_input:
-		return Vector2.ZERO
-	return current
-
-
-## Map joypad gyro (rad/s) into the same -1..1 stick space the right stick uses.
-func _gyro_as_stick(device: int) -> Vector2:
-	var gyro: Vector3 = Input.call("get_joy_gyroscope", device)
-	var full := maxf(gyro_full_tilt_rad_per_sec, 0.01)
-	# Yaw → screen X, pitch → screen Y (Godot: +gyro is counter-clockwise).
-	var stick := Vector2(-gyro.y, -gyro.x) / full
-	if gyro_invert_x:
-		stick.x = -stick.x
-	if gyro_invert_y:
-		stick.y = -stick.y
-	return stick.limit_length(1.0)
-
-
-func _joy_motion_api_available() -> bool:
-	return (
-		Input.has_method("has_joy_motion_sensors")
-		and Input.has_method("set_joy_motion_sensors_enabled")
-		and Input.has_method("get_joy_gyroscope")
-		and Input.has_method("is_joy_motion_sensors_calibrated")
-		and Input.has_method("start_joy_motion_sensors_calibration")
-		and Input.has_method("stop_joy_motion_sensors_calibration")
-	)
-
-
-func _on_joy_connection_changed_for_gyro(_device: int, _connected: bool) -> void:
-	_refresh_gyro_device(true)
-
-
-func _refresh_gyro_device(calibrate_if_needed: bool) -> void:
-	if running_on_mobile or not gyro_aim_enabled or not _joy_motion_api_available():
-		_gyro_device = -1
-		_gyro_velocity = Vector2.ZERO
-		return
-
-	var found := -1
-	for device in Input.get_connected_joypads():
-		if bool(Input.call("has_joy_motion_sensors", device)):
-			found = int(device)
-			break
-	_gyro_device = found
-	if _gyro_device < 0:
-		return
-
-	Input.call("set_joy_motion_sensors_enabled", _gyro_device, true)
-	if calibrate_if_needed and gyro_auto_calibrate_on_connect:
-		if not bool(Input.call("is_joy_motion_sensors_calibrated", _gyro_device)):
-			_calibrate_gyro_device(_gyro_device)
-
-
-func _calibrate_gyro_device(device: int) -> void:
-	if _gyro_calibrating or not _joy_motion_api_available():
-		return
-	_gyro_calibrating = true
-	Input.call("start_joy_motion_sensors_calibration", device)
-	await get_tree().create_timer(gyro_calibrate_seconds).timeout
-	if is_instance_valid(self) and device == _gyro_device and _joy_motion_api_available():
-		Input.call("stop_joy_motion_sensors_calibration", device)
-	_gyro_calibrating = false
-
-
 func set_power(settings:Dictionary, setting_name:String)-> float:
 	return gl_DataSet.get_value(setting_name, settings[setting_name])
 
@@ -1037,7 +882,7 @@ func update_player_stats() -> void:
 
 	
 	if player_gun and player_gun.has_method("set_weapon_slot"):
-		player_gun.set_weapon_slot(using_alt_weapon)
+		player_gun.set_weapon_slot(false)
 	else:
 		player_gun.update_guns()
 
@@ -1052,27 +897,9 @@ func update_player_stats() -> void:
 	update_stats_visually()
 
 
-func toggle_alt_weapon() -> void:
-	if not alt_weapon_enabled:
-		return
-	if current_state != State.ACTIVE and current_state != State.ROUND_FINISHED:
-		return
-	using_alt_weapon = not using_alt_weapon
-	if player_gun and player_gun.has_method("set_weapon_slot"):
-		player_gun.set_weapon_slot(using_alt_weapon)
-	_rebuild_weapon_bases_from_upgrades()
-	_sync_weapon_bullet_scene()
-	if weapon_shooting:
-		weapon_shooting.power_bullet_speed = power_bullet_speed
-	_refresh_crosshair_weapon_style()
-
-
 func _rebuild_weapon_bases_from_upgrades() -> void:
 	var speed := _upgrade_bullet_speed
 	var rate := _upgrade_gun_fire_rate
-	if using_alt_weapon:
-		speed *= alt_bullet_speed_scale
-		rate *= alt_fire_rate_scale
 	_base_bullet_speed = speed
 	_base_gun_fire_rate = rate
 	power_bullet_speed = speed
@@ -1096,15 +923,12 @@ func clear_difficulty_bullet_speed() -> void:
 func _sync_weapon_bullet_scene() -> void:
 	if weapon_shooting == null:
 		return
-	if using_alt_weapon and alt_bullet_scene:
-		weapon_shooting.set_active_bullet_scene(alt_bullet_scene)
-	else:
-		weapon_shooting.set_active_bullet_scene(null)
+	weapon_shooting.set_active_bullet_scene(null)
 
 
 func _refresh_crosshair_weapon_style() -> void:
 	if crosshair and crosshair.has_method("apply_weapon_style"):
-		crosshair.apply_weapon_style(using_alt_weapon, alt_crosshair_color)
+		crosshair.apply_weapon_style(false, Color.WHITE)
 
 
 func full_power_mode() -> void:
@@ -1712,7 +1536,6 @@ func start_player() -> void:
 	_sync_accuracy_bar_visibility()
 	
 func reset_mouse_pos() -> void:
-	print(' get_viewport().size / 2 ',  get_viewport().size / 2)
 	var center : Vector2 = get_viewport().size / 2
 	center -= Vector2(20.0, 20.0)
 	center += Vector2(0.0, 140.0)

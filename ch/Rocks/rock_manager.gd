@@ -28,6 +28,7 @@ const pigeon_aim_reference_depth := 45.0
 var rocks_limit := 0
 const ROCK_INSTANCE_SCENE := preload("res://ch/Rocks/Rock_Instance.tscn")
 const CHECKPOINT_SCENE := preload("res://ch/Rocks/Checkpoint.tscn")
+const LADDER_BALLOON_SCRIPT := preload("res://ch/Rocks/ladder_choice_balloon.gd")
 const AMMO_BALLOON_SCENE := preload("res://ch/Rocks/AmmoBalloon.tscn")
 ## Extra pool rocks added once when entering the boss layout (batched across frames).
 var _boss_extra_rocks_added := false
@@ -179,6 +180,7 @@ var _script_sfx_fade_tokens: Dictionary = {}
 var _sequence_active := false
 var _waiting_until_clear := false
 var _checkpoint_hold := false
+var _ladder_hold := false
 var _auto_pulse_next_beat := false
 var _force_mid_round_balloons := false
 var _advancing_sequence := false
@@ -240,7 +242,7 @@ func set_difficulty_gravity(difficulty: String) -> void:
 			aim_launch_gravity_scale = _base_aim_launch_gravity_scale
 
 func _process(delta: float) -> void:
-	if _waiting_until_clear and not _checkpoint_hold and not _advancing_sequence and not _final_atmosphere_playing and not _pineapple_round_playing and not _sequence_delay_active:
+	if _waiting_until_clear and not _checkpoint_hold and not _ladder_hold and not _advancing_sequence and not _final_atmosphere_playing and not _pineapple_round_playing and not _sequence_delay_active:
 		if current_state != State.INACTIVE and current_state != State.ROUND_END:
 			if _sky_is_clear_for_sequence():
 				try_continue_sequence()
@@ -288,6 +290,7 @@ func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
 	_sequence_active = true
 	_waiting_until_clear = false
 	_checkpoint_hold = false
+	_ladder_hold = false
 	_auto_pulse_next_beat = false
 	_force_mid_round_balloons = resume_index > 0
 	_timed_events_running = false
@@ -315,6 +318,10 @@ func _sequence_cmd_at(index: int) -> String:
 
 func _is_balloon_check_cmd(cmd: String) -> bool:
 	return cmd == "balloon-check" or cmd == "checkpoint"
+
+
+func _is_ladder_balloon_cmd(cmd: String) -> bool:
+	return cmd == "balloon-mult" or cmd == "balloon-multiply" or cmd == "balloon-bank" or cmd == "ladder"
 
 
 func _is_clear_cmd(cmd: String) -> bool:
@@ -345,7 +352,7 @@ func _maybe_run_pineapple_opportunity() -> void:
 
 
 func _is_sequence_barrier_cmd(cmd: String) -> bool:
-	return cmd == "wait-until-clear" or _is_balloon_check_cmd(cmd)
+	return cmd == "wait-until-clear" or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd)
 
 
 func _launch_next_sequence_beat() -> void:
@@ -404,6 +411,11 @@ func _launch_next_sequence_beat() -> void:
 			_sequence_cursor += 1
 			_consumed_sequence_barrier = true
 			_handle_clear_command(clear_entry)
+			continue
+		if _is_ladder_balloon_cmd(cmd):
+			var ladder_entry = _full_wave_sequence[_sequence_cursor]
+			_sequence_cursor += 1
+			_spawn_ladder_balloon(ladder_entry)
 			continue
 		if _is_balloon_check_cmd(cmd):
 			await _maybe_run_pineapple_opportunity()
@@ -588,11 +600,16 @@ func try_continue_sequence() -> bool:
 	if _script_has_more_commands():
 		_sequence_active = true
 	if current_state == State.INACTIVE or current_state == State.ROUND_END:
-		if not _script_has_more_commands() and not _waiting_until_clear and not _checkpoint_hold:
+		if not _script_has_more_commands() and not _waiting_until_clear and not _checkpoint_hold and not _has_live_ladder_balloons():
 			_sequence_active = false
 			_waiting_until_clear = false
 			return false
 	if _checkpoint_hold:
+		return true
+	if _ladder_hold:
+		return true
+	if _has_live_ladder_balloons() and not _script_has_more_commands():
+		_waiting_until_clear = true
 		return true
 	if _advancing_sequence:
 		return _sequence_active or _waiting_until_clear or _checkpoint_hold or _script_has_more_commands()
@@ -612,7 +629,7 @@ func try_continue_sequence() -> bool:
 	_advancing_sequence = true
 	_launch_next_sequence_beat()
 	_advancing_sequence = false
-	if _sequence_active or _waiting_until_clear or _checkpoint_hold or _has_live_checkpoint() or _script_has_more_commands():
+	if _sequence_active or _waiting_until_clear or _checkpoint_hold or _ladder_hold or _has_live_checkpoint() or _script_has_more_commands():
 		return true
 	if not _sky_is_clear_for_sequence():
 		return true
@@ -622,11 +639,15 @@ func try_continue_sequence() -> bool:
 func _sky_is_clear_for_sequence() -> bool:
 	if _checkpoint_hold:
 		return false
+	if _ladder_hold:
+		return false
 	if _pineapple_round_playing:
 		return false
 	if _sequence_delay_active:
 		return false
 	if _has_live_checkpoint():
+		return false
+	if _has_live_ladder_balloons():
 		return false
 	if _timed_events_running:
 		return false
@@ -646,9 +667,11 @@ func is_holding_wave() -> bool:
 		return true
 	if _script_has_more_commands():
 		return true
-	if _sequence_active or _waiting_until_clear or _checkpoint_hold:
+	if _sequence_active or _waiting_until_clear or _checkpoint_hold or _ladder_hold:
 		return true
 	if _has_live_checkpoint():
+		return true
+	if _has_live_ladder_balloons():
 		return true
 	return not _sky_is_clear_for_sequence()
 
@@ -687,6 +710,62 @@ func _spawn_checkpoint_balloon(entry = null) -> void:
 			checkpoint.arrive_from_below()
 
 
+func _spawn_ladder_balloon(entry = null) -> void:
+	var cmd := ""
+	if entry is Dictionary:
+		cmd = String(entry.get("cmd", "")).to_lower()
+	var kinds: PackedStringArray = []
+	if cmd == "ladder":
+		kinds = PackedStringArray(["bank", "multiply"])
+	elif cmd == "balloon-bank":
+		kinds = PackedStringArray(["bank"])
+	else:
+		kinds = PackedStringArray(["multiply"])
+
+	var host := get_tree().get_first_node_in_group("checkpoint_container")
+	if host == null:
+		host = get_tree().current_scene
+	if host == null:
+		host = self
+
+	for kind in kinds:
+		if _has_live_ladder_kind(kind):
+			continue
+		var balloon: Node = CHECKPOINT_SCENE.instantiate()
+		balloon.set_script(LADDER_BALLOON_SCRIPT)
+		balloon.set("choice_kind", kind)
+		host.add_child(balloon)
+		var rest := Vector3.INF
+		if balloon.has_method("default_rest_pos"):
+			rest = balloon.default_rest_pos()
+		if balloon.has_method("arrive_from_below"):
+			balloon.arrive_from_below(rest)
+
+
+func _has_live_ladder_kind(kind: String) -> bool:
+	for node in get_tree().get_nodes_in_group("ladder_choice"):
+		if not is_instance_valid(node):
+			continue
+		if String(node.get("choice_kind")) != kind:
+			continue
+		if bool(node.get("_consumed")):
+			continue
+		return true
+	return false
+
+
+func _has_live_ladder_balloons() -> bool:
+	for node in get_tree().get_nodes_in_group("ladder_choice"):
+		if not is_instance_valid(node):
+			continue
+		if bool(node.get("_consumed")):
+			continue
+		if node.has_method("is_blocking_sky") and not bool(node.is_blocking_sky()):
+			continue
+		return true
+	return false
+
+
 func _checkpoint_rest_from_entry(entry) -> Vector3:
 	if not (entry is Dictionary):
 		return Vector3.INF
@@ -714,6 +793,20 @@ func _dismiss_checkpoint() -> void:
 		elif is_instance_valid(_active_checkpoint):
 			_active_checkpoint.queue_free()
 	_active_checkpoint = null
+
+
+func _dismiss_ladder_balloons() -> void:
+	_ladder_hold = false
+	var tree := get_tree()
+	if tree == null:
+		return
+	for node in tree.get_nodes_in_group("ladder_choice"):
+		if not is_instance_valid(node):
+			continue
+		if node.has_method("dismiss_without_shot"):
+			node.dismiss_without_shot()
+		else:
+			node.queue_free()
 
 
 func _spawn_or_queue_ammo_balloon(entry = null) -> void:
@@ -973,6 +1066,7 @@ func _cancel_sequence() -> void:
 	_sequence_active = false
 	_waiting_until_clear = false
 	_checkpoint_hold = false
+	_ladder_hold = false
 	_auto_pulse_next_beat = false
 	_advancing_sequence = false
 	_timed_events_running = false
@@ -984,6 +1078,7 @@ func _cancel_sequence() -> void:
 	_pending_sequence_delay_sec = 0.0
 	_launched_rocks_this_sequence = false
 	_dismiss_checkpoint()
+	_dismiss_ladder_balloons()
 	_dismiss_ammo_balloons()
 	_pending_ammo_entries.clear()
 
@@ -1004,6 +1099,7 @@ func notify_clearable_destroyed() -> void:
 ## Checkpoint was shot — stop treating it as a live hold. Sequence continues via end_checkpoint_hold.
 func finish_checkpoint_round() -> void:
 	_checkpoint_hold = false
+	_ladder_hold = false
 	_sequence_active = false
 	_waiting_until_clear = false
 	_auto_pulse_next_beat = false
@@ -1013,6 +1109,7 @@ func finish_checkpoint_round() -> void:
 
 func end_checkpoint_hold() -> void:
 	_checkpoint_hold = false
+	_ladder_hold = false
 	_active_checkpoint = null
 	if _script_has_more_commands():
 		_sequence_active = true
@@ -1187,6 +1284,10 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.CHASER
 			'rock-juggle':
 				return RockInstance.RockSize.JUGGLE
+			'rock-grey':
+				return RockInstance.RockSize.GREY
+			'mothership':
+				return RockInstance.RockSize.MOTHERSHIP
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -1207,6 +1308,8 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-avoider'
 		or cmd == 'rock-chaser'
 		or cmd == 'rock-juggle'
+		or cmd == 'rock-grey'
+		or cmd == 'mothership'
 	)
 
 
@@ -1396,7 +1499,7 @@ func deactivate_out_of_bounds_rock(body: RockInstance, side: OobSide = OobSide.N
 
 
 func _oob_miss_causes_strike(rock_type_name: String) -> bool:
-	return rock_type_name.contains("rock_type_1") or rock_type_name.contains("rock_type_chaser")
+	return rock_type_name.contains("rock_type_1")
 
 
 func set_strike_feedback_origin(world_pos: Vector3) -> void:
@@ -1446,6 +1549,8 @@ func _any_live_round_rocks() -> bool:
 			continue
 		## Juggle rocks run independently — never block wait / wait-until-clear.
 		if body.rock_type == RockInstance.RockSize.JUGGLE:
+			continue
+		if body.rock_type == RockInstance.RockSize.MOTHERSHIP:
 			continue
 		## Still waiting to launch this wave.
 		if body.current_state == body.State.PREPARE_ROCK:
@@ -2748,7 +2853,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
 			# Keep wait / sequence barriers in place so launch stagger, balloon-checks, and clear survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'sfx-play' or cmd == 'sfx-stop':
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'sfx-play' or cmd == 'sfx-stop':
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue
