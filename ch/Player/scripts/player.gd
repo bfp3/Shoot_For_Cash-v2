@@ -144,12 +144,26 @@ var joystick_sensitivity := 500.0
 @export var grid_aim_side_lanes := true
 
 @export_group("Planted Crosshair")
-## When true, fire-release plants a crosshair trap instead of shooting. Overlap = hit; expires after 7s. Max 5.
+## When true, fire-release plants a crosshair trap instead of shooting. Overlap = hit; expires after lifetime. Max 5.
 @export var plant_crosshair_on_fire := false
 ## When true, `shoot_weapon_2` (right-click) plants a crosshair trap instead of shrinking the scope.
 @export var right_click_is_planted_crosshair := false
 ## Seconds a planted trap stays faded and inactive before it can hit.
 @export var planted_crosshair_arm_delay := 1.5
+## Seconds the trap stays live after planting (including arm delay) before it dissipates on its own.
+@export_range(0.5, 30.0, 0.1) var planted_crosshair_lifetime := 7.0
+## Degrees per second the planted crosshair spins once it goes live.
+@export var planted_crosshair_rotation_speed := 120.0
+## How far the outer-ring pulse expands (multiply of outer-scope scale).
+@export_range(1.2, 6.0, 0.1) var planted_crosshair_pulse_scale := 2.8
+## Duration of the plant / end ring-pulse fade.
+@export_range(0.1, 1.5, 0.05) var planted_crosshair_pulse_duration := 0.4
+## When true, every successful shoot-release pulses a duplicate RingTexture (expand + fade).
+@export var shoot_ring_pulse_on_release := false
+## How far the shoot-release ring expands from the live RingTexture size (1 = no grow).
+@export_range(1.0, 8.0, 0.05) var shoot_ring_pulse_scale := 2.0
+## Duration of the shoot-release ring expand + fade.
+@export_range(0.05, 2.0, 0.05) var shoot_ring_pulse_duration := 0.35
 
 const light_colour := Color('FFFFFF')
 const light_intensity := 2.0
@@ -1323,6 +1337,8 @@ func fire_weapon(force_plant: bool = false) -> void:
 
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
+	if shoot_ring_pulse_on_release:
+		%Crosshair.pulse_ring_texture()
 	
 
 func out_of_ammo() -> void:

@@ -66,7 +66,7 @@ material = SubResource("StandardMaterial3D_r5w5l")
 size = Vector3(0.05, 30, 0.05)
 
 [sub_resource type="BoxMesh" id="BoxMesh_mdemw"]
-size = Vector3(0.108, 0.502, 0.007)
+size = Vector3(0.276, 0.502, 0.007)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ymbdo"]
 size = Vector3(40, 1, 9.025)
@@ -467,11 +467,10 @@ randomize_later_waves = false
 pigeon_aim_markers = NodePath("../PigeonAimMarkers")
 telegraph_columns = NodePath("Columns2")
 debug_visualiser = NodePath("DebugVisualiser")
-telegraph_enabled = false
+telegraph_lead_sec = 0.0
 telegraph_blink_color = Color(1.8247963, 1.2783784, 0.39935833, 1)
 telegraph_blink_on_sec = 0.2
 telegraph_sfx_volume_db = -30.0
-path_telegraph_enabled = false
 oob_miss_shake_amount = 0.5
 
 [node name="DebugVisualiser" type="Node3D" parent="Rocks" unique_id=1321570169]
@@ -614,8 +613,7 @@ text = "C"
 font_size = 363
 
 [node name="Columns2" type="Node3D" parent="Rocks" unique_id=1595594875]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.232, -22.75)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.83, -22.75)
 
 [node name="Column1" type="MeshInstance3D" parent="Rocks/Columns2" unique_id=403936877]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.769, -2.614, 19.556)

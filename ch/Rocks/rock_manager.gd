@@ -77,21 +77,27 @@ const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a c
 @export var telegraph_columns: Node3D
 ## Aim-grid debug overlays (Column1–8 / RowA–C). Defaults to $DebugVisualiser.
 @export var debug_visualiser: Node3D
-@export var telegraph_enabled := true
+## Blink the column mesh just before each rock launches (not a full-wave preview).
+@export var telegraph_before_launch := true
+## How far ahead of launch the column blink starts (seconds). Capped at 1.0.
+@export_range(0.0, 1.0, 0.01) var telegraph_lead_sec := 0.35
 @export var telegraph_blink_color := Color(1.0, 0.92, 0.2, 1.0)
 @export_range(0.05, 0.8, 0.01) var telegraph_blink_on_sec := 0.12
 @export_range(0.05, 0.8, 0.01) var telegraph_blink_off_sec := 0.1
+## Legacy wave-preview gap (unused when using telegraph_before_launch).
 @export_range(0.0, 1.0, 0.01) var telegraph_gap_between_rocks_sec := 0.06
 @export var telegraph_sfx: AudioStream = preload("res://sfx/ninja_flicker.ogg")
 @export_range(-40.0, 6.0, 0.5) var telegraph_sfx_volume_db := -12.0
 ## Pitch rises with column index (1→low, 8→high). 0 = fixed pitch.
 @export_range(0.0, 0.2, 0.01) var telegraph_sfx_pitch_step := 0.06
-## Ghost spawn→aim path preview before the pulse (non-shootable).
-@export var path_telegraph_enabled := true
+## Legacy full-wave path preview — kept for tooling, disabled by default.
+@export var path_telegraph_enabled := false
 ## Total time budget for the full preview sequence (all rocks).
 @export_range(0.5, 5.0, 0.1) var path_telegraph_duration_sec := 2.0
 @export var path_telegraph_color := Color(1.0, 0.92, 0.25, 0.75)
 @export var path_telegraph_aim_color := Color(0.35, 1.0, 0.55, 0.85)
+## Deprecated: use telegraph_before_launch. Kept so old scenes still load.
+@export var telegraph_enabled := false
 var _telegraph_sfx_player: AudioStreamPlayer
 ## Resolved spawn columns for the current wave (launch order). Built in assign_manual_rock_positions.
 var _wave_spawn_columns: Array[int] = []
@@ -1302,7 +1308,7 @@ func update_prepare_rocks() -> void:
 		active_bodies[pointer].enter_state(active_bodies[pointer].State.PREPARE_ROCK)
 
 	_build_wave_telegraph_plan(active_bodies)
-	start_wave_telegraph()
+	## No full-wave telegraph — blinks happen per rock just before launch.
 	if _auto_pulse_next_beat:
 		_auto_pulse_next_beat = false
 		_pulse_continuation_beat()
@@ -2065,19 +2071,20 @@ func sync_debug_visualiser() -> void:
 
 
 func start_wave_telegraph() -> void:
-	_cancel_wave_telegraph()
-	if not telegraph_enabled and not path_telegraph_enabled:
-		return
-	if _resolve_telegraph_columns_node() != null:
-		sync_telegraph_column_positions()
-		telegraph_columns.visible = true
-
-	_telegraph_token += 1
-	var token := _telegraph_token
-	if path_telegraph_enabled:
-		_run_path_telegraph(token)
-	elif telegraph_enabled:
-		_run_column_telegraph(token)
+	## Full-wave preview disabled — use telegraph_before_launch per rock instead.
+	## Kept as a no-op so older call sites / editor tools do not break.
+	if path_telegraph_enabled or telegraph_enabled:
+		_cancel_wave_telegraph()
+		if _resolve_telegraph_columns_node() != null:
+			sync_telegraph_column_positions()
+			telegraph_columns.visible = true
+		_telegraph_token += 1
+		var token := _telegraph_token
+		if path_telegraph_enabled:
+			_run_path_telegraph(token)
+		elif telegraph_enabled:
+			_run_column_telegraph(token)
+	return
 
 
 func start_column_telegraph() -> void:
@@ -2640,7 +2647,7 @@ func get_angle_bias() -> float:
 	
 func bounce_rocks() -> void:
 	angle_bias = get_angle_bias()
-	# Prefer the prepare-time plan so launch matches the telegraph preview.
+	# Prefer the prepare-time plan so launch matches the cached aim points.
 	if _wave_telegraph_plan.is_empty():
 		var prepared: Array = []
 		for body in $Container_1.get_children():
@@ -2658,6 +2665,10 @@ func bounce_rocks() -> void:
 	_stream_launches_remaining = manual_rock_sequence.size()
 	var launched: Array = []
 
+	if telegraph_before_launch and _resolve_telegraph_columns_node() != null:
+		sync_telegraph_column_positions()
+		telegraph_columns.visible = true
+
 	for index in manual_rock_sequence.size():
 		if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
 			_stream_launches_remaining = 0
@@ -2670,6 +2681,17 @@ func bounce_rocks() -> void:
 				if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
 					_stream_launches_remaining = 0
 					return
+
+		var entry = null
+		if index < manual_rock_sequence.size():
+			entry = manual_rock_sequence[index]
+
+		if telegraph_before_launch:
+			var column := _spawn_column_for_launch_index(index, entry)
+			await _telegraph_column_before_launch(column, epoch)
+			if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+				_stream_launches_remaining = 0
+				return
 
 		var body = null
 		if index < prepared_queue.size():
@@ -2691,6 +2713,47 @@ func bounce_rocks() -> void:
 
 	if epoch == _launch_epoch and current_state == State.PULSE_ROCKS:
 		spin_rocks(launched)
+
+
+func _spawn_column_for_launch_index(index: int, entry) -> int:
+	if index >= 0 and index < _wave_spawn_columns.size():
+		return clampi(_wave_spawn_columns[index], 1, COLUMN_COUNT)
+	return clampi(_resolve_spawn_column(entry), 1, COLUMN_COUNT)
+
+
+## Blink the column mesh, then wait `telegraph_lead_sec` before the rock launches.
+func _telegraph_column_before_launch(column: int, epoch: int) -> void:
+	if not telegraph_before_launch:
+		return
+	if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+		return
+	_blink_column_once_always_restore(column)
+	_play_telegraph_sfx(column)
+	var lead := clampf(telegraph_lead_sec, 0.0, 1.0)
+	if lead <= 0.0:
+		return
+	await get_tree().create_timer(lead, false).timeout
+
+
+## Single blink that always restores base color (safe for overlapping per-launch telegraphs).
+func _blink_column_once_always_restore(column: int) -> void:
+	var mesh := _get_telegraph_mesh(column)
+	if mesh == null:
+		return
+	var mat := mesh.material_override as BaseMaterial3D
+	if mat == null:
+		_ensure_telegraph_material(mesh)
+		mat = mesh.material_override as BaseMaterial3D
+	if mat == null:
+		return
+	var base: Color = _telegraph_base_albedo.get(mesh.get_instance_id(), mat.albedo_color)
+	mat.albedo_color = telegraph_blink_color
+	get_tree().create_timer(telegraph_blink_on_sec).timeout.connect(
+		func () -> void:
+			if is_instance_valid(mesh) and mat:
+				mat.albedo_color = base,
+		CONNECT_ONE_SHOT
+	)
 
 
 func _acquire_pool_rock(epoch: int):

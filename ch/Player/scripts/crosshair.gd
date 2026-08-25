@@ -52,11 +52,10 @@ var _laser_pool: Array[TextureRect] = []
 var _laser_alpha: Array[float] = []
 
 const PLANTED_CROSSHAIR_MAX := 5
-const PLANTED_CROSSHAIR_LIFETIME_SEC := 7.0
 const PLANTED_ARMED_MODULATE := Color(1.0, 0.85, 0.45, 0.92)
 const PLANTED_UNARMED_MODULATE := Color(1.0, 0.85, 0.45, 0.32)
 const PLANTED_ARM_FLASH_SEC := 0.15
-## Planted traps: { "node": Control, "aim": Vector2, "age": float, "radius": float, "armed": bool, "arm_delay": float, "dissipating": bool }
+## Planted traps: node, aim, age, radius, armed, arm_delay, lifetime, rotation_speed, rotating, dissipating
 var _planted_crosshairs: Array[Dictionary] = []
 
 
@@ -385,7 +384,7 @@ func plant_crosshair_trap(arm_delay: float = 1.5) -> bool:
 		return false
 
 	while _planted_crosshairs.size() >= PLANTED_CROSSHAIR_MAX:
-		_dissipate_planted_crosshair(0, false)
+		_dissipate_planted_crosshair(0, false, "force")
 
 	var plant: Control = original.duplicate() as Control
 	if plant == null:
@@ -396,13 +395,25 @@ func plant_crosshair_trap(arm_delay: float = 1.5) -> bool:
 		plant.queue_free()
 		return false
 
+	var player = _player_for_plants()
 	arm_delay = maxf(0.0, arm_delay)
 	var starts_armed := arm_delay <= 0.0
+	var lifetime := 7.0
+	var rotation_speed := 120.0
+	var pulse_scale := 2.8
+	var pulse_duration := 0.4
+	if player:
+		lifetime = maxf(0.5, float(player.get("planted_crosshair_lifetime")))
+		rotation_speed = float(player.get("planted_crosshair_rotation_speed"))
+		pulse_scale = float(player.get("planted_crosshair_pulse_scale"))
+		pulse_duration = float(player.get("planted_crosshair_pulse_duration"))
 
 	host.add_child(plant)
 	plant.top_level = true
 	plant.global_position = original.global_position
 	plant.scale = original.scale
+	plant.pivot_offset_ratio = Vector2(0.5, 0.5)
+	plant.rotation = 0.0
 	plant.modulate = PLANTED_ARMED_MODULATE if starts_armed else PLANTED_UNARMED_MODULATE
 	plant.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	## Disable cooldown bar / anim on the planted copy.
@@ -412,11 +423,23 @@ func plant_crosshair_trap(arm_delay: float = 1.5) -> bool:
 	var anim := plant.get_node_or_null("AnimationPlayer")
 	if anim:
 		anim.stop()
+	## Pulse VFX uses RingTexture duplicates — hide the copy on the planted scope.
+	var planted_ring := plant.get_node_or_null("RingTexture") as Control
+	if planted_ring:
+		planted_ring.hide()
 
 	var aim_tex := plant.get_node_or_null("TextureRect") as Control
 	var aim_pos: Vector2 = aim_tex.global_position if aim_tex else plant.global_position
 	var weapon = _weapon_for_plants()
 	var radius: float = weapon.power_target_circle if weapon else 60.0
+
+	_play_planted_sfx(1)
+	var ring_src := $Inner_scope/RingTexture as Control
+	var pulse_center: Vector2 = (
+		ring_src.get_global_rect().get_center() if ring_src else plant.get_global_rect().get_center()
+	)
+	var pulse_base_scale: Vector2 = _control_global_scale(ring_src) if ring_src else Vector2.ONE
+	_spawn_outer_ring_pulse(pulse_center, pulse_base_scale, pulse_scale, pulse_duration)
 
 	_planted_crosshairs.append({
 		"node": plant,
@@ -425,16 +448,116 @@ func plant_crosshair_trap(arm_delay: float = 1.5) -> bool:
 		"radius": radius,
 		"armed": starts_armed,
 		"arm_delay": arm_delay,
+		"lifetime": lifetime,
+		"rotation_speed": rotation_speed,
+		"rotating": starts_armed,
+		"pulse_scale": pulse_scale,
+		"pulse_duration": pulse_duration,
 		"dissipating": false,
 	})
+	if starts_armed:
+		_play_planted_sfx(2)
 	return true
 
 
+func _player_for_plants():
+	var canvas := get_parent()
+	if canvas == null:
+		return null
+	return canvas.get_parent()
+
+
 func _weapon_for_plants():
-	var player := get_parent().get_parent() if get_parent() else null
+	var player = _player_for_plants()
 	if player == null:
 		return null
 	return player.get("weapon_shooting")
+
+
+## 1 plant, 2 armed/live, 3 overlap trigger, 4 natural dissipate.
+func _play_planted_sfx(which: int) -> void:
+	var player = _player_for_plants()
+	if player == null:
+		return
+	var node_name := "planted_crosshair"
+	if which >= 2:
+		node_name = "planted_crosshair%d" % which
+	var sfx := player.get_node_or_null("SFX/%s" % node_name) as AudioStreamPlayer
+	if sfx == null:
+		return
+	sfx.play()
+
+
+func _control_global_scale(node: Control) -> Vector2:
+	if node == null:
+		return Vector2.ONE
+	return node.get_global_transform_with_canvas().get_scale()
+
+
+func pulse_ring_texture(
+	pulse_scale_mult: float = -1.0,
+	pulse_duration: float = -1.0
+) -> void:
+	var player = _player_for_plants()
+	var scale_mult := pulse_scale_mult
+	var duration := pulse_duration
+	if scale_mult < 0.0:
+		scale_mult = float(player.get("shoot_ring_pulse_scale")) if player else 2.0
+	if duration < 0.0:
+		duration = float(player.get("shoot_ring_pulse_duration")) if player else 0.35
+	var ring_src := $Inner_scope/RingTexture as Control
+	if ring_src == null:
+		return
+	_spawn_outer_ring_pulse(
+		ring_src.get_global_rect().get_center(),
+		_control_global_scale(ring_src),
+		scale_mult,
+		duration
+	)
+
+
+func _spawn_outer_ring_pulse(
+	at_center: Vector2,
+	base_scale: Vector2,
+	pulse_scale_mult: float,
+	pulse_duration: float
+) -> void:
+	var ring_src: Control = $Inner_scope/RingTexture as Control
+	if ring_src == null:
+		return
+	var host := get_parent()
+	if host == null:
+		return
+	var pulse: Control = ring_src.duplicate() as Control
+	if pulse == null:
+		return
+	host.add_child(pulse)
+	pulse.top_level = true
+	pulse.visible = true
+	pulse.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	## Keep the duplicated layout/size; only center the pivot for clean expand.
+	pulse.pivot_offset_ratio = Vector2(0.5, 0.5)
+	pulse.rotation = 0.0
+	## Start at the live ring's on-screen size (includes Inner_scope scale), then grow.
+	var start_scale := base_scale
+	if start_scale == Vector2.ZERO:
+		start_scale = _control_global_scale(ring_src)
+	pulse.scale = start_scale
+	pulse.modulate = Color(ring_src.modulate.r, ring_src.modulate.g, ring_src.modulate.b, 0.9)
+	## Match the live ring's screen center, then expand around it.
+	var sz: Vector2 = pulse.size
+	if sz == Vector2.ZERO:
+		sz = ring_src.size
+	if sz == Vector2.ZERO:
+		sz = Vector2(251, 251)
+	pulse.global_position = at_center - sz * start_scale * 0.5
+	var expand := maxf(pulse_scale_mult, 1.0)
+	var end_scale := start_scale * expand
+	var dur := maxf(pulse_duration, 0.05)
+	var tween := create_tween().set_parallel(true)
+	tween.tween_property(pulse, "scale", end_scale, dur).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(pulse, "modulate:a", 0.0, dur).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.chain().tween_callback(pulse.queue_free)
 
 
 func _update_planted_crosshairs(delta: float) -> void:
@@ -454,19 +577,24 @@ func _update_planted_crosshairs(delta: float) -> void:
 			continue
 
 		entry["age"] = float(entry.get("age", 0.0)) + delta
-		if float(entry["age"]) >= PLANTED_CROSSHAIR_LIFETIME_SEC:
-			_dissipate_planted_crosshair(i, true)
+		if float(entry["age"]) >= float(entry.get("lifetime", 7.0)):
+			_dissipate_planted_crosshair(i, true, "timeout")
 			continue
 
 		if not bool(entry.get("armed", true)):
 			if float(entry["age"]) >= float(entry.get("arm_delay", 1.5)):
 				entry["armed"] = true
+				entry["rotating"] = true
+				_play_planted_sfx(2)
 				var arm_tween := create_tween()
 				arm_tween.tween_property(plant, "modulate", PLANTED_ARMED_MODULATE, PLANTED_ARM_FLASH_SEC)
 			else:
 				_planted_crosshairs[i] = entry
 				i += 1
 				continue
+
+		if bool(entry.get("rotating", false)):
+			plant.rotation_degrees += float(entry.get("rotation_speed", 120.0)) * delta
 
 		if weapon and weapon.has_method("get_targets_in_scope"):
 			var aim: Vector2 = entry.get("aim", plant.global_position)
@@ -476,14 +604,14 @@ func _update_planted_crosshairs(delta: float) -> void:
 				var hit_target = hits[0].get("target")
 				if is_instance_valid(hit_target) and weapon.has_method("apply_planted_scope_hit"):
 					weapon.apply_planted_scope_hit(hit_target, aim)
-				_dissipate_planted_crosshair(i, true)
+				_dissipate_planted_crosshair(i, true, "trigger")
 				continue
 
 		_planted_crosshairs[i] = entry
 		i += 1
 
 
-func _dissipate_planted_crosshair(index: int, animate: bool) -> void:
+func _dissipate_planted_crosshair(index: int, animate: bool, reason: String = "timeout") -> void:
 	if index < 0 or index >= _planted_crosshairs.size():
 		return
 	var entry: Dictionary = _planted_crosshairs[index]
@@ -491,14 +619,37 @@ func _dissipate_planted_crosshair(index: int, animate: bool) -> void:
 	_planted_crosshairs.remove_at(index)
 	if plant == null or not is_instance_valid(plant):
 		return
+
+	entry["rotating"] = false
+	plant.rotation = plant.rotation
+
 	if not animate:
 		plant.queue_free()
 		return
+
+	if reason == "trigger":
+		_play_planted_sfx(3)
+	else:
+		_play_planted_sfx(4)
+
+	var plant_ring := plant.get_node_or_null("RingTexture") as Control
+	var pulse_center: Vector2 = plant.get_global_rect().get_center()
+	var pulse_base_scale: Vector2 = Vector2.ONE
+	if plant_ring:
+		pulse_center = plant_ring.get_global_rect().get_center()
+		pulse_base_scale = _control_global_scale(plant_ring)
+	_spawn_outer_ring_pulse(
+		pulse_center,
+		pulse_base_scale,
+		float(entry.get("pulse_scale", 2.8)),
+		float(entry.get("pulse_duration", 0.4))
+	)
+
 	entry["dissipating"] = true
-	var tween := create_tween()
+	var tween := create_tween().set_parallel(true)
 	tween.tween_property(plant, "modulate:a", 0.0, 0.22)
-	tween.tween_property(plant, "scale", plant.scale * 1.35, 0.22)
-	tween.tween_callback(plant.queue_free)
+	tween.tween_property(plant, "scale", plant.scale * 1.15, 0.22)
+	tween.chain().tween_callback(plant.queue_free)
 
 
 func duplicate_inner_scope() -> void:
