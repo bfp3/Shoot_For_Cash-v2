@@ -1501,12 +1501,12 @@ func update_start_menu() -> void:
 		if rock_seq != []:
 			balloon_container.add_balloon(rock_seq)
 
-	## Start menu removed from boot flow — open the island map directly.
+	## Start menu removed from boot flow — open difficulty select instead of the island map.
 	_hide_start_menu_ui()
 	_ensure_gun_equipped_for_map()
 	if player and player.has_method("hide_ammo_panel_instant"):
 		player.hide_ammo_panel_instant()
-	_open_island_map_menu()
+	_open_difficulty_select_menu()
 
 
 func _hide_start_menu_ui() -> void:
@@ -1529,6 +1529,26 @@ func _ensure_gun_equipped_for_map() -> void:
 			player.player_gun.update_guns()
 		if player.player_gun.has_method("hide_for_menus"):
 			player.player_gun.hide_for_menus()
+
+
+func _open_difficulty_select_menu() -> void:
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	var select_menu: Node = null
+	if menus and menus.has_method("ensure_difficulty_select"):
+		select_menu = menus.ensure_difficulty_select()
+	if select_menu == null:
+		select_menu = get_tree().get_first_node_in_group("difficulty_select")
+	if select_menu == null:
+		push_warning("RoundManager: difficulty select missing — opening island map")
+		_open_island_map_menu()
+		return
+	if select_menu is CanvasItem:
+		(select_menu as CanvasItem).z_index = 41
+	CommonCode.apply_ui_overlay_blur()
+	if select_menu.has_method("open_pop_up"):
+		select_menu.open_pop_up()
+	else:
+		push_warning("RoundManager: difficulty select has no open_pop_up()")
 
 
 func _open_island_map_menu() -> void:

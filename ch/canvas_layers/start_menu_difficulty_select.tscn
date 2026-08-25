@@ -1,0 +1,592 @@
+[gd_scene format=3 uid="uid://bhxnsq2jshamq"]
+
+[ext_resource type="Script" uid="uid://dt1dkixmr0w0u" path="res://ch/canvas_layers/start_menu_difficulty_select.gd" id="0_script"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="1_42sk2"]
+[ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="2_saejh"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_51t21"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="3_drjai"]
+[ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="4_ivuve"]
+[ext_resource type="PackedScene" uid="uid://bjo4eyfoet5j6" path="res://ch/canvas_layers/difficulty_select_buttons.tscn" id="5_buttons"]
+
+[sub_resource type="Animation" id="Animation_tnodp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_ohn7f"]
+resource_name = "rotation"
+length = 4.0
+loop_mode = 2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.17453292519943295, 3.3161255787892263]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_c4bw8"]
+_data = {
+&"RESET": SubResource("Animation_tnodp"),
+&"rotation": SubResource("Animation_ohn7f")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q5ox8"]
+bg_color = Color(0.58, 0.0057999943, 0.015369854, 1)
+border_width_left = 477
+border_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_egetg"]
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+border_color = Color(0.3882353, 0.3882353, 0.3882353, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g430d"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_1rijk"]
+left_to_right = 1.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_ttggn"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ldbfm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0eqko"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+border_width_top = 1
+border_width_bottom = 1
+border_color = Color(0.75, 0.684, 0.63, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sej64"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.08235294, 0.09411765, 0.10980392, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_swjgb"]
+bg_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="PrismMesh" id="PrismMesh_yw63b"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_6orug"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_jjntv"]
+left_to_right = 1.0
+
+[node name="StartMenuDifficultySelect" type="Control" unique_id=1879767928]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("0_script")
+
+[node name="MainPanel" type="PanelContainer" parent="." unique_id=1318777282]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 470.0
+offset_top = 219.0
+offset_right = 1450.0
+offset_bottom = 833.0
+scale = Vector2(1.25, 1.25)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="TextureRect" type="Panel" parent="MainPanel" unique_id=2063428213]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("1_42sk2")
+
+[node name="BackgroundImages" type="Control" parent="MainPanel" unique_id=1118528394]
+clip_contents = true
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Reticle" type="TextureRect" parent="MainPanel/BackgroundImages" unique_id=1582418717]
+modulate = Color(0.91, 0.864955, 0.82809997, 0.11764706)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -495.9357
+offset_right = 512.0
+offset_bottom = 528.06433
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.619, 0.619)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("2_saejh")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MainPanel/BackgroundImages/Reticle" unique_id=614668186]
+libraries/ = SubResource("AnimationLibrary_c4bw8")
+autoplay = &"rotation"
+speed_scale = 0.8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainPanel" unique_id=1266011269]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TopRedPanel" type="Panel" parent="MainPanel/VBoxContainer" unique_id=434458672]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_q5ox8")
+
+[node name="Place_name" type="Control" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=1998075242]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -12.048195
+offset_bottom = -12.048195
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="PlaceLabel" type="RichTextLabel" parent="MainPanel/VBoxContainer/TopRedPanel/Place_name" unique_id=1114741342]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 228.11285
+offset_top = -51.53414
+offset_right = 422.11285
+offset_bottom = 39.46586
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_font_sizes/normal_font_size = 84
+bbcode_enabled = true
+text = "MOSS"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LevelSelectTitle" type="RichTextLabel" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=1114741343]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -40.0
+offset_right = 220.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.22, 0.18, 0.16, 1)
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "LEVEL SELECT"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MapButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=869067883]
+unique_name_in_owner = true
+self_modulate = Color(0.58, 0.0057999943, 0.015369854, 0)
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -471.27237
+offset_top = -38.14055
+offset_right = -427.30917
+offset_bottom = -1.192749
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.622, 1.622)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_egetg")
+script = ExtResource("3_51t21")
+wiggle_amount = 1.6
+wiggle_amount_exit = 1.55
+
+[node name="CloseButtonIcon" type="TextureRect" parent="MainPanel/VBoxContainer/TopRedPanel/MapButton" unique_id=2116857462]
+self_modulate = Color(0.85882354, 0.76862746, 0.69803923, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -129.2543
+offset_top = -127.99978
+offset_right = 126.7457
+offset_bottom = 128.00021
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.097, 0.097)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("4_ivuve")
+stretch_mode = 5
+
+[node name="CoatArms" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=409353141 instance=ExtResource("3_drjai")]
+z_index = 1
+layout_mode = 1
+offset_left = 318.07227
+offset_top = -144.16467
+offset_right = 574.07227
+offset_bottom = 111.83536
+scale = Vector2(0.62, 0.62)
+
+[node name="SpacePanel4" type="Panel" parent="MainPanel/VBoxContainer" unique_id=2126387308]
+custom_minimum_size = Vector2(50, 10)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_g430d")
+
+[node name="SpacePanel2" type="Panel" parent="MainPanel/VBoxContainer" unique_id=2119638558]
+custom_minimum_size = Vector2(50, 284.29)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_g430d")
+
+[node name="DifficultySelectButtons" parent="MainPanel/VBoxContainer/SpacePanel2" unique_id=2119638559 instance=ExtResource("5_buttons")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="SelectRangePanel" type="Panel" parent="MainPanel/VBoxContainer" unique_id=550777095]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="MainPanel/VBoxContainer/SelectRangePanel" unique_id=1041077195]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -1.6064758
+offset_bottom = -1.6064758
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RightTriangle" type="MeshInstance2D" parent="MainPanel/VBoxContainer/SelectRangePanel/Control" unique_id=189324303]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(203.526, 0)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_1rijk")
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="MainPanel/VBoxContainer/SelectRangePanel/Control" unique_id=303143755]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(-204.229, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_ttggn")
+
+[node name="Square" type="MeshInstance2D" parent="MainPanel/VBoxContainer/SelectRangePanel/Control" unique_id=778670595]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_ldbfm")
+
+[node name="CashBalanceLabel" type="RichTextLabel" parent="MainPanel/VBoxContainer/SelectRangePanel" unique_id=1241079348]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -20.800049
+offset_right = 280.0
+offset_bottom = 59.19995
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+focus_mode = 0
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "Pick A Range"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpacePanel3" type="Panel" parent="MainPanel/VBoxContainer" unique_id=333145769]
+custom_minimum_size = Vector2(50, 5.045)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_g430d")
+
+[node name="RoundSelector" type="Control" parent="MainPanel/VBoxContainer" unique_id=1779527947]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="MainPanel/VBoxContainer/RoundSelector" unique_id=1591682999]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 6.42572
+offset_bottom = 30.449768
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0eqko")
+
+[node name="Panel3" type="Panel" parent="MainPanel/VBoxContainer/RoundSelector" unique_id=1604812644]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 6.3935623
+offset_right = -0.040161133
+offset_bottom = 28.843391
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sej64")
+
+[node name="PauseGameButton" type="Button" parent="MainPanel/VBoxContainer/RoundSelector" unique_id=130209277]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -0.032104492
+offset_top = 34.82715
+offset_right = 35.967896
+offset_bottom = 70.82715
+grow_vertical = 0
+theme_type_variation = &"MenuUiButtons"
+theme_override_colors/font_color = Color(0.6313726, 0.007843138, 0.015686275, 1)
+theme_override_font_sizes/font_size = 22
+text = "x"
+
+[node name="PauseLabelPopUp" type="RichTextLabel" parent="MainPanel/VBoxContainer/RoundSelector/PauseGameButton" unique_id=212312826]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -52.0
+offset_top = -56.0
+offset_right = 52.0
+offset_bottom = -8.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 1)
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+theme_override_font_sizes/normal_font_size = 28
+bbcode_enabled = true
+text = "Pause"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="MainPanel/VBoxContainer/RoundSelector/PauseGameButton/PauseLabelPopUp" unique_id=701761244]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -4.0
+offset_right = 8.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_swjgb")
+
+[node name="GreyCornerPanel" type="Control" parent="." unique_id=490282917]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 166.0
+offset_top = -814.0
+offset_right = 736.0
+offset_bottom = -734.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="GreyCornerPanel" unique_id=158366767]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchor_left = 0.5877193
+anchor_top = -0.7757538
+anchor_right = 0.5877193
+anchor_bottom = -0.7757538
+offset_left = -3.0517578e-05
+offset_top = -8.0
+offset_right = -3.0517578e-05
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="GreyCornerPanel/Control" unique_id=730468612]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(-204.174, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_yw63b")
+
+[node name="Square" type="MeshInstance2D" parent="GreyCornerPanel/Control" unique_id=120276355]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_6orug")
+
+[node name="RedCornerPanel" type="Control" parent="." unique_id=522949075]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 984.0
+offset_top = -817.0
+offset_right = 1554.0
+offset_bottom = -737.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="RedCornerPanel" unique_id=2003752693]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchor_left = 0.5877193
+anchor_top = -0.7757538
+anchor_right = 0.5877193
+anchor_bottom = -0.7757538
+offset_left = 100.0
+offset_top = -8.0
+offset_right = 100.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="RedCornerPanel/Control" unique_id=1983332573]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_yw63b")
+
+[node name="RightTriangle" type="MeshInstance2D" parent="RedCornerPanel/Control" unique_id=1180061930]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(203.53, 0)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_jjntv")
+
+[node name="Square" type="MeshInstance2D" parent="RedCornerPanel/Control" unique_id=2064638253]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_6orug")

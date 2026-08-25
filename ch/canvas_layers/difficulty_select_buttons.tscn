@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://bjo4eyfoet5j6"]
+
+[ext_resource type="Script" uid="uid://v4ye816nf4w6" path="res://ch/canvas_layers/difficulty_select_buttons.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dm2hgl5lpfk7q" path="res://ch/canvas_layers/difficulty_badge.tscn" id="2_badge"]
+
+[node name="DifficultySelectButtons" type="HBoxContainer" unique_id=1985256719]
+custom_minimum_size = Vector2(0, 200)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 22
+alignment = 1
+script = ExtResource("1_script")
+
+[node name="Beginner" parent="." unique_id=1643776436 instance=ExtResource("2_badge")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+title = "BEGINNER"
+top_color = Color(0.5921569, 0.09019608, 0.09411765, 1)
+banner_color = Color(0.5921569, 0.09019608, 0.09411765, 1)
+icon_modulate = Color(0.5921569, 0.09019608, 0.09411765, 1)
+travel_place = "moss"
+
+[node name="Advanced" parent="." unique_id=1526729452 instance=ExtResource("2_badge")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+title = "ADVANCED"
+subtitle = "12 STAGES"
+circle_self_modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+circle2_self_modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+top_color = Color(0.5921569, 0.09019608, 0.09411765, 1)
+banner_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+icon_modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+locked = true
+
+[node name="Expert" parent="." unique_id=1820240750 instance=ExtResource("2_badge")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+title = "EXPERT"
+subtitle = "??? STAGES"
+circle_self_modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+circle2_self_modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+top_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
+banner_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
+icon_modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+locked = true
+
+[node name="Mystery" parent="." unique_id=333025774 instance=ExtResource("2_badge")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+title = "???"
+subtitle = "???"
+circle_self_modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+circle2_self_modulate = Color(0.81, 0.543375, 0.17009999, 1)
+top_color = Color(0.81, 0.543375, 0.17009999, 1)
+banner_color = Color(0.81, 0.543375, 0.17009999, 1)
+icon_modulate = Color(0.83, 0.12449998, 0.13625816, 1)
+title_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+subtitle_color = Color(1, 1, 1, 0)
+locked = true

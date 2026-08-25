@@ -11,6 +11,7 @@ const MENU_SCENES := {
 	"game_won": "res://ch/demo_end_screen/game_won_prompt.tscn",
 	"grand_total": "res://ch/demo_end_screen/Grand_total_prompt.tscn",
 	"ticket_map": "res://ch/Shop/MapIslandSelect.tscn",
+	"difficulty_select": "res://ch/canvas_layers/start_menu_difficulty_select.tscn",
 	"debug_chat": "res://ch/HUD_components/debug_tool_chatbox.tscn",
 }
 
@@ -80,6 +81,10 @@ func ensure_game_over() -> Control:
 
 func ensure_ticket_map() -> Control:
 	return ensure("ticket_map") as Control
+
+
+func ensure_difficulty_select() -> Control:
+	return ensure("difficulty_select") as Control
 
 
 func ensure_debug_chat() -> Node:
@@ -165,3 +170,10 @@ func _configure_instance(key: String, inst: Node) -> void:
 			inst.set("unique_name_in_owner", true)
 			if start_menu and "game_start_menu" in inst:
 				inst.set("game_start_menu", start_menu)
+		"difficulty_select":
+			inst.name = "StartMenuDifficultySelect"
+			if inst is CanvasItem:
+				(inst as CanvasItem).visible = false
+				(inst as CanvasItem).z_index = 41
+			if inst is Control:
+				(inst as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE

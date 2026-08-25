@@ -3,13 +3,12 @@ range moss
 
 	
 	round
-		hold out 120000
+		hold out 60000
 
 		#1
-		pace-normal
-
+		pace-slow
 		rock 4 a4
-		wait 1000
+		wait 1500
 		sfx-play oasisWorld -28.0
 		wait
 		rock 1 a1
@@ -24,8 +23,8 @@ range moss
 		rock 4 a4
 		wait
 
-		pineapple b0 b5
-
+		pineapple b0 b4
+		wait 2000
 
 		balloon a1
 		wait 700
@@ -33,7 +32,7 @@ range moss
 		wait 3000
 
 		#2
-		pace-faster
+		pace-normal
 		rock 1 a1
 		wait
 		rock 8 a8
@@ -53,9 +52,11 @@ range moss
 
 		wait 3300
 
-		pineapple b9 b3
+		pineapple a9 a4
+		wait 2000
+		pineapple b9 b5
 		#3
-		pace-normal
+
 		rock 1 a1
 		wait 1000
 		rock 2 a2
@@ -64,6 +65,8 @@ range moss
 		wait 1000
 		rock 4 a4
 		wait
+
+		pace-fast
 		wait 1000
 		rock 8 a8
 		wait 500
@@ -76,13 +79,51 @@ range moss
 		rock 4 a4
 		wait
 		clear
+
+		# adding extra stuff to fill out 10 seconds
+
+		pace-slowest
 		wait 3000
+		rock 1 a1
+		wait 50
+		rock 2 a2
+		wait 50
+		rock 3 a3
+		wait 50
+		rock 4 a4
+		wait 50
+		rock 8 a8
+		wait 50
+		rock 7 a7
+		wait 50
+		rock 6 a6
+		wait 50
+		rock 5 a5
+		wait 50
+		rock 4 a4
+		wait
+
+
+		wait 3000
+		pineapple b0 b5
 		rock 4 b4
 		wait
 
+		wait 2000
+		rock 4 b4
+		rock 4 b4
+
 		ammo
+		wait 5000
 
 
+	
+
+	round
+		hold out 60000
+
+		# PART 2 - SPARSE PAIRS
+		pace-slow
 		rock 3 a3
 		wait 0
 		rock 6 a6
@@ -158,6 +199,110 @@ range moss
 		wait 2000
 		pineapple b9 b0
 
+		alloon a4
+		wait 500
+		balloon b4
+		wait 500
+		balloon c4
+		wait 2400
+
+
+		#1
+		rock 3 a3
+		wait 0
+		rock 5 a5
+		wait
+
+		rock 3 a3
+		wait 0
+		rock 5 a5
+		wait
+
+		rock 3 b3
+		wait 0
+		rock 5 b5
+		wait
+
+		rock 3 b3
+		wait 0
+		rock 5 b5
+		wait
+
+		rock 5 b5
+		wait 0
+		rock 3 b3
+		wait
+
+		rock 5 a5
+		wait 0
+		rock 3 a3
+		wait
+
+
+		rock 5 c5
+		wait 0
+		rock 3 c3
+		wait
+
+		rock 5 a5
+		wait 0
+		rock 3 a3
+		wait
+
+		rock 5 c5
+		wait 0
+		rock 3 c3
+		wait
+
+		rock 5 a5
+		wait 0
+		rock 3 a3
+		wait
+
+		# extending out pattern
+		rock 3 a3
+		wait 0
+		rock 6 a6
+		wait
+
+		rock 2 a2
+		wait 0
+		rock 5 a5
+		wait
+
+		rock 5 b5
+		wait 0
+		rock 2 b2
+		wait
+
+		rock 3 b3
+		wait 0
+		rock 6 b6
+		wait
+
+		rock 3 c3
+		wait 0
+		rock 6 c6
+		wait
+
+		rock 2 c2
+		wait 0
+		rock 5 c5
+		wait
+
+		wait 2500
+		ammo c3
+
+
+
+
+
+
+		
+
+	round
+		#blank
+		#ORANGES
 		#Link
 		rock 4 b4
 		wait
@@ -320,7 +465,26 @@ range moss
 
 		wait 2000
 		ammo
-	round
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		# Orange 3 - leave oranges for later // expand on idea
 
 		#Link
@@ -446,6 +610,7 @@ range moss
 		balloon-bank
 		balloon-check
 		clear ammo
+
 	round
 		# Sparse pairs
 
