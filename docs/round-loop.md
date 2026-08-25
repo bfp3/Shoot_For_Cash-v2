@@ -59,6 +59,7 @@ Script commands. Default poses: BANK CASH left (`-2.8, 3.5, 22.5`), +1 Multiplie
 - Layouts: `LAYOUT_PATH_BY_PLACE_INDEX` / `LAYOUT_PATH_BOSS_BY_ISLAND` → `sc/All_level_layouts/level_layout_*.tscn`.
 - Environments: `ENV_PATH_BY_LEVEL` on the camera, not inside the layout.
 - Round modifiers on the sequence dict: `no_lives`, `bonus` (e.g. protect), `shuffle`, `difficulty`, `max_strikes`, `hold_out_ms`.
+- Pace: `pace-slowest` / `slow` / `normal` / `fast` / `fastest` / `impossible` mid-round. Sets `aim_launch_gravity_scale` for every rock from that line on (0.25 / 0.5 / 1.0 / 1.5 / 2.25 / 3.0). Replaces `difficulty-*` for launch speed.
 - Side lanes: `rock A0 A8` / `pineapple A0 A9` spawn just off-camera at column 0 (outside 1) or 9 (outside 8) and fly across. Out-of-bounds is ignored until the target has been on-screen.
 
 ## Special modes

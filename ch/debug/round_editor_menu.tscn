@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://b8lj768x0yxac"]
 
-[ext_resource type="Script" uid="uid://dq7roundedmenu01" path="res://ch/debug/round_editor_menu.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c0fkg223e43rk" path="res://ch/debug/round_editor_menu.gd" id="1_script"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sep"]
 
-[node name="RoundEditorMenu" type="Control"]
+[node name="RoundEditorMenu" type="Control" unique_id=2111768618]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Dim" type="ColorRect" parent="." unique_id=207133288]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,7 +22,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.05, 0.02, 0.02, 0.45)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=1893578266]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,39 +33,39 @@ scale = Vector2(1.2, 1.2)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="Cluster" type="HBoxContainer" parent="Center"]
+[node name="Cluster" type="HBoxContainer" parent="Center" unique_id=397565991]
 custom_minimum_size = Vector2(1280, 720)
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="RoundsPanel" type="PanelContainer" parent="Center/Cluster"]
+[node name="RoundsPanel" type="PanelContainer" parent="Center/Cluster" unique_id=1833777558]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RoundsScroll" type="ScrollContainer" parent="Center/Cluster/RoundsPanel"]
+[node name="RoundsScroll" type="ScrollContainer" parent="Center/Cluster/RoundsPanel" unique_id=1086367734]
 layout_mode = 2
-horizontal_scroll_mode = 0
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
-[node name="RoundsVBox" type="VBoxContainer" parent="Center/Cluster/RoundsPanel/RoundsScroll"]
+[node name="RoundsVBox" type="VBoxContainer" parent="Center/Cluster/RoundsPanel/RoundsScroll" unique_id=512372022]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="MainPanel" type="PanelContainer" parent="Center/Cluster"]
+[node name="MainPanel" type="PanelContainer" parent="Center/Cluster" unique_id=297873061]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBox" type="VBoxContainer" parent="Center/Cluster/MainPanel"]
+[node name="VBox" type="VBoxContainer" parent="Center/Cluster/MainPanel" unique_id=994995292]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="TitleLabel" type="RichTextLabel" parent="Center/Cluster/MainPanel/VBox"]
+[node name="TitleLabel" type="RichTextLabel" parent="Center/Cluster/MainPanel/VBox" unique_id=2059945652]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 36
@@ -73,27 +73,27 @@ bbcode_enabled = true
 text = "ROUND EDITOR"
 fit_content = true
 
-[node name="HintLabel" type="RichTextLabel" parent="Center/Cluster/MainPanel/VBox"]
+[node name="HintLabel" type="RichTextLabel" parent="Center/Cluster/MainPanel/VBox" unique_id=286738186]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"RedRichText"
-theme_override_font_sizes/normal_font_size = 22
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
-text = "SHIFT + F = Toggle · SHIFT + ENTER = Test · select text + TEST = that snippet only · SAVE writes all pending edits"
+text = "SHIFT + ENTER = Test · select text + TEST = that snippet only · SAVE writes all pending edits"
 fit_content = true
 
-[node name="RangeTabsScroll" type="ScrollContainer" parent="Center/Cluster/MainPanel/VBox"]
+[node name="RangeTabsScroll" type="ScrollContainer" parent="Center/Cluster/MainPanel/VBox" unique_id=1283639560]
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 vertical_scroll_mode = 0
 
-[node name="RangeTabs" type="HBoxContainer" parent="Center/Cluster/MainPanel/VBox/RangeTabsScroll"]
+[node name="RangeTabs" type="HBoxContainer" parent="Center/Cluster/MainPanel/VBox/RangeTabsScroll" unique_id=1908648230]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="ScriptEdit" type="TextEdit" parent="Center/Cluster/MainPanel/VBox"]
+[node name="ScriptEdit" type="TextEdit" parent="Center/Cluster/MainPanel/VBox" unique_id=2088337314]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 420)
 layout_mode = 2
@@ -103,31 +103,32 @@ placeholder_text = "Select a round…"
 wrap_mode = 1
 scroll_smooth = true
 
-[node name="Buttons" type="HBoxContainer" parent="Center/Cluster/MainPanel/VBox"]
+[node name="Buttons" type="HBoxContainer" parent="Center/Cluster/MainPanel/VBox" unique_id=946278320]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 2
 
-[node name="BackButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons"]
+[node name="BackButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=783441753]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 56)
 layout_mode = 2
 text = "BACK"
 
-[node name="VSeparator" type="VSeparator" parent="Center/Cluster/MainPanel/VBox/Buttons"]
+[node name="VSeparator" type="VSeparator" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=1353452982]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/separator = SubResource("StyleBoxEmpty_sep")
 
-[node name="SaveButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons"]
+[node name="SaveButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=1856368849]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 56)
 layout_mode = 2
 disabled = true
 text = "SAVE"
 
-[node name="TestButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons"]
+[node name="TestButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=1277103302]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 56)
 layout_mode = 2
+theme_override_font_sizes/font_size = 42
 text = "TEST"

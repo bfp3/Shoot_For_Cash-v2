@@ -128,6 +128,15 @@ const OFFSCREEN_SPAWN_PAD_M := 0.85
 ## Gravity during the aimed arc (higher = faster launch, sharper slowdown at apex). Must match impulse math.
 @export_range(0.05, 4.0, 0.01) var aim_launch_gravity_scale := 0.5
 var _base_aim_launch_gravity_scale := 0.5
+## Script `pace-*` → aim_launch_gravity_scale.
+const PACE_GRAVITY := {
+	"slowest": 0.25,
+	"slow": 0.5,
+	"normal": 1.0,
+	"fast": 1.5,
+	"fastest": 2.25,
+	"impossible": 3.0,
+}
 ## Linear damp applied once the rock passes the apex and starts falling.
 @export_range(0.0, 2.0, 0.05) var aim_descent_linear_damp := 0.5
 ## Extra seconds added to the ascent before passing the aim cell (0 = tight apex; try ~0.5 for old hang).
@@ -184,6 +193,8 @@ var _sequence_cursor := 0
 ## Active scriptor `sfx-play` instances, keyed by file stem (e.g. Windmill_YokoKanno).
 var _script_sfx_players: Dictionary = {}
 var _script_sfx_fade_tokens: Dictionary = {}
+## Fade used when the round ends or the player returns to shop.
+const SCRIPT_SFX_LEAVE_FADE_SEC := 3.0
 var _sequence_active := false
 var _waiting_until_clear := false
 var _checkpoint_hold := false
@@ -238,15 +249,32 @@ func _ready() -> void:
 func set_difficulty_gravity(difficulty: String) -> void:
 	match String(difficulty).to_lower():
 		"easy":
-			aim_launch_gravity_scale = 0.5
+			set_pace_gravity("slow")
 		"normal":
-			aim_launch_gravity_scale = 1.0
+			set_pace_gravity("normal")
 		"hard":
-			aim_launch_gravity_scale = 1.5
+			set_pace_gravity("fast")
 		"expert":
-			aim_launch_gravity_scale = 2.25
+			set_pace_gravity("fastest")
 		_:
 			aim_launch_gravity_scale = _base_aim_launch_gravity_scale
+
+
+func set_pace_gravity(pace: String) -> void:
+	var key := String(pace).strip_edges().to_lower()
+	if key.begins_with("pace-"):
+		key = key.substr(5)
+	if PACE_GRAVITY.has(key):
+		aim_launch_gravity_scale = float(PACE_GRAVITY[key])
+
+
+func _is_pace_cmd(cmd: String) -> bool:
+	return cmd == "pace" or cmd.begins_with("pace-")
+
+
+func _apply_pace_entry(entry) -> void:
+	if entry is Dictionary:
+		set_pace_gravity(String(entry.get("cmd", "")))
 
 func _process(delta: float) -> void:
 	if _waiting_until_clear and not _checkpoint_hold and not _ladder_hold and not _advancing_sequence and not _final_atmosphere_playing and not _pineapple_round_playing and not _sequence_delay_active:
@@ -408,6 +436,11 @@ func _launch_next_sequence_beat() -> void:
 			_sequence_cursor += 1
 			_handle_sfx_command(sfx_entry)
 			continue
+		if _is_pace_cmd(cmd):
+			var pace_entry = _full_wave_sequence[_sequence_cursor]
+			_sequence_cursor += 1
+			_apply_pace_entry(pace_entry)
+			continue
 		if cmd == "ammo":
 			var ammo_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
@@ -548,6 +581,9 @@ func _begin_beat(sequence: Array) -> void:
 			if cmd == 'wait':
 				pending_wait_ms = int(entry.get('ms', DEFAULT_LAUNCH_WAIT_MS))
 				continue
+			if _is_pace_cmd(cmd):
+				_apply_pace_entry(entry)
+				continue
 			if not _is_launchable_spawn_cmd(cmd):
 				continue
 
@@ -561,7 +597,9 @@ func _begin_beat(sequence: Array) -> void:
 				var wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
 				delays_sec.append(float(wait_ms) / 1000.0)
 			pending_wait_ms = null
-			rocks.append(entry)
+			var stamped: Dictionary = entry.duplicate()
+			stamped["gravity_scale"] = aim_launch_gravity_scale
+			rocks.append(stamped)
 			continue
 
 		# Legacy integer format support while migrating.
@@ -934,7 +972,7 @@ func _handle_sfx_command(entry) -> void:
 		_script_sfx_play(sfx_name, float(entry.get("volume_db", -20.0)))
 		return
 	if cmd == "sfx-stop":
-		_script_sfx_stop(sfx_name, float(entry.get("fade_sec", 3.0)))
+		_script_sfx_stop(sfx_name, float(entry.get("fade_sec", SCRIPT_SFX_LEAVE_FADE_SEC)))
 
 
 func _script_sfx_play(sfx_name: String, volume_db: float) -> void:
@@ -997,6 +1035,12 @@ func _script_sfx_stop(sfx_name: String, fade_sec: float) -> void:
 	if is_instance_valid(player):
 		player.stop()
 		player.queue_free()
+
+
+func _script_sfx_stop_all(fade_sec: float = SCRIPT_SFX_LEAVE_FADE_SEC) -> void:
+	var keys: Array = _script_sfx_players.keys()
+	for key in keys:
+		_script_sfx_stop(String(key), fade_sec)
 
 
 func _load_sfx_stream(sfx_name: String) -> AudioStream:
@@ -1088,6 +1132,7 @@ func _cancel_sequence() -> void:
 	_dismiss_ladder_balloons()
 	_dismiss_ammo_balloons()
 	_pending_ammo_entries.clear()
+	_script_sfx_stop_all()
 
 
 func begin_checkpoint_hold() -> void:
@@ -2098,7 +2143,7 @@ func _build_wave_telegraph_plan(bodies: Array) -> void:
 			'aim': aim_world,
 			'column': spawn_column,
 			'is_pigeon': is_pigeon,
-			'gravity_scale': LATERAL_LAUNCH_GRAVITY if _is_lateral_launch(entry) else _aim_launch_gravity_for(body),
+			'gravity_scale': LATERAL_LAUNCH_GRAVITY if _is_lateral_launch(entry) else _aim_launch_gravity_for(body, entry),
 		})
 
 
@@ -2715,10 +2760,10 @@ func _launch_stream_rock(body, counter: int) -> void:
 		upward_force = upward_force * rock_pigeon_upward_force
 		impulse = _pigeon_launch_impulse(body, counter, upward_force)
 	else:
-		var launch_g := _aim_launch_gravity_for(body)
+		var launch_g := _aim_launch_gravity_for(body, entry)
 		BallisticAim.configure_body_for_ballistic_launch(body, launch_g)
 		body.begin_ballistic_aim_feel(aim_descent_linear_damp)
-		impulse = _build_launch_impulse(body, counter, upward_force, 0.0)
+		impulse = _build_launch_impulse(body, counter, upward_force, 0.0, launch_g)
 	body.apply_central_impulse(impulse)
 
 	if rock_rock_collisions_enabled:
@@ -2813,10 +2858,12 @@ func nearest_column_x(x: float) -> float:
 
 
 ## Ballistic launch through the aim cell world point (e.g. A8 = (-7, 6.5, 23)).
-func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_variation: float) -> Vector3:
+func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_variation: float, gravity_scale: float = -1.0) -> Vector3:
 	var aim_pos: Vector3
 	if rock_index >= 0 and rock_index < _wave_telegraph_plan.size():
 		aim_pos = _wave_telegraph_plan[rock_index].aim
+		if gravity_scale < 0.0:
+			gravity_scale = float(_wave_telegraph_plan[rock_index].get("gravity_scale", aim_launch_gravity_scale))
 	else:
 		var entry = null
 		if rock_index >= 0 and rock_index < manual_rock_sequence.size():
@@ -2824,7 +2871,9 @@ func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_varia
 		var spawn_column := _x_to_nearest_column(body.target_x_position)
 		var aim := _resolve_aim_cell(entry, true, spawn_column)
 		aim_pos = _aim_cell_world_position(aim.x, aim.y, true)
-	return _aimed_launch_impulse_to_world(body, aim_pos)
+		if gravity_scale < 0.0:
+			gravity_scale = _aim_launch_gravity_for(body, entry)
+	return _aimed_launch_impulse_to_world(body, aim_pos, gravity_scale)
 
 
 func _lateral_launch_impulse(body, entry) -> Vector3:
@@ -2884,17 +2933,20 @@ func _aimed_launch_impulse(body, aim_row: int, aim_column: int) -> Vector3:
 	return _aimed_launch_impulse_to_world(body, _aim_cell_world_position(aim_row, aim_column, true))
 
 
-func _aimed_launch_impulse_to_world(body, aim_pos: Vector3) -> Vector3:
+func _aimed_launch_impulse_to_world(body, aim_pos: Vector3, gravity_scale: float = -1.0) -> Vector3:
 	var start_pos := _launch_world_position(body)
+	var g_scale := _aim_launch_gravity_for(body) if gravity_scale < 0.0 else gravity_scale
 	return BallisticAim.impulse_to_point(
-		body, start_pos, aim_pos, -1.0, _aim_launch_gravity_for(body), aim_impulse_scale, aim_hang_time_sec
+		body, start_pos, aim_pos, -1.0, g_scale, aim_impulse_scale, aim_hang_time_sec
 	)
 
 
-## Red-avoiders always launch at gravity 1.0, ignoring difficulty.
-func _aim_launch_gravity_for(body) -> float:
+## Red-avoiders always launch at gravity 1.0, ignoring pace / difficulty.
+func _aim_launch_gravity_for(body, entry = null) -> float:
 	if body != null and is_instance_valid(body) and body.rock_type == RockInstance.RockSize.AVOIDER:
 		return 1.0
+	if entry is Dictionary and entry.has("gravity_scale"):
+		return float(entry.get("gravity_scale"))
 	return aim_launch_gravity_scale
 
 
@@ -2981,7 +3033,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
 			# Keep wait / sequence barriers in place so launch stagger, balloon-checks, and clear survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'sfx-play' or cmd == 'sfx-stop':
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'sfx-play' or cmd == 'sfx-stop' or _is_pace_cmd(cmd):
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue

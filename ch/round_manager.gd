@@ -168,7 +168,7 @@ var egg_pulse : Egg
 var no_lives_this_round := false
 ## Debug chat `no-lives` / `lives` — persists across rounds until toggled off.
 var debug_no_lives := false
-## `difficulty-easy` / `difficulty-normal` / `difficulty-hard` / `difficulty-expert` for the active range.
+## `difficulty-easy` / `difficulty-normal` / `difficulty-hard` / `difficulty-expert` for the active range (legacy gravity). Prefer `pace-*` in the script.
 var difficulty_this_round := ""
 
 ## Active bonus subtype from the level file (`protect`, etc.). Empty = normal round.

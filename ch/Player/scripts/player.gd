@@ -146,6 +146,10 @@ var joystick_sensitivity := 500.0
 @export_group("Planted Crosshair")
 ## When true, fire-release plants a crosshair trap instead of shooting. Overlap = hit; expires after 7s. Max 5.
 @export var plant_crosshair_on_fire := false
+## When true, `shoot_weapon_2` (right-click) plants a crosshair trap instead of shrinking the scope.
+@export var right_click_is_planted_crosshair := false
+## Seconds a planted trap stays faded and inactive before it can hit.
+@export var planted_crosshair_arm_delay := 1.5
 
 const light_colour := Color('FFFFFF')
 const light_intensity := 2.0
@@ -419,7 +423,10 @@ func _process(delta: float) -> void:
 			fire_weapon()
 
 		if Input.is_action_just_released("shoot_weapon_2"):
-			fire_weapon()
+			if right_click_is_planted_crosshair:
+				fire_weapon(true)
+			else:
+				fire_weapon()
 
 	handle_scope_adjust(delta)
 	
@@ -1004,7 +1011,8 @@ func handle_scope_adjust(delta: float) -> void:
 		shrink_held = mobile_controller.is_fire_held()
 	else:
 		expand_held = Input.is_action_pressed("shootWeapon")
-		shrink_held = Input.is_action_pressed("shoot_weapon_2")
+		if not right_click_is_planted_crosshair:
+			shrink_held = Input.is_action_pressed("shoot_weapon_2")
 
 	# Start from upgraded resting values (normal tap-fire).
 	var bullet_speed := _base_bullet_speed
@@ -1267,7 +1275,7 @@ func get_ammo_pack_size() -> int:
 	return int(gl_DataSet.get_value('ammo_pack_size', 0))
 
 
-func fire_weapon() -> void:
+func fire_weapon(force_plant: bool = false) -> void:
 	
 	if current_state != State.ACTIVE:
 		return
@@ -1301,13 +1309,13 @@ func fire_weapon() -> void:
 		weapon_shooting.play_missed_sounds()
 		return
 
-	if plant_crosshair_on_fire:
+	if force_plant or plant_crosshair_on_fire:
 		if not debug_infinite_ammo and not consume_ammo(1):
 			out_of_ammo()
 			weapon_shooting.play_missed_sounds()
 			register_accuracy_miss()
 			return
-		if not %Crosshair.plant_crosshair_trap():
+		if not %Crosshair.plant_crosshair_trap(planted_crosshair_arm_delay):
 			weapon_shooting.play_missed_sounds()
 			return
 		player_did_not_miss()

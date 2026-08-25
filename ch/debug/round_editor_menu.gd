@@ -447,7 +447,7 @@ func _style_tab_button(button: Button, active: bool = false) -> void:
 	button.add_theme_stylebox_override("focus", hover)
 	button.add_theme_color_override("font_color", COLOR_CREAM if active else COLOR_RED)
 	button.add_theme_color_override("font_hover_color", COLOR_CREAM if active else COLOR_RED)
-	button.add_theme_font_size_override("font_size", 22)
+	button.add_theme_font_size_override("font_size", 34)
 	if _font:
 		button.add_theme_font_override("font", _font)
 

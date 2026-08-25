@@ -53,7 +53,10 @@ var _laser_alpha: Array[float] = []
 
 const PLANTED_CROSSHAIR_MAX := 5
 const PLANTED_CROSSHAIR_LIFETIME_SEC := 7.0
-## Planted traps: { "node": Control, "aim": Vector2, "age": float, "radius": float, "dissipating": bool }
+const PLANTED_ARMED_MODULATE := Color(1.0, 0.85, 0.45, 0.92)
+const PLANTED_UNARMED_MODULATE := Color(1.0, 0.85, 0.45, 0.32)
+const PLANTED_ARM_FLASH_SEC := 0.15
+## Planted traps: { "node": Control, "aim": Vector2, "age": float, "radius": float, "armed": bool, "arm_delay": float, "dissipating": bool }
 var _planted_crosshairs: Array[Dictionary] = []
 
 
@@ -376,7 +379,7 @@ func crosshair_fade_out_mode() -> void:
 	tween.tween_property(self, "modulate", Color('ffffff00'),0.25)
 	await tween.finished
 
-func plant_crosshair_trap() -> bool:
+func plant_crosshair_trap(arm_delay: float = 1.5) -> bool:
 	var original: Control = $Inner_scope
 	if original == null:
 		return false
@@ -393,11 +396,14 @@ func plant_crosshair_trap() -> bool:
 		plant.queue_free()
 		return false
 
+	arm_delay = maxf(0.0, arm_delay)
+	var starts_armed := arm_delay <= 0.0
+
 	host.add_child(plant)
 	plant.top_level = true
 	plant.global_position = original.global_position
 	plant.scale = original.scale
-	plant.modulate = Color(1.0, 0.85, 0.45, 0.92)
+	plant.modulate = PLANTED_ARMED_MODULATE if starts_armed else PLANTED_UNARMED_MODULATE
 	plant.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	## Disable cooldown bar / anim on the planted copy.
 	var cooldown := plant.get_node_or_null("Cooldown_progressBar3")
@@ -417,6 +423,8 @@ func plant_crosshair_trap() -> bool:
 		"aim": aim_pos,
 		"age": 0.0,
 		"radius": radius,
+		"armed": starts_armed,
+		"arm_delay": arm_delay,
 		"dissipating": false,
 	})
 	return true
@@ -449,6 +457,16 @@ func _update_planted_crosshairs(delta: float) -> void:
 		if float(entry["age"]) >= PLANTED_CROSSHAIR_LIFETIME_SEC:
 			_dissipate_planted_crosshair(i, true)
 			continue
+
+		if not bool(entry.get("armed", true)):
+			if float(entry["age"]) >= float(entry.get("arm_delay", 1.5)):
+				entry["armed"] = true
+				var arm_tween := create_tween()
+				arm_tween.tween_property(plant, "modulate", PLANTED_ARMED_MODULATE, PLANTED_ARM_FLASH_SEC)
+			else:
+				_planted_crosshairs[i] = entry
+				i += 1
+				continue
 
 		if weapon and weapon.has_method("get_targets_in_scope"):
 			var aim: Vector2 = entry.get("aim", plant.global_position)

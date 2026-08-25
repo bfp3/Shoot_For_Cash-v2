@@ -157,11 +157,14 @@ func _hold_out_ms_from_tokens(tokens) -> int:
 ##   Example: `strikes 5`.
 ## sfx-play Name volume_db: {cmd, name, volume_db} — play `res://sfx/Name.ogg` (etc.)
 ##   at the given volume. Example: `sfx-play Windmill_YokoKanno -30.0`.
+##   Leaving the round (shop, abort, round end) fades every script sfx out over 3s.
 ## sfx-stop Name fade_sec: {cmd, name, fade_sec} — fade that sfx-play instance out over
 ##   fade_sec seconds, then stop and free it. Example: `sfx-stop Windmill_YokoKanno 3.0`.
-## difficulty-easy / difficulty-normal / difficulty-hard / difficulty-expert:
-##   stored on the range as `difficulty`. Gravity: easy 0.5, normal 1.0, hard 1.5, expert 2.25.
-##   hard / expert also set bullet travel to 0.1. `difficulty hard` form is accepted.
+## pace-slowest / pace-slow / pace-normal / pace-fast / pace-fastest / pace-impossible:
+##   mid-round command. From that line on, aimed rocks use that gravity
+##   (0.25 / 0.5 / 1.0 / 1.5 / 2.25 / 3.0). `pace fastest` form is accepted.
+##   Replaces `difficulty-*` for launch speed. difficulty-* still sets round gravity
+##   (and hard/expert still set bullet travel to 0.1).
 ## hold out 90000 / hold-out 90000 / boss-timer 90000: {cmd: hold-out, ms}.
 ##   Range- or round-level survival timer in milliseconds. Same as a boss hold-out:
 ##   rocks loop and the round lasts until the timer hits 0.
@@ -274,6 +277,12 @@ func parse_spawn_command(token: String) -> Dictionary:
 				fade_sec = float(parts[2])
 			return {'cmd': 'sfx-stop', 'name': stop_name, 'fade_sec': fade_sec}
 		
+		'pace-slowest', 'pace-slow', 'pace-normal', 'pace-fast', 'pace-fastest', 'pace-impossible':
+			return {'cmd': cmd}
+
+		'pace':
+			return _parse_pace_command(parts)
+
 		'difficulty-easy':
 			return {'cmd': 'difficulty-easy'}
 		
@@ -324,6 +333,8 @@ func parse_spawn_command(token: String) -> Dictionary:
 			# Future `bonus-<type>` keywords are round markers, not spawns.
 			if cmd.begins_with('bonus-') and cmd.length() > 6:
 				return {'cmd': cmd}
+			if cmd.begins_with('pace-'):
+				return _parse_pace_command(parts)
 
 			push_warning("parser: unknown spawn command '%s' — using red_rock_error" % token)
 			return {
@@ -333,6 +344,29 @@ func parse_spawn_command(token: String) -> Dictionary:
 				'aim_column': 3,
 				'param': token,
 			}
+
+
+const PACE_LEVELS: PackedStringArray = [
+	'slowest', 'slow', 'normal', 'fast', 'fastest', 'impossible',
+]
+
+
+func _parse_pace_command(parts: PackedStringArray) -> Dictionary:
+	var level := ''
+	if parts.is_empty():
+		push_warning("parser: 'pace' needs slowest, slow, normal, fast, fastest, or impossible")
+		return {'cmd': 'pace-normal'}
+	var first := String(parts[0]).strip_edges().to_lower()
+	if first == 'pace' and parts.size() > 1:
+		level = String(parts[1]).strip_edges().to_lower()
+	elif first.begins_with('pace-'):
+		level = first.substr(5)
+	if level.begins_with('pace-'):
+		level = level.substr(5)
+	if not PACE_LEVELS.has(level):
+		push_warning("parser: unknown pace '%s' — using pace-normal" % first)
+		return {'cmd': 'pace-normal'}
+	return {'cmd': 'pace-%s' % level}
 
 
 const DEFAULT_ROUND_REPEAT := 1
@@ -759,6 +793,11 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			rounds[key]._pending.append(parsed)
 			continue
 
+		if parsed_cmd.begins_with('pace-'):
+			# Mid-round gravity — stay in the spawn timeline so later rocks pick it up.
+			rounds[key]._pending.append(parsed)
+			continue
+
 		if parsed_cmd == 'difficulty-hard':
 			if String(rounds[key].get('difficulty', '')) != 'expert':
 				rounds[key].difficulty = 'hard'
@@ -1025,6 +1064,8 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return 'wait %d' % int(entry.get('ms', DEFAULT_WAIT_MS))
 		'wait-until-clear':
 			return 'wait'
+		'pace-slowest', 'pace-slow', 'pace-normal', 'pace-fast', 'pace-fastest', 'pace-impossible':
+			return cmd
 		'pineapples':
 			return 'pineapples'
 		'balloon-check', 'checkpoint':
