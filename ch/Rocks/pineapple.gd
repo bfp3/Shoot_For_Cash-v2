@@ -60,6 +60,7 @@ var start_pos : Vector3
 var current_rock_type : String = ""
 var rock_type_name : String = ""
 var falling := false
+var has_entered_camera_view := false
 
 
 
@@ -236,6 +237,7 @@ func reset_stats() -> void:
 	falling = false
 	rock_destroyed = false
 	is_deactivated = false
+	has_entered_camera_view = false
 	global_position = start_pos
 
 
@@ -593,6 +595,11 @@ func hit_wall_effects() -> void:
 func check_position_for_wall() -> void:
 	if rock_destroyed:
 		return
+
+	if not has_entered_camera_view:
+		if _is_in_camera_view():
+			has_entered_camera_view = true
+		return
 	
 	match exit_side:
 		ExitSide.LEFT:
@@ -613,6 +620,28 @@ func check_position_for_wall() -> void:
 				hit_out_of_bounds()
 				
 		
+
+func arm_offscreen_entry() -> void:
+	has_entered_camera_view = false
+
+
+func _is_in_camera_view() -> bool:
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return false
+	if camera.is_position_behind(global_position):
+		return false
+	var viewport_size := get_viewport().get_visible_rect().size
+	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
+		return false
+	var screen := camera.unproject_position(global_position)
+	return (
+		screen.x >= 0.0
+		and screen.x <= viewport_size.x
+		and screen.y >= 0.0
+		and screen.y <= viewport_size.y
+	)
+
 
 func start_timer() -> void:
 	$hit_wall_timer.start()

@@ -964,7 +964,7 @@ func release_to_pool() -> void:
 
 
 ## Claim an inactive pool rock for a later launch without the async PREPARE wait.
-func setup_for_pool_launch(new_type: int, spawn_x: float) -> void:
+func setup_for_pool_launch(new_type: int, spawn_x: float, spawn_y: float = -INF, spawn_z: float = -INF) -> void:
 	_pool_setup_token += 1
 	disable_collision()
 	remove_from_group("Target")
@@ -972,6 +972,7 @@ func setup_for_pool_launch(new_type: int, spawn_x: float) -> void:
 	rock_destroyed = false
 	rock_has_been_logged = false
 	is_deactivated = false
+	has_entered_camera_view = false
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
 	gravity_scale = rock_type_gravity_scale
@@ -988,7 +989,9 @@ func setup_for_pool_launch(new_type: int, spawn_x: float) -> void:
 		and rock_type != RockSize.AVOIDER
 	):
 		gl_PlayerState.log_rocks(1, rock_type_name)
-	global_position = Vector3(spawn_x, start_pos.y, start_pos.z)
+	var y := start_pos.y if spawn_y == -INF else spawn_y
+	var z := start_pos.z if spawn_z == -INF else spawn_z
+	global_position = Vector3(spawn_x, y, z)
 	current_state = State.PREPARE_ROCK
 
 	

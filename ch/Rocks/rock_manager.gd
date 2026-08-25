@@ -116,6 +116,13 @@ const AIM_LANE_Y := {
 }
 ## World Z of the aim grid (balloon board is at Z ≈ 22.5; A8 ≈ Vector3(-7, 6.5, 22.5)).
 const AIM_PLANE_Z := 23.0
+## Side-lane script columns: 0 sits outside 1, 9 outside 8. Spawns start just off-camera.
+const SIDE_LANE_OUTSIDE_1 := 0
+const SIDE_LANE_OUTSIDE_8 := 9
+## Lateral fly-across (e.g. `rock A0 A8`): no arc, constant speed.
+const LATERAL_LAUNCH_GRAVITY := 0.0
+const LATERAL_FLIGHT_SPEED := 12.0
+const OFFSCREEN_SPAWN_PAD_M := 0.85
 ## Multiplier on computed aimed-launch impulse. 1.0 = exact ballistic solve; raise if rocks land short.
 @export_range(0.5, 2.0, 0.01) var aim_impulse_scale := 1.08
 ## Gravity during the aimed arc (higher = faster launch, sharper slowdown at apex). Must match impulse math.
@@ -1735,6 +1742,90 @@ func column_to_x_for_aim(column: int) -> float:
 	return _column_to_x_unclamped(column)
 
 
+func _is_side_lane_column(column: int) -> bool:
+	return column == SIDE_LANE_OUTSIDE_1 or column == SIDE_LANE_OUTSIDE_8
+
+
+## True for `rock A0 A8` / `rock 0 A8` — spawn at the aim-plane side and fly across.
+func _is_lateral_launch(entry) -> bool:
+	if not (entry is Dictionary):
+		return false
+	if int(entry.get("spawn_row", -1)) >= 1:
+		return true
+	return _is_side_lane_column(int(entry.get("column", -1)))
+
+
+func _spawn_x_for_entry(entry, column: int) -> float:
+	if _is_lateral_launch(entry):
+		return _lateral_spawn_world(entry, column).x
+	return column_to_x(column)
+
+
+func _lateral_spawn_row(entry, column: int) -> int:
+	if entry is Dictionary:
+		var row := int(entry.get("spawn_row", -1))
+		if row >= 1:
+			return row
+	var aim := _resolve_aim_cell(entry, false, column)
+	return aim.x if aim.x >= 1 else 1
+
+
+func _lateral_spawn_world(entry, column: int) -> Vector3:
+	var row := _lateral_spawn_row(entry, column)
+	var x := offscreen_spawn_x(column) if _is_side_lane_column(column) else column_to_x_for_aim(column)
+	return Vector3(x, float(AIM_LANE_Y.get(row, AIM_LANE_Y[1])), AIM_PLANE_Z)
+
+
+func _lateral_aim_world(aim: Vector2i) -> Vector3:
+	var pos := _aim_cell_world_position(aim.x, aim.y, false)
+	if _is_side_lane_column(aim.y):
+		pos.x = offscreen_spawn_x(aim.y)
+	return pos
+
+
+## World X just outside the camera at the aim plane, on the same side as this lane.
+func offscreen_spawn_x(column: int) -> float:
+	var fallback := column_to_x_for_aim(column)
+	if not _is_side_lane_column(column):
+		return fallback
+	var col1 := _column_to_x_unclamped(1)
+	var col8 := _column_to_x_unclamped(COLUMN_COUNT)
+	var side := signf(col1 - col8) if column == SIDE_LANE_OUTSIDE_1 else signf(col8 - col1)
+	if side == 0.0:
+		side = 1.0 if column == SIDE_LANE_OUTSIDE_1 else -1.0
+	var edge := _camera_world_x_at_aim_plane(side)
+	if not is_finite(edge):
+		return fallback
+	return edge + side * OFFSCREEN_SPAWN_PAD_M
+
+
+func _camera_world_x_at_aim_plane(side_sign: float) -> float:
+	var camera := _get_bounds_camera()
+	if camera == null:
+		return NAN
+	var viewport_size := get_viewport().get_visible_rect().size
+	if viewport_size.x <= 0.0:
+		return NAN
+	var x_left := _unproject_x_at_z(camera, 0.0, viewport_size.y * 0.5, AIM_PLANE_Z)
+	var x_right := _unproject_x_at_z(camera, viewport_size.x, viewport_size.y * 0.5, AIM_PLANE_Z)
+	if not is_finite(x_left) or not is_finite(x_right):
+		return NAN
+	if side_sign > 0.0:
+		return maxf(x_left, x_right)
+	return minf(x_left, x_right)
+
+
+func _unproject_x_at_z(camera: Camera3D, screen_x: float, screen_y: float, world_z: float) -> float:
+	var origin := camera.project_ray_origin(Vector2(screen_x, screen_y))
+	var dir := camera.project_ray_normal(Vector2(screen_x, screen_y))
+	if absf(dir.z) < 0.0001:
+		return NAN
+	var t := (world_z - origin.z) / dir.z
+	if t <= 0.0:
+		return NAN
+	return origin.x + dir.x * t
+
+
 func _column_to_x_unclamped(column: int) -> float:
 	var step := COLUMN_STEP + broaden_columns
 	var half_span := float(COLUMN_COUNT - 1) * 0.5 * step
@@ -1986,6 +2077,8 @@ func _build_wave_telegraph_plan(bodies: Array) -> void:
 			body.global_position.y,
 			body.global_position.z
 		)
+		if _is_lateral_launch(entry):
+			spawn = _lateral_spawn_world(entry, spawn_column)
 
 		var is_pigeon = body.rock_type == RockInstance.RockSize.SMALL_2
 		var aim_world: Vector3
@@ -1995,14 +2088,17 @@ func _build_wave_telegraph_plan(bodies: Array) -> void:
 		else:
 			var aim := _resolve_aim_cell(entry, true, spawn_column)
 			# Bake jitter once so preview and launch share the same target.
-			aim_world = _aim_cell_world_position(aim.x, aim.y, true)
+			if _is_lateral_launch(entry):
+				aim_world = _lateral_aim_world(aim)
+			else:
+				aim_world = _aim_cell_world_position(aim.x, aim.y, true)
 
 		_wave_telegraph_plan.append({
 			'spawn': spawn,
 			'aim': aim_world,
 			'column': spawn_column,
 			'is_pigeon': is_pigeon,
-			'gravity_scale': _aim_launch_gravity_for(body),
+			'gravity_scale': LATERAL_LAUNCH_GRAVITY if _is_lateral_launch(entry) else _aim_launch_gravity_for(body),
 		})
 
 
@@ -2273,12 +2369,12 @@ func assign_manual_rock_positions(bodies: Array) -> void:
 	for entry in manual_rock_sequence:
 		var column := _resolve_spawn_column(entry)
 		_wave_spawn_columns.append(column)
-		var base_x := column_to_x(column)
+		var base_x := _spawn_x_for_entry(entry, column)
 		var occurrence : int = column_counts.get(column, 0)
 		column_counts[column] = occurrence + 1
 		
 		var offset := 0.0
-		if occurrence > 0:
+		if occurrence > 0 and not _is_side_lane_column(column):
 			var direction := 1.0 if occurrence % 2 == 1 else -1.0
 			var step := ceili(occurrence / 2.0)
 			offset = direction * step * SAME_COLUMN_OFFSET
@@ -2291,16 +2387,21 @@ func assign_manual_rock_positions(bodies: Array) -> void:
 		body.target_x_position = positions[idx]
 
 
-## Resolves a spawn entry to column 1-8. Missing/negative column → random (same as waves 2/3).
+## Resolves a spawn entry to column 0–9. Missing/negative column → random 1-8.
+## 0 and 9 are off-camera side lanes (outside 1 and 8).
 func _resolve_spawn_column(entry) -> int:
 	if entry is Dictionary:
 		var column: int = int(entry.get('column', -1))
+		if _is_side_lane_column(column):
+			return column
 		if column < 1:
 			return randi_range(1, COLUMN_COUNT)
-		return column
+		return clampi(column, 1, COLUMN_COUNT)
 
 	if typeof(entry) == TYPE_INT:
 		var value: int = entry
+		if _is_side_lane_column(value):
+			return value
 		if value < 10:
 			return clampi(value, 1, COLUMN_COUNT)
 		return clampi(value % 10, 1, COLUMN_COUNT)
@@ -2308,17 +2409,17 @@ func _resolve_spawn_column(entry) -> int:
 	return randi_range(1, COLUMN_COUNT)
 
 
-## Resolves aim cell. Missing row → row A (1). Missing column → wave converge / split pool.
-## Pass apply_center_bias + spawn_column for rocks / rock-black / smokecan random aims.
+## Resolves aim cell. Missing row → row A (1). Missing column (< 0) → wave converge / split pool.
+## Column 0 / 9 are valid side-lane aims. Pass apply_center_bias + spawn_column for random aims.
 func _resolve_aim_cell(entry, apply_center_bias: bool = false, spawn_column: int = -1) -> Vector2i:
 	var aim_row := 0
-	var aim_column := 0
+	var aim_column := -1
 	if entry is Dictionary:
 		aim_row = int(entry.get('aim_row', -1))
 		aim_column = int(entry.get('aim_column', -1))
 	if aim_row < 1:
 		aim_row = 1
-	if aim_column < 1:
+	if aim_column < 0:
 		if apply_center_bias and bias_random_aim_toward_center and not _wave_aim_pool.is_empty():
 			aim_column = _pick_wave_aim_column(spawn_column)
 		else:
@@ -2575,12 +2676,19 @@ func _configure_stream_rock(body, rock_index: int) -> void:
 	if rock_index >= 0 and rock_index < manual_rock_sequence.size():
 		entry = manual_rock_sequence[rock_index]
 	var column := _resolve_spawn_column(entry)
-	var spawn_x := column_to_x(column)
+	var spawn_x := _spawn_x_for_entry(entry, column)
+	var spawn_y := -INF
+	var spawn_z := -INF
 	if rock_index < _wave_spawn_columns.size():
 		column = _wave_spawn_columns[rock_index]
-		spawn_x = column_to_x(column)
+		spawn_x = _spawn_x_for_entry(entry, column)
+	if _is_lateral_launch(entry):
+		var spawn := _lateral_spawn_world(entry, column)
+		spawn_x = spawn.x
+		spawn_y = spawn.y
+		spawn_z = spawn.z
 	if body.has_method("setup_for_pool_launch"):
-		body.setup_for_pool_launch(_spawn_entry_to_rock_type(entry), spawn_x)
+		body.setup_for_pool_launch(_spawn_entry_to_rock_type(entry), spawn_x, spawn_y, spawn_z)
 	else:
 		body.rock_type = _spawn_entry_to_rock_type(entry)
 		body.target_x_position = spawn_x
@@ -2594,7 +2702,15 @@ func _launch_stream_rock(body, counter: int) -> void:
 
 	var upward_force = 10.0
 	var impulse: Vector3
-	if body.rock_type == RockInstance.RockSize.SMALL_2:
+	var entry = null
+	var counter_idx := counter
+	if counter_idx >= 0 and counter_idx < manual_rock_sequence.size():
+		entry = manual_rock_sequence[counter_idx]
+	if _is_lateral_launch(entry):
+		body.constant_force = Vector3.ZERO
+		BallisticAim.configure_body_for_ballistic_launch(body, LATERAL_LAUNCH_GRAVITY)
+		impulse = _lateral_launch_impulse(body, entry)
+	elif body.rock_type == RockInstance.RockSize.SMALL_2:
 		body.bounce_rocks()
 		upward_force = upward_force * rock_pigeon_upward_force
 		impulse = _pigeon_launch_impulse(body, counter, upward_force)
@@ -2709,6 +2825,18 @@ func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_varia
 		var aim := _resolve_aim_cell(entry, true, spawn_column)
 		aim_pos = _aim_cell_world_position(aim.x, aim.y, true)
 	return _aimed_launch_impulse_to_world(body, aim_pos)
+
+
+func _lateral_launch_impulse(body, entry) -> Vector3:
+	var column := _resolve_spawn_column(entry)
+	var spawn :Vector3= body.global_position
+	var aim := _resolve_aim_cell(entry, false, column)
+	var aim_pos := _lateral_aim_world(aim)
+	var dist := spawn.distance_to(aim_pos)
+	var flight_t := clampf(dist / LATERAL_FLIGHT_SPEED, 0.45, 1.75)
+	return BallisticAim.impulse_to_point(
+		body, spawn, aim_pos, flight_t, LATERAL_LAUNCH_GRAVITY, 1.0, 0.0
+	)
 
 
 func _aim_cell_world_position(aim_row: int, aim_column: int, apply_jitter: bool = true) -> Vector3:
@@ -2859,6 +2987,9 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 				continue
 			if not _is_launchable_spawn_cmd(cmd):
 				_sequence.remove_at(idx)
+				continue
+			if _is_lateral_launch(entry):
+				_sequence[idx] = entry
 				continue
 			# Waves 2+: randomise column exactly like the old int shuffle.
 			entry.column = randi_range(1, COLUMN_COUNT)

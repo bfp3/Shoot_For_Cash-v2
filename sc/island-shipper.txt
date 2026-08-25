@@ -3,12 +3,11 @@ range moss
 
 	
 	round
-		pineapples
-		hold out 90000
+		#pineapples
+		hold out 120000
 		# Singles
-		difficulty-hard
+		#difficulty-hard
 		#1
-		
 
 
 		rock 4 a4
@@ -25,6 +24,8 @@ range moss
 		rock 4 a4
 		wait
 
+
+		pineapple b0 b9
 
 
 		balloon a1
@@ -52,7 +53,7 @@ range moss
 
 		wait 3300
 
-
+		pineapple b9 b0
 		#3
 		rock 1 a1
 		wait 1000
@@ -80,8 +81,12 @@ range moss
 
 		ammo
 
-	
+
 		# Singles in Twos - with oranges
+
+		pineapple a9 a0
+		wait 2000
+		pineapple b9 b0
 
 		#Link
 		rock 4 b4
@@ -143,10 +148,11 @@ range moss
 		clear
 		wait 2000
 		ammo
+		wait 2000
+		pineapple b0 b9
 
-	
 		# Orange 2 - Orange Blast Radius - keep short
-
+		wait 2000
 
 		#Link
 		rock 4 b4
@@ -165,9 +171,13 @@ range moss
 		wait
 
 
+
 		rock 2 a2
 		rock 2 a2
 		wait 1000
+
+		pineapple a0 b9
+
 		rock 1 a1
 		wait 0 
 		rock 3 a3
@@ -239,7 +249,6 @@ range moss
 
 		wait 2000
 		ammo
-
 	round
 		# Orange 3 - leave oranges for later // expand on idea
 
@@ -1715,27 +1724,52 @@ range glory
 
 range noir
 	round
-		rock 3
-		wait 0
-		rock 5
-		wait 1600
-		rock 2
-		wait 0
-		rock 4
-		repeat 3
+		hold out 90000
+		#difficulty-hard
+		balloon a3
+		balloon b3
+		balloon c3
+		balloon a2
+		#gap in the middle
+		balloon c2
+		balloon a1
+		balloon b1
+		balloon c1
+		balloon a8
+		balloon b8
+		balloon c8
+		balloon a7
+		#gap in the middle
+		balloon c7
+		balloon a6
+		balloon b6
+		balloon c6
 
-	#round
-		balloon A2
-		rock 1
-		wait 0
-		rock 3
-		wait 1400
-		rock 6
-		wait 0
-		rock 8
-		repeat 3
+		rock 4 a4
+		rock 4 a4
+		wait
+		rock 5 a5
+		rock 5 a5
+		wait
+		rock 4 b5
+		rock 4 b5
+		wait
+		rock 5 b4
+		rock 5 b4
+		wait 5000
 
-	#round
+		pineapple b0 b5
+
+		wait 4000
+		rock 2 b2
+		rock 2 b2
+		wait
+		rock 7 b7
+		rock 7 b7
+		wait
+
+
+		#round
 		balloon A1
 		balloon A3
 		rock 2
@@ -1747,7 +1781,7 @@ range noir
 		rock 6
 		repeat 3
 
-	#round
+		#round
 		rock 6
 		wait 0
 		rock 7
@@ -1755,9 +1789,8 @@ range noir
 		rock 5
 		wait 0
 		rock 8
-		repeat 3
 
-	#round
+		#round
 		balloon A2
 		rock 2
 		wait 0
@@ -1766,9 +1799,9 @@ range noir
 		rock-black 5
 		wait 0
 		rock 7
-		repeat 3
 
-	#round
+
+		#round
 		balloon A2
 		rock 3
 		wait 0
@@ -1781,9 +1814,9 @@ range noir
 		rock-black 3
 		wait 0
 		rock 8
-		repeat 3
 
-	#round
+
+		#round
 		rock 1
 		wait 0
 		rock 2
@@ -1797,7 +1830,7 @@ range noir
 		rock 6
 		repeat 3
 
-	#round
+		#round
 		rock-black 8
 		wait 0
 		rock 7
@@ -1811,11 +1844,8 @@ range noir
 		rock 5
 		repeat 3
 
-	#round
-		balloon A1
-		balloon A2
-		balloon A7
-		balloon A8
+		#round
+
 		rock 1
 		wait 0
 		rock 8
@@ -1823,9 +1853,8 @@ range noir
 		rock-black 1
 		wait 0
 		rock-black 7
-		repeat 3
 
-	#round
+		#round
 		rock 3
 		wait 0
 		rock 4
@@ -1841,10 +1870,9 @@ range noir
 		rock 3
 		wait 0
 		rock 6
-		repeat 3
 
 
-	#round
+		#round
 		rock 1
 		wait 0
 		rock 8
@@ -1868,10 +1896,9 @@ range noir
 		rock-black 3
 		wait 0
 		rock-black 4
-		repeat 3
 
 
-	#round
+		#round
 		rock-black 2
 		wait 0
 		rock 4
@@ -1887,19 +1914,8 @@ range noir
 		rock 7
 		wait 0
 		rock 8
-		wait 550
-		balloon A1
-		balloon A2
-		balloon A3
-		balloon A4
-		balloon A5
-		balloon A6
-		balloon A7
-		balloon A8
-		repeat 3
-
-		wait until clear
-
+		wait
+		balloon-check
 range boss
 	hold out 60000
 	round

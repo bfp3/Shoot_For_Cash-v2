@@ -115,10 +115,11 @@ func _hold_out_ms_from_tokens(tokens) -> int:
 
 ## Parses a single spawn line into a spawn dictionary.
 ## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / mothership / smokecan / pineapple / red_rock_error:
-##   {cmd, column, aim_row, aim_column, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
+##   {cmd, column, aim_row, aim_column, spawn_row, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
-##   `rock A4` is invalid — column must be a number or `?` before the aim cell.
+##   `rock A4` is invalid — use `rock ? A4`. Side lanes: `rock A0 A8` / `rock A0 A9`
+##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
 ##   `rock-grey` is $1 and does not strike on miss. `mothership` flees the player for bonus cash.
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
 ## wait: {cmd} — hold until the sky is clear (same as old `wait until clear`).
@@ -351,10 +352,14 @@ func _is_random_token(token: String) -> bool:
 ##   rock 2 A4     → column 2, aim A4
 ##   rock ? ?      → explicit both-random
 ##   rock A4       → red_rock_error (must write `rock ? A4`)
+##   rock A0 A8    → spawn at row A, column 0 (off-camera), fly across to A8
+##   rock A0 A9    → fly in from outside column 1 to outside column 8
+##   rock 0 A8     → same as `rock A0 A8` (spawn row taken from aim, default A)
 func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': cmd,
 		'column': RANDOM_SLOT,
+		'spawn_row': RANDOM_SLOT,
 		'aim_row': RANDOM_SLOT,
 		'aim_column': RANDOM_SLOT,
 		'param': '',
@@ -369,23 +374,42 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	elif token1.is_valid_int():
 		result.column = int(token1)
 	else:
-		# Aim cell as first arg (`rock A4`) is invalid — require `rock ? A4`.
-		if not _parse_balloon_cell(token1).is_empty():
-			push_warning("parser: '%s' needs column or '?' before aim (use '%s ? %s')" % [
-				' '.join(parts), cmd, token1,
-			])
-			return {
-				'cmd': 'red_rock_error',
-				'column': 3,
-				'aim_row': 3,
-				'aim_column': 3,
-				'param': ' '.join(parts),
-			}
+		var spawn_cell := _parse_balloon_cell(token1, true)
+		if not spawn_cell.is_empty():
+			var side_lane := _is_side_lane_column(int(spawn_cell.column))
+			if parts.size() <= 2 and not side_lane:
+				# Aim cell as first arg (`rock A4`) is invalid — require `rock ? A4`.
+				push_warning("parser: '%s' needs column or '?' before aim (use '%s ? %s')" % [
+					' '.join(parts), cmd, token1,
+				])
+				return {
+					'cmd': 'red_rock_error',
+					'column': 3,
+					'aim_row': 3,
+					'aim_column': 3,
+					'param': ' '.join(parts),
+				}
+			result.spawn_row = spawn_cell.row
+			result.column = spawn_cell.column
+			if parts.size() <= 2:
+				return result
+			var token2 := String(parts[2]).strip_edges()
+			if _is_random_token(token2):
+				result.aim_row = RANDOM_SLOT
+				result.aim_column = RANDOM_SLOT
+			else:
+				var aim := _parse_balloon_cell(token2, true)
+				if not aim.is_empty():
+					result.aim_row = aim.row
+					result.aim_column = aim.column
+				else:
+					result.param = token2
+			return result
 		result.param = token1
 		return result
 
 	if parts.size() <= 2:
-		# `rock 2` / `rock ?` — aim stays random.
+		# `rock 2` / `rock ?` / `rock 0` — aim stays random.
 		return result
 
 	var token2 := String(parts[2]).strip_edges()
@@ -393,7 +417,7 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 		result.aim_row = RANDOM_SLOT
 		result.aim_column = RANDOM_SLOT
 	else:
-		var aim := _parse_balloon_cell(token2)
+		var aim := _parse_balloon_cell(token2, true)
 		if not aim.is_empty():
 			result.aim_row = aim.row
 			result.aim_column = aim.column
@@ -595,7 +619,8 @@ func _parse_bonus_target_command(parts: PackedStringArray) -> Dictionary:
 
 
 ## Parses "A1", "b3", "C8" into {row, column}. Returns {} on failure.
-func _parse_balloon_cell(cell: String) -> Dictionary:
+## Side lanes: `allow_side_lanes` accepts column 0 (outside 1) and 9 (outside 8).
+func _parse_balloon_cell(cell: String, allow_side_lanes: bool = false) -> Dictionary:
 	if cell.length() < 2:
 		return {}
 
@@ -608,10 +633,16 @@ func _parse_balloon_cell(cell: String) -> Dictionary:
 		return {}
 
 	var column := int(col_str)
-	if column < 1 or column > 8:
+	var min_col := 0 if allow_side_lanes else 1
+	var max_col := 9 if allow_side_lanes else 8
+	if column < min_col or column > max_col:
 		return {}
 
 	return {'row': row, 'column': column}
+
+
+func _is_side_lane_column(column: int) -> bool:
+	return column == 0 or column == 9
 
 
 func _balloon_row_letter_to_index(letter: String) -> int:
@@ -1043,13 +1074,22 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return 'balloon %s%d' % [row_letter, bcol]
 		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'smokecan', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
+			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))
 			var ac := int(entry.get('aim_column', RANDOM_SLOT))
-			var col_token := '?' if col < 1 else str(col)
-			if ar > 0 and ac > 0:
-				var aim := '%s%d' % [['', 'A', 'B', 'C'][clampi(ar, 1, 3)], ac]
+			var letters := ['', 'A', 'B', 'C']
+			var aim := ''
+			if ar > 0 and ac >= 0:
+				aim = '%s%d' % [letters[clampi(ar, 1, 3)], ac]
+			if spawn_row >= 1 and col >= 0:
+				var spawn := '%s%d' % [letters[clampi(spawn_row, 1, 3)], col]
+				if aim != '':
+					return '%s %s %s' % [cmd, spawn, aim]
+				return '%s %s' % [cmd, spawn]
+			var col_token := '?' if col < 0 else str(col)
+			if aim != '':
 				return '%s %s %s' % [cmd, col_token, aim]
-			if col < 1:
+			if col < 0:
 				return cmd
 			return '%s %s' % [cmd, col_token]
 		_:
