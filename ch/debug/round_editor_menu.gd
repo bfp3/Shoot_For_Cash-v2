@@ -144,6 +144,7 @@ func _rebuild_range_tabs(prefer_range: String) -> void:
 		_style_tab_button(btn)
 		var captured := String(range_name).to_lower()
 		btn.pressed.connect(func(): _on_range_tab_pressed(captured))
+		btn.gui_input.connect(_on_range_tab_gui_input.bind(captured))
 		_tabs_hbox.add_child(btn)
 		_range_tab_buttons.append(btn)
 
@@ -157,6 +158,48 @@ func _on_range_tab_pressed(range_name: String) -> void:
 		_highlight_range_tab(range_name)
 		return
 	_select_range(range_name, true)
+
+
+func _on_range_tab_gui_input(event: InputEvent, range_name: String) -> void:
+	if not _is_open or _busy:
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mouse := event as InputEventMouseButton
+	if not mouse.pressed or not mouse.double_click:
+		return
+	if mouse.button_index != MOUSE_BUTTON_LEFT:
+		return
+	_fast_travel_to_range(range_name)
+
+
+func _fast_travel_to_range(range_name: String) -> void:
+	if not _is_open or _busy:
+		return
+	range_name = range_name.to_lower()
+	if range_name != _current_range:
+		_select_range(range_name, true)
+	if round_manager == null:
+		round_manager = get_tree().get_first_node_in_group("round_manager") as RoundManager
+	if round_manager == null:
+		push_warning("Round editor: round_manager missing")
+		return
+	_busy = true
+	print("Round editor: fast travel → %s" % range_name)
+	if round_manager.has_method("debug_editor_travel_to_range"):
+		await round_manager.debug_editor_travel_to_range(range_name)
+	elif round_manager.has_method("travel_to_level"):
+		await round_manager.travel_to_level(range_name, false)
+	keep_open_after_travel()
+	_busy = false
+
+
+func keep_open_after_travel() -> void:
+	_is_open = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	show()
+	_script_edit.release_focus()
+	_focus_script_edit_after_open_key()
 
 
 func _select_range(range_name: String, stash: bool) -> void:

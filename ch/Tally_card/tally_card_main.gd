@@ -3,7 +3,6 @@ class_name TallyCard extends Control
 
 var perfect_bonus := 0
 var pass_bonus := -1
-@onready var fail_label: RichTextLabel = %Fail_Label
 
 @onready var grade_label: RichTextLabel = %GradeLabel
 @onready var grade_cash_label : RichTextLabel = %GradeCashLabel
@@ -136,15 +135,14 @@ func start_fail_sequence() -> void:
 		bonuses_cash_label.show()
 		var kept := int(gl_PlayerState.get_round_cash_kept()) if gl_PlayerState.has_method("get_round_cash_kept") else int(gl_PlayerState.dataset.bonus_cash)
 		bonuses_cash_label.text = "$" + str(kept)
-		fail_label.hide()
+
 		grand_total_cash_label.show()
 		grand_total_cash_label.modulate.a = 1.0
 		grand_total_label.text = ""
 		grand_total_cash_label.text = "$" + str(kept)
 		return
 
-	if gl_PlayerState.dataset.fines < 0:
-		fail_label.text = "-$" + str(abs(gl_PlayerState.dataset.fines))
+
 	## Checkpoint-banked cash is already in the wallet. Unbanked pool is forfeited.
 	var earned := 0
 	if gl_PlayerState.has_method("get_round_cash_kept"):
@@ -161,7 +159,7 @@ func start_fail_sequence() -> void:
 	grand_total_cash_label.show()
 	grand_total_cash_label.modulate.a = 1.0
 	grand_total_label.text = ""
-	fail_label.show()
+
 	var net := earned + fines ## fines are negative
 	if net < 0:
 		grand_total_cash_label.text = "-$" + str(abs(net))
@@ -361,8 +359,7 @@ func _hide_sequence_labels() -> void:
 			continue
 		label.hide()
 		label.modulate.a = 0.0
-	if fail_label:
-		fail_label.hide()
+
 	var stamp := get_node_or_null("%100_percent") as CanvasItem
 	if stamp:
 		stamp.modulate.a = 0.0
@@ -457,7 +454,7 @@ func _free_winnings_fly() -> void:
 
 func check_white_rocks() -> void:
 	_hide_sequence_labels()
-	fail_label.text = "$0"
+
 	
 	start_sequence = true
 	

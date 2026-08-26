@@ -11,6 +11,7 @@ const SHOP_PANEL_STYLEBOX := preload("res://res/custom_themes_by_blake/shop_main
 @export var money_control : Node
 @export var reveal_skill_sfx: AudioStreamPlayer
 @onready var cash_label: RichTextLabel = %CashBalanceLabel
+@onready var player_money_label: RichTextLabel = %PlayerMoney
 #@onready var available_upgrades: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades
 #@onready var reroll_button: Button = %Reroll
 var available_upgrades
@@ -209,6 +210,37 @@ func _format_cash_label(amount: int, waved: bool = true) -> String:
 	return money
 
 
+func _wallet_label() -> RichTextLabel:
+	if player_money_label:
+		return player_money_label
+	return cash_label
+
+
+func _current_range_reward() -> int:
+	if round_manager and round_manager.has_method("get_current_range_reward"):
+		return int(round_manager.get_current_range_reward())
+	if gl_DataSet and gl_DataSet.has_method("get_range_clear_reward"):
+		return int(gl_DataSet.get_range_clear_reward())
+	return int(gl_DataSet.get_value("range_clear_reward", 0))
+
+
+func _refresh_range_reward_label() -> void:
+	if cash_label == null:
+		return
+	cash_label.text = _format_cash_label(_current_range_reward(), false)
+	cash_label.show()
+	cash_label.modulate.a = 1.0
+
+
+func _refresh_player_money_label() -> void:
+	var label := _wallet_label()
+	if label == null:
+		return
+	label.text = _format_cash_label(player_cash, false)
+	label.show()
+	label.modulate.a = 1.0
+
+
 func update_place_label() -> void:
 	var place_root := get_node_or_null('CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name') as CanvasItem
 	var place_label := get_node_or_null('CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name/PlaceLabel') as RichTextLabel
@@ -272,7 +304,8 @@ func _refresh_place_challenge_banner() -> void:
 				seconds = int(round(s))
 		var boss_fmt := gl_DataSet.get_string("shop_challenge_boss", 0)
 		if boss_fmt.is_empty():
-			boss_fmt = "HOLD OUT\n %d seconds"
+			#boss_fmt = "HOLD OUT\n %d seconds"
+			boss_fmt = "HOLD OUT %d"
 		_set_mission_label_text(banner, boss_fmt % seconds)
 		return
 
@@ -442,7 +475,10 @@ func purchase_made(_upgrade_type:String = '') -> void:
 	update_cash_label_color()
 	
 func spawn_spent_cash_label(amount: int) -> void:
-	var floating_label := cash_label.duplicate() as RichTextLabel
+	var source := _wallet_label()
+	if source == null:
+		return
+	var floating_label := source.duplicate() as RichTextLabel
 
 	# Detach from layout so it can float freely over everything
 	floating_label.top_level = true
@@ -451,8 +487,8 @@ func spawn_spent_cash_label(amount: int) -> void:
 
 	add_child(floating_label)
 
-	floating_label.global_position = cash_label.global_position
-	floating_label.size = cash_label.size
+	floating_label.global_position = source.global_position
+	floating_label.size = source.size
 	floating_label.text = "[color=#ff4444]-%s[/color]" % CommonCode.format_money(amount)
 	floating_label.modulate = Color(1, 1, 1, 1)
 	floating_label.show()
@@ -483,15 +519,16 @@ func receive_cents_winnings(dollars: int) -> void:
 
 
 func _show_cents_winnings_float(dollars: int) -> void:
-	if cash_label == null:
+	var source := _wallet_label()
+	if source == null:
 		return
-	var floating_label := cash_label.duplicate() as RichTextLabel
+	var floating_label := source.duplicate() as RichTextLabel
 	floating_label.top_level = true
 	floating_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	floating_label.z_index = 100
 	add_child(floating_label)
-	floating_label.global_position = cash_label.global_position
-	floating_label.size = cash_label.size
+	floating_label.global_position = source.global_position
+	floating_label.size = source.size
 	floating_label.text = "[color=#2ecc71]+%s[/color]" % CommonCode.format_money(dollars)
 	floating_label.modulate = Color(1, 1, 1, 1)
 	floating_label.show()
@@ -506,15 +543,16 @@ func _show_cents_winnings_float(dollars: int) -> void:
 
 func _roll_cash_from_to(from_cash: int, to_cash: int) -> void:
 	#return
-	if cash_label == null:
+	var label := _wallet_label()
+	if label == null:
 		return
-	cash_label.show()
-	cash_label.modulate.a = 1.0
+	label.show()
+	label.modulate.a = 1.0
 	var duration := clampf(absf(float(to_cash - from_cash)) / 80.0, 0.35, 1.4)
 	var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_method(
 		func(value: float):
-			cash_label.text = _format_cash_label(int(value)),
+			label.text = _format_cash_label(int(value)),
 		float(from_cash),
 		float(to_cash),
 		duration
@@ -732,7 +770,7 @@ func update_open_menu() -> void:
 	update_shop()
 	update_place_label()
 	_refresh_place_challenge_banner()
-	#%Play_round_text.text = "[i][wave][color=]PLAY\n[color=c70102]%s" % CommonCode.format_money(int(gl_DataSet.get_value('price_play_round', 0)))
+	#%Play_round_text.text = "[i][wave][color=]PLAY\n[color=c70102]%s" % CommonCode.format_money(_current_play_price())
 
 	
 	update_shop_labels()
@@ -782,7 +820,7 @@ func play_round_button_pressed() -> void:
 	%PlayButton.disabled = true
 	#$CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades.modulate.a = 0.0
 	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.modulate.a = 0.0
-	var play_round_cost = int(gl_DataSet.get_value('price_play_round', 0))
+	var play_round_cost = _current_play_price()
 	gl_PlayerState.log_buy('debug_add_cash', play_round_cost)
 	var round_hbox := $CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer/HBoxContainer
 	var tween := create_tween().set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
@@ -874,9 +912,8 @@ func update_close_menu() -> void:
 		
 		
 func roll_up_cash_first_round() -> void:
-	cash_label.show()
-	cash_label.modulate.a = 1.0
-	cash_label.text = _format_cash_label(0)
+	_refresh_range_reward_label()
+	_refresh_player_money_label()
 	update_cost_label()
 	return
 	if gl_PlayerState.dataset.power_gun < 1:
@@ -1140,11 +1177,22 @@ func _refresh_keep_continue_label() -> void:
 	var fee := 100
 	if gl_PlayerState and gl_PlayerState.has_method("get_continue_fee"):
 		fee = int(gl_PlayerState.get_continue_fee())
-	keep.text = "[center]KEEP %s FOR CONTINUE" % CommonCode.format_money(fee)
-	if player_cash >= fee:
-		keep.add_theme_color_override("default_color", Color("cf9e5bff"))
-	else:
-		keep.add_theme_color_override("default_color", Color("C70102"))
+
+
+
+func _current_play_price() -> int:
+	if round_manager and round_manager.has_method("get_current_play_price"):
+		return int(round_manager.get_current_play_price())
+	return int(gl_DataSet.get_value("price_play_round", 0))
+
+
+func _refresh_play_button_cost() -> void:
+	var play_btn := get_node_or_null("%PlayButton") as Control
+	if play_btn == null:
+		return
+	var cost := play_btn.find_child("CostLabel", true, false) as RichTextLabel
+	if cost:
+		cost.text = "[wave]%s" % CommonCode.format_money(_current_play_price())
 
 
 func _on_continue_reserve_broken() -> void:
@@ -1178,10 +1226,12 @@ func purchase_denied_tween() -> void:
 
 func update_shop_labels() -> void:
 	
-	cash_label.text = _format_cash_label(player_cash)
+	_refresh_range_reward_label()
+	_refresh_player_money_label()
 	update_cash_label_color()
 	update_cost_label()
 	_refresh_keep_continue_label()
+	_refresh_play_button_cost()
 	return
 	#if price_reroll == 0:
 		#reroll_button.get_child(0).text = "REROLL\n[wave][color=#c70102]FREE[/color]"
@@ -1258,11 +1308,13 @@ func _on_max_out_powers_pressed() -> void:
 		skills.reset_buttons_settings()
 		
 func update_cost_label() -> void:
-	cash_label.text = _format_cash_label(player_cash, false)
+	_refresh_player_money_label()
 	update_cash_label_color()
 	await get_tree().process_frame
 
-	cash_label.pivot_offset.x = cash_label.size.x * 0.5
+	var label := _wallet_label()
+	if label:
+		label.pivot_offset.x = label.size.x * 0.5
 	
 func _setup_shop_mini_game() -> void:
 	# Kept for compatibility; mini-game is created on first open.

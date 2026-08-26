@@ -16,6 +16,8 @@ var default_volume_map : Dictionary = {}
 ## Dedicated shop-menu track volume when the shop is open.
 @export var shop_music_volume := -30.0
 
+var _music_silenced := false
+
 ## Streams are assigned at runtime so Main.tscn does not decode ~30MB of audio on load.
 const STREAM_PATHS := {
 	"Birds": "res://sfx/Sonoma_birds.ogg",
@@ -191,6 +193,27 @@ func ensure_shop_music_playing() -> void:
 		shop_music.play()
 
 
+## Cut gameplay / script / menu music immediately (strike-out). Ambient birds/wind stay.
+func stop_all_music_immediate() -> void:
+	_music_silenced = true
+	var keep := {
+		"Birds": true,
+		"Birds2": true,
+		"Birds3": true,
+		"Birds4": true,
+		"Birds5": true,
+		"NightNoises": true,
+		"WindNoises": true,
+	}
+	for child in get_children():
+		if child is AudioStreamPlayer and not keep.has(child.name):
+			(child as AudioStreamPlayer).stop()
+	if current_song and is_instance_valid(current_song) and current_song.playing:
+		current_song.stop()
+	if opening_song and is_instance_valid(opening_song) and opening_song.playing:
+		opening_song.stop()
+
+
 ## Fade in the dedicated shop-menu track (was BG_Music in the shop scene).
 func raise_shop_menu_music() -> void:
 	if shop_music == null:
@@ -235,6 +258,7 @@ func game_won() -> void:
 	#await tween.finished
 	
 func first_round() -> void:
+	_music_silenced = false
 	if current_song == null:
 		return
 		
@@ -309,5 +333,7 @@ func stop_opening_song() -> void:
 
 
 func _on_randomiser_finished() -> void:
+	if _music_silenced:
+		return
 	if $Randomiser.stream:
 		$Randomiser.play()

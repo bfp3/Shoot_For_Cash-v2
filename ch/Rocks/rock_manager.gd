@@ -1113,6 +1113,10 @@ func _script_sfx_stop_all(fade_sec: float = SCRIPT_SFX_LEAVE_FADE_SEC) -> void:
 		_script_sfx_stop(String(key), fade_sec)
 
 
+func stop_script_sfx_immediate() -> void:
+	_script_sfx_stop_all(0.0)
+
+
 func _load_sfx_stream(sfx_name: String) -> AudioStream:
 	var stem := String(sfx_name).strip_edges()
 	if stem.is_empty():

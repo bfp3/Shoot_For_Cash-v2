@@ -423,6 +423,25 @@ func exit_round_editor_to_shop() -> void:
 		EventBus.instance.open_shop.emit()
 
 
+## Round editor: swap scenery to `range_name` without opening the shop.
+func debug_editor_travel_to_range(range_name: String) -> void:
+	if not is_level_editor_available():
+		return
+	if transitioning_worlds:
+		return
+	range_name = range_name.strip_edges().to_lower()
+	if range_name.is_empty():
+		return
+	var keep_editor := round_editor_open
+	await travel_to_level(range_name, false)
+	round_editor_open = keep_editor
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if keep_editor and round_editor_menu and round_editor_menu.has_method("keep_open_after_travel"):
+		round_editor_menu.keep_open_after_travel()
+	elif keep_editor and round_editor_menu:
+		round_editor_menu.show()
+
+
 ## Parse editor text as island test / range test / round, then play that one round.
 func begin_level_editor_test(text: String) -> void:
 	_editor_test_return = "level"
@@ -941,6 +960,38 @@ func select_sequence_index(index: int) -> void:
 	current_sequence_index = index
 
 
+## PLAY / continue fee for the current range (`play $100` in island-shipper).
+## Falls back to data_set `price_play_round` when the range has no play line.
+func get_current_play_price() -> int:
+	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
+		var round_data = current_rock_sequence[current_sequence_index]
+		if round_data is Dictionary:
+			var from_round := int(round_data.get("play_price", 0))
+			if from_round > 0:
+				return from_round
+	if Parser and Parser.has_method("get_play_price"):
+		var from_range := int(Parser.get_play_price(LEVEL_ISLAND_NAME, get_active_range_name()))
+		if from_range > 0:
+			return from_range
+	return int(gl_DataSet.get_value("price_play_round", 0))
+
+
+## Range-clear bonus for the current range (`reward $400` in island-shipper).
+## Falls back to data_set `range_clear_reward` when the range has no reward line.
+func get_current_range_reward() -> int:
+	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
+		var round_data = current_rock_sequence[current_sequence_index]
+		if round_data is Dictionary:
+			var from_round := int(round_data.get("reward", 0))
+			if from_round > 0:
+				return from_round
+	if Parser and Parser.has_method("get_range_reward"):
+		var from_range := int(Parser.get_range_reward(LEVEL_ISLAND_NAME, get_active_range_name()))
+		if from_range > 0:
+			return from_range
+	return int(gl_DataSet.get_value("range_clear_reward", 0))
+
+
 func get_resume_spawn_index() -> int:
 	return maxi(int(_script_checkpoint_resume.get("spawn_index", 0)), 0)
 
@@ -1302,13 +1353,22 @@ func handle_three_strikes() -> void:
 		await finish_level_editor_test_round()
 		return
 
+	if music_manager and music_manager.has_method("stop_all_music_immediate"):
+		music_manager.stop_all_music_immediate()
+	if rocks_container and rocks_container.has_method("stop_script_sfx_immediate"):
+		rocks_container.stop_script_sfx_immediate()
+
 	_continue_open = true
 	if round_timer:
 		round_timer.enter_state(round_timer.State.PAUSE_TIMER)
 	else:
 		stop_timer()
 	stop_player()
-	_freeze_gameplay_for_continue()
+	var resume_in_place := _is_continue_resume_in_place()
+	if resume_in_place:
+		_freeze_gameplay_for_continue()
+	else:
+		await _clear_round_entities_for_retry()
 	
 	var strike_hud = null
 	if wave_progress_feedback and "strike_hud" in wave_progress_feedback:
@@ -1617,12 +1677,24 @@ func update_continue() -> void:
 		cash = int(gl_PlayerState.get_spendable_cash())
 	else:
 		cash = int(gl_PlayerState.dataset.get("cash", 0)) + int(gl_PlayerState.dataset.get("bonus_cash", 0))
+	_fade_gameplay_hud_for_continue(false, false)
+	await _play_continue_loss_scatter()
+	if gl_PlayerState.has_method("get_spendable_cash"):
+		cash = int(gl_PlayerState.get_spendable_cash())
+	else:
+		cash = int(gl_PlayerState.dataset.get("cash", 0))
 	var outcome := "give_up"
 	if screen and screen.has_method("play"):
 		outcome = String(await screen.play(fee, cash))
 	_continue_open = false
 	if outcome == "paid" or outcome == "flip_win":
-		await _resume_after_continue()
+		var resume_in_place := true
+		if screen != null and "resume_in_place" in screen:
+			resume_in_place = bool(screen.resume_in_place)
+		if resume_in_place:
+			await _resume_after_continue()
+		else:
+			await _restart_round_after_continue()
 	else:
 		await _game_over_from_continue()
 
@@ -1651,6 +1723,77 @@ func _unfreeze_gameplay_for_continue() -> void:
 			(node as RigidBody3D).sleeping = false
 
 
+func _is_continue_resume_in_place() -> bool:
+	var screen := get_tree().get_first_node_in_group("continue_screen")
+	if screen == null:
+		var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+		if menus and menus.has_method("ensure_continue"):
+			screen = menus.ensure_continue()
+	if screen != null and "resume_in_place" in screen:
+		return bool(screen.resume_in_place)
+	return true
+
+
+## Same wipe as abort / backspace: rocks, balloons, pineapples gone for a fresh retry.
+func _clear_round_entities_for_retry() -> void:
+	if balloon_container:
+		balloon_container.process_mode = Node.PROCESS_MODE_INHERIT
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+	if balloon_container:
+		await balloon_container.end_round()
+	if has_node("%Splash_zone"):
+		%Splash_zone.deactivate_splash_zone()
+	for node in get_tree().get_nodes_in_group("pineapple"):
+		if node is RigidBody3D:
+			(node as RigidBody3D).freeze = false
+			(node as RigidBody3D).sleeping = false
+
+
+func _play_continue_loss_scatter() -> void:
+	var money := get_tree().get_first_node_in_group("money_manager")
+	if money and money.has_method("play_round_loss_scatter"):
+		await money.play_round_loss_scatter()
+	else:
+		_forfeit_round_cash_pool()
+	if money and money.has_method("fade_out_for_continue"):
+		money.fade_out_for_continue()
+	elif money:
+		money.hide()
+
+
+func _fade_gameplay_hud_for_continue(visible: bool, include_money: bool = true) -> void:
+	if visible:
+		if player and player.has_method("show_ammo_panel"):
+			player.show_ammo_panel()
+		if wave_progress_feedback and wave_progress_feedback.has_method("show_strike_hud"):
+			wave_progress_feedback.show_strike_hud()
+		if include_money:
+			var money := get_tree().get_first_node_in_group("money_manager")
+			if money and money.has_method("fade_in_for_continue"):
+				money.fade_in_for_continue()
+			elif money:
+				if money.has_method("show_for_round"):
+					money.show_for_round()
+				else:
+					money.show()
+		return
+	if player and player.has_method("fade_out_ammo_panel"):
+		player.fade_out_ammo_panel()
+	elif player and player.has_method("hide_ammo_panel_instant"):
+		player.hide_ammo_panel_instant()
+	if wave_progress_feedback and wave_progress_feedback.has_method("hide_strike_hud"):
+		wave_progress_feedback.hide_strike_hud()
+	if not include_money:
+		return
+	var money_out := get_tree().get_first_node_in_group("money_manager")
+	if money_out and money_out.has_method("fade_out_for_continue"):
+		money_out.fade_out_for_continue()
+	elif money_out:
+		money_out.hide()
+
+
 func _resume_after_continue() -> void:
 	_continue_resuming = true
 	wave_ending = true
@@ -1661,6 +1804,7 @@ func _resume_after_continue() -> void:
 	force_shop_open = false
 	current_round_state = RoundState.WAVE_START
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_fade_gameplay_hud_for_continue(true)
 	if wave_progress_feedback and wave_progress_feedback.has_method("play_countdown_banners"):
 		await wave_progress_feedback.play_countdown_banners(3)
 	elif wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
@@ -1679,6 +1823,46 @@ func _resume_after_continue() -> void:
 	if is_hold_out_round() or is_endless_mode():
 		if round_timer:
 			round_timer.enter_state(round_timer.State.RESUME_TIMER)
+	if music_manager and music_manager.has_method("first_round"):
+		music_manager.first_round()
+	_continue_resuming = false
+	_continue_grace = true
+	await get_tree().create_timer(1.0, false).timeout
+	_continue_grace = false
+
+
+## Paid continue with `resume_in_place` off: start this range's round from spawn 0.
+func _restart_round_after_continue() -> void:
+	_continue_resuming = true
+	wave_ending = true
+	_unfreeze_gameplay_for_continue()
+	check_round_for_strikes()
+	player_failed = false
+	success = false
+	game_over_triggered = false
+	force_shop_open = false
+	bonus_oranges_ready = false
+	current_wave = 0
+	_shots_fired_this_round = 0
+	clear_script_checkpoint()
+	apply_current_round_modifiers()
+	if balloon_container:
+		var rock_seq := update_rock_sequence()
+		if not rock_seq.is_empty():
+			balloon_container.add_balloon(rock_seq)
+	if wave_progress_feedback:
+		wave_progress_feedback.reset()
+	if player:
+		player.update_player_stats()
+		if player.has_method("ensure_ammo_panel_visible"):
+			player.ensure_ammo_panel_visible()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	current_round_state = RoundState.WAVE_START
+	_fade_gameplay_hud_for_continue(true)
+	_skip_next_wave_banner = true
+	if music_manager and music_manager.has_method("first_round"):
+		music_manager.first_round()
+	await update_wave_start()
 	_continue_resuming = false
 	_continue_grace = true
 	await get_tree().create_timer(1.0, false).timeout
@@ -1690,6 +1874,13 @@ func _game_over_from_continue() -> void:
 	record_endless_run_result()
 	_unfreeze_gameplay_for_continue()
 	stop_timer()
+	if player and player.has_method("hide_ammo_panel_instant"):
+		player.hide_ammo_panel_instant()
+	if wave_progress_feedback and wave_progress_feedback.has_method("hide_strike_hud"):
+		wave_progress_feedback.hide_strike_hud()
+	var money := get_tree().get_first_node_in_group("money_manager")
+	if money and money.has_method("hide_for_menus"):
+		money.hide_for_menus()
 	await return_to_difficulty_select()
 
 
@@ -1895,14 +2086,6 @@ func update_wave_start() -> void:
 		if wave_progress_feedback and wave_progress_feedback.has_method("show_strike_hud"):
 			wave_progress_feedback.show_strike_hud()
 	elif current_wave == 0 and not _skip_next_wave_banner:
-		if not _continue_intro_shown and wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
-			_continue_intro_shown = true
-			var intro_fee := 100
-			if gl_PlayerState.has_method("get_continue_fee"):
-				intro_fee = int(gl_PlayerState.get_continue_fee())
-			await wave_progress_feedback.play_named_banner(
-				"STRIKE OUT = %s TO CONTINUE" % CommonCode.format_money(intro_fee)
-			)
 		if resume_index > 0 and wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
 			await wave_progress_feedback.play_named_banner("CHECKPOINT")
 		else:

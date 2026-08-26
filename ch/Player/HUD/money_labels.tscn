@@ -66,6 +66,7 @@ Panel/styles/panel = SubResource("StyleBoxFlat_k5tjv")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_ms1v2")
 
 [node name="Money_labels" type="Control" unique_id=2075768694 groups=["money_manager"]]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -187,7 +188,8 @@ scroll_active = false
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="ContinueFeeLabel" type="RichTextLabel" parent="."]
+[node name="ContinueFeeLabel" type="RichTextLabel" parent="." unique_id=2051222769]
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 3
@@ -198,7 +200,7 @@ anchor_bottom = 1.0
 offset_left = -415.0
 offset_top = -210.0
 offset_right = -23.0
-offset_bottom = -154.0
+offset_bottom = -130.83502
 grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2

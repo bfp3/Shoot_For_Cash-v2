@@ -60,7 +60,7 @@ var dataset_float : Dictionary = {
 	,"price_reroll" 		: [10,20,40,80,160,320,640]
 	
 	,"reward_perfect_round"	: [50,1000,1500]
-	,"price_play_round"		: [10,50,100]
+	,"price_play_round"		: [100]
 	## Map: cash required to unlock island index+1 (Shipper→Anchor, Anchor→Squid, …).
 	## Edit these values to change unlock prices on the island map.
 	,"island_unlock_cost"		: [2500, 3500, 30, 40]
@@ -134,7 +134,7 @@ var dataset_string : Dictionary = {
 		"", ## redd
 		"6 Shots Only", ## glory
 		"That's all for now,\nenjoy endless mode.", ## jetz
-		"Don't Shoot [color=#ff8c00]Oranges[/color]", ## noir
+		"", ## noir (was Don't Shoot Oranges — re-enable later)
 		"", ## vesper
 		"", ## start
 	]
@@ -145,12 +145,12 @@ var dataset_string : Dictionary = {
 		"", ## redd
 		"six_shots_only", ## glory
 		"", ## jetz
-		"no_shoot_oranges", ## noir
+		"", ## noir (was no_shoot_oranges — re-enable later)
 		"", ## vesper
 		"", ## start
 	]
 	## Boss shop banner. Use %d for hold-out seconds.
-	,"shop_challenge_boss"		: ["HOLD OUT\n %d seconds"]
+	,"shop_challenge_boss"		: ["HOLD OUT %d"]
 	
 	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']
@@ -439,5 +439,13 @@ func get_boss_clear_reward(island_index: int) -> int:
 
 
 ## Flat clear bonus for finishing every round in a shooting range.
+## Prefers `reward $N` from island-shipper.txt over dataset `range_clear_reward`.
 func get_range_clear_reward(_place_id: String = "") -> int:
+	var range_name := resolve_place_name(_place_id) if not _place_id.is_empty() else ""
+	if range_name.is_empty() and gl_PlayerState:
+		range_name = resolve_place_name(String(gl_PlayerState.dataset.get("level_name", "")))
+	if Parser and Parser.has_method("get_range_reward") and not range_name.is_empty():
+		var from_script := int(Parser.get_range_reward("shipper", range_name))
+		if from_script > 0:
+			return from_script
 	return int(get_value("range_clear_reward", 0))

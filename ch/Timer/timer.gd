@@ -332,7 +332,7 @@ func format_time(time: float) -> String:
 	var seconds := int(time)
 	var hundredths := int((time - seconds) * 100.0)
 
-	return "%d:%02d" % [seconds, hundredths]
+	return "%d[font_size=44]%02d[/font_size]" % [seconds, hundredths]
 	
 func fade_out_timer() -> void:
 	var root: CanvasItem = self

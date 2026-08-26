@@ -339,6 +339,32 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+offset_left = -124.497345
+offset_top = 76.979965
+offset_right = 69.502686
+offset_bottom = 167.97997
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/normal_font_size = 84
+bbcode_enabled = true
+text = "MOSS"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="PlayerMoney" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name" unique_id=1726682583]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 offset_left = 228.11285
 offset_top = -51.53414
 offset_right = 422.11285
@@ -347,9 +373,10 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_constants/outline_size = 0
 theme_override_font_sizes/normal_font_size = 84
 bbcode_enabled = true
-text = "MOSS"
+text = "$1,200"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 2
@@ -372,7 +399,34 @@ mouse_filter = 2
 
 [node name="MissionLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MissionLabelControl" unique_id=372382077]
 unique_name_in_owner = true
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.5
+offset_top = -32.694702
+offset_right = 200.5
+offset_bottom = 185.3053
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 100
+bbcode_enabled = true
+text = "HOLD OUT
+120 seconds"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MissionLabel3" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MissionLabelControl" unique_id=1459268686]
+unique_name_in_owner = true
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -388,6 +442,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/normal_font_size = 74
 bbcode_enabled = true
 text = "HOLD OUT
@@ -399,6 +454,7 @@ vertical_alignment = 1
 
 [node name="MissionLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MissionLabelControl" unique_id=1224006194]
 unique_name_in_owner = true
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -414,6 +470,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/normal_font_size = 74
 bbcode_enabled = true
 text = "[font_size=52]TO WIN[/font_size]
@@ -423,7 +480,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Place_name3" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1187867439]
+[node name="UnderlineStar" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1187867439]
 z_index = 1
 layout_mode = 1
 anchors_preset = 8
@@ -431,33 +488,35 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = 165.46185
-offset_bottom = 165.46185
+offset_left = 9.1552734e-05
+offset_top = 211.24493
+offset_right = 9.1552734e-05
+offset_bottom = 211.24493
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="PlaceLabel" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name3" unique_id=1531404812]
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+[node name="StarTexture" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar" unique_id=1531404812]
+modulate = Color(0.37, 0.33053333, 0.296, 0.13725491)
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -168.5
-offset_top = -82.50586
-offset_right = 168.5
-offset_bottom = 173.49414
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -82.21631
+offset_right = 128.0
+offset_bottom = 173.78369
 grow_horizontal = 2
-grow_vertical = 0
-scale = Vector2(0.119, 0.119)
+grow_vertical = 2
+scale = Vector2(0.178, 0.178)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("5_7j408")
 stretch_mode = 5
 
-[node name="center_container" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name3" unique_id=1265265496]
+[node name="center_container" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar" unique_id=1265265496]
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 layout_mode = 1
 anchors_preset = 8
@@ -474,17 +533,25 @@ grow_vertical = 2
 scale = Vector2(0.195, 0.195)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
-[node name="left" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name3/center_container" unique_id=31501307]
-points = PackedVector2Array(-628, 0, -130, 0)
-width = 4.0
+[node name="left" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar/center_container" unique_id=31501307]
+position = Vector2(-98.85693, 0)
+points = PackedVector2Array(-900, 0, 0, 0)
+width = 2.0
 gradient = SubResource("Gradient_onfim")
 texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
 
-[node name="right" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name3/center_container" unique_id=1684114475]
-points = PackedVector2Array(753, 0, 130, 0)
-width = 4.0
+[node name="right" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar/center_container" unique_id=1684114475]
+position = Vector2(98.85693, 0)
+points = PackedVector2Array(900, 0, 0, 0)
+width = 2.0
 gradient = SubResource("Gradient_onfim")
 texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
 
 [node name="MapButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1819880088 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx")]
 unique_name_in_owner = true
@@ -619,14 +686,14 @@ theme_override_constants/shadow_offset_x = 7
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/normal_font_size = 124
 bbcode_enabled = true
-text = "$500"
+text = "[rainbow]$400"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="KeepContinueLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control"]
+[node name="KeepContinueLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1148650827]
 unique_name_in_owner = true
 clip_contents = false
 layout_mode = 1
@@ -636,17 +703,18 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -220.0
-offset_top = 48.0
+offset_top = -114.83917
 offset_right = 220.0
-offset_bottom = 88.0
+offset_bottom = -68.83917
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_colors/default_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
-theme_override_font_sizes/normal_font_size = 22
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 42
 bbcode_enabled = true
-text = "[center]KEEP $50 FOR CONTINUE"
+text = "[center][wave]W I N"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -679,6 +747,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_kvqbn")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel" unique_id=486141513]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -693,7 +762,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/Panel/VBoxContainer" unique_id=1296682477]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 1
 alignment = 1
@@ -1265,7 +1333,7 @@ rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_ohn7f")
 
-[node name="ShortContinueWarning" type="RichTextLabel" parent="."]
+[node name="ShortContinueWarning" type="RichTextLabel" parent="." unique_id=1757482079]
 unique_name_in_owner = true
 visible = false
 z_index = 90

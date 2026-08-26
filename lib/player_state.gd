@@ -297,8 +297,14 @@ func get_continue_base_fee() -> int:
 
 
 func get_continue_fee() -> int:
-	var steps := mini(get_continue_count(), 12)
-	return get_continue_base_fee() * (1 << steps)
+	var tree := get_tree()
+	if tree:
+		var rm := tree.get_first_node_in_group("round_manager")
+		if rm and rm.has_method("get_current_play_price"):
+			var play_price := int(rm.get_current_play_price())
+			if play_price > 0:
+				return play_price
+	return get_continue_base_fee()
 
 
 func pay_continue_fee() -> bool:

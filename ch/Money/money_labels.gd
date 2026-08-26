@@ -1,11 +1,11 @@
 @tool
 extends Control
 ## Bottom-right round cash HUD.
-## TotalCash2 = wallet + unbanked pool (running total). Hits fly a chip into it
-## and roll the number up, same as PoolLabel used to. PoolLabel is kept for
-## checkpoint / bank internals but can stay hidden.
+## TotalCash2 = unbanked round pool only. Each round starts at $0. Hits fly a
+## chip into it and roll the number up. Wallet cash is not shown here — it
+## cashes in at tally. Strikeout scatters the round total back to $0.
+## PoolLabel is kept for checkpoint / bank internals but can stay hidden.
 ## MultiplierLabel = current ladder multiplier.
-## Strikeout forfeits the pool (total drops by the unbanked amount).
 
 const COLOR_POOL := Color("EBE0D8")
 const COLOR_BANK := Color("cf9e5bff")
@@ -30,6 +30,14 @@ const COLOR_LOSE := Color("C70102")
 @export var gain_chip_absorb_down_sec := 0.12
 @export_tool_button("Test Cash Chip") var test_cash_chip: Callable = _on_test_cash_chip
 
+@export_group("Loss Scatter")
+## How many leftover-cash chips fly out on strikeout.
+@export var loss_scatter_count := 18
+## How far chips travel away from TotalCash2 (pixels).
+@export var loss_scatter_distance_px := 220.0
+## How long each flying chip lasts.
+@export var loss_scatter_fly_sec := 0.7
+
 @export_group("Checkpoint Ceremony")
 ## Added to the screen-centre rest pose (pixels). Raise X to shift right.
 const checkpoint_center_offset := Vector2(-125.0, 175.0)
@@ -49,7 +57,9 @@ var _move_tween: Tween
 var _pool_layout: Dictionary = {}
 var _total_layout: Dictionary = {}
 var _punch_tween: Tween
+var _fade_tween: Tween
 var _live_chips: Array[Control] = []
+var _loss_scatter_active := false
 
 
 func _ready() -> void:
@@ -90,6 +100,7 @@ func show_for_round() -> void:
 	_ceremony_lock = false
 	_animating_settle = false
 	_kill_roll()
+	_kill_fade()
 	_restore_scene_layout()
 	_tracked_pool = int(gl_PlayerState.dataset.get("bonus_cash", 0))
 	_displayed_pool = float(_tracked_pool)
@@ -128,7 +139,11 @@ func _refresh_continue_fee() -> void:
 	if gl_PlayerState and gl_PlayerState.has_method("get_continue_fee"):
 		fee = int(gl_PlayerState.get_continue_fee())
 	continue_fee_label.text = "CONTINUE %s" % CommonCode.format_money(fee)
-	var cash := _live_total_amount()
+	var cash := 0
+	if gl_PlayerState and gl_PlayerState.has_method("get_spendable_cash"):
+		cash = int(gl_PlayerState.get_spendable_cash())
+	else:
+		cash = _live_total_amount()
 	if cash >= fee:
 		continue_fee_label.add_theme_color_override("default_color", COLOR_BANK)
 	else:
@@ -140,10 +155,51 @@ func hide_for_menus() -> void:
 	_ceremony_lock = false
 	_animating_settle = false
 	_kill_roll()
+	_kill_fade()
 	_free_live_chips()
 	_restore_scene_layout()
 	_set_pool_color(COLOR_POOL)
+	modulate.a = 1.0
 	hide()
+
+
+func fade_out_for_continue(duration: float = 0.35) -> void:
+	_visible_for_round = false
+	_kill_roll()
+	_kill_fade()
+	if not visible:
+		modulate.a = 0.0
+		return
+	_fade_tween = create_tween()
+	_fade_tween.tween_property(self, "modulate:a", 0.0, duration)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+
+func fade_in_for_continue(duration: float = 0.55) -> void:
+	_ceremony_lock = false
+	_animating_settle = false
+	_kill_roll()
+	_kill_fade()
+	_restore_scene_layout()
+	_tracked_pool = int(gl_PlayerState.dataset.get("bonus_cash", 0))
+	_displayed_pool = float(_tracked_pool)
+	_sync_total_from_state(true)
+	_set_pool_color(COLOR_POOL)
+	_set_pool_text(int(_displayed_pool))
+	_refresh_multiplier()
+	_refresh_continue_fee()
+	_visible_for_round = true
+	show()
+	modulate.a = 0.0
+	_fade_tween = create_tween()
+	_fade_tween.tween_property(self, "modulate:a", 1.0, duration)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+func _kill_fade() -> void:
+	if _fade_tween and _fade_tween.is_valid():
+		_fade_tween.kill()
+	_fade_tween = null
 
 
 func _on_pool_changed(new_amount: int) -> void:
@@ -164,12 +220,8 @@ func _on_pool_changed(new_amount: int) -> void:
 
 
 func _on_wallet_changed() -> void:
-	_tracked_total = _live_total_amount()
 	_refresh_continue_fee()
-	if not _visible_for_round or _animating_settle or _ceremony_lock:
-		_set_total_text(float(_tracked_total))
-		return
-	_roll_total_to(float(_tracked_total))
+	## Round HUD is pool-only; wallet updates belong to the shop / tally.
 
 
 func _on_pool_banked(_amount: int, _previous_cash: int, _new_total_cash: int) -> void:
@@ -180,7 +232,7 @@ func _on_pool_banked(_amount: int, _previous_cash: int, _new_total_cash: int) ->
 	_animating_settle = true
 	_kill_roll()
 	_tracked_pool = 0
-	_tracked_total = _wallet_amount()
+	_tracked_total = 0
 	_set_pool_color(COLOR_BANK)
 	if coin_sfx:
 		coin_sfx.play()
@@ -188,7 +240,7 @@ func _on_pool_banked(_amount: int, _previous_cash: int, _new_total_cash: int) ->
 	_punch_label()
 	_set_pool_text(0)
 	_displayed_pool = 0.0
-	_roll_total_to(float(_tracked_total), 0.4)
+	_roll_total_to(0.0, 0.4)
 	_roll_pool_to(0, 0.4, _finish_settle_to_pool_color)
 
 
@@ -265,7 +317,7 @@ func _wallet_amount() -> int:
 func _live_total_amount() -> int:
 	if gl_PlayerState == null:
 		return 0
-	return _wallet_amount() + int(gl_PlayerState.dataset.get("bonus_cash", 0))
+	return int(gl_PlayerState.dataset.get("bonus_cash", 0))
 
 
 func _sync_total_from_state(snap: bool = false) -> void:
@@ -276,16 +328,124 @@ func _sync_total_from_state(snap: bool = false) -> void:
 
 
 func _on_pool_forfeited(_amount: int) -> void:
+	if _loss_scatter_active:
+		return
 	if not _visible_for_round:
 		return
 	_animating_settle = true
 	_kill_roll()
 	_tracked_pool = 0
-	_tracked_total = _wallet_amount()
+	_tracked_total = 0
 	_set_pool_color(COLOR_LOSE)
 	_punch_label()
-	_roll_total_to(float(_tracked_total), 0.35)
+	_roll_total_to(0.0, 0.35)
 	_roll_pool_to(0, 0.35, _finish_settle_to_pool_color)
+
+
+## Strikeout: fly lots of small dollar chips out of the corner total, then $0.
+func play_round_loss_scatter() -> void:
+	_loss_scatter_active = true
+	_kill_fade()
+	_visible_for_round = true
+	show()
+	modulate.a = 1.0
+	var lost := int(round(_displayed_total))
+	if lost <= 0:
+		lost = _live_total_amount()
+	if gl_PlayerState and gl_PlayerState.has_method("forfeit_cash_pool"):
+		gl_PlayerState.forfeit_cash_pool()
+	_tracked_pool = 0
+	_tracked_total = 0
+	_set_pool_color(COLOR_LOSE)
+	_punch_label()
+	if coin_sfx:
+		coin_sfx.play()
+	_spawn_loss_scatter_chips(lost)
+	var roll_sec := clampf(0.35 + float(lost) / 400.0, 0.4, 0.85)
+	_roll_total_to(0.0, roll_sec)
+	_roll_pool_to(0, roll_sec)
+	await get_tree().create_timer(maxf(roll_sec, loss_scatter_fly_sec), false).timeout
+	_displayed_total = 0.0
+	_displayed_pool = 0.0
+	_set_total_text(0.0)
+	_set_pool_text(0)
+	_loss_scatter_active = false
+	_animating_settle = false
+
+
+func _spawn_loss_scatter_chips(total: int) -> void:
+	var dest_label := _gain_chip_target()
+	if dest_label == null:
+		return
+	var origin := _label_corner_for_chip(dest_label, dest_label)
+	origin.x += dest_label.size.x * 0.35
+	origin.y += dest_label.size.y * 0.15
+	var count := loss_scatter_count
+	if total <= 0:
+		count = mini(count, 8)
+	var pieces: Array[int] = _split_loss_amounts(maxi(total, 0), count)
+	for i in pieces.size():
+		var amount: int = pieces[i]
+		var chip := Label.new()
+		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		chip.text = "$%d" % amount
+		chip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		chip.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		var font := dest_label.get_theme_font("normal_font")
+		if font:
+			chip.add_theme_font_override("font", font)
+		chip.add_theme_font_size_override("font_size", 36)
+		chip.add_theme_color_override("font_color", COLOR_LOSE)
+		chip.add_theme_constant_override("outline_size", 2)
+		chip.add_theme_color_override("font_outline_color", Color(0.08, 0.06, 0.04, 0.85))
+		add_child(chip)
+		chip.reset_size()
+		_live_chips.append(chip)
+		chip.global_position = origin
+		chip.pivot_offset = chip.size * 0.5
+		var angle := randf_range(-PI * 0.9, -PI * 0.1)
+		var dist := randf_range(loss_scatter_distance_px * 0.55, loss_scatter_distance_px)
+		var target := origin + Vector2(cos(angle), sin(angle)) * dist
+		var dur := randf_range(loss_scatter_fly_sec * 0.7, loss_scatter_fly_sec)
+		var tween := create_tween()
+		tween.set_parallel(true)
+		tween.tween_property(chip, "global_position", target, dur)\
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.tween_property(chip, "modulate:a", 0.0, dur)\
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		tween.tween_property(chip, "rotation", randf_range(-0.6, 0.6), dur)
+		tween.set_parallel(false)
+		tween.tween_callback(_free_chip.bind(chip))
+
+
+func _split_loss_amounts(total: int, count: int) -> Array[int]:
+	var out: Array[int] = []
+	if total <= 0:
+		for _i in count:
+			out.append(1)
+		return out
+	var remaining := total
+	for i in count:
+		var left := count - i
+		if left <= 1:
+			out.append(maxi(remaining, 1))
+			break
+		var chunk := maxi(int(round(float(remaining) / float(left))), 1)
+		chunk = mini(chunk, remaining)
+		# Prefer small familiar amounts so the scatter reads as lots of little bills.
+		if chunk > 25:
+			chunk = 25 if remaining > 25 else chunk
+		elif chunk > 10:
+			chunk = 10 if remaining > 10 else chunk
+		elif chunk > 5:
+			chunk = 5 if remaining > 5 else chunk
+		out.append(chunk)
+		remaining -= chunk
+		if remaining <= 0:
+			break
+	while out.size() < count and total > 0:
+		out.append(1)
+	return out
 
 
 func _finish_settle_to_pool_color() -> void:
@@ -333,7 +493,7 @@ func _set_total_text(value: float) -> void:
 	_displayed_total = value
 	if total_cash_label:
 		total_cash_label.text = "$%d" % int(round(value))
-
+		total_cash_label.text = "[wave][rainbow]" + CommonCode.format_money(value)
 
 func _set_pool_text(amount: int) -> void:
 	if pool_label:

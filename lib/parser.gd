@@ -5,6 +5,10 @@ class_name parser
 var data_set : Array = []
 ## "island|range" -> hold-out duration in milliseconds (`hold out 90000` / `boss-timer`).
 var boss_timer_ms_by_range: Dictionary = {}
+## "island|range" -> PLAY / continue fee (`play $100` under a range header).
+var play_price_by_range: Dictionary = {}
+## "island|range" -> range clear reward (`reward $400` under a range header).
+var reward_by_range: Dictionary = {}
 
 func loadIslandFile(file_name : String) -> bool:
 	var file = FileAccess.open(file_name, FileAccess.READ)
@@ -17,6 +21,8 @@ func loadIslandFile(file_name : String) -> bool:
 func loadIsland(data : String) -> bool:
 	data_set.clear()
 	boss_timer_ms_by_range.clear()
+	play_price_by_range.clear()
+	reward_by_range.clear()
 	
 	var ary : Array = data.split("\n", false)
 	
@@ -69,6 +75,14 @@ func loadIsland(data : String) -> bool:
 				if hold_ms >= 0:
 					boss_timer_ms_by_range['%s|%s' % [island_name, range_name]] = hold_ms
 					continue
+				var play_price := _cash_command_amount(tokens, "play")
+				if play_price >= 0:
+					play_price_by_range['%s|%s' % [island_name, range_name]] = play_price
+					continue
+				var reward := _cash_command_amount(tokens, "reward")
+				if reward >= 0:
+					reward_by_range['%s|%s' % [island_name, range_name]] = reward
+					continue
 				if round_no > 0:
 					data_set.push_back( [island_name,range_name,round_no,sanitise_token(token)] )
 					
@@ -97,6 +111,16 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 	return int(boss_timer_ms_by_range.get("%s|%s" % [island_name, range_name], 0))
 
 
+## PLAY / continue fee for an island/range (`play $100`). 0 if unset.
+func get_play_price(island_name: String, range_name: String) -> int:
+	return int(play_price_by_range.get("%s|%s" % [island_name, range_name], 0))
+
+
+## Range-clear reward for an island/range (`reward $400`). 0 if unset.
+func get_range_reward(island_name: String, range_name: String) -> int:
+	return int(reward_by_range.get("%s|%s" % [island_name, range_name], 0))
+
+
 ## `hold out 90000`, `hold-out 90000`, or `boss-timer 90000`. Returns ms, or -1 if not that command.
 func _hold_out_ms_from_tokens(tokens) -> int:
 	if tokens == null or tokens.size() == 0:
@@ -111,6 +135,30 @@ func _hold_out_ms_from_tokens(tokens) -> int:
 			return maxi(int(tokens[2]), 0)
 		return 0
 	return -1
+
+
+## `play $100`, `play 100`, or `play $1,000`. Returns the cash amount, or -1 if not that command.
+func _play_price_from_tokens(tokens) -> int:
+	return _cash_command_amount(tokens, "play")
+
+
+## `reward $400` / `reward 400`. Returns the cash amount, or -1 if not that command.
+func _reward_from_tokens(tokens) -> int:
+	return _cash_command_amount(tokens, "reward")
+
+
+## `play $100` / `reward $400`. Returns the cash amount, or -1 if `tokens[0]` is not `command_name`.
+func _cash_command_amount(tokens, command_name: String) -> int:
+	if tokens == null or tokens.size() == 0:
+		return -1
+	if String(tokens[0]).to_lower() != command_name:
+		return -1
+	if tokens.size() < 2:
+		return 0
+	var raw := String(tokens[1]).strip_edges().replace("$", "").replace(",", "")
+	if raw.is_empty() or not raw.is_valid_int():
+		return 0
+	return maxi(int(raw), 0)
 
 
 ## Parses a single spawn line into a spawn dictionary.
@@ -168,6 +216,11 @@ func _hold_out_ms_from_tokens(tokens) -> int:
 ## hold out 90000 / hold-out 90000 / boss-timer 90000: {cmd: hold-out, ms}.
 ##   Range- or round-level survival timer in milliseconds. Same as a boss hold-out:
 ##   rocks loop and the round lasts until the timer hits 0.
+## play $100 / play 100: {cmd: play, price}. Range-level PLAY / continue fee.
+##   Put under `range moss` (before or inside a round). Shop PLAY and CONTINUE
+##   both charge this amount. Fallback is data_set `price_play_round`.
+## reward $400 / reward 400: {cmd: reward, price}. Range-clear bonus shown in the
+##   shop CashBalanceLabel and paid at tally instead of data_set `range_clear_reward`.
 ## shuffle: {cmd} — this round only; later waves randomise rock columns.
 ## surprise-me: {cmd} — replace this round's spawns with a random generated sequence.
 ## bonus-type1 / bonus type1: marks the round as bonus type 1 (no strikes).
@@ -247,6 +300,12 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'hold-out', 'boss-timer':
 			## Survival duration in milliseconds. Handled while loading the file / round dict.
 			return {'cmd': 'hold-out', 'ms': int(parts[1]) if parts.size() > 1 else 0}
+
+		'play':
+			return {'cmd': 'play', 'price': maxi(_cash_command_amount(parts, 'play'), 0)}
+
+		'reward':
+			return {'cmd': 'reward', 'price': maxi(_cash_command_amount(parts, 'reward'), 0)}
 
 		'repeat':
 			return _parse_repeat_command(parts)
@@ -700,13 +759,17 @@ func parse_round_text(text: String) -> Dictionary:
 	if body != "":
 		wrapped += body + "\n"
 
-	# Don't clobber the live island-shipper dataset / hold-out timers.
+	# Don't clobber the live island-shipper dataset / hold-out timers / play prices.
 	var backup: Array = data_set.duplicate(true)
 	var backup_timers: Dictionary = boss_timer_ms_by_range.duplicate(true)
+	var backup_play: Dictionary = play_price_by_range.duplicate(true)
+	var backup_reward: Dictionary = reward_by_range.duplicate(true)
 	loadIsland(wrapped)
 	var sequences: Array = get_rock_sequences("test")
 	data_set = backup
 	boss_timer_ms_by_range = backup_timers
+	play_price_by_range = backup_play
+	reward_by_range = backup_reward
 
 	if sequences.is_empty():
 		return {
@@ -720,6 +783,8 @@ func parse_round_text(text: String) -> Dictionary:
 			"difficulty": "",
 			"max_strikes": 3,
 			"hold_out_ms": 0,
+			"play_price": 0,
+			"reward": 0,
 		}
 	return sequences[0]
 
@@ -755,6 +820,8 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				'difficulty': '',
 				'max_strikes': 3,
 				'hold_out_ms': 0,
+				'play_price': int(play_price_by_range.get(key, 0)),
+				'reward': int(reward_by_range.get(key, 0)),
 				# Temporary while parsing — removed by `_finalize_round_repeats`.
 				'_pending': [],
 				'_sections': [],
@@ -819,6 +886,18 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			boss_timer_ms_by_range['%s|%s' % [entry[0], entry[1]]] = maxi(ms, 0)
 			continue
 
+		if parsed_cmd == 'play':
+			var price := maxi(int(parsed.get('price', 0)), 0)
+			rounds[key].play_price = price
+			play_price_by_range['%s|%s' % [entry[0], entry[1]]] = price
+			continue
+
+		if parsed_cmd == 'reward':
+			var reward := maxi(int(parsed.get('price', 0)), 0)
+			rounds[key].reward = reward
+			reward_by_range['%s|%s' % [entry[0], entry[1]]] = reward
+			continue
+
 		if parsed_cmd == 'shuffle':
 			rounds[key].shuffle = true
 			continue
@@ -853,6 +932,12 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 		var range_ms := int(boss_timer_ms_by_range.get(key, 0))
 		if range_ms > 0:
 			rounds[key].hold_out_ms = range_ms
+		var range_play := int(play_price_by_range.get(key, 0))
+		if range_play > 0:
+			rounds[key].play_price = range_play
+		var range_reward := int(reward_by_range.get(key, 0))
+		if range_reward > 0:
+			rounds[key].reward = range_reward
 		sequences.append(rounds[key])
 	return sequences
 

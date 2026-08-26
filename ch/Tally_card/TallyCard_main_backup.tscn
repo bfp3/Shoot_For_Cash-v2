@@ -1,23 +1,23 @@
-[gd_scene format=3 uid="uid://q855h2qsq0w7"]
+[gd_scene format=3 uid="uid://dr4gu026teojv"]
 
-[ext_resource type="Script" uid="uid://bmkw103pryi4x" path="res://ch/Tally_card/tally_card_main.gd" id="1_d46ke"]
-[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_cuwcq"]
-[ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="7_7r173"]
-[ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="9_3q72g"]
-[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="11_ta7gf"]
-[ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="12_bux34"]
-[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="13_ecf0a"]
-[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="14_m83ei"]
-[ext_resource type="AudioStream" uid="uid://bixius52c3n2s" path="res://sfx/shop_reroll_sfx_01.ogg" id="15_t852v"]
-[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="16_q6qkh"]
-[ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="17_d46ke"]
-[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="18_tjy4i"]
-[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="19_8ryl7"]
-[ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="20_ja4dq"]
-[ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="21_o1kaa"]
-[ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="22_t1vx4"]
-[ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="23_hvbbb"]
-[ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="24_hrtfy"]
+[ext_resource type="Script" uid="uid://bmkw103pryi4x" path="res://ch/Tally_card/tally_card_main.gd" id="1_aupe7"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_c5j2d"]
+[ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="3_d4abb"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="4_menha"]
+[ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="5_5bmpj"]
+[ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="6_otucy"]
+[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="7_go2lv"]
+[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="8_p0gax"]
+[ext_resource type="AudioStream" uid="uid://bixius52c3n2s" path="res://sfx/shop_reroll_sfx_01.ogg" id="9_4qbm1"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="10_0nab8"]
+[ext_resource type="AudioStream" uid="uid://cuvk051xuj0c7" path="res://sfx/misc-001.ogg" id="11_8h15n"]
+[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="12_ilqs5"]
+[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="13_4uqmo"]
+[ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="14_bpg2o"]
+[ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="15_6grlh"]
+[ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="16_1rr01"]
+[ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="17_jncgn"]
+[ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="18_i67gl"]
 
 [sub_resource type="Animation" id="Animation_tnodp"]
 length = 0.001
@@ -58,6 +58,42 @@ _data = {
 &"rotation": SubResource("Animation_ohn7f")
 }
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1teaa"]
+
+[sub_resource type="Curve" id="Curve_bux34"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_bux34"]
+curve = SubResource("Curve_bux34")
+
+[sub_resource type="Curve" id="Curve_m83ei"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ecf0a"]
+curve = SubResource("Curve_m83ei")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q6qkh"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_velocity_min = 99.99998
+radial_velocity_max = 199.99997
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_ecf0a")
+color = Color(0.85882354, 0.76862746, 0.69803923, 1)
+alpha_curve = SubResource("CurveTexture_bux34")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iforg"]
+
 [sub_resource type="Curve" id="Curve_onfim"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
@@ -95,6 +131,8 @@ color = Color(0.78039217, 0.003921569, 0.007843138, 1)
 alpha_curve = SubResource("CurveTexture_vhsx8")
 hue_variation_min = 0.99999994
 hue_variation_max = 0.99999994
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8txu1"]
 
 [sub_resource type="PrismMesh" id="PrismMesh_7r173"]
 left_to_right = 1.0
@@ -199,10 +237,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-script = ExtResource("1_d46ke")
+script = ExtResource("1_aupe7")
 cash_earned_label = NodePath("CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned/BonusesCashLabel")
 
-[node name="CenterContainer" type="Control" parent="." unique_id=526585292]
+[node name="CenterContainer" type="MarginContainer" parent="." unique_id=721365468]
 custom_minimum_size = Vector2(1200, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -220,20 +258,17 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="MainPanel" type="PanelContainer" parent="CenterContainer" unique_id=785012210]
-custom_minimum_size = Vector2(0, 700)
-layout_mode = 0
-offset_right = 1200.0
-offset_bottom = 705.0
+layout_mode = 2
 mouse_filter = 1
-theme_override_styles/panel = ExtResource("2_cuwcq")
+theme_override_styles/panel = ExtResource("2_c5j2d")
 
-[node name="MainPanel" type="Control" parent="CenterContainer/MainPanel" unique_id=1247495332]
+[node name="MainPanel" type="VBoxContainer" parent="CenterContainer/MainPanel" unique_id=461386074]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="BackgroundImages" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=889304945]
-anchors_preset = 0
-offset_right = 1198.0
+layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 mouse_filter = 2
@@ -266,7 +301,7 @@ grow_vertical = 2
 scale = Vector2(0.851, 0.851)
 pivot_offset_ratio = Vector2(0.5, 0.46)
 mouse_filter = 2
-texture = ExtResource("7_7r173")
+texture = ExtResource("3_d4abb")
 stretch_mode = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer/MainPanel/MainPanel/BackgroundImages/Control/Reticle" unique_id=1692481063]
@@ -274,13 +309,16 @@ libraries/ = SubResource("AnimationLibrary_tjy4i")
 autoplay = &"rotation"
 speed_scale = 0.8
 
+[node name="SpacePanel" type="Panel" parent="CenterContainer/MainPanel/MainPanel" unique_id=2081657472]
+custom_minimum_size = Vector2(0, 84.29)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_1teaa")
+
 [node name="100_percent" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=961449738]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
-anchors_preset = 0
-offset_top = 84.0
-offset_right = 1198.0
-offset_bottom = 84.0
+layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/100_percent" unique_id=113222203]
 self_modulate = Color(1, 1, 1, 0.39215687)
@@ -322,33 +360,86 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1, 0.87)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_styles/panel = ExtResource("2_cuwcq")
+theme_override_styles/panel = ExtResource("2_c5j2d")
 
-[node name="CashHboxcontainer2" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=1433377188]
-anchors_preset = 0
-offset_top = 84.0
-offset_right = 1198.0
-offset_bottom = 282.0
+[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/100_percent" unique_id=1114605743]
+visible = false
+self_modulate = Color(1, 1, 1, 0.39215687)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -228.50012
+offset_top = 114.000015
+offset_right = 228.5
+offset_bottom = 382.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.17453292
+scale = Vector2(1.27, 1.27)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_type_variation = &"RedRichText"
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/italics_font_size = 248
+bbcode_enabled = true
+text = "[wave][i]100%"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="CenterContainer/MainPanel/MainPanel/100_percent/RichTextLabel2" unique_id=439870327]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.915405
+offset_right = 20.786621
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.87)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = ExtResource("2_c5j2d")
+
+[node name="CashHboxcontainer2" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=1278365589]
+layout_mode = 2
 
 [node name="TotalRocks" type="Control" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2" unique_id=1035013188]
 custom_minimum_size = Vector2(0, 198)
-anchors_preset = 0
-offset_right = 1198.0
-offset_bottom = 198.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="perfectScoreParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=1698175890]
+unique_name_in_owner = true
+z_index = 1
+position = Vector2(368.05127, 128.9744)
+scale = Vector2(1.005127, 1.005127)
+emitting = false
+amount = 50
+lifetime = 2.5
+one_shot = true
+explosiveness = 0.8
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_q6qkh")
+
 [node name="GradeLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=408558362]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 1)
 layout_mode = 0
-offset_top = -15.0
 offset_right = 1196.0
-offset_bottom = 148.78
+offset_bottom = 163.78
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 87
+theme_override_font_sizes/normal_font_size = 57
+theme_override_font_sizes/italics_font_size = 100
 bbcode_enabled = true
 text = "[wave]WON"
 fit_content = true
@@ -358,13 +449,13 @@ vertical_alignment = 1
 
 [node name="GradeCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=905765579]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 0.78431374)
 clip_contents = false
 custom_minimum_size = Vector2(0, 169.82)
 layout_mode = 0
-offset_top = 2.0
 offset_right = 1196.0
-offset_bottom = 171.82
+offset_bottom = 169.82
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 70
@@ -375,30 +466,22 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="CashHboxcontainer" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=548547686]
-visible = false
-anchors_preset = 0
-offset_top = 282.0
-offset_right = 1198.0
-offset_bottom = 410.0
+[node name="CashHboxcontainer" type="HBoxContainer" parent="CenterContainer/MainPanel/MainPanel" unique_id=555082800]
+layout_mode = 2
 
-[node name="CashEarned" type="Control" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=703839610]
-visible = false
+[node name="CashEarned" type="PanelContainer" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=391685329]
 custom_minimum_size = Vector2(98.13, 128)
-anchors_preset = 0
-offset_right = 1198.0
-offset_bottom = 170.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_iforg")
 
 [node name="BonusesCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=263932816]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 0.78431374)
 clip_contents = false
-layout_mode = 0
-offset_top = 8.0
-offset_right = 1198.0
-offset_bottom = 178.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 70
@@ -411,11 +494,10 @@ vertical_alignment = 1
 
 [node name="TotalLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=709325133]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 0.78431374)
 custom_minimum_size = Vector2(0, 170)
-layout_mode = 0
-offset_right = 1198.0
-offset_bottom = 170.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 55
@@ -425,10 +507,9 @@ fit_content = true
 horizontal_alignment = 1
 
 [node name="BonusesLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=1289664472]
+visible = false
 modulate = Color(0.37, 0.33053333, 0.296, 1)
-layout_mode = 0
-offset_right = 1198.0
-offset_bottom = 170.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 57
@@ -440,10 +521,7 @@ horizontal_alignment = 1
 
 [node name="CashOut" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=222821136]
 custom_minimum_size = Vector2(200, 128)
-anchors_preset = 0
-offset_top = 274.0
-offset_right = 1198.0
-offset_bottom = 402.0
+layout_mode = 2
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=151705255]
 position = Vector2(597.2461, 106.37421)
@@ -458,13 +536,15 @@ process_material = SubResource("ParticleProcessMaterial_bux34")
 
 [node name="Winnings_label" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=692688040]
 unique_name_in_owner = true
+visible = false
 self_modulate = Color(0.37, 0.33053333, 0.296, 0.8039216)
 clip_contents = false
 custom_minimum_size = Vector2(182.13, 150)
 layout_mode = 0
 offset_left = 276.0
+offset_top = -40.0
 offset_right = 922.0
-offset_bottom = 217.0
+offset_bottom = 177.0
 size_flags_horizontal = 6
 size_flags_vertical = 4
 theme_type_variation = &"WhiteRichText"
@@ -480,15 +560,15 @@ horizontal_alignment = 1
 
 [node name="TotalCashCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=1643114876]
 unique_name_in_owner = true
+visible = false
 self_modulate = Color(0.37, 0.33053333, 0.296, 0.8039216)
 clip_contents = false
 custom_minimum_size = Vector2(182.13, 150)
 layout_mode = 0
-offset_left = 370.0
-offset_top = 64.0
-offset_right = 835.0
-offset_bottom = 281.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
+offset_left = 507.0
+offset_top = 8.0
+offset_right = 689.13
+offset_bottom = 225.0
 size_flags_horizontal = 6
 size_flags_vertical = 4
 theme_type_variation = &"WhiteRichText"
@@ -515,7 +595,15 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1, 0.87)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_styles/panel = ExtResource("2_cuwcq")
+theme_override_styles/panel = ExtResource("2_c5j2d")
+
+[node name="HSeparator6" type="HSeparator" parent="CenterContainer/MainPanel/MainPanel" unique_id=293657851]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+theme_override_styles/separator = SubResource("StyleBoxEmpty_8txu1")
 
 [node name="GreyCornerPanel" type="Control" parent="CenterContainer/MainPanel" unique_id=963033442]
 unique_name_in_owner = true
@@ -574,6 +662,13 @@ scale = Vector2(1.339, 1.257)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
+[node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/RedCornerPanel/Control" unique_id=1610636013]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_7r173")
+
 [node name="RightTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/RedCornerPanel/Control" unique_id=345573811]
 modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 position = Vector2(203.387, 0)
@@ -593,75 +688,103 @@ libraries/ = SubResource("AnimationLibrary_cuwcq")
 [node name="SFX" type="Node" parent="." unique_id=1207917349]
 
 [node name="shop_coin_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1284900242]
-stream = ExtResource("11_ta7gf")
+stream = ExtResource("4_menha")
 volume_db = -40.0
 
 [node name="Stamp_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1289807409]
-stream = ExtResource("9_3q72g")
+stream = ExtResource("5_5bmpj")
 volume_db = -30.0
 pitch_scale = 0.6
 
 [node name="shop_purchase_01" type="AudioStreamPlayer" parent="SFX" unique_id=1528543384]
-stream = ExtResource("12_bux34")
+stream = ExtResource("6_otucy")
 volume_db = -40.0
 
 [node name="shop_purchase_02" type="AudioStreamPlayer" parent="SFX" unique_id=1104834250]
-stream = ExtResource("13_ecf0a")
+stream = ExtResource("7_go2lv")
 volume_db = -19.0
 
 [node name="shop_purchase_03" type="AudioStreamPlayer" parent="SFX" unique_id=1658921193]
-stream = ExtResource("14_m83ei")
+stream = ExtResource("8_p0gax")
 volume_db = -40.0
 
 [node name="shop_reroll_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1892388045]
-stream = ExtResource("15_t852v")
+stream = ExtResource("9_4qbm1")
 volume_db = -40.0
 
 [node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=607576653]
-stream = ExtResource("16_q6qkh")
+stream = ExtResource("10_0nab8")
 volume_db = -32.0
 
 [node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=415086637]
-stream = ExtResource("16_q6qkh")
+stream = ExtResource("10_0nab8")
 volume_db = -50.0
 
 [node name="purchase" type="AudioStreamPlayer" parent="SFX" unique_id=1632715856]
-stream = ExtResource("17_d46ke")
+stream = ExtResource("11_8h15n")
 volume_db = -40.0
 pitch_scale = 3.0
 
 [node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1292427104]
-stream = ExtResource("18_tjy4i")
+stream = ExtResource("12_ilqs5")
 volume_db = -40.0
 pitch_scale = 2.0
 
 [node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=907807094]
-stream = ExtResource("19_8ryl7")
+stream = ExtResource("13_4uqmo")
 volume_db = -40.0
 pitch_scale = 1.5
 
 [node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=202007315]
-stream = ExtResource("20_ja4dq")
+stream = ExtResource("14_bpg2o")
 volume_db = -34.0
 
 [node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=568955775]
-stream = ExtResource("21_o1kaa")
+stream = ExtResource("15_6grlh")
 volume_db = -20.0
 
 [node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=1065309991]
-stream = ExtResource("22_t1vx4")
+stream = ExtResource("16_1rr01")
 volume_db = -21.0
 
 [node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=739653216]
-stream = ExtResource("23_hvbbb")
+stream = ExtResource("17_jncgn")
 pitch_scale = 0.4
 
 [node name="reveal_skill_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=719620056]
-stream = ExtResource("24_hrtfy")
+stream = ExtResource("18_i67gl")
 volume_db = -40.0
 pitch_scale = 2.0
 
 [node name="perfect_score" type="AudioStreamPlayer" parent="SFX" unique_id=1689027135]
-stream = ExtResource("13_ecf0a")
+stream = ExtResource("7_go2lv")
 volume_db = -14.0
 pitch_scale = 1.1
+
+[node name="Fail_Label" type="RichTextLabel" parent="." unique_id=1930791002]
+unique_name_in_owner = true
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+self_modulate = Color(1, 1, 1, 0)
+clip_contents = false
+custom_minimum_size = Vector2(0, 169.82)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -42.0
+offset_top = -109.910034
+offset_right = 42.0
+offset_bottom = 59.910034
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 100
+bbcode_enabled = true
+text = "$0"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
