@@ -593,6 +593,8 @@ func check_all_rocks_cleared() -> void:
 
 	var round_manager = get_tree().get_first_node_in_group('round_manager')
 	if round_manager != null:
+		if bool(round_manager.get("_continue_open")) or bool(round_manager.get("_continue_resuming")) or bool(round_manager.get("_continue_grace")):
+			return
 		var rocks = round_manager.get("rocks_container")
 		if rocks != null and rocks.has_method("try_continue_sequence"):
 			if rocks.try_continue_sequence():

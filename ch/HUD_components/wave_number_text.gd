@@ -160,6 +160,13 @@ func play_named_banner(text: String) -> void:
 	wave_label.modulate.a = 1.0
 	await start_tween(wave_panel, _original_position, _original_modulate)
 
+
+func play_countdown_banners(from: int = 3) -> void:
+	var start_n := maxi(from, 1)
+	for n in range(start_n, 0, -1):
+		await play_named_banner(str(n))
+
+
 func start_bonus() -> void:
 	wave_label.text = "[font_size=150]BONUS!"
 	

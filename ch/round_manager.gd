@@ -95,6 +95,7 @@ var wave_ending := false
 var player_failed := false
 var force_shop_open := false
 var _continue_open := false
+var _continue_resuming := false
 var _continue_grace := false
 var _continue_intro_shown := false
 var in_display_text_prompt := false
@@ -552,6 +553,14 @@ func finish_level_editor_test_round() -> void:
 	if _level_editor_finishing:
 		return
 	_level_editor_finishing = true
+	_continue_open = false
+	_continue_resuming = false
+	_continue_grace = false
+	var continue_screen := get_tree().get_first_node_in_group("continue_screen")
+	if continue_screen and continue_screen.has_method("close_now"):
+		continue_screen.close_now()
+	elif continue_screen:
+		continue_screen.hide()
 
 	stop_timer()
 	stop_player()
@@ -1262,7 +1271,7 @@ func on_bonus_type1_failed() -> void:
 
 
 func handle_rock_missed() -> void:
-	if _continue_open or _continue_grace:
+	if _continue_open or _continue_resuming or _continue_grace:
 		return
 	wave_progress_feedback.add_strike()
 	check_if_rocks_still_in_air()
@@ -1272,14 +1281,25 @@ func handle_rock_missed() -> void:
 # Three strikes = instant loss. This short-circuits the round/wave state
 # machine entirely rather than routing through WAVE_END/ROUND_END.
 func handle_three_strikes() -> void:
-	if _continue_open:
+	if _continue_open or _continue_resuming:
 		return
-	_continue_open = true
 	restore_final_round_atmosphere()
 	wave_ending = true
 	player_failed = true
 	success = false
 
+	## Round / level editor tests never use arcade continue — bounce back to the editor.
+	if level_editor_test_active:
+		stop_timer()
+		stop_player()
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		if rocks_container:
+			rocks_container.enter_state(rocks_container.State.ROUND_END)
+			rocks_container.reset_all_rocks()
+		await finish_level_editor_test_round()
+		return
+
+	_continue_open = true
 	if round_timer:
 		round_timer.enter_state(round_timer.State.PAUSE_TIMER)
 	else:
@@ -1297,17 +1317,16 @@ func handle_three_strikes() -> void:
 
 	if level_editor_test_active:
 		_continue_open = false
+		_unfreeze_gameplay_for_continue()
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		wave_progress_feedback.start_miss()
-		wave_ending = true
-		unsuccessful_round_locked(false)
+		await finish_level_editor_test_round()
 		return
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	enter_state(RoundState.CONTINUE)
 
 func check_if_rocks_still_in_air() -> void:
-	if wave_ending:
+	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
 		return
 
 	if gl_PlayerState.dataset.total_rocks_in_round_remaining > 0:
@@ -1333,7 +1352,7 @@ func check_if_rocks_still_in_air() -> void:
 	enter_state(RoundState.WAVE_END)
 
 func successful_round() -> void:
-	if wave_ending:
+	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
 		return
 	if rocks_container and rocks_container.has_method("try_continue_sequence"):
 		if rocks_container.try_continue_sequence():
@@ -1449,7 +1468,7 @@ func abort_round_to_shop() -> void:
 
 
 func round_timer_time_out() -> void:
-	if wave_ending:
+	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
 		return
 	wave_ending = true
 
@@ -1499,6 +1518,12 @@ func _clamp_sequence_index_for_replay() -> void:
 func enter_state(new_state: RoundState) -> void:
 	if transitioning_worlds or game_over_triggered:
 		return
+	if (_continue_open or _continue_resuming) and new_state != RoundState.CONTINUE:
+		match new_state:
+			RoundState.WAVE_END, RoundState.CHECK_SCORE, RoundState.ROUND_END, RoundState.TALLY_START, RoundState.TALLY_END, RoundState.SHOP_START:
+				return
+			_:
+				pass
 		
 	current_round_state = new_state
 	
@@ -1616,22 +1641,34 @@ func _unfreeze_gameplay_for_continue() -> void:
 
 
 func _resume_after_continue() -> void:
-	_unfreeze_gameplay_for_continue()
+	_continue_resuming = true
+	wave_ending = true
 	check_round_for_strikes()
 	player_failed = false
-	wave_ending = false
 	success = false
 	game_over_triggered = false
 	force_shop_open = false
 	current_round_state = RoundState.WAVE_START
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if wave_progress_feedback and wave_progress_feedback.has_method("play_countdown_banners"):
+		await wave_progress_feedback.play_countdown_banners(3)
+	elif wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
+		await wave_progress_feedback.play_named_banner("3")
+		await wave_progress_feedback.play_named_banner("2")
+		await wave_progress_feedback.play_named_banner("1")
+	wave_ending = false
+	_unfreeze_gameplay_for_continue()
+	var needs_pulse := true
 	if rocks_container and rocks_container.has_method("resume_from_continue"):
-		rocks_container.resume_from_continue()
+		needs_pulse = bool(rocks_container.resume_from_continue())
+	if needs_pulse and rocks_container:
+		rocks_container.enter_state(rocks_container.State.PULSE_ROCKS)
 	if player:
 		player.start_player()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if is_hold_out_round() or is_endless_mode():
 		if round_timer:
 			round_timer.enter_state(round_timer.State.RESUME_TIMER)
+	_continue_resuming = false
 	_continue_grace = true
 	await get_tree().create_timer(1.0, false).timeout
 	_continue_grace = false
@@ -2496,6 +2533,7 @@ func return_to_difficulty_select() -> void:
 	success = false
 	game_over_triggered = false
 	_continue_open = false
+	_continue_resuming = false
 	_continue_grace = false
 	_continue_intro_shown = false
 	_boss_mode = false

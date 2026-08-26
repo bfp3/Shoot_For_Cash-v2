@@ -747,16 +747,39 @@ func freeze_live_rocks(frozen: bool) -> void:
 			(body as RigidBody3D).freeze = frozen
 			if frozen:
 				(body as RigidBody3D).sleeping = true
+			else:
+				(body as RigidBody3D).sleeping = false
 
 
-func resume_from_continue() -> void:
+## Unfreeze live rocks and keep the script cursor. Returns true when the caller
+## should pulse a freshly prepared beat (empty sky / checkpoint restart).
+func resume_from_continue() -> bool:
+	var remaining := int(gl_PlayerState.dataset.total_rocks_in_round_remaining)
+	if remaining > 0 or _any_live_round_rocks():
+		freeze_live_rocks(false)
+		_sequence_active = true
+		current_state = State.PULSE_ROCKS
+		_bounds_check_active = true
+		if splash_zone:
+			splash_zone.activate_splash_zone()
+		return false
 	freeze_live_rocks(false)
-	var cursor := _sequence_cursor
+	if _script_has_more_commands():
+		_sequence_active = true
+		_sequence_delay_active = false
+		_advancing_sequence = false
+		_auto_pulse_next_beat = true
+		_launch_next_sequence_beat()
+		return false
 	var seq: Array = _full_wave_sequence.duplicate(true)
-	reset_all_rocks()
 	if seq.is_empty():
-		return
+		return false
+	var cursor := 0
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager and round_manager.has_method("get_resume_spawn_index"):
+		cursor = int(round_manager.get_resume_spawn_index())
 	start_manual_rock_round(seq, cursor)
+	return true
 
 
 func _has_live_checkpoint() -> bool:

@@ -278,6 +278,7 @@ func timer_rollup_sequence() -> void:
 func update_pause_timer() -> void:
 	_timer_paused = true
 	timer_ticking_sfx.stop()
+	set_process(false)
 	await get_tree().create_timer(0.5).timeout
 	_pause_toggle_locked = false
 	

@@ -200,7 +200,6 @@ func _on_yes_pressed() -> void:
 	if _left:
 		_left.text = "LEFT      %s" % CommonCode.format_money(_cash_amount)
 	_play_coin_sfx()
-	await _show_next_fee_and_resume()
 	_finish(OUTCOME_PAID)
 
 
@@ -246,7 +245,6 @@ func _on_guess(picked_heads: bool) -> void:
 			_left.text = "LEFT      $0"
 		if _status:
 			_status.text = "[center]ALL CASH LOST"
-		await _show_next_fee_and_resume()
 		_finish(OUTCOME_FLIP_WIN)
 	else:
 		_finish(OUTCOME_GIVE_UP)
@@ -256,29 +254,6 @@ func _on_give_up_pressed() -> void:
 	if not _waiting:
 		return
 	_finish(OUTCOME_GIVE_UP)
-
-
-func _show_next_fee_and_resume() -> void:
-	var next_fee := 0
-	if gl_PlayerState and gl_PlayerState.has_method("get_continue_fee"):
-		next_fee = int(gl_PlayerState.get_continue_fee())
-	if _next_fee:
-		_next_fee.text = "[center]NEXT CONTINUE %s" % CommonCode.format_money(next_fee)
-		_next_fee.show()
-	await get_tree().create_timer(0.85, true).timeout
-	if _next_fee:
-		_next_fee.hide()
-	if _resume == null:
-		return
-	_resume.show()
-	var start_n := maxi(resume_from, 1)
-	for n in range(start_n, 0, -1):
-		_resume.text = "[center][wave]%d" % n
-		await get_tree().create_timer(0.55, true).timeout
-		if not _waiting:
-			return
-	_resume.text = "[center][wave]GO"
-	await get_tree().create_timer(0.35, true).timeout
 
 
 func _lock_actions() -> void:
@@ -301,6 +276,7 @@ func _finish(outcome: String) -> void:
 	_outcome = outcome
 	_waiting = false
 	_countdown_token += 1
+	hide()
 	_play_close_sfx()
 
 
