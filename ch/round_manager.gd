@@ -26,19 +26,21 @@ const LAYOUT_PATH_BOSS_BY_ISLAND := {
 const LAYOUT_PATH_BY_PLACE_NAME := {
 	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",
 	"moss3": "res://sc/All_level_layouts/level_layout_moss_03.tscn",
+	"hood": "res://sc/All_level_layouts/level_layout_hood_01.tscn",
 }
 
 ## Camera3D.environment resources per place / boss (layouts no longer carry WorldEnvironment).
 const ENV_PATH_BY_LEVEL := {
 	"start": "res://res/skyEnvironments/greyscale_world.tres",
 	"moss": "res://res/moss_env_v2.tres",
-	"moss2": "res://res/skyEnvironments/boss_1_world_env.tres",
+	"moss2": "res://res/skyEnvironments/moss_env_v2.tres",
 	"moss3": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"redd": "res://res/world_env_redd.tres",
 	"glory": "res://res/skyEnvironments/Level_simple_art_style.tres",
 	"jetz": "res://res/skyEnvironments/greyscale_world.tres",
 	"noir": "res://res/start_04_world_env.tres",
 	"vesper": "res://res/start_05_world_env.tres",
+	"hood": "res://res/skyEnvironments/greyscale_world.tres",
 	
 }
 const ENV_PATH_BY_LAYOUT := {
@@ -51,6 +53,7 @@ const ENV_PATH_BY_LAYOUT := {
 	"res://sc/All_level_layouts/level_layout_05_vesper.tscn": "res://res/start_05_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_moss_02.tscn": "res://res/moss_env_v2.tres",
 	"res://sc/All_level_layouts/level_layout_moss_03.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_hood.tscn": "res://res/skyEnvironments/greyscale_world.tres",
 }
 
 
