@@ -25,7 +25,6 @@ const OUTCOME_GIVE_UP := "give_up"
 @onready var _resume: RichTextLabel = %ResumeCountdownLabel
 @onready var _next_fee: RichTextLabel = %NextFeeLabel
 
-@export var countdown_seconds := 10
 @export var resume_from := 3
 
 var _busy := false
@@ -33,7 +32,6 @@ var _waiting := false
 var _resolving := false
 var _fee_amount := 0
 var _cash_amount := 0
-var _seconds_left := 10
 var _countdown_token := 0
 var _outcome := OUTCOME_GIVE_UP
 
@@ -65,8 +63,6 @@ func play(fee: int, cash: int) -> String:
 	_outcome = OUTCOME_GIVE_UP
 	_fee_amount = maxi(fee, 0)
 	_cash_amount = maxi(cash, 0)
-	_seconds_left = maxi(countdown_seconds, 1)
-	_countdown_token += 1
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_reset_visuals()
 	_refresh_money_labels(_cash_amount, _fee_amount)
@@ -76,7 +72,6 @@ func play(fee: int, cash: int) -> String:
 	if _root:
 		_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_focus_primary()
-	_run_countdown(_countdown_token)
 
 	while _waiting and is_inside_tree():
 		await get_tree().process_frame
@@ -97,6 +92,9 @@ func close_now() -> void:
 
 
 func _reset_visuals() -> void:
+	if _countdown:
+		_countdown.hide()
+		_countdown.text = ""
 	if _guess_panel:
 		_guess_panel.hide()
 	if _result:
@@ -162,23 +160,6 @@ func _focus_primary() -> void:
 		UiFocus.grab_in(_root, _coin_flip)
 	elif _give_up:
 		UiFocus.grab_in(_root, _give_up)
-
-
-func _run_countdown(token: int) -> void:
-	_set_countdown_text(_seconds_left)
-	while _waiting and token == _countdown_token and _seconds_left > 0:
-		await get_tree().create_timer(1.0, true).timeout
-		if not _waiting or token != _countdown_token:
-			return
-		_seconds_left -= 1
-		_set_countdown_text(_seconds_left)
-	if _waiting and token == _countdown_token and _seconds_left <= 0:
-		_finish(OUTCOME_GIVE_UP)
-
-
-func _set_countdown_text(seconds: int) -> void:
-	if _countdown:
-		_countdown.text = "[center]%d" % maxi(seconds, 0)
 
 
 func _on_yes_pressed() -> void:

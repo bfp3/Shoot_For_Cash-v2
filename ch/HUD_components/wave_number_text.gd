@@ -152,19 +152,19 @@ func play_checkpoint_sequence(next_round_number: int, total_rounds: int = -1) ->
 	await play_named_banner(_wave_display_name(wave_count, total_rounds))
 
 
-func play_named_banner(text: String) -> void:
+func play_named_banner(text: String, duration_sec: float = -1.0) -> void:
 	show()
 	if wave_panel:
 		wave_panel.show()
 	wave_label.text = "[i]%s" % text
 	wave_label.modulate.a = 1.0
-	await start_tween(wave_panel, _original_position, _original_modulate)
+	await start_tween(wave_panel, _original_position, _original_modulate, duration_sec)
 
 
-func play_countdown_banners(from: int = 3) -> void:
+func play_countdown_banners(from: int = 3, seconds_each: float = 0.5) -> void:
 	var start_n := maxi(from, 1)
 	for n in range(start_n, 0, -1):
-		await play_named_banner(str(n))
+		await play_named_banner(str(n), seconds_each)
 
 
 func start_bonus() -> void:
@@ -250,7 +250,7 @@ func start_perfect() -> void:
 	start_tween(perfect_panel, _perfect_original_position, _perfect_original_modulate)
 
 
-func start_tween(panel: Control, original_position: Vector2, original_modulate: Color) -> void:
+func start_tween(panel: Control, original_position: Vector2, original_modulate: Color, duration_sec: float = -1.0) -> void:
 	panel.position = original_position - Vector2(slide_distance, 0)
 	panel.modulate = Color(
 		original_modulate.r,
@@ -259,16 +259,27 @@ func start_tween(panel: Control, original_position: Vector2, original_modulate: 
 		0.0
 	)
 
+	var intro := 0.2
+	var fade_in := fade_in_time
+	var hold := hold_time
+	var fade_out := fade_out_time
+	if duration_sec > 0.0:
+		intro = 0.0
+		fade_in = minf(0.08, duration_sec * 0.2)
+		fade_out = minf(0.12, duration_sec * 0.24)
+		hold = maxf(duration_sec - fade_in - fade_out, 0.05)
+
 	var tween := create_tween()
 
-	tween.tween_interval(0.2)
-	tween.tween_property(panel, "position", original_position, fade_in_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property(panel, "modulate:a", original_modulate.a, fade_in_time)
-	tween.parallel().tween_callback(fade_in_sfx.play.bind(0.5)).set_delay(0.3)
-	tween.tween_interval(hold_time)
+	if intro > 0.0:
+		tween.tween_interval(intro)
+	tween.tween_property(panel, "position", original_position, fade_in).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(panel, "modulate:a", original_modulate.a, fade_in)
+	tween.parallel().tween_callback(fade_in_sfx.play.bind(0.5)).set_delay(minf(0.3, fade_in + hold * 0.5))
+	tween.tween_interval(hold)
 
-	tween.tween_property(panel, "modulate:a", 0.0, fade_out_time)
-	tween.parallel().tween_property(panel, "position:x", 200.0, fade_out_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).as_relative()
+	tween.tween_property(panel, "modulate:a", 0.0, fade_out)
+	tween.parallel().tween_property(panel, "position:x", 200.0, fade_out).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).as_relative()
 	tween.parallel().tween_callback(fade_in_sfx.play.bind(0.5))
 	await tween.finished
 	

@@ -202,6 +202,7 @@ var _script_sfx_fade_tokens: Dictionary = {}
 ## Fade used when the round ends or the player returns to shop.
 const SCRIPT_SFX_LEAVE_FADE_SEC := 3.0
 var _sequence_active := false
+var _paused_for_continue := false
 var _waiting_until_clear := false
 var _checkpoint_hold := false
 var _ladder_hold := false
@@ -299,6 +300,8 @@ func _process(delta: float) -> void:
 	check_rocks_out_of_bounds()
 
 func enter_state(new_state : State) -> void:
+	if _paused_for_continue and new_state == State.PULSE_ROCKS:
+		return
 	current_state = new_state
 	
 	match current_state:
@@ -326,6 +329,8 @@ func update_inactive() -> void:
 
 # This is the start of arranging the rocks.
 func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
+	if _paused_for_continue:
+		return
 	_full_wave_sequence = sequence.duplicate(true)
 	_sequence_cursor = clampi(resume_index, 0, _full_wave_sequence.size())
 	_sequence_active = true
@@ -397,7 +402,7 @@ func _is_sequence_barrier_cmd(cmd: String) -> bool:
 
 
 func _launch_next_sequence_beat() -> void:
-	if not _sequence_active:
+	if _paused_for_continue or not _sequence_active:
 		return
 
 	if _pending_sequence_delay_sec > 0.0:
@@ -732,10 +737,17 @@ func get_sequence_cursor() -> int:
 
 
 func pause_sequence_for_continue() -> void:
+	_paused_for_continue = true
 	_sequence_active = false
 	_sequence_delay_active = false
 	_advancing_sequence = false
+	_auto_pulse_next_beat = false
+	_waiting_until_clear = true
 	_timed_events_running = false
+	_stream_launches_remaining = 0
+	_cancel_pending_launches()
+	_timed_event_epoch += 1
+	_cancel_wave_telegraph()
 	freeze_live_rocks(true)
 
 
@@ -754,6 +766,7 @@ func freeze_live_rocks(frozen: bool) -> void:
 ## Unfreeze live rocks and keep the script cursor. Returns true when the caller
 ## should pulse a freshly prepared beat (empty sky / checkpoint restart).
 func resume_from_continue() -> bool:
+	_paused_for_continue = false
 	var remaining := int(gl_PlayerState.dataset.total_rocks_in_round_remaining)
 	if remaining > 0 or _any_live_round_rocks():
 		freeze_live_rocks(false)
@@ -1171,6 +1184,7 @@ func _clear_live_balloons() -> void:
 
 
 func _cancel_sequence() -> void:
+	_paused_for_continue = false
 	_sequence_active = false
 	_waiting_until_clear = false
 	_checkpoint_hold = false
@@ -1367,6 +1381,8 @@ func update_prepare_rocks() -> void:
 
 func _pulse_continuation_beat() -> void:
 	await get_tree().create_timer(0.4, false).timeout
+	if _paused_for_continue or not _sequence_active:
+		return
 	if current_state == State.PREPARE_ROCKS:
 		enter_state(State.PULSE_ROCKS)
 
@@ -1454,7 +1470,7 @@ func _run_timed_event_spawns() -> void:
 	var elapsed := 0.0
 
 	for item in schedule:
-		if epoch != _timed_event_epoch:
+		if _paused_for_continue or epoch != _timed_event_epoch:
 			_timed_events_running = false
 			return
 		if current_state != State.PULSE_ROCKS:
@@ -1467,7 +1483,7 @@ func _run_timed_event_spawns() -> void:
 			await get_tree().create_timer(wait_for, false).timeout
 			elapsed += wait_for
 
-		if epoch != _timed_event_epoch:
+		if _paused_for_continue or epoch != _timed_event_epoch:
 			_timed_events_running = false
 			return
 		if current_state != State.PULSE_ROCKS:
@@ -2697,6 +2713,8 @@ func get_angle_bias() -> float:
 	return 10.0
 	
 func bounce_rocks() -> void:
+	if _paused_for_continue:
+		return
 	angle_bias = get_angle_bias()
 	# Prefer the prepare-time plan so launch matches the cached aim points.
 	if _wave_telegraph_plan.is_empty():
@@ -2721,7 +2739,7 @@ func bounce_rocks() -> void:
 		telegraph_columns.visible = true
 
 	for index in manual_rock_sequence.size():
-		if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+		if _paused_for_continue or epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
 			_stream_launches_remaining = 0
 			return
 
@@ -2729,7 +2747,7 @@ func bounce_rocks() -> void:
 			var delay_sec: float = float(_launch_delays_sec[index])
 			if delay_sec > 0.0:
 				await get_tree().create_timer(delay_sec, false).timeout
-				if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+				if _paused_for_continue or epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
 					_stream_launches_remaining = 0
 					return
 
@@ -2740,7 +2758,7 @@ func bounce_rocks() -> void:
 		if telegraph_before_launch:
 			var column := _spawn_column_for_launch_index(index, entry)
 			await _telegraph_column_before_launch(column, epoch)
-			if epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
+			if _paused_for_continue or epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
 				_stream_launches_remaining = 0
 				return
 

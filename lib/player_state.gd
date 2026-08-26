@@ -567,6 +567,9 @@ func add_strike() -> void:
 	if round_manager != null and round_manager.has_method('is_current_round_no_lives'):
 		if round_manager.is_current_round_no_lives():
 			return
+	if round_manager != null:
+		if bool(round_manager.get("_continue_open")) or bool(round_manager.get("_continue_resuming")):
+			return
 
 	dataset.total_current_strikes += 1
 	var max_strikes := get_max_strikes()

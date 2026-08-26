@@ -1631,6 +1631,10 @@ func _freeze_gameplay_for_continue() -> void:
 		balloon_container.process_mode = Node.PROCESS_MODE_DISABLED
 	if has_node("%Splash_zone"):
 		%Splash_zone.deactivate_splash_zone()
+	for node in get_tree().get_nodes_in_group("pineapple"):
+		if node is RigidBody3D:
+			(node as RigidBody3D).freeze = true
+			(node as RigidBody3D).sleeping = true
 
 
 func _unfreeze_gameplay_for_continue() -> void:
@@ -1638,6 +1642,10 @@ func _unfreeze_gameplay_for_continue() -> void:
 		balloon_container.process_mode = Node.PROCESS_MODE_INHERIT
 	if rocks_container and rocks_container.has_method("freeze_live_rocks"):
 		rocks_container.freeze_live_rocks(false)
+	for node in get_tree().get_nodes_in_group("pineapple"):
+		if node is RigidBody3D:
+			(node as RigidBody3D).freeze = false
+			(node as RigidBody3D).sleeping = false
 
 
 func _resume_after_continue() -> void:
@@ -3214,7 +3222,7 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 
 
 func _loop_boss_sequence() -> void:
-	if not is_hold_out_round() or wave_ending or player_failed or _boss_looping:
+	if not is_hold_out_round() or wave_ending or player_failed or _boss_looping or _continue_open or _continue_resuming:
 		return
 	_boss_looping = true
 	var rock_seq := update_rock_sequence()
@@ -3226,7 +3234,7 @@ func _loop_boss_sequence() -> void:
 
 
 func _loop_endless_sequence() -> void:
-	if not is_endless_mode() or wave_ending or player_failed or _endless_looping:
+	if not is_endless_mode() or wave_ending or player_failed or _endless_looping or _continue_open or _continue_resuming:
 		return
 	_endless_looping = true
 	if current_rock_sequence.is_empty():
