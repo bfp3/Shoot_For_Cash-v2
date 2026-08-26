@@ -1,0 +1,676 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ch/canvas_layers/continue_screen.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_cherry"]
+[ext_resource type="FontFile" uid="uid://ch8oru3korcdf" path="res://res/marlbo.ttf" id="3_font"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="4_button"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="5_panel"]
+[ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="6_reticle"]
+[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="7_open"]
+[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="8_close"]
+[ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="9_click1"]
+[ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="10_click2"]
+[ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="11_click3"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="12_focus"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="13_coin"]
+
+[sub_resource type="Curve" id="Curve_alpha"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_alpha"]
+curve = SubResource("Curve_alpha")
+
+[sub_resource type="Curve" id="Curve_scale"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_scale"]
+curve = SubResource("Curve_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bg"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(534.76, 362.53, 1)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+scale_min = 0.02
+scale_max = 0.04
+scale_curve = SubResource("CurveTexture_scale")
+color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+alpha_curve = SubResource("CurveTexture_alpha")
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_spin"]
+resource_name = "rotation"
+length = 4.0
+loop_mode = 2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.17453292519943295, 3.3161255787892263]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_reticle"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"rotation": SubResource("Animation_spin")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+content_margin_left = 22.0
+content_margin_top = 8.0
+content_margin_right = 22.0
+content_margin_bottom = 8.0
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+content_margin_left = 22.0
+content_margin_top = 8.0
+content_margin_right = 22.0
+content_margin_bottom = 8.0
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="ContinueScreen" type="CanvasLayer" groups=["continue_screen"]]
+layer = 95
+script = ExtResource("1_script")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Dim" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0, 0, 0, 0.55)
+
+[node name="MainPanel" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -490.0
+offset_top = -321.0
+offset_right = 490.0
+offset_bottom = 293.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.12, 1.12)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Background" type="Panel" parent="Control/MainPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("5_panel")
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="Control/MainPanel"]
+position = Vector2(490, 307)
+amount = 20
+texture = ExtResource("2_cherry")
+lifetime = 5.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_bg")
+
+[node name="BackgroundImages" type="Control" parent="Control/MainPanel"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Reticle" type="TextureRect" parent="Control/MainPanel/BackgroundImages"]
+modulate = Color(0.91, 0.864955, 0.82809997, 0.11764706)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -495.9357
+offset_right = 512.0
+offset_bottom = 528.06433
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.619, 0.619)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("6_reticle")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Control/MainPanel/BackgroundImages/Reticle"]
+libraries/ = SubResource("AnimationLibrary_reticle")
+autoplay = &"rotation"
+speed_scale = 0.8
+
+[node name="TitleLabel" type="RichTextLabel" parent="Control/MainPanel"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -420.0
+offset_top = 18.0
+offset_right = 420.0
+offset_bottom = 128.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 92
+bbcode_enabled = true
+text = "[center][wave]CONTINUE?"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CountdownLabel" type="RichTextLabel" parent="Control/MainPanel"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -80.0
+offset_top = 118.0
+offset_right = 80.0
+offset_bottom = 198.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+text = "[center]10"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CashLabel" type="RichTextLabel" parent="Control/MainPanel"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -70.0
+offset_right = 280.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "CASH      $0"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FeeLabel" type="RichTextLabel" parent="Control/MainPanel"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -12.0
+offset_right = 280.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "CONTINUE −$100"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Divider" type="Panel" parent="Control/MainPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = 52.0
+offset_right = 220.0
+offset_bottom = 56.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LeftLabel" type="RichTextLabel" parent="Control/MainPanel"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = 58.0
+offset_right = 280.0
+offset_bottom = 118.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 42
+bbcode_enabled = true
+text = "LEFT      $0"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatusLabel" type="RichTextLabel" parent="Control/MainPanel"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = 118.0
+offset_right = 400.0
+offset_bottom = 168.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 28
+bbcode_enabled = true
+text = ""
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="YesButton" type="Button" parent="Control/MainPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 64)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -118.0
+offset_right = -10.0
+offset_bottom = -54.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_colors/font_pressed_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_colors/font_hover_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "YES"
+script = ExtResource("4_button")
+focus_enter_sfx = NodePath("../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../SFX/focus_exit")
+
+[node name="CoinFlipButton" type="Button" parent="Control/MainPanel"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(220, 64)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -118.0
+offset_right = -10.0
+offset_bottom = -54.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_colors/font_pressed_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_colors/font_hover_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "COIN FLIP"
+script = ExtResource("4_button")
+focus_enter_sfx = NodePath("../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../SFX/focus_exit")
+
+[node name="GiveUpButton" type="Button" parent="Control/MainPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 64)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -118.0
+offset_right = 250.0
+offset_bottom = -54.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_colors/font_pressed_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_colors/font_hover_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "GIVE UP"
+script = ExtResource("4_button")
+focus_enter_sfx = NodePath("../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../SFX/focus_exit")
+
+[node name="CoinGuessPanel" type="Control" parent="Control/MainPanel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -210.0
+offset_right = -10.0
+offset_bottom = -54.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="GuessTitle" type="RichTextLabel" parent="Control/MainPanel/CoinGuessPanel"]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -240.0
+offset_top = 0.0
+offset_right = 240.0
+offset_bottom = 40.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 26
+bbcode_enabled = true
+text = "[center]PICK A SIDE"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HeadsButton" type="Button" parent="Control/MainPanel/CoinGuessPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 52)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -110.0
+offset_top = 36.0
+offset_right = 110.0
+offset_bottom = 88.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_colors/font_hover_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "HEADS"
+script = ExtResource("4_button")
+focus_enter_sfx = NodePath("../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../SFX/focus_exit")
+
+[node name="TailsButton" type="Button" parent="Control/MainPanel/CoinGuessPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 52)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -110.0
+offset_top = -56.0
+offset_right = 110.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_colors/font_hover_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "TAILS"
+script = ExtResource("4_button")
+focus_enter_sfx = NodePath("../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../SFX/focus_exit")
+
+[node name="CoinResultLabel" type="RichTextLabel" parent="Control/MainPanel"]
+unique_name_in_owner = true
+visible = false
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 160.0
+offset_right = 300.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[center]HEADS"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextFeeLabel" type="RichTextLabel" parent="Control/MainPanel"]
+unique_name_in_owner = true
+visible = false
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = 150.0
+offset_right = 360.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 36
+bbcode_enabled = true
+text = "[center]NEXT CONTINUE $200"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResumeCountdownLabel" type="RichTextLabel" parent="Control/MainPanel"]
+unique_name_in_owner = true
+visible = false
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = 150.0
+offset_right = 200.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 96
+bbcode_enabled = true
+text = "[center]3"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("7_open")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("8_close")
+volume_db = -40.0
+pitch_scale = 1.5
+
+[node name="hud_click_1" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("9_click1")
+volume_db = -34.0
+
+[node name="hud_click_2" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("10_click2")
+volume_db = -20.0
+
+[node name="hud_click_3" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("11_click3")
+volume_db = -21.0
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("12_focus")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("12_focus")
+volume_db = -50.0
+
+[node name="coin_sfx" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("13_coin")
+volume_db = -22.0

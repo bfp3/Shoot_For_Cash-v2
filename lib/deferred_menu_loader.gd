@@ -13,6 +13,7 @@ const MENU_SCENES := {
 	"ticket_map": "res://ch/Shop/MapIslandSelect.tscn",
 	"difficulty_select": "res://ch/canvas_layers/start_menu_difficulty_select.tscn",
 	"stage_complete": "res://ch/canvas_layers/stage_complete_screen.tscn",
+	"continue": "res://ch/canvas_layers/continue_screen.tscn",
 	"debug_chat": "res://ch/HUD_components/debug_tool_chatbox.tscn",
 }
 
@@ -92,6 +93,10 @@ func ensure_stage_complete() -> CanvasLayer:
 	return ensure("stage_complete") as CanvasLayer
 
 
+func ensure_continue() -> CanvasLayer:
+	return ensure("continue") as CanvasLayer
+
+
 func ensure_debug_chat() -> Node:
 	if not OS.is_debug_build():
 		return null
@@ -108,7 +113,7 @@ func _load_packed(path: String) -> PackedScene:
 
 
 func _parent_instance(key: String, inst: Node) -> void:
-	if key == "pause" or key == "debug_chat" or key == "stage_complete":
+	if key == "pause" or key == "debug_chat" or key == "stage_complete" or key == "continue":
 		# Pause / debug chat / stage complete sit beside Main content, not under HUD canvas.
 		get_parent().add_child(inst)
 		return
@@ -186,5 +191,11 @@ func _configure_instance(key: String, inst: Node) -> void:
 			inst.name = "StageCompleteScreen"
 			if not inst.is_in_group("stage_complete_screen"):
 				inst.add_to_group("stage_complete_screen")
+			if inst is CanvasLayer:
+				(inst as CanvasLayer).hide()
+		"continue":
+			inst.name = "ContinueScreen"
+			if not inst.is_in_group("continue_screen"):
+				inst.add_to_group("continue_screen")
 			if inst is CanvasLayer:
 				(inst as CanvasLayer).hide()

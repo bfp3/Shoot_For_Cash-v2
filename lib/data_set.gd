@@ -35,6 +35,10 @@ var dataset_float : Dictionary = {
 	,"price_balloon_buster"			: [3, 6, 12, 56,125,400,800.1200,2400]
 	,'price_time_upgrade' 			: [500,500,500,500,500,500,500,500]
 	,"price_bonus_round_pineapples" : [200]
+	## First continue fee by title-screen difficulty. Each successful continue doubles it.
+	,"continue_fee_beginner"		: [50]
+	,"continue_fee_advanced"		: [100]
+	,"continue_fee_expert"			: [150]
 	
 	,'power_ticket_moss' 			: [0]
 	

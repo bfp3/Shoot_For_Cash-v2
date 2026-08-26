@@ -94,6 +94,9 @@ var success := false
 var wave_ending := false
 var player_failed := false
 var force_shop_open := false
+var _continue_open := false
+var _continue_grace := false
+var _continue_intro_shown := false
 var in_display_text_prompt := false
 var player_can_progress := false
 
@@ -204,7 +207,8 @@ enum RoundState {
 	PAUSE,
 	RESUME,
 	GAME_WON,
-	START_START
+	START_START,
+	CONTINUE
 	}
 
 @export var current_round_state : RoundState = RoundState.INACTIVE
@@ -1258,6 +1262,8 @@ func on_bonus_type1_failed() -> void:
 
 
 func handle_rock_missed() -> void:
+	if _continue_open or _continue_grace:
+		return
 	wave_progress_feedback.add_strike()
 	check_if_rocks_still_in_air()
 	
@@ -1266,15 +1272,20 @@ func handle_rock_missed() -> void:
 # Three strikes = instant loss. This short-circuits the round/wave state
 # machine entirely rather than routing through WAVE_END/ROUND_END.
 func handle_three_strikes() -> void:
+	if _continue_open:
+		return
+	_continue_open = true
 	restore_final_round_atmosphere()
 	wave_ending = true
 	player_failed = true
 	success = false
-	_snapshot_endless_elapsed()
-	record_endless_run_result()
 
-	stop_timer()
+	if round_timer:
+		round_timer.enter_state(round_timer.State.PAUSE_TIMER)
+	else:
+		stop_timer()
 	stop_player()
+	_freeze_gameplay_for_continue()
 	
 	var strike_hud = null
 	if wave_progress_feedback and "strike_hud" in wave_progress_feedback:
@@ -1283,11 +1294,17 @@ func handle_three_strikes() -> void:
 		await strike_hud.wait_until_finale_finished()
 	else:
 		await get_tree().create_timer(2.0, false).timeout
-	
+
+	if level_editor_test_active:
+		_continue_open = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		wave_progress_feedback.start_miss()
+		wave_ending = true
+		unsuccessful_round_locked(false)
+		return
+
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	wave_progress_feedback.start_miss()
-	wave_ending = true
-	unsuccessful_round_locked(not level_editor_test_active)
+	enter_state(RoundState.CONTINUE)
 
 func check_if_rocks_still_in_air() -> void:
 	if wave_ending:
@@ -1533,6 +1550,9 @@ func enter_state(new_state: RoundState) -> void:
 			
 		RoundState.START_START:
 			update_start_menu()
+
+		RoundState.CONTINUE:
+			update_continue()
 			
 func update_start_menu() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -1551,6 +1571,78 @@ func update_start_menu() -> void:
 	if player and player.has_method("hide_ammo_panel_instant"):
 		player.hide_ammo_panel_instant()
 	_open_difficulty_select_menu()
+
+
+func update_continue() -> void:
+	_continue_open = true
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	var screen: Node = null
+	if menus and menus.has_method("ensure_continue"):
+		screen = menus.ensure_continue()
+	if screen == null:
+		screen = get_tree().get_first_node_in_group("continue_screen")
+	var fee := 100
+	var cash := 0
+	if gl_PlayerState.has_method("get_continue_fee"):
+		fee = int(gl_PlayerState.get_continue_fee())
+	if gl_PlayerState.has_method("get_spendable_cash"):
+		cash = int(gl_PlayerState.get_spendable_cash())
+	else:
+		cash = int(gl_PlayerState.dataset.get("cash", 0)) + int(gl_PlayerState.dataset.get("bonus_cash", 0))
+	var outcome := "give_up"
+	if screen and screen.has_method("play"):
+		outcome = String(await screen.play(fee, cash))
+	_continue_open = false
+	if outcome == "paid" or outcome == "flip_win":
+		await _resume_after_continue()
+	else:
+		await _game_over_from_continue()
+
+
+func _freeze_gameplay_for_continue() -> void:
+	if rocks_container and rocks_container.has_method("pause_sequence_for_continue"):
+		rocks_container.pause_sequence_for_continue()
+	if balloon_container:
+		balloon_container.process_mode = Node.PROCESS_MODE_DISABLED
+	if has_node("%Splash_zone"):
+		%Splash_zone.deactivate_splash_zone()
+
+
+func _unfreeze_gameplay_for_continue() -> void:
+	if balloon_container:
+		balloon_container.process_mode = Node.PROCESS_MODE_INHERIT
+	if rocks_container and rocks_container.has_method("freeze_live_rocks"):
+		rocks_container.freeze_live_rocks(false)
+
+
+func _resume_after_continue() -> void:
+	_unfreeze_gameplay_for_continue()
+	check_round_for_strikes()
+	player_failed = false
+	wave_ending = false
+	success = false
+	game_over_triggered = false
+	force_shop_open = false
+	current_round_state = RoundState.WAVE_START
+	if rocks_container and rocks_container.has_method("resume_from_continue"):
+		rocks_container.resume_from_continue()
+	if player:
+		player.start_player()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if is_hold_out_round() or is_endless_mode():
+		if round_timer:
+			round_timer.enter_state(round_timer.State.RESUME_TIMER)
+	_continue_grace = true
+	await get_tree().create_timer(1.0, false).timeout
+	_continue_grace = false
+
+
+func _game_over_from_continue() -> void:
+	_snapshot_endless_elapsed()
+	record_endless_run_result()
+	_unfreeze_gameplay_for_continue()
+	stop_timer()
+	await return_to_difficulty_select()
 
 
 func _hide_start_menu_ui() -> void:
@@ -1755,6 +1847,14 @@ func update_wave_start() -> void:
 		if wave_progress_feedback and wave_progress_feedback.has_method("show_strike_hud"):
 			wave_progress_feedback.show_strike_hud()
 	elif current_wave == 0 and not _skip_next_wave_banner:
+		if not _continue_intro_shown and wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
+			_continue_intro_shown = true
+			var intro_fee := 100
+			if gl_PlayerState.has_method("get_continue_fee"):
+				intro_fee = int(gl_PlayerState.get_continue_fee())
+			await wave_progress_feedback.play_named_banner(
+				"STRIKE OUT = %s TO CONTINUE" % CommonCode.format_money(intro_fee)
+			)
 		if resume_index > 0 and wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
 			await wave_progress_feedback.play_named_banner("CHECKPOINT")
 		else:
@@ -2250,6 +2350,12 @@ func return_to_title() -> void:
 	elif stage_complete:
 		stage_complete.hide()
 
+	var continue_screen := get_tree().get_first_node_in_group("continue_screen")
+	if continue_screen and continue_screen.has_method("close_now"):
+		continue_screen.close_now()
+	elif continue_screen:
+		continue_screen.hide()
+
 	var diff_select := get_tree().get_first_node_in_group("difficulty_select")
 	if diff_select and diff_select.has_method("close_pop_up"):
 		diff_select.close_pop_up()
@@ -2376,6 +2482,12 @@ func return_to_difficulty_select() -> void:
 	elif stage_complete:
 		stage_complete.hide()
 
+	var continue_screen := get_tree().get_first_node_in_group("continue_screen")
+	if continue_screen and continue_screen.has_method("close_now"):
+		continue_screen.close_now()
+	elif continue_screen:
+		continue_screen.hide()
+
 	stop_timer()
 	stop_player()
 	force_shop_open = false
@@ -2383,6 +2495,9 @@ func return_to_difficulty_select() -> void:
 	player_failed = false
 	success = false
 	game_over_triggered = false
+	_continue_open = false
+	_continue_grace = false
+	_continue_intro_shown = false
 	_boss_mode = false
 	_boss_looping = false
 	_advance_range_after_hold_out = false

@@ -14,6 +14,7 @@ const COLOR_LOSE := Color("C70102")
 @onready var pool_label: RichTextLabel = $PoolLabel
 @onready var total_cash_label: RichTextLabel = $TotalCash2
 @onready var multiplier_label: RichTextLabel = $MultiplierLabel
+@onready var continue_fee_label: RichTextLabel = $ContinueFeeLabel
 @onready var coin_sfx: AudioStreamPlayer = $CoinSfx
 @onready var kaching_sfx: AudioStreamPlayer = $KachingSfx
 @onready var kaching_sfx_2: AudioStreamPlayer = $KachingSfx2
@@ -61,6 +62,8 @@ func _ready() -> void:
 		total_cash_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if multiplier_label:
 		multiplier_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if continue_fee_label:
+		continue_fee_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(0)
 	_sync_total_from_state(true)
@@ -74,6 +77,8 @@ func _ready() -> void:
 		if EventBus.instance.has_signal("cash_multiplier_changed"):
 			EventBus.instance.cash_multiplier_changed.connect(_on_multiplier_changed)
 		EventBus.instance.update_money.connect(_on_wallet_changed)
+		if EventBus.instance.has_signal("continue_fee_changed"):
+			EventBus.instance.continue_fee_changed.connect(_on_continue_fee_changed)
 		EventBus.instance.open_tally_card.connect(hide_for_menus)
 		EventBus.instance.open_shop.connect(hide_for_menus)
 		EventBus.instance.egg_pulsed.connect(show_for_round)
@@ -92,6 +97,7 @@ func show_for_round() -> void:
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(int(_displayed_pool))
 	_refresh_multiplier()
+	_refresh_continue_fee()
 	show()
 	modulate.a = 1.0
 
@@ -111,6 +117,24 @@ func _refresh_multiplier() -> void:
 	multiplier_label.text = "x%d" % maxi(mult, 1)
 
 
+func _on_continue_fee_changed(_new_fee: int = 0) -> void:
+	_refresh_continue_fee()
+
+
+func _refresh_continue_fee() -> void:
+	if continue_fee_label == null:
+		return
+	var fee := 0
+	if gl_PlayerState and gl_PlayerState.has_method("get_continue_fee"):
+		fee = int(gl_PlayerState.get_continue_fee())
+	continue_fee_label.text = "CONTINUE %s" % CommonCode.format_money(fee)
+	var cash := _live_total_amount()
+	if cash >= fee:
+		continue_fee_label.add_theme_color_override("default_color", COLOR_BANK)
+	else:
+		continue_fee_label.add_theme_color_override("default_color", COLOR_LOSE)
+
+
 func hide_for_menus() -> void:
 	_visible_for_round = false
 	_ceremony_lock = false
@@ -126,6 +150,7 @@ func _on_pool_changed(new_amount: int) -> void:
 	var delta := new_amount - _tracked_pool
 	_tracked_pool = new_amount
 	_tracked_total = _live_total_amount()
+	_refresh_continue_fee()
 	if not _visible_for_round or _animating_settle or _ceremony_lock:
 		_set_pool_text(new_amount)
 		_set_total_text(float(_tracked_total))
@@ -140,6 +165,7 @@ func _on_pool_changed(new_amount: int) -> void:
 
 func _on_wallet_changed() -> void:
 	_tracked_total = _live_total_amount()
+	_refresh_continue_fee()
 	if not _visible_for_round or _animating_settle or _ceremony_lock:
 		_set_total_text(float(_tracked_total))
 		return

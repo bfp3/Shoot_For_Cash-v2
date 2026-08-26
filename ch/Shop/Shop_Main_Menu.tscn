@@ -626,6 +626,33 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 2
 
+[node name="KeepContinueLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = 48.0
+offset_right = 220.0
+offset_bottom = 88.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
+theme_override_font_sizes/normal_font_size = 22
+bbcode_enabled = true
+text = "[center]KEEP $50 FOR CONTINUE"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="SpacePanel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1401745246]
 custom_minimum_size = Vector2(50, 5.045)
 layout_mode = 2
@@ -1237,6 +1264,35 @@ modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_ohn7f")
+
+[node name="ShortContinueWarning" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 90
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -420.0
+offset_top = 220.0
+offset_right = 420.0
+offset_bottom = 290.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(0.7803922, 0.003921569, 0.015686275, 1)
+theme_override_font_sizes/normal_font_size = 36
+bbcode_enabled = true
+text = "[center]THIS LEAVES YOU SHORT"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="_on_shop_back_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PlayButton" to="." method="play_round_button_pressed"]

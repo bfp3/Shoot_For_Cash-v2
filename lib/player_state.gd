@@ -34,6 +34,7 @@ const RESTART_DATASET := {
 	"tickets": 1,
 	"debug_add_cash": 1000,
 	"run_difficulty": "BEGINNER",
+	"continue_count": 0,
 	
 	# Round is set to 1, so that we can play the game instead of going back to start menu
 	"round": 1,
@@ -87,6 +88,7 @@ const DEFAULT_DATASET := {
 	"cash": 500,
 	"stage": 0,
 	"run_difficulty": "BEGINNER",
+	"continue_count": 0,
 	"level_name": "start",
 	"tickets": 0,
 	"debug_add_cash": 1000,
@@ -254,6 +256,8 @@ func set_run_difficulty(stage_name: String) -> void:
 	if cleaned.is_empty():
 		cleaned = "BEGINNER"
 	dataset.run_difficulty = cleaned
+	dataset.continue_count = 0
+	_emit_continue_fee_changed()
 
 
 func get_run_difficulty() -> String:
@@ -261,6 +265,85 @@ func get_run_difficulty() -> String:
 	if cleaned.is_empty():
 		return "BEGINNER"
 	return cleaned
+
+
+func get_spendable_cash() -> int:
+	return int(dataset.get("cash", 0)) + int(dataset.get("bonus_cash", 0))
+
+
+func get_continue_count() -> int:
+	return maxi(int(dataset.get("continue_count", 0)), 0)
+
+
+func get_continue_base_fee() -> int:
+	var key := "continue_fee_beginner"
+	match get_run_difficulty():
+		"ADVANCED":
+			key = "continue_fee_advanced"
+		"EXPERT":
+			key = "continue_fee_expert"
+	var fee := 100
+	if gl_DataSet:
+		fee = int(gl_DataSet.get_value(key, 0))
+	if fee <= 0:
+		match get_run_difficulty():
+			"ADVANCED":
+				return 100
+			"EXPERT":
+				return 150
+			_:
+				return 50
+	return fee
+
+
+func get_continue_fee() -> int:
+	var steps := mini(get_continue_count(), 12)
+	return get_continue_base_fee() * (1 << steps)
+
+
+func pay_continue_fee() -> bool:
+	var fee := get_continue_fee()
+	if get_spendable_cash() < fee:
+		return false
+	_deduct_spendable(fee)
+	_note_continue_used()
+	return true
+
+
+func continue_from_coin_flip() -> void:
+	wipe_all_cash()
+	_note_continue_used()
+
+
+func wipe_all_cash() -> void:
+	dataset.bonus_cash = 0
+	dataset.cash = 0
+	if EventBus.instance:
+		EventBus.instance.cash_pool_changed.emit(0)
+		EventBus.instance.update_money.emit()
+
+
+func _deduct_spendable(amount: int) -> void:
+	if amount <= 0:
+		return
+	var from_pool := mini(amount, int(dataset.get("bonus_cash", 0)))
+	dataset.bonus_cash = int(dataset.bonus_cash) - from_pool
+	amount -= from_pool
+	if amount > 0:
+		dataset.cash = maxi(int(dataset.cash) - amount, 0)
+	if EventBus.instance:
+		EventBus.instance.cash_pool_changed.emit(int(dataset.bonus_cash))
+		EventBus.instance.update_money.emit()
+
+
+func _note_continue_used() -> void:
+	dataset.continue_count = get_continue_count() + 1
+	_emit_continue_fee_changed()
+
+
+func _emit_continue_fee_changed() -> void:
+	if EventBus.instance and EventBus.instance.has_signal("continue_fee_changed"):
+		EventBus.instance.continue_fee_changed.emit(get_continue_fee())
 
 func subtract_penalties_from_cash() -> void:
 	dataset.cash = dataset.cash + dataset.fines
@@ -758,11 +841,19 @@ func log_buy(power_name:String, price:float, unit:int=1) -> bool:
 	if not dataset.has(power_name):
 		print('error in log buy')
 		return false
+
+	var fee := 0
+	if has_method("get_continue_fee"):
+		fee = get_continue_fee()
+	var before := int(dataset.cash)
+	var would_break_reserve := fee > 0 and before >= fee and (before - int(price)) < fee
 	
 	dataset[power_name] += unit
 	dataset.cash = dataset.cash - price
 
 	EventBus.instance.purchase_made.emit(power_name)
+	if would_break_reserve and EventBus.instance.has_signal("continue_reserve_broken"):
+		EventBus.instance.continue_reserve_broken.emit()
 	
 	var d: Dictionary = {
 		"round": dataset.round
@@ -893,6 +984,7 @@ func reset_all() -> void:
 	# Only overlay disk when Load Game is active.
 	if is_persist_enabled():
 		load_meta_progress()
+	_emit_continue_fee_changed()
 
 
 func reset_level() -> void:

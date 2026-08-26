@@ -731,6 +731,34 @@ func get_sequence_cursor() -> int:
 	return _sequence_cursor
 
 
+func pause_sequence_for_continue() -> void:
+	_sequence_active = false
+	_sequence_delay_active = false
+	_advancing_sequence = false
+	_timed_events_running = false
+	freeze_live_rocks(true)
+
+
+func freeze_live_rocks(frozen: bool) -> void:
+	if not has_node("Container_1"):
+		return
+	for body in $Container_1.get_children():
+		if body is RigidBody3D:
+			(body as RigidBody3D).freeze = frozen
+			if frozen:
+				(body as RigidBody3D).sleeping = true
+
+
+func resume_from_continue() -> void:
+	freeze_live_rocks(false)
+	var cursor := _sequence_cursor
+	var seq: Array = _full_wave_sequence.duplicate(true)
+	reset_all_rocks()
+	if seq.is_empty():
+		return
+	start_manual_rock_round(seq, cursor)
+
+
 func _has_live_checkpoint() -> bool:
 	if _active_checkpoint != null and is_instance_valid(_active_checkpoint):
 		if _active_checkpoint.has_method("is_blocking_sky"):

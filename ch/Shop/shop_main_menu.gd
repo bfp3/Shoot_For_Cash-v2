@@ -62,6 +62,10 @@ var _abandon_prompt: Control = null
 func _ready() -> void:
 	
 	EventBus.instance.update_money.connect(update_shop_labels)
+	if EventBus.instance.has_signal("continue_fee_changed"):
+		EventBus.instance.continue_fee_changed.connect(_on_continue_fee_changed)
+	if EventBus.instance.has_signal("continue_reserve_broken"):
+		EventBus.instance.continue_reserve_broken.connect(_on_continue_reserve_broken)
 
 	_music_control_call("ensure_shop_music_playing")
 
@@ -1125,6 +1129,37 @@ func _on_re_roll_pressed() -> void:
 	
 	is_rerolling = false
 
+func _on_continue_fee_changed(_new_fee: int = 0) -> void:
+	_refresh_keep_continue_label()
+
+
+func _refresh_keep_continue_label() -> void:
+	var keep := get_node_or_null("%KeepContinueLabel") as RichTextLabel
+	if keep == null:
+		return
+	var fee := 100
+	if gl_PlayerState and gl_PlayerState.has_method("get_continue_fee"):
+		fee = int(gl_PlayerState.get_continue_fee())
+	keep.text = "[center]KEEP %s FOR CONTINUE" % CommonCode.format_money(fee)
+	if player_cash >= fee:
+		keep.add_theme_color_override("default_color", Color("cf9e5bff"))
+	else:
+		keep.add_theme_color_override("default_color", Color("C70102"))
+
+
+func _on_continue_reserve_broken() -> void:
+	var warning := get_node_or_null("%ShortContinueWarning") as RichTextLabel
+	if warning == null:
+		return
+	warning.text = "[center]THIS LEAVES YOU SHORT"
+	warning.modulate.a = 1.0
+	warning.show()
+	var tween := create_tween()
+	tween.tween_interval(1.4)
+	tween.tween_property(warning, "modulate:a", 0.0, 0.35)
+	tween.tween_callback(warning.hide)
+
+
 func purchase_denied_tween() -> void:
 	$SFX/purchase.play()
 	var denied_tween := create_tween()
@@ -1146,6 +1181,7 @@ func update_shop_labels() -> void:
 	cash_label.text = _format_cash_label(player_cash)
 	update_cash_label_color()
 	update_cost_label()
+	_refresh_keep_continue_label()
 	return
 	#if price_reroll == 0:
 		#reroll_button.get_child(0).text = "REROLL\n[wave][color=#c70102]FREE[/color]"
