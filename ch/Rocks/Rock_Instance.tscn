@@ -1198,8 +1198,7 @@ script = ExtResource("18_sjja1")
 delays = {
 &"Smoke_quick": 0.0,
 &"Sparks01": 0.0,
-&"embers": 0.5,
-&"upward_smoke_glow": 0.0
+&"embers": 0.5
 }
 
 [node name="embers" type="GPUParticles3D" parent="Hazard_AoE2" unique_id=2093856674]
@@ -1216,6 +1215,7 @@ process_material = SubResource("ParticleProcessMaterial_65uxc")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
 [node name="upward_smoke_glow" type="GPUParticles3D" parent="Hazard_AoE2" unique_id=603999832 groups=["smoke_particles"]]
+visible = false
 material_override = SubResource("ShaderMaterial_fw7wv")
 cast_shadow = 0
 emitting = false

@@ -234,7 +234,8 @@ func _spawn_gain_chip(amount: int) -> void:
 		var fade := create_tween()
 		fade.tween_property(chip, "modulate:a", 0.0, 0.12)
 		await fade.finished
-	_free_chip(chip)
+	if is_instance_valid(chip):
+		_free_chip(chip)
 
 
 func _gain_chip_target() -> RichTextLabel:

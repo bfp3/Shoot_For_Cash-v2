@@ -318,7 +318,8 @@ range moss2
 		rock 4 b4
 		wait
 
-		sfx-play Windmill_YokoKanno -35.0
+		#sfx-play Windmill_YokoKanno -35.0
+		sfx-play C418 -35.0
 
 		# faster - 1 change
 		pace-normal
@@ -393,7 +394,7 @@ range moss2
 		rock-black 4 b4
 		wait 1000
 
-		# yellows slow
+		# increase the sequencing
 		rock-black 2 b2
 		wait 500
 		rock-black 7 b7
@@ -421,78 +422,151 @@ range moss2
 		rock 4 b4
 		wait
 
+		wait 2000
 
-		wait 3000
+		# frenzy mode
+		rock-black 2 b2
+		wait 500
+		rock-black 7 b7
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		pace-normal
+		rock 2 b2
+		wait 600
+		pace-impossible
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		rock-black 4 b4
+		wait 600
+		pace-impossible
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		pace-normal
+		rock 2 b2
+		wait 600
+		pace-impossible
+		rock-black 4 b4
+		wait 600
+		rock-black 2 b2
+		wait 600
+		pace-normal
+		rock 7 b7
+		wait 600
+		pace-impossible
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 4 b4
+		wait 600
 
+		# questionable break?
+		rock-black 7 b7
+		wait 300
+		rock-black 2 b2
+		wait 300
+		rock-black 4 b4
+		wait
+		wait 1000
+		pace-normal
+		rock 4 b4
+		wait
 
 		# freebies
 		pace-slow
 		wait 3000
-		rock-grey 1 a1
-		wait 50
-		rock-grey 2 a2
-		wait 50
-		rock-grey 3 a3
+		rock-grey 4 a4
 		wait 50
 		rock-grey 4 a4
 		wait 50
-		rock-grey 8 a8
+		rock-grey 4 a4
 		wait 50
 		rock-grey 7 a7
 		wait 50
-		rock-grey 6 a6
+		rock-grey 7 a7
 		wait 50
-		rock-grey 5 a5
+		rock-grey 7 a7
 		wait 50
-		rock-grey 4 a4
+		rock-grey 2 a2
+		wait 50
+		rock-grey 2 a2
+		wait 50
+		rock-grey 2 a2
 		wait
-
-		pace-normal
-		rock 2 b2
-		wait 500
-		rock 7 b7
-		wait 700
-		rock 4 b4
-		wait 1500
-
-		rock-black 4 b4
-		wait 
-
-		wait 2000
-		rock 7 a1
-		wait 2500
-		rock 6 a8
-		wait 0
-		rock 7 a4
-
-		wait 2000
-		rock 1 a7
-		wait 2500
-		rock 3 a1
-		wait 0
-		rock 4 a7
-
-		wait 2500
-		rock 6 a8
-		wait 500
-		rock 1 a4
-		wait 0
-		rock-black 3 a3
 
 		wait 1000
-		rock 1 a4
-		wait 0
-		rock-black 3 a3
-
-		wait 500
-		rock 2 a5
-		wait 0
-		rock-black 4 a4
+		# going back into tricky pattern
+		pace-slow
+		rock 4 b4
+		wait 1000
+		rock 7 b7
+		wait 1400
+		rock 2 b2
+		wait 1500
+		rock-black 4 b4
 		wait
-		clear
+		wait 1000
+		# repeat new pattern, single variation
+		rock 4 b4
+		wait 1000
+		rock 2 b2
+		wait 1000
+		rock 7 b7
+		wait 1400
+		rock-black 7 b7
+		wait 1400
+		rock 4 b4
+		wait 1500
+		rock-black 2 b2
+		wait
 
+		# repeat new pattern, another variation
+		pace-normal
+		rock 2 b2
+		wait 1000
+		rock 7 b7
+		wait 1400
+		rock-black 7 b7
+		wait 1400
+		rock-black 4 b4
+		wait 1400
+		rock 4 b4
+		wait 1500
+		rock-black 4 b4
+		wait
+
+		# repeat new pattern, less wait times
+		rock 2 b2
+		wait 250
+		rock 7 b7
+		wait 350
+		rock-black 7 b7
+		wait 350
+		rock-black 4 b4
+		wait 350
+		rock 4 b4
+		wait 750
+		rock-black 4 b4
+		wait
+
+		wait 1000
+		balloon-check
+		balloon-multi a3
 	round
-		hold out 60000
+		#hold out 60000
 		# first half is sideways rocks - Then black rocks, then balloon walls again, Add some oranges too
 		# Black rocks 1  - Keep these low
 		pace-slow
@@ -516,8 +590,8 @@ range moss2
 		rock-black 4 b4
 		wait
 
-		
-		
+
+
 		# Black rocks 2  -
 
 		balloon c2
@@ -560,7 +634,7 @@ range moss2
 		wait
 
 		clear
-		
+
 		#Link
 		# NA
 
@@ -740,7 +814,7 @@ range moss2
 
 		wait 2500
 		ammo c3
-		
+
 		# Sparse pairs 3 - Adding balloon walls 2
 
 		#Link
@@ -869,66 +943,62 @@ range moss2
 		clear
 		wait 2500
 		ammo c3
-
-
-		
-	
 	round
-		hold out 60000
+		#hold out 60000
 		rock 4 a4
 		wait 3000
 		rock 1 a4
 		wait 2500
-		
+
 		rock 4 a1
 		wait 1500
 		rock 4 a8
 		wait 1500
-		
+
 		rock
 		rock
 		wait 3000
 		rock
 		rock
 		wait 3000
-		
+
 		rock
 		rock
 		wait 1500
 		rock
 		rock
-		
+
 		wait 3000
-		
+
 		rock 1 a1
 		wait 0
 		rock 2 a2
 		wait 0
 		rock 3 a3
-		
+
 		wait 3000
-		
+
 		smokecan 1 a1
 		rock 8 a8
-		
+
 		wait 3000
 		rock
 		wait 4000
-		
+
 		rock 1 a1
 		smokecan 8 a8
-		
+
 		wait 3000
 		smokecan 1 a1
 		rock 8 a8
 		wait 0
 		rock 4 a8
 		wait 3000
-		
+
 		rock
 		wait 3000
-		
-		
+
+
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -937,9 +1007,9 @@ range moss2
 		wait 1000
 		smokecan 1 a8
 		wait 2000
-		
+
 		rock-black 1 a7
-		
+
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -958,9 +1028,9 @@ range moss2
 		rock
 		rock
 		wait 2000
-		
+
 		smokecan 1 a7
-		
+
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -979,7 +1049,7 @@ range moss2
 		rock
 		rock
 		wait 2000
-		
+
 		rock-black 1 a7
 		wait until clear
 range moss3
