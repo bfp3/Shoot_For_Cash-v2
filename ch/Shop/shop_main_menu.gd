@@ -4,6 +4,7 @@ extends Control
 const ENABLE_SHOOT_FOR_CENTS := false
 
 const SHOP_MINI_GAME_SCENE_PATH := "res://ch/Shop/ShopMiniGame.tscn"
+const ABANDON_RUN_PROMPT_PATH := "res://ch/Shop/abandon_run_prompt.tscn"
 const SHOP_PANEL_STYLEBOX := preload("res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres")
 
 @export var round_manager : RoundManager
@@ -55,6 +56,7 @@ var _pause_popup_tween: Tween
 var _pause_popup_rest_scale := Vector2.ONE
 var _pause_popup_rest_position := Vector2.ZERO
 var _shop_mini_game: Control
+var _abandon_prompt: Control = null
 
 
 func _ready() -> void:
@@ -90,6 +92,7 @@ func _ready() -> void:
 	_setup_ammo_count_popup()
 	_setup_pause_label_popup()
 	_setup_shop_extra_buttons()
+	_setup_abandon_run_prompt()
 	_strip_non_interactive_focus(self)
 
 
@@ -159,6 +162,42 @@ func open_map_menu() -> void:
 		push_warning('Shop: map menu missing')
 
 
+func _setup_abandon_run_prompt() -> void:
+	if _abandon_prompt and is_instance_valid(_abandon_prompt):
+		return
+	var packed := load(ABANDON_RUN_PROMPT_PATH) as PackedScene
+	if packed == null:
+		push_warning("Shop: abandon run prompt missing")
+		return
+	_abandon_prompt = packed.instantiate() as Control
+	add_child(_abandon_prompt)
+	_abandon_prompt.hide()
+	if _abandon_prompt.has_signal("confirmed"):
+		_abandon_prompt.confirmed.connect(_on_abandon_run_confirmed)
+	if _abandon_prompt.has_signal("cancelled"):
+		_abandon_prompt.cancelled.connect(_on_abandon_run_cancelled)
+
+
+func _on_shop_back_pressed() -> void:
+	if _abandon_prompt and _abandon_prompt.has_method("open_prompt"):
+		_abandon_prompt.open_prompt()
+		return
+	_on_abandon_run_confirmed()
+
+
+func _on_abandon_run_cancelled() -> void:
+	var play := get_node_or_null("%PlayButton") as Control
+	UiFocus.grab_in(self, play)
+
+
+func _on_abandon_run_confirmed() -> void:
+	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
+		_abandon_prompt.close_prompt()
+	soft_hide_for_level_editor()
+	if round_manager and round_manager.has_method("return_to_difficulty_select"):
+		await round_manager.return_to_difficulty_select()
+
+
 func _format_cash_label(amount: int, waved: bool = true) -> String:
 	var money := CommonCode.format_money(amount)
 	if waved:
@@ -182,9 +221,7 @@ func update_place_label() -> void:
 			place_label.text = ""
 		else:
 			var place_id := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
-			var display := place_id.to_upper()
-			if display.is_empty() or display.to_lower() == "start":
-				display = "MOSS"
+			var display := gl_DataSet.display_place_name(place_id)
 			place_label.text = display
 	## Round number buttons are retired — keep Play / Ammo / Pause, hide the selector row.
 	_hide_round_selector_buttons()
@@ -213,6 +250,8 @@ func _apply_shop_panel_shadow_for_place() -> void:
 
 func _refresh_place_challenge_banner() -> void:
 	var banner := _ensure_boss_challenge_banner()
+	if banner == null:
+		return
 	var is_hold_out := false
 	if round_manager and round_manager.has_method("is_hold_out_round"):
 		is_hold_out = bool(round_manager.is_hold_out_round())
@@ -222,7 +261,6 @@ func _refresh_place_challenge_banner() -> void:
 		is_hold_out = true
 
 	if is_hold_out:
-		banner.visible = true
 		var seconds := 60
 		if round_manager and round_manager.has_method("get_active_timer_seconds"):
 			var s := float(round_manager.get_active_timer_seconds())
@@ -231,14 +269,13 @@ func _refresh_place_challenge_banner() -> void:
 		var boss_fmt := gl_DataSet.get_string("shop_challenge_boss", 0)
 		if boss_fmt.is_empty():
 			boss_fmt = "HOLD OUT\n %d seconds"
-		banner.text = "[center][wave]%s[/wave][/center]" % (boss_fmt % seconds)
+		_set_mission_label_text(banner, boss_fmt % seconds)
 		return
 
 	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
 	var idx := gl_DataSet.get_place_index(place)
 	if idx < 0:
-		banner.visible = false
-		banner.text = ""
+		_set_mission_label_text(banner, "")
 		return
 
 	## Jetz endless: show best survival time once the player has a recorded run.
@@ -247,18 +284,27 @@ func _refresh_place_challenge_banner() -> void:
 		if gl_PlayerState.has_method("get_endless_best_seconds"):
 			best = float(gl_PlayerState.get_endless_best_seconds(place))
 		if best > 0.0:
-			banner.visible = true
 			var time_txt := _format_endless_best_time(best)
-			banner.text = "[center][wave]BEST TIME\n%s[/wave][/center]" % time_txt
+			_set_mission_label_text(banner, "BEST TIME\n%s" % time_txt)
 			return
 
 	var challenge := gl_DataSet.get_string("shop_challenge_text", idx)
-	if challenge.is_empty():
-		banner.visible = false
+	_set_mission_label_text(banner, challenge)
+
+
+func _set_mission_label_text(banner: RichTextLabel, raw: String) -> void:
+	var body := raw.strip_edges()
+	var host := banner.get_parent() as CanvasItem
+	if body.is_empty():
 		banner.text = ""
+		banner.visible = false
+		if host:
+			host.visible = false
 		return
 	banner.visible = true
-	banner.text = "[center][wave]%s[/wave][/center]" % challenge
+	if host:
+		host.visible = true
+	banner.text = "[wave]%s[/wave]" % body
 
 
 func _format_endless_best_time(seconds: float) -> String:
@@ -276,39 +322,9 @@ func _refresh_boss_challenge_banner() -> void:
 func _ensure_boss_challenge_banner() -> RichTextLabel:
 	if _boss_challenge_banner != null and is_instance_valid(_boss_challenge_banner):
 		return _boss_challenge_banner
-	var existing := get_node_or_null("CenterContainer/MainPanel/BackgroundImages/BossChallengeBanner") as RichTextLabel
-	if existing:
-		existing.add_theme_color_override("default_color", Color("5e544b"))
-		_boss_challenge_banner = existing
-		return _boss_challenge_banner
-
-	var parent := get_node_or_null("CenterContainer/MainPanel/BackgroundImages") as Control
-	if parent == null:
-		parent = get_node_or_null("CenterContainer/MainPanel") as Control
-	var banner := RichTextLabel.new()
-	banner.name = "BossChallengeBanner"
-	banner.bbcode_enabled = true
-	banner.fit_content = true
-	banner.scroll_active = false
-	banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	banner.z_index = 30
-	banner.visible = false
-	banner.set_anchors_preset(Control.PRESET_CENTER)
-	banner.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	banner.grow_vertical = Control.GROW_DIRECTION_BOTH
-	banner.offset_left = -280.0
-	banner.offset_top = -40.0
-	banner.offset_right = 280.0
-	banner.offset_bottom = 40.0
-	banner.add_theme_font_size_override("normal_font_size", 80)
-	banner.add_theme_color_override("default_color", Color("5e544b"))
-	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	banner.text = "[center][wave]HOLD OUT \n 60 seconds[/wave][/center]"
-	if parent:
-		parent.add_child(banner)
-	else:
-		add_child(banner)
+	var banner := get_node_or_null("%MissionLabel") as RichTextLabel
+	if banner == null:
+		banner = get_node_or_null("CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MissionLabelControl/MissionLabel") as RichTextLabel
 	_boss_challenge_banner = banner
 	return _boss_challenge_banner
 

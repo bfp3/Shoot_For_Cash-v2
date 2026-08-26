@@ -18,6 +18,10 @@ signal pressed
 	set(value):
 		icon = value
 		_apply_visuals()
+@export_range(0, 3, 1) var icon_count := 1:
+	set(value):
+		icon_count = value
+		_apply_visuals()
 @export var lock_icon: Texture2D:
 	set(value):
 		lock_icon = value
@@ -35,6 +39,10 @@ signal pressed
 @export var circle2_self_modulate := Color("5E544B"):
 	set(value):
 		circle2_self_modulate = value
+		_apply_visuals()
+@export var circle3_modulate := Color("5E544B"):
+	set(value):
+		circle3_modulate = value
 		_apply_visuals()
 @export var top_color := Color("C5D4A4"):
 	set(value):
@@ -67,7 +75,8 @@ signal pressed
 
 @onready var _circle: Control = $Circle
 @onready var _circle2: Control = get_node_or_null("Circle2")
-@onready var _icon: TextureRect = $Icon
+@onready var _circle3: Control = get_node_or_null("Circle3")
+@onready var _icon_box: HBoxContainer = get_node_or_null("HBoxContainer")
 @onready var _banner: ColorRect = $Banner
 @onready var _title: RichTextLabel = $Title
 @onready var _subtitle: RichTextLabel = $Subtitle
@@ -94,17 +103,17 @@ func _apply_visuals() -> void:
 		_circle.self_modulate = circle_self_modulate
 	if _circle2:
 		_circle2.self_modulate = circle2_self_modulate
-	if _icon:
-		_icon.texture = icon
-		_icon.modulate = icon_modulate
-		_icon.visible = icon != null
+	if _circle3:
+		_circle3.modulate = circle3_modulate
+	_apply_icons()
 	if _banner:
 		_banner.color = banner_color
 	if _title:
 		_title.text = "[wave]" + title
 		_title.add_theme_color_override("default_color", title_color)
 	if _subtitle:
-		_subtitle.text = subtitle
+		#_subtitle.text = "[pulse]" + subtitle + "[font_size=28] STAGES"
+		_subtitle.text = "[pulse freq=8 color=#FFFFFF90]" + subtitle + "[font_size=28] STAGES[/font_size][/pulse]"
 		_subtitle.add_theme_color_override("default_color", subtitle_color)
 	if _lock:
 		if lock_icon:
@@ -114,6 +123,27 @@ func _apply_visuals() -> void:
 		_button.disabled = locked or travel_place.strip_edges().is_empty()
 	#modulate.a = 0.62 if locked else 1.0
 	modulate.a = 1.0
+
+
+func _icon_rects() -> Array[TextureRect]:
+	var rects: Array[TextureRect] = []
+	if _icon_box == null:
+		return rects
+	for child in _icon_box.get_children():
+		if child is TextureRect:
+			rects.append(child)
+	return rects
+
+
+func _apply_icons() -> void:
+	var rects := _icon_rects()
+	var show_n := 0 if icon == null else clampi(icon_count, 0, rects.size())
+	if _icon_box:
+		_icon_box.visible = show_n > 0
+	for i in rects.size():
+		rects[i].texture = icon
+		rects[i].modulate = icon_modulate
+		rects[i].visible = i < show_n
 
 func _on_hit() -> void:
 	if locked or travel_place.strip_edges().is_empty():

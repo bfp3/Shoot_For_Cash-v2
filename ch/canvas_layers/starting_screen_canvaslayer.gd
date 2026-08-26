@@ -70,7 +70,14 @@ func enter_state(new_state: State) -> void:
 
 func update_start() -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT
+	visible = true
 	show()
+	menu_in_display = false
+	if splash_screen_control:
+		splash_screen_control.show()
+		splash_screen_control.modulate.a = 1.0
+	if wormfood_logo:
+		wormfood_logo.show()
 	copyright.modulate.a = 0.0
 	game_name.modulate.a = 0.0
 
@@ -109,6 +116,7 @@ func update_inactive() -> void:
 ## Return from gameplay without replaying the Wormfood / title intro.
 func show_title_ready() -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT
+	visible = true
 	show()
 	menu_in_display = true
 	current_state = State.IN_MENU
@@ -119,13 +127,15 @@ func show_title_ready() -> void:
 	game_name.modulate.a = 1.0
 	game_name.scale = Vector2.ONE
 	game_title_background.modulate.a = 1.0
-	splash_screen_control.modulate.a = 1.0
-	if splash_screen_control.get("default_scale") != null:
-		splash_screen_control.scale = splash_screen_control.default_scale
-	else:
-		splash_screen_control.scale = Vector2.ONE
-	splash_screen_control.position = default_position
-	splash_screen_control.pivot_offset_ratio = default_pivot_offset
+	if splash_screen_control:
+		splash_screen_control.show()
+		splash_screen_control.modulate.a = 1.0
+		if splash_screen_control.get("default_scale") != null:
+			splash_screen_control.scale = splash_screen_control.default_scale
+		else:
+			splash_screen_control.scale = Vector2.ONE
+		splash_screen_control.position = default_position
+		splash_screen_control.pivot_offset_ratio = default_pivot_offset
 	_resume_title_children()
 
 	if music_control and music_control.has_method("start_opening_song"):

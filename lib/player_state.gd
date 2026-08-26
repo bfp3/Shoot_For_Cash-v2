@@ -33,6 +33,7 @@ const RESTART_DATASET := {
 	"level_name": "moss", # overwritten in reset_level() from gl_DataSet default range
 	"tickets": 1,
 	"debug_add_cash": 1000,
+	"run_difficulty": "BEGINNER",
 	
 	# Round is set to 1, so that we can play the game instead of going back to start menu
 	"round": 1,
@@ -85,6 +86,7 @@ const RESTART_DATASET := {
 const DEFAULT_DATASET := {
 	"cash": 500,
 	"stage": 0,
+	"run_difficulty": "BEGINNER",
 	"level_name": "start",
 	"tickets": 0,
 	"debug_add_cash": 1000,
@@ -244,6 +246,21 @@ func add_cash(value : int) -> void:
 	dataset.cash = dataset.cash + value
 	if value > 0:
 		add_place_cash_earned(value)
+
+
+func set_run_difficulty(stage_name: String) -> void:
+	var cleaned := stage_name.strip_edges().to_upper()
+	cleaned = cleaned.replace("[WAVE]", "").replace("[/WAVE]", "")
+	if cleaned.is_empty():
+		cleaned = "BEGINNER"
+	dataset.run_difficulty = cleaned
+
+
+func get_run_difficulty() -> String:
+	var cleaned := String(dataset.get("run_difficulty", "BEGINNER")).strip_edges().to_upper()
+	if cleaned.is_empty():
+		return "BEGINNER"
+	return cleaned
 
 func subtract_penalties_from_cash() -> void:
 	dataset.cash = dataset.cash + dataset.fines

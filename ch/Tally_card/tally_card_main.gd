@@ -577,21 +577,7 @@ func update_open_menu() -> void:
 func update_close_menu() -> void:
 	pivot_offset = default_pivot_offset
 	sfx_close_tally()
-
-	if _win_keep_winnings:
-		_lift_winnings_overlay()
-		await get_tree().process_frame
-		if _center:
-			var fade := create_tween()
-			fade.set_trans(Tween.TRANS_LINEAR)
-			fade.set_ease(Tween.EASE_IN)
-			fade.tween_property(_center, "modulate:a", 0.0, 0.28)
-			await fade.finished
-			_center.hide()
-			_center.modulate.a = 1.0
-		menu_in_display = false
-		updating_stats = false
-		return
+	_cleanup_winnings_overlay()
 
 	var tween := create_tween()
 

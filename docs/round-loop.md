@@ -5,7 +5,7 @@
 ## Happy path
 
 ```
-START_START (island map)
+START_START (difficulty select)
   → SHOP_START → SHOP_END
   → ROUND_START (show cash HUD, apply modifiers)
   → WAVE_START (spawn rocks, pulse egg)
@@ -18,13 +18,13 @@ START_START (island map)
   → TALLY_END → SHOP_START
 ```
 
-Range clear (last round of a place, first time): tally, then island map + unlock stamp. Boss win: tally, then map ceremony. Boss loss: shop in the boss arena.
+Range clear (last round of a place, first time): tally, then shop (no island map). Hold-out win: tally, then the next range in `island-shipper.txt` order (shop on that range). Surviving the last hold-out without a strikeout: tally, then the stage-complete screen (fade to black, stage name + cash, DONE → title screen). Shop back: ABANDON RUN? No stays in shop; Yes resets the run and reopens difficulty select. Boss win: tally, then map ceremony. Boss loss: shop in the boss arena.
 
 ## States (`RoundState`)
 
 | State | What happens |
 |---|---|
-| `START_START` | Boot: hide start-menu clone, open island map. |
+| `START_START` | Boot / abandon: hide start-menu clone, open difficulty select. |
 | `SHOP_START` | `EventBus.instance.open_shop`. Reset modifiers. Shop balloons for the upcoming round. |
 | `SHOP_END` | Prompts, then `ROUND_START`. |
 | `ROUND_START` | `gl_PlayerState.next_round()`, modifiers, cash HUD, capture mouse. |
@@ -64,7 +64,7 @@ Script commands. Default poses: BANK CASH left (`-2.8, 3.5, 22.5`), +1 Multiplie
 
 ## Special modes
 
-- **Hold-out (`hold out 90000`):** looping rocks, countdown timer in milliseconds. Win = timer, not clearing rocks. Works on any range, including boss. `boss-timer` is still accepted as an alias.
+- **Hold-out (`hold out 90000`):** looping rocks, countdown timer in milliseconds. Win = timer, not clearing rocks. Works on any range, including boss. After a non-boss hold-out tally, travel to the next `range` header in `island-shipper.txt`. Surviving the last range opens the stage-complete screen instead of the map. `boss-timer` is still accepted as an alias.
 - **Boss:** hold-out in a boss arena. After tally, island map.
 - **Endless:** looping rocks, count-up timer, no wave banners.
 - **Level / round editor (D from shop, editor only):** sandbox under island `test`; does not write wallet unless forced.
@@ -76,6 +76,7 @@ Script commands. Default poses: BANK CASH left (`-2.8, 3.5, 22.5`), +1 Multiplie
 | Spawns | `rocks_container` (`ch/Rocks/rock_manager.gd`) |
 | Shop UI | `shop_main_menu` + `EventBus.instance.open_shop` |
 | Tally | `ch/Tally_card/tally_card_main.gd` + `EventBus.instance.open_tally_card` |
+| Stage complete | `ch/canvas_layers/stage_complete_screen.gd` |
 | Cash HUD | group `money_manager` (`ch/Money/money_labels.gd`) |
 | Strikes | `wave_progress_feedback` |
 | Player | `ch/Player/scripts/player.gd` |

@@ -300,6 +300,21 @@ func get_default_range_name() -> String:
 	return "moss"
 
 
+## HUD / shop label: "moss3" → "MOSS". Trailing digits are internal range ids.
+func display_place_name(place_id: String) -> String:
+	var raw := resolve_place_name(place_id).strip_edges().to_upper()
+	var end := raw.length()
+	while end > 0:
+		var code := raw.unicode_at(end - 1)
+		if code < 48 or code > 57:
+			break
+		end -= 1
+	var display := raw.substr(0, end).strip_edges()
+	if display.is_empty() or display == "START":
+		return get_default_range_name().to_upper()
+	return display
+
+
 ## Testing / free-play room — conventionally place_name index 3 ("jetz").
 func get_testing_place_name() -> String:
 	var names := get_place_names()

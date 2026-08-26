@@ -31,7 +31,8 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 metadata/_edit_use_anchors_ = true
 
-[node name="TimeLabel" type="RichTextLabel" parent="." unique_id=1615499108]
+[node name="XTimeLabel" type="RichTextLabel" parent="." unique_id=1615499108]
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 3
@@ -55,7 +56,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panel2" type="Panel" parent="TimeLabel" unique_id=1651050236]
+[node name="Panel2" type="Panel" parent="XTimeLabel" unique_id=1651050236]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 3
@@ -63,13 +64,54 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -313.33466
-offset_top = -166.80699
-offset_right = 45.128113
-offset_bottom = -6.370529
+offset_left = -331.46277
+offset_top = -164.43646
+offset_right = 27.0
+offset_bottom = -4.0
 grow_horizontal = 0
 grow_vertical = 0
-scale = Vector2(0.846, 0.835)
+scale = Vector2(0.95, 0.835)
+pivot_offset_ratio = Vector2(0.5, 1)
+mouse_filter = 2
+theme_type_variation = &"TimerPanel"
+theme_override_styles/panel = ExtResource("2_l7mi1")
+
+[node name="TimeLabel" type="RichTextLabel" parent="." unique_id=839373091]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -124.5
+offset_top = 16.0
+offset_right = 124.5
+offset_bottom = 159.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 132
+bbcode_enabled = true
+text = "Timer"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel2" type="Panel" parent="TimeLabel" unique_id=487158039]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -179.23138
+offset_top = -92.21823
+offset_right = 179.23138
+offset_bottom = 68.21823
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.95, 0.835)
 pivot_offset_ratio = Vector2(0.5, 1)
 mouse_filter = 2
 theme_type_variation = &"TimerPanel"

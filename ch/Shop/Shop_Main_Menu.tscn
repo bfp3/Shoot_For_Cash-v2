@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dth8aeb528x78" path="res://ch/Shop/shop_main_menu.gd" id="1_wlak1"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_cn8lj"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_y3o4g"]
+[ext_resource type="Texture2D" uid="uid://du24q4ceh1rta" path="res://res/star_png_256.png" id="5_7j408"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="5_vom4t"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="8_kvqbn"]
 [ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="10_ohn7f"]
@@ -100,6 +101,9 @@ border_width_left = 477
 border_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
+
+[sub_resource type="Gradient" id="Gradient_onfim"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jv82y"]
 bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
@@ -351,6 +355,137 @@ autowrap_mode = 0
 horizontal_alignment = 2
 vertical_alignment = 1
 
+[node name="MissionLabelControl" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=341998894]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 122.08835
+offset_bottom = 122.08835
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="MissionLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MissionLabelControl" unique_id=372382077]
+unique_name_in_owner = true
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -148.0
+offset_top = -80.0
+offset_right = 148.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/normal_font_size = 74
+bbcode_enabled = true
+text = "HOLD OUT
+120 seconds"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MissionLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MissionLabelControl" unique_id=1224006194]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -148.0
+offset_top = 40.79123
+offset_right = 148.0
+offset_bottom = 254.79123
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/normal_font_size = 74
+bbcode_enabled = true
+text = "[font_size=52]TO WIN[/font_size]
+[font_size=55]$1,200[/font_size]"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Place_name3" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1187867439]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 165.46185
+offset_bottom = 165.46185
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="PlaceLabel" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name3" unique_id=1531404812]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -168.5
+offset_top = -82.50586
+offset_right = 168.5
+offset_bottom = 173.49414
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.119, 0.119)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("5_7j408")
+stretch_mode = 5
+
+[node name="center_container" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name3" unique_id=1265265496]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 0.80322266
+offset_top = 46.586548
+offset_right = 0.80322266
+offset_bottom = 46.586548
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.195, 0.195)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="left" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name3/center_container" unique_id=31501307]
+points = PackedVector2Array(-628, 0, -130, 0)
+width = 4.0
+gradient = SubResource("Gradient_onfim")
+texture_mode = 2
+
+[node name="right" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name3/center_container" unique_id=1684114475]
+points = PackedVector2Array(753, 0, 130, 0)
+width = 4.0
+gradient = SubResource("Gradient_onfim")
+texture_mode = 2
+
 [node name="MapButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1819880088 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx")]
 unique_name_in_owner = true
 self_modulate = Color(0.58, 0.0057999943, 0.015369854, 0)
@@ -432,8 +567,8 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = -1.6064758
-offset_bottom = -1.6064758
+offset_top = -0.8032532
+offset_bottom = -0.8032532
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.339, 1.257)
@@ -469,9 +604,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -154.99997
-offset_top = -67.54617
+offset_top = -125.19882
 offset_right = 155.0
-offset_bottom = 66.45383
+offset_bottom = 65.80118
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -489,7 +624,7 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
-vertical_alignment = 1
+vertical_alignment = 2
 
 [node name="SpacePanel3" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer" unique_id=1401745246]
 custom_minimum_size = Vector2(50, 5.045)
@@ -1073,9 +1208,9 @@ anchor_top = -0.7757538
 anchor_right = 0.5877193
 anchor_bottom = -0.7757538
 offset_left = 100.0
-offset_top = -8.0
+offset_top = -5.0
 offset_right = 100.0
-offset_bottom = -8.0
+offset_bottom = -5.0
 grow_horizontal = 2
 grow_vertical = 2
 rotation = -3.1415927
@@ -1103,7 +1238,7 @@ rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_ohn7f")
 
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="open_map_menu"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="_on_shop_back_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PlayButton" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo" to="." method="_on_buy_ammo_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]

@@ -1,0 +1,198 @@
+[gd_scene format=3 uid="uid://cvopgkn82mfwb"]
+
+[ext_resource type="Script" uid="uid://dd7l2yk0ai28e" path="res://ch/canvas_layers/stage_complete_screen.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://ch8oru3korcdf" path="res://res/marlbo.ttf" id="2_font"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_button"]
+[ext_resource type="Texture2D" uid="uid://du24q4ceh1rta" path="res://res/star_png_256.png" id="3_ndkd8"]
+[ext_resource type="PackedScene" uid="uid://dm2hgl5lpfk7q" path="res://ch/canvas_layers/difficulty_badge.tscn" id="4_kmigo"]
+[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="4_open"]
+[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="5_close"]
+[ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="6_click1"]
+[ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="7_click2"]
+[ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="8_click3"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="9_focus"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_px0wo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_done"]
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_done_hover"]
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="StageCompleteScreen" type="CanvasLayer" unique_id=1867938796 groups=["stage_complete_screen"]]
+layer = 90
+script = ExtResource("1_script")
+
+[node name="Control" type="Control" parent="." unique_id=1073516441]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FadeRect" type="ColorRect" parent="Control" unique_id=983204991]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Beginner" parent="Control" unique_id=399074094 instance=ExtResource("4_kmigo")]
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 869.00006
+offset_top = 205.0
+offset_right = 1057.0
+offset_bottom = 393.0
+grow_horizontal = 1
+grow_vertical = 1
+scale = Vector2(2.529316, 2.529316)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+title = "BEGINNER"
+subtitle = "ALL"
+icon = ExtResource("3_ndkd8")
+circle_self_modulate = Color(0.84705883, 0.77254903, 0.7176471, 1)
+circle3_modulate = Color(0.8784314, 0.8392157, 0.80784315, 1)
+top_color = Color(0.5921569, 0.09019608, 0.09411765, 1)
+banner_color = Color(0.34117648, 0.2901961, 0.2509804, 1)
+icon_modulate = Color(0.37, 0.33053333, 0.296, 1)
+title_color = Color(1, 1, 1, 0)
+subtitle_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+travel_place = "moss"
+
+[node name="TitleLabel" type="RichTextLabel" parent="Control" unique_id=1184884650]
+unique_name_in_owner = true
+clip_contents = false
+custom_minimum_size = Vector2(1400, 120)
+layout_mode = 0
+offset_left = 260.0
+offset_top = 234.0
+offset_right = 1660.0
+offset_bottom = 368.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/normal_font = ExtResource("2_font")
+theme_override_font_sizes/normal_font_size = 124
+bbcode_enabled = true
+text = "[center][wave] COMPLETE"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Center" type="CenterContainer" parent="Control" unique_id=838822229]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBox" type="VBoxContainer" parent="Control/Center" unique_id=607082792]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Control/Center/VBox" unique_id=1184126829]
+custom_minimum_size = Vector2(0, 525)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_px0wo")
+
+[node name="CashLabel" type="RichTextLabel" parent="Control/Center/VBox" unique_id=1224268751]
+unique_name_in_owner = true
+clip_contents = false
+custom_minimum_size = Vector2(900, 140)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/normal_font = ExtResource("2_font")
+theme_override_font_sizes/normal_font_size = 128
+bbcode_enabled = true
+text = "[center]$0"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DoneButton" type="Button" parent="Control/Center/VBox" unique_id=764891763]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(650, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_colors/font_pressed_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_colors/font_hover_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_font_sizes/font_size = 242
+theme_override_styles/normal = SubResource("StyleBoxFlat_done")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_done")
+theme_override_styles/hover = SubResource("StyleBoxFlat_done_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_done_hover")
+text = "DONE"
+script = ExtResource("3_button")
+focus_enter_sfx = NodePath("../../../../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../../../../SFX/focus_exit")
+
+[node name="SFX" type="Node" parent="." unique_id=1874527373]
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1133415194]
+stream = ExtResource("4_open")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=1197442546]
+stream = ExtResource("5_close")
+volume_db = -40.0
+pitch_scale = 1.5
+
+[node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=1058624519]
+stream = ExtResource("6_click1")
+volume_db = -34.0
+
+[node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=1918812683]
+stream = ExtResource("7_click2")
+volume_db = -20.0
+
+[node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=642864230]
+stream = ExtResource("8_click3")
+volume_db = -21.0
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=309131583]
+stream = ExtResource("9_focus")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=595980327]
+stream = ExtResource("9_focus")
+volume_db = -50.0

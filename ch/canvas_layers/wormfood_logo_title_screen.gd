@@ -12,6 +12,8 @@ extends Control
 
 func start():
 	#sfx_1.play()
+	if black_screen:
+		black_screen.modulate.a = 1.0
 	copyright.modulate.a = 0.0
 	wmf_logo.scale = Vector2.ONE * 10.0
 	wormfood_logo.modulate.a = 0.0

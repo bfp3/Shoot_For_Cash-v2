@@ -1,6 +1,6 @@
 extends HBoxContainer
 
-signal level_chosen(place: String)
+signal level_chosen(place: String, stage_title: String)
 
 @onready var beginner: DifficultyBadge = $Beginner
 @onready var advanced: DifficultyBadge = $Advanced
@@ -20,4 +20,8 @@ func _on_badge_pressed(badge: DifficultyBadge) -> void:
 	var place := String(badge.travel_place).strip_edges().to_lower()
 	if place.is_empty():
 		return
-	level_chosen.emit(place)
+	var stage_title := String(badge.title).strip_edges().to_upper()
+	stage_title = stage_title.replace("[WAVE]", "").replace("[/WAVE]", "")
+	if stage_title.is_empty():
+		stage_title = "BEGINNER"
+	level_chosen.emit(place, stage_title)

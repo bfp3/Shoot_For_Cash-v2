@@ -9,7 +9,7 @@ static func is_level_editor_available() -> bool:
 ## Keep these under sc/All_level_layouts only. Do NOT point at sc/2025_Levels/* giants.
 const LAYOUT_PATH_START := "res://sc/All_level_layouts/level_layout_00_start.tscn"
 const LAYOUT_PATH_BY_PLACE_INDEX := {
-	0: "res://sc/All_level_layouts/level_layout_01_moss.tscn",
+	0: "res://sc/All_level_layouts/level_layout_moss.tscn",
 	1: "res://sc/All_level_layouts/level_layout_02_redd.tscn",
 	2: "res://sc/All_level_layouts/level_layout_03_glory.tscn",
 	3: "res://sc/All_level_layouts/level_layout_000_jetz.tscn",
@@ -19,33 +19,40 @@ const LAYOUT_PATH_BY_PLACE_INDEX := {
 
 ## Boss arena layouts by overworld island index (0 = Shipper, 1 = Anchor, …).
 const LAYOUT_PATH_BOSS_BY_ISLAND := {
-	0: "res://sc/All_level_layouts/level_layout_island_1_boss.tscn",
-	1: "res://sc/All_level_layouts/level_layout_island_2_boss.tscn",
+	0: "res://sc/All_level_layouts/level_layout_moss_02.tscn",
+	1: "res://sc/All_level_layouts/level_layout_moss_03.tscn",
+}
+## Script ranges that are not in gl_DataSet.place_name (e.g. moss2 in island-shipper.txt).
+const LAYOUT_PATH_BY_PLACE_NAME := {
+	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",
+	"moss3": "res://sc/All_level_layouts/level_layout_moss_03.tscn",
 }
 
 ## Camera3D.environment resources per place / boss (layouts no longer carry WorldEnvironment).
 const ENV_PATH_BY_LEVEL := {
 	"start": "res://res/skyEnvironments/greyscale_world.tres",
 	"moss": "res://res/moss_env_v2.tres",
+	"moss2": "res://res/skyEnvironments/boss_1_world_env.tres",
+	"moss3": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"redd": "res://res/world_env_redd.tres",
 	"glory": "res://res/skyEnvironments/Level_simple_art_style.tres",
 	"jetz": "res://res/skyEnvironments/greyscale_world.tres",
 	"noir": "res://res/start_04_world_env.tres",
 	"vesper": "res://res/start_05_world_env.tres",
-	"boss": "res://res/skyEnvironments/boss_1_world_env.tres",
-	"boss-2": "res://res/skyEnvironments/boss_2_world_env.tres",
+	
 }
 const ENV_PATH_BY_LAYOUT := {
 	LAYOUT_PATH_START: "res://res/skyEnvironments/greyscale_world.tres",
-	"res://sc/All_level_layouts/level_layout_01_moss.tscn": "res://res/moss_env_v2.tres",
+	"res://sc/All_level_layouts/level_layout_moss.tscn": "res://res/moss_env_v2.tres",
 	"res://sc/All_level_layouts/level_layout_02_redd.tscn": "res://res/world_env_redd.tres",
 	"res://sc/All_level_layouts/level_layout_03_glory.tscn": "res://res/skyEnvironments/Level_simple_art_style.tres",
 	"res://sc/All_level_layouts/level_layout_000_jetz.tscn": "res://res/skyEnvironments/greyscale_world.tres",
 	"res://sc/All_level_layouts/level_layout_04_noir.tscn": "res://res/start_04_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_05_vesper.tscn": "res://res/start_05_world_env.tres",
-	"res://sc/All_level_layouts/level_layout_island_1_boss.tscn": "res://res/skyEnvironments/boss_1_world_env.tres",
-	"res://sc/All_level_layouts/level_layout_island_2_boss.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_moss_02.tscn": "res://res/moss_env_v2.tres",
+	"res://sc/All_level_layouts/level_layout_moss_03.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
 }
+
 
 const FINAL_ROUND_ATMOSPHERE_SEC := 5.0
 const FINAL_ROUND_LIGHT_DIM := 0.3
@@ -97,6 +104,8 @@ var _boss_timer_seconds := 120.0
 var _boss_looping := false
 ## After a boss win tally, open the island map instead of the shop.
 var _boss_open_map_after_tally := false
+## After a non-boss hold-out win tally, travel to the next range in island-shipper.txt.
+var _advance_range_after_hold_out := false
 ## Island whose boss was just cleared — map plays unlock ceremony on this page.
 var _boss_ceremony_island := -1
 ## Optional UI bar driven while a map travel loads a layout (0–100).
@@ -626,6 +635,37 @@ func get_active_range_name() -> String:
 	if range_id == '' or range_id == gl_DataSet.get_start_place_name() or range_id == 'start':
 		return gl_DataSet.get_default_range_name()
 	return gl_DataSet.resolve_place_name(range_id)
+
+
+## Next playable range after `place_id` in island-shipper.txt header order. Empty if none.
+func _next_range_in_script(place_id: String) -> String:
+	var cur := gl_DataSet.resolve_place_name(place_id).to_lower()
+	if cur.is_empty():
+		return ""
+	var found := false
+	for raw in Parser.list_ranges_in_file(LEVEL_FILE_PATH):
+		var name := String(raw).to_lower()
+		if name.is_empty() or name == "start" or name == "boss" or name.begins_with("boss-"):
+			continue
+		if found:
+			return name
+		if name == cur:
+			found = true
+	return ""
+
+
+## True when `place_id` is the last playable `range` header in island-shipper.txt.
+func _is_last_playable_range(place_id: String) -> bool:
+	var cur := gl_DataSet.resolve_place_name(place_id).to_lower()
+	if cur.is_empty():
+		return false
+	var last := ""
+	for raw in Parser.list_ranges_in_file(LEVEL_FILE_PATH):
+		var name := String(raw).to_lower()
+		if name.is_empty() or name == "start" or name == "boss" or name.begins_with("boss-"):
+			continue
+		last = name
+	return not last.is_empty() and cur == last
 
 
 ## island 0 → "boss", island 1 → "boss-2", island 2 → "boss-3", …
@@ -1318,6 +1358,7 @@ func unsuccessful_round_locked(skip_tally: bool = false) -> void:
 	record_endless_run_result()
 	stop_timer()
 	player_failed = true
+	_advance_range_after_hold_out = false
 	force_shop_open = true
 	success = false
 	EventBus.instance.end_round_rock_missed.emit()
@@ -1363,6 +1404,7 @@ func abort_round_to_shop() -> void:
 	if current_round_state == RoundState.SHOP_START or current_round_state == RoundState.INACTIVE:
 		return
 
+	_advance_range_after_hold_out = false
 	wave_ending = true
 	player_failed = true
 	force_shop_open = false
@@ -1399,6 +1441,8 @@ func round_timer_time_out() -> void:
 	success = true
 	if is_hold_out_round():
 		player_failed = false
+		if not _boss_mode and not is_endless_mode() and not level_editor_test_active:
+			_advance_range_after_hold_out = true
 	enter_state(RoundState.WAVE_END)
 
 	
@@ -1511,8 +1555,6 @@ func update_start_menu() -> void:
 
 func _hide_start_menu_ui() -> void:
 	var start_clone := get_node_or_null("%Start_menu_shop_clone") as Control
-	if start_clone == null:
-		start_clone = get_tree().get_first_node_in_group("start_menu_ui") as Control
 	if start_clone == null:
 		return
 	start_clone.hide()
@@ -2052,7 +2094,23 @@ func update_tally_end() -> void:
 	while in_display_text_prompt:
 		await get_tree().process_frame
 
-	## First-time range clear: tally + perfect already played — go to start and stamp the map.
+	## Hold-out win: next range in island-shipper.txt, or the stage-complete screen on the last range.
+	if _advance_range_after_hold_out:
+		_advance_range_after_hold_out = false
+		if not player_failed and not _boss_mode and not level_editor_test_active:
+			var hold_place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+			if not gl_PlayerState.is_place_completed(hold_place):
+				gl_PlayerState.mark_place_completed(hold_place)
+				_save_level_progress()
+			var next_place := _next_range_in_script(hold_place)
+			if not next_place.is_empty():
+				await travel_to_level(next_place)
+				return
+			if _is_last_playable_range(hold_place):
+				await _show_stage_complete_and_return_to_title()
+				return
+
+	## First-time range clear: last range → complete screen. No island map / map-cash fly-in.
 	if not player_failed and not _boss_mode and not level_editor_test_active:
 		var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
 		if current_rock_sequence.size() > 0 and current_sequence_index >= current_rock_sequence.size():
@@ -2061,11 +2119,8 @@ func update_tally_end() -> void:
 			else:
 				gl_PlayerState.mark_place_completed(place)
 				_save_level_progress()
-				var held_winnings := 0
-				var tally := get_tree().get_first_node_in_group("tally_card_menu")
-				if tally and "pending_winnings" in tally:
-					held_winnings = int(tally.pending_winnings)
-				await open_island_map_after_range_clear(place, held_winnings)
+			if _is_last_playable_range(place):
+				await _show_stage_complete_and_return_to_title()
 				return
 
 	# Level-complete screen owns the next step — don't also open the shop underneath it.
@@ -2155,7 +2210,7 @@ func move_to_start() -> void:
 	call_deferred("_reattach_heavy_layout_nodes", heavy)
 
 
-## Smooth return to the title screen (no scene reload / Wormfood intro).
+## Return to the title screen as a cold boot: start island, Wormfood intro, Start button.
 func return_to_title() -> void:
 	if transitioning_worlds:
 		return
@@ -2170,8 +2225,6 @@ func return_to_title() -> void:
 			if "current_state" in shop_main_menu:
 				shop_main_menu.current_state = shop_main_menu.SkillState.INACTIVE
 	var start_clone := get_node_or_null("%Start_menu_shop_clone") as Control
-	if start_clone == null:
-		start_clone = get_tree().get_first_node_in_group("start_menu_ui") as Control
 	if start_clone and start_clone.visible:
 		start_clone.hide()
 		if "current_state" in start_clone:
@@ -2190,6 +2243,18 @@ func return_to_title() -> void:
 			game_over_menu.modulate.a = 1.0
 		if "current_state" in game_over_menu:
 			game_over_menu.current_state = game_over_menu.State.INACTIVE
+
+	var stage_complete := get_tree().get_first_node_in_group("stage_complete_screen")
+	if stage_complete and stage_complete.has_method("close_now"):
+		stage_complete.close_now()
+	elif stage_complete:
+		stage_complete.hide()
+
+	var diff_select := get_tree().get_first_node_in_group("difficulty_select")
+	if diff_select and diff_select.has_method("close_pop_up"):
+		diff_select.close_pop_up()
+	elif diff_select:
+		diff_select.hide()
 
 	stop_timer()
 	stop_player()
@@ -2248,19 +2313,28 @@ func return_to_title() -> void:
 	if splash == null and scene_mgr:
 		splash = scene_mgr.get_node_or_null("SplashScreenCanvasLayer")
 
-	## Keep gameplay camera pose after Back to Title — do not snap back to intro cam.
-
 	if scene_mgr and is_instance_valid(scene_mgr.get("main_game_canvas")):
 		scene_mgr.main_game_canvas.hide()
+	if scene_mgr and "_title_camera_swoop_done" in scene_mgr:
+		scene_mgr._title_camera_swoop_done = false
+	if scene_mgr and scene_mgr.has_method("apply_title_camera_pose"):
+		scene_mgr.apply_title_camera_pose()
 
 	if scene_transition_screen:
 		await scene_transition_screen.next_level_finish()
 
-	# Only now — after arriving at start — reveal the title UI.
-	if is_instance_valid(splash) and splash.has_method('show_title_ready'):
-		await splash.show_title_ready()
-	elif is_instance_valid(splash):
-		splash.show()
+	# Boot-style title: splash CanvasLayer (sibling of gameplay HUD) + Start button.
+	if is_instance_valid(splash):
+		if splash is CanvasLayer:
+			(splash as CanvasLayer).layer = 20
+			splash.process_mode = Node.PROCESS_MODE_INHERIT
+			splash.visible = true
+		if splash.has_method("start"):
+			splash.start()
+		elif splash.has_method("show_title_ready"):
+			splash.show_title_ready()
+		else:
+			splash.show()
 	else:
 		# Last resort: back to Quick Start so the player is never soft-locked.
 		push_warning("RoundManager: title splash missing — returning to Quick Start")
@@ -2269,14 +2343,131 @@ func return_to_title() -> void:
 		return
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	enter_state(RoundState.INACTIVE)
+	current_round_state = RoundState.INACTIVE
 	transitioning_worlds = false
+
+
+## Shop back → Yes: reset the run and reopen difficulty select on the start layout.
+func return_to_difficulty_select() -> void:
+	if transitioning_worlds:
+		return
+	transitioning_worlds = true
+
+	if shop_main_menu and shop_main_menu.visible:
+		if shop_main_menu.has_method("soft_hide_for_level_editor"):
+			shop_main_menu.soft_hide_for_level_editor()
+		else:
+			shop_main_menu.hide()
+
+	var map_menu := get_tree().get_first_node_in_group("map_menu")
+	if map_menu and map_menu is CanvasItem and (map_menu as CanvasItem).visible:
+		if map_menu.has_method("close_pop_up"):
+			map_menu.close_pop_up()
+
+	var diff_select := get_tree().get_first_node_in_group("difficulty_select")
+	if diff_select and diff_select.has_method("close_pop_up"):
+		diff_select.close_pop_up()
+	elif diff_select:
+		diff_select.hide()
+
+	var stage_complete := get_tree().get_first_node_in_group("stage_complete_screen")
+	if stage_complete and stage_complete.has_method("close_now"):
+		stage_complete.close_now()
+	elif stage_complete:
+		stage_complete.hide()
+
+	stop_timer()
+	stop_player()
+	force_shop_open = false
+	wave_ending = false
+	player_failed = false
+	success = false
+	game_over_triggered = false
+	_boss_mode = false
+	_boss_looping = false
+	_advance_range_after_hold_out = false
+	current_wave = 0
+	current_sequence_index = 0
+	current_round = 0
+	current_round_state = RoundState.INACTIVE
+
+	if rocks_container:
+		rocks_container.enter_state(rocks_container.State.ROUND_END)
+		rocks_container.reset_all_rocks()
+		rocks_container.hide()
+	if balloon_container and (balloon_container.started or balloon_container.balloons_in_play > 0):
+		await balloon_container.end_round()
+	if bonus_target_manager and bonus_target_manager.has_method("cleanup_bonus_round"):
+		bonus_target_manager.cleanup_bonus_round()
+	if wave_progress_feedback:
+		wave_progress_feedback.hide()
+
+	if scene_transition_screen and scene_transition_screen.has_method("set_destination_place"):
+		scene_transition_screen.set_destination_place("start")
+	if scene_transition_screen:
+		await scene_transition_screen.next_level_start()
+
+	gl_PlayerState.reset_all()
+	gl_PlayerState.dataset.level_name = gl_DataSet.get_start_place_name()
+	var stored = gl_PlayerState.dataset.get("level_progress", {})
+	_level_progress = (stored as Dictionary).duplicate(true) if stored is Dictionary else {}
+
+	move_to_start()
+	if place_name and place_name.has_method("update_place_name"):
+		place_name.update_place_name()
+	if shop_main_menu and shop_main_menu.has_method("sync_rounds_to_progress"):
+		shop_main_menu.sync_rounds_to_progress(0, 0)
+	if player and player.has_method("hide_ammo_panel_instant"):
+		player.hide_ammo_panel_instant()
+	if player and player.has_method("title_screen_end"):
+		player.title_screen_end()
+
+	var scene_mgr := get_tree().get_first_node_in_group("scene_manager")
+	if scene_mgr and is_instance_valid(scene_mgr.get("splash_screen")):
+		var splash: Node = scene_mgr.splash_screen
+		if splash:
+			splash.hide()
+	if scene_mgr and is_instance_valid(scene_mgr.get("main_game_canvas")):
+		scene_mgr.main_game_canvas.show()
+
+	if scene_transition_screen:
+		await scene_transition_screen.next_level_finish()
+
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	transitioning_worlds = false
+	enter_state(RoundState.START_START)
+
+
+## Last-range survival: fade to black, show stage complete, then title on DONE.
+func _show_stage_complete_and_return_to_title() -> void:
+	enter_state(RoundState.INACTIVE)
+	stop_timer()
+	stop_player()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	var screen: Node = null
+	if menus and menus.has_method("ensure_stage_complete"):
+		screen = menus.ensure_stage_complete()
+	if screen == null:
+		screen = get_tree().get_first_node_in_group("stage_complete_screen")
+	var stage_name := "BEGINNER"
+	if gl_PlayerState.has_method("get_run_difficulty"):
+		stage_name = String(gl_PlayerState.get_run_difficulty())
+	elif gl_PlayerState.dataset.get("run_difficulty", "") != "":
+		stage_name = String(gl_PlayerState.dataset.run_difficulty)
+	var cash := int(gl_PlayerState.dataset.cash)
+	if screen and screen.has_method("play"):
+		await screen.play(stage_name, cash)
+	await return_to_title()
 
 
 func _layout_path_for_level(level_id: String) -> String:
 	## Layouts are bound to place_name *index* so renaming entries in
 	## gl_DataSet.dataset_string.place_name keeps the same scenery.
 	level_id = gl_DataSet.resolve_place_name(level_id)
+	var named := String(LAYOUT_PATH_BY_PLACE_NAME.get(level_id.to_lower(), ""))
+	if not named.is_empty():
+		return named
 	var idx := gl_DataSet.get_place_index(level_id)
 	if LAYOUT_PATH_BY_PLACE_INDEX.has(idx):
 		return String(LAYOUT_PATH_BY_PLACE_INDEX[idx])
@@ -2625,6 +2816,7 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	_boss_mode = false
 	_boss_looping = false
 	_boss_open_map_after_tally = false
+	_advance_range_after_hold_out = false
 	_boss_ceremony_island = -1
 
 	if rocks_container:
@@ -3300,20 +3492,3 @@ func _input(event: InputEvent) -> void:
 		if event.keycode == KEY_BACKSPACE and level_editor_test_active:
 			abort_level_editor_test()
 			get_viewport().set_input_as_handled()
-	#if Input.is_action_just_pressed('backward'):
-		#enter_state(RoundState.TALLY_START)
-#func _input(event: InputEvent) -> void:
-	#if Input.is_key_label_pressed(KEY_8):
-		#unsuccessful_round()
-#
-	#if Input.is_key_label_pressed(KEY_7):
-		#successful_round()
-		#
-	#if Input.is_key_label_pressed(KEY_6) && !success:
-		#success = true
-		#shop_main_menu.mark_round_as_perfect()
-		#
-		#shop_main_menu.increase_round_available()
-		#
-		#current_wave = 3
-		#successful_round()

@@ -836,8 +836,11 @@ func setup_rock_type() -> void:
 			small_rock.visible = true
 			current_mesh = small_rock
 			assign_random_mesh(current_mesh)
-			_tint_mesh(Color(0.52, 0.52, 0.55))
-			current_mesh.scale = Vector3.ONE * 0.42
+			
+			#var rand_colour = randf_range(0.0,1.0)
+			#_tint_mesh(Color(rand_colour,rand_colour,rand_colour))
+			_tint_mesh(Color(0.92, 0.92, 0.92))
+			current_mesh.scale = Vector3.ONE * randf_range(0.42,0.6)
 			main_col.scale = Vector3.ONE * 0.125 * 1.2
 			rock_type_gravity_scale = 0.1
 			force_mult.clear()
