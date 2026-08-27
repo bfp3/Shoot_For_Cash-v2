@@ -127,20 +127,21 @@ func _wave_display_name(wave: int, total_waves: int) -> String:
 
 
 func _ordinal_round_name(wave: int) -> String:
-	const ORDINALS := [
-		'First',
-		'Second',
-		'Third',
-		'Fourth',
-		'Fifth',
-		'Sixth',
-		'Seventh',
-		'Eighth',
-		'Ninth',
-	]
-	if wave >= 1 and wave <= ORDINALS.size():
-		return '%s Round' % ORDINALS[wave - 1]
-	return 'Round %d' % wave
+	return "Don't Miss~"
+	#const ORDINALS := [
+		#'First',
+		#'Second',
+		#'Third',
+		#'Fourth',
+		#'Fifth',
+		#'Sixth',
+		#'Seventh',
+		#'Eighth',
+		#'Ninth',
+	#]
+	#if wave >= 1 and wave <= ORDINALS.size():
+		#return '%s Round' % ORDINALS[wave - 1]
+	#return 'Round %d' % wave
 
 
 ## Checkpoint pop: "CHECKPOINT" banner, then the next ordinal round banner.

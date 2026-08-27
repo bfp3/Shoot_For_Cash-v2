@@ -174,7 +174,6 @@ shadow_offset = Vector2(5, 5)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hit"]
 
 [node name="ContinueScreen" type="CanvasLayer" unique_id=1321187376 groups=["continue_screen"]]
-layer = 0
 script = ExtResource("1_script")
 resume_in_place = false
 
@@ -244,7 +243,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Reticle" type="TextureRect" parent="Control/MainPanel/BackgroundImages" unique_id=1129850124]
-modulate = Color(0.91, 0.864955, 0.82809997, 0.11764706)
+modulate = Color(0.91, 0.867685, 0.82809997, 0.039215688)
 show_behind_parent = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
@@ -269,120 +268,6 @@ stretch_mode = 5
 libraries/ = SubResource("AnimationLibrary_reticle")
 autoplay = &"rotation"
 speed_scale = 0.8
-
-[node name="RedCornerPanel" type="Control" parent="Control/MainPanel/BackgroundImages" unique_id=1378072250]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -569.8929
-offset_top = -248.42847
-offset_right = 0.107177734
-offset_bottom = -168.4284
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-
-[node name="Control" type="Control" parent="Control/MainPanel/BackgroundImages/RedCornerPanel" unique_id=1437809366]
-modulate = Color(1, 1, 1, 0.56078434)
-show_behind_parent = true
-layout_mode = 1
-anchor_left = 0.5877193
-anchor_top = -0.7757538
-anchor_right = 0.5877193
-anchor_bottom = -0.7757538
-offset_left = 84.0
-offset_top = 88.0
-offset_right = 84.0
-offset_bottom = 88.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = -3.1415927
-scale = Vector2(1.339, 1.257)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="LeftTriangle" type="MeshInstance2D" parent="Control/MainPanel/BackgroundImages/RedCornerPanel/Control" unique_id=215077789]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(-203.8343, 0)
-scale = Vector2(183.79362, -82)
-mesh = SubResource("PrismMesh_2urmc")
-
-[node name="RightTriangle" type="MeshInstance2D" parent="Control/MainPanel/BackgroundImages/RedCornerPanel/Control" unique_id=1140671942]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(203.53, 0)
-rotation = 3.1415925
-scale = Vector2(182.139, -82)
-mesh = SubResource("PrismMesh_iajia")
-
-[node name="Square" type="MeshInstance2D" parent="Control/MainPanel/BackgroundImages/RedCornerPanel/Control" unique_id=1642262413]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-rotation = 3.1415925
-scale = Vector2(225, 82)
-mesh = SubResource("BoxMesh_ivjbg")
-
-[node name="RedCornerPanel2" type="Control" parent="Control/MainPanel/BackgroundImages" unique_id=132708852]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -1248.4644
-offset_top = -248.42847
-offset_right = -678.4641
-offset_bottom = -168.4284
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-
-[node name="Control" type="Control" parent="Control/MainPanel/BackgroundImages/RedCornerPanel2" unique_id=1610884341]
-modulate = Color(1, 1, 1, 0.56078434)
-show_behind_parent = true
-layout_mode = 1
-anchor_left = 0.5877193
-anchor_top = -0.7757538
-anchor_right = 0.5877193
-anchor_bottom = -0.7757538
-offset_left = 84.0
-offset_top = 88.0
-offset_right = 84.0
-offset_bottom = 88.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = -3.1415927
-scale = Vector2(1.339, 1.257)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="LeftTriangle" type="MeshInstance2D" parent="Control/MainPanel/BackgroundImages/RedCornerPanel2/Control" unique_id=983647195]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(-204.5011, 3.0517578e-05)
-scale = Vector2(183.794, 82)
-mesh = SubResource("PrismMesh_2urmc")
-
-[node name="RightTriangle" type="MeshInstance2D" parent="Control/MainPanel/BackgroundImages/RedCornerPanel2/Control" unique_id=880777233]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(203.53, 0)
-rotation = 3.1415925
-scale = Vector2(182.139, -82)
-mesh = SubResource("PrismMesh_iajia")
-
-[node name="Square" type="MeshInstance2D" parent="Control/MainPanel/BackgroundImages/RedCornerPanel2/Control" unique_id=2096016234]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-rotation = 3.1415925
-scale = Vector2(225, 82)
-mesh = SubResource("BoxMesh_ivjbg")
 
 [node name="RedCornerPanel3" type="Control" parent="Control/MainPanel/BackgroundImages" unique_id=962936159]
 unique_name_in_owner = true
@@ -493,184 +378,6 @@ autowrap_mode = 0
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="CashLabel2" type="RichTextLabel" parent="Control/MainPanel" unique_id=1554505364]
-unique_name_in_owner = true
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 25.0
-offset_top = -281.17874
-offset_right = 584.9999
-offset_bottom = -165.17868
-grow_vertical = 0
-mouse_filter = 2
-theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 107
-bbcode_enabled = true
-text = "$480"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-vertical_alignment = 1
-
-[node name="FeeLabel" type="RichTextLabel" parent="Control/MainPanel" unique_id=716728393]
-unique_name_in_owner = true
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -96.49994
-offset_right = 280.0
-offset_bottom = 32.50006
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/default_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
-theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 119
-bbcode_enabled = true
-text = "$100"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CountdownLabel" type="RichTextLabel" parent="Control/MainPanel" unique_id=393603505]
-unique_name_in_owner = true
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -89.0
-offset_top = 239.42859
-offset_right = 89.0
-offset_bottom = 319.42862
-grow_horizontal = 2
-mouse_filter = 2
-theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 3
-theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 39
-bbcode_enabled = true
-text = "[center]CONTINUE FOR"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Divider" type="Panel" parent="Control/MainPanel" unique_id=795262529]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -220.0
-offset_top = 52.0
-offset_right = 220.0
-offset_bottom = 56.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="LeftLabel" type="RichTextLabel" parent="Control/MainPanel" unique_id=198168724]
-unique_name_in_owner = true
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = 58.0
-offset_right = 280.0
-offset_bottom = 118.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 42
-bbcode_enabled = true
-text = "LEFT      $0"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="StatusLabel" type="RichTextLabel" parent="Control/MainPanel" unique_id=395387654]
-unique_name_in_owner = true
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -400.0
-offset_top = 118.0
-offset_right = 400.0
-offset_bottom = 168.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/default_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
-theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 28
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="YesButton" type="Button" parent="Control/MainPanel" unique_id=1408565911]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(220, 64)
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -285.7143
-offset_top = -159.0
-offset_right = -45.714294
-offset_bottom = -54.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_colors/font_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
-theme_override_colors/font_pressed_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
-theme_override_colors/font_hover_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
-theme_override_font_sizes/font_size = 82
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
-text = "PAY"
-script = ExtResource("4_button")
-focus_enter_sfx = NodePath("../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../SFX/focus_exit")
-
 [node name="CoinFlipButton" type="Button" parent="Control/MainPanel" unique_id=1385535061]
 unique_name_in_owner = true
 layout_mode = 1
@@ -694,8 +401,6 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 script = ExtResource("4_button")
-focus_enter_sfx = NodePath("../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../SFX/focus_exit")
 
 [node name="RedPanel3" type="Panel" parent="Control/MainPanel/CoinFlipButton" unique_id=1254131465]
 clip_contents = true
@@ -703,13 +408,11 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 0.8510666
-offset_top = 0.9930515
-offset_right = 2.258606
-offset_bottom = -61.92852
+offset_top = -0.842
+offset_right = 1.407547
+offset_bottom = -63.763573
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.931, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"RedPanel"
@@ -731,10 +434,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -80.0
-offset_top = -89.57147
-offset_right = 80.0
-offset_bottom = 32.428528
+offset_left = -80.00006
+offset_top = -90.656
+offset_right = 79.99994
+offset_bottom = 31.344002
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -749,26 +452,16 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Cost" type="Control" parent="Control/MainPanel/CoinFlipButton" unique_id=545729260]
-custom_minimum_size = Vector2(100, 130)
-anchors_preset = 0
-offset_left = 4.5911865
-offset_top = 0.993042
-offset_right = 4.5911865
-offset_bottom = 0.993042
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="CostLabel" type="RichTextLabel" parent="Control/MainPanel/CoinFlipButton/Cost" unique_id=1418068160]
-modulate = Color(0.75686276, 0.003921569, 0.007843138, 1)
+[node name="CostLabel" type="RichTextLabel" parent="Control/MainPanel/CoinFlipButton" unique_id=1418068160]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1.0
-offset_top = 67.75037
-offset_right = 1.0
-offset_bottom = 12.750366
+offset_left = -0.869
+offset_top = 64.908
+offset_right = 1.1309967
+offset_bottom = 9.907928
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -806,8 +499,6 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 text = "BAIL"
 script = ExtResource("4_button")
-focus_enter_sfx = NodePath("../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../SFX/focus_exit")
 wiggle_amount = 0.5
 wiggle_amount_exit = 0.51
 
@@ -834,18 +525,18 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -240.0
-offset_top = -135.71426
-offset_right = 240.0
-offset_bottom = -95.714264
+offset_left = -225.7143
+offset_top = -150.94406
+offset_right = 254.2857
+offset_bottom = 182.05594
 grow_horizontal = 2
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 theme_override_constants/outline_size = 1
 theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 69
+theme_override_font_sizes/normal_font_size = 106
 bbcode_enabled = true
-text = "[center][wave]PICK A SIDE"
+text = "[wave][font_size=150]or[/font_size]"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -874,8 +565,6 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 text = "HEADS"
 script = ExtResource("4_button")
-focus_enter_sfx = NodePath("../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../SFX/focus_exit")
 
 [node name="TailsButton" type="Button" parent="Control/MainPanel/CoinGuessPanel" unique_id=1524087223]
 unique_name_in_owner = true
@@ -901,8 +590,6 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 text = "TAILS"
 script = ExtResource("4_button")
-focus_enter_sfx = NodePath("../../../../SFX/focus_enter_sfx")
-focus_exit_sfx = NodePath("../../../../SFX/focus_exit")
 
 [node name="CoinResultLabel" type="RichTextLabel" parent="Control/MainPanel" unique_id=1667977859]
 unique_name_in_owner = true
@@ -1095,7 +782,6 @@ color = Color(0, 0, 0, 1)
 
 [node name="CoinHeads" type="Control" parent="Control" unique_id=399074094]
 unique_name_in_owner = true
-visible = false
 z_index = 12
 custom_minimum_size = Vector2(188, 188)
 layout_mode = 1
@@ -1104,12 +790,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -233.0
-offset_top = -94.0
-offset_right = -45.0
+offset_left = -352.175
+offset_top = -93.99997
+offset_right = -164.17499
 offset_bottom = 94.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.667, 1.667)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="Circle" type="Panel" parent="Control/CoinHeads" unique_id=536188618]
@@ -1288,7 +975,6 @@ pitch_scale = 1.6
 
 [node name="CoinTails" type="Control" parent="Control" unique_id=207818723]
 unique_name_in_owner = true
-visible = false
 z_index = 12
 custom_minimum_size = Vector2(188, 188)
 layout_mode = 1
@@ -1297,12 +983,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 9.0
-offset_top = -94.0
-offset_right = 197.0
+offset_left = 176.00012
+offset_top = -93.99997
+offset_right = 364.00037
 offset_bottom = 94.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.667, 1.667)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="Circle" type="Panel" parent="Control/CoinTails" unique_id=853781068]
@@ -1490,7 +1177,7 @@ pitch_scale = 0.6
 [node name="coin_fail_jingle" type="AudioStreamPlayer" parent="SFX" unique_id=486632317]
 stream = ExtResource("14_ccueh")
 volume_db = -30.0
-pitch_scale = 0.6
+pitch_scale = 0.8
 
 [node name="coin_win_jingle" type="AudioStreamPlayer" parent="SFX" unique_id=1994947649]
 stream = ExtResource("15_y5wqd")

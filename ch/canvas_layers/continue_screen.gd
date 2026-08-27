@@ -11,13 +11,8 @@ const ABANDON_RUN_PROMPT_PATH := "res://ch/Shop/abandon_run_prompt.tscn"
 
 @onready var _root: Control = $Control
 @onready var _title: RichTextLabel = %TitleLabel
-@onready var _countdown: RichTextLabel = %CountdownLabel
 @onready var _cash: RichTextLabel = %CashLabel
-@onready var _fee: RichTextLabel = %FeeLabel
-@onready var _left: RichTextLabel = %LeftLabel
-@onready var _status: RichTextLabel = %StatusLabel
 @onready var _yes: Button = %PlayButton
-#@onready var _yes: Button = %YesButton
 @onready var _coin_flip: Button = %CoinFlipButton
 @onready var _give_up: Button = %GiveUpButton
 @onready var _guess_panel: Control = %CoinGuessPanel
@@ -176,9 +171,7 @@ func _reset_visuals() -> void:
 	_cash_roll_tween = null
 	if _cash:
 		_cash.scale = Vector2.ONE
-	if _countdown:
-		_countdown.hide()
-		_countdown.text = ""
+
 	if _guess_panel:
 		_guess_panel.hide()
 		_guess_panel.modulate.a = 1.0
@@ -194,8 +187,7 @@ func _reset_visuals() -> void:
 	if _next_fee:
 		_next_fee.hide()
 		_next_fee.text = ""
-	if _status:
-		_status.text = ""
+
 	if _title:
 		#_title.text = "[center][wave]CONTINUE?"
 		_title.text = ""
@@ -232,17 +224,7 @@ func _reset_visuals() -> void:
 func _refresh_money_labels(cash: int, fee: int) -> void:
 	_displayed_cash = float(cash)
 	_set_cash_text(float(cash))
-	if _fee:
-		#_fee.text = "[pulse]CONTINUE −%s" % CommonCode.format_money(fee)
-		_fee.text = "CONTINUE"
 	_set_play_button_cost(fee)
-	var leftover := cash - fee
-	if _left:
-		if leftover >= 0:
-			_left.text = "LEFT      %s" % CommonCode.format_money(leftover)
-		else:
-			_left.text = "LEFT      %s" % CommonCode.format_money(cash)
-
 
 func _set_play_button_cost(price: int) -> void:
 	if _yes == null:
@@ -287,11 +269,6 @@ func _show_afford_or_flip() -> void:
 	if _coin_flip:
 		_coin_flip.visible = not can_pay
 		_coin_flip.disabled = can_pay
-	if _status:
-		if can_pay:
-			_status.text = ""
-		else:
-			_status.text = "[center]NOT ENOUGH — FLIP TO STAY IN"
 
 
 func _focus_primary() -> void:
@@ -325,8 +302,7 @@ func _on_yes_pressed() -> void:
 	await _roll_cash_to(_cash_amount)
 	if not _waiting:
 		return
-	if _left:
-		_left.text = "LEFT      %s" % CommonCode.format_money(_cash_amount)
+
 	await get_tree().create_timer(1.0, true).timeout
 	if not _waiting:
 		return
@@ -342,8 +318,7 @@ func _on_coin_flip_pressed() -> void:
 		_coin_flip.hide()
 	if _give_up:
 		_give_up.hide()
-	if _status:
-		_status.text = ""
+
 	_clear_oh_no_and_strikes()
 	await _present_coin_choices()
 
@@ -380,8 +355,6 @@ func _on_guess(picked_heads: bool) -> void:
 		_cash_amount = 0
 		_displayed_cash = float(from_cash)
 		_set_cash_text(float(from_cash))
-		if _left:
-			_left.text = "LEFT      $0"
 		_roll_cash_to(0)
 		await _fade_coin_toss_out(1.0)
 		if not _coin_still_active(token):

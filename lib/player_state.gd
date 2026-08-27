@@ -29,7 +29,7 @@ enum PersistMode {
 var persist_mode: PersistMode = PersistMode.TEST
 
 const RESTART_DATASET := {
-	"cash": 500,
+	"cash": 5,
 	"level_name": "moss", # overwritten in reset_level() from gl_DataSet default range
 	"tickets": 1,
 	"debug_add_cash": 1000,
@@ -85,7 +85,7 @@ const RESTART_DATASET := {
 }
 
 const DEFAULT_DATASET := {
-	"cash": 500,
+	"cash": 5,
 	"stage": 0,
 	"run_difficulty": "BEGINNER",
 	"continue_count": 0,

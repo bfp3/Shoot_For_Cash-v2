@@ -1456,54 +1456,22 @@ unique_name_in_owner = true
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -80.0
-offset_right = 570.0
+anchor_left = 0.18300001
+anchor_top = 0.75200003
+anchor_right = 0.453
+anchor_bottom = 0.84000003
+offset_left = -2.3600159
+offset_top = 17.839966
+offset_right = 49.23999
+offset_bottom = 2.7999878
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="Control" type="Control" parent="RedCornerPanel2" unique_id=1222662068]
-modulate = Color(1, 1, 1, 0.56078434)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 216.0
-offset_top = -178.0
-offset_right = 216.0
-offset_bottom = -178.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = -3.1415927
-scale = Vector2(1.339, 1.257)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="LeftTriangle" type="MeshInstance2D" parent="RedCornerPanel2/Control" unique_id=1524221903]
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
-position = Vector2(-291.431, 0)
-scale = Vector2(183.794, 82)
-mesh = SubResource("PrismMesh_xklyy")
-
-[node name="RightTriangle" type="MeshInstance2D" parent="RedCornerPanel2/Control" unique_id=2094442781]
-visible = false
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
-position = Vector2(203.53, 0)
-rotation = 3.1415925
-scale = Vector2(182.13904, 82)
-mesh = SubResource("PrismMesh_tnodp")
-
-[node name="Square" type="MeshInstance2D" parent="RedCornerPanel2/Control" unique_id=2117502462]
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
-position = Vector2(-43.385025, 6.5509557e-06)
-rotation = 3.1415925
-scale = Vector2(311.77005, 82)
-mesh = SubResource("BoxMesh_ohn7f")
+[node name="TMCornerPiece2" type="Polygon2D" parent="RedCornerPanel2" unique_id=642743212]
+modulate = Color(0.37, 0.33053333, 0.296, 0.6392157)
+position = Vector2(0, 84.38501)
+rotation = 3.1415927
+polygon = PackedVector2Array(0, 0, 0, 104.385, -417.82, 104.385, -662.565, 0, 0, 0)
 
 [node name="ShortContinueWarning" type="RichTextLabel" parent="." unique_id=1757482079]
 unique_name_in_owner = true

@@ -350,9 +350,9 @@ theme_override_styles/panel = ExtResource("2_cuwcq")
 
 [node name="CashHboxcontainer2" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=1433377188]
 anchors_preset = 0
-offset_top = 84.0
+offset_top = 76.0
 offset_right = 1198.0
-offset_bottom = 282.0
+offset_bottom = 274.0
 
 [node name="TotalRocks" type="Control" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2" unique_id=1035013188]
 custom_minimum_size = Vector2(0, 198)
@@ -364,7 +364,7 @@ size_flags_vertical = 3
 
 [node name="GradeLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=408558362]
 unique_name_in_owner = true
-modulate = Color(0.37, 0.33053333, 0.296, 1)
+modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
 layout_mode = 0
 offset_top = -15.0
 offset_right = 1196.0
@@ -372,9 +372,11 @@ offset_bottom = 148.78
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/normal_font_size = 87
 bbcode_enabled = true
-text = "[wave]CASH PRIZE"
+text = "[wave][u]CASH PRIZE"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -382,29 +384,30 @@ vertical_alignment = 1
 
 [node name="GradeCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=905765579]
 unique_name_in_owner = true
-modulate = Color(0.37, 0.33053333, 0.296, 0.78431374)
 clip_contents = false
 custom_minimum_size = Vector2(0, 169.82)
 layout_mode = 0
-offset_top = 2.0
+offset_top = 65.0
 offset_right = 1196.0
-offset_bottom = 171.82
+offset_bottom = 234.82
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 70
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/normal_font_size = 109
 bbcode_enabled = true
 text = "$50"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
-vertical_alignment = 2
+vertical_alignment = 1
 
 [node name="CashHboxcontainer" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=548547686]
 visible = false
 anchors_preset = 0
-offset_top = 282.0
+offset_top = 317.085
 offset_right = 1198.0
-offset_bottom = 410.0
+offset_bottom = 445.085
 
 [node name="CashEarned" type="Control" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer" unique_id=703839610]
 visible = false
@@ -417,15 +420,16 @@ size_flags_vertical = 3
 
 [node name="BonusesCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=263932816]
 unique_name_in_owner = true
-modulate = Color(0.37, 0.33053333, 0.296, 0.78431374)
 clip_contents = false
 layout_mode = 0
-offset_top = 8.0
+offset_top = 18.615
 offset_right = 1198.0
-offset_bottom = 178.0
+offset_bottom = 188.615
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 70
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/normal_font_size = 109
 bbcode_enabled = true
 text = "TEST"
 fit_content = true
@@ -435,13 +439,16 @@ vertical_alignment = 1
 
 [node name="TotalLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=709325133]
 unique_name_in_owner = true
-modulate = Color(0.37, 0.33053333, 0.296, 0.78431374)
+visible = false
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
 custom_minimum_size = Vector2(0, 170)
 layout_mode = 0
 offset_right = 1198.0
 offset_bottom = 170.0
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/normal_font_size = 55
 bbcode_enabled = true
 text = "C A S H"
@@ -449,15 +456,18 @@ fit_content = true
 horizontal_alignment = 1
 
 [node name="BonusesLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=1289664472]
-modulate = Color(0.37, 0.33053333, 0.296, 1)
+modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
 layout_mode = 0
+offset_top = -17.36
 offset_right = 1198.0
-offset_bottom = 170.0
+offset_bottom = 152.64
 size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 57
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 80
 bbcode_enabled = true
-text = "BONUS CASH"
+text = "[u]BONUS CASH"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -482,7 +492,6 @@ process_material = SubResource("ParticleProcessMaterial_bux34")
 
 [node name="Winnings_label" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=692688040]
 unique_name_in_owner = true
-self_modulate = Color(0.37, 0.33053333, 0.296, 0.8039216)
 clip_contents = false
 custom_minimum_size = Vector2(182.13, 150)
 layout_mode = 0
@@ -492,19 +501,18 @@ offset_bottom = 217.0
 size_flags_horizontal = 6
 size_flags_vertical = 4
 theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.28, 0.28, 0.28, 1)
 theme_override_constants/shadow_outline_size = 10
-theme_override_constants/outline_size = 2
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/normal_font_size = 72
 bbcode_enabled = true
-text = ""
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 
 [node name="TotalCashCashLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=1643114876]
 unique_name_in_owner = true
-self_modulate = Color(0.37, 0.33053333, 0.296, 0.8039216)
 clip_contents = false
 custom_minimum_size = Vector2(182.13, 150)
 layout_mode = 0
@@ -516,9 +524,10 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 6
 size_flags_vertical = 4
 theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.28, 0.28, 0.28, 1)
 theme_override_constants/shadow_outline_size = 10
-theme_override_constants/outline_size = 2
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/normal_font_size = 200
 bbcode_enabled = true
 text = "$"
@@ -661,6 +670,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="RichTextLabel" type="RichTextLabel" parent="NextRound" unique_id=69238808]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -674,7 +684,7 @@ theme_override_colors/default_color = Color(0.92156863, 0.8745098, 0.84313726, 1
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/normal_font_size = 90
 bbcode_enabled = true
-text = "[pulse]NEXT"
+text = "[pulse freq=3][wave freq=10]NEXT"
 horizontal_alignment = 1
 vertical_alignment = 1
 
