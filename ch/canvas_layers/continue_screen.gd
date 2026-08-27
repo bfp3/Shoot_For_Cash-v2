@@ -21,8 +21,13 @@ const ABANDON_RUN_PROMPT_PATH := "res://ch/Shop/abandon_run_prompt.tscn"
 @onready var _coin_flip: Button = %CoinFlipButton
 @onready var _give_up: Button = %GiveUpButton
 @onready var _guess_panel: Control = %CoinGuessPanel
+@onready var _guess_title: RichTextLabel = get_node_or_null("%GuessTitle")
 @onready var _heads: Button = %HeadsButton
 @onready var _tails: Button = %TailsButton
+@onready var _coin_heads: Control = get_node_or_null("%CoinHeads")
+@onready var _coin_tails: Control = get_node_or_null("%CoinTails")
+@onready var _coin_heads_hit: Button = get_node_or_null("Control/CoinHeads/HitButton")
+@onready var _coin_tails_hit: Button = get_node_or_null("Control/CoinTails/HitButton")
 @onready var _result: RichTextLabel = %CoinResultLabel
 @onready var _resume: RichTextLabel = %ResumeCountdownLabel
 @onready var _next_fee: RichTextLabel = %NextFeeLabel
@@ -47,6 +52,16 @@ var _outcome := OUTCOME_GIVE_UP
 var _holding_blackout := false
 var _game_over_rest_scale := Vector2(0.874, 0.874)
 var _abandon_prompt: Control = null
+var _coin_heads_rest_scale := Vector2.ONE
+var _coin_tails_rest_scale := Vector2.ONE
+var _coin_heads_home := Vector2.ZERO
+var _coin_tails_home := Vector2.ZERO
+var _coin_hover_enabled := false
+var _coin_token := 0
+var _coin_spin_showing_heads := true
+var _coin_anim_tween: Tween
+var _heads_hover_tween: Tween
+var _tails_hover_tween: Tween
 
 
 func _ready() -> void:
@@ -60,10 +75,7 @@ func _ready() -> void:
 		_coin_flip.pressed.connect(_on_coin_flip_pressed)
 	if _give_up:
 		_give_up.pressed.connect(_on_give_up_pressed)
-	if _heads:
-		_heads.pressed.connect(_on_guess.bind(true))
-	if _tails:
-		_tails.pressed.connect(_on_guess.bind(false))
+	_setup_coin_choice_buttons()
 	_setup_abandon_run_prompt()
 	_reset_visuals()
 	if _game_over_label:
@@ -108,6 +120,7 @@ func close_now() -> void:
 	_busy = false
 	_holding_blackout = false
 	_countdown_token += 1
+	_coin_token += 1
 	_close_abandon_prompt()
 	_lower_shop_music()
 	hide()
@@ -145,6 +158,7 @@ func play_run_loss_overlay() -> void:
 
 func _hide_continue_chrome_instant() -> void:
 	_hide_overlay_strikes()
+	_reset_coin_nodes()
 	var panel := _root.get_node_or_null("MainPanel") as Control if _root else null
 	if panel == null:
 		return
@@ -167,6 +181,10 @@ func _reset_visuals() -> void:
 		_countdown.text = ""
 	if _guess_panel:
 		_guess_panel.hide()
+		_guess_panel.modulate.a = 1.0
+	if _guess_title:
+		_guess_title.modulate.a = 0.0
+	_reset_coin_nodes()
 	if _result:
 		_result.hide()
 		_result.text = ""
@@ -193,8 +211,11 @@ func _reset_visuals() -> void:
 		#_give_up.hide()
 	if _heads:
 		_heads.disabled = false
+		_heads.hide()
 	if _tails:
 		_tails.disabled = false
+		_tails.hide()
+	_set_coin_buttons_enabled(false)
 	_restore_continue_chrome()
 	if _game_over:
 		_game_over.hide()
@@ -319,51 +340,58 @@ func _on_coin_flip_pressed() -> void:
 		_yes.hide()
 	if _coin_flip:
 		_coin_flip.hide()
-	if _guess_panel:
-		_guess_panel.show()
+	if _give_up:
+		_give_up.hide()
 	if _status:
-		_status.text = "[center]WRONG = GAME OVER"
-	if _heads:
-		UiFocus.grab_in(_root, _heads)
+		_status.text = ""
+	_clear_oh_no_and_strikes()
+	await _present_coin_choices()
 
 
 func _on_guess(picked_heads: bool) -> void:
 	if not _waiting or _resolving:
 		return
 	_resolving = true
+	_coin_hover_enabled = false
 	_lock_actions()
-	if _guess_panel:
-		_guess_panel.hide()
-	var landed_heads := randi() % 2 == 0
-	var won := picked_heads == landed_heads
-	if _result:
-		var side := "HEADS" if landed_heads else "TAILS"
-		var verdict := "YOU WIN" if won else "YOU LOSE"
-		_result.text = "[center][wave]%s\n%s" % [side, verdict]
-		_result.show()
-	_play_coin_sfx()
-	await get_tree().create_timer(1.15, true).timeout
-	if not _waiting:
+	var token := _coin_token
+	if _guess_title:
+		var title_fade := create_tween()
+		title_fade.tween_property(_guess_title, "modulate:a", 0.0, 0.15)
+	var other := _coin_tails if picked_heads else _coin_heads
+	if other:
+		var other_fade := create_tween()
+		other_fade.tween_property(other, "modulate:a", 0.0, 0.2)
+	var picked := _coin_heads if picked_heads else _coin_tails
+	if picked:
+		await _blink_coin(picked, 1.0)
+	if not _coin_still_active(token):
 		return
+	await _play_coin_spin(picked_heads)
+	if not _coin_still_active(token):
+		return
+	var landed_heads := _coin_spin_showing_heads
+	var won := picked_heads == landed_heads
 	if won:
+		_play_named_sfx("coin_win_jingle")
 		if gl_PlayerState and gl_PlayerState.has_method("continue_from_coin_flip"):
 			gl_PlayerState.continue_from_coin_flip()
 		var from_cash := _cash_amount
 		_cash_amount = 0
 		_displayed_cash = float(from_cash)
 		_set_cash_text(float(from_cash))
-		if _status:
-			_status.text = "[center]ALL CASH LOST"
-		await _roll_cash_to(0)
-		if not _waiting:
-			return
 		if _left:
 			_left.text = "LEFT      $0"
-		await get_tree().create_timer(1.0, true).timeout
-		if not _waiting:
+		_roll_cash_to(0)
+		await _fade_coin_toss_out(1.0)
+		if not _coin_still_active(token):
 			return
 		_finish(OUTCOME_FLIP_WIN)
 	else:
+		_play_named_sfx("coin_fail_jingle")
+		await get_tree().create_timer(2.0, true).timeout
+		if not _coin_still_active(token):
+			return
 		await _play_game_over_sequence()
 		if not _waiting:
 			return
@@ -454,6 +482,7 @@ func _lock_actions() -> void:
 		_heads.disabled = true
 	if _tails:
 		_tails.disabled = true
+	_set_coin_buttons_enabled(false)
 
 
 func _finish(outcome: String) -> void:
@@ -491,6 +520,328 @@ func _play_coin_sfx() -> void:
 	var click := get_node_or_null("SFX/hud_click_1") as AudioStreamPlayer
 	if click:
 		click.play()
+
+
+func _setup_coin_choice_buttons() -> void:
+	_cache_coin_homes()
+	call_deferred("_cache_coin_homes")
+	if _coin_heads_hit:
+		_coin_heads_hit.pressed.connect(_on_guess.bind(true))
+		_coin_heads_hit.mouse_entered.connect(_on_coin_hover.bind(true, true))
+		_coin_heads_hit.mouse_exited.connect(_on_coin_hover.bind(true, false))
+	elif _heads:
+		_heads.pressed.connect(_on_guess.bind(true))
+	if _coin_tails_hit:
+		_coin_tails_hit.pressed.connect(_on_guess.bind(false))
+		_coin_tails_hit.mouse_entered.connect(_on_coin_hover.bind(false, true))
+		_coin_tails_hit.mouse_exited.connect(_on_coin_hover.bind(false, false))
+	elif _tails:
+		_tails.pressed.connect(_on_guess.bind(false))
+
+
+func _cache_coin_homes() -> void:
+	if _coin_heads:
+		_coin_heads_rest_scale = _coin_heads.scale
+		_coin_heads_home = _coin_heads.position
+	if _coin_tails:
+		_coin_tails_rest_scale = _coin_tails.scale
+		_coin_tails_home = _coin_tails.position
+
+
+func _reset_coin_nodes() -> void:
+	_coin_token += 1
+	_coin_hover_enabled = false
+	if _coin_anim_tween and _coin_anim_tween.is_valid():
+		_coin_anim_tween.kill()
+	_coin_anim_tween = null
+	if _heads_hover_tween and _heads_hover_tween.is_valid():
+		_heads_hover_tween.kill()
+	_heads_hover_tween = null
+	if _tails_hover_tween and _tails_hover_tween.is_valid():
+		_tails_hover_tween.kill()
+	_tails_hover_tween = null
+	if _coin_heads:
+		_coin_heads.hide()
+		_coin_heads.visible = false
+		_coin_heads.modulate.a = 1.0
+		_coin_heads.scale = _coin_heads_rest_scale
+		_coin_heads.position = _coin_heads_home
+	if _coin_tails:
+		_coin_tails.hide()
+		_coin_tails.visible = false
+		_coin_tails.modulate.a = 1.0
+		_coin_tails.scale = _coin_tails_rest_scale
+		_coin_tails.position = _coin_tails_home
+	_set_coin_buttons_enabled(false)
+
+
+func _set_coin_buttons_enabled(enabled: bool) -> void:
+	if _coin_heads_hit:
+		_coin_heads_hit.disabled = not enabled
+		_coin_heads_hit.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+	if _coin_tails_hit:
+		_coin_tails_hit.disabled = not enabled
+		_coin_tails_hit.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+
+
+func _coin_still_active(token: int) -> bool:
+	return _waiting and token == _coin_token and is_inside_tree()
+
+
+func _clear_oh_no_and_strikes() -> void:
+	_hide_overlay_strikes()
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	var feedback = rm.get("wave_progress_feedback") if rm else null
+	if feedback and feedback.has_method("hide_strike_hud"):
+		feedback.hide_strike_hud()
+	if feedback:
+		var notice = feedback.get_node_or_null("MakeStrikeNoticeable")
+		if notice:
+			if notice.has_method("stop"):
+				notice.stop()
+			notice.hide()
+	var strike_hud = feedback.get("strike_hud") if feedback else null
+	if strike_hud and strike_hud.has_method("stop_strike_notices"):
+		strike_hud.stop_strike_notices()
+
+
+func _present_coin_choices() -> void:
+	var token := _coin_token
+	_coin_hover_enabled = false
+	_set_coin_buttons_enabled(false)
+	if _heads:
+		_heads.hide()
+	if _tails:
+		_tails.hide()
+	if _guess_panel:
+		_guess_panel.show()
+		_guess_panel.modulate.a = 1.0
+	if _guess_title:
+		_guess_title.show()
+		_guess_title.modulate.a = 0.0
+	if _coin_anim_tween and _coin_anim_tween.is_valid():
+		_coin_anim_tween.kill()
+	_coin_anim_tween = create_tween()
+	_coin_anim_tween.set_parallel(true)
+	if _guess_title:
+		_coin_anim_tween.tween_property(_guess_title, "modulate:a", 1.0, 0.18)\
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	if _coin_heads:
+		_prepare_coin_for_pop(_coin_heads, _coin_heads_home)
+		_coin_anim_tween.tween_property(_coin_heads, "scale", _coin_heads_rest_scale, 0.45)\
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		_coin_anim_tween.tween_callback(_play_coin_appear_sfx)
+	if _coin_tails:
+		_coin_tails.position = _coin_tails_home
+		_coin_tails.modulate.a = 1.0
+		_coin_tails.scale = Vector2.ONE / 99.0
+		_coin_tails.hide()
+		_coin_anim_tween.tween_callback(_coin_tails.show).set_delay(0.25)
+		_coin_anim_tween.tween_property(_coin_tails, "scale", _coin_tails_rest_scale, 0.45)\
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.25)
+		_coin_anim_tween.tween_callback(_play_coin_appear_sfx).set_delay(0.25)
+	if _coin_anim_tween.is_valid():
+		await _coin_anim_tween.finished
+	if not _coin_still_active(token):
+		return
+	_coin_hover_enabled = true
+	_set_coin_buttons_enabled(true)
+	if _coin_heads_hit:
+		UiFocus.grab_in(_root, _coin_heads_hit)
+
+
+func _prepare_coin_for_pop(coin: Control, home: Vector2) -> void:
+	if coin == null:
+		return
+	coin.position = home
+	coin.modulate.a = 1.0
+	coin.scale = Vector2.ONE / 99.0
+	coin.show()
+
+
+func _play_coin_appear_sfx() -> void:
+	var open_sfx := get_node_or_null("SFX/shop_open_sfx_01") as AudioStreamPlayer
+	if open_sfx:
+		open_sfx.stop()
+		open_sfx.play(0.3)
+	var click := get_node_or_null("SFX/hud_click_1") as AudioStreamPlayer
+	if click:
+		click.stop()
+		click.play()
+
+
+func _on_coin_hover(is_heads: bool, inside: bool) -> void:
+	if not _coin_hover_enabled or _resolving or not is_inside_tree():
+		return
+	var coin := _coin_heads if is_heads else _coin_tails
+	if coin == null or not coin.visible:
+		return
+	var rest := _coin_heads_rest_scale if is_heads else _coin_tails_rest_scale
+	_play_coin_node_sfx(coin, "focus_enter_sfx" if inside else "focus_exit")
+	var hover_tween := _heads_hover_tween if is_heads else _tails_hover_tween
+	if hover_tween and hover_tween.is_valid():
+		hover_tween.kill()
+	hover_tween = create_tween()
+	hover_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	var target := rest * (1.06 if inside else 1.0)
+	hover_tween.tween_property(coin, "scale", target, 0.12)
+	if is_heads:
+		_heads_hover_tween = hover_tween
+	else:
+		_tails_hover_tween = hover_tween
+
+
+func _play_coin_node_sfx(coin: Control, sfx_name: String) -> void:
+	if coin == null:
+		return
+	var player := coin.get_node_or_null("SFX/%s" % sfx_name) as AudioStreamPlayer
+	if player == null:
+		return
+	player.stop()
+	player.play()
+
+
+func _blink_coin(coin: Control, duration: float) -> void:
+	if coin == null:
+		return
+	var token := _coin_token
+	var elapsed := 0.0
+	var shown := true
+	while elapsed < duration and _coin_still_active(token):
+		shown = not shown
+		coin.visible = shown
+		var step := 0.08
+		await get_tree().create_timer(step, true).timeout
+		elapsed += step
+	if _coin_still_active(token) and coin:
+		coin.visible = true
+		coin.show()
+
+
+func _play_coin_spin(start_heads: bool) -> void:
+	var token := _coin_token
+	if _guess_title:
+		var fade := create_tween()
+		fade.tween_property(_guess_title, "modulate:a", 0.0, 0.15)
+	_place_coins_for_spin()
+	_show_spin_face(start_heads)
+	_play_named_sfx("coin_flicker")
+	var landed_heads := randi() % 2 == 0
+	var showing := start_heads
+	var flips := 12 if showing == landed_heads else 13
+	for i in flips:
+		if not _coin_still_active(token):
+			return
+		var t := 0.0 if flips <= 1 else float(i) / float(flips - 1)
+		var half := lerpf(0.035, 0.2, t * t)
+		showing = not showing
+		await _animate_spin_flip(showing, half)
+	if not _coin_still_active(token):
+		return
+	var flicker := get_node_or_null("SFX/coin_flicker") as AudioStreamPlayer
+	if flicker and flicker.playing:
+		flicker.stop()
+	if _coin_spin_showing_heads != landed_heads:
+		await _animate_spin_flip(landed_heads, 0.22)
+	await get_tree().create_timer(0.35, true).timeout
+
+
+func _place_coins_for_spin() -> void:
+	var spin_pos := _coin_heads_home
+	if _coin_heads and _coin_tails:
+		spin_pos = (_coin_heads_home + _coin_tails_home) * 0.5
+	elif _coin_tails:
+		spin_pos = _coin_tails_home
+	if _heads_hover_tween and _heads_hover_tween.is_valid():
+		_heads_hover_tween.kill()
+	if _tails_hover_tween and _tails_hover_tween.is_valid():
+		_tails_hover_tween.kill()
+	if _coin_heads:
+		_coin_heads.position = spin_pos
+		_coin_heads.scale = _coin_heads_rest_scale
+		_coin_heads.modulate.a = 1.0
+	if _coin_tails:
+		_coin_tails.position = spin_pos
+		_coin_tails.scale = _coin_tails_rest_scale
+		_coin_tails.modulate.a = 1.0
+
+
+func _show_spin_face(heads: bool) -> void:
+	_coin_spin_showing_heads = heads
+	if _coin_heads:
+		_coin_heads.visible = heads
+		if heads:
+			_coin_heads.show()
+		else:
+			_coin_heads.hide()
+	if _coin_tails:
+		_coin_tails.visible = not heads
+		if heads:
+			_coin_tails.hide()
+		else:
+			_coin_tails.show()
+
+
+func _animate_spin_flip(to_heads: bool, half: float) -> void:
+	if to_heads == _coin_spin_showing_heads:
+		return
+	var from := _coin_heads if _coin_spin_showing_heads else _coin_tails
+	var to := _coin_heads if to_heads else _coin_tails
+	var from_rest := _coin_heads_rest_scale if _coin_spin_showing_heads else _coin_tails_rest_scale
+	var to_rest := _coin_heads_rest_scale if to_heads else _coin_tails_rest_scale
+	if from == null or to == null:
+		_show_spin_face(to_heads)
+		return
+	var edge := Vector2(0.001, from_rest.y * 1.12)
+	if _coin_anim_tween and _coin_anim_tween.is_valid():
+		_coin_anim_tween.kill()
+	_coin_anim_tween = create_tween()
+	_coin_anim_tween.tween_property(from, "scale", edge, maxf(half, 0.01))\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	await _coin_anim_tween.finished
+	if not _waiting or from == null or to == null:
+		return
+	from.hide()
+	from.scale = from_rest
+	to.scale = Vector2(0.001, to_rest.y * 1.12)
+	to.show()
+	_coin_anim_tween = create_tween()
+	_coin_anim_tween.tween_property(to, "scale", to_rest, maxf(half, 0.01))\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await _coin_anim_tween.finished
+	if not _waiting:
+		return
+	_coin_spin_showing_heads = to_heads
+
+
+func _fade_coin_toss_out(duration: float) -> void:
+	if _coin_anim_tween and _coin_anim_tween.is_valid():
+		_coin_anim_tween.kill()
+	_coin_anim_tween = create_tween()
+	_coin_anim_tween.set_parallel(true)
+	for coin in [_coin_heads, _coin_tails]:
+		if coin and coin.visible:
+			_coin_anim_tween.tween_property(coin, "modulate:a", 0.0, duration)\
+				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	if _guess_title:
+		_coin_anim_tween.tween_property(_guess_title, "modulate:a", 0.0, minf(duration, 0.35))\
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	if _guess_panel:
+		_coin_anim_tween.tween_property(_guess_panel, "modulate:a", 0.0, minf(duration, 0.35))\
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await _coin_anim_tween.finished
+	if _coin_heads:
+		_coin_heads.hide()
+	if _coin_tails:
+		_coin_tails.hide()
+
+
+func _play_named_sfx(sfx_name: String) -> void:
+	var player := get_node_or_null("SFX/%s" % sfx_name) as AudioStreamPlayer
+	if player == null:
+		return
+	player.stop()
+	player.play()
 
 
 func _raise_shop_music() -> void:
@@ -571,6 +922,10 @@ func _fade_continue_chrome() -> void:
 			continue
 		if child is CanvasItem:
 			tween.tween_property(child, "modulate:a", 0.0, 0.4)\
+				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	for coin in [_coin_heads, _coin_tails]:
+		if coin and coin.visible:
+			tween.tween_property(coin, "modulate:a", 0.0, 0.4)\
 				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await tween.finished
 

@@ -828,6 +828,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="GuessTitle" type="RichTextLabel" parent="Control/MainPanel/CoinGuessPanel" unique_id=1091316445]
+unique_name_in_owner = true
 clip_contents = false
 layout_mode = 1
 anchors_preset = 5
@@ -853,6 +854,7 @@ vertical_alignment = 1
 
 [node name="HeadsButton" type="Button" parent="Control/MainPanel/CoinGuessPanel" unique_id=763288240]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(200, 52)
 layout_mode = 1
 anchors_preset = 5
@@ -877,6 +879,7 @@ focus_exit_sfx = NodePath("../../../../SFX/focus_exit")
 
 [node name="TailsButton" type="Button" parent="Control/MainPanel/CoinGuessPanel" unique_id=1524087223]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(200, 52)
 layout_mode = 1
 anchors_preset = 7
@@ -1091,6 +1094,9 @@ mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="CoinHeads" type="Control" parent="Control" unique_id=399074094]
+unique_name_in_owner = true
+visible = false
+z_index = 12
 custom_minimum_size = Vector2(188, 188)
 layout_mode = 1
 anchors_preset = 8
@@ -1281,6 +1287,9 @@ volume_db = -32.0
 pitch_scale = 1.6
 
 [node name="CoinTails" type="Control" parent="Control" unique_id=207818723]
+unique_name_in_owner = true
+visible = false
+z_index = 12
 custom_minimum_size = Vector2(188, 188)
 layout_mode = 1
 anchors_preset = 8
