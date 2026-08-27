@@ -304,13 +304,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -24.210785
-offset_top = -177.7822
-offset_right = 15.789246
-offset_bottom = -137.7822
+offset_left = -18.853638
+offset_top = -70.63928
+offset_right = 21.146362
+offset_bottom = -30.639282
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.6482365, 1.6482365)
+scale = Vector2(1.6984234, 1.6984234)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="Control" type="Control" parent="Control/MainPanel/Control/StrikeIndicator" unique_id=808486803 groups=["restartable"]]
@@ -446,13 +446,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -159.92499
-offset_top = -177.7822
-offset_right = -119.92499
-offset_bottom = -137.7822
+offset_left = -175.99628
+offset_top = -69.74637
+offset_right = -135.99628
+offset_bottom = -29.746368
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.6482364, 1.6482364)
+scale = Vector2(1.6984231, 1.6984231)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="Control" type="Control" parent="Control/MainPanel/Control/StrikeIndicator2" unique_id=1976571899 groups=["restartable"]]
@@ -586,13 +586,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 118.64636
-offset_top = -177.7822
-offset_right = 158.64636
-offset_bottom = -137.7822
+offset_left = 135.61072
+offset_top = -69.74646
+offset_right = 175.61072
+offset_bottom = -29.74646
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.6482365, 1.6482365)
+scale = Vector2(1.6984234, 1.6984234)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="Control" type="Control" parent="Control/MainPanel/Control/StrikeIndicator3" unique_id=796323035 groups=["restartable"]]
@@ -1010,6 +1010,7 @@ vertical_alignment = 1
 
 [node name="FeeLabel" type="RichTextLabel" parent="Control/MainPanel" unique_id=716728393]
 unique_name_in_owner = true
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -1037,6 +1038,7 @@ vertical_alignment = 1
 
 [node name="CountdownLabel" type="RichTextLabel" parent="Control/MainPanel" unique_id=393603505]
 unique_name_in_owner = true
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 5
@@ -1191,20 +1193,18 @@ focus_exit_sfx = NodePath("../../../SFX/focus_exit")
 
 [node name="GiveUpButton" type="Button" parent="Control/MainPanel" unique_id=564426469]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(220, 64)
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 39.714294
-offset_top = -159.0
-offset_right = 291.7143
-offset_bottom = -54.0
-grow_horizontal = 2
-grow_vertical = 0
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -22.321503
+offset_top = 26.964294
+offset_right = 229.6785
+offset_bottom = 131.9643
+grow_vertical = 2
+scale = Vector2(0.625, 0.625)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
 theme_override_colors/font_pressed_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
 theme_override_colors/font_hover_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
@@ -1213,10 +1213,12 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
-text = "GIVE UP"
+text = "BAIL"
 script = ExtResource("4_button")
 focus_enter_sfx = NodePath("../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../SFX/focus_exit")
+wiggle_amount = 0.5
+wiggle_amount_exit = 0.51
 
 [node name="CoinGuessPanel" type="Control" parent="Control/MainPanel" unique_id=1988878070]
 unique_name_in_owner = true
@@ -1413,6 +1415,13 @@ scale = Vector2(0.45, 0.45)
 wiggle_amount = 0.45
 wiggle_amount_exit = 0.45
 
+[node name="PlayLabel" parent="Control/MainPanel/PlayButton/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="2" unique_id=160258226]
+theme_override_font_sizes/normal_font_size = 82
+text = "[shake]REPLAY"
+
+[node name="CostLabel" parent="Control/MainPanel/PlayButton/VBoxContainer2/Cost" parent_id_path=PackedInt32Array(388452363, 1538052106) index="0" unique_id=552854020]
+text = "[wave]$10"
+
 [node name="ColorRect" type="ColorRect" parent="Control/MainPanel/PlayButton" unique_id=441850085]
 show_behind_parent = true
 layout_mode = 0
@@ -1420,6 +1429,59 @@ offset_top = 146.82544
 offset_right = 215.23901
 offset_bottom = 250.0
 color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+
+[node name="100_percent" type="Control" parent="Control/MainPanel" unique_id=759693444]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/MainPanel/100_percent" unique_id=706070287]
+self_modulate = Color(1, 1, 1, 0.39215687)
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -483.0
+offset_top = -229.21426
+offset_right = 483.0
+offset_bottom = 57.785736
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.08726646
+scale = Vector2(0.874, 0.874)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_type_variation = &"RedRichText"
+theme_override_font_sizes/normal_font_size = 265
+bbcode_enabled = true
+text = "[wave]GAME OVER"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="Control/MainPanel/100_percent/RichTextLabel" unique_id=1751562246]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.915405
+offset_right = 20.786621
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.87)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = ExtResource("5_panel")
 
 [node name="SFX" type="Node" parent="." unique_id=516345916]
 
@@ -1456,3 +1518,5 @@ volume_db = -50.0
 [node name="coin_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=2115072490]
 stream = ExtResource("13_coin")
 volume_db = -22.0
+
+[editable path="Control/MainPanel/PlayButton"]

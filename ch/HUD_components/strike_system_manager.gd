@@ -17,6 +17,8 @@ var _row_original_position: Vector2
 var _row_original_modulate: Color
 var _active_tween: Tween
 var _is_playing_finale := false
+## True once the row is parked centre with "Oh no..." — stays until play_finale_return().
+var _finale_held := false
 @onready var strike_out_label: RichTextLabel = $StrikeLabel
 
 func _ready() -> void:
@@ -91,6 +93,7 @@ func three_strikes() -> void:
 func reset() -> void:
 	_kill_tween()
 	_is_playing_finale = false
+	_finale_held = false
 	strike_count = 0
 	stop_strike_notices()
 	_hide_strike_out_label()
@@ -216,25 +219,42 @@ func _play_three_strikes_sequence() -> void:
 	for i in blink_count:
 		_active_tween.tween_property(indicators_row, "modulate:a", 0.15, blink_interval * 0.5)
 		_active_tween.tween_property(indicators_row, "modulate:a", _row_original_modulate.a, blink_interval * 0.5)
-	_active_tween.tween_interval(maxf(strike_out_hold_sec, 0.0))
-	_active_tween.tween_callback(_hide_strike_out_label)
-	_active_tween.tween_property(indicators_row, "position", _row_original_position, return_time)\
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
-	_active_tween.parallel().tween_property(indicators_row, "scale", Vector2.ONE, return_time)\
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	_active_tween.tween_interval(maxf(hold_at_center_time, 0.0))
 	_active_tween.tween_callback(func() -> void:
-		_is_playing_finale = false
-		reset()
+		_finale_held = true
 	)
 
 
+## Wait until the row is parked centre with "Oh no..." (continue overlay can open).
 func wait_until_finale_finished() -> void:
 	var waited := 0.0
 	while not _is_playing_finale and waited < 0.2 and is_instance_valid(self):
 		await get_tree().process_frame
 		waited += get_process_delta_time()
-	while _is_playing_finale and is_instance_valid(self):
+	while is_instance_valid(self) and _is_playing_finale and not _finale_held:
 		await get_tree().process_frame
+
+
+## Fade "Oh no..." and send the strikes home. Call after continue pay / give up.
+func play_finale_return() -> void:
+	if not is_instance_valid(self):
+		return
+	if not _is_playing_finale and not _finale_held:
+		return
+	_kill_tween()
+	_active_tween = create_tween()
+	if strike_out_label and strike_out_label.visible:
+		_active_tween.tween_property(strike_out_label, "modulate:a", 0.0, return_time)\
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_active_tween.parallel().tween_property(indicators_row, "position", _row_original_position, return_time)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	_active_tween.parallel().tween_property(indicators_row, "scale", Vector2.ONE, return_time)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	await _active_tween.finished
+	_hide_strike_out_label()
+	_is_playing_finale = false
+	_finale_held = false
+	reset()
 
 
 func stop_strike_notices() -> void:
@@ -257,8 +277,8 @@ func _show_strike_out_label() -> void:
 	if strike_out_label == null:
 		return
 	strike_out_label.visible = true
-	
 	strike_out_label.text = "Oh no..."
+	strike_out_label.modulate.a = 0.0
 	var tween = create_tween()
 	tween.tween_property(strike_out_label, "modulate:a", 1.0, 0.15)
 

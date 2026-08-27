@@ -75,9 +75,13 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_aaxe5")
+loss_scatter_count = null
+loss_scatter_distance_px = null
+loss_scatter_fly_sec = null
 
 [node name="RedCornerPanel" type="Control" parent="." unique_id=1772394240]
 unique_name_in_owner = true
+visible = false
 modulate = Color(1, 1, 1, 0.5058824)
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 80)
@@ -163,6 +167,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="TotalCash2" type="RichTextLabel" parent="." unique_id=1123567456]
+visible = false
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -270,7 +275,6 @@ horizontal_alignment = 2
 vertical_alignment = 2
 
 [node name="PoolLabel" type="RichTextLabel" parent="." unique_id=433932978]
-visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 3

@@ -1382,6 +1382,7 @@ func handle_three_strikes() -> void:
 		_continue_open = false
 		_unfreeze_gameplay_for_continue()
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		await _play_strike_finale_return()
 		await finish_level_editor_test_round()
 		return
 
@@ -1677,7 +1678,7 @@ func update_continue() -> void:
 		cash = int(gl_PlayerState.get_spendable_cash())
 	else:
 		cash = int(gl_PlayerState.dataset.get("cash", 0)) + int(gl_PlayerState.dataset.get("bonus_cash", 0))
-	_fade_gameplay_hud_for_continue(false, false)
+	_fade_gameplay_hud_for_continue(false, false, false)
 	await _play_continue_loss_scatter()
 	if gl_PlayerState.has_method("get_spendable_cash"):
 		cash = int(gl_PlayerState.get_spendable_cash())
@@ -1687,6 +1688,7 @@ func update_continue() -> void:
 	if screen and screen.has_method("play"):
 		outcome = String(await screen.play(fee, cash))
 	_continue_open = false
+	await _play_strike_finale_return()
 	if outcome == "paid" or outcome == "flip_win":
 		var resume_in_place := true
 		if screen != null and "resume_in_place" in screen:
@@ -1763,11 +1765,19 @@ func _play_continue_loss_scatter() -> void:
 		money.hide()
 
 
-func _fade_gameplay_hud_for_continue(visible: bool, include_money: bool = true) -> void:
+func _play_strike_finale_return() -> void:
+	var strike_hud = null
+	if wave_progress_feedback and "strike_hud" in wave_progress_feedback:
+		strike_hud = wave_progress_feedback.strike_hud
+	if strike_hud and strike_hud.has_method("play_finale_return"):
+		await strike_hud.play_finale_return()
+
+
+func _fade_gameplay_hud_for_continue(visible: bool, include_money: bool = true, include_strikes: bool = true) -> void:
 	if visible:
 		if player and player.has_method("show_ammo_panel"):
 			player.show_ammo_panel()
-		if wave_progress_feedback and wave_progress_feedback.has_method("show_strike_hud"):
+		if include_strikes and wave_progress_feedback and wave_progress_feedback.has_method("show_strike_hud"):
 			wave_progress_feedback.show_strike_hud()
 		if include_money:
 			var money := get_tree().get_first_node_in_group("money_manager")
@@ -1783,7 +1793,7 @@ func _fade_gameplay_hud_for_continue(visible: bool, include_money: bool = true) 
 		player.fade_out_ammo_panel()
 	elif player and player.has_method("hide_ammo_panel_instant"):
 		player.hide_ammo_panel_instant()
-	if wave_progress_feedback and wave_progress_feedback.has_method("hide_strike_hud"):
+	if include_strikes and wave_progress_feedback and wave_progress_feedback.has_method("hide_strike_hud"):
 		wave_progress_feedback.hide_strike_hud()
 	if not include_money:
 		return

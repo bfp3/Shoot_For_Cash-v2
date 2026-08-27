@@ -133,8 +133,8 @@ func _reset_visuals() -> void:
 		_coin_flip.hide()
 	if _give_up:
 		_give_up.disabled = false
-		#_give_up.show()
-		_give_up.hide()
+		_give_up.show()
+		#_give_up.hide()
 	if _heads:
 		_heads.disabled = false
 	if _tails:

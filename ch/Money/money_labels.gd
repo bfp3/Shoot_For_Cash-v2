@@ -44,6 +44,7 @@ const checkpoint_center_offset := Vector2(-125.0, 175.0)
 ## Pause after the HUD reaches centre, before pool rolls into TotalCash2.
 @export var checkpoint_bank_delay_sec := 0.5
 
+
 var _displayed_pool := 0.0
 var _tracked_pool := 0
 var _tracked_total := 0
@@ -493,7 +494,7 @@ func _set_total_text(value: float) -> void:
 	_displayed_total = value
 	if total_cash_label:
 		total_cash_label.text = "$%d" % int(round(value))
-		total_cash_label.text = "[wave][rainbow]" + CommonCode.format_money(value)
+		total_cash_label.text = "[wave]" + CommonCode.format_money(value)
 
 func _set_pool_text(amount: int) -> void:
 	if pool_label:
