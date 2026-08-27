@@ -198,6 +198,9 @@ func _on_abandon_run_cancelled() -> void:
 func _on_abandon_run_confirmed() -> void:
 	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
 		_abandon_prompt.close_prompt()
+	if round_manager and round_manager.has_method("play_run_over_and_restart"):
+		await round_manager.play_run_over_and_restart()
+		return
 	soft_hide_for_level_editor()
 	if round_manager and round_manager.has_method("return_to_difficulty_select"):
 		await round_manager.return_to_difficulty_select()
@@ -227,7 +230,7 @@ func _current_range_reward() -> int:
 func _refresh_range_reward_label() -> void:
 	if cash_label == null:
 		return
-	cash_label.text = _format_cash_label(_current_range_reward(), false)
+	cash_label.text = "[wave]" + _format_cash_label(_current_range_reward(), false)
 	cash_label.show()
 	cash_label.modulate.a = 1.0
 

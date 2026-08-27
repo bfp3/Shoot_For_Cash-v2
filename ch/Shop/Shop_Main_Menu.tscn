@@ -30,14 +30,14 @@
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_cn8lj"]
+[sub_resource type="CurveTexture" id="CurveTexture_onfim"]
 curve = SubResource("Curve_xgu8n")
 
 [sub_resource type="Curve" id="Curve_r6l2h"]
 _data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_64t06"]
+[sub_resource type="CurveTexture" id="CurveTexture_r6l2h"]
 curve = SubResource("Curve_r6l2h")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yuebc"]
@@ -53,9 +53,9 @@ tangential_accel_min = -2.2351742e-06
 tangential_accel_max = -2.2351742e-06
 scale_min = 0.02
 scale_max = 0.04
-scale_curve = SubResource("CurveTexture_64t06")
+scale_curve = SubResource("CurveTexture_r6l2h")
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-alpha_curve = SubResource("CurveTexture_cn8lj")
+alpha_curve = SubResource("CurveTexture_onfim")
 
 [sub_resource type="Animation" id="Animation_tnodp"]
 length = 0.001
@@ -115,6 +115,36 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s82uk"]
+
+[sub_resource type="Curve" id="Curve_yuebc"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.46923074, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_cn8lj"]
+curve = SubResource("Curve_yuebc")
+
+[sub_resource type="Curve" id="Curve_h3dr1"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_64t06"]
+curve = SubResource("Curve_h3dr1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sk87m"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(25, 25, 1)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 0.02
+scale_max = 0.04
+scale_curve = SubResource("CurveTexture_64t06")
+alpha_curve = SubResource("CurveTexture_cn8lj")
 
 [sub_resource type="PrismMesh" id="PrismMesh_sgib8"]
 left_to_right = 1.0
@@ -668,6 +698,24 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 mouse_filter = 2
 
+[node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1530085937]
+modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+position = Vector2(563.0929, 38.38159)
+amount = 1
+texture = ExtResource("2_cn8lj")
+fixed_fps = 24
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_sk87m")
+
+[node name="BackgroundParticles2" type="GPUParticles2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1121548879]
+modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+position = Vector2(408.0721, 37.578262)
+amount = 1
+texture = ExtResource("2_cn8lj")
+fixed_fps = 24
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_sk87m")
+
 [node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1601384433]
 modulate = Color(1, 1, 1, 0.56078434)
 show_behind_parent = true
@@ -978,7 +1026,7 @@ visible = false
 [node name="Icon" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="1" unique_id=667654554]
 visible = false
 
-[node name="PlayLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="3" unique_id=160258226]
+[node name="PlayLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="2" unique_id=160258226]
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 offset_left = -93.63642
 offset_top = -18.038681
@@ -993,7 +1041,6 @@ offset_left = 1.6906738
 offset_top = -1.1555786
 offset_right = 1.6906738
 offset_bottom = -1.1555786
-text = "[wave]$100"
 
 [node name="AmmoCountPopUp" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo" unique_id=2144831784]
 clip_contents = false
@@ -1487,7 +1534,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="_on_shop_back_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="_on_pause_game_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PlayButton" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo" to="." method="_on_buy_ammo_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]

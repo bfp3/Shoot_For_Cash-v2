@@ -15,6 +15,10 @@ var stored_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_VISIBLE
 ## Set when pause was opened from the island map — Resume fades the map back in.
 var reopen_map_on_resume := false
 
+const ABANDON_RUN_PROMPT_PATH := "res://ch/Shop/abandon_run_prompt.tscn"
+var _abandon_prompt: Control = null
+var _leaving_to_difficulty := false
+
 
 func _ready() -> void:
 	# Let this menu (its _input and its tweens) keep running while the
@@ -24,6 +28,7 @@ func _ready() -> void:
 	hide()
 	settings_menu.hide()
 	resolution_confirm.hide()
+	_setup_abandon_run_prompt()
 
 
 func disable() -> void:
@@ -51,6 +56,11 @@ func _input(_event: InputEvent) -> void:
 	# Debug chat owns Escape while open — do not open/close pause.
 	var debug_chat := get_tree().get_first_node_in_group("debug_tool_chatbox")
 	if debug_chat and debug_chat.has_method("is_open") and debug_chat.is_open():
+		return
+
+	if visible and _abandon_prompt_open() and (cancel or toggle_pause):
+		_cancel_abandon_prompt()
+		get_viewport().set_input_as_handled()
 		return
 
 	# Map popup owns Back / B / Escape while it's open (and pause isn't).
@@ -118,6 +128,8 @@ func open_menu() -> void:
 func close_menu() -> void:
 	if !visible or animating:
 		return
+	if _abandon_prompt_open():
+		_cancel_abandon_prompt()
 	if GameSettings.is_resolution_pending():
 		GameSettings.revert_resolution()
 	animating = true
@@ -218,21 +230,107 @@ func _on_open_map_pressed() -> void:
 
 
 func _on_back_to_title_pressed() -> void:
-	# Smooth transition back to the title screen — no scene reload / full restart.
 	reopen_map_on_resume = false
 	if GameSettings.is_resolution_pending():
 		GameSettings.revert_resolution()
+	if _is_in_active_run():
+		_open_abandon_prompt()
+		return
+	## Already on the title / difficulty screen — Main Menu does nothing.
+
+
+func _setup_abandon_run_prompt() -> void:
+	if _abandon_prompt and is_instance_valid(_abandon_prompt):
+		return
+	var packed := load(ABANDON_RUN_PROMPT_PATH) as PackedScene
+	if packed == null:
+		push_warning("Pause menu: abandon run prompt missing")
+		return
+	_abandon_prompt = packed.instantiate() as Control
+	if _abandon_prompt == null:
+		return
+	_abandon_prompt.process_mode = Node.PROCESS_MODE_ALWAYS
+	_abandon_prompt.z_index = 120
+	main_control.add_child(_abandon_prompt)
+	_abandon_prompt.hide()
+	if _abandon_prompt.has_signal("confirmed"):
+		_abandon_prompt.confirmed.connect(_on_abandon_run_confirmed)
+	if _abandon_prompt.has_signal("cancelled"):
+		_abandon_prompt.cancelled.connect(_on_abandon_run_cancelled)
+
+
+func _abandon_prompt_open() -> bool:
+	return _abandon_prompt != null and is_instance_valid(_abandon_prompt) and _abandon_prompt.visible
+
+
+func _open_abandon_prompt() -> void:
+	if _abandon_prompt and _abandon_prompt.has_method("open_prompt"):
+		_abandon_prompt.open_prompt()
+		return
+	_on_abandon_run_confirmed()
+
+
+func _cancel_abandon_prompt() -> void:
+	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
+		_abandon_prompt.close_prompt()
+	_focus_pause_root()
+
+
+func _on_abandon_run_cancelled() -> void:
+	_focus_pause_root()
+
+
+func _on_abandon_run_confirmed() -> void:
+	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
+		_abandon_prompt.close_prompt()
+	reopen_map_on_resume = false
 	animating = false
+	hide()
+	get_tree().paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var round_manager := get_tree().get_first_node_in_group("round_manager")
+	if round_manager and round_manager.has_method("play_run_over_and_restart"):
+		await round_manager.play_run_over_and_restart()
+		_leaving_to_difficulty = false
+		return
+	await _leave_to_difficulty_select()
+
+
+func _is_in_active_run() -> bool:
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and rm.has_method("is_in_active_run"):
+		return bool(rm.is_in_active_run())
+	if gl_PlayerState == null:
+		return false
+	var level := String(gl_PlayerState.dataset.get("level_name", "")).strip_edges().to_lower()
+	var start := "start"
+	if gl_DataSet and gl_DataSet.has_method("get_start_place_name"):
+		start = String(gl_DataSet.get_start_place_name()).strip_edges().to_lower()
+	return not level.is_empty() and level != start and level != "start"
+
+
+func _leave_to_difficulty_select() -> void:
+	if _leaving_to_difficulty:
+		return
+	_leaving_to_difficulty = true
+	reopen_map_on_resume = false
+	animating = false
+	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
+		_abandon_prompt.close_prompt()
 	hide()
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	var round_manager := get_tree().get_first_node_in_group("round_manager")
+	if round_manager and round_manager.has_method("return_to_difficulty_select"):
+		await round_manager.return_to_difficulty_select()
+		_leaving_to_difficulty = false
+		return
+
+	_leaving_to_difficulty = false
 	if round_manager and round_manager.has_method("return_to_title"):
 		await round_manager.return_to_title()
 		return
-
-	# Fallback if round manager path is missing.
 	gl_PlayerState.reset_all()
 	await get_tree().process_frame
 	get_tree().reload_current_scene()

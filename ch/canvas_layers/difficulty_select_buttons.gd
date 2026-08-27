@@ -12,10 +12,17 @@ func _ready() -> void:
 	for badge in [beginner, advanced, expert, mystery]:
 		if badge:
 			badge.pressed.connect(_on_badge_pressed.bind(badge))
+	refresh_unlocks()
+
+
+func refresh_unlocks() -> void:
+	for badge in [beginner, advanced, expert, mystery]:
+		if badge and badge.has_method("refresh_unlock_state"):
+			badge.refresh_unlock_state()
 
 
 func _on_badge_pressed(badge: DifficultyBadge) -> void:
-	if badge == null or badge.locked:
+	if badge == null:
 		return
 	var place := String(badge.travel_place).strip_edges().to_lower()
 	if place.is_empty():

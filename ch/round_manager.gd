@@ -67,7 +67,11 @@ var _final_world_env_snapshot: Array = []
 var _layout_cache: Dictionary = {} # path -> PackedScene
 var _layout_load_requested: Dictionary = {} # path -> true
 
-const LEVEL_FILE_PATH := 'res://sc/island-shipper.txt'
+const LEVEL_FILE_BEGINNER := "res://sc/island-shipper.txt"
+const LEVEL_FILE_ADVANCED := "res://sc/island-advanced.txt"
+const LEVEL_FILE_EXPERT := "res://sc/island-expert.txt"
+const LEVEL_FILE_MYSTERY := "res://sc/island-mystery.txt"
+var LEVEL_FILE_PATH := LEVEL_FILE_BEGINNER
 const LEVEL_ISLAND_NAME := 'shipper'
 ## How often to check the level file for edits while playing (seconds).
 const LEVEL_RELOAD_POLL_INTERVAL := 0.35
@@ -818,7 +822,24 @@ func _apply_boss_timer_to_hud() -> void:
 		round_timer.update_text()
 
 
+func apply_level_file_for_difficulty(stage: String = "") -> void:
+	if stage.strip_edges().is_empty() and gl_PlayerState and gl_PlayerState.has_method("get_run_difficulty"):
+		stage = String(gl_PlayerState.get_run_difficulty())
+	var key := stage.strip_edges().to_upper()
+	key = key.replace("[WAVE]", "").replace("[/WAVE]", "")
+	match key:
+		"ADVANCED":
+			LEVEL_FILE_PATH = LEVEL_FILE_ADVANCED
+		"EXPERT":
+			LEVEL_FILE_PATH = LEVEL_FILE_EXPERT
+		"MYSTERY", "???":
+			LEVEL_FILE_PATH = LEVEL_FILE_MYSTERY
+		_:
+			LEVEL_FILE_PATH = LEVEL_FILE_BEGINNER
+
+
 func load_level_sequence() -> void:
+	apply_level_file_for_difficulty()
 	if not Parser.loadIslandFile(LEVEL_FILE_PATH):
 		push_error('RoundManager: failed to load level file %s' % LEVEL_FILE_PATH)
 		current_rock_sequence = []
@@ -1688,8 +1709,8 @@ func update_continue() -> void:
 	if screen and screen.has_method("play"):
 		outcome = String(await screen.play(fee, cash))
 	_continue_open = false
-	await _play_strike_finale_return()
 	if outcome == "paid" or outcome == "flip_win":
+		await _play_strike_finale_return()
 		var resume_in_place := true
 		if screen != null and "resume_in_place" in screen:
 			resume_in_place = bool(screen.resume_in_place)
@@ -1773,6 +1794,15 @@ func _play_strike_finale_return() -> void:
 		await strike_hud.play_finale_return()
 
 
+func _refill_ammo_after_continue() -> void:
+	if player == null:
+		return
+	if player.has_method("refill_ammo_to_max_animated"):
+		await player.refill_ammo_to_max_animated()
+	elif player.has_method("refill_ammo_to_max"):
+		player.refill_ammo_to_max(true)
+
+
 func _fade_gameplay_hud_for_continue(visible: bool, include_money: bool = true, include_strikes: bool = true) -> void:
 	if visible:
 		if player and player.has_method("show_ammo_panel"):
@@ -1815,6 +1845,7 @@ func _resume_after_continue() -> void:
 	current_round_state = RoundState.WAVE_START
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_fade_gameplay_hud_for_continue(true)
+	await _refill_ammo_after_continue()
 	if wave_progress_feedback and wave_progress_feedback.has_method("play_countdown_banners"):
 		await wave_progress_feedback.play_countdown_banners(3)
 	elif wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
@@ -1869,6 +1900,7 @@ func _restart_round_after_continue() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	current_round_state = RoundState.WAVE_START
 	_fade_gameplay_hud_for_continue(true)
+	await _refill_ammo_after_continue()
 	_skip_next_wave_banner = true
 	if music_manager and music_manager.has_method("first_round"):
 		music_manager.first_round()
@@ -1891,7 +1923,38 @@ func _game_over_from_continue() -> void:
 	var money := get_tree().get_first_node_in_group("money_manager")
 	if money and money.has_method("hide_for_menus"):
 		money.hide_for_menus()
-	await return_to_difficulty_select()
+	await reload_to_boot()
+
+
+func play_run_over_and_restart() -> void:
+	if transitioning_worlds:
+		return
+	_continue_open = false
+	_unfreeze_gameplay_for_continue()
+	stop_timer()
+	stop_player()
+	force_shop_open = false
+	wave_ending = false
+	game_over_triggered = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	var pause_menu := get_tree().get_first_node_in_group("pause_menu")
+	if pause_menu:
+		if pause_menu.has_method("close_now"):
+			pause_menu.close_now()
+		elif pause_menu is CanvasItem:
+			(pause_menu as CanvasItem).hide()
+	get_tree().paused = false
+
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	var screen: Node = null
+	if menus and menus.has_method("ensure_continue"):
+		screen = menus.ensure_continue()
+	if screen == null:
+		screen = get_tree().get_first_node_in_group("continue_screen")
+	if screen and screen.has_method("play_run_loss_overlay"):
+		await screen.play_run_loss_overlay()
+	await _game_over_from_continue()
 
 
 func _hide_start_menu_ui() -> void:
@@ -2551,6 +2614,16 @@ func move_to_start() -> void:
 	call_deferred("_reattach_heavy_layout_nodes", heavy)
 
 
+## After a fade-to-black overlay, reload the main scene instead of reconstructing title by hand.
+func reload_to_boot() -> void:
+	if get_tree().paused:
+		get_tree().paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	gl_PlayerState.reset_all()
+	await get_tree().process_frame
+	get_tree().reload_current_scene()
+
+
 ## Return to the title screen as a cold boot: start island, Wormfood intro, Start button.
 func return_to_title() -> void:
 	if transitioning_worlds:
@@ -2592,10 +2665,12 @@ func return_to_title() -> void:
 		stage_complete.hide()
 
 	var continue_screen := get_tree().get_first_node_in_group("continue_screen")
-	if continue_screen and continue_screen.has_method("close_now"):
-		continue_screen.close_now()
-	elif continue_screen:
-		continue_screen.hide()
+	var keep_continue_blackout := continue_screen != null and bool(continue_screen.get("_holding_blackout"))
+	if continue_screen and not keep_continue_blackout:
+		if continue_screen.has_method("close_now"):
+			continue_screen.close_now()
+		else:
+			continue_screen.hide()
 
 	var diff_select := get_tree().get_first_node_in_group("difficulty_select")
 	if diff_select and diff_select.has_method("close_pop_up"):
@@ -2628,9 +2703,15 @@ func return_to_title() -> void:
 		scene_transition_screen.set_destination_place('start')
 	if scene_transition_screen:
 		await scene_transition_screen.next_level_start()
+	if keep_continue_blackout and is_instance_valid(continue_screen):
+		if continue_screen.has_method("close_now"):
+			continue_screen.close_now()
+		else:
+			continue_screen.hide()
 
 	gl_PlayerState.reset_all()
 	gl_PlayerState.dataset.level_name = 'start'
+	apply_level_file_for_difficulty()
 	# Restore runtime progress cache from persisted meta (not wiped by reset_all).
 	var stored = gl_PlayerState.dataset.get('level_progress', {})
 	_level_progress = (stored as Dictionary).duplicate(true) if stored is Dictionary else {}
@@ -2692,6 +2773,20 @@ func return_to_title() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	current_round_state = RoundState.INACTIVE
 	transitioning_worlds = false
+
+
+func is_in_active_run() -> bool:
+	var level := String(gl_PlayerState.dataset.get("level_name", "")).strip_edges().to_lower() if gl_PlayerState else ""
+	var start := "start"
+	if gl_DataSet and gl_DataSet.has_method("get_start_place_name"):
+		start = String(gl_DataSet.get_start_place_name()).strip_edges().to_lower()
+	if not level.is_empty() and level != start and level != "start":
+		return true
+	match current_round_state:
+		RoundState.INACTIVE, RoundState.START_START:
+			return false
+		_:
+			return true
 
 
 ## Shop back → Yes: reset the run and reopen difficulty select on the start layout.
@@ -2795,7 +2890,7 @@ func return_to_difficulty_select() -> void:
 	enter_state(RoundState.START_START)
 
 
-## Last-range survival: fade to black, show stage complete, then title on DONE.
+## Last-range survival: fade to black, show stage complete, then reload to title.
 func _show_stage_complete_and_return_to_title() -> void:
 	enter_state(RoundState.INACTIVE)
 	stop_timer()
@@ -2815,7 +2910,7 @@ func _show_stage_complete_and_return_to_title() -> void:
 	var cash := int(gl_PlayerState.dataset.cash)
 	if screen and screen.has_method("play"):
 		await screen.play(stage_name, cash)
-	await return_to_title()
+	await reload_to_boot()
 
 
 func _layout_path_for_level(level_id: String) -> String:
@@ -3127,6 +3222,7 @@ func _restore_level_progress(level_id: String) -> void:
 ## use_transition_overlay: background travel banner/fade. Map button travel passes false and drives progress_bar instead.
 func travel_to_level(level_id: String, use_transition_overlay: bool = true, progress_bar: Range = null) -> void:
 	level_id = gl_DataSet.resolve_place_name(level_id)
+	apply_level_file_for_difficulty()
 	var layout_path := _layout_path_for_level(level_id)
 	if layout_path.is_empty():
 		push_error('RoundManager: unknown level "%s"' % level_id)
@@ -3147,6 +3243,8 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 		progress_bar.value = 0.0
 	_set_travel_progress(0.02)
 	CommonCode.apply_transition_blur()
+	if use_transition_overlay:
+		_hold_title_camera_for_travel()
 
 	# Kick layout load on a worker during the fade / map progress.
 	_request_layout_load(layout_path)
@@ -3184,7 +3282,10 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	if bonus_target_manager and bonus_target_manager.has_method('cleanup_bonus_round'):
 		bonus_target_manager.cleanup_bonus_round()
 
-	player.display_hud()
+	if use_transition_overlay and player and player.has_method("hide_hud"):
+		player.hide_hud()
+	else:
+		player.display_hud()
 	gl_PlayerState.dataset.level_name = level_id
 	if gl_PlayerState.has_method("reset_range_banked_cash"):
 		gl_PlayerState.reset_range_banked_cash()
@@ -3244,12 +3345,14 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	shop_main_menu.setup_shop_for_rounds()
 	shop_main_menu.sync_rounds_to_progress(current_sequence_index, current_rock_sequence.size())
 	shop_main_menu.update_place_label()
-	wave_progress_feedback.show()
+	if not use_transition_overlay:
+		wave_progress_feedback.show()
 	find_egg()
 	_set_travel_progress(0.95)
 
 
-	place_name.update_place_name()
+	if not use_transition_overlay and place_name:
+		place_name.update_place_name()
 
 	if coming_from_start:
 		var player_balloon := get_node_or_null('../PlayerBalloon')
@@ -3265,11 +3368,35 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	## Mark this place as entered so the map can show round progress.
 	_save_level_progress()
 	_clear_travel_progress_bar()
-	CommonCode.apply_ui_overlay_blur()
 	## Map travel (no overlay): shop + ammo open after the map's own exit timing.
 	if use_transition_overlay:
-		enter_state(RoundState.SHOP_START)
+		await _play_range_arrival_intro(level_id)
+
+
+func _hold_title_camera_for_travel() -> void:
+	var scene_mgr := get_tree().get_first_node_in_group("scene_manager")
+	if scene_mgr and scene_mgr.has_method("hold_at_title_camera"):
+		scene_mgr.hold_at_title_camera()
+
+
+func _play_range_arrival_intro(level_id: String) -> void:
+	CommonCode.apply_gameplay_blur()
+	if player and player.has_method("hide_hud"):
+		player.hide_hud()
+	if wave_progress_feedback:
+		wave_progress_feedback.hide()
+	if place_name and place_name.has_method("play_arrival_card"):
+		await place_name.play_arrival_card(level_id)
+	var scene_mgr := get_tree().get_first_node_in_group("scene_manager")
+	if scene_mgr and scene_mgr.has_method("begin_swoop_to_gameplay_camera"):
+		scene_mgr.begin_swoop_to_gameplay_camera()
+	if wave_progress_feedback:
+		wave_progress_feedback.show()
+	enter_state(RoundState.SHOP_START)
+	if player and player.has_method("show_ammo_panel"):
 		player.show_ammo_panel()
+	if scene_mgr and scene_mgr.has_method("await_camera_swoop"):
+		await scene_mgr.await_camera_swoop()
 
 
 ## Boss survival fight for an overworld island (0 → island_1_boss + range boss, 1 → island_2_boss + range boss-2).

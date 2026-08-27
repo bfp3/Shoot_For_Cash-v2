@@ -4,6 +4,42 @@
 [ext_resource type="Texture2D" uid="uid://du24q4ceh1rta" path="res://res/star_png_256.png" id="4_2givc"]
 [ext_resource type="Texture2D" uid="uid://cp255yy4k2lna" path="res://res/lock-svgrepo-com.png" id="4_lock"]
 [ext_resource type="Texture2D" uid="uid://c2vlvp7tqncih" path="res://res/star_filled_256.png" id="4_w73f1"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="4_xilsf"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="5_focus"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="6_flip"]
+[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="7_shing"]
+[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="8_travel"]
+
+[sub_resource type="Curve" id="Curve_f258a"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_tt1wp"]
+curve = SubResource("Curve_f258a")
+
+[sub_resource type="Curve" id="Curve_ayn6y"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_pmshx"]
+curve = SubResource("Curve_ayn6y")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gn3u7"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(128, 128, 1)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+gravity = Vector3(0, -2, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 4.9999976
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 0.02
+scale_max = 0.04
+scale_curve = SubResource("CurveTexture_pmshx")
+color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+alpha_curve = SubResource("CurveTexture_tt1wp")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_circle"]
 bg_color = Color(1, 1, 1, 1)
@@ -40,6 +76,16 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 script = ExtResource("1_script")
 icon = ExtResource("4_w73f1")
 lock_icon = ExtResource("4_lock")
+locked_hold_sec = 1.0
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=660221732]
+position = Vector2(95, 95)
+amount = 15
+texture = ExtResource("4_xilsf")
+lifetime = 2.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_gn3u7")
 
 [node name="Circle" type="Panel" parent="." unique_id=536188618]
 self_modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
@@ -160,6 +206,32 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="BackLabel" type="RichTextLabel" parent="." unique_id=388791902]
+unique_name_in_owner = true
+visible = false
+z_index = 2
+clip_contents = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "[center][wave]UNLOCKED
+NOT YET"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="LockIcon" type="TextureRect" parent="." unique_id=932523332]
 visible = false
 modulate = Color(1, 1, 1, 0.22745098)
@@ -213,6 +285,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.125, 0.125)
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="HBoxContainer" unique_id=2119161989]
@@ -243,3 +316,27 @@ mouse_filter = 2
 texture = ExtResource("4_2givc")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="SFX" type="Node" parent="." unique_id=1847203311]
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1847203312]
+stream = ExtResource("5_focus")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=1847203313]
+stream = ExtResource("5_focus")
+volume_db = -50.0
+
+[node name="flip_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1847203314]
+stream = ExtResource("6_flip")
+volume_db = -22.0
+
+[node name="shing_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1847203315]
+stream = ExtResource("7_shing")
+volume_db = -19.0
+pitch_scale = 1.2
+
+[node name="travel_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1847203316]
+stream = ExtResource("8_travel")
+volume_db = -32.0
+pitch_scale = 1.6

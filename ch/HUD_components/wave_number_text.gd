@@ -376,6 +376,17 @@ func show_strike_hud() -> void:
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 
+func hide_strike_hud_now() -> void:
+	_set_strike_hud_hidden_immediate()
+	if strike_panel:
+		strike_panel.hide()
+	var notice := get_node_or_null("MakeStrikeNoticeable")
+	if notice:
+		if notice.has_method("stop"):
+			notice.stop()
+		notice.hide()
+
+
 func hide_strike_hud() -> void:
 	if strike_hud == null:
 		return

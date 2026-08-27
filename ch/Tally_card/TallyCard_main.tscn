@@ -18,6 +18,8 @@
 [ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="22_t1vx4"]
 [ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="23_hvbbb"]
 [ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="24_hrtfy"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="25_next"]
+[ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="26_arrow"]
 
 [sub_resource type="Animation" id="Animation_tnodp"]
 length = 0.001
@@ -103,6 +105,28 @@ left_to_right = 1.0
 
 [sub_resource type="PrismMesh" id="PrismMesh_bux34"]
 left_to_right = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_next"]
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_next_hover"]
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="Animation" id="Animation_3q72g"]
 length = 0.001
@@ -350,7 +374,7 @@ size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 87
 bbcode_enabled = true
-text = "[wave]WON"
+text = "[wave]CASH PRIZE"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -433,7 +457,7 @@ size_flags_horizontal = 3
 theme_type_variation = &"WhiteRichText"
 theme_override_font_sizes/normal_font_size = 57
 bbcode_enabled = true
-text = "CASH BANKED"
+text = "BONUS CASH"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -441,9 +465,9 @@ horizontal_alignment = 1
 [node name="CashOut" type="Control" parent="CenterContainer/MainPanel/MainPanel" unique_id=222821136]
 custom_minimum_size = Vector2(200, 128)
 anchors_preset = 0
-offset_top = 274.0
+offset_top = 400.0
 offset_right = 1198.0
-offset_bottom = 402.0
+offset_bottom = 560.0
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=151705255]
 position = Vector2(597.2461, 106.37421)
@@ -473,7 +497,7 @@ theme_override_constants/shadow_outline_size = 10
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/normal_font_size = 72
 bbcode_enabled = true
-text = "WINNINGS"
+text = ""
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -586,6 +610,73 @@ modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_ta7gf")
+
+[node name="NextRound" type="Button" parent="." unique_id=1534249607 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.13725491)
+custom_minimum_size = Vector2(220, 88)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -669.0
+offset_top = -420.0
+offset_right = -425.0
+offset_bottom = -320.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_colors/font_hover_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_font_sizes/font_size = 98
+theme_override_styles/normal = SubResource("StyleBoxFlat_next")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_next")
+theme_override_styles/hover = SubResource("StyleBoxFlat_next_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_next_hover")
+script = ExtResource("25_next")
+focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../SFX/focus_exit")
+purchase_sfx = NodePath("../SFX/shop_purchase_02")
+
+[node name="Arrow" type="TextureRect" parent="NextRound" unique_id=1316183754]
+modulate = Color(0.92156863, 0.8745098, 0.84313726, 1)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -65.0
+offset_top = -28.0
+offset_right = -9.0
+offset_bottom = 28.0
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(-1, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("26_arrow")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RichTextLabel" type="RichTextLabel" parent="NextRound" unique_id=69238808]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_right = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8745098, 0.84313726, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 90
+bbcode_enabled = true
+text = "[pulse]NEXT"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1059437881]
 libraries/ = SubResource("AnimationLibrary_cuwcq")

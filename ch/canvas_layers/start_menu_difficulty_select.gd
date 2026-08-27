@@ -28,6 +28,8 @@ func open_pop_up() -> void:
 	position = default_position
 	show()
 	CommonCode.apply_ui_overlay_blur()
+	if _buttons and _buttons.has_method("refresh_unlocks"):
+		_buttons.refresh_unlocks()
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_LINEAR)
 	tween.set_ease(Tween.EASE_OUT)
@@ -65,8 +67,11 @@ func _on_level_chosen(place: String, stage_title: String = "BEGINNER") -> void:
 
 
 func _on_back_pressed() -> void:
-	close_pop_up()
-	var scene := get_tree().get_first_node_in_group("scene_manager")
-	var splash = scene.get("splash_screen") if scene else null
-	if splash and splash.has_method("show_title_ready"):
-		splash.show_title_ready()
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if menus and menus.has_method("ensure_pause"):
+		menus.ensure_pause()
+	var pause_menu = get_tree().get_first_node_in_group("pause_menu")
+	if pause_menu and pause_menu.has_method("open_menu"):
+		pause_menu.open_menu()
+	elif pause_menu and pause_menu.has_method("start"):
+		pause_menu.start()

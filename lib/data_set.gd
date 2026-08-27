@@ -1,5 +1,10 @@
 extends Node
 
+## Title-screen difficulty locks. False = badge flips to the locked-back message.
+var advanced_unlocked := false
+var expert_unlocked := false
+var mystery_unlocked := false
+
 # Upgrade stages
 
 var dataset_float : Dictionary = {
@@ -174,6 +179,18 @@ var dataset_string : Dictionary = {
 	}
 	
 # DATASET.get_value('bullet_speed',4)
+
+func is_difficulty_unlocked(key: String) -> bool:
+	match String(key).strip_edges().to_lower():
+		"advanced":
+			return advanced_unlocked
+		"expert":
+			return expert_unlocked
+		"mystery":
+			return mystery_unlocked
+		_:
+			return true
+
 
 func get_value(_name : String, _index : int = 0) -> float:
 	

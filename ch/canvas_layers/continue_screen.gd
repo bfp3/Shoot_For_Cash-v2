@@ -7,6 +7,7 @@ signal finished(outcome: String)
 const OUTCOME_PAID := "paid"
 const OUTCOME_FLIP_WIN := "flip_win"
 const OUTCOME_GIVE_UP := "give_up"
+const ABANDON_RUN_PROMPT_PATH := "res://ch/Shop/abandon_run_prompt.tscn"
 
 @onready var _root: Control = $Control
 @onready var _title: RichTextLabel = %TitleLabel
@@ -25,6 +26,9 @@ const OUTCOME_GIVE_UP := "give_up"
 @onready var _result: RichTextLabel = %CoinResultLabel
 @onready var _resume: RichTextLabel = %ResumeCountdownLabel
 @onready var _next_fee: RichTextLabel = %NextFeeLabel
+@onready var _game_over: Control = %GameOver
+@onready var _game_over_label: RichTextLabel = $Control/MainPanel/GameOver/GameOverLabel
+@onready var _fade_to_black: ColorRect = $Control/FadeToBlack
 
 @export var resume_from := 3
 ## When true (default), a paid continue resumes mid-wave. When false, PLAY / YES
@@ -40,6 +44,9 @@ var _displayed_cash := 0.0
 var _cash_roll_tween: Tween
 var _countdown_token := 0
 var _outcome := OUTCOME_GIVE_UP
+var _holding_blackout := false
+var _game_over_rest_scale := Vector2(0.874, 0.874)
+var _abandon_prompt: Control = null
 
 
 func _ready() -> void:
@@ -57,7 +64,10 @@ func _ready() -> void:
 		_heads.pressed.connect(_on_guess.bind(true))
 	if _tails:
 		_tails.pressed.connect(_on_guess.bind(false))
+	_setup_abandon_run_prompt()
 	_reset_visuals()
+	if _game_over_label:
+		_game_over_rest_scale = _game_over_label.scale
 
 
 func play(fee: int, cash: int) -> String:
@@ -66,6 +76,7 @@ func play(fee: int, cash: int) -> String:
 	_busy = true
 	_waiting = true
 	_resolving = false
+	_holding_blackout = false
 	_outcome = OUTCOME_GIVE_UP
 	_fee_amount = maxi(fee, 0)
 	_cash_amount = maxi(cash, 0)
@@ -85,8 +96,9 @@ func play(fee: int, cash: int) -> String:
 		await get_tree().process_frame
 
 	_busy = false
-	hide()
-	_reset_visuals()
+	if not _holding_blackout:
+		hide()
+		_reset_visuals()
 	finished.emit(_outcome)
 	return _outcome
 
@@ -94,13 +106,57 @@ func play(fee: int, cash: int) -> String:
 func close_now() -> void:
 	_waiting = false
 	_busy = false
+	_holding_blackout = false
 	_countdown_token += 1
+	_close_abandon_prompt()
 	_lower_shop_music()
 	hide()
 	_reset_visuals()
 
 
+func play_run_loss_overlay() -> void:
+	if _busy:
+		return
+	_busy = true
+	_waiting = true
+	_resolving = true
+	_holding_blackout = false
+	_outcome = OUTCOME_GIVE_UP
+	var prev_layer := layer
+	layer = 110
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_hide_continue_chrome_instant()
+	if _game_over:
+		_game_over.hide()
+		_game_over.modulate.a = 1.0
+	if _game_over_label:
+		_game_over_label.scale = _game_over_rest_scale
+	if _fade_to_black:
+		_fade_to_black.hide()
+		_fade_to_black.modulate.a = 0.0
+		_fade_to_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	show()
+	if _root:
+		_root.mouse_filter = Control.MOUSE_FILTER_STOP
+	await _play_game_over_sequence()
+	layer = prev_layer
+	_busy = false
+
+
+func _hide_continue_chrome_instant() -> void:
+	_hide_overlay_strikes()
+	var panel := _root.get_node_or_null("MainPanel") as Control if _root else null
+	if panel == null:
+		return
+	for child in panel.get_children():
+		if child == _game_over:
+			continue
+		if child is CanvasItem:
+			(child as CanvasItem).modulate.a = 0.0
+
+
 func _reset_visuals() -> void:
+	_close_abandon_prompt()
 	if _cash_roll_tween and _cash_roll_tween.is_valid():
 		_cash_roll_tween.kill()
 	_cash_roll_tween = null
@@ -139,6 +195,17 @@ func _reset_visuals() -> void:
 		_heads.disabled = false
 	if _tails:
 		_tails.disabled = false
+	_restore_continue_chrome()
+	if _game_over:
+		_game_over.hide()
+		_game_over.modulate.a = 1.0
+	if _game_over_label:
+		_game_over_label.scale = _game_over_rest_scale
+		_game_over_label.modulate.a = 1.0
+	if _fade_to_black:
+		_fade_to_black.hide()
+		_fade_to_black.modulate.a = 0.0
+		_fade_to_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func _refresh_money_labels(cash: int, fee: int) -> void:
@@ -297,13 +364,82 @@ func _on_guess(picked_heads: bool) -> void:
 			return
 		_finish(OUTCOME_FLIP_WIN)
 	else:
+		await _play_game_over_sequence()
+		if not _waiting:
+			return
 		_finish(OUTCOME_GIVE_UP)
 
 
 func _on_give_up_pressed() -> void:
+	if not _waiting or _resolving:
+		return
+	if _abandon_prompt and _abandon_prompt.visible:
+		return
+	_lock_actions()
+	_open_abandon_prompt()
+
+
+func _setup_abandon_run_prompt() -> void:
+	if _abandon_prompt and is_instance_valid(_abandon_prompt):
+		return
+	var packed := load(ABANDON_RUN_PROMPT_PATH) as PackedScene
+	if packed == null:
+		push_warning("Continue screen: abandon run prompt missing")
+		return
+	_abandon_prompt = packed.instantiate() as Control
+	if _abandon_prompt == null:
+		return
+	_abandon_prompt.process_mode = Node.PROCESS_MODE_ALWAYS
+	_abandon_prompt.z_index = 120
+	if _root:
+		_root.add_child(_abandon_prompt)
+	else:
+		add_child(_abandon_prompt)
+	_abandon_prompt.hide()
+	if _abandon_prompt.has_signal("confirmed"):
+		_abandon_prompt.confirmed.connect(_on_abandon_run_confirmed)
+	if _abandon_prompt.has_signal("cancelled"):
+		_abandon_prompt.cancelled.connect(_on_abandon_run_cancelled)
+
+
+func _open_abandon_prompt() -> void:
+	if _abandon_prompt and _abandon_prompt.has_method("open_prompt"):
+		_abandon_prompt.open_prompt()
+		return
+	_on_abandon_run_confirmed()
+
+
+func _close_abandon_prompt() -> void:
+	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
+		_abandon_prompt.close_prompt()
+
+
+func _on_abandon_run_cancelled() -> void:
+	_unlock_actions()
+	_focus_primary()
+
+
+func _on_abandon_run_confirmed() -> void:
+	if _resolving:
+		return
+	_resolving = true
+	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
+		await _abandon_prompt.close_prompt()
+	_lock_actions()
+	await _play_game_over_sequence()
 	if not _waiting:
 		return
 	_finish(OUTCOME_GIVE_UP)
+
+
+func _unlock_actions() -> void:
+	if _give_up:
+		_give_up.disabled = false
+	_show_afford_or_flip()
+	if _heads:
+		_heads.disabled = false
+	if _tails:
+		_tails.disabled = false
 
 
 func _lock_actions() -> void:
@@ -327,8 +463,9 @@ func _finish(outcome: String) -> void:
 	_waiting = false
 	_countdown_token += 1
 	_lower_shop_music()
-	hide()
-	_play_close_sfx()
+	if not _holding_blackout:
+		hide()
+		_play_close_sfx()
 
 
 func _play_open_sfx() -> void:
@@ -373,3 +510,111 @@ func _music_call(method_name: String) -> void:
 			music = rm.get("music_manager")
 	if music and music.has_method(method_name):
 		music.call(method_name)
+
+
+func _hide_gameplay_strikes() -> void:
+	_hide_overlay_strikes()
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	var feedback = rm.get("wave_progress_feedback") if rm else null
+	if feedback and feedback.has_method("hide_strike_hud_now"):
+		feedback.hide_strike_hud_now()
+	elif feedback and feedback.has_method("hide_strike_hud"):
+		feedback.hide_strike_hud()
+	if feedback is CanvasItem:
+		(feedback as CanvasItem).hide()
+
+
+func _overlay_strike_host() -> Control:
+	return _root.get_node_or_null("MainPanel/Control") as Control if _root else null
+
+
+func _hide_overlay_strikes() -> void:
+	var host := _overlay_strike_host()
+	if host == null:
+		return
+	var pulse := host.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	if pulse:
+		pulse.stop()
+	host.hide()
+	host.modulate.a = 0.0
+
+
+func _play_game_over_sequence() -> void:
+	_hide_gameplay_strikes()
+	_lock_actions()
+	await _fade_continue_chrome()
+	if not _waiting:
+		return
+	await _stamp_game_over()
+	if not _waiting:
+		return
+	await get_tree().create_timer(2.0, true).timeout
+	if not _waiting:
+		return
+	_holding_blackout = true
+	await _fade_screen_to_black()
+	if not _waiting:
+		return
+	await get_tree().create_timer(2.0, true).timeout
+
+
+func _fade_continue_chrome() -> void:
+	_hide_overlay_strikes()
+	var panel := _root.get_node_or_null("MainPanel") as Control if _root else null
+	if panel == null:
+		return
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_interval(0.01)
+	for child in panel.get_children():
+		if child == _game_over:
+			continue
+		if child is CanvasItem:
+			tween.tween_property(child, "modulate:a", 0.0, 0.4)\
+				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tween.finished
+
+
+func _restore_continue_chrome() -> void:
+	var panel := _root.get_node_or_null("MainPanel") as Control if _root else null
+	if panel == null:
+		return
+	for child in panel.get_children():
+		if child is CanvasItem:
+			(child as CanvasItem).modulate.a = 1.0
+	var host := _overlay_strike_host()
+	if host:
+		host.show()
+		host.modulate.a = 1.0
+		var pulse := host.get_node_or_null("AnimationPlayer") as AnimationPlayer
+		if pulse:
+			pulse.play("pulse")
+
+
+func _stamp_game_over() -> void:
+	if _game_over == null:
+		return
+	_game_over.show()
+	_game_over.modulate.a = 0.0
+	if _game_over_label:
+		_game_over_label.scale = _game_over_rest_scale * 3.0
+	var stamp_sfx := get_node_or_null("SFX/Stamp_sfx") as AudioStreamPlayer
+	var tween := create_tween()
+	tween.tween_property(_game_over, "modulate:a", 1.0, 0.2)
+	if _game_over_label:
+		tween.parallel().tween_property(_game_over_label, "scale", _game_over_rest_scale, 0.2)
+	if stamp_sfx:
+		tween.parallel().tween_callback(stamp_sfx.play.bind(0.05)).set_delay(0.15)
+	await tween.finished
+
+
+func _fade_screen_to_black() -> void:
+	if _fade_to_black == null:
+		return
+	_fade_to_black.show()
+	_fade_to_black.modulate.a = 0.0
+	_fade_to_black.mouse_filter = Control.MOUSE_FILTER_STOP
+	var tween := create_tween()
+	tween.tween_property(_fade_to_black, "modulate:a", 1.0, 0.7)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tween.finished

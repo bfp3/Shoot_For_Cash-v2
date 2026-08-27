@@ -15,6 +15,11 @@
 [ext_resource type="Script" uid="uid://2td2u2syuhrd" path="res://ch/HUD_components/resolution_confirm_dialog.gd" id="11_confirm"]
 [ext_resource type="Script" uid="uid://be14gsgtq6uyc" path="res://ch/HUD_components/volume_dial.gd" id="12_dial"]
 
+[sub_resource type="PrismMesh" id="PrismMesh_brcys"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_s7dml"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cn8lj"]
@@ -74,6 +79,52 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 1.2)
 
+[node name="RedCornerPanel" type="Control" parent="Control" unique_id=125942234]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -750.0
+offset_top = 216.0
+offset_right = -750.0
+offset_bottom = 296.0
+grow_horizontal = 0
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="Control/RedCornerPanel" unique_id=192180598]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -149.0
+offset_top = 50.0
+offset_right = -149.0
+offset_bottom = 50.0
+grow_horizontal = 0
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RightTriangle" type="MeshInstance2D" parent="Control/RedCornerPanel/Control" unique_id=987479237]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(141.451, 0)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_brcys")
+
+[node name="Square" type="MeshInstance2D" parent="Control/RedCornerPanel/Control" unique_id=484499736]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(-32.484, 0)
+rotation = 3.1415925
+scale = Vector2(165.93288, 82)
+mesh = SubResource("BoxMesh_s7dml")
+
 [node name="CenterContainer" type="CenterContainer" parent="Control" unique_id=47598338]
 layout_mode = 1
 anchors_preset = 8
@@ -97,6 +148,13 @@ custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 2
 mouse_filter = 2
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+
+[node name="ColorRect2" type="Panel" parent="Control/CenterContainer" unique_id=1053665524]
+z_index = -1
+custom_minimum_size = Vector2(640, 708.105)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("8_68q17")
 
 [node name="QuitControl" type="Control" parent="Control/CenterContainer" unique_id=1728775442]
 unique_name_in_owner = true
@@ -146,9 +204,11 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 [node name="RichTextLabel" type="RichTextLabel" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1396683498]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 144
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 124
 bbcode_enabled = true
-text = "[pulse]Paused"
+text = "[pulse]PAUSED"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -161,8 +221,10 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 [node name="CancelMenu" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=539474980 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 96
-text = "Resume"
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 106
+text = "PLAY"
 script = ExtResource("9_uy4i6")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
@@ -176,8 +238,10 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 [node name="Settings" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1271211033 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 96
-text = "Settings"
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 106
+text = "SETTINGS"
 script = ExtResource("9_uy4i6")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
@@ -192,8 +256,10 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 visible = false
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 96
-text = "Map"
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 106
+text = "MAP"
 script = ExtResource("9_uy4i6")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
@@ -207,8 +273,10 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 [node name="BackToTitle" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1988776651 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 72
-text = "Title Screen"
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 106
+text = "MAIN MENU"
 script = ExtResource("9_uy4i6")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")
@@ -222,8 +290,10 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 [node name="CloseGame" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1955505925 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
-theme_override_font_sizes/font_size = 96
-text = "Quit Game"
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 106
+text = "QUIT GAME"
 script = ExtResource("9_uy4i6")
 focus_enter_sfx = NodePath("../../../../../../../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../../../../../../../SFX/focus_exit")

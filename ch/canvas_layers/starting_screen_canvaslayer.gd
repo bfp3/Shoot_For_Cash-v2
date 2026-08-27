@@ -264,8 +264,8 @@ func _on_start_game_pressed() -> void:
 	var tween = create_tween()
 
 	tween.tween_property(prog_bar, "value", 100.0, 0.3)
-	await get_tree().create_timer(0.29).timeout
-	prog_bar.value = 0.0
+	await get_tree().create_timer(0.29, false).timeout
+
 	
 	music_control._on_start_button_pressed()
 	
@@ -276,3 +276,6 @@ func _on_start_game_pressed() -> void:
 	$SplashScreen_v2/SFX/hud_click_3.play()
 	$SplashScreen_v2/SFX/start_sfx.play()
 	enter_state(State.CLOSE_MENU)
+	
+	await get_tree().create_timer(0.29, false).timeout
+	prog_bar.value = 0.0

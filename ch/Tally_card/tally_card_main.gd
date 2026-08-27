@@ -62,6 +62,15 @@ var _win_keep_winnings := false
 var _winnings_fly: RichTextLabel = null
 var _center: Control
 var _preview_win_busy := false
+var _displayed_wallet := 0.0
+var _next_ready := false
+var _scene_prize_title := ""
+var _scene_bonus_title := ""
+var _scene_cash_title := ""
+
+@onready var _next_button: Button = get_node_or_null("%NextRound") as Button
+@onready var _bonus_row: Control = get_node_or_null("CenterContainer/MainPanel/MainPanel/CashHboxcontainer") as Control
+@onready var _bonus_earned: Control = get_node_or_null("CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned") as Control
 
 
 func _ready() -> void:
@@ -72,6 +81,12 @@ func _ready() -> void:
 	default_position = position
 	
 	round_manager = get_tree().get_first_node_in_group('round_manager')
+	if grade_label:
+		_scene_prize_title = grade_label.text
+	if bonuses_label:
+		_scene_bonus_title = bonuses_label.text
+	if winnings_label:
+		_scene_cash_title = winnings_label.text
 	
 	# BOTTOM RIGHT PIVOT
 	default_pivot_offset = Vector2(0, size.y)
@@ -80,6 +95,9 @@ func _ready() -> void:
 	hide()
 	_hide_sequence_labels()
 	_center = get_node_or_null("CenterContainer") as Control
+	if _next_button and not _next_button.pressed.is_connected(_on_shop_pressed):
+		_next_button.pressed.connect(_on_shop_pressed)
+	_hide_next_button()
 
 	if test_mode:
 		enter_state(State.OPEN_MENU)
@@ -179,74 +197,12 @@ func _format_survival_time(seconds: float) -> String:
 	
 	
 func start_perfect_sequence() -> void:
-	
-	#start_fail_sequence()
-	#return
-	
 	await get_tree().create_timer(0.5, false).timeout
 	$SFX/shop_purchase_02.play()
 	$SFX/shop_purchase_01.play()
-	var dur := 0.33
-	grade_label.show()
-	grade_label.modulate.a = 1.0
-	grade_label.text = "[wave]WON"
-	
-	if gl_PlayerState.dataset.total_current_strikes <= 0:
-		grade_label.text = "[wave]PERFECT!"
-		
-	perfect_bonus = int(gl_DataSet.get_value('reward_perfect_round', 0))
-	
-	# 2. GRADE CASH LABEL
-	grade_cash_label.show()
-	grade_cash_label.text = '$' + str(perfect_bonus)
-	grade_cash_label.modulate.a = 1.0
-	gl_PlayerState.add_cash(perfect_bonus)
-
-	# decorative particle flourish, fires in the background (non-blocking)
-	
-	grand_total_cash_label.show()
-	grand_total_cash_label.modulate.a = 1.0
-	# PAUSE
-	await get_tree().create_timer(0.25, false).timeout
-	#await get_tree().create_timer(dur / 2, false).timeout
-
-	# 3. BONUSES
-	$SFX/shop_purchase_02.play()
-	apply_bonus_cash()
-	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned.modulate.a = 1.0
-	#$CenterContainer/MainPanel/MainPanel/CashHboxcontainer/Fines.modulate.a = 0.0
-
-	grand_total_cash_label.modulate.a = 0.0
-	var kept := int(gl_PlayerState.dataset.bonus_cash)
-	if gl_PlayerState.has_method("get_round_cash_kept"):
-		kept = int(gl_PlayerState.get_round_cash_kept())
-	grand_total_cash_label.text = "$" + str(int(kept + perfect_bonus - gl_PlayerState.dataset.fines))
-	grand_total_cash_label.pivot_offset_ratio = Vector2(0.5,0.5)
-	#await get_tree().create_timer(0.5, false).timeout
-
-	await get_tree().create_timer(dur, false).timeout
-	
-	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	
-	tween.tween_property(grand_total_cash_label, 'modulate:a', 1.0, 0.15)
-	tween.parallel().tween_property(grand_total_cash_label, 'scale', Vector2.ONE * 1.1, 0.15)
-	
-	tween.parallel().tween_property($CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles, "emitting", true, 0.1).set_delay(0.1)
-	tween.parallel().tween_callback($SFX/shop_purchase_02.play).set_delay(0.1)
-	tween.tween_property(grand_total_cash_label, 'scale', Vector2.ONE, 0.15)
-	#await get_tree().create_timer(dur / 3, false).timeout
-	await tween.finished
-	#$CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles.emitting = true
-	#$SFX/shop_purchase_02.play()
-	
-	
-	await get_tree().create_timer(dur, false).timeout
-	await get_tree().create_timer(dur, false).timeout
-	#await get_tree().create_timer(dur, false).timeout
-	
-	await perfect_particles()
-	
-	#await get_tree().create_timer(dur, false).timeout
+	await _play_payout_sequence()
+	if int(gl_PlayerState.dataset.total_current_strikes) <= 0:
+		await perfect_particles()
 	return
 
 
@@ -254,46 +210,10 @@ func start_win_sequence() -> void:
 	_win_keep_winnings = true
 	pending_winnings = 0
 	_clear_win_row_text()
-
-	var clear_bonus := 0
-	if gl_DataSet.has_method("get_range_clear_reward"):
-		var place := ""
-		if gl_PlayerState:
-			place = gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
-		clear_bonus = int(gl_DataSet.get_range_clear_reward(place))
-	else:
-		clear_bonus = int(gl_DataSet.get_value("range_clear_reward", 0))
-
-	var banked := 0
-	if gl_PlayerState and "cash_banked_this_range" in gl_PlayerState:
-		banked = int(gl_PlayerState.cash_banked_this_range)
-	elif gl_PlayerState and gl_PlayerState.has_method("get_round_cash_kept"):
-		banked = int(gl_PlayerState.get_round_cash_kept())
-	pending_winnings = clear_bonus + banked
-
-	if clear_bonus > 0:
-		gl_PlayerState.add_cash(clear_bonus)
-
 	await get_tree().create_timer(0.5, false).timeout
 	$SFX/shop_purchase_02.play()
 	$SFX/shop_purchase_01.play()
-	await _reveal_win_row(grade_label, grade_cash_label, "[wave]GREAT WORK", _money_text(clear_bonus))
-
-	await get_tree().create_timer(0.5, false).timeout
-	$SFX/shop_purchase_02.play()
-	await _reveal_win_row(bonuses_label, bonuses_cash_label, "CASH BANKED", _money_text(banked))
-
-	await get_tree().create_timer(0.5, false).timeout
-	$SFX/shop_purchase_02.play()
-	$SFX/shop_purchase_01.play()
-	grand_total_cash_label.pivot_offset_ratio = Vector2(0.5, 0.5)
-	await _reveal_win_row(winnings_label, grand_total_cash_label, "WINNINGS", _money_text(pending_winnings))
-
-	var punch := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	punch.tween_property(grand_total_cash_label, "scale", Vector2.ONE * 1.1, 0.15)
-	punch.parallel().tween_property($CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles, "emitting", true, 0.1)
-	punch.tween_property(grand_total_cash_label, "scale", Vector2.ONE, 0.15)
-	await punch.finished
+	await _play_payout_sequence()
 	return
 
 
@@ -364,6 +284,7 @@ func _hide_sequence_labels() -> void:
 	if stamp:
 		stamp.modulate.a = 0.0
 		stamp.hide()
+	_hide_next_button()
 
 
 func _clear_win_row_text() -> void:
@@ -389,6 +310,129 @@ func _reveal_win_row(title: Control, amount: Control, title_text: String, amount
 
 func _money_text(amount: int) -> String:
 	return CommonCode.format_money(amount)
+
+
+func _round_prize_amount() -> int:
+	if round_manager and round_manager.has_method("get_current_range_reward"):
+		var from_range := int(round_manager.get_current_range_reward())
+		if from_range > 0:
+			return from_range
+	if gl_DataSet and gl_DataSet.has_method("get_range_clear_reward"):
+		var place := ""
+		if gl_PlayerState:
+			place = gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+		var from_place := int(gl_DataSet.get_range_clear_reward(place))
+		if from_place > 0:
+			return from_place
+	return int(gl_DataSet.get_value("reward_perfect_round", 0))
+
+
+func _play_payout_sequence() -> void:
+	var wallet := int(gl_PlayerState.dataset.cash)
+	var prize := _round_prize_amount()
+	var pool := int(gl_PlayerState.dataset.get("bonus_cash", 0))
+	pending_winnings = prize + pool
+	perfect_bonus = prize
+	_displayed_wallet = float(wallet)
+
+	if _bonus_row:
+		_bonus_row.show()
+	if _bonus_earned:
+		_bonus_earned.show()
+
+	await get_tree().create_timer(0.25, false).timeout
+	$SFX/shop_purchase_02.play()
+	await _reveal_win_row(winnings_label, grand_total_cash_label, _scene_cash_title, _money_text(wallet))
+	if grand_total_cash_label:
+		grand_total_cash_label.pivot_offset_ratio = Vector2(0.5, 0.5)
+
+	await get_tree().create_timer(0.35, false).timeout
+	$SFX/shop_purchase_02.play()
+	await _reveal_win_row(grade_label, grade_cash_label, _scene_prize_title, _money_text(prize))
+
+	await get_tree().create_timer(0.35, false).timeout
+	$SFX/shop_purchase_02.play()
+	await _reveal_win_row(bonuses_label, bonuses_cash_label, _scene_bonus_title, _money_text(pool))
+
+	await get_tree().create_timer(0.4, false).timeout
+	if prize > 0:
+		gl_PlayerState.add_cash(prize)
+		_play_coin_sfx()
+		await _roll_wallet_to(wallet + prize)
+		wallet += prize
+	if pool > 0:
+		if gl_PlayerState.has_method("bank_cash_pool"):
+			gl_PlayerState.bank_cash_pool(true)
+		else:
+			gl_PlayerState.add_cash(pool)
+			gl_PlayerState.dataset.bonus_cash = 0
+		_play_coin_sfx()
+		await _roll_wallet_to(wallet + pool)
+		wallet += pool
+	if EventBus.instance:
+		EventBus.instance.update_money.emit()
+
+	var punch := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	punch.tween_property(grand_total_cash_label, "scale", Vector2.ONE * 1.1, 0.15)
+	punch.parallel().tween_property($CenterContainer/MainPanel/MainPanel/CashOut/BackgroundParticles, "emitting", true, 0.1)
+	punch.parallel().tween_callback($SFX/shop_purchase_02.play)
+	punch.tween_property(grand_total_cash_label, "scale", Vector2.ONE, 0.15)
+	await punch.finished
+
+
+func _set_wallet_label_text(value: float) -> void:
+	_displayed_wallet = value
+	if grand_total_cash_label:
+		grand_total_cash_label.text = _money_text(int(round(value)))
+
+
+func _roll_wallet_to(target: int, duration: float = 0.55) -> void:
+	var from := _displayed_wallet
+	var to := float(maxi(target, 0))
+	if grand_total_cash_label == null or is_equal_approx(from, to):
+		_set_wallet_label_text(to)
+		return
+	var tween := create_tween()
+	tween.tween_method(_set_wallet_label_text, from, to, duration)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	grand_total_cash_label.pivot_offset_ratio = Vector2(0.5, 0.5)
+	var punch := create_tween()
+	punch.tween_property(grand_total_cash_label, "scale", Vector2.ONE * 1.08, 0.08)\
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	punch.tween_property(grand_total_cash_label, "scale", Vector2.ONE, 0.12)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tween.finished
+
+
+func _play_coin_sfx() -> void:
+	var coin := get_node_or_null("SFX/shop_coin_sfx_01") as AudioStreamPlayer
+	if coin:
+		coin.play()
+	var click := get_node_or_null("SFX/hud_click_1") as AudioStreamPlayer
+	if click:
+		click.play()
+
+
+func _hide_next_button() -> void:
+	_next_ready = false
+	if _next_button:
+		_next_button.hide()
+		_next_button.disabled = true
+		_next_button.modulate.a = 0.0
+
+
+func _show_next_button() -> void:
+	if _next_button == null:
+		return
+	_next_button.disabled = false
+	_next_button.modulate.a = 0.0
+	_next_button.show()
+	var tween := create_tween()
+	tween.tween_property(_next_button, "modulate:a", 1.0, 0.22)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await tween.finished
+	_next_ready = true
+	UiFocus.grab_in(self, _next_button)
 
 
 func fly_winnings_to_map(map_cash: Control) -> void:
@@ -464,7 +508,7 @@ func check_white_rocks() -> void:
 	if gl_PlayerState.has_method("get_max_strikes"):
 		max_strikes = gl_PlayerState.get_max_strikes()
 	if gl_PlayerState.dataset.total_current_strikes >= max_strikes:
-		start_fail_sequence()
+		await start_fail_sequence()
 		start_sequence = false
 		return
 
@@ -534,8 +578,8 @@ func update_open_menu() -> void:
 		_center.show()
 		_center.modulate.a = 1.0
 	_hide_sequence_labels()
+	_hide_next_button()
 	
-	check_white_rocks()
 	menu_in_display = true
 	sfx_open_tally()
 
@@ -555,21 +599,9 @@ func update_open_menu() -> void:
 	tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)
 
 	await tween.finished
-	await reveal_stats()
-	
+	await check_white_rocks()
 	enter_state(State.IN_MENU)
-	var next := get_node_or_null("NextRound") as Control
-	UiFocus.grab_in(self, next)
-
-	
-	await get_tree().create_timer(2.0, false).timeout
-	
-	while start_sequence:
-		await get_tree().process_frame
-	
-	await get_tree().create_timer(1.0, false).timeout
-	
-	_on_shop_pressed()
+	await _show_next_button()
 		
 func update_close_menu() -> void:
 	pivot_offset = default_pivot_offset
@@ -669,7 +701,12 @@ func sfx_close_tally() -> void:
 
 
 func _on_shop_pressed() -> void:
+	if current_state == State.CLOSE_MENU:
+		return
+	if _next_button and _next_button.visible and not _next_ready:
+		return
 	current_state = State.CLOSE_MENU
+	_hide_next_button()
 	await update_close_menu()
 	if round_manager:
 		round_manager.enter_state(round_manager.RoundState.TALLY_END)

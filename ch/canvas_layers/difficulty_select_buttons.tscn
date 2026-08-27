@@ -10,7 +10,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 42
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_constants/separation = 93
 alignment = 1
 script = ExtResource("1_script")
 
@@ -41,6 +42,8 @@ top_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
 banner_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
 icon_modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 subtitle_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+travel_place = "moss"
+unlock_key = "advanced"
 locked = true
 
 [node name="Expert" parent="." unique_id=1820240750 instance=ExtResource("2_badge")]
@@ -58,6 +61,8 @@ banner_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
 icon_modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 title_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 subtitle_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+travel_place = "moss"
+unlock_key = "expert"
 locked = true
 
 [node name="Mystery" parent="." unique_id=333025774 instance=ExtResource("2_badge")]
@@ -71,4 +76,6 @@ icon_count = 0
 top_color = Color(0.5921569, 0.09019608, 0.09411765, 1)
 banner_color = Color(0.5921569, 0.09019608, 0.09411765, 1)
 icon_modulate = Color(0.5921569, 0.09019608, 0.09411765, 1)
+travel_place = "moss"
+unlock_key = "mystery"
 locked = true

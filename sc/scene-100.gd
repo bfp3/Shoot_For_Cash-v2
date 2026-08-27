@@ -79,6 +79,27 @@ func apply_title_camera_pose() -> void:
 	cam.current = true
 
 
+func hold_at_title_camera() -> void:
+	moving_camera = false
+	set_process(false)
+	apply_title_camera_pose()
+
+
+func begin_swoop_to_gameplay_camera() -> void:
+	if not _has_cam_rest:
+		_capture_player_cam_rest()
+	var cam := _get_player_cam()
+	if cam:
+		cam.current = true
+	moving_camera = true
+	set_process(true)
+
+
+func await_camera_swoop() -> void:
+	while moving_camera and is_inside_tree():
+		await get_tree().process_frame
+
+
 func snap_player_camera_to_rest() -> void:
 	var cam := _get_player_cam()
 	if cam == null:
