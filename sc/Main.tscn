@@ -1587,22 +1587,82 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_inade")
 draw_pass_1 = SubResource("QuadMesh_y75p7")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=2124630451]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20.486)
-size = Vector3(17.595, 8.275, 0.131)
+[node name="WallPuzzle" type="CSGBox3D" parent="." unique_id=2124630451]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3625002, 20.486)
+size = Vector3(17.595, 13, 0.131)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D" unique_id=974986408]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.893, 0)
+[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzle" unique_id=974986408]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.60430145, 0)
 operation = 2
 size = Vector3(17.4, 1.954, 1)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="CSGBox3D" unique_id=798769302]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.308, 0)
+[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzle" unique_id=798769302]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.9806981, 0)
 operation = 2
 size = Vector3(17.4, 1.754, 1)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="CSGBox3D" unique_id=470599114]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, 1.5855633, 0)
+[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzle" unique_id=470599114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, -0.703135, 0)
+operation = 2
+size = Vector3(2.0243163, 1.754, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzle" unique_id=1963741184]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, -0.70269823, 0)
+operation = 2
+size = Vector3(2.0243163, 1.754, 1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzle" unique_id=1999038460]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, -0.70269823, 0)
+operation = 2
+size = Vector3(2.0243163, 1.754, 1)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="WallPuzzle" unique_id=1428973723]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, -0.70269823, 0)
+operation = 2
+size = Vector3(2.0243163, 1.754, 1)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="WallPuzzle" unique_id=1484043425]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.901, -0.70269823, 0)
+operation = 2
+size = Vector3(2.0243163, 1.754, 1)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="WallPuzzle" unique_id=110040033]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3156414, 0)
+operation = 2
+size = Vector3(17.4, 2.877603, 1)
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="WallPuzzle" unique_id=1450830400]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.822077, 0)
+operation = 2
+size = Vector3(17.4, 1.954, 1)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="WallPuzzle" unique_id=1507089526]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26883984, 0)
+operation = 2
+size = Vector3(17.4, 1.754, 1)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="WallPuzzle" unique_id=2145193156]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, 1.5464029, 0)
+operation = 2
+size = Vector3(2.0243163, 1.754, 1)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="WallPuzzle" unique_id=70158364]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, 1.5468397, 0)
+operation = 2
+size = Vector3(2.0243163, 1.754, 1)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="WallPuzzle" unique_id=355127362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, 1.5468397, 0)
+operation = 2
+size = Vector3(2.0243163, 1.754, 1)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="WallPuzzle" unique_id=1746071485]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, 1.5468397, 0)
+operation = 2
+size = Vector3(2.0243163, 1.754, 1)
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="WallPuzzle" unique_id=341885067]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.901, 1.5468397, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
