@@ -18,6 +18,7 @@ var _award_cash_on_hit := true
 
 @export var force_multiplier := 1.5
 var pitch_adjustment := 0.02
+var _orange_sfx: Node = null
 var taken_hit = false
 @onready var main_col: CollisionShape3D = $main_col
 
@@ -224,13 +225,13 @@ func update_active() -> void:
 	## Stay at apex — do not arm the old fall-back timer.
 	#$Start_falling_timer.start(2.2)
 	
-	$explosion_sfx.play()
+	_play_orange_sfx("explosion_sfx")
 	$Smoke_quick.emitting = true
 	
 	#apply_torque_impulse(Vector3.RIGHT * 1000.0)
 	apply_torque_impulse(Vector3.UP * 1000.0)
 	
-	$launch_sound.play()
+	_play_orange_sfx("launch_sound")
 	
 	#await get_tree().create_timer(2.0,false).timeout
 	#update_gravity(1.0)
@@ -240,14 +241,14 @@ func update_active() -> void:
 func update_hit() -> void:
 	update_gravity(1.0)
 	%GoldParticless.emitting = false
-	$Pineapple_sound_hit.play()
+	_play_orange_sfx("Pineapple_sound_hit")
 	disable_collision()
 	if _award_cash_on_hit:
 		gl_PlayerState.log_hit('orange', 'orange', cash_value, global_position)
-	$Pineapple_shot_explode.play()
+	_play_orange_sfx("Pineapple_shot_explode")
 	
 	await get_tree().create_timer(0.3).timeout
-	$Pineapple_destroyed.play()
+	_play_orange_sfx("Pineapple_destroyed")
 	
 func update_missed() -> void:
 	reset_stats()
@@ -548,20 +549,20 @@ func start_destroyed_process(expand_blast: bool = true, award_cash: bool = true)
 	
 
 func play_hit_sfx() -> void:
-	$take_damage_sfx.volume_db = randf_range(-25.0, -20.0)
-	$take_damage_sfx.pitch_scale = randf_range(0.9, 1.2)
+	var vol := randf_range(-25.0, -20.0)
+	var pitch := randf_range(0.9, 1.2)
 	await get_tree().create_timer(0.05).timeout
-	$take_damage_sfx.play(0.01)
+	_play_orange_sfx("take_damage_sfx", 0.01, pitch, vol)
 	await get_tree().create_timer(0.1).timeout
-	$take_damage_sfx.play(0.02)
+	_play_orange_sfx("take_damage_sfx", 0.02, pitch, vol)
 
 
 func play_destroy_sfx() -> void:
-	$take_damage_sfx.play(0.02)
+	_play_orange_sfx("take_damage_sfx", 0.02)
 	await get_tree().create_timer(0.1).timeout
-	$hitSound.play()
+	_play_orange_sfx("hitSound")
 	await get_tree().create_timer(0.1).timeout
-	$explosion_sfx.play()
+	_play_orange_sfx("explosion_sfx")
 	
 
 func _on_start_falling_timer_timeout() -> void:
@@ -618,25 +619,33 @@ func start_bullet_to_target() -> void:
 	
 	
 func play_accurate_sounds() -> void:
-	#await get_tree().create_timer(0.05).timeout
-	create_shot_instance(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
+	_play_orange_stream(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
 	pitch_adjustment += 0.05
-	
+
 
 func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_scale : float = 0.02) -> void:
-	var sound_instance = AudioStreamPlayer.new()
-	sound_instance.name = str(sound_file)
-	add_child(sound_instance)
-	sound_instance.stream = sound_file
-	sound_instance.volume_db = clamp(volume_db, -80.0,-10.0)
-	sound_instance.pitch_scale = pitch_scale
-	sound_instance.play()
-	await sound_instance.finished
-	
-	# Remove Sounds Safely
-	if sound_instance != null:
-		remove_child(sound_instance)
-		sound_instance.queue_free()
+	_play_orange_stream(sound_file, volume_db, pitch_scale)
+
+
+func _orange_sfx_manager() -> Node:
+	if _orange_sfx != null and is_instance_valid(_orange_sfx):
+		return _orange_sfx
+	var tree := get_tree()
+	if tree:
+		_orange_sfx = tree.get_first_node_in_group("orange_sfx")
+	return _orange_sfx
+
+
+func _play_orange_sfx(sfx_name: String, from_position: float = 0.0, pitch_scale: float = -1.0, volume_db: float = INF) -> void:
+	var mgr := _orange_sfx_manager()
+	if mgr and mgr.has_method("play"):
+		mgr.play(sfx_name, from_position, pitch_scale, volume_db)
+
+
+func _play_orange_stream(stream: AudioStream, volume_db: float, pitch_scale: float) -> void:
+	var mgr := _orange_sfx_manager()
+	if mgr and mgr.has_method("play_stream"):
+		mgr.play_stream(stream, volume_db, pitch_scale)
 		
 func hit_out_of_bounds() -> void:
 	if !rock_activated:

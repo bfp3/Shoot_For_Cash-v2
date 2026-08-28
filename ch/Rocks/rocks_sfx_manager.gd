@@ -1,9 +1,12 @@
 extends Node
-## Shared rock SFX on `$Rocks/RocksSFXManager/SFX` and `$PianoNotesSFX`.
-## Overlap uses `max_polyphony` on the existing players — never spawn voices during a pulse.
+## Shared SFX host. Overlap uses `max_polyphony` on the existing players —
+## never spawn voices during a pulse. Set `sfx_group` so rocks and oranges
+## don't share the same lookup.
 
 const MAX_POLYPHONY := 24
 const ONESHOT_VOICES := 12
+
+@export var sfx_group := &"rocks_sfx"
 
 var _templates: Dictionary = {}
 var _defaults: Dictionary = {}
@@ -11,7 +14,7 @@ var _oneshots: Array[AudioStreamPlayer] = []
 
 
 func _ready() -> void:
-	add_to_group("rocks_sfx")
+	add_to_group(String(sfx_group))
 	_index_players(self)
 	var piano := _piano_host()
 	if piano and piano != self:
