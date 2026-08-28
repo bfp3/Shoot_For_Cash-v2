@@ -34,7 +34,7 @@ func _ready() -> void:
 	main_game_canvas.hide()
 	_capture_player_cam_rest()
 
-	Parser.loadIslandFile('res://sc/island-shipper.txt')
+	Parser.loadIslandFile('res://sc/level-beginner.txt')
 
 	var pending_level := RestarterScript.take_pending_fast_travel()
 	if pending_level != "":

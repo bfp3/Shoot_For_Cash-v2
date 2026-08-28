@@ -240,7 +240,7 @@ func _apply_round_progress_text(_place: String, _entry: Dictionary) -> void:
 
 func _total_rounds_for_place(place: String) -> int:
 	place = gl_DataSet.resolve_place_name(place)
-	var file_path := "res://sc/island-shipper.txt"
+	var file_path := "res://sc/level-beginner.txt"
 	if Parser.has_method("count_rounds_in_file"):
 		var from_file := Parser.count_rounds_in_file(file_path, place)
 		if from_file > 0:

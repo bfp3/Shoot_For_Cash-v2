@@ -1,5 +1,5 @@
 extends Control
-## Round Editor: edit island-shipper.txt rounds in-game (Godot editor builds only).
+## Round Editor: edit level-beginner.txt rounds in-game (Godot editor builds only).
 
 const FONT_PATH := "res://res/marlbo.ttf"
 const COLOR_CREAM := Color("EBE0D8")
@@ -108,7 +108,7 @@ func close_menu() -> void:
 func _level_file_path() -> String:
 	if round_manager and "LEVEL_FILE_PATH" in round_manager:
 		return String(round_manager.LEVEL_FILE_PATH)
-	return "res://sc/island-shipper.txt"
+	return "res://sc/level-beginner.txt"
 
 
 func _draft_key(range_name: String, round_no: int) -> String:

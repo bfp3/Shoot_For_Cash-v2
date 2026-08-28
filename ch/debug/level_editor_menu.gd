@@ -1,5 +1,5 @@
 extends Control
-## Debug level editor: type island-shipper commands, TEST one round, return here with text preserved.
+## Debug level editor: type level-beginner commands, TEST one round, return here with text preserved.
 
 const FONT_PATH := "res://res/marlbo.ttf"
 const COLOR_CREAM := Color("EBE0D8")

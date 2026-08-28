@@ -5,6 +5,13 @@ var advanced_unlocked := false
 var expert_unlocked := false
 var mystery_unlocked := false
 
+## Title-screen difficulty locks. False = badge flips to the locked-back message.
+var challenges_unlocked := false
+var challenge_01_unlocked := false
+var challenge_02_unlocked := false
+var challenge_03_unlocked := false
+var challenge_04_unlocked := false
+
 # Upgrade stages
 
 var dataset_float : Dictionary = {
@@ -458,7 +465,7 @@ func get_boss_clear_reward(island_index: int) -> int:
 
 
 ## Flat clear bonus for finishing every round in a shooting range.
-## Prefers `reward $N` from island-shipper.txt over dataset `range_clear_reward`.
+## Prefers `reward $N` from level-beginner.txt over dataset `range_clear_reward`.
 func get_range_clear_reward(_place_id: String = "") -> int:
 	var range_name := resolve_place_name(_place_id) if not _place_id.is_empty() else ""
 	if range_name.is_empty() and gl_PlayerState:

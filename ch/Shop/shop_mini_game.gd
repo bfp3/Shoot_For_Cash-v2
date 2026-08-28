@@ -145,7 +145,7 @@ const MAX_STRIKES := 10
 const PILLAR_META := &"shop_mini_pillar"
 const RING_POOL_SIZE := 8
 
-const LEVEL_FILE_PATH := "res://sc/island-shipper.txt"
+const LEVEL_FILE_PATH := "res://sc/level-beginner.txt"
 const LEVEL_ISLAND_NAME := "shipper"
 const GRID_COLUMN_COUNT := 8
 const GRID_LABEL_COLOR := Color(0.78, 0.02, 0.02, 0.85)
@@ -358,7 +358,7 @@ var _sky_from := 0.0
 var _sky_to := 0.0
 var _sky_blend_t := 1.0
 
-## Island-shipper script state (same rounds/waves as the 3D game).
+## level-beginner script state (same rounds/waves as the 3D game).
 var _script_rounds: Array = []
 var _script_round_index := 0
 var _script_wave_index := 0

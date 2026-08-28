@@ -22,7 +22,7 @@ const LAYOUT_PATH_BOSS_BY_ISLAND := {
 	0: "res://sc/All_level_layouts/level_layout_moss_02.tscn",
 	1: "res://sc/All_level_layouts/level_layout_moss_03.tscn",
 }
-## Script ranges that are not in gl_DataSet.place_name (e.g. moss2 in island-shipper.txt).
+## Script ranges that are not in gl_DataSet.place_name (e.g. moss2 in level-beginner.txt).
 const LAYOUT_PATH_BY_PLACE_NAME := {
 	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",
 	"moss3": "res://sc/All_level_layouts/level_layout_moss_03.tscn",
@@ -70,10 +70,11 @@ var _final_world_env_snapshot: Array = []
 var _layout_cache: Dictionary = {} # path -> PackedScene
 var _layout_load_requested: Dictionary = {} # path -> true
 
-const LEVEL_FILE_BEGINNER := "res://sc/island-shipper.txt"
-const LEVEL_FILE_ADVANCED := "res://sc/island-advanced.txt"
-const LEVEL_FILE_EXPERT := "res://sc/island-expert.txt"
-const LEVEL_FILE_MYSTERY := "res://sc/island-mystery.txt"
+const LEVEL_FILE_BEGINNER := "res://sc/level-beginner.txt"
+const LEVEL_FILE_ADVANCED := "res://sc/level-advanced.txt"
+const LEVEL_FILE_EXPERT := "res://sc/level-expert.txt"
+const LEVEL_FILE_MYSTERY := "res://sc/level-mystery.txt"
+
 var LEVEL_FILE_PATH := LEVEL_FILE_BEGINNER
 const LEVEL_ISLAND_NAME := 'shipper'
 ## How often to check the level file for edits while playing (seconds).
@@ -118,7 +119,7 @@ var _boss_timer_seconds := 120.0
 var _boss_looping := false
 ## After a boss win tally, open the island map instead of the shop.
 var _boss_open_map_after_tally := false
-## After a non-boss hold-out win tally, travel to the next range in island-shipper.txt.
+## After a non-boss hold-out win tally, travel to the next range in level-beginner.txt.
 var _advance_range_after_hold_out := false
 ## Island whose boss was just cleared — map plays unlock ceremony on this page.
 var _boss_ceremony_island := -1
@@ -303,7 +304,7 @@ func _read_level_file_mtime() -> int:
 	return int(FileAccess.get_modified_time(_level_file_abs_path()))
 
 
-## Reloads island-shipper.txt when it has been saved on disk.
+## Reloads level-beginner.txt when it has been saved on disk.
 func reload_level_if_changed() -> bool:
 	if level_editor_test_active:
 		return false
@@ -362,7 +363,7 @@ func open_level_editor_from_shop() -> bool:
 	return true
 
 
-## Open round editor (Shift+F). Requires being on a range that exists in island-shipper.txt.
+## Open round editor (Shift+F). Requires being on a range that exists in level-beginner.txt.
 ## Only the Back button closes it — Shift+F while open does nothing.
 func open_round_editor_from_shop() -> bool:
 	if not is_level_editor_available():
@@ -679,7 +680,7 @@ func get_active_range_name() -> String:
 	return gl_DataSet.resolve_place_name(range_id)
 
 
-## Next playable range after `place_id` in island-shipper.txt header order. Empty if none.
+## Next playable range after `place_id` in level-beginner.txt header order. Empty if none.
 func _next_range_in_script(place_id: String) -> String:
 	var cur := gl_DataSet.resolve_place_name(place_id).to_lower()
 	if cur.is_empty():
@@ -696,7 +697,7 @@ func _next_range_in_script(place_id: String) -> String:
 	return ""
 
 
-## True when `place_id` is the last playable `range` header in island-shipper.txt.
+## True when `place_id` is the last playable `range` header in level-beginner.txt.
 func _is_last_playable_range(place_id: String) -> bool:
 	var cur := gl_DataSet.resolve_place_name(place_id).to_lower()
 	if cur.is_empty():
@@ -984,7 +985,7 @@ func select_sequence_index(index: int) -> void:
 	current_sequence_index = index
 
 
-## PLAY / continue fee for the current range (`play $100` in island-shipper).
+## PLAY / continue fee for the current range (`play $100` in level-beginner).
 ## Falls back to data_set `price_play_round` when the range has no play line.
 func get_current_play_price() -> int:
 	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
@@ -1000,7 +1001,7 @@ func get_current_play_price() -> int:
 	return int(gl_DataSet.get_value("price_play_round", 0))
 
 
-## Range-clear bonus for the current range (`reward $400` in island-shipper).
+## Range-clear bonus for the current range (`reward $400` in level-beginner).
 ## Falls back to data_set `range_clear_reward` when the range has no reward line.
 func get_current_range_reward() -> int:
 	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
@@ -2501,7 +2502,7 @@ func update_tally_end() -> void:
 	while in_display_text_prompt:
 		await get_tree().process_frame
 
-	## Hold-out win: next range in island-shipper.txt, or the stage-complete screen on the last range.
+	## Hold-out win: next range in level-beginner.txt, or the stage-complete screen on the last range.
 	if _advance_range_after_hold_out:
 		_advance_range_after_hold_out = false
 		if not player_failed and not _boss_mode and not level_editor_test_active:

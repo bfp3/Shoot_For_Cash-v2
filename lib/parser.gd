@@ -768,7 +768,7 @@ func parse_round_text(text: String) -> Dictionary:
 	if body != "":
 		wrapped += body + "\n"
 
-	# Don't clobber the live island-shipper dataset / hold-out timers / play prices.
+	# Don't clobber the live level-beginner dataset / hold-out timers / play prices.
 	var backup: Array = data_set.duplicate(true)
 	var backup_timers: Dictionary = boss_timer_ms_by_range.duplicate(true)
 	var backup_play: Dictionary = play_price_by_range.duplicate(true)
@@ -1290,7 +1290,7 @@ func getCommand(_str : String) -> Dictionary:
 	return result
 
 
-# --- Round editor file helpers (island-shipper.txt surgical edit) ---------------
+# --- Round editor file helpers (level-beginner.txt surgical edit) ---------------
 
 func _file_line_token(line: String) -> String:
 	return line.replace("\t", "").strip_edges()

@@ -64,7 +64,7 @@ var outline_points: PackedVector2Array = PackedVector2Array()
 var pulsed := false
 var hit := false
 var hits_remaining := 1
-## Island-shipper spawn metadata for aimed launches.
+## level-beginner spawn metadata for aimed launches.
 var spawn_column := 1
 var spawn_entry: Dictionary = {}
 var launch_delay_sec := 0.0
