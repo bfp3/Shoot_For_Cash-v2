@@ -53,7 +53,7 @@ func launch_orange(pos : Vector3) -> void:
 	) * body.pulse_magnitude
 
 	body.apply_central_impulse(impulse)
-	body.start_timer()
+	#body.start_timer()
 
 
 

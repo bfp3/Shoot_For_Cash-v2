@@ -145,7 +145,7 @@ var joystick_sensitivity := 500.0
 
 @export_group("Crosshair Size")
 ## Multiplies the resting scope size (hit radius + visual), same idea as holding expand toward SCOPE_EXPAND_MAX_SCALE.
-@export_range(1.0, 3.0, 0.05) var crosshair_default_size_scale := 1.0:
+@export_range(0.25, 3.0, 0.05) var crosshair_default_size_scale := 1.0:
 	set(value):
 		crosshair_default_size_scale = maxf(value, 0.05)
 		if is_node_ready():

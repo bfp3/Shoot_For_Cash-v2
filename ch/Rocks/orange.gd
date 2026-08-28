@@ -206,6 +206,8 @@ func update_active() -> void:
 	disable_collision()
 	enable_collision()
 	%GoldParticless.emitting = true
+	$Mesh/small_rock/Fire.emitting = true
+	$Mesh/small_rock/Fire.show()
 	reset_stats()
 	reset_rock_back_on()
 	add_to_group('Target')
@@ -241,6 +243,8 @@ func update_active() -> void:
 func update_hit() -> void:
 	update_gravity(1.0)
 	%GoldParticless.emitting = false
+	$Mesh/small_rock/Fire.emitting = false
+	$Mesh/small_rock/Fire.hide()
 	_play_orange_sfx("Pineapple_sound_hit")
 	disable_collision()
 	if _award_cash_on_hit:
@@ -322,10 +326,7 @@ func reset_rock_back_on() -> void:
 	main_col.scale = Vector3.ONE #base_scale
 	current_mesh = orange_mesh
 	current_mesh.scale = Vector3.ONE * 2#base_scale
-	#current_mesh.scale.x = base_scale.x
-	#current_mesh.scale.y = 1.471
-	#current_mesh.scale.z = base_scale.z
-	
+
 	rock_type_gravity_scale = 0.2
 	show()
 
@@ -499,7 +500,7 @@ func start_destroyed_process(expand_blast: bool = true, award_cash: bool = true)
 	
 	if expand_blast:
 		expand_blast_radius()
-	_blow_nearby_smoke()
+
 	
 	#$Mesh/Yellow_particles.emitting = true
 	rock_activated = false
@@ -551,17 +552,17 @@ func start_destroyed_process(expand_blast: bool = true, award_cash: bool = true)
 func play_hit_sfx() -> void:
 	var vol := randf_range(-25.0, -20.0)
 	var pitch := randf_range(0.9, 1.2)
-	await get_tree().create_timer(0.05).timeout
+	await get_tree().create_timer(0.05, false).timeout
 	_play_orange_sfx("take_damage_sfx", 0.01, pitch, vol)
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1,false).timeout
 	_play_orange_sfx("take_damage_sfx", 0.02, pitch, vol)
 
 
 func play_destroy_sfx() -> void:
 	_play_orange_sfx("take_damage_sfx", 0.02)
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	_play_orange_sfx("hitSound")
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1, false).timeout
 	_play_orange_sfx("explosion_sfx")
 	
 
@@ -586,8 +587,8 @@ func _on_orange_body_entered(body: Node) -> void:
 
 
 func smoke_particles() -> void:
-	$AoE.global_position = global_position
-	$AoE.play_particles = true
+	$AoE_Oranges.global_position = global_position
+	$AoE_Oranges.play_particles = true
 
 
 func smoke_particles_duplicates() -> void:
@@ -654,9 +655,6 @@ func hit_out_of_bounds() -> void:
 	rock_destroyed = true
 	set_collision_layer_value(1, false)
 	set_collision_layer_value(8, false)
-	#current_mesh.get_node('damage_mesh').show()
-	#await get_tree().create_timer(0.28).timeout
-	#current_mesh.get_node('damage_mesh').hide()
 	
 	var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
 	if round_manager:
@@ -665,73 +663,14 @@ func hit_out_of_bounds() -> void:
 	freeze = true
 
 	remove_from_group('Target')
-
-	# Same explosion feedback as a normal destroy
-
-	#play_destroy_sfx()
-	#$Pineapple_sound_hit.play()
-
-
 	# Penalize instead of reward
 	gl_PlayerState.log_hit('orange', 'orange', 0)
-	#money_label_3d.money_is_money(global_position, 0)
-
-
 	is_deactivated = true
-
-
-	hit_wall_effects()
 	$Mesh.hide()
-	#var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
-	#tween.tween_property(current_mesh, "scale", current_mesh.scale * 1.5, 0.33)
-	#await tween.finished
-
-	
-
-	#await get_tree().create_timer(0.3).timeout
-	#$Pineapple_destroyed.play()
-
 	enter_state(State.MISSED)
 
-func hit_wall_effects() -> void:
-	var tween = create_tween().set_ease(Tween.EASE_OUT)
-	tween.tween_property($AoE2Fail, "play_particles", true, 0.10)
-	tween.tween_property($Mesh, "scale", Vector3.ZERO, 0.10)
-	await tween.finished
 
-func check_position_for_wall() -> void:
-	var bottom_y := -3.0
-	match exit_side:
-		ExitSide.LEFT:
-			
-			if global_position.x > 15.5 || global_position.y <= bottom_y:
-				hit_out_of_bounds()
-			#if global_position.x > -18.5:
-				#hit_out_of_bounds()
 
-		ExitSide.RIGHT:
-			if global_position.x < -15.5 || global_position.y <= bottom_y:
-				hit_out_of_bounds()
-			#if global_position.x > 15.5:
-				#hit_out_of_bounds()
-
-		ExitSide.TOP:
-			if global_position.y > 9.0 || global_position.y <= bottom_y:
-				hit_out_of_bounds()
-				
-		
-
-func start_timer() -> void:
-	$hit_wall_timer.start()
-
-func _on_hit_wall_timer_timeout() -> void:
-	check_position_for_wall()
-	if is_deactivated:
-		$hit_wall_timer.stop()
-		return
-		
-	else:
-		$hit_wall_timer.start()
 
 
 func _on_explosion_area_body_entered(body: Node3D) -> void:
@@ -742,13 +681,13 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 		#body.destroyed_by_shratnel()
 	
 	#if body.name.contains('range') || body.name.contains('apple'):
-	if body.name.contains('apple'):
+	if body.name.contains('apple'): #pineapple
 		var strength : float = [2.0,3.0].pick_random()
 		body.rock_destroyed = true
 		body.apply_central_impulse(body.global_position - global_position * -strength)
-		await get_tree().create_timer(1.6).timeout
+		await get_tree().create_timer(1.6,false).timeout
 		body.rock_destroyed = false
-		await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.1, false).timeout
 		body.start_destroyed_process()
 		#body.axis_lock_linear_z = true
 
@@ -844,11 +783,37 @@ func expand_blast_radius() -> void:
 	blast_node.monitoring = false
 
 
-func _blow_nearby_smoke() -> void:
-	return
-	#var shape_radius := 0.304
-	#var col := $Explosion_area.get_node_or_null("CollisionShape3D") as CollisionShape3D
-	#if col and col.shape is SphereShape3D:
-		#shape_radius = (col.shape as SphereShape3D).radius
-	#var radius := shape_radius * BLAST_DOMAIN_EXPANSION + SMOKE_BLOW_BUFFER
-	#CommonCode.blow_nearby_smoke_particles(global_position, radius, 7.0, 1.2)
+
+#func check_position_for_wall() -> void:
+	#var bottom_y := -3.0
+	#match exit_side:
+		#ExitSide.LEFT:
+			#
+			#if global_position.x > 15.5 || global_position.y <= bottom_y:
+				#hit_out_of_bounds()
+			##if global_position.x > -18.5:
+				##hit_out_of_bounds()
+#
+		#ExitSide.RIGHT:
+			#if global_position.x < -15.5 || global_position.y <= bottom_y:
+				#hit_out_of_bounds()
+			##if global_position.x > 15.5:
+				##hit_out_of_bounds()
+#
+		#ExitSide.TOP:
+			#if global_position.y > 9.0 || global_position.y <= bottom_y:
+				#hit_out_of_bounds()
+				#
+		#
+#
+#func start_timer() -> void:
+	#$hit_wall_timer.start()
+#
+#func _on_hit_wall_timer_timeout() -> void:
+	#check_position_for_wall()
+	#if is_deactivated:
+		#$hit_wall_timer.stop()
+		#return
+		#
+	#else:
+		#$hit_wall_timer.start()

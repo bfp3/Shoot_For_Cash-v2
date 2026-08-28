@@ -85,7 +85,7 @@ var current_state : State
 var	force_mult : Array = [3,4]
 var force_mult_index := 0
 
-@onready var money_label_3d: Label3D = $Money_Label3D
+#@onready var money_label_3d: Label3D = $Money_Label3D
 
 @onready var main_col: CollisionShape3D = $main_col
 @onready var current_mesh : MeshInstance3D=  $Mesh/small_rock2
@@ -513,7 +513,7 @@ func start_destroyed_process() -> void:
 	if balloon_type == BalloonType.RED and not _script_balloon_uses_container_rules():
 		cash_value = int(gl_DataSet.get_value('balloon_orange', 0))
 		print("balloon value is ", cash_value)
-		money_label_3d.money_is_money(global_position, cash_value)
+		#money_label_3d.money_is_money(global_position, cash_value)
 
 		
 	set_collision_layer_value(19, false)
@@ -622,8 +622,8 @@ func stop_gentle_pan() -> void:
 
 func smoke_particles() -> void:
 	
-	$AoE.global_position = global_position
-	$AoE.play_particles = true
+	$AoE_Balloon.global_position = global_position
+	$AoE_Balloon.play_particles = true
 
 func smoke_particles_duplicates() -> void:
 	var _new_particles : GPUParticles3D = $Smoke_quick.duplicate()

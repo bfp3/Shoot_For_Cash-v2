@@ -16,7 +16,6 @@
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="11_kesly"]
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="13_1ioma"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="14_sojxn"]
-[ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="18_nbk4g"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lrylr"]
 radius = 0.57746214
@@ -579,7 +578,7 @@ volume_db = -20.0
 stream = ExtResource("11_6ube6")
 volume_db = -38.0
 
-[node name="AoE" type="Node3D" parent="." unique_id=2099865106]
+[node name="AoE_Balloon" type="Node3D" parent="." unique_id=2099865106]
 top_level = true
 script = ExtResource("10_bqgy6")
 delays = {
@@ -587,7 +586,7 @@ delays = {
 &"upward_smoke_glow": 0.0
 }
 
-[node name="embers" type="GPUParticles3D" parent="AoE" unique_id=2038892716]
+[node name="embers" type="GPUParticles3D" parent="AoE_Balloon" unique_id=2038892716]
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false
@@ -600,7 +599,7 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_65uxc")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE" unique_id=59811981]
+[node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE_Balloon" unique_id=59811981]
 visible = false
 material_override = SubResource("ShaderMaterial_fw7wv")
 cast_shadow = 0
@@ -615,18 +614,6 @@ draw_order = 3
 transform_align = 1
 process_material = SubResource("ParticleProcessMaterial_2vt30")
 draw_pass_1 = ExtResource("14_sojxn")
-
-[node name="Money_Label3D" type="Label3D" parent="." unique_id=303646721]
-visible = false
-pixel_size = 0.0009
-billboard = 1
-no_depth_test = true
-fixed_size = true
-modulate = Color(0.2596667, 0.82, 0, 1)
-outline_modulate = Color(0.15, 0.15, 0.15, 1)
-text = "+$2.00"
-outline_size = 4
-script = ExtResource("18_nbk4g")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=750985537]
 libraries/ = SubResource("AnimationLibrary_imq00")

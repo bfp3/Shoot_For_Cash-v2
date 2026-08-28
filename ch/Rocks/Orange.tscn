@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dq6cbl62l07oc" path="res://ch/Rocks/orange.gd" id="1_osrcr"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_osrcr"]
+[ext_resource type="Material" path="res://mine_temp/materials/mat_fire.tres" id="3_7qv74"]
 [ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="12_nuq65"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="13_0qe50"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="14_yp1pk"]
@@ -9,7 +10,6 @@
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="16_0xwnr"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="17_3hkbi"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="18_n52fv"]
-[ext_resource type="PackedScene" path="res://mine_temp/scenes/mine_fire.tscn" id="21_2i7b7"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 bounce = 0.5
@@ -46,6 +46,43 @@ billboard_keep_scale = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_6dqdt"]
 material = SubResource("StandardMaterial3D_gsivy")
+
+[sub_resource type="Gradient" id="FireGrad"]
+offsets = PackedFloat32Array(0, 0.28, 0.7, 1)
+colors = PackedColorArray(1, 0.95, 0.55, 1, 1, 0.48, 0.08, 0.95, 0.85, 0.12, 0.02, 0.45, 0.15, 0.02, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="FireRamp"]
+gradient = SubResource("FireGrad")
+
+[sub_resource type="Curve" id="ScaleCurve"]
+_data = [Vector2(0, 0.35), 0.0, 0.0, 0, 0, Vector2(0.22, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="ScaleTex"]
+curve = SubResource("ScaleCurve")
+
+[sub_resource type="ParticleProcessMaterial" id="FireProc"]
+emission_shape = 1
+emission_sphere_radius = 0.14
+direction = Vector3(0, 1, 0)
+spread = 16.0
+initial_velocity_min = 0.45
+initial_velocity_max = 1.55
+gravity = Vector3(0, 0.55, 0)
+damping_min = 0.1
+damping_max = 0.4
+scale_min = 0.12
+scale_max = 0.32
+scale_curve = SubResource("ScaleTex")
+color = Color(1, 0.7, 0.25, 1)
+color_ramp = SubResource("FireRamp")
+turbulence_enabled = true
+turbulence_noise_strength = 0.6
+turbulence_noise_scale = 1.5
+
+[sub_resource type="QuadMesh" id="FireQuad"]
+material = ExtResource("3_7qv74")
+size = Vector2(0.55, 0.7)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oiolr"]
 no_depth_test = true
@@ -859,6 +896,7 @@ shape = SubResource("SphereShape3D_nul74")
 
 [node name="Mesh" type="Node3D" parent="." unique_id=1406987277]
 unique_name_in_owner = true
+visible = false
 
 [node name="GoldParticless" type="GPUParticles3D" parent="Mesh" unique_id=2125638247]
 unique_name_in_owner = true
@@ -871,10 +909,27 @@ draw_pass_1 = SubResource("QuadMesh_6dqdt")
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 skeleton = NodePath("")
 
-[node name="Fire" parent="Mesh/small_rock" unique_id=147624846 instance=ExtResource("21_2i7b7")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.21, 0)
+[node name="Fire" type="GPUParticles3D" parent="Mesh/small_rock" unique_id=147624846]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2, 0)
+visible = false
+cast_shadow = 0
+emitting = false
 amount = 26
-local_coords = false
+lifetime = 0.7
+explosiveness = 0.05
+randomness = 0.35
+visibility_aabb = AABB(-1.2, -0.2, -1.2, 2.4, 2.8, 2.4)
+process_material = SubResource("FireProc")
+draw_pass_1 = SubResource("FireQuad")
+
+[node name="Glow" type="OmniLight3D" parent="Mesh/small_rock/Fire" unique_id=47026067]
+light_color = Color(1, 0.52, 0.14, 1)
+light_energy = 2.4
+light_indirect_energy = 0.6
+light_volumetric_fog_energy = 1.4
+light_size = 0.5
+omni_range = 7.5
+omni_attenuation = 1.2
 
 [node name="damage_mesh" type="MeshInstance3D" parent="Mesh/small_rock" unique_id=697784323]
 transform = Transform3D(1.075, 0, 0, 0, 1.075, 0, 0, 0, 1.075, 0, 0, 0)
@@ -895,7 +950,7 @@ skeleton = NodePath("")
 libraries/ = SubResource("AnimationLibrary_2i7b7")
 autoplay = &"idle"
 
-[node name="AoE" type="Node3D" parent="." unique_id=734798651]
+[node name="AoE_Oranges" type="Node3D" parent="." unique_id=734798651]
 top_level = true
 script = ExtResource("12_nuq65")
 delays = {
@@ -907,7 +962,7 @@ delays = {
 &"upward_smoke_glow": 0.0
 }
 
-[node name="Yellow_particles" type="GPUParticles3D" parent="AoE" unique_id=178894875]
+[node name="Yellow_particles" type="GPUParticles3D" parent="AoE_Oranges" unique_id=178894875]
 material_override = SubResource("StandardMaterial3D_nul74")
 emitting = false
 amount = 20
@@ -918,8 +973,7 @@ draw_order = 3
 process_material = SubResource("ParticleProcessMaterial_jq8lj")
 draw_pass_1 = SubResource("SphereMesh_c4njd")
 
-[node name="embers" type="GPUParticles3D" parent="AoE" unique_id=2040597011]
-visible = false
+[node name="embers" type="GPUParticles3D" parent="AoE_Oranges" unique_id=2040597011]
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false
@@ -932,7 +986,7 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_65uxc")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE" unique_id=1256869411]
+[node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE_Oranges" unique_id=1256869411]
 material_override = SubResource("ShaderMaterial_1p817")
 cast_shadow = 0
 emitting = false
@@ -945,7 +999,7 @@ transform_align = 1
 process_material = SubResource("ParticleProcessMaterial_lv0ah")
 draw_pass_1 = ExtResource("16_0xwnr")
 
-[node name="Sparks01" type="GPUParticles3D" parent="AoE" unique_id=571658533]
+[node name="Sparks01" type="GPUParticles3D" parent="AoE_Oranges" unique_id=571658533]
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false
@@ -957,7 +1011,7 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_beb3h")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="AoE" unique_id=1566104010]
+[node name="Smoke_quick" type="GPUParticles3D" parent="AoE_Oranges" unique_id=1566104010]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 cast_shadow = 0
 emitting = false
@@ -971,8 +1025,7 @@ process_material = SubResource("ParticleProcessMaterial_osrcr")
 draw_pass_1 = SubResource("QuadMesh_c7jqr")
 script = ExtResource("18_n52fv")
 
-[node name="pineapple_embers" type="GPUParticles3D" parent="AoE" unique_id=1238460025]
-visible = false
+[node name="pineapple_embers" type="GPUParticles3D" parent="AoE_Oranges" unique_id=1238460025]
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false

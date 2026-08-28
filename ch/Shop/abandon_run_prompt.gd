@@ -7,16 +7,20 @@ signal cancelled
 @onready var _no: Button = %NoButton
 @onready var _panel: Control = %PromptPanel
 @onready var _dim: CanvasItem = get_node_or_null("Dim") as CanvasItem
+@onready var _title: RichTextLabel = $Center/PromptPanel/VBox/Title as RichTextLabel
 
 var _busy := false
 var _closing := false
 var _panel_rest_scale := Vector2.ONE
+var _default_title := ""
 
 
 func _ready() -> void:
 	hide()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if _title:
+		_default_title = _title.text
 	if _panel:
 		_panel.pivot_offset_ratio = Vector2(0.5, 0.5)
 		_panel_rest_scale = _panel.scale if _panel.scale != Vector2.ZERO else Vector2.ONE
@@ -26,11 +30,13 @@ func _ready() -> void:
 		_no.pressed.connect(_on_no)
 
 
-func open_prompt() -> void:
+func open_prompt(title_bbcode: String = "") -> void:
 	if _busy or _closing:
 		return
 	if visible:
 		return
+	if _title:
+		_title.text = title_bbcode if not title_bbcode.is_empty() else _default_title
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	if _dim:
 		_dim.modulate.a = 0.0

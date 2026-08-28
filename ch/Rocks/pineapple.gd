@@ -8,6 +8,7 @@ var	did_not_get_all_pineapples := false
 var original_cash_value := 30
 @export var force_multiplier := 1.5
 var pitch_adjustment := 0.02
+var _pineapple_sfx: Node = null
 var taken_hit = false
 @onready var main_col: CollisionShape3D = $main_col
 
@@ -126,12 +127,12 @@ func update_active() -> void:
 	$Mesh.show()
 	$Start_falling_timer.start(2.2)
 
-	$explosion_sfx.play()
+	_play_pineapple_sfx("explosion_sfx")
 	$Smoke_quick.emitting = true
 	$Mesh/small_rock/GoldParticles.emitting = true
 	#apply_torque_impulse(Vector3.RIGHT * 3000.0)
 	
-	$Pineapple_launch_sound.play()
+	_play_pineapple_sfx("Pineapple_launch_sound")
 	
 	#apply_hit_reaction(Vector2.ZERO)
 	
@@ -414,10 +415,10 @@ func start_destroyed_process() -> void:
 	rock_activated = false
 	freeze = true
 	enter_state(State.HIT)
-	$Pineapple_shot_explode.play()
-	$Pineapple_sound_hit.play()
+	_play_pineapple_sfx("Pineapple_shot_explode")
+	_play_pineapple_sfx("Pineapple_sound_hit")
 	#await get_tree().create_timer(0.3).timeout
-	$Pineapple_destroyed.play()
+	_play_pineapple_sfx("Pineapple_destroyed")
 	#if !destroyed_by_marked:
 	
 	remove_from_group('Target')
@@ -456,20 +457,20 @@ func start_destroyed_process() -> void:
 	
 
 func play_hit_sfx() -> void:
-	$take_damage_sfx.volume_db = randf_range(-25.0, -20.0)
-	$take_damage_sfx.pitch_scale = randf_range(0.9, 1.2)
-	await get_tree().create_timer(0.05).timeout
-	$take_damage_sfx.play(0.01)
-	await get_tree().create_timer(0.1).timeout
-	$take_damage_sfx.play(0.02)
+	var vol := randf_range(-25.0, -20.0)
+	var pitch := randf_range(0.9, 1.2)
+	await get_tree().create_timer(0.05, false).timeout
+	_play_pineapple_sfx("take_damage_sfx", 0.01, pitch, vol)
+	await get_tree().create_timer(0.1, false).timeout
+	_play_pineapple_sfx("take_damage_sfx", 0.02, pitch, vol)
 
 
 func play_destroy_sfx() -> void:
-	$take_damage_sfx.play(0.02)
-	await get_tree().create_timer(0.1).timeout
-	$hitSound.play()
-	await get_tree().create_timer(0.1).timeout
-	$explosion_sfx.play()
+	_play_pineapple_sfx("take_damage_sfx", 0.02)
+	await get_tree().create_timer(0.1, false).timeout
+	_play_pineapple_sfx("hitSound")
+	await get_tree().create_timer(0.1, false).timeout
+	_play_pineapple_sfx("explosion_sfx")
 	
 
 func _on_start_falling_timer_timeout() -> void:
@@ -485,12 +486,12 @@ func smoke_particles() -> void:
 	# #region agent log
 	var _phys := global_position
 	var _interp := get_global_transform_interpolated().origin
-	var _aoe_before :Vector3= $AoE.global_position
+	var _aoe_before :Vector3= $AoE_Pineapples.global_position
 	var _expl : Vector3= $Explosion_area.global_position
 	var _expl_interp = $Explosion_area.get_global_transform_interpolated().origin
 	# #endregion
-	$AoE.global_position = global_position
-	$AoE.play_particles = true
+	$AoE_Pineapples.global_position = global_position
+	$AoE_Pineapples.play_particles = true
 
 
 func smoke_particles_duplicates() -> void:
@@ -509,14 +510,7 @@ func smoke_particles_duplicates() -> void:
 
 	# #endregion
 	
-	var _new_sparks : GPUParticles3D = $Sparks01.duplicate()
-	if !_new_sparks:
-		return
-	_new_sparks.show()
-	_new_sparks.finished.connect(_new_sparks.queue_free)
-	get_tree().get_current_scene().add_child(_new_sparks)
-	_new_sparks.global_position = global_position
-	_new_sparks.emitting = true
+
 	
 
 func start_bullet_to_target() -> void:
@@ -524,25 +518,34 @@ func start_bullet_to_target() -> void:
 	
 	
 func play_accurate_sounds() -> void:
-	#await get_tree().create_timer(0.05).timeout
-	create_shot_instance(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
+	_play_pineapple_stream(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
 	pitch_adjustment += 0.05
 	
 
 func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_scale : float = 0.02) -> void:
-	var sound_instance = AudioStreamPlayer.new()
-	sound_instance.name = str(sound_file)
-	add_child(sound_instance)
-	sound_instance.stream = sound_file
-	sound_instance.volume_db = clamp(volume_db, -80.0,-10.0)
-	sound_instance.pitch_scale = pitch_scale
-	sound_instance.play()
-	await sound_instance.finished
-	
-	# Remove Sounds Safely
-	if sound_instance != null:
-		remove_child(sound_instance)
-		sound_instance.queue_free()
+	_play_pineapple_stream(sound_file, volume_db, pitch_scale)
+
+
+func _pineapple_sfx_manager() -> Node:
+	if _pineapple_sfx != null and is_instance_valid(_pineapple_sfx):
+		return _pineapple_sfx
+	var tree := get_tree()
+	if tree:
+		_pineapple_sfx = tree.get_first_node_in_group("pineapple_sfx")
+	return _pineapple_sfx
+
+
+func _play_pineapple_sfx(sfx_name: String, from_position: float = 0.0, pitch_scale: float = -1.0, volume_db: float = INF) -> void:
+	var mgr := _pineapple_sfx_manager()
+	if mgr and mgr.has_method("play"):
+		mgr.play(sfx_name, from_position, pitch_scale, volume_db)
+
+
+func _play_pineapple_stream(stream: AudioStream, volume_db: float, pitch_scale: float) -> void:
+	var mgr := _pineapple_sfx_manager()
+	if mgr and mgr.has_method("play_stream"):
+		mgr.play_stream(stream, volume_db, pitch_scale)
+
 		
 func hit_out_of_bounds() -> void:
 	if !rock_activated:
@@ -588,7 +591,6 @@ func hit_out_of_bounds() -> void:
 
 func hit_wall_effects() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
-	tween.tween_property($AoE2Fail, "play_particles", true, 0.10)
 	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
 	await tween.finished
 

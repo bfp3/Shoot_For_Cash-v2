@@ -1105,7 +1105,10 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("56_4ta1g")
-arrival_shop_delay_sec = 1.0
+arrival_fade_in_sec = 0.25
+arrival_hold_sec = 0.5
+arrival_fade_out_sec = 1.0
+arrival_shop_delay_sec = 0.5
 metadata/_edit_use_anchors_ = true
 
 [node name="CenterPOS" type="Control" parent="MainGameCanvasLayer/Place_name" unique_id=1728009373]
@@ -1343,48 +1346,48 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="floor5/StaticBody3D" unique_id=908553122]
 shape = SubResource("ConvexPolygonShape3D_43pd7")
 
-[node name="Pineapple" type="Node3D" parent="." unique_id=859325861 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["pineapple_container"]]
+[node name="Pineapple_Manager" type="Node3D" parent="." unique_id=859325861 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["pineapple_container"]]
 script = ExtResource("65_wtxnc")
 left_marker = NodePath("../Pineapple_markers/LeftMarker")
 right_marker = NodePath("../Pineapple_markers/RightMarker")
 round_manager = NodePath("../Round_manager")
 
-[node name="Pineapple" parent="Pineapple" unique_id=1539472592 instance=ExtResource("68_14r73")]
+[node name="Pineapple" parent="Pineapple_Manager" unique_id=1539472592 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
 force_multiplier = 0.75
 
-[node name="Pineapple2" parent="Pineapple" unique_id=1349360149 instance=ExtResource("68_14r73")]
+[node name="Pineapple2" parent="Pineapple_Manager" unique_id=1349360149 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
 force_multiplier = 0.75
 
-[node name="Pineapple3" parent="Pineapple" unique_id=1506732277 instance=ExtResource("68_14r73")]
+[node name="Pineapple3" parent="Pineapple_Manager" unique_id=1506732277 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
 force_multiplier = 0.75
 
-[node name="Pineapple4" parent="Pineapple" unique_id=535343239 instance=ExtResource("68_14r73")]
+[node name="Pineapple4" parent="Pineapple_Manager" unique_id=535343239 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
 force_multiplier = 0.75
 
-[node name="Pineapple5" parent="Pineapple" unique_id=1865048044 instance=ExtResource("68_14r73")]
+[node name="Pineapple5" parent="Pineapple_Manager" unique_id=1865048044 instance=ExtResource("68_14r73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.6
 cash_value = 0
 force_multiplier = 0.75
 
-[node name="PerfectParticles" type="GPUParticles2D" parent="Pineapple" unique_id=989237153]
+[node name="PerfectParticles" type="GPUParticles2D" parent="Pineapple_Manager" unique_id=989237153]
 unique_name_in_owner = true
 z_index = 3
 position = Vector2(965, 524)
@@ -1396,7 +1399,7 @@ fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_gf2tl")
 
-[node name="PerfectParticles2" type="GPUParticles2D" parent="Pineapple" unique_id=1561808200]
+[node name="PerfectParticles2" type="GPUParticles2D" parent="Pineapple_Manager" unique_id=1561808200]
 unique_name_in_owner = true
 z_index = 3
 position = Vector2(964, 517)
@@ -1410,10 +1413,59 @@ fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_24t6b")
 
-[node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["orange_container"]]
+[node name="SFX" type="Node" parent="Pineapple_Manager" unique_id=747967270]
+script = ExtResource("14_24t6b")
+sfx_group = &"pineapple_sfx"
+
+[node name="hitSound" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1552561789]
+stream = ExtResource("14_gspdd")
+volume_db = -35.0
+max_polyphony = 2
+
+[node name="take_damage_sfx" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=882133869]
+stream = ExtResource("16_8xhv2")
+volume_db = -20.0
+max_polyphony = 2
+
+[node name="marked_sfx" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=369547174]
+stream = ExtResource("23_1i2h1")
+volume_db = -25.0
+pitch_scale = 1.2
+
+[node name="gold_sfx" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=186883716]
+stream = ExtResource("15_24t6b")
+volume_db = -25.0
+pitch_scale = 1.2
+
+[node name="shop_purchase_03" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1563020729]
+stream = ExtResource("54_ymbdo")
+volume_db = -30.0
+
+[node name="explosion_sfx" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=702901366]
+stream = ExtResource("17_2300m")
+volume_db = -30.0
+
+[node name="Pineapple_shot_explode" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=979498665]
+stream = ExtResource("23_1i2h1")
+volume_db = -13.0
+pitch_scale = 0.75
+max_polyphony = 2
+
+[node name="Pineapple_launch_sound" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1512691561]
+stream = ExtResource("20_ec2we")
+volume_db = -35.0
+pitch_scale = 2.5
+
+[node name="Pineapple_sound_hit" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=2144386315]
+stream = ExtResource("55_wv0tc")
+volume_db = -15.0
+
+[node name="Pineapple_destroyed" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1034800634]
+stream = ExtResource("56_gf2tl")
+volume_db = -10.0
+
+[node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("round_manager") groups=["orange_container"]]
 script = ExtResource("68_qmj5w")
-left_marker = NodePath("")
-right_marker = NodePath("")
 round_manager = NodePath("../Round_manager")
 
 [node name="Orange" parent="OrangeBombs" unique_id=1226943477 instance=ExtResource("69_swp41")]
@@ -1642,6 +1694,7 @@ process_material = SubResource("ParticleProcessMaterial_inade")
 draw_pass_1 = SubResource("QuadMesh_y75p7")
 
 [node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=1389715347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, 0)
 script = ExtResource("62_wallpz")
 spawn_rock_on_hit = true
 
@@ -1656,87 +1709,124 @@ omni_attenuation = 0.0
 [node name="Allgood" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=321319073]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.384448, 1.642421, 20.14018)
 
-[node name="WallPuzzle" type="CSGBox3D" parent="WallPuzzleSetup" unique_id=2124630451]
+[node name="WallPuzzle" type="CSGCombiner3D" parent="WallPuzzleSetup" unique_id=962981030]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.363, 24.75)
+use_collision = true
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=974986408]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4631152, 1.5029593, 0)
+size = Vector3(12, 0.76, 1)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=851687279]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5368848, -0.99704075, 0)
+size = Vector3(12, 0.76, 1)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1269927889]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5368848, 4.0029593, 0)
+size = Vector3(12, 0.76, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1429191292]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -8.936885, 1.0029593, 0)
+size = Vector3(12, 0.76, 1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1023976106]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 7.863115, 1.0029593, 0)
+size = Vector3(12, 0.76, 1)
+
+[node name="CSGBox3D20" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=203730346]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.463115, -0.99704075, 0)
+size = Vector3(2, 0.76, 1)
+
+[node name="CSGBox3D25" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1132892119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.536885, 1.5029593, 0)
+size = Vector3(2, 0.76, 1)
+
+[node name="WallPuzzle2" type="CSGBox3D" parent="WallPuzzleSetup" unique_id=736609469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.324196, 2.363, 24.75)
+visible = false
 use_collision = true
 size = Vector3(17.595, 13, 0.191)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=974986408]
+[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1778206715]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.60430145, 0)
 operation = 2
 size = Vector3(17.4, 1.954, 1)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=798769302]
+[node name="CSGBox3D18" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1641669113]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4698057, 0)
+size = Vector3(17.240234, 1.954, 1)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1265593326]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.9806981, 0)
 operation = 2
 size = Vector3(17.4, 1.754, 1)
 
-[node name="CSGBox3D17" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=940490899]
+[node name="CSGBox3D17" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=212075190]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.7563257, 0)
 operation = 2
 size = Vector3(17.4, 2.8364725, 1)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=470599114]
+[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=2124074031]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, -0.703135, 0)
 operation = 2
 size = Vector3(2.496, 1.754, 1)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1963741184]
+[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=244976164]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, -0.70269823, 0)
 operation = 2
 size = Vector3(2.496, 1.754, 1)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1999038460]
+[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1585524]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, -0.70269823, 0)
 operation = 2
 size = Vector3(2.496, 1.754, 1)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1428973723]
+[node name="CSGBox3D7" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1794672932]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, -0.70269823, 0)
 operation = 2
 size = Vector3(2.496, 1.754, 1)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1484043425]
+[node name="CSGBox3D8" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=687528487]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6726356, -0.70269823, 0)
 operation = 2
 size = Vector3(2.023, 1.754, 1)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=110040033]
+[node name="CSGBox3D9" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=103448573]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3156414, 0)
 operation = 2
 size = Vector3(17.4, 2.877603, 1)
 
-[node name="CSGBox3D16" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1450830400]
+[node name="CSGBox3D16" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=731475829]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.822077, 0)
 operation = 2
 size = Vector3(17.4, 1.954, 1)
 
-[node name="CSGBox3D10" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1507089526]
+[node name="CSGBox3D10" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=394685299]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26883984, 0)
 operation = 2
 size = Vector3(17.4, 1.754, 1)
 
-[node name="CSGBox3D11" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=2145193156]
+[node name="CSGBox3D11" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1188565788]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, 1.5464029, 0)
 operation = 2
 size = Vector3(2.496, 1.754, 1)
 
-[node name="CSGBox3D12" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=70158364]
+[node name="CSGBox3D12" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=127381401]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, 1.5468397, 0)
 operation = 2
 size = Vector3(2.496, 1.754, 1)
 
-[node name="CSGBox3D13" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=355127362]
+[node name="CSGBox3D13" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1670670658]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, 1.5468397, 0)
 operation = 2
 size = Vector3(2.496, 1.754, 1)
 
-[node name="CSGBox3D14" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1746071485]
+[node name="CSGBox3D14" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1651544830]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, 1.5468397, 0)
 operation = 2
 size = Vector3(2.496, 1.754, 1)
 
-[node name="CSGBox3D15" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=341885067]
+[node name="CSGBox3D15" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=900058289]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6726356, 1.5468397, 0)
 operation = 2
 size = Vector3(2.023, 1.754, 1)

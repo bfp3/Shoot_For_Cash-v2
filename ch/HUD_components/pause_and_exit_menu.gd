@@ -16,8 +16,13 @@ var stored_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_VISIBLE
 var reopen_map_on_resume := false
 
 const ABANDON_RUN_PROMPT_PATH := "res://ch/Shop/abandon_run_prompt.tscn"
+const QUIT_CONFIRM_TITLE := "[center][pulse freq=2 color=#FFFFFF99]ARE YOU SURE?"
+
+enum ConfirmKind { ABANDON, QUIT }
+
 var _abandon_prompt: Control = null
 var _leaving_to_difficulty := false
+var _confirm_kind: ConfirmKind = ConfirmKind.ABANDON
 
 
 func _ready() -> void:
@@ -212,6 +217,10 @@ func _focus_pause_root() -> void:
 
 
 func _on_close_game_pressed() -> void:
+	_confirm_kind = ConfirmKind.QUIT
+	if _abandon_prompt and _abandon_prompt.has_method("open_prompt"):
+		_abandon_prompt.open_prompt(QUIT_CONFIRM_TITLE)
+		return
 	get_tree().quit()
 
 
@@ -264,6 +273,7 @@ func _abandon_prompt_open() -> bool:
 
 
 func _open_abandon_prompt() -> void:
+	_confirm_kind = ConfirmKind.ABANDON
 	if _abandon_prompt and _abandon_prompt.has_method("open_prompt"):
 		_abandon_prompt.open_prompt()
 		return
@@ -271,16 +281,22 @@ func _open_abandon_prompt() -> void:
 
 
 func _cancel_abandon_prompt() -> void:
+	_confirm_kind = ConfirmKind.ABANDON
 	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
 		_abandon_prompt.close_prompt()
 	_focus_pause_root()
 
 
 func _on_abandon_run_cancelled() -> void:
+	_confirm_kind = ConfirmKind.ABANDON
 	_focus_pause_root()
 
 
 func _on_abandon_run_confirmed() -> void:
+	if _confirm_kind == ConfirmKind.QUIT:
+		_confirm_kind = ConfirmKind.ABANDON
+		get_tree().quit()
+		return
 	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
 		_abandon_prompt.close_prompt()
 	reopen_map_on_resume = false

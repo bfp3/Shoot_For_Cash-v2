@@ -75,9 +75,6 @@ var rock_has_been_logged := false
 
 @onready var money_label_3d: Label3D = $Money_Label3D
 
-@onready var damage_label_3d: Label3D = %Damage_Label3D
-@onready var health_remaining_label: Label3D = %Health_remaining_label
-
 @onready var main_col: CollisionShape3D = $main_col
 @onready var mesh_container: Node3D = %Mesh
 
@@ -1052,8 +1049,7 @@ func apply_freeze_shot_effect(damage: int = 1, screen_offset: Vector2 = Vector2.
 		health -= 1
 	else:
 		health -= damage
-	display_health_counter()
-	display_damage_counter(maxi(damage, 1))
+
 	play_hit_sfx()
 	apply_hit_reaction(screen_offset)
 
@@ -1269,24 +1265,6 @@ func get_hit_force_direction(
 
 
 	
-func display_damage_counter(_damage_output : int) -> void:
-	return
-	#%Damage_Label3D.damage_is_damage(global_position, _damage_output)
-	#pass
-
-func display_health_counter() -> void:
-	pass
-	#%Health_remaining_label.health_is_health(global_position, health)
-	
-
-#func _on_area_3d_area_entered(area: Area3D) -> void:
-	#if !self.is_in_group('Target'):
-		#return
-	#
-	#if area.is_in_group("bullet") and !target_hit:
-		##if !has_been_marked:
-			##return		
-		#hit_by_player(area.power_bullet_damage)
 		
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_shot := false) -> void:	
 	
@@ -1321,9 +1299,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 			#tween.tween_property(
 				#current_mesh, "scale", current_mesh.scale * 1.1, 0.08)
 		
-	display_health_counter()
-	display_damage_counter(damage)
-	
+
 	
 	
 	#Rock Takes Damage But Is Not Destroyed Process
@@ -1688,13 +1664,13 @@ func standard_blast() -> void:
 
 func hazard_aoe_delayed() -> void:
 
-	$Hazard_AoE2.global_position = global_position
-	$Hazard_AoE2.play_particles = true
+	$Aoe_HazardDestroy.global_position = global_position
+	$Aoe_HazardDestroy.play_particles = true
 
 func crate_particles() -> void:
 	if has_node("CrateAoe"):
-		$CrateAoe.global_position = global_position
-		$CrateAoe.play_particles = true
+		$Aoe_CrateDestroy.global_position = global_position
+		$Aoe_CrateDestroy.play_particles = true
 
 
 func smoke_particles() -> void:
@@ -1703,26 +1679,26 @@ func smoke_particles() -> void:
 		return
 	
 	if rock_type == RockSize.SMOKECAN:
-		%Smokecan_AoE.global_position = global_position
-		%Smokecan_AoE.play_particles = true
+		%Aoe_SmokecanDestroy.global_position = global_position
+		%Aoe_SmokecanDestroy.play_particles = true
 		
 	if rock_type_name.contains('hazard'):
 		## Orange-neutralized blacks: normal rock burst only — no hazard fail particles.
 		if _orange_neutralized_hazard:
-			$AoE.global_position = global_position
-			$AoE.play_particles = true
+			$AoE_RockDestroy.global_position = global_position
+			$AoE_RockDestroy.play_particles = true
 		else:
-			$Hazard_AoE2.global_position = global_position
-			$Hazard_AoE2.play_particles = true
-			_try_apply_hazard_smoke_blur()
+			$Aoe_HazardDestroy.global_position = global_position
+			$Aoe_HazardDestroy.play_particles = true
+			#_try_apply_hazard_smoke_blur()
 		
 	else:
 		var _phys := global_position
 		var _interp := get_global_transform_interpolated().origin
 		var _expl_interp = $Explosion_area.get_global_transform_interpolated().origin
 		# #endregion
-		$AoE.global_position = global_position
-		$AoE.play_particles = true
+		$AoE_RockDestroy.global_position = global_position
+		$AoE_RockDestroy.play_particles = true
 
 
 func _try_apply_hazard_smoke_blur() -> void:
