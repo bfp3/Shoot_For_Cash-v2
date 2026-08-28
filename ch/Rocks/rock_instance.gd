@@ -808,7 +808,7 @@ func setup_rock_type() -> void:
 			rock_type_name = "rock_type_juggle"
 			var juggle_scale := Vector3.ONE * 0.45
 			var juggle_size := 1.6
-			health = 4
+			health = 400
 			cash_value = 0
 			max_health = health
 			if medium_rock:

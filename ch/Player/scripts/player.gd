@@ -1035,14 +1035,14 @@ func handle_scope_adjust(delta: float) -> void:
 	if shrink_held and _scope_mode != ScopeMode.EXPAND:
 		_update_scope_hold(ScopeMode.SHRINK, delta)
 		# Smaller scope = faster fire + faster bullets (lower travel time).
-		bullet_speed = _base_bullet_speed * scope_shrink_bullet_speed_scale
-		fire_rate = _base_gun_fire_rate * scope_shrink_fire_rate_scale
+		#bullet_speed = _base_bullet_speed * scope_shrink_bullet_speed_scale
+		#fire_rate = _base_gun_fire_rate * scope_shrink_fire_rate_scale
 
 	elif expand_held and _scope_mode != ScopeMode.SHRINK:
 		_update_scope_hold(ScopeMode.EXPAND, delta)
 		# Larger scope = slower fire + slower bullets (higher travel time).
-		bullet_speed = _base_bullet_speed * scope_expand_bullet_speed_scale
-		fire_rate = _base_gun_fire_rate * scope_expand_fire_rate_scale
+		#bullet_speed = _base_bullet_speed * scope_expand_bullet_speed_scale
+		#fire_rate = _base_gun_fire_rate * scope_expand_fire_rate_scale
 
 	elif _is_holding_shoot:
 		_release_scope_hold()
@@ -1290,7 +1290,8 @@ func get_ammo_pack_size() -> int:
 
 
 func fire_weapon(force_plant: bool = false) -> void:
-	
+	power_gun_fire_rate = 0.01
+	power_bullet_speed = 0.01
 	if current_state != State.ACTIVE:
 		return
 		
