@@ -121,9 +121,9 @@ func start_game_quick() -> void:
 	if HUD_CRT and HUD_CRT.has_method("crt_start_up"):
 		HUD_CRT.crt_start_up()
 	round_manager.enter_state(round_manager.RoundState.SHOP_START)
-	await get_tree().create_timer(0.05).timeout
+	await get_tree().create_timer(0.05, false).timeout
 	music_manager.start_bg_noise()
-	await get_tree().create_timer(0.25).timeout
+	await get_tree().create_timer(0.25, false).timeout
 	player.start_player()
 
 
@@ -135,10 +135,10 @@ func start_intro_process() -> void:
 		round_timer.hide()
 	player.title_screen_start()
 
-	await get_tree().create_timer(0.25).timeout
+	await get_tree().create_timer(0.25, false).timeout
 	music_manager.start_bg_noise()
 
-	await get_tree().create_timer(1.75).timeout
+	await get_tree().create_timer(1.75, false).timeout
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -172,7 +172,7 @@ func start_game() -> void:
 		await get_tree().process_frame
 
 	_title_camera_swoop_done = true
-	await get_tree().create_timer(0.25).timeout
+	await get_tree().create_timer(0.25, false).timeout
 	# Keep splash around so Back to Title can reopen it without a scene reload.
 	if is_instance_valid(splash_screen):
 		splash_screen.hide()

@@ -2,6 +2,7 @@ extends RigidBody3D
 class_name RockInstance
 
 @onready var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
+var _rocks_sfx: Node = null
 
 @export var freeze_mine := false
 ## Alt-gun freeze burst: how far the ice pulse reaches from the rock you shot.
@@ -395,7 +396,7 @@ func update_active() -> void:
 			_arm_destroy_on_crosshair()
 	
 	#%rock_launch_sound.pitch_scale = randf_range(3.0,3.2)
-	%rock_launch_sound.play()
+	_play_rocks_sfx("rock_launch_sound")
 	
 
 
@@ -835,7 +836,7 @@ func setup_rock_type() -> void:
 			gl_PlayerState.log_white_rock()
 			var crate_health := int(gl_DataSet.get_value("rock_type_crate", 1))
 			var crate_cash := int(gl_DataSet.get_value("rock_type_crate", 0))
-			var crate_scale := Vector3.ONE  #* 0.35
+			var crate_scale := Vector3.ONE * 0.5
 			var crate_size := 1.2
 			health = 3
 			cash_value = crate_cash
@@ -1068,10 +1069,7 @@ func apply_freeze_shot_effect(damage: int = 1, screen_offset: Vector2 = Vector2.
 ## Small AOE ice pulse from this rock. Caught rocks (including avoiders) call apply_aoe_freeze().
 func release_freeze_burst() -> void:
 	_play_freeze_burst_visual()
-	if has_node("%Freeze_sfx"):
-		%Freeze_sfx.play()
-	elif has_node("%Freeze_sfx2"):
-		%Freeze_sfx2.play()
+	_play_rocks_sfx("Freeze_sfx")
 
 	var origin := global_position
 	var radius_sq := freeze_burst_radius * freeze_burst_radius
@@ -1186,7 +1184,7 @@ func apply_marked_ability() -> void:
 	
 	
 	await get_tree().create_timer(0.15, false).timeout
-	%rock_marked_sfx.play()
+	_play_rocks_sfx("rock_marked_sfx")
 	
 	
 	await get_tree().create_timer(1.0, false).timeout
@@ -1351,8 +1349,8 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 		apply_torque_impulse(Vector3.BACK * 100.0)
 		play_hit_sfx()
 		#%rock_launch_sound.play()
-		%rock_flicker_sfx.play()
-		%launched_into_distance_3d.play(0.25)
+		_play_rocks_sfx("rock_flicker_sfx")
+		_play_rocks_sfx("launched_into_distance_3d", 0.25)
 		fly_off_into_distance()
 		var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween.tween_property($Mesh, "position:y", 0.5, 0.5)
@@ -1367,7 +1365,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 	if rock_type == RockSize.HAZARD:
 		$Marked.show()
 		#$marked_embers.emitting = true
-		%rock_marked_sfx.play()
+		_play_rocks_sfx("rock_marked_sfx")
 		apply_slow_linear_damp()
 		await get_tree().create_timer(1.5, false).timeout
 	
@@ -1439,11 +1437,8 @@ func start_destroyed_process() -> void:
 	var destroyed_as_hazard := rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL
 	
 	if rock_type == RockSize.SMALL:
-		%rock_flicker_sfx.play()
-		#await get_tree().create_timer(0.1).timeout
-		var pitching_up_sfx : AudioStreamPlayer = get_parent().get_parent().get_node('pitch_shift_rock_sound')
-		pitching_up_sfx.pitch_scale = clamp(pitching_up_sfx.pitch_scale + 0.1, 0.5, 1.2)
-		pitching_up_sfx.play()
+		_play_rocks_sfx("rock_flicker_sfx")
+		_play_rocks_pitch_shift()
 
 	
 	# This is to score bonus cash for shooting rocks beneath the Cash Zones / ZoneA, ZoneB
@@ -1503,7 +1498,7 @@ func start_destroyed_process() -> void:
 		## Direct shots already struck above; orange-neutralized blacks never strike.
 		## Blast/indirect destroys of live hazards still strike here.
 		if not _hazard_strike_from_direct_shot and not _orange_neutralized_hazard:
-			%hazard_hit_sound.play()
+			_play_rocks_sfx("hazard_hit_sound")
 			play_destroy_sfx()
 			EventBus.instance.hazard_hit.emit()
 			_set_strike_feedback_origin_here()
@@ -1511,7 +1506,7 @@ func start_destroyed_process() -> void:
 		_hazard_strike_from_direct_shot = false
 	
 	if rock_type == RockSize.SMOKECAN:
-		%hazard_hit_sound.play()
+		_play_rocks_sfx("hazard_hit_sound")
 
 	if !player_has_marked_rock:
 		shake_camera()
@@ -1523,20 +1518,20 @@ func start_destroyed_process() -> void:
 			release_to_pool()
 
 func play_hit_sfx() -> void:
-	%rock_hit_sound.volume_db = randf_range(-25.0, -20.0)
-	%rock_hit_sound.pitch_scale = randf_range(0.9, 1.2)
+	var vol := randf_range(-25.0, -20.0)
+	var pitch := randf_range(0.9, 1.2)
 	await get_tree().create_timer(0.05, false).timeout
-	%rock_hit_sound.play(0.01)
+	_play_rocks_sfx("rock_hit_sound", 0.01, pitch, vol)
 	await get_tree().create_timer(0.1, false).timeout
-	%rock_hit_sound.play(0.02)
+	_play_rocks_sfx("rock_hit_sound", 0.02, pitch, vol)
 
 
 func play_destroy_sfx() -> void:
-	%rock_hit_sound.play(0.02)
+	_play_rocks_sfx("rock_hit_sound", 0.02)
 	await get_tree().create_timer(0.1, false).timeout
-	%rock_hitSound.play()
+	_play_rocks_sfx("rock_hitSound")
 	await get_tree().create_timer(0.1, false).timeout
-	%rock_explosion_sfx.play()
+	_play_rocks_sfx("rock_explosion_sfx")
 
 
 
@@ -1779,63 +1774,71 @@ func start_bullet_to_target() -> void:
 		gl_PlayerState.dataset.total_hazards += 1
 		
 func play_accurate_sounds() -> void:
-	#await get_tree().create_timer(0.05).timeout
-	create_shot_instance(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
+	_play_rocks_stream(ON_TARGET_SFX, -30.0, 0.7 + pitch_adjustment)
 	pitch_adjustment += 0.05
 	pitch_adjustment += 0.05
-	
+
 
 func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_scale : float = 0.02) -> void:
-	var sound_instance = AudioStreamPlayer.new()
-	sound_instance.name = str(sound_file)
-	add_child(sound_instance)
-	sound_instance.stream = sound_file
-	sound_instance.volume_db = clamp(volume_db, -80.0,-10.0)
-	sound_instance.pitch_scale = pitch_scale
-	sound_instance.play()
-	await sound_instance.finished
-	
-	# Remove Sounds Safely
-	if sound_instance != null:
-		remove_child(sound_instance)
-		sound_instance.queue_free()
+	_play_rocks_stream(sound_file, volume_db, pitch_scale)
+
 
 func play_piano_note() -> void:
-	$PianoNotes/launch_flick.pitch_scale = randf_range(0.8,0.9)
-	$PianoNotes/launch_flick.play()
-	
-	
+	_play_rocks_piano("launch_flick", randf_range(0.8, 0.9))
 	match global_position.x:
 		-7.0:
-			$"PianoNotes/1".play()
-			
+			_play_rocks_piano("1")
 		-5.0:
-			$"PianoNotes/2".play()
-			
+			_play_rocks_piano("2")
 		-3.0:
-			$"PianoNotes/3".play()
-			
+			_play_rocks_piano("3")
 		-1.0:
-			$"PianoNotes/4".play()
-		
+			_play_rocks_piano("4")
 		1.0:
-			$"PianoNotes/5".play()
-			
+			_play_rocks_piano("5")
 		3.0:
-			$"PianoNotes/6".play()
-			
+			_play_rocks_piano("6")
 		5.0:
-			$"PianoNotes/7".play()
-			
+			_play_rocks_piano("7")
 		7.0:
-			$"PianoNotes/8".play()
-		
+			_play_rocks_piano("8")
 
-		
 
 func out_of_bounds() -> void:
-	#%rock_hitSound.play()
-	%outofBoundsSFX.play()
+	_play_rocks_sfx("outofBoundsSFX")
+
+
+func _rocks_sfx_manager() -> Node:
+	if _rocks_sfx != null and is_instance_valid(_rocks_sfx):
+		return _rocks_sfx
+	var tree := get_tree()
+	if tree:
+		_rocks_sfx = tree.get_first_node_in_group("rocks_sfx")
+	return _rocks_sfx
+
+
+func _play_rocks_sfx(sfx_name: String, from_position: float = 0.0, pitch_scale: float = -1.0, volume_db: float = INF) -> void:
+	var mgr := _rocks_sfx_manager()
+	if mgr and mgr.has_method("play"):
+		mgr.play(sfx_name, from_position, pitch_scale, volume_db)
+
+
+func _play_rocks_piano(note_name: String, pitch_scale: float = -1.0) -> void:
+	var mgr := _rocks_sfx_manager()
+	if mgr and mgr.has_method("play_piano"):
+		mgr.play_piano(note_name, pitch_scale)
+
+
+func _play_rocks_pitch_shift() -> void:
+	var mgr := _rocks_sfx_manager()
+	if mgr and mgr.has_method("play_pitch_shift"):
+		mgr.play_pitch_shift()
+
+
+func _play_rocks_stream(stream: AudioStream, volume_db: float, pitch_scale: float) -> void:
+	var mgr := _rocks_sfx_manager()
+	if mgr and mgr.has_method("play_stream"):
+		mgr.play_stream(stream, volume_db, pitch_scale)
 
 
 ## Same impact sting used when a rock leaves play — also used for any strike.
@@ -1847,7 +1850,7 @@ func _apply_direct_hazard_strike() -> void:
 	if _hazard_strike_from_direct_shot:
 		return
 	_hazard_strike_from_direct_shot = true
-	%hazard_hit_sound.play()
+	_play_rocks_sfx("hazard_hit_sound")
 	EventBus.instance.hazard_hit.emit()
 	_set_strike_feedback_origin_here()
 	gl_PlayerState.add_strike()
@@ -2311,7 +2314,7 @@ func _play_aim_hold_bonus_feedback() -> void:
 		_aim_bonus_scale_tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		_aim_bonus_scale_tween.tween_property(current_mesh, "scale", punch, aim_bonus_scale_punch_sec * 0.45)
 		_aim_bonus_scale_tween.tween_property(current_mesh, "scale", base, aim_bonus_scale_punch_sec * 0.55)
-		_aim_bonus_scale_tween.tween_callback($%cash_bonus_sfx.play.bind(0.05))
+		_aim_bonus_scale_tween.tween_callback(_play_rocks_sfx.bind("cash_bonus_sfx", 0.05))
 
 	#create_shot_instance(
 		#AIM_BONUS_SFX,

@@ -15,31 +15,15 @@
 [ext_resource type="Material" uid="uid://4w3skkrnoirr" path="res://res/hazard_black_mat.tres" id="10_herjc"]
 [ext_resource type="Material" uid="uid://hn35w2qwra5g" path="res://res/balloon_blue_mat.tres" id="11_8mu68"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="11_fao6x"]
-[ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="13_gxoxp"]
 [ext_resource type="Material" path="res://mine_temp/materials/mat_log.tres" id="13_ltsxa"]
-[ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="14_gxoxp"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="15_8mu68"]
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="15_q8tld"]
 [ext_resource type="Material" uid="uid://biyawm8nwgiiq" path="res://res/moss_level_white_material.tres" id="16_q8tld"]
-[ext_resource type="AudioStream" uid="uid://m75w4o7bl00c" path="res://sfx/explosion_sfx_01.ogg" id="17_p78v0"]
 [ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="18_sjja1"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="19_mj3mj"]
-[ext_resource type="AudioStream" uid="uid://b3wehdx2vkaob" path="res://sfx/opt_5.ogg" id="19_pqbxg"]
-[ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="20_herjc"]
-[ext_resource type="AudioStream" uid="uid://b6adyjr237ckn" path="res://sfx/opt_4.ogg" id="20_ltsxa"]
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="21_27dlh"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="21_y4gyo"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="22_63gdt"]
-[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="30_8mu68"]
-[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="31_s0kjy"]
-[ext_resource type="AudioStream" uid="uid://cp1bi14xcue2e" path="res://sfx/a#_startInt.ogg" id="32_ltsxa"]
-[ext_resource type="AudioStream" uid="uid://cwd4ue861klyx" path="res://sfx/2ndInt.ogg" id="33_8mu68"]
-[ext_resource type="AudioStream" uid="uid://b8jsfrc6gqwd" path="res://sfx/3rdInt.ogg" id="34_q8tld"]
-[ext_resource type="AudioStream" uid="uid://byhyspj0ng0gr" path="res://sfx/4thInt.ogg" id="35_0cvxb"]
-[ext_resource type="AudioStream" uid="uid://bfg27yk2v8wom" path="res://sfx/5thInt.ogg" id="36_gsivy"]
-[ext_resource type="AudioStream" uid="uid://dua25tojybkiv" path="res://sfx/6thInt.ogg" id="37_pbe1n"]
-[ext_resource type="AudioStream" uid="uid://c87df1ylycoq2" path="res://sfx/7thInt.ogg" id="38_qfsx3"]
-[ext_resource type="AudioStream" uid="uid://bqqq2qfwp0uw8" path="res://sfx/8thInt.ogg" id="39_20bhc"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lrylr"]
 radius = 0.305
@@ -1765,128 +1749,6 @@ fixed_fps = 60
 visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_s0kjy")
 draw_pass_1 = SubResource("QuadMesh_p78v0")
-
-[node name="launched_into_distance_3d" type="AudioStreamPlayer3D" parent="." unique_id=7900283]
-unique_name_in_owner = true
-stream = ExtResource("20_herjc")
-volume_db = -20.0
-max_db = -24.0
-pitch_scale = 2.0
-
-[node name="SFX" type="Node" parent="." unique_id=1060144521]
-
-[node name="rock_hitSound" type="AudioStreamPlayer" parent="SFX" unique_id=506567940]
-unique_name_in_owner = true
-stream = ExtResource("13_gxoxp")
-volume_db = -35.0
-max_polyphony = 2
-
-[node name="cash_bonus_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=23327474]
-unique_name_in_owner = true
-stream = ExtResource("31_s0kjy")
-volume_db = -30.0
-max_polyphony = 2
-
-[node name="hazard_hit_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1736702722]
-unique_name_in_owner = true
-stream = ExtResource("13_gxoxp")
-volume_db = -32.0
-pitch_scale = 0.5
-
-[node name="rock_hit_sound" type="AudioStreamPlayer" parent="SFX" unique_id=1867904270]
-unique_name_in_owner = true
-stream = ExtResource("14_gxoxp")
-volume_db = -23.0
-max_polyphony = 2
-
-[node name="outofBoundsSFX" type="AudioStreamPlayer" parent="SFX" unique_id=1563598438]
-unique_name_in_owner = true
-stream = ExtResource("14_gxoxp")
-volume_db = -80.0
-pitch_scale = 1.1
-max_polyphony = 2
-
-[node name="rock_marked_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=454048543]
-unique_name_in_owner = true
-stream = ExtResource("14_gxoxp")
-volume_db = -25.0
-pitch_scale = 1.2
-
-[node name="rock_explosion_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1309161507]
-unique_name_in_owner = true
-stream = ExtResource("17_p78v0")
-volume_db = -30.0
-max_polyphony = 2
-
-[node name="Freeze_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=2079997345]
-unique_name_in_owner = true
-stream = ExtResource("19_pqbxg")
-volume_db = -26.0
-
-[node name="Freeze_sfx2" type="AudioStreamPlayer" parent="SFX" unique_id=1813387723]
-unique_name_in_owner = true
-stream = ExtResource("20_ltsxa")
-volume_db = -35.0
-
-[node name="rock_flicker_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1715758718]
-unique_name_in_owner = true
-stream = ExtResource("30_8mu68")
-volume_db = -22.0
-pitch_scale = 0.85
-
-[node name="rock_launch_sound" type="AudioStreamPlayer" parent="SFX" unique_id=910213729]
-unique_name_in_owner = true
-stream = ExtResource("20_herjc")
-volume_db = -43.0
-pitch_scale = 3.2
-max_polyphony = 10
-
-[node name="PianoNotes" type="Node" parent="SFX" unique_id=1296907689]
-
-[node name="launch_flick" type="AudioStreamPlayer" parent="SFX/PianoNotes" unique_id=2127211158]
-stream = ExtResource("30_8mu68")
-volume_db = -29.0
-pitch_scale = 0.8
-
-[node name="1" type="AudioStreamPlayer" parent="SFX/PianoNotes" unique_id=858664464]
-stream = ExtResource("32_ltsxa")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="2" type="AudioStreamPlayer" parent="SFX/PianoNotes" unique_id=2107288870]
-stream = ExtResource("33_8mu68")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="3" type="AudioStreamPlayer" parent="SFX/PianoNotes" unique_id=267659503]
-stream = ExtResource("34_q8tld")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="4" type="AudioStreamPlayer" parent="SFX/PianoNotes" unique_id=257489984]
-stream = ExtResource("35_0cvxb")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="5" type="AudioStreamPlayer" parent="SFX/PianoNotes" unique_id=1657133887]
-stream = ExtResource("36_gsivy")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="6" type="AudioStreamPlayer" parent="SFX/PianoNotes" unique_id=1458442543]
-stream = ExtResource("37_pbe1n")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="7" type="AudioStreamPlayer" parent="SFX/PianoNotes" unique_id=139895595]
-stream = ExtResource("38_qfsx3")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="8" type="AudioStreamPlayer" parent="SFX/PianoNotes" unique_id=1400746164]
-stream = ExtResource("39_20bhc")
-volume_db = -70.0
-bus = &"ReverbBus"
 
 [connection signal="body_entered" from="Explosion_area" to="." method="_on_explosion_area_body_entered"]
 [connection signal="timeout" from="Start_falling_timer" to="." method="_on_start_falling_timer_timeout"]
