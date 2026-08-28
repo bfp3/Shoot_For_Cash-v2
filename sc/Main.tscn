@@ -40,8 +40,11 @@
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="42_nxc00"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="47_wtxnc"]
 [ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="54_i541k"]
+[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="54_ymbdo"]
 [ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="55_3u5oq"]
+[ext_resource type="AudioStream" uid="uid://cgmf5xub0ewvx" path="res://sfx/pineapple_sound_3.ogg" id="55_wv0tc"]
 [ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="56_4ta1g"]
+[ext_resource type="AudioStream" uid="uid://w5iohymmpptg" path="res://sfx/score_tally_sfx.ogg" id="56_gf2tl"]
 [ext_resource type="AudioStream" uid="uid://pqc60gfwwbnp" path="res://sfx/low_pitch_humming_loop.ogg" id="62_2300m"]
 [ext_resource type="Script" uid="uid://jrsa7e3mhuxu" path="res://ch/wall_puzzle_setup.gd" id="62_wallpz"]
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
@@ -1476,6 +1479,60 @@ gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
+[node name="SFX" type="Node" parent="OrangeBombs" unique_id=21669631]
+
+[node name="hitSound" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1159045003]
+unique_name_in_owner = true
+stream = ExtResource("14_gspdd")
+volume_db = -35.0
+max_polyphony = 2
+
+[node name="take_damage_sfx" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=2053594315]
+unique_name_in_owner = true
+stream = ExtResource("16_8xhv2")
+volume_db = -20.0
+max_polyphony = 2
+
+[node name="marked_sfx" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=2053391826]
+unique_name_in_owner = true
+stream = ExtResource("23_1i2h1")
+volume_db = -25.0
+pitch_scale = 1.2
+
+[node name="gold_sfx" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1511850070]
+unique_name_in_owner = true
+stream = ExtResource("15_24t6b")
+volume_db = -25.0
+pitch_scale = 1.2
+
+[node name="shop_purchase_03" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1939631238]
+unique_name_in_owner = true
+stream = ExtResource("54_ymbdo")
+volume_db = -30.0
+
+[node name="explosion_sfx" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=2125272574]
+stream = ExtResource("17_2300m")
+volume_db = -30.0
+
+[node name="Pineapple_shot_explode" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1818937653]
+stream = ExtResource("23_1i2h1")
+volume_db = -19.0
+pitch_scale = 0.75
+max_polyphony = 2
+
+[node name="launch_sound" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1714071663]
+stream = ExtResource("20_ec2we")
+volume_db = -40.0
+pitch_scale = 2.5
+
+[node name="Pineapple_sound_hit" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=59696560]
+stream = ExtResource("55_wv0tc")
+volume_db = -15.0
+
+[node name="Pineapple_destroyed" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1198644935]
+stream = ExtResource("56_gf2tl")
+volume_db = -13.0
+
 [node name="OrangeBombsMarkers" type="Node3D" parent="." unique_id=104155927 groups=["pineapple_container"]]
 
 [node name="LeftMarker" type="Marker3D" parent="OrangeBombsMarkers" unique_id=637739805]
@@ -1591,7 +1648,10 @@ process_material = SubResource("ParticleProcessMaterial_inade")
 draw_pass_1 = SubResource("QuadMesh_y75p7")
 
 [node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=1389715347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, 0)
 script = ExtResource("62_wallpz")
+spawn_on_wall_hit = true
+spawn_rock_on_hit = true
 
 [node name="TouchingWallWithCrosshair" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=739585517]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.384448, 1.642421, 20.14018)

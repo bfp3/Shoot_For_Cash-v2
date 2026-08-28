@@ -18,7 +18,7 @@ START_START (difficulty select)
   → TALLY_END → SHOP_START
 ```
 
-Range clear (last round of a place, first time): tally, then shop (no island map). Hold-out win: tally, then the next range in `island-shipper.txt` order (shop on that range). Surviving the last hold-out without a strikeout: tally, then the stage-complete screen (fade to black, stage name + cash, DONE → title screen). Shop back: ABANDON RUN? No stays in shop; Yes resets the run and reopens difficulty select. Boss win: tally, then map ceremony. Boss loss: shop in the boss arena.
+Range clear (last round of a place, first time): tally, then shop (no island map). Hold-out win: tally, then the next range in `level-beginner.txt` order (shop on that range). Surviving the last hold-out without a strikeout: tally, then the stage-complete screen (fade to black, stage name + cash, DONE → title screen). Shop back: ABANDON RUN? No stays in shop; Yes resets the run and reopens difficulty select. Boss win: tally, then map ceremony. Boss loss: shop in the boss arena.
 
 ## States (`RoundState`)
 
@@ -55,7 +55,7 @@ Script commands. Default poses: BANK CASH left (`-2.8, 3.5, 22.5`), +1 Multiplie
 
 ## Level data
 
-- Script: `sc/island-shipper.txt` (`LEVEL_FILE_PATH`). Parser fills `current_rock_sequence`.
+- Script: `sc/level-beginner.txt` (and `level-advanced` / `level-expert` / `level-mystery` / `level-challenge-0N` via difficulty). Parser fills `current_rock_sequence`.
 - Layouts: `LAYOUT_PATH_BY_PLACE_INDEX` / `LAYOUT_PATH_BOSS_BY_ISLAND` → `sc/All_level_layouts/level_layout_*.tscn`.
 - Environments: `ENV_PATH_BY_LEVEL` on the camera, not inside the layout.
 - Round modifiers on the sequence dict: `no_lives`, `bonus` (e.g. protect), `shuffle`, `difficulty`, `max_strikes`, `hold_out_ms`.
@@ -64,7 +64,7 @@ Script commands. Default poses: BANK CASH left (`-2.8, 3.5, 22.5`), +1 Multiplie
 
 ## Special modes
 
-- **Hold-out (`hold out 90000`):** looping rocks, countdown timer in milliseconds. Win = timer, not clearing rocks. Works on any range, including boss. After a non-boss hold-out tally, travel to the next `range` header in `island-shipper.txt`. Surviving the last range opens the stage-complete screen instead of the map. `boss-timer` is still accepted as an alias.
+- **Hold-out (`hold out 90000`):** looping rocks, countdown timer in milliseconds. Win = timer, not clearing rocks. Works on any range, including boss. After a non-boss hold-out tally, travel to the next `range` header in `level-beginner.txt`. Surviving the last range opens the stage-complete screen instead of the map. `boss-timer` is still accepted as an alias.
 - **Boss:** hold-out in a boss arena. After tally, island map.
 - **Endless:** looping rocks, count-up timer, no wave banners.
 - **Level / round editor (D from shop, editor only):** sandbox under island `test`; does not write wallet unless forced.

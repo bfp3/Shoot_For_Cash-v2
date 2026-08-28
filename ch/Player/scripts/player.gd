@@ -14,7 +14,7 @@ var keyboard_velocity := Vector2.ZERO
 @onready var scope_shrink_sfx : AudioStreamPlayer = $SFX/ScopeShrink
 @export var scope_shrink_sfx_min_pitch := 1.0
 @export var scope_shrink_sfx_max_pitch := 50.0
-const scope_shrink_duration := 0.1 #0.5          # total seconds to fully shrink, regardless of starting size
+const scope_shrink_duration := 0.01 #0.5          # total seconds to fully shrink, regardless of starting size
 @export var scope_shrink_large_bonus := 0.2        # extra seconds tacked on for very large scopes
 const scope_shrink_reference_circle := 60.0  # "normal" size; circles above this scale toward the bonus
 @export var _current_shrink_duration := 0.15
@@ -143,6 +143,14 @@ var joystick_sensitivity := 500.0
 ## Extra vertical lanes just outside columns 1 and 8 (same A/B/C heights) for the reticle.
 @export var grid_aim_side_lanes := true
 
+@export_group("Crosshair Size")
+## Multiplies the resting scope size (hit radius + visual), same idea as holding expand toward SCOPE_EXPAND_MAX_SCALE.
+@export_range(1.0, 3.0, 0.05) var crosshair_default_size_scale := 1.0:
+	set(value):
+		crosshair_default_size_scale = maxf(value, 0.05)
+		if is_node_ready():
+			_apply_resting_crosshair_size(0.2)
+
 @export_group("Planted Crosshair")
 ## When true, fire-release plants a crosshair trap instead of shooting. Overlap = hit; expires after lifetime. Max 5.
 @export var plant_crosshair_on_fire := false
@@ -164,6 +172,8 @@ var joystick_sensitivity := 500.0
 @export_range(1.0, 8.0, 0.05) var shoot_ring_pulse_scale := 2.0
 ## Duration of the shoot-release ring expand + fade.
 @export_range(0.05, 2.0, 0.05) var shoot_ring_pulse_duration := 0.35
+## Ring pulse color for `shoot_weapon_2` (right-click / orange launch).
+@export var shoot_weapon_2_ring_pulse_color := Color(1.0, 0.55, 0.12, 1.0)
 
 const light_colour := Color('FFFFFF')
 const light_intensity := 2.0
@@ -231,7 +241,8 @@ func _ready() -> void:
 		'power_target_circle',
 		gl_PlayerState.dataset.power_target_circle
 	)
-	tween_scope(_inner_scope_scale_for_radius(start_radius), 0.33)
+	power_target_circle = start_radius
+	_apply_resting_crosshair_size(0.33)
 	
 	_init_ammo()
 	update_player_stats()
@@ -437,10 +448,14 @@ func _process(delta: float) -> void:
 			fire_weapon()
 
 		if Input.is_action_just_released("shoot_weapon_2"):
-			if right_click_is_planted_crosshair:
-				fire_weapon(true)
-			else:
-				fire_weapon()
+			var orange_container := get_tree().get_first_node_in_group('orange_container')
+			if orange_container and orange_container.has_method("launch_orange"):
+				orange_container.launch_orange(_crosshair_world_on_z(23.0))
+			%Crosshair.pulse_ring_texture(-1.0, -1.0, shoot_weapon_2_ring_pulse_color)
+			#if right_click_is_planted_crosshair:
+				#fire_weapon(true)
+			#else:
+				#fire_weapon()
 
 	handle_scope_adjust(delta)
 	
@@ -454,6 +469,19 @@ func _process(delta: float) -> void:
 	
 	#handle_pan_keyboard(delta)
 	
+
+## World point under the reticle center on a fixed Z plane (e.g. orange spawn depth).
+func _crosshair_world_on_z(plane_z: float) -> Vector3:
+	var screen_pos := crosshair.global_position + CROSSHAIR_CENTER_OFFSET
+	var origin: Vector3 = camera_3d.project_ray_origin(screen_pos)
+	var dir: Vector3 = camera_3d.project_ray_normal(screen_pos)
+	if absf(dir.z) < 0.0001:
+		return Vector3(origin.x, origin.y, plane_z)
+	var t := (plane_z - origin.z) / dir.z
+	var hit := origin + dir * t
+	return Vector3(hit.x, hit.y, plane_z)
+
+
 func update_gun_look() -> void:
 
 	var screen_pos = crosshair.global_position + CROSSHAIR_CENTER_OFFSET
@@ -914,6 +942,7 @@ func update_player_stats() -> void:
 	
 	_sync_weapon_bullet_scene()
 	weapon_shooting.apply_upgrades()
+	_apply_resting_crosshair_size(0.33)
 	_refresh_crosshair_weapon_style()
 	update_stats_visually()
 
@@ -976,7 +1005,7 @@ func update_stats_visually() -> void:
 	#await get_tree().create_timer(1.5).timeout
 	
 	
-	var scale_multiplier := _inner_scope_scale_for_radius(power_target_circle)
+	var scale_multiplier := _inner_scope_scale_for_radius(get_resting_target_circle())
 
 	tween_scope(scale_multiplier, 0.33)
 
@@ -1008,6 +1037,20 @@ func tween_scope(_scale_multiplier : float, _dur : float = 0.75) -> void:
 	scope_base_scale = _scale_multiplier
 	var increase_scope_tween : Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	increase_scope_tween.tween_property(%Inner_scope, "scale", Vector2.ONE * _scale_multiplier, _dur)
+
+
+## Resting hit-radius after upgrades × inspector default size scale.
+func get_resting_target_circle() -> float:
+	return maxf(power_target_circle, 1.0) * crosshair_default_size_scale
+
+
+func _apply_resting_crosshair_size(tween_dur: float = 0.33) -> void:
+	var resting := get_resting_target_circle()
+	scope_base_target_circle = resting
+	if weapon_shooting:
+		weapon_shooting.power_target_circle = resting
+	tween_scope(_inner_scope_scale_for_radius(resting), tween_dur)
+
 
 func _on_scope_shrink_sfx_finished() -> void:
 	if _scope_at_min or _scope_at_max:
@@ -1074,7 +1117,7 @@ func _update_scope_hold(mode: ScopeMode, delta: float) -> void:
 		_is_holding_shoot = true
 		_scope_mode = mode
 		scope_hold_time = 0.0
-		scope_base_target_circle = power_target_circle
+		scope_base_target_circle = get_resting_target_circle()
 		_scope_at_min = false
 		_scope_at_max = false
 		if _shrink_return_tween:
@@ -1148,7 +1191,6 @@ func _tween_scope_back_to_base() -> void:
 	_shrink_return_tween.tween_interval(0.1)
 	_shrink_return_tween.tween_property(%Inner_scope, "scale", Vector2.ONE * scope_base_scale, scope_return_duration)
 	_shrink_return_tween.parallel().tween_property(weapon_shooting, "power_target_circle", scope_base_target_circle, scope_return_duration)
-	# _shrink_return_tween.parallel().tween_property(%Target_circle, "scale", Vector2.ONE * scope_base_scale, scope_return_duration)
 
 
 
@@ -1292,6 +1334,7 @@ func get_ammo_pack_size() -> int:
 func fire_weapon(force_plant: bool = false) -> void:
 	power_gun_fire_rate = 0.01
 	power_bullet_speed = 0.01
+	#power_target_circle = 60.0
 	if current_state != State.ACTIVE:
 		return
 		

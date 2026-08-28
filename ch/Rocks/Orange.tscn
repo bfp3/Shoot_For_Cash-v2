@@ -2,15 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dq6cbl62l07oc" path="res://ch/Rocks/orange.gd" id="1_osrcr"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_osrcr"]
-[ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="3_mo482"]
-[ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="4_6dqdt"]
-[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="5_1p817"]
-[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="6_qlnda"]
-[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="7_f0n8o"]
-[ext_resource type="AudioStream" uid="uid://m75w4o7bl00c" path="res://sfx/explosion_sfx_01.ogg" id="8_ypig7"]
-[ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="9_i2ggm"]
-[ext_resource type="AudioStream" uid="uid://cgmf5xub0ewvx" path="res://sfx/pineapple_sound_3.ogg" id="10_lv0ah"]
-[ext_resource type="AudioStream" uid="uid://w5iohymmpptg" path="res://sfx/score_tally_sfx.ogg" id="11_hswuf"]
 [ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="12_nuq65"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="13_0qe50"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="14_yp1pk"]
@@ -18,8 +9,7 @@
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="16_0xwnr"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="17_3hkbi"]
 [ext_resource type="Script" uid="uid://cmtnbmo3ywoau" path="res://res/Particles/Smoke_particles/smoke_quick_script.gd" id="18_n52fv"]
-[ext_resource type="PackedScene" uid="uid://bh211snc0txl4" path="res://res/Particles/Smoke_coloured.tscn" id="19_sloxq"]
-[ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="20_bamir"]
+[ext_resource type="PackedScene" path="res://mine_temp/scenes/mine_fire.tscn" id="21_2i7b7"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 bounce = 0.5
@@ -649,32 +639,6 @@ turbulence_influence_min = 0.25
 turbulence_influence_max = 1.0
 turbulence_influence_over_life = SubResource("CurveTexture_27dlh")
 
-[sub_resource type="Gradient" id="Gradient_luarq"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(0.22, 0.22, 0.22, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_uhgr1"]
-gradient = SubResource("Gradient_luarq")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_js5s8"]
-emission_shape_scale = Vector3(0.6, 0.6, 0.6)
-emission_shape = 6
-emission_ring_axis = Vector3(0, 1, 0)
-emission_ring_height = 0.0
-emission_ring_radius = 0.0
-emission_ring_inner_radius = 0.5
-emission_ring_cone_angle = 90.0
-direction = Vector3(0, 1, 0)
-spread = 5.0
-angular_velocity_min = -1.6093254e-05
-angular_velocity_max = -1.6093254e-05
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_xgo4i")
-color_ramp = SubResource("GradientTexture1D_uhgr1")
-alpha_curve = SubResource("CurveTexture_y4gyo")
-anim_speed_min = 1.0
-anim_speed_max = 1.0
-
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tw3hu"]
 emission_shape_scale = Vector3(0.6, 0.6, 0.6)
 emission_shape = 6
@@ -693,123 +657,6 @@ color = Color(0.81, 0.81, 0.81, 1)
 alpha_curve = SubResource("CurveTexture_y4gyo")
 anim_speed_min = 1.0
 anim_speed_max = 1.0
-
-[sub_resource type="Curve" id="Curve_vhbws"]
-_data = [Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.8034189, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.55551094), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_k0v7p"]
-curve = SubResource("Curve_vhbws")
-
-[sub_resource type="Curve" id="Curve_ywl8v"]
-_limits = [-360.0, 360.0, 0.0, 1.0]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_picib"]
-curve = SubResource("Curve_ywl8v")
-
-[sub_resource type="Gradient" id="Gradient_ipf0s"]
-offsets = PackedFloat32Array(0.022624435, 0.10633484, 0.17420815, 0.29185522, 1)
-colors = PackedColorArray(0, 0.05490196, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0.22, 0.22, 0.22, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_bc0l2"]
-gradient = SubResource("Gradient_ipf0s")
-
-[sub_resource type="Curve" id="Curve_k7ipu"]
-_data = [Vector2(0, 0.775281), 0.0, 0.0, 0, 0, Vector2(0.0234742, 1), 0.0, 0.0, 0, 0, Vector2(0.943662, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 4
-
-[sub_resource type="CurveTexture" id="CurveTexture_ehdue"]
-curve = SubResource("Curve_k7ipu")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ae1ab"]
-lifetime_randomness = 1.0
-emission_shape_scale = Vector3(0.6, 0.6, 0.6)
-emission_shape = 6
-emission_ring_axis = Vector3(0, 1, 0)
-emission_ring_height = 0.0
-emission_ring_radius = 0.0
-emission_ring_inner_radius = 0.5
-emission_ring_cone_angle = 90.0
-direction = Vector3(0, 1, 0)
-spread = 5.0
-angular_velocity_min = -30.0
-angular_velocity_max = 30.0
-angular_velocity_curve = SubResource("CurveTexture_picib")
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_ehdue")
-color_ramp = SubResource("GradientTexture1D_bc0l2")
-alpha_curve = SubResource("CurveTexture_k0v7p")
-anim_speed_min = 1.0
-anim_speed_max = 1.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5v6vj"]
-transparency = 2
-alpha_scissor_threshold = 0.5
-alpha_antialiasing_mode = 0
-shading_mode = 0
-vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("17_3hkbi")
-billboard_mode = 3
-billboard_keep_scale = true
-particles_anim_h_frames = 8
-particles_anim_v_frames = 8
-particles_anim_loop = false
-
-[sub_resource type="QuadMesh" id="QuadMesh_x8mw5"]
-material = SubResource("StandardMaterial3D_5v6vj")
-size = Vector2(5, 5)
-
-[sub_resource type="Curve" id="Curve_s08hf"]
-_data = [Vector2(0, 0.460674), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_yq32h"]
-_limits = [0.0, 4.0, 0.0, 1.0]
-_data = [Vector2(0, 4), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_beb3h"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_aypq8"]
-curve_x = SubResource("Curve_s08hf")
-curve_y = SubResource("Curve_yq32h")
-curve_z = SubResource("Curve_beb3h")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_lrylr"]
-particle_flag_align_y = true
-direction = Vector3(0, 1, -5)
-spread = 180.0
-initial_velocity_min = 1.0
-initial_velocity_max = 5.0
-scale_min = 0.1
-scale_max = 0.2
-scale_curve = SubResource("CurveXYZTexture_aypq8")
-
-[sub_resource type="Gradient" id="Gradient_qrex3"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0.610526, 0.663158)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_x736i"]
-gradient = SubResource("Gradient_qrex3")
-width = 512
-height = 512
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2dco4"]
-transparency = 1
-blend_mode = 1
-albedo_color = Color(6, 3, 1, 1)
-albedo_texture = SubResource("GradientTexture2D_x736i")
-
-[sub_resource type="QuadMesh" id="QuadMesh_sjja1"]
-material = SubResource("StandardMaterial3D_2dco4")
-size = Vector2(0.2, 0.2)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jq8lj"]
 radius = 0.304
@@ -1002,7 +849,6 @@ rings = 6
 [node name="Orange" type="RigidBody3D" unique_id=1539472592 groups=["Target", "pineapple"]]
 collision_layer = 128
 collision_mask = 128
-mass = 50.0
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.3
 angular_damp = 1.0
@@ -1013,6 +859,11 @@ shape = SubResource("SphereShape3D_nul74")
 
 [node name="Mesh" type="Node3D" parent="." unique_id=1406987277]
 unique_name_in_owner = true
+
+[node name="Fire" parent="Mesh" unique_id=147624846 instance=ExtResource("21_2i7b7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+amount = 26
+local_coords = false
 
 [node name="GoldParticless" type="GPUParticles3D" parent="Mesh" unique_id=2125638247]
 unique_name_in_owner = true
@@ -1043,58 +894,6 @@ skeleton = NodePath("")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Mesh" unique_id=1911912636]
 libraries/ = SubResource("AnimationLibrary_2i7b7")
 autoplay = &"idle"
-
-[node name="hitSound" type="AudioStreamPlayer" parent="." unique_id=350956147]
-unique_name_in_owner = true
-stream = ExtResource("3_mo482")
-volume_db = -35.0
-max_polyphony = 2
-
-[node name="take_damage_sfx" type="AudioStreamPlayer" parent="." unique_id=1565205019]
-unique_name_in_owner = true
-stream = ExtResource("4_6dqdt")
-volume_db = -20.0
-max_polyphony = 2
-
-[node name="marked_sfx" type="AudioStreamPlayer" parent="." unique_id=678390155]
-unique_name_in_owner = true
-stream = ExtResource("5_1p817")
-volume_db = -25.0
-pitch_scale = 1.2
-
-[node name="gold_sfx" type="AudioStreamPlayer" parent="." unique_id=106677023]
-unique_name_in_owner = true
-stream = ExtResource("6_qlnda")
-volume_db = -25.0
-pitch_scale = 1.2
-
-[node name="shop_purchase_03" type="AudioStreamPlayer" parent="." unique_id=1814407507]
-unique_name_in_owner = true
-stream = ExtResource("7_f0n8o")
-volume_db = -30.0
-
-[node name="explosion_sfx" type="AudioStreamPlayer" parent="." unique_id=985110193]
-stream = ExtResource("8_ypig7")
-volume_db = -30.0
-
-[node name="Pineapple_shot_explode" type="AudioStreamPlayer" parent="." unique_id=583233580]
-stream = ExtResource("5_1p817")
-volume_db = -19.0
-pitch_scale = 0.75
-max_polyphony = 2
-
-[node name="launch_sound" type="AudioStreamPlayer" parent="." unique_id=1446386083]
-stream = ExtResource("9_i2ggm")
-volume_db = -40.0
-pitch_scale = 2.5
-
-[node name="Pineapple_sound_hit" type="AudioStreamPlayer" parent="." unique_id=1242188360]
-stream = ExtResource("10_lv0ah")
-volume_db = -15.0
-
-[node name="Pineapple_destroyed" type="AudioStreamPlayer" parent="." unique_id=1354155901]
-stream = ExtResource("11_hswuf")
-volume_db = -13.0
 
 [node name="AoE" type="Node3D" parent="." unique_id=734798651]
 top_level = true
@@ -1186,43 +985,6 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_sjja1")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="AoE2Fail" type="Node3D" parent="." unique_id=1119795136]
-top_level = true
-script = ExtResource("12_nuq65")
-delays = {
-&"Smoke_quick": 0.0,
-&"Sparks01": 0.0,
-&"embers": 1.0,
-&"pineapple_embers": 0.0,
-&"upward_smoke_glow": 0.0
-}
-
-[node name="Sparks01" type="GPUParticles3D" parent="AoE2Fail" unique_id=1112008638]
-material_override = SubResource("StandardMaterial3D_xb1fg")
-cast_shadow = 0
-emitting = false
-amount = 20
-lifetime = 2.0
-one_shot = true
-explosiveness = 1.0
-visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
-process_material = SubResource("ParticleProcessMaterial_beb3h")
-draw_pass_1 = SubResource("QuadMesh_bymj0")
-
-[node name="Smoke_quick" type="GPUParticles3D" parent="AoE2Fail" unique_id=410846378]
-transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
-cast_shadow = 0
-emitting = false
-amount = 1
-lifetime = 5.0
-one_shot = true
-explosiveness = 1.0
-fixed_fps = 12
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_js5s8")
-draw_pass_1 = SubResource("QuadMesh_c7jqr")
-script = ExtResource("18_n52fv")
-
 [node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=1699975843]
 transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
 cast_shadow = 0
@@ -1232,24 +994,6 @@ one_shot = true
 process_material = SubResource("ParticleProcessMaterial_tw3hu")
 draw_pass_1 = SubResource("QuadMesh_c7jqr")
 script = ExtResource("18_n52fv")
-
-[node name="Smoke_quick2" parent="." unique_id=1910998751 instance=ExtResource("19_sloxq")]
-visible = false
-cast_shadow = 0
-process_material = SubResource("ParticleProcessMaterial_ae1ab")
-draw_pass_1 = SubResource("QuadMesh_x8mw5")
-
-[node name="XSparks01" type="GPUParticles3D" parent="." unique_id=63975764]
-top_level = true
-visible = false
-cast_shadow = 0
-emitting = false
-amount = 30
-one_shot = true
-explosiveness = 1.0
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_lrylr")
-draw_pass_1 = SubResource("QuadMesh_sjja1")
 
 [node name="Sparks01" type="GPUParticles3D" parent="." unique_id=723796104]
 material_override = SubResource("StandardMaterial3D_xb1fg")
@@ -1262,18 +1006,6 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_beb3h")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="Sparks02Destroyed" type="GPUParticles3D" parent="." unique_id=2037617505]
-top_level = true
-visible = false
-cast_shadow = 0
-emitting = false
-amount = 50
-lifetime = 2.0
-one_shot = true
-explosiveness = 0.7
-process_material = SubResource("ParticleProcessMaterial_lrylr")
-draw_pass_1 = SubResource("QuadMesh_sjja1")
-
 [node name="Timer" type="Timer" parent="." unique_id=218049222]
 wait_time = 2.0
 one_shot = true
@@ -1281,37 +1013,6 @@ one_shot = true
 [node name="Start_falling_timer" type="Timer" parent="." unique_id=1194527769]
 wait_time = 2.0
 one_shot = true
-
-[node name="Money_Label3D" type="Label3D" parent="." unique_id=940150756]
-visible = false
-pixel_size = 0.0009
-billboard = 1
-no_depth_test = true
-fixed_size = true
-modulate = Color(0.2596667, 0.82, 0, 1)
-outline_modulate = Color(0.15, 0.15, 0.15, 1)
-text = "+$2.00"
-outline_size = 4
-script = ExtResource("20_bamir")
-
-[node name="Gold_label3D" type="Label3D" parent="." unique_id=1115168145]
-visible = false
-pixel_size = 0.0009
-billboard = 1
-no_depth_test = true
-fixed_size = true
-modulate = Color(1, 0.78039217, 0, 1)
-outline_modulate = Color(0.15, 0.15, 0.15, 1)
-text = "+$2.00"
-font_size = 20
-outline_size = 4
-script = ExtResource("20_bamir")
-
-[node name="Gold_sfx" type="AudioStreamPlayer" parent="Gold_label3D" unique_id=704467371]
-stream = ExtResource("5_1p817")
-volume_db = -10.0
-pitch_scale = 0.7
-max_polyphony = 2
 
 [node name="hit_wall_timer" type="Timer" parent="." unique_id=926593352]
 wait_time = 0.1

@@ -128,7 +128,10 @@ func _ready() -> void:
 func refresh_unlock_state() -> void:
 	if unlock_key.strip_edges().is_empty():
 		return
-	if gl_DataSet and gl_DataSet.has_method("is_difficulty_unlocked"):
+	var key := unlock_key.strip_edges().to_lower()
+	if key.begins_with("challenge") and gl_DataSet and gl_DataSet.has_method("is_challenge_unlocked"):
+		locked = not gl_DataSet.is_challenge_unlocked(key)
+	elif gl_DataSet and gl_DataSet.has_method("is_difficulty_unlocked"):
 		locked = not gl_DataSet.is_difficulty_unlocked(unlock_key)
 
 
@@ -241,6 +244,12 @@ func play_unlocked_spin() -> void:
 	_set_face(false)
 	_play_sfx(_shing_sfx)
 	get_tree().call_group("difficulty_badge", "fade_away_for_selection", self)
+	## Challenge row: move the whole row up first (badge still a child), then center.
+	var challenge_row := get_parent()
+	if challenge_row and challenge_row.has_method("animate_align_to_difficulty_row"):
+		await challenge_row.animate_align_to_difficulty_row(0.22)
+		if not is_inside_tree():
+			return
 	await _center_horizontally()
 	if not is_inside_tree():
 		return
@@ -266,7 +275,7 @@ func _center_horizontally() -> void:
 	top_level = true
 	global_position = gp
 	var dest := gp
-	dest.x += _selection_center().x - get_global_rect().get_center().x
+	dest.x = 832.0
 	if _flip_tween and _flip_tween.is_valid():
 		_flip_tween.kill()
 	_flip_tween = create_tween()
@@ -302,6 +311,9 @@ func _blink_visible(duration: float) -> void:
 func _is_content_locked() -> bool:
 	if unlock_key.strip_edges().is_empty():
 		return false
+	var key := unlock_key.strip_edges().to_lower()
+	if key.begins_with("challenge") and gl_DataSet and gl_DataSet.has_method("is_challenge_unlocked"):
+		return not gl_DataSet.is_challenge_unlocked(key)
 	if gl_DataSet and gl_DataSet.has_method("is_difficulty_unlocked"):
 		return not gl_DataSet.is_difficulty_unlocked(unlock_key)
 	return locked

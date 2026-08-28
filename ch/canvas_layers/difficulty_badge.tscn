@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c2vlvp7tqncih" path="res://res/star_filled_256.png" id="4_w73f1"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="4_xilsf"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="5_focus"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="5_pmshx"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="6_flip"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="7_shing"]
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="8_travel"]
@@ -124,16 +125,26 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_circle")
 
+[node name="CoatArms" parent="." unique_id=409353141 instance=ExtResource("5_pmshx")]
+layout_mode = 1
+offset_top = -124.0
+offset_bottom = 132.0
+scale = Vector2(2.112, 2.112)
+
+[node name="Ring" parent="CoatArms" index="0" unique_id=1586711955]
+visible = false
+
+[node name="Insignia" parent="CoatArms" index="2" unique_id=1723705056]
+theme_override_constants/outline_size = 1
+
 [node name="Banner2" type="ColorRect" parent="." unique_id=1425960322]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 3.0
-offset_top = -19.0
-offset_right = 3.0
-offset_bottom = 19.029053
+offset_top = -18.0
+offset_bottom = 20.029053
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.97, 1.515)
@@ -151,7 +162,7 @@ offset_top = -18.0
 offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.97, 1.515)
+scale = Vector2(1.075, 1.515)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 color = Color(0.5921569, 0.09019608, 0.09411765, 1)
@@ -340,3 +351,5 @@ pitch_scale = 1.2
 stream = ExtResource("8_travel")
 volume_db = -32.0
 pitch_scale = 1.6
+
+[editable path="CoatArms"]

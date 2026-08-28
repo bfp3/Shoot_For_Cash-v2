@@ -6,8 +6,8 @@ var expert_unlocked := false
 var mystery_unlocked := false
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
-var challenges_unlocked := false
-var challenge_01_unlocked := false
+var challenges_unlocked := true
+var challenge_01_unlocked := true
 var challenge_02_unlocked := false
 var challenge_03_unlocked := false
 var challenge_04_unlocked := false
@@ -199,6 +199,20 @@ func is_difficulty_unlocked(key: String) -> bool:
 			return mystery_unlocked
 		_:
 			return true
+
+
+func is_challenge_unlocked(key: String) -> bool:
+	match String(key).strip_edges().to_lower():
+		"challenge_01", "challenge1", "challenge 1":
+			return challenge_01_unlocked
+		"challenge_02", "challenge2", "challenge 2":
+			return challenge_02_unlocked
+		"challenge_03", "challenge3", "challenge 3":
+			return challenge_03_unlocked
+		"challenge_04", "challenge4", "challenge 4":
+			return challenge_04_unlocked
+		_:
+			return false
 
 
 func get_value(_name : String, _index : int = 0) -> float:

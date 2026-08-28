@@ -14,6 +14,14 @@ class_name WallPuzzleSetup
 ## 1 = full hit-radius; raise slightly above 1 if the visual ring feels bigger than the hit radius.
 @export_range(0.5, 1.5, 0.05) var reticle_sample_radius_scale := 1.05
 
+@export_group("Wall Hit Spawn")
+## When true, entering overlap spawns a threat (balloon or rock — pick one flag below).
+@export var spawn_on_wall_hit := false
+## Spawn a random-cell balloon when the crosshair first hits solid wall.
+@export var spawn_balloon_on_hit := false
+## Spawn a standard rock when the crosshair first hits solid wall.
+@export var spawn_rock_on_hit := false
+
 @onready var wall_puzzle: CSGShape3D = $WallPuzzle
 @onready var light_touching: OmniLight3D = $TouchingWallWithCrosshair
 @onready var light_allgood: OmniLight3D = $Allgood
@@ -37,12 +45,56 @@ func _physics_process(_delta: float) -> void:
 	var overlapping := _query_crosshair_overlaps_wall()
 	if overlapping == _overlapping:
 		return
+	var entered := overlapping and not _overlapping
 	_overlapping = overlapping
 	_apply_overlap_visuals(overlapping, false)
+	if entered:
+		_try_spawn_on_wall_hit()
 
 
 func is_crosshair_overlapping_wall() -> bool:
 	return _overlapping
+
+
+func _try_spawn_on_wall_hit() -> void:
+	if not spawn_on_wall_hit:
+		return
+	var want_balloon := spawn_balloon_on_hit
+	var want_rock := spawn_rock_on_hit
+	if want_balloon and want_rock:
+		push_warning("WallPuzzleSetup: both spawn flags true — spawning rock only.")
+		want_balloon = false
+	if want_balloon:
+		_spawn_wall_hit_balloon()
+	elif want_rock:
+		_spawn_wall_hit_rock()
+
+
+func _spawn_wall_hit_balloon() -> void:
+	var host := get_tree().get_first_node_in_group("balloon_container")
+	if host == null or not host.has_method("spawn_balloon_entry"):
+		push_warning("WallPuzzleSetup: no balloon_container to spawn into.")
+		return
+	host.spawn_balloon_entry({"cmd": "balloon"})
+
+
+func _spawn_wall_hit_rock() -> void:
+	var rocks: RockManager = null
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm != null:
+		var container = rm.get("rocks_container")
+		if container is RockManager:
+			rocks = container
+	if rocks == null:
+		var scene := get_tree().current_scene
+		if scene:
+			var node := scene.get_node_or_null("Rocks")
+			if node is RockManager:
+				rocks = node
+	if rocks == null or not rocks.has_method("spawn_threat_rock"):
+		push_warning("WallPuzzleSetup: no RockManager.spawn_threat_rock.")
+		return
+	rocks.spawn_threat_rock("rock")
 
 
 func _apply_overlap_visuals(overlapping: bool, silent: bool) -> void:

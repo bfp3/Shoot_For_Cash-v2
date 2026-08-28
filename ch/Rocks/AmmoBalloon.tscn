@@ -5,10 +5,17 @@
 [ext_resource type="Material" uid="uid://cte0j125svd7e" path="res://res/camo_material.tres" id="3_5tkbb"]
 [ext_resource type="Material" uid="uid://c265b2f4yjk72" path="res://res/pileon_clay_material_2.tres" id="4_5tkbb"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_5tkbb"]
+size = Vector3(1, 2.506958, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_5tkbb"]
 
 [node name="AmmoBalloon" unique_id=1844229001 instance=ExtResource("1_ckpt")]
 script = ExtResource("2_script")
+
+[node name="main_col" parent="." index="0" unique_id=809893561]
+transform = Transform3D(0.5000001, 0, 0, 0, 0.5000001, 0, 0, 0, 0.5000001, 0, 0.34251896, 0)
+shape = SubResource("BoxShape3D_5tkbb")
 
 [node name="small_rock2" parent="Mesh" parent_id_path=PackedInt32Array(950426368) index="0" unique_id=2102516094]
 transform = Transform3D(0.6860001, 0, 0, 0, 0.6860001, 0, 0, 0, 0.6860001, 0, 0.788, 0)

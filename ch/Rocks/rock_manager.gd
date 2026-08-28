@@ -2909,6 +2909,35 @@ func _find_free_pool_rock():
 	return fallback
 
 
+## Ad-hoc single rock (wall-puzzle threat, etc.). Does not advance the script sequence.
+func spawn_threat_rock(cmd: String = "rock") -> void:
+	var body = _find_free_pool_rock()
+	if body == null:
+		return
+	var entry := {"cmd": String(cmd).to_lower(), "column": -1}
+	var column := _resolve_spawn_column(entry)
+	var spawn_x := _spawn_x_for_entry(entry, column)
+	if body.has_method("setup_for_pool_launch"):
+		body.setup_for_pool_launch(_spawn_entry_to_rock_type(entry), spawn_x)
+	else:
+		body.rock_type = _spawn_entry_to_rock_type(entry)
+		body.target_x_position = spawn_x
+		body.enter_state(body.State.PREPARE_ROCK)
+	await get_tree().create_timer(0.35, false).timeout
+	if not is_instance_valid(body) or body.current_state != body.State.PREPARE_ROCK:
+		return
+	body.enter_state(body.State.ACTIVE)
+	var upward_force := 10.0
+	var launch_g := _aim_launch_gravity_for(body, entry)
+	BallisticAim.configure_body_for_ballistic_launch(body, launch_g)
+	if body.has_method("begin_ballistic_aim_feel"):
+		body.begin_ballistic_aim_feel(aim_descent_linear_damp)
+	var impulse := _build_launch_impulse(body, -1, upward_force, 0.0, launch_g)
+	body.apply_central_impulse(impulse)
+	if rock_rock_collisions_enabled and body.has_method("schedule_airborne_rock_collisions"):
+		body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
+
+
 func _configure_stream_rock(body, rock_index: int) -> void:
 	var entry = null
 	if rock_index >= 0 and rock_index < manual_rock_sequence.size():

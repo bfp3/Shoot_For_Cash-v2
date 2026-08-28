@@ -496,7 +496,8 @@ func _control_global_scale(node: Control) -> Vector2:
 
 func pulse_ring_texture(
 	pulse_scale_mult: float = -1.0,
-	pulse_duration: float = -1.0
+	pulse_duration: float = -1.0,
+	modulate_color: Variant = null
 ) -> void:
 	var player = _player_for_plants()
 	var scale_mult := pulse_scale_mult
@@ -512,7 +513,8 @@ func pulse_ring_texture(
 		ring_src.get_global_rect().get_center(),
 		_control_global_scale(ring_src),
 		scale_mult,
-		duration
+		duration,
+		modulate_color
 	)
 
 
@@ -520,7 +522,8 @@ func _spawn_outer_ring_pulse(
 	at_center: Vector2,
 	base_scale: Vector2,
 	pulse_scale_mult: float,
-	pulse_duration: float
+	pulse_duration: float,
+	modulate_color: Variant = null
 ) -> void:
 	var ring_src: Control = $Inner_scope/RingTexture as Control
 	if ring_src == null:
@@ -543,7 +546,11 @@ func _spawn_outer_ring_pulse(
 	if start_scale == Vector2.ZERO:
 		start_scale = _control_global_scale(ring_src)
 	pulse.scale = start_scale
-	pulse.modulate = Color(ring_src.modulate.r, ring_src.modulate.g, ring_src.modulate.b, 0.9)
+	if modulate_color is Color:
+		var c: Color = modulate_color
+		pulse.modulate = Color(c.r, c.g, c.b, 0.9)
+	else:
+		pulse.modulate = Color(ring_src.modulate.r, ring_src.modulate.g, ring_src.modulate.b, 0.9)
 	## Match the live ring's screen center, then expand around it.
 	var sz: Vector2 = pulse.size
 	if sz == Vector2.ZERO:

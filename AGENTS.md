@@ -15,7 +15,7 @@ Godot **4.6** GDScript. Do not edit `.godot/` or `addons/` unless the task is th
 - **Run data / cash / save:** `lib/player_state.gd` (`gl_PlayerState`).
 - **Prices / rock values / unlock costs:** `lib/data_set.gd` (`gl_DataSet`).
 - **Signals:** `scripts/EventBus.gd` via `EventBus.instance`.
-- **Level script:** `sc/island-shipper.txt` through `lib/parser.gd` (`Parser`).
+- **Level script:** `sc/level-beginner.txt` (also `level-advanced` / `level-expert` / `level-mystery` / `level-challenge-0N`) through `lib/parser.gd` (`Parser`).
 - **Island scenery:** `sc/All_level_layouts/` only. Never point `RoundManager` at `sc/2025_Levels/`.
 
 ## Cash

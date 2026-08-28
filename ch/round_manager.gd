@@ -74,6 +74,10 @@ const LEVEL_FILE_BEGINNER := "res://sc/level-beginner.txt"
 const LEVEL_FILE_ADVANCED := "res://sc/level-advanced.txt"
 const LEVEL_FILE_EXPERT := "res://sc/level-expert.txt"
 const LEVEL_FILE_MYSTERY := "res://sc/level-mystery.txt"
+const LEVEL_FILE_CHALLENGE_01 := "res://sc/level-challenge-01.txt"
+const LEVEL_FILE_CHALLENGE_02 := "res://sc/level-challenge-02.txt"
+const LEVEL_FILE_CHALLENGE_03 := "res://sc/level-challenge-03.txt"
+const LEVEL_FILE_CHALLENGE_04 := "res://sc/level-challenge-04.txt"
 
 var LEVEL_FILE_PATH := LEVEL_FILE_BEGINNER
 const LEVEL_ISLAND_NAME := 'shipper'
@@ -831,6 +835,7 @@ func apply_level_file_for_difficulty(stage: String = "") -> void:
 		stage = String(gl_PlayerState.get_run_difficulty())
 	var key := stage.strip_edges().to_upper()
 	key = key.replace("[WAVE]", "").replace("[/WAVE]", "")
+	key = key.replace("_", " ")
 	match key:
 		"ADVANCED":
 			LEVEL_FILE_PATH = LEVEL_FILE_ADVANCED
@@ -838,6 +843,14 @@ func apply_level_file_for_difficulty(stage: String = "") -> void:
 			LEVEL_FILE_PATH = LEVEL_FILE_EXPERT
 		"MYSTERY", "???":
 			LEVEL_FILE_PATH = LEVEL_FILE_MYSTERY
+		"CHALLENGE 1", "CHALLENGE1", "CHALLENGE 01":
+			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_01
+		"CHALLENGE 2", "CHALLENGE2", "CHALLENGE 02":
+			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_02
+		"CHALLENGE 3", "CHALLENGE3", "CHALLENGE 03":
+			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_03
+		"CHALLENGE 4", "CHALLENGE4", "CHALLENGE 04":
+			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_04
 		_:
 			LEVEL_FILE_PATH = LEVEL_FILE_BEGINNER
 

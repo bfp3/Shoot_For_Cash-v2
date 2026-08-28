@@ -5,6 +5,7 @@ var default_position := Vector2.ZERO
 var _busy := false
 
 @onready var _buttons: Node = %DifficultySelectButtons
+@onready var _challenge_buttons: Node = %SpecialChallengeButtons
 @onready var _back_button: Button = %MapButton
 
 
@@ -17,6 +18,8 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if _buttons and _buttons.has_signal("level_chosen"):
 		_buttons.level_chosen.connect(_on_level_chosen)
+	if _challenge_buttons and _challenge_buttons.has_signal("level_chosen"):
+		_challenge_buttons.level_chosen.connect(_on_level_chosen)
 	if _back_button:
 		_back_button.pressed.connect(_on_back_pressed)
 
@@ -30,6 +33,8 @@ func open_pop_up() -> void:
 	CommonCode.apply_ui_overlay_blur()
 	if _buttons and _buttons.has_method("refresh_unlocks"):
 		_buttons.refresh_unlocks()
+	if _challenge_buttons and _challenge_buttons.has_method("refresh_unlocks"):
+		_challenge_buttons.refresh_unlocks()
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_LINEAR)
 	tween.set_ease(Tween.EASE_OUT)

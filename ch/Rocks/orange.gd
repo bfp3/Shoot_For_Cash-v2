@@ -6,6 +6,8 @@ const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 @export var aim_apex_at_hit_height := true
 ## When true, spawn X snaps to the nearest aim-grid column.
 @export var snap_x_to_nearest_column := true
+## When true, any RockInstance that physically collides with this orange makes it explode.
+@export var explode_on_rock_collision := true
 
 var cash_value := 0
 var original_cash_value := 0
@@ -127,6 +129,10 @@ func _get_rock_manager() -> RockManager:
 func _ready() -> void:
 	
 	start_pos = global_position
+	contact_monitor = true
+	max_contacts_reported = 8
+	if not body_entered.is_connected(_on_orange_body_entered):
+		body_entered.connect(_on_orange_body_entered)
 	
 	# End-of-round explode is driven by RoundManager with a stagger (not EventBus).
 	EventBus.instance.open_shop.connect(update_disabled)
@@ -215,7 +221,8 @@ func update_active() -> void:
 	rock_activated = true
 
 	$Mesh.show()
-	$Start_falling_timer.start(2.2)
+	## Stay at apex — do not arm the old fall-back timer.
+	#$Start_falling_timer.start(2.2)
 	
 	$explosion_sfx.play()
 	$Smoke_quick.emitting = true
@@ -558,9 +565,24 @@ func play_destroy_sfx() -> void:
 	
 
 func _on_start_falling_timer_timeout() -> void:
-	falling = true
-	_apex_lock_active = false
-	linear_damp = 0.0
+	## Oranges stay put at apex after launch — fall-back disabled.
+	pass
+
+
+func _on_orange_body_entered(body: Node) -> void:
+	if not explode_on_rock_collision:
+		return
+	if not rock_activated or rock_destroyed or is_deactivated:
+		return
+	if body == null or body == self:
+		return
+	if body is not RockInstance:
+		return
+	var rock := body as RockInstance
+	if not rock.rock_activated or rock.rock_destroyed:
+		return
+	start_destroyed_process()
+
 
 func smoke_particles() -> void:
 	$AoE.global_position = global_position
@@ -732,7 +754,11 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			await get_tree().create_timer(randf_range(0.1, 0.15), false).timeout
 			body.start_destroyed_process()
 			return
-
+		
+		if body.rock_type != body.RockSize.AVOIDER:
+			body.start_destroyed_process()
+			return
+		
 		# Basic rocks: stagger destroy chain so they don't all pop at once.
 		var stagger_i := _blast_destroy_stagger_index
 		_blast_destroy_stagger_index += 1

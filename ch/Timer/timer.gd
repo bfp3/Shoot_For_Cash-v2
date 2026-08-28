@@ -34,6 +34,21 @@ var _last_count_up_elapsed := 0.0
 @export var ticking_sfx_max_db := 40.0
 @export var ticking_sfx_smooth_speed := 6.0 # higher = faster response
 
+@export_group("Crosshair Fade")
+## Fade the timer when the crosshair gets near the clock label so it stays out of the way.
+@export var crosshair_fade_enabled := true
+## Fully faded alpha while the reticle is overlapping / very close to the timer.
+@export_range(0.0, 1.0, 0.05) var crosshair_fade_min_alpha := 0.2
+## Distance (px) from the timer label where fade begins.
+@export var crosshair_fade_start_px := 140.0
+## Distance (px) at / below which alpha is fully at `crosshair_fade_min_alpha`.
+@export var crosshair_fade_full_px := 20.0
+@export var crosshair_fade_speed := 10.0
+
+var _base_modulate_a := 1.0
+var _suppress_crosshair_fade := false
+var _crosshair_fade_a := 1.0
+
 
 func _ready() -> void:
 	if process_mode == Node.PROCESS_MODE_DISABLED:
@@ -50,11 +65,13 @@ func _ready() -> void:
 	fade_out_timer()
 	
 func _process(delta: float) -> void:
+	if visible and crosshair_fade_enabled and not _suppress_crosshair_fade:
+		_update_crosshair_proximity_fade(delta)
+
 	if timer_disabled:
 		return
 	
 	if current_state != State.RUNNING:
-		set_process(false)
 		return
 
 	if count_up:
@@ -119,6 +136,8 @@ func start_count_up() -> void:
 	_last_count_up_elapsed = 0.0
 	sent_signal = false
 	show()
+	_base_modulate_a = 1.0
+	_crosshair_fade_a = 1.0
 	modulate.a = 1.0
 	if timer_label:
 		timer_label.modulate = Color.WHITE
@@ -179,7 +198,6 @@ func update_finished() -> void:
 	update_text()
 	update_round_manager()
 	update_bonus_times()
-	set_process(false)
 	enter_state(State.INACTIVE)
 
 
@@ -198,11 +216,14 @@ func update_restarting() -> void:
 		round_manager = get_tree().get_first_node_in_group("round_manager")
 		
 	show()
+	_base_modulate_a = 1.0
+	_crosshair_fade_a = 1.0
 	modulate.a = 1.0
 	if timer_label:
 		timer_label.modulate = Color.WHITE
 	sent_signal = false
 	count_up = false
+	set_process(true)
 	var override_seconds := -1.0
 	if round_manager and round_manager.has_method("get_active_timer_seconds"):
 		override_seconds = float(round_manager.get_active_timer_seconds())
@@ -338,11 +359,63 @@ func fade_out_timer() -> void:
 	var root: CanvasItem = self
 	if root == null:
 		return
+	_suppress_crosshair_fade = true
 	var tween := create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_property(root, "modulate:a", 0.0, 0.45)
 	await tween.finished
 	hide()
 	modulate.a = 1.0
+	_crosshair_fade_a = 1.0
+	_suppress_crosshair_fade = false
+	set_process(false)
+
+
+func _update_crosshair_proximity_fade(delta: float) -> void:
+	var target_a := _base_modulate_a
+	var player := get_tree().get_first_node_in_group("Player")
+	if player != null and is_instance_valid(player):
+		var aim := Vector2(-99999, -99999)
+		if "crosshair" in player and player.crosshair is Control:
+			var ch: Control = player.crosshair
+			aim = ch.global_position
+			if "CROSSHAIR_CENTER_OFFSET" in player:
+				aim += player.CROSSHAIR_CENTER_OFFSET
+			else:
+				aim += Vector2(20.0, 20.0)
+
+		var timer_rect := _timer_screen_rect()
+		## Grow the rect by the live reticle radius so "close" matches aim feel.
+		var pad := 40.0
+		if player.has_method("get_current_crosshair_hit_radius"):
+			pad = float(player.get_current_crosshair_hit_radius())
+		timer_rect = timer_rect.grow(pad * 0.35)
+
+		var dist := _distance_point_to_rect(aim, timer_rect)
+		var start_d := maxf(crosshair_fade_start_px, crosshair_fade_full_px + 1.0)
+		var full_d := crosshair_fade_full_px
+		if dist <= full_d:
+			target_a = crosshair_fade_min_alpha
+		elif dist < start_d:
+			var t := (dist - full_d) / (start_d - full_d)
+			target_a = lerpf(crosshair_fade_min_alpha, _base_modulate_a, t)
+
+	_crosshair_fade_a = move_toward(_crosshair_fade_a, target_a, crosshair_fade_speed * delta)
+	modulate.a = _crosshair_fade_a
+
+
+func _timer_screen_rect() -> Rect2:
+	if timer_label and is_instance_valid(timer_label):
+		return timer_label.get_global_rect()
+	return get_global_rect()
+
+
+func _distance_point_to_rect(point: Vector2, rect: Rect2) -> float:
+	var closest := Vector2(
+		clampf(point.x, rect.position.x, rect.position.x + rect.size.x),
+		clampf(point.y, rect.position.y, rect.position.y + rect.size.y)
+	)
+	return point.distance_to(closest)
+
 
 func _update_ticking_volume(seconds_left: float, delta: float) -> void:
 	var target_db: float = 0.0

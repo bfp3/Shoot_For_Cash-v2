@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://m8j4jk4exfys"]
 
-[ext_resource type="Texture2D" uid="uid://bl7fmib8ct4nv" path="res://unfiled/Decal_placeholders/Watchtower_radar_ring.png" id="1_bjoeg"]
 [ext_resource type="Script" uid="uid://qm6b5nj0ms6n" path="res://lib/draw_circle_tool.gd" id="2_ohunf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hx5og"]
@@ -8,7 +7,7 @@ content_margin_left = 0.0
 content_margin_top = 0.0
 content_margin_right = 0.0
 content_margin_bottom = 0.0
-bg_color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+bg_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -66,95 +65,6 @@ circle_radius = 40.0
 circle_color = Color(0.81, 0.621, 0.3564, 1)
 circle_outline_width = 12.515
 
-[node name="CircleEmblem" type="TextureRect" parent="." unique_id=712626264]
-visible = false
-modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -21.834015
-offset_right = 25.0
-offset_bottom = 28.165985
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.062, 1.062)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("1_bjoeg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CircleEmblem3" type="TextureRect" parent="CircleEmblem" unique_id=220934762]
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -46.5
-offset_right = 25.0
-offset_bottom = 46.5
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.956, 0.956)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("1_bjoeg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CircleEmblem4" type="TextureRect" parent="CircleEmblem" unique_id=552813004]
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -46.5
-offset_right = 25.0
-offset_bottom = 46.5
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.909, 0.909)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("1_bjoeg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CircleEmblem5" type="TextureRect" parent="CircleEmblem" unique_id=1259115187]
-show_behind_parent = true
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -46.5
-offset_right = 25.0
-offset_bottom = 46.5
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.865, 0.865)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("1_bjoeg")
-expand_mode = 1
-stretch_mode = 5
-
 [node name="Insignia" type="RichTextLabel" parent="." unique_id=1723705056]
 layout_mode = 1
 anchors_preset = 8
@@ -181,6 +91,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Control" type="Control" parent="." unique_id=16653932]
+visible = false
 show_behind_parent = true
 clip_contents = true
 custom_minimum_size = Vector2(400, 0)
@@ -201,7 +112,6 @@ mouse_filter = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="Control" unique_id=1108466991]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -220,7 +130,6 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hx5og")
 
 [node name="Panel3" type="Panel" parent="Control" unique_id=1709715427]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
