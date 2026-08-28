@@ -17,6 +17,8 @@ func launch_orange(pos : Vector3) -> void:
 	#return
 	var body : Node3D
 	for i in get_children():
+		if i is not RigidBody3D:
+			continue
 		if i.rock_activated == false:
 			body = i
 			break

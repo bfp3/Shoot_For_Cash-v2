@@ -1412,8 +1412,8 @@ process_material = SubResource("ParticleProcessMaterial_24t6b")
 
 [node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["orange_container"]]
 script = ExtResource("68_qmj5w")
-left_marker = NodePath("../OrangeBombsMarkers/LeftMarker")
-right_marker = NodePath("../OrangeBombsMarkers/RightMarker")
+left_marker = NodePath("")
+right_marker = NodePath("")
 round_manager = NodePath("../Round_manager")
 
 [node name="Orange" parent="OrangeBombs" unique_id=1226943477 instance=ExtResource("69_swp41")]
@@ -1535,14 +1535,6 @@ volume_db = -15.0
 stream = ExtResource("56_gf2tl")
 volume_db = -13.0
 
-[node name="OrangeBombsMarkers" type="Node3D" parent="." unique_id=104155927 groups=["pineapple_container"]]
-
-[node name="LeftMarker" type="Marker3D" parent="OrangeBombsMarkers" unique_id=637739805]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 23)
-
-[node name="RightMarker" type="Marker3D" parent="OrangeBombsMarkers" unique_id=751508645]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 23)
-
 [node name="Pineapple_markers" type="Node3D" parent="." unique_id=253776400 groups=["pineapple_container"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9)
 
@@ -1650,9 +1642,7 @@ process_material = SubResource("ParticleProcessMaterial_inade")
 draw_pass_1 = SubResource("QuadMesh_y75p7")
 
 [node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=1389715347]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, 0)
 script = ExtResource("62_wallpz")
-spawn_on_wall_hit = true
 spawn_rock_on_hit = true
 
 [node name="TouchingWallWithCrosshair" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=739585517]

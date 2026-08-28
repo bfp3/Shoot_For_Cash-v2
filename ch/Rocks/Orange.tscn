@@ -860,11 +860,6 @@ shape = SubResource("SphereShape3D_nul74")
 [node name="Mesh" type="Node3D" parent="." unique_id=1406987277]
 unique_name_in_owner = true
 
-[node name="Fire" parent="Mesh" unique_id=147624846 instance=ExtResource("21_2i7b7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
-amount = 26
-local_coords = false
-
 [node name="GoldParticless" type="GPUParticles3D" parent="Mesh" unique_id=2125638247]
 unique_name_in_owner = true
 amount = 10
@@ -875,6 +870,11 @@ draw_pass_1 = SubResource("QuadMesh_6dqdt")
 [node name="small_rock" type="MeshInstance3D" parent="Mesh" unique_id=151918807]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 skeleton = NodePath("")
+
+[node name="Fire" parent="Mesh/small_rock" unique_id=147624846 instance=ExtResource("21_2i7b7")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.21, 0)
+amount = 26
+local_coords = false
 
 [node name="damage_mesh" type="MeshInstance3D" parent="Mesh/small_rock" unique_id=697784323]
 transform = Transform3D(1.075, 0, 0, 0, 1.075, 0, 0, 0, 1.075, 0, 0, 0)
