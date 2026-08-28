@@ -5,12 +5,14 @@ class_name WallPuzzleSetup
 
 @export var enabled := true
 @export var ray_length := 150.0
-## When true, sample the reticle circle (not just the center) so any aim overlap counts.
+## When true, sample the full reticle disk (not just the center) so any aim overlap counts.
 @export var sample_reticle_circle := true
-## How many points around the reticle rim to raycast (plus center).
-@export_range(4, 16, 1) var reticle_sample_count := 8
-## 1 = full hit-radius; lower = tighter sample ring inside the reticle.
-@export_range(0.1, 1.0, 0.05) var reticle_sample_radius_scale := 1.0
+## Filled-disk density: rays along a grid inside the reticle (higher = fewer edge misses, more cost).
+@export_range(2, 10, 1) var reticle_grid_divisions := 5
+## Extra concentric rim rings (helps thin edges between grid cells).
+@export_range(4, 24, 1) var reticle_rim_samples := 16
+## 1 = full hit-radius; raise slightly above 1 if the visual ring feels bigger than the hit radius.
+@export_range(0.5, 1.5, 0.05) var reticle_sample_radius_scale := 1.05
 
 @onready var wall_puzzle: CSGShape3D = $WallPuzzle
 @onready var light_touching: OmniLight3D = $TouchingWallWithCrosshair
@@ -84,18 +86,45 @@ func _query_crosshair_overlaps_wall() -> bool:
 	if player.has_method("get_current_crosshair_hit_radius"):
 		radius = float(player.get_current_crosshair_hit_radius())
 
-	var offsets: Array[Vector2] = [Vector2.ZERO]
-	if sample_reticle_circle and radius > 0.5:
-		var rim := radius * reticle_sample_radius_scale
-		for i in reticle_sample_count:
-			var angle := TAU * float(i) / float(reticle_sample_count)
-			offsets.append(Vector2(cos(angle), sin(angle)) * rim)
-
 	var space := get_world_3d().direct_space_state
-	for offset in offsets:
+	for offset in _build_reticle_sample_offsets(radius):
 		if _ray_hits_wall(cam, space, center + offset):
 			return true
 	return false
+
+
+## Filled disk: center + inner grid + outer rim. Catches crescent overlaps at solid edges.
+func _build_reticle_sample_offsets(radius: float) -> Array[Vector2]:
+	var offsets: Array[Vector2] = [Vector2.ZERO]
+	if not sample_reticle_circle or radius <= 0.5:
+		return offsets
+
+	var r := radius * reticle_sample_radius_scale
+	var r2 := r * r
+
+	## Square grid clipped to the circle — covers crescents that rim-only samples miss.
+	var divs := maxi(reticle_grid_divisions, 2)
+	var step := (r * 2.0) / float(divs)
+	for ix in range(divs + 1):
+		for iy in range(divs + 1):
+			var p := Vector2(-r + step * float(ix), -r + step * float(iy))
+			if p.length_squared() <= r2 + 0.01:
+				offsets.append(p)
+
+	## Dense rim ring (slightly inside max radius so rays don't skim past thin faces).
+	var rim_r := r * 0.98
+	for i in reticle_rim_samples:
+		var angle := TAU * float(i) / float(reticle_rim_samples)
+		offsets.append(Vector2(cos(angle), sin(angle)) * rim_r)
+
+	## Mid ring for thin bars sitting between grid cells.
+	var mid_r := r * 0.55
+	var mid_count := maxi(reticle_rim_samples / 2, 6)
+	for i in mid_count:
+		var angle := TAU * float(i) / float(mid_count) + 0.15
+		offsets.append(Vector2(cos(angle), sin(angle)) * mid_r)
+
+	return offsets
 
 
 func _ray_hits_wall(cam: Camera3D, space: PhysicsDirectSpaceState3D, screen_pos: Vector2) -> bool:
