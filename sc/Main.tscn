@@ -42,8 +42,11 @@
 [ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="54_i541k"]
 [ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="55_3u5oq"]
 [ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="56_4ta1g"]
+[ext_resource type="AudioStream" uid="uid://pqc60gfwwbnp" path="res://sfx/low_pitch_humming_loop.ogg" id="62_2300m"]
+[ext_resource type="Script" uid="uid://jrsa7e3mhuxu" path="res://ch/wall_puzzle_setup.gd" id="62_wallpz"]
 [ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="62_ymbdo"]
 [ext_resource type="Script" uid="uid://dv0lm0lx1nico" path="res://ch/Balllons/balloon_container.gd" id="63_nn6vd"]
+[ext_resource type="AudioStream" uid="uid://ub17xcey7moy" path="res://sfx/sfx-click.ogg" id="63_tnw34"]
 [ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="64_83tjn"]
 [ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="65_wtxnc"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
@@ -1587,84 +1590,112 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_inade")
 draw_pass_1 = SubResource("QuadMesh_y75p7")
 
-[node name="WallPuzzle" type="CSGBox3D" parent="." unique_id=2124630451]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3625002, 20.486)
-size = Vector3(17.595, 13, 0.131)
+[node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=1389715347]
+script = ExtResource("62_wallpz")
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzle" unique_id=974986408]
+[node name="TouchingWallWithCrosshair" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=739585517]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.384448, 1.642421, 20.14018)
+visible = false
+light_color = Color(1, 0, 0, 1)
+light_energy = 20.0
+omni_range = 15.0
+omni_attenuation = 0.0
+
+[node name="Allgood" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=321319073]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.384448, 1.642421, 20.14018)
+
+[node name="WallPuzzle" type="CSGBox3D" parent="WallPuzzleSetup" unique_id=2124630451]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3625002, 20.486)
+use_collision = true
+size = Vector3(17.595, 13, 0.801)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=974986408]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.60430145, 0)
 operation = 2
 size = Vector3(17.4, 1.954, 1)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzle" unique_id=798769302]
+[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=798769302]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.9806981, 0)
 operation = 2
 size = Vector3(17.4, 1.754, 1)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzle" unique_id=470599114]
+[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=470599114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, -0.703135, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzle" unique_id=1963741184]
+[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1963741184]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, -0.70269823, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzle" unique_id=1999038460]
+[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1999038460]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, -0.70269823, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="WallPuzzle" unique_id=1428973723]
+[node name="CSGBox3D7" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1428973723]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, -0.70269823, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="WallPuzzle" unique_id=1484043425]
+[node name="CSGBox3D8" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1484043425]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.901, -0.70269823, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="WallPuzzle" unique_id=110040033]
+[node name="CSGBox3D9" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=110040033]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3156414, 0)
 operation = 2
 size = Vector3(17.4, 2.877603, 1)
 
-[node name="CSGBox3D16" type="CSGBox3D" parent="WallPuzzle" unique_id=1450830400]
+[node name="CSGBox3D16" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1450830400]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.822077, 0)
 operation = 2
 size = Vector3(17.4, 1.954, 1)
 
-[node name="CSGBox3D10" type="CSGBox3D" parent="WallPuzzle" unique_id=1507089526]
+[node name="CSGBox3D10" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1507089526]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26883984, 0)
 operation = 2
 size = Vector3(17.4, 1.754, 1)
 
-[node name="CSGBox3D11" type="CSGBox3D" parent="WallPuzzle" unique_id=2145193156]
+[node name="CSGBox3D11" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=2145193156]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, 1.5464029, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
-[node name="CSGBox3D12" type="CSGBox3D" parent="WallPuzzle" unique_id=70158364]
+[node name="CSGBox3D12" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=70158364]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, 1.5468397, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
-[node name="CSGBox3D13" type="CSGBox3D" parent="WallPuzzle" unique_id=355127362]
+[node name="CSGBox3D13" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=355127362]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, 1.5468397, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
-[node name="CSGBox3D14" type="CSGBox3D" parent="WallPuzzle" unique_id=1746071485]
+[node name="CSGBox3D14" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1746071485]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, 1.5468397, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
 
-[node name="CSGBox3D15" type="CSGBox3D" parent="WallPuzzle" unique_id=341885067]
+[node name="CSGBox3D15" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=341885067]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.901, 1.5468397, 0)
 operation = 2
 size = Vector3(2.0243163, 1.754, 1)
+
+[node name="SFX" type="Node" parent="WallPuzzleSetup" unique_id=571630610]
+
+[node name="OverlappingWallHum" type="AudioStreamPlayer" parent="WallPuzzleSetup/SFX" unique_id=878568215]
+stream = ExtResource("62_2300m")
+volume_db = 8.0
+pitch_scale = 0.8
+
+[node name="TurningLightOnOrOff" type="AudioStreamPlayer" parent="WallPuzzleSetup/SFX" unique_id=1380116396]
+stream = ExtResource("63_tnw34")
+volume_db = -35.0
+pitch_scale = 2.0
+bus = &"ReverbBus"
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]

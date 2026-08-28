@@ -862,8 +862,8 @@ func setup_rock_type() -> void:
 			rock_type_name = "rock_type_grey"
 			var grey_health := int(gl_DataSet.get_value("rock_type_grey", 1))
 			var grey_cash := int(gl_DataSet.get_value("rock_type_grey", 0))
-			#health = maxi(grey_health, 1)
-			health = 2
+			health = maxi(grey_health, 1)
+			#health = 2
 			cash_value = grey_cash
 			max_health = health
 			small_rock.visible = true
