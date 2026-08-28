@@ -351,11 +351,6 @@ func _on_guess(picked_heads: bool) -> void:
 		_play_named_sfx("coin_win_jingle")
 		if gl_PlayerState and gl_PlayerState.has_method("continue_from_coin_flip"):
 			gl_PlayerState.continue_from_coin_flip()
-		var from_cash := _cash_amount
-		_cash_amount = 0
-		_displayed_cash = float(from_cash)
-		_set_cash_text(float(from_cash))
-		_roll_cash_to(0)
 		await _fade_coin_toss_out(1.0)
 		if not _coin_still_active(token):
 			return

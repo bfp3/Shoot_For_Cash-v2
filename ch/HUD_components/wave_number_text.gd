@@ -127,7 +127,7 @@ func _wave_display_name(wave: int, total_waves: int) -> String:
 
 
 func _ordinal_round_name(wave: int) -> String:
-	return "Don't Miss~"
+	return "READY"
 	#const ORDINALS := [
 		#'First',
 		#'Second',

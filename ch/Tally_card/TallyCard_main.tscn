@@ -68,8 +68,8 @@ point_count = 2
 curve = SubResource("Curve_onfim")
 
 [sub_resource type="Curve" id="Curve_r6l2h"]
-_data = [Vector2(1e-05, 0.52808994), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
-point_count = 2
+_data = [Vector2(1e-05, 0.52808994), 0.0, 0.0, 0, 0, Vector2(0.30952382, 1), 0.0, 0.0, 0, 0, Vector2(0.4613095, 0.14817), 0.0, 0.0, 0, 0, Vector2(0.53571427, 1), 0.0, 0.0, 0, 0, Vector2(0.70535713, 0.21723723), 0.0, 0.0, 0, 0, Vector2(0.8065476, 1), 0.0, 0.0, 0, 0, Vector2(0.9285714, 0.2402597), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 8
 
 [sub_resource type="CurveTexture" id="CurveTexture_64t06"]
 curve = SubResource("Curve_r6l2h")
@@ -90,12 +90,12 @@ tangential_accel_min = 500.0
 tangential_accel_max = 500.0
 damping_min = 373.854
 damping_max = 800.00006
-scale_min = 5.0
-scale_max = 10.0
+scale_min = 10.0
+scale_max = 15.0
 scale_curve = SubResource("CurveTexture_64t06")
 color = Color(0.78039217, 0.003921569, 0.007843138, 1)
 alpha_curve = SubResource("CurveTexture_vhsx8")
-hue_variation_min = 0.99999994
+hue_variation_min = -1.0
 hue_variation_max = 0.99999994
 
 [sub_resource type="PrismMesh" id="PrismMesh_7r173"]
@@ -364,7 +364,7 @@ size_flags_vertical = 3
 
 [node name="GradeLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer2/TotalRocks" unique_id=408558362]
 unique_name_in_owner = true
-modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+modulate = Color(0.56, 0.5002667, 0.448, 1)
 layout_mode = 0
 offset_top = -15.0
 offset_right = 1196.0
@@ -456,7 +456,7 @@ fit_content = true
 horizontal_alignment = 1
 
 [node name="BonusesLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned" unique_id=1289664472]
-modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+modulate = Color(0.56, 0.5002667, 0.448, 1)
 layout_mode = 0
 offset_top = -17.36
 offset_right = 1198.0
@@ -480,12 +480,12 @@ offset_right = 1198.0
 offset_bottom = 560.0
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/MainPanel/CashOut" unique_id=151705255]
-position = Vector2(597.2461, 106.37421)
+position = Vector2(597.2461, 170.3742)
 emitting = false
-amount = 50
-lifetime = 1.5
+amount = 251
+lifetime = 3.0
 one_shot = true
-explosiveness = 0.9
+explosiveness = 0.5
 fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_bux34")

@@ -18,6 +18,7 @@ const COMMAND_BUTTONS: PackedStringArray = [
 	"rock-grey",
 	"mothership",
 	"smokecan",
+	"crate",
 	"pineapple",
 	"balloon",
 	"wait",

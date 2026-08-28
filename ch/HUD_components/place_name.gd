@@ -6,8 +6,11 @@ extends Control
 
 @export var arrival_time_text := "8:02AM"
 @export var arrival_fade_in_sec := 0.35
-@export var arrival_hold_sec := 1.6
+## Seconds the range name / time stay on screen after fade-in, before fade-out and the camera swoop.
+@export var arrival_hold_sec := 2.6
 @export var arrival_fade_out_sec := 0.55
+## Seconds after the camera lands before shop + blur. 0 = open shop while the camera still swoops.
+@export var arrival_shop_delay_sec := 0.0
 
 
 func _ready() -> void:

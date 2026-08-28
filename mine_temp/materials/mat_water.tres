@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://mine_temp/shaders/mine_water.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" path="res://mine_temp/textures/water.bmp" id="2_tex"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/tex_water = ExtResource("2_tex")
+shader_parameter/shallow = Color(0.22, 0.55, 0.95, 0.64)
+shader_parameter/deep = Color(0.06, 0.24, 0.58, 0.84)
+shader_parameter/wave_height = 0.05
+shader_parameter/wave_speed = 0.65
+shader_parameter/pixel_scale = 7.0

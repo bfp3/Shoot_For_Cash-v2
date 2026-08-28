@@ -27,6 +27,7 @@ const LAYOUT_PATH_BY_PLACE_NAME := {
 	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",
 	"moss3": "res://sc/All_level_layouts/level_layout_moss_03.tscn",
 	"hood": "res://sc/All_level_layouts/level_layout_hood_01.tscn",
+	"mine": "res://sc/All_level_layouts/level_layout_mine_01.tscn",
 }
 
 ## Camera3D.environment resources per place / boss (layouts no longer carry WorldEnvironment).
@@ -41,6 +42,7 @@ const ENV_PATH_BY_LEVEL := {
 	"noir": "res://res/start_04_world_env.tres",
 	"vesper": "res://res/start_05_world_env.tres",
 	"hood": "res://res/skyEnvironments/greyscale_world.tres",
+	"mine": "res://mine_temp/mine_sunset_env.tres",
 	
 }
 const ENV_PATH_BY_LAYOUT := {
@@ -54,6 +56,7 @@ const ENV_PATH_BY_LAYOUT := {
 	"res://sc/All_level_layouts/level_layout_moss_02.tscn": "res://res/moss_env_v2.tres",
 	"res://sc/All_level_layouts/level_layout_moss_03.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_hood.tscn": "res://res/skyEnvironments/greyscale_world.tres",
+	"res://sc/All_level_layouts/level_layout_mine_01.tscn": "res://mine_temp/mine_sunset_env.tres",
 }
 
 
@@ -3390,13 +3393,30 @@ func _play_range_arrival_intro(level_id: String) -> void:
 	var scene_mgr := get_tree().get_first_node_in_group("scene_manager")
 	if scene_mgr and scene_mgr.has_method("begin_swoop_to_gameplay_camera"):
 		scene_mgr.begin_swoop_to_gameplay_camera()
+	var shop_delay := 0.0
+	if place_name and "arrival_shop_delay_sec" in place_name:
+		shop_delay = maxf(float(place_name.arrival_shop_delay_sec), 0.0)
+	if shop_delay > 0.0:
+		if scene_mgr and scene_mgr.has_method("await_camera_swoop"):
+			await scene_mgr.await_camera_swoop()
+		if not is_inside_tree():
+			return
+		await get_tree().create_timer(shop_delay, false).timeout
+		if not is_inside_tree():
+			return
+		_open_shop_after_arrival()
+		return
+	_open_shop_after_arrival()
+	if scene_mgr and scene_mgr.has_method("await_camera_swoop"):
+		await scene_mgr.await_camera_swoop()
+
+
+func _open_shop_after_arrival() -> void:
 	if wave_progress_feedback:
 		wave_progress_feedback.show()
 	enter_state(RoundState.SHOP_START)
 	if player and player.has_method("show_ammo_panel"):
 		player.show_ammo_panel()
-	if scene_mgr and scene_mgr.has_method("await_camera_swoop"):
-		await scene_mgr.await_camera_swoop()
 
 
 ## Boss survival fight for an overworld island (0 → island_1_boss + range boss, 1 → island_2_boss + range boss-2).

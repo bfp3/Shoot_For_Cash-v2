@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://mine_temp/shaders/mine_cube.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" path="res://mine_temp/textures/grass_top.bmp" id="2_top"]
+[ext_resource type="Texture2D" path="res://mine_temp/textures/grass_side.bmp" id="3_side"]
+[ext_resource type="Texture2D" path="res://mine_temp/textures/dirt.bmp" id="4_bot"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/tex_top = ExtResource("2_top")
+shader_parameter/tex_side = ExtResource("3_side")
+shader_parameter/tex_bottom = ExtResource("4_bot")
+shader_parameter/albedo_tint = Color(1, 1, 1, 1)
+shader_parameter/roughness_val = 1.0
+shader_parameter/emission_energy = 0.0
+shader_parameter/emission_color = Color(0, 0, 0, 1)

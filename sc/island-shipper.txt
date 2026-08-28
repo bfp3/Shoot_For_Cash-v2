@@ -7,16 +7,18 @@ range moss
 	reward $400
 
 	round
-		#hold out 120000
-		hold out 16000
+		hold out 120000
+		#hold out 16000
 		#1
 
-		pace-impossible
-		rock 4 a4
-		rock 4 a4
-		rock 4 a4
-		rock 4 a4
+		rock-juggle
+		wait
 
+
+		pace-impossible
+		#rock 4 a4
+		#rock 4 a4
+		#rock 4 a4
 
 
 		pace-slow
@@ -37,7 +39,7 @@ range moss
 		rock 4 a4
 		wait
 
-		pineapple b0 b4
+		pineapple b0 b3
 		wait 2000
 
 		balloon a1
@@ -115,82 +117,86 @@ range moss
 		wait 50
 		rock-grey 4 a4
 		wait 1000
-		pineapple b0 b5
 
 		wait
 		ammo
-		wait 3000
+		wait 2000
 
 		# PART 2 - SPARSE PAIRS - make them go faster and faster
 
 		pace-slow
-		rock 3 a3
+		rock-grey 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
+		wait
+
+		rock-grey 3 a3
+		wait 0
+		rock-grey 6 a6
+		wait
+
+		rock-grey 3 a3
+		wait 0
+		rock-grey 6 a6
 		wait
 
 		rock 3 a3
 		wait 0
-		rock 6 a6
-		wait
-
-		rock 3 a3
-		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
 
 		pace-normal
 		rock 5 a5
 		wait 0
+		rock-grey 8 a8
+		wait
+
+		rock 5 a5
+		wait 0
+		rock-grey 8 a8
+		wait
+
+		rock-grey 5 a5
+		wait 0
 		rock 8 a8
 		wait
 
 		rock 5 a5
 		wait 0
-		rock 8 a8
+		rock-grey 2 a2
 		wait
 
 		rock 5 a5
 		wait 0
-		rock 8 a8
+		rock-grey 2 a2
 		wait
 
-		pace-fast
-		rock 5 a5
-		wait 0
-		rock 2 a2
-		wait
-
-		rock 5 a5
-		wait 0
-		rock 2 a2
-		wait
-
-		rock 5 a5
+		rock-grey 5 a5
 		wait 0
 		rock 2 a2
 		wait
 
 
-		rock 5 b5
+		rock-grey 5 b5
 		wait 0
 		rock 2 b2
 		wait
 
-		rock 5 b5
+		rock-grey 5 b5
 		wait 0
 		rock 2 b2
 		wait
 
-		rock 5 b5
+		pace-slow
+		rock-grey 5 a5
 		wait 0
-		rock 2 b2
+		rock 2 a2
 		wait
 
 
 		wait 1000
-		pineapple a0 a5
+		pineapple a0 a4
 		wait 2000
 
 
@@ -204,69 +210,71 @@ range moss
 		pace-normal
 		rock 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
 		rock 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
-		rock 3 a3
+		rock-grey 3 a3
 		wait 0
 		rock 6 a6
 		wait
 
 		#Alternate Sides with balloon wall in the way.
-		rock 2 a2
+		rock-grey 2 a2
 		wait 0
 		rock 5 a5
 		wait
 
 		rock 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
-		rock 2 a2
+		rock-grey 2 a2
 		wait 0
 		rock 5 a5
 		wait
 
 		rock 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
 
 		# to ROW B
+		rock-grey 2 b2
+		wait 0
+		rock-grey 5 b5
+		wait
+
+		rock-grey 3 b3
+		wait 0
+		rock-grey 6 b6
+		wait
+
 		rock 2 b2
 		wait 0
-		rock 5 b5
+		rock-grey 5 b5
 		wait
 
-		rock 3 b3
+		pace-slow
+		rock 3 a3
 		wait 0
-		rock 6 b6
-		wait
-
-		rock 2 b2
-		wait 0
-		rock 5 b5
-		wait
-
-		rock 3 b3
-		wait 0
-		rock 6 b6
+		rock 6 a6
 		wait
 
 		# end Row B
 
-		rock-black
-		# time check
 
+		rock-black 7 b7
+		wait
+		clear
+		wait 2000
 		pace-slowest
-		wait 3000
 		rock-grey 1 a1
 		wait 50
 		rock-grey 2 a2
@@ -285,7 +293,7 @@ range moss
 		wait 50
 		rock-grey 4 a4
 		wait 1000
-		pineapple b0 b5
+
 		wait 2000
 		rock-grey
 		wait 50
@@ -305,7 +313,6 @@ range moss
 		wait 50
 		rock-grey
 		wait 1000
-
 
 		balloon-check
 range moss2
@@ -325,9 +332,9 @@ range moss2
 		rock-black 4 b4
 		wait 2000
 
-		rock 2 b2
+		rock-grey 2 b2
 		wait 1000
-		rock 7 b7
+		rock-grey 7 b7
 		wait 1200
 		rock 4 b4
 		wait
@@ -1071,6 +1078,349 @@ range moss3
 	reward $400
 	hold out 90000
 	round
+		# Level Idea, throw together the past two levels
+		hold out 150000
+
+		pace-normal
+		rock-grey 4 a4
+		wait
+		rock-grey 1 a1
+		wait
+		rock-grey 8 a8
+		wait
+		wait 1000
+
+		rock-grey 8 a8
+		wait
+		rock-grey 1 a1
+		wait
+		rock 4 a4
+		wait
+
+		pineapple b9 b5
+		wait 2000
+
+		balloon a1
+		wait 700
+		balloon a8
+		wait 2200
+
+		sfx-play oasisWorld -28.0
+		wait 1000
+
+		#2
+		pace-normal
+		wait 4000
+		rock 1 a1
+		wait 1500
+		rock-grey 8 a8
+		wait 1500
+		rock-grey 1 a1
+		wait 1500
+		rock-grey 8 a8
+		wait 1500
+		rock 1 a1
+		wait 1500
+		rock-grey 8 a8
+		wait 1500
+		rock 4 a4
+		wait
+
+		pace-fast
+		rock-grey 1 a1
+		wait 1500
+		rock 2 a2
+		wait 1500
+		rock-grey 3 a3
+		wait 1500
+		rock 4 a4
+		wait
+
+		rock-grey  8 a8
+		wait 1000
+		rock 7 a7
+		wait 1000
+		rock-grey 6 a6
+		wait 1000
+		rock 5 a5
+		wait 1000
+		rock-grey 4 a4
+		wait
+
+		sfx-faster oasisWorld
+
+		wait 2000
+		# PART 2 - SPARSE PAIRS - make them go faster and faster
+
+		pace-normal
+		rock-grey 3 a3
+		wait 0
+		rock-grey 6 a6
+		wait
+
+		rock-grey 3 a3
+		wait 0
+		rock-grey 6 a6
+		wait
+
+		rock-grey 3 a3
+		wait 0
+		rock-grey 6 a6
+		wait
+
+		rock-grey 3 b3
+		wait 0
+		rock-grey 6 b6
+		wait
+
+		rock-grey 3 b3
+		wait 0
+		rock-grey 6 b6
+		wait
+
+		rock-grey 3 b3
+		wait 0
+		rock-grey 6 b6
+		wait
+
+		pace-slow
+		rock-grey 3 c3
+		wait 0
+		rock-grey 6 c6
+		wait
+
+		rock-grey 3 c3
+		wait 0
+		rock-grey 6 c6
+		wait
+
+		rock-grey 3 c3
+		wait 0
+		rock-grey 6 c6
+		wait
+
+		pace-normal
+		rock 3 a3
+		wait 0
+		rock 6 a6
+		wait
+
+		wait 2000
+
+		ammo
+		sfx-faster oasisWorld
+		wait 2000
+
+		pace-normal
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2000
+
+		rock-grey 5 a5
+		wait 0
+		rock-black 8 a8
+		wait 2000
+
+		rock-grey 5 a5
+		wait 0
+		rock-black 8 a8
+		wait 2000
+
+		rock 5 a5
+		wait 0
+		rock-black 8 a8
+		wait 2000
+
+		rock-black 5 a5
+		wait 0
+		rock 8 a8
+		wait 2000
+
+		rock-black 5 a5
+		wait 0
+		rock-black 8 a8
+		wait 2000
+
+		# same again but sped up 
+		sfx-faster oasisWorld
+		pace-fast
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2000
+
+		rock-grey 2 a2
+		wait 0
+		rock-black 7 a7
+		wait 1500
+
+		rock-grey 2 a2
+		wait 0
+		rock-black 7 a7
+		wait 1500
+
+		rock 2 a2
+		wait 0
+		rock-black 7 a7
+		wait 1500
+
+		rock 7 a7
+		wait 0
+		rock-black 2 a2
+		wait 1500
+
+		rock-black 5 a5
+		wait 0
+		rock 8 a8
+		wait 1500
+
+		rock-black 5 a5
+		wait 0
+		rock-black 8 a8
+		wait 1500
+
+		rock-black 4 a4
+		wait 0
+		rock-black 7 a7
+		wait 1500
+
+		rock-grey 7 a7
+		wait 0
+		rock-black 4 a4
+		wait 1500
+
+		rock-grey 7 a7
+		wait 0
+		rock 4 a4
+		wait 1500
+
+		wait 1000
+		sfx-faster oasisWorld
+		ammo
+
+		balloon a4
+		balloon b4
+		balloon c4
+		wait 2200
+
+
+		rock-grey 5 a5
+		wait 0
+		rock 8 a8
+		wait 1500
+
+		rock 5 a5
+		wait 0
+		rock-grey 2 a2
+		wait
+
+		rock 5 a5
+		wait 0
+		rock-grey 2 a2
+		wait
+
+		rock-grey 5 a5
+		wait 0
+		rock 2 a2
+		wait
+
+
+		rock-grey 5 b5
+		wait 0
+		rock 2 b2
+		wait
+
+		rock-grey 5 b5
+		wait 0
+		rock 2 b2
+		wait
+
+		pace-slow
+		rock-grey 5 a5
+		wait 0
+		rock 2 a2
+		wait
+
+
+		wait 1000
+		pineapple a0 a4
+		wait 2000
+
+		sfx-faster oasisWorld
+		pace-normal
+		rock 3 a3
+		wait 0
+		rock-grey 6 a6
+		wait 1000
+
+		rock 3 a3
+		wait 0
+		rock-grey 6 a6
+		wait 1000
+
+		rock-grey 3 a3
+		wait 0
+		rock 6 a6
+		wait 1000
+
+		#Alternate Sides with balloon wall in the way.
+		rock-grey 2 a2
+		wait 0
+		rock 5 a5
+		wait 1000
+
+		rock-grey 3 a3
+		wait 0
+		rock-grey 6 a6
+		wait 500
+
+		rock-grey 2 a2
+		wait 0
+		rock-grey 5 a5
+		wait 250
+
+		rock 3 a3
+		wait 0
+		rock-grey 6 a6
+		wait
+		wait 2000
+
+		balloon c1
+		balloon c8
+		sfx-faster oasisWorld
+		wait 3000
+
+		# to ROW B
+		rock-grey 2 b2
+		wait 0
+		rock-grey 5 b5
+		wait 500
+
+		rock-grey 3 b3
+		wait 0
+		rock-grey 6 b6
+		wait
+
+		rock 2 b2
+		wait 0
+		rock-grey 5 b5
+		wait
+
+		pace-slow
+		rock 3 a3
+		wait 0
+		rock 6 a6
+		wait
+range moss4
+	play $100
+	reward $400
+	hold out 90000
+	round
 		#difficulty-expert
 		rock 4 a4
 		wait 3000
@@ -1791,8 +2141,29 @@ range jetz
 	reward $400
 	round
 		pace-impossible
+
+		wait 2300
+
 		rock 4 a4
-		wait 3000
+		wait 150
+		sfx-play sephiroff -30.0
+		wait 450
+		rock 2 a1
+		wait 450
+		rock 3 a2
+		wait 450
+		rock 4 a3
+		wait 450
+		rock 5 a4
+		wait 450
+		rock 6 a5
+		wait 450
+		rock 6 a5
+		wait 450
+		rock 7 a6
+		wait 450
+		rock 8 a7
+
 		rock 1 a4
 		wait 2500
 
@@ -1813,8 +2184,11 @@ range jetz
 		wait 1500
 		rock
 		rock
+		wait
 
 		wait 3000
+
+		sfx-faster sephiroff
 
 		rock 1 a1
 		wait 0
@@ -2322,3 +2696,10 @@ range spares
 		balloon-bank
 		balloon-check
 		clear ammo
+		
+		
+range mine
+	play $200
+	reward $400
+	round
+		hold out 90000

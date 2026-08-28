@@ -210,8 +210,23 @@ func _on_hit() -> void:
 
 func lock_out_selection() -> void:
 	_selecting = true
+	_abort_locked_flip()
 	if _button:
 		_button.disabled = true
+
+
+func fade_away_for_selection(selected: Node) -> void:
+	if selected == self:
+		return
+	_abort_locked_flip()
+	if _wiggle:
+		_wiggle.kill()
+		_wiggle = null
+	if _button:
+		_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	scale = Vector2.ONE
+	hide()
+	modulate.a = 0.0
 
 
 func play_unlocked_spin() -> void:
@@ -220,23 +235,68 @@ func play_unlocked_spin() -> void:
 		_wiggle = null
 	if _flip_tween and _flip_tween.is_valid():
 		_flip_tween.kill()
-	z_index = 2
+	z_index = 24
 	rotation_degrees = 0.0
 	scale = Vector2.ONE
 	_set_face(false)
 	_play_sfx(_shing_sfx)
-	var show_blank := true
-	var until := Time.get_ticks_msec() + int(maxf(unlocked_spin_sec, 0.05) * 1000.0)
-	while is_inside_tree() and Time.get_ticks_msec() < until:
-		await _animate_face_flip(show_blank, false, true)
-		show_blank = not show_blank
+	get_tree().call_group("difficulty_badge", "fade_away_for_selection", self)
+	await _center_horizontally()
 	if not is_inside_tree():
 		return
-	if _showing_back:
-		_set_face(false)
-	scale = Vector2.ONE
+	await _blink_visible(maxf(unlocked_spin_sec, 0.05))
+	if not is_inside_tree():
+		return
+	visible = true
+	show()
 	_play_sfx(_travel_sfx)
 	pressed.emit()
+
+
+func _abort_locked_flip() -> void:
+	_flip_token += 1
+	_flipping = false
+	if _flip_tween and _flip_tween.is_valid():
+		_flip_tween.kill()
+	_flip_tween = null
+
+
+func _center_horizontally() -> void:
+	var gp := global_position
+	top_level = true
+	global_position = gp
+	var dest := gp
+	dest.x += _selection_center().x - get_global_rect().get_center().x
+	if _flip_tween and _flip_tween.is_valid():
+		_flip_tween.kill()
+	_flip_tween = create_tween()
+	_flip_tween.set_parallel(true)
+	_flip_tween.tween_property(self, "global_position", dest, 0.22)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_flip_tween.tween_property(self, "scale", Vector2.ONE * 1.5, 0.22)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	await _flip_tween.finished
+
+
+func _selection_center() -> Vector2:
+	var overlay := get_tree().get_first_node_in_group("difficulty_select") as Control
+	if overlay:
+		return overlay.get_global_rect().get_center()
+	return get_viewport().get_visible_rect().get_center()
+
+
+func _blink_visible(duration: float) -> void:
+	var elapsed := 0.0
+	var shown := true
+	while elapsed < duration and is_inside_tree():
+		shown = not shown
+		visible = shown
+		var step := 0.08
+		await get_tree().create_timer(step, true).timeout
+		elapsed += step
+	if is_inside_tree():
+		visible = true
+		show()
 
 
 func _is_content_locked() -> bool:

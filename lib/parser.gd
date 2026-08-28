@@ -162,13 +162,14 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / mothership / smokecan / pineapple / red_rock_error:
+## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / mothership / smokecan / crate / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, spawn_row, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
 ##   `rock A4` is invalid — use `rock ? A4`. Side lanes: `rock A0 A8` / `rock A0 A9`
 ##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
 ##   `rock-grey` is $1 and does not strike on miss. `mothership` flees the player for bonus cash.
+##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
 ## wait: {cmd} — hold until the sky is clear (same as old `wait until clear`).
 ## wait 0 / wait 600: {cmd, ms} — delay that many milliseconds before the next rock.
@@ -208,6 +209,10 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   Leaving the round (shop, abort, round end) fades every script sfx out over 3s.
 ## sfx-stop Name fade_sec: {cmd, name, fade_sec} — fade that sfx-play instance out over
 ##   fade_sec seconds, then stop and free it. Example: `sfx-stop Windmill_YokoKanno 3.0`.
+## sfx-faster Name: {cmd, name} — raise that playing sfx's pitch_scale by 0.05 over 3s.
+##   Stacks each time it is run. Example: `sfx-faster Windmill_YokoKanno`.
+## sfx-slower Name: {cmd, name} — lower that playing sfx's pitch_scale by 0.05 over 3s.
+##   Stacks each time it is run. Example: `sfx-slower Windmill_YokoKanno`.
 ## pace-slowest / pace-slow / pace-normal / pace-fast / pace-fastest / pace-impossible:
 ##   mid-round command. From that line on, aimed rocks use that gravity
 ##   (0.25 / 0.5 / 1.0 / 1.5 / 2.25 / 3.0). `pace fastest` form is accepted.
@@ -236,7 +241,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'red_rock_error', 'smokecan':
+		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
 
 		'pineapple':
@@ -335,6 +340,10 @@ func parse_spawn_command(token: String) -> Dictionary:
 			if parts.size() > 2:
 				fade_sec = float(parts[2])
 			return {'cmd': 'sfx-stop', 'name': stop_name, 'fade_sec': fade_sec}
+
+		'sfx-faster', 'sfx-slower':
+			var pitch_name := String(parts[1]).strip_edges() if parts.size() > 1 else ''
+			return {'cmd': cmd, 'name': pitch_name}
 		
 		'pace-slowest', 'pace-slow', 'pace-normal', 'pace-fast', 'pace-fastest', 'pace-impossible':
 			return {'cmd': cmd}
@@ -438,7 +447,7 @@ func _is_random_token(token: String) -> bool:
 	return token.strip_edges() == '?'
 
 
-## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / mothership / smokecan / pineapple / red_rock_error
+## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / mothership / smokecan / crate / pineapple / red_rock_error
 ##   rock          → rock ? ?   (random column, aim row A + random aim column)
 ##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
@@ -855,7 +864,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			rounds[key]._pending.append(parsed)
 			continue
 
-		if parsed_cmd == 'sfx-play' or parsed_cmd == 'sfx-stop':
+		if parsed_cmd.begins_with('sfx-'):
 			# Mid-round cues — stay in the spawn timeline like ammo / pineapples.
 			rounds[key]._pending.append(parsed)
 			continue
@@ -1198,7 +1207,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'smokecan', 'red_rock_error':
+		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'smokecan', 'crate', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))

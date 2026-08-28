@@ -55,6 +55,7 @@ enum RockSize {
 	GREY,
 	## Flees the reticle and bounces in the playfield. Bonus cash on destroy. Not compulsory.
 	MOTHERSHIP,
+	CRATE
 }
 
 enum State {
@@ -88,6 +89,7 @@ var rock_has_been_logged := false
 @onready var red_rock: MeshInstance3D = %Red_rock
 @onready var blue_rock: MeshInstance3D = %blue_rock
 @onready var smokecan: MeshInstance3D = %Smokecan
+@onready var crate: MeshInstance3D = get_node_or_null("%Crate")
 
 @onready var hazard_large: MeshInstance3D = %Hazard_large
 
@@ -524,7 +526,7 @@ func update_gravity(_gravity_scale : float) -> void:
 		linear_damp = 0.0
 
 func _visual_meshes() -> Array:
-	return [small_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, blue_rock, smokecan]
+	return [small_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, blue_rock, smokecan, crate]
 
 
 func _cache_mesh_original_overrides() -> void:
@@ -538,7 +540,7 @@ func _cache_mesh_original_overrides() -> void:
 
 func hide_all_meshes() -> void:
 	_cache_mesh_original_overrides()
-	for mesh in [small_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, blue_rock, smokecan]:
+	for mesh in [small_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, blue_rock, smokecan, crate]:
 		if mesh == null:
 			continue
 		mesh.visible = false
@@ -577,6 +579,8 @@ func setup_rock_type() -> void:
 	force_mult_index = 0
 	linear_damp = 0.5
 	$Mesh.scale = Vector3.ONE
+	
+	$Mesh/Crate/CrateAnimplayer.stop()
 	
 	match rock_type:
 		# 0
@@ -803,7 +807,7 @@ func setup_rock_type() -> void:
 			rock_type_name = "rock_type_juggle"
 			var juggle_scale := Vector3.ONE * 0.45
 			var juggle_size := 1.6
-			health = 100
+			health = 4
 			cash_value = 0
 			max_health = health
 			if medium_rock:
@@ -818,19 +822,47 @@ func setup_rock_type() -> void:
 			rock_type_gravity_scale = 0.12
 			linear_damp = 0.4
 			force_mult.clear()
-			force_mult = [3, 4]
+			force_mult = [6, 8]
 			force_mult_index = 0
 			ignores_x_out_of_bounds = true
 			if current_mesh.has_node("GoldParticles"):
 				current_particles = current_mesh.get_node("GoldParticles")
 				current_particles.emitting = true
-
+	
+		RockSize.CRATE:
+			current_rock_type = "Crate"
+			rock_type_name = "rock_type_crate"
+			gl_PlayerState.log_white_rock()
+			var crate_health := int(gl_DataSet.get_value("rock_type_crate", 1))
+			var crate_cash := int(gl_DataSet.get_value("rock_type_crate", 0))
+			var crate_scale := Vector3.ONE  #* 0.35
+			var crate_size := 1.2
+			health = 3
+			cash_value = crate_cash
+			max_health = health
+			if crate:
+				crate.visible = true
+				current_mesh = crate
+			else:
+				small_rock.visible = true
+				current_mesh = small_rock
+			current_mesh.scale = crate_scale * crate_size
+			main_col.scale = Vector3.ONE * 0.125 * crate_size
+			rock_type_gravity_scale = 0.1
+			force_mult.clear()
+			force_mult = [12]
+			angular_damp = 3.0
+			force_mult_index = 0
+			if has_node("Mesh/Crate/CrateAnimplayer"):
+				$Mesh/Crate/CrateAnimplayer.play("flashing_dollar")
+				
 		RockSize.GREY:
 			current_rock_type = "Grey Rock"
 			rock_type_name = "rock_type_grey"
 			var grey_health := int(gl_DataSet.get_value("rock_type_grey", 1))
 			var grey_cash := int(gl_DataSet.get_value("rock_type_grey", 0))
-			health = maxi(grey_health, 1)
+			#health = maxi(grey_health, 1)
+			health = 2
 			cash_value = grey_cash
 			max_health = health
 			small_rock.visible = true
@@ -844,7 +876,7 @@ func setup_rock_type() -> void:
 			main_col.scale = Vector3.ONE * 0.125 * 1.2
 			rock_type_gravity_scale = 0.1
 			force_mult.clear()
-			force_mult = [3, 4]
+			force_mult = [5]
 			force_mult_index = 0
 
 		RockSize.MOTHERSHIP:
@@ -943,7 +975,10 @@ func reset_stats() -> void:
 
 func was_hit_tween() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
-	tween.tween_callback(smoke_particles)
+	if rock_type == RockSize.CRATE:
+		tween.tween_callback(crate_particles)
+	else:
+		tween.tween_callback(smoke_particles)
 	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
 	await tween.finished
 
@@ -1176,8 +1211,9 @@ func apply_slow_linear_damp() -> void:
 	
 func apply_hit_reaction(screen_offset: Vector2, accurate_direction := true) -> void:
 	
-	gravity_scale = 0.1
-	linear_damp = 0.3
+	#
+	#gravity_scale = 0.1
+	linear_damp = 1.3
 	linear_velocity = Vector3.ZERO
 	
 	var camera := get_viewport().get_camera_3d()
@@ -1208,7 +1244,8 @@ func apply_hit_reaction(screen_offset: Vector2, accurate_direction := true) -> v
 		torque_dir * force_mult[force_mult_index] * hit_torque_strength
 	)
 
-	smoke_particles_duplicates()
+	if rock_type != RockSize.CRATE:
+		smoke_particles_duplicates()
 
 
 func get_hit_force_direction(
@@ -1590,6 +1627,9 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 
 func expand_blast_radius() -> void:
 
+	if rock_type == RockSize.CRATE:
+		return
+
 	if !player_has_marked_rock && !start_exploding:
 		#gl_PlayerState.dataset.power_sky_mine = clamp(gl_PlayerState.dataset.power_sky_mine -1,0,3)
 		standard_blast()
@@ -1656,8 +1696,16 @@ func hazard_aoe_delayed() -> void:
 	$Hazard_AoE2.global_position = global_position
 	$Hazard_AoE2.play_particles = true
 
+func crate_particles() -> void:
+	if has_node("CrateAoe"):
+		$CrateAoe.global_position = global_position
+		$CrateAoe.play_particles = true
+
 
 func smoke_particles() -> void:
+	if rock_type == RockSize.CRATE:
+		crate_particles()
+		return
 	
 	if rock_type == RockSize.SMOKECAN:
 		%Smokecan_AoE.global_position = global_position

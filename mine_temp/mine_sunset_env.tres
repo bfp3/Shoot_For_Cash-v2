@@ -1,0 +1,52 @@
+[gd_resource type="Environment" format=3 uid="uid://dghg4qgdofb2"]
+
+[ext_resource type="Shader" uid="uid://bh0bes2of80ac" path="res://mine_temp/shaders/mine_sky.gdshader" id="1_sky"]
+
+[sub_resource type="ShaderMaterial" id="SkyMat"]
+shader = ExtResource("1_sky")
+shader_parameter/top_color = Color(0.36, 0.26, 0.58, 1)
+shader_parameter/mid_color = Color(0.95, 0.46, 0.34, 1)
+shader_parameter/horizon_color = Color(1, 0.64, 0.26, 1)
+shader_parameter/sun_color = Color(1, 0.96, 0.78, 1)
+shader_parameter/sun_dir = Vector3(-0.82, 0.18, 0.28)
+shader_parameter/sun_size = 0.03600000101148
+shader_parameter/glow_size = 0.36200001556506
+
+[sub_resource type="Sky" id="SkySunset"]
+sky_material = SubResource("SkyMat")
+
+[resource]
+background_mode = 2
+sky = SubResource("SkySunset")
+sky_rotation = Vector3(6.335545, 1.3613569, 0)
+ambient_light_source = 2
+ambient_light_color = Color(1, 0.62, 0.38, 1)
+ambient_light_sky_contribution = 0.7
+ambient_light_energy = 0.55
+tonemap_mode = 4
+tonemap_exposure = 1.05
+glow_enabled = true
+glow_intensity = 0.7
+glow_strength = 0.85
+glow_bloom = 0.08
+glow_blend_mode = 0
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.98, 0.55, 0.32, 1)
+fog_sun_scatter = 0.35
+fog_density = 0.002
+fog_aerial_perspective = 0.35
+fog_sky_affect = 0.15
+fog_depth_curve = 0.8
+fog_depth_begin = 28.0
+fog_depth_end = 110.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.012
+volumetric_fog_albedo = Color(1, 0.62, 0.35, 1)
+volumetric_fog_emission = Color(0.55, 0.22, 0.08, 1)
+volumetric_fog_emission_energy = 0.15
+volumetric_fog_anisotropy = 0.4
+volumetric_fog_sky_affect = 0.4
+adjustment_enabled = true
+adjustment_contrast = 1.06
+adjustment_saturation = 1.12

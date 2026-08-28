@@ -372,6 +372,98 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_uucxj")
 
+[node name="UnderlineStar" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1187867439]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 9.1552734e-05
+offset_top = 211.24493
+offset_right = 9.1552734e-05
+offset_bottom = 211.24493
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="StarTexture" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar" unique_id=1531404812]
+modulate = Color(0.37, 0.33053333, 0.296, 0.13725491)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -82.21631
+offset_right = 128.0
+offset_bottom = 173.78369
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.178, 0.178)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("5_7j408")
+stretch_mode = 5
+
+[node name="StarTexture2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar" unique_id=1833442705]
+visible = false
+modulate = Color(1, 1, 1, 0.32941177)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -130.12085
+offset_top = -116.05136
+offset_right = 125.87915
+offset_bottom = 139.94864
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.89, 0.89)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("6_onfim")
+stretch_mode = 5
+
+[node name="center_container" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar" unique_id=1265265496]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 0.80322266
+offset_top = 46.586548
+offset_right = 0.80322266
+offset_bottom = 46.586548
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.195, 0.195)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="left" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar/center_container" unique_id=31501307]
+position = Vector2(-98.85693, 0)
+points = PackedVector2Array(-900, 0, 0, 0)
+width = 2.0
+gradient = SubResource("Gradient_onfim")
+texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="right" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar/center_container" unique_id=1684114475]
+position = Vector2(98.85693, 0)
+points = PackedVector2Array(900, 0, 0, 0)
+width = 2.0
+gradient = SubResource("Gradient_onfim")
+texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
 [node name="Place_name" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=542050662]
 z_index = 1
 layout_mode = 1
@@ -532,99 +624,6 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="UnderlineStar" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1187867439]
-z_index = 1
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 9.1552734e-05
-offset_top = 211.24493
-offset_right = 9.1552734e-05
-offset_bottom = 211.24493
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="StarTexture" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar" unique_id=1531404812]
-modulate = Color(0.37, 0.33053333, 0.296, 0.13725491)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -128.0
-offset_top = -82.21631
-offset_right = 128.0
-offset_bottom = 173.78369
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.178, 0.178)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("5_7j408")
-stretch_mode = 5
-
-[node name="StarTexture2" type="TextureRect" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar" unique_id=1833442705]
-visible = false
-modulate = Color(1, 1, 1, 0.32941177)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -130.12085
-offset_top = -116.05136
-offset_right = 125.87915
-offset_bottom = 139.94864
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.89, 0.89)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("6_onfim")
-stretch_mode = 5
-
-[node name="center_container" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar" unique_id=1265265496]
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 0.80322266
-offset_top = 46.586548
-offset_right = 0.80322266
-offset_bottom = 46.586548
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.195, 0.195)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-
-[node name="left" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar/center_container" unique_id=31501307]
-position = Vector2(-98.85693, 0)
-points = PackedVector2Array(-900, 0, 0, 0)
-width = 2.0
-gradient = SubResource("Gradient_onfim")
-texture_mode = 2
-joint_mode = 2
-begin_cap_mode = 2
-end_cap_mode = 2
-
-[node name="right" type="Line2D" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/UnderlineStar/center_container" unique_id=1684114475]
-position = Vector2(98.85693, 0)
-points = PackedVector2Array(900, 0, 0, 0)
-width = 2.0
-gradient = SubResource("Gradient_onfim")
-texture_mode = 2
-joint_mode = 2
-begin_cap_mode = 2
-end_cap_mode = 2
 
 [node name="MapButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=1819880088 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx")]
 unique_name_in_owner = true

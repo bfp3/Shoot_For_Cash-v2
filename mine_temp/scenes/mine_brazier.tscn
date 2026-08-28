@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://c4h6aveq47bhy"]
+
+[ext_resource type="PackedScene" path="res://mine_temp/scenes/mine_fire.tscn" id="1_fire"]
+[ext_resource type="Material" path="res://mine_temp/materials/mat_iron.tres" id="2_iron"]
+[ext_resource type="Material" path="res://mine_temp/materials/mat_black.tres" id="3_black"]
+
+[sub_resource type="BoxMesh" id="Cube"]
+
+[node name="MineBrazier" type="Node3D" unique_id=1767535159]
+
+[node name="Bowl" type="MeshInstance3D" parent="." unique_id=2033065213]
+transform = Transform3D(0.9, 0, 0, 0, 0.35, 0, 0, 0, 0.9, 0, 0.18, 0)
+material_override = ExtResource("2_iron")
+mesh = SubResource("Cube")
+
+[node name="Rim" type="MeshInstance3D" parent="." unique_id=1255507774]
+transform = Transform3D(1.05, 0, 0, 0, 0.12, 0, 0, 0, 1.05, 0, 0.38, 0)
+material_override = ExtResource("3_black")
+mesh = SubResource("Cube")
+
+[node name="Fire" parent="." unique_id=963703655 instance=ExtResource("1_fire")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)

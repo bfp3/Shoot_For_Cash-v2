@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://mine_temp/shaders/mine_cube.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" path="res://mine_temp/textures/gold.bmp" id="2_tex"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/tex_top = ExtResource("2_tex")
+shader_parameter/tex_side = ExtResource("2_tex")
+shader_parameter/tex_bottom = ExtResource("2_tex")
+shader_parameter/albedo_tint = Color(1, 1, 1, 1)
+shader_parameter/roughness_val = 0.45
+shader_parameter/emission_energy = 0.25
+shader_parameter/emission_color = Color(1, 0.78, 0.25, 1)

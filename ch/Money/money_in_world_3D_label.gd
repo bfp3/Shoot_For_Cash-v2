@@ -169,6 +169,7 @@ func tween_fade_gold() -> void:
 
 
 func pineapple_is_pineapple() -> void:
+	return
 	await show_big_reward_popup(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
 
 

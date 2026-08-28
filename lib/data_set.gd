@@ -100,6 +100,8 @@ var dataset_float : Dictionary = {
 	,"rock_type_grey"		: [1,		1]
 	## Mothership: [bonus cash, hits to destroy].
 	,"mothership_reward"	: [35,		3]
+	## Crate: same cash/health as a basic rock; uses crate mesh + crate_particles.
+	,"rock_type_crate"		: [2,		1]
 	## Shop range-target cash shown when entering a place.
 	,"range_target_moss"	: [1000]
 	,"range_target_redd"	: [2500]

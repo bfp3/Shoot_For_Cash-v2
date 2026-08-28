@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://cnop65ffsds0g"]
+
+[ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="1_d8nqj"]
+[ext_resource type="Material" path="res://mine_temp/materials/mat_dirt.tres" id="3_if6h2"]
+[ext_resource type="PackedScene" uid="uid://dfxc6a3q1bcf5" path="res://mine_temp/scenes/mine_world.tscn" id="9_mine"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ops7e"]
+
+[node name="Moss" type="Node3D" unique_id=229302118]
+
+[node name="Egg" parent="." unique_id=2127545510 instance=ExtResource("1_d8nqj")]
+transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -4.590103, -1.8200959, 11.896428)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.9612617, 0.27563736, 0, -0.27563736, 0.9612617, 0, 12, 0)
+light_color = Color(1, 0.62, 0.32, 1)
+light_energy = 1.55
+light_indirect_energy = 0.85
+light_volumetric_fog_energy = 0.0
+light_bake_mode = 0
+shadow_bias = 0.03
+shadow_normal_bias = 1.2
+shadow_opacity = 0.85
+shadow_blur = 1.1
+directional_shadow_mode = 0
+directional_shadow_split_1 = 0.08
+directional_shadow_split_2 = 0.22
+directional_shadow_blend_splits = true
+directional_shadow_max_distance = 160.0
+sky_mode = 1
+
+[node name="MineWorld" parent="." unique_id=1200954654 instance=ExtResource("9_mine")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.265, -2.735)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1476681688]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1.650454, 13.1518)
+material_override = ExtResource("3_if6h2")
+mesh = SubResource("BoxMesh_ops7e")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=469274016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -1.650454, 13.1518)
+material_override = ExtResource("3_if6h2")
+mesh = SubResource("BoxMesh_ops7e")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=2006548708]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -1.650454, 13.1518)
+material_override = ExtResource("3_if6h2")
+mesh = SubResource("BoxMesh_ops7e")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="." unique_id=272322252]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -1.650454, 13.1518)
+material_override = ExtResource("3_if6h2")
+mesh = SubResource("BoxMesh_ops7e")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=1707608816]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -1.650454, 13.1518)
+material_override = ExtResource("3_if6h2")
+mesh = SubResource("BoxMesh_ops7e")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="." unique_id=1918034288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.65045404, 13.1518)
+material_override = ExtResource("3_if6h2")
+mesh = SubResource("BoxMesh_ops7e")
+
+[editable path="MineWorld"]

@@ -199,8 +199,12 @@ var _sequence_cursor := 0
 ## Active scriptor `sfx-play` instances, keyed by file stem (e.g. Windmill_YokoKanno).
 var _script_sfx_players: Dictionary = {}
 var _script_sfx_fade_tokens: Dictionary = {}
+var _script_sfx_pitch_tweens: Dictionary = {}
+var _script_sfx_pitch_target: Dictionary = {}
 ## Fade used when the round ends or the player returns to shop.
 const SCRIPT_SFX_LEAVE_FADE_SEC := 3.0
+const SCRIPT_SFX_PITCH_STEP := 0.05
+const SCRIPT_SFX_PITCH_RAMP_SEC := 3.0
 var _sequence_active := false
 var _paused_for_continue := false
 var _waiting_until_clear := false
@@ -401,6 +405,10 @@ func _is_sequence_barrier_cmd(cmd: String) -> bool:
 	return cmd == "wait-until-clear" or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd)
 
 
+func _is_script_sfx_cmd(cmd: String) -> bool:
+	return cmd.begins_with("sfx-")
+
+
 func _launch_next_sequence_beat() -> void:
 	if _paused_for_continue or not _sequence_active:
 		return
@@ -442,7 +450,7 @@ func _launch_next_sequence_beat() -> void:
 			_sequence_cursor += 1
 			_arm_pineapple_opportunity()
 			continue
-		if cmd == "sfx-play" or cmd == "sfx-stop":
+		if _is_script_sfx_cmd(cmd):
 			var sfx_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
 			_handle_sfx_command(sfx_entry)
@@ -527,7 +535,7 @@ func _collect_next_beat() -> Array:
 			_arm_pineapple_opportunity()
 			_sequence_cursor += 1
 			continue
-		if cmd == "sfx-play" or cmd == "sfx-stop":
+		if _is_script_sfx_cmd(cmd):
 			_handle_sfx_command(_full_wave_sequence[_sequence_cursor])
 			_sequence_cursor += 1
 			continue
@@ -1043,6 +1051,12 @@ func _handle_sfx_command(entry) -> void:
 		return
 	if cmd == "sfx-stop":
 		_script_sfx_stop(sfx_name, float(entry.get("fade_sec", SCRIPT_SFX_LEAVE_FADE_SEC)))
+		return
+	if cmd == "sfx-faster":
+		_script_sfx_nudge_pitch(sfx_name, SCRIPT_SFX_PITCH_STEP)
+		return
+	if cmd == "sfx-slower":
+		_script_sfx_nudge_pitch(sfx_name, -SCRIPT_SFX_PITCH_STEP)
 
 
 func _script_sfx_play(sfx_name: String, volume_db: float) -> void:
@@ -1054,6 +1068,7 @@ func _script_sfx_play(sfx_name: String, volume_db: float) -> void:
 			existing.stop()
 			existing.queue_free()
 		_script_sfx_players.erase(key)
+	_script_sfx_clear_pitch(key)
 	_script_sfx_fade_tokens[key] = int(_script_sfx_fade_tokens.get(key, 0)) + 1
 
 	var stream := _load_sfx_stream(sfx_name)
@@ -1065,29 +1080,68 @@ func _script_sfx_play(sfx_name: String, volume_db: float) -> void:
 	player.name = "ScriptSfx_%s" % key
 	player.stream = stream
 	player.volume_db = volume_db
+	player.pitch_scale = 1.0
 	player.bus = &"MusicBus"
 	add_child(player)
 	_script_sfx_players[key] = player
+	_script_sfx_pitch_target[key] = 1.0
 	player.finished.connect(func() -> void:
 		if _script_sfx_players.get(key) == player:
 			_script_sfx_players.erase(key)
+		_script_sfx_clear_pitch(key)
 		if is_instance_valid(player):
 			player.queue_free()
 	)
 	player.play()
 
 
-func _script_sfx_stop(sfx_name: String, fade_sec: float) -> void:
+func _script_sfx_nudge_pitch(sfx_name: String, delta: float) -> void:
 	var key := sfx_name.get_file().get_basename()
 	if not _script_sfx_players.has(key):
+		push_warning("RockManager: %s — no playing sfx named '%s'" % ["sfx-faster" if delta > 0.0 else "sfx-slower", sfx_name])
 		return
 	var player: AudioStreamPlayer = _script_sfx_players[key]
 	if not is_instance_valid(player):
 		_script_sfx_players.erase(key)
+		_script_sfx_clear_pitch(key)
+		return
+	var from := float(_script_sfx_pitch_target.get(key, player.pitch_scale))
+	var target := maxf(from + delta, 0.01)
+	_script_sfx_pitch_target[key] = target
+	if _script_sfx_pitch_tweens.has(key):
+		var old = _script_sfx_pitch_tweens[key]
+		if old is Tween and (old as Tween).is_valid():
+			(old as Tween).kill()
+		_script_sfx_pitch_tweens.erase(key)
+	var tween := create_tween()
+	tween.tween_property(player, "pitch_scale", target, SCRIPT_SFX_PITCH_RAMP_SEC)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_script_sfx_pitch_tweens[key] = tween
+
+
+func _script_sfx_clear_pitch(key: String) -> void:
+	if _script_sfx_pitch_tweens.has(key):
+		var old = _script_sfx_pitch_tweens[key]
+		if old is Tween and (old as Tween).is_valid():
+			(old as Tween).kill()
+		_script_sfx_pitch_tweens.erase(key)
+	_script_sfx_pitch_target.erase(key)
+
+
+func _script_sfx_stop(sfx_name: String, fade_sec: float) -> void:
+	var key := sfx_name.get_file().get_basename()
+	if not _script_sfx_players.has(key):
+		_script_sfx_clear_pitch(key)
+		return
+	var player: AudioStreamPlayer = _script_sfx_players[key]
+	if not is_instance_valid(player):
+		_script_sfx_players.erase(key)
+		_script_sfx_clear_pitch(key)
 		return
 
 	var token := int(_script_sfx_fade_tokens.get(key, 0)) + 1
 	_script_sfx_fade_tokens[key] = token
+	_script_sfx_clear_pitch(key)
 	var dur := maxf(fade_sec, 0.0)
 	if dur <= 0.001:
 		_script_sfx_players.erase(key)
@@ -1417,6 +1471,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.GREY
 			'mothership':
 				return RockInstance.RockSize.MOTHERSHIP
+			'crate':
+				return RockInstance.RockSize.CRATE
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -1439,6 +1495,7 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-juggle'
 		or cmd == 'rock-grey'
 		or cmd == 'mothership'
+		or cmd == 'crate'
 	)
 
 
@@ -3169,7 +3226,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
 			# Keep wait / sequence barriers in place so launch stagger, balloon-checks, and clear survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'sfx-play' or cmd == 'sfx-stop' or _is_pace_cmd(cmd):
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or _is_script_sfx_cmd(cmd) or _is_pace_cmd(cmd):
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue
