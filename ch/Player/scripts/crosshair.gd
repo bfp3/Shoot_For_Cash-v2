@@ -42,6 +42,18 @@ var right_pos_x : float
 @export var transition_speed := 0.05
 var orig_pos := Vector2.ZERO
 
+@export_group("Low Ammo Warning")
+## Show blinking LOW AMMO on the reticle when ammo is below this (and above 0).
+@export var low_ammo_threshold := 20
+@export var low_ammo_blink_sec := 0.35
+@export var low_ammo_blink_min_alpha := 0.2
+@export var low_ammo_blink_max_alpha := 1.0
+
+@onready var low_ammo_label: RichTextLabel = get_node_or_null("LowAmmoLabel") as RichTextLabel
+
+var _low_ammo_warning_active := false
+var _low_ammo_blink_tween: Tween
+
 @export_group("Avoider Hit Feedback")
 ## Reticle tint when a red-avoider snaps onto the crosshair.
 @export var avoider_hit_color := Color(1.0, 0.05, 0.05, 1.0)
@@ -399,6 +411,7 @@ func crosshair_nothing_to_shoot() -> void:
 	
 func out_of_ammo_display() -> void:
 	#crosshair_nothing_to_shoot()
+	set_low_ammo_warning(false)
 	var no_ammo_label : RichTextLabel = $OutOfAmmoLabel
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(no_ammo_label, "modulate:a", 1.0, 0.1)
@@ -413,6 +426,33 @@ func out_of_ammo_hide() -> void:
 	var no_ammo_label : RichTextLabel = $OutOfAmmoLabel
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(no_ammo_label, "modulate:a", 0.0, 0.1)
+
+
+## Blinking "LOW AMMO" under the reticle while ammo is critically low.
+func set_low_ammo_warning(active: bool) -> void:
+	if active == _low_ammo_warning_active:
+		return
+	_low_ammo_warning_active = active
+	if low_ammo_label == null:
+		low_ammo_label = get_node_or_null("LowAmmoLabel") as RichTextLabel
+	if low_ammo_label == null:
+		return
+	if _low_ammo_blink_tween:
+		_low_ammo_blink_tween.kill()
+		_low_ammo_blink_tween = null
+	if not active:
+		low_ammo_label.hide()
+		low_ammo_label.modulate.a = 0.0
+		return
+
+	low_ammo_label.text = "LOW AMMO"
+	low_ammo_label.show()
+	low_ammo_label.modulate.a = low_ammo_blink_max_alpha
+	_low_ammo_blink_tween = create_tween().set_loops()
+	_low_ammo_blink_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	var half := maxf(low_ammo_blink_sec, 0.05)
+	_low_ammo_blink_tween.tween_property(low_ammo_label, "modulate:a", low_ammo_blink_min_alpha, half)
+	_low_ammo_blink_tween.tween_property(low_ammo_label, "modulate:a", low_ammo_blink_max_alpha, half)
 
 	
 func crosshair_fade_out_mode() -> void:

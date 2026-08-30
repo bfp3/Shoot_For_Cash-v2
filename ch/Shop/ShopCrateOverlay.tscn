@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dhtjxqxwh78e6"]
 
 [ext_resource type="Script" uid="uid://d3xub060a6u3m" path="res://ch/Shop/shop_crate_overlay.gd" id="1_overlay"]
-[ext_resource type="PackedScene" uid="uid://bqdykfvjcag5q" path="res://res/crateMesh2.glb" id="2_crate"]
+[ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="2_4b7pq"]
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="3_4b7pq"]
 
 [sub_resource type="TextMesh" id="TextMesh_pyo40"]
@@ -42,15 +42,18 @@ fov = 35.0
 
 [node name="FillLight" type="OmniLight3D" parent="SubViewport" unique_id=2041599059]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 1.4)
-light_color = Color(1, 0.8875, 0.85, 1)
-light_energy = 1.605
+light_energy = 0.085
 omni_range = 6.834
 
 [node name="CratePivot" type="Node3D" parent="SubViewport" unique_id=1511656362]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 
-[node name="Crate" parent="SubViewport/CratePivot" unique_id=310265294 instance=ExtResource("2_crate")]
+[node name="Crate" type="Node3D" parent="SubViewport/CratePivot" unique_id=310265294]
 transform = Transform3D(1.15, 0, 0, 0, 1.15, 0, 0, 0, 1.15, 0, 0, 0)
+
+[node name="Crate" type="MeshInstance3D" parent="SubViewport/CratePivot/Crate" unique_id=1776381222]
+mesh = ExtResource("2_4b7pq")
+skeleton = NodePath("")
 
 [node name="Dollar" type="MeshInstance3D" parent="SubViewport/CratePivot/Crate" unique_id=46564355]
 transform = Transform3D(1.261, 0, 0, 0, 0.701, 0, 0, 0, 0.1, 0, 0.040947646, 0.5)
@@ -71,3 +74,11 @@ mesh = SubResource("TextMesh_pyo40")
 transform = Transform3D(9.520286e-08, 0, 0.1, 0, 0.701, 0, -1.261, 0, 7.54979e-09, 0.5, 0.041, 2.1855694e-08)
 material_override = ExtResource("3_4b7pq")
 mesh = SubResource("TextMesh_pyo40")
+
+[node name="Label" type="RichTextLabel" parent="." unique_id=1185047456]
+layout_mode = 2
+theme_type_variation = &"WhiteRichText"
+theme_override_font_sizes/normal_font_size = 200
+text = "x3"
+fit_content = true
+autowrap_mode = 0

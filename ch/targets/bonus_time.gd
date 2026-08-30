@@ -49,8 +49,8 @@ func start_destroyed_process() -> void:
 	
 func shake_camera() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
-	if player_cam:
-		player_cam.shake_camera_rock_destroyed()
+	if player_cam and player_cam.has_method("shake_camera_bonus_time"):
+		player_cam.shake_camera_bonus_time()
 
 func was_hit_tween() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)

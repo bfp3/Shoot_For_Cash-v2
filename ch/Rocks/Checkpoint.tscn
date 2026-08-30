@@ -6,18 +6,17 @@
 [ext_resource type="Texture2D" uid="uid://drvjio7oxqunn" path="res://res/ring512.png" id="4_7wlsc"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="4_lwyt0"]
 [ext_resource type="Material" uid="uid://c265b2f4yjk72" path="res://res/pileon_clay_material_2.tres" id="6_vuv8b"]
+[ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="7_vr0ep"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5tkbb"]
 size = Vector3(1, 2.506958, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_vr0ep"]
 
 [node name="Checkpoint" unique_id=397951874 instance=ExtResource("1_balloon")]
 script = ExtResource("2_script")
 balloon_type = 1
 
 [node name="main_col" parent="." index="0" unique_id=809893561]
-transform = Transform3D(0.5000001, 0, 0, 0, 0.5000001, 0, 0, 0, 0.5000001, 0, 0.34251896, 0)
+transform = Transform3D(0.5000001, 0, 0, 0, 0.5000001, 0, 0, 0, 0.5000001, 0, -0.05748114, 0)
 shape = SubResource("BoxShape3D_5tkbb")
 
 [node name="small_rock2" parent="Mesh" parent_id_path=PackedInt32Array(950426368) index="0" unique_id=2102516094]
@@ -92,78 +91,21 @@ pitch_scale = 1.2
 bus = &"ReverbBus"
 
 [node name="Crate" type="Node3D" parent="." index="15" unique_id=133431577]
-transform = Transform3D(0.65500003, 0, 0, 0, 0.65500003, 0, 0, 0, 0.65500003, 0, -0.5782517, 0)
+transform = Transform3D(0.65500003, 0, 0, 0, 0.65500003, 0, 0, 0, 0.65500003, 0, -0.38175172, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Crate" index="0" unique_id=2098571721]
 transform = Transform3D(0.65800005, 0, 0, 0, 0.65800005, 0, 0, 0, 0.65800005, 0, -0.5882354, 0)
 material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
+mesh = ExtResource("7_vr0ep")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Crate" index="1" unique_id=287578880]
-transform = Transform3D(0.100000024, 0, 0, 0, 0.6580002, 0, 0, 0, 0.100000024, -0.23449892, -0.5882354, -0.31515577)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Crate" index="2" unique_id=533128729]
-transform = Transform3D(0.10000004, 0, 0, 0, 0.65800023, 0, 0, 0, 0.10000004, 0.24217428, -0.5882354, -0.31515577)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Crate" index="3" unique_id=1137158511]
-transform = Transform3D(0.100000046, 0, 0, 0, 0.65800023, 0, 0, 0, 0.100000046, -0.23449896, -0.5882354, 0.3049099)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="Crate" index="4" unique_id=855308393]
-transform = Transform3D(0.100000046, 0, 0, 0, 0.65800023, 0, 0, 0, 0.100000046, 0.24217433, -0.5882354, 0.3049099)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D6" type="MeshInstance3D" parent="Crate" index="5" unique_id=1158446078]
-transform = Transform3D(-2.4216112e-08, 0, -0.5540001, 0, 0.072000004, 0, 0.5540001, 0, -2.4216112e-08, -0.0010000002, -0.26900002, 0)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D11" type="MeshInstance3D" parent="Crate" index="6" unique_id=2096801853]
-transform = Transform3D(-2.4216112e-08, 0, -0.55400014, 0, 0.072000004, 0, 0.55400014, 0, -2.4216112e-08, -0.0010000003, -0.9166274, 0)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D7" type="MeshInstance3D" parent="Crate" index="7" unique_id=1444959361]
-transform = Transform3D(-4.3711403e-09, 0, -0.10000003, 0, 0.65800023, 0, 0.10000003, 0, -4.3711403e-09, 0.31412756, -0.5882354, -0.2416674)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D8" type="MeshInstance3D" parent="Crate" index="8" unique_id=156066025]
-transform = Transform3D(-4.3711417e-09, 0, -0.100000046, 0, 0.65800023, 0, 0.100000046, 0, -4.3711417e-09, 0.31412756, -0.5882354, 0.23500583)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D9" type="MeshInstance3D" parent="Crate" index="9" unique_id=1364376684]
-transform = Transform3D(-4.3711417e-09, 0, -0.100000046, 0, 0.65800023, 0, 0.100000046, 0, -4.3711417e-09, -0.30593812, -0.5882354, -0.2416675)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D10" type="MeshInstance3D" parent="Crate" index="10" unique_id=1597575907]
-transform = Transform3D(-4.3711412e-09, 0, -0.100000046, 0, 0.65800023, 0, 0.100000046, 0, -4.3711412e-09, -0.30593812, -0.5882354, 0.23500584)
-material_override = ExtResource("6_vuv8b")
-mesh = SubResource("BoxMesh_vr0ep")
-skeleton = NodePath("../..")
-
-[node name="Label3D" type="Label3D" parent="Crate" index="11" unique_id=1524231842]
+[node name="Label3D" type="Label3D" parent="Crate" index="1" unique_id=1524231842]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.599, -0.372)
 billboard = 1
 shaded = true
 no_depth_test = true
+modulate = Color(0, 1, 0, 1)
+outline_modulate = Color(1, 1, 0.6156863, 1)
 text = "+"
-font_size = 232
+font_size = 289
+outline_size = 29

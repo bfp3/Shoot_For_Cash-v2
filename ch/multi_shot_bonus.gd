@@ -20,6 +20,27 @@ const MULTI_SHOT_DATA := {
 	10: {"name":"10X",    "reward":0,  "color":"ffe600", "font_size":120},
 }
 
+## Shrunken-scope hit callouts (no immediate repeat).
+var SHRINK_CALLOUTS: PackedStringArray = PackedStringArray([
+	"360 NO SCOPE",
+	"SNIPED!",
+	"WOW",
+	"IMPRESSIVE",
+	"CLEAN!",
+])
+## Expanded-scope hit callouts (no immediate repeat).
+var EXPAND_CALLOUTS: PackedStringArray = PackedStringArray([
+	"ZOOMING!",
+	"BIG SHOT",
+	"DAYUM!",
+	"WIDE OPEN!",
+])
+
+var _shrink_callout_bag: Array[String] = []
+var _expand_callout_bag: Array[String] = []
+var _last_shrink_callout := ""
+var _last_expand_callout := ""
+
 
 
 
@@ -74,7 +95,39 @@ func show_360(pos: Vector3) -> void:
 	_play_named_banner("360!", pos, Color("ffe600"), 72)
 
 
+## Hit while the scope is shrunk (right-click / no-scope mechanic).
+func show_shrink_scope_callout(pos: Vector3) -> void:
+	var text := _next_callout(SHRINK_CALLOUTS, _shrink_callout_bag, _last_shrink_callout)
+	_last_shrink_callout = text
+	_play_named_banner(text, pos, Color("7bffd8"), 38)
+
+
+## Hit while the scope is expanded (held shootWeapon).
+func show_expand_scope_callout(pos: Vector3) -> void:
+	var text := _next_callout(EXPAND_CALLOUTS, _expand_callout_bag, _last_expand_callout)
+	_last_expand_callout = text
+	_play_named_banner(text, pos, Color("ff8400"), 32)
+
+
+## Shuffle through `pool` without repeating the previous line back-to-back.
+func _next_callout(pool: PackedStringArray, bag: Array[String], last: String) -> String:
+	if pool.is_empty():
+		return ""
+	if bag.is_empty():
+		for line in pool:
+			bag.append(String(line))
+		bag.shuffle()
+		## Avoid starting a fresh bag on the same line we just showed.
+		if bag.size() > 1 and bag[0] == last:
+			var first: String = bag.pop_front()
+			bag.append(first)
+	var pick: String = bag.pop_front()
+	return pick
+
+
 func _play_named_banner(text: String, pos: Vector3, color: Color, font_size: int) -> void:
+	if text.is_empty():
+		return
 	multi_label.text = text
 	multi_label.modulate = color
 	multi_label.modulate.a = 0.0

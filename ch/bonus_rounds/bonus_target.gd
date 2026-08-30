@@ -225,8 +225,8 @@ func was_hit_tween() -> void:
 
 func shake_camera() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
-	if player_cam:
-		player_cam.shake_camera_rock_destroyed()
+	if player_cam and player_cam.has_method("shake_camera_bonus_target"):
+		player_cam.shake_camera_bonus_target()
 
 func destroyed_by_shratnel() -> void:
 	if !visible:

@@ -3,6 +3,7 @@
 [ext_resource type="Material" uid="uid://be3ktn7h2r3kb" path="res://res/test_room_prototype_mat.tres" id="4_80w0q"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="7_ynult"]
 [ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="10_uulno"]
+[ext_resource type="Script" uid="uid://cg6xll53va6hj" path="res://sc/All_level_layouts/crossy_bridge_scroll.gd" id="layout_scroll"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tt2ep"]
 
@@ -303,6 +304,9 @@ texture_filter = 5
 data = PackedVector3Array(-14, 0.5, 19.5, 14, 0.5, 19.5, -14, -0.5, 19.5, 14, 0.5, 19.5, 14, -0.5, 19.5, -14, -0.5, 19.5, 14, 0.5, -19.5, -14, 0.5, -19.5, 14, -0.5, -19.5, -14, 0.5, -19.5, -14, -0.5, -19.5, 14, -0.5, -19.5, 14, 0.5, 19.5, 14, 0.5, -19.5, 14, -0.5, 19.5, 14, 0.5, -19.5, 14, -0.5, -19.5, 14, -0.5, 19.5, -14, 0.5, -19.5, -14, 0.5, 19.5, -14, -0.5, -19.5, -14, 0.5, 19.5, -14, -0.5, 19.5, -14, -0.5, -19.5, 14, 0.5, 19.5, -14, 0.5, 19.5, 14, 0.5, -19.5, -14, 0.5, 19.5, -14, 0.5, -19.5, 14, 0.5, -19.5, -14, -0.5, 19.5, 14, -0.5, 19.5, -14, -0.5, -19.5, 14, -0.5, 19.5, 14, -0.5, -19.5, -14, -0.5, -19.5)
 
 [node name="TestAtJetz" type="Node3D" unique_id=229302118]
+script = ExtResource("layout_scroll")
+enabled = false
+forward_axis = Vector3(0, -1, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true

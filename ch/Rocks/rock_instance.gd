@@ -1426,8 +1426,8 @@ func detonate_rock() -> void:
 	expand_blast_radius()
 
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
-	if player_cam:
-		player_cam.shake_camera_sky_mines()
+	if player_cam and player_cam.has_method("shake_camera_sky_mine"):
+		player_cam.shake_camera_sky_mine()
 
 
 ## Alt-gun hit: pulse a small freeze radius; every rock inside gets iced.
@@ -1555,8 +1555,45 @@ func _play_freeze_burst_visual() -> void:
 
 func shake_camera() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
-	if player_cam:
-		player_cam.shake_camera_rock_destroyed()
+	if player_cam == null:
+		return
+	match rock_type:
+		RockSize.STAY:
+			if player_cam.has_method("shake_camera_rock_stay"):
+				player_cam.shake_camera_rock_stay()
+		RockSize.GREY:
+			if player_cam.has_method("shake_camera_rock_grey"):
+				player_cam.shake_camera_rock_grey()
+		RockSize.AVOIDER:
+			if player_cam.has_method("shake_camera_rock_avoider"):
+				player_cam.shake_camera_rock_avoider()
+		RockSize.RED_ATTACKER:
+			if player_cam.has_method("shake_camera_rock_red_attacker"):
+				player_cam.shake_camera_rock_red_attacker()
+		RockSize.HAZARD, RockSize.HAZARD_SMALL:
+			if player_cam.has_method("shake_camera_rock_hazard"):
+				player_cam.shake_camera_rock_hazard()
+		RockSize.CRATE:
+			if player_cam.has_method("shake_camera_rock_crate"):
+				player_cam.shake_camera_rock_crate()
+		RockSize.SMOKECAN:
+			if player_cam.has_method("shake_camera_rock_smokecan"):
+				player_cam.shake_camera_rock_smokecan()
+		RockSize.CHASER:
+			if player_cam.has_method("shake_camera_rock_chaser"):
+				player_cam.shake_camera_rock_chaser()
+		RockSize.MOTHERSHIP:
+			if player_cam.has_method("shake_camera_rock_mothership"):
+				player_cam.shake_camera_rock_mothership()
+		RockSize.JUGGLE:
+			if player_cam.has_method("shake_camera_rock_juggle"):
+				player_cam.shake_camera_rock_juggle()
+		RockSize.SMALL_2:
+			if player_cam.has_method("shake_camera_rock_pigeon"):
+				player_cam.shake_camera_rock_pigeon()
+		_:
+			if player_cam.has_method("shake_camera_rock"):
+				player_cam.shake_camera_rock()
 
 func apply_marked_ability() -> void:
 	#if player_has_marked_rock:
@@ -2265,7 +2302,6 @@ func _trigger_hazard_crosshair_contact() -> void:
 	_hazard_crosshair_arm_token += 1
 	## Same strike path as shooting a black rock (prevents a second strike in destroy).
 	_apply_direct_hazard_strike()
-	_shake_camera_avoider_hit()
 	start_destroyed_process()
 
 
@@ -2980,9 +3016,13 @@ func _destroy_frozen_avoider() -> void:
 
 func _shake_camera_avoider_hit() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
-	if player_cam and player_cam.has_method("shake_camera_avoider_hit"):
-		player_cam.shake_camera_avoider_hit()
-	elif player_cam and player_cam.has_method("shake_camera_impact"):
+	if player_cam == null:
+		return
+	if rock_type == RockSize.RED_ATTACKER and player_cam.has_method("shake_camera_rock_red_attacker"):
+		player_cam.shake_camera_rock_red_attacker()
+	elif player_cam.has_method("shake_camera_rock_avoider"):
+		player_cam.shake_camera_rock_avoider()
+	elif player_cam.has_method("shake_camera_impact"):
 		player_cam.shake_camera_impact()
 
 
@@ -3213,8 +3253,8 @@ func _explode_orange_from_avoider(body: Node) -> void:
 ## Same small punch as destroying a rock with a shot (not the heavy avoider-reticle shake).
 func _shake_camera_rock_collision() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
-	if player_cam and player_cam.has_method("shake_camera_rock_destroyed"):
-		player_cam.shake_camera_rock_destroyed()
+	if player_cam and player_cam.has_method("shake_camera_rock"):
+		player_cam.shake_camera_rock()
 
 
 func _destroy_rock_from_avoider_collision(other: RockInstance) -> void:

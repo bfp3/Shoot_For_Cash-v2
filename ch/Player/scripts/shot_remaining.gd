@@ -4,13 +4,23 @@ const RELOAD_TICK_SFX = preload("res://sfx/reload_sound_01.ogg")
 
 @onready var ammo_label: RichTextLabel = %ShotRemainingLabel
 
+@export_group("Low Ammo Pulse")
+@export var low_ammo_threshold := 20
+@export var low_ammo_pulse_sec := 0.45
+@export var low_ammo_pulse_min_alpha := 0.35
+@export var low_ammo_pulse_max_alpha := 1.0
+
 var _display_ammo := 0
 var _reload_tween: Tween
 var _reload_tick_sfx: AudioStreamPlayer
 var _last_tick_ammo := -1
+var _low_ammo_pulse_active := false
+var _low_ammo_pulse_tween: Tween
+var _ammo_base_modulate := Color.WHITE
 
 
 func _ready() -> void:
+	_ammo_base_modulate = modulate
 	_reload_tick_sfx = AudioStreamPlayer.new()
 	_reload_tick_sfx.name = "ReloadTickSFX"
 	_reload_tick_sfx.stream = RELOAD_TICK_SFX
@@ -25,6 +35,7 @@ func set_ammo(amount: int, animate := false) -> void:
 	else:
 		_display_ammo = amount
 		_update_label(amount)
+	set_low_ammo_pulse(amount < low_ammo_threshold)
 
 
 func play_reload_fill(from_amount: int, to_amount: int) -> void:
@@ -41,6 +52,7 @@ func play_reload_fill(from_amount: int, to_amount: int) -> void:
 	if bullets_added <= 0:
 		_display_ammo = to_amount
 		_update_label(to_amount)
+		set_low_ammo_pulse(to_amount < low_ammo_threshold)
 		return
 
 	## Match ammo_panel magazine load pacing (~0.08s per bullet).
@@ -48,6 +60,9 @@ func play_reload_fill(from_amount: int, to_amount: int) -> void:
 
 	_reload_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_reload_tween.tween_method(_set_display_ammo, float(from_amount), float(to_amount), duration)
+	_reload_tween.tween_callback(func() -> void:
+		set_low_ammo_pulse(to_amount < low_ammo_threshold)
+	)
 
 	if ammo_label:
 		var base_scale := Vector2.ONE
@@ -83,3 +98,22 @@ func _play_reload_tick() -> void:
 func _update_label(amount: int) -> void:
 	if ammo_label:
 		ammo_label.text = '[wave]' + str(amount).pad_zeros(2)
+
+
+func set_low_ammo_pulse(active: bool) -> void:
+	if active == _low_ammo_pulse_active:
+		return
+	_low_ammo_pulse_active = active
+	if _low_ammo_pulse_tween:
+		_low_ammo_pulse_tween.kill()
+		_low_ammo_pulse_tween = null
+	if not active:
+		modulate = _ammo_base_modulate
+		return
+
+	modulate.a = low_ammo_pulse_max_alpha
+	_low_ammo_pulse_tween = create_tween().set_loops()
+	_low_ammo_pulse_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	var half := maxf(low_ammo_pulse_sec, 0.05)
+	_low_ammo_pulse_tween.tween_property(self, "modulate:a", low_ammo_pulse_min_alpha, half)
+	_low_ammo_pulse_tween.tween_property(self, "modulate:a", low_ammo_pulse_max_alpha, half)

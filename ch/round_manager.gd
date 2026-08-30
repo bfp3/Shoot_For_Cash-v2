@@ -17,6 +17,7 @@ const LAYOUT_PATH_BY_PLACE_INDEX := {
 	5: "res://sc/All_level_layouts/level_layout_05_vesper.tscn",
 }
 
+
 ## Boss arena layouts by overworld island index (0 = Shipper, 1 = Anchor, …).
 const LAYOUT_PATH_BOSS_BY_ISLAND := {
 	0: "res://sc/All_level_layouts/level_layout_moss_02.tscn",
@@ -24,11 +25,13 @@ const LAYOUT_PATH_BOSS_BY_ISLAND := {
 }
 ## Script ranges that are not in gl_DataSet.place_name (e.g. moss2 in level-beginner.txt).
 const LAYOUT_PATH_BY_PLACE_NAME := {
-	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",
+	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",   # "res://sc/All_level_layouts/level_layout_moss_02.tscn",
 	"moss3": "res://sc/All_level_layouts/level_layout_moss_03.tscn",
 	"hood": "res://sc/All_level_layouts/level_layout_hood_01.tscn",
 	"mine": "res://sc/All_level_layouts/level_layout_mine_01.tscn",
+	"kings": "res://sc/All_level_layouts/level_layout_moss_crossy_bridge.tscn"
 }
+
 
 ## Camera3D.environment resources per place / boss (layouts no longer carry WorldEnvironment).
 const ENV_PATH_BY_LEVEL := {
@@ -43,11 +46,12 @@ const ENV_PATH_BY_LEVEL := {
 	"vesper": "res://res/start_05_world_env.tres",
 	"hood": "res://res/skyEnvironments/greyscale_world.tres",
 	"mine": "res://mine_temp/mine_sunset_env.tres",
+	"kings": "res://res/skyEnvironments/moss_crossy_world_env.tres"
 	
 }
 const ENV_PATH_BY_LAYOUT := {
 	LAYOUT_PATH_START: "res://res/skyEnvironments/greyscale_world.tres",
-	"res://sc/All_level_layouts/level_layout_moss.tscn": "res://res/moss_env_v2.tres",
+	"res://sc/All_level_layouts/level_layout_mosscr.tscn": "res://res/moss_env_v2.tres",
 	"res://sc/All_level_layouts/level_layout_02_redd.tscn": "res://res/world_env_redd.tres",
 	"res://sc/All_level_layouts/level_layout_03_glory.tscn": "res://res/skyEnvironments/Level_simple_art_style.tres",
 	"res://sc/All_level_layouts/level_layout_000_jetz.tscn": "res://res/skyEnvironments/greyscale_world.tres",

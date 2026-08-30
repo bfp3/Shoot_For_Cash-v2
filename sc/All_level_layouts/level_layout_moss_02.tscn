@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://udb8jdxvl5d8" path="res://res/cloud-svgrepo-com.png" id="11_yyju4"]
 [ext_resource type="Texture2D" uid="uid://cmk72g2wr4ulq" path="res://res/mountains-svgrepo-com.png" id="12_gasc2"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="16_xsjl2"]
+[ext_resource type="Script" uid="uid://cg6xll53va6hj" path="res://sc/All_level_layouts/crossy_bridge_scroll.gd" id="layout_scroll"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x8ffe"]
 shading_mode = 0
@@ -579,6 +580,8 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_obp0s")
 
 [node name="Moss" type="Node3D" unique_id=229302118]
+script = ExtResource("layout_scroll")
+enabled = false
 
 [node name="Egg" parent="." unique_id=2127545510 instance=ExtResource("9_bnvqn")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -4.590103, -1.8200959, 11.896428)

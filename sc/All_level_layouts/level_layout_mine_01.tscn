@@ -3,10 +3,13 @@
 [ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="1_d8nqj"]
 [ext_resource type="Material" path="res://mine_temp/materials/mat_dirt.tres" id="3_if6h2"]
 [ext_resource type="PackedScene" uid="uid://dfxc6a3q1bcf5" path="res://mine_temp/scenes/mine_world.tscn" id="9_mine"]
+[ext_resource type="Script" uid="uid://cg6xll53va6hj" path="res://sc/All_level_layouts/crossy_bridge_scroll.gd" id="layout_scroll"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_ops7e"]
 
 [node name="Moss" type="Node3D" unique_id=229302118]
+script = ExtResource("layout_scroll")
+enabled = false
 
 [node name="Egg" parent="." unique_id=2127545510 instance=ExtResource("1_d8nqj")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -4.590103, -1.8200959, 11.896428)

@@ -1,6 +1,6 @@
 class_name Player extends Node3D
 
-const mouse_no_lerp := false
+const mouse_no_lerp := true
 
 @onready var mobile_controller: Node = $MobileControl
 var is_mobile := OS.has_feature("mobile")
@@ -467,14 +467,13 @@ func _process(delta: float) -> void:
 			fire_weapon()
 
 		if Input.is_action_just_released("shoot_weapon_2"):
-			var orange_container := get_tree().get_first_node_in_group('orange_container')
-			if orange_container and orange_container.has_method("launch_orange"):
-				orange_container.launch_orange(_crosshair_world_on_z(23.0))
-			%Crosshair.pulse_ring_texture(-1.0, -1.0, shoot_weapon_2_ring_pulse_color)
-			#if right_click_is_planted_crosshair:
-				#fire_weapon(true)
-			#else:
-				#fire_weapon()
+			#fire_oranges()
+			if right_click_is_planted_crosshair:
+				fire_weapon(true)
+			else:
+				fire_weapon()
+
+
 
 	handle_scope_adjust(delta)
 	_update_hold_aim_zoom()
@@ -1228,6 +1227,17 @@ func get_current_crosshair_hit_radius() -> float:
 	return scope_base_target_circle if scope_base_target_circle > 0.0 else 40.0
 
 
+## "" / "shrink" / "expand" — only after the hold delay so the mechanic has actually engaged.
+func get_scope_mechanic_kind() -> String:
+	if scope_hold_time < scope_shrink_delay_dur:
+		return ""
+	if _scope_mode == ScopeMode.SHRINK:
+		return "shrink"
+	if _scope_mode == ScopeMode.EXPAND:
+		return "expand"
+	return ""
+
+
 func _update_scope_hold(mode: ScopeMode, delta: float) -> void:
 	if not _is_holding_shoot or _scope_mode != mode:
 		_is_holding_shoot = true
@@ -1345,6 +1355,22 @@ func _refresh_ammo_display(animate := false) -> void:
 		%ShotRemainingLabel.text = str(shown).pad_zeros(2)
 
 	%Crosshair.out_of_ammo_hide()
+	_update_low_ammo_warning(shown)
+
+
+func _update_low_ammo_warning(ammo_amount: int = -1) -> void:
+	if ammo_amount < 0:
+		ammo_amount = get_displayed_ammo()
+	var crosshair := %Crosshair
+	if crosshair == null:
+		return
+	var threshold := 20
+	if "low_ammo_threshold" in crosshair:
+		threshold = int(crosshair.low_ammo_threshold)
+	## Blink LOW AMMO while critically low but not empty (empty uses OUT).
+	var show_low := ammo_amount > 0 and ammo_amount < threshold
+	if crosshair.has_method("set_low_ammo_warning"):
+		crosshair.set_low_ammo_warning(show_low)
 
 
 ## Adds pack bullets up to max capacity. Returns how many were actually added.
@@ -1447,6 +1473,12 @@ func get_ammo_pack_size() -> int:
 	return int(gl_DataSet.get_value('ammo_pack_size', 0))
 
 
+func fire_oranges() -> void:
+	var orange_container := get_tree().get_first_node_in_group('orange_container')
+	if orange_container and orange_container.has_method("launch_orange"):
+		orange_container.launch_orange(_crosshair_world_on_z(23.0))
+		%Crosshair.pulse_ring_texture(-1.0, -1.0, shoot_weapon_2_ring_pulse_color)
+
 func fire_weapon(force_plant: bool = false) -> void:
 	power_gun_fire_rate = 0.01
 	power_bullet_speed = 0.01
@@ -1502,6 +1534,7 @@ func fire_weapon(force_plant: bool = false) -> void:
 	
 
 func out_of_ammo() -> void:
+	%Crosshair.set_low_ammo_warning(false)
 	%Crosshair.out_of_ammo_display()
 	
 

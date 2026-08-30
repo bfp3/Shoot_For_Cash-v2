@@ -330,6 +330,8 @@ func shoot_target() -> void:
 	if player and player.has_method("register_accurate_shot"):
 		player.register_accurate_shot()
 
+	_try_scope_mechanic_callout(targets)
+
 	for target_data in targets:
 
 		var target = target_data.target
@@ -661,4 +663,32 @@ func activate_multishot_bonus(rock_count: int) -> void:
 	
 	#%ComboMode.start()
 	
+
+## One callout per volley when a hit lands under shrink / expand scope.
+func _try_scope_mechanic_callout(targets: Array) -> void:
+	if player == null or not player.has_method("get_scope_mechanic_kind"):
+		return
+	var kind: String = player.get_scope_mechanic_kind()
+	if kind.is_empty():
+		return
+	var label_pos := Vector3.ZERO
+	var count := 0
+	for entry in targets:
+		if not (entry is Dictionary):
+			continue
+		var target = entry.get("target")
+		if is_instance_valid(target):
+			label_pos += target.global_position
+			count += 1
+	if count <= 0:
+		return
+	label_pos /= float(count)
+	label_pos.y += 1.15
+	var bonus := get_tree().get_first_node_in_group("multi_shot")
+	if bonus == null:
+		return
+	if kind == "shrink" and bonus.has_method("show_shrink_scope_callout"):
+		bonus.show_shrink_scope_callout(label_pos)
+	elif kind == "expand" and bonus.has_method("show_expand_scope_callout"):
+		bonus.show_expand_scope_callout(label_pos)
 	

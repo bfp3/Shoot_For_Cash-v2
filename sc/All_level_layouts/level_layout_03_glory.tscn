@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b830br7pig61j" path="res://res/Kenney_prototype_textures/Dark/texture_08.png" id="9_1nq10"]
 [ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="10_861rv"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="16_mi5c8"]
+[ext_resource type="Script" uid="uid://cg6xll53va6hj" path="res://sc/All_level_layouts/crossy_bridge_scroll.gd" id="layout_scroll"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_dv8gk"]
 _surfaces = [{
@@ -266,6 +267,8 @@ material = SubResource("StandardMaterial3D_siii1")
 size = Vector2(10, 14.37)
 
 [node name="Moss" type="Node3D" unique_id=229302118]
+script = ExtResource("layout_scroll")
+enabled = false
 
 [node name="Brick_wall_2" type="Node3D" parent="." unique_id=1643600064]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -1.5, 20.15)

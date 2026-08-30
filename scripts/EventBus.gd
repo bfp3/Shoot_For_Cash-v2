@@ -42,6 +42,8 @@ signal actor_event()
 #Projectiles
 signal rock_destroyed()
 signal rock_created()
+## Fired from PlayerState.log_hit after a hit is recorded (item / type / value).
+signal rock_hit_logged(item: String, item_type: String, value: int)
 
 #EGG 
 signal egg_pulse_activated()
@@ -150,6 +152,7 @@ func XXemit_all_signals() -> void:
 	# Projectiles
 	rock_destroyed.emit()
 	rock_created.emit()
+	rock_hit_logged.emit("", "", 0)
 
 	# EGG
 	egg_pulse_activated.emit()

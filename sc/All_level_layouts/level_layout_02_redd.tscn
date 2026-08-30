@@ -10,6 +10,7 @@
 [ext_resource type="Material" uid="uid://cg2tfxiei8rx" path="res://ch/SimpleWater/simple_water_material.tres" id="11_n1dh2"]
 [ext_resource type="PackedScene" uid="uid://bynwchnbyxiue" path="res://ch/environment_decoration/T_pileon.tscn" id="20_56nw2"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="23_08twk"]
+[ext_resource type="Script" uid="uid://cg6xll53va6hj" path="res://sc/All_level_layouts/crossy_bridge_scroll.gd" id="layout_scroll"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o0am4"]
 cull_mode = 1
@@ -584,6 +585,8 @@ subdivide_width = 24
 subdivide_depth = 24
 
 [node name="Redd" type="Node3D" unique_id=229302118]
+script = ExtResource("layout_scroll")
+enabled = false
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1725409465 groups=["directional_light"]]
 unique_name_in_owner = true

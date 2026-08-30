@@ -1,183 +1,31 @@
 [gd_scene format=4 uid="uid://b7mg3hftvmykm"]
 
-[ext_resource type="Script" uid="uid://btsbvhp421kgq" path="res://sc/scene-100.gd" id="1_4ncdc"]
 [ext_resource type="Script" uid="uid://cwee1r4c8ea3p" path="res://ch/SimpleWater/simple_water.gd" id="1_vqgwg"]
 [ext_resource type="Shader" uid="uid://qwrwcgj6ueia" path="res://ch/SimpleWater/simple_water.gdshader" id="2_qusck"]
-[ext_resource type="Script" uid="uid://cxq1gyi7m7b7q" path="res://ch/round_manager.gd" id="2_sr7m5"]
-[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="3_1lm63"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="3_lojg1"]
 [ext_resource type="Material" uid="uid://biyawm8nwgiiq" path="res://res/moss_level_white_material.tres" id="4_0t6gl"]
-[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="4_7wmgb"]
 [ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="5_kk2e5"]
-[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="5_nqxp5"]
-[ext_resource type="Script" uid="uid://tyrtfghjsjni" path="res://lib/deferred_menu_loader.gd" id="6_nauet"]
 [ext_resource type="Material" uid="uid://wjavjdaqqsvj" path="res://res/UI_brown_mat.tres" id="6_wmxsq"]
-[ext_resource type="Script" uid="uid://dl73eie0p7fwm" path="res://lib/level_music_control.gd" id="7_bbxcm"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="7_yxy2u"]
 [ext_resource type="PackedScene" uid="uid://c3mxy8tvyd34a" path="res://unfiled/Blender_custom_assets/brick_fountain_2.glb" id="8_1mn88"]
-[ext_resource type="AudioStream" uid="uid://b6da3lywd7cys" path="res://sfx/USERSONG166.ogg" id="8_ukprp"]
-[ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="9_i8xs6"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="9_qmxp7"]
 [ext_resource type="Texture2D" uid="uid://b830br7pig61j" path="res://res/Kenney_prototype_textures/Dark/texture_08.png" id="10_nhgil"]
-[ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="10_vq3d2"]
 [ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="11_iv7rj"]
-[ext_resource type="Script" uid="uid://b48ifaelune2q" path="res://vfx/vfx_pool_manager.gd" id="11_s076v"]
 [ext_resource type="Material" uid="uid://bl3gllx7weywe" path="res://ch/Egg/Materials/Egg_cage_orange.tres" id="12_re8ro"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_rock_destroy.tscn" id="12_rv718"]
 [ext_resource type="Material" uid="uid://bjtlwim75ionw" path="res://res/pedestal_mat_01.tres" id="13_at8v2"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_crate_destroy.tscn" id="13_m8ykt"]
 [ext_resource type="Material" uid="uid://blub6wy0nan72" path="res://res/pedestal_mat_02.tres" id="14_phoqx"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_crate_for_cash_destroy.tscn" id="14_wit6l"]
 [ext_resource type="Material" uid="uid://b1iy0q3013sms" path="res://res/Kenney_prototype_textures/Material_override/Light_texture.tres" id="15_04ovs"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_hazard_destroy.tscn" id="15_v2x3t"]
 [ext_resource type="PackedScene" uid="uid://dee8qfh0jrlf1" path="res://lib/Flag_rollout_Scene/FlagRollout.tscn" id="16_cfw1h"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_smokecan_destroy.tscn" id="16_hb6s7"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_rock_hit.tscn" id="17_8yuge"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="17_hc0jj"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_balloon_destroy.tscn" id="18_6ccap"]
 [ext_resource type="Texture2D" uid="uid://x5tjmkxr3qll" path="res://res/dirt_texture_01.png" id="18_yf0gs"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_orange_destroy.tscn" id="19_4bwqg"]
 [ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="19_q7xqw"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="20_f5ja6"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_orange_hit.tscn" id="20_xhfu1"]
 [ext_resource type="Texture2D" uid="uid://udb8jdxvl5d8" path="res://res/cloud-svgrepo-com.png" id="21_kfbjg"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_pineapple_destroy.tscn" id="21_rplcw"]
-[ext_resource type="Script" uid="uid://cgxjasj1ltgpx" path="res://ch/Rocks/rocks_sfx_manager.gd" id="22_t2wcd"]
-[ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="23_g6lr8"]
+[ext_resource type="PackedScene" uid="uid://ceab3modrlhg5" path="res://res/Shaders/water_mesh.tscn" id="23_m0xh2"]
 [ext_resource type="Texture2D" uid="uid://cmk72g2wr4ulq" path="res://res/mountains-svgrepo-com.png" id="23_y3exd"]
-[ext_resource type="PackedScene" uid="uid://cnf5uin71fgrj" path="res://ch/Rocks/CrateRigidBody.tscn" id="24_1xxex"]
-[ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="24_gtiyi"]
-[ext_resource type="AudioStream" uid="uid://m75w4o7bl00c" path="res://sfx/explosion_sfx_01.ogg" id="25_hjkci"]
-[ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="26_2d600"]
-[ext_resource type="PackedScene" uid="uid://cerjahby1oei4" path="res://ch/Rocks/Rock_Instance.tscn" id="28_4qthb"]
-[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="29_788xd"]
-[ext_resource type="AudioStream" uid="uid://b3wehdx2vkaob" path="res://sfx/opt_5.ogg" id="30_s0oae"]
-[ext_resource type="AudioStream" uid="uid://b6adyjr237ckn" path="res://sfx/opt_4.ogg" id="31_06dr0"]
-[ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="32_g2dsl"]
-[ext_resource type="AudioStream" uid="uid://cp1bi14xcue2e" path="res://sfx/a#_startInt.ogg" id="33_bq0om"]
-[ext_resource type="AudioStream" uid="uid://cwd4ue861klyx" path="res://sfx/2ndInt.ogg" id="34_l8wvo"]
-[ext_resource type="AudioStream" uid="uid://b8jsfrc6gqwd" path="res://sfx/3rdInt.ogg" id="35_b4rwt"]
-[ext_resource type="AudioStream" uid="uid://byhyspj0ng0gr" path="res://sfx/4thInt.ogg" id="36_heu6q"]
-[ext_resource type="AudioStream" uid="uid://bfg27yk2v8wom" path="res://sfx/5thInt.ogg" id="37_ulv6r"]
-[ext_resource type="AudioStream" uid="uid://dua25tojybkiv" path="res://sfx/6thInt.ogg" id="38_48wnc"]
-[ext_resource type="AudioStream" uid="uid://c87df1ylycoq2" path="res://sfx/7thInt.ogg" id="39_dp4ea"]
-[ext_resource type="AudioStream" uid="uid://bqqq2qfwp0uw8" path="res://sfx/8thInt.ogg" id="40_aysio"]
-[ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://ch/Player.tscn" id="41_cu8jf"]
-[ext_resource type="PackedScene" uid="uid://cafj0iwnxs1k3" path="res://ch/targets/ammo_reload_target.tscn" id="42_x8xtc"]
-[ext_resource type="Script" uid="uid://cbcv8383lu5sl" path="res://ch/splash_zone.gd" id="43_jheqg"]
-[ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="44_8ylnb"]
-[ext_resource type="AudioStream" uid="uid://b80q15yp4lvhc" path="res://sfx/water_splash_sfx_01.ogg" id="45_kkyhi"]
-[ext_resource type="AudioStream" uid="uid://bwulgbjlr2hv5" path="res://sfx/water_splash_sfx_02.ogg" id="46_pbkhm"]
-[ext_resource type="PackedScene" uid="uid://b6o112wnsu6a" path="res://ch/canvas_layers/starting_screen_canvaslayer.tscn" id="68_448cw"]
-[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="69_tj0js"]
-[ext_resource type="Script" uid="uid://5ws7ewjpdcpq" path="res://ch/HUD_components/quit_menu.gd" id="70_le0mw"]
-[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="71_438o7"]
-[ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="72_vkxci"]
-[ext_resource type="PackedScene" uid="uid://csc7dstgv81nb" path="res://ch/Timer/timer_main.tscn" id="73_myvlp"]
-[ext_resource type="Script" uid="uid://fcrm2j7og35e" path="res://ch/HUD_components/place_name.gd" id="74_mxnpt"]
-[ext_resource type="PackedScene" uid="uid://b8up6woqoujb3" path="res://ch/HUD_components/wave_number_text.tscn" id="75_ycwwb"]
-[ext_resource type="PackedScene" uid="uid://damsr4c1n8g60" path="res://ch/Shop/Shop_Main_Menu.tscn" id="76_ddbg4"]
-[ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="77_07lin"]
-[ext_resource type="PackedScene" uid="uid://b8lj768x0yxac" path="res://ch/debug/round_editor_menu.tscn" id="78_tbf3i"]
-[ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="79_eeg7y"]
-[ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="80_pt0y3"]
-[ext_resource type="PackedScene" path="res://ch/Rocks/Pineapple.tscn" id="81_u87l6"]
-[ext_resource type="Texture2D" uid="uid://cxk0yxen5f6sp" path="res://unfiled/Decal_placeholders/pineapple_1024x1024.png" id="82_s83eh"]
-[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="83_2pju2"]
-[ext_resource type="AudioStream" uid="uid://cgmf5xub0ewvx" path="res://sfx/pineapple_sound_3.ogg" id="84_r41nj"]
-[ext_resource type="AudioStream" uid="uid://w5iohymmpptg" path="res://sfx/score_tally_sfx.ogg" id="85_7mue1"]
-[ext_resource type="Script" uid="uid://bns2a7l7rdc41" path="res://ch/targets/orange_bombs.gd" id="86_gt2ho"]
-[ext_resource type="PackedScene" path="res://ch/Rocks/Orange.tscn" id="87_u0u1k"]
-[ext_resource type="Script" uid="uid://dv0lm0lx1nico" path="res://ch/Balllons/balloon_container.gd" id="88_rc6nt"]
-[ext_resource type="PackedScene" path="res://ch/Rocks/Balloon.tscn" id="89_tjsoa"]
-[ext_resource type="Script" uid="uid://byuybau4gp23h" path="res://ch/Balllons/player_balloon_container.gd" id="90_4gddr"]
-[ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="91_2xk8e"]
-[ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="92_sbrah"]
-[ext_resource type="Script" uid="uid://cw36fy6a37j1h" path="res://ch/bonus_rounds/bonus_target_manager.gd" id="93_3j6bm"]
-[ext_resource type="Script" uid="uid://jrsa7e3mhuxu" path="res://ch/wall_puzzle_setup.gd" id="94_jr4k4"]
-[ext_resource type="AudioStream" uid="uid://pqc60gfwwbnp" path="res://sfx/low_pitch_humming_loop.ogg" id="95_m18md"]
-[ext_resource type="AudioStream" uid="uid://ub17xcey7moy" path="res://sfx/sfx-click.ogg" id="96_mdj6d"]
-
-[sub_resource type="Curve3D" id="Curve3D_gr7pb"]
-bake_interval = 5.0
-_data = {
-"points": PackedVector3Array(0, 0, 0, 118.694, 3.755, 135, -5.77, 1.5, 0, 100, 34.74, 0, -74, -16.5, -27.5, -190, 10, 180),
-"tilts": PackedFloat32Array(0, 0)
-}
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_7gshx"]
-_data = [Vector2(0, 0.846895), 0.0, -0.154856, 0, 0, Vector2(0.773371, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5w5l"]
-shading_mode = 0
-
-[sub_resource type="BoxMesh" id="BoxMesh_r5w5l"]
-material = SubResource("StandardMaterial3D_r5w5l")
-size = Vector3(0.05, 30, 0.05)
-
-[sub_resource type="BoxMesh" id="BoxMesh_mdemw"]
-size = Vector3(0.276, 0.502, 0.007)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_ymbdo"]
-size = Vector3(40, 1, 9.025)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_fjxa8"]
-size = Vector3(4000, 0.1, 4000)
-
-[sub_resource type="Gradient" id="Gradient_an2hp"]
-offsets = PackedFloat32Array(0, 0.1756374, 0.305949, 0.38243628)
-colors = PackedColorArray(0, 0.4862745, 0.7490196, 1, 0.06710001, 0.18472837, 0.61, 1, 0.11555753, 0.23940638, 0.5091781, 1, 0.144, 0.2715, 0.45, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_43pd7"]
-gradient = SubResource("Gradient_an2hp")
-
-[sub_resource type="Curve" id="Curve_nh3e2"]
-_data = [Vector2(0, 0.673668), 0.0, 0.0, 0, 0, Vector2(0.15567282, 1), 0.0, 0.0, 0, 0, Vector2(0.2480211, 0.673668), 0.0, 0.0, 0, 0, Vector2(0.31134564, 1), 0.0, 0.0, 0, 0, Vector2(0.44327173, 0.6936475), 0.0, 0.0, 0, 0, Vector2(0.52242744, 1), 0.0, 0.0, 0, 0, Vector2(0.6094987, 0.6403688), 0.0, 0.0, 0, 0, Vector2(0.6622691, 1), 0.0, 0.0, 0, 0, Vector2(0.74670184, 0.6403688), 0.0, 0.0, 0, 0, Vector2(0.8680739, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 11
-
-[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_84tyu"]
-curve_x = SubResource("Curve_nh3e2")
-curve_y = SubResource("Curve_nh3e2")
-curve_z = SubResource("Curve_nh3e2")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_84tyu"]
-lifetime_randomness = 1.0
-emission_shape_scale = Vector3(1, 1, 0)
-direction = Vector3(0, 0, 0)
-spread = 180.0
-initial_velocity_min = 3.0
-initial_velocity_max = 4.0
-radial_velocity_min = -2.2351742e-05
-radial_velocity_max = -2.2351742e-05
-gravity = Vector3(0, -2, 0)
-scale_min = 0.5
-scale_curve = SubResource("CurveXYZTexture_84tyu")
-color_ramp = SubResource("GradientTexture1D_43pd7")
-hue_variation_min = -0.020000022
-hue_variation_max = 0.019999977
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u26ts"]
-transparency = 1
-cull_mode = 1
-vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("44_8ylnb")
-
-[sub_resource type="QuadMesh" id="QuadMesh_k3oa0"]
-material = SubResource("StandardMaterial3D_u26ts")
-size = Vector2(0.15, 0.15)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wv0tc"]
-no_depth_test = true
-shading_mode = 0
-albedo_color = Color(1, 0, 0, 1)
-uv1_scale = Vector3(0.5, 0.5, 0.5)
-uv1_offset = Vector3(0.25, 0.25, 0.25)
-uv1_triplanar = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_ymbdo"]
-size = Vector3(40, 0.1, 0.1)
+[ext_resource type="Shader" uid="uid://bmrn11o7r2l76" path="res://res/Shaders/water.gdshader" id="24_vqgwg"]
+[ext_resource type="PackedScene" uid="uid://bdgpfw3241vuc" path="res://sc/All_level_layouts/CrateForCash.tscn" id="25_b4ack"]
+[ext_resource type="Script" uid="uid://cg6xll53va6hj" path="res://sc/All_level_layouts/crossy_bridge_scroll.gd" id="layout_scroll"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_md1in"]
 render_priority = 0
@@ -195,7 +43,7 @@ shader_parameter/wave_secondary = 0.55
 shader_parameter/wave_tertiary = 0.28
 shader_parameter/freeze_time = false
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_ke32s"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_qusck"]
 size = Vector2(150, 312.865)
 subdivide_width = 24
 subdivide_depth = 24
@@ -704,9 +552,6 @@ texture_filter = 5
 [sub_resource type="BoxMesh" id="BoxMesh_3vvr1"]
 size = Vector3(28, 1, 39)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_3vvr1"]
-size = Vector3(27, 1, 39)
-
 [sub_resource type="CylinderMesh" id="CylinderMesh_sx8tb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_88r7l"]
@@ -989,810 +834,56 @@ radius = 26.761719
 [sub_resource type="BoxShape3D" id="BoxShape3D_i42jn"]
 size = Vector3(250, 1, 250)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ec2we"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ymbdo"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gspdd"]
-bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_24t6b"]
-bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.15, 0.15, 1)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8xhv2"]
-bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="Theme" id="Theme_r5w5l"]
-Button/styles/normal = SubResource("StyleBoxFlat_gspdd")
-Panel/styles/panel = SubResource("StyleBoxFlat_24t6b")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_8xhv2")
-
-[sub_resource type="PrismMesh" id="PrismMesh_vycyu"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_an2hp"]
-
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_43pd7"]
-points = PackedVector3Array(-1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, 1)
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
-bounce = 0.5
-
-[sub_resource type="Curve" id="Curve_ymbdo"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_fuvvr"]
-curve = SubResource("Curve_ymbdo")
-
-[sub_resource type="Curve" id="Curve_wv0tc"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_3gdew"]
-curve = SubResource("Curve_wv0tc")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gf2tl"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(980, 580, 1)
-spread = 180.0
-gravity = Vector3(0, 0, 0)
-attractor_interaction_enabled = false
-scale_min = 10.0
-scale_max = 10.0
-scale_curve = SubResource("CurveTexture_3gdew")
-color = Color(1.8247963, 1.4387401, 0, 1)
-alpha_curve = SubResource("CurveTexture_fuvvr")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_24t6b"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 450.0
-initial_velocity_max = 500.0
-angular_velocity_min = -180.0
-angular_velocity_max = 180.0
-gravity = Vector3(0, 0, 0)
-scale_min = 0.099999994
-scale_max = 0.19999999
-scale_curve = SubResource("CurveTexture_3gdew")
-alpha_curve = SubResource("CurveTexture_fuvvr")
-
-[node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "round_timer", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
-script = ExtResource("1_4ncdc")
-intro_title_screen = true
-player = NodePath("Player")
-round_manager = NodePath("Round_manager")
-round_timer = NodePath("MainGameCanvasLayer/Timer")
-splash_screen = NodePath("SplashScreenCanvasLayer")
-music_manager = NodePath("Music")
-main_game_canvas = NodePath("MainGameCanvasLayer")
-
-[node name="Round_manager" type="Node" parent="." unique_id=1922089945 node_paths=PackedStringArray("player", "shop_main_menu", "round_timer", "place_name", "rocks_container", "music_manager", "birds", "balloon_container", "blue_balloon", "bonus_target_manager", "level_layout", "wave_progress_indication", "wave_progress_feedback") groups=["restartable", "round_manager"]]
-script = ExtResource("2_sr7m5")
-orange_black_rock_instant_explode = true
-player = NodePath("../Player")
-shop_main_menu = NodePath("../MainGameCanvasLayer/Shop_Main_Menu")
-round_timer = NodePath("../MainGameCanvasLayer/Timer")
-place_name = NodePath("../MainGameCanvasLayer/Place_name")
-rocks_container = NodePath("../Rocks")
-music_manager = NodePath("../Music")
-birds = NodePath("../BirdsFlightPath/PathFollow3D/Bird_fly_by_helpers")
-balloon_container = NodePath("../Balloon_container")
-blue_balloon = NodePath("../PlayerBalloon")
-bonus_target_manager = NodePath("../BonusTargetManager")
-level_layout = NodePath("../Level_Visual")
-wave_progress_indication = NodePath("../MainGameCanvasLayer/WaveProgressIndication")
-wave_progress_feedback = NodePath("../MainGameCanvasLayer/WaveProgressIndication/Wave_Text")
-
-[node name="Gold_sfx" type="AudioStreamPlayer" parent="Round_manager" unique_id=1819342297]
-stream = ExtResource("3_1lm63")
-volume_db = -10.0
-pitch_scale = 0.7
-max_polyphony = 2
-
-[node name="EggPulseSfx" type="AudioStreamPlayer" parent="Round_manager" unique_id=1557976174]
-stream = ExtResource("4_7wmgb")
-volume_db = -28.0
-
-[node name="EggPulseSfxReverse" type="AudioStreamPlayer" parent="Round_manager" unique_id=48288102]
-stream = ExtResource("5_nqxp5")
-volume_db = -30.0
-
-[node name="DeferredMenuLoader" type="Node" parent="." unique_id=991991991]
-script = ExtResource("6_nauet")
-canvas_layer_path = NodePath("MainGameCanvasLayer")
-round_manager_path = NodePath("Round_manager")
-start_menu_path = NodePath("MainGameCanvasLayer/Start_menu_shop_clone")
-
-[node name="Music" type="Node" parent="." unique_id=1760506893 node_paths=PackedStringArray("opening_song") groups=["level_music"]]
-script = ExtResource("7_bbxcm")
-opening_song = NodePath("Opening_song")
-background_music_vol_out_of_shop = -45.0
-
-[node name="Birds" type="AudioStreamPlayer" parent="Music" unique_id=1760180170]
-volume_db = -45.0
-
-[node name="Birds4" type="AudioStreamPlayer" parent="Music" unique_id=1693840937]
-volume_db = -35.0
-
-[node name="Birds5" type="AudioStreamPlayer" parent="Music" unique_id=348778646]
-volume_db = -38.0
-
-[node name="Birds2" type="AudioStreamPlayer" parent="Music" unique_id=1520904327]
-volume_db = -35.0
-
-[node name="Birds3" type="AudioStreamPlayer" parent="Music" unique_id=1611956174]
-volume_db = -49.0
-
-[node name="Flag" type="AudioStreamPlayer" parent="Music" unique_id=537681908]
-volume_db = -45.0
-pitch_scale = 0.8
-
-[node name="WindNoises" type="AudioStreamPlayer" parent="Music" unique_id=1363719912]
-volume_db = -23.0
-
-[node name="NightNoises" type="AudioStreamPlayer" parent="Music" unique_id=1949811683]
-volume_db = -54.0
-
-[node name="Opening_song" type="AudioStreamPlayer" parent="Music" unique_id=940796054]
-volume_db = -35.0
-bus = &"MusicBus"
-
-[node name="BalloonsGoing" type="AudioStreamPlayer" parent="Music" unique_id=176486947]
-stream = ExtResource("8_ukprp")
-volume_db = -30.0
-bus = &"MusicBus"
-
-[node name="PerfectPineappleRound" type="AudioStreamPlayer" parent="Music" unique_id=1838793762]
-unique_name_in_owner = true
-stream = ExtResource("9_i8xs6")
-volume_db = -30.0
-pitch_scale = 0.9
-
-[node name="Shop_Music" type="AudioStreamPlayer" parent="Music" unique_id=800541780]
-volume_db = -20.0
-bus = &"MusicBus"
-
-[node name="BirdsFlightPath" type="Path3D" parent="." unique_id=659428985]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
-curve = SubResource("Curve3D_gr7pb")
-
-[node name="PathFollow3D" type="PathFollow3D" parent="BirdsFlightPath" unique_id=1230755136]
-transform = Transform3D(0.7509671, -0.013788617, 0.6601236, 4.6563725e-10, 0.99968433, 0.020883655, -0.6602613, -0.015682878, 0.7508105, -5.77, 1.5, 0)
-use_model_front = true
-loop = false
-
-[node name="Bird_fly_by_helpers" parent="BirdsFlightPath/PathFollow3D" unique_id=1451433032 instance=ExtResource("10_vq3d2")]
-flight_speed_curve = SubResource("Curve_7gshx")
-speed_multiplier = 60.0
-
-[node name="PigeonAimMarkers" type="Node3D" parent="." unique_id=1888004100]
-
-[node name="1" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004101]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.1567, 0, 43.0337)
-
-[node name="2" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004102]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.4657, 0, 43.9932)
-
-[node name="3" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004103]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.7068, 0, 44.6367)
-
-[node name="4" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004104]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9068, 0, 44.9596)
-
-[node name="5" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004105]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9068, 0, 44.9596)
-
-[node name="6" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004106]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7068, 0, 44.6367)
-
-[node name="7" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004107]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.4657, 0, 43.9932)
-
-[node name="8" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004108]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.1567, 0, 43.0337)
-
-[node name="VfxPool" type="Node3D" parent="." unique_id=782836845 groups=["vfx_pool"]]
-script = ExtResource("11_s076v")
-scene_rock_destroy = ExtResource("12_rv718")
-scene_crate_destroy = ExtResource("13_m8ykt")
-scene_crate_for_cash_destroy = ExtResource("14_wit6l")
-scene_hazard_destroy = ExtResource("15_v2x3t")
-scene_smokecan_destroy = ExtResource("16_hb6s7")
-scene_rock_hit = ExtResource("17_8yuge")
-scene_balloon_destroy = ExtResource("18_6ccap")
-scene_orange_destroy = ExtResource("19_4bwqg")
-scene_orange_hit = ExtResource("20_xhfu1")
-scene_pineapple_destroy = ExtResource("21_rplcw")
-
-[node name="CratesSFXManager" type="Node" parent="." unique_id=1928374650]
-script = ExtResource("22_t2wcd")
-sfx_group = &"crates_sfx"
-
-[node name="SFX" type="Node" parent="CratesSFXManager" unique_id=1928374651]
-
-[node name="crate_hit_sound" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374652]
-stream = ExtResource("23_g6lr8")
-volume_db = -23.0
-max_polyphony = 2
-
-[node name="crate_hitSound" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374653]
-stream = ExtResource("24_gtiyi")
-volume_db = -35.0
-max_polyphony = 2
-
-[node name="crate_explosion_sfx" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374654]
-stream = ExtResource("25_hjkci")
-volume_db = -30.0
-max_polyphony = 2
-
-[node name="crate_destroy_sfx" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374655]
-stream = ExtResource("24_gtiyi")
-volume_db = -22.0
-max_polyphony = 4
-
-[node name="Rocks" type="Node3D" parent="." unique_id=859468523 node_paths=PackedStringArray("pigeon_aim_markers", "telegraph_columns", "debug_visualiser")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
-script = ExtResource("26_2d600")
-randomize_later_waves = false
-pigeon_aim_markers = NodePath("../PigeonAimMarkers")
-telegraph_columns = NodePath("Columns2")
-debug_visualiser = NodePath("DebugVisualiser")
-telegraph_lead_sec = 0.0
-telegraph_blink_color = Color(1.8247963, 1.2783784, 0.39935833, 1)
-telegraph_blink_on_sec = 0.2
-telegraph_gap_between_rocks_sec = 0.0
-telegraph_sfx_volume_db = -30.0
-oob_miss_shake_amount = 0.5
-
-[node name="DebugVisualiser" type="Node3D" parent="Rocks" unique_id=1321570169]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.81, 0.25)
-visible = false
-
-[node name="Column1" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1494068997]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column1" unique_id=957156339]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "1"
-font_size = 363
-
-[node name="Column2" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=756792632]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column2" unique_id=776624174]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "2"
-font_size = 363
-
-[node name="Column3" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1204986257]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column3" unique_id=1781802579]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.49999976, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "3"
-font_size = 363
-
-[node name="Column4" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=876816692]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column4" unique_id=1949995617]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "4"
-font_size = 363
-
-[node name="Column5" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=663355396]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column5" unique_id=1623821103]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.50000006, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "5"
-font_size = 363
-
-[node name="Column6" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1317091329]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column6" unique_id=1951433967]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.49999976, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "6"
-font_size = 363
-
-[node name="Column7" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=866795825]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column7" unique_id=1837264852]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "7"
-font_size = 363
-
-[node name="Column8" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1471829065]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/Column8" unique_id=1414520683]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.5, 7.6, -0.5)
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "8"
-font_size = 363
-
-[node name="RowA" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1554108687]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 6.5, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/RowA" unique_id=5275279]
-transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
-visible = false
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "A"
-font_size = 363
-
-[node name="RowA2" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=936778820]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 3.5, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/RowA2" unique_id=154806771]
-transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
-visible = false
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "B"
-font_size = 363
-
-[node name="RowA3" type="MeshInstance3D" parent="Rocks/DebugVisualiser" unique_id=1764665298]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("BoxMesh_r5w5l")
-
-[node name="Label3D" type="Label3D" parent="Rocks/DebugVisualiser/RowA3" unique_id=283320935]
-transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0.59999895, -10.500001, -0.5)
-visible = false
-pixel_size = 0.0002
-no_depth_test = true
-fixed_size = true
-text = "C"
-font_size = 363
-
-[node name="Columns2" type="Node3D" parent="Rocks" unique_id=1595594875]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.88, -22.75)
-
-[node name="Column1" type="MeshInstance3D" parent="Rocks/Columns2" unique_id=403936877]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.769, -2.614, 19.556)
-material_override = ExtResource("5_kk2e5")
-mesh = SubResource("BoxMesh_mdemw")
-skeleton = NodePath("../../..")
-
-[node name="Column2" type="MeshInstance3D" parent="Rocks/Columns2" unique_id=1351801926]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.115, -2.614, 19.556)
-material_override = ExtResource("5_kk2e5")
-mesh = SubResource("BoxMesh_mdemw")
-skeleton = NodePath("../../..")
-
-[node name="Column3" type="MeshInstance3D" parent="Rocks/Columns2" unique_id=1329101575]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.413, -2.614, 19.556)
-material_override = ExtResource("5_kk2e5")
-mesh = SubResource("BoxMesh_mdemw")
-skeleton = NodePath("../../..")
-
-[node name="Column4" type="MeshInstance3D" parent="Rocks/Columns2" unique_id=30188870]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.722, -2.614, 19.556)
-material_override = ExtResource("5_kk2e5")
-mesh = SubResource("BoxMesh_mdemw")
-skeleton = NodePath("../../..")
-
-[node name="Column5" type="MeshInstance3D" parent="Rocks/Columns2" unique_id=1590436270]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.939, -2.614, 19.556)
-material_override = ExtResource("5_kk2e5")
-mesh = SubResource("BoxMesh_mdemw")
-skeleton = NodePath("../../..")
-
-[node name="Column6" type="MeshInstance3D" parent="Rocks/Columns2" unique_id=1722808204]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.636, -2.614, 19.556)
-material_override = ExtResource("5_kk2e5")
-mesh = SubResource("BoxMesh_mdemw")
-skeleton = NodePath("../../..")
-
-[node name="Column7" type="MeshInstance3D" parent="Rocks/Columns2" unique_id=1506343298]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.317, -2.614, 19.556)
-material_override = ExtResource("5_kk2e5")
-mesh = SubResource("BoxMesh_mdemw")
-skeleton = NodePath("../../..")
-
-[node name="Column8" type="MeshInstance3D" parent="Rocks/Columns2" unique_id=1741042433]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.957, -2.614, 19.556)
-material_override = ExtResource("5_kk2e5")
-mesh = SubResource("BoxMesh_mdemw")
-skeleton = NodePath("../../..")
-
-[node name="Container_1" type="Node3D" parent="Rocks" unique_id=189760907]
-
-[node name="Rock_Instance" parent="Rocks/Container_1" unique_id=1089661090 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4728577, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance2" parent="Rocks/Container_1" unique_id=641614515 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8336112, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance3" parent="Rocks/Container_1" unique_id=977217555 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.658868, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance4" parent="Rocks/Container_1" unique_id=614925084 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.798102, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance5" parent="Rocks/Container_1" unique_id=1804095401 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5083055, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance6" parent="Rocks/Container_1" unique_id=1648636095 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.63919, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance7" parent="Rocks/Container_1" unique_id=1588486015 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.451482, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance8" parent="Rocks/Container_1" unique_id=2122944651 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5166283, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance9" parent="Rocks/Container_1" unique_id=1306876008 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.997283, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance10" parent="Rocks/Container_1" unique_id=702490276 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4127793, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance11" parent="Rocks/Container_1" unique_id=1826283916 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6957083, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance12" parent="Rocks/Container_1" unique_id=1936738185 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4926226, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance13" parent="Rocks/Container_1" unique_id=511030969 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.390077, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance14" parent="Rocks/Container_1" unique_id=869067105 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.036045, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance15" parent="Rocks/Container_1" unique_id=221535877 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3772593, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance16" parent="Rocks/Container_1" unique_id=1814951285 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.077259, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance17" parent="Rocks/Container_1" unique_id=446462659 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.977259, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance18" parent="Rocks/Container_1" unique_id=713812521 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.077259, -0.08000016, 0.42000008)
-
-[node name="Rock_Instance19" parent="Rocks/Container_1" unique_id=1621520787 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5271423, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance20" parent="Rocks/Container_1" unique_id=924788179 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1663888, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance21" parent="Rocks/Container_1" unique_id=1579382370 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.34113216, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance22" parent="Rocks/Container_1" unique_id=879928436 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7981019, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance23" parent="Rocks/Container_1" unique_id=1264178888 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.49169445, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance24" parent="Rocks/Container_1" unique_id=2075105464 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6391902, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance25" parent="Rocks/Container_1" unique_id=1756196015 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5485182, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance26" parent="Rocks/Container_1" unique_id=675561590 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4833717, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance27" parent="Rocks/Container_1" unique_id=1472172333 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.997283, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance28" parent="Rocks/Container_1" unique_id=2061574200 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5872207, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance29" parent="Rocks/Container_1" unique_id=1790571121 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30429173, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance30" parent="Rocks/Container_1" unique_id=972613179 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5073774, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance31" parent="Rocks/Container_1" unique_id=1386112966 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.609923, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance32" parent="Rocks/Container_1" unique_id=264452137 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0360451, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance33" parent="Rocks/Container_1" unique_id=1007180806 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3772593, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance34" parent="Rocks/Container_1" unique_id=371028162 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.077259, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance35" parent="Rocks/Container_1" unique_id=427420436 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9772587, -0.08000016, 1.2199993)
-
-[node name="Rock_Instance36" parent="Rocks/Container_1" unique_id=598201547 instance=ExtResource("28_4qthb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.077259, -0.08000016, 1.2199993)
-
-[node name="Gold_sfx" type="AudioStreamPlayer" parent="Rocks" unique_id=951137588]
-stream = ExtResource("3_1lm63")
-volume_db = -10.0
-pitch_scale = 0.7
-max_polyphony = 2
-
-[node name="TelegraphSFX" type="AudioStreamPlayer" parent="Rocks" unique_id=951137589]
-stream = ExtResource("3_1lm63")
-volume_db = -35.0
-pitch_scale = 2.0
-max_polyphony = 4
-
-[node name="pitch_shift_rock_sound" type="AudioStreamPlayer" parent="Rocks" unique_id=1051112971]
-stream = ExtResource("3_1lm63")
-volume_db = -16.0
-pitch_scale = 1.2
-
-[node name="RocksSFXManager" type="Node" parent="Rocks" unique_id=1219644859]
-script = ExtResource("22_t2wcd")
-
-[node name="SFX" type="Node" parent="Rocks/RocksSFXManager" unique_id=398147261]
-
-[node name="rock_hitSound" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1153309406]
-unique_name_in_owner = true
-stream = ExtResource("24_gtiyi")
-volume_db = -35.0
-max_polyphony = 2
-
-[node name="cash_bonus_sfx" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1620849333]
-unique_name_in_owner = true
-stream = ExtResource("29_788xd")
-volume_db = -30.0
-max_polyphony = 2
-
-[node name="hazard_hit_sound" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1348718860]
-unique_name_in_owner = true
-stream = ExtResource("24_gtiyi")
-volume_db = -32.0
-pitch_scale = 0.5
-
-[node name="rock_hit_sound" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=847913602]
-unique_name_in_owner = true
-stream = ExtResource("23_g6lr8")
-volume_db = -23.0
-max_polyphony = 2
-
-[node name="outofBoundsSFX" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1176381350]
-unique_name_in_owner = true
-stream = ExtResource("23_g6lr8")
-volume_db = -80.0
-pitch_scale = 1.1
-max_polyphony = 2
-
-[node name="rock_marked_sfx" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=598019690]
-unique_name_in_owner = true
-stream = ExtResource("23_g6lr8")
-volume_db = -25.0
-pitch_scale = 1.2
-
-[node name="rock_explosion_sfx" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=294596012]
-unique_name_in_owner = true
-stream = ExtResource("25_hjkci")
-volume_db = -30.0
-max_polyphony = 2
-
-[node name="Freeze_sfx" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1398945972]
-unique_name_in_owner = true
-stream = ExtResource("30_s0oae")
-volume_db = -26.0
-
-[node name="Freeze_sfx2" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=2053486436]
-unique_name_in_owner = true
-stream = ExtResource("31_06dr0")
-volume_db = -35.0
-
-[node name="rock_flicker_sfx" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=648503885]
-unique_name_in_owner = true
-stream = ExtResource("3_1lm63")
-volume_db = -22.0
-pitch_scale = 0.85
-
-[node name="rock_launch_sound" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=843696323]
-unique_name_in_owner = true
-stream = ExtResource("32_g2dsl")
-volume_db = -43.0
-pitch_scale = 3.2
-max_polyphony = 10
-
-[node name="launched_into_distance_3d" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1773884973]
-stream = ExtResource("32_g2dsl")
-volume_db = -20.0
-pitch_scale = 2.0
-max_polyphony = 8
-
-[node name="PianoNotesSFX" type="Node" parent="Rocks/RocksSFXManager" unique_id=890040565]
-
-[node name="launch_flick" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=19710977]
-stream = ExtResource("3_1lm63")
-volume_db = -29.0
-pitch_scale = 0.8
-
-[node name="1" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=642236541]
-stream = ExtResource("33_bq0om")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="2" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=2128760860]
-stream = ExtResource("34_l8wvo")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="3" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=417658203]
-stream = ExtResource("35_b4rwt")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="4" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=452249262]
-stream = ExtResource("36_heu6q")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="5" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=1942782523]
-stream = ExtResource("37_ulv6r")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="6" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=2002803183]
-stream = ExtResource("38_48wnc")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="7" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=82412626]
-stream = ExtResource("39_dp4ea")
-volume_db = -50.0
-bus = &"ReverbBus"
-
-[node name="8" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=765474263]
-stream = ExtResource("40_aysio")
-volume_db = -70.0
-bus = &"ReverbBus"
-
-[node name="SolidPlatformforRocks" type="StaticBody3D" parent="Rocks" unique_id=1202508704]
-collision_layer = 7
-collision_mask = 7
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Rocks/SolidPlatformforRocks" unique_id=1619768210]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2012472, 0)
-shape = SubResource("BoxShape3D_ymbdo")
-debug_color = Color(0, 1, 0, 1)
-
-[node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("41_cu8jf")]
-unique_name_in_owner = true
-transform = Transform3D(-1, -1.4472306e-08, -1.5030065e-07, 0, 0.9953962, -0.09584575, 1.509958e-07, -0.09584575, -0.9953962, 0, -0.875, 0.5)
-roundManager = NodePath("../Round_manager")
-
-[node name="AmmoReloadTarget" parent="." unique_id=1821285975 instance=ExtResource("42_x8xtc")]
-transform = Transform3D(0.446, 0, 0, 0, 0.446, 0, 0, 0, 0.446, 2.994, -21.959, 19.628)
-visible = false
-
-[node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.045, 0)
-visible = false
-collision_layer = 258
-collision_mask = 259
-monitorable = false
-script = ExtResource("43_jheqg")
-round_manager = NodePath("../Round_manager")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Splash_zone" unique_id=915563512]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1982.4)
-shape = SubResource("BoxShape3D_fjxa8")
-disabled = true
-
-[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Splash_zone" unique_id=1899438336]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 10)
-depth = 0.1
-polygon = PackedVector2Array(-20, 0, -2000, -4000, 2000, -4000, 20, 0)
-debug_color = Color(0.58333325, 0.7, 0, 1)
-
-[node name="GPUParticles3D" type="GPUParticles3D" parent="Splash_zone" unique_id=1142810847]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.2624941, 0.4667511)
-emitting = false
-amount = 30
-lifetime = 2.0
-one_shot = true
-explosiveness = 0.9
-fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_84tyu")
-draw_pass_1 = SubResource("QuadMesh_k3oa0")
-
-[node name="splash_sfx_01" type="AudioStreamPlayer" parent="Splash_zone" unique_id=28607076]
-stream = ExtResource("45_kkyhi")
-volume_db = -18.0
-
-[node name="splash_sfx_02" type="AudioStreamPlayer" parent="Splash_zone" unique_id=911794202]
-stream = ExtResource("46_pbkhm")
-volume_db = -18.0
-
-[node name="Visual" type="MeshInstance3D" parent="Splash_zone" unique_id=1883425194]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 23)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Splash_zone/Visual" unique_id=1358077586]
-material_override = SubResource("StandardMaterial3D_wv0tc")
-mesh = SubResource("BoxMesh_ymbdo")
-skeleton = NodePath("../..")
-
-[node name="Level_Visual" type="Node3D" parent="." unique_id=1485757792]
-
-[node name="Moss" type="Node3D" parent="Level_Visual" unique_id=229302118]
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Level_Visual/Moss" unique_id=1419458972 groups=["directional_light"]]
+[sub_resource type="QuadMesh" id="QuadMesh_lojg1"]
+size = Vector2(300, 200)
+subdivide_width = 200
+subdivide_depth = 200
+orientation = 1
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0t6gl"]
+noise_type = 3
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_i0fdo"]
+noise = SubResource("FastNoiseLite_0t6gl")
+seamless = true
+as_normal_map = true
+bump_strength = 1.5
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kk2e5"]
+noise_type = 3
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_hyrjw"]
+noise = SubResource("FastNoiseLite_kk2e5")
+seamless = true
+as_normal_map = true
+bump_strength = 1.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wmxsq"]
+render_priority = 0
+shader = ExtResource("24_vqgwg")
+shader_parameter/albedo = Color(2.887845e-06, 0.4731052, 0.6270959, 1)
+shader_parameter/metallic = 0.0
+shader_parameter/roughness = 0.4450000211375
+shader_parameter/texture_normal = SubResource("NoiseTexture2D_i0fdo")
+shader_parameter/texture_normal2 = SubResource("NoiseTexture2D_hyrjw")
+shader_parameter/wave_direction = Vector2(0, -1)
+shader_parameter/wave_direction2 = Vector2(0, -1)
+shader_parameter/time_scale = 0.01999999955296
+
+[sub_resource type="BoxMesh" id="BoxMesh_lojg1"]
+size = Vector3(1, 5, 1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_0t6gl"]
+data = PackedVector3Array(-0.5, 2.5, 0.5, 0.5, 2.5, 0.5, -0.5, -2.5, 0.5, 0.5, 2.5, 0.5, 0.5, -2.5, 0.5, -0.5, -2.5, 0.5, 0.5, 2.5, -0.5, -0.5, 2.5, -0.5, 0.5, -2.5, -0.5, -0.5, 2.5, -0.5, -0.5, -2.5, -0.5, 0.5, -2.5, -0.5, 0.5, 2.5, 0.5, 0.5, 2.5, -0.5, 0.5, -2.5, 0.5, 0.5, 2.5, -0.5, 0.5, -2.5, -0.5, 0.5, -2.5, 0.5, -0.5, 2.5, -0.5, -0.5, 2.5, 0.5, -0.5, -2.5, -0.5, -0.5, 2.5, 0.5, -0.5, -2.5, 0.5, -0.5, -2.5, -0.5, 0.5, 2.5, 0.5, -0.5, 2.5, 0.5, 0.5, 2.5, -0.5, -0.5, 2.5, 0.5, -0.5, 2.5, -0.5, 0.5, 2.5, -0.5, -0.5, -2.5, 0.5, 0.5, -2.5, 0.5, -0.5, -2.5, -0.5, 0.5, -2.5, 0.5, 0.5, -2.5, -0.5, -0.5, -2.5, -0.5)
+
+[node name="Moss2" type="Node3D" unique_id=229302118]
+script = ExtResource("layout_scroll")
+lerp_duration = 0.5
+reset_lerp_duration = 1.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true
 transform = Transform3D(-0.50000006, -0.04079538, -0.86506397, 0, 0.9988898, -0.047106452, 0.8660254, -0.023553228, -0.499445, 40, 80, 60)
 light_color = Color(1, 0.7435, 0.43, 1)
@@ -1810,109 +901,118 @@ directional_shadow_blend_splits = true
 directional_shadow_max_distance = 520.0
 sky_mode = 1
 
-[node name="SimpleWater" type="Node3D" parent="Level_Visual/Moss" unique_id=1041667159]
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="." unique_id=1493856914 groups=["directional_light"]]
+unique_name_in_owner = true
+transform = Transform3D(0.94832367, 0.07353469, -0.3086663, 0, 0.9727759, 0.2317479, 0.31730464, -0.21977201, 0.9225064, 0, 0, -1)
+light_color = Color(0.65, 0.47840002, 0.364, 1)
+light_energy = 1.5
+shadow_enabled = true
+directional_shadow_max_distance = 25.0
+sky_mode = 1
+
+[node name="SimpleWater" type="Node3D" parent="." unique_id=1041667159]
 transform = Transform3D(1, 0, 0, 0, 0.9999984, -0.0017453282, 0, 0.0017453282, 0.9999984, 3.36, -4.228, 177.888)
 script = ExtResource("1_vqgwg")
 water_size = Vector2(150, 312.865)
 subdivide = 24
 metadata/_custom_type_script = "uid://cwee1r4c8ea3p"
 
-[node name="Mesh" type="MeshInstance3D" parent="Level_Visual/Moss/SimpleWater" unique_id=650506395]
+[node name="Mesh" type="MeshInstance3D" parent="SimpleWater" unique_id=650506395]
 material_override = SubResource("ShaderMaterial_md1in")
 cast_shadow = 0
-mesh = SubResource("PlaneMesh_ke32s")
+mesh = SubResource("PlaneMesh_qusck")
 
-[node name="Emblem_3D" type="Node3D" parent="Level_Visual/Moss" unique_id=365948702]
+[node name="Emblem_3D" type="Node3D" parent="." unique_id=365948702]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 0.2, 9.4, 2.93, 19.66)
 
-[node name="W" type="MeshInstance3D" parent="Level_Visual/Moss/Emblem_3D" unique_id=499092404]
+[node name="W" type="MeshInstance3D" parent="Emblem_3D" unique_id=499092404]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_fwjsh")
 cast_shadow = 0
 mesh = SubResource("TextMesh_fwjsh")
 skeleton = NodePath("")
 
-[node name="Circle" type="MeshInstance3D" parent="Level_Visual/Moss/Emblem_3D" unique_id=1283789252]
+[node name="Circle" type="MeshInstance3D" parent="Emblem_3D" unique_id=1283789252]
 transform = Transform3D(-3.18, 0, 4.8016665e-07, 0, 3.18, 0, -4.8016665e-07, 0, -3.18, 0, 0.02580738, 0.030000687)
 cast_shadow = 0
 mesh = SubResource("TextMesh_2svof")
 skeleton = NodePath("")
 
-[node name="Circle2" type="MeshInstance3D" parent="Level_Visual/Moss/Emblem_3D" unique_id=451021924]
+[node name="Circle2" type="MeshInstance3D" parent="Emblem_3D" unique_id=451021924]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0.0079603195, 0.02744925, -0.03149128)
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_1vd3e")
 
-[node name="Emblem_3D2" type="Node3D" parent="Level_Visual/Moss" unique_id=1742034845]
+[node name="Emblem_3D2" type="Node3D" parent="." unique_id=1742034845]
 transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 0.2, -9.400002, 2.93, 19.66)
 
-[node name="W" type="MeshInstance3D" parent="Level_Visual/Moss/Emblem_3D2" unique_id=1172860492]
+[node name="W" type="MeshInstance3D" parent="Emblem_3D2" unique_id=1172860492]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_fwjsh")
 cast_shadow = 0
 mesh = SubResource("TextMesh_fwjsh")
 skeleton = NodePath("")
 
-[node name="Circle" type="MeshInstance3D" parent="Level_Visual/Moss/Emblem_3D2" unique_id=1420083700]
+[node name="Circle" type="MeshInstance3D" parent="Emblem_3D2" unique_id=1420083700]
 transform = Transform3D(-3.18, 0, 4.8016665e-07, 0, 3.18, 0, -4.8016665e-07, 0, -3.18, 0, 0.02580738, 0.030000687)
 cast_shadow = 0
 mesh = SubResource("TextMesh_2svof")
 skeleton = NodePath("")
 
-[node name="Circle2" type="MeshInstance3D" parent="Level_Visual/Moss/Emblem_3D2" unique_id=1231849896]
+[node name="Circle2" type="MeshInstance3D" parent="Emblem_3D2" unique_id=1231849896]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0.0079603195, 0.02744925, -0.03149128)
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_1vd3e")
 
-[node name="Boatmesh" type="Node3D" parent="Level_Visual/Moss" unique_id=2030877919]
+[node name="Boatmesh" type="Node3D" parent="." unique_id=2030877919]
 
-[node name="Pillar" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=623093765]
+[node name="Pillar" type="MeshInstance3D" parent="Boatmesh" unique_id=623093765]
 transform = Transform3D(0.46, 0, 0, 0, -0.46, 4.0214477e-08, 0, -4.0214477e-08, -0.46, -9.357407, 0, 20.15)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_x8ffe")
 skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Pillar" unique_id=3485877]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Pillar" unique_id=3485877]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Pillar/StaticBody3D" unique_id=1382278732]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Pillar/StaticBody3D" unique_id=1382278732]
 shape = SubResource("ConcavePolygonShape3D_1vd3e")
 
-[node name="Pillar2" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=853160674]
+[node name="Pillar2" type="MeshInstance3D" parent="Boatmesh" unique_id=853160674]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, -9.357407, 3, 20.15)
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_x8ffe")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Pillar2" unique_id=123257828]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Pillar2" unique_id=123257828]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Pillar2/StaticBody3D" unique_id=380663075]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Pillar2/StaticBody3D" unique_id=380663075]
 shape = SubResource("ConcavePolygonShape3D_2svof")
 
-[node name="Pillar3" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=271162901]
+[node name="Pillar3" type="MeshInstance3D" parent="Boatmesh" unique_id=271162901]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, 9.399999, 3, 20.15)
 material_override = ExtResource("6_wmxsq")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_x8ffe")
 skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Pillar3" unique_id=437919977]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Pillar3" unique_id=437919977]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Pillar3/StaticBody3D" unique_id=1559775023]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Pillar3/StaticBody3D" unique_id=1559775023]
 shape = SubResource("ConcavePolygonShape3D_u0cw1")
 
-[node name="Pillar4" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1076136885]
+[node name="Pillar4" type="MeshInstance3D" parent="Boatmesh" unique_id=1076136885]
 transform = Transform3D(0.46, 0, 0, 0, -0.46, 4.0214477e-08, 0, -4.0214477e-08, -0.46, 9.41, 0, 20.15)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_x8ffe")
 skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Pillar4" unique_id=1275934220]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Pillar4" unique_id=1275934220]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Pillar4/StaticBody3D" unique_id=302082156]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Pillar4/StaticBody3D" unique_id=302082156]
 shape = SubResource("ConcavePolygonShape3D_74xva")
 
-[node name="Quotes" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=10351786]
+[node name="Quotes" type="MeshInstance3D" parent="Boatmesh" unique_id=10351786]
 transform = Transform3D(-1.32, 0, -1.9931447e-07, 0, 1.32, 0, 1.9931447e-07, 0, -1.32, 4.6, -2.291, 11.3005905)
 material_override = SubResource("StandardMaterial3D_x8ffe")
 cast_shadow = 0
@@ -1920,252 +1020,250 @@ mesh = SubResource("TextMesh_snbl5")
 skeleton = NodePath("")
 script = ExtResource("7_yxy2u")
 
-[node name="brickRing" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1800679336]
+[node name="brickRing" type="MeshInstance3D" parent="Boatmesh" unique_id=1800679336]
 transform = Transform3D(0.09775001, 0, 0, 0, 0.28000003, 0, 0, 0, 0.24225001, 4.630125, -2.505, 11.775)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_ogtj0")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar4" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1971536597]
+[node name="Right_tall_pillar4" type="MeshInstance3D" parent="Boatmesh" unique_id=1971536597]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.582716, -2.4185681, 11.774998)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fyjqt")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Right_tall_pillar4" unique_id=1778057458]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Right_tall_pillar4" unique_id=1778057458]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Right_tall_pillar4/StaticBody3D" unique_id=1954168202]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Right_tall_pillar4/StaticBody3D" unique_id=1954168202]
 shape = SubResource("ConcavePolygonShape3D_qy441")
 
-[node name="brick_fountain_4" parent="Level_Visual/Moss/Boatmesh" unique_id=754689571 instance=ExtResource("8_1mn88")]
+[node name="brick_fountain_4" parent="Boatmesh" unique_id=754689571 instance=ExtResource("8_1mn88")]
 transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, -6.27, -2.505, 11.775)
 
-[node name="Cube_001" parent="Level_Visual/Moss/Boatmesh/brick_fountain_4" index="0" unique_id=1800679336]
+[node name="Cube_001" parent="Boatmesh/brick_fountain_4" index="0" unique_id=1800679336]
 transform = Transform3D(0.23000003, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57000005, 3.94353, 0, 0)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 
-[node name="Brick_wall_2" type="Node3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1643600064]
+[node name="Brick_wall_2" type="Node3D" parent="Boatmesh" unique_id=1643600064]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -1.5, 20.15)
 
-[node name="Cube_001" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=1644174907]
+[node name="Cube_001" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1644174907]
 transform = Transform3D(0.25, 0, 0, 0, 0.33, 0, 0, 0, 0.4, -8.29, -1.076, -0.509)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_cl50v")
 
-[node name="Cube_002" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=849807802]
+[node name="Cube_002" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=849807802]
 transform = Transform3D(0.25, 0, 0, 0, 0.33, 0, 0, 0, 0.4, 6.865, -1.076, -0.509)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_cl50v")
 skeleton = NodePath("")
 
-[node name="Wall" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=674074660]
+[node name="Wall" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=674074660]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 0)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_dv8gk")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Wall" unique_id=640863554]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Wall" unique_id=640863554]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Wall/StaticBody3D" unique_id=2060404257]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Wall/StaticBody3D" unique_id=2060404257]
 shape = SubResource("ConcavePolygonShape3D_md1in")
 
-[node name="Cube_004" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=1368513560]
+[node name="Cube_004" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1368513560]
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_o5bly")
 
-[node name="Right_tall_pillar" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=2051219897]
+[node name="Right_tall_pillar" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=2051219897]
 transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, -6.2, -1.4000001, -0.06386757)
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fyjqt")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar5" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=1758020979]
+[node name="Right_tall_pillar5" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1758020979]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.406, -0.895, -8.4)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fyjqt")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Right_tall_pillar5" unique_id=1432031197]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar5" unique_id=1432031197]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Right_tall_pillar5/StaticBody3D" unique_id=674370787]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Right_tall_pillar5/StaticBody3D" unique_id=674370787]
 shape = SubResource("ConcavePolygonShape3D_hj3yw")
 
-[node name="Right_tall_pillar_caps" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=879694892]
+[node name="Right_tall_pillar_caps" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=879694892]
 transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, -3.3768702, 5, 0)
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_4d5kf")
 skeleton = NodePath("")
 
-[node name="Left_tall_pillar2" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=297421995]
+[node name="Left_tall_pillar2" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=297421995]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.399999, 0.5, 0)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_yg5pk")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Left_tall_pillar2" unique_id=432461648]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar2" unique_id=432461648]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Left_tall_pillar2/StaticBody3D" unique_id=272845426]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar2/StaticBody3D" unique_id=272845426]
 shape = SubResource("ConcavePolygonShape3D_oyq6x")
 
-[node name="Left_tall_pillar4" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=21381463]
+[node name="Left_tall_pillar4" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=21381463]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3623505, 0.5, 0)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_yg5pk")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Left_tall_pillar4" unique_id=1511106308]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar4" unique_id=1511106308]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Left_tall_pillar4/StaticBody3D" unique_id=2052822161]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar4/StaticBody3D" unique_id=2052822161]
 shape = SubResource("ConcavePolygonShape3D_oyq6x")
 
-[node name="Left_tall_pillar5" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=1905404369]
+[node name="Left_tall_pillar5" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1905404369]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3574066, 1.5, 0)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_yg5pk")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Left_tall_pillar5" unique_id=1333092287]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar5" unique_id=1333092287]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Left_tall_pillar5/StaticBody3D" unique_id=1595789302]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Left_tall_pillar5/StaticBody3D" unique_id=1595789302]
 shape = SubResource("ConcavePolygonShape3D_tej34")
 
-[node name="Left_tall_pillar_caps" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=1740899981]
+[node name="Left_tall_pillar_caps" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1740899981]
 transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, 15.399999, 5, 0)
 material_override = ExtResource("6_wmxsq")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_sp6x3")
 
-[node name="Right_tall_pillar_002" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=2100494882]
+[node name="Right_tall_pillar_002" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=2100494882]
 transform = Transform3D(1, 0, 0, 0, 1.5, 0, 0, 0, 1, 17, -0.25, -0.234825)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_lyn50")
 skeleton = NodePath("")
 
-[node name="Left_tall_pillar_caps_001" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=1310451546]
+[node name="Left_tall_pillar_caps_001" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1310451546]
 transform = Transform3D(1.15, 0, 0, 0, 0.25, 0, 0, 0, 1.15, 17, 0.56, -0.234825)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_kaemd")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar8" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=363266803]
+[node name="Right_tall_pillar8" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=363266803]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.5, 0)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fyjqt")
 skeleton = NodePath("")
 
-[node name="Left_tall_pillar_caps_005" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=207351152]
+[node name="Left_tall_pillar_caps_005" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=207351152]
 transform = Transform3D(1.15, 0, 0, 0, 0.125, 0, 0, 0, 1.15, -6, 0.907, -0.034999847)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_kaemd")
 skeleton = NodePath("")
 
-[node name="Cube_005" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=636515491]
+[node name="Cube_005" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=636515491]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, -0.5, 0)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fl4k6")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Cube_005" unique_id=1415686977]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Cube_005" unique_id=1415686977]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Cube_005/StaticBody3D" unique_id=1407560716]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Cube_005/StaticBody3D" unique_id=1407560716]
 shape = SubResource("ConcavePolygonShape3D_uud5r")
 
-[node name="Cube_009" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=1018679930]
+[node name="Cube_009" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1018679930]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.5, 0)
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fl4k6")
 skeleton = NodePath("")
 
-[node name="Cube_013" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=1242496383]
+[node name="Cube_013" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1242496383]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -0.5, -0.19999886)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fl4k6")
 
-[node name="Cube_014" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=2085368038]
+[node name="Cube_014" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=2085368038]
 transform = Transform3D(1.175, 0, 0, 0, 1, 0, 0, 0, 1, -5.415, -0.49, -0.15500069)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fl4k6")
 skeleton = NodePath("")
 
-[node name="Cube_011" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=1386672727]
+[node name="Cube_011" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1386672727]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -0.5, 0)
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fl4k6")
 skeleton = NodePath("")
 
-[node name="Cube_006" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2" unique_id=991490914]
+[node name="Cube_006" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=991490914]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, 0.14)
 material_override = ExtResource("4_0t6gl")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_bmmqp")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Cube_006" unique_id=486996033]
+[node name="StaticBody3D" type="StaticBody3D" parent="Boatmesh/Brick_wall_2/Cube_006" unique_id=486996033]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/Brick_wall_2/Cube_006/StaticBody3D" unique_id=2122079872]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boatmesh/Brick_wall_2/Cube_006/StaticBody3D" unique_id=2122079872]
 shape = SubResource("ConcavePolygonShape3D_hlao3")
 
-[node name="floor3" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=683119665]
+[node name="floor3" type="MeshInstance3D" parent="Boatmesh" unique_id=683119665]
+transform = Transform3D(-6.5567085e-09, 0, 20, 0, 1, 0, -0.15, 0, -8.742278e-07, 0, -2.995, 8.5)
+material_override = SubResource("StandardMaterial3D_socq8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_3vvr1")
+
+[node name="floor6" type="MeshInstance3D" parent="Boatmesh" unique_id=445676268]
 transform = Transform3D(0.15, 0, 0, 0, 1, 0, 0, 0, 20, 0, -2.995, -370)
 material_override = SubResource("StandardMaterial3D_socq8")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
 
-[node name="Floor" type="StaticBody3D" parent="Level_Visual/Moss/Boatmesh/floor3" unique_id=728506952]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.345, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/Boatmesh/floor3/Floor" unique_id=1239533371]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
-shape = SubResource("BoxShape3D_3vvr1")
-debug_color = Color(1, 0, 0.016666412, 1)
-
-[node name="floor4" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1363320637]
+[node name="floor4" type="MeshInstance3D" parent="Boatmesh" unique_id=1363320637]
 transform = Transform3D(13.965, 0, 0, 0, 0.1, 0, 0, 0, 8.615, 0, -3.038, 180.867)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
 
-[node name="floor5" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1976104322]
+[node name="floor5" type="MeshInstance3D" parent="Boatmesh" unique_id=1976104322]
 transform = Transform3D(13.965, 0, 0, 0, 0.1, 0, 0, 0, 8.615, 0, -3.038, -155.11798)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
 
-[node name="brick_fountain_3" parent="Level_Visual/Moss/Boatmesh" unique_id=142482850 instance=ExtResource("8_1mn88")]
+[node name="brick_fountain_3" parent="Boatmesh" unique_id=142482850 instance=ExtResource("8_1mn88")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.70000064, -2.505, -6.675)
 
-[node name="Cube_001" parent="Level_Visual/Moss/Boatmesh/brick_fountain_3" index="0" unique_id=1800679336]
+[node name="Cube_001" parent="Boatmesh/brick_fountain_3" index="0" unique_id=1800679336]
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
 material_override = SubResource("StandardMaterial3D_qt5sv")
 cast_shadow = 0
 
-[node name="Egg" parent="Level_Visual/Moss/Boatmesh" unique_id=2127545510 instance=ExtResource("11_iv7rj")]
+[node name="Egg" parent="Boatmesh" unique_id=2127545510 instance=ExtResource("11_iv7rj")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -9.4, 3.811, 20.154)
 
-[node name="EggFake" type="Node3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1021616403 groups=["Egg_Cage"]]
+[node name="EggFake" type="Node3D" parent="Boatmesh" unique_id=1021616403 groups=["Egg_Cage"]]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, 9.385158, 3.811255, 20.154352)
 visible = false
 
-[node name="Egg_shape" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/EggFake" unique_id=1283621850]
+[node name="Egg_shape" type="MeshInstance3D" parent="Boatmesh/EggFake" unique_id=1283621850]
 transform = Transform3D(0.53, 0, 0, 0, 0.141, 0, 0, 0, 0.53, 0, 0, 0)
 layers = 2
 material_override = ExtResource("12_re8ro")
@@ -2173,152 +1271,152 @@ cast_shadow = 0
 mesh = SubResource("CylinderMesh_sx8tb")
 skeleton = NodePath("")
 
-[node name="Pedestal" type="Node3D" parent="Level_Visual/Moss/Boatmesh/EggFake" unique_id=554270340]
+[node name="Pedestal" type="Node3D" parent="Boatmesh/EggFake" unique_id=554270340]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.120534, 0)
 
-[node name="Cube" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/EggFake/Pedestal" unique_id=849873926]
+[node name="Cube" type="MeshInstance3D" parent="Boatmesh/EggFake/Pedestal" unique_id=849873926]
 transform = Transform3D(1.04, 0, 0, 0, 0.125, 0, 0, 0, 1.04, 0, -0.125, 0)
 material_override = ExtResource("13_at8v2")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_01dte")
 skeleton = NodePath("../../..")
 
-[node name="Cube_002" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/EggFake/Pedestal" unique_id=1105874839]
+[node name="Cube_002" type="MeshInstance3D" parent="Boatmesh/EggFake/Pedestal" unique_id=1105874839]
 transform = Transform3D(0.84763587, 0, 0, 0, 0.14987932, 0, 0, 0, 0.84763587, 0, -0.12037608, 0)
 material_override = ExtResource("14_phoqx")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_fnfss")
 skeleton = NodePath("../../..")
 
-[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/EggFake" unique_id=1977323845]
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Boatmesh/EggFake" unique_id=1977323845]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_sx8tb")
 
-[node name="CSGBakedMeshInstance3D2" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh/EggFake" unique_id=794074469]
+[node name="CSGBakedMeshInstance3D2" type="MeshInstance3D" parent="Boatmesh/EggFake" unique_id=794074469]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8649046, 0)
 material_override = ExtResource("15_04ovs")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_8t0ik")
 
-[node name="Boat_Flag" parent="Level_Visual/Moss/Boatmesh" unique_id=1149056858 instance=ExtResource("16_cfw1h")]
+[node name="Boat_Flag" parent="Boatmesh" unique_id=1149056858 instance=ExtResource("16_cfw1h")]
 unique_name_in_owner = true
 transform = Transform3D(-0.14, 0, -2.1139412e-08, 0, 0.14, 0, 2.1139412e-08, 0, -0.14, 9.41, 4.942, 20.165)
 cast_shadow = 0
 
-[node name="Boat_Flag3" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1361529371]
+[node name="Boat_Flag3" type="MeshInstance3D" parent="Boatmesh" unique_id=1361529371]
 unique_name_in_owner = true
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 9.41, 4.2364607, 20.165)
 material_override = ExtResource("6_wmxsq")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_61oqc")
 
-[node name="Boat_Flag4" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=361876954]
+[node name="Boat_Flag4" type="MeshInstance3D" parent="Boatmesh" unique_id=361876954]
 unique_name_in_owner = true
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 8.889551, 3.738, 19.688)
 material_override = ExtResource("6_wmxsq")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_fallt")
 
-[node name="Boat_Flag5" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1834801403]
+[node name="Boat_Flag5" type="MeshInstance3D" parent="Boatmesh" unique_id=1834801403]
 unique_name_in_owner = true
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 9.947469, 3.738, 19.688)
 material_override = ExtResource("6_wmxsq")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_fallt")
 
-[node name="Boat_Flag8" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=994275829]
+[node name="Boat_Flag8" type="MeshInstance3D" parent="Boatmesh" unique_id=994275829]
 unique_name_in_owner = true
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 8.889551, 3.738, 20.666224)
 material_override = ExtResource("6_wmxsq")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_fallt")
 
-[node name="Boat_Flag9" type="MeshInstance3D" parent="Level_Visual/Moss/Boatmesh" unique_id=1947514723]
+[node name="Boat_Flag9" type="MeshInstance3D" parent="Boatmesh" unique_id=1947514723]
 unique_name_in_owner = true
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 9.947469, 3.738, 20.666224)
 material_override = ExtResource("6_wmxsq")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_fallt")
 
-[node name="Boat_Flag2" parent="Level_Visual/Moss/Boatmesh" unique_id=950646453 instance=ExtResource("16_cfw1h")]
+[node name="Boat_Flag2" parent="Boatmesh" unique_id=950646453 instance=ExtResource("16_cfw1h")]
 unique_name_in_owner = true
 transform = Transform3D(-0.14, 0, -2.1139412e-08, 0, 0.14, 0, 2.1139412e-08, 0, -0.14, -9.449, 4.942, 20.271)
 cast_shadow = 0
 
-[node name="Clouds" type="Node3D" parent="Level_Visual/Moss" unique_id=1909983253]
+[node name="Clouds" type="Node3D" parent="." unique_id=1909983253]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1000, 170, 13)
 
-[node name="Cloud31" type="MeshInstance3D" parent="Level_Visual/Moss/Clouds" unique_id=1649044106]
+[node name="Cloud31" type="MeshInstance3D" parent="Clouds" unique_id=1649044106]
 transform = Transform3D(-1, 1.4870183e-07, 2.6220116e-08, 0, 0.17364797, -0.9848077, -1.509958e-07, -0.9848077, -0.17364797, 445.52, -108.161, 1562.785)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_1thcr")
 skeleton = NodePath("../Moving_clouds")
 
-[node name="Cloud32" type="MeshInstance3D" parent="Level_Visual/Moss/Clouds" unique_id=1474804123]
+[node name="Cloud32" type="MeshInstance3D" parent="Clouds" unique_id=1474804123]
 transform = Transform3D(-1, 1.4870183e-07, 2.6220116e-08, 0, 0.17364797, -0.9848077, -1.509958e-07, -0.9848077, -0.17364797, -84.79736, -108.161, 1562.785)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_1thcr")
 skeleton = NodePath("../Moving_clouds")
 
-[node name="Moving_clouds" type="Node3D" parent="Level_Visual/Moss/Clouds" unique_id=1648804211]
+[node name="Moving_clouds" type="Node3D" parent="Clouds" unique_id=1648804211]
 process_mode = 3
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Level_Visual/Moss/Clouds/Moving_clouds" unique_id=1755419699]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Clouds/Moving_clouds" unique_id=1755419699]
 process_mode = 1
 libraries/ = SubResource("AnimationLibrary_md1in")
 autoplay = &"moving"
 speed_scale = 0.5
 
-[node name="Cloud22" type="MeshInstance3D" parent="Level_Visual/Moss/Clouds/Moving_clouds" unique_id=1913208246]
+[node name="Cloud22" type="MeshInstance3D" parent="Clouds/Moving_clouds" unique_id=1913208246]
 transform = Transform3D(-88.62, -2.2377578e-06, 1.8561183e-13, 0, -6.478028e-07, -28.122, 1.3381248e-05, -14.82, 1.2292517e-06, -369.938, -84.94755, 836)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_s470r")
 skeleton = NodePath("../..")
 
-[node name="Cloud24" type="MeshInstance3D" parent="Level_Visual/Moss/Clouds/Moving_clouds" unique_id=632454436]
+[node name="Cloud24" type="MeshInstance3D" parent="Clouds/Moving_clouds" unique_id=632454436]
 transform = Transform3D(-59.534, -1.509958e-07, 1.2469167e-13, 0, -4.371139e-08, -18.892, 8.989384e-06, -1, 8.2579555e-07, 410.767, 11.383, 754.957)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_s470r")
 skeleton = NodePath("../..")
 
-[node name="Cloud25" type="MeshInstance3D" parent="Level_Visual/Moss/Clouds/Moving_clouds" unique_id=537301008]
+[node name="Cloud25" type="MeshInstance3D" parent="Clouds/Moving_clouds" unique_id=537301008]
 transform = Transform3D(-63.741, -1.6094643e-06, 1.3350298e-13, 0, -4.659197e-07, -20.227, 9.624624e-06, -10.659, 8.841502e-07, -975.28186, 120.15, 836)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_s470r")
 skeleton = NodePath("../..")
 
-[node name="Cloud26" type="MeshInstance3D" parent="Level_Visual/Moss/Clouds/Moving_clouds" unique_id=2104025456]
+[node name="Cloud26" type="MeshInstance3D" parent="Clouds/Moving_clouds" unique_id=2104025456]
 transform = Transform3D(-63.741, -1.6094643e-06, 1.3350298e-13, 0, -4.659197e-07, -20.227, 9.624624e-06, -10.659, 8.841502e-07, 753.315, 120.15, 950.5969)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_s470r")
 skeleton = NodePath("../..")
 
-[node name="Cloud28" type="MeshInstance3D" parent="Level_Visual/Moss/Clouds/Moving_clouds" unique_id=279384958]
+[node name="Cloud28" type="MeshInstance3D" parent="Clouds/Moving_clouds" unique_id=279384958]
 transform = Transform3D(-63.741, -1.6094643e-06, 1.3350298e-13, 0, -4.659197e-07, -20.227, 9.624624e-06, -10.659, 8.841502e-07, 982.315, 34.15, 836)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_s470r")
 skeleton = NodePath("../..")
 
-[node name="CubesMultiMesh2" type="MultiMeshInstance3D" parent="Level_Visual/Moss" unique_id=518129793]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -175.34, 0, 58)
+[node name="CubesMultiMesh2" type="MultiMeshInstance3D" parent="." unique_id=518129793]
+transform = Transform3D(0.751, 0, 0, 0, 0.751, 0, 0, 0, 0.751, -175.34, 0, -53.827)
 material_override = ExtResource("9_qmxp7")
 cast_shadow = 0
 multimesh = SubResource("MultiMesh_moving_cubes")
 
-[node name="Moving_nodes" type="Node3D" parent="Level_Visual/Moss" unique_id=1239968480]
+[node name="Moving_nodes" type="Node3D" parent="." unique_id=1239968480]
 
-[node name="CubesMultiMesh" type="MultiMeshInstance3D" parent="Level_Visual/Moss/Moving_nodes" unique_id=387124266]
+[node name="CubesMultiMesh" type="MultiMeshInstance3D" parent="Moving_nodes" unique_id=387124266]
 material_override = ExtResource("9_qmxp7")
 cast_shadow = 0
 multimesh = SubResource("MultiMesh_moving_cubes")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Level_Visual/Moss/Moving_nodes" unique_id=1833792743]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Moving_nodes" unique_id=1833792743]
 libraries/ = SubResource("AnimationLibrary_vntk7")
 autoplay = &"sailboat"
 speed_scale = 0.2
 
-[node name="DirtDecal4" type="Decal" parent="Level_Visual/Moss" unique_id=896342778]
+[node name="DirtDecal4" type="Decal" parent="." unique_id=896342778]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.825, -3, 9.850001)
 size = Vector3(15, 5, 10)
 texture_albedo = ExtResource("18_yf0gs")
@@ -2326,7 +1424,7 @@ modulate = Color(1, 1, 1, 0.4627451)
 normal_fade = 0.5
 cull_mask = 1048559
 
-[node name="CrackedDecal4" type="Decal" parent="Level_Visual/Moss" unique_id=1305340188]
+[node name="CrackedDecal4" type="Decal" parent="." unique_id=1305340188]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 7.665, -0.5, 20.282)
 size = Vector3(5, 5, 6)
 texture_albedo = ExtResource("19_q7xqw")
@@ -2334,7 +1432,7 @@ texture_normal = ExtResource("19_q7xqw")
 modulate = Color(0.49, 0.49, 0.49, 0.16862746)
 cull_mask = 1048559
 
-[node name="CrackedDecal5" type="Decal" parent="Level_Visual/Moss" unique_id=847724840]
+[node name="CrackedDecal5" type="Decal" parent="." unique_id=847724840]
 transform = Transform3D(-4.371139e-08, 4.371139e-08, -1, 1, 1.9106855e-15, -4.371139e-08, 0, -1, -4.371139e-08, -7.64, -0.5, 20.282)
 size = Vector3(5, 5, 5)
 texture_albedo = ExtResource("19_q7xqw")
@@ -2342,7 +1440,7 @@ texture_normal = ExtResource("19_q7xqw")
 modulate = Color(0.49, 0.49, 0.49, 0.16862746)
 cull_mask = 1048559
 
-[node name="CrackedDecal6" type="Decal" parent="Level_Visual/Moss" unique_id=1821152922]
+[node name="CrackedDecal6" type="Decal" parent="." unique_id=1821152922]
 transform = Transform3D(-4.371139e-08, 4.371139e-08, -1, 1, 1.9106855e-15, -4.371139e-08, 0, -1, -4.371139e-08, -1.93, -3.15, 19.782)
 size = Vector3(5, 1, 5)
 texture_albedo = ExtResource("19_q7xqw")
@@ -2350,7 +1448,7 @@ texture_normal = ExtResource("19_q7xqw")
 modulate = Color(0.49, 0.49, 0.49, 0.16862746)
 cull_mask = 1048559
 
-[node name="CrackedDecal7" type="Decal" parent="Level_Visual/Moss" unique_id=41454309]
+[node name="CrackedDecal7" type="Decal" parent="." unique_id=41454309]
 transform = Transform3D(-4.371139e-08, 4.371139e-08, -1, 1, 1.9106855e-15, -4.371139e-08, 0, -1, -4.371139e-08, 3.36, -3.105, 19.782)
 size = Vector3(5, 1, 5)
 texture_albedo = ExtResource("19_q7xqw")
@@ -2358,111 +1456,111 @@ texture_normal = ExtResource("19_q7xqw")
 modulate = Color(0.49, 0.49, 0.49, 0.16862746)
 cull_mask = 1048559
 
-[node name="Cloud31" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1417259871]
+[node name="Cloud31" type="MeshInstance3D" parent="." unique_id=1417259871]
 transform = Transform3D(-1, 1.4870183e-07, 2.6220116e-08, 0, 0.17364797, -0.9848077, -1.509958e-07, -0.9848077, -0.17364797, 510.52, 61.838997, 1575.785)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_k3oa0")
 skeleton = NodePath("")
 
-[node name="Single_brick14" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=2120223287]
+[node name="Single_brick14" type="MeshInstance3D" parent="." unique_id=2120223287]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, -1, -2.4150002, 19.644)
 layers = 16384
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_kgf3r")
 
-[node name="Single_brick15" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=2017985420]
+[node name="Single_brick15" type="MeshInstance3D" parent="." unique_id=2017985420]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, 1, -2.4150002, 19.644)
 layers = 16384
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_kgf3r")
 
-[node name="Single_brick" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1913530891]
+[node name="Single_brick" type="MeshInstance3D" parent="." unique_id=1913530891]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, 8, -2.4150002, 19.643997)
 layers = 16384
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_kgf3r")
 
-[node name="Single_brick2" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1725147241]
+[node name="Single_brick2" type="MeshInstance3D" parent="." unique_id=1725147241]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, 5, -2.4150002, 19.643997)
 layers = 16384
 material_override = ExtResource("6_wmxsq")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_kgf3r")
 
-[node name="Single_brick16" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1714868667]
+[node name="Single_brick16" type="MeshInstance3D" parent="." unique_id=1714868667]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, -8.304131, -2.4150002, 19.776476)
 layers = 16384
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_kgf3r")
 
-[node name="Single_brick3" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1542845044]
+[node name="Single_brick3" type="MeshInstance3D" parent="." unique_id=1542845044]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, -5, -2.4150002, 19.643997)
 layers = 16384
 material_override = ExtResource("6_wmxsq")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_kgf3r")
 
-[node name="Column1" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1925895366]
+[node name="Column1" type="MeshInstance3D" parent="." unique_id=1925895366]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.769, -2.614, 19.556)
 visible = false
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
-[node name="Column2" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1906403061]
+[node name="Column2" type="MeshInstance3D" parent="." unique_id=1906403061]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.115, -2.614, 19.556)
 visible = false
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
-[node name="Column3" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=261050208]
+[node name="Column3" type="MeshInstance3D" parent="." unique_id=261050208]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.413, -2.614, 19.556)
 visible = false
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
-[node name="Column4" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1929982561]
+[node name="Column4" type="MeshInstance3D" parent="." unique_id=1929982561]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.722, -2.614, 19.556)
 visible = false
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
-[node name="Column5" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=927015456]
+[node name="Column5" type="MeshInstance3D" parent="." unique_id=927015456]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.939, -2.614, 19.556)
 visible = false
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
-[node name="Column6" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=904575327]
+[node name="Column6" type="MeshInstance3D" parent="." unique_id=904575327]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.636, -2.614, 19.556)
 visible = false
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
-[node name="Column7" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1750789358]
+[node name="Column7" type="MeshInstance3D" parent="." unique_id=1750789358]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.317, -2.614, 19.556)
 visible = false
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
-[node name="Column8" type="MeshInstance3D" parent="Level_Visual/Moss" unique_id=1604281670]
+[node name="Column8" type="MeshInstance3D" parent="." unique_id=1604281670]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.957, -2.614, 19.556)
 visible = false
 material_override = ExtResource("5_kk2e5")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
-[node name="Moon" type="Sprite3D" parent="Level_Visual/Moss" unique_id=1627859436]
+[node name="Moon" type="Sprite3D" parent="." unique_id=1627859436]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 220, 110, 980)
 cast_shadow = 0
 modulate = Color(1, 0.88, 0.7, 0.32)
@@ -2470,82 +1568,94 @@ pixel_size = 0.85
 billboard = 1
 texture = ExtResource("20_f5ja6")
 
-[node name="CloudsCartoon" type="Sprite3D" parent="Level_Visual/Moss" unique_id=615454710]
+[node name="CloudsCartoon" type="Sprite3D" parent="." unique_id=615454710]
 transform = Transform3D(6.745, 0, 0, 0, 6.745, 0, 0, 0, 6.745, -34.552574, 16.845741, 64.29297)
+visible = false
 pixel_size = 0.0151725
 texture = ExtResource("21_kfbjg")
 
-[node name="CloudsCartoon3" type="Sprite3D" parent="Level_Visual/Moss" unique_id=1218770127]
+[node name="CloudsCartoon3" type="Sprite3D" parent="." unique_id=1218770127]
 transform = Transform3D(6.745, 0, 0, 0, 6.745, 0, 0, 0, 6.745, -34.918, 17.736, 66.138)
+visible = false
 modulate = Color(0.46651083, 0.7430351, 0.94555444, 1)
 pixel_size = 0.0151725
 texture = ExtResource("21_kfbjg")
 
-[node name="CloudsCartoon2" type="Sprite3D" parent="Level_Visual/Moss" unique_id=1057627194]
+[node name="CloudsCartoon2" type="Sprite3D" parent="." unique_id=1057627194]
 transform = Transform3D(4.046, 0, 0, 0, 4.046, 0, 0, 0, 4.046, 28.171246, 9.061707, 39.95996)
+visible = false
 pixel_size = 0.0151725
 texture = ExtResource("21_kfbjg")
 
-[node name="CloudsCartoon6" type="Sprite3D" parent="Level_Visual/Moss" unique_id=1316794988]
+[node name="CloudsCartoon6" type="Sprite3D" parent="." unique_id=1316794988]
 transform = Transform3D(2.456, 0, 0, 0, 2.456, 0, 0, 0, 2.456, 26.540956, 6.397, 37.26)
+visible = false
 modulate = Color(0.92, 0.92, 0.92, 0.6431373)
 pixel_size = 0.0151725
 texture = ExtResource("21_kfbjg")
 
-[node name="CloudsCartoon7" type="Sprite3D" parent="Level_Visual/Moss" unique_id=299117985]
+[node name="CloudsCartoon7" type="Sprite3D" parent="." unique_id=299117985]
 transform = Transform3D(2.456, 0, 0, 0, 2.456, 0, 0, 0, 2.456, 33.86096, 6.397, 37.26)
+visible = false
 modulate = Color(0.92, 0.92, 0.92, 1)
 pixel_size = 0.0151725
 texture = ExtResource("21_kfbjg")
 
-[node name="CloudsCartoon4" type="Sprite3D" parent="Level_Visual/Moss" unique_id=40401122]
+[node name="CloudsCartoon4" type="Sprite3D" parent="." unique_id=40401122]
 transform = Transform3D(4.046, 0, 0, 0, 4.046, 0, 0, 0, 4.046, 28.496, 9.402, 40.94)
+visible = false
 modulate = Color(0.85, 1, 0.9675, 1)
 pixel_size = 0.0151725
 texture = ExtResource("21_kfbjg")
 
-[node name="CloudsCartoon8" type="Sprite3D" parent="Level_Visual/Moss" unique_id=1783429923]
+[node name="CloudsCartoon8" type="Sprite3D" parent="." unique_id=1783429923]
 transform = Transform3D(-2.456, 2.1471034e-07, 0, -2.1471034e-07, -2.456, 0, 0, 0, 2.456, -25.291, 6.077, 37.26)
+visible = false
 modulate = Color(0.92, 0.92, 0.92, 1)
 pixel_size = 0.0151725
 texture = ExtResource("21_kfbjg")
 
-[node name="CloudsCartoon9" type="Sprite3D" parent="Level_Visual/Moss" unique_id=1695690028]
+[node name="CloudsCartoon9" type="Sprite3D" parent="." unique_id=1695690028]
 transform = Transform3D(71.066, 0, 0, 0, 71.066, 0, 0, 0, 71.066, -229.845, 0, 461.325)
+visible = false
 modulate = Color(0.9, 0.9, 0.9, 0.4509804)
 pixel_size = 0.0151725
 texture = ExtResource("21_kfbjg")
 
-[node name="CloudsCartoon5" type="Sprite3D" parent="Level_Visual/Moss" unique_id=24312180]
+[node name="CloudsCartoon5" type="Sprite3D" parent="." unique_id=24312180]
 transform = Transform3D(12.141, 0, 0, 0, 12.141, 0, 0, 0, 12.141, 52.945, -2.236, 281.08237)
+visible = false
 pixel_size = 0.0151725
 texture = ExtResource("21_kfbjg")
 
-[node name="Mountain" type="Sprite3D" parent="Level_Visual/Moss" unique_id=490917543]
+[node name="Mountain" type="Sprite3D" parent="." unique_id=490917543]
 transform = Transform3D(18.4, 0, 0, 0, 6.355, 0, 0, 0, 6.355, -64.434, 7.756, 256.847)
+visible = false
 modulate = Color(0.33333334, 0.33333334, 0.33333334, 0.44705883)
 texture = ExtResource("23_y3exd")
 
-[node name="Mountain2" type="Sprite3D" parent="Level_Visual/Moss" unique_id=1185072818]
+[node name="Mountain2" type="Sprite3D" parent="." unique_id=1185072818]
 transform = Transform3D(18.4, 0, 0, 0, 6.355, 0, 0, 0, 6.355, 163.89539, 7.756, 256.847)
+visible = false
 modulate = Color(0.33333334, 0.33333334, 0.33333334, 0.44705883)
 texture = ExtResource("23_y3exd")
 
-[node name="Mountain3" type="Sprite3D" parent="Level_Visual/Moss" unique_id=88604400]
+[node name="Mountain3" type="Sprite3D" parent="." unique_id=88604400]
 transform = Transform3D(-6.5, 0, -3.3898556e-07, 0, 2.245, 0, 9.814727e-07, 0, -2.245, 35.591, 4.016, 256.847)
+visible = false
 modulate = Color(0.33, 0.33, 0.33, 0.29411766)
 texture = ExtResource("23_y3exd")
 
-[node name="CrateLayout" type="Node3D" parent="Level_Visual/Moss" unique_id=1945974550]
+[node name="CrateLayout" type="Node3D" parent="." unique_id=1945974550]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.807793, 44.30255)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level_Visual/Moss/CrateLayout" unique_id=569261180]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CrateLayout" unique_id=569261180]
 transform = Transform3D(0.165, 0, 0, 0, 0.165, 0, 0, 0, 0.165, 0, 0, 14.087341)
 material_override = SubResource("StandardMaterial3D_chxso")
 mesh = SubResource("CylinderMesh_t4alo")
 skeleton = NodePath("../Base")
 
-[node name="Base" type="RigidBody3D" parent="Level_Visual/Moss/CrateLayout" unique_id=339292164]
+[node name="Base" type="RigidBody3D" parent="CrateLayout" unique_id=339292164]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10.876278)
 axis_lock_linear_x = true
 axis_lock_linear_z = true
@@ -2556,892 +1666,98 @@ mass = 250.0
 gravity_scale = 9.0
 script = SubResource("GDScript_w4p4w")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/CrateLayout/Base" unique_id=367735634]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CrateLayout/Base" unique_id=367735634]
 shape = SubResource("CylinderShape3D_4i34m")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Level_Visual/Moss/CrateLayout" unique_id=1678236120]
+[node name="StaticBody3D" type="StaticBody3D" parent="CrateLayout" unique_id=1678236120]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.615, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Level_Visual/Moss/CrateLayout/StaticBody3D" unique_id=1719803171]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CrateLayout/StaticBody3D" unique_id=1719803171]
 shape = SubResource("BoxShape3D_i42jn")
 
-[node name="SplashScreenCanvasLayer" parent="." unique_id=991233177 node_paths=PackedStringArray("round_manager", "music_control") instance=ExtResource("68_448cw")]
-visible = false
-round_manager = NodePath("../Round_manager")
-music_control = NodePath("../Music")
+[node name="WaterMesh2" parent="." unique_id=1036662146 instance=ExtResource("23_m0xh2")]
+transform = Transform3D(5, 0, 0, 0, 4.9998097, 0.04363268, 0, -0.04363268, 4.9998097, 0, -0.63, 234.555)
+mesh = SubResource("QuadMesh_lojg1")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("ShaderMaterial_wmxsq")
 
-[node name="MainGameCanvasLayer" type="CanvasLayer" parent="." unique_id=778582470]
+[node name="CrateForCash" parent="." unique_id=1706272792 instance=ExtResource("25_b4ack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.386295, 3, 43.860092)
 
-[node name="QuitMenu" type="PanelContainer" parent="MainGameCanvasLayer" unique_id=2079405395]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(205, 205)
-anchors_preset = -1
-anchor_left = -0.18333334
-anchor_top = -0.08148148
-anchor_right = -0.18333334
-anchor_bottom = 2.4810185
-offset_left = 598.0
-offset_top = 813.0
-offset_right = 803.0
-offset_bottom = -1749.5
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_styles/panel = ExtResource("69_tj0js")
-script = ExtResource("70_le0mw")
-metadata/_edit_use_anchors_ = true
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1159189655]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, -26.386295, 0, 43.860092)
+material_override = ExtResource("9_qmxp7")
+mesh = SubResource("BoxMesh_lojg1")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MainGameCanvasLayer/QuitMenu" unique_id=368530600]
-layout_mode = 2
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=829864143]
 
-[node name="VSeparator" type="VSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer" unique_id=778298384]
-custom_minimum_size = Vector2(19.4, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=1166690407]
+shape = SubResource("ConcavePolygonShape3D_0t6gl")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer" unique_id=1321358755]
-layout_mode = 2
+[node name="CrateForCash2" parent="." unique_id=1972641432 instance=ExtResource("25_b4ack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -66.686295, 3, 43.860092)
 
-[node name="HSeparator" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=2068529690]
-custom_minimum_size = Vector2(50, 12.18)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1505560936]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, -66.686295, 0, 43.860092)
+material_override = ExtResource("9_qmxp7")
+mesh = SubResource("BoxMesh_lojg1")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=143841262]
-custom_minimum_size = Vector2(150, 50)
-layout_mode = 2
-theme_override_font_sizes/normal_font_size = 19
-bbcode_enabled = true
-text = "Are You Sure?"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D2" unique_id=36571923]
 
-[node name="HSeparator4" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1472225335]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D" unique_id=344905709]
+shape = SubResource("ConcavePolygonShape3D_0t6gl")
 
-[node name="CloseGame" type="Button" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1448034943]
-layout_mode = 2
-text = "Quit Game"
-script = ExtResource("71_438o7")
+[node name="CrateForCash3" parent="." unique_id=1620614676 instance=ExtResource("25_b4ack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -61.686295, 0.29999995, 37.260094)
 
-[node name="HSeparator2" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=445130285]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=226977811]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, -61.686295, -2.7, 37.260094)
+material_override = ExtResource("9_qmxp7")
+mesh = SubResource("BoxMesh_lojg1")
 
-[node name="CancelMenu" type="Button" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=2054175066]
-layout_mode = 2
-text = "Close Menu"
-script = ExtResource("71_438o7")
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D3" unique_id=2079745484]
 
-[node name="HSeparator3" type="HSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1389113148]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ymbdo")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D3/StaticBody3D" unique_id=1110610452]
+shape = SubResource("ConcavePolygonShape3D_0t6gl")
 
-[node name="VSeparator2" type="VSeparator" parent="MainGameCanvasLayer/QuitMenu/HBoxContainer" unique_id=1405237058]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
+[node name="CrateForCash4" parent="." unique_id=1376274496 instance=ExtResource("25_b4ack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -117.686295, 0.29999995, 37.260094)
 
-[node name="Money_labels" parent="MainGameCanvasLayer" unique_id=2012145336 instance=ExtResource("72_vkxci")]
-loss_scatter_count = 18
-loss_scatter_distance_px = 220.0
-loss_scatter_fly_sec = 0.7
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="." unique_id=79315402]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, -117.686295, -2.7, 37.260094)
+material_override = ExtResource("9_qmxp7")
+mesh = SubResource("BoxMesh_lojg1")
 
-[node name="Timer" parent="MainGameCanvasLayer" unique_id=779418741 instance=ExtResource("73_myvlp")]
-mouse_filter = 2
-start_time = 50.0
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D4" unique_id=2001203359]
 
-[node name="Place_name" type="Control" parent="MainGameCanvasLayer" unique_id=877796412]
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("74_mxnpt")
-arrival_fade_in_sec = 0.25
-arrival_hold_sec = 0.5
-arrival_fade_out_sec = 1.0
-arrival_shop_delay_sec = 0.5
-metadata/_edit_use_anchors_ = true
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D4/StaticBody3D" unique_id=1571997358]
+shape = SubResource("ConcavePolygonShape3D_0t6gl")
 
-[node name="CenterPOS" type="Control" parent="MainGameCanvasLayer/Place_name" unique_id=1728009373]
-visible = false
-layout_mode = 1
-anchor_left = 0.49947917
-anchor_top = 0.425
-anchor_right = 0.5005208
-anchor_bottom = 0.42685184
-offset_left = 846.0
-offset_top = -755.0
-offset_right = 846.0
-offset_bottom = -755.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
+[node name="CrateForCash5" parent="." unique_id=1154783130 instance=ExtResource("25_b4ack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -112.686295, 0.29999995, 37.260094)
 
-[node name="Panel" type="Panel" parent="MainGameCanvasLayer/Place_name" unique_id=1893096777]
-visible = false
-modulate = Color(1, 1, 1, 0.8627451)
-show_behind_parent = true
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -936.5
-offset_top = 449.5692
-offset_right = -756.5
-offset_bottom = 522.9718
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 3.1415927
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme = SubResource("Theme_r5w5l")
-theme_override_styles/panel = ExtResource("69_tj0js")
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=696548693]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, -112.686295, -2.7, 37.260094)
+material_override = ExtResource("9_qmxp7")
+mesh = SubResource("BoxMesh_lojg1")
 
-[node name="Panel2" type="Panel" parent="MainGameCanvasLayer/Place_name" unique_id=1869801473]
-visible = false
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -91.5
-offset_top = -304.66675
-offset_right = 88.5
-offset_bottom = -226.83337
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.165, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"TimerPanel"
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D5" unique_id=27203687]
 
-[node name="ColorRect" type="ColorRect" parent="MainGameCanvasLayer/Place_name/Panel2" unique_id=1473172203]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -17.0
-offset_bottom = -61.833344
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.968, 1)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-color = Color(0.78039217, 0.003921569, 0.007843138, 1)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D5/StaticBody3D" unique_id=71265924]
+shape = SubResource("ConcavePolygonShape3D_0t6gl")
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="MainGameCanvasLayer/Place_name/Panel2" unique_id=650191241]
-modulate = Color(0.92156863, 0.8784314, 0.84705883, 1)
-position = Vector2(89.270996, 10.025024)
-scale = Vector2(179.255, -13.95)
-mesh = SubResource("PrismMesh_vycyu")
+[node name="CrateForCash6" parent="." unique_id=1042656628 instance=ExtResource("25_b4ack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -115.686295, 1.4, 37.260094)
 
-[node name="PlaceLabel" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=422115750]
-visible = false
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 846.0
-offset_top = -855.66675
-offset_right = 1071.0
-offset_bottom = -744.0
-grow_vertical = 0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_font_sizes/normal_font_size = 47
-theme_override_font_sizes/bold_font_size = 47
-bbcode_enabled = true
-text = "MOSS"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="." unique_id=1185724320]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, -115.686295, -1.6, 37.260094)
+material_override = ExtResource("9_qmxp7")
+mesh = SubResource("BoxMesh_lojg1")
 
-[node name="ArrivalName" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=1888002101]
-unique_name_in_owner = true
-visible = false
-z_index = 20
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -420.0
-offset_top = -120.0
-offset_right = 420.0
-offset_bottom = 40.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 148
-bbcode_enabled = true
-text = "[center][wave]MOSS"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D6" unique_id=1609520282]
 
-[node name="ArrivalTime" type="RichTextLabel" parent="MainGameCanvasLayer/Place_name" unique_id=1888002102]
-unique_name_in_owner = true
-visible = false
-z_index = 20
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = 36.0
-offset_right = 280.0
-offset_bottom = 120.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 56
-bbcode_enabled = true
-text = "[center][wave]8:02AM"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D6/StaticBody3D" unique_id=1907528958]
+shape = SubResource("ConcavePolygonShape3D_0t6gl")
 
-[node name="WaveProgressIndication" type="Control" parent="MainGameCanvasLayer" unique_id=1362113778]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="Wave_Text" parent="MainGameCanvasLayer/WaveProgressIndication" unique_id=1851310312 instance=ExtResource("75_ycwwb")]
-visible = false
-layout_mode = 1
-
-[node name="Shop_Main_Menu" parent="MainGameCanvasLayer" unique_id=1034704471 node_paths=PackedStringArray("round_manager", "money_control") instance=ExtResource("76_ddbg4")]
-unique_name_in_owner = true
-round_manager = NodePath("../../Round_manager")
-money_control = NodePath("../Money_labels")
-
-[node name="LevelEditorMenu" parent="MainGameCanvasLayer" unique_id=1888001001 node_paths=PackedStringArray("round_manager", "shop_main_menu") instance=ExtResource("77_07lin")]
-unique_name_in_owner = true
-visible = false
-round_manager = NodePath("../../Round_manager")
-shop_main_menu = NodePath("../Shop_Main_Menu")
-
-[node name="RoundEditorMenu" parent="MainGameCanvasLayer" unique_id=1888001002 node_paths=PackedStringArray("round_manager", "shop_main_menu") instance=ExtResource("78_tbf3i")]
-unique_name_in_owner = true
-visible = false
-round_manager = NodePath("../../Round_manager")
-shop_main_menu = NodePath("../Shop_Main_Menu")
-
-[node name="Frame_rate" type="Control" parent="MainGameCanvasLayer" unique_id=439145462]
-visible = false
-custom_minimum_size = Vector2(250, 50)
-layout_mode = 3
-anchors_preset = 0
-offset_right = 592.0
-offset_bottom = 50.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("79_eeg7y")
-
-[node name="Label" type="Label" parent="MainGameCanvasLayer/Frame_rate" unique_id=2113754555]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 4.0
-offset_right = 8.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("3_lojg1")
-text = "FPS"
-
-[node name="Timer" type="Timer" parent="MainGameCanvasLayer/Frame_rate" unique_id=1710339876]
-autostart = true
-
-[node name="floor2" type="MeshInstance3D" parent="." unique_id=1359241023]
-transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 30, 0, -3.39, 50)
-visible = false
-mesh = SubResource("PlaneMesh_an2hp")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="floor2" unique_id=1935846493]
-collision_layer = 0
-collision_mask = 0
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="floor2/StaticBody3D" unique_id=2663720]
-shape = SubResource("ConvexPolygonShape3D_43pd7")
-
-[node name="floor5" type="MeshInstance3D" parent="." unique_id=1020859611]
-transform = Transform3D(15, 0, 0, 0, -4.371139e-08, -15, 0, 1, -6.556708e-07, 0, -17.265, 20.300001)
-visible = false
-mesh = SubResource("PlaneMesh_an2hp")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="floor5" unique_id=1846687704]
-collision_layer = 0
-collision_mask = 0
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="floor5/StaticBody3D" unique_id=908553122]
-shape = SubResource("ConvexPolygonShape3D_43pd7")
-
-[node name="Pineapple_Manager" type="Node3D" parent="." unique_id=859325861 node_paths=PackedStringArray("left_marker", "right_marker", "round_manager") groups=["pineapple_container"]]
-script = ExtResource("80_pt0y3")
-left_marker = NodePath("../Pineapple_markers/LeftMarker")
-right_marker = NodePath("../Pineapple_markers/RightMarker")
-round_manager = NodePath("../Round_manager")
-
-[node name="Pineapple" parent="Pineapple_Manager" unique_id=1539472592 instance=ExtResource("81_u87l6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 0.75
-
-[node name="Pineapple2" parent="Pineapple_Manager" unique_id=1349360149 instance=ExtResource("81_u87l6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 0.75
-
-[node name="Pineapple3" parent="Pineapple_Manager" unique_id=1506732277 instance=ExtResource("81_u87l6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 0.75
-
-[node name="Pineapple4" parent="Pineapple_Manager" unique_id=535343239 instance=ExtResource("81_u87l6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 0.75
-
-[node name="Pineapple5" parent="Pineapple_Manager" unique_id=1865048044 instance=ExtResource("81_u87l6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -2.89, 23)
-physics_material_override = SubResource("PhysicsMaterial_gmvr6")
-linear_damp = 0.6
-cash_value = 0
-force_multiplier = 0.75
-
-[node name="PerfectParticles" type="GPUParticles2D" parent="Pineapple_Manager" unique_id=989237153]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(965, 524)
-emitting = false
-amount = 100
-lifetime = 0.5
-one_shot = true
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_gf2tl")
-
-[node name="PerfectParticles2" type="GPUParticles2D" parent="Pineapple_Manager" unique_id=1561808200]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(964, 517)
-emitting = false
-amount = 10
-texture = ExtResource("82_s83eh")
-lifetime = 1.5
-one_shot = true
-explosiveness = 0.8
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_24t6b")
-
-[node name="SFX" type="Node" parent="Pineapple_Manager" unique_id=747967270]
-script = ExtResource("22_t2wcd")
-sfx_group = &"pineapple_sfx"
-
-[node name="hitSound" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1552561789]
-stream = ExtResource("24_gtiyi")
-volume_db = -35.0
-max_polyphony = 2
-
-[node name="take_damage_sfx" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=882133869]
-stream = ExtResource("23_g6lr8")
-volume_db = -20.0
-max_polyphony = 2
-
-[node name="marked_sfx" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=369547174]
-stream = ExtResource("3_1lm63")
-volume_db = -25.0
-pitch_scale = 1.2
-
-[node name="gold_sfx" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=186883716]
-stream = ExtResource("29_788xd")
-volume_db = -25.0
-pitch_scale = 1.2
-
-[node name="shop_purchase_03" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1563020729]
-stream = ExtResource("83_2pju2")
-volume_db = -30.0
-
-[node name="explosion_sfx" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=702901366]
-stream = ExtResource("25_hjkci")
-volume_db = -30.0
-
-[node name="Pineapple_shot_explode" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=979498665]
-stream = ExtResource("3_1lm63")
-volume_db = -13.0
-pitch_scale = 0.75
-max_polyphony = 2
-
-[node name="Pineapple_launch_sound" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1512691561]
-stream = ExtResource("32_g2dsl")
-volume_db = -35.0
-pitch_scale = 2.5
-
-[node name="Pineapple_sound_hit" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=2144386315]
-stream = ExtResource("84_r41nj")
-volume_db = -15.0
-
-[node name="Pineapple_destroyed" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1034800634]
-stream = ExtResource("85_7mue1")
-volume_db = -10.0
-
-[node name="PerfectPineappleRound" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1139686394]
-stream = ExtResource("9_i8xs6")
-volume_db = -30.0
-pitch_scale = 0.9
-
-[node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("round_manager") groups=["orange_container"]]
-script = ExtResource("86_gt2ho")
-round_manager = NodePath("../Round_manager")
-
-[node name="Orange" parent="OrangeBombs" unique_id=1226943477 instance=ExtResource("87_u0u1k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange2" parent="OrangeBombs" unique_id=1044980419 instance=ExtResource("87_u0u1k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange3" parent="OrangeBombs" unique_id=63026475 instance=ExtResource("87_u0u1k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange4" parent="OrangeBombs" unique_id=1337323973 instance=ExtResource("87_u0u1k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange5" parent="OrangeBombs" unique_id=170169503 instance=ExtResource("87_u0u1k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange6" parent="OrangeBombs" unique_id=587617743 instance=ExtResource("87_u0u1k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange7" parent="OrangeBombs" unique_id=1646497334 instance=ExtResource("87_u0u1k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange8" parent="OrangeBombs" unique_id=701289244 instance=ExtResource("87_u0u1k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="Orange9" parent="OrangeBombs" unique_id=281292951 instance=ExtResource("87_u0u1k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, -2.9, 23)
-mass = 0.5
-gravity_scale = 0.0
-linear_damp = 5.0
-force_multiplier = 1.0
-
-[node name="SFX" type="Node" parent="OrangeBombs" unique_id=21669631]
-script = ExtResource("22_t2wcd")
-sfx_group = &"orange_sfx"
-
-[node name="hitSound" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1159045003]
-unique_name_in_owner = true
-stream = ExtResource("24_gtiyi")
-volume_db = -35.0
-max_polyphony = 2
-
-[node name="take_damage_sfx" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=2053594315]
-unique_name_in_owner = true
-stream = ExtResource("23_g6lr8")
-volume_db = -20.0
-max_polyphony = 2
-
-[node name="marked_sfx" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=2053391826]
-unique_name_in_owner = true
-stream = ExtResource("3_1lm63")
-volume_db = -25.0
-pitch_scale = 1.2
-
-[node name="gold_sfx" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1511850070]
-unique_name_in_owner = true
-stream = ExtResource("29_788xd")
-volume_db = -25.0
-pitch_scale = 1.2
-
-[node name="shop_purchase_03" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1939631238]
-unique_name_in_owner = true
-stream = ExtResource("83_2pju2")
-volume_db = -30.0
-
-[node name="explosion_sfx" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=2125272574]
-stream = ExtResource("25_hjkci")
-volume_db = -30.0
-
-[node name="Pineapple_shot_explode" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1818937653]
-stream = ExtResource("3_1lm63")
-volume_db = -19.0
-pitch_scale = 0.75
-max_polyphony = 2
-
-[node name="launch_sound" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1714071663]
-stream = ExtResource("32_g2dsl")
-volume_db = -40.0
-pitch_scale = 2.5
-
-[node name="Pineapple_sound_hit" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=59696560]
-stream = ExtResource("84_r41nj")
-volume_db = -15.0
-
-[node name="Pineapple_destroyed" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1198644935]
-stream = ExtResource("85_7mue1")
-volume_db = -13.0
-
-[node name="Pineapple_markers" type="Node3D" parent="." unique_id=253776400 groups=["pineapple_container"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9)
-
-[node name="LeftMarker" type="Marker3D" parent="Pineapple_markers" unique_id=784347114]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 23)
-
-[node name="RightMarker" type="Marker3D" parent="Pineapple_markers" unique_id=2133183574]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 23)
-
-[node name="Balloon_container" type="Node3D" parent="." unique_id=906093422 groups=["balloon_container", "restartable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 22.5)
-script = ExtResource("88_rc6nt")
-approach_duration = 2.0
-spawn_distance = 24.0
-
-[node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("89_tjsoa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 7, 0)
-balloon_type = 3
-
-[node name="Balloon2" parent="Balloon_container" unique_id=121622778 instance=ExtResource("89_tjsoa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 7, 0)
-balloon_type = 3
-
-[node name="Balloon3" parent="Balloon_container" unique_id=1030168432 instance=ExtResource("89_tjsoa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 7, 0)
-balloon_type = 3
-
-[node name="Balloon4" parent="Balloon_container" unique_id=355297050 instance=ExtResource("89_tjsoa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 7, 0)
-balloon_type = 3
-
-[node name="Balloon5" parent="Balloon_container" unique_id=95575164 instance=ExtResource("89_tjsoa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 7, 0)
-balloon_type = 3
-
-[node name="Balloon6" parent="Balloon_container" unique_id=1531073187 instance=ExtResource("89_tjsoa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 7, 0)
-balloon_type = 3
-
-[node name="Balloon7" parent="Balloon_container" unique_id=884139657 instance=ExtResource("89_tjsoa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 7, 0)
-balloon_type = 3
-
-[node name="Balloon8" parent="Balloon_container" unique_id=1953252365 instance=ExtResource("89_tjsoa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 7, 0)
-balloon_type = 3
-
-[node name="Balloon_wait_positions" type="Node3D" parent="." unique_id=242094308]
-
-[node name="Balloon_pos_1" type="Marker3D" parent="Balloon_wait_positions" unique_id=796756762]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9000003, -1.1999999, 11.799999)
-
-[node name="Checkpoint_container" type="Node3D" parent="." unique_id=1888000001 groups=["checkpoint_container"]]
-
-[node name="PlayerBalloon" type="Node3D" parent="." unique_id=375306820 node_paths=PackedStringArray("round_manager") groups=["player_balloon_container", "restartable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
-script = ExtResource("90_4gddr")
-starting_balloons = 1
-round_manager = NodePath("../Round_manager")
-
-[node name="PlayerBalloon" parent="PlayerBalloon" unique_id=966203961 instance=ExtResource("91_2xk8e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 8, 23.225)
-top_level = true
-
-[node name="BonusCash" type="Node3D" parent="." unique_id=836260086 groups=["multi_shot"]]
-script = ExtResource("92_sbrah")
-
-[node name="mutli_label" type="Label3D" parent="BonusCash" unique_id=262291951]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 30)
-visible = false
-layers = 16
-pixel_size = 0.001
-billboard = 1
-double_sided = false
-fixed_size = true
-modulate = Color(1, 0.51666665, 0, 1)
-outline_modulate = Color(0.15, 0.15, 0.15, 1)
-text = "2"
-outline_size = 6
-
-[node name="MultiShotSFX" type="AudioStreamPlayer" parent="BonusCash" unique_id=807368738]
-stream = ExtResource("9_i8xs6")
-volume_db = -40.0
-pitch_scale = 2.0
-
-[node name="BonusTargetManager" type="Node3D" parent="." unique_id=1888003001 node_paths=PackedStringArray("round_manager")]
-script = ExtResource("93_3j6bm")
-round_manager = NodePath("../Round_manager")
-patrol_seconds_per_leg = 6.0
-
-[node name="Particles" type="Node3D" parent="." unique_id=1387661040]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.163108)
-
-[node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=1389715347]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
-script = ExtResource("94_jr4k4")
-strike_on_wall_overlap = false
-knock_crosshair_distance = 40.0
-spawn_rock_on_hit = true
-
-[node name="TouchingWallWithCrosshair" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=739585517]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.384448, 1.642421, 20.14018)
-visible = false
-light_color = Color(1, 0, 0, 1)
-light_energy = 20.0
-omni_range = 15.0
-omni_attenuation = 0.0
-
-[node name="Allgood" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=321319073]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.384448, 1.642421, 20.14018)
-
-[node name="WallPuzzle" type="CSGCombiner3D" parent="WallPuzzleSetup" unique_id=962981030]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 2.363, 24.75)
-use_collision = true
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=974986408]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9631152, 0.13700008, 0)
-size = Vector3(13, 0.21, 1)
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=851687279]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0368848, -2.863, 0)
-size = Vector3(11, 0.21, 1)
-
-[node name="CSGBox3D20" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=203730346]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.963115, -2.863, 0)
-size = Vector3(1, 0.21, 1)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1269927889]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.537, 3.137, 0)
-size = Vector3(12, 0.21, 1)
-
-[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1429191292]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -8.936885, 1.0029593, 0)
-size = Vector3(12, 0.76, 1)
-
-[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1023976106]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 8.713, 1.003, 0)
-size = Vector3(12, 0.76, 1)
-
-[node name="CSGBox3D25" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1132892119]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.536885, 0.137, 0)
-size = Vector3(2, 0.21, 1)
-
-[node name="WallPuzzle2" type="CSGBox3D" parent="WallPuzzleSetup" unique_id=736609469]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.324196, 2.363, 24.75)
-visible = false
-use_collision = true
-size = Vector3(17.595, 13, 0.191)
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1778206715]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.60430145, 0)
-operation = 2
-size = Vector3(17.4, 1.954, 1)
-
-[node name="CSGBox3D18" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1641669113]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4698057, 0)
-size = Vector3(17.240234, 1.954, 1)
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1265593326]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.9806981, 0)
-operation = 2
-size = Vector3(17.4, 1.754, 1)
-
-[node name="CSGBox3D17" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=212075190]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.7563257, 0)
-operation = 2
-size = Vector3(17.4, 2.8364725, 1)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=2124074031]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, -0.703135, 0)
-operation = 2
-size = Vector3(2.496, 1.754, 1)
-
-[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=244976164]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, -0.70269823, 0)
-operation = 2
-size = Vector3(2.496, 1.754, 1)
-
-[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1585524]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, -0.70269823, 0)
-operation = 2
-size = Vector3(2.496, 1.754, 1)
-
-[node name="CSGBox3D7" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1794672932]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, -0.70269823, 0)
-operation = 2
-size = Vector3(2.496, 1.754, 1)
-
-[node name="CSGBox3D8" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=687528487]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6726356, -0.70269823, 0)
-operation = 2
-size = Vector3(2.023, 1.754, 1)
-
-[node name="CSGBox3D9" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=103448573]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3156414, 0)
-operation = 2
-size = Vector3(17.4, 2.877603, 1)
-
-[node name="CSGBox3D16" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=731475829]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.822077, 0)
-operation = 2
-size = Vector3(17.4, 1.954, 1)
-
-[node name="CSGBox3D10" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=394685299]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26883984, 0)
-operation = 2
-size = Vector3(17.4, 1.754, 1)
-
-[node name="CSGBox3D11" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1188565788]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, 1.5464029, 0)
-operation = 2
-size = Vector3(2.496, 1.754, 1)
-
-[node name="CSGBox3D12" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=127381401]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, 1.5468397, 0)
-operation = 2
-size = Vector3(2.496, 1.754, 1)
-
-[node name="CSGBox3D13" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1670670658]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, 1.5468397, 0)
-operation = 2
-size = Vector3(2.496, 1.754, 1)
-
-[node name="CSGBox3D14" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=1651544830]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, 1.5468397, 0)
-operation = 2
-size = Vector3(2.496, 1.754, 1)
-
-[node name="CSGBox3D15" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle2" unique_id=900058289]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6726356, 1.5468397, 0)
-operation = 2
-size = Vector3(2.023, 1.754, 1)
-
-[node name="SFX" type="Node" parent="WallPuzzleSetup" unique_id=571630610]
-
-[node name="OverlappingWallHum" type="AudioStreamPlayer" parent="WallPuzzleSetup/SFX" unique_id=878568215]
-stream = ExtResource("95_m18md")
-volume_db = 8.0
-pitch_scale = 0.8
-
-[node name="TurningLightOnOrOff" type="AudioStreamPlayer" parent="WallPuzzleSetup/SFX" unique_id=1380116396]
-stream = ExtResource("96_mdj6d")
-volume_db = -35.0
-pitch_scale = 2.0
-bus = &"ReverbBus"
-
-[node name="Crate" parent="WallPuzzleSetup" unique_id=575272199 instance=ExtResource("24_1xxex")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.824073, 2.340082, 24.577652)
-cash_value = 100
-hit_impulse_power = 80.0
-hit_upward_bias = 0.15
-hit_torque_strength = 10.0
-force_mult = [6, 8]
-
-[node name="Crate2" parent="WallPuzzleSetup" unique_id=415466945 instance=ExtResource("24_1xxex")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4339585, 5.165947, 24.577652)
-cash_value = 100
-hit_impulse_power = 80.0
-hit_upward_bias = 0.15
-hit_torque_strength = 10.0
-force_mult = [6, 8]
-
-[node name="Crate3" parent="WallPuzzleSetup" unique_id=375888889 instance=ExtResource("24_1xxex")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4339585, 7.3008623, 24.577652)
-cash_value = 100
-hit_impulse_power = 80.0
-hit_upward_bias = 0.15
-hit_torque_strength = 10.0
-force_mult = [6, 8]
-
-[node name="Crate4" parent="WallPuzzleSetup" unique_id=265235330 instance=ExtResource("24_1xxex")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3008132, 7.3008623, 24.577652)
-cash_value = 100
-hit_impulse_power = 80.0
-hit_upward_bias = 0.15
-hit_torque_strength = 10.0
-force_mult = [6, 8]
-
-[node name="Crate5" parent="WallPuzzleSetup" unique_id=1684002578 instance=ExtResource("24_1xxex")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.8984714, 10.019372, 24.577652)
-cash_value = 100
-hit_impulse_power = 80.0
-hit_upward_bias = 0.15
-hit_torque_strength = 10.0
-force_mult = [6, 8]
-
-[connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
-[connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]
-[connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CancelMenu" to="MainGameCanvasLayer/QuitMenu" method="_on_cancel_menu_pressed"]
-[connection signal="timeout" from="MainGameCanvasLayer/Frame_rate/Timer" to="MainGameCanvasLayer/Frame_rate" method="_on_timer_timeout"]
-
-[editable path="Level_Visual/Moss/Boatmesh/brick_fountain_4"]
-[editable path="Level_Visual/Moss/Boatmesh/brick_fountain_3"]
+[editable path="Boatmesh/brick_fountain_4"]
+[editable path="Boatmesh/brick_fountain_3"]

@@ -476,6 +476,8 @@ func log_hit(item:String, item_type:String, value:int, world_origin: Vector3 = V
 
 	_log.append(d)
 	_current_round_log.append(d)
+	if EventBus.instance and EventBus.instance.has_signal("rock_hit_logged"):
+		EventBus.instance.rock_hit_logged.emit(item, item_type, value)
 	
 	if item.contains('rock_type_1'):
 		dataset.total_white_rocks -= 1

@@ -518,12 +518,12 @@ func detonate_rock() -> void:
 
 	var player_cam = get_tree().get_first_node_in_group(\"player_cam\")
 	if player_cam:
-		player_cam.shake_camera_sky_mines()
+		player_cam.shake_camera_sky_mine()
 
 func shake_camera() -> void:
 	var player_cam = get_tree().get_first_node_in_group(\"player_cam\")
 	if player_cam:
-		player_cam.shake_camera_rock_destroyed()
+		player_cam.shake_camera_rock()
 
 func apply_marked_ability() -> void:
 	if player_has_marked_rock:

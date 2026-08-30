@@ -22,9 +22,12 @@
 [ext_resource type="Texture2D" uid="uid://udb8jdxvl5d8" path="res://res/cloud-svgrepo-com.png" id="21_rewwc"]
 [ext_resource type="Script" uid="uid://cwee1r4c8ea3p" path="res://ch/SimpleWater/simple_water.gd" id="21_x8ffe"]
 [ext_resource type="Texture2D" uid="uid://cmk72g2wr4ulq" path="res://res/mountains-svgrepo-com.png" id="22_61oqc"]
+[ext_resource type="Script" uid="uid://jrsa7e3mhuxu" path="res://ch/wall_puzzle_setup.gd" id="26_4i34m"]
+[ext_resource type="AudioStream" uid="uid://pqc60gfwwbnp" path="res://sfx/low_pitch_humming_loop.ogg" id="27_y34rb"]
+[ext_resource type="AudioStream" uid="uid://ub17xcey7moy" path="res://sfx/sfx-click.ogg" id="28_3kghn"]
 [ext_resource type="PackedScene" uid="uid://cnf5uin71fgrj" path="res://ch/Rocks/CrateRigidBody.tscn" id="crate_body"]
 [ext_resource type="PackedScene" uid="uid://bdgpfw3241vuc" path="res://sc/All_level_layouts/CrateForCash.tscn" id="crate_cash"]
-[ext_resource type="PackedScene" path="res://ch/environment_decoration/FluffyCloudField.tscn" id="fluffy_field"]
+[ext_resource type="Script" uid="uid://cg6xll53va6hj" path="res://sc/All_level_layouts/crossy_bridge_scroll.gd" id="layout_scroll"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_md1in"]
 render_priority = 0
@@ -42,7 +45,7 @@ shader_parameter/wave_secondary = 0.55
 shader_parameter/wave_tertiary = 0.28
 shader_parameter/freeze_time = false
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_chxso"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_i42jn"]
 size = Vector2(150, 312.865)
 subdivide_width = 24
 subdivide_depth = 24
@@ -839,7 +842,27 @@ radius = 26.761719
 [sub_resource type="BoxShape3D" id="BoxShape3D_i42jn"]
 size = Vector3(250, 1, 250)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t4alo"]
+albedo_color = Color(0.96, 0.92, 0.86, 1)
+albedo_texture = ExtResource("8_hj3yw")
+metallic_specular = 0.15
+roughness = 0.78
+uv1_scale = Vector3(0.35, 0.35, 0.35)
+uv1_triplanar = true
+texture_filter = 5
+
+[sub_resource type="BoxMesh" id="BoxMesh_w4p4w"]
+size = Vector3(28, 1, 39)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4i34m"]
+size = Vector3(1, 5, 1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_y34rb"]
+data = PackedVector3Array(-0.5, 2.5, 0.5, 0.5, 2.5, 0.5, -0.5, -2.5, 0.5, 0.5, 2.5, 0.5, 0.5, -2.5, 0.5, -0.5, -2.5, 0.5, 0.5, 2.5, -0.5, -0.5, 2.5, -0.5, 0.5, -2.5, -0.5, -0.5, 2.5, -0.5, -0.5, -2.5, -0.5, 0.5, -2.5, -0.5, 0.5, 2.5, 0.5, 0.5, 2.5, -0.5, 0.5, -2.5, 0.5, 0.5, 2.5, -0.5, 0.5, -2.5, -0.5, 0.5, -2.5, 0.5, -0.5, 2.5, -0.5, -0.5, 2.5, 0.5, -0.5, -2.5, -0.5, -0.5, 2.5, 0.5, -0.5, -2.5, 0.5, -0.5, -2.5, -0.5, 0.5, 2.5, 0.5, -0.5, 2.5, 0.5, 0.5, 2.5, -0.5, -0.5, 2.5, 0.5, -0.5, 2.5, -0.5, 0.5, 2.5, -0.5, -0.5, -2.5, 0.5, 0.5, -2.5, 0.5, -0.5, -2.5, -0.5, 0.5, -2.5, 0.5, 0.5, -2.5, -0.5, -0.5, -2.5, -0.5)
+
 [node name="Moss" type="Node3D" unique_id=229302118]
+script = ExtResource("layout_scroll")
+lerp_duration = 1.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true
@@ -869,7 +892,7 @@ metadata/_custom_type_script = "uid://cwee1r4c8ea3p"
 [node name="Mesh" type="MeshInstance3D" parent="SimpleWater" unique_id=650506395]
 material_override = SubResource("ShaderMaterial_md1in")
 cast_shadow = 0
-mesh = SubResource("PlaneMesh_chxso")
+mesh = SubResource("PlaneMesh_i42jn")
 
 [node name="ShadowBlocker" type="MeshInstance3D" parent="." unique_id=580761885]
 transform = Transform3D(-2.585, 0, -1.509958e-07, 0, 1, 0, 3.9032415e-07, 0, -1, -2, -7.197, -18)
@@ -1575,12 +1598,12 @@ billboard = 1
 texture = ExtResource("21_fwjsh")
 
 [node name="CloudsCartoon" type="Sprite3D" parent="." unique_id=615454710]
-transform = Transform3D(6.745, 0, 0, 0, 6.745, 0, 0, 0, 6.745, -34.552574, 16.845741, 64.29297)
+transform = Transform3D(6.745, 0, 0, 0, 6.745, 0, 0, 0, 6.745, -60.90305, 19.604183, 186.3764)
 pixel_size = 0.0151725
 texture = ExtResource("21_rewwc")
 
 [node name="CloudsCartoon3" type="Sprite3D" parent="." unique_id=1218770127]
-transform = Transform3D(6.745, 0, 0, 0, 6.745, 0, 0, 0, 6.745, -34.918, 17.736, 66.138)
+transform = Transform3D(6.745, 0, 0, 0, 6.745, 0, 0, 0, 6.745, -61.268475, 20.494442, 188.22144)
 modulate = Color(0.46651083, 0.7430351, 0.94555444, 1)
 pixel_size = 0.0151725
 texture = ExtResource("21_rewwc")
@@ -1609,7 +1632,7 @@ pixel_size = 0.0151725
 texture = ExtResource("21_rewwc")
 
 [node name="CloudsCartoon8" type="Sprite3D" parent="." unique_id=1783429923]
-transform = Transform3D(-2.456, 2.1471034e-07, 0, -2.1471034e-07, -2.456, 0, 0, 0, 2.456, -25.291, 6.077, 37.26)
+transform = Transform3D(-2.456, 2.1471034e-07, 0, -2.1471034e-07, -2.456, 0, 0, 0, 2.456, -51.641476, 8.835442, 159.34343)
 modulate = Color(0.92, 0.92, 0.92, 1)
 pixel_size = 0.0151725
 texture = ExtResource("21_rewwc")
@@ -1624,30 +1647,6 @@ texture = ExtResource("21_rewwc")
 transform = Transform3D(12.141, 0, 0, 0, 12.141, 0, 0, 0, 12.141, 52.945, -2.236, 281.08237)
 pixel_size = 0.0151725
 texture = ExtResource("21_rewwc")
-
-[node name="FluffyCloudField" parent="." unique_id=1869536249 instance=ExtResource("fluffy_field")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-cloud_count = 14
-area_size = Vector3(70, 12, 40)
-area_center = Vector3(0, 14, 28)
-drift_speed_min = 0.45
-drift_speed_max = 1.2
-drift_axis = Vector3(1, 0, 0.08)
-cloud_scale_min = 1.4
-cloud_scale_max = 2.8
-morph_speed = 0.055
-
-[node name="FluffyCloudFieldFar" parent="." unique_id=783831392 instance=ExtResource("fluffy_field")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-cloud_count = 8
-area_size = Vector3(100, 16, 50)
-area_center = Vector3(0, 22, 55)
-drift_speed_min = 0.3
-drift_speed_max = 0.85
-drift_axis = Vector3(1, 0, 0.05)
-cloud_scale_min = 2.0
-cloud_scale_max = 3.8
-morph_speed = 0.04
 
 [node name="Mountain" type="Sprite3D" parent="." unique_id=490917543]
 transform = Transform3D(18.4, 0, 0, 0, 6.355, 0, 0, 0, 6.355, -64.434, 7.756, 256.847)
@@ -1666,6 +1665,7 @@ texture = ExtResource("22_61oqc")
 
 [node name="CrateLayout" type="Node3D" parent="." unique_id=1945974550]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.807793, 44.30255)
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CrateLayout" unique_id=569261180]
 transform = Transform3D(0.165, 0, 0, 0, 0.165, 0, 0, 0, 0.165, 0, 0, 14.087341)
@@ -2781,6 +2781,231 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.615, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CrateLayout/StaticBody3D" unique_id=1719803171]
 shape = SubResource("BoxShape3D_i42jn")
+
+[node name="floor3" type="MeshInstance3D" parent="." unique_id=1603819985]
+transform = Transform3D(-6.5567085e-09, 0, 20, 0, 1, 0, -0.15, 0, -8.742278e-07, 0, -2.995, 8.5)
+material_override = SubResource("StandardMaterial3D_t4alo")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_w4p4w")
+
+[node name="CrateForCash" parent="." unique_id=1706272792 instance=ExtResource("crate_cash")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.686295, 3, 43.860092)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1716538620]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, -22.686295, 0, 43.860092)
+material_override = ExtResource("6_u0cw1")
+mesh = SubResource("BoxMesh_4i34m")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=1489660971]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=1916622029]
+shape = SubResource("ConcavePolygonShape3D_y34rb")
+
+[node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=2123277898]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -52.43682, 0, 0)
+script = ExtResource("26_4i34m")
+strike_on_wall_overlap = false
+knock_crosshair_distance = 40.0
+spawn_rock_on_hit = true
+
+[node name="TouchingWallWithCrosshair" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=1932821645]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7756195, 1.642421, 20.14018)
+visible = false
+light_color = Color(1, 0, 0, 1)
+light_energy = 20.0
+omni_range = 15.0
+omni_attenuation = 0.0
+
+[node name="Allgood" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=986583065]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7756195, 1.642421, 20.14018)
+
+[node name="WallPuzzle" type="CSGCombiner3D" parent="WallPuzzleSetup" unique_id=2002800515]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, 6.3911743, 2.363, 24.75)
+use_collision = true
+
+[node name="WallPuzzle2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=729490505]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 5, 32.324192, 0, 0)
+use_collision = true
+size = Vector3(17.595, 13, 0.191)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1342905981]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.60430145, 0)
+operation = 2
+size = Vector3(17.4, 1.954, 1)
+
+[node name="CSGBox3D19" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=599910832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.344884, 0)
+operation = 2
+size = Vector3(19.21, 1.954, 1)
+
+[node name="CSGBox3D20" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=398851126]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8928299, 5.2069187, 0)
+operation = 2
+size = Vector3(1.6677341, 4.22993, 1)
+
+[node name="CSGBox3D18" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1909158339]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4698057, 0)
+size = Vector3(17.240234, 1.954, 1)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1588622760]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.9806981, 0)
+operation = 2
+size = Vector3(17.4, 1.754, 1)
+
+[node name="CSGBox3D17" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1913523469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.7563257, 0)
+operation = 2
+size = Vector3(17.4, 2.8364725, 1)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1181829444]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, -0.703135, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=519713394]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, -0.70269823, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=724533755]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, -0.70269823, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1809399324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, -0.70269823, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1351960931]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6726356, -0.70269823, 0)
+operation = 2
+size = Vector3(2.023, 1.754, 1)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1416659286]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3156414, 0)
+operation = 2
+size = Vector3(17.4, 2.877603, 1)
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=471975280]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.822077, 0)
+operation = 2
+size = Vector3(17.4, 1.954, 1)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1880374912]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26883984, 0)
+operation = 2
+size = Vector3(17.4, 1.754, 1)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=806465527]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, 1.5464029, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1063484622]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, 1.5468397, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1702655317]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, 1.5468397, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=740576677]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, 1.5468397, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1718328471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6726356, 1.5468397, 0)
+operation = 2
+size = Vector3(2.023, 1.754, 1)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=961895213]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9631152, 0.13700008, 0)
+size = Vector3(13, 0.21, 1)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=472330498]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0368848, -2.863, 0)
+size = Vector3(11, 0.21, 1)
+
+[node name="CSGBox3D20" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1830474521]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.963115, -2.863, 0)
+size = Vector3(1, 0.21, 1)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=326300462]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.537, 3.137, 0)
+size = Vector3(12, 0.21, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=2127543526]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -8.936885, 1.0029593, 0)
+size = Vector3(12, 0.76, 1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1007183420]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 8.713001, -2.408621, 0)
+size = Vector3(5.176758, 0.76, 1)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=527157384]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 8.713001, 5.270029, 0)
+size = Vector3(3.4659424, 0.76, 1)
+
+[node name="CSGBox3D25" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1526663047]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.536885, 0.137, 0)
+size = Vector3(2, 0.21, 1)
+
+[node name="SFX" type="Node" parent="WallPuzzleSetup" unique_id=1288691040]
+
+[node name="OverlappingWallHum" type="AudioStreamPlayer" parent="WallPuzzleSetup/SFX" unique_id=533030442]
+stream = ExtResource("27_y34rb")
+volume_db = 8.0
+pitch_scale = 0.8
+
+[node name="TurningLightOnOrOff" type="AudioStreamPlayer" parent="WallPuzzleSetup/SFX" unique_id=1629728224]
+stream = ExtResource("28_3kghn")
+volume_db = -35.0
+pitch_scale = 2.0
+bus = &"ReverbBus"
+
+[node name="Crate" parent="WallPuzzleSetup" unique_id=575272199 instance=ExtResource("crate_body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.824073, 2.340082, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
+
+[node name="Crate2" parent="WallPuzzleSetup" unique_id=1398462483 instance=ExtResource("crate_body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4339585, 5.165947, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
+
+[node name="Crate3" parent="WallPuzzleSetup" unique_id=68173347 instance=ExtResource("crate_body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4339585, 7.3008623, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
+
+[node name="Crate4" parent="WallPuzzleSetup" unique_id=1234434006 instance=ExtResource("crate_body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3008132, 7.3008623, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
+
+[node name="Crate5" parent="WallPuzzleSetup" unique_id=426406392 instance=ExtResource("crate_body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.8984714, 10.019372, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
 
 [editable path="Boatmesh/brick_fountain_4"]
 [editable path="Boatmesh/brick_fountain_3"]

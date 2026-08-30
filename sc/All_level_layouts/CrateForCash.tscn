@@ -71,6 +71,10 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_2t2ha")
 
+[sub_resource type="TextMesh" id="TextMesh_jdshi"]
+text = "$"
+font_size = 127
+
 [node name="CrateForCash" type="RigidBody3D" unique_id=1706272792]
 collision_layer = 1048577
 collision_mask = 1048577
@@ -81,9 +85,32 @@ script = ExtResource("2_crate")
 cash_value = 5
 use_hit_vfx = true
 destroy_vfx_cue = &"crate_for_cash_destroy"
+hit_impulse_power = 160.0
+hit_upward_bias = 1.0
+hit_torque_strength = 350.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1341871182]
 shape = SubResource("BoxShape3D_1cyfr")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1563009357]
 mesh = SubResource("ArrayMesh_p2bv1")
+
+[node name="Dollar" type="MeshInstance3D" parent="." unique_id=1259198699]
+transform = Transform3D(1.261, 0, 0, 0, 0.701, 0, 0, 0, 0.1, 0, 0.040947646, 0.5)
+material_override = ExtResource("1_a45tf")
+mesh = SubResource("TextMesh_jdshi")
+
+[node name="Dollar2" type="MeshInstance3D" parent="." unique_id=933127782]
+transform = Transform3D(-1.261, 0, 1.509958e-08, 0, 0.701, 0, -1.9040571e-07, 0, -0.1, 0, 0.041, -0.5)
+material_override = ExtResource("1_a45tf")
+mesh = SubResource("TextMesh_jdshi")
+
+[node name="Dollar3" type="MeshInstance3D" parent="." unique_id=199280901]
+transform = Transform3D(-5.512006e-08, 0, -0.1, 0, 0.701, 0, 1.261, 0, -4.371139e-09, -0.5, 0.040947646, -2.1855694e-08)
+material_override = ExtResource("1_a45tf")
+mesh = SubResource("TextMesh_jdshi")
+
+[node name="Dollar4" type="MeshInstance3D" parent="." unique_id=665315159]
+transform = Transform3D(9.520286e-08, 0, 0.1, 0, 0.701, 0, -1.261, 0, 7.54979e-09, 0.5, 0.041, 2.1855694e-08)
+material_override = ExtResource("1_a45tf")
+mesh = SubResource("TextMesh_jdshi")

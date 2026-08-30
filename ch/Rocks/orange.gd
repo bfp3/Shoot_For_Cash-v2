@@ -379,8 +379,8 @@ func _cleanup_after_end_of_round_explode() -> void:
 
 func shake_camera() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
-	if player_cam:
-		player_cam.shake_camera_rock_destroyed()
+	if player_cam and player_cam.has_method("shake_camera_orange"):
+		player_cam.shake_camera_orange()
 
 func apply_hit_reaction(screen_offset : Vector2) -> void:
 
