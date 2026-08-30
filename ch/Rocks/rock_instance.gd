@@ -1158,12 +1158,11 @@ func setup_rock_type() -> void:
 			current_rock_type = "Crate"
 			rock_type_name = "rock_type_crate"
 			gl_PlayerState.log_white_rock()
-			var crate_health := int(gl_DataSet.get_value("rock_type_crate", 1))
-			var crate_cash := int(gl_DataSet.get_value("rock_type_crate", 0))
 			var crate_scale := Vector3.ONE * 0.5
 			var crate_size := 1.2
 			health = 3
-			cash_value = crate_cash
+			## Award this range's script `reward $N` (not rock_type_crate dataset cash).
+			cash_value = _crate_range_reward_amount()
 			max_health = health
 			if crate:
 				crate.visible = true
@@ -1835,6 +1834,9 @@ func start_destroyed_process() -> void:
 
 	
 	
+	if rock_type == RockSize.CRATE:
+		cash_value = _crate_range_reward_amount()
+
 	if !rock_has_been_logged:
 		rock_has_been_logged = true
 
@@ -1847,6 +1849,10 @@ func start_destroyed_process() -> void:
 	$Marked.hide()
 	if has_node("Freeze"):
 		$Freeze.hide()
+
+	if rock_type == RockSize.CRATE and cash_value > 0:
+		if money_label_3d and money_label_3d.has_method("money_is_money"):
+			money_label_3d.money_is_money(global_position, cash_value)
 
 	#if cash_value > 0:
 		#money_label_3d.money_is_money(global_position, cash_value)
@@ -1898,6 +1904,16 @@ func start_destroyed_process() -> void:
 		await was_hit_tween()
 		if current_state == State.HIT:
 			release_to_pool()
+
+
+## Script `reward $N` for the active range (level-*.txt). Falls back to dataset range_clear_reward.
+func _crate_range_reward_amount() -> int:
+	if round_manager and round_manager.has_method("get_current_range_reward"):
+		return maxi(int(round_manager.get_current_range_reward()), 0)
+	if gl_DataSet and gl_DataSet.has_method("get_range_clear_reward"):
+		return maxi(int(gl_DataSet.get_range_clear_reward()), 0)
+	return maxi(int(gl_DataSet.get_value("range_clear_reward", 0)), 0)
+
 
 func play_hit_sfx() -> void:
 	var vol := randf_range(-25.0, -20.0)

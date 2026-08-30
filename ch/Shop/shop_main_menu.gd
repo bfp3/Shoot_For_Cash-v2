@@ -12,6 +12,7 @@ const SHOP_PANEL_STYLEBOX := preload("res://res/custom_themes_by_blake/shop_main
 @export var reveal_skill_sfx: AudioStreamPlayer
 @onready var cash_label: RichTextLabel = %CashBalanceLabel
 @onready var player_money_label: RichTextLabel = %PlayerMoney
+@onready var shop_crate_overlay: Node = get_node_or_null("%ShopCrateOverlay")
 #@onready var available_upgrades: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades
 #@onready var reroll_button: Button = %Reroll
 var available_upgrades
@@ -91,6 +92,7 @@ func _ready() -> void:
 	cash_label.hide()
 	#update_shop_labels()
 	cash_label.text = "$0"
+	_set_shop_crate_overlay_visible(false)
 	
 
 	
@@ -586,6 +588,21 @@ func enter_state(new_state: SkillState) -> void:
 			print("No State Exists - Skill Menu Script")
 
 
+func _set_shop_crate_overlay_visible(is_open: bool) -> void:
+	if shop_crate_overlay == null:
+		return
+	if is_open:
+		if shop_crate_overlay.has_method("show_overlay"):
+			shop_crate_overlay.show_overlay()
+		else:
+			shop_crate_overlay.show()
+	else:
+		if shop_crate_overlay.has_method("hide_overlay"):
+			shop_crate_overlay.hide_overlay()
+		else:
+			shop_crate_overlay.hide()
+
+
 func update_inactive() -> void:
 	pass
 
@@ -785,6 +802,7 @@ func update_open_menu() -> void:
 	pivot_offset = default_pivot_offset
 
 	show()
+	_set_shop_crate_overlay_visible(true)
 
 	# OPEN ANIMATION
 	var tween := create_tween()
@@ -848,6 +866,7 @@ func play_round_button_pressed() -> void:
 func soft_hide_for_level_editor() -> void:
 	reset_cash_label_color()
 	_close_shop_mini_game()
+	_set_shop_crate_overlay_visible(false)
 	current_state = SkillState.INACTIVE
 	hide()
 	_music_control_call("lower_shop_menu_music")
@@ -864,6 +883,7 @@ func update_close_menu() -> void:
 	_force_hide_ammo_count_popup()
 	_force_hide_pause_label_popup()
 	_close_shop_mini_game()
+	_set_shop_crate_overlay_visible(false)
 	
 	$CenterContainer/MainPanel/VBoxContainer/Money_control.show()
 	#$CenterContainer/MainPanel/VBoxContainer/UpgradeStats.show()
@@ -1487,6 +1507,7 @@ func increase_round_available(played_index: int = -1) -> void:
 	
 func restart() -> void:
 	_close_shop_mini_game()
+	_set_shop_crate_overlay_visible(false)
 	current_state = SkillState.INACTIVE
 
 	current_round = 0

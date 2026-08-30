@@ -25,6 +25,7 @@
 [ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="50_poyra"]
 [ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="51_mxp20"]
 [ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="52_55hkm"]
+[ext_resource type="PackedScene" uid="uid://dhtjxqxwh78e6" path="res://ch/Shop/ShopCrateOverlay.tscn" id="shop_crate_overlay"]
 
 [sub_resource type="Curve" id="Curve_xgu8n"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -753,6 +754,7 @@ mesh = SubResource("BoxMesh_atgli")
 
 [node name="CashBalanceLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1835839393]
 unique_name_in_owner = true
+z_index = 1
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -1273,6 +1275,10 @@ text = "Reset Cash($0)"
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ShopCrateOverlay" parent="." unique_id=1713278199 instance=ExtResource("shop_crate_overlay")]
+layout_mode = 1
+scale = Vector2(0.76, 0.76)
 
 [node name="SFX" type="Node" parent="." unique_id=645241627]
 

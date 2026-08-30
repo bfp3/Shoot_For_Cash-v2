@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://dhtjxqxwh78e6"]
+
+[ext_resource type="Script" uid="uid://d3xub060a6u3m" path="res://ch/Shop/shop_crate_overlay.gd" id="1_overlay"]
+[ext_resource type="PackedScene" uid="uid://bqdykfvjcag5q" path="res://res/crateMesh2.glb" id="2_crate"]
+[ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="3_4b7pq"]
+
+[sub_resource type="TextMesh" id="TextMesh_pyo40"]
+text = "$"
+font_size = 127
+
+[node name="ShopCrateOverlay" type="SubViewportContainer" unique_id=1055404115]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 320)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -160.0
+offset_right = 160.0
+offset_bottom = 160.00012
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+stretch = true
+script = ExtResource("1_overlay")
+display_offset = Vector2(0, 0)
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=553471368]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(320, 320)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=2031673099]
+transform = Transform3D(1, 0, 0, 0, 0.96, 0.28, 0, -0.28, 0.96, 0, 0.85, 2.6)
+current = true
+fov = 35.0
+
+[node name="FillLight" type="OmniLight3D" parent="SubViewport" unique_id=2041599059]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 1.4)
+light_color = Color(1, 0.8875, 0.85, 1)
+light_energy = 1.605
+omni_range = 6.834
+
+[node name="CratePivot" type="Node3D" parent="SubViewport" unique_id=1511656362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+
+[node name="Crate" parent="SubViewport/CratePivot" unique_id=310265294 instance=ExtResource("2_crate")]
+transform = Transform3D(1.15, 0, 0, 0, 1.15, 0, 0, 0, 1.15, 0, 0, 0)
+
+[node name="Dollar" type="MeshInstance3D" parent="SubViewport/CratePivot/Crate" unique_id=46564355]
+transform = Transform3D(1.261, 0, 0, 0, 0.701, 0, 0, 0, 0.1, 0, 0.040947646, 0.5)
+material_override = ExtResource("3_4b7pq")
+mesh = SubResource("TextMesh_pyo40")
+
+[node name="Dollar2" type="MeshInstance3D" parent="SubViewport/CratePivot/Crate" unique_id=1149286511]
+transform = Transform3D(-1.261, 0, 1.509958e-08, 0, 0.701, 0, -1.9040571e-07, 0, -0.1, 0, 0.041, -0.5)
+material_override = ExtResource("3_4b7pq")
+mesh = SubResource("TextMesh_pyo40")
+
+[node name="Dollar3" type="MeshInstance3D" parent="SubViewport/CratePivot/Crate" unique_id=2015740233]
+transform = Transform3D(-5.512006e-08, 0, -0.1, 0, 0.701, 0, 1.261, 0, -4.371139e-09, -0.5, 0.040947646, -2.1855694e-08)
+material_override = ExtResource("3_4b7pq")
+mesh = SubResource("TextMesh_pyo40")
+
+[node name="Dollar4" type="MeshInstance3D" parent="SubViewport/CratePivot/Crate" unique_id=844296410]
+transform = Transform3D(9.520286e-08, 0, 0.1, 0, 0.701, 0, -1.261, 0, 7.54979e-09, 0.5, 0.041, 2.1855694e-08)
+material_override = ExtResource("3_4b7pq")
+mesh = SubResource("TextMesh_pyo40")

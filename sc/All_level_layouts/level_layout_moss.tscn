@@ -22,9 +22,9 @@
 [ext_resource type="Texture2D" uid="uid://udb8jdxvl5d8" path="res://res/cloud-svgrepo-com.png" id="21_rewwc"]
 [ext_resource type="Script" uid="uid://cwee1r4c8ea3p" path="res://ch/SimpleWater/simple_water.gd" id="21_x8ffe"]
 [ext_resource type="Texture2D" uid="uid://cmk72g2wr4ulq" path="res://res/mountains-svgrepo-com.png" id="22_61oqc"]
-[ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="23_61oqc"]
-[ext_resource type="PackedScene" uid="uid://bdgpfw3241vuc" path="res://sc/All_level_layouts/CrateForCash.tscn" id="crate_cash"]
 [ext_resource type="PackedScene" uid="uid://cnf5uin71fgrj" path="res://ch/Rocks/CrateRigidBody.tscn" id="crate_body"]
+[ext_resource type="PackedScene" uid="uid://bdgpfw3241vuc" path="res://sc/All_level_layouts/CrateForCash.tscn" id="crate_cash"]
+[ext_resource type="PackedScene" path="res://ch/environment_decoration/FluffyCloudField.tscn" id="fluffy_field"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_md1in"]
 render_priority = 0
@@ -42,7 +42,7 @@ shader_parameter/wave_secondary = 0.55
 shader_parameter/wave_tertiary = 0.28
 shader_parameter/freeze_time = false
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_fallt"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_chxso"]
 size = Vector2(150, 312.865)
 subdivide_width = 24
 subdivide_depth = 24
@@ -836,10 +836,6 @@ func _input(event: InputEvent) -> void:
 height = 1.975
 radius = 26.761719
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_y34rb"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_3kghn"]
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_i42jn"]
 size = Vector3(250, 1, 250)
 
@@ -873,7 +869,7 @@ metadata/_custom_type_script = "uid://cwee1r4c8ea3p"
 [node name="Mesh" type="MeshInstance3D" parent="SimpleWater" unique_id=650506395]
 material_override = SubResource("ShaderMaterial_md1in")
 cast_shadow = 0
-mesh = SubResource("PlaneMesh_fallt")
+mesh = SubResource("PlaneMesh_chxso")
 
 [node name="ShadowBlocker" type="MeshInstance3D" parent="." unique_id=580761885]
 transform = Transform3D(-2.585, 0, -1.509958e-07, 0, 1, 0, 3.9032415e-07, 0, -1, -2, -7.197, -18)
@@ -1516,48 +1512,56 @@ mesh = SubResource("ArrayMesh_kgf3r")
 
 [node name="Column1" type="MeshInstance3D" parent="." unique_id=1925895366]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.769, -2.614, 19.556)
+visible = false
 material_override = ExtResource("7_1vd3e")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column2" type="MeshInstance3D" parent="." unique_id=1906403061]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.115, -2.614, 19.556)
+visible = false
 material_override = ExtResource("7_1vd3e")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column3" type="MeshInstance3D" parent="." unique_id=261050208]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.413, -2.614, 19.556)
+visible = false
 material_override = ExtResource("7_1vd3e")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column4" type="MeshInstance3D" parent="." unique_id=1929982561]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.722, -2.614, 19.556)
+visible = false
 material_override = ExtResource("7_1vd3e")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column5" type="MeshInstance3D" parent="." unique_id=927015456]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.939, -2.614, 19.556)
+visible = false
 material_override = ExtResource("7_1vd3e")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column6" type="MeshInstance3D" parent="." unique_id=904575327]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.636, -2.614, 19.556)
+visible = false
 material_override = ExtResource("7_1vd3e")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column7" type="MeshInstance3D" parent="." unique_id=1750789358]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.317, -2.614, 19.556)
+visible = false
 material_override = ExtResource("7_1vd3e")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
 
 [node name="Column8" type="MeshInstance3D" parent="." unique_id=1604281670]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.957, -2.614, 19.556)
+visible = false
 material_override = ExtResource("7_1vd3e")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_s470r")
@@ -1620,6 +1624,30 @@ texture = ExtResource("21_rewwc")
 transform = Transform3D(12.141, 0, 0, 0, 12.141, 0, 0, 0, 12.141, 52.945, -2.236, 281.08237)
 pixel_size = 0.0151725
 texture = ExtResource("21_rewwc")
+
+[node name="FluffyCloudField" parent="." unique_id=1869536249 instance=ExtResource("fluffy_field")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+cloud_count = 14
+area_size = Vector3(70, 12, 40)
+area_center = Vector3(0, 14, 28)
+drift_speed_min = 0.45
+drift_speed_max = 1.2
+drift_axis = Vector3(1, 0, 0.08)
+cloud_scale_min = 1.4
+cloud_scale_max = 2.8
+morph_speed = 0.055
+
+[node name="FluffyCloudFieldFar" parent="." unique_id=783831392 instance=ExtResource("fluffy_field")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+cloud_count = 8
+area_size = Vector3(100, 16, 50)
+area_center = Vector3(0, 22, 55)
+drift_speed_min = 0.3
+drift_speed_max = 0.85
+drift_axis = Vector3(1, 0, 0.05)
+cloud_scale_min = 2.0
+cloud_scale_max = 3.8
+morph_speed = 0.04
 
 [node name="Mountain" type="Sprite3D" parent="." unique_id=490917543]
 transform = Transform3D(18.4, 0, 0, 0, 6.355, 0, 0, 0, 6.355, -64.434, 7.756, 256.847)

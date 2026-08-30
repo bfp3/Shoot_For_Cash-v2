@@ -29,13 +29,18 @@ const STRAIGHT_UP_FORCE := 15.0
 const LATERAL_LAUNCH_GRAVITY := 0.0
 const LATERAL_FLIGHT_SPEED := 12.0
 
+## Pre-launch fanfare: play once per wave, then cooldown before it can fire again.
+const PRELAUNCH_FANFARE_DELAY_SEC := 1.5
+const PRELAUNCH_FANFARE_COOLDOWN_SEC := 12.0
+
+var _fanfare_inflight := false
+var _last_fanfare_sec := -99999.0
+
 
 func start_bonus_round() -> void:
-	%PerfectPineappleRound.play(0.5)
+	_play_perfect_fanfare()
 	gl_PlayerState.dataset.power_bonus_round_pineapples = 0
-	%PerfectParticles.emitting = true
-	%PerfectParticles2.emitting = true
-	
+
 	# Pick a random starting position
 	var start_index := randi() % x_positions.size()
 
@@ -51,10 +56,9 @@ func start_bonus_round() -> void:
 			index += x_positions.size()
 
 		pineapple_positions.append(x_positions[index])
-	
-	
+
 	await get_tree().create_timer(1.0, false).timeout
-	
+
 	await get_tree().create_timer(1.0, false).timeout
 	launch_pineapple(pineapple, pineapple_positions[0])
 
@@ -115,6 +119,8 @@ func _rock_manager() -> Node:
 ## Level-script launch: `pineapple 1` (straight up), `pineapple 1 A8` (aimed),
 ## or `pineapple A0 A8` (lateral fly-across from off-camera).
 func launch_from_spawn_entry(entry: Dictionary) -> void:
+	await _ensure_prelaunch_fanfare()
+
 	var body := _get_next_available_pineapple()
 	if body == null:
 		push_warning("PineappleLauncher: no available pineapple for spawn")
@@ -138,6 +144,46 @@ func launch_from_spawn_entry(entry: Dictionary) -> void:
 	if aim_column < 0:
 		aim_column = randi_range(1, COLUMN_COUNT)
 	launch_pineapple(body, x_pos, aim_row, aim_column)
+
+
+## Plays PerfectPineappleRound + particles once per wave (shared by multi-pineapple
+## spawns). After that, blocked for PRELAUNCH_FANFARE_COOLDOWN_SEC.
+func _ensure_prelaunch_fanfare() -> void:
+	if _fanfare_inflight:
+		while _fanfare_inflight and is_inside_tree():
+			await get_tree().process_frame
+		return
+
+	var now := Time.get_ticks_msec() * 0.001
+	if now - _last_fanfare_sec < PRELAUNCH_FANFARE_COOLDOWN_SEC:
+		return
+
+	_fanfare_inflight = true
+	_play_perfect_fanfare()
+	await get_tree().create_timer(PRELAUNCH_FANFARE_DELAY_SEC, false).timeout
+	_last_fanfare_sec = Time.get_ticks_msec() * 0.001
+	_fanfare_inflight = false
+
+
+func _play_perfect_fanfare() -> void:
+	var sfx := get_node_or_null("SFX/PerfectPineappleRound") as AudioStreamPlayer
+	if sfx:
+		sfx.play(0.5)
+	elif has_node("%PerfectPineappleRound"):
+		%PerfectPineappleRound.play(0.5)
+
+	var p1 := get_node_or_null("%PerfectParticles") as GPUParticles2D
+	if p1 == null:
+		p1 = get_node_or_null("PerfectParticles") as GPUParticles2D
+	var p2 := get_node_or_null("%PerfectParticles2") as GPUParticles2D
+	if p2 == null:
+		p2 = get_node_or_null("PerfectParticles2") as GPUParticles2D
+	if p1:
+		p1.restart()
+		p1.emitting = true
+	if p2:
+		p2.restart()
+		p2.emitting = true
 
 
 func _launch_lateral_pineapple(body: RigidBody3D, entry: Dictionary) -> void:

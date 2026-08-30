@@ -1419,6 +1419,11 @@ volume_db = -15.0
 stream = ExtResource("56_gf2tl")
 volume_db = -10.0
 
+[node name="PerfectPineappleRound" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1139686394]
+stream = ExtResource("17_lysu5")
+volume_db = -30.0
+pitch_scale = 0.9
+
 [node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("round_manager") groups=["orange_container"]]
 script = ExtResource("68_qmj5w")
 round_manager = NodePath("../Round_manager")
@@ -1636,6 +1641,7 @@ patrol_seconds_per_leg = 6.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.163108)
 
 [node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=1389715347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
 script = ExtResource("62_wallpz")
 strike_on_wall_overlap = false
 knock_crosshair_distance = 40.0
@@ -1657,15 +1663,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 2.363, 24.75)
 use_collision = true
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=974986408]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4631152, 1.137, 0)
-size = Vector3(12, 0.21, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9631152, 0.13700008, 0)
+size = Vector3(13, 0.21, 1)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=851687279]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5368848, -1.863, 0)
-size = Vector3(12, 0.21, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0368848, -2.863, 0)
+size = Vector3(11, 0.21, 1)
+
+[node name="CSGBox3D20" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=203730346]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.963115, -2.863, 0)
+size = Vector3(1, 0.21, 1)
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1269927889]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.537, 4.137, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.537, 3.137, 0)
 size = Vector3(12, 0.21, 1)
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1429191292]
@@ -1673,15 +1683,11 @@ transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -8.9
 size = Vector3(12, 0.76, 1)
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1023976106]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 7.863115, 1.0029593, 0)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 8.713, 1.003, 0)
 size = Vector3(12, 0.76, 1)
 
-[node name="CSGBox3D20" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=203730346]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.463115, -1.863, 0)
-size = Vector3(2, 0.21, 1)
-
 [node name="CSGBox3D25" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1132892119]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.536885, 1.137, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.536885, 0.137, 0)
 size = Vector3(2, 0.21, 1)
 
 [node name="WallPuzzle2" type="CSGBox3D" parent="WallPuzzleSetup" unique_id=736609469]

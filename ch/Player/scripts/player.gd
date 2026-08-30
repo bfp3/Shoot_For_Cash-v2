@@ -398,6 +398,7 @@ func _process(delta: float) -> void:
 			Engine.time_scale = restore
 	
 	if current_state == State.IN_SHOP:
+		_update_hold_aim_zoom()
 		return 
 		
 	
@@ -416,10 +417,12 @@ func _process(delta: float) -> void:
 
 	if current_state == State.ROUND_FINISHED:
 		crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
-		update_gun_look() 
+		update_gun_look()
+		_update_hold_aim_zoom()
 		return
 	
 	if current_state == State.INACTIVE || current_state == State.IN_SHOP:
+		_update_hold_aim_zoom()
 		return
 	
 	var viewport_size := get_viewport().get_visible_rect().size
@@ -474,7 +477,8 @@ func _process(delta: float) -> void:
 				#fire_weapon()
 
 	handle_scope_adjust(delta)
-	
+	_update_hold_aim_zoom()
+
 	#if Input.is_action_pressed("shootWeapon"):
 		#return
 	
@@ -1732,6 +1736,19 @@ func reset_mouse_pos() -> void:
 
 func pulse_shake_camera() -> void:
 	camera_3d.pulse_shake_camera()
+
+
+## Hold shootWeapon → camera FOV ease (see PlayerCamera Hold Aim Zoom exports).
+func _update_hold_aim_zoom() -> void:
+	if camera_3d == null or not camera_3d.has_method("set_hold_aim_pressed"):
+		return
+	var held := false
+	if current_state == State.ACTIVE:
+		if running_on_mobile:
+			held = mobile_controller.is_fire_held()
+		else:
+			held = Input.is_action_pressed("shootWeapon")
+	camera_3d.set_hold_aim_pressed(held)
 
 func perfect_score() -> void:
 	$SFX/PerfectScore4.play(0.5)

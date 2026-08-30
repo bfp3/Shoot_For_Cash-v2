@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://ch/environment_decoration/fluffy_cloud_field.gd" id="1_field"]
+[ext_resource type="PackedScene" path="res://ch/environment_decoration/FluffyCloud.tscn" id="2_cloud"]
+
+[node name="FluffyCloudField" type="Node3D"]
+script = ExtResource("1_field")
+cloud_scene = ExtResource("2_cloud")
+cloud_count = 12
+area_size = Vector3(70, 12, 40)
+area_center = Vector3(0, 14, 28)
+drift_speed_min = 0.45
+drift_speed_max = 1.2
+drift_axis = Vector3(1, 0, 0.08)
+cloud_scale_min = 1.4
+cloud_scale_max = 2.8
+morph_speed = 0.06

@@ -56,6 +56,7 @@ range jetz
 
 		wait 1500
 
+		balloon-check
 		sfx-faster sephiroff
 
 		rock-stay 4 c6
@@ -87,7 +88,7 @@ range jetz
 
 		rock-stay 1 a1
 		wait 1500
-
+		balloon-check
 
 		rock-stay 2 b6
 		wait 0
@@ -145,8 +146,7 @@ range jetz
 
 		rock-avoider 1 a7
 
-
-		smokecan
+		balloon-check
 		smokecan
 
 		rock-stay 1 a1
@@ -194,7 +194,8 @@ range jetz
 		rock-stay 5 c5
 
 		wait 2000
-
+		balloon-check
+		wait 2000
 		red-avoider
 		wait
 		red-avoider
@@ -271,7 +272,7 @@ range jetz
 		wait 500
 		rock-avoider 1 a8
 		wait 1000
-
+		balloon-check
 		rock-avoider 1 a7
 
 		rock-stay 3 a3
@@ -378,5 +379,8 @@ range jetz
 		rock-avoider
 		wait 2000
 		rock-stay 4 c8
-		wait until clear
+		wait
+
+		balloon-check
+
 		repeat 99
