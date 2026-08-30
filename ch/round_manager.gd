@@ -1043,7 +1043,7 @@ func set_script_checkpoint(spawn_index: int) -> void:
 
 
 ## Player shot the balloon-check: save this script cursor as the fail-resume
-## point and clear strikes. Does not bank the round cash pool.
+## point and clear strikes. No cash bank, no money-label pull, no CHECKPOINT banner.
 func on_checkpoint_shot() -> void:
 	if _checkpoint_advancing or player_failed or game_over_triggered:
 		return
@@ -1054,34 +1054,17 @@ func on_checkpoint_shot() -> void:
 			set_script_checkpoint(int(rocks_container.get_sequence_cursor()))
 		_save_level_progress()
 
-	var money = get_tree().get_first_node_in_group("money_manager")
-	if money and money.has_method("begin_checkpoint_ceremony"):
-		money.begin_checkpoint_ceremony()
-
 	var strike_hud = null
 	if wave_progress_feedback and "strike_hud" in wave_progress_feedback:
 		strike_hud = wave_progress_feedback.strike_hud
 
-	if money and money.has_method("checkpoint_move_to_center"):
-		if strike_hud and strike_hud.has_method("checkpoint_move_to_center"):
-			strike_hud.checkpoint_move_to_center()
-		await money.checkpoint_move_to_center()
-	elif strike_hud and strike_hud.has_method("checkpoint_move_to_center"):
+	if strike_hud and strike_hud.has_method("checkpoint_move_to_center"):
 		await strike_hud.checkpoint_move_to_center()
-
-	# Money bank is the end-of-round ladder pair — checkpoint only saves progress / clears strikes.
 	if strike_hud and strike_hud.has_method("checkpoint_clear_struck"):
 		await strike_hud.checkpoint_clear_struck()
-
-	if money and money.has_method("checkpoint_return_home"):
-		if strike_hud and strike_hud.has_method("checkpoint_return_home"):
-			strike_hud.checkpoint_return_home()
-		await money.checkpoint_return_home()
-	elif strike_hud and strike_hud.has_method("checkpoint_return_home"):
+	if strike_hud and strike_hud.has_method("checkpoint_return_home"):
 		await strike_hud.checkpoint_return_home()
 
-	if money and money.has_method("end_checkpoint_ceremony"):
-		money.end_checkpoint_ceremony()
 	if wave_progress_feedback:
 		wave_progress_feedback.strikes_int = 0
 		if wave_progress_feedback.strike_label:
@@ -1093,8 +1076,6 @@ func on_checkpoint_shot() -> void:
 		rocks_container.flush_pending_ammo()
 	if rocks_container and rocks_container.has_method("end_checkpoint_hold"):
 		rocks_container.end_checkpoint_hold()
-	if wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
-		wave_progress_feedback.play_named_banner("CHECKPOINT")
 
 
 func _is_editor_playtest() -> bool:

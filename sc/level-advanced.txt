@@ -3,20 +3,41 @@ island shipper
 
 range moss
 
-	play $1000
-	reward $4000
+	play $100
+	reward $400
 
 	round
-		#hold out 120000
-		hold out 30000
+		hold out 120000
+		#hold out 10000
 		#1
 
-		pace-impossible
-		rock 4 a4
-		rock 4 a4
-		rock 4 a4
-		rock 4 a4
+		#rock-juggle
+		#wait
 
+		#balloon-check a8
+
+		rock-black 4 b4
+		wait 2000
+
+		rock-black 4 b4
+		wait 0
+		rock-black 6 b6
+		wait 2000
+
+		rock-black 4 a4
+		wait 0
+		rock-black 6 b6
+		wait 0 
+		rock-black 2 b2
+		wait 2000
+
+		wait
+
+
+		pace-impossible
+		#rock 4 a4
+		#rock 4 a4
+		#rock 4 a4
 
 
 		pace-slow
@@ -37,7 +58,7 @@ range moss
 		rock 4 a4
 		wait
 
-		pineapple b0 b4
+		pineapple b0 b3
 		wait 2000
 
 		balloon a1
@@ -115,82 +136,86 @@ range moss
 		wait 50
 		rock-grey 4 a4
 		wait 1000
-		pineapple b0 b5
 
 		wait
 		ammo
-		wait 3000
+		wait 2000
 
 		# PART 2 - SPARSE PAIRS - make them go faster and faster
 
 		pace-slow
-		rock 3 a3
+		rock-grey 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
+		wait
+
+		rock-grey 3 a3
+		wait 0
+		rock-grey 6 a6
+		wait
+
+		rock-grey 3 a3
+		wait 0
+		rock-grey 6 a6
 		wait
 
 		rock 3 a3
 		wait 0
-		rock 6 a6
-		wait
-
-		rock 3 a3
-		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
 
 		pace-normal
 		rock 5 a5
 		wait 0
+		rock-grey 8 a8
+		wait
+
+		rock 5 a5
+		wait 0
+		rock-grey 8 a8
+		wait
+
+		rock-grey 5 a5
+		wait 0
 		rock 8 a8
 		wait
 
 		rock 5 a5
 		wait 0
-		rock 8 a8
+		rock-grey 2 a2
 		wait
 
 		rock 5 a5
 		wait 0
-		rock 8 a8
+		rock-grey 2 a2
 		wait
 
-		pace-fast
-		rock 5 a5
-		wait 0
-		rock 2 a2
-		wait
-
-		rock 5 a5
-		wait 0
-		rock 2 a2
-		wait
-
-		rock 5 a5
+		rock-grey 5 a5
 		wait 0
 		rock 2 a2
 		wait
 
 
-		rock 5 b5
+		rock-grey 5 b5
 		wait 0
 		rock 2 b2
 		wait
 
-		rock 5 b5
+		rock-grey 5 b5
 		wait 0
 		rock 2 b2
 		wait
 
-		rock 5 b5
+		pace-slow
+		rock-grey 5 a5
 		wait 0
-		rock 2 b2
+		rock 2 a2
 		wait
 
 
 		wait 1000
-		pineapple a0 a5
+		pineapple a0 a4
 		wait 2000
 
 
@@ -204,69 +229,71 @@ range moss
 		pace-normal
 		rock 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
 		rock 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
-		rock 3 a3
+		rock-grey 3 a3
 		wait 0
 		rock 6 a6
 		wait
 
 		#Alternate Sides with balloon wall in the way.
-		rock 2 a2
+		rock-grey 2 a2
 		wait 0
 		rock 5 a5
 		wait
 
 		rock 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
-		rock 2 a2
+		rock-grey 2 a2
 		wait 0
 		rock 5 a5
 		wait
 
 		rock 3 a3
 		wait 0
-		rock 6 a6
+		rock-grey 6 a6
 		wait
 
 
 		# to ROW B
+		rock-grey 2 b2
+		wait 0
+		rock-grey 5 b5
+		wait
+
+		rock-grey 3 b3
+		wait 0
+		rock-grey 6 b6
+		wait
+
 		rock 2 b2
 		wait 0
-		rock 5 b5
+		rock-grey 5 b5
 		wait
 
-		rock 3 b3
+		pace-slow
+		rock 3 a3
 		wait 0
-		rock 6 b6
-		wait
-
-		rock 2 b2
-		wait 0
-		rock 5 b5
-		wait
-
-		rock 3 b3
-		wait 0
-		rock 6 b6
+		rock 6 a6
 		wait
 
 		# end Row B
 
-		rock-black
-		# time check
 
+		rock-black 7 b7
+		wait
+		clear
+		wait 2000
 		pace-slowest
-		wait 3000
 		rock-grey 1 a1
 		wait 50
 		rock-grey 2 a2
@@ -285,7 +312,7 @@ range moss
 		wait 50
 		rock-grey 4 a4
 		wait 1000
-		pineapple b0 b5
+
 		wait 2000
 		rock-grey
 		wait 50
@@ -306,8 +333,9 @@ range moss
 		rock-grey
 		wait 1000
 
-
 		balloon-check
+		
+		
 range moss2
 	play $200
 	reward $400

@@ -162,13 +162,13 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / mothership / smokecan / crate / pineapple / red_rock_error:
+## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / rock-stay / mothership / smokecan / crate / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, spawn_row, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
 ##   `rock A4` is invalid — use `rock ? A4`. Side lanes: `rock A0 A8` / `rock A0 A9`
 ##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
-##   `rock-grey` is $1 and does not strike on miss. `mothership` flees the player for bonus cash.
+##   `rock-grey` is $1 and does not strike on miss. `rock-stay` flies straight to aim then hangs (pace ignored). `mothership` flees the player for bonus cash.
 ##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
 ## wait: {cmd} — hold until the sky is clear (same as old `wait until clear`).
@@ -241,7 +241,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'red_rock_error', 'smokecan', 'crate':
+		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'rock-stay', 'rock-still', 'mothership', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
 
 		'pineapple':
@@ -447,7 +447,7 @@ func _is_random_token(token: String) -> bool:
 	return token.strip_edges() == '?'
 
 
-## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / mothership / smokecan / crate / pineapple / red_rock_error
+## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / rock-stay / mothership / smokecan / crate / pineapple / red_rock_error
 ##   rock          → rock ? ?   (random column, aim row A + random aim column)
 ##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
@@ -1207,7 +1207,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'smokecan', 'crate', 'red_rock_error':
+		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'rock-stay', 'rock-still', 'mothership', 'smokecan', 'crate', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))

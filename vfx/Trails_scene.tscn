@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://crflenc26g7jw"]
+
+[ext_resource type="Script" uid="uid://c8svgu738e70v" path="res://ch/projectiles/Trails3D.gd" id="1_4owyf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqw67"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[node name="MeshInstance3D" type="MeshInstance3D"]
+material_override = SubResource("StandardMaterial3D_dqw67")
+script = ExtResource("1_4owyf")
+_endColor = Color(1, 1, 1, 0)

@@ -68,6 +68,37 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 	tween.tween_property(multi_label, "modulate:a", 0.0, 0.2)
 	tween.parallel().tween_property(multi_label, "outline_modulate:a", 0.0, 0.2)
 
+
+## Orbit-around-rock bonus: pop "360!" above the rock (same Label3D / SFX as multi-shot).
+func show_360(pos: Vector3) -> void:
+	_play_named_banner("360!", pos, Color("ffe600"), 72)
+
+
+func _play_named_banner(text: String, pos: Vector3, color: Color, font_size: int) -> void:
+	multi_label.text = text
+	multi_label.modulate = color
+	multi_label.modulate.a = 0.0
+	multi_label.outline_modulate.a = 0.0
+	multi_label.font_size = font_size
+	multi_label.show()
+	multi_label.global_position.x = pos.x
+	multi_label.global_position.y = pos.y
+
+	if gl_PlayerState.dataset.total_hazards > 0:
+		return
+
+	$MultiShotSFX.play()
+
+	if tween:
+		tween.kill()
+
+	tween = create_tween().set_ease(Tween.EASE_OUT)
+	tween.tween_property(multi_label, "modulate:a", 1.0, 0.15)
+	tween.parallel().tween_property(multi_label, "outline_modulate:a", 1.0, 0.15)
+	tween.tween_interval(0.85)
+	tween.tween_property(multi_label, "modulate:a", 0.0, 0.2)
+	tween.parallel().tween_property(multi_label, "outline_modulate:a", 0.0, 0.2)
+
 func check_if_within_zone(pos : float) -> int:
 	return -1
 	#var zone_a_reward := 10

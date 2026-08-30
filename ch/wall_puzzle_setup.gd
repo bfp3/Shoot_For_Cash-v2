@@ -14,6 +14,18 @@ class_name WallPuzzleSetup
 ## 1 = full hit-radius; raise slightly above 1 if the visual ring feels bigger than the hit radius.
 @export_range(0.5, 1.5, 0.05) var reticle_sample_radius_scale := 1.05
 
+@export_group("Strike On Wall Touch")
+## When true, first frame the crosshair overlaps solid wall awards a strike.
+@export var strike_on_wall_overlap := true
+
+@export_group("Crosshair Knock On Wall Touch")
+## When true, first frame the crosshair overlaps solid wall knocks the reticle away (independent of strikes).
+@export var knock_crosshair_on_wall_touch := true
+## Screen-pixel distance to shove the crosshair away from the touch.
+@export_range(20.0, 400.0, 1.0) var knock_crosshair_distance := 140.0
+## Seconds to complete the knock shove (higher = slower / smoother).
+@export_range(0.02, 1.0, 0.01) var knock_crosshair_duration := 0.15
+
 @export_group("Wall Hit Spawn")
 ## When true, entering overlap spawns a threat (balloon or rock — pick one flag below).
 @export var spawn_on_wall_hit := false
@@ -49,11 +61,46 @@ func _physics_process(_delta: float) -> void:
 	_overlapping = overlapping
 	_apply_overlap_visuals(overlapping, false)
 	if entered:
+		_try_strike_on_wall_hit()
+		_try_knock_crosshair_on_wall_hit()
 		_try_spawn_on_wall_hit()
 
 
 func is_crosshair_overlapping_wall() -> bool:
 	return _overlapping
+
+
+func _try_strike_on_wall_hit() -> void:
+	if not strike_on_wall_overlap:
+		return
+	var player := get_tree().get_first_node_in_group("Player")
+	if player != null and "current_state" in player and "State" in player:
+		if player.current_state != player.State.ACTIVE:
+			return
+	var origin := global_position
+	if light_touching:
+		origin = light_touching.global_position
+	var rocks_container = null
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm != null:
+		rocks_container = rm.get("rocks_container")
+	if rocks_container == null:
+		rocks_container = get_tree().get_first_node_in_group("rocks_container")
+	if rocks_container and rocks_container.has_method("set_strike_feedback_origin"):
+		rocks_container.set_strike_feedback_origin(origin)
+	gl_PlayerState.add_strike()
+
+
+func _try_knock_crosshair_on_wall_hit() -> void:
+	if not knock_crosshair_on_wall_touch:
+		return
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null:
+		return
+	if "current_state" in player and "State" in player:
+		if player.current_state != player.State.ACTIVE:
+			return
+	_knock_crosshair_away_from_wall(player)
 
 
 func _try_spawn_on_wall_hit() -> void:
@@ -179,7 +226,103 @@ func _build_reticle_sample_offsets(radius: float) -> Array[Vector2]:
 	return offsets
 
 
-func _ray_hits_wall(cam: Camera3D, space: PhysicsDirectSpaceState3D, screen_pos: Vector2) -> bool:
+func _knock_crosshair_away_from_wall(player: Node) -> void:
+	var cam: Camera3D = null
+	if "camera_3d" in player and player.camera_3d is Camera3D:
+		cam = player.camera_3d
+	if cam == null:
+		cam = get_viewport().get_camera_3d()
+	if cam == null:
+		return
+
+	var crosshair: Control = player.get("crosshair") as Control
+	if crosshair == null or not is_instance_valid(crosshair):
+		return
+
+	var center: Vector2 = crosshair.global_position + Vector2(20.0, 20.0)
+	if "CROSSHAIR_CENTER_OFFSET" in player:
+		center = crosshair.global_position + player.CROSSHAIR_CENTER_OFFSET
+
+	var radius := 40.0
+	if player.has_method("get_current_crosshair_hit_radius"):
+		radius = float(player.get_current_crosshair_hit_radius())
+
+	var space := get_world_3d().direct_space_state
+	var hit_offset_sum := Vector2.ZERO
+	var hit_count := 0
+	var miss_offset_sum := Vector2.ZERO
+	var miss_count := 0
+	## Quadrant hit counts: 0=up(-Y), 1=right(+X), 2=down(+Y), 3=left(-X)
+	var quad_hits := [0, 0, 0, 0]
+	var nearest_normal_screen := Vector2.ZERO
+	var nearest_dist := INF
+
+	for offset in _build_reticle_sample_offsets(radius):
+		var hit := _ray_wall_hit(cam, space, center + offset)
+		if hit.is_empty():
+			miss_offset_sum += offset
+			miss_count += 1
+			continue
+		hit_offset_sum += offset
+		hit_count += 1
+		if offset.y < -0.01:
+			quad_hits[0] += 1
+		elif offset.y > 0.01:
+			quad_hits[2] += 1
+		if offset.x > 0.01:
+			quad_hits[1] += 1
+		elif offset.x < -0.01:
+			quad_hits[3] += 1
+		var dist := offset.length_squared()
+		if dist < nearest_dist:
+			nearest_dist = dist
+			var hit_pos: Vector3 = hit.get("position", Vector3.ZERO)
+			var hit_normal: Vector3 = hit.get("normal", Vector3.ZERO)
+			if hit_normal.length_squared() > 0.0001:
+				var a := cam.unproject_position(hit_pos)
+				var b := cam.unproject_position(hit_pos + hit_normal.normalized())
+				nearest_normal_screen = b - a
+
+	var push := Vector2.ZERO
+	## Prefer free reticle space: if the wall only covers the bottom, misses average upward.
+	if miss_count > 0 and miss_offset_sum.length_squared() > 0.25:
+		push = miss_offset_sum.normalized()
+	elif hit_count > 0 and hit_offset_sum.length_squared() > 0.25:
+		push = -hit_offset_sum.normalized()
+	else:
+		## Wall covers most of the disk — shove toward the least-covered quadrant.
+		var best_q := 0
+		var best_hits := 999999
+		for q in 4:
+			if int(quad_hits[q]) < best_hits:
+				best_hits = int(quad_hits[q])
+				best_q = q
+		match best_q:
+			0:
+				push = Vector2(0, -1) ## screen up
+			1:
+				push = Vector2(1, 0)
+			2:
+				push = Vector2(0, 1) ## screen down
+			_:
+				push = Vector2(-1, 0)
+		if nearest_normal_screen.length_squared() > 0.01:
+			## Blend in surface normal if it has a clear screen component.
+			var n2 := nearest_normal_screen.normalized()
+			if absf(n2.dot(push)) > 0.15:
+				push = (push + n2).normalized()
+
+	if push.length_squared() < 0.01:
+		push = Vector2(0, -1)
+
+	var delta := push * knock_crosshair_distance
+	if player.has_method("knock_crosshair_by"):
+		player.knock_crosshair_by(delta, knock_crosshair_duration)
+	elif "target_crosshair_position" in player:
+		player.target_crosshair_position += delta
+
+
+func _ray_wall_hit(cam: Camera3D, space: PhysicsDirectSpaceState3D, screen_pos: Vector2) -> Dictionary:
 	var origin := cam.project_ray_origin(screen_pos)
 	var dir := cam.project_ray_normal(screen_pos)
 	var query := PhysicsRayQueryParameters3D.create(origin, origin + dir * ray_length)
@@ -187,8 +330,14 @@ func _ray_hits_wall(cam: Camera3D, space: PhysicsDirectSpaceState3D, screen_pos:
 	query.collide_with_bodies = true
 	var hit := space.intersect_ray(query)
 	if hit.is_empty():
-		return false
-	return _collider_is_wall_puzzle(hit.get("collider"))
+		return {}
+	if not _collider_is_wall_puzzle(hit.get("collider")):
+		return {}
+	return hit
+
+
+func _ray_hits_wall(cam: Camera3D, space: PhysicsDirectSpaceState3D, screen_pos: Vector2) -> bool:
+	return not _ray_wall_hit(cam, space, screen_pos).is_empty()
 
 
 func _collider_is_wall_puzzle(collider: Object) -> bool:

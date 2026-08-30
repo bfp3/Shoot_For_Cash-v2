@@ -2,15 +2,15 @@ extends Node
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 var advanced_unlocked := false
-var expert_unlocked := false
-var mystery_unlocked := false
+var expert_unlocked := true
+var mystery_unlocked := true
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 var challenges_unlocked := true
 var challenge_01_unlocked := true
-var challenge_02_unlocked := false
-var challenge_03_unlocked := false
-var challenge_04_unlocked := false
+var challenge_02_unlocked := true
+var challenge_03_unlocked := true
+var challenge_04_unlocked := true
 
 # Upgrade stages
 
@@ -102,9 +102,12 @@ var dataset_float : Dictionary = {
 	,"rock_type_8"			: [0,		1]
 	,"rock_type_9"			: [0,		1]
 	,"rock_type_avoider"	: [0,		1]
+	,"rock_type_red_attacker": [0,		1]
 	,"rock_type_chaser"		: [0,		1]
 	## Grey rock: $1, 1 health. Misses do not strike.
 	,"rock_type_grey"		: [1,		1]
+	## rock-stay: hangs at aim after a fast straight approach.
+	,"rock_type_stay"		: [2,		1]
 	## Mothership: [bonus cash, hits to destroy].
 	,"mothership_reward"	: [35,		3]
 	## Crate: same cash/health as a basic rock; uses crate mesh + crate_particles.

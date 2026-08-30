@@ -49,6 +49,7 @@ func _on_body_entered(body: Node3D) -> void:
 			splash_particles(body)
 			splash_sfx()
 			return
+		## Red-attacker: splash + despawn via OOB path, never a strike.
 		
 		splash_particles(body)
 		## Soft water splash only for black rocks — no strike sting / OOB hit SFX.
@@ -73,7 +74,7 @@ func _on_body_entered(body: Node3D) -> void:
 
 		gl_PlayerState.log_rock_missed(missed_rock_type_name)
 
-		if is_hazard:
+		if is_hazard or missed_rock_type_name.contains("red_attacker"):
 			if rocks_container and rocks_container.has_method("check_wave_clear_if_no_live_rocks"):
 				rocks_container.call_deferred("check_wave_clear_if_no_live_rocks")
 			return

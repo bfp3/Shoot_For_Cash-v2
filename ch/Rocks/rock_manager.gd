@@ -116,7 +116,7 @@ var _path_trail_mat: StandardMaterial3D
 var _path_telegraph_tween: Tween
 ## Aim apex heights — same Y bands balloons use (A/B/C → 1/2/3).
 const AIM_LANE_Y := {
-	1: 7.0, #6.5
+	1: 6.5, # 7.0
 	2: 3.5,
 	3: 0.5,
 }
@@ -1463,12 +1463,16 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.SMOKECAN
 			'rock-avoider':
 				return RockInstance.RockSize.AVOIDER
+			'rock-red-attacker', 'red-attacker':
+				return RockInstance.RockSize.RED_ATTACKER
 			'rock-chaser':
 				return RockInstance.RockSize.CHASER
 			'rock-juggle':
 				return RockInstance.RockSize.JUGGLE
 			'rock-grey':
 				return RockInstance.RockSize.GREY
+			'rock-stay', 'rock-still':
+				return RockInstance.RockSize.STAY
 			'mothership':
 				return RockInstance.RockSize.MOTHERSHIP
 			'crate':
@@ -1491,9 +1495,13 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'red_rock_error'
 		or cmd == 'smokecan'
 		or cmd == 'rock-avoider'
+		or cmd == 'rock-red-attacker'
+		or cmd == 'red-attacker'
 		or cmd == 'rock-chaser'
 		or cmd == 'rock-juggle'
 		or cmd == 'rock-grey'
+		or cmd == 'rock-stay'
+		or cmd == 'rock-still'
 		or cmd == 'mothership'
 		or cmd == 'crate'
 	)
@@ -1590,6 +1598,7 @@ func check_rocks_out_of_bounds() -> void:
 			continue
 		if body.rock_type == RockInstance.RockSize.AVOIDER and not body.avoider_destroys_on_out_of_bounds:
 			continue
+		## Red-attacker always uses camera OOB cull (no strike — see _oob_miss_causes_strike).
 
 		var world_pos : Vector3 = body.global_position
 		if _is_inside_camera_viewport(camera, world_pos, viewport_size):
@@ -1672,19 +1681,23 @@ func deactivate_out_of_bounds_rock(body: RockInstance, side: OobSide = OobSide.N
 		set_strike_feedback_origin(miss_pos)
 	gl_PlayerState.log_rock_missed(missed_rock_type_name)
 
-	# Non-clearable exits (black / smokecan / avoider) can leave remaining at 0 forever.
+	# Non-clearable exits (black / smokecan / avoider / red-attacker) can leave remaining at 0 forever.
 	if not _oob_miss_should_show_feedback(missed_rock_type_name) \
-			or missed_rock_type_name.contains("hazard"):
+			or missed_rock_type_name.contains("hazard") \
+			or missed_rock_type_name.contains("red_attacker"):
 		call_deferred("check_wave_clear_if_no_live_rocks")
 
 	# Strike / miss feedback. Must-hit OOB strikes get this via EventBus.add_strike instead
-	# (avoids doubling the shake/particles).
+	# (avoids doubling the shake/particles). Red-attacker: feedback yes, strike no.
 	if oob_miss_feedback_enabled and _oob_miss_should_show_feedback(missed_rock_type_name) \
 			and not _oob_miss_causes_strike(missed_rock_type_name):
 		_play_oob_miss_feedback(miss_pos, side)
 
 
 func _oob_miss_causes_strike(rock_type_name: String) -> bool:
+	## Must-hit basic rocks only. Grey / avoider / red-attacker / hazards never strike on OOB.
+	if rock_type_name.contains("red_attacker"):
+		return false
 	return rock_type_name.contains("rock_type_1")
 
 
@@ -2443,6 +2456,13 @@ func _sample_telegraph_path(
 		return pts
 
 	var g_scale := aim_launch_gravity_scale if gravity_scale < 0.0 else gravity_scale
+	## Zero / near-zero gravity = straight flight (rock-stay, etc.).
+	if g_scale <= 0.01:
+		for i in samples:
+			var u := float(i) / float(samples - 1)
+			pts.append(from.lerp(to, u))
+		return pts
+
 	var vel := BallisticAim.velocity_to_point(
 		from, to, -1.0, g_scale, aim_hang_time_sec
 	)
@@ -2928,6 +2948,14 @@ func spawn_threat_rock(cmd: String = "rock") -> void:
 		return
 	body.enter_state(body.State.ACTIVE)
 	var upward_force := 10.0
+	if body.rock_type == RockInstance.RockSize.STAY:
+		var aim := _resolve_aim_cell(entry, true, column)
+		var aim_pos := _aim_cell_world_position(aim.x, aim.y, true)
+		if body.has_method("begin_rock_stay_flight"):
+			body.begin_rock_stay_flight(aim_pos)
+		if rock_rock_collisions_enabled and body.has_method("schedule_airborne_rock_collisions"):
+			body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
+		return
 	var launch_g := _aim_launch_gravity_for(body, entry)
 	BallisticAim.configure_body_for_ballistic_launch(body, launch_g)
 	if body.has_method("begin_ballistic_aim_feel"):
@@ -2977,19 +3005,37 @@ func _launch_stream_rock(body, counter: int) -> void:
 		body.constant_force = Vector3.ZERO
 		BallisticAim.configure_body_for_ballistic_launch(body, LATERAL_LAUNCH_GRAVITY)
 		impulse = _lateral_launch_impulse(body, entry)
+		body.apply_central_impulse(impulse)
 	elif body.rock_type == RockInstance.RockSize.SMALL_2:
 		body.bounce_rocks()
 		upward_force = upward_force * rock_pigeon_upward_force
 		impulse = _pigeon_launch_impulse(body, counter, upward_force)
+		body.apply_central_impulse(impulse)
+	elif body.rock_type == RockInstance.RockSize.STAY:
+		var aim_pos := _stay_aim_world(body, counter, entry)
+		if body.has_method("begin_rock_stay_flight"):
+			body.begin_rock_stay_flight(aim_pos)
+		else:
+			BallisticAim.configure_body_for_ballistic_launch(body, 0.0)
+			impulse = _aimed_launch_impulse_to_world(body, aim_pos, 0.0)
+			body.apply_central_impulse(impulse)
 	else:
 		var launch_g := _aim_launch_gravity_for(body, entry)
 		BallisticAim.configure_body_for_ballistic_launch(body, launch_g)
 		body.begin_ballistic_aim_feel(aim_descent_linear_damp)
 		impulse = _build_launch_impulse(body, counter, upward_force, 0.0, launch_g)
-	body.apply_central_impulse(impulse)
+		body.apply_central_impulse(impulse)
 
 	if rock_rock_collisions_enabled:
 		body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
+
+
+func _stay_aim_world(body, rock_index: int, entry) -> Vector3:
+	if rock_index >= 0 and rock_index < _wave_telegraph_plan.size():
+		return _wave_telegraph_plan[rock_index].aim
+	var spawn_column := _x_to_nearest_column(body.target_x_position)
+	var aim := _resolve_aim_cell(entry, true, spawn_column)
+	return _aim_cell_world_position(aim.x, aim.y, true)
 
 
 ## Pigeons fly into the distance along the column fan (17° half-angle from world origin).
@@ -3163,10 +3209,15 @@ func _aimed_launch_impulse_to_world(body, aim_pos: Vector3, gravity_scale: float
 	)
 
 
-## Red-avoiders always launch at gravity 1.0, ignoring pace / difficulty.
+## Red-avoiders / red-attackers always launch at gravity 1.0, ignoring pace / difficulty.
+## rock-stay ignores pace entirely (custom straight flight + hang).
 func _aim_launch_gravity_for(body, entry = null) -> float:
 	if body != null and is_instance_valid(body) and body.rock_type == RockInstance.RockSize.AVOIDER:
 		return 1.0
+	if body != null and is_instance_valid(body) and body.rock_type == RockInstance.RockSize.RED_ATTACKER:
+		return 1.0
+	if body != null and is_instance_valid(body) and body.rock_type == RockInstance.RockSize.STAY:
+		return 0.0
 	if entry is Dictionary and entry.has("gravity_scale"):
 		return float(entry.get("gravity_scale"))
 	return aim_launch_gravity_scale

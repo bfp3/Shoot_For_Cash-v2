@@ -42,6 +42,16 @@ var right_pos_x : float
 @export var transition_speed := 0.05
 var orig_pos := Vector2.ZERO
 
+@export_group("Avoider Hit Feedback")
+## Reticle tint when a red-avoider snaps onto the crosshair.
+@export var avoider_hit_color := Color(1.0, 0.05, 0.05, 1.0)
+@export_range(0.05, 0.5, 0.01) var avoider_hit_flicker_sec := 0.1
+@export_range(1, 8, 1) var avoider_hit_flicker_times := 4
+@export_range(0.05, 1.0, 0.05) var avoider_hit_fade_sec := 0.35
+
+var _avoider_hit_token := 0
+var _avoider_hit_tween: Tween
+
 var _weapon_style_cached := false
 var _default_inner_modulate := Color.WHITE
 var _default_outer_modulate := Color.WHITE
@@ -347,6 +357,39 @@ func crosshair_shooting_something() -> void:
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(self, "modulate", Color.ORANGE ,0.1)
 	tween.tween_property(self, "modulate", Color.WHITE, 0.3)
+
+
+## Red-avoider landed on reticle: turn red, flicker visibility, fade back to white.
+func play_avoider_hit_feedback() -> void:
+	_avoider_hit_token += 1
+	var token := _avoider_hit_token
+	if _avoider_hit_tween and _avoider_hit_tween.is_valid():
+		_avoider_hit_tween.kill()
+	_avoider_hit_tween = null
+
+	visible = true
+	modulate = Color(avoider_hit_color.r, avoider_hit_color.g, avoider_hit_color.b, 1.0)
+
+	var flickers := maxi(avoider_hit_flicker_times, 1)
+	var step := maxf(avoider_hit_flicker_sec, 0.05)
+	for _i in flickers:
+		if token != _avoider_hit_token:
+			return
+		visible = false
+		await get_tree().create_timer(step, false).timeout
+		if token != _avoider_hit_token:
+			return
+		visible = true
+		await get_tree().create_timer(step, false).timeout
+
+	if token != _avoider_hit_token:
+		return
+	visible = true
+	modulate = Color(avoider_hit_color.r, avoider_hit_color.g, avoider_hit_color.b, 1.0)
+	_avoider_hit_tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_avoider_hit_tween.tween_property(self, "modulate", Color.WHITE, maxf(avoider_hit_fade_sec, 0.05))
+	await _avoider_hit_tween.finished
+
 
 func crosshair_nothing_to_shoot() -> void:
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)

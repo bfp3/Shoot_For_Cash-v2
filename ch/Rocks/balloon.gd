@@ -7,11 +7,12 @@ const BALLOON_WHITE_MAT = preload('uid://bwa2khv4jv2fv')
 const BALLOON_ORANGE_MAT = preload('uid://bg5auabbq8fo8')
 const BALLOON_RED_MAT = preload('uid://c5lrichw3wfce')
 const BALLOON_GREY_MAT = preload('uid://dgrbglmgp2fad')
-const BALLOON_YELLOW_MAT = preload('uid://bcrtdxo7t4poh')
+#const BALLOON_YELLOW_MAT = preload('uid://bcrtdxo7t4poh')
 const BALLOON_MAT_BANK_BALLOON = preload('res://res/BALLOON_MAT_BANK_BALLOON.tres')
 const BALLOON_MAT_MULTIPLIER_BALLOON = preload('res://res/BALLOON_MAT_MULTIPLIER_BALLOON.tres')
 const CAMO_MATERIAL = preload('uid://cte0j125svd7e')
 var pitch_adjustment := 0.02
+const BALLOON_YELLOW_MAT = preload("uid://dfug3isuomnqg")
 
 @onready var balloon_blowing_up: AudioStreamPlayer = $balloon_blowing_up
 var player_has_marked_balloon := false
@@ -621,32 +622,16 @@ func stop_gentle_pan() -> void:
 		pan_tween.kill()
 
 func smoke_particles() -> void:
-	
-	$AoE_Balloon.global_position = global_position
-	$AoE_Balloon.play_particles = true
+	_play_vfx(&"balloon_destroy")
 
 func smoke_particles_duplicates() -> void:
-	var _new_particles : GPUParticles3D = $Smoke_quick.duplicate()
+	_play_vfx(&"balloon_destroy")
 
-	if !_new_particles:
-		return
-		
-	_new_particles.add_to_group("smoke_particles")
-	_new_particles.emitting = true
-	_new_particles.duplicate_particles = true
-	_new_particles.show()
-	add_child(_new_particles)
-	#get_tree().get_current_scene().add_child(_new_particles)
-	_new_particles.global_position = global_position
-	
-	var _new_sparks : GPUParticles3D = $Sparks01.duplicate()
-	if !_new_sparks:
-		return
-	_new_sparks.show()
-	_new_sparks.finished.connect(_new_sparks.queue_free)
-	get_tree().get_current_scene().add_child(_new_sparks)
-	_new_sparks.global_position = global_position
-	_new_sparks.emitting = true
+
+func _play_vfx(cue: StringName) -> void:
+	var pool := get_tree().get_first_node_in_group("vfx_pool")
+	if pool and pool.has_method("play"):
+		pool.play(cue, global_position)
 
 
 func start_bullet_to_target() -> void:

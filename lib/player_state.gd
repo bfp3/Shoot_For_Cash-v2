@@ -545,6 +545,8 @@ func log_rock_missed(item : String = '') -> void:
 		return
 	if item.contains('rock_type_avoider') or item.contains('avoider'):
 		return
+	if item.contains('red_attacker'):
+		return
 	if item.contains('rock_type_juggle') or item.contains('juggle'):
 		return
 	if item.contains('mothership'):

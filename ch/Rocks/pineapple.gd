@@ -38,7 +38,7 @@ var force_mult_index := 0
 
 var rock_type_gravity_scale := 0.4
 
-@onready var money_label_3d: Label3D = $Money_Label3D
+#@onready var money_label_3d: Label3D = $Money_Label3D
 @onready var gold_label_3d: Label3D = $Gold_label3D
 @onready var pineapple_mesh:= $Mesh/small_rock
 
@@ -128,7 +128,7 @@ func update_active() -> void:
 	$Start_falling_timer.start(2.2)
 
 	_play_pineapple_sfx("explosion_sfx")
-	$Smoke_quick.emitting = true
+	_play_vfx(&"pineapple_destroy")
 	$Mesh/small_rock/GoldParticles.emitting = true
 	#apply_torque_impulse(Vector3.RIGHT * 3000.0)
 	
@@ -350,9 +350,6 @@ func hit_by_player(damage: int, screen_offset: Vector2 = Vector2.ZERO) -> void:
 	if is_deactivated:
 		return
 	
-	$Smoke_quick.emitting = false
-	$Smoke_quick.amount = 21
-	$Smoke_quick.amount = 20
 	$hit_wall_timer.stop()
 	taken_hit = true
 	strike_count += 1
@@ -440,7 +437,7 @@ func start_destroyed_process() -> void:
 	
 	if gl_PlayerState.dataset.total_pineapples_destroyed >= 3 && did_not_get_all_pineapples == false:
 		gl_PlayerState.add_bonus(int(gl_DataSet.get_value('reward_all_pineapples', 0)))
-		money_label_3d.pineapple_is_pineapple()
+		#money_label_3d.pineapple_is_pineapple()
 	
 	is_deactivated = true
 	#$Mesh.hide()
@@ -483,35 +480,17 @@ func _on_start_falling_timer_timeout() -> void:
 	
 
 func smoke_particles() -> void:
-	# #region agent log
-	var _phys := global_position
-	var _interp := get_global_transform_interpolated().origin
-	var _aoe_before :Vector3= $AoE_Pineapples.global_position
-	var _expl : Vector3= $Explosion_area.global_position
-	var _expl_interp = $Explosion_area.get_global_transform_interpolated().origin
-	# #endregion
-	$AoE_Pineapples.global_position = global_position
-	$AoE_Pineapples.play_particles = true
+	_play_vfx(&"pineapple_destroy")
 
 
 func smoke_particles_duplicates() -> void:
-	var _new_particles : GPUParticles3D = $Smoke_quick.duplicate()
+	_play_vfx(&"pineapple_destroy")
 
-	if !_new_particles:
-		return
-		
-	_new_particles.add_to_group("smoke_particles")
-	_new_particles.emitting = true
-	_new_particles.duplicate_particles = true
-	_new_particles.show()
-	add_child(_new_particles)
-	#get_tree().get_current_scene().add_child(_new_particles)
-	_new_particles.global_position = global_position
 
-	# #endregion
-	
-
-	
+func _play_vfx(cue: StringName) -> void:
+	var pool := get_tree().get_first_node_in_group("vfx_pool")
+	if pool and pool.has_method("play"):
+		pool.play(cue, global_position)
 
 func start_bullet_to_target() -> void:
 	play_accurate_sounds()

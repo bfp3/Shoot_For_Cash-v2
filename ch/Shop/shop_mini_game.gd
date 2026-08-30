@@ -807,6 +807,8 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == "red_rock_error"
 		or cmd == "smokecan"
 		or cmd == "rock-avoider"
+		or cmd == "rock-red-attacker"
+		or cmd == "red-attacker"
 		or cmd == "rock-chaser"
 		or cmd == "rock-juggle"
 		or cmd == "crate"

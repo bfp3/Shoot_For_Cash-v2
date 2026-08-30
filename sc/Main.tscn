@@ -9,6 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://b6da3lywd7cys" path="res://sfx/USERSONG166.ogg" id="8_no853"]
 [ext_resource type="Script" uid="uid://cgxjasj1ltgpx" path="res://ch/Rocks/rocks_sfx_manager.gd" id="14_24t6b"]
 [ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="14_gspdd"]
+[ext_resource type="Script" uid="uid://b48ifaelune2q" path="res://vfx/vfx_pool_manager.gd" id="14_vfxpool"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="15_24t6b"]
 [ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="16_8xhv2"]
 [ext_resource type="AudioStream" uid="uid://m75w4o7bl00c" path="res://sfx/explosion_sfx_01.ogg" id="17_2300m"]
@@ -18,7 +19,7 @@
 [ext_resource type="AudioStream" uid="uid://b6adyjr237ckn" path="res://sfx/opt_4.ogg" id="19_nn6vd"]
 [ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="20_ec2we"]
 [ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="20_l8wgb"]
-[ext_resource type="PackedScene" uid="uid://b51vopusw334w" path="res://ch/Rocks/Rock_Instance.tscn" id="21_e0u1b"]
+[ext_resource type="PackedScene" uid="uid://cerjahby1oei4" path="res://ch/Rocks/Rock_Instance.tscn" id="21_e0u1b"]
 [ext_resource type="AudioStream" uid="uid://cp1bi14xcue2e" path="res://sfx/a#_startInt.ogg" id="21_ymbdo"]
 [ext_resource type="AudioStream" uid="uid://cwd4ue861klyx" path="res://sfx/2ndInt.ogg" id="22_wv0tc"]
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="23_1i2h1"]
@@ -36,8 +37,6 @@
 [ext_resource type="AudioStream" uid="uid://bwulgbjlr2hv5" path="res://sfx/water_splash_sfx_02.ogg" id="29_q3aq7"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="31_hwubp"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="34_v17ib"]
-[ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="41_23po0"]
-[ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="42_nxc00"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="47_wtxnc"]
 [ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="54_i541k"]
 [ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="54_ymbdo"]
@@ -54,19 +53,30 @@
 [ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="65_wtxnc"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
 [ext_resource type="PackedScene" uid="uid://b8up6woqoujb3" path="res://ch/HUD_components/wave_number_text.tscn" id="66_fjxa8"]
-[ext_resource type="PackedScene" uid="uid://bld0ml5h5mmnv" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
+[ext_resource type="PackedScene" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
 [ext_resource type="Script" uid="uid://bns2a7l7rdc41" path="res://ch/targets/orange_bombs.gd" id="68_qmj5w"]
 [ext_resource type="Script" uid="uid://byuybau4gp23h" path="res://ch/Balllons/player_balloon_container.gd" id="68_r5w5l"]
 [ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="68_wtxnc"]
-[ext_resource type="PackedScene" uid="uid://bneywqpkig5wv" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
-[ext_resource type="PackedScene" uid="uid://ddqfihifjccx5" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
+[ext_resource type="PackedScene" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
+[ext_resource type="PackedScene" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
 [ext_resource type="Script" uid="uid://cw36fy6a37j1h" path="res://ch/bonus_rounds/bonus_target_manager.gd" id="71_3ga0b"]
 [ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="74_vwwt2"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
+[ext_resource type="PackedScene" uid="uid://cnf5uin71fgrj" path="res://ch/Rocks/CrateRigidBody.tscn" id="77_swp41"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 [ext_resource type="PackedScene" uid="uid://b8lj768x0yxac" path="res://ch/debug/round_editor_menu.tscn" id="81_rounded"]
 [ext_resource type="PackedScene" uid="uid://cafj0iwnxs1k3" path="res://ch/targets/ammo_reload_target.tscn" id="83_ammo"]
 [ext_resource type="Script" uid="uid://tyrtfghjsjni" path="res://lib/deferred_menu_loader.gd" id="def_menu_loader"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_balloon_destroy.tscn" id="vfx_balloon"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_crate_destroy.tscn" id="vfx_crate"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_crate_for_cash_destroy.tscn" id="vfx_crate_cash"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_hazard_destroy.tscn" id="vfx_hazard"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_orange_destroy.tscn" id="vfx_orange"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_orange_hit.tscn" id="vfx_orangehit"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_pineapple_destroy.tscn" id="vfx_pine"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_rock_destroy.tscn" id="vfx_rock"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_rock_hit.tscn" id="vfx_rockhit"]
+[ext_resource type="PackedScene" path="res://vfx/aoe_smokecan_destroy.tscn" id="vfx_smoke"]
 
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
 bake_interval = 5.0
@@ -253,100 +263,6 @@ scale_max = 0.19999999
 scale_curve = SubResource("CurveTexture_3gdew")
 alpha_curve = SubResource("CurveTexture_fuvvr")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fra7e"]
-render_priority = 2
-transparency = 1
-vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("41_23po0")
-roughness = 0.0
-billboard_mode = 3
-billboard_keep_scale = true
-particles_anim_h_frames = 2
-particles_anim_v_frames = 2
-particles_anim_loop = false
-proximity_fade_enabled = true
-
-[sub_resource type="Curve" id="Curve_no853"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_lrylr"]
-texture_mode = 1
-curve = SubResource("Curve_no853")
-
-[sub_resource type="Curve" id="Curve_uc1v7"]
-_data = [Vector2(0, 0), 0.0, 2.89056, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_x736i"]
-curve = SubResource("Curve_uc1v7")
-
-[sub_resource type="Curve" id="Curve_sfsfg"]
-_data = [Vector2(0, 1), 0.0, -2.29396, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_sjja1"]
-curve = SubResource("Curve_sfsfg")
-
-[sub_resource type="Curve" id="Curve_ufsll"]
-_data = [Vector2(0.00268096, 0.973057), 0.0, -23.8681, 0, 0, Vector2(0.10992, 0.0569948), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_mj3mj"]
-curve = SubResource("Curve_ufsll")
-
-[sub_resource type="Curve" id="Curve_25di8"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.87403, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_1gclf"]
-curve = SubResource("Curve_25di8")
-
-[sub_resource type="Curve" id="Curve_hewrc"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_27dlh"]
-curve = SubResource("Curve_hewrc")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_inade"]
-lifetime_randomness = 1.0
-particle_flag_rotate_y = true
-emission_shape = 1
-emission_sphere_radius = 0.5
-direction = Vector3(0, 1, 0)
-spread = 180.0
-initial_velocity_min = 0.5
-initial_velocity_max = 1.0
-angular_velocity_min = -360.0
-angular_velocity_max = 360.0
-angular_velocity_curve = SubResource("CurveTexture_x736i")
-radial_velocity_min = 19.999977
-radial_velocity_max = 29.999977
-radial_velocity_curve = SubResource("CurveTexture_mj3mj")
-gravity = Vector3(0, 0, 0)
-radial_accel_min = 0.49999776
-radial_accel_max = 0.99999774
-tangential_accel_min = -4.0
-tangential_accel_max = -2.0
-damping_min = 3.0
-damping_max = 10.0
-damping_curve = SubResource("CurveTexture_sjja1")
-scale_min = 0.29999998
-scale_max = 0.5
-scale_curve = SubResource("CurveTexture_1gclf")
-color = Color(4.415934, 0, 0, 1)
-color_ramp = ExtResource("42_nxc00")
-alpha_curve = SubResource("CurveTexture_lrylr")
-anim_offset_max = 1.0
-turbulence_enabled = true
-turbulence_noise_speed = Vector3(1, 1, 1)
-turbulence_influence_min = 0.25
-turbulence_influence_max = 1.0
-turbulence_influence_over_life = SubResource("CurveTexture_27dlh")
-
-[sub_resource type="QuadMesh" id="QuadMesh_y75p7"]
-
 [node name="Scene-100" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "round_timer", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
 intro_title_screen = true
@@ -481,6 +397,45 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.4657, 0, 43.9932)
 
 [node name="8" type="Marker3D" parent="PigeonAimMarkers" unique_id=1888004108]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.1567, 0, 43.0337)
+
+[node name="VfxPool" type="Node3D" parent="." unique_id=782836845 groups=["vfx_pool"]]
+script = ExtResource("14_vfxpool")
+scene_rock_destroy = ExtResource("vfx_rock")
+scene_crate_destroy = ExtResource("vfx_crate")
+scene_crate_for_cash_destroy = ExtResource("vfx_crate_cash")
+scene_hazard_destroy = ExtResource("vfx_hazard")
+scene_smokecan_destroy = ExtResource("vfx_smoke")
+scene_rock_hit = ExtResource("vfx_rockhit")
+scene_balloon_destroy = ExtResource("vfx_balloon")
+scene_orange_destroy = ExtResource("vfx_orange")
+scene_orange_hit = ExtResource("vfx_orangehit")
+scene_pineapple_destroy = ExtResource("vfx_pine")
+
+[node name="CratesSFXManager" type="Node" parent="." unique_id=1928374650]
+script = ExtResource("14_24t6b")
+sfx_group = &"crates_sfx"
+
+[node name="SFX" type="Node" parent="CratesSFXManager" unique_id=1928374651]
+
+[node name="crate_hit_sound" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374652]
+stream = ExtResource("16_8xhv2")
+volume_db = -23.0
+max_polyphony = 2
+
+[node name="crate_hitSound" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374653]
+stream = ExtResource("14_gspdd")
+volume_db = -35.0
+max_polyphony = 2
+
+[node name="crate_explosion_sfx" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374654]
+stream = ExtResource("17_2300m")
+volume_db = -30.0
+max_polyphony = 2
+
+[node name="crate_destroy_sfx" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374655]
+stream = ExtResource("14_gspdd")
+volume_db = -22.0
+max_polyphony = 4
 
 [node name="Rocks" type="Node3D" parent="." unique_id=859468523 node_paths=PackedStringArray("pigeon_aim_markers", "telegraph_columns", "debug_visualiser")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
@@ -1680,22 +1635,10 @@ patrol_seconds_per_leg = 6.0
 [node name="Particles" type="Node3D" parent="." unique_id=1387661040]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.163108)
 
-[node name="red-avoiders_particles" type="GPUParticles3D" parent="Particles" unique_id=2079832236 groups=["red_avoider_arm_particles"]]
-material_override = SubResource("StandardMaterial3D_fra7e")
-cast_shadow = 0
-emitting = false
-amount = 15
-one_shot = true
-speed_scale = 2.0
-explosiveness = 1.0
-fixed_fps = 60
-visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
-process_material = SubResource("ParticleProcessMaterial_inade")
-draw_pass_1 = SubResource("QuadMesh_y75p7")
-
 [node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=1389715347]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, 0)
 script = ExtResource("62_wallpz")
+strike_on_wall_overlap = false
+knock_crosshair_distance = 40.0
 spawn_rock_on_hit = true
 
 [node name="TouchingWallWithCrosshair" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=739585517]
@@ -1710,20 +1653,20 @@ omni_attenuation = 0.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.384448, 1.642421, 20.14018)
 
 [node name="WallPuzzle" type="CSGCombiner3D" parent="WallPuzzleSetup" unique_id=962981030]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.363, 24.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 2.363, 24.75)
 use_collision = true
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=974986408]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4631152, 1.5029593, 0)
-size = Vector3(12, 0.76, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4631152, 1.137, 0)
+size = Vector3(12, 0.21, 1)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=851687279]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5368848, -0.99704075, 0)
-size = Vector3(12, 0.76, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5368848, -1.863, 0)
+size = Vector3(12, 0.21, 1)
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1269927889]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5368848, 4.0029593, 0)
-size = Vector3(12, 0.76, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.537, 4.137, 0)
+size = Vector3(12, 0.21, 1)
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1429191292]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -8.936885, 1.0029593, 0)
@@ -1734,12 +1677,12 @@ transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 7.86
 size = Vector3(12, 0.76, 1)
 
 [node name="CSGBox3D20" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=203730346]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.463115, -0.99704075, 0)
-size = Vector3(2, 0.76, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.463115, -1.863, 0)
+size = Vector3(2, 0.21, 1)
 
 [node name="CSGBox3D25" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1132892119]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.536885, 1.5029593, 0)
-size = Vector3(2, 0.76, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.536885, 1.137, 0)
+size = Vector3(2, 0.21, 1)
 
 [node name="WallPuzzle2" type="CSGBox3D" parent="WallPuzzleSetup" unique_id=736609469]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.324196, 2.363, 24.75)
@@ -1843,6 +1786,46 @@ stream = ExtResource("63_tnw34")
 volume_db = -35.0
 pitch_scale = 2.0
 bus = &"ReverbBus"
+
+[node name="Crate" parent="WallPuzzleSetup" unique_id=575272199 instance=ExtResource("77_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.824073, 2.340082, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
+
+[node name="Crate2" parent="WallPuzzleSetup" unique_id=415466945 instance=ExtResource("77_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4339585, 5.165947, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
+
+[node name="Crate3" parent="WallPuzzleSetup" unique_id=375888889 instance=ExtResource("77_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4339585, 7.3008623, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
+
+[node name="Crate4" parent="WallPuzzleSetup" unique_id=265235330 instance=ExtResource("77_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3008132, 7.3008623, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
+
+[node name="Crate5" parent="WallPuzzleSetup" unique_id=1684002578 instance=ExtResource("77_swp41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.8984714, 10.019372, 24.577652)
+cash_value = 100
+hit_impulse_power = 80.0
+hit_upward_bias = 0.15
+hit_torque_strength = 10.0
+force_mult = [6, 8]
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]

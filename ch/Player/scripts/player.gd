@@ -1,5 +1,7 @@
 class_name Player extends Node3D
 
+const mouse_no_lerp := false
+
 @onready var mobile_controller: Node = $MobileControl
 var is_mobile := OS.has_feature("mobile")
 var running_on_mobile := false
@@ -142,6 +144,10 @@ var joystick_sensitivity := 500.0
 @export var grid_aim_move_speed := 1800.0
 ## Extra vertical lanes just outside columns 1 and 8 (same A/B/C heights) for the reticle.
 @export var grid_aim_side_lanes := true
+## Volume for the short hovercraft clip played on each grid step.
+@export_range(-80.0, 6.0, 0.5) var grid_aim_step_sfx_volume_db := -28.0
+## How long each step SFX plays before stopping (full files are longer).
+@export_range(0.05, 2.0, 0.05) var grid_aim_step_sfx_duration := 0.5
 
 @export_group("Crosshair Size")
 ## Multiplies the resting scope size (hit radius + visual), same idea as holding expand toward SCOPE_EXPAND_MAX_SCALE.
@@ -190,6 +196,7 @@ var start_rotation : Vector3
 var target_crosshair_position: Vector2 = Vector2(980, 540)
 var crosshair_position := Vector2.ZERO
 var crosshair_lag_speed := 11.0  # Higher = faster catch-up
+var _crosshair_knock_tween: Tween
 
 ## Grid aim lock (rows A=1…C=3; columns 1…8, plus optional side lanes 0 / 9).
 var _grid_aim_row := 2
@@ -201,6 +208,9 @@ var _grid_aim_hold_dir := Vector2.ZERO
 var _grid_aim_repeat_timer := 0.0
 var _grid_aim_stick_dir := Vector2i.ZERO
 var _grid_aim_dpad_dir := Vector2i.ZERO
+var _grid_aim_sfx_left: AudioStreamPlayer
+var _grid_aim_sfx_right: AudioStreamPlayer
+var _grid_aim_sfx_stop_timer: Timer
 var _grid_rock_manager: RockManager
 
 var crosshair_move_left_limit := 660
@@ -246,6 +256,7 @@ func _ready() -> void:
 	
 	_init_ammo()
 	update_player_stats()
+	_setup_grid_aim_step_sfx()
 	
 	#%Bullet_icon.hide()
 
@@ -435,8 +446,13 @@ func _process(delta: float) -> void:
 	crosshair.position = target_crosshair_position
 	if grid_aim_enabled and _grid_aim_moving:
 		crosshair_position = target_crosshair_position
+	
+	elif mouse_no_lerp:
+		crosshair_position = target_crosshair_position
 	else:
 		crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
+		
+		
 	%Crosshair.global_position = crosshair_position
 
 	# Desktop: InputMap shoot / scope. Mobile: left-half touch only (ignore emulated mouse).
@@ -786,11 +802,68 @@ func _grid_aim_apply_step(screen_dir: Vector2) -> void:
 		return
 
 	var dest := _resolve_grid_aim_destination(rocks, screen_dir)
+	var prev := Vector2i(_grid_aim_row, _grid_aim_column)
+	var cell_changed := (not _grid_aim_has_cell) or dest.x != prev.x or dest.y != prev.y
 	_grid_aim_row = dest.x
 	_grid_aim_column = dest.y
 	_grid_aim_has_cell = true
 	_grid_aim_moving = true
 	_refresh_grid_aim_screen_target()
+	if cell_changed:
+		_play_grid_aim_step_sfx(screen_dir)
+
+
+func _setup_grid_aim_step_sfx() -> void:
+	var host := get_node_or_null("SFX")
+	if host == null:
+		host = self
+	_grid_aim_sfx_left = host.get_node_or_null("GridAimStepLeft") as AudioStreamPlayer
+	if _grid_aim_sfx_left == null:
+		_grid_aim_sfx_left = AudioStreamPlayer.new()
+		_grid_aim_sfx_left.name = "GridAimStepLeft"
+		_grid_aim_sfx_left.stream = preload("res://sfx/Hovercraft_turning_SFX_right_v3.ogg")
+		host.add_child(_grid_aim_sfx_left)
+	_grid_aim_sfx_right = host.get_node_or_null("GridAimStepRight") as AudioStreamPlayer
+	if _grid_aim_sfx_right == null:
+		_grid_aim_sfx_right = AudioStreamPlayer.new()
+		_grid_aim_sfx_right.name = "GridAimStepRight"
+		_grid_aim_sfx_right.stream = preload("res://sfx/Hovercraft_turning_SFX_right_v3.ogg")
+		host.add_child(_grid_aim_sfx_right)
+	_grid_aim_sfx_stop_timer = host.get_node_or_null("GridAimStepStopTimer") as Timer
+	if _grid_aim_sfx_stop_timer == null:
+		_grid_aim_sfx_stop_timer = Timer.new()
+		_grid_aim_sfx_stop_timer.name = "GridAimStepStopTimer"
+		_grid_aim_sfx_stop_timer.one_shot = true
+		host.add_child(_grid_aim_sfx_stop_timer)
+	if not _grid_aim_sfx_stop_timer.timeout.is_connected(_on_grid_aim_step_sfx_timeout):
+		_grid_aim_sfx_stop_timer.timeout.connect(_on_grid_aim_step_sfx_timeout)
+
+
+func _play_grid_aim_step_sfx(screen_dir: Vector2) -> void:
+	var dir := _cardinalize_screen_dir(screen_dir)
+	if dir == Vector2.ZERO:
+		return
+	if _grid_aim_sfx_left == null or _grid_aim_sfx_right == null:
+		_setup_grid_aim_step_sfx()
+	## Up / left → left sample; down / right → right sample.
+	var use_left := dir.x < 0.0 or dir.y < 0.0
+	var player := _grid_aim_sfx_left if use_left else _grid_aim_sfx_right
+	var other := _grid_aim_sfx_right if use_left else _grid_aim_sfx_left
+	if other != null and other.playing:
+		other.stop()
+	player.volume_db = grid_aim_step_sfx_volume_db
+	player.play(0.0)
+	if _grid_aim_sfx_stop_timer != null:
+		_grid_aim_sfx_stop_timer.stop()
+		_grid_aim_sfx_stop_timer.wait_time = maxf(grid_aim_step_sfx_duration, 0.05)
+		_grid_aim_sfx_stop_timer.start()
+
+
+func _on_grid_aim_step_sfx_timeout() -> void:
+	if _grid_aim_sfx_left != null and _grid_aim_sfx_left.playing:
+		_grid_aim_sfx_left.stop()
+	if _grid_aim_sfx_right != null and _grid_aim_sfx_right.playing:
+		_grid_aim_sfx_right.stop()
 
 
 func _resolve_grid_aim_destination(rocks: RockManager, screen_dir: Vector2) -> Vector2i:
@@ -860,6 +933,45 @@ func _aim_screen_center() -> Vector2:
 	if crosshair != null:
 		return crosshair.global_position + CROSSHAIR_CENTER_OFFSET
 	return target_crosshair_position + CROSSHAIR_CENTER_OFFSET
+
+
+## Instant or tweened screen-space shove (e.g. wall-strike knockback). Clears grid aim lock.
+func knock_crosshair_by(screen_delta: Vector2, duration: float = 0.0) -> void:
+	if screen_delta.length_squared() < 0.0001:
+		return
+	if grid_aim_enabled:
+		_clear_grid_aim_lock()
+	var viewport_size := get_viewport().get_visible_rect().size
+	var half_crosshair := (crosshair.size * crosshair.scale) * 0.5
+	var start := target_crosshair_position
+	var end := start + screen_delta
+	end.x = clamp(end.x, half_crosshair.x, viewport_size.x - half_crosshair.x)
+	end.y = clamp(end.y, half_crosshair.y, viewport_size.y - half_crosshair.y)
+
+	if _crosshair_knock_tween != null and is_instance_valid(_crosshair_knock_tween):
+		_crosshair_knock_tween.kill()
+		_crosshair_knock_tween = null
+
+	if duration <= 0.02:
+		target_crosshair_position = end
+		crosshair.position = end
+		crosshair_position = end
+		return
+
+	_crosshair_knock_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_crosshair_knock_tween.tween_method(
+		_apply_crosshair_knock_pos,
+		start,
+		end,
+		duration
+	)
+
+
+func _apply_crosshair_knock_pos(pos: Vector2) -> void:
+	target_crosshair_position = pos
+	if crosshair != null:
+		crosshair.position = pos
+	crosshair_position = pos
 
 
 func _grid_cell_aim_screen(rocks: RockManager, row: int, column: int) -> Vector2:

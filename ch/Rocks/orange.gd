@@ -228,7 +228,7 @@ func update_active() -> void:
 	#$Start_falling_timer.start(2.2)
 	
 	_play_orange_sfx("explosion_sfx")
-	$Smoke_quick.emitting = true
+	_play_vfx(&"orange_hit")
 	
 	#apply_torque_impulse(Vector3.RIGHT * 1000.0)
 	apply_torque_impulse(Vector3.UP * 1000.0)
@@ -587,33 +587,18 @@ func _on_orange_body_entered(body: Node) -> void:
 
 
 func smoke_particles() -> void:
-	$AoE_Oranges.global_position = global_position
-	$AoE_Oranges.play_particles = true
+	_play_vfx(&"orange_destroy")
 
 
 func smoke_particles_duplicates() -> void:
-	var _new_particles : GPUParticles3D = $Smoke_quick.duplicate()
+	_play_vfx(&"orange_hit")
 
-	if !_new_particles:
-		return
-		
-	_new_particles.add_to_group("smoke_particles")
-	_new_particles.emitting = true
-	_new_particles.duplicate_particles = true
-	_new_particles.show()
-	add_child(_new_particles)
-	#get_tree().get_current_scene().add_child(_new_particles)
-	_new_particles.global_position = global_position
-	
-	var _new_sparks : GPUParticles3D = $Sparks01.duplicate()
-	if !_new_sparks:
-		return
-	_new_sparks.show()
-	_new_sparks.finished.connect(_new_sparks.queue_free)
-	get_tree().get_current_scene().add_child(_new_sparks)
-	_new_sparks.global_position = global_position
-	_new_sparks.emitting = true
-	
+
+func _play_vfx(cue: StringName) -> void:
+	var pool := get_tree().get_first_node_in_group("vfx_pool")
+	if pool and pool.has_method("play"):
+		pool.play(cue, global_position)
+
 
 func start_bullet_to_target() -> void:
 	play_accurate_sounds()
