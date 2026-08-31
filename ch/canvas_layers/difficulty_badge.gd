@@ -106,6 +106,8 @@ enum ColorScheme { BEGINNER, ADVANCED, EXPERT }
 @export var boss_armored := false
 ## Beginner / Advanced / Expert on the title screen — opens that difficulty's level grid instead of travelling.
 @export var selects_difficulty := false
+## When locked, stay off the row entirely (Mystery) instead of showing a dulled / flip badge.
+@export var hide_when_locked := false
 
 @export_group("Locked Flip")
 @export_multiline var locked_back_text := "[pulse freq=8 color=#FFFFFF90]NOT\nUNLOCKED YET":
@@ -169,6 +171,11 @@ func refresh_unlock_state() -> void:
 	elif gl_DataSet and gl_DataSet.has_method("is_difficulty_unlocked"):
 		locked = not gl_DataSet.is_difficulty_unlocked(unlock_key)
 	_apply_back_text()
+	if hide_when_locked:
+		visible = not locked
+
+
+func _apply_back_text() -> void:
 
 
 func _apply_back_text() -> void:
@@ -235,6 +242,8 @@ func _apply_visuals() -> void:
 		modulate = Color(0.52, 0.52, 0.55)
 	else:
 		modulate = Color.WHITE
+	if hide_when_locked:
+		visible = not locked
 	if _circle2:
 		if is_boss and boss_armored:
 			_circle2.scale = Vector2(1.22, 0.78)
@@ -367,6 +376,17 @@ func reset_selection_state() -> void:
 		_wiggle.kill()
 		_wiggle = null
 	_set_face(false)
+	if hide_when_locked and locked:
+		hide()
+		modulate = Color(0.52, 0.52, 0.55)
+		scale = Vector2.ONE
+		rotation_degrees = 0.0
+		top_level = false
+		z_index = 0
+		if _button:
+			_button.disabled = true
+			_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		return
 	visible = true
 	show()
 	modulate = Color.WHITE if not (locked and not is_header) else Color(0.52, 0.52, 0.55)

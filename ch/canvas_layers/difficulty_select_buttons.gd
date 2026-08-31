@@ -18,7 +18,7 @@ func _ready() -> void:
 
 
 func refresh_unlocks() -> void:
-	for badge in [beginner, advanced, expert]:
+	for badge in [beginner, advanced, expert, mystery]:
 		if badge == null:
 			continue
 		if badge.has_method("reset_selection_state"):
