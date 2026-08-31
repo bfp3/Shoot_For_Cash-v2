@@ -82,6 +82,7 @@ const LEVEL_FILE_CHALLENGE_01 := "res://sc/level-challenge-01.txt"
 const LEVEL_FILE_CHALLENGE_02 := "res://sc/level-challenge-02.txt"
 const LEVEL_FILE_CHALLENGE_03 := "res://sc/level-challenge-03.txt"
 const LEVEL_FILE_CHALLENGE_04 := "res://sc/level-challenge-04.txt"
+const LEVEL_FILE_CHALLENGE_05 := "res://sc/level-challenge-05.txt"
 
 var LEVEL_FILE_PATH := LEVEL_FILE_BEGINNER
 const LEVEL_ISLAND_NAME := 'shipper'
@@ -997,6 +998,8 @@ func apply_level_file_for_difficulty(stage: String = "") -> void:
 			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_03
 		"CHALLENGE 4", "CHALLENGE4", "CHALLENGE 04":
 			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_04
+		"CHALLENGE 5", "CHALLENGE5", "CHALLENGE 05":
+			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_05
 		_:
 			LEVEL_FILE_PATH = LEVEL_FILE_BEGINNER
 

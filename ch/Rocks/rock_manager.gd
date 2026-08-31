@@ -62,6 +62,8 @@ var _launch_epoch := 0
 const COLUMN_1_X := 7.0 #18.0 
 const COLUMN_STEP := 2.0 #4.0
 const COLUMN_COUNT := 8
+## Default stagger between rocks in a rock-gap / rock-red-gap fan.
+const GAP_FAN_STAGGER_MS := 100
 const SAME_COLUMN_OFFSET := 0.0  # spread applied to duplicate rocks sharing a column
 ## Extra meters added to the spacing between every neighbouring column.
 ## 0 = default step 2 → (7, 5, 3, 1, -1, -3, -5, -7).
@@ -603,6 +605,27 @@ func _begin_beat(sequence: Array) -> void:
 			if _is_pace_cmd(cmd):
 				_apply_pace_entry(entry)
 				continue
+			if cmd == 'rock-gap' or cmd == 'rock-red-gap':
+				var gap_entries := _expand_rock_gap_entry(entry)
+				for gap_i in gap_entries.size():
+					var gap_entry: Dictionary = gap_entries[gap_i]
+					if is_first_rock:
+						if pending_wait_ms == null:
+							delays_sec.append(0.0)
+						else:
+							delays_sec.append(float(int(pending_wait_ms)) / 1000.0)
+						is_first_rock = false
+					elif gap_i == 0:
+						var gap_wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
+						delays_sec.append(float(gap_wait_ms) / 1000.0)
+					else:
+						## Fan stagger between columns in one gap command.
+						delays_sec.append(float(GAP_FAN_STAGGER_MS) / 1000.0)
+					pending_wait_ms = null
+					var stamped_gap: Dictionary = gap_entry.duplicate()
+					stamped_gap["gravity_scale"] = aim_launch_gravity_scale
+					rocks.append(stamped_gap)
+				continue
 			if not _is_launchable_spawn_cmd(cmd):
 				continue
 
@@ -643,6 +666,45 @@ func _begin_beat(sequence: Array) -> void:
 	_launch_delays_sec = delays_sec
 	_timed_event_schedule = _build_timed_event_schedule(sequence)
 	enter_state(State.PREPARE_ROCKS)
+
+
+## Gap columns from a parsed rock-gap entry. Default single gap at 8.
+func _gap_columns_from_entry(entry: Dictionary) -> Array:
+	var gaps: Array = []
+	var raw = entry.get("gap_columns", [])
+	if raw is Array and not raw.is_empty():
+		for g in raw:
+			var c := int(g)
+			if c >= 1 and c <= COLUMN_COUNT and not gaps.has(c):
+				gaps.append(c)
+	if gaps.is_empty():
+		var gap_col := int(entry.get("column", 8))
+		if gap_col < 1 or gap_col > COLUMN_COUNT:
+			gap_col = 8
+		gaps = [gap_col]
+	return gaps
+
+
+## `rock-red-gap [gapCols…] [aim]` → rocks in columns 1–8 except the gaps.
+## Default gap = 8. Aim row defaults to A; each rock aims its own column.
+func _expand_rock_gap_entry(entry: Dictionary) -> Array:
+	var gaps := _gap_columns_from_entry(entry)
+	var aim_row := int(entry.get("aim_row", -1))
+	if aim_row < 1 or aim_row > 3:
+		aim_row = 1
+	var out: Array = []
+	for col in range(1, COLUMN_COUNT + 1):
+		if gaps.has(col):
+			continue
+		out.append({
+			"cmd": "rock-gap",
+			"column": col,
+			"spawn_row": -1,
+			"aim_row": aim_row,
+			"aim_column": col,
+			"param": "",
+		})
+	return out
 
 
 func _script_has_more_commands() -> bool:
@@ -1347,6 +1409,22 @@ func _build_timed_event_schedule(sequence: Array) -> Array:
 				})
 				continue
 
+			if cmd == 'rock-gap' or cmd == 'rock-red-gap':
+				var gap_n := _expand_rock_gap_entry(entry).size()
+				if gap_n <= 0:
+					continue
+				if is_first_rock:
+					is_first_rock = false
+					if pending_wait_ms != null:
+						abs_t += float(int(pending_wait_ms)) / 1000.0
+				else:
+					var gap_wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
+					abs_t += float(gap_wait_ms) / 1000.0
+				pending_wait_ms = null
+				if gap_n > 1:
+					abs_t += float(GAP_FAN_STAGGER_MS) / 1000.0 * float(gap_n - 1)
+				continue
+
 			if not _is_launchable_spawn_cmd(cmd):
 				continue
 
@@ -1465,6 +1543,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.AVOIDER
 			'rock-red-attacker', 'red-attacker':
 				return RockInstance.RockSize.RED_ATTACKER
+			'rock-gap', 'rock-red-gap':
+				return RockInstance.RockSize.GAP
 			'rock-chaser':
 				return RockInstance.RockSize.CHASER
 			'rock-juggle':
@@ -1497,6 +1577,8 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-avoider'
 		or cmd == 'rock-red-attacker'
 		or cmd == 'red-attacker'
+		or cmd == 'rock-gap'
+		or cmd == 'rock-red-gap'
 		or cmd == 'rock-chaser'
 		or cmd == 'rock-juggle'
 		or cmd == 'rock-grey'

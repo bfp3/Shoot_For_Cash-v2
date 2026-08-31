@@ -1,0 +1,325 @@
+island shipper
+
+range jetz
+
+	play $1200
+	reward $5000
+	round
+
+		# Challenge 5 — rock-red-gap gauntlet.
+		# Gap column is the safe lane through 7 large red hazards.
+		# Mix: rock / rock-stay through the gap, rock-red-attackers on edges.
+		# Attackers only: cols 1/2/7/8 × rows a/b.
+
+		sfx-play sephiroff -40.0
+		pace-slow
+
+		# --- Warmup: learn the gap ---
+		rock-stay 4 a4
+		wait 400
+		rock-stay 5 a5
+		wait 400
+		rock 4 b4
+		wait 500
+		rock 5 b5
+		wait
+
+		rock-red-gap 4 b4
+		wait
+		rock 4 a4
+		wait 600
+
+		rock-red-gap 5 b5
+		wait
+		rock-stay 5 a5
+		wait
+
+		balloon-check
+		ammo
+		sfx-faster sephiroff
+		pace-normal
+
+		# --- Phase 1: gap walks L→R, shoot the hole ---
+		rock-red-gap 2 b2
+		wait 900
+		rock 2 a2
+		wait 400
+
+		rock-red-gap 3 a3
+		wait 800
+		rock-stay 3 a3
+		wait 300
+
+		rock-red-gap 4 a4
+		wait 700
+		rock 4 a4
+		wait
+
+		rock-red-gap 5 a5
+		wait 700
+		rock 5 a5
+		wait 300
+
+		rock-red-gap 6 a6
+		wait 800
+		rock-stay 6 a6
+		wait 300
+
+		rock-red-gap 7 a7
+		wait 900
+		rock 7 a7
+		wait
+
+		balloon-check
+		ammo
+		sfx-faster sephiroff
+
+		# --- Phase 2: gap + edge attackers ---
+		rock-red-gap 4 a4
+		wait 500
+		rock-red-attacker 1 a1
+		wait 600
+		rock 4 a4
+		wait 400
+
+		rock-red-gap 5 a5
+		wait 450
+		rock-red-attacker 8 a8
+		wait 600
+		rock-stay 5 a5
+		wait 400
+
+		rock-red-gap 3 b3
+		wait 400
+		rock-red-attacker 1 b1
+		wait 350
+		rock-red-attacker 8 b8
+		wait 500
+		rock 3 b3
+		wait
+
+		rock-stay 2 a2
+		wait 300
+		rock-stay 7 a7
+		wait 600
+
+		rock-red-gap 4 a4
+		wait 350
+		rock-red-attacker 2 a2
+		wait 300
+		rock-red-attacker 7 a7
+		wait 500
+		rock 4 a4
+		wait
+
+		balloon-check
+		ammo
+		sfx-faster sephiroff
+		pace-fast
+
+		# --- Phase 3: gap flips, denser stays ---
+		rock-red-gap 3 a3
+		wait 550
+		rock-stay 3 a3
+		wait 200
+		rock-red-gap 6 a6
+		wait 550
+		rock-stay 6 a6
+		wait 200
+
+		rock-red-gap 4 a4
+		wait 400
+		rock 4 a4
+		wait 150
+		rock-red-gap 5 a5
+		wait 400
+		rock 5 a5
+		wait 150
+
+		rock-red-gap 2 b2
+		wait 450
+		rock-red-attacker 1 a1
+		wait 250
+		rock 2 b2
+		wait 200
+
+		rock-red-gap 7 b7
+		wait 450
+		rock-red-attacker 8 a8
+		wait 250
+		rock-stay 7 b7
+		wait
+
+		rock 1 a1
+		wait 0
+		rock 8 a8
+		wait 500
+		rock-stay 4 a4
+		wait 0
+		rock-stay 5 a5
+		wait 800
+
+		rock-red-gap 4 a4
+		wait 300
+		rock-red-attacker 1 b1
+		wait 200
+		rock-red-attacker 8 b8
+		wait 350
+		rock 4 a4
+		wait
+
+		balloon-check
+		ammo
+		sfx-faster sephiroff
+
+		# --- Phase 4: rapid gap zigzag ---
+		rock-red-gap 2 a2
+		wait 400
+		rock 2 a2
+		wait 100
+		rock-red-gap 7 a7
+		wait 400
+		rock 7 a7
+		wait 100
+
+		rock-red-gap 3 a3
+		wait 350
+		rock-stay 3 a3
+		wait 80
+		rock-red-gap 6 a6
+		wait 350
+		rock-stay 6 a6
+		wait 80
+
+		rock-red-gap 4 a4
+		wait 300
+		rock 4 a4
+		wait 60
+		rock-red-gap 5 a5
+		wait 300
+		rock 5 a5
+		wait 60
+
+		rock-red-gap 1 a1
+		wait 450
+		rock-red-attacker 2 a2
+		wait 200
+		rock 1 a1
+		wait 100
+
+		rock-red-gap 8 a8
+		wait 450
+		rock-red-attacker 7 a7
+		wait 200
+		rock-stay 8 a8
+		wait
+
+		balloon-check
+		ammo
+		sfx-faster sephiroff
+		pace-fastest
+
+		# --- Phase 5: stacked pressure ---
+		rock-red-gap 4 a4
+		wait 250
+		rock-red-attacker 1 a1
+		wait 150
+		rock-red-attacker 8 a8
+		wait 300
+		rock 4 a4
+		wait 120
+
+		rock-red-gap 5 b5
+		wait 250
+		rock-red-attacker 2 b2
+		wait 150
+		rock-red-attacker 7 b7
+		wait 300
+		rock-stay 5 b5
+		wait 120
+
+		rock-stay 3 a3
+		wait 0
+		rock-stay 6 a6
+		wait 400
+
+		rock-red-gap 3 a3
+		wait 220
+		rock 3 a3
+		wait 80
+		rock-red-gap 6 a6
+		wait 220
+		rock 6 a6
+		wait 80
+
+		rock-red-gap 4 a4
+		wait 200
+		rock-red-attacker 1 b1
+		wait 100
+		rock-red-attacker 2 a2
+		wait 100
+		rock-red-attacker 7 a7
+		wait 100
+		rock-red-attacker 8 b8
+		wait 280
+		rock 4 a4
+		wait
+
+		# --- Finale: gap storm ---
+		rock-red-gap 2 a2
+		wait 280
+		rock 2 a2
+		wait 50
+		rock-red-gap 7 a7
+		wait 280
+		rock 7 a7
+		wait 50
+
+		rock-red-gap 4 a4
+		wait 220
+		rock-stay 4 a4
+		wait 40
+		rock-red-gap 5 a5
+		wait 220
+		rock-stay 5 a5
+		wait 40
+
+		rock-red-gap 3 b3
+		wait 200
+		rock-red-attacker 1 a1
+		wait 80
+		rock-red-attacker 8 a8
+		wait 200
+		rock 3 b3
+		wait 40
+
+		rock-red-gap 6 b6
+		wait 200
+		rock-red-attacker 2 b2
+		wait 80
+		rock-red-attacker 7 b7
+		wait 200
+		rock 6 b6
+		wait 40
+
+		rock-red-gap 4 a4
+		wait 180
+		rock-red-attacker 1 b1
+		wait 60
+		rock-red-attacker 2 a2
+		wait 60
+		rock-red-attacker 7 a7
+		wait 60
+		rock-red-attacker 8 b8
+		wait 220
+		rock-stay 4 a4
+		wait 0
+		rock 5 a5
+		wait 0
+		rock 3 a3
+		wait 0
+		rock 6 a6
+		wait
+
+		balloon-check
+		sfx-stop sephiroff 2.0

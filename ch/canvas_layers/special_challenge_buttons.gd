@@ -7,16 +7,21 @@ signal level_chosen(place: String, stage_title: String)
 @onready var challenge_2: DifficultyBadge = $Challenge2
 @onready var challenge_3: DifficultyBadge = $Challenge3
 @onready var challenge_4: DifficultyBadge = $Challenge4
+@onready var challenge_5: DifficultyBadge = $Challenge5
 
 var _rest_position := Vector2.ZERO
 var _rest_captured := false
+
+
+func _challenge_badges() -> Array:
+	return [challenge_1, challenge_2, challenge_3, challenge_4, challenge_5]
 
 
 func _ready() -> void:
 	add_to_group("special_challenge_buttons")
 	_rest_position = position
 	_rest_captured = true
-	for badge in [challenge_1, challenge_2, challenge_3, challenge_4]:
+	for badge in _challenge_badges():
 		if badge:
 			badge.pressed.connect(_on_badge_pressed.bind(badge))
 	refresh_unlocks()
@@ -26,7 +31,7 @@ func reset_row_layout() -> void:
 	top_level = false
 	if _rest_captured:
 		position = _rest_position
-	for badge in [challenge_1, challenge_2, challenge_3, challenge_4]:
+	for badge in _challenge_badges():
 		if badge and badge.has_method("reset_selection_state"):
 			badge.reset_selection_state()
 
@@ -43,7 +48,7 @@ func refresh_unlocks() -> void:
 	visible = show_row
 	if not show_row:
 		return
-	for badge in [challenge_1, challenge_2, challenge_3, challenge_4]:
+	for badge in _challenge_badges():
 		if badge and badge.has_method("refresh_unlock_state"):
 			badge.refresh_unlock_state()
 

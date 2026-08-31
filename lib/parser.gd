@@ -162,7 +162,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / rock-stay / mothership / smokecan / crate / pineapple / red_rock_error:
+## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-chaser / rock-juggle / rock-grey / rock-stay / mothership / smokecan / crate / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, spawn_row, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
@@ -170,6 +170,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
 ##   `rock-grey` is $1 and does not strike on miss. `rock-stay` flies straight to aim then hangs (pace ignored). `mothership` flees the player for bonus cash.
 ##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
+##   `rock-gap` / `rock-red-gap [gapCols…] [aim]`: expands to large red hazards in every
+##   column except the listed gap(s). Default gap = 8. Aim may be `a4`, `a?` / `a` (row A,
+##   random col), or `?`. Example: `rock-gap 4 6 8 a?` → gaps at 4/6/8, aim row A.
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
 ## wait: {cmd} — hold until the sky is clear (same as old `wait until clear`).
 ## wait 0 / wait 600: {cmd, ms} — delay that many milliseconds before the next rock.
@@ -243,6 +246,9 @@ func parse_spawn_command(token: String) -> Dictionary:
 	match cmd:
 		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'rock-stay', 'rock-still', 'mothership', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
+
+		'rock-gap', 'rock-red-gap':
+			return _parse_rock_gap_command(cmd, parts)
 
 		'pineapple':
 			# Same `?` / default-random rules as other targets (no forced column 1).
@@ -527,6 +533,71 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 			result.param = token2
 
 	return result
+
+
+## rock-gap / rock-red-gap — gap columns then optional aim.
+##   rock-gap              → gap at 8
+##   rock-gap 4            → gap at 4
+##   rock-gap 4 a4         → gap at 4, aim A4
+##   rock-gap 4 6 8 a?     → gaps at 4/6/8, aim row A (random aim col)
+##   rock-gap 3 5 b        → gaps at 3/5, aim row B
+func _parse_rock_gap_command(cmd: String, parts: PackedStringArray) -> Dictionary:
+	var result := {
+		'cmd': cmd,
+		'column': 8,
+		'gap_columns': [],
+		'spawn_row': RANDOM_SLOT,
+		'aim_row': RANDOM_SLOT,
+		'aim_column': RANDOM_SLOT,
+		'param': '',
+	}
+	var gaps: Array = []
+	var i := 1
+	while i < parts.size():
+		var token := String(parts[i]).strip_edges()
+		if token.is_valid_int():
+			var col := int(token)
+			if col >= 1 and col <= 8 and not gaps.has(col):
+				gaps.append(col)
+			i += 1
+			continue
+		break
+	if gaps.is_empty():
+		gaps = [8]
+	result.gap_columns = gaps
+	result.column = int(gaps[0])
+
+	if i >= parts.size():
+		return result
+
+	var aim_tok := String(parts[i]).strip_edges()
+	if _is_random_token(aim_tok):
+		result.aim_row = RANDOM_SLOT
+		result.aim_column = RANDOM_SLOT
+		return result
+
+	var aim := _parse_gap_aim_token(aim_tok)
+	if not aim.is_empty():
+		result.aim_row = aim.row
+		result.aim_column = aim.column
+	else:
+		result.param = aim_tok
+	return result
+
+
+## Aim for gap lines: `a4`, `a?` / `a` (row only), or full cell with side lanes.
+func _parse_gap_aim_token(token: String) -> Dictionary:
+	var cell := _parse_balloon_cell(token, true)
+	if not cell.is_empty():
+		return cell
+	var cleaned := token.strip_edges()
+	if cleaned.ends_with('?'):
+		cleaned = cleaned.substr(0, cleaned.length() - 1)
+	if cleaned.length() == 1:
+		var row := _balloon_row_letter_to_index(cleaned)
+		if row > 0:
+			return {'row': row, 'column': RANDOM_SLOT}
+	return {}
 
 
 ## Bare `wait` → wait until clear. `wait 600` → 600ms. `wait until` still works.
@@ -1216,6 +1287,8 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			var aim := ''
 			if ar > 0 and ac >= 0:
 				aim = '%s%d' % [letters[clampi(ar, 1, 3)], ac]
+			elif ar > 0 and ac < 0:
+				aim = '%s?' % letters[clampi(ar, 1, 3)]
 			if spawn_row >= 1 and col >= 0:
 				var spawn := '%s%d' % [letters[clampi(spawn_row, 1, 3)], col]
 				if aim != '':
@@ -1227,6 +1300,26 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			if col < 0:
 				return cmd
 			return '%s %s' % [cmd, col_token]
+		'rock-gap', 'rock-red-gap':
+			var gap_parts: PackedStringArray = [cmd]
+			var gaps = entry.get('gap_columns', [])
+			if gaps is Array and not gaps.is_empty():
+				for g in gaps:
+					gap_parts.append(str(int(g)))
+			else:
+				var gcol := int(entry.get('column', 8))
+				if gcol >= 1:
+					gap_parts.append(str(gcol))
+			var gap_ar := int(entry.get('aim_row', RANDOM_SLOT))
+			var gap_ac := int(entry.get('aim_column', RANDOM_SLOT))
+			var gap_letters := ['', 'A', 'B', 'C']
+			if gap_ar > 0 and gap_ac >= 0:
+				gap_parts.append('%s%d' % [gap_letters[clampi(gap_ar, 1, 3)], gap_ac])
+			elif gap_ar > 0:
+				gap_parts.append('%s?' % gap_letters[clampi(gap_ar, 1, 3)])
+			elif gap_ar < 0 and gap_ac < 0 and gap_parts.size() > 1:
+				pass
+			return ' '.join(gap_parts)
 		_:
 			return cmd
 

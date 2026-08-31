@@ -65,6 +65,8 @@ enum RockSize {
 	STAY,
 	## Like avoider launch, but at apex locks crosshair and dashes straight at that point.
 	RED_ATTACKER,
+	## Red-attacker look, 3× scale; arms hazardous after a short delay (crosshair overlap = strike).
+	GAP,
 }
 
 enum State {
@@ -293,6 +295,16 @@ var _red_attacker_life_token := 0
 var _red_attacker_dash_target := Vector3.ZERO
 var _red_attacker_dash_dir := Vector3(0.0, -1.0, 0.0)
 var _red_attacker_dash_speed_current := 0.0
+
+# --- Rock Gap (rock-gap / rock-red-gap) --------------------------------------
+@export_group("Rock Gap")
+## Delay after launch before crosshair overlap becomes a strike.
+@export_range(0.0, 3.0, 0.05) var gap_hazard_arm_delay_sec := 0.3
+## Self-destruct if still alive this long after going ACTIVE (no strike).
+@export_range(0.5, 12.0, 0.1) var gap_lifetime_sec := 5.0
+var _gap_armed := false
+var _gap_arm_token := 0
+var _gap_life_token := 0
 
 # --- Rock Chaser (rock-chaser) -----------------------------------------------
 @export_group("Rock Chaser")
@@ -553,6 +565,9 @@ func _physics_process(delta: float) -> void:
 			if not _freeze_shot_pending:
 				_check_threat_crosshair()
 				_update_red_attacker(delta)
+		elif rock_type == RockSize.GAP:
+			if not _freeze_shot_pending:
+				_check_threat_crosshair()
 		elif rock_type == RockSize.CHASER:
 			if not _freeze_shot_pending:
 				_update_chaser(delta)
@@ -652,6 +667,7 @@ func update_prepare_rock() -> void:
 		and rock_type != RockSize.SMOKECAN
 		and rock_type != RockSize.AVOIDER
 		and rock_type != RockSize.RED_ATTACKER
+		and rock_type != RockSize.GAP
 		and rock_type != RockSize.JUGGLE
 		and rock_type != RockSize.MOTHERSHIP
 	):
@@ -674,6 +690,10 @@ func update_active() -> void:
 	elif rock_type == RockSize.RED_ATTACKER:
 		constant_force.x = 1.5
 		rotation_degrees = Vector3.ZERO
+	elif rock_type == RockSize.GAP:
+		constant_force.x = 0.01
+		rotation_degrees = Vector3.ZERO
+		apply_torque_impulse(Vector3.LEFT * 1500)
 	elif rock_type == RockSize.CHASER:
 		constant_force.x = 1.5
 		rotation_degrees = Vector3.ZERO
@@ -708,6 +728,11 @@ func update_active() -> void:
 		_arm_red_attacker()
 		_start_red_attacker_lifetime()
 		_sync_avoider_collision_exceptions()
+	elif rock_type == RockSize.GAP:
+		_set_red_attack_mesh_particles(true)
+		_set_threat_fire(false)
+		_arm_gap_hazard()
+		_start_gap_lifetime()
 	elif rock_type == RockSize.CHASER:
 		_arm_chaser()
 	elif rock_type == RockSize.MOTHERSHIP:
@@ -770,6 +795,7 @@ func round_end_check_rock_status() -> void:
 				or rock_type == RockSize.SMOKECAN
 				or rock_type == RockSize.AVOIDER
 				or rock_type == RockSize.RED_ATTACKER
+				or rock_type == RockSize.GAP
 			):
 				pass
 			else:
@@ -1271,6 +1297,34 @@ func setup_rock_type() -> void:
 			_set_red_attack_mesh_particles(false)
 			_set_threat_fire(false)
 
+		RockSize.GAP:
+			## Same look as red-attacker; ~2× scale (33% under prior 3×); ballistic (pace gravity).
+			current_rock_type = "Rock Gap"
+			rock_type_name = "rock_type_gap"
+			var gap_base := Vector3.ONE * 0.35 * 1.8
+			var gap_size := 3.0 * 0.67
+			health = 1
+			cash_value = 0
+			max_health = health
+			if red_rock_attack:
+				red_rock_attack.visible = true
+				current_mesh = red_rock_attack
+			else:
+				red_rock.visible = true
+				current_mesh = red_rock
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = gap_base * gap_size
+			main_col.scale = Vector3.ONE * 0.125 * 1.8 * gap_size * 1.5
+			rock_type_gravity_scale = 0.4
+			linear_damp = 0.1
+			force_mult.clear()
+			force_mult = [3, 4]
+			force_mult_index = 0
+			_gap_armed = false
+			_gap_life_token += 1
+			_set_red_attack_mesh_particles(false)
+			_set_threat_fire(false)
+
 		RockSize.MOTHERSHIP:
 			current_rock_type = "Mothership"
 			rock_type_name = "mothership_reward"
@@ -1325,6 +1379,9 @@ func reset_stats() -> void:
 	_red_attacker_locking = false
 	_red_attacker_arm_token += 1
 	_red_attacker_life_token += 1
+	_gap_armed = false
+	_gap_arm_token += 1
+	_gap_life_token += 1
 	_chaser_armed = false
 	_chaser_arm_token += 1
 	_chaser_lock_progress = 0.0
@@ -1433,6 +1490,7 @@ func setup_for_pool_launch(new_type: int, spawn_x: float, spawn_y: float = -INF,
 		and rock_type != RockSize.SMOKECAN
 		and rock_type != RockSize.AVOIDER
 		and rock_type != RockSize.RED_ATTACKER
+		and rock_type != RockSize.GAP
 	):
 		gl_PlayerState.log_rocks(1, rock_type_name)
 	var y := start_pos.y if spawn_y == -INF else spawn_y
@@ -1522,6 +1580,9 @@ func apply_aoe_freeze(duration: float = 1.0) -> void:
 	elif rock_type == RockSize.RED_ATTACKER:
 		_red_attacker_life_token += 1
 		_red_attacker_arm_token += 1
+	elif rock_type == RockSize.GAP:
+		_gap_life_token += 1
+		_gap_arm_token += 1
 	elif rock_type == RockSize.STAY:
 		_stay_life_token += 1
 		_stop_rock_stay_burst_warn(true)
@@ -1548,6 +1609,9 @@ func apply_aoe_freeze(duration: float = 1.0) -> void:
 	elif rock_type == RockSize.RED_ATTACKER and rock_activated and current_state == State.ACTIVE:
 		_start_red_attacker_lifetime()
 		_arm_red_attacker()
+	elif rock_type == RockSize.GAP and rock_activated and current_state == State.ACTIVE:
+		_start_gap_lifetime()
+		_arm_gap_hazard()
 	elif rock_type == RockSize.STAY and rock_activated and current_state == State.ACTIVE:
 		_start_rock_stay_lifetime()
 
@@ -1591,6 +1655,9 @@ func shake_camera() -> void:
 			if player_cam.has_method("shake_camera_rock_avoider"):
 				player_cam.shake_camera_rock_avoider()
 		RockSize.RED_ATTACKER:
+			if player_cam.has_method("shake_camera_rock_red_attacker"):
+				player_cam.shake_camera_rock_red_attacker()
+		RockSize.GAP:
 			if player_cam.has_method("shake_camera_rock_red_attacker"):
 				player_cam.shake_camera_rock_red_attacker()
 		RockSize.HAZARD, RockSize.HAZARD_SMALL:
@@ -1734,9 +1801,9 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 	
 	#freeze_mine = true
 
-	# Avoiders / red-attackers: while calm (or frozen), a shot destroys with no strike.
+	# Avoiders / red-attackers / gap: while calm (or frozen), a shot destroys with no strike.
 	# Once in attack mode, a shot or reticle overlap is a hazard strike.
-	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER:
+	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER or rock_type == RockSize.GAP:
 		if _freeze_shot_pending or not _is_threat_hazardous():
 			_destroy_pre_arm_threat()
 			return
@@ -2430,6 +2497,8 @@ func _is_threat_hazardous() -> bool:
 		return _avoider_armed
 	if rock_type == RockSize.RED_ATTACKER:
 		return _red_attacker_dashing or _red_attacker_locking
+	if rock_type == RockSize.GAP:
+		return _gap_armed
 	return false
 
 
@@ -2474,14 +2543,14 @@ func _set_avoider_hum(on: bool) -> void:
 
 
 func _check_threat_crosshair() -> void:
-	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER:
+	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER and rock_type != RockSize.GAP:
 		return
 	if current_state != State.ACTIVE or not rock_activated:
 		return
 	if not _avoider_overlaps_crosshair():
 		return
 	## Calm / pre-attack: crosshair alone does nothing — must be shot like a normal rock.
-	## Aggressive (seeking / locking / dashing): overlap pops them and strikes.
+	## Aggressive (seeking / locking / dashing / gap-armed): overlap pops them and strikes.
 	if _is_threat_hazardous():
 		_trigger_avoider_crosshair_contact()
 
@@ -2502,6 +2571,38 @@ func _arm_red_attacker() -> void:
 	_red_attacker_armed = true
 	set_collision_mask_value(1, true)
 	_sync_avoider_collision_exceptions()
+
+
+## Ballistic gap rock: after a short delay, reticle overlap (or a shot) is a strike.
+func _arm_gap_hazard() -> void:
+	_gap_armed = false
+	_gap_arm_token += 1
+	var token := _gap_arm_token
+	var delay := maxf(gap_hazard_arm_delay_sec, 0.0)
+	if delay > 0.0:
+		await get_tree().create_timer(delay, false).timeout
+	if token != _gap_arm_token:
+		return
+	if current_state != State.ACTIVE or rock_type != RockSize.GAP:
+		return
+	if not rock_activated:
+		return
+	_gap_armed = true
+	_activate_threat_mode()
+
+
+func _start_gap_lifetime() -> void:
+	_gap_life_token += 1
+	var token := _gap_life_token
+	var lifetime := maxf(gap_lifetime_sec, 0.1)
+	await get_tree().create_timer(lifetime, false).timeout
+	if token != _gap_life_token:
+		return
+	if current_state != State.ACTIVE or rock_type != RockSize.GAP:
+		return
+	if not rock_activated:
+		return
+	_expire_gap_safe()
 
 
 func _start_red_attacker_lifetime() -> void:
@@ -3054,7 +3155,7 @@ func _play_aim_hold_bonus_feedback() -> void:
 
 
 func _trigger_avoider_crosshair_contact() -> void:
-	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER:
+	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER and rock_type != RockSize.GAP:
 		return
 	# Frozen avoiders are inert — no strike from reticle touch.
 	if _freeze_shot_pending:
@@ -3072,13 +3173,16 @@ func _trigger_avoider_crosshair_contact() -> void:
 	_red_attacker_locking = false
 	_red_attacker_arm_token += 1
 	_red_attacker_life_token += 1
+	_gap_armed = false
+	_gap_arm_token += 1
+	_gap_life_token += 1
 	_shutdown_threat_fx()
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
 	freeze = true
 
-	var aim_xy := _crosshair_world_xy_at_depth(_avoider_plane_z)
-	global_position = Vector3(aim_xy.x, aim_xy.y, _avoider_plane_z)
+	var aim_xy := _crosshair_world_xy_at_depth(_avoider_plane_z if rock_type != RockSize.GAP else global_position.z)
+	global_position = Vector3(aim_xy.x, aim_xy.y, global_position.z if rock_type == RockSize.GAP else _avoider_plane_z)
 	## One short beat so the snap reads before the burst.
 	await get_tree().create_timer(0.08, false).timeout
 	if current_state != State.ACTIVE or rock_destroyed:
@@ -3117,7 +3221,7 @@ func _destroy_frozen_avoider() -> void:
 
 
 func _destroy_pre_arm_threat() -> void:
-	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER:
+	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER and rock_type != RockSize.GAP:
 		return
 	if current_state != State.ACTIVE or not rock_activated:
 		return
@@ -3132,15 +3236,50 @@ func _destroy_pre_arm_threat() -> void:
 	play_hit_sfx()
 	if rock_type == RockSize.RED_ATTACKER:
 		_expire_red_attacker_lifetime()
+	elif rock_type == RockSize.GAP:
+		_expire_gap_safe()
 	else:
 		_expire_avoider_lifetime()
+
+
+## Shot while calm — destroy with no strike.
+func _expire_gap_safe() -> void:
+	if rock_type != RockSize.GAP:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+
+	rock_activated = false
+	_gap_armed = false
+	_gap_arm_token += 1
+	_gap_life_token += 1
+	_shutdown_threat_fx()
+
+	remove_from_group("Target")
+	disable_collision()
+	_set_red_attack_mesh_particles(false)
+	if current_particles != null:
+		current_particles.emitting = false
+
+	var red := get_node_or_null("%RedParticles") as GPUParticles3D
+	if red:
+		red.emitting = false
+
+	expand_blast_radius()
+	play_destroy_sfx()
+	var player_cam = get_tree().get_first_node_in_group("player_cam")
+	if player_cam and player_cam.has_method("shake_camera_rock_red_attacker"):
+		player_cam.shake_camera_rock_red_attacker()
+	await was_hit_tween()
+	if current_state == State.ACTIVE:
+		enter_state(State.MISSED)
 
 
 func _shake_camera_avoider_hit() -> void:
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
 	if player_cam == null:
 		return
-	if rock_type == RockSize.RED_ATTACKER and player_cam.has_method("shake_camera_rock_red_attacker"):
+	if (rock_type == RockSize.RED_ATTACKER or rock_type == RockSize.GAP) and player_cam.has_method("shake_camera_rock_red_attacker"):
 		player_cam.shake_camera_rock_red_attacker()
 	elif player_cam.has_method("shake_camera_rock_avoider"):
 		player_cam.shake_camera_rock_avoider()

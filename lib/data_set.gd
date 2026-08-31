@@ -22,6 +22,7 @@ var challenge_01_unlocked := false
 var challenge_02_unlocked := false
 var challenge_03_unlocked := false
 var challenge_04_unlocked := false
+var challenge_05_unlocked := false
 
 # Upgrade stages
 
@@ -114,6 +115,7 @@ var dataset_float : Dictionary = {
 	,"rock_type_9"			: [0,		1]
 	,"rock_type_avoider"	: [0,		1]
 	,"rock_type_red_attacker": [0,		1]
+	,"rock_type_gap"		: [0,		1]
 	,"rock_type_chaser"		: [0,		1]
 	## Grey rock: $1, 1 health. Misses do not strike.
 	,"rock_type_grey"		: [1,		1]
@@ -275,6 +277,9 @@ func is_challenge_unlocked(key: String) -> bool:
 		"challenge_04", "challenge4", "challenge 4":
 			flag = challenge_04_unlocked
 			index = 4
+		"challenge_05", "challenge5", "challenge 5":
+			flag = challenge_05_unlocked
+			index = 5
 		_:
 			if index <= 0:
 				return false
