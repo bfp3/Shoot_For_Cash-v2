@@ -176,9 +176,6 @@ func refresh_unlock_state() -> void:
 
 
 func _apply_back_text() -> void:
-
-
-func _apply_back_text() -> void:
 	if _back_label == null:
 		return
 	var copy := _locked_need_text()

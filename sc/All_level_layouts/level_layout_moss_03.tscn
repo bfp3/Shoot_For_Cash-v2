@@ -545,9 +545,9 @@ func pulse_sand() -> void:
 	apply_central_impulse(impulse)
 	
 	
-func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed('left'):
-		pulse_sand()
+#func _input(event: InputEvent) -> void:
+	#if Input.is_action_just_pressed('left'):
+		#pulse_sand()
 "
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_phipx"]
@@ -558,7 +558,6 @@ size = Vector3(250, 1, 250)
 
 [node name="Moss" type="Node3D" unique_id=229302118]
 script = ExtResource("layout_scroll")
-enabled = false
 
 [node name="Egg" parent="." unique_id=2127545510 instance=ExtResource("1_qesvg")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -4.590103, -1.8200959, 11.896428)
