@@ -607,6 +607,28 @@ fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_q8tld")
 draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
+[node name="Fire" type="GPUParticles3D" parent="Mesh/Red_rock" unique_id=744399041]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2, 0)
+visible = false
+cast_shadow = 0
+emitting = false
+amount = 26
+lifetime = 0.7
+explosiveness = 0.05
+randomness = 0.35
+visibility_aabb = AABB(-1.2, -0.2, -1.2, 2.4, 2.8, 2.4)
+process_material = SubResource("ParticleProcessMaterial_dfmc7")
+draw_pass_1 = SubResource("QuadMesh_2063v")
+
+[node name="Glow" type="OmniLight3D" parent="Mesh/Red_rock/Fire" unique_id=1386905732]
+light_color = Color(1, 0.52, 0.14, 1)
+light_energy = 2.4
+light_indirect_energy = 0.6
+light_volumetric_fog_energy = 1.4
+light_size = 0.5
+omni_range = 7.5
+omni_attenuation = 1.2
+
 [node name="Red_rock_attack" type="MeshInstance3D" parent="Mesh" unique_id=561141429]
 unique_name_in_owner = true
 layers = 524288

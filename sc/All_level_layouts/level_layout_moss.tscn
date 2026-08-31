@@ -45,7 +45,7 @@ shader_parameter/wave_secondary = 0.55
 shader_parameter/wave_tertiary = 0.28
 shader_parameter/freeze_time = false
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_i42jn"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_4i34m"]
 size = Vector2(150, 312.865)
 subdivide_width = 24
 subdivide_depth = 24
@@ -862,6 +862,7 @@ data = PackedVector3Array(-0.5, 2.5, 0.5, 0.5, 2.5, 0.5, -0.5, -2.5, 0.5, 0.5, 2
 
 [node name="Moss" type="Node3D" unique_id=229302118]
 script = ExtResource("layout_scroll")
+forward_axis = Vector3(0, 0, 0)
 lerp_duration = 1.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
@@ -892,7 +893,7 @@ metadata/_custom_type_script = "uid://cwee1r4c8ea3p"
 [node name="Mesh" type="MeshInstance3D" parent="SimpleWater" unique_id=650506395]
 material_override = SubResource("ShaderMaterial_md1in")
 cast_shadow = 0
-mesh = SubResource("PlaneMesh_i42jn")
+mesh = SubResource("PlaneMesh_4i34m")
 
 [node name="ShadowBlocker" type="MeshInstance3D" parent="." unique_id=580761885]
 transform = Transform3D(-2.585, 0, -1.509958e-07, 0, 1, 0, 3.9032415e-07, 0, -1, -2, -7.197, -18)
@@ -1664,8 +1665,7 @@ modulate = Color(0.33, 0.33, 0.33, 0.29411766)
 texture = ExtResource("22_61oqc")
 
 [node name="CrateLayout" type="Node3D" parent="." unique_id=1945974550]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.807793, 44.30255)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.808, 44.303)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CrateLayout" unique_id=569261180]
 transform = Transform3D(0.165, 0, 0, 0, 0.165, 0, 0, 0, 0.165, 0, 0, 14.087341)
@@ -2802,7 +2802,7 @@ mesh = SubResource("BoxMesh_4i34m")
 shape = SubResource("ConcavePolygonShape3D_y34rb")
 
 [node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=2123277898]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -52.43682, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -75.693, 0, 0)
 script = ExtResource("26_4i34m")
 strike_on_wall_overlap = false
 knock_crosshair_distance = 40.0

@@ -1,6 +1,6 @@
 class_name Player extends Node3D
 
-const mouse_no_lerp := true
+const mouse_no_lerp := false
 
 @onready var mobile_controller: Node = $MobileControl
 var is_mobile := OS.has_feature("mobile")
@@ -465,6 +465,9 @@ func _process(delta: float) -> void:
 	else:
 		if Input.is_action_just_released("shootWeapon"):
 			fire_weapon()
+			
+		if Input.is_key_label_pressed(KEY_TAB):
+			fire_weapon_auto()
 
 		if Input.is_action_just_released("shoot_weapon_2"):
 			#fire_oranges()
@@ -1479,8 +1482,59 @@ func fire_oranges() -> void:
 		orange_container.launch_orange(_crosshair_world_on_z(23.0))
 		%Crosshair.pulse_ring_texture(-1.0, -1.0, shoot_weapon_2_ring_pulse_color)
 
+
+func fire_weapon_auto(force_plant: bool = false) -> void:
+	power_gun_fire_rate = 0.05
+	if current_state != State.ACTIVE:
+		return
+		
+	if _is_currently_shooting:
+		return
+		
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and not running_on_mobile:
+		return
+
+	if get_displayed_ammo() <= 0 and not debug_infinite_ammo:
+		if _is_in_testing_room() and not _level_editor_ammo_active:
+			_refill_regular_ammo_to_max()
+		elif _level_editor_ammo_active:
+			_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
+			_refresh_ammo_display()
+		else:
+			# Empty magazine: still allow shooting early-exit / ammo-reload targets.
+			if weapon_shooting.shoot_special_midround_target_if_aimed():
+				return
+			out_of_ammo()
+			weapon_shooting.play_missed_sounds()
+			register_accuracy_miss()
+			return
+
+	## Glory: 6 weapon fires per round (not magazine ammo).
+	var rm = get_tree().get_first_node_in_group("round_manager")
+	if rm and rm.has_method("try_register_weapon_shot") and not bool(rm.try_register_weapon_shot()):
+		weapon_shooting.play_missed_sounds()
+		return
+
+	if force_plant or plant_crosshair_on_fire:
+		if not debug_infinite_ammo and not consume_ammo(1):
+			out_of_ammo()
+			#weapon_shooting.play_missed_sounds()
+			register_accuracy_miss()
+			return
+		if not %Crosshair.plant_crosshair_trap(planted_crosshair_arm_delay):
+			#weapon_shooting.play_missed_sounds()
+			return
+		player_did_not_miss()
+		return
+
+	weapon_shooting.shoot_target()
+	player_did_not_miss()
+	if shoot_ring_pulse_on_release:
+		%Crosshair.pulse_ring_texture()
+
 func fire_weapon(force_plant: bool = false) -> void:
-	power_gun_fire_rate = 0.01
+	#power_gun_fire_rate = 0.01
+	power_gun_fire_rate = 0.05
 	power_bullet_speed = 0.01
 	#power_target_circle = 60.0
 	if current_state != State.ACTIVE:
