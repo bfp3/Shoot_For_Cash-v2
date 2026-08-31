@@ -1,6 +1,6 @@
 extends Node
 ## When true, Advanced / Expert / all challenges are treated as unlocked.
-const debug_everything_unlocked := false
+const debug_everything_unlocked := true
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 ## Advanced / Expert also require net worth (see unlock amounts below).
@@ -17,7 +17,7 @@ var challenges_unlock_net_worth := 50000
 var challenge_unlock_net_worth_step := 10000
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
-var challenges_unlocked := false
+var challenges_unlocked := true
 var challenge_01_unlocked := false
 var challenge_02_unlocked := false
 var challenge_03_unlocked := false
@@ -160,14 +160,14 @@ var dataset_string : Dictionary = {
 	,"shop_challenge_text"		: [
 		"ACCURACY\nfor the WIN", ## moss
 		"", ## redd
-		"6 Shots Only", ## glory
+		"6 Ammo Max", ## glory
 		"That's all for now,\nenjoy endless mode.", ## jetz
 		"", ## noir (was Don't Shoot Oranges — re-enable later)
 		"", ## vesper
 		"", ## start
 	]
 	## Runtime special challenge ids per place (parallel to place_name). Empty = none.
-	## Known ids: no_shoot_oranges, six_shots_only
+	## Known ids: no_shoot_oranges, six_shots_only (Glory: max magazine = 6)
 	,"special_challenge"		: [
 		"", ## moss
 		"", ## redd
@@ -478,7 +478,7 @@ func get_ticket_power_key(place_id: String) -> String:
 	return "power_ticket_%s" % resolve_place_name(place_id)
 
 
-## Special challenge id for a place (e.g. "no_shoot_oranges", "six_shots_only"). Empty = none.
+## Special challenge id for a place (e.g. "no_shoot_oranges", "six_shots_only" = max ammo 6). Empty = none.
 func get_special_challenge(place_id: String = "") -> String:
 	if place_id.is_empty():
 		place_id = String(gl_PlayerState.dataset.level_name)

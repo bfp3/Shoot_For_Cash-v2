@@ -8,6 +8,10 @@ const OUTCOME_PAID := "paid"
 const OUTCOME_FLIP_WIN := "flip_win"
 const OUTCOME_GIVE_UP := "give_up"
 const ABANDON_RUN_PROMPT_PATH := "res://ch/Shop/abandon_run_prompt.tscn"
+## Coin flip only offered when the round countdown is longer than this.
+const COIN_FLIP_MIN_TIMER_SEC := 60.0
+## Chance the coin-flip offer appears when the timer gate passes.
+const COIN_FLIP_CHANCE := 0.33
 
 @onready var _root: Control = $Control
 @onready var _title: RichTextLabel = %TitleLabel
@@ -31,8 +35,7 @@ const ABANDON_RUN_PROMPT_PATH := "res://ch/Shop/abandon_run_prompt.tscn"
 @onready var _fade_to_black: ColorRect = $Control/FadeToBlack
 
 @export var resume_from := 3
-## When true (default), a paid continue resumes mid-wave. When false, PLAY / YES
-## restarts the current round from the beginning (no shop, no checkpoint resume).
+## Kept for inspector compatibility. Round manager treats paid as replay and flip_win as resume-in-place.
 @export var resume_in_place := true
 
 var _busy := false
@@ -57,6 +60,7 @@ var _coin_spin_showing_heads := true
 var _coin_anim_tween: Tween
 var _heads_hover_tween: Tween
 var _tails_hover_tween: Tween
+var _coin_flip_offered := false
 
 
 func _ready() -> void:
@@ -68,8 +72,10 @@ func _ready() -> void:
 		_yes.pressed.connect(_on_yes_pressed)
 	if _coin_flip:
 		_coin_flip.pressed.connect(_on_coin_flip_pressed)
+		_coin_flip.hide()
 	if _give_up:
 		_give_up.pressed.connect(_on_give_up_pressed)
+		_give_up.hide()
 	_setup_coin_choice_buttons()
 	_setup_abandon_run_prompt()
 	_reset_visuals()
@@ -86,18 +92,26 @@ func play(fee: int, cash: int) -> String:
 	_holding_blackout = false
 	_outcome = OUTCOME_GIVE_UP
 	_fee_amount = maxi(fee, 0)
-	_cash_amount = maxi(cash, 0)
+	## Cash may already be negative (debt from a prior continue).
+	_cash_amount = cash
 	_displayed_cash = float(_cash_amount)
+	_coin_flip_offered = _roll_coin_flip_offer()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_reset_visuals()
 	_refresh_money_labels(_cash_amount, _fee_amount)
-	_show_afford_or_flip()
 	show()
 	_play_open_sfx()
 	_raise_shop_music()
 	if _root:
 		_root.mouse_filter = Control.MOUSE_FILTER_STOP
-	_focus_primary()
+
+	if _coin_flip_offered:
+		_hide_pay_buttons()
+		_clear_oh_no_and_strikes()
+		await _present_coin_choices()
+	else:
+		_show_pay_ui()
+		_focus_primary()
 
 	while _waiting and is_inside_tree():
 		await get_tree().process_frame
@@ -195,12 +209,12 @@ func _reset_visuals() -> void:
 		_yes.disabled = false
 		_yes.show()
 	if _coin_flip:
-		_coin_flip.disabled = false
+		_coin_flip.disabled = true
 		_coin_flip.hide()
 	if _give_up:
-		_give_up.disabled = false
-		_give_up.show()
-		#_give_up.hide()
+		## Bail / give-up is retired — continue is pay (or coin flip) only.
+		_give_up.disabled = true
+		_give_up.hide()
 	if _heads:
 		_heads.disabled = false
 		_heads.hide()
@@ -241,7 +255,8 @@ func _set_cash_text(value: float) -> void:
 
 
 func _roll_cash_to(target: int, duration: float = 0.45) -> void:
-	var to := float(maxi(target, 0))
+	## Allow negative targets so debt from continue is visible.
+	var to := float(target)
 	var from := _displayed_cash
 	if _cash_roll_tween and _cash_roll_tween.is_valid():
 		_cash_roll_tween.kill()
@@ -261,23 +276,58 @@ func _roll_cash_to(target: int, duration: float = 0.45) -> void:
 	await _cash_roll_tween.finished
 
 
-func _show_afford_or_flip() -> void:
-	var can_pay := _cash_amount >= _fee_amount
+func _roll_coin_flip_offer() -> bool:
+	var timer_sec := _current_round_timer_seconds()
+	if timer_sec <= COIN_FLIP_MIN_TIMER_SEC:
+		return false
+	return randf() < COIN_FLIP_CHANCE
+
+
+func _current_round_timer_seconds() -> float:
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm == null:
+		return 0.0
+	if rm.has_method("get_current_countdown_seconds"):
+		return float(rm.get_current_countdown_seconds())
+	if rm.has_method("get_active_timer_seconds"):
+		var s := float(rm.get_active_timer_seconds())
+		if s > 0.0:
+			return s
+	var timer = rm.get("round_timer") if "round_timer" in rm else null
+	if timer and float(timer.get("start_time")) > 0.0:
+		return float(timer.start_time)
+	return 0.0
+
+
+func _hide_pay_buttons() -> void:
 	if _yes:
-		_yes.visible = can_pay
-		_yes.disabled = not can_pay
+		_yes.hide()
+		_yes.disabled = true
 	if _coin_flip:
-		_coin_flip.visible = not can_pay
-		_coin_flip.disabled = can_pay
+		_coin_flip.hide()
+		_coin_flip.disabled = true
+	if _give_up:
+		_give_up.hide()
+		_give_up.disabled = true
+
+
+func _show_pay_ui() -> void:
+	if _yes:
+		_yes.visible = true
+		_yes.disabled = false
+	if _coin_flip:
+		_coin_flip.hide()
+		_coin_flip.disabled = true
+	if _give_up:
+		_give_up.hide()
+		_give_up.disabled = true
 
 
 func _focus_primary() -> void:
 	if _yes and _yes.visible:
 		UiFocus.grab_in(_root, _yes)
-	elif _coin_flip and _coin_flip.visible:
-		UiFocus.grab_in(_root, _coin_flip)
-	elif _give_up:
-		UiFocus.grab_in(_root, _give_up)
+	elif _coin_heads_hit and _coin_heads_hit.visible and not _coin_heads_hit.disabled:
+		UiFocus.grab_in(_root, _coin_heads_hit)
 
 
 func _on_yes_pressed() -> void:
@@ -288,14 +338,10 @@ func _on_yes_pressed() -> void:
 		_finish(OUTCOME_GIVE_UP)
 		return
 	var from_cash := _cash_amount
-	if not bool(gl_PlayerState.pay_continue_fee()):
-		_resolving = false
-		_cash_amount = int(gl_PlayerState.get_spendable_cash()) if gl_PlayerState.has_method("get_spendable_cash") else 0
-		_refresh_money_labels(_cash_amount, _fee_amount)
-		_show_afford_or_flip()
-		return
+	## Always succeeds; may put the wallet into debt.
+	gl_PlayerState.pay_continue_fee()
 	_lock_actions()
-	_cash_amount = int(gl_PlayerState.get_spendable_cash()) if gl_PlayerState.has_method("get_spendable_cash") else 0
+	_cash_amount = int(gl_PlayerState.get_spendable_cash()) if gl_PlayerState.has_method("get_spendable_cash") else from_cash - _fee_amount
 	_displayed_cash = float(from_cash)
 	_set_cash_text(float(from_cash))
 	_play_coin_sfx()
@@ -312,13 +358,7 @@ func _on_yes_pressed() -> void:
 func _on_coin_flip_pressed() -> void:
 	if not _waiting or _resolving:
 		return
-	if _yes:
-		_yes.hide()
-	if _coin_flip:
-		_coin_flip.hide()
-	if _give_up:
-		_give_up.hide()
-
+	_hide_pay_buttons()
 	_clear_oh_no_and_strikes()
 	await _present_coin_choices()
 
@@ -357,13 +397,25 @@ func _on_guess(picked_heads: bool) -> void:
 		_finish(OUTCOME_FLIP_WIN)
 	else:
 		_play_named_sfx("coin_fail_jingle")
-		await get_tree().create_timer(2.0, true).timeout
+		await get_tree().create_timer(1.0, true).timeout
 		if not _coin_still_active(token):
 			return
-		await _play_game_over_sequence()
-		if not _waiting:
-			return
-		_finish(OUTCOME_GIVE_UP)
+		await _return_to_pay_ui_after_failed_flip()
+
+
+func _return_to_pay_ui_after_failed_flip() -> void:
+	await _fade_coin_toss_out(0.35)
+	_reset_coin_nodes()
+	if _guess_panel:
+		_guess_panel.hide()
+		_guess_panel.modulate.a = 1.0
+	if _guess_title:
+		_guess_title.modulate.a = 0.0
+	_restore_continue_chrome()
+	_resolving = false
+	_show_pay_ui()
+	_unlock_actions()
+	_focus_primary()
 
 
 func _on_give_up_pressed() -> void:
@@ -429,9 +481,7 @@ func _on_abandon_run_confirmed() -> void:
 
 
 func _unlock_actions() -> void:
-	if _give_up:
-		_give_up.disabled = false
-	_show_afford_or_flip()
+	_show_pay_ui()
 	if _heads:
 		_heads.disabled = false
 	if _tails:

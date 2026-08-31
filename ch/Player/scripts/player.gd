@@ -74,6 +74,8 @@ func wants_crosshair_destroy_on_overlap(kind: String) -> bool:
 ## Current bullets loaded. Starts at power_max_ammo and is refilled via shop ammo packs.
 var shot_count := 0
 var max_ammo := 0
+## Glory `six_shots_only` challenge: hard magazine cap (see get_max_ammo).
+const SIX_SHOTS_AMMO_CAP := 6
 ## Separate magazine used only while a level-editor test round is active.
 var _level_editor_ammo_active := false
 var _level_editor_ammo := 99
@@ -161,6 +163,26 @@ var joystick_sensitivity := 500.0
 ## How long each step SFX plays before stopping (full files are longer).
 @export_range(0.05, 2.0, 0.05) var grid_aim_step_sfx_duration := 0.5
 
+@export_group("Player Lean")
+## When grid aim is off: how far the player peeks left/right (world units).
+@export var lean_sideways := 0.45
+## When grid aim is off: how far the player peeks up (world +Y).
+@export var lean_upwards := 0.3
+## When grid aim is off: how far the player peeks down (world −Y).
+@export var lean_downwards := 0.35
+## Max Z-roll (degrees) when fully leaning left/right. Negate to flip tilt direction.
+@export var lean_roll_degrees := 6.0
+## If true, cardinal lean yaws/pitches instead of peeking / Z-rolling.
+@export var lean_use_yaw := false
+## Max Y rotation (degrees) when fully leaning left/right. Negate to flip turn direction.
+@export var lean_yaw_degrees := 12.0
+## Max X rotation (degrees) when fully looking up/down. Negate to flip pitch direction.
+@export var lean_pitch_degrees := 8.0
+## How quickly the lean eases toward the held direction.
+@export var lean_in_speed := 8.0
+## How quickly the lean eases back to rest on release.
+@export var lean_out_speed := 10.0
+
 @export_group("Crosshair Size")
 ## Multiplies the resting scope size (hit radius + visual), same idea as holding expand toward SCOPE_EXPAND_MAX_SCALE.
 @export_range(0.25, 3.0, 0.05) var crosshair_default_size_scale := 1.0:
@@ -204,6 +226,14 @@ const GRID_AIM_REPEAT_RATE_SEC := 0.11
 const GRID_AIM_STICK_DEADZONE := 0.55
 
 var start_rotation : Vector3
+var _lean_rest_position := Vector3.ZERO
+var _lean_rest_rotation_z := 0.0
+var _lean_rest_rotation_y := 0.0
+var _lean_rest_rotation_x := 0.0
+var _lean_offset := Vector3.ZERO
+var _lean_roll := 0.0
+var _lean_yaw := 0.0
+var _lean_pitch := 0.0
 
 var target_crosshair_position: Vector2 = Vector2(980, 540)
 var crosshair_position := Vector2.ZERO
@@ -274,6 +304,10 @@ func _ready() -> void:
 
 	EventBus.instance.egg_pulsed.connect(pulse_shake_camera)
 	start_rotation = rotation_degrees
+	_lean_rest_position = position
+	_lean_rest_rotation_z = rotation.z
+	_lean_rest_rotation_y = rotation.y
+	_lean_rest_rotation_x = rotation.x
 	_setup_mobile_pause_button()
 
 
@@ -410,6 +444,7 @@ func _process(delta: float) -> void:
 			Engine.time_scale = restore
 	
 	if current_state == State.IN_SHOP:
+		_update_player_lean(delta, Vector2.ZERO)
 		_update_hold_aim_zoom()
 		return 
 		
@@ -430,10 +465,12 @@ func _process(delta: float) -> void:
 	if current_state == State.ROUND_FINISHED:
 		crosshair.position = target_crosshair_position #This controls the movement of crosshair 2D
 		update_gun_look()
+		_update_player_lean(delta, Vector2.ZERO)
 		_update_hold_aim_zoom()
 		return
 	
 	if current_state == State.INACTIVE || current_state == State.IN_SHOP:
+		_update_player_lean(delta, Vector2.ZERO)
 		_update_hold_aim_zoom()
 		return
 	
@@ -644,43 +681,86 @@ func handle_joystick(delta : float) -> void:
 func handle_keyboard_and_controller_input(delta: float) -> void:
 	if grid_aim_enabled:
 		_handle_grid_aim_input(delta)
+		_update_player_lean(delta, Vector2.ZERO)
 		return
 
-	# Raw stick axes keep full 360° aim. InputMap deadzones on left/right/forward/backward
-	# snap diagonals to cardinals, so only use those for keyboard.
+	# Stick keeps free crosshair aim. Cardinal keys lean the player (not the reticle).
 	var stick := Vector2(
 		Input.get_joy_axis(0, JOY_AXIS_LEFT_X),
 		Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
 	)
 	const STICK_DEADZONE := 0.12
-	var raw: Vector2
 	if stick.length() > STICK_DEADZONE:
-		raw = stick
-	else:
-		raw = Vector2(
-			Input.get_axis("left", "right"),
-			Input.get_axis("forward", "backward")
-		)
-	# Stick tilt scales speed (partial push = slower). Keys read as ±1 so stay full speed.
-	var magnitude := clampf(raw.length(), 0.0, 1.0)
-	var has_input := magnitude > STICK_DEADZONE
-
-	var target_velocity := Vector2.ZERO
-	if has_input:
-		# Mild curve: light tilts stay precise, full throw still hits max speed.
+		var magnitude := clampf(stick.length(), 0.0, 1.0)
 		var strength := pow(magnitude, 1.35)
-		target_velocity = raw.normalized() * strength
+		var target_velocity := stick.normalized() * strength
+		const ACCEL := 60.0
+		keyboard_velocity = keyboard_velocity.lerp(target_velocity, ACCEL * delta)
+		target_crosshair_position += keyboard_velocity * delta
+	else:
+		const DECEL := 18.0
+		keyboard_velocity = keyboard_velocity.lerp(Vector2.ZERO, DECEL * delta)
+		if keyboard_velocity.length_squared() < 0.01:
+			keyboard_velocity = Vector2.ZERO
+		else:
+			target_crosshair_position += keyboard_velocity * delta
 
-	const ACCEL := 60.0
-	const DECEL := 18.0
-	var lerp_speed := ACCEL if has_input else DECEL
-	keyboard_velocity = keyboard_velocity.lerp(target_velocity, lerp_speed * delta)
+	_update_player_lean(delta, _player_lean_input())
 
-	if keyboard_velocity.length_squared() < 0.01 and not has_input:
-		keyboard_velocity = Vector2.ZERO
-		return
 
-	target_crosshair_position += keyboard_velocity * delta
+## Cardinal hold strength for lean: x −1…1 left/right, y −1…1 up/down (screen-style).
+func _player_lean_input() -> Vector2:
+	var x := Input.get_axis("left", "right")
+	if is_zero_approx(x):
+		x = Input.get_axis("ui_left", "ui_right")
+	var y := Input.get_axis("forward", "backward")
+	if is_zero_approx(y):
+		y = Input.get_axis("ui_up", "ui_down")
+	## Stick is for crosshair; don't also lean from stick tilts.
+	return Vector2(clampf(x, -1.0, 1.0), clampf(y, -1.0, 1.0))
+
+
+## Smooth peek from rest toward lean_* amounts while held; ease back on release.
+## When `lean_use_yaw` is on, left/right yaws and up/down pitches instead of translating / Z-rolling.
+func _update_player_lean(delta: float, dir: Vector2) -> void:
+	var desired := Vector3.ZERO
+	var desired_roll := 0.0
+	var desired_yaw := 0.0
+	var desired_pitch := 0.0
+
+	if lean_use_yaw:
+		## Match sideways sign of peek mode (`dir.x * -lean_sideways`).
+		desired_yaw = dir.x * -deg_to_rad(lean_yaw_degrees)
+		## forward/up (dir.y < 0) pitches up; backward/down pitches down.
+		desired_pitch = (-dir.y) * deg_to_rad(lean_pitch_degrees)
+	else:
+		desired.x = dir.x * -lean_sideways
+		if dir.y < 0.0:
+			## forward / up → rise
+			desired.y = (-dir.y) * lean_upwards
+		elif dir.y > 0.0:
+			## backward / down → drop
+			desired.y = (-dir.y) * lean_downwards
+		## Match sideways peek: roll with the lean (negate lean_roll_degrees in the inspector to flip).
+		desired_roll = dir.x * deg_to_rad(lean_roll_degrees)
+
+	var at_rest := (
+		desired.length_squared() < 0.0001
+		and is_zero_approx(desired_roll)
+		and is_zero_approx(desired_yaw)
+		and is_zero_approx(desired_pitch)
+	)
+	var speed := lean_out_speed if at_rest else lean_in_speed
+	speed = maxf(speed, 0.01)
+	var t := 1.0 - exp(-speed * delta)
+	_lean_offset = _lean_offset.lerp(desired, t)
+	_lean_roll = lerpf(_lean_roll, desired_roll, t)
+	_lean_yaw = lerpf(_lean_yaw, desired_yaw, t)
+	_lean_pitch = lerpf(_lean_pitch, desired_pitch, t)
+	position = _lean_rest_position + _lean_offset
+	rotation.z = _lean_rest_rotation_z + _lean_roll
+	rotation.y = _lean_rest_rotation_y + _lean_yaw
+	rotation.x = _lean_rest_rotation_x + _lean_pitch
 
 
 ## Discrete A1–C8 aim: WASD / left stick / D-pad step cells; crosshair eases between them.
@@ -1108,6 +1188,8 @@ func update_player_stats() -> void:
 	_apply_resting_crosshair_size(0.33)
 	_refresh_crosshair_weapon_style()
 	update_stats_visually()
+	## Re-apply place ammo caps (e.g. Glory six-ammo) after travel / shop.
+	_sync_ammo_to_max_cap()
 
 
 func _rebuild_weapon_bases_from_upgrades() -> void:
@@ -1371,7 +1453,12 @@ func _tween_scope_back_to_base() -> void:
 func get_max_ammo() -> int:
 	if _level_editor_ammo_active:
 		return LEVEL_EDITOR_AMMO_MAX
-	return int(gl_DataSet.get_value('power_max_ammo', gl_PlayerState.dataset.power_max_ammo))
+
+	var base := int(gl_DataSet.get_value('power_max_ammo', gl_PlayerState.dataset.power_max_ammo))
+	## Glory special challenge: magazine capacity is 6 for the whole place.
+	if gl_DataSet.has_special_challenge("six_shots_only", String(gl_PlayerState.dataset.level_name)):
+		return mini(base, SIX_SHOTS_AMMO_CAP) if base > 0 else SIX_SHOTS_AMMO_CAP
+	return base
 
 
 func get_displayed_ammo() -> int:
@@ -1392,6 +1479,17 @@ func _init_ammo() -> void:
 	else:
 		shot_count = max_ammo
 	_refresh_ammo_display()
+
+
+## Clamp loaded ammo when max capacity changes (Glory 6-ammo challenge, etc.).
+func _sync_ammo_to_max_cap() -> void:
+	if _level_editor_ammo_active:
+		return
+	max_ammo = get_max_ammo()
+	var before := shot_count
+	shot_count = clampi(shot_count, 0, max_ammo)
+	if shot_count != before:
+		_refresh_ammo_display()
 
 
 func _refresh_ammo_display(animate := false) -> void:
@@ -1554,7 +1652,7 @@ func fire_weapon_auto(force_plant: bool = false) -> void:
 			register_accuracy_miss()
 			return
 
-	## Glory: 6 weapon fires per round (not magazine ammo).
+	## Glory six-ammo is enforced via get_max_ammo() / magazine, not a separate fire counter.
 	var rm = get_tree().get_first_node_in_group("round_manager")
 	if rm and rm.has_method("try_register_weapon_shot") and not bool(rm.try_register_weapon_shot()):
 		weapon_shooting.play_missed_sounds()
@@ -1608,7 +1706,7 @@ func fire_weapon(force_plant: bool = false) -> void:
 			register_accuracy_miss()
 			return
 
-	## Glory: 6 weapon fires per round (not magazine ammo).
+	## Glory six-ammo is enforced via get_max_ammo() / magazine, not a separate fire counter.
 	var rm = get_tree().get_first_node_in_group("round_manager")
 	if rm and rm.has_method("try_register_weapon_shot") and not bool(rm.try_register_weapon_shot()):
 		weapon_shooting.play_missed_sounds()

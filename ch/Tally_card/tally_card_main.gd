@@ -69,6 +69,7 @@ var _scene_bonus_title := ""
 var _scene_cash_title := ""
 
 @onready var _next_button: Button = get_node_or_null("%NextRound") as Button
+@onready var _replay_button: Button = get_node_or_null("%Replay") as Button
 @onready var _level_select_button: Button = get_node_or_null("%LevelSelect") as Button
 @onready var _bonus_row: Control = get_node_or_null("CenterContainer/MainPanel/MainPanel/CashHboxcontainer") as Control
 @onready var _bonus_earned: Control = get_node_or_null("CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned") as Control
@@ -98,6 +99,8 @@ func _ready() -> void:
 	_center = get_node_or_null("CenterContainer") as Control
 	if _next_button and not _next_button.pressed.is_connected(_on_shop_pressed):
 		_next_button.pressed.connect(_on_shop_pressed)
+	if _replay_button and not _replay_button.pressed.is_connected(_on_replay_pressed):
+		_replay_button.pressed.connect(_on_replay_pressed)
 	if _level_select_button and not _level_select_button.pressed.is_connected(_on_level_select_pressed):
 		_level_select_button.pressed.connect(_on_level_select_pressed)
 	_hide_next_button()
@@ -422,7 +425,16 @@ func _hide_next_button() -> void:
 		_next_button.hide()
 		_next_button.disabled = true
 		_next_button.modulate.a = 0.0
+	_hide_replay_button()
 	_hide_level_select_button()
+
+
+func _hide_replay_button() -> void:
+	if _replay_button == null:
+		return
+	_replay_button.hide()
+	_replay_button.disabled = true
+	_replay_button.modulate.a = 0.0
 
 
 func _hide_level_select_button() -> void:
@@ -435,6 +447,7 @@ func _hide_level_select_button() -> void:
 
 func _show_next_button() -> void:
 	_show_level_select_button()
+	_show_replay_button()
 	var show_next := true
 	if _is_level_complete_tally() and round_manager and round_manager.has_method("has_next_script_level"):
 		show_next = bool(round_manager.has_next_script_level())
@@ -443,7 +456,9 @@ func _show_next_button() -> void:
 			_next_button.hide()
 			_next_button.disabled = true
 		_next_ready = true
-		if _level_select_button:
+		if _replay_button and _replay_button.visible:
+			UiFocus.grab_in(self, _replay_button)
+		elif _level_select_button:
 			UiFocus.grab_in(self, _level_select_button)
 		return
 	if _next_button == null:
@@ -458,6 +473,17 @@ func _show_next_button() -> void:
 	await tween.finished
 	_next_ready = true
 	UiFocus.grab_in(self, _next_button)
+
+
+func _show_replay_button() -> void:
+	if _replay_button == null:
+		return
+	_replay_button.disabled = false
+	_replay_button.modulate.a = 0.0
+	_replay_button.show()
+	var tween := create_tween()
+	tween.tween_property(_replay_button, "modulate:a", 1.0, 0.22)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 
 func _show_level_select_button() -> void:
@@ -770,6 +796,20 @@ func _on_shop_pressed() -> void:
 		round_manager.request_tally_next_level()
 		return
 	round_manager.enter_state(round_manager.RoundState.TALLY_END)
+
+
+func _on_replay_pressed() -> void:
+	if current_state == State.CLOSE_MENU:
+		return
+	if not _next_ready and _next_button and _next_button.visible:
+		return
+	current_state = State.CLOSE_MENU
+	_hide_next_button()
+	await update_close_menu()
+	if round_manager and round_manager.has_method("request_tally_replay"):
+		round_manager.request_tally_replay()
+	elif round_manager:
+		round_manager.enter_state(round_manager.RoundState.TALLY_END)
 
 
 func _on_level_select_pressed() -> void:

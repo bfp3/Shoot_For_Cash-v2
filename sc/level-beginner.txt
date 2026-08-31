@@ -133,18 +133,11 @@ range kings
 		#hold out 10000
 		#1
 
-		sfx-play Windmill_Sunburst_Your_name -36.0
+		sfx-play Windmill_Sunburst_Your_name -39.0
 		rock-stay 8 a8
-		wait 1000
-		#rock-juggle
-		#wait
+		wait 1500
 
-		#balloon-check a8
-
-
-
-		pace-normal
-		rock-stay 8 a8
+		rock-red-attacker 8 a8
 		wait 1000
 		rock-stay 1 a1
 		wait
@@ -1348,56 +1341,56 @@ range boss-redd
 		wait 3000
 		rock 1 a4
 		wait 2500
-		
+
 		rock 4 a1
 		wait 1500
 		rock 4 a8
 		wait 1500
-		
+
 		rock
 		rock
 		wait 3000
 		rock
 		rock
 		wait 3000
-		
+
 		rock
 		rock
 		wait 1500
 		rock
 		rock
-		
+
 		wait 3000
-		
+
 		rock 1 a1
 		wait 0
 		rock 2 a2
 		wait 0
 		rock 3 a3
-		
+
 		wait 3000
-		
+
 		smokecan 1 a1
 		rock 8 a8
-		
+
 		wait 3000
 		rock
 		wait 4000
-		
+
 		rock 1 a1
 		smokecan 8 a8
-		
+
 		wait 3000
 		smokecan 1 a1
 		rock 8 a8
 		wait 0
 		rock 4 a8
 		wait 3000
-		
+
 		rock
 		wait 3000
-		
-		
+
+
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -1406,9 +1399,9 @@ range boss-redd
 		wait 1000
 		smokecan 1 a8
 		wait 2000
-		
+
 		rock-black 1 a7
-		
+
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -1427,9 +1420,9 @@ range boss-redd
 		rock
 		rock
 		wait 2000
-		
+
 		smokecan 1 a7
-		
+
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -1448,7 +1441,7 @@ range boss-redd
 		rock
 		rock
 		wait 2000
-		
+
 		rock-black 1 a7
 		wait until clear
 range glory
@@ -1456,6 +1449,7 @@ range glory
 	reward $400
 	# Round 1
 	round
+		hold out 30000
 		rock 3 a3
 		wait 1000
 		rock 8 a8
@@ -1469,11 +1463,10 @@ range glory
 		rock 4 a4
 		wait 200
 		rock 4 a4
-		wait until clear
-		balloon-mult
-		balloon-bank
+		wait
+		ammo
 		balloon-check
-	round
+
 		rock 1 a8
 		wait 1000
 		rock 8 a1
@@ -1489,12 +1482,11 @@ range glory
 		wait 200
 		rock 4 a4
 		rock 4 a4
+		wait
 
-		wait until clear
-		balloon-mult
-		balloon-bank
+		ammo
 		balloon-check
-	round
+
 		balloon c3
 		balloon c6
 		rock
@@ -1505,11 +1497,10 @@ range glory
 		rock
 		rock
 		rock
-		wait until clear
-		balloon-mult
-		balloon-bank
+		wait
+		ammo
 		balloon-check
-	round
+
 		rock 1 A4
 		wait 300
 		rock 1 A6
@@ -1524,12 +1515,10 @@ range glory
 		wait 2000
 		rock 4 a4
 		rock 4 b4
-
-		wait until clear
-		balloon-mult
-		balloon-bank
+		wait
+		ammo
 		balloon-check
-	round
+
 		rock 2
 		rock 4
 		wait 200
@@ -1537,12 +1526,9 @@ range glory
 		wait 200
 		rock 7
 		rock 8
+		wait
+		ammo
 
-		wait until clear
-		balloon-mult
-		balloon-bank
-		balloon-check
-	round
 		rock
 		wait 5000
 		rock
@@ -1557,11 +1543,10 @@ range glory
 		wait 6000
 		rock 1 a8
 
-		wait until clear
-		balloon-mult
-		balloon-bank
+		wait
+		ammo
 		balloon-check
-	round
+
 		rock 2 c3
 		wait 2000
 		rock 2 c4
@@ -1572,12 +1557,11 @@ range glory
 		rock 6 c6
 		wait 2000
 		rock 6 c4
+		wait
 
-		wait until clear
-		balloon-mult
-		balloon-bank
+		ammo
 		balloon-check
-	round
+
 		rock 1 b3
 		wait 2000
 		rock 2 b4
@@ -1595,11 +1579,11 @@ range glory
 
 		rock 2 c6
 
-		wait until clear
-		balloon-mult
-		balloon-bank
+		wait
+		ammo
 		balloon-check
-	round
+
+
 		rock 1 b3
 		wait 2000
 		smokecan
@@ -1614,11 +1598,12 @@ range glory
 		wait 2000
 		rock 2 a3
 
-		wait until clear
-		balloon-mult
-		balloon-bank
+		wait
+
+		ammo
 		balloon-check
-	round
+
+
 		rock 1 a8
 		wait 2000
 		smokecan 1 a8
@@ -1636,11 +1621,10 @@ range glory
 		wait 0
 		rock 6 a5
 
-		wait until clear
-		balloon-mult
-		balloon-bank
+		wait
+		ammo
 		balloon-check
-	round
+
 		rock ? a4
 		rock ? a4
 		rock ? a4
@@ -1650,16 +1634,15 @@ range glory
 		rock ? a4
 		rock ? a4
 
-		wait until clear
-		balloon-mult
-		balloon-bank
+		wait
+		ammo
 		balloon-check
-	round
+
 		balloon A1
 		balloon A2
 		balloon A7
 		balloon A8
-		
+
 		rock 1 A8
 		wait 90
 		rock 8 A1
@@ -1672,22 +1655,24 @@ range glory
 		wait 80
 		rock-black 6
 		wait 3000
-		
+
 		rock 4 A6
 		wait 70
 		rock 5 A3
 
 		wait 3000
-		
+
 		wait 3000
-		
+
 		rock 3 	
-		wait until clear
+		wait
+
+
 range noir
 	play $100
 	reward $400
 	round
-		hold out 90000
+		hold out 30000
 		#difficulty-hard
 		balloon a3
 		balloon b3

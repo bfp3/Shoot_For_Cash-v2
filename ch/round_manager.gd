@@ -129,9 +129,10 @@ var _boss_looping := false
 var _boss_open_map_after_tally := false
 ## After a non-boss hold-out win tally, travel to the next range in level-beginner.txt.
 var _advance_range_after_hold_out := false
-## Tally Level Select / NEXT: leave to the grid, or skip shop and load the next range.
+## Tally Level Select / NEXT / Replay: leave to the grid, next range, or restart this range.
 var _tally_exit_to_level_select := false
 var _tally_travel_next_level := false
+var _tally_replay_level := false
 ## After returning from a finished level, reopen the numbered grid instead of Beginner/Advanced/Expert.
 var _reopen_on_level_grid := false
 ## Island whose boss was just cleared — map plays unlock ceremony on this page.
@@ -746,6 +747,7 @@ func is_range_complete_tally() -> bool:
 func request_tally_level_select() -> void:
 	_tally_exit_to_level_select = true
 	_tally_travel_next_level = false
+	_tally_replay_level = false
 	_reopen_on_level_grid = true
 	enter_state(RoundState.TALLY_END)
 
@@ -753,7 +755,52 @@ func request_tally_level_select() -> void:
 func request_tally_next_level() -> void:
 	_tally_travel_next_level = true
 	_tally_exit_to_level_select = false
+	_tally_replay_level = false
 	enter_state(RoundState.TALLY_END)
+
+
+func request_tally_replay() -> void:
+	_tally_replay_level = true
+	_tally_exit_to_level_select = false
+	_tally_travel_next_level = false
+	enter_state(RoundState.TALLY_END)
+
+
+## Restart the current range from round 1 with no play fee (tally Replay).
+func _replay_current_level_from_start() -> void:
+	player_failed = false
+	success = false
+	game_over_triggered = false
+	force_shop_open = false
+	wave_ending = false
+	bullet_active = false
+	bullet_active_counter = 0.0
+	pineapple_mode = false
+	bonus_type_this_round = ""
+	protect_bonus_failed = false
+	current_wave = 0
+	current_sequence_index = 0
+	current_round = 1
+	gl_PlayerState.dataset.round = 1
+	clear_script_checkpoint()
+	if gl_PlayerState.has_method("reset_range_banked_cash"):
+		gl_PlayerState.reset_range_banked_cash()
+	check_round_for_strikes()
+	if rocks_container:
+		rocks_container.reset_all_rocks()
+	if balloon_container and (balloon_container.started or balloon_container.balloons_in_play > 0):
+		await balloon_container.end_round()
+	if player:
+		if player.has_method("refill_ammo_to_max_animated"):
+			await player.refill_ammo_to_max_animated()
+		elif player.has_method("refill_ammo_to_max"):
+			player.refill_ammo_to_max(true)
+		player.round_finished(false)
+		player.display_hud()
+	if shop_main_menu and shop_main_menu.has_method("sync_rounds_to_progress"):
+		shop_main_menu.sync_rounds_to_progress(current_sequence_index, current_rock_sequence.size())
+	_save_level_progress()
+	enter_state(RoundState.SHOP_END)
 
 
 func _settle_completed_level() -> void:
@@ -883,6 +930,18 @@ func get_active_timer_seconds() -> float:
 		if _boss_timer_seconds > 0.0:
 			return _boss_timer_seconds
 	return -1.0
+
+
+## Actual countdown length for the current round (hold-out override or power_time_upgrade).
+func get_current_countdown_seconds() -> float:
+	if is_endless_mode():
+		return 0.0
+	var override_sec := get_active_timer_seconds()
+	if override_sec > 0.0:
+		return override_sec
+	if round_timer and float(round_timer.start_time) > 0.0:
+		return float(round_timer.start_time)
+	return float(gl_DataSet.get_value("power_time_upgrade", gl_PlayerState.dataset.get("power_time_upgrade", 10)))
 
 
 func _refresh_boss_timer_from_parser() -> void:
@@ -1085,36 +1144,59 @@ func select_sequence_index(index: int) -> void:
 	current_sequence_index = index
 
 
+## True once this range has been cleared (free play + half reward thereafter).
+func is_active_range_beaten() -> bool:
+	var place := gl_DataSet.resolve_place_name(get_active_range_name())
+	if place.is_empty() or place == "start":
+		return false
+	if gl_PlayerState.has_method("is_level_cleared"):
+		if gl_PlayerState.is_level_cleared(gl_PlayerState.get_run_difficulty(), place):
+			return true
+	return gl_PlayerState.is_place_completed(place)
+
+
 ## PLAY / continue fee for the current range (`play $100` in level-beginner).
 ## Falls back to data_set `price_play_round` when the range has no play line.
+## Cleared ranges are free to play again.
 func get_current_play_price() -> int:
+	if is_active_range_beaten():
+		return 0
+	var price := 0
 	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
 		var round_data = current_rock_sequence[current_sequence_index]
 		if round_data is Dictionary:
 			var from_round := int(round_data.get("play_price", 0))
 			if from_round > 0:
-				return from_round
-	if Parser and Parser.has_method("get_play_price"):
+				price = from_round
+	if price <= 0 and Parser and Parser.has_method("get_play_price"):
 		var from_range := int(Parser.get_play_price(LEVEL_ISLAND_NAME, get_active_range_name()))
 		if from_range > 0:
-			return from_range
-	return int(gl_DataSet.get_value("price_play_round", 0))
+			price = from_range
+	if price <= 0:
+		price = int(gl_DataSet.get_value("price_play_round", 0))
+	return price
 
 
 ## Range-clear bonus for the current range (`reward $400` in level-beginner).
 ## Falls back to data_set `range_clear_reward` when the range has no reward line.
+## After the range has been beaten once, winnings are half the script amount.
 func get_current_range_reward() -> int:
+	var reward := 0
 	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
 		var round_data = current_rock_sequence[current_sequence_index]
 		if round_data is Dictionary:
 			var from_round := int(round_data.get("reward", 0))
 			if from_round > 0:
-				return from_round
-	if Parser and Parser.has_method("get_range_reward"):
+				reward = from_round
+	if reward <= 0 and Parser and Parser.has_method("get_range_reward"):
 		var from_range := int(Parser.get_range_reward(LEVEL_ISLAND_NAME, get_active_range_name()))
 		if from_range > 0:
-			return from_range
-	return int(gl_DataSet.get_value("range_clear_reward", 0))
+			reward = from_range
+	if reward <= 0:
+		reward = int(gl_DataSet.get_value("range_clear_reward", 0))
+	if reward > 0 and is_active_range_beaten():
+		return int(reward / 2)
+	return reward
 
 
 func get_resume_spawn_index() -> int:
@@ -1361,16 +1443,9 @@ func has_active_special_challenge(challenge_id: String) -> bool:
 	return gl_DataSet.has_special_challenge(challenge_id, String(gl_PlayerState.dataset.level_name))
 
 
-## Returns false when Glory six-shot limit is reached (weapon must not fire).
-## Bonus pineapple round is exempt — only main waves are limited.
+## Legacy hook — Glory six-ammo is now a magazine cap on the player (`get_max_ammo`).
+## Always allows fire; kept so older call sites stay safe.
 func try_register_weapon_shot() -> bool:
-	if not has_active_special_challenge("six_shots_only"):
-		return true
-	if pineapple_mode:
-		return true
-	if _shots_fired_this_round >= SIX_SHOTS_LIMIT:
-		return false
-	_shots_fired_this_round += 1
 	return true
 
 
@@ -1794,15 +1869,14 @@ func update_continue() -> void:
 	if screen and screen.has_method("play"):
 		outcome = String(await screen.play(fee, cash))
 	_continue_open = false
-	if outcome == "paid" or outcome == "flip_win":
+	if outcome == "flip_win":
+		## Coin-flip win: resume mid-wave from where they left off.
 		await _play_strike_finale_return()
-		var resume_in_place := true
-		if screen != null and "resume_in_place" in screen:
-			resume_in_place = bool(screen.resume_in_place)
-		if resume_in_place:
-			await _resume_after_continue()
-		else:
-			await _restart_round_after_continue()
+		await _resume_after_continue()
+	elif outcome == "paid":
+		## Paid continue: replay the round from the start (debt allowed).
+		await _play_strike_finale_return()
+		await _restart_round_after_continue()
 	else:
 		await _game_over_from_continue()
 
@@ -2609,13 +2683,23 @@ func update_tally_end() -> void:
 	if _tally_exit_to_level_select:
 		_tally_exit_to_level_select = false
 		_tally_travel_next_level = false
+		_tally_replay_level = false
 		_advance_range_after_hold_out = false
 		_settle_completed_level()
 		await return_to_difficulty_select()
 		return
 
+	if _tally_replay_level:
+		_tally_replay_level = false
+		_tally_travel_next_level = false
+		_advance_range_after_hold_out = false
+		_settle_completed_level()
+		await _replay_current_level_from_start()
+		return
+
 	if _tally_travel_next_level:
 		_tally_travel_next_level = false
+		_tally_replay_level = false
 		_advance_range_after_hold_out = false
 		_settle_completed_level()
 		var here := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
@@ -3001,6 +3085,7 @@ func return_to_difficulty_select() -> void:
 	_advance_range_after_hold_out = false
 	_tally_exit_to_level_select = false
 	_tally_travel_next_level = false
+	_tally_replay_level = false
 	current_wave = 0
 	current_sequence_index = 0
 	current_round = 0
@@ -3439,6 +3524,7 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	_advance_range_after_hold_out = false
 	_tally_exit_to_level_select = false
 	_tally_travel_next_level = false
+	_tally_replay_level = false
 	_boss_ceremony_island = -1
 
 	if rocks_container:

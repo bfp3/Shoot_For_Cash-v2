@@ -2371,7 +2371,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54, 0, 0)
 
 [node name="MainWallSmallBlocks" type="Node3D" parent="Advanced" unique_id=1595198365]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -1.5, 20.15)
-visible = false
 
 [node name="Cube_003" type="MeshInstance3D" parent="Advanced/MainWallSmallBlocks" unique_id=1343265109]
 transform = Transform3D(0.351, 0, 0, 0, 0.463, 0, 0, 0, 0.562, -5.79, -0.773, -0.07600021)
@@ -2436,32 +2435,19 @@ cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
 skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Advanced/Pillar" unique_id=411653055]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Advanced/Pillar/StaticBody3D" unique_id=1548065657]
-shape = SubResource("ConcavePolygonShape3D_vwccs")
-
 [node name="Pillar2" type="MeshInstance3D" parent="Advanced" unique_id=63582851]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, -9.357407, 3, 20.15)
+visible = false
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Advanced/Pillar2" unique_id=887333020]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Advanced/Pillar2/StaticBody3D" unique_id=775142555]
-shape = SubResource("ConcavePolygonShape3D_5u00t")
-
 [node name="Pillar3" type="MeshInstance3D" parent="Advanced" unique_id=1367381314]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, 9.399999, 3, 20.15)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
 skeleton = NodePath("../..")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Advanced/Pillar3" unique_id=102334919]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Advanced/Pillar3/StaticBody3D" unique_id=30175259]
-shape = SubResource("ConcavePolygonShape3D_hjyak")
 
 [node name="Pillar4" type="MeshInstance3D" parent="Advanced" unique_id=893104989]
 transform = Transform3D(0.46, 0, 0, 0, -0.46, 4.0214477e-08, 0, -4.0214477e-08, -0.46, 9.41, 0, 20.15)
@@ -2469,19 +2455,6 @@ material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
 skeleton = NodePath("../..")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Advanced/Pillar4" unique_id=1640184876]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Advanced/Pillar4/StaticBody3D" unique_id=287362025]
-shape = SubResource("ConcavePolygonShape3D_eaovr")
-
-[node name="Quotes" type="MeshInstance3D" parent="Advanced" unique_id=1061638167]
-transform = Transform3D(-1.32, 0, -1.9931447e-07, 0, 1.32, 0, 1.9931447e-07, 0, -1.32, 4.6, -2.291, 11.3005905)
-material_override = SubResource("StandardMaterial3D_j7l0j")
-cast_shadow = 0
-mesh = SubResource("TextMesh_v4dw2")
-skeleton = NodePath("")
-script = ExtResource("21_7t7cf")
 
 [node name="brickRing" type="MeshInstance3D" parent="Advanced" unique_id=546108098]
 transform = Transform3D(0.09775001, 0, 0, 0, 0.28000003, 0, 0, 0, 0.24225001, 4.630125, -2.505, 11.775)
@@ -2528,11 +2501,13 @@ skeleton = NodePath("")
 
 [node name="Wall" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1026812543]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 0)
+visible = false
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_r8bsg")
 
 [node name="Cube_004" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=276065089]
+visible = false
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_3xxdk")
@@ -2551,8 +2526,51 @@ cast_shadow = 0
 mesh = SubResource("ArrayMesh_2ect5")
 skeleton = NodePath("")
 
+[node name="Right_tall_pillar6" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1281999288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4059982, 0.10500002, -8.4)
+material_override = ExtResource("11_ak538")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_2ect5")
+skeleton = NodePath("")
+
+[node name="Right_tall_pillar7" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=980875494]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4059982, 1.105, -8.4)
+material_override = ExtResource("11_ak538")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_2ect5")
+skeleton = NodePath("")
+
+[node name="Right_tall_pillar9" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1580925344]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.78596497, 2.105, -8.4)
+material_override = ExtResource("11_ak538")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_2ect5")
+skeleton = NodePath("")
+
+[node name="Right_tall_pillar10" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1260695048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0897102, 3.105, -8.4)
+material_override = ExtResource("11_ak538")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_2ect5")
+skeleton = NodePath("")
+
+[node name="Right_tall_pillar11" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1469208016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0897102, 4.784148, -8.4)
+material_override = ExtResource("11_ak538")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_2ect5")
+skeleton = NodePath("")
+
+[node name="Right_tall_pillar12" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=521949223]
+transform = Transform3D(0.485, 0, 0, 0, 0.911, 0, 0, 0, 0.485, 1.0897102, 3.9706504, -8.4)
+material_override = ExtResource("11_ak538")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_2ect5")
+skeleton = NodePath("")
+
 [node name="Right_tall_pillar_caps" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=175525771]
 transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, -3.3768702, 5, 0)
+visible = false
 material_override = ExtResource("12_tn30x")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_rtw7e")
@@ -2580,7 +2598,25 @@ mesh = SubResource("ArrayMesh_d67ai")
 skeleton = NodePath("")
 
 [node name="Left_tall_pillar_caps" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1469025014]
-transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, 15.399999, 5, 0)
+transform = Transform3D(1.454, 1.5868556e-23, -5.308145e-30, 0, -8.305164e-09, -1.454, -1.214362e-22, 0.19, -6.355636e-08, 9.9521675, 4.433, 0)
+material_override = ExtResource("13_nca8f")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_ljgw6")
+
+[node name="Left_tall_pillar_caps2" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1684215500]
+transform = Transform3D(1.0295894, -0.0041812914, 1.0261762, 1.0265222, 0.0074699563, -1.0281539, -0.017718317, 0.18980704, 0.06306934, 9.9521675, 4.433, 0)
+material_override = ExtResource("13_nca8f")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_ljgw6")
+
+[node name="Left_tall_pillar_caps3" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=2099763846]
+transform = Transform3D(1.454, 1.5868556e-23, -5.308145e-30, 0, -8.305164e-09, -1.454, -1.214362e-22, 0.19, -6.355636e-08, 3.2107124, 4.433, 0)
+material_override = ExtResource("13_nca8f")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_ljgw6")
+
+[node name="Left_tall_pillar_caps4" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=23404929]
+transform = Transform3D(1.0295894, -0.0041812914, 1.0261762, 1.0265222, 0.0074699563, -1.0281539, -0.017718317, 0.18980704, 0.06306934, 3.2107124, 4.433, 0)
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_ljgw6")
@@ -2675,6 +2711,7 @@ cast_shadow = 0
 
 [node name="Egg" parent="Advanced" unique_id=740734980 instance=ExtResource("14_7t7cf")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -9.4, 3.811, 20.154)
+visible = false
 
 [node name="EggFake" type="Node3D" parent="Advanced" unique_id=1952924215 groups=["Egg_Cage"]]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, 9.385158, 3.811255, 20.154352)
@@ -2718,40 +2755,47 @@ mesh = SubResource("ArrayMesh_2af1h")
 
 [node name="Boat_Flag" parent="Advanced" unique_id=1721234103 instance=ExtResource("19_1awnq")]
 transform = Transform3D(-0.14, 0, -2.1139412e-08, 0, 0.14, 0, 2.1139412e-08, 0, -0.14, 9.41, 4.942, 20.165)
+visible = false
 cast_shadow = 0
 
 [node name="Boat_Flag3" type="MeshInstance3D" parent="Advanced" unique_id=1751867434]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 9.41, 4.2364607, 20.165)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_p57ui")
 
 [node name="Boat_Flag4" type="MeshInstance3D" parent="Advanced" unique_id=527453510]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 8.889551, 3.738, 19.688)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_kbdfb")
 
 [node name="Boat_Flag5" type="MeshInstance3D" parent="Advanced" unique_id=1655606711]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 9.947469, 3.738, 19.688)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_kbdfb")
 
 [node name="Boat_Flag8" type="MeshInstance3D" parent="Advanced" unique_id=487366416]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 8.889551, 3.738, 20.666224)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_kbdfb")
 
 [node name="Boat_Flag9" type="MeshInstance3D" parent="Advanced" unique_id=457057990]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 9.947469, 3.738, 20.666224)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_kbdfb")
 
 [node name="Boat_Flag2" parent="Advanced" unique_id=1205057972 instance=ExtResource("19_1awnq")]
 transform = Transform3D(-0.14, 0, -2.1139412e-08, 0, 0.14, 0, 2.1139412e-08, 0, -0.14, -9.449, 4.942, 20.271)
+visible = false
 cast_shadow = 0
 
 [node name="Expert" type="Node3D" parent="." unique_id=1804068660]
@@ -2824,20 +2868,10 @@ cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
 skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Expert/Pillar" unique_id=2016118316]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Expert/Pillar/StaticBody3D" unique_id=1050700147]
-shape = SubResource("ConcavePolygonShape3D_vwccs")
-
 [node name="Pillar2" type="MeshInstance3D" parent="Expert" unique_id=1905797242]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, -9.357407, 3, 20.15)
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Expert/Pillar2" unique_id=1623842700]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Expert/Pillar2/StaticBody3D" unique_id=735298429]
-shape = SubResource("ConcavePolygonShape3D_5u00t")
 
 [node name="Pillar3" type="MeshInstance3D" parent="Expert" unique_id=72959543]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, 9.399999, 3, 20.15)
@@ -2846,11 +2880,6 @@ cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
 skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Expert/Pillar3" unique_id=290235679]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Expert/Pillar3/StaticBody3D" unique_id=1773672035]
-shape = SubResource("ConcavePolygonShape3D_hjyak")
-
 [node name="Pillar4" type="MeshInstance3D" parent="Expert" unique_id=1188223206]
 transform = Transform3D(0.46, 0, 0, 0, -0.46, 4.0214477e-08, 0, -4.0214477e-08, -0.46, 9.41, 0, 20.15)
 material_override = ExtResource("11_ak538")
@@ -2858,13 +2887,9 @@ cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
 skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Expert/Pillar4" unique_id=1114932417]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Expert/Pillar4/StaticBody3D" unique_id=916497819]
-shape = SubResource("ConcavePolygonShape3D_eaovr")
-
 [node name="Quotes" type="MeshInstance3D" parent="Expert" unique_id=2026145659]
 transform = Transform3D(-1.32, 0, -1.9931447e-07, 0, 1.32, 0, 1.9931447e-07, 0, -1.32, 4.6, -2.291, 11.3005905)
+visible = false
 material_override = SubResource("StandardMaterial3D_j7l0j")
 cast_shadow = 0
 mesh = SubResource("TextMesh_v4dw2")
@@ -2873,6 +2898,7 @@ script = ExtResource("21_7t7cf")
 
 [node name="brickRing" type="MeshInstance3D" parent="Expert" unique_id=1522756302]
 transform = Transform3D(0.09775001, 0, 0, 0, 0.28000003, 0, 0, 0, 0.24225001, 4.630125, -2.505, 11.775)
+visible = false
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_edvkb")
@@ -2880,6 +2906,7 @@ skeleton = NodePath("")
 
 [node name="Right_tall_pillar4" type="MeshInstance3D" parent="Expert" unique_id=1352323341]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.582716, -2.4185681, 11.774998)
+visible = false
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_2ect5")
@@ -2895,6 +2922,7 @@ transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, -6.27, -2.505, 11.775
 
 [node name="Cube_001" parent="Expert/brick_fountain_4" index="0" unique_id=1800679336]
 transform = Transform3D(0.23000003, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57000005, 3.94353, 0, 0)
+visible = false
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 
@@ -2926,6 +2954,18 @@ material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_r8bsg")
 
+[node name="Wall3" type="MeshInstance3D" parent="Expert/Brick_wall_2" unique_id=1697073796]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, -2, 0.39955068, -10.64598)
+material_override = ExtResource("11_ak538")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_r8bsg")
+
+[node name="Wall4" type="MeshInstance3D" parent="Expert/Brick_wall_2" unique_id=1345018511]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, -3, 0.39955068, -6.049775)
+material_override = ExtResource("11_ak538")
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_r8bsg")
+
 [node name="Cube_004" type="MeshInstance3D" parent="Expert/Brick_wall_2" unique_id=1847828102]
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
@@ -2940,6 +2980,7 @@ skeleton = NodePath("")
 
 [node name="Right_tall_pillar5" type="MeshInstance3D" parent="Expert/Brick_wall_2" unique_id=1618114598]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.406, -0.895, -8.4)
+visible = false
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_2ect5")

@@ -322,10 +322,9 @@ func get_continue_fee() -> int:
 	return get_continue_base_fee()
 
 
+## Continues always succeed — unpaid balance goes into debt (negative wallet cash).
 func pay_continue_fee() -> bool:
 	var fee := get_continue_fee()
-	if get_spendable_cash() < fee:
-		return false
 	_deduct_spendable(fee)
 	_note_continue_used()
 	return true
@@ -350,7 +349,8 @@ func _deduct_spendable(amount: int) -> void:
 	dataset.bonus_cash = int(dataset.bonus_cash) - from_pool
 	amount -= from_pool
 	if amount > 0:
-		dataset.cash = maxi(int(dataset.cash) - amount, 0)
+		## Allow negative cash (debt) when continuing without enough money.
+		dataset.cash = int(dataset.cash) - amount
 	if EventBus.instance:
 		EventBus.instance.cash_pool_changed.emit(int(dataset.bonus_cash))
 		EventBus.instance.update_money.emit()

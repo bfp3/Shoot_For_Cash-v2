@@ -548,7 +548,6 @@ draw_pass_1 = SubResource("QuadMesh_ltsxa")
 [node name="Fire" type="GPUParticles3D" parent="Mesh/small_rock" unique_id=1211168993]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2, 0)
 cast_shadow = 0
-emitting = true
 amount = 26
 lifetime = 0.7
 explosiveness = 0.05
@@ -621,7 +620,6 @@ draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
 [node name="Fire" type="GPUParticles3D" parent="Mesh/Red_rock" unique_id=744399041]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2, 0)
-visible = false
 cast_shadow = 0
 emitting = false
 amount = 26
@@ -633,13 +631,14 @@ process_material = SubResource("ParticleProcessMaterial_dfmc7")
 draw_pass_1 = SubResource("QuadMesh_2063v")
 
 [node name="Glow" type="OmniLight3D" parent="Mesh/Red_rock/Fire" unique_id=1386905732]
-light_color = Color(1, 0.52, 0.14, 1)
-light_energy = 2.4
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4882101, 0, 0)
+light_color = Color(1, 0.00999999, 0.026499748, 1)
+light_energy = 5.0
 light_indirect_energy = 0.6
 light_volumetric_fog_energy = 1.4
-light_size = 0.5
-omni_range = 7.5
-omni_attenuation = 1.2
+light_size = 7.155
+omni_range = 25.0
+omni_attenuation = 1.5
 
 [node name="Red_rock_attack" type="MeshInstance3D" parent="Mesh" unique_id=561141429]
 unique_name_in_owner = true
@@ -659,7 +658,6 @@ draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
 [node name="Fire" type="GPUParticles3D" parent="Mesh/Red_rock_attack" unique_id=841721604]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2, 0)
-visible = false
 cast_shadow = 0
 emitting = false
 amount = 26
@@ -671,13 +669,14 @@ process_material = SubResource("ParticleProcessMaterial_dfmc7")
 draw_pass_1 = SubResource("QuadMesh_2063v")
 
 [node name="Glow" type="OmniLight3D" parent="Mesh/Red_rock_attack/Fire" unique_id=1814708233]
-light_color = Color(1, 0.52, 0.14, 1)
-light_energy = 2.4
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4882101, 0, 0)
+light_color = Color(1, 0.00999999, 0.026499748, 1)
+light_energy = 5.0
 light_indirect_energy = 0.6
 light_volumetric_fog_energy = 1.4
-light_size = 0.5
-omni_range = 7.5
-omni_attenuation = 1.2
+light_size = 7.155
+omni_range = 25.0
+omni_attenuation = 1.5
 
 [node name="blue_rock" type="MeshInstance3D" parent="Mesh" unique_id=1780174949]
 unique_name_in_owner = true
@@ -1562,6 +1561,7 @@ script = ExtResource("20_2063v")
 _fromWidth = 0.05
 _lifespan = 0.1
 _startColor = Color(1, 1, 1, 0.24705882)
+_endColor = Color(1, 1, 1, 1)
 
 [node name="Marked" type="Node3D" parent="." unique_id=649707594]
 visible = false

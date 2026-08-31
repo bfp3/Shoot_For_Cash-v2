@@ -50,7 +50,8 @@ var _orig_fov_for_shake := 37.0
 
 
 func _ready() -> void:
-	orig_pos = global_position
+	## Local rest under Cam_pivot — never world space, so player lean/move can own the parent transform.
+	orig_pos = position
 	orig_rot = rotation_degrees
 	_rest_fov = fov
 	_orig_fov_for_shake = fov
@@ -75,7 +76,7 @@ func _prepare_shake() -> bool:
 		return false
 	if cam_shake_tween:
 		cam_shake_tween.kill()
-	global_position = orig_pos
+	position = orig_pos
 	rotation_degrees = _hold_aim_settled_rotation()
 	fov = _hold_aim_target_fov() if _hold_aim_zoomed and hold_aim_zoom_enabled else _rest_fov
 	_orig_fov_for_shake = fov
@@ -95,7 +96,7 @@ func _hold_aim_settled_rotation() -> Vector3:
 
 func _settle_shake(duration: float = 0.5) -> void:
 	cam_shake_tween.tween_property(self, "rotation_degrees", _hold_aim_settled_rotation(), duration)
-	cam_shake_tween.parallel().tween_property(self, "global_position", orig_pos, duration)
+	cam_shake_tween.parallel().tween_property(self, "position", orig_pos, duration)
 	cam_shake_tween.parallel().tween_property(self, "fov", _orig_fov_for_shake, duration)
 
 
@@ -642,7 +643,7 @@ func _shake_oob_miss(side_sign: float = 1.0, amount: float = 0.16, duration: flo
 	if cam_shake_tween:
 		cam_shake_tween.kill()
 
-	global_position = orig_pos
+	position = orig_pos
 	rotation_degrees = _hold_aim_settled_rotation()
 
 	var kick_x := amount * side_sign
@@ -652,7 +653,7 @@ func _shake_oob_miss(side_sign: float = 1.0, amount: float = 0.16, duration: flo
 	cam_shake_tween.tween_property(self, "position:x", kick_x, dur).as_relative()
 	cam_shake_tween.tween_property(self, "position:x", -kick_x * 1.35, dur * 1.15).as_relative()
 	cam_shake_tween.tween_property(self, "position:x", kick_x * 0.45, dur * 0.9).as_relative()
-	cam_shake_tween.tween_property(self, "global_position", orig_pos, 0.35)
+	cam_shake_tween.tween_property(self, "position", orig_pos, 0.35)
 	cam_shake_tween.parallel().tween_property(self, "rotation_degrees", _hold_aim_settled_rotation(), 0.35)
 
 	await cam_shake_tween.finished
@@ -683,23 +684,21 @@ func _shake_shooting() -> void:
 	if cam_shake_tween:
 		cam_shake_tween.kill()
 	var max_recoil := shoot_shake_amount * 2.0
-	var target_z = min(position.z + shoot_shake_amount, max_recoil)
+	var target_z = minf(orig_pos.z + shoot_shake_amount, orig_pos.z + max_recoil)
 	cam_shake_tween = create_tween()
 	cam_shake_tween.tween_property(self, "position:z", target_z, move_speed)
-	cam_shake_tween.tween_property(self, "position:z", 0.0, move_speed * 1.5)
-	cam_shake_tween.parallel().tween_property(self, "position:y", 0.0, move_speed * 1.5)
+	cam_shake_tween.tween_property(self, "position:z", orig_pos.z, move_speed * 1.5)
+	cam_shake_tween.parallel().tween_property(self, "position:y", orig_pos.y, move_speed * 1.5)
 	await cam_shake_tween.finished
 
 
 func _shake_egg_pulse() -> void:
-	var _orig_pos_y: float = self.global_position.y
 	var tween_pulse_shake = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween_pulse_shake.tween_interval(0.1)
-	tween_pulse_shake.tween_property(self, "global_position:y", -0.2, move_speed).as_relative()
+	tween_pulse_shake.tween_property(self, "position:y", -0.2, move_speed).as_relative()
 	tween_pulse_shake.tween_interval(0.1)
-	tween_pulse_shake.tween_property(self, "global_position:y", _orig_pos_y, 1.0)
+	tween_pulse_shake.tween_property(self, "position:y", orig_pos.y, 1.0)
 	await tween_pulse_shake.finished
-
 
 # --- Depth of field blur (menus / travel / gameplay) -------------------------
 ## Blur while shop, tally, pause, or map is up. Edit in the inspector.

@@ -1214,8 +1214,11 @@ func _refresh_play_button_cost() -> void:
 		return
 	var cost := play_btn.find_child("CostLabel", true, false) as RichTextLabel
 	if cost:
-		cost.text = "[wave]%s" % CommonCode.format_money(_current_play_price())
-
+		var price := _current_play_price()
+		if price <= 0:
+			cost.text = "[wave]FREE"
+		else:
+			cost.text = "[wave]%s" % CommonCode.format_money(price)
 
 func _on_continue_reserve_broken() -> void:
 	var warning := get_node_or_null("%ShortContinueWarning") as RichTextLabel

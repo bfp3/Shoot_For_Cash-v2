@@ -339,7 +339,9 @@ func shoot_target() -> void:
 		if !is_instance_valid(target):
 			continue
 
-		if player.shot_count <= 0:
+		var free_shot := _is_special_midround_target(target)
+		## Ammo balloons / checkpoints / early-exit never spend a bullet.
+		if not free_shot and player.shot_count <= 0:
 			break
 
 		var damage := power_bullet_damage
@@ -368,7 +370,7 @@ func shoot_target() -> void:
 			damage = 0
 			power_bullet_speed /= 4
 
-		if not spawn_projectile(target, power_bullet_speed):
+		if not spawn_projectile(target, power_bullet_speed, Vector3.ZERO, free_shot):
 			break
 
 		var rock_screen_pos = stable_camera.unproject_position(target.global_position)

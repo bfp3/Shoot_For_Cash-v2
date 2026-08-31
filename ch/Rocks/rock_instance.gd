@@ -1734,8 +1734,8 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 	
 	#freeze_mine = true
 
-	# Avoiders / red-attackers: unarmed or frozen shots destroy them with no strike.
-	# Once they enter attack mode, a shot or reticle overlap is a hazard strike.
+	# Avoiders / red-attackers: while calm (or frozen), a shot destroys with no strike.
+	# Once in attack mode, a shot or reticle overlap is a hazard strike.
 	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER:
 		if _freeze_shot_pending or not _is_threat_hazardous():
 			_destroy_pre_arm_threat()
@@ -2480,10 +2480,10 @@ func _check_threat_crosshair() -> void:
 		return
 	if not _avoider_overlaps_crosshair():
 		return
+	## Calm / pre-attack: crosshair alone does nothing — must be shot like a normal rock.
+	## Aggressive (seeking / locking / dashing): overlap pops them and strikes.
 	if _is_threat_hazardous():
 		_trigger_avoider_crosshair_contact()
-	else:
-		_destroy_pre_arm_threat()
 
 
 func _arm_red_attacker() -> void:
