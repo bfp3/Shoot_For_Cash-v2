@@ -27,17 +27,17 @@ range jetz
 		wait 225
 		rock-stay 8 b4
 		wait
-		wait 500
+
 
 		# --- Phase 1: one at a time ---
 		rock-red-attacker 1 a1
 		wait
 		rock-red-attacker 8 a8
-		wait
+		wait 1000
 		rock-red-attacker 2 b2
-		wait
+		wait 1000
 		rock-red-attacker 7 b7
-		wait 800
+		wait
 
 		rock-stay 4 a5
 		wait 600
@@ -47,16 +47,15 @@ range jetz
 		rock-red-attacker 1 b1
 		wait 700
 		rock-red-attacker 8 b8
-		wait 1200
+		wait
 
 		balloon-check
-		ammo
-		wait 800
+		amm
 		sfx-faster sephiroff
 
 		# --- Phase 2: pairs ---
 		rock-red-attacker 1 a1
-		wait 0
+		wait 450
 		rock-red-attacker 8 a8
 		wait
 
@@ -66,12 +65,12 @@ range jetz
 		wait 800
 
 		rock-red-attacker 2 a2
-		wait 0
+		wait 450
 		rock-red-attacker 7 a7
 		wait
 
 		rock-red-attacker 1 b1
-		wait 500
+		wait 450
 		rock-red-attacker 8 b8
 		wait
 
@@ -81,13 +80,13 @@ range jetz
 		wait 1000
 
 		rock-red-attacker 2 b2
-		wait 0
+		wait 450
 		rock-red-attacker 7 b7
-		wait 1200
+		wait
 
 		balloon-check
 		ammo
-		wait 1000
+
 
 		# --- Phase 3: stay pressure + staggered attackers ---
 		rock-stay 1 a3
@@ -120,59 +119,58 @@ range jetz
 		rock-red-attacker 2 b2
 		wait 400
 		rock-red-attacker 7 b7
-		wait 1200
+		wait
 
 		balloon-check
 		ammo
-		wait 1000
 
 		# --- Phase 4: four at once ---
 		rock-stay 8 c2
 		wait 600
 
 		rock-red-attacker 1 a1
-		wait 0
+		wait 450
 		rock-red-attacker 2 a2
-		wait 0
+		wait 450
 		rock-red-attacker 7 a7
-		wait 0
+		wait 450
 		rock-red-attacker 8 a8
 		wait 1800
 
 		rock-stay 4 a4
-		wait 0
+		wait 450
 		rock-stay 5 b5
 		wait 800
 
 		rock-red-attacker 1 b1
-		wait 0
+		wait 450
 		rock-red-attacker 2 b2
-		wait 0
+		wait 450
 		rock-red-attacker 7 b7
-		wait 0
+		wait 450
 		rock-red-attacker 8 b8
-		wait 1800
+		wait
 
 		balloon-check
 		ammo
-		wait 1200
+
 
 		# --- Phase 5: six-pack ---
 		rock-stay 3 c1
-		wait 0
+		wait 450
 		rock-stay 6 c8
 		wait 500
 
 		rock-red-attacker 1 a1
-		wait 0
+		wait 250
 		rock-red-attacker 2 a2
-		wait 0
+		wait 250
 		rock-red-attacker 7 a7
-		wait 0
+		wait 250
 		rock-red-attacker 8 a8
-		wait 0
+		wait 250
 		rock-red-attacker 1 b1
-		wait 0
+		wait 250
 		rock-red-attacker 8 b8
 		wait 2200
 
@@ -182,17 +180,17 @@ range jetz
 		wait 1000
 
 		rock-red-attacker 2 b2
-		wait 0
+		wait 250
 		rock-red-attacker 7 b7
-		wait 0
+		wait 250
 		rock-red-attacker 1 a1
-		wait 0
+		wait 250
 		rock-red-attacker 8 a8
-		wait 0
+		wait 350
 		rock-red-attacker 2 a2
-		wait 0
+		wait 350
 		rock-red-attacker 7 a7
-		wait 2200
+		wait
 
 		balloon-check
 		ammo
@@ -205,25 +203,25 @@ range jetz
 		wait 700
 
 		rock-red-attacker 1 a1
-		wait 0
+		wait 200
 		rock-red-attacker 2 a2
-		wait 0
+		wait 200
 		rock-red-attacker 7 a7
-		wait 0
+		wait 200
 		rock-red-attacker 8 a8
-		wait 0
+		wait 200
 		rock-red-attacker 1 b1
-		wait 0
+		wait 200
 		rock-red-attacker 2 b2
-		wait 0
+		wait 200
 		rock-red-attacker 7 b7
-		wait 0
+		wait 200
 		rock-red-attacker 8 b8
-		wait 2800
+		wait
 
 		balloon-check
 		ammo
-		wait 1500
+
 
 		# --- Phase 7: stay weave + overlapping 8-packs ---
 		rock-stay 1 c3
@@ -236,46 +234,51 @@ range jetz
 		wait 600
 
 		rock-red-attacker 1 a1
-		wait 0
+		wait 100
 		rock-red-attacker 8 a8
-		wait 350
+		wait 100
 		rock-red-attacker 2 a2
-		wait 0
+		wait 100
 		rock-red-attacker 7 a7
 		wait 350
 		rock-red-attacker 1 b1
-		wait 0
+		wait 100
 		rock-red-attacker 8 b8
-		wait 350
+		wait 100
 		rock-red-attacker 2 b2
-		wait 0
+		wait 100
 		rock-red-attacker 7 b7
-		wait 2000
+		wait
 
 		smokecan
+		wait 1200
 		smokecan
 		wait 1000
 
 		rock-red-attacker 1 a1
-		wait 0
+		wait 168
 		rock-red-attacker 2 a2
-		wait 0
+		wait 168
 		rock-red-attacker 7 a7
-		wait 0
+		wait 168
 		rock-red-attacker 8 a8
-		wait 0
+		wait 168
 		rock-red-attacker 1 b1
-		wait 0
+		wait 168
 		rock-red-attacker 2 b2
-		wait 0
+		wait 168
 		rock-red-attacker 7 b7
-		wait 0
+		wait 168
+		rock-stay 1 b1
+		wait 168
+		rock-stay 8 a8
+		wait 168
 		rock-red-attacker 8 b8
-		wait 3000
+		wait
 
 		balloon-check
 		ammo
-		wait 1500
+
 
 		# --- Finale: rapid singles into one last full eight ---
 		rock-stay 8 a4
@@ -299,29 +302,23 @@ range jetz
 		wait 1200
 
 		rock-red-attacker 1 a1
-		wait 0
+		wait 50
 		rock-red-attacker 2 a2
-		wait 0
+		wait 150
 		rock-red-attacker 7 a7
-		wait 0
+		wait 250
 		rock-red-attacker 8 a8
-		wait 0
+		wait 350
 		rock-red-attacker 1 b1
-		wait 0
+		wait 450
 		rock-red-attacker 2 b2
-		wait 0
+		wait 550
 		rock-red-attacker 7 b7
-		wait 0
+		wait 650
 		rock-red-attacker 8 b8
-		wait 2500
+		wait
 
 		balloon-check
 		ammo
-		wait 2000
 
-		rock-stay 4 a4
-		wait 1000
-		rock-stay 5 b5
-		wait
-
-		repeat 99
+		#repeat 99
