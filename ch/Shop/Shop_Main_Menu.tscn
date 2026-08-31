@@ -478,7 +478,8 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="PlaceLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name" unique_id=614947465]
+[node name="PlayerTotalCash" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name" unique_id=614947465]
+unique_name_in_owner = true
 clip_contents = false
 layout_mode = 1
 anchors_preset = 8
@@ -497,13 +498,13 @@ theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1
 theme_override_constants/outline_size = 0
 theme_override_font_sizes/normal_font_size = 84
 bbcode_enabled = true
-text = "MOSS"
+text = "$0"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="PlayerMoney" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name" unique_id=1726682583]
+[node name="PlaceLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/Place_name" unique_id=1726682583]
 unique_name_in_owner = true
 clip_contents = false
 layout_mode = 1
@@ -752,7 +753,7 @@ rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_atgli")
 
-[node name="CashBalanceLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1835839393]
+[node name="RewardMoney" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1835839393]
 unique_name_in_owner = true
 z_index = 1
 clip_contents = false
@@ -778,7 +779,7 @@ theme_override_constants/shadow_offset_x = 7
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/normal_font_size = 124
 bbcode_enabled = true
-text = "$400"
+text = "$0"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0

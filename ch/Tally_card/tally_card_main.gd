@@ -69,6 +69,7 @@ var _scene_bonus_title := ""
 var _scene_cash_title := ""
 
 @onready var _next_button: Button = get_node_or_null("%NextRound") as Button
+@onready var _level_select_button: Button = get_node_or_null("%LevelSelect") as Button
 @onready var _bonus_row: Control = get_node_or_null("CenterContainer/MainPanel/MainPanel/CashHboxcontainer") as Control
 @onready var _bonus_earned: Control = get_node_or_null("CenterContainer/MainPanel/MainPanel/CashHboxcontainer/CashEarned") as Control
 
@@ -97,6 +98,8 @@ func _ready() -> void:
 	_center = get_node_or_null("CenterContainer") as Control
 	if _next_button and not _next_button.pressed.is_connected(_on_shop_pressed):
 		_next_button.pressed.connect(_on_shop_pressed)
+	if _level_select_button and not _level_select_button.pressed.is_connected(_on_level_select_pressed):
+		_level_select_button.pressed.connect(_on_level_select_pressed)
 	_hide_next_button()
 
 	if test_mode:
@@ -419,10 +422,32 @@ func _hide_next_button() -> void:
 		_next_button.hide()
 		_next_button.disabled = true
 		_next_button.modulate.a = 0.0
+	_hide_level_select_button()
+
+
+func _hide_level_select_button() -> void:
+	if _level_select_button == null:
+		return
+	_level_select_button.hide()
+	_level_select_button.disabled = true
+	_level_select_button.modulate.a = 0.0
 
 
 func _show_next_button() -> void:
+	_show_level_select_button()
+	var show_next := true
+	if _is_level_complete_tally() and round_manager and round_manager.has_method("has_next_script_level"):
+		show_next = bool(round_manager.has_next_script_level())
+	if not show_next:
+		if _next_button:
+			_next_button.hide()
+			_next_button.disabled = true
+		_next_ready = true
+		if _level_select_button:
+			UiFocus.grab_in(self, _level_select_button)
+		return
 	if _next_button == null:
+		_next_ready = true
 		return
 	_next_button.disabled = false
 	_next_button.modulate.a = 0.0
@@ -433,6 +458,17 @@ func _show_next_button() -> void:
 	await tween.finished
 	_next_ready = true
 	UiFocus.grab_in(self, _next_button)
+
+
+func _show_level_select_button() -> void:
+	if _level_select_button == null:
+		return
+	_level_select_button.disabled = false
+	_level_select_button.modulate.a = 0.0
+	_level_select_button.show()
+	var tween := create_tween()
+	tween.tween_property(_level_select_button, "modulate:a", 1.0, 0.22)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 
 func fly_winnings_to_map(map_cash: Control) -> void:
@@ -514,10 +550,12 @@ func check_white_rocks() -> void:
 
 	if _is_range_clear_win():
 		await start_win_sequence()
+		_grant_net_worth_if_level_complete()
 		start_sequence = false
 		return
 
 	await start_perfect_sequence()
+	_grant_net_worth_if_level_complete()
 	start_sequence = false
 	return
 
@@ -552,6 +590,24 @@ func _is_range_clear_win() -> bool:
 	if round_manager and round_manager.has_method("is_range_clear_win_tally"):
 		return bool(round_manager.is_range_clear_win_tally())
 	return false
+
+
+func _is_level_complete_tally() -> bool:
+	if round_manager and round_manager.has_method("is_range_complete_tally"):
+		return bool(round_manager.is_range_complete_tally())
+	return _is_range_clear_win()
+
+
+func _grant_net_worth_if_level_complete() -> void:
+	if not _is_level_complete_tally():
+		return
+	var amount := pending_winnings
+	if amount <= 0:
+		amount = _round_prize_amount() + int(gl_PlayerState.dataset.get("bonus_cash", 0))
+	if amount <= 0:
+		return
+	if gl_PlayerState and gl_PlayerState.has_method("add_net_worth"):
+		gl_PlayerState.add_net_worth(amount)
 
 
 func apply_bonus_cash() -> void:
@@ -708,5 +764,23 @@ func _on_shop_pressed() -> void:
 	current_state = State.CLOSE_MENU
 	_hide_next_button()
 	await update_close_menu()
-	if round_manager:
-		round_manager.enter_state(round_manager.RoundState.TALLY_END)
+	if round_manager == null:
+		return
+	if _is_level_complete_tally() and round_manager.has_method("request_tally_next_level"):
+		round_manager.request_tally_next_level()
+		return
+	round_manager.enter_state(round_manager.RoundState.TALLY_END)
+
+
+func _on_level_select_pressed() -> void:
+	if current_state == State.CLOSE_MENU:
+		return
+	if not _next_ready and _next_button and _next_button.visible:
+		return
+	current_state = State.CLOSE_MENU
+	_hide_next_button()
+	await update_close_menu()
+	if round_manager and round_manager.has_method("request_tally_level_select"):
+		round_manager.request_tally_level_select()
+	elif round_manager and round_manager.has_method("return_to_difficulty_select"):
+		await round_manager.return_to_difficulty_select()

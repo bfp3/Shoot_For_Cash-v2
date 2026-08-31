@@ -4,7 +4,7 @@ extends Node3D
 ## Attach to each level layout's root Node3D. Toggle with `enabled` — only active layouts scroll.
 
 ## When false, this layout never scrolls (default). Turn on per level that needs it.
-@export var enabled := true
+const enabled := false
 ## World units to move the layout per successful shot.
 @export var step_distance := 5.0
 ## Direction treated as "forward" for the layout (default +Z into the scene).

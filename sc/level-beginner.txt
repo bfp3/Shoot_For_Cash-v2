@@ -2,8 +2,8 @@ island shipper
 
 range moss
 
-	play $100
-	reward $400
+	play $10
+	reward $50
 
 	round
 		hold out 45000
@@ -125,7 +125,7 @@ range moss
 		# PART 2 - SPARSE PAIRS - make them go faster and faster
 range kings
 
-	play $100
+	play $10
 	reward $400
 
 	round
@@ -234,7 +234,7 @@ range kings
 		ammo
 		wait 2000
 range moss2
-	play $200
+	play $10
 	reward $400
 	round
 		hold out 90000
@@ -1065,9 +1065,9 @@ range moss3
 		rock-grey 4 a4
 		wait
 
-		sfx-faster oasisWorld
+		balloon-check
 
-		wait 2000
+		sfx-faster oasisWorld
 		# PART 2 - SPARSE PAIRS - make them go faster and faster
 
 		pace-normal
@@ -1123,9 +1123,9 @@ range moss3
 		rock 6 a6
 		wait
 
-		wait 2000
-
 		ammo
+		balloon-check
+
 		sfx-faster oasisWorld
 		wait 2000
 
@@ -1218,8 +1218,10 @@ range moss3
 		wait 1500
 
 		wait 1000
-		sfx-faster oasisWorld
+
 		ammo
+		balloon-check
+		sfx-faster oasisWorld
 
 		balloon a4
 		balloon b4
@@ -1286,6 +1288,8 @@ range moss3
 		rock 6 a6
 		wait 1000
 
+		balloon-check
+
 		#Alternate Sides with balloon wall in the way.
 		rock-grey 2 a2
 		wait 0
@@ -1334,8 +1338,7 @@ range moss3
 		wait 0
 		rock 6 a6
 		wait
-
-range redd
+range boss-redd
 	play $100
 	reward $400
 	hold out 60000
@@ -1881,7 +1884,7 @@ range mine
 	reward $400
 	round
 		hold out 90000
-range boss-scar
+range scar
 	play $100
 	reward $400
 	hold out 90000
@@ -2060,3 +2063,66 @@ range boss-scar
 		red-avoider
 
 		wait until clear
+
+
+range boss-mossasdf
+
+	play $10
+	reward $600
+
+	round
+		hold out 45000
+		#hold out 10000
+		#1
+		
+
+range moss33333fg
+
+	play $10
+	reward $600
+
+	round
+		hold out 45000
+		#hold out 10000
+		#1
+		
+range moss33333
+
+	play $10
+	reward $600
+
+	round
+		hold out 45000
+		#hold out 10000
+		#1
+		
+range moss3333
+
+	play $10
+	reward $600
+
+	round
+		hold out 45000
+		#hold out 10000
+		#1
+		
+range moss33
+
+	play $10
+	reward $600
+
+	round
+		hold out 45000
+		#hold out 10000
+		#1
+		
+		
+range boss-finale
+
+	play $10
+	reward $600
+
+	round
+		hold out 45000
+		#hold out 10000
+		#1

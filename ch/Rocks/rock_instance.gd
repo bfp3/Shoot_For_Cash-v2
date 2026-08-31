@@ -722,6 +722,8 @@ func update_active() -> void:
 	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.STAY:
 		if _player_wants_overlap_destroy("rocks"):
 			_arm_destroy_on_crosshair()
+	if rock_type == RockSize.SMALL or rock_type == RockSize.STAY:
+		_set_small_rock_fire(true)
 	
 	#%rock_launch_sound.pitch_scale = randf_range(3.0,3.2)
 	_play_rocks_sfx("rock_launch_sound")
@@ -937,6 +939,7 @@ func setup_rock_type() -> void:
 			current_mesh = small_rock
 			assign_random_mesh(current_mesh)
 			current_mesh.scale = base_scale * size_multiplier_float
+			_set_small_rock_fire(true)
 			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
 
 			force_mult.clear()
@@ -1208,6 +1211,7 @@ func setup_rock_type() -> void:
 			force_mult.clear()
 			force_mult = [4]
 			force_mult_index = 0
+			_set_small_rock_fire(true)
 			if current_mesh.has_node("GoldParticles"):
 				current_particles = current_mesh.get_node("GoldParticles")
 				current_particles.emitting = true
@@ -1314,6 +1318,7 @@ func reset_stats() -> void:
 	_avoider_retarget_timer = 0.0
 	_set_avoider_hum(false)
 	_set_threat_fire(false)
+	_set_small_rock_fire(false)
 	_set_marked_embers(false)
 	_red_attacker_armed = false
 	_red_attacker_dashing = false
@@ -2393,6 +2398,17 @@ func _set_threat_fire(active: bool) -> void:
 			mesh = red_rock_attack
 		else:
 			mesh = red_rock
+	if mesh == null or mesh == small_rock:
+		return
+	_set_mesh_fire(mesh, active)
+
+
+func _set_small_rock_fire(active: bool) -> void:
+	if small_rock:
+		_set_mesh_fire(small_rock, active)
+
+
+func _set_mesh_fire(mesh: Node, active: bool) -> void:
 	if mesh == null:
 		return
 	var fire := mesh.get_node_or_null("Fire")

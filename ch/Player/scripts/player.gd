@@ -144,6 +144,18 @@ var joystick_sensitivity := 500.0
 @export var grid_aim_move_speed := 1800.0
 ## Extra vertical lanes just outside columns 1 and 8 (same A/B/C heights) for the reticle.
 @export var grid_aim_side_lanes := true
+## Extra aim rows below C (row 3). Crosshair only — does not change rock spawn lanes.
+@export var grid_aim_extra_rows_down := 2
+## World Y of the first extra row down (row 4). A/B/C are 6.5 / 3.5 / 0.5.
+@export var grid_aim_extra_row_1_y := -2.5
+## World Y of the second extra row down (row 5).
+@export var grid_aim_extra_row_2_y := -5.5
+## Extra aim columns beyond A1–C8 on each side (column 0 left, 9 right when 1).
+@export var grid_aim_extra_columns_each_side := 1
+## World X of the extra-left column (column 0 default is one step outside 1 → 9.0).
+@export var grid_aim_extra_left_x := 9.0
+## World X of the extra-right column (column 9 default is one step outside 8 → -9.0).
+@export var grid_aim_extra_right_x := -9.0
 ## Volume for the short hovercraft clip played on each grid step.
 @export_range(-80.0, 6.0, 0.5) var grid_aim_step_sfx_volume_db := -28.0
 ## How long each step SFX plays before stopping (full files are longer).
@@ -468,6 +480,9 @@ func _process(delta: float) -> void:
 			
 		if Input.is_key_label_pressed(KEY_TAB):
 			fire_weapon_auto()
+			
+		if Input.is_action_just_pressed("spacebar"):
+			fire_weapon()
 
 		if Input.is_action_just_released("shoot_weapon_2"):
 			#fire_oranges()
@@ -905,24 +920,45 @@ func _grid_step_from_cell(
 	elif screen_dir.y < 0.0:
 		next_row -= 1
 
-	next_row = clampi(next_row, 1, rocks.aim_grid_row_count())
+	next_row = clampi(next_row, 1, _grid_aim_row_count(rocks))
 	var bounds := _grid_aim_column_bounds(rocks)
 	next_col = clampi(next_col, bounds.x, bounds.y)
 	return Vector2i(next_row, next_col)
 
 
+func _grid_aim_row_count(rocks: RockManager) -> int:
+	var base := rocks.aim_grid_row_count() if rocks.has_method("aim_grid_row_count") else 3
+	return base + maxi(grid_aim_extra_rows_down, 0)
+
+
 func _grid_aim_column_bounds(rocks: RockManager) -> Vector2i:
-	if rocks.has_method("aim_grid_column_bounds"):
-		return rocks.aim_grid_column_bounds(grid_aim_side_lanes)
+	var extra := maxi(grid_aim_extra_columns_each_side, 0)
+	var col_count := rocks.aim_grid_column_count() if rocks.has_method("aim_grid_column_count") else 8
+	var min_c := 1 - extra
+	var max_c := col_count + extra
 	if grid_aim_side_lanes:
-		return Vector2i(0, rocks.aim_grid_column_count() + 1)
-	return Vector2i(1, rocks.aim_grid_column_count())
+		min_c = mini(min_c, 0)
+		max_c = maxi(max_c, col_count + 1)
+	return Vector2i(min_c, max_c)
+
+
+func _grid_aim_extra_row_y(extra_index: int) -> float:
+	match extra_index:
+		1:
+			return grid_aim_extra_row_1_y
+		2:
+			return grid_aim_extra_row_2_y
+		_:
+			var step := grid_aim_extra_row_1_y - 0.5
+			if extra_index >= 2:
+				step = grid_aim_extra_row_2_y - grid_aim_extra_row_1_y
+			return grid_aim_extra_row_2_y + step * float(extra_index - 2)
 
 
 func _nearest_grid_cell(rocks: RockManager, from_screen: Vector2) -> Vector2i:
 	var best := Vector2i(2, 4)
 	var best_dist := INF
-	var row_count := rocks.aim_grid_row_count()
+	var row_count := _grid_aim_row_count(rocks)
 	var bounds := _grid_aim_column_bounds(rocks)
 
 	for row in range(1, row_count + 1):
@@ -982,6 +1018,15 @@ func _apply_crosshair_knock_pos(pos: Vector2) -> void:
 
 func _grid_cell_aim_screen(rocks: RockManager, row: int, column: int) -> Vector2:
 	var world := rocks.aim_cell_world_position(row, column)
+	var base_rows := rocks.aim_grid_row_count() if rocks.has_method("aim_grid_row_count") else 3
+	if row > base_rows:
+		world.y = _grid_aim_extra_row_y(row - base_rows)
+	var bounds := _grid_aim_column_bounds(rocks)
+	if grid_aim_extra_columns_each_side > 0:
+		if column == bounds.x:
+			world.x = grid_aim_extra_left_x
+		elif column == bounds.y:
+			world.x = grid_aim_extra_right_x
 	return camera_3d.unproject_position(world)
 
 

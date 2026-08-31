@@ -73,6 +73,20 @@ signal pressed
 		subtitle_color = value
 		_apply_visuals()
 
+@export_group("Scheme")
+enum ColorScheme { BEGINNER, ADVANCED, EXPERT }
+## Picks the Beginner / Advanced / Expert colour set. Default matches the title difficulty badge.
+@export var color_scheme: ColorScheme = ColorScheme.BEGINNER:
+	set(value):
+		color_scheme = value
+		if is_node_ready():
+			_apply_scheme_colors()
+## Hide the star icons (used by numbered level-select badges).
+@export var hide_icons := false:
+	set(value):
+		hide_icons = value
+		_apply_visuals()
+
 @export_group("Play")
 ## Empty = this badge does nothing when clicked.
 @export var travel_place := ""
@@ -82,6 +96,16 @@ signal pressed
 	set(value):
 		locked = value
 		_apply_visuals()
+## Header difficulty badge on level select — not a playable level.
+@export var is_header := false
+## Boss range (`boss-` prefix). Red ring + emblem on top.
+@export var is_boss := false
+## Hide the "N STAGES" subtitle (numbered level badges).
+@export var hide_subtitle := false
+## Later bosses get side plates (Circle2 scaled out).
+@export var boss_armored := false
+## Beginner / Advanced / Expert on the title screen — opens that difficulty's level grid instead of travelling.
+@export var selects_difficulty := false
 
 @export_group("Locked Flip")
 @export_multiline var locked_back_text := "[pulse freq=8 color=#FFFFFF90]NOT\nUNLOCKED YET":
@@ -129,7 +153,8 @@ func _ready() -> void:
 		_button.mouse_exited.connect(_on_hover.bind(false))
 		_button.focus_entered.connect(_on_hover.bind(true))
 		_button.focus_exited.connect(_on_hover.bind(false))
-	refresh_unlock_state()
+	if not is_header:
+		refresh_unlock_state()
 	_apply_visuals()
 	_apply_back_text()
 	_set_locked_face(false)
@@ -143,15 +168,30 @@ func refresh_unlock_state() -> void:
 		locked = not gl_DataSet.is_challenge_unlocked(key)
 	elif gl_DataSet and gl_DataSet.has_method("is_difficulty_unlocked"):
 		locked = not gl_DataSet.is_difficulty_unlocked(unlock_key)
+	_apply_back_text()
 
 
 func _apply_back_text() -> void:
 	if _back_label == null:
 		return
-	var copy := locked_back_text.strip_edges()
+	var copy := _locked_need_text()
+	if copy.is_empty():
+		copy = locked_back_text.strip_edges()
 	if copy.is_empty():
 		copy = "[pulse freq=8 color=#FFFFFF90]NOT\nUNLOCKED YET"
 	_back_label.text = "[center]%s" % copy
+
+
+func _locked_need_text() -> String:
+	if gl_DataSet == null or not gl_DataSet.has_method("get_unlock_net_worth"):
+		return ""
+	var amount := int(gl_DataSet.get_unlock_net_worth(unlock_key))
+	if amount <= 0:
+		return ""
+	var money := "$" + str(amount)
+	if CommonCode and CommonCode.has_method("format_money"):
+		money = String(CommonCode.format_money(amount))
+	return "[pulse freq=8 color=#FFFFFF90]NEED\n%s" % money
 
 
 func _apply_visuals() -> void:
@@ -176,21 +216,30 @@ func _apply_visuals() -> void:
 		_title.text = "[wave]" + title
 		_title.add_theme_color_override("default_color", title_color)
 	if _subtitle:
+		_subtitle.visible = not hide_subtitle
 		#_subtitle.text = "[pulse]" + subtitle + "[font_size=28] STAGES"
 		_subtitle.text = "[pulse freq=8 color=#FFFFFF90]" + subtitle + "[font_size=28] STAGES[/font_size][/pulse]"
 		_subtitle.add_theme_color_override("default_color", subtitle_color)
 	if _lock:
 		if lock_icon:
 			_lock.texture = lock_icon
-		_lock.visible = locked and not _showing_back
+		_lock.visible = locked and not _showing_back and not is_header
 	if _button:
-		## Locked Advanced/Expert/Mystery stay clickable so they can flip.
-		if not unlock_key.strip_edges().is_empty():
-			_button.disabled = false
+		if is_header:
+			_button.disabled = true
+			_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		else:
-			_button.disabled = locked or travel_place.strip_edges().is_empty()
-	#modulate.a = 0.62 if locked else 1.0
-	modulate.a = 1.0
+			## Locked badges stay clickable so they can flip.
+			_button.disabled = travel_place.strip_edges().is_empty() and not locked and not selects_difficulty
+	if locked and not is_header:
+		modulate = Color(0.52, 0.52, 0.55)
+	else:
+		modulate = Color.WHITE
+	if _circle2:
+		if is_boss and boss_armored:
+			_circle2.scale = Vector2(1.22, 0.78)
+		else:
+			_circle2.scale = Vector2(0.855, 0.855)
 
 
 func _icon_rects() -> Array[TextureRect]:
@@ -205,7 +254,7 @@ func _icon_rects() -> Array[TextureRect]:
 
 func _apply_icons() -> void:
 	var rects := _icon_rects()
-	var show_n := 0 if icon == null else clampi(icon_count, 0, rects.size())
+	var show_n := 0 if hide_icons or icon == null else clampi(icon_count, 0, rects.size())
 	if _icon_box:
 		_icon_box.visible = show_n > 0
 	for i in rects.size():
@@ -213,11 +262,97 @@ func _apply_icons() -> void:
 		rects[i].modulate = icon_modulate
 		rects[i].visible = i < show_n
 
+
+func apply_color_scheme(stage: String) -> void:
+	match stage.strip_edges().to_upper():
+		"ADVANCED":
+			color_scheme = ColorScheme.ADVANCED
+		"EXPERT":
+			color_scheme = ColorScheme.EXPERT
+		_:
+			color_scheme = ColorScheme.BEGINNER
+
+
+func _apply_scheme_colors() -> void:
+	match color_scheme:
+		ColorScheme.ADVANCED:
+			icon_count = 2
+			circle_self_modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+			circle2_self_modulate = Color("5E544B")
+			circle3_modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
+			top_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
+			banner_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
+			banner3_color = Color(0.59, 0.4523333, 0.2596, 1)
+			icon_modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+			title_color = Color.WHITE
+		ColorScheme.EXPERT:
+			icon_count = 3
+			circle_self_modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+			circle2_self_modulate = Color(0.81, 0.543375, 0.1701, 1)
+			circle3_modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+			top_color = Color(0.81, 0.543375, 0.1701, 1)
+			banner_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+			banner3_color = Color(0.4, 0.004, 0.0106, 1)
+			icon_modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+			title_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+		_:
+			icon_count = 1
+			circle_self_modulate = Color(0.76862746, 0.65882355, 0.56078434, 1)
+			circle2_self_modulate = Color(0.25490198, 0.31764707, 0.16078432, 1)
+			circle3_modulate = Color(0.8039216, 0.69803923, 0.5803922, 1)
+			top_color = Color(0.5921569, 0.09019608, 0.09411765, 1)
+			banner_color = Color(0.25490198, 0.31764707, 0.16078432, 1)
+			banner3_color = Color(0.12864, 0.16, 0.0816, 1)
+			icon_modulate = Color(0.37, 0.33053333, 0.296, 1)
+			title_color = Color.WHITE
+
+
+func configure_as_level(number: int, place: String, unlocked: bool, boss: bool, armored: bool = false, stage: String = "BEGINNER") -> void:
+	is_header = false
+	is_boss = boss
+	boss_armored = armored
+	hide_subtitle = true
+	hide_icons = true
+	title = str(number)
+	subtitle = ""
+	travel_place = place
+	unlock_key = ""
+	locked = not unlocked
+	apply_color_scheme(stage)
+	if boss:
+		coat_arms_modulate = Color.WHITE
+	else:
+		coat_arms_modulate = Color(1, 1, 1, 0)
+	_apply_visuals()
+
+
+func copy_look_from(other: DifficultyBadge) -> void:
+	if other == null:
+		return
+	title = other.title
+	subtitle = other.subtitle
+	icon_count = other.icon_count
+	circle_self_modulate = other.circle_self_modulate
+	circle2_self_modulate = other.circle2_self_modulate
+	circle3_modulate = other.circle3_modulate
+	top_color = other.top_color
+	banner_color = other.banner_color
+	banner3_color = other.banner3_color
+	coat_arms_modulate = other.coat_arms_modulate
+	icon_modulate = other.icon_modulate
+	title_color = other.title_color
+	subtitle_color = other.subtitle_color
+	_apply_visuals()
+
+
 func _on_hit() -> void:
-	if _selecting:
+	if is_header or _selecting:
 		return
 	if _is_content_locked():
 		play_locked_flip()
+		return
+	if selects_difficulty:
+		pressed.emit()
 		return
 	if travel_place.strip_edges().is_empty():
 		return
@@ -225,7 +360,32 @@ func _on_hit() -> void:
 	await play_unlocked_spin()
 
 
+func reset_selection_state() -> void:
+	_selecting = false
+	_abort_locked_flip()
+	if _wiggle:
+		_wiggle.kill()
+		_wiggle = null
+	_set_face(false)
+	visible = true
+	show()
+	modulate = Color.WHITE if not (locked and not is_header) else Color(0.52, 0.52, 0.55)
+	scale = Vector2.ONE
+	rotation_degrees = 0.0
+	top_level = false
+	z_index = 0
+	if _button:
+		_button.mouse_filter = Control.MOUSE_FILTER_STOP
+		if is_header:
+			_button.disabled = true
+			_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		else:
+			_button.disabled = travel_place.strip_edges().is_empty() and not locked and not selects_difficulty
+
+
 func lock_out_selection() -> void:
+	if is_header or not is_visible_in_tree():
+		return
 	_selecting = true
 	_abort_locked_flip()
 	if _button:
@@ -233,7 +393,7 @@ func lock_out_selection() -> void:
 
 
 func fade_away_for_selection(selected: Node) -> void:
-	if selected == self:
+	if is_header or selected == self or not is_visible_in_tree():
 		return
 	_abort_locked_flip()
 	if _wiggle:
@@ -270,9 +430,10 @@ func play_unlocked_spin() -> void:
 	await _blink_visible(maxf(unlocked_spin_sec, 0.05))
 	if not is_inside_tree():
 		return
-	visible = true
-	show()
 	_play_sfx(_travel_sfx)
+	await _fade_out_selected()
+	if not is_inside_tree():
+		return
 	pressed.emit()
 
 
@@ -285,11 +446,13 @@ func _abort_locked_flip() -> void:
 
 
 func _center_horizontally() -> void:
+	_apply_center_pivot()
 	var gp := global_position
 	top_level = true
 	global_position = gp
-	var dest := gp
-	dest.x = 832.0
+	var dest := _selection_center() - pivot_offset
+	## Selected badge still sat too far right of the panel centre; shift left by half its width.
+	dest.x -= size.x * 0.5
 	if _flip_tween and _flip_tween.is_valid():
 		_flip_tween.kill()
 	_flip_tween = create_tween()
@@ -301,9 +464,31 @@ func _center_horizontally() -> void:
 	await _flip_tween.finished
 
 
+func _apply_center_pivot() -> void:
+	if size.x < 1.0 or size.y < 1.0:
+		size = custom_minimum_size
+	pivot_offset_ratio = Vector2(0.5, 0.5)
+	pivot_offset = size * 0.5
+
+
+func _fade_out_selected() -> void:
+	if _flip_tween and _flip_tween.is_valid():
+		_flip_tween.kill()
+	_flip_tween = create_tween()
+	_flip_tween.tween_property(self, "modulate:a", 0.0, 0.22)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	await _flip_tween.finished
+	hide()
+
+
 func _selection_center() -> Vector2:
-	var overlay := get_tree().get_first_node_in_group("difficulty_select") as Control
+	var overlay := get_tree().get_first_node_in_group("level_select") as Control
+	if overlay == null or not overlay.visible:
+		overlay = get_tree().get_first_node_in_group("difficulty_select") as Control
 	if overlay:
+		var panel := overlay.get_node_or_null("MainPanel") as Control
+		if panel:
+			return panel.get_global_rect().get_center()
 		return overlay.get_global_rect().get_center()
 	return get_viewport().get_visible_rect().get_center()
 
@@ -323,6 +508,10 @@ func _blink_visible(duration: float) -> void:
 
 
 func _is_content_locked() -> bool:
+	if is_header:
+		return false
+	if locked:
+		return true
 	if unlock_key.strip_edges().is_empty():
 		return false
 	var key := unlock_key.strip_edges().to_lower()

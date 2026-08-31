@@ -2,7 +2,7 @@ extends "res://ch/Rocks/balloon.gd"
 ## Balloon-check: drifts up into centre, bobs in place, never leaves until shot.
 ## Shooting it saves this script cursor as the fail-resume point and clears strikes.
 
-const REST_POS := Vector3(0.0, 3.5, 22.5)
+const REST_POS := Vector3(-1.0, 3.5, 22.5) ## B5 (row 2, column 5)
 const SPAWN_POS := Vector3(0.0, -12.0, 26.0)
 ## Seconds to rise from SPAWN_POS to REST_POS. Lower = faster.
 const ARRIVE_DURATION := 1.0

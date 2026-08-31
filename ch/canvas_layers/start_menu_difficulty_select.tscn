@@ -9,6 +9,14 @@
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="5_ivuve"]
 [ext_resource type="Script" uid="uid://cc2hsvhfqsyjs" path="res://ch/canvas_layers/special_challenge_buttons.gd" id="8_chal"]
 [ext_resource type="PackedScene" uid="uid://dm2hgl5lpfk7q" path="res://ch/canvas_layers/difficulty_badge.tscn" id="9_egetg"]
+[ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="10_arrow"]
+[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="11_open"]
+[ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="12_close"]
+[ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="13_click1"]
+[ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="14_click2"]
+[ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="15_click3"]
+[ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="16_hum"]
+[ext_resource type="PackedScene" uid="uid://b4ddmogbrspeb" path="res://ch/canvas_layers/net_worth_label.tscn" id="17_net"]
 
 [sub_resource type="Animation" id="Animation_tnodp"]
 length = 0.001
@@ -198,42 +206,11 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_q5ox8")
 
-[node name="NetWorth" type="Control" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=1998075242]
-z_index = 1
+[node name="NetWorth" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=1463515772 instance=ExtResource("17_net")]
+unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -12.048195
-offset_bottom = -12.048195
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="NetWorth" type="RichTextLabel" parent="MainPanel/VBoxContainer/TopRedPanel/NetWorth" unique_id=1114741342]
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -318.40002
-offset_top = -51.53414
-offset_right = 423.1129
-offset_bottom = 39.46586
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
-theme_override_font_sizes/normal_font_size = 84
-bbcode_enabled = true
-text = "$10,000,000"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 2
-vertical_alignment = 1
+offset_top = 0.0
+offset_bottom = 0.0
 
 [node name="LevelSelectTitle" type="RichTextLabel" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=1114741343]
 visible = false
@@ -303,6 +280,63 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("5_ivuve")
 stretch_mode = 5
 
+[node name="DifficultyHeader" type="HBoxContainer" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=1998075301]
+unique_name_in_owner = true
+visible = false
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -94.0
+offset_right = 280.0
+offset_bottom = 94.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="PrevDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075302]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("10_arrow")
+flat = true
+expand_icon = true
+
+[node name="HeaderBadge" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075303 instance=ExtResource("9_egetg")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(168, 168)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+title = "BEGINNER"
+subtitle = ""
+circle_self_modulate = Color(0.76862746, 0.65882355, 0.56078434, 1)
+circle2_self_modulate = Color(0.25490198, 0.31764707, 0.16078432, 1)
+circle3_modulate = Color(0.8039216, 0.69803923, 0.5803922, 1)
+banner_color = Color(0.25490198, 0.31764707, 0.16078432, 1)
+banner3_color = Color(0.12864, 0.16, 0.081599995, 1)
+icon_modulate = Color(0.37, 0.33053333, 0.296, 1)
+is_header = true
+hide_subtitle = true
+
+[node name="NextDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075304]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("10_arrow")
+flat = true
+expand_icon = true
+
 [node name="CoatArms" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=409353141 instance=ExtResource("3_drjai")]
 z_index = 1
 layout_mode = 1
@@ -329,9 +363,27 @@ layout_mode = 1
 scale = Vector2(1.12, 1.12)
 theme_override_constants/separation = 91
 
-[node name="SpecialChallengeButtons" type="HBoxContainer" parent="MainPanel/VBoxContainer/SpacePanel2" unique_id=1985256719]
+[node name="LevelGrid" type="GridContainer" parent="MainPanel/VBoxContainer/SpacePanel2" unique_id=1998075305]
 unique_name_in_owner = true
 visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -430.0
+offset_top = -150.0
+offset_right = 430.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 8
+columns = 5
+
+[node name="SpecialChallengeButtons" type="HBoxContainer" parent="MainPanel/VBoxContainer/SpacePanel2" unique_id=1985256719]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 1
 anchors_preset = 15
@@ -405,7 +457,6 @@ unlock_key = "challenge_03"
 locked = true
 
 [node name="Challenge4" parent="MainPanel/VBoxContainer/SpacePanel2/SpecialChallengeButtons" unique_id=333025774 instance=ExtResource("9_egetg")]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -688,3 +739,31 @@ modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
 rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_6orug")
+
+[node name="SFX" type="Node" parent="." unique_id=880011001]
+
+[node name="shop_open_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=880011002]
+stream = ExtResource("11_open")
+volume_db = -40.0
+pitch_scale = 2.0
+
+[node name="shop_close_sfx_01" type="AudioStreamPlayer" parent="SFX" unique_id=880011003]
+stream = ExtResource("12_close")
+volume_db = -40.0
+pitch_scale = 1.5
+
+[node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=880011004]
+stream = ExtResource("13_click1")
+volume_db = -34.0
+
+[node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=880011005]
+stream = ExtResource("14_click2")
+volume_db = -20.0
+
+[node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=880011006]
+stream = ExtResource("15_click3")
+volume_db = -20.0
+
+[node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=880011007]
+stream = ExtResource("16_hum")
+volume_db = -32.0

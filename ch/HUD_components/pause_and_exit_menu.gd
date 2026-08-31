@@ -159,11 +159,19 @@ func close_menu() -> void:
 	var should_reopen_map := reopen_map_on_resume
 	reopen_map_on_resume = false
 
-	## Pause itself does not blur. Only re-apply overlay blur if we return to shop/map/tally.
+	## Pause itself does not blur. Re-apply overlay blur if we return to another menu.
 	var shop := get_tree().get_first_node_in_group("shop_main_menu") as CanvasItem
 	var map_menu := get_tree().get_first_node_in_group("map_menu") as CanvasItem
 	var tally := get_tree().get_first_node_in_group("tally_card_menu") as CanvasItem
-	if (shop and shop.visible) or (map_menu and map_menu.visible) or (tally and tally.visible):
+	var difficulty := get_tree().get_first_node_in_group("difficulty_select") as CanvasItem
+	var level_select := get_tree().get_first_node_in_group("level_select") as CanvasItem
+	if (
+		(shop and shop.visible)
+		or (map_menu and map_menu.visible)
+		or (tally and tally.visible)
+		or (difficulty and difficulty.visible)
+		or (level_select and level_select.visible)
+	):
 		CommonCode.apply_ui_overlay_blur()
 
 	if should_reopen_map:
@@ -221,7 +229,7 @@ func _on_close_game_pressed() -> void:
 	if _abandon_prompt and _abandon_prompt.has_method("open_prompt"):
 		_abandon_prompt.open_prompt(QUIT_CONFIRM_TITLE)
 		return
-	get_tree().quit()
+	await _fade_to_black_and_quit()
 
 
 func _on_open_map_pressed() -> void:
@@ -242,10 +250,13 @@ func _on_back_to_title_pressed() -> void:
 	reopen_map_on_resume = false
 	if GameSettings.is_resolution_pending():
 		GameSettings.revert_resolution()
+	if _is_on_title_select_screens():
+		await _return_to_difficulty_from_menus()
+		return
 	if _is_in_active_run():
 		_open_abandon_prompt()
 		return
-	## Already on the title / difficulty screen — Main Menu does nothing.
+	await _return_to_difficulty_from_menus()
 
 
 func _setup_abandon_run_prompt() -> void:
@@ -295,7 +306,7 @@ func _on_abandon_run_cancelled() -> void:
 func _on_abandon_run_confirmed() -> void:
 	if _confirm_kind == ConfirmKind.QUIT:
 		_confirm_kind = ConfirmKind.ABANDON
-		get_tree().quit()
+		await _fade_to_black_and_quit()
 		return
 	if _abandon_prompt and _abandon_prompt.has_method("close_prompt"):
 		_abandon_prompt.close_prompt()
@@ -304,11 +315,6 @@ func _on_abandon_run_confirmed() -> void:
 	hide()
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	var round_manager := get_tree().get_first_node_in_group("round_manager")
-	if round_manager and round_manager.has_method("play_run_over_and_restart"):
-		await round_manager.play_run_over_and_restart()
-		_leaving_to_difficulty = false
-		return
 	await _leave_to_difficulty_select()
 
 
@@ -323,6 +329,52 @@ func _is_in_active_run() -> bool:
 	if gl_DataSet and gl_DataSet.has_method("get_start_place_name"):
 		start = String(gl_DataSet.get_start_place_name()).strip_edges().to_lower()
 	return not level.is_empty() and level != start and level != "start"
+
+
+func _menu_visible(node: Node) -> bool:
+	return node is CanvasItem and (node as CanvasItem).visible
+
+
+func _is_on_title_select_screens() -> bool:
+	return _menu_visible(get_tree().get_first_node_in_group("difficulty_select")) or _menu_visible(get_tree().get_first_node_in_group("level_select"))
+
+
+func _return_to_difficulty_from_menus() -> void:
+	await close_menu()
+	var level_menu := get_tree().get_first_node_in_group("level_select")
+	var select_menu := get_tree().get_first_node_in_group("difficulty_select")
+	if _menu_visible(level_menu):
+		if level_menu.has_method("close_pop_up_animated"):
+			await level_menu.close_pop_up_animated()
+		elif level_menu is CanvasItem:
+			(level_menu as CanvasItem).hide()
+	if _menu_visible(select_menu):
+		return
+	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
+	if select_menu == null and menus and menus.has_method("ensure_difficulty_select"):
+		select_menu = menus.ensure_difficulty_select()
+	if select_menu and select_menu.has_method("open_pop_up"):
+		await select_menu.open_pop_up()
+
+
+func _fade_to_black_and_quit() -> void:
+	var host := Control.new()
+	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	host.mouse_filter = Control.MOUSE_FILTER_STOP
+	host.process_mode = Node.PROCESS_MODE_ALWAYS
+	host.z_index = 4096
+	add_child(host)
+	var fade := ColorRect.new()
+	fade.color = Color(0, 0, 0, 0)
+	fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fade.mouse_filter = Control.MOUSE_FILTER_STOP
+	host.add_child(fade)
+	var tween := create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tween.tween_property(fade, "color:a", 1.0, 0.4)
+	await tween.finished
+	get_tree().quit()
 
 
 func _leave_to_difficulty_select() -> void:

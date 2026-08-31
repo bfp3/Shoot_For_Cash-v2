@@ -8,19 +8,38 @@ signal level_chosen(place: String, stage_title: String)
 @onready var challenge_3: DifficultyBadge = $Challenge3
 @onready var challenge_4: DifficultyBadge = $Challenge4
 
+var _rest_position := Vector2.ZERO
+var _rest_captured := false
+
 
 func _ready() -> void:
 	add_to_group("special_challenge_buttons")
+	_rest_position = position
+	_rest_captured = true
 	for badge in [challenge_1, challenge_2, challenge_3, challenge_4]:
 		if badge:
 			badge.pressed.connect(_on_badge_pressed.bind(badge))
 	refresh_unlocks()
 
 
+func reset_row_layout() -> void:
+	top_level = false
+	if _rest_captured:
+		position = _rest_position
+	for badge in [challenge_1, challenge_2, challenge_3, challenge_4]:
+		if badge and badge.has_method("reset_selection_state"):
+			badge.reset_selection_state()
+
+
 func refresh_unlocks() -> void:
+	if owner != null and String(owner.name) == "StartMenuLevelSelect":
+		hide()
+		return
 	var show_row := false
-	if gl_DataSet and "challenges_unlocked" in gl_DataSet:
-		show_row = bool(gl_DataSet.challenges_unlocked)
+	if gl_DataSet and gl_DataSet.has_method("are_challenges_visible"):
+		show_row = bool(gl_DataSet.are_challenges_visible())
+	elif gl_DataSet and "debug_everything_unlocked" in gl_DataSet and gl_DataSet.debug_everything_unlocked:
+		show_row = true
 	visible = show_row
 	if not show_row:
 		return

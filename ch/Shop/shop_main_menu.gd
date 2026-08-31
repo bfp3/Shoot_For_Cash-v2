@@ -10,8 +10,8 @@ const SHOP_PANEL_STYLEBOX := preload("res://res/custom_themes_by_blake/shop_main
 @export var round_manager : RoundManager
 @export var money_control : Node
 @export var reveal_skill_sfx: AudioStreamPlayer
-@onready var cash_label: RichTextLabel = %CashBalanceLabel
-@onready var player_money_label: RichTextLabel = %PlayerMoney
+@onready var cash_label: RichTextLabel = %PlayerTotalCash
+@onready var reward_money: RichTextLabel = %RewardMoney
 @onready var shop_crate_overlay: Node = get_node_or_null("%ShopCrateOverlay")
 #@onready var available_upgrades: HBoxContainer = $CenterContainer/MainPanel/VBoxContainer/TreePanel/AvailableUpgrades
 #@onready var reroll_button: Button = %Reroll
@@ -80,7 +80,6 @@ func _ready() -> void:
 	#default_pivot_offset = size 
 	#pivot_offset = default_pivot_offset
 	pivot_offset_ratio = Vector2(0.5,1.5)
-	cash_label.modulate.a = 0.0
 
 	
 	hide()
@@ -89,9 +88,10 @@ func _ready() -> void:
 
 	EventBus.instance.open_shop.connect(enter_state.bind(SkillState.OPEN_MENU))
 	#$NextRound.pressed.connect(enter_state.bind(SkillState.CLOSE_MENU))
-	cash_label.hide()
-	#update_shop_labels()
-	cash_label.text = "$0"
+	if cash_label:
+		cash_label.text = "$0"
+	if reward_money:
+		reward_money.text = "$0"
 	_set_shop_crate_overlay_visible(false)
 	
 
@@ -216,9 +216,9 @@ func _format_cash_label(amount: int, waved: bool = true) -> String:
 
 
 func _wallet_label() -> RichTextLabel:
-	if player_money_label:
-		return player_money_label
-	return cash_label
+	if cash_label:
+		return cash_label
+	return reward_money
 
 
 func _current_range_reward() -> int:
@@ -230,14 +230,16 @@ func _current_range_reward() -> int:
 
 
 func _refresh_range_reward_label() -> void:
-	if cash_label == null:
+	if reward_money == null:
 		return
-	cash_label.text = "[wave]" + _format_cash_label(_current_range_reward(), false)
-	cash_label.show()
-	cash_label.modulate.a = 1.0
+	reward_money.text = "[wave]" + _format_cash_label(_current_range_reward(), false)
+	reward_money.show()
+	reward_money.modulate.a = 1.0
 
 
 func _refresh_player_money_label() -> void:
+	if gl_PlayerState:
+		player_cash = int(gl_PlayerState.dataset.cash)
 	var label := _wallet_label()
 	if label == null:
 		return
@@ -916,9 +918,6 @@ func update_close_menu() -> void:
 	position = default_position
 	
 	hide()
-	cash_label.hide()
-	cash_label.text = ''
-	reset_cash_label_color()
 	EventBus.instance.close_shop.emit()
 
 	#reroll_button.show()

@@ -29,7 +29,7 @@ enum PersistMode {
 var persist_mode: PersistMode = PersistMode.TEST
 
 const RESTART_DATASET := {
-	"cash": 500,
+	"cash": 0,
 	"level_name": "moss", # overwritten in reset_level() from gl_DataSet default range
 	"tickets": 1,
 	"debug_add_cash": 1000,
@@ -76,6 +76,9 @@ const RESTART_DATASET := {
 	"cents_total_earned": 0.0,
 	"completed_places": [],
 	"level_progress": {},
+	"net_worth": 0,
+	"cleared_levels": {},
+	"select_difficulty": "BEGINNER",
 	## Highest overworld island index unlocked (0 = Shipper Island).
 	"unlocked_island_index": 0,
 	## Island indices whose boss fight has been cleared.
@@ -85,7 +88,7 @@ const RESTART_DATASET := {
 }
 
 const DEFAULT_DATASET := {
-	"cash": 500,
+	"cash": 0,
 	"stage": 0,
 	"run_difficulty": "BEGINNER",
 	"continue_count": 0,
@@ -130,6 +133,9 @@ const DEFAULT_DATASET := {
 	"cents_total_earned": 0.0,
 	"completed_places": [],
 	"level_progress": {},
+	"net_worth": 0,
+	"cleared_levels": {},
+	"select_difficulty": "BEGINNER",
 	## Highest overworld island index unlocked (0 = Shipper Island).
 	"unlocked_island_index": 0,
 	## Island indices whose boss fight has been cleared.
@@ -176,6 +182,9 @@ func begin_test_session() -> void:
 	persist_mode = PersistMode.TEST
 	dataset["completed_places"] = []
 	dataset["level_progress"] = {}
+	dataset["net_worth"] = 0
+	dataset["cleared_levels"] = {}
+	dataset["select_difficulty"] = "BEGINNER"
 	dataset["unlocked_island_index"] = 0
 	dataset["cleared_boss_islands"] = []
 	dataset["unlocked_boss_islands"] = []
@@ -186,6 +195,9 @@ func begin_load_game_session() -> void:
 	persist_mode = PersistMode.LOAD
 	dataset["completed_places"] = []
 	dataset["level_progress"] = {}
+	dataset["net_worth"] = 0
+	dataset["cleared_levels"] = {}
+	dataset["select_difficulty"] = "BEGINNER"
 	_load_meta_progress_from_disk()
 
 
@@ -197,6 +209,9 @@ func has_meta_save_file() -> bool:
 func clear_meta_progress() -> void:
 	dataset["completed_places"] = []
 	dataset["level_progress"] = {}
+	dataset["net_worth"] = 0
+	dataset["cleared_levels"] = {}
+	dataset["select_difficulty"] = "BEGINNER"
 	dataset["unlocked_island_index"] = 0
 	dataset["cleared_boss_islands"] = []
 	dataset["unlocked_boss_islands"] = []
@@ -685,6 +700,121 @@ func mark_boss_unlocked(island_index: int) -> void:
 	save_meta_progress()
 
 
+func _snapshot_meta_progress() -> Dictionary:
+	var progress = dataset.get("level_progress", {})
+	if progress is Dictionary:
+		progress = (progress as Dictionary).duplicate(true)
+	else:
+		progress = {}
+	var cleared = dataset.get("cleared_levels", {})
+	if cleared is Dictionary:
+		cleared = (cleared as Dictionary).duplicate(true)
+	else:
+		cleared = {}
+	return {
+		"completed_places": get_completed_places().duplicate(),
+		"level_progress": progress,
+		"net_worth": get_net_worth(),
+		"cleared_levels": cleared,
+		"select_difficulty": get_select_difficulty(),
+		"unlocked_island_index": int(dataset.get("unlocked_island_index", 0)),
+		"cleared_boss_islands": get_cleared_boss_islands().duplicate(),
+		"unlocked_boss_islands": get_unlocked_boss_islands().duplicate(),
+	}
+
+
+func _restore_meta_progress(kept: Dictionary) -> void:
+	dataset["completed_places"] = kept.get("completed_places", [])
+	dataset["level_progress"] = kept.get("level_progress", {})
+	dataset["net_worth"] = int(kept.get("net_worth", 0))
+	dataset["cleared_levels"] = kept.get("cleared_levels", {})
+	dataset["select_difficulty"] = String(kept.get("select_difficulty", "BEGINNER"))
+	dataset["unlocked_island_index"] = int(kept.get("unlocked_island_index", 0))
+	dataset["cleared_boss_islands"] = kept.get("cleared_boss_islands", [])
+	dataset["unlocked_boss_islands"] = kept.get("unlocked_boss_islands", [])
+
+
+func get_net_worth() -> int:
+	return maxi(int(dataset.get("net_worth", 0)), 0)
+
+
+func add_net_worth(amount: int) -> void:
+	if amount <= 0:
+		return
+	dataset["net_worth"] = get_net_worth() + amount
+	save_meta_progress()
+
+
+func get_select_difficulty() -> String:
+	var cleaned := String(dataset.get("select_difficulty", "")).strip_edges().to_upper()
+	if cleaned.is_empty():
+		cleaned = get_run_difficulty()
+	if cleaned.is_empty():
+		return "BEGINNER"
+	return cleaned
+
+
+func set_select_difficulty(stage_name: String) -> void:
+	var cleaned := stage_name.strip_edges().to_upper()
+	cleaned = cleaned.replace("[WAVE]", "").replace("[/WAVE]", "")
+	if cleaned.is_empty():
+		cleaned = "BEGINNER"
+	dataset["select_difficulty"] = cleaned
+	save_meta_progress()
+
+
+func get_cleared_levels(difficulty: String = "") -> Array:
+	if difficulty.is_empty():
+		difficulty = get_select_difficulty()
+	difficulty = difficulty.strip_edges().to_upper()
+	var stored = dataset.get("cleared_levels", {})
+	if stored is Dictionary:
+		var list = stored.get(difficulty, [])
+		return list if list is Array else []
+	return []
+
+
+func is_level_cleared(difficulty: String, place_id: String) -> bool:
+	place_id = gl_DataSet.resolve_place_name(place_id).to_lower()
+	if place_id.is_empty():
+		return false
+	for raw in get_cleared_levels(difficulty):
+		if gl_DataSet.resolve_place_name(String(raw)).to_lower() == place_id:
+			return true
+	return false
+
+
+func mark_level_cleared(difficulty: String, place_id: String) -> void:
+	difficulty = difficulty.strip_edges().to_upper()
+	place_id = gl_DataSet.resolve_place_name(place_id).to_lower()
+	if difficulty.is_empty() or place_id.is_empty() or place_id == "start":
+		return
+	if is_level_cleared(difficulty, place_id):
+		save_meta_progress()
+		return
+	var stored: Dictionary = {}
+	var raw = dataset.get("cleared_levels", {})
+	if raw is Dictionary:
+		stored = (raw as Dictionary).duplicate(true)
+	var list: Array = []
+	var existing = stored.get(difficulty, [])
+	if existing is Array:
+		list = existing.duplicate()
+	list.append(place_id)
+	stored[difficulty] = list
+	dataset["cleared_levels"] = stored
+	save_meta_progress()
+
+
+## Level 1 is always open. Level N opens after N-1 is cleared in that difficulty.
+func is_sequential_level_unlocked(difficulty: String, range_list: PackedStringArray, index: int) -> bool:
+	if index <= 0:
+		return true
+	if index >= range_list.size():
+		return false
+	return is_level_cleared(difficulty, String(range_list[index - 1]))
+
+
 func mark_place_completed(place_id: String) -> void:
 	place_id = gl_DataSet.resolve_place_name(place_id)
 	if place_id.is_empty() or place_id == gl_DataSet.get_start_place_name():
@@ -751,6 +881,9 @@ func save_meta_progress() -> void:
 	cfg.load(META_SAVE_PATH) # ok if missing
 	cfg.set_value(META_SECTION, "completed_places", get_completed_places())
 	cfg.set_value(META_SECTION, "level_progress", dataset.get("level_progress", {}))
+	cfg.set_value(META_SECTION, "net_worth", get_net_worth())
+	cfg.set_value(META_SECTION, "cleared_levels", dataset.get("cleared_levels", {}))
+	cfg.set_value(META_SECTION, "select_difficulty", get_select_difficulty())
 	cfg.set_value(META_SECTION, "unlocked_island_index", int(dataset.get("unlocked_island_index", 0)))
 	cfg.set_value(META_SECTION, "cleared_boss_islands", get_cleared_boss_islands())
 	cfg.set_value(META_SECTION, "unlocked_boss_islands", get_unlocked_boss_islands())
@@ -818,6 +951,11 @@ func _load_meta_progress_from_disk() -> void:
 	var progress = cfg.get_value(META_SECTION, "level_progress", {})
 	if progress is Dictionary:
 		dataset["level_progress"] = (progress as Dictionary).duplicate(true)
+	dataset["net_worth"] = int(cfg.get_value(META_SECTION, "net_worth", 0))
+	var cleared = cfg.get_value(META_SECTION, "cleared_levels", {})
+	if cleared is Dictionary:
+		dataset["cleared_levels"] = (cleared as Dictionary).duplicate(true)
+	dataset["select_difficulty"] = String(cfg.get_value(META_SECTION, "select_difficulty", "BEGINNER"))
 	dataset["unlocked_island_index"] = int(cfg.get_value(META_SECTION, "unlocked_island_index", 0))
 	var bosses = cfg.get_value(META_SECTION, "cleared_boss_islands", [])
 	if bosses is Array:
@@ -981,16 +1119,10 @@ func buy_all_upgrades() -> void:
 
 func reset_all() -> void:
 	# Keep range completion / round progress across title returns (session memory).
-	var kept_places = get_completed_places().duplicate()
-	var kept_progress = dataset.get("level_progress", {})
-	if kept_progress is Dictionary:
-		kept_progress = (kept_progress as Dictionary).duplicate(true)
-	else:
-		kept_progress = {}
+	var kept := _snapshot_meta_progress()
 
 	dataset = DEFAULT_DATASET.duplicate(true)
-	dataset["completed_places"] = kept_places
-	dataset["level_progress"] = kept_progress
+	_restore_meta_progress(kept)
 
 	_log.clear()
 	_current_round_log.clear()
@@ -1002,17 +1134,11 @@ func reset_all() -> void:
 
 
 func reset_level() -> void:
-	var kept_places = get_completed_places().duplicate()
-	var kept_progress = dataset.get("level_progress", {})
-	if kept_progress is Dictionary:
-		kept_progress = (kept_progress as Dictionary).duplicate(true)
-	else:
-		kept_progress = {}
+	var kept := _snapshot_meta_progress()
 
 	dataset = RESTART_DATASET.duplicate(true)
 	dataset.level_name = gl_DataSet.get_default_range_name()
-	dataset["completed_places"] = kept_places
-	dataset["level_progress"] = kept_progress
+	_restore_meta_progress(kept)
 	_log.clear()
 	_current_round_log.clear()
 	reset_range_banked_cash()

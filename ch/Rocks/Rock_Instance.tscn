@@ -506,7 +506,7 @@ fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_q8tld")
 draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
-[node name="marked_embers" type="GPUParticles3D" parent="."]
+[node name="marked_embers" type="GPUParticles3D" parent="." unique_id=1216703294]
 cast_shadow = 0
 emitting = false
 amount = 22
@@ -548,7 +548,7 @@ draw_pass_1 = SubResource("QuadMesh_ltsxa")
 [node name="Fire" type="GPUParticles3D" parent="Mesh/small_rock" unique_id=1211168993]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2, 0)
 cast_shadow = 0
-emitting = false
+emitting = true
 amount = 26
 lifetime = 0.7
 explosiveness = 0.05
@@ -1561,8 +1561,7 @@ mesh = SubResource("ArrayMesh_1h1dk")
 script = ExtResource("20_2063v")
 _fromWidth = 0.05
 _lifespan = 0.1
-_startColor = Color(1, 1, 1, 0.52156866)
-_endColor = Color(1, 1, 1, 1)
+_startColor = Color(1, 1, 1, 0.24705882)
 
 [node name="Marked" type="Node3D" parent="." unique_id=649707594]
 visible = false

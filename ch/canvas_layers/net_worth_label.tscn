@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://b4ddmogbrspeb"]
+
+[ext_resource type="Script" uid="uid://cft21aci3a61s" path="res://ch/canvas_layers/net_worth_label.gd" id="1_script"]
+
+[node name="NetWorth" type="Control" unique_id=2010015299]
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -12.048195
+offset_bottom = -12.048195
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="Amount" type="RichTextLabel" parent="." unique_id=415635416]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 72.79993
+offset_top = -61.5
+offset_right = 422.79993
+offset_bottom = 27.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_font_sizes/normal_font_size = 82
+bbcode_enabled = true
+text = "$0"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 2
+vertical_alignment = 1

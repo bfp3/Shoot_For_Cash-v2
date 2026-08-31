@@ -1,16 +1,27 @@
 extends Node
+## When true, Advanced / Expert / all challenges are treated as unlocked.
+const debug_everything_unlocked := false
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
+## Advanced / Expert also require net worth (see unlock amounts below).
 var advanced_unlocked := false
-var expert_unlocked := true
-var mystery_unlocked := true
+var expert_unlocked := false
+var mystery_unlocked := false
+
+## Net worth needed to unlock these difficulties from the title screen.
+var advanced_unlock_net_worth := 9000
+var expert_unlock_net_worth := 50000
+
+## Challenge row appears at this net worth. Each later challenge adds `challenge_unlock_net_worth_step`.
+var challenges_unlock_net_worth := 50000
+var challenge_unlock_net_worth_step := 10000
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
-var challenges_unlocked := true
-var challenge_01_unlocked := true
-var challenge_02_unlocked := true
-var challenge_03_unlocked := true
-var challenge_04_unlocked := true
+var challenges_unlocked := false
+var challenge_01_unlocked := false
+var challenge_02_unlocked := false
+var challenge_03_unlocked := false
+var challenge_04_unlocked := false
 
 # Upgrade stages
 
@@ -192,12 +203,53 @@ var dataset_string : Dictionary = {
 	
 # DATASET.get_value('bullet_speed',4)
 
+func is_debug_everything_unlocked() -> bool:
+	return debug_everything_unlocked
+
+
+func _player_net_worth() -> int:
+	if gl_PlayerState and gl_PlayerState.has_method("get_net_worth"):
+		return maxi(int(gl_PlayerState.get_net_worth()), 0)
+	return 0
+
+
+func get_challenge_unlock_net_worth(index: int) -> int:
+	return maxi(challenges_unlock_net_worth + (maxi(index, 1) - 1) * challenge_unlock_net_worth_step, 0)
+
+
+func _challenge_index_from_key(key: String) -> int:
+	var cleaned := String(key).strip_edges().to_lower()
+	cleaned = cleaned.replace("challenge", "").replace("_", "").replace("-", "").replace(" ", "")
+	if cleaned.is_valid_int():
+		return maxi(int(cleaned), 0)
+	return 0
+
+
+func get_unlock_net_worth(key: String) -> int:
+	var cleaned := String(key).strip_edges().to_lower()
+	match cleaned:
+		"advanced":
+			return advanced_unlock_net_worth
+		"expert":
+			return expert_unlock_net_worth
+		"challenges", "challenge":
+			return challenges_unlock_net_worth
+		_:
+			var challenge_index := _challenge_index_from_key(cleaned)
+			if challenge_index > 0:
+				return get_challenge_unlock_net_worth(challenge_index)
+			return 0
+
+
 func is_difficulty_unlocked(key: String) -> bool:
+	if debug_everything_unlocked:
+		return true
+	var worth := _player_net_worth()
 	match String(key).strip_edges().to_lower():
 		"advanced":
-			return advanced_unlocked
+			return advanced_unlocked or worth >= advanced_unlock_net_worth
 		"expert":
-			return expert_unlocked
+			return expert_unlocked or worth >= expert_unlock_net_worth
 		"mystery":
 			return mystery_unlocked
 		_:
@@ -205,17 +257,36 @@ func is_difficulty_unlocked(key: String) -> bool:
 
 
 func is_challenge_unlocked(key: String) -> bool:
-	match String(key).strip_edges().to_lower():
+	if debug_everything_unlocked:
+		return true
+	var cleaned := String(key).strip_edges().to_lower()
+	var index := _challenge_index_from_key(cleaned)
+	var flag := false
+	match cleaned:
 		"challenge_01", "challenge1", "challenge 1":
-			return challenge_01_unlocked
+			flag = challenge_01_unlocked
+			index = 1
 		"challenge_02", "challenge2", "challenge 2":
-			return challenge_02_unlocked
+			flag = challenge_02_unlocked
+			index = 2
 		"challenge_03", "challenge3", "challenge 3":
-			return challenge_03_unlocked
+			flag = challenge_03_unlocked
+			index = 3
 		"challenge_04", "challenge4", "challenge 4":
-			return challenge_04_unlocked
+			flag = challenge_04_unlocked
+			index = 4
 		_:
-			return false
+			if index <= 0:
+				return false
+	if flag:
+		return true
+	return _player_net_worth() >= get_challenge_unlock_net_worth(index)
+
+
+func are_challenges_visible() -> bool:
+	if debug_everything_unlocked or challenges_unlocked:
+		return true
+	return _player_net_worth() >= challenges_unlock_net_worth
 
 
 func get_value(_name : String, _index : int = 0) -> float:

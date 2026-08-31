@@ -356,6 +356,10 @@ pitch_scale = 0.9
 volume_db = -20.0
 bus = &"MusicBus"
 
+[node name="Title_Select_Music" type="AudioStreamPlayer" parent="Music" unique_id=800541781]
+volume_db = -80.0
+bus = &"MusicBus"
+
 [node name="BirdsFlightPath" type="Path3D" parent="." unique_id=659428985]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
 curve = SubResource("Curve3D_gr7pb")
@@ -842,7 +846,7 @@ volume_db = -36.0
 pitch_scale = 2.0
 max_polyphony = 8
 
-[node name="low_humming" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX"]
+[node name="low_humming" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=399372403]
 stream = ExtResource("20_humloop")
 volume_db = -22.0
 pitch_scale = 0.55

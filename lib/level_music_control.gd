@@ -10,11 +10,14 @@ var default_volume_map : Dictionary = {}
 
 @export var current_song : AudioStreamPlayer
 @export var opening_song : AudioStreamPlayer
+@onready var title_select_music: AudioStreamPlayer = get_node_or_null("Title_Select_Music") as AudioStreamPlayer
 
 @export var background_music_vol_in_shop := -40.0
 @export var background_music_vol_out_of_shop := -40.0
 ## Dedicated shop-menu track volume when the shop is open.
 @export var shop_music_volume := -30.0
+## Title difficulty / level select track.
+@export var title_select_music_volume := 0.0
 
 var _music_silenced := false
 
@@ -30,6 +33,7 @@ const STREAM_PATHS := {
 	"Opening_song": "res://sfx/Windmill_Sprint.ogg",
 	#"Shop_Music": "res://sfx/shop_music.ogg",
 	"Shop_Music": "res://sfx/USERSONG164.ogg",
+	"Title_Select_Music": "res://sfx/greyscale_compressed.ogg",
 	"PerfectPineappleRound": "res://sfx/one_hundred_percent.ogg",
 }
 
@@ -44,9 +48,16 @@ const STREAM_PATHS := {
 
 var _audio_ready := false
 var _pending_stream_loads: Dictionary = {} # path -> [AudioStreamPlayer]
+var _title_select_tween: Tween
+var _opening_fade_tween: Tween
+var _opening_song_rest_db := -35.0
+var _opening_song_rest_pitch := 1.0
 
 
 func _ready() -> void:
+	if opening_song:
+		_opening_song_rest_db = opening_song.volume_db
+		_opening_song_rest_pitch = opening_song.pitch_scale
 	_strip_embedded_streams()
 	default_volumes()
 	_begin_threaded_audio_loads()
@@ -288,7 +299,7 @@ func first_round() -> void:
 	#await tween.finished
 	
 func start_opening_song() -> void:
-	
+	fade_out_title_select_music(0.6)
 	if opening_song == null:
 		return
 	if opening_song.stream == null:
@@ -296,11 +307,13 @@ func start_opening_song() -> void:
 		
 	var dur : float = 0.7
 	var curr_song : AudioStreamPlayer = opening_song
-	var orig_vol = curr_song.volume_db
-	var _pitch_scale = curr_song.pitch_scale
+	var orig_vol = _opening_song_rest_db
+	var _pitch_scale = _opening_song_rest_pitch
 	curr_song.volume_db = -80.0
 	curr_song.pitch_scale = 0.1
+	_kill_opening_fade_tween()
 	var tween = create_tween().set_ease(Tween.EASE_IN).set_parallel()
+	_opening_fade_tween = tween
 	#tween.tween_interval(0.75)
 	tween.tween_property(curr_song, "pitch_scale", _pitch_scale, dur)
 	tween.tween_property(curr_song, "volume_db", orig_vol, dur)
@@ -308,28 +321,105 @@ func start_opening_song() -> void:
 	await tween.finished
 
 func _on_start_button_pressed() -> void:
-	if opening_song == null:
-		return
-	var curr_song : AudioStreamPlayer = opening_song
+	_fade_out_opening_song(1.2)
+	play_title_select_music(1.4)
 
-	var tween = create_tween().set_ease(Tween.EASE_IN).set_parallel()
-	#tween.tween_interval(0.75)
-	#tween.tween_property(curr_song, "pitch_scale", 0.01, 1.5)
-	tween.tween_property(curr_song, "volume_db", -10.0, 1.0).as_relative()
-	await tween.finished
+
+func _fade_out_opening_song(duration := 1.2) -> void:
+	if opening_song == null or not is_instance_valid(opening_song):
+		return
+	_kill_opening_fade_tween()
+	if not opening_song.playing:
+		return
+	var song := opening_song
+	_opening_fade_tween = create_tween()
+	_opening_fade_tween.set_ease(Tween.EASE_IN)
+	_opening_fade_tween.tween_property(song, "volume_db", -80.0, duration)
+	_opening_fade_tween.tween_callback(func() -> void:
+		if is_instance_valid(song):
+			song.stop()
+	)
+
+
+func play_title_select_music(fade_sec := 1.2) -> void:
+	_music_silenced = false
+	var player := _ensure_title_select_player()
+	if player == null:
+		return
+	if player.stream == null:
+		var path := String(STREAM_PATHS.get("Title_Select_Music", ""))
+		if not path.is_empty() and ResourceLoader.exists(path):
+			player.stream = load(path) as AudioStream
+	if player.stream == null:
+		return
+	_kill_title_select_tween()
+	if not player.playing:
+		player.volume_db = -80.0
+		player.play()
+	elif absf(player.volume_db - title_select_music_volume) < 0.4:
+		return
+	_title_select_tween = create_tween()
+	_title_select_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	_title_select_tween.tween_property(player, "volume_db", title_select_music_volume, maxf(fade_sec, 0.05))
+
+
+func fade_out_title_select_music(fade_sec := 1.2) -> void:
+	var player := _ensure_title_select_player()
+	if player == null or not player.playing:
+		return
+	_kill_title_select_tween()
+	var song := player
+	_title_select_tween = create_tween()
+	_title_select_tween.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	_title_select_tween.tween_property(song, "volume_db", -80.0, maxf(fade_sec, 0.05))
+	_title_select_tween.tween_callback(func() -> void:
+		if is_instance_valid(song):
+			song.stop()
+	)
+
+
+func fade_out_title_menu_music() -> void:
+	stop_opening_song()
+	fade_out_title_select_music(1.2)
+
+
+func _ensure_title_select_player() -> AudioStreamPlayer:
+	if title_select_music != null and is_instance_valid(title_select_music):
+		return title_select_music
+	title_select_music = get_node_or_null("Title_Select_Music") as AudioStreamPlayer
+	if title_select_music == null:
+		title_select_music = AudioStreamPlayer.new()
+		title_select_music.name = "Title_Select_Music"
+		title_select_music.bus = &"MusicBus"
+		title_select_music.volume_db = -80.0
+		add_child(title_select_music)
+	return title_select_music
+
+
+func _kill_title_select_tween() -> void:
+	if _title_select_tween != null and is_instance_valid(_title_select_tween):
+		_title_select_tween.kill()
+	_title_select_tween = null
+
+
+func _kill_opening_fade_tween() -> void:
+	if _opening_fade_tween != null and is_instance_valid(_opening_fade_tween):
+		_opening_fade_tween.kill()
+	_opening_fade_tween = null
 
 
 func stop_opening_song() -> void:
 	if opening_song == null:
 		return
+	_kill_opening_fade_tween()
 	var curr_song : AudioStreamPlayer = opening_song
-
-	var tween = create_tween().set_ease(Tween.EASE_IN).set_parallel()
+	if not curr_song.playing:
+		return
+	_opening_fade_tween = create_tween().set_ease(Tween.EASE_IN).set_parallel()
 	#tween.tween_interval(0.75)
-	tween.tween_property(curr_song, "pitch_scale", 0.01, 1.5)
-	tween.tween_property(curr_song, "volume_db", -80.0, 1.5)
-	await tween.finished
-	curr_song.stop()
+	_opening_fade_tween.tween_property(curr_song, "pitch_scale", 0.01, 1.5)
+	_opening_fade_tween.tween_property(curr_song, "volume_db", -80.0, 1.5)
+	_opening_fade_tween.chain().tween_callback(curr_song.stop)
 
 
 func _on_randomiser_finished() -> void:

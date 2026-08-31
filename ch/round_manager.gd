@@ -129,6 +129,11 @@ var _boss_looping := false
 var _boss_open_map_after_tally := false
 ## After a non-boss hold-out win tally, travel to the next range in level-beginner.txt.
 var _advance_range_after_hold_out := false
+## Tally Level Select / NEXT: leave to the grid, or skip shop and load the next range.
+var _tally_exit_to_level_select := false
+var _tally_travel_next_level := false
+## After returning from a finished level, reopen the numbered grid instead of Beginner/Advanced/Expert.
+var _reopen_on_level_grid := false
 ## Island whose boss was just cleared — map plays unlock ceremony on this page.
 var _boss_ceremony_island := -1
 ## Optional UI bar driven while a map travel loads a layout (0–100).
@@ -192,6 +197,14 @@ var _script_checkpoint_resume: Dictionary = {}
 @export var level_layout : Node3D
 @export var wave_progress_indication : Control
 @export var wave_progress_feedback : Control
+
+## Title-screen scenery pan (level select). X is world metres on `level_layout`.
+@export_group("Title Layout Pan")
+@export var layout_pan_beginner_x := 27.0
+@export var layout_pan_advanced_x := 54.0
+@export var layout_pan_expert_x := 81.0
+@export var layout_pan_duration := 0.45
+var _layout_pan_tween: Tween
 
 
 var egg_pulse : Egg
@@ -686,6 +699,76 @@ func get_active_range_name() -> String:
 	if range_id == '' or range_id == gl_DataSet.get_start_place_name() or range_id == 'start':
 		return gl_DataSet.get_default_range_name()
 	return gl_DataSet.resolve_place_name(range_id)
+
+
+## Next range after `place_id` in the active level file, including `boss-` ranges. Empty if none.
+func _next_level_in_script(place_id: String) -> String:
+	var cur := gl_DataSet.resolve_place_name(place_id).to_lower()
+	if cur.is_empty():
+		return ""
+	var found := false
+	for raw in list_script_levels():
+		var name := String(raw).to_lower()
+		if found:
+			return name
+		if name == cur:
+			found = true
+	return ""
+
+
+## Ordered playable ranges in the active difficulty file (includes `boss-` prefixes).
+func list_script_levels() -> PackedStringArray:
+	apply_level_file_for_difficulty()
+	var out: PackedStringArray = []
+	for raw in Parser.list_ranges_in_file(LEVEL_FILE_PATH):
+		var name := String(raw).to_lower()
+		if name.is_empty() or name == "start":
+			continue
+		out.append(name)
+	return out
+
+
+func has_next_script_level(place_id: String = "") -> bool:
+	if place_id.is_empty():
+		place_id = String(gl_PlayerState.dataset.level_name)
+	return not _next_level_in_script(place_id).is_empty()
+
+
+## True after the last round of this range, win or lose aside — used to treat the range as a "level".
+func is_range_complete_tally() -> bool:
+	if player_failed or level_editor_test_active:
+		return false
+	if current_rock_sequence.is_empty():
+		return false
+	return current_sequence_index >= current_rock_sequence.size()
+
+
+func request_tally_level_select() -> void:
+	_tally_exit_to_level_select = true
+	_tally_travel_next_level = false
+	_reopen_on_level_grid = true
+	enter_state(RoundState.TALLY_END)
+
+
+func request_tally_next_level() -> void:
+	_tally_travel_next_level = true
+	_tally_exit_to_level_select = false
+	enter_state(RoundState.TALLY_END)
+
+
+func _settle_completed_level() -> void:
+	if player_failed or level_editor_test_active:
+		return
+	if not is_range_complete_tally():
+		return
+	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	if place.is_empty() or place == "start":
+		return
+	if gl_PlayerState.has_method("mark_level_cleared"):
+		gl_PlayerState.mark_level_cleared(gl_PlayerState.get_run_difficulty(), place)
+	if not gl_PlayerState.is_place_completed(place):
+		gl_PlayerState.mark_place_completed(place)
+		_save_level_progress()
 
 
 ## Next playable range after `place_id` in level-beginner.txt header order. Empty if none.
@@ -1993,6 +2076,29 @@ func _open_difficulty_select_menu() -> void:
 	if select_menu is CanvasItem:
 		(select_menu as CanvasItem).z_index = 41
 	CommonCode.apply_ui_overlay_blur()
+	var open_levels := _reopen_on_level_grid
+	_reopen_on_level_grid = false
+	if open_levels:
+		var stage := "BEGINNER"
+		if gl_PlayerState and gl_PlayerState.has_method("get_select_difficulty"):
+			stage = String(gl_PlayerState.get_select_difficulty())
+		elif gl_PlayerState and gl_PlayerState.has_method("get_run_difficulty"):
+			stage = String(gl_PlayerState.get_run_difficulty())
+		var level_menu: Node = null
+		if menus and menus.has_method("ensure_level_select"):
+			level_menu = menus.ensure_level_select()
+		if level_menu == null:
+			level_menu = get_tree().get_first_node_in_group("level_select")
+		if level_menu == null:
+			push_warning("RoundManager: level select missing")
+			if select_menu.has_method("open_pop_up"):
+				select_menu.open_pop_up()
+			return
+		if level_menu is CanvasItem:
+			(level_menu as CanvasItem).z_index = 41
+		if level_menu.has_method("open_pop_up"):
+			level_menu.open_pop_up(stage)
+		return
 	if select_menu.has_method("open_pop_up"):
 		select_menu.open_pop_up()
 	else:
@@ -2500,23 +2606,31 @@ func update_tally_end() -> void:
 	while in_display_text_prompt:
 		await get_tree().process_frame
 
-	## Hold-out win: next range in level-beginner.txt, or the stage-complete screen on the last range.
+	if _tally_exit_to_level_select:
+		_tally_exit_to_level_select = false
+		_tally_travel_next_level = false
+		_advance_range_after_hold_out = false
+		_settle_completed_level()
+		await return_to_difficulty_select()
+		return
+
+	if _tally_travel_next_level:
+		_tally_travel_next_level = false
+		_advance_range_after_hold_out = false
+		_settle_completed_level()
+		var here := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+		var next_place := _next_level_in_script(here)
+		if next_place.is_empty():
+			await return_to_difficulty_select()
+			return
+		await travel_to_level(next_place)
+		return
+
+	## Hold-out no longer auto-advances; tally NEXT / Level Select choose the destination.
 	if _advance_range_after_hold_out:
 		_advance_range_after_hold_out = false
-		if not player_failed and not _boss_mode and not level_editor_test_active:
-			var hold_place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
-			if not gl_PlayerState.is_place_completed(hold_place):
-				gl_PlayerState.mark_place_completed(hold_place)
-				_save_level_progress()
-			var next_place := _next_range_in_script(hold_place)
-			if not next_place.is_empty():
-				await travel_to_level(next_place)
-				return
-			if _is_last_playable_range(hold_place):
-				await _show_stage_complete_and_return_to_title()
-				return
 
-	## First-time range clear: last range → complete screen. No island map / map-cash fly-in.
+	## First-time range clear is recorded; last-range no longer dumps to a stage-complete reload.
 	if not player_failed and not _boss_mode and not level_editor_test_active:
 		var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
 		if current_rock_sequence.size() > 0 and current_sequence_index >= current_rock_sequence.size():
@@ -2525,9 +2639,8 @@ func update_tally_end() -> void:
 			else:
 				gl_PlayerState.mark_place_completed(place)
 				_save_level_progress()
-			if _is_last_playable_range(place):
-				await _show_stage_complete_and_return_to_title()
-				return
+			if gl_PlayerState.has_method("mark_level_cleared"):
+				gl_PlayerState.mark_level_cleared(gl_PlayerState.get_run_difficulty(), place)
 
 	# Level-complete screen owns the next step — don't also open the shop underneath it.
 	if game_over_triggered:
@@ -2598,7 +2711,41 @@ func update_game_won() -> void:
 	enter_state(RoundState.INACTIVE)
 
 
+func pan_level_layout_for_stage(stage: String, duration: float = -1.0) -> void:
+	var x := 0.0
+	match stage.strip_edges().to_upper():
+		"BEGINNER":
+			x = layout_pan_beginner_x
+		"ADVANCED":
+			x = layout_pan_advanced_x
+		"EXPERT":
+			x = layout_pan_expert_x
+	_tween_level_layout_x(x, layout_pan_duration if duration < 0.0 else duration)
+
+
+func reset_level_layout_pan(instant: bool = false, duration: float = -1.0) -> void:
+	var t := 0.0 if instant else (layout_pan_duration if duration < 0.0 else duration)
+	_tween_level_layout_x(0.0, t)
+
+
+func _tween_level_layout_x(x: float, duration: float) -> void:
+	if level_layout == null or not is_instance_valid(level_layout):
+		return
+	if _layout_pan_tween != null and is_instance_valid(_layout_pan_tween):
+		_layout_pan_tween.kill()
+		_layout_pan_tween = null
+	if duration <= 0.02:
+		var pos := level_layout.position
+		pos.x = x
+		level_layout.position = pos
+		return
+	_layout_pan_tween = create_tween()
+	_layout_pan_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_layout_pan_tween.tween_property(level_layout, "position:x", x, duration)
+
+
 func move_to_start() -> void:
+	reset_level_layout_pan(true)
 	if level_layout.get_children().size() > 0:
 		level_layout.get_child(0).queue_free()
 
@@ -2679,6 +2826,12 @@ func return_to_title() -> void:
 		diff_select.close_pop_up()
 	elif diff_select:
 		diff_select.hide()
+
+	var level_select := get_tree().get_first_node_in_group("level_select")
+	if level_select and level_select.has_method("close_pop_up"):
+		level_select.close_pop_up()
+	elif level_select:
+		level_select.hide()
 
 	stop_timer()
 	stop_player()
@@ -2814,6 +2967,12 @@ func return_to_difficulty_select() -> void:
 	elif diff_select:
 		diff_select.hide()
 
+	var level_select := get_tree().get_first_node_in_group("level_select")
+	if level_select and level_select.has_method("close_pop_up"):
+		level_select.close_pop_up()
+	elif level_select:
+		level_select.hide()
+
 	var stage_complete := get_tree().get_first_node_in_group("stage_complete_screen")
 	if stage_complete and stage_complete.has_method("close_now"):
 		stage_complete.close_now()
@@ -2840,6 +2999,8 @@ func return_to_difficulty_select() -> void:
 	_boss_mode = false
 	_boss_looping = false
 	_advance_range_after_hold_out = false
+	_tally_exit_to_level_select = false
+	_tally_travel_next_level = false
 	current_wave = 0
 	current_sequence_index = 0
 	current_round = 0
@@ -2861,6 +3022,7 @@ func return_to_difficulty_select() -> void:
 	if scene_transition_screen:
 		await scene_transition_screen.next_level_start()
 
+	reset_level_layout_pan(true)
 	gl_PlayerState.reset_all()
 	gl_PlayerState.dataset.level_name = gl_DataSet.get_start_place_name()
 	var stored = gl_PlayerState.dataset.get("level_progress", {})
@@ -3252,6 +3414,7 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	_request_layout_load(layout_path)
 
 	transitioning_worlds = true
+	reset_level_layout_pan(true)
 	_save_level_progress()
 
 	# Soft-close shop / start menu so nothing fires SHOP_END during the fade.
@@ -3274,6 +3437,8 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	_boss_looping = false
 	_boss_open_map_after_tally = false
 	_advance_range_after_hold_out = false
+	_tally_exit_to_level_select = false
+	_tally_travel_next_level = false
 	_boss_ceremony_island = -1
 
 	if rocks_container:
@@ -3296,8 +3461,10 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	if coming_from_start:
 		gl_PlayerState.dataset['stage'] = 1
 		gl_PlayerState.dataset['reroll_unlocked'] = 1
-	## Always stop intro music on any level travel (map → range, start → range, etc.).
-	if music_manager and music_manager.has_method("stop_opening_song"):
+	## Always stop intro / title-select music on any level travel (map → range, start → range, etc.).
+	if music_manager and music_manager.has_method("fade_out_title_menu_music"):
+		music_manager.fade_out_title_menu_music()
+	elif music_manager and music_manager.has_method("stop_opening_song"):
 		music_manager.stop_opening_song()
 
 
@@ -3440,8 +3607,11 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	CommonCode.apply_transition_blur()
 	_request_layout_load(layout_path)
 	transitioning_worlds = true
+	reset_level_layout_pan(true)
 	_save_level_progress()
-	if music_manager and music_manager.has_method("stop_opening_song"):
+	if music_manager and music_manager.has_method("fade_out_title_menu_music"):
+		music_manager.fade_out_title_menu_music()
+	elif music_manager and music_manager.has_method("stop_opening_song"):
 		music_manager.stop_opening_song()
 
 	if shop_main_menu and shop_main_menu.visible:
@@ -3932,6 +4102,7 @@ func move_to_level_instant(level_id) -> void:
 
 	_request_layout_load(layout_path)
 	transitioning_worlds = true
+	reset_level_layout_pan(true)
 	player.display_hud()
 	gl_PlayerState.dataset["stage"] = 1
 	gl_PlayerState.dataset["reroll_unlocked"] = 1
@@ -3939,7 +4110,10 @@ func move_to_level_instant(level_id) -> void:
 	gl_PlayerState.dataset["level_name"] = level_id
 	if gl_PlayerState.has_method("reset_range_banked_cash"):
 		gl_PlayerState.reset_range_banked_cash()
-	music_manager.stop_opening_song()
+	if music_manager and music_manager.has_method("fade_out_title_menu_music"):
+		music_manager.fade_out_title_menu_music()
+	elif music_manager:
+		music_manager.stop_opening_song()
 
 	# Keep transition overlay off-screen (no slide animation).
 	if scene_transition_screen and scene_transition_screen.has_method("_reset_next_level"):

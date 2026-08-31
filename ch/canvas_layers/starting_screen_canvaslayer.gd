@@ -259,6 +259,7 @@ func update_in_menu() -> void:
 
 
 func _on_start_game_pressed() -> void:
+	%StartGame.disabled = true
 	var prog_bar : ProgressBar = %Start_button_progressBar
 	
 	var tween = create_tween()
@@ -269,13 +270,18 @@ func _on_start_game_pressed() -> void:
 	
 	music_control._on_start_button_pressed()
 	
+	#closing_start_menu_sfx()
+	
+	enter_state(State.CLOSE_MENU)
+	
+	await get_tree().create_timer(0.29, false).timeout
+	prog_bar.value = 0.0
+	%StartGame.disabled = false
+
+func closing_start_menu_sfx() -> void:
 	$SplashScreen_v2/SFX/hud_click_1.play()
 	$SplashScreen_v2/SFX/shop_close_sfx_01.play()
 	$SplashScreen_v2/SFX/hud_click_1.play()
 	$SplashScreen_v2/SFX/hud_click_2.play()
 	$SplashScreen_v2/SFX/hud_click_3.play()
 	$SplashScreen_v2/SFX/start_sfx.play()
-	enter_state(State.CLOSE_MENU)
-	
-	await get_tree().create_timer(0.29, false).timeout
-	prog_bar.value = 0.0
