@@ -15,6 +15,7 @@
 [ext_resource type="Material" uid="uid://b1iy0q3013sms" path="res://res/Kenney_prototype_textures/Material_override/Light_texture.tres" id="18_o0i20"]
 [ext_resource type="PackedScene" uid="uid://dee8qfh0jrlf1" path="res://lib/Flag_rollout_Scene/FlagRollout.tscn" id="19_1awnq"]
 [ext_resource type="Material" uid="uid://bwa2khv4jv2fv" path="res://res/balloon_white_mat.tres" id="20_7t7cf"]
+[ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="20_gooii"]
 [ext_resource type="Material" uid="uid://cwghmkcoyrj3m" path="res://res/textures_2D/texture_materials/M_Dark.tres" id="20_nca8f"]
 [ext_resource type="Script" uid="uid://4gg5gog2xvn" path="res://ch/wall_quotes/wall_quote.gd" id="21_7t7cf"]
 [ext_resource type="Material" uid="uid://c5lrichw3wfce" path="res://res/Kenney_prototype_textures/Material_override/balloon_red_mat.tres" id="21_gooii"]
@@ -1251,6 +1252,14 @@ top_radius = 0.1
 bottom_radius = 0.1
 radial_segments = 4
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qs0km"]
+albedo_color = Color(0.55, 0.46355835, 0.32450002, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n5s7k"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_1awnq"]
+data = PackedVector3Array(-0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5)
+
 [node name="Start_scenery" type="Node3D" unique_id=229302118]
 script = ExtResource("layout_scroll")
 
@@ -2369,6 +2378,24 @@ cast_shadow = 0
 [node name="Advanced" type="Node3D" parent="." unique_id=1977367413]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54, 0, 0)
 
+[node name="Crate" type="Node3D" parent="Advanced" unique_id=1638791213]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -58.66531, 2.479364, 11.66852)
+top_level = true
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Advanced/Crate" unique_id=677938910]
+transform = Transform3D(0.615, 0, 0, 0, 0.615, 0, 0, 0, 0.615, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_qs0km")
+mesh = SubResource("BoxMesh_n5s7k")
+
+[node name="crateMesh" type="Node3D" parent="Advanced/Crate" unique_id=1851666554]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
+
+[node name="Crate" type="MeshInstance3D" parent="Advanced/Crate/crateMesh" unique_id=1776381222]
+mesh = ExtResource("20_gooii")
+skeleton = NodePath("")
+
 [node name="MainWallSmallBlocks" type="Node3D" parent="Advanced" unique_id=1595198365]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -1.5, 20.15)
 
@@ -2548,21 +2575,26 @@ mesh = SubResource("ArrayMesh_2ect5")
 skeleton = NodePath("")
 
 [node name="Right_tall_pillar10" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1260695048]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0897102, 3.105, -8.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0897102, 4.9073105, -8.4)
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_2ect5")
 skeleton = NodePath("")
 
 [node name="Right_tall_pillar11" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1469208016]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0897102, 4.784148, -8.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4807014, 3.104364, -8.4)
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_2ect5")
 skeleton = NodePath("")
 
+[node name="StaticBody3D" type="StaticBody3D" parent="Advanced/Brick_wall_2/Right_tall_pillar11" unique_id=500504538]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Advanced/Brick_wall_2/Right_tall_pillar11/StaticBody3D" unique_id=79570239]
+shape = SubResource("ConcavePolygonShape3D_1awnq")
+
 [node name="Right_tall_pillar12" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=521949223]
-transform = Transform3D(0.485, 0, 0, 0, 0.911, 0, 0, 0, 0.485, 1.0897102, 3.9706504, -8.4)
+transform = Transform3D(0.485, 0, 0, 0, 0.911, 0, 0, 0, 0.485, -1.7584229, 3.9706504, -8.4)
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_2ect5")
@@ -2596,30 +2628,6 @@ material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_d67ai")
 skeleton = NodePath("")
-
-[node name="Left_tall_pillar_caps" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1469025014]
-transform = Transform3D(1.454, 1.5868556e-23, -5.308145e-30, 0, -8.305164e-09, -1.454, -1.214362e-22, 0.19, -6.355636e-08, 9.9521675, 4.433, 0)
-material_override = ExtResource("13_nca8f")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_ljgw6")
-
-[node name="Left_tall_pillar_caps2" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1684215500]
-transform = Transform3D(1.0295894, -0.0041812914, 1.0261762, 1.0265222, 0.0074699563, -1.0281539, -0.017718317, 0.18980704, 0.06306934, 9.9521675, 4.433, 0)
-material_override = ExtResource("13_nca8f")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_ljgw6")
-
-[node name="Left_tall_pillar_caps3" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=2099763846]
-transform = Transform3D(1.454, 1.5868556e-23, -5.308145e-30, 0, -8.305164e-09, -1.454, -1.214362e-22, 0.19, -6.355636e-08, 3.2107124, 4.433, 0)
-material_override = ExtResource("13_nca8f")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_ljgw6")
-
-[node name="Left_tall_pillar_caps4" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=23404929]
-transform = Transform3D(1.0295894, -0.0041812914, 1.0261762, 1.0265222, 0.0074699563, -1.0281539, -0.017718317, 0.18980704, 0.06306934, 3.2107124, 4.433, 0)
-material_override = ExtResource("13_nca8f")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_ljgw6")
 
 [node name="Right_tall_pillar_002" type="MeshInstance3D" parent="Advanced/Brick_wall_2" unique_id=1508776173]
 transform = Transform3D(1, 0, 0, 0, 1.5, 0, 0, 0, 1, 17, -0.25, -0.234825)
@@ -2798,6 +2806,113 @@ transform = Transform3D(-0.14, 0, -2.1139412e-08, 0, 0.14, 0, 2.1139412e-08, 0, 
 visible = false
 cast_shadow = 0
 
+[node name="WallPuzzleSetup" type="Node3D" parent="Advanced" unique_id=734515235]
+
+[node name="TouchingWallWithCrosshair" type="OmniLight3D" parent="Advanced/WallPuzzleSetup" unique_id=1325002858]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1116333, 1.642421, 20.14018)
+light_color = Color(1, 0, 0, 1)
+light_energy = 20.0
+omni_range = 15.0
+omni_attenuation = 0.0
+
+[node name="WallPuzzle" type="CSGCombiner3D" parent="Advanced/WallPuzzleSetup" unique_id=1815977170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, -0.2728119, 2.363, 24.75)
+use_collision = true
+
+[node name="WallPuzzle2" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle" unique_id=2049000553]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0)
+use_collision = true
+size = Vector3(17.595, 13, 0.191)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1533916058]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.60430145, 0)
+operation = 2
+size = Vector3(17.4, 1.954, 1)
+
+[node name="CSGBox3D19" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1901002579]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.344884, 0)
+operation = 2
+size = Vector3(19.21, 1.954, 1)
+
+[node name="CSGBox3D18" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1437515027]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4698057, 0)
+size = Vector3(17.240234, 1.954, 1)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=554158829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.9806981, 0)
+operation = 2
+size = Vector3(17.4, 1.754, 1)
+
+[node name="CSGBox3D17" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=885743103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.7563257, 0)
+operation = 2
+size = Vector3(17.4, 2.8364725, 1)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=894862865]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, -0.703135, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1263471402]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, -0.70269823, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1106646477]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, -0.70269823, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1948481056]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, -0.70269823, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1763220712]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6726356, -0.70269823, 0)
+operation = 2
+size = Vector3(2.023, 1.754, 1)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=624906188]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3156414, 0)
+operation = 2
+size = Vector3(17.4, 2.877603, 1)
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=823500628]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.822077, 0)
+operation = 2
+size = Vector3(17.4, 1.954, 1)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=2059272787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26883984, 0)
+operation = 2
+size = Vector3(17.4, 1.754, 1)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=118646034]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2191896, 1.5464029, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=2105806464]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.689, 1.5468397, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1561501921]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.841, 1.5468397, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=997475303]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.371, 1.5468397, 0)
+operation = 2
+size = Vector3(2.496, 1.754, 1)
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="Advanced/WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=2002685455]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6726356, 1.5468397, 0)
+operation = 2
+size = Vector3(2.023, 1.754, 1)
+
 [node name="Expert" type="Node3D" parent="." unique_id=1804068660]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -81, 0, 0)
 
@@ -2863,6 +2978,7 @@ skeleton = NodePath("")
 
 [node name="Pillar" type="MeshInstance3D" parent="Expert" unique_id=140699370]
 transform = Transform3D(0.46, 0, 0, 0, -0.46, 4.0214477e-08, 0, -4.0214477e-08, -0.46, -9.357407, 0, 20.15)
+visible = false
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
@@ -2870,11 +2986,13 @@ skeleton = NodePath("../..")
 
 [node name="Pillar2" type="MeshInstance3D" parent="Expert" unique_id=1905797242]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, -9.357407, 3, 20.15)
+visible = false
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
 
 [node name="Pillar3" type="MeshInstance3D" parent="Expert" unique_id=72959543]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, 9.399999, 3, 20.15)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
@@ -2882,6 +3000,7 @@ skeleton = NodePath("../..")
 
 [node name="Pillar4" type="MeshInstance3D" parent="Expert" unique_id=1188223206]
 transform = Transform3D(0.46, 0, 0, 0, -0.46, 4.0214477e-08, 0, -4.0214477e-08, -0.46, 9.41, 0, 20.15)
+visible = false
 material_override = ExtResource("11_ak538")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_s68sf")
@@ -2988,6 +3107,7 @@ skeleton = NodePath("")
 
 [node name="Right_tall_pillar_caps" type="MeshInstance3D" parent="Expert/Brick_wall_2" unique_id=1593145276]
 transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, -3.3768702, 5, 0)
+visible = false
 material_override = ExtResource("12_tn30x")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_rtw7e")
@@ -3016,6 +3136,7 @@ skeleton = NodePath("")
 
 [node name="Left_tall_pillar_caps" type="MeshInstance3D" parent="Expert/Brick_wall_2" unique_id=833014688]
 transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, 15.399999, 5, 0)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_ljgw6")
@@ -3110,6 +3231,7 @@ cast_shadow = 0
 
 [node name="Egg" parent="Expert" unique_id=126038381 instance=ExtResource("14_7t7cf")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -9.4, 3.811, 20.154)
+visible = false
 
 [node name="EggFake" type="Node3D" parent="Expert" unique_id=2053119447 groups=["Egg_Cage"]]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, 9.385158, 3.811255, 20.154352)
@@ -3153,41 +3275,43 @@ mesh = SubResource("ArrayMesh_2af1h")
 
 [node name="Boat_Flag" parent="Expert" unique_id=1712852254 instance=ExtResource("19_1awnq")]
 transform = Transform3D(-0.14, 0, -2.1139412e-08, 0, 0.14, 0, 2.1139412e-08, 0, -0.14, 9.41, 4.942, 20.165)
+visible = false
 cast_shadow = 0
 
 [node name="Boat_Flag3" type="MeshInstance3D" parent="Expert" unique_id=632470623]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 9.41, 4.2364607, 20.165)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_p57ui")
 
 [node name="Boat_Flag4" type="MeshInstance3D" parent="Expert" unique_id=99705438]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 8.889551, 3.738, 19.688)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_kbdfb")
 
 [node name="Boat_Flag5" type="MeshInstance3D" parent="Expert" unique_id=1260661789]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 9.947469, 3.738, 19.688)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_kbdfb")
 
 [node name="Boat_Flag8" type="MeshInstance3D" parent="Expert" unique_id=1649585260]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 8.889551, 3.738, 20.666224)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_kbdfb")
 
 [node name="Boat_Flag9" type="MeshInstance3D" parent="Expert" unique_id=547288714]
 transform = Transform3D(-0.22273858, 0, -0.22273868, 0, 0.315, 0, 0.22273868, 0, -0.22273858, 9.947469, 3.738, 20.666224)
+visible = false
 material_override = ExtResource("13_nca8f")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_kbdfb")
-
-[node name="Boat_Flag2" parent="Expert" unique_id=164913104 instance=ExtResource("19_1awnq")]
-transform = Transform3D(-0.14, 0, -2.1139412e-08, 0, 0.14, 0, 2.1139412e-08, 0, -0.14, -9.449, 4.942, 20.271)
-cast_shadow = 0
 
 [editable path="Boatmesh/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

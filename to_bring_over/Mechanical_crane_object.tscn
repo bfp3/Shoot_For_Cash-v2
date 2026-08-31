@@ -1,9 +1,9 @@
 [gd_scene format=4 uid="uid://djfufa3thf27j"]
 
-[ext_resource type="Material" uid="uid://cmk6wnyq0fpc2" path="res://res/crane_construction_mesh.tres" id="1_u2ev1"]
-[ext_resource type="Texture2D" uid="uid://cqogfw657iy51" path="res://res/dirt_texture_01.png" id="2_msm2p"]
-[ext_resource type="Texture2D" uid="uid://1fthvvfe1kvu" path="res://res/dirt_texture_02.png" id="3_rx2pp"]
-[ext_resource type="Material" uid="uid://boaovmkpgnp38" path="res://res/dark_road.tres" id="4_11wxi"]
+[ext_resource type="Material" uid="uid://dfug3isuomnqg" path="res://res/BALLOON_MAT_HEALTH_BALLOON.tres" id="1_u2ev1"]
+[ext_resource type="Texture2D" uid="uid://x5tjmkxr3qll" path="res://res/dirt_texture_01.png" id="2_msm2p"]
+[ext_resource type="Texture2D" uid="uid://bhobthujish72" path="res://res/dirt_texture_02.png" id="3_rx2pp"]
+[ext_resource type="Material" uid="uid://boaovmkpgnp38" path="res://to_bring_over/dark_road.tres" id="4_11wxi"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_i76fq"]
 material = ExtResource("1_u2ev1")
@@ -163,9 +163,9 @@ collision_layer = 9
 shape = SubResource("ConvexPolygonShape3D_tr36f")
 
 [node name="Dirt" type="Decal" parent="Pivot_Up_Down/Pivot_Forward_Backward/Anchor_point/StaticBody3D" unique_id=2081165528]
-transform = Transform3D(0.99996287, 0.008837774, 3.5527154e-15, -0.0088377595, 0.9999626, -7.030856e-23, -3.5525822e-15, -3.1398135e-17, 1.0000002, 114.27, -4.4280014, -2.9869337)
+transform = Transform3D(0.99996287, 0.008837757, 3.552715e-15, -0.008837759, 0.9999626, 4.5926542e-23, -3.5525822e-15, -3.139807e-17, 1.0000002, 114.27, -4.4280014, -3.618)
 layers = 32768
-size = Vector3(272.5, 50, 50.73068)
+size = Vector3(272.5, 74.335, 77.72)
 texture_albedo = ExtResource("2_msm2p")
 modulate = Color(0.41, 0.41, 0.41, 1)
 upper_fade = 0.008747185
@@ -173,9 +173,18 @@ lower_fade = 0.006629124
 cull_mask = 1048574
 
 [node name="Decal2" type="Decal" parent="Pivot_Up_Down/Pivot_Forward_Backward/Anchor_point/StaticBody3D" unique_id=132114072]
-transform = Transform3D(0.999965, 0.0088376785, 1.4901161e-07, -0.008837797, 0.9999647, 1.3038516e-08, -7.4505806e-08, -2.4680048e-08, 1.0000025, 220.07156, -6.5487747, -16.39272)
+transform = Transform3D(0.999965, 0.008837793, 7.4720894e-08, -0.008837796, 0.99996465, 2.40206e-08, -7.45058e-08, -2.4680057e-08, 1.0000025, 220.07156, -6.5487747, -3.618)
 layers = 32768
-size = Vector3(117.5, 50, 57.89)
+size = Vector3(117.5, 74.335, 77.72)
+texture_albedo = ExtResource("2_msm2p")
+texture_normal = ExtResource("3_rx2pp")
+modulate = Color(0.41, 0.41, 0.41, 1)
+cull_mask = 1048574
+
+[node name="Decal3" type="Decal" parent="Pivot_Up_Down/Pivot_Forward_Backward/Anchor_point/StaticBody3D" unique_id=19835275]
+transform = Transform3D(0.99996597, 0.008726568, 4.417621e-28, 3.8145054e-10, -4.3709882e-08, -1.0000025, -0.008726571, 0.9999656, -4.37115e-08, 337.462, -4.619, -3.618)
+layers = 32768
+size = Vector3(117.5, 74.335, 77.72)
 texture_albedo = ExtResource("2_msm2p")
 texture_normal = ExtResource("3_rx2pp")
 modulate = Color(0.41, 0.41, 0.41, 1)
@@ -249,7 +258,7 @@ shape = SubResource("ConcavePolygonShape3D_r6vl4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -162.5, 25, 0)
 
 [node name="Dirt" type="Decal" parent="Base" unique_id=1227616026]
-transform = Transform3D(1.0000017, 0, 0, 0, -4.3711463e-08, -1, 0, 1.0000017, -4.371139e-08, 7.211853, 22.673424, 49.268246)
+transform = Transform3D(1.0000017, 0, 0, 0, -4.3711463e-08, -1, 0, 1.0000017, -4.371139e-08, 115.303, 22.673424, 13.970737)
 layers = 32768
 size = Vector3(62.177612, 72.5, 60)
 texture_albedo = ExtResource("2_msm2p")
@@ -257,6 +266,7 @@ modulate = Color(0.21, 0.21, 0.21, 1)
 cull_mask = 1048574
 
 [node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Base" unique_id=1277970520]
+visible = false
 layers = 32769
 material_override = ExtResource("1_u2ev1")
 mesh = SubResource("ArrayMesh_7xgxp")
