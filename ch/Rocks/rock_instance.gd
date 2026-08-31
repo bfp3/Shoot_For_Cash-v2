@@ -268,6 +268,7 @@ var _avoider_life_token := 0
 var _avoider_seek_xy := Vector2.ZERO
 var _avoider_has_seek_target := false
 var _avoider_retarget_timer := 0.0
+var _avoider_humming := false
 
 # --- Rock Red Attacker (rock-red-attacker) -----------------------------------
 @export_group("Rock Red Attacker")
@@ -542,12 +543,15 @@ func _physics_process(delta: float) -> void:
 			## Always pin depth so collisions stay on the rock plane.
 			linear_velocity.z = 0.0
 			global_position.z = _avoider_plane_z
+			_update_rock_stay_burst_warn(delta)
 			if not _freeze_shot_pending:
+				_check_threat_crosshair()
 				_update_avoider(delta)
 		elif rock_type == RockSize.RED_ATTACKER:
 			linear_velocity.z = 0.0
 			global_position.z = _avoider_plane_z
 			if not _freeze_shot_pending:
+				_check_threat_crosshair()
 				_update_red_attacker(delta)
 		elif rock_type == RockSize.CHASER:
 			if not _freeze_shot_pending:
@@ -691,6 +695,7 @@ func update_active() -> void:
 		_avoider_plane_z = avoider_lock_z
 		global_position.z = _avoider_plane_z
 		linear_velocity.z = 0.0
+		_set_threat_fire(false)
 		_arm_avoider()
 		_start_avoider_lifetime()
 		_sync_avoider_collision_exceptions()
@@ -698,11 +703,11 @@ func update_active() -> void:
 		_avoider_plane_z = avoider_lock_z
 		global_position.z = _avoider_plane_z
 		linear_velocity.z = 0.0
+		_set_red_attack_mesh_particles(true)
+		_set_threat_fire(false)
 		_arm_red_attacker()
 		_start_red_attacker_lifetime()
 		_sync_avoider_collision_exceptions()
-		_set_red_attack_mesh_particles(true)
-		_set_red_attack_fire(false)
 	elif rock_type == RockSize.CHASER:
 		_arm_chaser()
 	elif rock_type == RockSize.MOTHERSHIP:
@@ -1095,6 +1100,7 @@ func setup_rock_type() -> void:
 			_avoider_retarget_timer = 0.0
 			_avoider_plane_z = avoider_lock_z
 			global_position.z = _avoider_plane_z
+			_set_threat_fire(false)
 
 		RockSize.CHASER:
 			current_rock_type = "Rock Chaser"
@@ -1259,7 +1265,7 @@ func setup_rock_type() -> void:
 			_avoider_plane_z = avoider_lock_z
 			global_position.z = _avoider_plane_z
 			_set_red_attack_mesh_particles(false)
-			_set_red_attack_fire(false)
+			_set_threat_fire(false)
 
 		RockSize.MOTHERSHIP:
 			current_rock_type = "Mothership"
@@ -1306,6 +1312,14 @@ func reset_stats() -> void:
 	_avoider_life_token += 1
 	_avoider_has_seek_target = false
 	_avoider_retarget_timer = 0.0
+	_set_avoider_hum(false)
+	_set_threat_fire(false)
+	_set_marked_embers(false)
+	_red_attacker_armed = false
+	_red_attacker_dashing = false
+	_red_attacker_locking = false
+	_red_attacker_arm_token += 1
+	_red_attacker_life_token += 1
 	_chaser_armed = false
 	_chaser_arm_token += 1
 	_chaser_lock_progress = 0.0
@@ -1378,6 +1392,7 @@ func release_to_pool() -> void:
 	remove_from_group("Target")
 	rock_activated = false
 	rock_destroyed = true
+	_set_avoider_hum(false)
 	_cancel_airborne_rock_collisions()
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
@@ -1498,6 +1513,7 @@ func apply_aoe_freeze(duration: float = 1.0) -> void:
 	# Pause avoider / rock-stay lifetime so it can't expire mid-freeze.
 	if rock_type == RockSize.AVOIDER:
 		_avoider_life_token += 1
+		_set_avoider_hum(false)
 	elif rock_type == RockSize.RED_ATTACKER:
 		_red_attacker_life_token += 1
 		_red_attacker_arm_token += 1
@@ -1522,6 +1538,8 @@ func apply_aoe_freeze(duration: float = 1.0) -> void:
 	# Resume avoider / rock-stay lifetime after thaw.
 	if rock_type == RockSize.AVOIDER and rock_activated and current_state == State.ACTIVE:
 		_start_avoider_lifetime()
+		if _avoider_armed:
+			_set_avoider_hum(true)
 	elif rock_type == RockSize.RED_ATTACKER and rock_activated and current_state == State.ACTIVE:
 		_start_red_attacker_lifetime()
 		_arm_red_attacker()
@@ -1711,10 +1729,11 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 	
 	#freeze_mine = true
 
-	# Avoiders / red-attackers: reticle/shot normally strikes — unless frozen, then you can shoot them out cleanly.
+	# Avoiders / red-attackers: unarmed or frozen shots destroy them with no strike.
+	# Once they enter attack mode, a shot or reticle overlap is a hazard strike.
 	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER:
-		if _freeze_shot_pending:
-			_destroy_frozen_avoider()
+		if _freeze_shot_pending or not _is_threat_hazardous():
+			_destroy_pre_arm_threat()
 			return
 		_trigger_avoider_crosshair_contact()
 		return
@@ -1839,6 +1858,7 @@ func start_destroyed_process() -> void:
 		return
 
 	_clear_rock_stay()
+	_shutdown_threat_fx()
 	%RedParticles.emitting = false
 	rock_activated = false
 	var rm := _find_rock_manager()
@@ -2334,7 +2354,7 @@ func _arm_avoider() -> void:
 	_avoider_seek_xy = _crosshair_world_xy_at_depth(global_position.z)
 	_avoider_has_seek_target = true
 	_avoider_retarget_timer = maxf(avoider_retarget_delay_sec, 0.0)
-	_emit_avoider_hone_particles()
+	_activate_threat_mode()
 	# Detect rock contacts for destroy-on-hit (independent of bounce toggle timing).
 	set_collision_mask_value(1, true)
 	_sync_avoider_collision_exceptions()
@@ -2357,24 +2377,97 @@ func _set_red_attack_mesh_particles(emitting: bool) -> void:
 	if red_rock_attack == null:
 		return
 	for child in red_rock_attack.get_children():
-		## Fire stays off until attack mode — see `_set_red_attack_fire`.
+		## Fire stays off until attack mode — see `_set_threat_fire`.
 		if String(child.name).to_lower() == "fire":
 			continue
 		if child is GPUParticles3D:
 			(child as GPUParticles3D).emitting = emitting
 	if not emitting:
-		_set_red_attack_fire(false)
+		_set_threat_fire(false)
 
 
-func _set_red_attack_fire(active: bool) -> void:
-	if red_rock_attack == null:
+func _set_threat_fire(active: bool) -> void:
+	var mesh := current_mesh
+	if mesh == null:
+		if rock_type == RockSize.RED_ATTACKER:
+			mesh = red_rock_attack
+		else:
+			mesh = red_rock
+	if mesh == null:
 		return
-	var fire := red_rock_attack.get_node_or_null("Fire")
+	var fire := mesh.get_node_or_null("Fire")
 	if fire == null:
 		return
 	fire.visible = active
 	if fire is GPUParticles3D:
 		(fire as GPUParticles3D).emitting = active
+
+
+func _set_red_attack_fire(active: bool) -> void:
+	_set_threat_fire(active)
+
+
+func _is_threat_hazardous() -> bool:
+	if _freeze_shot_pending:
+		return false
+	if rock_type == RockSize.AVOIDER:
+		return _avoider_armed
+	if rock_type == RockSize.RED_ATTACKER:
+		return _red_attacker_dashing or _red_attacker_locking
+	return false
+
+
+func _activate_threat_mode() -> void:
+	_set_threat_fire(true)
+	_emit_avoider_hone_particles()
+	_set_marked_embers(true)
+	if rock_type == RockSize.AVOIDER:
+		_set_avoider_hum(true)
+
+
+func _shutdown_threat_fx() -> void:
+	_set_threat_fire(false)
+	_set_marked_embers(false)
+	_set_avoider_hum(false)
+	_stop_rock_stay_burst_warn(true)
+
+
+func _set_marked_embers(active: bool) -> void:
+	var embers := get_node_or_null("marked_embers") as GPUParticles3D
+	if embers == null:
+		return
+	if active:
+		embers.emitting = false
+		embers.restart()
+		embers.emitting = true
+	else:
+		embers.emitting = false
+
+
+func _set_avoider_hum(on: bool) -> void:
+	if on == _avoider_humming:
+		return
+	_avoider_humming = on
+	var mgr := _rocks_sfx_manager()
+	if mgr == null:
+		return
+	if on and mgr.has_method("start_loop"):
+		mgr.start_loop("low_humming")
+	elif (not on) and mgr.has_method("stop_loop"):
+		mgr.stop_loop("low_humming")
+
+
+func _check_threat_crosshair() -> void:
+	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+	if not _avoider_overlaps_crosshair():
+		return
+	if _is_threat_hazardous():
+		_trigger_avoider_crosshair_contact()
+	else:
+		_destroy_pre_arm_threat()
 
 
 func _arm_red_attacker() -> void:
@@ -2421,6 +2514,7 @@ func _expire_red_attacker_lifetime() -> void:
 	_red_attacker_dashing = false
 	_red_attacker_arm_token += 1
 	_red_attacker_life_token += 1
+	_shutdown_threat_fx()
 
 	remove_from_group("Target")
 	disable_collision()
@@ -2447,9 +2541,8 @@ func _begin_red_attacker_dash() -> void:
 	var aim_xy := _crosshair_world_xy_at_depth(_avoider_plane_z)
 	_red_attacker_dash_target = Vector3(aim_xy.x, aim_xy.y, _avoider_plane_z)
 
-	_emit_avoider_hone_particles()
 	_play_rocks_sfx(red_attacker_lock_sfx)
-	_set_red_attack_fire(true)
+	_activate_threat_mode()
 
 	var wait := maxf(red_attacker_apex_wait_sec, 0.0)
 	if wait > 0.0:
@@ -2499,8 +2592,6 @@ func _update_red_attacker(delta: float) -> void:
 			)
 		linear_velocity = _red_attacker_dash_dir * _red_attacker_dash_speed_current
 		linear_velocity.z = 0.0
-		if _avoider_overlaps_crosshair():
-			_trigger_avoider_crosshair_contact()
 		return
 
 	if not _red_attacker_armed:
@@ -2520,13 +2611,25 @@ func _start_avoider_lifetime() -> void:
 	_avoider_life_token += 1
 	var token := _avoider_life_token
 	var lifetime := maxf(avoider_lifetime_sec, 0.1)
-	await get_tree().create_timer(lifetime, false).timeout
-	if token != _avoider_life_token:
-		return
-	if current_state != State.ACTIVE or rock_type != RockSize.AVOIDER:
-		return
-	if not rock_activated:
-		return
+	var warn_dur := clampf(rock_stay_burst_warn_sec, 0.0, lifetime)
+	var cruise := lifetime - warn_dur
+	if cruise > 0.0:
+		await get_tree().create_timer(cruise, false).timeout
+		if token != _avoider_life_token:
+			return
+		if current_state != State.ACTIVE or rock_type != RockSize.AVOIDER:
+			return
+		if not rock_activated or rock_destroyed:
+			return
+	_begin_rock_stay_burst_warn(warn_dur)
+	if warn_dur > 0.0:
+		await get_tree().create_timer(warn_dur, false).timeout
+		if token != _avoider_life_token:
+			return
+		if current_state != State.ACTIVE or rock_type != RockSize.AVOIDER:
+			return
+		if not rock_activated or rock_destroyed:
+			return
 	_expire_avoider_lifetime()
 
 
@@ -2541,6 +2644,7 @@ func _expire_avoider_lifetime() -> void:
 	_avoider_armed = false
 	_avoider_arm_token += 1
 	_avoider_life_token += 1
+	_shutdown_threat_fx()
 
 	remove_from_group("Target")
 	disable_collision()
@@ -2586,9 +2690,6 @@ func _update_avoider(delta: float) -> void:
 		## Pin to the spawn depth plane — no Z drift from launch / collisions.
 		linear_velocity.z = 0.0
 		global_position.z = _avoider_plane_z
-
-	if _avoider_overlaps_crosshair():
-		_trigger_avoider_crosshair_contact()
 
 
 func _arm_mothership() -> void:
@@ -2955,6 +3056,7 @@ func _trigger_avoider_crosshair_contact() -> void:
 	_red_attacker_locking = false
 	_red_attacker_arm_token += 1
 	_red_attacker_life_token += 1
+	_shutdown_threat_fx()
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
 	freeze = true
@@ -2993,8 +3095,12 @@ func _trigger_avoider_crosshair_contact() -> void:
 		enter_state(State.MISSED)
 
 
-## Shoot a frozen avoider to destroy it with no strike (freeze disables the hazard).
+## Shoot a frozen / pre-arm avoider to destroy it with no strike.
 func _destroy_frozen_avoider() -> void:
+	_destroy_pre_arm_threat()
+
+
+func _destroy_pre_arm_threat() -> void:
 	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER:
 		return
 	if current_state != State.ACTIVE or not rock_activated:

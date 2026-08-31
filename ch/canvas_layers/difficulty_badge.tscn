@@ -12,8 +12,8 @@
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="8_travel"]
 
 [sub_resource type="Curve" id="Curve_f258a"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.70105827, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
 
 [sub_resource type="CurveTexture" id="CurveTexture_tt1wp"]
 curve = SubResource("Curve_f258a")
@@ -27,19 +27,24 @@ curve = SubResource("Curve_ayn6y")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gn3u7"]
 particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(128, 128, 1)
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 125.0
+emission_ring_inner_radius = 100.0
+emission_ring_cone_angle = 90.0
 initial_velocity_min = 1.0
 initial_velocity_max = 2.0
-gravity = Vector3(0, -2, 0)
-radial_accel_min = 0.99999774
-radial_accel_max = 4.9999976
-tangential_accel_min = -2.2351742e-06
-tangential_accel_max = -2.2351742e-06
+angular_velocity_min = -50.000015
+angular_velocity_max = -50.000015
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 9.49949e-08
+tangential_accel_min = 4.9999976
+tangential_accel_max = 4.9999976
 scale_min = 0.02
 scale_max = 0.04
 scale_curve = SubResource("CurveTexture_pmshx")
-color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+color = Color(0.95, 0.95, 0.95, 1)
 alpha_curve = SubResource("CurveTexture_tt1wp")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_circle"]
@@ -80,11 +85,9 @@ lock_icon = ExtResource("4_lock")
 locked_hold_sec = 1.0
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=660221732]
-position = Vector2(95, 95)
-amount = 15
+position = Vector2(95, 100)
+amount = 3
 texture = ExtResource("4_xilsf")
-lifetime = 2.0
-fixed_fps = 60
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_gn3u7")
 
@@ -135,9 +138,9 @@ scale = Vector2(2.112, 2.112)
 visible = false
 
 [node name="Insignia" parent="CoatArms" index="2" unique_id=1723705056]
-theme_override_constants/outline_size = 1
+theme_override_constants/outline_size = 0
 
-[node name="Banner2" type="ColorRect" parent="." unique_id=1425960322]
+[node name="Banner3" type="ColorRect" parent="." unique_id=1205367444]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -147,7 +150,22 @@ offset_top = -18.0
 offset_bottom = 20.029053
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.97, 1.515)
+scale = Vector2(1.12, 1.39)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+
+[node name="Banner2" type="ColorRect" parent="." unique_id=1425960322]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -17.754997
+offset_bottom = 20.274055
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.028, 1.496)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 color = Color(0.14, 0.14, 0.14, 1)
@@ -162,7 +180,7 @@ offset_top = -18.0
 offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.075, 1.515)
+scale = Vector2(1.0594372, 1.493067)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 color = Color(0.5921569, 0.09019608, 0.09411765, 1)

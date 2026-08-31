@@ -52,6 +52,14 @@ signal pressed
 	set(value):
 		banner_color = value
 		_apply_visuals()
+@export var banner3_color := Color(0.22512, 0.28, 0.1428, 1):
+	set(value):
+		banner3_color = value
+		_apply_visuals()
+@export var coat_arms_modulate := Color.WHITE:
+	set(value):
+		coat_arms_modulate = value
+		_apply_visuals()
 @export var icon_modulate := Color("2F4F28"):
 	set(value):
 		icon_modulate = value
@@ -91,6 +99,8 @@ signal pressed
 @onready var _icon_box: HBoxContainer = get_node_or_null("HBoxContainer")
 @onready var _banner: ColorRect = $Banner
 @onready var _banner2: ColorRect = get_node_or_null("Banner2")
+@onready var _banner3: ColorRect = get_node_or_null("Banner3")
+@onready var _coat_arms: Control = get_node_or_null("CoatArms")
 @onready var _title: RichTextLabel = $Title
 @onready var _subtitle: RichTextLabel = $Subtitle
 @onready var _lock: TextureRect = $LockIcon
@@ -158,6 +168,10 @@ func _apply_visuals() -> void:
 	_apply_icons()
 	if _banner:
 		_banner.color = banner_color
+	if _banner3:
+		_banner3.color = banner3_color
+	if _coat_arms:
+		_coat_arms.modulate = coat_arms_modulate
 	if _title:
 		_title.text = "[wave]" + title
 		_title.add_theme_color_override("default_color", title_color)
@@ -377,11 +391,11 @@ func _set_face(back: bool, blank_back: bool = false) -> void:
 	if _particles:
 		_particles.visible = not back
 	if back:
-		for node in [_banner, _banner2, _title, _subtitle, _icon_box, _lock]:
+		for node in [_banner, _banner2, _banner3, _coat_arms, _title, _subtitle, _icon_box, _lock]:
 			if node:
 				node.visible = false
 		return
-	for node in [_banner, _banner2, _title, _subtitle]:
+	for node in [_banner, _banner2, _banner3, _coat_arms, _title, _subtitle]:
 		if node:
 			node.visible = true
 	_apply_visuals()

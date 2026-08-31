@@ -686,6 +686,76 @@ text = "[pulse freq=3][wave freq=10]NEXT"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="LevelSelect" type="Button" parent="." unique_id=1629270956 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.13725491)
+custom_minimum_size = Vector2(220, 88)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1421.0
+offset_top = -420.0
+offset_right = -1177.0
+offset_bottom = -320.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_colors/font_hover_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_font_sizes/font_size = 98
+theme_override_styles/normal = SubResource("StyleBoxFlat_next")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_next")
+theme_override_styles/hover = SubResource("StyleBoxFlat_next_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_next_hover")
+script = ExtResource("25_next")
+focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../SFX/focus_exit")
+purchase_sfx = NodePath("../SFX/shop_purchase_02")
+
+[node name="Arrow" type="TextureRect" parent="LevelSelect" unique_id=826164355]
+modulate = Color(0.92156863, 0.8745098, 0.84313726, 1)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -65.0
+offset_top = -28.0
+offset_right = -9.0
+offset_bottom = 28.0
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(-1, 1)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("26_arrow")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RichTextLabel" type="RichTextLabel" parent="LevelSelect" unique_id=1459025283]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_right = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8745098, 0.84313726, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 90
+bbcode_enabled = true
+text = "[pulse freq=3][wave freq=10]LEVEL SELECT"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1059437881]
 libraries/ = SubResource("AnimationLibrary_cuwcq")
 

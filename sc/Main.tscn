@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://ca54yec8vpk68" path="res://ch/01_characters/bird_fly_by_helpers.tscn" id="19_gu7ia"]
 [ext_resource type="AudioStream" uid="uid://b6adyjr237ckn" path="res://sfx/opt_4.ogg" id="19_nn6vd"]
 [ext_resource type="AudioStream" uid="uid://bh2yxsx61yn0f" path="res://sfx/missileWhoosh.ogg" id="20_ec2we"]
+[ext_resource type="AudioStream" uid="uid://pqc60gfwwbnp" path="res://sfx/low_pitch_humming_loop.ogg" id="20_humloop"]
 [ext_resource type="Script" uid="uid://dhdm2t1tu5l6t" path="res://ch/Rocks/rock_manager.gd" id="20_l8wgb"]
 [ext_resource type="PackedScene" uid="uid://cerjahby1oei4" path="res://ch/Rocks/Rock_Instance.tscn" id="21_e0u1b"]
 [ext_resource type="AudioStream" uid="uid://cp1bi14xcue2e" path="res://sfx/a#_startInt.ogg" id="21_ymbdo"]
@@ -840,6 +841,11 @@ stream = ExtResource("20_ec2we")
 volume_db = -36.0
 pitch_scale = 2.0
 max_polyphony = 8
+
+[node name="low_humming" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX"]
+stream = ExtResource("20_humloop")
+volume_db = -22.0
+pitch_scale = 0.55
 
 [node name="PianoNotesSFX" type="Node" parent="Rocks/RocksSFXManager" unique_id=890040565]
 

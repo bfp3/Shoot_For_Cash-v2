@@ -11,6 +11,7 @@ const ONESHOT_VOICES := 12
 var _templates: Dictionary = {}
 var _defaults: Dictionary = {}
 var _oneshots: Array[AudioStreamPlayer] = []
+var _loop_counts: Dictionary = {}
 
 
 func _ready() -> void:
@@ -57,6 +58,27 @@ func play_pitch_shift() -> void:
 		return
 	player.pitch_scale = clampf(player.pitch_scale + 0.1, 0.5, 1.2)
 	player.play()
+
+
+func start_loop(sfx_name: String) -> void:
+	var player := _template_for(sfx_name)
+	if player == null:
+		push_warning("RocksSfx: missing loop '%s'" % sfx_name)
+		return
+	var n := int(_loop_counts.get(sfx_name, 0)) + 1
+	_loop_counts[sfx_name] = n
+	if not player.playing:
+		player.play()
+
+
+func stop_loop(sfx_name: String) -> void:
+	var player := _template_for(sfx_name)
+	if player == null:
+		return
+	var n := maxi(int(_loop_counts.get(sfx_name, 0)) - 1, 0)
+	_loop_counts[sfx_name] = n
+	if n <= 0 and player.playing:
+		player.stop()
 
 
 func play_stream(stream: AudioStream, volume_db: float, pitch_scale: float) -> void:
@@ -128,8 +150,8 @@ func _register_player(player: Node) -> void:
 		"pitch": player.pitch_scale,
 		"volume": player.volume_db,
 	}
-	# Pitch-shift is meant to retrigger one stacked tone, not layer 24 copies.
-	if key != "pitch_shift_rock_sound" and player.max_polyphony < MAX_POLYPHONY:
+	# Pitch-shift / loops are single voices, not layered polyphony.
+	if key != "pitch_shift_rock_sound" and key != "low_humming" and player.max_polyphony < MAX_POLYPHONY:
 		player.max_polyphony = MAX_POLYPHONY
 
 

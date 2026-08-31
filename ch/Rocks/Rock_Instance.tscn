@@ -506,6 +506,18 @@ fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_q8tld")
 draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
+[node name="marked_embers" type="GPUParticles3D" parent="."]
+cast_shadow = 0
+emitting = false
+amount = 22
+lifetime = 0.7
+one_shot = true
+speed_scale = 1.35
+explosiveness = 0.85
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_q8tld")
+draw_pass_1 = SubResource("QuadMesh_ltsxa")
+
 [node name="Mesh" type="Node3D" parent="." unique_id=185867645]
 unique_name_in_owner = true
 
