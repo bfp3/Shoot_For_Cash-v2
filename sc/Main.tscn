@@ -51,6 +51,7 @@
 [ext_resource type="Script" uid="uid://ko452pyw2jjw" path="res://ch/Rocks/pineapple_launcher.gd" id="65_wtxnc"]
 [ext_resource type="Script" uid="uid://dknfxe38nyt5m" path="res://lib/Frame_rate.gd" id="66_e5hsu"]
 [ext_resource type="PackedScene" uid="uid://b8up6woqoujb3" path="res://ch/HUD_components/wave_number_text.tscn" id="66_fjxa8"]
+[ext_resource type="AudioStream" uid="uid://cm8btuv4pdotl" path="res://sfx/pineapple_shake_1.ogg" id="67_mdemw"]
 [ext_resource type="PackedScene" path="res://ch/Rocks/Pineapple.tscn" id="68_14r73"]
 [ext_resource type="Script" uid="uid://bns2a7l7rdc41" path="res://ch/targets/orange_bombs.gd" id="68_qmj5w"]
 [ext_resource type="Script" uid="uid://byuybau4gp23h" path="res://ch/Balllons/player_balloon_container.gd" id="68_r5w5l"]
@@ -1067,6 +1068,7 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("56_4ta1g")
+arrival_time_text = ""
 arrival_fade_in_sec = 0.25
 arrival_hold_sec = 0.5
 arrival_fade_out_sec = 1.0
@@ -1427,9 +1429,9 @@ stream = ExtResource("56_gf2tl")
 volume_db = -10.0
 
 [node name="PerfectPineappleRound" type="AudioStreamPlayer" parent="Pineapple_Manager/SFX" unique_id=1139686394]
-stream = ExtResource("17_lysu5")
-volume_db = -40.0
-pitch_scale = 2.5
+stream = ExtResource("67_mdemw")
+volume_db = -12.0
+pitch_scale = 0.9
 
 [node name="Pineapple_markers" type="Node3D" parent="." unique_id=253776400 groups=["pineapple_container"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9)
@@ -1636,8 +1638,8 @@ outline_size = 6
 
 [node name="MultiShotSFX" type="AudioStreamPlayer" parent="BonusCash" unique_id=807368738]
 stream = ExtResource("17_lysu5")
-volume_db = -40.0
-pitch_scale = 2.0
+volume_db = -45.0
+pitch_scale = 1.8
 
 [node name="BonusTargetManager" type="Node3D" parent="." unique_id=1888003001 node_paths=PackedStringArray("round_manager")]
 script = ExtResource("71_3ga0b")

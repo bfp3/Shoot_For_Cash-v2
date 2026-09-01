@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://pm7i6qr0v4or"]
+
+[ext_resource type="Script" uid="uid://bobk5aqmu11bd" path="res://ch/2D_pieces/star_node.gd" id="0_script"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="1_ncgeq"]
+[ext_resource type="Texture2D" uid="uid://c2vlvp7tqncih" path="res://res/star_filled_256.png" id="2_8fpqk"]
+[ext_resource type="Shader" uid="uid://ccgwdlm2by1oa" path="res://ch/2D_pieces/star_sheen.gdshader" id="2_lsmw6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3gem2"]
+resource_local_to_scene = true
+shader = ExtResource("2_lsmw6")
+shader_parameter/shine_progress = 0.94000004465
+shader_parameter/shine_width = 0.42700001958398004
+shader_parameter/shine_strength = 0.458000021755
+shader_parameter/base_color = Color(1, 0.65, 0.15, 1)
+shader_parameter/shine_color = Color(1, 0.98, 0.88, 0.9)
+
+[sub_resource type="Curve" id="Curve_lsmw6"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.70105827, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_tt1wp"]
+curve = SubResource("Curve_lsmw6")
+
+[sub_resource type="Curve" id="Curve_3gem2"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_pmshx"]
+curve = SubResource("Curve_3gem2")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gmyti"]
+particle_flag_disable_z = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 125.0
+emission_ring_inner_radius = 100.0
+emission_ring_cone_angle = 90.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+angular_velocity_min = -50.000015
+angular_velocity_max = -50.000015
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 9.49949e-08
+tangential_accel_min = 4.9999976
+tangential_accel_max = 4.9999976
+scale_min = 0.02
+scale_max = 0.04
+scale_curve = SubResource("CurveTexture_pmshx")
+alpha_curve = SubResource("CurveTexture_tt1wp")
+
+[node name="StarNode" type="Control" unique_id=1455358656]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("0_script")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1939430764]
+modulate = Color(0.92, 0.70533335, 0.4048, 1)
+material = SubResource("ShaderMaterial_3gem2")
+clip_contents = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.00002
+offset_top = -128.00002
+offset_right = 127.999985
+offset_bottom = 127.999985
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.14703685, 0.15316206)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("2_8fpqk")
+
+[node name="TextureRect2" type="TextureRect" parent="TextureRect" unique_id=1368033279]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.369385
+offset_top = -121.53833
+offset_right = 130.63062
+offset_bottom = 134.46167
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("2_8fpqk")
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=1796618284]
+modulate = Color(0.92, 0.72772, 0.3128, 1)
+position = Vector2(19.999939, 22)
+scale = Vector2(0.15, 0.15)
+emitting = false
+amount = 3
+texture = ExtResource("1_ncgeq")
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_gmyti")

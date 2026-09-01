@@ -206,7 +206,7 @@ func _play_three_strikes_sequence() -> void:
 	#indicators_row.pivot_offset = indicators_row.size * 0.5
 
 	#var center_pos := _get_center_position()
-	var center_pos := Vector2(848,520)
+	var center_pos := Vector2(848, 592)
 	_active_tween = create_tween()
 	_active_tween.tween_interval(0.2)
 	_active_tween.tween_property(indicators_row, "position", center_pos, move_to_center_time)\

@@ -26,9 +26,12 @@ func refresh(amount: int = -1) -> void:
 
 
 static func font_size_for(amount: int) -> int:
-	var n := absi(amount)
-	if n < 10000:
-		return 82
-	if n <= 999999:
-		return 72
-	return 60
+	#var n := absi(amount)
+	#if n < 10000:
+		#return 82
+	#if n <= 999999:
+		#return 72
+	#return 60
+	
+	return 54
+	

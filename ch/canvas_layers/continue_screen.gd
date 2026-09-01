@@ -7,11 +7,12 @@ signal finished(outcome: String)
 const OUTCOME_PAID := "paid"
 const OUTCOME_FLIP_WIN := "flip_win"
 const OUTCOME_GIVE_UP := "give_up"
+const OUTCOME_LEVEL_SELECT := "level_select"
 const ABANDON_RUN_PROMPT_PATH := "res://ch/Shop/abandon_run_prompt.tscn"
 ## Coin flip only offered when the round countdown is longer than this.
 const COIN_FLIP_MIN_TIMER_SEC := 60.0
 ## Chance the coin-flip offer appears when the timer gate passes.
-const COIN_FLIP_CHANCE := 0.33
+const COIN_FLIP_CHANCE := 0.0
 
 @onready var _root: Control = $Control
 @onready var _title: RichTextLabel = %TitleLabel
@@ -19,6 +20,7 @@ const COIN_FLIP_CHANCE := 0.33
 @onready var _yes: Button = %PlayButton
 @onready var _coin_flip: Button = %CoinFlipButton
 @onready var _give_up: Button = %GiveUpButton
+@onready var _level_select: Button = get_node_or_null("%LevelSelect") as Button
 @onready var _guess_panel: Control = %CoinGuessPanel
 @onready var _guess_title: RichTextLabel = get_node_or_null("%GuessTitle")
 @onready var _heads: Button = %HeadsButton
@@ -76,6 +78,9 @@ func _ready() -> void:
 	if _give_up:
 		_give_up.pressed.connect(_on_give_up_pressed)
 		_give_up.hide()
+	if _level_select:
+		_level_select.pressed.connect(_on_level_select_pressed)
+		_level_select.show()
 	_setup_coin_choice_buttons()
 	_setup_abandon_run_prompt()
 	_reset_visuals()
@@ -215,6 +220,9 @@ func _reset_visuals() -> void:
 		## Bail / give-up is retired — continue is pay (or coin flip) only.
 		_give_up.disabled = true
 		_give_up.hide()
+	if _level_select:
+		_level_select.disabled = false
+		_level_select.show()
 	if _heads:
 		_heads.disabled = false
 		_heads.hide()
@@ -245,7 +253,10 @@ func _set_play_button_cost(price: int) -> void:
 		return
 	var cost := _yes.find_child("CostLabel", true, false) as RichTextLabel
 	if cost:
-		cost.text = "[wave]%s" % CommonCode.format_money(price)
+		if price <= 0:
+			cost.text = "[wave]FREE"
+		else:
+			cost.text = "[wave]%s" % CommonCode.format_money(price)
 
 
 func _set_cash_text(value: float) -> void:
@@ -321,6 +332,9 @@ func _show_pay_ui() -> void:
 	if _give_up:
 		_give_up.hide()
 		_give_up.disabled = true
+	if _level_select:
+		_level_select.visible = true
+		_level_select.disabled = false
 
 
 func _focus_primary() -> void:
@@ -418,6 +432,14 @@ func _return_to_pay_ui_after_failed_flip() -> void:
 	_focus_primary()
 
 
+func _on_level_select_pressed() -> void:
+	if not _waiting or _resolving:
+		return
+	_resolving = true
+	_lock_actions()
+	_finish(OUTCOME_LEVEL_SELECT)
+
+
 func _on_give_up_pressed() -> void:
 	if not _waiting or _resolving:
 		return
@@ -496,6 +518,8 @@ func _lock_actions() -> void:
 		_coin_flip.disabled = true
 	if _give_up:
 		_give_up.disabled = true
+	if _level_select:
+		_level_select.disabled = true
 	if _heads:
 		_heads.disabled = true
 	if _tails:

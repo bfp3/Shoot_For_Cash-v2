@@ -590,10 +590,11 @@ func _shake_pineapple() -> void:
 	cam_shake_tween.tween_property(self, "position:y", -0.28, 0.05).as_relative()
 	cam_shake_tween.parallel().tween_property(self, "position:z", 0.32, 0.05).as_relative()
 	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:x", 1.4, 0.05).as_relative()
-	cam_shake_tween.parallel().tween_property(self, "fov", _orig_fov_for_shake + 3.0, 0.05)
-	cam_shake_tween.tween_property(self, "position:y", 0.14, 0.09).as_relative()
-	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:x", -0.9, 0.09).as_relative()
-	cam_shake_tween.parallel().tween_property(self, "fov", _orig_fov_for_shake - 0.8, 0.09)
+	cam_shake_tween.tween_interval(0.1)
+	#cam_shake_tween.parallel().tween_property(self, "fov", _orig_fov_for_shake + 3.0, 0.05)
+	cam_shake_tween.tween_property(self, "position:y", 0.14, 0.29).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:x", -0.9, 0.39).as_relative()
+	#cam_shake_tween.parallel().tween_property(self, "fov", _orig_fov_for_shake - 0.8, 0.09)
 	_settle_shake(0.55)
 	await cam_shake_tween.finished
 

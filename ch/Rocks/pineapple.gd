@@ -38,8 +38,6 @@ var force_mult_index := 0
 
 var rock_type_gravity_scale := 0.4
 
-#@onready var money_label_3d: Label3D = $Money_Label3D
-@onready var gold_label_3d: Label3D = $Gold_label3D
 @onready var pineapple_mesh:= $Mesh/small_rock
 
 @onready var current_mesh : MeshInstance3D= pineapple_mesh
@@ -119,7 +117,7 @@ func update_active() -> void:
 	update_gravity(0.04)
 	global_position = start_pos
 	global_position.x = randi_range(-8,8)
-	health = 3
+
 	
 	pineapple_mesh.show()
 	rock_activated = true
@@ -128,8 +126,6 @@ func update_active() -> void:
 	$Start_falling_timer.start(2.2)
 
 	_play_pineapple_sfx("explosion_sfx")
-	_play_vfx(&"pineapple_destroy")
-	$Mesh/small_rock/GoldParticles.emitting = true
 	#apply_torque_impulse(Vector3.RIGHT * 3000.0)
 	
 	_play_pineapple_sfx("Pineapple_launch_sound")
@@ -200,7 +196,7 @@ func reset_rock_back_on() -> void:
 	# Random subtype: 1x / 2x / 3x
 	$hit_wall_timer.stop()
 	$Mesh.scale = Vector3.ONE
-	health = base_health
+	health = 1 #base_health
 	strike_count = 0
 	#cash_value = base_cash # * size_multiplier
 	max_health = health
@@ -356,12 +352,27 @@ func hit_by_player(damage: int, screen_offset: Vector2 = Vector2.ZERO) -> void:
 
 	match strike_count:
 		1:
+			start_destroyed_process()
 			# Strike 1: send it flying off into the distance
 			play_hit_sfx()
-			fly_off_into_the_distance()
+			#fly_off_into_the_distance()
 			smoke_particles_duplicates()
-			watch_for_abandoned_hit()
+			#watch_for_abandoned_hit()
+			#await get_tree().create_timer(0.25, false).timeout
+			#start_destroyed_process()
 
+		
+		
+			#1:
+			## Strike 1: send it flying off into the distance
+			#play_hit_sfx()
+			#fly_off_into_the_distance()
+			#smoke_particles_duplicates()
+			#watch_for_abandoned_hit()
+			#await get_tree().create_timer(0.25, false).timeout
+			#start_destroyed_process()
+			
+		
 		2:
 			# Strike 2: freeze it midair
 			freeze = false

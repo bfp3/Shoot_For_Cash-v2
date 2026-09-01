@@ -34,7 +34,7 @@ class_name WallPuzzleSetup
 ## Spawn a standard rock when the crosshair first hits solid wall.
 @export var spawn_rock_on_hit := false
 
-@onready var wall_puzzle: CSGShape3D = $WallPuzzle
+@onready var wall_puzzle:= $WallPuzzle
 @onready var light_touching: OmniLight3D = $TouchingWallWithCrosshair
 @onready var light_allgood: OmniLight3D = $Allgood
 @onready var sfx_hum: AudioStreamPlayer = $SFX/OverlappingWallHum
@@ -47,7 +47,8 @@ func _ready() -> void:
 	add_to_group("wall_puzzle")
 	if wall_puzzle:
 		## CSG only blocks / ray-hits when collision is generated from the boolean mesh.
-		wall_puzzle.use_collision = true
+		if wall_puzzle is CSGShape3D:
+			wall_puzzle.use_collision = true
 	_apply_overlap_visuals(false, true)
 
 

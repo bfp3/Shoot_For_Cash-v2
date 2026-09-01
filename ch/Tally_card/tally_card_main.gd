@@ -319,6 +319,8 @@ func _money_text(amount: int) -> String:
 
 
 func _round_prize_amount() -> int:
+	if round_manager and round_manager.has_method("get_script_range_reward"):
+		return int(round_manager.get_script_range_reward())
 	if round_manager and round_manager.has_method("get_current_range_reward"):
 		var from_range := int(round_manager.get_current_range_reward())
 		if from_range > 0:
@@ -447,7 +449,7 @@ func _hide_level_select_button() -> void:
 
 func _show_next_button() -> void:
 	_show_level_select_button()
-	_show_replay_button()
+	#_show_replay_button()
 	var show_next := true
 	if _is_level_complete_tally() and round_manager and round_manager.has_method("has_next_script_level"):
 		show_next = bool(round_manager.has_next_script_level())
@@ -476,6 +478,7 @@ func _show_next_button() -> void:
 
 
 func _show_replay_button() -> void:
+	return
 	if _replay_button == null:
 		return
 	_replay_button.disabled = false

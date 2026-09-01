@@ -346,9 +346,9 @@ func shoot_target() -> void:
 
 		var damage := power_bullet_damage
 
-		if double_power:
-			damage += 1
-			power_bullet_speed /= 4
+		#if double_power:
+			#damage += 1
+			#power_bullet_speed /= 4
 
 		%Crosshair.crosshair_shake()
 		player_gun.get_barrel_position(target.global_position.x)
@@ -366,9 +366,9 @@ func shoot_target() -> void:
 				
 		target.start_bullet_to_target()
 
-		if shot_with_right_click:
-			damage = 0
-			power_bullet_speed /= 4
+		#if shot_with_right_click:
+			#damage = 0
+			#power_bullet_speed /= 4
 
 		if not spawn_projectile(target, power_bullet_speed, Vector3.ZERO, free_shot):
 			break

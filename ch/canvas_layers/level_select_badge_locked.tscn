@@ -1,0 +1,142 @@
+[gd_scene format=3 uid="uid://cqfakocdlk81p"]
+
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="1_rphdc"]
+[ext_resource type="Script" uid="uid://06iwf2xckx80" path="res://ch/canvas_layers/level_select_badge_locked.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cp255yy4k2lna" path="res://res/lock-svgrepo-com.png" id="2_0eg7k"]
+
+[sub_resource type="Curve" id="Curve_f258a"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.70105827, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_tt1wp"]
+curve = SubResource("Curve_f258a")
+
+[sub_resource type="Curve" id="Curve_ayn6y"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_pmshx"]
+curve = SubResource("Curve_ayn6y")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gn3u7"]
+particle_flag_disable_z = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 125.0
+emission_ring_inner_radius = 100.0
+emission_ring_cone_angle = 90.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+angular_velocity_min = -50.000015
+angular_velocity_max = -50.000015
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 9.49949e-08
+tangential_accel_min = 4.9999976
+tangential_accel_max = 4.9999976
+scale_min = 0.02
+scale_max = 0.04
+scale_curve = SubResource("CurveTexture_pmshx")
+color = Color(0.95, 0.95, 0.95, 1)
+alpha_curve = SubResource("CurveTexture_tt1wp")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qb8xo"]
+bg_color = Color(0.92, 0.8770667, 0.8464, 0.15686275)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.47382927, 0.50620335, 0.5386369, 1)
+corner_radius_top_left = 200
+corner_radius_top_right = 200
+corner_radius_bottom_right = 200
+corner_radius_bottom_left = 200
+corner_detail = 12
+shadow_color = Color(1, 1, 1, 0.11764706)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hit"]
+
+[node name="LevelSelectBadgeLocked" type="Control" unique_id=399074094]
+custom_minimum_size = Vector2(188, 188)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -94.0
+offset_top = -94.0
+offset_right = 94.0
+offset_bottom = 94.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1_script")
+badge_scale = 0.5
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=660221732]
+position = Vector2(95, 99)
+emitting = false
+amount = 3
+texture = ExtResource("1_rphdc")
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_gn3u7")
+
+[node name="Circle" type="Panel" parent="." unique_id=536188618]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qb8xo")
+
+[node name="Circle2" type="Panel" parent="." unique_id=277744476]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.842, 0.842)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qb8xo")
+
+[node name="LockIcon" type="TextureRect" parent="." unique_id=932523332]
+self_modulate = Color(0.37, 0.33053333, 0.296, 0.5647059)
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.137, 0.137)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_0eg7k")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HitButton" type="Button" parent="." unique_id=2004100255]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_hit")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_hit")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_hit")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_hit")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hit")
+flat = true

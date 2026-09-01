@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cbelgvglet2ae" path="res://sc/All_level_layouts/moss_visual_boost.tscn" id="10_c5n8r"]
 [ext_resource type="Texture2D" uid="uid://udb8jdxvl5d8" path="res://res/cloud-svgrepo-com.png" id="11_yyju4"]
 [ext_resource type="Texture2D" uid="uid://cmk72g2wr4ulq" path="res://res/mountains-svgrepo-com.png" id="12_gasc2"]
+[ext_resource type="PackedScene" uid="uid://bdgpfw3241vuc" path="res://sc/All_level_layouts/CrateForCash.tscn" id="14_aw6p4"]
 [ext_resource type="Script" uid="uid://jrsa7e3mhuxu" path="res://ch/wall_puzzle_setup.gd" id="14_obp0s"]
 [ext_resource type="AudioStream" uid="uid://pqc60gfwwbnp" path="res://sfx/low_pitch_humming_loop.ogg" id="15_6ol7e"]
 [ext_resource type="AudioStream" uid="uid://ub17xcey7moy" path="res://sfx/sfx-click.ogg" id="16_aw6p4"]
@@ -582,6 +583,45 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_obp0s")
+
+[sub_resource type="Animation" id="Animation_6ol7e"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-3.045, 5.702, 24.247)]
+}
+
+[sub_resource type="Animation" id="Animation_aw6p4"]
+resource_name = "up_down"
+length = 10.0
+loop_mode = 2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(3, 9.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-3.045, 5.702, 24.247), Vector3(-3.045, -0.633, 24.247)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e6ieb"]
+_data = {
+&"RESET": SubResource("Animation_6ol7e"),
+&"up_down": SubResource("Animation_aw6p4")
+}
 
 [node name="Moss" type="Node3D" unique_id=229302118]
 script = ExtResource("layout_scroll")
@@ -1231,81 +1271,100 @@ omni_attenuation = 0.0
 [node name="Allgood" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=494246532]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7756195, 1.642421, 20.14018)
 
-[node name="WallPuzzle" type="CSGCombiner3D" parent="WallPuzzleSetup" unique_id=1710731574]
+[node name="WallPuzzle" parent="WallPuzzleSetup" unique_id=223314719 instance=ExtResource("17_6ol7e")]
+transform = Transform3D(0.044, 0, 0, 0, 0.044, 0, 0, 0, 0.044, -3.045, 5.702, 24.247)
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="WallPuzzleSetup/WallPuzzle" unique_id=856418249]
+libraries/ = SubResource("AnimationLibrary_e6ieb")
+autoplay = &"up_down"
+speed_scale = 1.25
+
+[node name="WallPuzzleX" type="CSGCombiner3D" parent="WallPuzzleSetup" unique_id=1710731574]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 2.363, 24.75)
 use_collision = true
 
-[node name="WallPuzzle2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle" unique_id=1724403144]
+[node name="WallPuzzle2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX" unique_id=1724403144]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 5, -0.021998882, 6.4342394, -0.0021209717)
 use_collision = true
 size = Vector3(17.595, 1.3591309, 0.191)
 
-[node name="WallPuzzle3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=809039645]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 9.22607, -5.2130136, 0)
+[node name="WallPuzzle3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=809039645]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 9.161, -5.213, 0)
 use_collision = true
 size = Vector3(17.595, 0.71606445, 0.191)
 
-[node name="WallPuzzle4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1067585502]
+[node name="WallPuzzle6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1834759514]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 8.362942, -10.499947, 0)
+use_collision = true
+size = Vector3(7.0211325, 1.5470581, 0.191)
+
+[node name="WallPuzzle5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=542382116]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7568296, -0.089764595, 0)
+operation = 2
+use_collision = true
+size = Vector3(16.624914, 1.733, 0.856)
+
+[node name="WallPuzzle4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1067585502]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -9.134092, -5.2130136, 0)
 use_collision = true
 size = Vector3(17.595, 0.71606445, 0.191)
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1335209420]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5413456, -4.691353, 0)
+[node name="CSGSphere3D" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1335209420]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55.541348, -4.691353, 0)
 radial_segments = 16
 rings = 12
 smooth_faces = false
 
-[node name="CSGSphere3D2" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=341432589]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.019465, -3.6913528, 0)
+[node name="CSGSphere3D2" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=341432589]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.019466, -3.6913528, 0)
 radius = 0.25
 radial_segments = 16
 rings = 12
 smooth_faces = false
 
-[node name="CSGSphere3D9" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1535580230]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.275, -6.357, 0)
+[node name="CSGSphere3D9" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1535580230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.275, -6.357, 0)
 visible = false
 radius = 0.171
 radial_segments = 16
 rings = 12
 smooth_faces = false
 
-[node name="CSGSphere3D3" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1796831370]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5237725, -3.6913528, 0)
+[node name="CSGSphere3D3" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1796831370]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.476227, -3.6913528, 0)
 radius = 0.25
 radial_segments = 16
 rings = 12
 smooth_faces = false
 
-[node name="CSGSphere3D4" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1828463530]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.059924, -4.691353, 0)
+[node name="CSGSphere3D4" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1828463530]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.940075, -4.691353, 0)
 radial_segments = 16
 rings = 12
 smooth_faces = false
 
-[node name="CSGSphere3D5" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1979776525]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5413456, -8.043463, 0)
+[node name="CSGSphere3D5" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1979776525]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55.541348, -8.043463, 0)
 radial_segments = 16
 rings = 12
 smooth_faces = false
 
-[node name="CSGSphere3D6" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=258713454]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.019465, -9.043463, 0)
+[node name="CSGSphere3D6" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=258713454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.019466, -9.043463, 0)
 radius = 0.25
 radial_segments = 16
 rings = 12
 smooth_faces = false
 
-[node name="CSGSphere3D7" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1373006493]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5237725, -9.043463, 0)
+[node name="CSGSphere3D7" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1373006493]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.476227, -9.043463, 0)
 radius = 0.25
 radial_segments = 16
 rings = 12
 smooth_faces = false
 
-[node name="CSGSphere3D8" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzle/WallPuzzle2" unique_id=1028346731]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.059924, -8.043463, 0)
+[node name="CSGSphere3D8" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1028346731]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.940075, -8.043463, 0)
 radial_segments = 16
 rings = 12
 smooth_faces = false
@@ -1323,8 +1382,10 @@ volume_db = -35.0
 pitch_scale = 2.0
 bus = &"ReverbBus"
 
-[node name="Mechanical_crane_object" parent="." unique_id=223314719 instance=ExtResource("17_6ol7e")]
-transform = Transform3D(0.044, 0, 0, 0, 0.044, 0, 0, 0, 0.044, -3.045, 5.702, 24.247)
+[node name="CrateForCash" parent="." unique_id=1706272792 instance=ExtResource("14_aw6p4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.986, 9.239, 25.13)
+mass = 50.0
+gravity_scale = 1.15
 
 [editable path="Boatmesh/FrontRotatingPillars/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

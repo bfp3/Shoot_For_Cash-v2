@@ -41,6 +41,7 @@ func open_pop_up() -> void:
 	scale = Vector2.ONE * 0.01
 	position = default_position
 	show()
+	_fade_out_ammo_hud()
 	CommonCode.apply_ui_overlay_blur()
 	_sfx_open()
 	_refresh_net_worth()
@@ -202,3 +203,11 @@ func _sfx_close() -> void:
 func _sfx_close_instant() -> void:
 	if _hum:
 		_hum.stop()
+
+
+func _fade_out_ammo_hud() -> void:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player and player.has_method("fade_out_ammo_panel"):
+		player.fade_out_ammo_panel(0.33)
+	elif player and player.has_method("hide_ammo_panel_instant"):
+		player.hide_ammo_panel_instant()

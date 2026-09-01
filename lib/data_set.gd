@@ -1,6 +1,6 @@
 extends Node
 ## When true, Advanced / Expert / all challenges are treated as unlocked.
-const debug_everything_unlocked := true
+const debug_everything_unlocked := false
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 ## Advanced / Expert also require net worth (see unlock amounts below).
@@ -9,7 +9,7 @@ var expert_unlocked := false
 var mystery_unlocked := false
 
 ## Net worth needed to unlock these difficulties from the title screen.
-var advanced_unlock_net_worth := 9000
+var advanced_unlock_net_worth := 10000
 var expert_unlock_net_worth := 50000
 
 ## Challenge row appears at this net worth. Each later challenge adds `challenge_unlock_net_worth_step`.
@@ -17,7 +17,7 @@ var challenges_unlock_net_worth := 50000
 var challenge_unlock_net_worth_step := 10000
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
-var challenges_unlocked := true
+var challenges_unlocked := false
 var challenge_01_unlocked := false
 var challenge_02_unlocked := false
 var challenge_03_unlocked := false
@@ -84,7 +84,7 @@ var dataset_float : Dictionary = {
 	,"price_reroll" 		: [10,20,40,80,160,320,640]
 	
 	,"reward_perfect_round"	: [50,1000,1500]
-	,"price_play_round"		: [100]
+	,"price_play_round"		: [1]
 	## Map: cash required to unlock island index+1 (Shipper→Anchor, Anchor→Squid, …).
 	## Edit these values to change unlock prices on the island map.
 	,"island_unlock_cost"		: [2500, 3500, 30, 40]
@@ -180,7 +180,7 @@ var dataset_string : Dictionary = {
 		"", ## start
 	]
 	## Boss shop banner. Use %d for hold-out seconds.
-	,"shop_challenge_boss"		: ["HOLD OUT %d"]
+	,"shop_challenge_boss"		: ["HOLD OUT %d SECONDS"]
 	
 	,"tooltip_gun"						: ["You'll Need This"]
 	,"tooltip_bonus_round_pineapples" 	: ['Flying Pineapples']

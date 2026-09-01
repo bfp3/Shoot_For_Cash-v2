@@ -54,8 +54,6 @@ const BLAST_DESTROY_STAGGER_SEC := 0.075
 const BLAST_DOMAIN_EXPANSION := 14.0
 const SMOKE_BLOW_BUFFER := 5.0
 
-@onready var money_label_3d: Label3D = $Money_Label3D
-@onready var gold_label_3d: Label3D = $Gold_label3D
 @onready var orange_mesh := $Mesh/small_rock
 
 @onready var current_mesh : MeshInstance3D= orange_mesh

@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="2_saejh"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="3_51t21"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="3_drjai"]
-[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="5_ivuve"]
 [ext_resource type="Texture2D" uid="uid://dmjbjnlesv0r0" path="res://res/forward_arrow_icon.png" id="8_0ga4m"]
 [ext_resource type="PackedScene" uid="uid://dm2hgl5lpfk7q" path="res://ch/canvas_layers/difficulty_badge.tscn" id="9_egetg"]
 [ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="10_arrow"]
@@ -15,7 +14,7 @@
 [ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="14_click2"]
 [ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="15_click3"]
 [ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="16_hum"]
-[ext_resource type="PackedScene" path="res://ch/canvas_layers/net_worth_label.tscn" id="17_net"]
+[ext_resource type="PackedScene" uid="uid://b4ddmogbrspeb" path="res://ch/canvas_layers/net_worth_label.tscn" id="17_net"]
 [ext_resource type="Texture2D" uid="uid://cp255yy4k2lna" path="res://res/lock-svgrepo-com.png" id="18_lock"]
 
 [sub_resource type="Animation" id="Animation_tnodp"]
@@ -87,11 +86,17 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 56.0
+offset_bottom = 56.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.325, 1.325)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("0_script")
+unlocked_badge_scale = 0.8
+locked_badge_scale = 0.8
+level_grid_position = Vector2(0, 1)
 
 [node name="MainPanel" type="PanelContainer" parent="." unique_id=1318777282]
 self_modulate = Color(1, 1, 1, 0)
@@ -114,7 +119,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="Reticle" type="TextureRect" parent="MainPanel/BackgroundImages" unique_id=1582418717]
-modulate = Color(0.91, 0.864955, 0.82809997, 0.11764706)
+modulate = Color(0.91, 0.867685, 0.82809997, 0.039215688)
 show_behind_parent = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
@@ -151,14 +156,11 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_q5ox8")
 
-[node name="NetWorth" parent="MainPanel/VBoxContainer/TopRedPanel" instance=ExtResource("17_net")]
+[node name="NetWorth" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=1278205673 instance=ExtResource("17_net")]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_top = 0.0
+offset_bottom = 0.0
 
 [node name="MapButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=869067883]
 unique_name_in_owner = true
@@ -198,9 +200,9 @@ offset_right = 126.7457
 offset_bottom = 128.00021
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.176, 0.176)
+scale = Vector2(0.085, 0.085)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("5_ivuve")
+texture = ExtResource("10_arrow")
 stretch_mode = 5
 
 [node name="DifficultyHeader" type="HBoxContainer" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=1998075301]
@@ -213,19 +215,19 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -280.0
-offset_top = -94.0
+offset_top = -33.018906
 offset_right = 280.0
-offset_bottom = 94.0
+offset_bottom = 154.9811
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.621, 0.621)
+scale = Vector2(0.948, 0.948)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_constants/separation = 32
 alignment = 1
 
 [node name="PrevDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075302]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(72, 72)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -235,24 +237,45 @@ expand_icon = true
 
 [node name="HeaderBadge" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075303 instance=ExtResource("9_egetg")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(168, 168)
+custom_minimum_size = Vector2(298, 168)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 title = "BEGINNER"
 subtitle = ""
 circle_self_modulate = Color(0.76862746, 0.65882355, 0.56078434, 1)
-circle2_self_modulate = Color(0.25490198, 0.31764707, 0.16078432, 1)
 circle3_modulate = Color(0.8039216, 0.69803923, 0.5803922, 1)
-banner_color = Color(0.25490198, 0.31764707, 0.16078432, 1)
-banner3_color = Color(0.12864, 0.16, 0.081599995, 1)
+banner_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+banner3_color = Color(0.25, 0.22333333, 0.2, 1)
 icon_modulate = Color(0.37, 0.33053333, 0.296, 1)
 is_header = true
 hide_subtitle = true
 
+[node name="Circle" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="1" unique_id=536188618]
+visible = false
+
+[node name="Circle2" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="2" unique_id=277744476]
+visible = false
+
+[node name="Circle3" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="3" unique_id=1212491101]
+visible = false
+
+[node name="Banner3" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="5" unique_id=1205367444]
+scale = Vector2(1.082, 1.39)
+
+[node name="Icon" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge/HBoxContainer" parent_id_path=PackedInt32Array(1998075303, 4134395) index="0" unique_id=2119161989]
+visible = false
+self_modulate = Color(1, 1, 1, 0)
+
+[node name="Icon2" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge/HBoxContainer" parent_id_path=PackedInt32Array(1998075303, 4134395) index="1" unique_id=1183234057]
+self_modulate = Color(1, 1, 1, 0)
+
+[node name="Icon3" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge/HBoxContainer" parent_id_path=PackedInt32Array(1998075303, 4134395) index="2" unique_id=176816404]
+self_modulate = Color(1, 1, 1, 0)
+
 [node name="NextDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075304]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(72, 72)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -288,23 +311,23 @@ offset_right = 430.0
 offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.769, 0.769)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_constants/h_separation = 68
-theme_override_constants/v_separation = 71
-columns = 5
+theme_override_constants/h_separation = 46
+theme_override_constants/v_separation = 34
+columns = 6
 
 [node name="LockedOverlay" type="Control" parent="MainPanel/VBoxContainer/SpacePanel2" unique_id=1998075306]
 unique_name_in_owner = true
-visible = false
 z_index = 8
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 9.66037
+offset_bottom = 9.660339
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
+mouse_filter = 2
 
 [node name="Dim" type="ColorRect" parent="MainPanel/VBoxContainer/SpacePanel2/LockedOverlay" unique_id=1998075307]
 layout_mode = 1
@@ -313,6 +336,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1, 0.788)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 color = Color(0.08, 0.07, 0.06, 0.62)
 
@@ -329,6 +354,7 @@ offset_right = 220.0
 offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_constants/separation = 12
 alignment = 1
 
@@ -367,9 +393,9 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 166.0
-offset_top = -813.0
+offset_top = -813.7547
 offset_right = 736.0
-offset_bottom = -733.0
+offset_bottom = -733.7547
 grow_vertical = 0
 mouse_filter = 2
 
@@ -413,9 +439,9 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 984.0
-offset_top = -816.0
+offset_top = -816.75476
 offset_right = 1554.0
-offset_bottom = -736.0
+offset_bottom = -736.75476
 grow_vertical = 0
 mouse_filter = 2
 
@@ -483,3 +509,6 @@ volume_db = -20.0
 [node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=880011107]
 stream = ExtResource("16_hum")
 volume_db = -32.0
+
+[editable path="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge"]
+[editable path="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge/CoatArms"]

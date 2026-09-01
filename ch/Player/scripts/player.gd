@@ -229,6 +229,7 @@ var start_rotation : Vector3
 var _lean_rest_position := Vector3.ZERO
 var _lean_rest_rotation_z := 0.0
 var _lean_rest_rotation_y := 0.0
+var _ammo_hud_tween: Tween
 var _lean_rest_rotation_x := 0.0
 var _lean_offset := Vector3.ZERO
 var _lean_roll := 0.0
@@ -1676,10 +1677,7 @@ func fire_weapon_auto(force_plant: bool = false) -> void:
 		%Crosshair.pulse_ring_texture()
 
 func fire_weapon(force_plant: bool = false) -> void:
-	#power_gun_fire_rate = 0.01
-	power_gun_fire_rate = 0.05
-	power_bullet_speed = 0.01
-	#power_target_circle = 60.0
+
 	if current_state != State.ACTIVE:
 		return
 		
@@ -1723,6 +1721,12 @@ func fire_weapon(force_plant: bool = false) -> void:
 			return
 		player_did_not_miss()
 		return
+
+	power_gun_fire_rate = 0.05
+	#power_bullet_speed = 0.01
+	#
+	#weapon_shooting.power_bullet_speed = 0.3
+	#power_target_circle = 60.0
 
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
@@ -2004,39 +2008,51 @@ func round_finished(_round_finished : bool) -> void:
 		
 		
 func show_ammo_panel() -> void:
-	%HUD_bottom_corner.modulate.a = 0.0
-	%HUD_bottom_corner.show()
-	$CanvasLayer/HUD_bottom_corner/AmmoCorner.modulate.a = 0.0
-	$CanvasLayer/HUD_bottom_corner/AmmoCorner.show()
-	
-	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
-	#tween.tween_interval(0.2)
-	tween.tween_property(%HUD_bottom_corner, 'modulate:a', 1.0, 1.0)
-	tween.parallel().tween_property($CanvasLayer/HUD_bottom_corner/AmmoCorner, 'modulate:a', 1.0, 1.0)
+	_kill_ammo_hud_tween()
+	var hud := get_node_or_null("%HUD_bottom_corner") as CanvasItem
+	var ammo := get_node_or_null("CanvasLayer/HUD_bottom_corner/AmmoCorner") as CanvasItem
+	if hud:
+		hud.modulate.a = 0.0
+		hud.show()
+	if ammo:
+		ammo.modulate.a = 0.0
+		ammo.show()
+	_ammo_hud_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	if hud:
+		_ammo_hud_tween.tween_property(hud, "modulate:a", 1.0, 0.45)
+	if ammo:
+		if hud:
+			_ammo_hud_tween.parallel().tween_property(ammo, "modulate:a", 1.0, 0.45)
+		else:
+			_ammo_hud_tween.tween_property(ammo, "modulate:a", 1.0, 0.45)
 
 
 func fade_out_ammo_panel(duration: float = 0.33) -> void:
+	_kill_ammo_hud_tween()
 	var hud := get_node_or_null("%HUD_bottom_corner") as CanvasItem
 	var ammo := get_node_or_null("CanvasLayer/HUD_bottom_corner/AmmoCorner") as CanvasItem
 	if hud == null and ammo == null:
 		return
-	var tween := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	if hud and (not hud.visible or hud.modulate.a <= 0.01) and (ammo == null or not ammo.visible or ammo.modulate.a <= 0.01):
+		hide_ammo_panel_instant()
+		return
 	if hud:
-		tween.tween_property(hud, "modulate:a", 0.0, duration)
+		hud.show()
+	if ammo:
+		ammo.show()
+	_ammo_hud_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	if hud:
+		_ammo_hud_tween.tween_property(hud, "modulate:a", 0.0, duration)
 	if ammo:
 		if hud:
-			tween.parallel().tween_property(ammo, "modulate:a", 0.0, duration)
+			_ammo_hud_tween.parallel().tween_property(ammo, "modulate:a", 0.0, duration)
 		else:
-			tween.tween_property(ammo, "modulate:a", 0.0, duration)
-	tween.tween_callback(func() -> void:
-		if ammo:
-			ammo.hide()
-		if hud:
-			hud.hide()
-	)
+			_ammo_hud_tween.tween_property(ammo, "modulate:a", 0.0, duration)
+	_ammo_hud_tween.tween_callback(hide_ammo_panel_instant)
 
 
 func hide_ammo_panel_instant() -> void:
+	_kill_ammo_hud_tween()
 	var hud := get_node_or_null("%HUD_bottom_corner") as CanvasItem
 	var ammo := get_node_or_null("CanvasLayer/HUD_bottom_corner/AmmoCorner") as CanvasItem
 	if hud:
@@ -2049,6 +2065,7 @@ func hide_ammo_panel_instant() -> void:
 
 ## Shop / tally / gameplay — bullets visible without the delayed intro fade.
 func ensure_ammo_panel_visible() -> void:
+	_kill_ammo_hud_tween()
 	var hud := get_node_or_null("%HUD_bottom_corner") as CanvasItem
 	var ammo := get_node_or_null("CanvasLayer/HUD_bottom_corner/AmmoCorner") as CanvasItem
 	if hud:
@@ -2057,3 +2074,9 @@ func ensure_ammo_panel_visible() -> void:
 	if ammo:
 		ammo.show()
 		ammo.modulate.a = 1.0
+
+
+func _kill_ammo_hud_tween() -> void:
+	if _ammo_hud_tween and _ammo_hud_tween.is_valid():
+		_ammo_hud_tween.kill()
+	_ammo_hud_tween = null

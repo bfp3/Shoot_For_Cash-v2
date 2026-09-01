@@ -18,6 +18,8 @@
 [ext_resource type="Texture2D" uid="uid://c2vlvp7tqncih" path="res://res/star_filled_256.png" id="13_ccueh"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="13_coin"]
 [ext_resource type="AudioStream" uid="uid://jduh5n36fbsx" path="res://sfx/strike_out_jingle_01.ogg" id="14_ccueh"]
+[ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="14_e2ubg"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="15_baefb"]
 [ext_resource type="AudioStream" uid="uid://cf81655g7woc" path="res://sfx/Deactivate_mine_jingle_1.ogg" id="15_y5wqd"]
 [ext_resource type="AudioStream" uid="uid://cuf4qmyoqsp3n" path="res://sfx/stamp_sfx.ogg" id="17_stamp"]
 
@@ -96,6 +98,33 @@ left_to_right = 1.0
 left_to_right = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_ivjbg"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_yp6xl"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_imce1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pelxk"]
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yrc6g"]
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+bg_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
 content_margin_left = 22.0
@@ -211,10 +240,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -490.00003
-offset_top = -251.0
+offset_left = -490.0
+offset_top = -307.0
 offset_right = 490.0
-offset_bottom = 363.0
+offset_bottom = 307.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.12, 1.12)
@@ -222,11 +251,13 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="Background" type="Panel" parent="Control/MainPanel" unique_id=1644195712]
+custom_minimum_size = Vector2(980, 614)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = -171.26999
+offset_top = 0.079330444
+offset_bottom = 0.0793457
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -326,6 +357,111 @@ rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_ivjbg")
 
+[node name="GreyCornerPanel" type="Control" parent="Control/MainPanel/BackgroundImages/RedCornerPanel3" unique_id=877737955]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+anchors_preset = 0
+offset_left = -546.55945
+offset_top = -23.409317
+offset_right = -546.55945
+offset_bottom = 56.590683
+scale = Vector2(0.928, 0.928)
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="Control/MainPanel/BackgroundImages/RedCornerPanel3/GreyCornerPanel" unique_id=1228943580]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 0
+offset_left = 149.0
+offset_top = 50.0
+offset_right = 149.0
+offset_bottom = 50.0
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="Control/MainPanel/BackgroundImages/RedCornerPanel3/GreyCornerPanel/Control" unique_id=332408062]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(-204.229, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_yp6xl")
+
+[node name="Square" type="MeshInstance2D" parent="Control/MainPanel/BackgroundImages/RedCornerPanel3/GreyCornerPanel/Control" unique_id=643867308]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_imce1")
+
+[node name="CoatArms" parent="Control/MainPanel/BackgroundImages" unique_id=409353141 instance=ExtResource("15_baefb")]
+z_index = 1
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 339.30963
+offset_top = -307.45532
+offset_right = 1537.3096
+offset_bottom = 395.54468
+grow_horizontal = 1
+grow_vertical = 1
+scale = Vector2(0.711, 0.711)
+
+[node name="LevelSelect" type="Button" parent="Control/MainPanel/BackgroundImages" unique_id=48833919 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -981.0714
+offset_top = -623.0716
+offset_right = -872.07153
+offset_bottom = -523.0716
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+theme_override_colors/font_hover_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+theme_override_font_sizes/font_size = 98
+theme_override_styles/normal = SubResource("StyleBoxFlat_pelxk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pelxk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_yrc6g")
+theme_override_styles/focus = SubResource("StyleBoxFlat_yrc6g")
+script = ExtResource("4_button")
+focus_enter_sfx = NodePath("")
+focus_exit_sfx = NodePath("")
+purchase_sfx = NodePath("")
+
+[node name="Arrow" type="TextureRect" parent="Control/MainPanel/BackgroundImages/LevelSelect" unique_id=1667493539]
+modulate = Color(0.85882354, 0.76862746, 0.69803923, 0.44705883)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25419173
+anchor_top = 0.3306415
+anchor_right = 0.6199899
+anchor_bottom = 0.7293619
+offset_left = -8.063999
+offset_top = -8.063999
+offset_right = 8.064003
+offset_bottom = 8.063995
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.712, 0.712)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("14_e2ubg")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
 [node name="TitleLabel" type="RichTextLabel" parent="Control/MainPanel" unique_id=1944110229]
 unique_name_in_owner = true
 visible = false
@@ -361,15 +497,15 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 413.21448
+offset_left = 348.9286
 offset_top = -627.5358
-offset_right = 973.21436
+offset_right = 908.92847
 offset_bottom = -511.53583
 grow_vertical = 0
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 107
+theme_override_font_sizes/normal_font_size = 54
 bbcode_enabled = true
 text = "$480"
 fit_content = true
@@ -690,9 +826,9 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_left = -156.96405
-offset_top = -46.42862
+offset_top = 124.99988
 offset_right = 59.00769
-offset_bottom = 203.57156
+offset_bottom = 374.99988
 grow_horizontal = 0
 grow_vertical = 2
 scale = Vector2(0.45, 0.45)

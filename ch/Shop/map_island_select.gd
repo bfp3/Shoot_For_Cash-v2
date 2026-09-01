@@ -1302,9 +1302,6 @@ func _finish_map_travel_then_open_shop() -> void:
 	var rm := get_tree().get_first_node_in_group("round_manager")
 	if rm and "RoundState" in rm:
 		rm.enter_state(rm.RoundState.SHOP_START)
-	var player = get_tree().get_first_node_in_group("Player")
-	if player and player.has_method("show_ammo_panel"):
-		player.show_ammo_panel()
 
 
 func _resolve_travel_place(level_id: String) -> String:

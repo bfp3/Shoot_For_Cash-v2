@@ -18,6 +18,8 @@ var _rest_position := Vector2.ZERO
 
 
 func _ready() -> void:
+	hide()
+	return
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	stretch = true
 	_rest_position = position

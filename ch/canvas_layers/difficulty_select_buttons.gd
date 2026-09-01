@@ -6,7 +6,7 @@ signal level_chosen(place: String, stage_title: String)
 @onready var beginner: DifficultyBadge = $Beginner
 @onready var advanced: DifficultyBadge = $Advanced
 @onready var expert: DifficultyBadge = $Expert
-@onready var mystery: DifficultyBadge = $Mystery
+#@onready var mystery: DifficultyBadge = $Mystery
 
 
 func _ready() -> void:
@@ -18,7 +18,7 @@ func _ready() -> void:
 
 
 func refresh_unlocks() -> void:
-	for badge in [beginner, advanced, expert, mystery]:
+	for badge in [beginner, advanced, expert]:
 		if badge == null:
 			continue
 		if badge.has_method("reset_selection_state"):

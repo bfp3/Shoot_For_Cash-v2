@@ -7,7 +7,7 @@
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="5_vom4t"]
 [ext_resource type="Texture2D" uid="uid://dr37vytkhidrn" path="res://res/clock-svgrepo-com.png" id="6_onfim"]
 [ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="8_kvqbn"]
-[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="8_onfim"]
+[ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="8_r6l2h"]
 [ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="10_ohn7f"]
 [ext_resource type="PackedScene" uid="uid://bnvrnccnsas5n" path="res://ch/Shop/PlayButton_v2.tscn" id="17_xklyy"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
@@ -381,9 +381,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 9.1552734e-05
-offset_top = 211.24493
+offset_top = 243.37354
 offset_right = 9.1552734e-05
-offset_bottom = 211.24493
+offset_bottom = 243.37354
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -488,15 +488,15 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 228.11255
-offset_top = -51.53409
+offset_top = -49.927666
 offset_right = 422.11255
-offset_bottom = 39.46591
+offset_bottom = 41.072334
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 theme_override_constants/outline_size = 0
-theme_override_font_sizes/normal_font_size = 84
+theme_override_font_sizes/normal_font_size = 54
 bbcode_enabled = true
 text = "$0"
 fit_content = true
@@ -513,16 +513,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -483.53406
-offset_top = 482.3413
-offset_right = 73.89563
-offset_bottom = 573.3413
+offset_left = -472.289
+offset_top = 483.14447
+offset_right = 85.140686
+offset_bottom = 574.1445
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 theme_override_constants/outline_size = 0
-theme_override_font_sizes/normal_font_size = 84
+theme_override_font_sizes/normal_font_size = 60
 bbcode_enabled = true
 text = "MOSS"
 fit_content = true
@@ -537,8 +537,8 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = 122.08835
-offset_bottom = 122.08835
+offset_top = 212.04825
+offset_bottom = 212.04825
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -554,74 +554,18 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -200.5
-offset_top = -32.694702
+offset_top = 79.75522
 offset_right = 200.5
-offset_bottom = 185.3053
+offset_bottom = 297.75522
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/normal_font_size = 100
+theme_override_font_sizes/normal_font_size = 51
 bbcode_enabled = true
 text = "HOLD OUT
 120 seconds"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MissionLabel3" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MissionLabelControl" unique_id=1459268686]
-unique_name_in_owner = true
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -148.0
-offset_top = -80.0
-offset_right = 148.0
-offset_bottom = 80.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/default_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/normal_font_size = 74
-bbcode_enabled = true
-text = "HOLD OUT
-120 seconds"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MissionLabel2" type="RichTextLabel" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MissionLabelControl" unique_id=1224006194]
-unique_name_in_owner = true
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -148.0
-offset_top = 40.79123
-offset_right = 148.0
-offset_bottom = 254.79123
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_colors/default_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/normal_font_size = 74
-bbcode_enabled = true
-text = "[font_size=52]TO WIN[/font_size]
-[font_size=55]$1,200[/font_size]"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
@@ -667,9 +611,9 @@ offset_right = 126.7457
 offset_bottom = 128.00021
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.176, 0.176)
+scale = Vector2(0.094, 0.094)
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("8_onfim")
+texture = ExtResource("8_r6l2h")
 stretch_mode = 5
 
 [node name="CoatArms" parent="CenterContainer/MainPanel/VBoxContainer/TopRedPanel" unique_id=409353141 instance=ExtResource("8_kvqbn")]
@@ -701,7 +645,7 @@ mouse_filter = 2
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1530085937]
 modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
-position = Vector2(563.0929, 38.38159)
+position = Vector2(595.22174, -180.0922)
 amount = 1
 texture = ExtResource("2_cn8lj")
 fixed_fps = 24
@@ -710,7 +654,7 @@ process_material = SubResource("ParticleProcessMaterial_sk87m")
 
 [node name="BackgroundParticles2" type="GPUParticles2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1121548879]
 modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
-position = Vector2(408.0721, 37.578262)
+position = Vector2(375.94366, -180.89551)
 amount = 1
 texture = ExtResource("2_cn8lj")
 fixed_fps = 24
@@ -718,7 +662,7 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_sk87m")
 
 [node name="Control" type="Control" parent="CenterContainer/MainPanel/VBoxContainer/Money_control" unique_id=1601384433]
-modulate = Color(1, 1, 1, 0.56078434)
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 0.6392157)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
@@ -735,20 +679,17 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="RightTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=549092801]
-modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
 position = Vector2(203.526, 0)
 rotation = 3.1415925
 scale = Vector2(182.13904, 82)
 mesh = SubResource("PrismMesh_sgib8")
 
 [node name="LeftTriangle" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=909585586]
-modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
 position = Vector2(-204.229, 0)
 scale = Vector2(183.79362, -82)
 mesh = SubResource("PrismMesh_jv82y")
 
 [node name="Square" type="MeshInstance2D" parent="CenterContainer/MainPanel/VBoxContainer/Money_control/Control" unique_id=927548181]
-modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
 rotation = 3.1415925
 scale = Vector2(225, 82)
 mesh = SubResource("BoxMesh_atgli")
@@ -764,9 +705,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -215.26114
-offset_top = -125.19882
+offset_top = -292.26706
 offset_right = 185.54236
-offset_bottom = 65.80118
+offset_bottom = -101.26706
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -777,7 +718,7 @@ theme_type_variation = &"WhiteRichText"
 theme_override_constants/shadow_outline_size = 133
 theme_override_constants/shadow_offset_x = 7
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/normal_font_size = 124
+theme_override_font_sizes/normal_font_size = 164
 bbcode_enabled = true
 text = "$0"
 fit_content = true
@@ -1278,8 +1219,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ShopCrateOverlay" parent="." unique_id=1713278199 instance=ExtResource("shop_crate_overlay")]
+visible = false
 layout_mode = 1
-scale = Vector2(0.76, 0.76)
+offset_top = -215.99997
+offset_bottom = 104.00012
+scale = Vector2(0.537, 0.537)
 
 [node name="SFX" type="Node" parent="." unique_id=645241627]
 
@@ -1373,7 +1317,6 @@ grow_vertical = 0
 mouse_filter = 2
 
 [node name="Control" type="Control" parent="GreyCornerPanel" unique_id=802783650]
-modulate = Color(1, 1, 1, 0.56078434)
 show_behind_parent = true
 layout_mode = 1
 anchor_left = 0.5877193
@@ -1508,7 +1451,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="_on_pause_game_button_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="_on_map_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PlayButton" to="." method="play_round_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo" to="." method="_on_buy_ammo_pressed"]
 [connection signal="pressed" from="AddMoney" to="." method="_on_add_money_pressed"]

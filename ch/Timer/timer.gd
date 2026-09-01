@@ -2,6 +2,8 @@ extends Control
 class_name RoundTimer
 @onready var round_manager : RoundManager = get_tree().get_current_scene().get_node_or_null('Round_manager')
 
+# If needed this is the TimeLabel Self Modulate #ffffff63
+
 enum State {
 	INACTIVE,
 	RUNNING,

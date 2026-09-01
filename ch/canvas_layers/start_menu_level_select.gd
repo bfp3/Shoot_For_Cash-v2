@@ -1,3 +1,4 @@
+@tool
 extends Control
 
 const STAGES: Array[String] = ["BEGINNER", "ADVANCED", "EXPERT"]
@@ -6,13 +7,33 @@ const LEVEL_FILES := {
 	"ADVANCED": "res://sc/level-advanced.txt",
 	"EXPERT": "res://sc/level-expert.txt",
 }
-const BADGE_SCENE := preload("res://ch/canvas_layers/difficulty_badge.tscn")
+const BADGE_SCENE := preload("res://ch/canvas_layers/level_select_badge_unlocked.tscn")
+const LOCKED_BADGE_SCENE := preload("res://ch/canvas_layers/level_select_badge_locked.tscn")
 const LEVEL_BADGE_SIZE := Vector2(118, 118)
+
+@export_group("Level Grid")
+@export_range(0.15, 2.5, 0.01, "or_greater") var unlocked_badge_scale := 1.0:
+	set(value):
+		unlocked_badge_scale = maxf(value, 0.05)
+		_apply_badge_layout()
+@export_range(0.15, 2.5, 0.01, "or_greater") var locked_badge_scale := 1.0:
+	set(value):
+		locked_badge_scale = maxf(value, 0.05)
+		_apply_badge_layout()
+## Extra offset from the grid's scene layout. (0, 0) keeps the authored centre placement.
+@export var level_grid_position := Vector2.ZERO:
+	set(value):
+		level_grid_position = value
+		if _grid_layout_ready:
+			_apply_grid_position()
 
 var default_scale := Vector2.ONE
 var default_position := Vector2.ZERO
 var _busy := false
 var _stage_index := 0
+var _grid_layout_ready := false
+var _grid_home_offset := Vector2.ZERO
+var _grid_home_size := Vector2(860.0, 300.0)
 
 @onready var _net_worth_root: Control = get_node_or_null("%NetWorth") as Control
 @onready var _header_badge: DifficultyBadge = get_node_or_null("%HeaderBadge") as DifficultyBadge
@@ -31,10 +52,16 @@ var _stage_index := 0
 
 
 func _ready() -> void:
+	_capture_grid_home()
+	_grid_layout_ready = true
+	if Engine.is_editor_hint():
+		call_deferred("_apply_grid_position")
+		return
 	add_to_group("level_select")
 	default_scale = scale
 	default_position = position
 	pivot_offset_ratio = Vector2(0.5, 0.5)
+	call_deferred("_apply_grid_position")
 	hide()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if _back_button:
@@ -69,6 +96,8 @@ func open_pop_up(stage: String = "") -> void:
 	scale = Vector2.ONE * 0.01
 	position = default_position
 	show()
+	call_deferred("_apply_grid_position")
+	_fade_out_ammo_hud()
 	CommonCode.apply_ui_overlay_blur()
 	_sfx_open()
 	_refresh_net_worth()
@@ -214,17 +243,86 @@ func _rebuild_level_grid() -> void:
 		var unlocked := stage_unlocked
 		if unlocked and gl_PlayerState and gl_PlayerState.has_method("is_sequential_level_unlocked"):
 			unlocked = bool(gl_PlayerState.is_sequential_level_unlocked(stage, ranges, i))
-		var badge := BADGE_SCENE.instantiate() as DifficultyBadge
-		if badge == null:
-			continue
-		badge.hide_icons = true
-		_level_grid.add_child(badge)
-		badge.custom_minimum_size = LEVEL_BADGE_SIZE
-		badge.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		badge.configure_as_level(i + 1, place, unlocked, boss, armored, stage)
-		badge.pressed.connect(_on_level_chosen.bind(place, stage))
+		var badge: Control
+		if unlocked:
+			var open_badge := BADGE_SCENE.instantiate() as DifficultyBadge
+			if open_badge == null:
+				continue
+			open_badge.hide_icons = true
+			badge = open_badge
+			_level_grid.add_child(badge)
+			_style_grid_badge(badge, true)
+			open_badge.configure_as_level(i + 1, place, true, boss, armored, stage)
+			open_badge.pressed.connect(_on_level_chosen.bind(place, stage))
+		else:
+			badge = LOCKED_BADGE_SCENE.instantiate() as Control
+			if badge == null:
+				continue
+			_level_grid.add_child(badge)
+			_style_grid_badge(badge, false)
 	_refresh_locked_overlay()
+
+
+func _style_grid_badge(badge: Control, unlocked: bool) -> void:
+	if badge == null:
+		return
+	var s := unlocked_badge_scale if unlocked else locked_badge_scale
+	badge.custom_minimum_size = LEVEL_BADGE_SIZE * s
+	badge.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	badge.pivot_offset_ratio = Vector2(0.5, 0.5)
+	badge.scale = Vector2.ONE
+	badge.set_meta("level_badge_unlocked", unlocked)
+
+
+func _grid_node() -> GridContainer:
+	if _level_grid:
+		return _level_grid
+	return get_node_or_null("%LevelGrid") as GridContainer
+
+
+func _capture_grid_home() -> void:
+	var grid := _grid_node()
+	if grid == null:
+		return
+	_grid_home_offset = Vector2(grid.offset_left, grid.offset_top)
+	var size := Vector2(grid.offset_right - grid.offset_left, grid.offset_bottom - grid.offset_top)
+	if size.x > 1.0 and size.y > 1.0:
+		_grid_home_size = size
+	elif grid.size.x > 1.0 and grid.size.y > 1.0:
+		_grid_home_size = grid.size
+
+
+func _apply_grid_position() -> void:
+	var grid := _grid_node()
+	if grid == null:
+		return
+	var pos := _grid_home_offset + level_grid_position
+	var size := _grid_home_size
+	if size.x < 1.0 or size.y < 1.0:
+		size = grid.size
+	if size.x < 1.0 or size.y < 1.0:
+		return
+	grid.offset_left = pos.x
+	grid.offset_top = pos.y
+	grid.offset_right = pos.x + size.x
+	grid.offset_bottom = pos.y + size.y
+
+
+func _apply_badge_layout() -> void:
+	var grid := _grid_node()
+	if grid == null:
+		return
+	for child in grid.get_children():
+		if not child is Control:
+			continue
+		var badge := child as Control
+		var unlocked := true
+		if badge.has_meta("level_badge_unlocked"):
+			unlocked = bool(badge.get_meta("level_badge_unlocked"))
+		elif badge is LevelSelectBadgeLocked:
+			unlocked = false
+		_style_grid_badge(badge, unlocked)
 
 
 func _refresh_locked_overlay() -> void:
@@ -411,14 +509,25 @@ func _on_level_chosen(place: String, stage_title: String = "BEGINNER") -> void:
 
 
 func _on_back_pressed() -> void:
+	if _busy:
+		return
+	_busy = true
+	await close_pop_up_animated()
 	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
-	if menus and menus.has_method("ensure_pause"):
-		menus.ensure_pause()
-	var pause_menu = get_tree().get_first_node_in_group("pause_menu")
-	if pause_menu and pause_menu.has_method("open_menu"):
-		pause_menu.open_menu()
-	elif pause_menu and pause_menu.has_method("start"):
-		pause_menu.start()
+	var select_menu: Node = null
+	if menus and menus.has_method("ensure_difficulty_select"):
+		select_menu = menus.ensure_difficulty_select()
+	if select_menu == null:
+		select_menu = get_tree().get_first_node_in_group("difficulty_select")
+	if select_menu == null:
+		push_warning("Level select: difficulty select menu missing")
+		_busy = false
+		return
+	if select_menu is CanvasItem:
+		(select_menu as CanvasItem).z_index = 41
+	if select_menu.has_method("open_pop_up"):
+		await select_menu.open_pop_up()
+	_busy = false
 
 
 func _sfx_open() -> void:
@@ -450,3 +559,11 @@ func _sfx_close() -> void:
 func _sfx_close_instant() -> void:
 	if _hum:
 		_hum.stop()
+
+
+func _fade_out_ammo_hud() -> void:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player and player.has_method("fade_out_ammo_panel"):
+		player.fade_out_ammo_panel(0.33)
+	elif player and player.has_method("hide_ammo_panel_instant"):
+		player.hide_ammo_panel_instant()

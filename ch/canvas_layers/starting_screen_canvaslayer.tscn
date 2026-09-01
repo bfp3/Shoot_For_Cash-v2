@@ -262,6 +262,14 @@ border_color = Color(0.15, 0.15, 0.15, 1)
 corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
+[sub_resource type="PrismMesh" id="PrismMesh_qxvgm"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_uucxj"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_3jj4g"]
+left_to_right = 1.0
+
 [node name="SplashScreenCanvasLayer" type="CanvasLayer" unique_id=991233177]
 script = ExtResource("1_a6mtr")
 
@@ -1155,6 +1163,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RightTriangle" type="MeshInstance2D" parent="SplashScreen_v2/GameName" unique_id=271043440]
+visible = false
 modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
 z_index = -10
 position = Vector2(956.025, 500)
@@ -1264,5 +1273,105 @@ pitch_scale = 0.4
 stream = ExtResource("27_355tk")
 volume_db = -40.0
 pitch_scale = 2.0
+
+[node name="GreyCornerPanel" type="Control" parent="SplashScreen_v2" unique_id=705316753]
+unique_name_in_owner = true
+visible = false
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -104.0
+offset_top = -755.0
+offset_right = 466.0
+offset_bottom = -675.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="SplashScreen_v2/GreyCornerPanel" unique_id=909873565]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchor_left = 0.5877193
+anchor_top = -0.7757538
+anchor_right = 0.5877193
+anchor_bottom = -0.7757538
+offset_left = -3.000061
+offset_top = -3.0
+offset_right = -3.000061
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="SplashScreen_v2/GreyCornerPanel/Control" unique_id=764258574]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(-204.174, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_qxvgm")
+
+[node name="Square" type="MeshInstance2D" parent="SplashScreen_v2/GreyCornerPanel/Control" unique_id=732943635]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_uucxj")
+
+[node name="RedCornerPanel" type="Control" parent="SplashScreen_v2" unique_id=1965215908]
+unique_name_in_owner = true
+visible = false
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 1272.0
+offset_top = -758.0
+offset_right = 1842.0
+offset_bottom = -678.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="SplashScreen_v2/RedCornerPanel" unique_id=762486979]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchor_left = 0.5877193
+anchor_top = -0.7757538
+anchor_right = 0.5877193
+anchor_bottom = -0.7757538
+offset_left = 102.0
+offset_right = 102.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="SplashScreen_v2/RedCornerPanel/Control" unique_id=397587945]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_qxvgm")
+
+[node name="RightTriangle" type="MeshInstance2D" parent="SplashScreen_v2/RedCornerPanel/Control" unique_id=505869365]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(203.53, 0)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_3jj4g")
+
+[node name="Square" type="MeshInstance2D" parent="SplashScreen_v2/RedCornerPanel/Control" unique_id=572438459]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_uucxj")
 
 [connection signal="pressed" from="SplashScreen_v2/GameTitleBackground/StartGame" to="." method="_on_start_game_pressed"]

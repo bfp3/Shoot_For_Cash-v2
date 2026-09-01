@@ -133,6 +133,14 @@ func _on_pause_game_button_pressed() -> void:
 		pause_menu.start()
 
 
+func _on_map_button_pressed() -> void:
+	if round_manager and round_manager.has_method("return_to_level_select"):
+		await round_manager.return_to_level_select()
+		return
+	if round_manager and round_manager.has_method("return_to_difficulty_select"):
+		await round_manager.return_to_difficulty_select()
+
+
 func _on_shoot_for_cents_pressed() -> void:
 	if not ENABLE_SHOOT_FOR_CENTS:
 		return
@@ -312,7 +320,7 @@ func _refresh_place_challenge_banner() -> void:
 		var boss_fmt := gl_DataSet.get_string("shop_challenge_boss", 0)
 		if boss_fmt.is_empty():
 			#boss_fmt = "HOLD OUT\n %d seconds"
-			boss_fmt = "HOLD OUT %d"
+			boss_fmt = "HOLD OUT %dseconds"
 		_set_mission_label_text(banner, boss_fmt % seconds)
 		return
 
@@ -591,6 +599,8 @@ func enter_state(new_state: SkillState) -> void:
 
 
 func _set_shop_crate_overlay_visible(is_open: bool) -> void:
+	
+	
 	if shop_crate_overlay == null:
 		return
 	if is_open:
@@ -603,7 +613,9 @@ func _set_shop_crate_overlay_visible(is_open: bool) -> void:
 			shop_crate_overlay.hide_overlay()
 		else:
 			shop_crate_overlay.hide()
-
+	
+	
+	
 
 func update_inactive() -> void:
 	pass
@@ -804,7 +816,8 @@ func update_open_menu() -> void:
 	pivot_offset = default_pivot_offset
 
 	show()
-	_set_shop_crate_overlay_visible(true)
+	_fade_out_ammo_for_shop()
+	#_set_shop_crate_overlay_visible(true)
 
 	# OPEN ANIMATION
 	var tween := create_tween()
@@ -1205,7 +1218,8 @@ func _refresh_keep_continue_label() -> void:
 func _current_play_price() -> int:
 	if round_manager and round_manager.has_method("get_current_play_price"):
 		return int(round_manager.get_current_play_price())
-	return int(gl_DataSet.get_value("price_play_round", 0))
+	var fallback := int(gl_DataSet.get_value("price_play_round", 0))
+	return fallback if fallback >= 0 else 1
 
 
 func _refresh_play_button_cost() -> void:
@@ -1297,6 +1311,14 @@ func sfx_open_shop() -> void:
 	$SFX/hud_click_2.play()
 	$SFX/hud_click_3.play()
 	$SFX/low_humming.play()
+
+
+func _fade_out_ammo_for_shop() -> void:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player and player.has_method("fade_out_ammo_panel"):
+		player.fade_out_ammo_panel(0.33)
+	elif player and player.has_method("hide_ammo_panel_instant"):
+		player.hide_ammo_panel_instant()
 	
 func sfx_close_shop() -> void:
 	$SFX/shop_close_sfx_01.play(0.5)

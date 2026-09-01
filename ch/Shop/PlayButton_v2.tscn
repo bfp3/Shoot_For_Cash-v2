@@ -43,6 +43,7 @@ gravity = Vector3(0, 0, 0)
 scale_min = 6.0
 scale_max = 12.0
 scale_curve = SubResource("CurveTexture_4eg6k")
+color = Color(0.5803922, 0.003921569, 0.015686275, 1)
 alpha_curve = SubResource("CurveTexture_gxbd8")
 hue_variation_min = -2.2351742e-08
 hue_variation_max = 0.09999997
@@ -100,12 +101,6 @@ corner_radius_bottom_left = 3
 corner_detail = 3
 shadow_size = 3
 
-[sub_resource type="Gradient" id="Gradient_okand"]
-colors = PackedColorArray(0.6313726, 0.007843138, 0.015686275, 1, 0.85882354, 0.76862746, 0.69803923, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_so3my"]
-gradient = SubResource("Gradient_okand")
-
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_okand"]
 particle_flag_disable_z = true
 spread = 180.0
@@ -117,7 +112,6 @@ gravity = Vector3(0, 0, 0)
 scale_min = 4.0
 scale_max = 8.0
 scale_curve = SubResource("CurveTexture_4eg6k")
-color_ramp = SubResource("GradientTexture1D_so3my")
 
 [sub_resource type="Animation" id="Animation_qxmyh"]
 length = 0.001
@@ -229,18 +223,16 @@ size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="RedPanel3" type="Panel" parent="VBoxContainer2/Play" unique_id=564021378]
+visible = false
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -0.93457985
-offset_top = 7.24299
-offset_right = 0.47296143
-offset_bottom = 21.626175
+offset_right = 1.407547
+offset_bottom = 14.383179
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.931, 1)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 theme_type_variation = &"RedPanel"
@@ -255,6 +247,7 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_okand")
 
 [node name="Icon" type="Control" parent="VBoxContainer2/Play" unique_id=667654554]
+visible = false
 modulate = Color(0.63, 0.006299994, 0.016694842, 0.43137255)
 layout_mode = 1
 anchors_preset = 15
@@ -364,6 +357,7 @@ speed_scale = 2.0
 
 [node name="PlayLabel" type="RichTextLabel" parent="VBoxContainer2/Play" unique_id=160258226]
 unique_name_in_owner = true
+self_modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -371,9 +365,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -95.327095
-offset_top = -46.78038
+offset_top = -60.799057
 offset_right = 91.67291
-offset_bottom = 80.21965
+offset_bottom = 66.20099
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -387,12 +381,23 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="PlayParticles" type="GPUParticles2D" parent="VBoxContainer2/Play/PlayLabel" unique_id=32111635]
+show_behind_parent = true
+position = Vector2(97.42329, 49.70275)
+scale = Vector2(0.93457943, 0.93457943)
+amount = 18
+fixed_fps = 6
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_okand")
+
 [node name="Cost" type="Control" parent="VBoxContainer2" unique_id=1538052106]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="CostLabel" type="RichTextLabel" parent="VBoxContainer2/Cost" unique_id=552854020]
+visible = false
 modulate = Color(0.75686276, 0.003921569, 0.007843138, 1)
 layout_mode = 1
 anchors_preset = 15

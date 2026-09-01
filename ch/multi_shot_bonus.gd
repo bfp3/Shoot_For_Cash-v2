@@ -139,7 +139,8 @@ func _play_named_banner(text: String, pos: Vector3, color: Color, font_size: int
 
 	if gl_PlayerState.dataset.total_hazards > 0:
 		return
-
+	
+	$MultiShotSFX.pitch_scale = [1.8,1.9,2.0].pick_random()
 	$MultiShotSFX.play()
 
 	if tween:

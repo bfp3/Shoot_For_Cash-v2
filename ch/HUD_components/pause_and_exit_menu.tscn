@@ -11,6 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="8_dvstp"]
 [ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="9_6uj88"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="9_uy4i6"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="10_s7dml"]
 [ext_resource type="Script" uid="uid://dfaimwsnabqrt" path="res://ch/HUD_components/settings_menu.gd" id="10_settings"]
 [ext_resource type="Script" uid="uid://2td2u2syuhrd" path="res://ch/HUD_components/resolution_confirm_dialog.gd" id="11_confirm"]
 [ext_resource type="Script" uid="uid://be14gsgtq6uyc" path="res://ch/HUD_components/volume_dial.gd" id="12_dial"]
@@ -20,9 +21,33 @@ left_to_right = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_s7dml"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s7dml"]
+bg_color = Color(0.92, 0.8770667, 0.8464, 0.32941177)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2125, 0.23, 0.25, 1)
+border_blend = true
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 4
+shadow_color = Color(1, 1, 1, 0.11764706)
+anti_aliasing = false
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei2sf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cn8lj"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_s7dml"]
+left_to_right = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_dvstp"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_6uj88"]
+left_to_right = 1.0
 
 [node name="Settings_pause_menu" type="CanvasLayer" unique_id=127694209 groups=["pause_menu"]]
 process_mode = 3
@@ -79,52 +104,6 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 1.2)
 
-[node name="RedCornerPanel" type="Control" parent="Control" unique_id=125942234]
-unique_name_in_owner = true
-self_modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -750.0
-offset_top = 216.0
-offset_right = -750.0
-offset_bottom = 296.0
-grow_horizontal = 0
-mouse_filter = 2
-
-[node name="Control" type="Control" parent="Control/RedCornerPanel" unique_id=192180598]
-modulate = Color(1, 1, 1, 0.56078434)
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -149.0
-offset_top = 50.0
-offset_right = -149.0
-offset_bottom = 50.0
-grow_horizontal = 0
-rotation = -3.1415927
-scale = Vector2(1.339, 1.257)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="RightTriangle" type="MeshInstance2D" parent="Control/RedCornerPanel/Control" unique_id=987479237]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(141.451, 0)
-rotation = 3.1415925
-scale = Vector2(182.13904, 82)
-mesh = SubResource("PrismMesh_brcys")
-
-[node name="Square" type="MeshInstance2D" parent="Control/RedCornerPanel/Control" unique_id=484499736]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(-32.484, 0)
-rotation = 3.1415925
-scale = Vector2(165.93288, 82)
-mesh = SubResource("BoxMesh_s7dml")
-
 [node name="CenterContainer" type="CenterContainer" parent="Control" unique_id=47598338]
 layout_mode = 1
 anchors_preset = 8
@@ -133,16 +112,17 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -960.0
-offset_top = -540.0
+offset_top = -571.0
 offset_right = 960.0
-offset_bottom = 540.0
+offset_bottom = 509.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.081, 1.077)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="Control/CenterContainer" unique_id=1200476633]
-modulate = Color(1, 1, 1, 0.26666668)
+modulate = Color(1, 1, 1, 0.42352942)
 z_index = -1
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 2
@@ -150,6 +130,7 @@ mouse_filter = 2
 color = Color(0.92156863, 0.8784314, 0.84705883, 1)
 
 [node name="ColorRect2" type="Panel" parent="Control/CenterContainer" unique_id=1053665524]
+visible = false
 z_index = -1
 custom_minimum_size = Vector2(640, 708.105)
 layout_mode = 2
@@ -162,29 +143,138 @@ custom_minimum_size = Vector2(500, 500)
 layout_mode = 2
 mouse_filter = 2
 
+[node name="RedCornerPanel" type="Control" parent="Control/CenterContainer/QuitControl" unique_id=125942234]
+unique_name_in_owner = true
+visible = false
+z_index = 1
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 495.0
+offset_top = -151.7855
+offset_right = 495.0
+offset_bottom = -71.78551
+grow_horizontal = 0
+scale = Vector2(1.258, 1.098)
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="Control/CenterContainer/QuitControl/RedCornerPanel" unique_id=192180598]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -181.0
+offset_top = 50.0
+offset_right = -181.0
+offset_bottom = 50.0
+grow_horizontal = 0
+rotation = -3.1415927
+scale = Vector2(1.6, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RightTriangle" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/RedCornerPanel/Control" unique_id=987479237]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(141.45102, -5.381916)
+rotation = 3.1415925
+scale = Vector2(182.13904, 94.29)
+mesh = SubResource("PrismMesh_brcys")
+
+[node name="Square" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/RedCornerPanel/Control" unique_id=484499736]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(-32.48401, -5.381916)
+rotation = 3.1415925
+scale = Vector2(165.93288, 94.29)
+mesh = SubResource("BoxMesh_s7dml")
+
+[node name="GreyCornerPanel" type="Control" parent="Control/CenterContainer/QuitControl" unique_id=561507935]
+unique_name_in_owner = true
+visible = false
+z_index = 1
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -769.0
+offset_top = -151.53899
+offset_right = -769.0
+offset_bottom = -71.53899
+grow_horizontal = 0
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="Control/CenterContainer/QuitControl/GreyCornerPanel" unique_id=1248181004]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -149.0
+offset_top = 50.0
+offset_right = -149.0
+offset_bottom = 50.0
+grow_horizontal = 0
+rotation = -3.1415927
+scale = Vector2(1.6, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RightTriangle" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/GreyCornerPanel/Control" unique_id=1679196495]
+modulate = Color(0.37, 0.33053333, 0.296, 0.7058824)
+position = Vector2(-206.1239, -3.0517578e-05)
+rotation = 3.1415925
+scale = Vector2(-182.139, 82)
+mesh = SubResource("PrismMesh_brcys")
+
+[node name="Square" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/GreyCornerPanel/Control" unique_id=978564616]
+modulate = Color(0.37, 0.33053333, 0.296, 0.7058824)
+position = Vector2(-32.484, 0)
+rotation = 3.1415925
+scale = Vector2(165.93288, 82)
+mesh = SubResource("BoxMesh_s7dml")
+
+[node name="CoatArms" parent="Control/CenterContainer/QuitControl" unique_id=409353141 instance=ExtResource("10_s7dml")]
+z_index = 1
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 335.12433
+offset_top = -433.50134
+offset_right = 1533.1245
+offset_bottom = 269.49866
+grow_horizontal = 1
+grow_vertical = 1
+scale = Vector2(0.893, 0.893)
+
 [node name="QuitMenu" type="PanelContainer" parent="Control/CenterContainer/QuitControl" unique_id=1093554413]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(800, 800)
+custom_minimum_size = Vector2(1500, 850)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -102.5
-offset_top = -102.5
-offset_right = 102.5
-offset_bottom = 102.5
+offset_left = -750.0
+offset_top = -403.0734
+offset_right = 750.0
+offset_bottom = 456.92664
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_styles/panel = ExtResource("8_68q17")
+theme_override_styles/panel = SubResource("StyleBoxFlat_s7dml")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/CenterContainer/QuitControl/QuitMenu" unique_id=631780910]
 layout_mode = 2
 
 [node name="VSeparator" type="VSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=150049176]
-custom_minimum_size = Vector2(10, 0)
+custom_minimum_size = Vector2(510, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.4
@@ -200,18 +290,6 @@ visible = false
 custom_minimum_size = Vector2(50, 12.18)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1396683498]
-custom_minimum_size = Vector2(150, 30)
-layout_mode = 2
-theme_override_colors/default_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/normal_font_size = 124
-bbcode_enabled = true
-text = "[pulse]PAUSED"
-fit_content = true
-autowrap_mode = 0
-horizontal_alignment = 1
 
 [node name="HSeparator4" type="HSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1117888658]
 custom_minimum_size = Vector2(50, 0)
@@ -271,6 +349,7 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 
 [node name="BackToTitle" type="Button" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer/VBoxContainer" unique_id=1988776651 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+visible = false
 layout_mode = 2
 theme_type_variation = &"MenuUiButtons"
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
@@ -305,10 +384,128 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_cn8lj")
 
 [node name="VSeparator2" type="VSeparator" parent="Control/CenterContainer/QuitControl/QuitMenu/HBoxContainer" unique_id=592141924]
+custom_minimum_size = Vector2(510, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.4
 theme_override_styles/separator = SubResource("StyleBoxEmpty_ei2sf")
+
+[node name="GreyCornerPanel2" type="Control" parent="Control/CenterContainer/QuitControl" unique_id=1642271380]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -744.2682
+offset_top = -501.09387
+offset_right = -174.26819
+offset_bottom = -421.0938
+grow_vertical = 0
+scale = Vector2(1.325, 1.325)
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="Control/CenterContainer/QuitControl/GreyCornerPanel2" unique_id=473595818]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchor_left = 0.5877193
+anchor_top = -0.7757538
+anchor_right = 0.5877193
+anchor_bottom = -0.7757538
+offset_left = -3.000061
+offset_top = -3.0
+offset_right = -3.000061
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/GreyCornerPanel2/Control" unique_id=518277164]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+position = Vector2(-204.174, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_s7dml")
+
+[node name="Square" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/GreyCornerPanel2/Control" unique_id=1192506687]
+modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_dvstp")
+
+[node name="RedCornerPanel2" type="Control" parent="Control/CenterContainer/QuitControl" unique_id=941497279]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 221.74298
+offset_top = -504.0938
+offset_right = 791.74286
+offset_bottom = -424.09375
+grow_vertical = 0
+scale = Vector2(1.325, 1.325)
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="Control/CenterContainer/QuitControl/RedCornerPanel2" unique_id=1598599727]
+modulate = Color(1, 1, 1, 0.56078434)
+show_behind_parent = true
+layout_mode = 1
+anchor_left = 0.5877193
+anchor_top = -0.7757538
+anchor_right = 0.5877193
+anchor_bottom = -0.7757538
+offset_left = 102.0
+offset_right = 102.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -3.1415927
+scale = Vector2(1.339, 1.257)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="LeftTriangle" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/RedCornerPanel2/Control" unique_id=1404125874]
+visible = false
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(-203.8343, 0)
+scale = Vector2(183.79362, -82)
+mesh = SubResource("PrismMesh_s7dml")
+
+[node name="RightTriangle" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/RedCornerPanel2/Control" unique_id=587125462]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+position = Vector2(203.53, 0)
+rotation = 3.1415925
+scale = Vector2(182.13904, 82)
+mesh = SubResource("PrismMesh_6uj88")
+
+[node name="Square" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/RedCornerPanel2/Control" unique_id=247967936]
+modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
+rotation = 3.1415925
+scale = Vector2(225, 82)
+mesh = SubResource("BoxMesh_dvstp")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/CenterContainer/QuitControl" unique_id=1396683498]
+z_index = 1
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 0
+offset_left = 724.4095
+offset_top = -121.40201
+offset_right = 902.4095
+offset_bottom = -42.402008
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 72
+bbcode_enabled = true
+text = "PAUSED"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
 
 [node name="Settings_menu" type="Control" parent="Control" unique_id=103359054]
 unique_name_in_owner = true

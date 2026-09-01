@@ -115,6 +115,7 @@ func open_menu() -> void:
 	show()
 
 	sfx_open_shop()
+	_fade_ammo_for_pause(false)
 
 	var backgroundColor := $Control/CenterContainer/ColorRect
 	backgroundColor.modulate.a = 0.0
@@ -156,6 +157,7 @@ func close_menu() -> void:
 		focused.release_focus()
 
 	animating = false
+	_restore_ammo_after_pause()
 	var should_reopen_map := reopen_map_on_resume
 	reopen_map_on_resume = false
 
@@ -420,6 +422,36 @@ func _on_open_resolution_confirm() -> void:
 	resolution_confirm.show()
 	var keep := resolution_confirm.get_node_or_null("%KeepButton") as Control
 	UiFocus.grab_in(resolution_confirm, keep)
+
+
+func _fade_ammo_for_pause(visible: bool) -> void:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null:
+		return
+	if visible:
+		if player.has_method("show_ammo_panel"):
+			player.show_ammo_panel()
+	elif player.has_method("fade_out_ammo_panel"):
+		player.fade_out_ammo_panel(0.25)
+
+
+func _restore_ammo_after_pause() -> void:
+	var shop := get_tree().get_first_node_in_group("shop_main_menu") as CanvasItem
+	var map_menu := get_tree().get_first_node_in_group("map_menu") as CanvasItem
+	var tally := get_tree().get_first_node_in_group("tally_card_menu") as CanvasItem
+	var difficulty := get_tree().get_first_node_in_group("difficulty_select") as CanvasItem
+	var level_select := get_tree().get_first_node_in_group("level_select") as CanvasItem
+	if (
+		(shop and shop.visible)
+		or (map_menu and map_menu.visible)
+		or (tally and tally.visible)
+		or (difficulty and difficulty.visible)
+		or (level_select and level_select.visible)
+	):
+		return
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and rm.has_method("should_show_ammo_hud") and bool(rm.should_show_ammo_hud()):
+		_fade_ammo_for_pause(true)
 
 
 func sfx_open_shop() -> void:

@@ -1,0 +1,516 @@
+[gd_scene format=3 uid="uid://d8u1jr5rxudy"]
+
+[ext_resource type="Script" uid="uid://ru5h7vo6ehu6" path="res://ch/canvas_layers/level_select_badge_unlocked.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://du24q4ceh1rta" path="res://res/star_png_256.png" id="4_2givc"]
+[ext_resource type="Texture2D" uid="uid://cp255yy4k2lna" path="res://res/lock-svgrepo-com.png" id="4_lock"]
+[ext_resource type="Texture2D" uid="uid://c2vlvp7tqncih" path="res://res/star_filled_256.png" id="4_w73f1"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="4_xilsf"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="5_2dukn"]
+[ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="5_focus"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="5_pmshx"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="6_flip"]
+[ext_resource type="Script" uid="uid://bbyajack21ct1" path="res://ch/canvas_layers/sheen_automation.gd" id="6_sc68w"]
+[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="7_shing"]
+[ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="8_travel"]
+[ext_resource type="PackedScene" uid="uid://pm7i6qr0v4or" path="res://ch/2D_pieces/star_node.tscn" id="9_stars"]
+
+[sub_resource type="Curve" id="Curve_f258a"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.70105827, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_tt1wp"]
+curve = SubResource("Curve_f258a")
+
+[sub_resource type="Curve" id="Curve_ayn6y"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.50446427, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_pmshx"]
+curve = SubResource("Curve_ayn6y")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gn3u7"]
+particle_flag_disable_z = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 125.0
+emission_ring_inner_radius = 100.0
+emission_ring_cone_angle = 90.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+angular_velocity_min = -50.000015
+angular_velocity_max = -50.000015
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 9.49949e-08
+tangential_accel_min = 4.9999976
+tangential_accel_max = 4.9999976
+scale_min = 0.02
+scale_max = 0.04
+scale_curve = SubResource("CurveTexture_pmshx")
+color = Color(0.95, 0.95, 0.95, 1)
+alpha_curve = SubResource("CurveTexture_tt1wp")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_circle"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_blend = true
+corner_radius_top_left = 94
+corner_radius_top_right = 94
+corner_radius_bottom_right = 94
+corner_radius_bottom_left = 94
+corner_detail = 16
+shadow_color = Color(0.61, 0.46766666, 0.2684, 1)
+shadow_size = 1
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="Shader" id="Shader_sc68w"]
+code = "shader_type canvas_item;
+
+uniform float shine_progress : hint_range(0.0, 2.0) = -0.2;
+uniform float shine_width : hint_range(0.01, 1.0) = 0.15;
+uniform float shine_strength : hint_range(0.0, 2.0) = 1.0;
+
+uniform vec4 base_color : source_color = vec4(1.0, 0.65, 0.15, 1.0);
+uniform vec4 shine_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+
+void fragment() {
+    vec4 tex = texture(TEXTURE, UV);
+
+    // Diagonal from bottom-left to top-right
+    float axis = UV.x + UV.y;
+
+    // Distance from the moving shine
+    float distance_to_shine = abs(axis - shine_progress);
+
+    // Soft shine band
+    float shine = 1.0 - smoothstep(
+        0.0,
+        shine_width,
+        distance_to_shine
+    );
+
+    // Tint the original white star
+    vec3 color = tex.rgb * base_color.rgb;
+
+    // Add the white shine
+    color += shine_color.rgb * shine * shine_strength * tex.a;
+
+    COLOR = vec4(color, tex.a);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m7byi"]
+resource_local_to_scene = true
+shader = SubResource("Shader_sc68w")
+shader_parameter/shine_progress = 1.1850000562875
+shader_parameter/shine_width = 0.42700001958398004
+shader_parameter/shine_strength = 0.050000002375
+shader_parameter/base_color = Color(0.8, 0.6954667, 0.57600003, 0.4392157)
+shader_parameter/shine_color = Color(1, 0.98, 0.88, 0.39215687)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hit"]
+
+[node name="LevelSelectBadgeUnlocked" type="Control" unique_id=399074095]
+custom_minimum_size = Vector2(188, 188)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -94.0
+offset_top = -94.0
+offset_right = 94.0
+offset_bottom = 94.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1_script")
+title = "1"
+subtitle = ""
+icon = ExtResource("4_w73f1")
+lock_icon = ExtResource("4_lock")
+circle_self_modulate = Color(0.76862746, 0.65882355, 0.56078434, 1)
+circle3_modulate = Color(0.8039216, 0.69803923, 0.5803922, 1)
+hide_icons = true
+hide_subtitle = true
+hide_banners = true
+blink_lock_instead_of_flip = true
+locked_hold_sec = 1.0
+
+[node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=660221732]
+position = Vector2(95, 100)
+amount = 3
+texture = ExtResource("4_xilsf")
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_gn3u7")
+
+[node name="Circle" type="Panel" parent="." unique_id=536188618]
+self_modulate = Color(0.76862746, 0.65882355, 0.56078434, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.98, 0.98)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_circle")
+
+[node name="Circle2" type="Panel" parent="." unique_id=277744476]
+visible = false
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.842, 0.842)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_circle")
+
+[node name="Circle3" type="Panel" parent="." unique_id=1212491101]
+visible = false
+modulate = Color(0.8039216, 0.69803923, 0.5803922, 1)
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.792, 0.792)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_circle")
+
+[node name="Circle4" type="TextureRect" parent="." unique_id=1353664011 node_paths=PackedStringArray("target")]
+modulate = Color(0.8039216, 0.69803923, 0.5803922, 1)
+material = SubResource("ShaderMaterial_m7byi")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.359, 0.359)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("5_2dukn")
+script = ExtResource("6_sc68w")
+target = NodePath(".")
+sheen_width = 0.1
+sheen_color = Color(1, 0.98, 0.88, 0.32941177)
+
+[node name="Stars" type="Control" parent="." unique_id=1998075401]
+visible = false
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0)
+z_index = 3
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -72.0
+offset_top = -38.0
+offset_right = 72.0
+offset_bottom = 18.0
+grow_horizontal = 2
+scale = Vector2(0.88, 0.88)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="StarLeft" parent="Stars" unique_id=1998075402 instance=ExtResource("9_stars")]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+offset_left = -64.0
+offset_top = 4.227234
+offset_right = -24.0
+offset_bottom = 44.227234
+rotation = -0.32
+scale = Vector2(0.8, 0.8)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="StarMid" parent="Stars" unique_id=1998075403 instance=ExtResource("9_stars")]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0)
+z_index = 1
+layout_mode = 1
+offset_left = -22.0
+offset_top = -13.772797
+offset_right = 22.0
+offset_bottom = 30.227203
+scale = Vector2(1.12, 1.12)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="StarRight" parent="Stars" unique_id=1998075404 instance=ExtResource("9_stars")]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+offset_left = 24.0
+offset_top = 4.2272644
+offset_right = 64.0
+offset_bottom = 44.227264
+rotation = 0.32
+scale = Vector2(0.8, 0.8)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="CoatArms" parent="." unique_id=409353141 instance=ExtResource("5_pmshx")]
+visible = false
+layout_mode = 1
+offset_top = -124.0
+offset_bottom = 132.0
+scale = Vector2(2.112, 2.112)
+
+[node name="Ring" parent="CoatArms" index="0" unique_id=1586711955]
+visible = false
+
+[node name="Insignia" parent="CoatArms" index="2" unique_id=1723705056]
+theme_override_constants/outline_size = 0
+
+[node name="Banner3" type="ColorRect" parent="." unique_id=1205367444]
+visible = false
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -18.0
+offset_bottom = 20.029053
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.56, 0.6375403)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+
+[node name="Banner2" type="ColorRect" parent="." unique_id=1425960322]
+visible = false
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -17.754997
+offset_bottom = 20.274055
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.51400006, 0.68615854)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+color = Color(0.14, 0.14, 0.14, 1)
+
+[node name="Banner" type="ColorRect" parent="." unique_id=1650236240]
+visible = false
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -18.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5297186, 0.68481326)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+color = Color(0.5921569, 0.09019608, 0.09411765, 1)
+
+[node name="Title" type="RichTextLabel" parent="." unique_id=2020352176]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 6.0
+offset_top = -20.0
+offset_right = -6.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 52
+bbcode_enabled = true
+text = "[wave]01"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Subtitle" type="RichTextLabel" parent="." unique_id=1131355777]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -173.0
+offset_right = 80.0
+offset_bottom = -120.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[pulse]3 [font_size=28]STAGES"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BackLabel" type="RichTextLabel" parent="." unique_id=388791902]
+unique_name_in_owner = true
+visible = false
+z_index = 2
+clip_contents = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "[center][wave]UNLOCKED
+NOT YET"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LockIcon" type="TextureRect" parent="." unique_id=932523332]
+visible = false
+modulate = Color(1, 1, 1, 0.22745098)
+self_modulate = Color(1, 1, 1, 0)
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.598, 0.598)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("4_lock")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HitButton" type="Button" parent="." unique_id=2004100255]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_hit")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_hit")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_hit")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_hit")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hit")
+flat = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=4134395]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -388.0
+offset_top = -78.0
+offset_right = 388.0
+offset_bottom = 178.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.125, 0.125)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer" unique_id=2119161989]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_2givc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Icon2" type="TextureRect" parent="HBoxContainer" unique_id=1183234057]
+visible = false
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_2givc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Icon3" type="TextureRect" parent="HBoxContainer" unique_id=176816404]
+visible = false
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_2givc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SFX" type="Node" parent="." unique_id=1847203311]
+
+[node name="focus_enter_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1847203312]
+stream = ExtResource("5_focus")
+volume_db = -32.0
+
+[node name="focus_exit" type="AudioStreamPlayer" parent="SFX" unique_id=1847203313]
+stream = ExtResource("5_focus")
+volume_db = -50.0
+
+[node name="flip_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1847203314]
+stream = ExtResource("6_flip")
+volume_db = -22.0
+
+[node name="shing_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1847203315]
+stream = ExtResource("7_shing")
+volume_db = -19.0
+pitch_scale = 1.2
+
+[node name="travel_sfx" type="AudioStreamPlayer" parent="SFX" unique_id=1847203316]
+stream = ExtResource("8_travel")
+volume_db = -32.0
+pitch_scale = 1.6
+
+[editable path="CoatArms"]

@@ -151,8 +151,8 @@ var round_finished := false
 var cash_banked_this_round := 0
 ## Cash banked at the end-of-round BANK balloon so far this shooting range (HUD BankedLabel).
 var cash_banked_this_range := 0
-## Ladder multiplier applied when cash enters the unbanked pool. Banking resets to 2.
-const DEFAULT_CASH_MULTIPLIER := 2
+## Ladder multiplier applied when cash enters the unbanked pool. Banking resets to 1 (face value).
+const DEFAULT_CASH_MULTIPLIER := 1
 var cash_multiplier := DEFAULT_CASH_MULTIPLIER
 
 var _log: Array=[]
@@ -316,10 +316,12 @@ func get_continue_fee() -> int:
 	if tree:
 		var rm := tree.get_first_node_in_group("round_manager")
 		if rm and rm.has_method("get_current_play_price"):
-			var play_price := int(rm.get_current_play_price())
-			if play_price > 0:
-				return play_price
-	return get_continue_base_fee()
+			return int(rm.get_current_play_price())
+	if gl_DataSet and gl_DataSet.has_method("get_value"):
+		var fallback := int(gl_DataSet.get_value("price_play_round", 0))
+		if fallback >= 0:
+			return fallback
+	return 1
 
 
 ## Continues always succeed — unpaid balance goes into debt (negative wallet cash).

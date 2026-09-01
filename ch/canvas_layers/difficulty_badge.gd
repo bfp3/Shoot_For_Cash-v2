@@ -56,7 +56,7 @@ signal pressed
 	set(value):
 		banner3_color = value
 		_apply_visuals()
-@export var coat_arms_modulate := Color.WHITE:
+@export var coat_arms_modulate := Color.TRANSPARENT:
 	set(value):
 		coat_arms_modulate = value
 		_apply_visuals()
@@ -102,12 +102,19 @@ enum ColorScheme { BEGINNER, ADVANCED, EXPERT }
 @export var is_boss := false
 ## Hide the "N STAGES" subtitle (numbered level badges).
 @export var hide_subtitle := false
+## Hide Banner / Banner2 / Banner3 (unlocked numbered level badges).
+@export var hide_banners := false:
+	set(value):
+		hide_banners = value
+		_apply_visuals()
 ## Later bosses get side plates (Circle2 scaled out).
 @export var boss_armored := false
 ## Beginner / Advanced / Expert on the title screen — opens that difficulty's level grid instead of travelling.
 @export var selects_difficulty := false
 ## When locked, stay off the row entirely (Mystery) instead of showing a dulled / flip badge.
 @export var hide_when_locked := false
+## Level-select numbered badges: locked click blinks the lock icon instead of flipping to copy.
+@export var blink_lock_instead_of_flip := false
 
 @export_group("Locked Flip")
 @export_multiline var locked_back_text := "[pulse freq=8 color=#FFFFFF90]NOT\nUNLOCKED YET":
@@ -118,6 +125,7 @@ enum ColorScheme { BEGINNER, ADVANCED, EXPERT }
 @export var locked_flip_half_time := 0.1
 @export var locked_flip_edge_y_scale := 1.12
 @export var unlocked_spin_sec := 1.5
+@export var locked_spin_return_sec := 0.25
 
 @onready var _circle: Control = $Circle
 @onready var _circle2: Control = get_node_or_null("Circle2")
@@ -214,20 +222,30 @@ func _apply_visuals() -> void:
 		_banner.color = banner_color
 	if _banner3:
 		_banner3.color = banner3_color
+	_apply_banner_tilt()
 	if _coat_arms:
 		_coat_arms.modulate = coat_arms_modulate
+		_coat_arms.visible = not is_boss and coat_arms_modulate.a > 0.01 and not _showing_back
 	if _title:
 		_title.text = "[wave]" + title
 		_title.add_theme_color_override("default_color", title_color)
+		_title.visible = not _showing_back and not _hide_number_for_lock()
 	if _subtitle:
-		_subtitle.visible = not hide_subtitle
+		_subtitle.visible = not hide_subtitle and not _showing_back
 		#_subtitle.text = "[pulse]" + subtitle + "[font_size=28] STAGES"
 		_subtitle.text = "[pulse freq=8 color=#FFFFFF90]" + subtitle + "[font_size=28] STAGES[/font_size][/pulse]"
 		_subtitle.add_theme_color_override("default_color", subtitle_color)
 	if _lock:
 		if lock_icon:
 			_lock.texture = lock_icon
-		_lock.visible = locked and not _showing_back and not is_header
+		if blink_lock_instead_of_flip:
+			if locked and not is_header and not _showing_back:
+				_show_lock_in_place()
+			else:
+				_lock.visible = false
+				_lock.scale = _lock_rest_scale()
+		else:
+			_lock.visible = locked and not _showing_back and not is_header
 	if _button:
 		if is_header:
 			_button.disabled = true
@@ -242,10 +260,7 @@ func _apply_visuals() -> void:
 	if hide_when_locked:
 		visible = not locked
 	if _circle2:
-		if is_boss and boss_armored:
-			_circle2.scale = Vector2(1.22, 0.78)
-		else:
-			_circle2.scale = Vector2(0.855, 0.855)
+		_circle2.scale = Vector2(0.855, 0.855)
 
 
 func _icon_rects() -> Array[TextureRect]:
@@ -304,11 +319,11 @@ func _apply_scheme_colors() -> void:
 		_:
 			icon_count = 1
 			circle_self_modulate = Color(0.76862746, 0.65882355, 0.56078434, 1)
-			circle2_self_modulate = Color(0.25490198, 0.31764707, 0.16078432, 1)
+			circle2_self_modulate = Color("5E544B")
 			circle3_modulate = Color(0.8039216, 0.69803923, 0.5803922, 1)
 			top_color = Color(0.5921569, 0.09019608, 0.09411765, 1)
-			banner_color = Color(0.25490198, 0.31764707, 0.16078432, 1)
-			banner3_color = Color(0.12864, 0.16, 0.0816, 1)
+			banner_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
+			banner3_color = Color(0.25, 0.22333333, 0.2, 1)
 			icon_modulate = Color(0.37, 0.33053333, 0.296, 1)
 			title_color = Color.WHITE
 
@@ -318,17 +333,16 @@ func configure_as_level(number: int, place: String, unlocked: bool, boss: bool, 
 	is_boss = boss
 	boss_armored = armored
 	hide_subtitle = true
+	hide_banners = true
 	hide_icons = true
 	title = str(number)
 	subtitle = ""
 	travel_place = place
 	unlock_key = ""
 	locked = not unlocked
+	blink_lock_instead_of_flip = true
 	apply_color_scheme(stage)
-	if boss:
-		coat_arms_modulate = Color.WHITE
-	else:
-		coat_arms_modulate = Color(1, 1, 1, 0)
+	coat_arms_modulate = Color(1, 1, 1, 0)
 	_apply_visuals()
 
 
@@ -418,7 +432,7 @@ func fade_away_for_selection(selected: Node) -> void:
 		_wiggle = null
 	if _button:
 		_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	scale = Vector2.ONE
+	scale = Vector2.ONE 
 	hide()
 	modulate.a = 0.0
 
@@ -431,7 +445,7 @@ func play_unlocked_spin() -> void:
 		_flip_tween.kill()
 	z_index = 24
 	rotation_degrees = 0.0
-	scale = Vector2.ONE
+	scale = Vector2.ONE 
 	_set_face(false)
 	_play_sfx(_shing_sfx)
 	get_tree().call_group("difficulty_badge", "fade_away_for_selection", self)
@@ -540,6 +554,9 @@ func _is_content_locked() -> bool:
 
 
 func play_locked_flip() -> void:
+	if blink_lock_instead_of_flip:
+		await play_locked_icon_blink()
+		return
 	_flip_token += 1
 	var token := _flip_token
 	_flipping = true
@@ -565,6 +582,128 @@ func play_locked_flip() -> void:
 		_on_hover(true)
 
 
+func play_locked_icon_blink() -> void:
+	_flip_token += 1
+	var token := _flip_token
+	_flipping = true
+	if _wiggle:
+		_wiggle.kill()
+		_wiggle = null
+	if _flip_tween and _flip_tween.is_valid():
+		_flip_tween.kill()
+	_apply_center_pivot()
+	scale = Vector2.ONE
+	rotation_degrees = 0.0
+	_show_lock_in_place()
+	_play_sfx(_shing_sfx)
+	z_index = 24
+	_flip_tween = create_tween()
+	_flip_tween.tween_property(self, "scale", Vector2.ONE * 1.5, 0.12)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	await _flip_tween.finished
+	if token != _flip_token:
+		return
+	await _blink_visible(0.24)
+	if token != _flip_token:
+		return
+	if _flip_tween and _flip_tween.is_valid():
+		_flip_tween.kill()
+	_flip_tween = create_tween()
+	_flip_tween.set_parallel(true)
+	_flip_tween.tween_property(self, "scale", Vector2.ONE, maxf(locked_spin_return_sec, 0.05))\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	_flip_tween.tween_property(self, "rotation_degrees", 0.0, maxf(locked_spin_return_sec, 0.05))\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	await _flip_tween.finished
+	if token != _flip_token:
+		return
+	scale = Vector2.ONE
+	rotation_degrees = 0.0
+	z_index = 0
+	_show_lock_in_place()
+	_flipping = false
+	if _button and _button.is_hovered():
+		_on_hover(true)
+
+
+func _hide_number_for_lock() -> bool:
+	return blink_lock_instead_of_flip and locked and not is_header
+
+
+func _apply_banner_tilt() -> void:
+	var rot := 15.0 if is_boss else 0.0
+	var show_banners := not hide_banners and not is_boss and not _showing_back
+	for banner in [_banner, _banner2, _banner3]:
+		if banner == null:
+			continue
+		banner.rotation_degrees = rot
+		banner.visible = show_banners
+
+
+func _lock_rest_scale() -> Vector2:
+	return Vector2(0.598, 0.598)
+
+
+func _lock_number_scale() -> Vector2:
+	return _lock_rest_scale() * 0.2
+
+
+func _show_lock_in_place() -> void:
+	if _lock == null:
+		return
+	_lock.visible = true
+	_lock.self_modulate = Color.WHITE
+	_lock.modulate = Color.WHITE
+	_lock.scale = _lock_number_scale()
+
+
+func _prepare_lock_on_back() -> void:
+	_show_lock_in_place()
+
+
+func _blink_lock_on_back(token: int) -> void:
+	if _lock == null:
+		await get_tree().create_timer(maxf(locked_hold_sec, 0.05), true).timeout
+		return
+	_show_lock_in_place()
+	var blink := create_tween()
+	_flip_tween = blink
+	blink.set_loops(8)
+	blink.tween_property(_lock, "modulate:a", 0.08, 0.09)
+	blink.tween_property(_lock, "modulate:a", 1.0, 0.09)
+	await blink.finished
+	if token != _flip_token:
+		return
+	if _lock:
+		_lock.modulate.a = 1.0
+
+
+func _set_face(back: bool, blank_back: bool = false) -> void:
+	_showing_back = back
+	if _back_label:
+		_back_label.visible = back and not blank_back
+		if _back_label.visible:
+			_apply_back_text()
+	if _particles:
+		_particles.visible = not back
+	if back:
+		for node in [_banner, _banner2, _banner3, _coat_arms, _title, _subtitle, _icon_box]:
+			if node:
+				node.visible = false
+		if blink_lock_instead_of_flip:
+			_show_lock_in_place()
+		elif _lock:
+			_lock.visible = false
+		return
+	if _subtitle:
+		_subtitle.visible = not hide_subtitle
+	if _coat_arms:
+		_coat_arms.visible = not is_boss
+	if _title:
+		_title.visible = not _hide_number_for_lock()
+	_apply_visuals()
+
+
 func _animate_face_flip(to_back: bool, play_flip_sfx: bool = true, blank_back: bool = false) -> void:
 	var rest := Vector2.ONE
 	var edge := Vector2(0.001, rest.y * locked_flip_edge_y_scale)
@@ -586,25 +725,6 @@ func _animate_face_flip(to_back: bool, play_flip_sfx: bool = true, blank_back: b
 
 func _set_locked_face(back: bool) -> void:
 	_set_face(back, false)
-
-
-func _set_face(back: bool, blank_back: bool = false) -> void:
-	_showing_back = back
-	if _back_label:
-		_back_label.visible = back and not blank_back
-		if _back_label.visible:
-			_apply_back_text()
-	if _particles:
-		_particles.visible = not back
-	if back:
-		for node in [_banner, _banner2, _banner3, _coat_arms, _title, _subtitle, _icon_box, _lock]:
-			if node:
-				node.visible = false
-		return
-	for node in [_banner, _banner2, _banner3, _coat_arms, _title, _subtitle]:
-		if node:
-			node.visible = true
-	_apply_visuals()
 
 
 func _on_hover(inside: bool) -> void:

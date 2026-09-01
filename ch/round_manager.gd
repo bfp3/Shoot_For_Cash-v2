@@ -250,6 +250,14 @@ enum RoundState {
 var bonus_oranges_ready := false
 
 
+func should_show_ammo_hud() -> bool:
+	match current_round_state:
+		RoundState.ROUND_START, RoundState.WAVE_START, RoundState.WAVE_END, RoundState.BONUS_ROUND, RoundState.CHECK_SCORE, RoundState.RESUME:
+			return true
+		_:
+			return false
+
+
 func _ready() -> void:
 	load_level_sequence()
 	_capture_rocks_randomize_baseline()
@@ -740,17 +748,36 @@ func has_next_script_level(place_id: String = "") -> bool:
 func is_range_complete_tally() -> bool:
 	if player_failed or level_editor_test_active:
 		return false
+	## Hold-out win is a range clear even if the sequence index has not advanced yet.
+	if _advance_range_after_hold_out and not _boss_mode:
+		return true
 	if current_rock_sequence.is_empty():
 		return false
 	return current_sequence_index >= current_rock_sequence.size()
 
 
 func request_tally_level_select() -> void:
+	if gl_PlayerState and gl_PlayerState.has_method("get_run_difficulty") and gl_PlayerState.has_method("set_select_difficulty"):
+		gl_PlayerState.set_select_difficulty(gl_PlayerState.get_run_difficulty())
 	_tally_exit_to_level_select = true
 	_tally_travel_next_level = false
 	_tally_replay_level = false
 	_reopen_on_level_grid = true
 	enter_state(RoundState.TALLY_END)
+
+
+## Shop MapButton / tally Level Select: reset the run and reopen the numbered grid for this difficulty.
+func return_to_level_select() -> void:
+	if gl_PlayerState:
+		var stage := "BEGINNER"
+		if gl_PlayerState.has_method("get_run_difficulty"):
+			stage = String(gl_PlayerState.get_run_difficulty())
+		elif gl_PlayerState.has_method("get_select_difficulty"):
+			stage = String(gl_PlayerState.get_select_difficulty())
+		if gl_PlayerState.has_method("set_select_difficulty"):
+			gl_PlayerState.set_select_difficulty(stage)
+	_reopen_on_level_grid = true
+	await return_to_difficulty_select()
 
 
 func request_tally_next_level() -> void:
@@ -809,7 +836,7 @@ func _settle_completed_level() -> void:
 		return
 	if not is_range_complete_tally():
 		return
-	var place := gl_DataSet.resolve_place_name(String(gl_PlayerState.dataset.level_name))
+	var place := gl_DataSet.resolve_place_name(get_active_range_name())
 	if place.is_empty() or place == "start":
 		return
 	if gl_PlayerState.has_method("mark_level_cleared"):
@@ -1158,26 +1185,29 @@ func is_active_range_beaten() -> bool:
 	return gl_PlayerState.is_place_completed(place)
 
 
-## PLAY / continue fee for the current range (`play $100` in level-beginner).
-## Falls back to data_set `price_play_round` when the range has no play line.
-## Cleared ranges are free to play again.
+## PLAY / continue fee for the current range (`play $100` in the active level file).
+## Uses that script amount even when it is $0. Falls back to data_set `price_play_round` when the range has no play line.
 func get_current_play_price() -> int:
-	if is_active_range_beaten():
-		return 0
-	var price := 0
+	var range_id := get_active_range_name()
+	if Parser and Parser.has_method("has_play_price") and Parser.has_play_price(LEVEL_ISLAND_NAME, range_id):
+		return maxi(int(Parser.get_play_price(LEVEL_ISLAND_NAME, range_id)), 0)
 	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
 		var round_data = current_rock_sequence[current_sequence_index]
-		if round_data is Dictionary:
-			var from_round := int(round_data.get("play_price", 0))
-			if from_round > 0:
-				price = from_round
-	if price <= 0 and Parser and Parser.has_method("get_play_price"):
-		var from_range := int(Parser.get_play_price(LEVEL_ISLAND_NAME, get_active_range_name()))
-		if from_range > 0:
-			price = from_range
-	if price <= 0:
-		price = int(gl_DataSet.get_value("price_play_round", 0))
-	return price
+		if round_data is Dictionary and round_data.has("play_price"):
+			return maxi(int(round_data.get("play_price", 0)), 0)
+	if not current_rock_sequence.is_empty() and current_rock_sequence[0] is Dictionary:
+		var first: Dictionary = current_rock_sequence[0]
+		if first.has("play_price"):
+			return maxi(int(first.get("play_price", 0)), 0)
+	return _dataset_play_price()
+
+
+func _dataset_play_price() -> int:
+	if gl_DataSet and gl_DataSet.has_method("get_value"):
+		var fallback := int(gl_DataSet.get_value("price_play_round", 0))
+		if fallback >= 0:
+			return fallback
+	return 1
 
 
 ## Range-clear bonus for the current range (`reward $400` in level-beginner).
@@ -1200,6 +1230,26 @@ func get_current_range_reward() -> int:
 	if reward > 0 and is_active_range_beaten():
 		return int(reward / 2)
 	return reward
+
+
+## Script `reward $N` for the current range, with no half-after-clear. Used by the tally grade row.
+func get_script_range_reward() -> int:
+	var range_id := get_active_range_name()
+	if Parser and Parser.has_method("has_range_reward") and Parser.has_range_reward(LEVEL_ISLAND_NAME, range_id):
+		return maxi(int(Parser.get_range_reward(LEVEL_ISLAND_NAME, range_id)), 0)
+	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
+		var round_data = current_rock_sequence[current_sequence_index]
+		if round_data is Dictionary and round_data.has("reward"):
+			return maxi(int(round_data.get("reward", 0)), 0)
+	if not current_rock_sequence.is_empty() and current_rock_sequence[0] is Dictionary:
+		var first: Dictionary = current_rock_sequence[0]
+		if first.has("reward"):
+			return maxi(int(first.get("reward", 0)), 0)
+	if gl_DataSet and gl_DataSet.has_method("get_value"):
+		var fallback := int(gl_DataSet.get_value("range_clear_reward", 0))
+		if fallback >= 0:
+			return fallback
+	return 0
 
 
 func get_resume_spawn_index() -> int:
@@ -1854,10 +1904,12 @@ func update_continue() -> void:
 		screen = menus.ensure_continue()
 	if screen == null:
 		screen = get_tree().get_first_node_in_group("continue_screen")
-	var fee := 100
+	var fee := 1
 	var cash := 0
 	if gl_PlayerState.has_method("get_continue_fee"):
 		fee = int(gl_PlayerState.get_continue_fee())
+	elif has_method("get_current_play_price"):
+		fee = int(get_current_play_price())
 	if gl_PlayerState.has_method("get_spendable_cash"):
 		cash = int(gl_PlayerState.get_spendable_cash())
 	else:
@@ -1880,6 +1932,9 @@ func update_continue() -> void:
 		## Paid continue: replay the round from the start (debt allowed).
 		await _play_strike_finale_return()
 		await _restart_round_after_continue()
+	elif outcome == "level_select":
+		await _play_strike_finale_return()
+		await return_to_level_select()
 	else:
 		await _game_over_from_continue()
 
@@ -2657,12 +2712,17 @@ func update_round_end() -> void:
 
 
 func update_tally_start() -> void:
+	## Unlock the next numbered badge as soon as the tally exists, and persist it
+	## so a quit-and-reload still has that level available.
+	_settle_completed_level()
 	var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
 	if menus and menus.has_method("ensure_tally"):
 		menus.ensure_tally()
 	CommonCode.apply_ui_overlay_blur()
-	if player and player.has_method("ensure_ammo_panel_visible"):
-		player.ensure_ammo_panel_visible()
+	if player and player.has_method("fade_out_ammo_panel"):
+		player.fade_out_ammo_panel()
+	elif player and player.has_method("hide_ammo_panel_instant"):
+		player.hide_ammo_panel_instant()
 	EventBus.instance.open_tally_card.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -3670,8 +3730,6 @@ func _open_shop_after_arrival() -> void:
 	if wave_progress_feedback:
 		wave_progress_feedback.show()
 	enter_state(RoundState.SHOP_START)
-	if player and player.has_method("show_ammo_panel"):
-		player.show_ammo_panel()
 
 
 ## Boss survival fight for an overworld island (0 → island_1_boss + range boss, 1 → island_2_boss + range boss-2).
@@ -3818,7 +3876,6 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 	CommonCode.apply_ui_overlay_blur()
 	## Map travel (no overlay): shop + ammo open after the map's own exit timing.
 	if use_transition_overlay:
-		player.show_ammo_panel()
 		enter_state(RoundState.SHOP_START)
 
 

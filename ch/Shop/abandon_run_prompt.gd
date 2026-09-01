@@ -53,7 +53,7 @@ func open_prompt(title_bbcode: String = "") -> void:
 	if _dim:
 		tween.parallel().tween_property(_dim, "modulate:a", 1.0, 0.18)
 	if _panel:
-		tween.parallel().tween_property(_panel, "scale", _panel_rest_scale, 0.3)
+		tween.parallel().tween_property(_panel, "scale", _panel_rest_scale, 0.03)
 		tween.parallel().tween_property(_panel, "modulate:a", 1.0, 0.18)
 	else:
 		tween.parallel().tween_property(self, "modulate:a", 1.0, 0.18)

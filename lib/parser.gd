@@ -111,14 +111,28 @@ func get_boss_timer_ms(island_name: String, range_name: String = "boss") -> int:
 	return int(boss_timer_ms_by_range.get("%s|%s" % [island_name, range_name], 0))
 
 
-## PLAY / continue fee for an island/range (`play $100`). 0 if unset.
+## PLAY / continue fee for an island/range (`play $100`). -1 if that range has no play line.
 func get_play_price(island_name: String, range_name: String) -> int:
-	return int(play_price_by_range.get("%s|%s" % [island_name, range_name], 0))
+	var key := "%s|%s" % [island_name, range_name]
+	if not play_price_by_range.has(key):
+		return -1
+	return maxi(int(play_price_by_range[key]), 0)
 
 
-## Range-clear reward for an island/range (`reward $400`). 0 if unset.
+func has_play_price(island_name: String, range_name: String) -> bool:
+	return play_price_by_range.has("%s|%s" % [island_name, range_name])
+
+
+## Range-clear reward for an island/range (`reward $400`). -1 if that range has no reward line.
 func get_range_reward(island_name: String, range_name: String) -> int:
-	return int(reward_by_range.get("%s|%s" % [island_name, range_name], 0))
+	var key := "%s|%s" % [island_name, range_name]
+	if not reward_by_range.has(key):
+		return -1
+	return maxi(int(reward_by_range[key]), 0)
+
+
+func has_range_reward(island_name: String, range_name: String) -> bool:
+	return reward_by_range.has("%s|%s" % [island_name, range_name])
 
 
 ## `hold out 90000`, `hold-out 90000`, or `boss-timer 90000`. Returns ms, or -1 if not that command.
@@ -900,12 +914,14 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				'difficulty': '',
 				'max_strikes': 3,
 				'hold_out_ms': 0,
-				'play_price': int(play_price_by_range.get(key, 0)),
-				'reward': int(reward_by_range.get(key, 0)),
 				# Temporary while parsing — removed by `_finalize_round_repeats`.
 				'_pending': [],
 				'_sections': [],
 			}
+			if play_price_by_range.has(key):
+				rounds[key].play_price = maxi(int(play_price_by_range[key]), 0)
+			if reward_by_range.has(key):
+				rounds[key].reward = maxi(int(reward_by_range[key]), 0)
 			order.append(key)
 
 		var parsed := parse_spawn_command(entry[3])
@@ -1012,12 +1028,10 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 		var range_ms := int(boss_timer_ms_by_range.get(key, 0))
 		if range_ms > 0:
 			rounds[key].hold_out_ms = range_ms
-		var range_play := int(play_price_by_range.get(key, 0))
-		if range_play > 0:
-			rounds[key].play_price = range_play
-		var range_reward := int(reward_by_range.get(key, 0))
-		if range_reward > 0:
-			rounds[key].reward = range_reward
+		if play_price_by_range.has(key):
+			rounds[key].play_price = maxi(int(play_price_by_range[key]), 0)
+		if reward_by_range.has(key):
+			rounds[key].reward = maxi(int(reward_by_range[key]), 0)
 		sequences.append(rounds[key])
 	return sequences
 
