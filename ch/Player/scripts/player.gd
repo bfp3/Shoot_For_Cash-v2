@@ -284,7 +284,7 @@ func _ready() -> void:
 
 	%HUD_bottom_corner.hide()
 	
-	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
+	get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
 	
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)
@@ -1724,10 +1724,10 @@ func fire_weapon(force_plant: bool = false) -> void:
 
 	power_gun_fire_rate = 0.05
 	#power_bullet_speed = 0.01
-	#
+	
 	#weapon_shooting.power_bullet_speed = 0.3
 	#power_target_circle = 60.0
-
+	weapon_shooting.power_bullet_delay = 0.01
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
 	if shoot_ring_pulse_on_release:

@@ -204,3 +204,12 @@ func XXemit_all_signals() -> void:
 	mult_increase.emit()
 	mult_decrease.emit()
 	mult_reset.emit()
+
+
+	continue_fee_changed.emit()
+	continue_reserve_broken.emit()
+	cash_pool_changed.emit()
+	cash_pool_banked.emit()
+	cash_pool_forfeited.emit()
+	checkpoint_shot.emit()
+	cash_multiplier_changed.emit()

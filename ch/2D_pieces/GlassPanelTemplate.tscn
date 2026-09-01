@@ -1,0 +1,225 @@
+[gd_scene format=3 uid="uid://spv8vasmv31o"]
+
+[ext_resource type="Script" uid="uid://dt1dkixmr0w0u" path="res://ch/canvas_layers/start_menu_difficulty_select.gd" id="1_6an6n"]
+[ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="2_fjg6u"]
+[ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="3_8stou"]
+[ext_resource type="PackedScene" uid="uid://b4ddmogbrspeb" path="res://ch/canvas_layers/net_worth_label.tscn" id="4_f5w2n"]
+[ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="5_b8a0o"]
+[ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="6_girwg"]
+[ext_resource type="PackedScene" uid="uid://m8j4jk4exfys" path="res://ch/2D_pieces/coat_arms.tscn" id="7_vijik"]
+[ext_resource type="PackedScene" uid="uid://ed5pry7fa1o5" path="res://ch/2D_pieces/t_mcornerpiece_grey.tscn" id="8_64f34"]
+[ext_resource type="PackedScene" uid="uid://0t4i1ia84d24" path="res://ch/2D_pieces/t_mcornerpiece_red.tscn" id="9_v3pxp"]
+
+[sub_resource type="Animation" id="Animation_tnodp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_ohn7f"]
+resource_name = "rotation"
+length = 4.0
+loop_mode = 2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.17453292519943295, 3.3161255787892263]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_c4bw8"]
+_data = {
+&"RESET": SubResource("Animation_tnodp"),
+&"rotation": SubResource("Animation_ohn7f")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_egetg"]
+bg_color = Color(0.8784314, 0.8392157, 0.80784315, 1)
+border_color = Color(0.3882353, 0.3882353, 0.3882353, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="GlassPanelTemplate" type="Control" unique_id=1879767928]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.325, 1.325)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("1_6an6n")
+
+[node name="MainPanel" type="Control" parent="." unique_id=1948149109]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -490.0
+offset_top = -277.81
+offset_right = 490.0
+offset_bottom = 277.81
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.25, 1.25)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="GlassPanel" type="Panel" parent="MainPanel" unique_id=2063428213]
+layout_mode = 0
+offset_right = 980.0
+offset_bottom = 555.62
+theme_override_styles/panel = ExtResource("2_fjg6u")
+
+[node name="BackgroundImages" type="Control" parent="MainPanel" unique_id=1118528394]
+clip_contents = true
+anchors_preset = 0
+offset_right = 980.0
+offset_bottom = 555.62
+mouse_filter = 2
+
+[node name="Reticle" type="TextureRect" parent="MainPanel/BackgroundImages" unique_id=1582418717]
+modulate = Color(0.91, 0.867685, 0.82809997, 0.11764706)
+show_behind_parent = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -471.13568
+offset_right = 512.0
+offset_bottom = 552.8643
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.619, 0.619)
+pivot_offset_ratio = Vector2(0.5, 0.46)
+mouse_filter = 2
+texture = ExtResource("3_8stou")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MainPanel/BackgroundImages/Reticle" unique_id=614668186]
+libraries/ = SubResource("AnimationLibrary_c4bw8")
+autoplay = &"rotation"
+speed_scale = 0.8
+
+[node name="TopRedPanel" type="Control" parent="MainPanel" unique_id=1098189418]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 120)
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 0.21597494
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="NetWorth" parent="MainPanel/TopRedPanel" unique_id=1463515772 instance=ExtResource("4_f5w2n")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_top = 0.0
+offset_bottom = 0.0
+
+[node name="MapButton" type="Button" parent="MainPanel/TopRedPanel" unique_id=869067883]
+unique_name_in_owner = true
+self_modulate = Color(0.58, 0.0057999943, 0.015369854, 0)
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -467.18494
+offset_top = -33.5368
+offset_right = -423.22174
+offset_bottom = 3.4109993
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.622, 1.622)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_egetg")
+script = ExtResource("5_b8a0o")
+wiggle_amount = 1.6
+wiggle_amount_exit = 1.55
+
+[node name="CloseButtonIcon" type="TextureRect" parent="MainPanel/TopRedPanel/MapButton" unique_id=2116857462]
+self_modulate = Color(0.86, 0.7674067, 0.6966, 0.44705883)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -129.2543
+offset_top = -127.99978
+offset_right = 126.7457
+offset_bottom = 128.00021
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.176, 0.176)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("6_girwg")
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainPanel" unique_id=1266011269]
+layout_mode = 0
+offset_right = 980.0
+offset_bottom = 555.62
+theme_override_constants/separation = 0
+
+[node name="CornerPieces" type="Control" parent="MainPanel" unique_id=489061287]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CoatArms" parent="MainPanel/CornerPieces" unique_id=409353141 instance=ExtResource("7_vijik")]
+z_index = 1
+layout_mode = 1
+offset_left = 318.07227
+offset_top = -361.97467
+offset_right = 574.07227
+offset_bottom = -105.97464
+scale = Vector2(0.62, 0.62)
+
+[node name="TMcornerpieceGrey" parent="MainPanel/CornerPieces" unique_id=1003467784 instance=ExtResource("8_64f34")]
+position = Vector2(-470, -178.01764)
+rotation = -3.1415925
+
+[node name="TMcornerpieceRed" parent="MainPanel/CornerPieces" unique_id=961558198 instance=ExtResource("9_v3pxp")]
+position = Vector2(264.79248, -178.6214)
+rotation = -3.1415925
