@@ -23,10 +23,69 @@ range moss
 
 		pace-slow
 		rock 4 a4
-
-		#sfx-play oasisWorld -28.0
-
 		wait
+
+		rock-red-attacker 1 a1
+		wait 1000
+		rock-red-attacker 8 a8
+		wait 420
+		rock-red-attacker 2 b2
+		wait 1000
+		rock-red-attacker 7 b7
+		wait 420
+		rock-stay 8 a8
+		rock-red-attacker 1 b1
+		wait 1000
+		rock-red-attacker 8 b8
+		wait 420
+		rock-red-attacker 2 a2
+		wait 1000
+		rock-red-attacker 7 a7
+		wait 1000
+		rock-stay 1 a1
+		rock-red-attacker 8 a8
+		wait 420
+		rock-red-attacker 1 a1
+		wait 1000
+		rock-red-attacker 7 b7
+		wait 420
+		rock-red-attacker 2 b2
+		wait 1000
+		rock-red-attacker 8 b8
+		wait 420
+		rock-red-attacker 1 b1
+		wait 1000
+		rock-stay 1 c1
+		rock-red-attacker 7 a7
+		wait 420
+		rock-red-attacker 2 a2
+		wait 1000
+
+		rock-red-attacker 1 a1
+		wait 420
+		rock-red-attacker 2 a2
+		wait 1000
+		rock-red-attacker 7 a7
+		wait 420
+		rock-red-attacker 8 a8
+		wait 1000
+		rock-red-attacker 1 b1
+		wait 420
+		rock-red-attacker 2 b2
+		wait 1000
+		rock-red-attacker 7 b7
+		wait 420
+		rock-red-attacker 8 b8
+		wait
+
+
+
+
+
+
+
+
+
 		rock 1 a1
 		wait
 		rock 8 a8
@@ -2132,3 +2191,66 @@ range boss-finale
 		hold out 45000
 		#hold out 10000
 		#1
+
+
+range quiz
+
+	play $0
+	reward $400
+	round
+		# Same dodge swarm as a Challenge 6 wrong answer:
+		# ~10s of rock-red-attackers on a1/a2/a7/a8/b1/b2/b7/b8 (~420ms apart).
+
+
+		rock-red-attacker 1 a1
+		wait 420
+		rock-red-attacker 8 a8
+		wait 420
+		rock-red-attacker 2 b2
+		wait 420
+		rock-red-attacker 7 b7
+		wait 420
+		rock-red-attacker 1 b1
+		wait 420
+		rock-red-attacker 8 b8
+		wait 420
+		rock-red-attacker 2 a2
+		wait 420
+		rock-red-attacker 7 a7
+		wait 420
+
+		rock-red-attacker 8 a8
+		wait 420
+		rock-red-attacker 1 a1
+		wait 420
+		rock-red-attacker 7 b7
+		wait 420
+		rock-red-attacker 2 b2
+		wait 420
+		rock-red-attacker 8 b8
+		wait 420
+		rock-red-attacker 1 b1
+		wait 420
+		rock-red-attacker 7 a7
+		wait 420
+		rock-red-attacker 2 a2
+		wait 420
+
+		rock-red-attacker 1 a1
+		wait 420
+		rock-red-attacker 2 a2
+		wait 420
+		rock-red-attacker 7 a7
+		wait 420
+		rock-red-attacker 8 a8
+		wait 420
+		rock-red-attacker 1 b1
+		wait 420
+		rock-red-attacker 2 b2
+		wait 420
+		rock-red-attacker 7 b7
+		wait 420
+		rock-red-attacker 8 b8
+		wait
+
+		balloon-check

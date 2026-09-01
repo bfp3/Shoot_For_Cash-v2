@@ -8,13 +8,14 @@ signal level_chosen(place: String, stage_title: String)
 @onready var challenge_3: DifficultyBadge = $Challenge3
 @onready var challenge_4: DifficultyBadge = $Challenge4
 @onready var challenge_5: DifficultyBadge = $Challenge5
+@onready var challenge_6: DifficultyBadge = $Challenge6
 
 var _rest_position := Vector2.ZERO
 var _rest_captured := false
 
 
 func _challenge_badges() -> Array:
-	return [challenge_1, challenge_2, challenge_3, challenge_4, challenge_5]
+	return [challenge_1, challenge_2, challenge_3, challenge_4, challenge_5, challenge_6]
 
 
 func _ready() -> void:

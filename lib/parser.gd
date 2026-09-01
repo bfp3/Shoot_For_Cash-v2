@@ -187,6 +187,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   `rock-gap` / `rock-red-gap [gapCols…] [aim]`: expands to large red hazards in every
 ##   column except the listed gap(s). Default gap = 8. Aim may be `a4`, `a?` / `a` (row A,
 ##   random col), or `?`. Example: `rock-gap 4 6 8 a?` → gaps at 4/6/8, aim row A.
+## quiz / quiz-timer N / quiz-wrong-limit N / quiz-prize-start N / quiz-prize-step N:
+##   Marks the round as a questionnaire (Challenge 6). Questions live in the script:
+##   `question …` then four `answer …` lines (mark the right one with trailing `correct`).
 ## balloon: {cmd, row, column, param} — bare / `?` → random cell; `balloon A1` → fixed.
 ## wait: {cmd} — hold until the sky is clear (same as old `wait until clear`).
 ## wait 0 / wait 600: {cmd, ms} — delay that many milliseconds before the next rock.
@@ -346,6 +349,51 @@ func parse_spawn_command(token: String) -> Dictionary:
 			if parts.size() > 1:
 				strike_count = maxi(int(parts[1]), 1)
 			return {'cmd': 'strikes', 'count': strike_count}
+
+		'quiz':
+			return {'cmd': 'quiz'}
+
+		'quiz-timer':
+			var timer_sec := 60
+			if parts.size() > 1 and String(parts[1]).is_valid_int():
+				timer_sec = maxi(int(parts[1]), 1)
+			return {'cmd': 'quiz-timer', 'sec': timer_sec}
+
+		'quiz-wrong-limit':
+			var wrong_limit := 3
+			if parts.size() > 1 and String(parts[1]).is_valid_int():
+				wrong_limit = maxi(int(parts[1]), 1)
+			return {'cmd': 'quiz-wrong-limit', 'count': wrong_limit}
+
+		'quiz-prize-start':
+			var prize_start := 100
+			if parts.size() > 1 and String(parts[1]).is_valid_int():
+				prize_start = maxi(int(parts[1]), 0)
+			return {'cmd': 'quiz-prize-start', 'amount': prize_start}
+
+		'quiz-prize-step':
+			var prize_step := 100
+			if parts.size() > 1 and String(parts[1]).is_valid_int():
+				prize_step = maxi(int(parts[1]), 0)
+			return {'cmd': 'quiz-prize-step', 'amount': prize_step}
+
+		'question':
+			return {
+				'cmd': 'question',
+				'text': ' '.join(parts.slice(1)).strip_edges(),
+			}
+
+		'answer':
+			var answer_parts: PackedStringArray = parts.slice(1)
+			var is_correct := false
+			if answer_parts.size() > 0 and String(answer_parts[answer_parts.size() - 1]).strip_edges().to_lower() == 'correct':
+				is_correct = true
+				answer_parts = answer_parts.slice(0, answer_parts.size() - 1)
+			return {
+				'cmd': 'answer',
+				'text': ' '.join(answer_parts).strip_edges(),
+				'correct': is_correct,
+			}
 
 		'sfx-play':
 			var play_name := String(parts[1]).strip_edges() if parts.size() > 1 else ''
@@ -844,6 +892,22 @@ func _balloon_row_letter_to_index(letter: String) -> int:
 			return 0
 
 
+## Load another level file's rock sequences without replacing the active island dataset.
+func peek_rock_sequences_from_file(file_name: String, island_name: String = "", range_name: String = "") -> Array:
+	var backup: Array = data_set.duplicate(true)
+	var backup_timers: Dictionary = boss_timer_ms_by_range.duplicate(true)
+	var backup_play: Dictionary = play_price_by_range.duplicate(true)
+	var backup_reward: Dictionary = reward_by_range.duplicate(true)
+	var sequences: Array = []
+	if loadIslandFile(file_name):
+		sequences = get_rock_sequences(island_name, range_name)
+	data_set = backup
+	boss_timer_ms_by_range = backup_timers
+	play_price_by_range = backup_play
+	reward_by_range = backup_reward
+	return sequences
+
+
 ## Parse freeform level-editor text as a single round under island/range `test`.
 ## Caller text is the body of the round (rock, wait, repeat, etc.).
 ## Returns { "spawns": [...], "repeat": int }. Empty spawns if nothing parsed.
@@ -914,6 +978,12 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				'difficulty': '',
 				'max_strikes': 3,
 				'hold_out_ms': 0,
+				'quiz': false,
+				'quiz_timer_sec': 60,
+				'quiz_wrong_limit': 3,
+				'quiz_prize_start': 100,
+				'quiz_prize_step': 100,
+				'quiz_questions': [],
 				# Temporary while parsing — removed by `_finalize_round_repeats`.
 				'_pending': [],
 				'_sections': [],
@@ -1008,6 +1078,49 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			rounds[key].bonus_targets.append({
 				'waypoints': waypoints.duplicate(true),
 			})
+			continue
+
+		if parsed_cmd == 'quiz':
+			rounds[key].quiz = true
+			continue
+
+		if parsed_cmd == 'quiz-timer':
+			rounds[key].quiz_timer_sec = maxi(int(parsed.get('sec', 60)), 1)
+			continue
+
+		if parsed_cmd == 'quiz-wrong-limit':
+			rounds[key].quiz_wrong_limit = maxi(int(parsed.get('count', 3)), 1)
+			continue
+
+		if parsed_cmd == 'quiz-prize-start':
+			rounds[key].quiz_prize_start = maxi(int(parsed.get('amount', 100)), 0)
+			continue
+
+		if parsed_cmd == 'quiz-prize-step':
+			rounds[key].quiz_prize_step = maxi(int(parsed.get('amount', 100)), 0)
+			continue
+
+		if parsed_cmd == 'question':
+			rounds[key].quiz = true
+			rounds[key].quiz_questions.append({
+				'text': String(parsed.get('text', '')).strip_edges(),
+				'answers': [],
+				'correct_index': -1,
+			})
+			continue
+
+		if parsed_cmd == 'answer':
+			var questions: Array = rounds[key].quiz_questions
+			if questions.is_empty():
+				push_warning("parser: answer before question — ignored")
+				continue
+			var q: Dictionary = questions[questions.size() - 1]
+			var answers: Array = q.get('answers', [])
+			var answer_text := String(parsed.get('text', '')).strip_edges()
+			answers.append(answer_text)
+			q.answers = answers
+			if bool(parsed.get('correct', false)):
+				q.correct_index = answers.size() - 1
 			continue
 
 		# Round markers like `bonus-type1` — must not catch `bonus-target` (handled above).

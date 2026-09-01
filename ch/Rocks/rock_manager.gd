@@ -789,6 +789,8 @@ func _sky_is_clear_for_sequence() -> bool:
 
 
 func is_holding_wave() -> bool:
+	if _quiz_hold:
+		return true
 	if _pineapple_round_playing:
 		return true
 	if _script_has_more_commands():
@@ -3256,6 +3258,115 @@ func _aim_cell_world_position(aim_row: int, aim_column: int, apply_jitter: bool 
 ## Exact aim-grid world point (A1–C8, plus optional side lanes 0 / 9). No jitter.
 func aim_cell_world_position(aim_row: int, aim_column: int) -> Vector3:
 	return _aim_cell_world_position(aim_row, aim_column, false)
+
+
+## Quiz mode: keep the wave open while the questionnaire runs.
+var _quiz_hold := false
+
+
+func set_quiz_hold(active: bool) -> void:
+	_quiz_hold = active
+	if active:
+		_waiting_until_clear = true
+		_sequence_active = true
+	else:
+		_waiting_until_clear = false
+		_sequence_active = false
+
+
+## Launch a rock-stay for quiz answer selection. `answer_index` is stored as meta.
+func spawn_quiz_answer_rock(aim_row: int, aim_column: int, answer_index: int):
+	var body = _find_free_pool_rock()
+	if body == null:
+		push_warning("RockManager: no free pool rock for quiz answer")
+		return null
+	var entry := {
+		"cmd": "rock-stay",
+		"column": aim_column,
+		"spawn_row": -1,
+		"aim_row": aim_row,
+		"aim_column": aim_column,
+		"param": "",
+	}
+	var column := _resolve_spawn_column(entry)
+	var spawn_x := _spawn_x_for_entry(entry, column)
+	if body.has_method("setup_for_pool_launch"):
+		body.setup_for_pool_launch(_spawn_entry_to_rock_type(entry), spawn_x)
+	else:
+		body.rock_type = _spawn_entry_to_rock_type(entry)
+		body.target_x_position = spawn_x
+		body.enter_state(body.State.PREPARE_ROCK)
+	body.set_meta("quiz_answer_index", answer_index)
+	body.set_meta("quiz_aim_row", aim_row)
+	body.set_meta("quiz_aim_column", aim_column)
+	body.cash_value = 0
+	if "rock_stay_self_destruct" in body:
+		body.rock_stay_self_destruct = false
+	if "rock_stay_expire_gives_strike" in body:
+		body.rock_stay_expire_gives_strike = false
+	await get_tree().create_timer(0.2, false).timeout
+	if not is_instance_valid(body) or body.current_state != body.State.PREPARE_ROCK:
+		return null
+	body.cash_value = 0
+	if "rock_stay_self_destruct" in body:
+		body.rock_stay_self_destruct = false
+	body.enter_state(body.State.ACTIVE)
+	var aim_pos := _aim_cell_world_position(aim_row, aim_column, false)
+	if body.has_method("begin_rock_stay_flight"):
+		body.begin_rock_stay_flight(aim_pos)
+	## Lifetime may restart on begin_rock_stay_flight — disable again.
+	if "rock_stay_self_destruct" in body:
+		body.rock_stay_self_destruct = false
+	if body.has_method("_start_rock_stay_lifetime"):
+		## Cancel any just-started lifetime by bumping the token.
+		if "_stay_life_token" in body:
+			body._stay_life_token += 1
+	return body
+
+
+## Fire-and-forget red-attacker for quiz dodge swarms (cols 1/2/7/8, rows A/B).
+func spawn_quiz_swarm_attacker(aim_row: int, aim_column: int) -> void:
+	_spawn_quiz_swarm_attacker_async(aim_row, aim_column)
+
+
+func _spawn_quiz_swarm_attacker_async(aim_row: int, aim_column: int) -> void:
+	var body = _find_free_pool_rock()
+	if body == null:
+		return
+	aim_row = clampi(aim_row, 1, 2)
+	aim_column = clampi(aim_column, 1, 8)
+	if aim_column > 2 and aim_column < 7:
+		aim_column = 1 if randf() < 0.5 else 8
+	var entry := {
+		"cmd": "rock-red-attacker",
+		"column": aim_column,
+		"spawn_row": -1,
+		"aim_row": aim_row,
+		"aim_column": aim_column,
+		"param": "",
+	}
+	var column := _resolve_spawn_column(entry)
+	var spawn_x := _spawn_x_for_entry(entry, column)
+	if body.has_method("setup_for_pool_launch"):
+		body.setup_for_pool_launch(_spawn_entry_to_rock_type(entry), spawn_x)
+	else:
+		body.rock_type = _spawn_entry_to_rock_type(entry)
+		body.target_x_position = spawn_x
+		body.enter_state(body.State.PREPARE_ROCK)
+	body.set_meta("quiz_swarm", true)
+	await get_tree().create_timer(0.08, false).timeout
+	if not is_instance_valid(body) or body.current_state != body.State.PREPARE_ROCK:
+		return
+	body.enter_state(body.State.ACTIVE)
+	var launch_g := _aim_launch_gravity_for(body, entry)
+	BallisticAim.configure_body_for_ballistic_launch(body, launch_g)
+	if body.has_method("begin_ballistic_aim_feel"):
+		body.begin_ballistic_aim_feel(aim_descent_linear_damp)
+	var aim_pos := _aim_cell_world_position(aim_row, aim_column, true)
+	var impulse := _aimed_launch_impulse_to_world(body, aim_pos, launch_g)
+	body.apply_central_impulse(impulse)
+	if rock_rock_collisions_enabled and body.has_method("schedule_airborne_rock_collisions"):
+		body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
 
 
 func aim_grid_row_count() -> int:

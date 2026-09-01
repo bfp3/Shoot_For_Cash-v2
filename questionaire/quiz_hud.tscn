@@ -1,0 +1,141 @@
+[gd_scene format=3 uid="uid://d2mwo1fj63s8s"]
+
+[ext_resource type="Script" uid="uid://khsto8501wo3" path="res://questionaire/quiz_hud.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://ch8oru3korcdf" path="res://res/marlbo.ttf" id="2_font"]
+
+[node name="QuizHud" type="CanvasLayer" unique_id=960682364]
+layer = 85
+script = ExtResource("1_script")
+
+[node name="Root" type="Control" parent="." unique_id=839197758]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="HBoxContainer" parent="Root" unique_id=1468900609]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 40.0
+offset_top = 172.0
+offset_right = -40.0
+offset_bottom = 240.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="PrizeLabel" type="Label" parent="Root/TopBar" unique_id=529758703]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.82, 0.28, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.06, 0.02, 0.85)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 42
+text = "$100"
+
+[node name="TimerLabel" type="Label" parent="Root/TopBar" unique_id=808835498]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 0.85)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 42
+text = "1:00"
+horizontal_alignment = 1
+
+[node name="WrongsLabel" type="Label" parent="Root/TopBar" unique_id=1488921322]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.55, 0.45, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.02, 0.02, 0.85)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 32
+text = "Wrong 0 / 3"
+horizontal_alignment = 2
+
+[node name="QuestionLabel" type="RichTextLabel" parent="Root" unique_id=1910897192]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -520.0
+offset_top = -158.0
+offset_right = 520.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 0.6, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/normal_font = ExtResource("2_font")
+theme_override_font_sizes/normal_font_size = 96
+bbcode_enabled = true
+text = "[center]Question[/center]"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="Root" unique_id=1341145814]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_top = 250.0
+offset_right = 320.0
+offset_bottom = 290.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 0.85)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+
+[node name="AnswerRoot" type="Control" parent="Root" unique_id=437684519]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Confetti" type="CPUParticles2D" parent="Root" unique_id=481347022]
+unique_name_in_owner = true
+z_index = 20
+position = Vector2(960, 360)
+emitting = false
+amount = 110
+lifetime = 3.0
+one_shot = true
+explosiveness = 0.92
+randomness = 0.55
+lifetime_randomness = 0.35
+emission_shape = 1
+emission_sphere_radius = 48.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 420)
+initial_velocity_min = 220.0
+initial_velocity_max = 520.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+scale_amount_min = 4.0
+scale_amount_max = 10.0

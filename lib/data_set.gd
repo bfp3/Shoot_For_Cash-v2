@@ -23,6 +23,7 @@ var challenge_02_unlocked := false
 var challenge_03_unlocked := false
 var challenge_04_unlocked := false
 var challenge_05_unlocked := false
+var challenge_06_unlocked := true
 
 # Upgrade stages
 
@@ -280,6 +281,9 @@ func is_challenge_unlocked(key: String) -> bool:
 		"challenge_05", "challenge5", "challenge 5":
 			flag = challenge_05_unlocked
 			index = 5
+		"challenge_06", "challenge6", "challenge 6":
+			flag = challenge_06_unlocked
+			index = 6
 		_:
 			if index <= 0:
 				return false

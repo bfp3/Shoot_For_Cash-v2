@@ -83,6 +83,7 @@ const LEVEL_FILE_CHALLENGE_02 := "res://sc/level-challenge-02.txt"
 const LEVEL_FILE_CHALLENGE_03 := "res://sc/level-challenge-03.txt"
 const LEVEL_FILE_CHALLENGE_04 := "res://sc/level-challenge-04.txt"
 const LEVEL_FILE_CHALLENGE_05 := "res://sc/level-challenge-05.txt"
+const LEVEL_FILE_CHALLENGE_06 := "res://sc/level-challenge-06.txt"
 
 var LEVEL_FILE_PATH := LEVEL_FILE_BEGINNER
 const LEVEL_ISLAND_NAME := 'shipper'
@@ -220,6 +221,10 @@ var difficulty_this_round := ""
 
 ## Active bonus subtype from the level file (`protect`, etc.). Empty = normal round.
 var bonus_type_this_round := ""
+## Challenge 6 questionnaire — driven by `questionaire/quiz_controller.gd`.
+var quiz_this_round := false
+var _quiz_active := false
+var _quiz_controller: QuizController = null
 ## Bonus target was destroyed during `bonus-type1` — no bonus cash, still advance.
 var protect_bonus_failed := false
 ## Scene default for Rocks.randomize_later_waves (restored when `shuffle` is off).
@@ -1027,6 +1032,8 @@ func apply_level_file_for_difficulty(stage: String = "") -> void:
 			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_04
 		"CHALLENGE 5", "CHALLENGE5", "CHALLENGE 05":
 			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_05
+		"CHALLENGE 6", "CHALLENGE6", "CHALLENGE 06":
+			LEVEL_FILE_PATH = LEVEL_FILE_CHALLENGE_06
 		_:
 			LEVEL_FILE_PATH = LEVEL_FILE_BEGINNER
 
@@ -1425,6 +1432,7 @@ func _hide_round_cash_hud() -> void:
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
 	bonus_type_this_round = ""
+	quiz_this_round = false
 	difficulty_this_round = ""
 	protect_bonus_failed = false
 	_apply_shuffle_modifier(false)
@@ -1438,7 +1446,8 @@ func apply_current_round_modifiers() -> void:
 	var round_data = current_rock_sequence[current_sequence_index]
 	if round_data is Dictionary:
 		bonus_type_this_round = String(round_data.get('bonus', ''))
-		no_lives_this_round = bool(round_data.get('no_lives', false)) or bonus_type_this_round != ""
+		quiz_this_round = bool(round_data.get('quiz', false)) or not (round_data.get('quiz_questions', []) as Array).is_empty()
+		no_lives_this_round = bool(round_data.get('no_lives', false)) or bonus_type_this_round != "" or quiz_this_round
 		difficulty_this_round = String(round_data.get('difficulty', '')).to_lower()
 		_apply_shuffle_modifier(bool(round_data.get('shuffle', false)))
 		_apply_round_max_strikes(int(round_data.get('max_strikes', 3)))
@@ -1446,6 +1455,8 @@ func apply_current_round_modifiers() -> void:
 			print('RoundManager: no-lives active for this round only')
 		if bonus_type_this_round != "":
 			print('RoundManager: bonus-%s active for this round' % bonus_type_this_round)
+		if quiz_this_round:
+			print('RoundManager: quiz mode active for this round')
 		if difficulty_this_round != "":
 			print('RoundManager: difficulty-%s active for this round' % difficulty_this_round)
 		var hold_ms := int(round_data.get('hold_out_ms', 0))
@@ -1453,6 +1464,83 @@ func apply_current_round_modifiers() -> void:
 			print('RoundManager: hold out %d ms for this round' % hold_ms)
 	_apply_difficulty_runtime()
 	_refresh_boss_timer_from_parser()
+
+
+func is_quiz_round() -> bool:
+	return quiz_this_round
+
+
+func set_quiz_active(active: bool) -> void:
+	_quiz_active = active
+
+
+func is_quiz_active() -> bool:
+	return _quiz_active
+
+
+func _ensure_quiz_controller() -> QuizController:
+	if _quiz_controller != null and is_instance_valid(_quiz_controller):
+		return _quiz_controller
+	const QUIZ_CONTROLLER_SCENE := preload("res://questionaire/quiz_controller.tscn")
+	_quiz_controller = QUIZ_CONTROLLER_SCENE.instantiate() as QuizController
+	if _quiz_controller == null:
+		_quiz_controller = QuizController.new()
+	_quiz_controller.name = "QuizController"
+	add_child(_quiz_controller)
+	return _quiz_controller
+
+
+func _start_quiz_round_if_needed() -> void:
+	if not quiz_this_round:
+		return
+	var round_data: Dictionary = {}
+	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
+		var raw = current_rock_sequence[current_sequence_index]
+		if raw is Dictionary:
+			round_data = raw
+	var quiz := _ensure_quiz_controller()
+	quiz.begin(self, rocks_container, round_data)
+
+
+## After Challenge 6 quiz ends, run the Challenge 4 rock script in the same round.
+func begin_post_quiz_rocks() -> void:
+	_quiz_active = false
+	quiz_this_round = false
+	no_lives_this_round = false
+	_apply_round_max_strikes(3)
+	if rocks_container and rocks_container.has_method("set_quiz_hold"):
+		rocks_container.set_quiz_hold(false)
+
+	var spawns := _load_challenge_04_spawns()
+	if spawns.is_empty():
+		push_warning("RoundManager: post-quiz Challenge 4 spawns empty — ending round")
+		successful_round()
+		return
+
+	wave_ending = false
+	if rocks_container and rocks_container.has_method("start_manual_rock_round"):
+		rocks_container.start_manual_rock_round(spawns)
+	if player and player.has_method("start_player"):
+		player.start_player()
+	print("RoundManager: post-quiz — starting Challenge 4 rock sequence (%d cmds)" % spawns.size())
+
+
+func _load_challenge_04_spawns() -> Array:
+	if Parser == null or not Parser.has_method("peek_rock_sequences_from_file"):
+		return []
+	var range_id := "jetz"
+	if has_method("get_active_range_name"):
+		range_id = get_active_range_name()
+	var sequences: Array = Parser.peek_rock_sequences_from_file(
+		LEVEL_FILE_CHALLENGE_04,
+		LEVEL_ISLAND_NAME,
+		range_id
+	)
+	if sequences.is_empty():
+		sequences = Parser.peek_rock_sequences_from_file(LEVEL_FILE_CHALLENGE_04, "shipper", "jetz")
+	if sequences.is_empty():
+		return []
+	return _flatten_round_spawns(sequences[0])
 
 
 func _apply_round_max_strikes(count: int) -> void:
@@ -1626,6 +1714,8 @@ func handle_three_strikes() -> void:
 func check_if_rocks_still_in_air() -> void:
 	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
 		return
+	if _quiz_active:
+		return
 
 	if gl_PlayerState.dataset.total_rocks_in_round_remaining > 0:
 		return
@@ -1651,6 +1741,9 @@ func check_if_rocks_still_in_air() -> void:
 
 func successful_round() -> void:
 	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
+		return
+	## Quiz ends itself via successful_round / unsuccessful_round_locked when finished.
+	if _quiz_active and _quiz_controller != null and _quiz_controller.is_active():
 		return
 	if rocks_container and rocks_container.has_method("try_continue_sequence"):
 		if rocks_container.try_continue_sequence():
@@ -1688,6 +1781,9 @@ func unsuccessful_round() -> void:
 
 
 func unsuccessful_round_locked(skip_tally: bool = false) -> void:
+	if _quiz_controller != null and _quiz_controller.has_method("stop"):
+		_quiz_controller.stop()
+	_quiz_active = false
 	_snapshot_endless_elapsed()
 	record_endless_run_result()
 	stop_timer()
@@ -1737,6 +1833,10 @@ func abort_round_to_shop() -> void:
 		return
 	if current_round_state == RoundState.SHOP_START or current_round_state == RoundState.INACTIVE:
 		return
+
+	if _quiz_controller != null and _quiz_controller.has_method("stop"):
+		_quiz_controller.stop()
+	_quiz_active = false
 
 	_advance_range_after_hold_out = false
 	wave_ending = true
@@ -2440,9 +2540,15 @@ func update_wave_start() -> void:
 	gl_PlayerState.next_wave()
 
 	if current_wave == 1:
-		var rock_seq := update_rock_sequence()
-		# Always prepare (even empty) so bonus-type1 target-only rounds don't hang on old rock state.
-		rocks_container.start_manual_rock_round(rock_seq, resume_index)
+		if quiz_this_round:
+			## Questionnaire owns rock-stay launches; hold the wave open.
+			if rocks_container and rocks_container.has_method("set_quiz_hold"):
+				rocks_container.set_quiz_hold(true)
+			rocks_container.start_manual_rock_round([])
+		else:
+			var rock_seq := update_rock_sequence()
+			# Always prepare (even empty) so bonus-type1 target-only rounds don't hang on old rock state.
+			rocks_container.start_manual_rock_round(rock_seq, resume_index)
 		
 	else:
 		var rock_seq := update_rock_sequence()
@@ -2479,6 +2585,10 @@ func update_wave_start() -> void:
 		#egg_pulse.activate_pulse_wave()
 
 	wave_ending = false   # only now can a wave-end signal be accepted
+
+	if quiz_this_round:
+		_start_quiz_round_if_needed()
+		return
 	
 	await get_tree().create_timer(1.9, false).timeout
 	#await get_tree().create_timer(0.8, false).timeout
