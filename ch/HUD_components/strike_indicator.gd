@@ -70,7 +70,7 @@ func reveal_strike(play_notice: bool = true) -> void:
 
 	var edge_scale := Vector2(0.001, _size_control_scale.y * flip_edge_y_scale)
 	var half := maxf(flip_half_time, 0.01)
-	var up_height := 50.0
+	var up_height := 0.0
 
 	_active_tween = create_tween()
 	# Flip empty face to edge-on.

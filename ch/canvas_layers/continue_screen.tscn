@@ -203,6 +203,7 @@ shadow_offset = Vector2(5, 5)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hit"]
 
 [node name="ContinueScreen" type="CanvasLayer" unique_id=1321187376 groups=["continue_screen"]]
+layer = 0
 script = ExtResource("1_script")
 resume_in_place = false
 
@@ -411,7 +412,7 @@ grow_horizontal = 1
 grow_vertical = 1
 scale = Vector2(0.711, 0.711)
 
-[node name="LevelSelect" type="Button" parent="Control/MainPanel/BackgroundImages" unique_id=48833919 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
+[node name="LevelSelect" type="Button" parent="Control/MainPanel/BackgroundImages" unique_id=48833919]
 unique_name_in_owner = true
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(50, 50)
@@ -436,9 +437,6 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_pelxk")
 theme_override_styles/hover = SubResource("StyleBoxFlat_yrc6g")
 theme_override_styles/focus = SubResource("StyleBoxFlat_yrc6g")
 script = ExtResource("4_button")
-focus_enter_sfx = NodePath("")
-focus_exit_sfx = NodePath("")
-purchase_sfx = NodePath("")
 
 [node name="Arrow" type="TextureRect" parent="Control/MainPanel/BackgroundImages/LevelSelect" unique_id=1667493539]
 modulate = Color(0.85882354, 0.76862746, 0.69803923, 0.44705883)
@@ -834,10 +832,6 @@ grow_vertical = 2
 scale = Vector2(0.45, 0.45)
 wiggle_amount = 0.45
 wiggle_amount_exit = 0.45
-
-[node name="PlayLabel" parent="Control/MainPanel/PlayButton/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="2" unique_id=160258226]
-theme_override_font_sizes/normal_font_size = 82
-text = "[shake]REPLAY"
 
 [node name="CostLabel" parent="Control/MainPanel/PlayButton/VBoxContainer2/Cost" parent_id_path=PackedInt32Array(388452363, 1538052106) index="0" unique_id=552854020]
 text = "[wave]$10"

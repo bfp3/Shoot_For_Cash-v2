@@ -7,7 +7,7 @@
 [ext_resource type="Material" uid="uid://boaovmkpgnp38" path="res://to_bring_over/dark_road.tres" id="4_11wxi"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_u2ev1"]
-size = Vector3(41.49, 30.226, 346.595)
+size = Vector3(1, 1, 13.5)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_i76fq"]
 material = ExtResource("1_u2ev1")
@@ -48,7 +48,7 @@ step = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Pivot_Up_Down/Pivot_Forward_Backward:rotation")
+tracks/0/path = NodePath(".:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -86,7 +86,7 @@ tracks/2/keys = {
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
-tracks/0/enabled = true
+tracks/0/enabled = false
 tracks/0/path = NodePath("Pivot_Up_Down/Pivot_Forward_Backward:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
@@ -98,7 +98,7 @@ tracks/0/keys = {
 }
 tracks/1/type = "value"
 tracks/1/imported = false
-tracks/1/enabled = true
+tracks/1/enabled = false
 tracks/1/path = NodePath("Pivot_Up_Down:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
@@ -110,7 +110,7 @@ tracks/1/keys = {
 }
 tracks/2/type = "value"
 tracks/2/imported = false
-tracks/2/enabled = true
+tracks/2/enabled = false
 tracks/2/path = NodePath("Pivot_Up_Down:rotation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
@@ -135,15 +135,15 @@ _data = {
 [node name="Mechanical_crane_object" type="AnimatableBody3D" unique_id=767213718]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1153608764]
-transform = Transform3D(0.008726561, 0, 0.9999619, 0, 1, 0, -0.9999619, 0, 0.008726561, 69.265, 43.63, 10.03)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.92117, 0, -9.729412e-08)
 shape = SubResource("BoxShape3D_u2ev1")
-debug_color = Color(0.38333344, 1, 0, 0.41960785)
+debug_color = Color(1, 0.85, 0, 1)
 
 [node name="Pivot_Up_Down" type="Node3D" parent="." unique_id=1057590919]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -125, 25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.875, 0)
 
 [node name="Pivot_Forward_Backward" type="Node3D" parent="Pivot_Up_Down" unique_id=405561095]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 8.833649)
+transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.04, 0, 0, 0)
 
 [node name="Anchor_point" type="MeshInstance3D" parent="Pivot_Up_Down/Pivot_Forward_Backward" unique_id=1020797610]
 transform = Transform3D(0.9999998, 0, -3.5527135e-15, 0, 1, 0, 3.5527135e-15, 0, 0.9999998, 0, 20, 5.8832016)

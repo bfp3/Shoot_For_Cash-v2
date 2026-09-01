@@ -225,7 +225,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_constants/separation = 32
 alignment = 1
 
-[node name="PrevDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075302]
+[node name="PrevDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075302 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -234,9 +234,14 @@ size_flags_vertical = 4
 icon = ExtResource("10_arrow")
 flat = true
 expand_icon = true
+script = ExtResource("3_51t21")
+focus_enter_sfx = NodePath("../HeaderBadge/SFX/focus_enter_sfx")
+focus_exit_sfx = NodePath("../HeaderBadge/SFX/focus_exit")
+wiggle_amount = 1.05
 
 [node name="HeaderBadge" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075303 instance=ExtResource("9_egetg")]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(298, 168)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -273,7 +278,7 @@ self_modulate = Color(1, 1, 1, 0)
 [node name="Icon3" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge/HBoxContainer" parent_id_path=PackedInt32Array(1998075303, 4134395) index="2" unique_id=176816404]
 self_modulate = Color(1, 1, 1, 0)
 
-[node name="NextDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075304]
+[node name="NextDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075304 node_paths=PackedStringArray("focus_enter_sfx", "purchase_sfx")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -282,6 +287,10 @@ size_flags_vertical = 4
 icon = ExtResource("8_0ga4m")
 flat = true
 expand_icon = true
+script = ExtResource("3_51t21")
+focus_enter_sfx = NodePath("../HeaderBadge/SFX/focus_enter_sfx")
+purchase_sfx = NodePath("../HeaderBadge/SFX/focus_exit")
+wiggle_amount = 1.05
 
 [node name="CoatArms" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=409353141 instance=ExtResource("3_drjai")]
 z_index = 1
@@ -295,6 +304,7 @@ scale = Vector2(0.62, 0.62)
 [node name="SpacePanel2" type="Panel" parent="MainPanel/VBoxContainer" unique_id=2119638558]
 custom_minimum_size = Vector2(50, 438.035)
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_g430d")
 
 [node name="LevelGrid" type="GridContainer" parent="MainPanel/VBoxContainer/SpacePanel2" unique_id=1998075305]
@@ -306,9 +316,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -430.0
-offset_top = -150.0
+offset_top = -149.0
 offset_right = 430.0
-offset_bottom = 150.0
+offset_bottom = 151.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)

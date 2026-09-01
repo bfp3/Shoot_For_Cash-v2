@@ -190,6 +190,7 @@ process_material = SubResource("ParticleProcessMaterial_gxbd8")
 
 [node name="FreeParticles" type="GPUParticles2D" parent="." unique_id=151502249]
 position = Vector2(168, 212)
+emitting = false
 amount = 2
 texture = ExtResource("9_d2y3p")
 lifetime = 2.0
@@ -199,6 +200,7 @@ process_material = SubResource("ParticleProcessMaterial_4eg6k")
 
 [node name="FreeParticles2" type="GPUParticles2D" parent="." unique_id=633432650]
 position = Vector2(104, 212)
+emitting = false
 amount = 2
 texture = ExtResource("9_d2y3p")
 lifetime = 2.0
@@ -241,6 +243,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_wt77o")
 [node name="PlayParticles" type="GPUParticles2D" parent="VBoxContainer2/Play/RedPanel3" unique_id=193308665]
 position = Vector2(107.09618, 69.04388)
 scale = Vector2(0.93457943, 0.93457943)
+emitting = false
 amount = 18
 fixed_fps = 6
 local_coords = true
@@ -372,6 +375,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
+theme_override_colors/default_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/normal_font_size = 112
 bbcode_enabled = true
 text = "[shake]PLAY"

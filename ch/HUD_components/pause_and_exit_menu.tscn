@@ -16,11 +16,6 @@
 [ext_resource type="Script" uid="uid://2td2u2syuhrd" path="res://ch/HUD_components/resolution_confirm_dialog.gd" id="11_confirm"]
 [ext_resource type="Script" uid="uid://be14gsgtq6uyc" path="res://ch/HUD_components/volume_dial.gd" id="12_dial"]
 
-[sub_resource type="PrismMesh" id="PrismMesh_brcys"]
-left_to_right = 1.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_s7dml"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s7dml"]
 bg_color = Color(0.92, 0.8770667, 0.8464, 0.32941177)
 border_width_left = 1
@@ -142,99 +137,6 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(500, 500)
 layout_mode = 2
 mouse_filter = 2
-
-[node name="RedCornerPanel" type="Control" parent="Control/CenterContainer/QuitControl" unique_id=125942234]
-unique_name_in_owner = true
-visible = false
-z_index = 1
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = 495.0
-offset_top = -151.7855
-offset_right = 495.0
-offset_bottom = -71.78551
-grow_horizontal = 0
-scale = Vector2(1.258, 1.098)
-mouse_filter = 2
-
-[node name="Control" type="Control" parent="Control/CenterContainer/QuitControl/RedCornerPanel" unique_id=192180598]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -181.0
-offset_top = 50.0
-offset_right = -181.0
-offset_bottom = 50.0
-grow_horizontal = 0
-rotation = -3.1415927
-scale = Vector2(1.6, 1.257)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="RightTriangle" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/RedCornerPanel/Control" unique_id=987479237]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(141.45102, -5.381916)
-rotation = 3.1415925
-scale = Vector2(182.13904, 94.29)
-mesh = SubResource("PrismMesh_brcys")
-
-[node name="Square" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/RedCornerPanel/Control" unique_id=484499736]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(-32.48401, -5.381916)
-rotation = 3.1415925
-scale = Vector2(165.93288, 94.29)
-mesh = SubResource("BoxMesh_s7dml")
-
-[node name="GreyCornerPanel" type="Control" parent="Control/CenterContainer/QuitControl" unique_id=561507935]
-unique_name_in_owner = true
-visible = false
-z_index = 1
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -769.0
-offset_top = -151.53899
-offset_right = -769.0
-offset_bottom = -71.53899
-grow_horizontal = 0
-mouse_filter = 2
-
-[node name="Control" type="Control" parent="Control/CenterContainer/QuitControl/GreyCornerPanel" unique_id=1248181004]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -149.0
-offset_top = 50.0
-offset_right = -149.0
-offset_bottom = 50.0
-grow_horizontal = 0
-rotation = -3.1415927
-scale = Vector2(1.6, 1.257)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="RightTriangle" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/GreyCornerPanel/Control" unique_id=1679196495]
-modulate = Color(0.37, 0.33053333, 0.296, 0.7058824)
-position = Vector2(-206.1239, -3.0517578e-05)
-rotation = 3.1415925
-scale = Vector2(-182.139, 82)
-mesh = SubResource("PrismMesh_brcys")
-
-[node name="Square" type="MeshInstance2D" parent="Control/CenterContainer/QuitControl/GreyCornerPanel/Control" unique_id=978564616]
-modulate = Color(0.37, 0.33053333, 0.296, 0.7058824)
-position = Vector2(-32.484, 0)
-rotation = 3.1415925
-scale = Vector2(165.93288, 82)
-mesh = SubResource("BoxMesh_s7dml")
 
 [node name="CoatArms" parent="Control/CenterContainer/QuitControl" unique_id=409353141 instance=ExtResource("10_s7dml")]
 z_index = 1
@@ -398,10 +300,10 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = -744.2682
-offset_top = -501.09387
-offset_right = -174.26819
-offset_bottom = -421.0938
+offset_left = -740.568
+offset_top = -498.30835
+offset_right = -170.568
+offset_bottom = -418.3083
 grow_vertical = 0
 scale = Vector2(1.325, 1.325)
 mouse_filter = 2
@@ -446,9 +348,9 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 221.74298
-offset_top = -504.0938
+offset_top = -503.1653
 offset_right = 791.74286
-offset_bottom = -424.09375
+offset_bottom = -423.16525
 grow_vertical = 0
 scale = Vector2(1.325, 1.325)
 mouse_filter = 2
