@@ -183,6 +183,9 @@ const BOUNDS_CHECK_INTERVAL := 0.1  # how often (seconds) to scan active rocks
 @export var oob_miss_feedback_enabled := true
 @export_range(0.0, 0.5, 0.005) var oob_miss_shake_amount := 0.16
 @export_range(0.02, 0.5, 0.01) var oob_miss_shake_duration := 0.1
+## When false, yellow / must-hit rocks (`rock_type_1`) no longer award a strike
+## for splash-zone hits or out-of-bounds exits (they still despawn / count as cleared).
+@export var rock_yellows_give_strikes := true
 ## After launch delay, airborne rocks collide and bounce off each other.
 ## Off while dormant / preparing / during the pulse itself (see delay below).
 ## Toggle on the Rocks / RockManager node in Main.tscn.
@@ -237,6 +240,7 @@ const _OOB_MISS_SPARKS = preload("uid://fsbgvpv0703x")
 # --------------------------------------------------------------------------
 
 func _ready() -> void:
+	add_to_group("rocks_container")
 	_base_aim_launch_gravity_scale = aim_launch_gravity_scale
 	if telegraph_columns == null:
 		if has_node("Columns2"):
@@ -1840,8 +1844,10 @@ func deactivate_out_of_bounds_rock(body: RockInstance, side: OobSide = OobSide.N
 
 
 func _oob_miss_causes_strike(rock_type_name: String) -> bool:
-	## Must-hit basic rocks only. Grey / avoider / red-attacker / hazards never strike on OOB.
+	## Must-hit basic (yellow) rocks only. Grey / avoider / red-attacker / hazards never strike on OOB.
 	if rock_type_name.contains("red_attacker"):
+		return false
+	if not rock_yellows_give_strikes:
 		return false
 	return rock_type_name.contains("rock_type_1")
 

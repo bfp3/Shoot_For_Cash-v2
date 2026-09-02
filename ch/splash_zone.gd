@@ -70,7 +70,9 @@ func _on_body_entered(body: Node3D) -> void:
 		if rocks_container == null:
 			rocks_container = get_tree().get_first_node_in_group("rocks_container")
 		if not is_hazard and rocks_container and rocks_container.has_method("set_strike_feedback_origin"):
-			rocks_container.set_strike_feedback_origin(body.global_position)
+			var give_strike := bool(rocks_container.get("rock_yellows_give_strikes"))
+			if give_strike and missed_rock_type_name.contains("rock_type_1"):
+				rocks_container.set_strike_feedback_origin(body.global_position)
 
 		gl_PlayerState.log_rock_missed(missed_rock_type_name)
 

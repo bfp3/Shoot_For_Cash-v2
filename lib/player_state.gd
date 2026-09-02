@@ -575,7 +575,8 @@ func log_rock_missed(item : String = '') -> void:
 	
 
 	if item.contains('rock_type_1'):
-		add_strike()
+		if _yellow_rocks_give_strikes():
+			add_strike()
 		#return
 		
 
@@ -585,6 +586,20 @@ func log_rock_missed(item : String = '') -> void:
 	
 
 	check_all_rocks_cleared()
+
+
+func _yellow_rocks_give_strikes() -> bool:
+	## RockManager.rock_yellows_give_strikes — default true when the flag is missing.
+	## Resolve via RoundManager.rocks_container (Rocks is not always in a group).
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager != null:
+		var rocks = round_manager.get("rocks_container")
+		if rocks != null:
+			return bool(rocks.get("rock_yellows_give_strikes"))
+	var rocks_fallback = get_tree().get_first_node_in_group("rocks_container")
+	if rocks_fallback != null:
+		return bool(rocks_fallback.get("rock_yellows_give_strikes"))
+	return true
 
 
 func add_strike() -> void:

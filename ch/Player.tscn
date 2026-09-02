@@ -31,7 +31,6 @@
 [ext_resource type="AudioStream" uid="uid://cya8lm4w3l6hi" path="res://sfx/Hovercraft_turning_SFX_right_v3.ogg" id="21_bpx2c"]
 [ext_resource type="Script" uid="uid://bmye3h6jry1bf" path="res://ch/Player/scripts/mouse_turning_sfx_script.gd" id="24_b1tng"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_l3uax"]
-[ext_resource type="Texture2D" uid="uid://lkkbvdr5c354" path="res://unfiled/Decal_placeholders/Cherry_paint.png" id="28_1tjj5"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="28_fuvvr"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="29_fuvvr"]
 [ext_resource type="Texture2D" uid="uid://dt7escr207fom" path="res://res/ring256.png" id="29_txfio"]
@@ -645,7 +644,6 @@ scope_expand_bullet_speed_scale = 0.35
 scope_shrink_fire_rate_scale = 0.8
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
-grid_aim_enabled = true
 grid_aim_move_speed = 6000.0
 grid_aim_extra_columns_each_side = 2
 grid_aim_extra_left_x = 13.0
@@ -655,7 +653,6 @@ grid_aim_step_sfx_duration = 0.2
 lean_sideways = 2.0
 lean_upwards = 1.0
 lean_roll_degrees = -6.0
-lean_use_yaw = true
 lean_in_speed = 12.0
 planted_crosshair_arm_delay = 0.25
 shoot_ring_pulse_on_release = true
@@ -906,41 +903,6 @@ mouse_filter = 2
 script = ExtResource("10_hwyif")
 target_color = Color(0.6, 0, 0, 0.662745)
 
-[node name="Cherry" type="TextureRect" parent="CanvasLayer/Crosshair" unique_id=1428137281]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -285.0
-offset_top = -285.0
-offset_right = 285.0
-offset_bottom = 285.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.034, 0.034)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("28_1tjj5")
-
-[node name="Panel" type="Panel" parent="CanvasLayer/Crosshair" unique_id=162395954]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -80.0
-offset_top = -80.0
-offset_right = 80.0
-offset_bottom = 80.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_styles/panel = ExtResource("29_fuvvr")
-
 [node name="Large_outer_scope" type="Control" parent="CanvasLayer/Crosshair" unique_id=60949367]
 unique_name_in_owner = true
 visible = false
@@ -996,7 +958,6 @@ gradient = SubResource("Gradient_dpvnf")
 texture_mode = 2
 
 [node name="RedDot" type="TextureRect" parent="CanvasLayer/Crosshair" unique_id=979867009]
-visible = false
 self_modulate = Color(1, 0, 0, 0.5803922)
 layout_mode = 1
 anchors_preset = 8
@@ -1100,7 +1061,7 @@ grow_vertical = 2
 scale = Vector2(0.364, 0.364)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=485216342]
+[node name="WhiteLeft" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=485216342]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1118,17 +1079,17 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("28_fuvvr")
 stretch_mode = 5
 
-[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=993311189]
+[node name="WhiteRight" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=993311189]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -72.0
-offset_top = -128.0
-offset_right = 184.0
-offset_bottom = 128.0
+offset_left = -72.00006
+offset_top = -128.00006
+offset_right = 183.99994
+offset_bottom = 127.99994
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.02, 0.02)
@@ -1136,7 +1097,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("28_fuvvr")
 stretch_mode = 5
 
-[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=661759670]
+[node name="WhiteTop" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=661759670]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1154,7 +1115,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("28_fuvvr")
 stretch_mode = 5
 
-[node name="TextureRect4" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=1915231558]
+[node name="WhiteBottom" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=1915231558]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1165,6 +1126,82 @@ offset_left = -128.0
 offset_top = -72.0
 offset_right = 128.0
 offset_bottom = 184.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.02, 0.02)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("28_fuvvr")
+stretch_mode = 5
+
+[node name="BlackLeft" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=824087997]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -189.48438
+offset_top = -128.0
+offset_right = 66.515625
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.02, 0.02)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("28_fuvvr")
+stretch_mode = 5
+
+[node name="BlackTop" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=1870357698]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -127.99219
+offset_top = -189.5
+offset_right = 128.00781
+offset_bottom = 66.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.02, 0.02)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("28_fuvvr")
+stretch_mode = 5
+
+[node name="BlackRight" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=73870487]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -66.46875
+offset_top = -128.0
+offset_right = 189.53125
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.02, 0.02)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("28_fuvvr")
+stretch_mode = 5
+
+[node name="BlackBottom" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope/SmallDisplay" unique_id=1891128671]
+modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -66.49219
+offset_right = 128.0
+offset_bottom = 189.50781
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.02, 0.02)
@@ -1356,6 +1393,21 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Rossy" type="Control" parent="CanvasLayer/Crosshair" unique_id=871799163]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="HUD_bottom_corner" type="Control" parent="CanvasLayer" unique_id=116034029]
 unique_name_in_owner = true
