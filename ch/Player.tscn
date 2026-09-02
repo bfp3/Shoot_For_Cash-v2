@@ -12,13 +12,13 @@
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="9_ts3hu"]
 [ext_resource type="AudioStream" uid="uid://xuojfr4w7ox3" path="res://sfx/Gun_SFX_attempt_2.ogg" id="10_bpx2c"]
 [ext_resource type="Script" uid="uid://bh2xro2ru0ok0" path="res://ch/Player/scripts/crosshair.gd" id="10_hwyif"]
-[ext_resource type="Script" path="res://ch/Player/scripts/rossy_face.gd" id="10_rossy"]
-[ext_resource type="Texture2D" uid="uid://brossyfaceidle01" path="res://res/rossy/face_idle.png" id="10_rossyi"]
-[ext_resource type="Texture2D" uid="uid://brossyfacehappy01" path="res://res/rossy/face_happy.png" id="10_rossyh"]
-[ext_resource type="Texture2D" uid="uid://brossyfacehurt01" path="res://res/rossy/face_hurt.png" id="10_rossyx"]
-[ext_resource type="Texture2D" uid="uid://brossyfacesad001" path="res://res/rossy/face_sad.png" id="10_rossys"]
 [ext_resource type="Script" uid="uid://lqvwdyu058t8" path="res://ch/Player/scripts/cam_pivot.gd" id="10_kkix3"]
 [ext_resource type="Script" uid="uid://snu7cq0wsbqk" path="res://ch/Player/scripts/player_camera.gd" id="10_n6ds6"]
+[ext_resource type="Script" uid="uid://hoiv3q8eibju" path="res://ch/Player/scripts/rossy_face.gd" id="10_rossy"]
+[ext_resource type="Texture2D" uid="uid://bvlh2nnyaxqb1" path="res://res/rossy/face_happy.png" id="10_rossyh"]
+[ext_resource type="Texture2D" uid="uid://bvlh2no15mrc" path="res://res/rossy/face_idle.png" id="10_rossyi"]
+[ext_resource type="Texture2D" uid="uid://bvlh2nyxw8rc" path="res://res/rossy/face_sad.png" id="10_rossys"]
+[ext_resource type="Texture2D" uid="uid://bvlh2nokc2rc" path="res://res/rossy/face_hurt.png" id="10_rossyx"]
 [ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="11_txfio"]
 [ext_resource type="AudioStream" uid="uid://bx66frfw01x0d" path="res://sfx/gun-whit-ay-yah.ogg" id="12_fuvvr"]
 [ext_resource type="AudioStream" uid="uid://bicv070p4lp8j" path="res://sfx/Shoot_sfx_1.ogg" id="13_1tjj5"]
@@ -1219,7 +1219,6 @@ libraries/ = SubResource("AnimationLibrary_ms1v2")
 autoplay = &"rotate_arrow"
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=1715470668]
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.4375
@@ -1237,7 +1236,6 @@ expand_mode = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="TextureRect3" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=1150922052]
-visible = false
 modulate = Color(0.25, 0.25, 0.25, 0.5294118)
 layout_mode = 1
 anchors_preset = -1
@@ -1256,7 +1254,6 @@ expand_mode = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="RingTexture" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=679002444]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1275,7 +1272,6 @@ texture = ExtResource("29_txfio")
 expand_mode = 1
 
 [node name="center_container" type="Control" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=216145941]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1314,7 +1310,6 @@ width = 4.0
 gradient = SubResource("Gradient_j58se")
 
 [node name="blackTexture" type="TextureRect" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=789006330]
-visible = false
 modulate = Color(1, 1, 1, 0.133333)
 layout_mode = 1
 anchors_preset = 8
@@ -1336,7 +1331,6 @@ stretch_mode = 4
 
 [node name="Cooldown_progressBar3" type="TextureProgressBar" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=1360268281]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1412,6 +1406,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(11.795, 11.795)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("10_rossy")
@@ -1419,9 +1414,9 @@ face_idle = ExtResource("10_rossyi")
 face_happy = ExtResource("10_rossyh")
 face_hurt = ExtResource("10_rossyx")
 face_sad = ExtResource("10_rossys")
-face_display_size = 12.0
 
 [node name="Face" type="TextureRect" parent="CanvasLayer/Crosshair/Rossy" unique_id=871799164]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1439,7 +1434,6 @@ mouse_filter = 2
 texture = ExtResource("10_rossyi")
 expand_mode = 1
 stretch_mode = 5
-texture_filter = 1
 
 [node name="HUD_bottom_corner" type="Control" parent="CanvasLayer" unique_id=116034029]
 unique_name_in_owner = true
