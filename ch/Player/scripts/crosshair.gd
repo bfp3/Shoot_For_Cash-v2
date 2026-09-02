@@ -105,7 +105,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	#_update_target_laser_dots(delta)
 	_update_planted_crosshairs(delta)
-
+	%SmallDisplay.rotation += 0.1
+	#%Crosshair.modulate.a = 1.0
+	#if Input.is_action_pressed("shootWeapon"):
+		#%Crosshair.modulate.a = 1.0
+	#else:
+		#modulate.a -= 0.1
+	#modulate.a -= 0.1
 
 func _setup_target_laser_dots() -> void:
 	## Keep the scene RedDot as a hidden template; live dots are clones on the rocks.
@@ -363,6 +369,8 @@ func cannot_shoot_obstacle_in_way() -> void:
 	#tween.tween_property(self, "rotation", 0.0 ,0.1)
 
 
+
+
 func crosshair_shooting_something() -> void:
 	
 
@@ -404,6 +412,7 @@ func play_avoider_hit_feedback() -> void:
 
 
 func crosshair_nothing_to_shoot() -> void:
+	return
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(self, "modulate:a", 0.5 ,0.1)
 	tween.tween_property(self, "modulate:a", 1.0, 0.1)

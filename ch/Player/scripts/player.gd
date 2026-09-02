@@ -16,7 +16,7 @@ var keyboard_velocity := Vector2.ZERO
 @onready var scope_shrink_sfx : AudioStreamPlayer = $SFX/ScopeShrink
 @export var scope_shrink_sfx_min_pitch := 1.0
 @export var scope_shrink_sfx_max_pitch := 50.0
-const scope_shrink_duration := 0.01 #0.5          # total seconds to fully shrink, regardless of starting size
+const scope_shrink_duration := 0.15 #0.5          # total seconds to fully shrink, regardless of starting size
 @export var scope_shrink_large_bonus := 0.2        # extra seconds tacked on for very large scopes
 const scope_shrink_reference_circle := 60.0  # "normal" size; circles above this scale toward the bonus
 @export var _current_shrink_duration := 0.15
@@ -513,6 +513,9 @@ func _process(delta: float) -> void:
 		if mobile_controller.consume_fire_release():
 			fire_weapon()
 	else:
+	
+		
+		
 		if Input.is_action_just_released("shootWeapon"):
 			fire_weapon()
 			
@@ -1329,6 +1332,8 @@ func handle_scope_adjust(delta: float) -> void:
 
 	elif expand_held and _scope_mode != ScopeMode.SHRINK:
 		_update_scope_hold(ScopeMode.EXPAND, delta)
+		
+		
 		# Larger scope = slower fire + slower bullets (higher travel time).
 		#bullet_speed = _base_bullet_speed * scope_expand_bullet_speed_scale
 		#fire_rate = _base_gun_fire_rate * scope_expand_fire_rate_scale
@@ -1722,13 +1727,18 @@ func fire_weapon(force_plant: bool = false) -> void:
 		player_did_not_miss()
 		return
 
-	power_gun_fire_rate = 0.05
+	#power_gun_fire_rate = 0.05
+	power_gun_fire_rate = 0.25
 	#power_bullet_speed = 0.01
 	
 	#weapon_shooting.power_bullet_speed = 0.3
 	#power_target_circle = 60.0
 	weapon_shooting.power_bullet_delay = 0.01
 	weapon_shooting.shoot_target()
+	
+	#%Crosshair.modulate.a = 0.05
+	
+	
 	player_did_not_miss()
 	if shoot_ring_pulse_on_release:
 		%Crosshair.pulse_ring_texture()
