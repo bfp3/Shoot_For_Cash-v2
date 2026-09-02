@@ -279,17 +279,13 @@ func _balloon_overlaps_crosshair() -> bool:
 	if cam == null or cam.is_position_behind(global_position):
 		return false
 
-	var balloon_screen := cam.unproject_position(global_position)
+	var balloon_screen := cam.unproject_position(get_aim_global_position())
 	var crosshair_screen := _player_crosshair_screen_pos(player)
 
-	var world_radius := 0.5
-	if main_col and main_col.shape is SphereShape3D:
-		world_radius = (main_col.shape as SphereShape3D).radius * main_col.scale.x
-	elif current_mesh:
-		world_radius = maxf(current_mesh.scale.x, 0.2) * 0.5
+	var world_radius := get_aim_world_radius()
 
 	var edge_screen := cam.unproject_position(
-		global_position + cam.global_basis.x * world_radius
+		get_aim_global_position() + cam.global_basis.x * world_radius
 	)
 	var screen_radius := balloon_screen.distance_to(edge_screen)
 	var hit_radius := _player_live_crosshair_hit_radius(player)
@@ -371,6 +367,32 @@ func enable_collision() -> void:
 
 	if %balloon_area:
 		%balloon_area.set_deferred("monitoring", true)
+
+
+## Screen / LOS aim point — prefer the collider (ammo/checkpoint meshes sit above the root).
+func get_aim_global_position() -> Vector3:
+	if main_col != null and is_instance_valid(main_col):
+		return main_col.global_position
+	return global_position
+
+
+## World-space radius used for reticle circle overlap.
+func get_aim_world_radius() -> float:
+	if main_col == null or not is_instance_valid(main_col) or main_col.shape == null:
+		return 0.5
+	var gscale := main_col.global_transform.basis.get_scale()
+	var sx := absf(gscale.x)
+	var sy := absf(gscale.y)
+	var sz := absf(gscale.z)
+	var shape := main_col.shape
+	if shape is SphereShape3D:
+		return (shape as SphereShape3D).radius * maxf(sx, maxf(sy, sz))
+	if shape is BoxShape3D:
+		var half: Vector3 = (shape as BoxShape3D).size * 0.5
+		## Cover the visible balloon silhouette, not just the thin X scale heuristic.
+		return maxf(half.x * sx, maxf(half.z * sz, half.y * sy * 0.65))
+	return maxf(sx, 0.25) * 0.5
+
 
 func reset_rock_back_on() -> void:
 	#enter_state(State.MISSED)

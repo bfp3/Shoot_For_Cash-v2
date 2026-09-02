@@ -49,7 +49,7 @@ var dataset_float : Dictionary = {
 	
 	
 	,"price_max_ammo"				: [10]
-	,"price_ammo"					: [100]
+	,"price_ammo"					: [0]
 	,"price_target_circle"			: [700,700,700,700,700,700,700,700,700,700]
 	,"price_gun_fire_rate"			: [500, 500,500,500,500,500,500,500,500,500]
 	,"price_bullet_damage" 			: [400,400,400,400,400,400,400,400,400,400]

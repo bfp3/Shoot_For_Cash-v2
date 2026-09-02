@@ -85,10 +85,12 @@ func get_targets_in_scope(screen_center: Variant = null, circle_radius: float = 
 		if target.visible == false:
 			continue
 
-		if stable_camera.is_position_behind(target.global_position):
+		var aim_pos: Vector3 = _target_aim_position(target)
+
+		if stable_camera.is_position_behind(aim_pos):
 			continue
 
-		if stable_camera.global_position.distance_squared_to(target.global_position) > max_check_distance * max_check_distance:
+		if stable_camera.global_position.distance_squared_to(aim_pos) > max_check_distance * max_check_distance:
 			continue
 			
 		if !has_line_of_sight(target):
@@ -96,17 +98,15 @@ func get_targets_in_scope(screen_center: Variant = null, circle_radius: float = 
 				%Crosshair.cannot_shoot_obstacle_in_way()
 			continue
 
-		var screen_pos = stable_camera.unproject_position(target.global_position)
+		var screen_pos = stable_camera.unproject_position(aim_pos)
 		var closest_dist = screen_pos.distance_to(aim_center)
 
-		# Calculate the rock's radius on screen
 		if not ("main_col" in target) or target.main_col == null:
 			continue
-		var world_scale: Vector3 = target.main_col.global_transform.basis.get_scale()
-		var world_radius: float = world_scale.x * 0.5
+		var world_radius: float = _target_aim_radius(target)
 
 		var edge_screen_pos = stable_camera.unproject_position(
-			target.global_position + stable_camera.global_basis.x * world_radius
+			aim_pos + stable_camera.global_basis.x * world_radius
 		)
 
 		var screen_radius = screen_pos.distance_to(edge_screen_pos)
@@ -126,6 +126,23 @@ func get_targets_in_scope(screen_center: Variant = null, circle_radius: float = 
 	return targets_in_scope
 
 
+func _target_aim_position(target: Node3D) -> Vector3:
+	if target.has_method("get_aim_global_position"):
+		return target.get_aim_global_position()
+	if "main_col" in target and target.main_col != null:
+		return target.main_col.global_position
+	return target.global_position
+
+
+func _target_aim_radius(target: Node3D) -> float:
+	if target.has_method("get_aim_world_radius"):
+		return float(target.get_aim_world_radius())
+	if "main_col" in target and target.main_col != null:
+		var world_scale: Vector3 = target.main_col.global_transform.basis.get_scale()
+		return absf(world_scale.x) * 0.5
+	return 0.5
+
+
 ## Instant hit as if the gun fired at `aim_center` (used by planted crosshair traps).
 func apply_planted_scope_hit(target: Node3D, aim_center: Vector2) -> void:
 	if not is_instance_valid(target) or not target.has_method("hit_by_player"):
@@ -134,7 +151,7 @@ func apply_planted_scope_hit(target: Node3D, aim_center: Vector2) -> void:
 	var freeze_shot := false
 	if player and player.get("using_alt_weapon") == true:
 		freeze_shot = true
-	var rock_screen_pos := stable_camera.unproject_position(target.global_position)
+	var rock_screen_pos := stable_camera.unproject_position(_target_aim_position(target))
 	var screen_offset := rock_screen_pos - aim_center
 	if target.has_method("start_bullet_to_target"):
 		target.start_bullet_to_target()
@@ -145,7 +162,7 @@ func apply_planted_scope_hit(target: Node3D, aim_center: Vector2) -> void:
 
 func has_line_of_sight(target: Node3D) -> bool:
 	var origin = stable_camera.global_position
-	var target_pos = target.global_position
+	var target_pos = _target_aim_position(target)
 
 	var query = PhysicsRayQueryParameters3D.create(origin, target_pos)
 	query.collide_with_bodies = true
@@ -474,7 +491,7 @@ func shoot_special_midround_target_if_aimed() -> bool:
 		round_manager.bullet_active = false
 		return false
 
-	var rock_screen_pos = stable_camera.unproject_position(special_target.global_position)
+	var rock_screen_pos = stable_camera.unproject_position(_target_aim_position(special_target))
 	var screen_offset = rock_screen_pos - crosshair.global_position
 	process_target_hit.call_deferred(special_target, power_bullet_damage, screen_offset)
 	if player and player.has_method("register_accurate_shot"):
