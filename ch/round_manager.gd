@@ -2716,7 +2716,7 @@ func _copy_spawn_list(source: Array) -> Array:
 	var copy: Array = []
 	for entry in source:
 		if entry is Dictionary:
-			copy.append(entry.duplicate())
+			copy.append(entry.duplicate(true))
 		else:
 			copy.append(entry)
 	return copy

@@ -15,7 +15,7 @@ var _rocks_sfx: Node = null
 ## Alt-gun freeze burst: how far the ice pulse reaches from the rock you shot.
 @export var freeze_burst_radius := 4.0
 ## How long rocks stay frozen after being caught in the burst.
-@export var freeze_burst_duration := 1.0
+@export var freeze_burst_duration := 1.5
 ## Visual size of the freeze pulse (Explosion_area scale).
 @export var freeze_burst_visual_scale := 3.0
 var sky_mine_blast_radius := 5.0 #15.0
@@ -166,35 +166,36 @@ var _airborne_collision_token := 0
 
 @export_group("Hazard / Black Rock")
 ## When true, destroying a black hazard that releases smoke blurs the player camera.
-@export var hazard_smoke_blurs_camera := true
+@export var hazard_smoke_blurs_camera := false
 ## Local fallback only. The Player scene "Crosshair Destroy On Overlap / Hazards" flag is the live toggle.
 @export var hazard_strike_on_crosshair_overlap := false
 ## Delay after launch before crosshair overlap can strike (avoids instant spawn kills).
-@export_range(0.0, 3.0, 0.05) var hazard_crosshair_arm_delay_sec := 0.45
+@export_range(0.0, 3.0, 0.05) var hazard_crosshair_arm_delay_sec := 0.65
 ## Set when an orange neutralized this black rock (blow-away or instant explode).
 ## Prevents strikes and hazard fail particles on the follow-up destroy.
+const ROCK_STAY_BLACK_LIFETIME_SEC := 3.0
 var _orange_neutralized_hazard := false
 var _hazard_crosshair_armed := false
 var _hazard_crosshair_arm_token := 0
 
 @export_group("Aim Hold Bonus (Basic Rock)")
 ## While the crosshair overlaps a basic rock, add this much cash every interval (paid only if shot).
-@export var aim_bonus_enabled := true
-@export_range(0.1, 5.0, 0.05) var aim_bonus_interval_sec := 1.0
-@export var aim_bonus_cash_per_tick := 1
+@export var aim_bonus_enabled := false
+@export_range(0.1, 5.0, 0.05) var aim_bonus_interval_sec := 0.35
+@export var aim_bonus_cash_per_tick := 2
 ## Brief leave without pausing the hold timer (seconds).
-@export_range(0.0, 1.0, 0.05) var aim_bonus_leave_grace_sec := 0.35
+@export_range(0.0, 1.0, 0.05) var aim_bonus_leave_grace_sec := 1.0
 @export var aim_bonus_torque := 650.0
-@export_range(1.0, 1.5, 0.01) var aim_bonus_scale_punch := 1.14
+@export_range(1.0, 1.5, 0.01) var aim_bonus_scale_punch := 1.5
 @export_range(0.05, 0.5, 0.01) var aim_bonus_scale_punch_sec := 0.12
-@export var aim_bonus_sfx_volume_db := -18.0
+@export var aim_bonus_sfx_volume_db := -26.0
 
 @export_group("Orbit 360 Bonus")
 ## Master switch: circle the crosshair fully around an active rock to earn cash + "360!" label.
-@export var orbit_bonus_enabled := true
+@export var orbit_bonus_enabled := false
 ## Inspector readout — true while this rock is currently tracking a circle around it.
 @export var orbit_bonus_tracking := false
-@export var orbit_bonus_cash := 1
+@export var orbit_bonus_cash := 100
 ## Max screen-px from rock center for the orbit to count (rock radius is added on top).
 @export_range(40.0, 500.0, 1.0) var orbit_bonus_outer_px := 160.0
 ## Min screen-px from rock center (ignore dead-center sitting).
@@ -216,31 +217,39 @@ var _destroy_on_crosshair_arm_token := 0
 
 @export_group("rock-stay settings")
 ## Cruise speed toward the aim cell (world units / sec). Pace-* does not affect this.
-@export_range(4.0, 80.0, 0.5) var rock_stay_speed := 32.0
+@export_range(4.0, 80.0, 0.5) var rock_stay_speed := 30.0
 ## How quickly velocity is pulled down while braking (units / sec²). Higher = snappier stop.
-@export_range(4.0, 200.0, 1.0) var rock_stay_brake := 55.0
+@export_range(4.0, 200.0, 1.0) var rock_stay_brake := 100.0
 ## Start decelerating when this close to the aim point.
-@export_range(0.25, 10.0, 0.05) var rock_stay_brake_distance := 2.75
+@export_range(0.25, 10.0, 0.05) var rock_stay_brake_distance := 5.0
 ## Snap / hang when within this radius of the aim point.
-@export_range(0.02, 1.0, 0.01) var rock_stay_lock_radius := 0.12
+@export_range(0.02, 1.0, 0.01) var rock_stay_lock_radius := 0.02
 ## When true, rock-stay self-destructs after `rock_stay_lifetime_sec` (no cash).
 @export var rock_stay_self_destruct := true
 ## Seconds after launch before an unshot rock-stay pops with $0.
-@export_range(0.5, 30.0, 0.1) var rock_stay_lifetime_sec := 3.0
+@export_range(0.5, 30.0, 0.1) var rock_stay_lifetime_sec := 5.0
 ## rock-stay-black always pops after this many seconds (leave it, don't shoot).
-const ROCK_STAY_BLACK_LIFETIME_SEC := 3.0
+
 ## When true, lifetime expire counts as a miss strike.
 @export var rock_stay_expire_gives_strike := false
 ## Seconds before expire when the mesh starts shaking / swelling.
-@export_range(0.15, 5.0, 0.05) var rock_stay_burst_warn_sec := 1.0
+@export_range(0.15, 5.0, 0.05) var rock_stay_burst_warn_sec := 1.5
 ## Scale multiplier reached at the end of the burst warn (1 = no grow).
-@export_range(1.0, 2.5, 0.05) var rock_stay_burst_grow := 1.4
+@export_range(1.0, 2.5, 0.05) var rock_stay_burst_grow := 1.8
 ## World-unit shake amplitude at the end of the warn (ramps up from ~0).
-@export_range(0.01, 0.5, 0.01) var rock_stay_burst_shake := 0.14
+@export_range(0.01, 0.5, 0.01) var rock_stay_burst_shake := 0.2
 ## Launch spin impulse so it keeps tumbling while hanging.
 @export var rock_stay_spin_torque := 1200.0
 ## Near-zero damp so the launch torque keeps spinning.
 @export_range(0.0, 2.0, 0.01) var rock_stay_angular_damp := 0.05
+
+## Seconds to pause on each waypoint before flying to the next.
+@export_range(0.0, 3.0, 0.05) var rock_stay_path_hold_sec := 0.35
+## After the first leg (spawn → first cell), each later leg is this fraction slower than the previous.
+## 0.01 = 1% slower per hop (compounding). 0 = all legs at full `rock_stay_speed`.
+@export_range(0.0, 0.5, 0.001) var rock_stay_path_leg_slowdown := 0.01
+## Floor so long paths never crawl to a stop (fraction of `rock_stay_speed`).
+@export_range(0.05, 1.0, 0.01) var rock_stay_path_min_speed_factor := 0.25
 
 @export_group("rock-cardinal bursts")
 ## How fast each energy burst flies after the parent explodes (world units / sec).
@@ -267,6 +276,17 @@ var _stay_burst_warn_duration := 1.0
 var _stay_mesh_base_scale := Vector3.ONE
 var _stay_mesh_base_pos := Vector3.ZERO
 var _cardinal_bursts_spawned := false
+## Multi-cell script path: world points to visit in order.
+var _stay_path: Array[Vector3] = []
+var _stay_path_index := 0
+var _stay_path_exit_splash := false
+var _stay_path_hold_left := 0.0
+var _stay_path_exiting := false
+var _stay_splash_exit_pos := Vector3.ZERO
+var _stay_path_tween: Tween
+var _stay_path_drive_token := 0
+var _stay_path_driving := false
+
 
 
 func is_stay_flight() -> bool:
@@ -289,19 +309,19 @@ func is_cardinal() -> bool:
 ## Caps horizontal/vertical chase speed so it stays readable.
 @export var avoider_max_speed_xy := 16.0
 ## Delay after launch before seeking / overlap checks (avoids instant spawn kills).
-@export var avoider_arm_delay_sec := 0.45
+@export var avoider_arm_delay_sec := 1.25
 ## How long the avoider keeps chasing its last aim point before sampling the crosshair again.
 ## 0 = track every frame (old behaviour). Raise for a delayed / laggy retarget.
-@export var avoider_retarget_delay_sec := 0.35
+@export var avoider_retarget_delay_sec := 0.15
 ## How long the avoider stays alive before it explodes on its own (no strike).
-@export var avoider_lifetime_sec := 4.0
+@export var avoider_lifetime_sec := 6.0
 ## If true, avoider + rock both explode on contact. If false, only the other rock blows up.
-@export var avoider_explodes_when_hitting_rock := false
+@export var avoider_explodes_when_hitting_rock := true
 ## If true, two avoiders destroy each other on contact. If false, they pass through each other.
-@export var avoider_explodes_when_hitting_avoider := false
+@export var avoider_explodes_when_hitting_avoider := true
 ## If true, avoider is culled when leaving camera bounds or hitting the splash zone.
 ## If false, it keeps flying; StaticBody3D / rock contacts still explode as above.
-@export var avoider_destroys_on_out_of_bounds := true
+@export var avoider_destroys_on_out_of_bounds := false
 ## Lock avoiders to this world Z so they share a collision plane with other rocks.
 @export var avoider_lock_z := 23.0
 var _avoider_plane_z := 23.0
@@ -318,13 +338,13 @@ var _avoider_humming := false
 ## Min time after launch before apex-lock can fire (0 = as soon as apex).
 @export_range(0.0, 3.0, 0.05) var red_attacker_arm_delay_sec := 0.0
 ## Extra pause after apex (lock crosshair + VFX) before the dash starts.
-@export_range(0.0, 2.0, 0.05) var red_attacker_apex_wait_sec := 0.12
+@export_range(0.0, 2.0, 0.05) var red_attacker_apex_wait_sec := 0.1
 ## Straight-line dash top speed (world units / sec).
-@export_range(8.0, 120.0, 0.5) var red_attacker_dash_speed := 58.0
+@export_range(8.0, 120.0, 0.5) var red_attacker_dash_speed := 128.0
 ## Seconds to accelerate from 0 up to `red_attacker_dash_speed` (0 = instant).
-@export_range(0.0, 3.0, 0.05) var red_attacker_dash_ramp_sec := 0.45
+@export_range(0.0, 3.0, 0.05) var red_attacker_dash_ramp_sec := 2.0
 ## Self-destruct if still alive this long after going ACTIVE (no strike).
-@export_range(0.5, 12.0, 0.1) var red_attacker_lifetime_sec := 3.0
+@export_range(0.5, 12.0, 0.1) var red_attacker_lifetime_sec := 4.0
 ## RocksSFXManager child name played when it locks and dashes.
 @export var red_attacker_lock_sfx := "rock_marked_sfx"
 var _red_attacker_armed := false
@@ -343,9 +363,9 @@ var _red_attacker_script_aim := Vector3.ZERO
 # --- Rock Gap (rock-gap / rock-red-gap) --------------------------------------
 @export_group("Rock Gap")
 ## Delay after launch before crosshair overlap becomes a strike.
-@export_range(0.0, 3.0, 0.05) var gap_hazard_arm_delay_sec := 0.3
+@export_range(0.0, 3.0, 0.05) var gap_hazard_arm_delay_sec := 0.8
 ## Self-destruct if still alive this long after going ACTIVE (no strike).
-@export_range(0.5, 12.0, 0.1) var gap_lifetime_sec := 5.0
+@export_range(0.5, 12.0, 0.1) var gap_lifetime_sec := 4.0
 var _gap_armed := false
 var _gap_arm_token := 0
 var _gap_life_token := 0
@@ -366,15 +386,15 @@ const _CONVERTER_FLIP_SMOKE := preload("res://res/Particles/Smoke_particles/Smok
 @export_group("Rock Chaser")
 @export var chaser_flee_accel := 22.0
 @export var chaser_max_speed_xy := 16.0
-@export var chaser_arm_delay_sec := 0.35
+@export var chaser_arm_delay_sec := 1.0
 ## How long the reticle must stay on the chaser before it becomes shootable.
-@export var chaser_lock_time_sec := 2.0
+@export var chaser_lock_time_sec := 0.0
 ## Padding inside the column 1–8 / row A–C play rectangle.
-@export var chaser_bounds_padding := 0.35
+@export var chaser_bounds_padding := 5.0
 ## Gravity while dodging (near 0 keeps it in the lane band).
 @export var chaser_float_gravity := 0.04
 ## One-shot spin impulse when the chaser locks (ready to shoot).
-@export var chaser_lock_torque := 18.0
+@export var chaser_lock_torque := 1800.0
 var _chaser_armed := false
 var _chaser_arm_token := 0
 var _chaser_lock_progress := 0.0
@@ -413,26 +433,135 @@ func begin_ballistic_aim_feel(descent_damp: float = 0.5) -> void:
 
 
 ## rock-stay: fly straight at `aim_pos`, brake, then hang (no fall / pace ignored).
-func begin_rock_stay_flight(aim_pos: Vector3) -> void:
+## Optional `path_world` visits each point in order; `exit_splash` then flies into the splash zone.
+func begin_rock_stay_flight(aim_pos: Vector3, path_world: Array = [], exit_splash: bool = false, splash_pos: Vector3 = Vector3.ZERO) -> void:
+	_stop_stay_path_tween()
 	_stay_flight_active = true
 	_stay_locked = false
-	_stay_target = aim_pos
+	_stay_path_exiting = false
+	_stay_path_driving = false
+	_stay_path.clear()
+	_stay_path_index = 0
+	_stay_path_hold_left = 0.0
+	_stay_path_exit_splash = exit_splash
+	_stay_splash_exit_pos = splash_pos
+	for p in path_world:
+		if typeof(p) == TYPE_VECTOR3:
+			_stay_path.append(p)
+		elif p is Vector3:
+			_stay_path.append(p as Vector3)
+	if _stay_path.is_empty():
+		_stay_path.append(aim_pos)
+	_stay_target = _stay_path[0]
 	ballistic_aim_active = false
 	_ballistic_in_descent = false
 	falling = false
+	freeze = false
+	sleeping = false
+	can_sleep = false
 	gravity_scale = 0.0
 	linear_damp = 0.0
 	angular_damp = rock_stay_angular_damp
 	constant_force = Vector3.ZERO
+	apply_torque_impulse(Vector3.FORWARD * _stay_spin_torque_amount())
+
+	## Multi-leg / splash-exit: coroutine + tweens (rigidbody sleep cannot stall this).
+	if _stay_path.size() >= 2 or _stay_path_exit_splash:
+		_stay_life_token += 1
+		_stay_path_drive_token += 1
+		_drive_stay_path(_stay_path_drive_token)
+		return
+
+	## Classic single-cell hang.
 	var from := global_position
-	var to_target := aim_pos - from
+	var to_target := _stay_target - from
 	var dist := to_target.length()
 	var dir := to_target / maxf(dist, 0.001)
-	var cruise := maxf(rock_stay_speed, 1.0)
-	linear_velocity = dir * cruise
-	## Continuous tumble while hanging / in flight.
-	apply_torque_impulse(Vector3.FORWARD * _stay_spin_torque_amount())
+	linear_velocity = dir * maxf(rock_stay_speed, 1.0)
 	_start_rock_stay_lifetime()
+
+
+func _stop_stay_path_tween() -> void:
+	if _stay_path_tween != null and is_instance_valid(_stay_path_tween):
+		_stay_path_tween.kill()
+	_stay_path_tween = null
+
+
+## Tween each scripted cell in order, then hang or plunge to splash.
+func _drive_stay_path(token: int) -> void:
+	_stay_path_driving = true
+	## Kinematic freeze so tweens can move this RigidBody reliably.
+	freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
+	freeze = true
+	sleeping = false
+	linear_velocity = Vector3.ZERO
+	gravity_scale = 0.0
+
+	## Launch can race activation by a frame — wait until shootable.
+	for _wait_i in 10:
+		if token != _stay_path_drive_token or not _stay_flight_active:
+			return
+		if current_state == State.ACTIVE and rock_activated and not rock_destroyed:
+			break
+		await get_tree().process_frame
+
+	for i in _stay_path.size():
+		if token != _stay_path_drive_token or not _stay_flight_active:
+			return
+		if current_state != State.ACTIVE or rock_destroyed:
+			return
+		_stay_path_index = i
+		_stay_target = _stay_path[i]
+		await _tween_stay_to_point(_stay_target, token, i)
+		if token != _stay_path_drive_token or not _stay_flight_active:
+			return
+		var is_last := i >= _stay_path.size() - 1
+		## Pause on every cell; also pause on last before splash exit.
+		if (not is_last) or _stay_path_exit_splash:
+			var hold := maxf(rock_stay_path_hold_sec, 0.0)
+			if hold > 0.0:
+				await get_tree().create_timer(hold, false).timeout
+			if token != _stay_path_drive_token or not _stay_flight_active:
+				return
+
+	if token != _stay_path_drive_token or not _stay_flight_active:
+		return
+
+	_stay_path_driving = false
+	if _stay_path_exit_splash:
+		freeze = false
+		_begin_stay_splash_exit()
+		return
+
+	## Hang on final cell.
+	_stay_locked = true
+	freeze = false
+	global_position = _stay_target
+	linear_velocity = Vector3.ZERO
+	_start_rock_stay_lifetime()
+
+
+func _stay_path_leg_speed(leg_index: int) -> float:
+	## Leg 0 (spawn→first cell) = full speed. Each later leg compounds the slowdown.
+	var base := maxf(rock_stay_speed, 1.0)
+	var slow := clampf(rock_stay_path_leg_slowdown, 0.0, 0.95)
+	var factor := pow(1.0 - slow, maxi(leg_index, 0))
+	var floor_factor := clampf(rock_stay_path_min_speed_factor, 0.05, 1.0)
+	return maxf(base * factor, base * floor_factor)
+
+
+func _tween_stay_to_point(dest: Vector3, token: int, leg_index: int = 0) -> void:
+	_stop_stay_path_tween()
+	var dist := global_position.distance_to(dest)
+	var cruise := _stay_path_leg_speed(leg_index)
+	var duration := clampf(dist / cruise, 0.08, 8.0)
+	_stay_path_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_stay_path_tween.tween_property(self, "global_position", dest, duration)
+	await _stay_path_tween.finished
+	if token != _stay_path_drive_token:
+		return
+	global_position = dest
+	linear_velocity = Vector3.ZERO
 
 
 func _update_rock_stay(delta: float) -> void:
@@ -444,10 +573,19 @@ func _update_rock_stay(delta: float) -> void:
 	angular_damp = rock_stay_angular_damp
 	constant_force = Vector3.ZERO
 
+	## Tween driver owns multi-leg motion.
+	if _stay_path_driving:
+		linear_velocity = Vector3.ZERO
+		return
+
+	## Plunge into the splash zone — do not brake/lock or the rock freezes above water.
+	if _stay_path_exiting:
+		_update_stay_splash_exit_flight()
+		return
+
 	if _stay_locked:
 		global_position = _stay_target
 		linear_velocity = Vector3.ZERO
-		## Keep spinning — do not zero angular_velocity.
 		return
 
 	var to_target := _stay_target - global_position
@@ -457,6 +595,8 @@ func _update_rock_stay(delta: float) -> void:
 		_lock_rock_stay()
 		return
 
+	sleeping = false
+	freeze = false
 	var dir := to_target / maxf(dist, 0.001)
 	var cruise := maxf(rock_stay_speed, 1.0)
 	var brake_dist := maxf(rock_stay_brake_distance, lock_r * 2.0)
@@ -466,7 +606,6 @@ func _update_rock_stay(delta: float) -> void:
 	var desired_vel := dir * desired_speed
 	var brake := maxf(rock_stay_brake, 1.0)
 	linear_velocity = linear_velocity.move_toward(desired_vel, brake * delta)
-	## Kill stray depth drift so it settles on the aim plane.
 	if absf(linear_velocity.z) > 0.01 and absf(_stay_target.z - global_position.z) < 0.05:
 		linear_velocity.z = move_toward(linear_velocity.z, 0.0, brake * delta)
 
@@ -474,7 +613,69 @@ func _update_rock_stay(delta: float) -> void:
 		_lock_rock_stay()
 
 
+func _begin_stay_splash_exit() -> void:
+	_stay_path_exiting = true
+	_stay_path_driving = false
+	_stay_locked = false
+	freeze = false
+	sleeping = false
+	_stay_life_token += 1
+	_stop_rock_stay_burst_warn(true)
+	var splash := _stay_splash_exit_pos
+	if splash == Vector3.ZERO:
+		splash = Vector3(global_position.x, global_position.y - 14.0, global_position.z)
+	if splash.y >= global_position.y - 0.5:
+		splash.y = global_position.y - 14.0
+	_stay_target = splash
+	## Splash plunge continues the path slowdown (next leg after the last cell).
+	var cruise := _stay_path_leg_speed(_stay_path.size()) * 1.15
+	var dir := (_stay_target - global_position)
+	if dir.length() < 0.001:
+		dir = Vector3(0, -1, 0)
+	else:
+		dir = dir.normalized()
+	linear_velocity = dir * cruise
+	_schedule_stay_splash_exit_failsafe()
+
+
+func _update_stay_splash_exit_flight() -> void:
+	sleeping = false
+	var cruise := _stay_path_leg_speed(_stay_path.size()) * 1.15
+	var to_target := _stay_target - global_position
+	var dist := to_target.length()
+	var lock_r := maxf(rock_stay_lock_radius, 0.5)
+	if dist > lock_r:
+		linear_velocity = to_target.normalized() * cruise
+		return
+	var plunge := linear_velocity
+	if plunge.length() < 0.5 or plunge.y >= 0.0:
+		plunge = Vector3.DOWN * cruise
+	else:
+		plunge = plunge.normalized() * cruise
+	linear_velocity = plunge
+
+
+func _schedule_stay_splash_exit_failsafe() -> void:
+	var token := _stay_life_token
+	await get_tree().create_timer(4.0, false).timeout
+	if token != _stay_life_token:
+		return
+	if not is_instance_valid(self):
+		return
+	if current_state != State.ACTIVE or not rock_activated or rock_destroyed:
+		return
+	if not _stay_path_exiting:
+		return
+	_clear_rock_stay()
+	rock_activated = false
+	if has_method("out_of_bounds"):
+		out_of_bounds()
+	enter_state(State.MISSED)
+
+
 func _lock_rock_stay() -> void:
+	if _stay_path_exiting or _stay_path_driving:
+		return
 	_stay_locked = true
 	global_position = _stay_target
 	linear_velocity = Vector3.ZERO
@@ -482,13 +683,27 @@ func _lock_rock_stay() -> void:
 	linear_damp = 0.0
 	angular_damp = rock_stay_angular_damp
 	falling = false
+	if _stay_path.is_empty() or _stay_path.size() <= 1:
+		return
+	## Multi-path should be tween-driven; if we got here, hang.
+	_start_rock_stay_lifetime()
 
 
 func _clear_rock_stay() -> void:
+	_stay_path_drive_token += 1
+	_stay_path_driving = false
+	_stop_stay_path_tween()
 	_stay_flight_active = false
 	_stay_locked = false
 	_stay_target = Vector3.ZERO
 	_stay_life_token += 1
+	_stay_path.clear()
+	_stay_path_index = 0
+	_stay_path_exit_splash = false
+	_stay_path_exiting = false
+	_stay_path_hold_left = 0.0
+	_stay_splash_exit_pos = Vector3.ZERO
+	can_sleep = true
 	_stop_rock_stay_burst_warn(true)
 
 

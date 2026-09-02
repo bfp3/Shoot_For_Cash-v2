@@ -683,7 +683,7 @@ func _begin_beat(sequence: Array) -> void:
 				var wait_ms: int = DEFAULT_LAUNCH_WAIT_MS if pending_wait_ms == null else int(pending_wait_ms)
 				delays_sec.append(float(wait_ms) / 1000.0)
 			pending_wait_ms = null
-			var stamped: Dictionary = entry.duplicate()
+			var stamped: Dictionary = entry.duplicate(true)
 			stamped["gravity_scale"] = aim_launch_gravity_scale
 			rocks.append(stamped)
 			continue
@@ -3210,9 +3210,35 @@ func _launch_stream_rock(body, counter: int) -> void:
 		impulse = _pigeon_launch_impulse(body, counter, upward_force)
 		body.apply_central_impulse(impulse)
 	elif body.has_method("is_stay_flight") and body.is_stay_flight():
+		## Prefer a fresh parse from the original script line so path_cells cannot be lost in copies.
+		if entry is Dictionary:
+			var raw_line := str(entry.get("raw", "")).strip_edges()
+			if raw_line.is_empty() and Parser and Parser.has_method("_spawn_entry_to_line"):
+				raw_line = str(Parser._spawn_entry_to_line(entry)).strip_edges()
+			if not raw_line.is_empty() and Parser and Parser.has_method("parse_spawn_command"):
+				var reparsed: Dictionary = Parser.parse_spawn_command(raw_line)
+				if not reparsed.is_empty() and String(reparsed.get("cmd", "")).begins_with("rock-stay"):
+					entry = reparsed
+					if counter_idx >= 0 and counter_idx < manual_rock_sequence.size():
+						manual_rock_sequence[counter_idx] = reparsed
 		var aim_pos := _stay_aim_world(body, counter, entry)
+		var path_world := _stay_path_worlds(entry, counter)
+		var exit_splash := bool(entry.get("path_exit_splash", false)) if entry is Dictionary else false
+		var splash_from := aim_pos
+		if path_world.size() > 0:
+			splash_from = path_world[path_world.size() - 1]
+			## First path cell is the authoritative aim (ignore telegraph jitter).
+			aim_pos = path_world[0]
+		var splash_pos := _stay_splash_exit_world(splash_from)
+		var cell_count := 0
+		if entry is Dictionary:
+			cell_count = int(entry.get("path_cells", []).size())
+		print(
+			"RockManager: rock-stay launch path_cells=%d path_world=%d exit=%s raw=%s"
+			% [cell_count, path_world.size(), str(exit_splash), str(entry.get("raw", "") if entry is Dictionary else "")]
+		)
 		if body.has_method("begin_rock_stay_flight"):
-			body.begin_rock_stay_flight(aim_pos)
+			body.begin_rock_stay_flight(aim_pos, path_world, exit_splash, splash_pos)
 		else:
 			BallisticAim.configure_body_for_ballistic_launch(body, 0.0)
 			impulse = _aimed_launch_impulse_to_world(body, aim_pos, 0.0)
@@ -3251,6 +3277,60 @@ func _stay_aim_world(body, rock_index: int, entry) -> Vector3:
 	var spawn_column := _x_to_nearest_column(body.target_x_position)
 	var aim := _resolve_aim_cell(entry, true, spawn_column)
 	return _aim_cell_world_position(aim.x, aim.y, true)
+
+
+## Resolve `path_cells` from a rock-stay script entry into world points (no jitter).
+func _stay_path_worlds(entry, rock_index: int = -1) -> Array:
+	var out: Array = []
+	if not (entry is Dictionary):
+		return out
+	var cells: Array = entry.get("path_cells", [])
+	if cells.is_empty():
+		## Fallback: single aim cell from classic stay fields.
+		var ar := int(entry.get("aim_row", -1))
+		var ac := int(entry.get("aim_column", -1))
+		if ar >= 1 and ac >= 0:
+			out.append(_aim_cell_world_position(ar, ac, false))
+		return out
+	var spawn_column := int(entry.get("column", -1))
+	for cell in cells:
+		var row := -1
+		var col := -1
+		if cell is Vector2i:
+			row = int(cell.x)
+			col = int(cell.y)
+		elif cell is Dictionary:
+			row = int(cell.get("row", -1))
+			col = int(cell.get("column", -1))
+		else:
+			continue
+		if row < 1 and col < 0:
+			var resolved := _resolve_aim_cell({
+				"aim_row": row,
+				"aim_column": col,
+				"column": spawn_column,
+			}, true, spawn_column)
+			row = int(resolved.x)
+			col = int(resolved.y)
+		elif row < 1 or col < 0:
+			var resolved2 := _resolve_aim_cell({
+				"aim_row": row if row >= 1 else -1,
+				"aim_column": col if col >= 0 else -1,
+				"column": spawn_column,
+			}, true, spawn_column)
+			row = int(resolved2.x)
+			col = int(resolved2.y)
+		out.append(_aim_cell_world_position(row, col, false))
+	return out
+
+
+func _stay_splash_exit_world(from_aim: Vector3) -> Vector3:
+	## Aim below the play grid into water so exit velocity is downward (splash miss requires vy ≤ 0).
+	if splash_zone and is_instance_valid(splash_zone):
+		var p: Vector3 = splash_zone.global_position
+		p.y = minf(p.y, from_aim.y - 8.0)
+		return p
+	return Vector3(from_aim.x, from_aim.y - 16.0, from_aim.z)
 
 
 ## Pigeons fly into the distance along the column fan (17° half-angle from world origin).

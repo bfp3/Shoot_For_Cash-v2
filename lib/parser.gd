@@ -182,7 +182,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
 ##   `rock A4` is invalid — use `rock ? A4`. Side lanes: `rock A0 A8` / `rock A0 A9`
 ##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
-##   `rock-grey` is $1 and does not strike on miss. `rock-stay` flies straight to aim then hangs (pace ignored). `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `mothership` flees the player for bonus cash.
+##   `rock-grey` is $1 and does not strike on miss. `rock-stay` flies straight to aim then hangs (pace ignored).
+##   `rock-stay 1 a1 a8 c8 c1 a4 1` — spawn col 1, visit those cells in order; trailing `1` = then leave into the splash zone (`0` or omit = hang on the last cell).
+##   `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `mothership` flees the player for bonus cash.
 ##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
 ##   `rock-red-attacker 1 a1` flies to A1 then dashes at the crosshair (and through it).
 ##   `rock-red-attacker 1 a1 a8` same, but dashes toward A8 instead of the crosshair.
@@ -266,8 +268,11 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'mothership', 'red_rock_error', 'smokecan', 'crate':
+		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
+
+		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still':
+			return _parse_rock_stay_command(cmd, parts)
 
 		'rock-gap', 'rock-red-gap':
 			return _parse_rock_gap_command(cmd, parts)
@@ -608,6 +613,95 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 			result.param = token2
 
 	_apply_optional_end_cell(result, parts)
+	return result
+
+
+## rock-stay / rock-stay-black / rock-cardinal / rock-still
+##   rock-stay 1 a1                 → spawn col 1, hang at A1
+##   rock-stay 1 a1 a8 c8 c1 a4 1   → path A1→A8→C8→C1→A4, then splash exit
+##   Trailing bare `0`/`1` after cells = path_exit_splash (1 = leave into splash zone).
+## rock-stay / rock-stay-black / rock-cardinal / rock-still
+##   rock-stay 1 a1                 → spawn col 1, hang at A1
+##   rock-stay 1 a1 a8 c8 c1 a4 1   → path A1→A8→C8→C1→A4, then splash exit
+##   Trailing bare `0`/`1` after cells = path_exit_splash (1 = leave into splash zone).
+func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictionary:
+	var result := {
+		'cmd': cmd,
+		'column': RANDOM_SLOT,
+		'spawn_row': RANDOM_SLOT,
+		'aim_row': RANDOM_SLOT,
+		'aim_column': RANDOM_SLOT,
+		'end_row': RANDOM_SLOT,
+		'end_column': RANDOM_SLOT,
+		'path_exit_splash': false,
+		'param': '',
+		'raw': ' '.join(parts),
+	}
+	var path_cells: Array = []
+
+	if parts.size() <= 1:
+		result['path_cells'] = path_cells
+		return result
+
+	var token1 := String(parts[1]).strip_edges().trim_suffix(',').strip_edges()
+	var cell_start := 2
+	if _is_random_token(token1):
+		result.column = RANDOM_SLOT
+	elif token1.is_valid_int():
+		result.column = int(token1)
+	else:
+		var spawn_cell := _parse_balloon_cell(token1, true)
+		if spawn_cell.is_empty():
+			result.param = token1
+			result['path_cells'] = path_cells
+			return result
+		## `rock-stay A1 …` — first cell is also the first waypoint.
+		result.column = int(spawn_cell.column)
+		result.spawn_row = int(spawn_cell.row)
+		path_cells.append(Vector2i(int(spawn_cell.row), int(spawn_cell.column)))
+		cell_start = 2
+
+	if parts.size() <= cell_start:
+		result['path_cells'] = path_cells
+		return result
+
+	var end_i := parts.size() - 1
+	var last_tok := String(parts[end_i]).strip_edges().trim_suffix(',').strip_edges()
+	## Trailing 0/1 only counts as splash-exit when at least one grid cell precedes it.
+	if last_tok == '0' or last_tok == '1':
+		var cell_before := false
+		for i in range(cell_start, end_i):
+			var mid := String(parts[i]).strip_edges().trim_suffix(',').strip_edges()
+			if _is_random_token(mid) or not _parse_balloon_cell(mid, true).is_empty():
+				cell_before = true
+				break
+		if cell_before:
+			result.path_exit_splash = last_tok == '1'
+			end_i -= 1
+
+	for i in range(cell_start, end_i + 1):
+		var tok := String(parts[i]).strip_edges().trim_suffix(',').strip_edges()
+		if tok.is_empty():
+			continue
+		if _is_random_token(tok):
+			path_cells.append(Vector2i(RANDOM_SLOT, RANDOM_SLOT))
+			continue
+		var cell := _parse_balloon_cell(tok, true)
+		if cell.is_empty():
+			result.param = tok
+			break
+		path_cells.append(Vector2i(int(cell.row), int(cell.column)))
+
+	result['path_cells'] = path_cells
+	if path_cells.size() > 0:
+		var first: Vector2i = path_cells[0]
+		result.aim_row = int(first.x)
+		result.aim_column = int(first.y)
+		if path_cells.size() >= 2:
+			var last_cell: Vector2i = path_cells[path_cells.size() - 1]
+			result.end_row = int(last_cell.x)
+			result.end_column = int(last_cell.y)
+
 	return result
 
 
@@ -1440,7 +1534,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'mothership', 'smokecan', 'crate', 'red_rock_error':
+		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'smokecan', 'crate', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))
@@ -1471,6 +1565,35 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			if col < 0:
 				return cmd
 			return '%s %s' % [cmd, col_token]
+		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still':
+			var stay_bits: PackedStringArray = [cmd]
+			var stay_col := int(entry.get('column', RANDOM_SLOT))
+			stay_bits.append('?' if stay_col < 0 else str(stay_col))
+			var letters_s := ['', 'A', 'B', 'C']
+			var path_cells: Array = entry.get('path_cells', [])
+			if path_cells.is_empty():
+				var sar := int(entry.get('aim_row', RANDOM_SLOT))
+				var sac := int(entry.get('aim_column', RANDOM_SLOT))
+				if sar > 0 and sac >= 0:
+					path_cells = [Vector2i(sar, sac)]
+			for cell in path_cells:
+				var pr := RANDOM_SLOT
+				var pc := RANDOM_SLOT
+				if cell is Vector2i:
+					pr = int(cell.x)
+					pc = int(cell.y)
+				elif cell is Dictionary:
+					pr = int(cell.get('row', RANDOM_SLOT))
+					pc = int(cell.get('column', RANDOM_SLOT))
+				else:
+					continue
+				if pr > 0 and pc >= 0:
+					stay_bits.append('%s%d' % [letters_s[clampi(pr, 1, 3)], pc])
+				elif pr > 0:
+					stay_bits.append('%s?' % letters_s[clampi(pr, 1, 3)])
+			if bool(entry.get('path_exit_splash', false)):
+				stay_bits.append('1')
+			return ' '.join(stay_bits)
 		'rock-gap', 'rock-red-gap':
 			var gap_parts: PackedStringArray = [cmd]
 			var gaps = entry.get('gap_columns', [])

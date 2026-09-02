@@ -1367,7 +1367,7 @@ func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
 	if _loadout_bullet_speed_override >= 0.0:
 		bullet_speed = _loadout_bullet_speed_override
 	else:
-		bullet_speed = 0.05
+		bullet_speed = 0.001 #0.05
 	if active_gun_loadout == GunLoadout.GUN2:
 		fire_rate = 0.05
 	elif active_gun_loadout == GunLoadout.GUN3:
