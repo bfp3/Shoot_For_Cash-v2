@@ -1,6 +1,6 @@
 extends Area3D
-## Thin gate in Main.tscn ($RockConverter/Area3D).
-## Active rocks that pass through flip yellow↔red (crosshair-hazard) without changing flight.
+## Gate in Main.tscn ($MysteryRockConverter/Area3D).
+## Randomizes an active rock into a different type that fully adopts that type's behaviour.
 
 @export var flip_cooldown_sec := 0.4
 ## Thicken detection in world Y so fast rocks don't tunnel the thin visual mesh.
@@ -38,7 +38,7 @@ func _on_body_entered(body: Node3D) -> void:
 	var now := Time.get_ticks_msec()
 	if _last_flip_msec.has(id) and now - int(_last_flip_msec[id]) < roundi(flip_cooldown_sec * 1000.0):
 		return
-	if rock.has_method("flip_converter_alliance") and rock.flip_converter_alliance():
+	if rock.has_method("mystery_transform_rock") and rock.mystery_transform_rock():
 		_last_flip_msec[id] = now
 		_prune_flip_cache(now)
 

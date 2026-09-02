@@ -270,7 +270,9 @@ var _cardinal_bursts_spawned := false
 
 
 func is_stay_flight() -> bool:
-	return rock_type == RockSize.STAY or is_stay_black()
+	## Converter-flipped red rocks from rock-stay keep hang-flight while looking red.
+	return rock_type == RockSize.STAY or is_stay_black() \
+		or (rock_type == RockSize.RED_ROCK_ERROR and _converter_keep_stay_flight)
 
 
 func is_stay_black() -> bool:
@@ -347,6 +349,18 @@ var _red_attacker_script_aim := Vector3.ZERO
 var _gap_armed := false
 var _gap_arm_token := 0
 var _gap_life_token := 0
+
+# --- RockConverter mid-flight flip -------------------------------------------
+## True when a rock-stay was flipped to a red rock — keep hang-flight, red mesh + threat.
+var _converter_keep_stay_flight := false
+## True after a yellow→red converter flip until flipped back / pooled.
+var _converter_red_active := false
+var _converter_threat_armed := false
+var _converter_threat_arm_token := 0
+@export_group("Rock Converter")
+## Delay after a yellow→red flip before reticle overlap can strike.
+@export_range(0.0, 2.0, 0.05) var converter_threat_arm_delay_sec := 0.15
+const _CONVERTER_FLIP_SMOKE := preload("res://res/Particles/Smoke_particles/SmokeQuick.tscn")
 
 # --- Rock Chaser (rock-chaser) -----------------------------------------------
 @export_group("Rock Chaser")
@@ -643,8 +657,14 @@ func _physics_process(delta: float) -> void:
 			_update_rock_stay(delta)
 			if is_stay_black():
 				_update_hazard_crosshair_overlap()
+			elif rock_type == RockSize.RED_ROCK_ERROR and _converter_keep_stay_flight:
+				if not _freeze_shot_pending:
+					_check_threat_crosshair()
 			else:
 				_update_destroy_on_crosshair_overlap()
+		elif rock_type == RockSize.RED_ROCK_ERROR:
+			if not _freeze_shot_pending:
+				_check_threat_crosshair()
 		elif rock_type == RockSize.AVOIDER:
 			## Always pin depth so collisions stay on the rock plane.
 			linear_velocity.z = 0.0
@@ -1032,13 +1052,16 @@ func _log_white_rock_if_needed() -> void:
 	gl_PlayerState.log_white_rock()
 
 
-## RockConverter gate: yellow/stay ↔ red hazard (mesh + threat), keep current flight motion.
+## RockConverter gate: yellow/stay ↔ red rock (mesh + crosshair strike), keep current flight.
 func flip_converter_alliance() -> bool:
 	if current_state != State.ACTIVE or not rock_activated or rock_destroyed:
 		return false
 	var next_type := _converter_flip_target_type()
 	if next_type < 0 or next_type == rock_type:
 		return false
+
+	var was_stay := rock_type == RockSize.STAY or _converter_keep_stay_flight
+	var becoming_red := next_type == RockSize.RED_ROCK_ERROR
 
 	var saved_lin := linear_velocity
 	var saved_ang := angular_velocity
@@ -1051,10 +1074,14 @@ func flip_converter_alliance() -> bool:
 	_hazard_crosshair_arm_token += 1
 	_destroy_on_crosshair_armed = false
 	_destroy_on_crosshair_arm_token += 1
+	_converter_threat_armed = false
+	_converter_threat_arm_token += 1
 	_set_small_rock_fire(false)
-	_set_threat_fire(false)
+	_shutdown_threat_fx()
 
 	rock_type = next_type as RockSize
+	_converter_keep_stay_flight = becoming_red and was_stay
+	_converter_red_active = becoming_red
 	_skip_setup_stat_logs = true
 	hide_all_meshes()
 	setup_rock_type()
@@ -1072,35 +1099,229 @@ func flip_converter_alliance() -> bool:
 	if not is_in_group("Target"):
 		add_to_group("Target")
 
-	## Refresh stay timers for stay↔stay-black; cancel if leaving stay family.
+	## Refresh stay timers when hang-flight is still in play.
 	_stay_life_token += 1
-	if rock_type == RockSize.STAY or is_stay_black():
+	if is_stay_flight():
 		_start_rock_stay_lifetime()
 
-	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black():
-		if _player_wants_overlap_destroy("hazards"):
-			_arm_hazard_crosshair()
+	if becoming_red:
+		_arm_converter_red_threat()
 	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.STAY:
 		if _player_wants_overlap_destroy("rocks"):
 			_arm_destroy_on_crosshair()
 		if rock_type == RockSize.SMALL or rock_type == RockSize.STAY:
 			_set_small_rock_fire(true)
 
+	_play_converter_flip_feedback()
 	return true
 
 
 func _converter_flip_target_type() -> int:
 	match rock_type:
 		RockSize.SMALL, RockSize.GREY, RockSize.SMALL_2:
-			return RockSize.HAZARD
+			return RockSize.RED_ROCK_ERROR
 		RockSize.STAY:
-			return RockSize.STAY_BLACK
-		RockSize.HAZARD, RockSize.HAZARD_SMALL, RockSize.RED_ROCK_ERROR:
+			return RockSize.RED_ROCK_ERROR
+		RockSize.RED_ROCK_ERROR:
+			## Stay-origin reds flip back to hang-flight yellows.
+			return RockSize.STAY if _converter_keep_stay_flight else RockSize.SMALL
+		RockSize.HAZARD, RockSize.HAZARD_SMALL, RockSize.AVOIDER, RockSize.RED_ATTACKER, RockSize.GAP:
 			return RockSize.SMALL
 		RockSize.STAY_BLACK, RockSize.CARDINAL:
 			return RockSize.STAY
 		_:
 			return -1
+
+
+func _play_converter_flip_feedback() -> void:
+	_play_rocks_sfx("rock_flicker_sfx")
+	var host := get_tree().get_current_scene() if get_tree() else null
+	if host == null:
+		host = self
+	var smoke: Node3D = _CONVERTER_FLIP_SMOKE.instantiate() as Node3D
+	if smoke == null:
+		return
+	host.add_child(smoke)
+	smoke.global_position = global_position
+	if "duplicate_particles" in smoke:
+		smoke.duplicate_particles = true
+	if smoke is GPUParticles3D:
+		var gp := smoke as GPUParticles3D
+		gp.one_shot = true
+		gp.emitting = false
+		gp.restart()
+		gp.emitting = true
+	## Scale down — convert pop should feel small, not a full destroy cloud.
+	smoke.scale = Vector3.ONE * 0.45
+	smoke.show()
+	## SmokeQuick's finished→free path is often disconnected; cull after a short burst.
+	get_tree().create_timer(1.4, false).timeout.connect(
+		func() -> void:
+			if is_instance_valid(smoke):
+				smoke.queue_free()
+	)
+
+func _arm_converter_red_threat() -> void:
+	_converter_threat_armed = false
+	_converter_threat_arm_token += 1
+	var token := _converter_threat_arm_token
+	var delay := maxf(converter_threat_arm_delay_sec, 0.0)
+	if delay > 0.0:
+		await get_tree().create_timer(delay, false).timeout
+	if token != _converter_threat_arm_token:
+		return
+	if current_state != State.ACTIVE or rock_type != RockSize.RED_ROCK_ERROR:
+		return
+	if not rock_activated:
+		return
+	_converter_threat_armed = true
+	_activate_threat_mode()
+
+
+## MysteryRockConverter: swap into a random full type (yellow / red-attacker / avoider / black)
+## and start that type's real behaviour (seek, dash, hazard, etc.).
+func mystery_transform_rock() -> bool:
+	if current_state != State.ACTIVE or not rock_activated or rock_destroyed:
+		return false
+
+	var next_type := _mystery_pick_next_type()
+	if next_type < 0 or next_type == rock_type:
+		return false
+
+	_cancel_runtime_type_behaviors()
+
+	rock_type = next_type as RockSize
+	_converter_keep_stay_flight = false
+	_converter_red_active = false
+	_converter_threat_armed = false
+	_skip_setup_stat_logs = true
+	hide_all_meshes()
+	setup_rock_type()
+	_skip_setup_stat_logs = false
+
+	## Adopt the new type's flight profile (not just the mesh).
+	gravity_scale = rock_type_gravity_scale
+	angular_velocity = Vector3.ZERO
+	rotation_degrees = Vector3.ZERO
+
+	if not is_in_group("Target"):
+		add_to_group("Target")
+	enable_collision()
+
+	_apply_mystery_type_behavior()
+	_play_converter_flip_feedback()
+	return true
+
+
+func _mystery_pool_types() -> Array:
+	## rocks, red-rock-attackers, red-avoiders, rock-blacks
+	return [
+		RockSize.SMALL,
+		RockSize.RED_ATTACKER,
+		RockSize.AVOIDER,
+		RockSize.HAZARD,
+	]
+
+
+func _mystery_current_pool_key() -> int:
+	match rock_type:
+		RockSize.SMALL, RockSize.GREY, RockSize.SMALL_2, RockSize.STAY, RockSize.RED_ROCK_ERROR:
+			return RockSize.SMALL
+		RockSize.RED_ATTACKER, RockSize.GAP:
+			return RockSize.RED_ATTACKER
+		RockSize.AVOIDER:
+			return RockSize.AVOIDER
+		RockSize.HAZARD, RockSize.HAZARD_SMALL, RockSize.STAY_BLACK, RockSize.CARDINAL:
+			return RockSize.HAZARD
+		_:
+			return -1
+
+
+func _mystery_pick_next_type() -> int:
+	var current_key := _mystery_current_pool_key()
+	var options: Array = []
+	for t in _mystery_pool_types():
+		if int(t) != current_key:
+			options.append(t)
+	if options.is_empty():
+		return -1
+	return int(options.pick_random())
+
+
+func _cancel_runtime_type_behaviors() -> void:
+	_hazard_crosshair_armed = false
+	_hazard_crosshair_arm_token += 1
+	_destroy_on_crosshair_armed = false
+	_destroy_on_crosshair_arm_token += 1
+	_converter_threat_armed = false
+	_converter_threat_arm_token += 1
+	_converter_red_active = false
+	_converter_keep_stay_flight = false
+	_avoider_armed = false
+	_avoider_arm_token += 1
+	_avoider_life_token += 1
+	_avoider_has_seek_target = false
+	_avoider_retarget_timer = 0.0
+	_red_attacker_armed = false
+	_red_attacker_dashing = false
+	_red_attacker_locking = false
+	_red_attacker_arm_token += 1
+	_red_attacker_life_token += 1
+	_red_attacker_has_script_aim = false
+	_gap_armed = false
+	_gap_arm_token += 1
+	_gap_life_token += 1
+	_stay_life_token += 1
+	_chaser_armed = false
+	_chaser_arm_token += 1
+	_set_small_rock_fire(false)
+	_set_red_attack_mesh_particles(false)
+	_shutdown_threat_fx()
+	_set_avoider_hum(false)
+	_stop_rock_stay_burst_warn(true)
+	ignores_x_out_of_bounds = false
+	freeze = false
+	_freeze_shot_pending = false
+
+
+func _apply_mystery_type_behavior() -> void:
+	## Mirror update_active() arming for the mystery pool only — no re-log / launch sfx.
+	if rock_type != RockSize.SMALL_2:
+		constant_force.x = 0.01
+
+	match rock_type:
+		RockSize.AVOIDER:
+			constant_force.x = 1.5
+			_avoider_plane_z = avoider_lock_z
+			global_position.z = _avoider_plane_z
+			linear_velocity.z = 0.0
+			_set_threat_fire(false)
+			_arm_avoider()
+			_start_avoider_lifetime()
+			_sync_avoider_collision_exceptions()
+		RockSize.RED_ATTACKER:
+			constant_force.x = 1.5
+			_avoider_plane_z = avoider_lock_z
+			global_position.z = _avoider_plane_z
+			linear_velocity.z = 0.0
+			_set_red_attack_mesh_particles(true)
+			_set_threat_fire(false)
+			_arm_red_attacker()
+			_start_red_attacker_lifetime()
+			_sync_avoider_collision_exceptions()
+		RockSize.HAZARD:
+			constant_force.x = 0.01
+			apply_torque_impulse(Vector3.LEFT * 1500)
+			if _player_wants_overlap_destroy("hazards"):
+				_arm_hazard_crosshair()
+		RockSize.SMALL:
+			constant_force.x = 0.01
+			apply_torque_impulse(Vector3.LEFT * 1500)
+			if _player_wants_overlap_destroy("rocks"):
+				_arm_destroy_on_crosshair()
+			_set_small_rock_fire(true)
+		_:
+			pass
 
 
 func reset_rock_back_on() -> void:
@@ -1630,6 +1851,10 @@ func reset_stats() -> void:
 	_gap_armed = false
 	_gap_arm_token += 1
 	_gap_life_token += 1
+	_converter_keep_stay_flight = false
+	_converter_red_active = false
+	_converter_threat_armed = false
+	_converter_threat_arm_token += 1
 	_chaser_armed = false
 	_chaser_arm_token += 1
 	_chaser_lock_progress = 0.0
@@ -2053,9 +2278,10 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 	
 	#freeze_mine = true
 
-	# Avoiders / red-attackers / gap: while calm (or frozen), a shot destroys with no strike.
+	# Avoiders / red-attackers / gap / converter-reds: while calm (or frozen), a shot destroys with no strike.
 	# Once in attack mode, a shot or reticle overlap is a hazard strike.
-	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER or rock_type == RockSize.GAP:
+	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER or rock_type == RockSize.GAP \
+			or (rock_type == RockSize.RED_ROCK_ERROR and _converter_red_active):
 		if _freeze_shot_pending or not _is_threat_hazardous():
 			_destroy_pre_arm_threat()
 			return
@@ -2755,6 +2981,8 @@ func _is_threat_hazardous() -> bool:
 		return _red_attacker_dashing or _red_attacker_locking
 	if rock_type == RockSize.GAP:
 		return _gap_armed
+	if rock_type == RockSize.RED_ROCK_ERROR:
+		return _converter_threat_armed
 	return false
 
 
@@ -2799,14 +3027,15 @@ func _set_avoider_hum(on: bool) -> void:
 
 
 func _check_threat_crosshair() -> void:
-	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER and rock_type != RockSize.GAP:
+	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER \
+			and rock_type != RockSize.GAP and rock_type != RockSize.RED_ROCK_ERROR:
 		return
 	if current_state != State.ACTIVE or not rock_activated:
 		return
 	if not _avoider_overlaps_crosshair():
 		return
 	## Calm / pre-attack: crosshair alone does nothing — must be shot like a normal rock.
-	## Aggressive (seeking / locking / dashing / gap-armed): overlap pops them and strikes.
+	## Aggressive (seeking / locking / dashing / gap-armed / converter-red): overlap pops + strikes.
 	if _is_threat_hazardous():
 		_trigger_avoider_crosshair_contact()
 
@@ -3423,7 +3652,8 @@ func _play_aim_hold_bonus_feedback() -> void:
 
 
 func _trigger_avoider_crosshair_contact() -> void:
-	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER and rock_type != RockSize.GAP:
+	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER \
+			and rock_type != RockSize.GAP and rock_type != RockSize.RED_ROCK_ERROR:
 		return
 	# Frozen avoiders are inert — no strike from reticle touch.
 	if _freeze_shot_pending:
@@ -3444,13 +3674,20 @@ func _trigger_avoider_crosshair_contact() -> void:
 	_gap_armed = false
 	_gap_arm_token += 1
 	_gap_life_token += 1
+	_converter_threat_armed = false
+	_converter_threat_arm_token += 1
+	_converter_red_active = false
+	_converter_keep_stay_flight = false
 	_shutdown_threat_fx()
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
 	freeze = true
 
-	var aim_xy := _crosshair_world_xy_at_depth(_avoider_plane_z if rock_type != RockSize.GAP else global_position.z)
-	global_position = Vector3(aim_xy.x, aim_xy.y, global_position.z if rock_type == RockSize.GAP else _avoider_plane_z)
+	var aim_z := global_position.z
+	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER:
+		aim_z = _avoider_plane_z
+	var aim_xy := _crosshair_world_xy_at_depth(aim_z)
+	global_position = Vector3(aim_xy.x, aim_xy.y, aim_z)
 	## One short beat so the snap reads before the burst.
 	await get_tree().create_timer(0.08, false).timeout
 	if current_state != State.ACTIVE or rock_destroyed:
@@ -3489,7 +3726,9 @@ func _destroy_frozen_avoider() -> void:
 
 
 func _destroy_pre_arm_threat() -> void:
-	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER and rock_type != RockSize.GAP:
+	if rock_type != RockSize.AVOIDER and rock_type != RockSize.RED_ATTACKER \
+			and rock_type != RockSize.GAP \
+			and not (rock_type == RockSize.RED_ROCK_ERROR and _converter_red_active):
 		return
 	if current_state != State.ACTIVE or not rock_activated:
 		return
@@ -3506,8 +3745,40 @@ func _destroy_pre_arm_threat() -> void:
 		_expire_red_attacker_lifetime()
 	elif rock_type == RockSize.GAP:
 		_expire_gap_safe()
+	elif rock_type == RockSize.RED_ROCK_ERROR and _converter_red_active:
+		_expire_converter_red_safe()
 	else:
 		_expire_avoider_lifetime()
+
+
+## Shot while converter-red was still arming — destroy with no strike.
+func _expire_converter_red_safe() -> void:
+	if rock_type != RockSize.RED_ROCK_ERROR or not _converter_red_active:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+
+	rock_activated = false
+	_converter_threat_armed = false
+	_converter_threat_arm_token += 1
+	_converter_red_active = false
+	_converter_keep_stay_flight = false
+	_stay_life_token += 1
+	_shutdown_threat_fx()
+
+	remove_from_group("Target")
+	disable_collision()
+	if current_particles != null:
+		current_particles.emitting = false
+	var red := get_node_or_null("%RedParticles") as GPUParticles3D
+	if red:
+		red.emitting = false
+
+	expand_blast_radius()
+	play_destroy_sfx()
+	await was_hit_tween()
+	if current_state == State.ACTIVE:
+		enter_state(State.MISSED)
 
 
 ## Shot while calm — destroy with no strike.
