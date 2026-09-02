@@ -17,6 +17,8 @@ var _dir := Vector3.RIGHT
 var _speed := 16.0
 var _size := 0.625
 var _lifetime := 2.75
+var _spin := 8.0
+var _shake_amp := 0.0
 var _plane_z := 0.0
 var _origin := Vector3.ZERO
 var _arm_token := 0
@@ -37,7 +39,7 @@ func _ready() -> void:
 	_build_energy_vfx()
 
 
-func launch(origin: Vector3, dir: Vector3, speed: float, size: float, lifetime: float) -> void:
+func launch(origin: Vector3, dir: Vector3, speed: float, size: float, lifetime: float, spin: float = 8.0, shake: float = 0.0) -> void:
 	_origin = origin
 	_plane_z = origin.z
 	_dir = dir
@@ -48,11 +50,16 @@ func launch(origin: Vector3, dir: Vector3, speed: float, size: float, lifetime: 
 	_speed = maxf(speed, 0.1)
 	_size = maxf(size, 0.05)
 	_lifetime = maxf(lifetime, 0.15)
+	_spin = maxf(spin, 0.0)
+	_shake_amp = maxf(shake, 0.0)
 	global_position = origin + _dir * (_size * 0.45)
 	global_position.z = _plane_z
 	_apply_size()
 	linear_velocity = _dir * _speed
-	apply_torque_impulse(Vector3(_dir.y, _dir.x, 0.4).normalized() * 8.0)
+	var spin_axis := Vector3(_dir.y, _dir.x, 0.4)
+	if spin_axis.length_squared() > 0.0001 and _spin > 0.0:
+		## Parent hang torque is ~1200; shards use a smaller fraction so they tumble, not blur.
+		apply_torque_impulse(spin_axis.normalized() * (_spin * 0.01))
 	add_to_group("Target")
 	_start_lifetime()
 	_arm_overlap()
@@ -92,6 +99,7 @@ func _physics_process(_delta: float) -> void:
 	var pos := global_position
 	pos.z = _plane_z
 	global_position = pos
+	_apply_flight_shake()
 	if _armed and global_position.distance_to(_origin) >= maxf(_size * 1.25, 0.7) and _overlaps_crosshair():
 		_strike_and_die()
 		return
@@ -107,6 +115,20 @@ func _apply_size() -> void:
 	if main_col:
 		## Match rock-stay-black: mesh 0.625 → collision scale 0.2.
 		main_col.scale = Vector3.ONE * (0.2 * (_size / 0.625))
+
+
+func _apply_flight_shake() -> void:
+	if _shake_amp <= 0.0 or core_mesh == null:
+		return
+	var amp := _shake_amp * 0.35
+	var jitter := Vector3(
+		randf_range(-amp, amp),
+		randf_range(-amp, amp),
+		randf_range(-amp * 0.35, amp * 0.35)
+	)
+	core_mesh.position = jitter
+	if glow_mesh:
+		glow_mesh.position = jitter
 
 
 func _build_energy_vfx() -> void:

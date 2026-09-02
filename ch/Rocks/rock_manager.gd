@@ -922,6 +922,7 @@ func _spawn_checkpoint_balloon(entry = null) -> void:
 			checkpoint.arrive_from_below(rest)
 		else:
 			checkpoint.arrive_from_below()
+	_latch_round_timer_for_checkpoint()
 
 
 func _spawn_ladder_balloon(entry = null) -> void:
@@ -1001,12 +1002,34 @@ func _checkpoint_rest_from_entry(entry) -> Vector3:
 
 
 func _dismiss_checkpoint() -> void:
+	_unlatch_round_timer_for_checkpoint()
 	if _active_checkpoint != null and is_instance_valid(_active_checkpoint):
 		if _active_checkpoint.has_method("dismiss_without_shot"):
 			_active_checkpoint.dismiss_without_shot()
 		elif is_instance_valid(_active_checkpoint):
 			_active_checkpoint.queue_free()
 	_active_checkpoint = null
+
+
+func _latch_round_timer_for_checkpoint() -> void:
+	var timer := _round_timer_node()
+	if timer and timer.has_method("latch_timer"):
+		timer.latch_timer()
+
+
+func _unlatch_round_timer_for_checkpoint() -> void:
+	var timer := _round_timer_node()
+	if timer and timer.has_method("unlatch_timer"):
+		timer.unlatch_timer()
+
+
+func _round_timer_node() -> Node:
+	var rm = get_tree().get_first_node_in_group("round_manager")
+	if rm:
+		var timer = rm.get("round_timer")
+		if timer:
+			return timer
+	return get_tree().get_first_node_in_group("round_timer")
 
 
 func _dismiss_ladder_balloons() -> void:
@@ -1380,6 +1403,7 @@ func finish_checkpoint_round() -> void:
 
 
 func end_checkpoint_hold() -> void:
+	_unlatch_round_timer_for_checkpoint()
 	_checkpoint_hold = false
 	_ladder_hold = false
 	_active_checkpoint = null

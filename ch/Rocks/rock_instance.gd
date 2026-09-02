@@ -7,7 +7,8 @@ const CARDINAL_BURST_SCENE := preload("res://ch/Rocks/cardinal_burst.tscn")
 var _rocks_sfx: Node = null
 
 @export var freeze_mine := false
-## Keep RigidBody torque/spin; visually aim mesh +Y along travel velocity.
+## Keep RigidBody torque/spin; visually aim mesh +Y along travel.
+## Only applies to red-rock types and rock-stay. Black rocks tumble from torque.
 @export var mesh_face_velocity := true
 ## Min speed before the mesh starts tracking travel direction.
 @export_range(0.01, 2.0, 0.01) var mesh_face_velocity_min_speed := 0.15
@@ -246,6 +247,12 @@ const ROCK_STAY_BLACK_LIFETIME_SEC := 3.0
 @export_range(0.15, 2.0, 0.05) var cardinal_burst_size := 0.625
 ## How long the four bursts stay in play before vanishing (no strike).
 @export_range(0.4, 12.0, 0.1) var cardinal_burst_lifetime_sec := 2.75
+## Parent warn-shake amplitude before / as bursts are about to release.
+@export_range(0.0, 0.8, 0.01) var cardinal_shake := 0.2
+## Hang-spin torque on the parent, and tumble on the four bursts.
+@export_range(0.0, 4000.0, 10.0) var cardinal_spin := 1200.0
+## Seconds after the parent explodes before the four bursts fly out.
+@export_range(0.0, 5.0, 0.05) var cardinal_release_delay_sec := 0.0
 
 ## Soft hang at aim after rock-stay brakes (like orange apex lock).
 var _stay_flight_active := false
@@ -408,7 +415,7 @@ func begin_rock_stay_flight(aim_pos: Vector3) -> void:
 	var cruise := maxf(rock_stay_speed, 1.0)
 	linear_velocity = dir * cruise
 	## Continuous tumble while hanging / in flight.
-	apply_torque_impulse(Vector3.FORWARD * rock_stay_spin_torque)
+	apply_torque_impulse(Vector3.FORWARD * _stay_spin_torque_amount())
 	_start_rock_stay_lifetime()
 
 
@@ -525,7 +532,7 @@ func _update_rock_stay_burst_warn(delta: float) -> void:
 	var ease_t := t * t
 	var grow := maxf(rock_stay_burst_grow, 1.0)
 	current_mesh.scale = _stay_mesh_base_scale.lerp(_stay_mesh_base_scale * grow, ease_t)
-	var amp := lerpf(0.015, maxf(rock_stay_burst_shake, 0.01), ease_t)
+	var amp := lerpf(0.015, maxf(_stay_warn_shake_amp(), 0.01), ease_t)
 	current_mesh.position = _stay_mesh_base_pos + Vector3(
 		randf_range(-amp, amp),
 		randf_range(-amp, amp),
@@ -589,18 +596,30 @@ func _spawn_cardinal_bursts() -> void:
 	if host == null:
 		return
 	var origin := global_position
+	var speed := cardinal_burst_speed
+	var size := cardinal_burst_size
+	var life := cardinal_burst_lifetime_sec
+	var spin := cardinal_spin
+	var shake := cardinal_shake
+	var delay := maxf(cardinal_release_delay_sec, 0.0)
+	if delay > 0.0:
+		await get_tree().create_timer(delay, false).timeout
+		if host == null or not is_instance_valid(host):
+			return
 	var dirs := [Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN]
 	var spawned: Array = []
 	for dir in dirs:
 		var burst = CARDINAL_BURST_SCENE.instantiate()
 		host.add_child(burst)
 		if burst.has_method("launch"):
-			burst.launch(origin, dir, cardinal_burst_speed, cardinal_burst_size, cardinal_burst_lifetime_sec)
+			burst.launch(origin, dir, speed, size, life, spin, shake)
 		spawned.append(burst)
+	var parent_rock := self if is_instance_valid(self) else null
 	for a in spawned:
 		if not is_instance_valid(a):
 			continue
-		a.add_collision_exception_with(self)
+		if parent_rock:
+			a.add_collision_exception_with(parent_rock)
 		for b in spawned:
 			if a != b and is_instance_valid(b):
 				a.add_collision_exception_with(b)
@@ -616,7 +635,8 @@ func _cardinal_burst_host() -> Node:
 func _physics_process(delta: float) -> void:
 	if current_state == State.ACTIVE and rock_activated:
 		_update_orbit_bonus(delta)
-		_update_mesh_face_velocity()
+		if _wants_mesh_face_velocity():
+			_update_mesh_face_velocity()
 		if is_stay_flight():
 			_update_rock_stay(delta)
 			if is_stay_black():
@@ -663,6 +683,30 @@ func _physics_process(delta: float) -> void:
 		return
 	_ballistic_in_descent = true
 	linear_damp = _ballistic_descent_damp
+
+
+## Point mesh local +Y along travel; RigidBody can keep spinning underneath.
+## Only red-rock types and rock-stay. Black rocks keep torque tumble.
+func _wants_mesh_face_velocity() -> bool:
+	if not mesh_face_velocity:
+		return false
+	match rock_type:
+		RockSize.STAY, RockSize.RED_ATTACKER, RockSize.GAP, RockSize.AVOIDER, RockSize.RED_ROCK_ERROR:
+			return true
+		_:
+			return false
+
+
+func _stay_spin_torque_amount() -> float:
+	if is_cardinal():
+		return cardinal_spin
+	return rock_stay_spin_torque
+
+
+func _stay_warn_shake_amp() -> float:
+	if is_cardinal():
+		return cardinal_shake
+	return rock_stay_burst_shake
 
 
 ## Point mesh local +Y along travel; RigidBody can keep spinning underneath.
