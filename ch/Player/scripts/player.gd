@@ -1727,13 +1727,7 @@ func fire_weapon(force_plant: bool = false) -> void:
 		player_did_not_miss()
 		return
 
-	#power_gun_fire_rate = 0.05
-	power_gun_fire_rate = 0.25
-	#power_bullet_speed = 0.01
-	
-	#weapon_shooting.power_bullet_speed = 0.3
-	#power_target_circle = 60.0
-	weapon_shooting.power_bullet_delay = 0.01
+	gun_stats()
 	weapon_shooting.shoot_target()
 	
 	#%Crosshair.modulate.a = 0.05
@@ -2090,3 +2084,18 @@ func _kill_ammo_hud_tween() -> void:
 	if _ammo_hud_tween and _ammo_hud_tween.is_valid():
 		_ammo_hud_tween.kill()
 	_ammo_hud_tween = null
+	
+	
+	
+func gun_stats() -> void:
+	scope_base_scale = 1.0
+	power_gun_fire_rate = 0.1
+	weapon_shooting.power_bullet_delay = 0.01
+	
+func gun_3_stats() -> void:
+	power_gun_fire_rate = 0.5
+	#weapon_shooting.power_bullet_speed = 0.3
+	scope_base_scale = 2.0
+	weapon_shooting.power_bullet_delay = 0.01
+	weapon_shooting.shoot_target()
+	
