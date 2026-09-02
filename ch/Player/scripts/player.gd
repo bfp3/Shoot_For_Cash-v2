@@ -284,7 +284,7 @@ func _ready() -> void:
 
 	%HUD_bottom_corner.hide()
 	
-	get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
+	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
 	
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
 	EventBus.instance.player_update_stats_visually.connect(update_player_stats)

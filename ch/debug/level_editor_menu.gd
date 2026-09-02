@@ -20,6 +20,8 @@ const COMMAND_BUTTONS: PackedStringArray = [
 	"rock-juggle",
 	"rock-grey",
 	"rock-stay",
+	"rock-stay-black",
+	"rock-cardinal",
 	"mothership",
 	"smokecan",
 	"crate",
