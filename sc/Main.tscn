@@ -1718,24 +1718,28 @@ script = ExtResource("1_rockconv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RockConverter2/Area3D" unique_id=1270259890]
 shape = SubResource("BoxShape3D_heewt")
+disabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="RockConverter2" unique_id=299351578]
 libraries/ = SubResource("AnimationLibrary_heewt")
 autoplay = &"new_animation"
 
 [node name="MysteryRockConverter" type="MeshInstance3D" parent="." unique_id=1947107396]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.075, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 23)
+visible = false
 material_override = ExtResource("77_heewt")
 mesh = SubResource("BoxMesh_qmj5w")
 
 [node name="Area3D" type="Area3D" parent="MysteryRockConverter" unique_id=2144081813]
 collision_layer = 0
 collision_mask = 2
+monitoring = false
 monitorable = false
 script = ExtResource("1_mysteryconv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MysteryRockConverter/Area3D" unique_id=1658898021]
 shape = SubResource("BoxShape3D_swp41")
+disabled = true
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]

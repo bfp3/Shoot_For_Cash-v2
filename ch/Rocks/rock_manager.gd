@@ -289,9 +289,31 @@ func _is_pace_cmd(cmd: String) -> bool:
 	return cmd == "pace" or cmd.begins_with("pace-")
 
 
+func _is_gun_cmd(cmd: String) -> bool:
+	return cmd == "gun" or cmd == "gun1" or cmd == "gun2" or cmd == "gun3" or cmd == "gun4"
+
+
 func _apply_pace_entry(entry) -> void:
 	if entry is Dictionary:
 		set_pace_gravity(String(entry.get("cmd", "")))
+
+
+func _apply_gun_entry(entry) -> void:
+	var cmd := "gun1"
+	if entry is Dictionary:
+		cmd = String(entry.get("cmd", "gun1")).to_lower()
+	if cmd == "gun":
+		cmd = "gun1"
+	var gun_id := 1
+	if cmd == "gun2":
+		gun_id = 2
+	elif cmd == "gun3":
+		gun_id = 3
+	elif cmd == "gun4":
+		gun_id = 4
+	var player = get_tree().get_first_node_in_group("Player") if get_tree() else null
+	if player and player.has_method("switch_gun_loadout"):
+		player.switch_gun_loadout(gun_id)
 
 func _process(delta: float) -> void:
 	if _waiting_until_clear and not _checkpoint_hold and not _ladder_hold and not _advancing_sequence and not _final_atmosphere_playing and not _pineapple_round_playing and not _sequence_delay_active:
@@ -468,6 +490,11 @@ func _launch_next_sequence_beat() -> void:
 			_sequence_cursor += 1
 			_apply_pace_entry(pace_entry)
 			continue
+		if _is_gun_cmd(cmd):
+			var gun_entry = _full_wave_sequence[_sequence_cursor]
+			_sequence_cursor += 1
+			_apply_gun_entry(gun_entry)
+			continue
 		if cmd == "ammo":
 			var ammo_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
@@ -547,6 +574,14 @@ func _collect_next_beat() -> Array:
 			_handle_sfx_command(_full_wave_sequence[_sequence_cursor])
 			_sequence_cursor += 1
 			continue
+		if _is_pace_cmd(cmd):
+			_apply_pace_entry(_full_wave_sequence[_sequence_cursor])
+			_sequence_cursor += 1
+			continue
+		if _is_gun_cmd(cmd):
+			_apply_gun_entry(_full_wave_sequence[_sequence_cursor])
+			_sequence_cursor += 1
+			continue
 		if cmd == "ammo" or _is_sequence_barrier_cmd(cmd) or _is_clear_cmd(cmd):
 			break
 		beat.append(_full_wave_sequence[_sequence_cursor])
@@ -610,6 +645,9 @@ func _begin_beat(sequence: Array) -> void:
 				continue
 			if _is_pace_cmd(cmd):
 				_apply_pace_entry(entry)
+				continue
+			if _is_gun_cmd(cmd):
+				_apply_gun_entry(entry)
 				continue
 			if cmd == 'rock-gap' or cmd == 'rock-red-gap':
 				var gap_entries := _expand_rock_gap_entry(entry)
@@ -3598,7 +3636,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
 			# Keep wait / sequence barriers in place so launch stagger, balloon-checks, and clear survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or _is_script_sfx_cmd(cmd) or _is_pace_cmd(cmd):
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or _is_script_sfx_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd):
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue

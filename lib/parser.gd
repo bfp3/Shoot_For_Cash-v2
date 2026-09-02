@@ -240,6 +240,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   (0.25 / 0.5 / 1.0 / 1.5 / 2.25 / 3.0). `pace fastest` form is accepted.
 ##   Replaces `difficulty-*` for launch speed. difficulty-* still sets round gravity
 ##   (and hard/expert still set bullet travel to 0.1).
+## gun / gun1 / gun2 / gun3 / gun4: mid-round weapon swap. Drops the gun mesh briefly, then
+##   raises it with that loadout's crosshair (Rossy / Gun2 / Gun3 / Gun4) and fire behaviour.
+##   gun4 plants a crosshair trap on shoot instead of a normal shot.
 ## hold out 90000 / hold-out 90000 / boss-timer 90000: {cmd: hold-out, ms}.
 ##   Range- or round-level survival timer in milliseconds. Same as a boss hold-out:
 ##   rocks loop and the round lasts until the timer hits 0.
@@ -420,6 +423,11 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'pace':
 			return _parse_pace_command(parts)
+
+		'gun', 'gun1', 'gun2', 'gun3', 'gun4':
+			## Alias `gun` → gun1 (default loadout).
+			var gun_cmd := 'gun1' if cmd == 'gun' else cmd
+			return {'cmd': gun_cmd}
 
 		'difficulty-easy':
 			return {'cmd': 'difficulty-easy'}
@@ -1051,6 +1059,11 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			rounds[key]._pending.append(parsed)
 			continue
 
+		if parsed_cmd == 'gun1' or parsed_cmd == 'gun2' or parsed_cmd == 'gun3' or parsed_cmd == 'gun4':
+			# Mid-round weapon swap — stay in the spawn timeline.
+			rounds[key]._pending.append(parsed)
+			continue
+
 		if parsed_cmd == 'difficulty-hard':
 			if String(rounds[key].get('difficulty', '')) != 'expert':
 				rounds[key].difficulty = 'hard'
@@ -1377,6 +1390,8 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 		'wait-until-clear':
 			return 'wait'
 		'pace-slowest', 'pace-slow', 'pace-normal', 'pace-fast', 'pace-fastest', 'pace-impossible':
+			return cmd
+		'gun1', 'gun2', 'gun3', 'gun4':
 			return cmd
 		'pineapples':
 			return 'pineapples'

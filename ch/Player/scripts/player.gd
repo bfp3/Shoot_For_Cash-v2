@@ -116,6 +116,14 @@ var current_round : int
 @export var weapon_shooting : Node3D
 @export var player_gun : Node3D
 
+## Scripted loadouts: gun1 (Rossy), gun2 (rapid fire), gun3 (gun_3_stats), gun4 (plant trap).
+enum GunLoadout { GUN1 = 1, GUN2 = 2, GUN3 = 3, GUN4 = 4 }
+var active_gun_loadout: GunLoadout = GunLoadout.GUN1
+var _gun_swap_token := 0
+## When >= 0, `_apply_scope_shot_stats` uses this travel time instead of the hardcoded 0.05.
+var _loadout_bullet_speed_override := -1.0
+@export_range(0.05, 2.0, 0.01) var gun3_bullet_travel_sec := 0.3
+
 var current_gun_fire_rate_cooldown := 0.0
 var _is_currently_shooting := false
 
@@ -283,6 +291,7 @@ func _ready() -> void:
 		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 
 	%HUD_bottom_corner.hide()
+	_apply_gun_crosshair_visibility()
 	
 	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
 	
@@ -510,18 +519,23 @@ func _process(delta: float) -> void:
 
 	# Desktop: InputMap shoot / scope. Mobile: left-half touch only (ignore emulated mouse).
 	if running_on_mobile:
-		if mobile_controller.consume_fire_release():
+		if active_gun_loadout == GunLoadout.GUN2:
+			if mobile_controller.is_fire_held():
+				fire_weapon_auto()
+		elif mobile_controller.consume_fire_release():
 			fire_weapon()
 	else:
-	
-		
-		
-		if Input.is_action_just_released("shootWeapon"):
+		if active_gun_loadout == GunLoadout.GUN2:
+			## Hold shoot = rapid fire (same as old TAB path). No release-tap shot / no scope expand.
+			if Input.is_action_pressed("shootWeapon"):
+				fire_weapon_auto()
+		elif Input.is_action_just_released("shootWeapon"):
 			fire_weapon()
-			
+
+		## Debug / leftover: TAB still rapid-fires on any loadout.
 		if Input.is_key_label_pressed(KEY_TAB):
 			fire_weapon_auto()
-			
+
 		if Input.is_action_just_pressed("spacebar"):
 			fire_weapon()
 
@@ -1314,9 +1328,12 @@ func handle_scope_adjust(delta: float) -> void:
 	var expand_held := false
 
 	if running_on_mobile:
-		shrink_held = mobile_controller.is_fire_held()
+		## Gun2 hold-fire should not drive scope expand via the fire finger.
+		if active_gun_loadout == GunLoadout.GUN1:
+			shrink_held = mobile_controller.is_fire_held()
 	else:
-		expand_held = Input.is_action_pressed("shootWeapon")
+		if active_gun_loadout == GunLoadout.GUN1:
+			expand_held = Input.is_action_pressed("shootWeapon")
 		if not right_click_is_planted_crosshair:
 			shrink_held = Input.is_action_pressed("shoot_weapon_2")
 
@@ -1346,9 +1363,16 @@ func handle_scope_adjust(delta: float) -> void:
 
 ## Keep Player + Weapon_shooting in sync. Bullets read weapon_shooting.power_bullet_speed.
 func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
+	## Gun3 override must stick — the old path always forced 0.05 every frame.
+	if _loadout_bullet_speed_override >= 0.0:
+		bullet_speed = _loadout_bullet_speed_override
+	else:
+		bullet_speed = 0.05
+	if active_gun_loadout == GunLoadout.GUN2:
+		fire_rate = 0.05
+	elif active_gun_loadout == GunLoadout.GUN3:
+		fire_rate = 0.5
 	power_bullet_speed = bullet_speed
-	#bullet_speed = [0.1,0.25,0.3].pick_random()
-	bullet_speed = 0.05
 	power_gun_fire_rate = fire_rate
 	if weapon_shooting:
 		weapon_shooting.power_bullet_speed = bullet_speed
@@ -1448,6 +1472,12 @@ func handle_scope_shrink(delta: float) -> void:
 func _tween_scope_back_to_base() -> void:
 	if _shrink_return_tween:
 		_shrink_return_tween.kill()
+
+	## Gun1/2 resting size is upgrade-driven, not a hardcoded scale.
+	if active_gun_loadout != GunLoadout.GUN3:
+		var resting := get_resting_target_circle()
+		scope_base_target_circle = resting
+		scope_base_scale = _inner_scope_scale_for_radius(resting)
 
 	_shrink_return_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	_shrink_return_tween.tween_interval(0.1)
@@ -1664,7 +1694,7 @@ func fire_weapon_auto(force_plant: bool = false) -> void:
 		weapon_shooting.play_missed_sounds()
 		return
 
-	if force_plant or plant_crosshair_on_fire:
+	if force_plant or plant_crosshair_on_fire or active_gun_loadout == GunLoadout.GUN4:
 		if not debug_infinite_ammo and not consume_ammo(1):
 			out_of_ammo()
 			#weapon_shooting.play_missed_sounds()
@@ -1715,7 +1745,7 @@ func fire_weapon(force_plant: bool = false) -> void:
 		weapon_shooting.play_missed_sounds()
 		return
 
-	if force_plant or plant_crosshair_on_fire:
+	if force_plant or plant_crosshair_on_fire or active_gun_loadout == GunLoadout.GUN4:
 		if not debug_infinite_ammo and not consume_ammo(1):
 			out_of_ammo()
 			weapon_shooting.play_missed_sounds()
@@ -1727,11 +1757,9 @@ func fire_weapon(force_plant: bool = false) -> void:
 		player_did_not_miss()
 		return
 
-	gun_stats()
+	_apply_active_gun_shot_stats()
 	weapon_shooting.shoot_target()
-	
-	#%Crosshair.modulate.a = 0.05
-	
+
 	
 	player_did_not_miss()
 	if shoot_ring_pulse_on_release:
@@ -1932,6 +1960,10 @@ func start_player() -> void:
 		return
 	game_lost = false
 	weapon_shooting.shot_with_right_click = false
+	## Fresh round always starts on the default gun / Rossy crosshair.
+	active_gun_loadout = GunLoadout.GUN1
+	_loadout_bullet_speed_override = -1.0
+	_apply_gun_crosshair_visibility()
 	if _level_editor_ammo_active:
 		_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
 	else:
@@ -1981,7 +2013,7 @@ func _update_hold_aim_zoom() -> void:
 	if camera_3d == null or not camera_3d.has_method("set_hold_aim_pressed"):
 		return
 	var held := false
-	if current_state == State.ACTIVE:
+	if current_state == State.ACTIVE and active_gun_loadout == GunLoadout.GUN1:
 		if running_on_mobile:
 			held = mobile_controller.is_fire_held()
 		else:
@@ -2088,14 +2120,124 @@ func _kill_ammo_hud_tween() -> void:
 	
 	
 func gun_stats() -> void:
-	scope_base_scale = 1.0
+	## Do not touch scope_base_scale — resting size comes from upgrades via
+	## `_apply_resting_crosshair_size()`. Forcing 1.0 here made every shot
+	## snap the reticle too small on release.
 	power_gun_fire_rate = 0.1
-	weapon_shooting.power_bullet_delay = 0.01
-	
+	_loadout_bullet_speed_override = -1.0
+	if weapon_shooting:
+		weapon_shooting.power_bullet_delay = 0.01
+
+
+func gun_2_stats() -> void:
+	## Rapid-fire hold gun — same travel as default; fire rate matches fire_weapon_auto.
+	power_gun_fire_rate = 0.05
+	_loadout_bullet_speed_override = -1.0
+	if weapon_shooting:
+		weapon_shooting.power_bullet_delay = 0.01
+
+
 func gun_3_stats() -> void:
 	power_gun_fire_rate = 0.5
-	#weapon_shooting.power_bullet_speed = 0.3
 	scope_base_scale = 2.0
-	weapon_shooting.power_bullet_delay = 0.01
-	weapon_shooting.shoot_target()
-	
+	_loadout_bullet_speed_override = gun3_bullet_travel_sec
+	power_bullet_speed = gun3_bullet_travel_sec
+	if weapon_shooting:
+		weapon_shooting.power_bullet_delay = 0.01
+		weapon_shooting.power_bullet_speed = gun3_bullet_travel_sec
+
+
+func gun_4_stats() -> void:
+	## Plant-trap gun — same resting scope / fire cadence as gun1; shoot plants a trap.
+	power_gun_fire_rate = 0.1
+	_loadout_bullet_speed_override = -1.0
+	if weapon_shooting:
+		weapon_shooting.power_bullet_delay = 0.01
+
+
+func _apply_active_gun_shot_stats() -> void:
+	match active_gun_loadout:
+		GunLoadout.GUN2:
+			gun_2_stats()
+		GunLoadout.GUN3:
+			gun_3_stats()
+		GunLoadout.GUN4:
+			gun_4_stats()
+		_:
+			gun_stats()
+
+
+## Script command `gun1` / `gun2` / `gun3` / `gun4`: dip the mesh, swap HUD, raise with new stats.
+func switch_gun_loadout(gun_id: int) -> void:
+	var next: GunLoadout = GunLoadout.GUN1
+	match clampi(gun_id, 1, 4):
+		2:
+			next = GunLoadout.GUN2
+		3:
+			next = GunLoadout.GUN3
+		4:
+			next = GunLoadout.GUN4
+		_:
+			next = GunLoadout.GUN1
+	if next == active_gun_loadout:
+		_apply_gun_crosshair_visibility()
+		_apply_gun_loadout_stats(false)
+		return
+
+	_gun_swap_token += 1
+	var token := _gun_swap_token
+	if player_gun and player_gun.has_method("end_position"):
+		player_gun.end_position()
+	await get_tree().create_timer(0.5, false).timeout
+	if token != _gun_swap_token:
+		return
+
+	active_gun_loadout = next
+	if _is_holding_shoot:
+		_release_scope_hold()
+	_apply_gun_crosshair_visibility()
+	_apply_gun_loadout_stats(true)
+
+	if player_gun and player_gun.has_method("start_position"):
+		player_gun.start_position()
+
+
+func _apply_gun_crosshair_visibility() -> void:
+	var ch := %Crosshair if has_node("%Crosshair") else get_node_or_null("CanvasLayer/Crosshair")
+	if ch == null:
+		return
+	var rossy := ch.get_node_or_null("Rossy") as CanvasItem
+	var gun2 := ch.get_node_or_null("Gun2") as CanvasItem
+	var gun3 := ch.get_node_or_null("Gun3") as CanvasItem
+	var gun4 := ch.get_node_or_null("Gun4") as CanvasItem
+	if rossy:
+		rossy.visible = active_gun_loadout == GunLoadout.GUN1
+	if gun2:
+		gun2.visible = active_gun_loadout == GunLoadout.GUN2
+	if gun3:
+		gun3.visible = active_gun_loadout == GunLoadout.GUN3
+	if gun4:
+		gun4.visible = active_gun_loadout == GunLoadout.GUN4
+
+
+func _apply_gun_loadout_stats(animate_scope: bool) -> void:
+	match active_gun_loadout:
+		GunLoadout.GUN2:
+			gun_2_stats()
+			if animate_scope:
+				_apply_resting_crosshair_size(0.25)
+		GunLoadout.GUN3:
+			gun_3_stats()
+			if animate_scope:
+				tween_scope(scope_base_scale, 0.35)
+			elif %Inner_scope:
+				%Inner_scope.scale = Vector2.ONE * scope_base_scale
+		GunLoadout.GUN4:
+			gun_4_stats()
+			if animate_scope:
+				_apply_resting_crosshair_size(0.25)
+		_:
+			gun_stats()
+			if animate_scope:
+				_apply_resting_crosshair_size(0.25)
+	_apply_scope_shot_stats(_base_bullet_speed, power_gun_fire_rate)
