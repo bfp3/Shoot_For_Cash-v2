@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bloikx4lltrrr"]
 
 [ext_resource type="Script" uid="uid://btsbvhp421kgq" path="res://sc/scene-100.gd" id="1_gf2tl"]
+[ext_resource type="Script" path="res://ch/rock_converter.gd" id="1_rockconv"]
 [ext_resource type="Script" uid="uid://cxq1gyi7m7b7q" path="res://ch/round_manager.gd" id="2_wtxnc"]
 [ext_resource type="Script" uid="uid://dl73eie0p7fwm" path="res://lib/level_music_control.gd" id="3_r5w5l"]
 [ext_resource type="Texture2D" uid="uid://cxk0yxen5f6sp" path="res://unfiled/Decal_placeholders/pineapple_1024x1024.png" id="3_wv0tc"]
@@ -60,6 +61,7 @@
 [ext_resource type="PackedScene" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
 [ext_resource type="Script" uid="uid://cw36fy6a37j1h" path="res://ch/bonus_rounds/bonus_target_manager.gd" id="71_3ga0b"]
 [ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="74_vwwt2"]
+[ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="75_mdemw"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 [ext_resource type="PackedScene" uid="uid://b8lj768x0yxac" path="res://ch/debug/round_editor_menu.tscn" id="81_rounded"]
@@ -260,6 +262,12 @@ scale_max = 0.19999999
 scale_curve = SubResource("CurveTexture_3gdew")
 alpha_curve = SubResource("CurveTexture_fuvvr")
 
+[sub_resource type="BoxMesh" id="BoxMesh_qmj5w"]
+size = Vector3(50, 0.05, 0.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_swp41"]
+size = Vector3(50, 1.5, 2.37)
+
 [node name="Scene-101" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "round_timer", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
 intro_title_screen = true
@@ -451,7 +459,6 @@ telegraph_blink_on_sec = 0.2
 telegraph_gap_between_rocks_sec = 0.0
 telegraph_sfx_volume_db = -30.0
 oob_miss_shake_amount = 0.5
-rock_yellows_give_strikes = false
 
 [node name="DebugVisualiser" type="Node3D" parent="Rocks" unique_id=1321570169]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.81, 0.25)
@@ -1651,6 +1658,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6063585, 9.915)
 light_color = Color(2.454227, 0, 0, 1)
 omni_range = 10.0
 omni_attenuation = 0.0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=847723680]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 23)
+material_override = ExtResource("75_mdemw")
+cast_shadow = 0
+size = Vector3(50, 0.05, 0.05)
+material = ExtResource("75_mdemw")
+
+[node name="RockConverter" type="MeshInstance3D" parent="." unique_id=487887593]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 23)
+mesh = SubResource("BoxMesh_qmj5w")
+
+[node name="Area3D" type="Area3D" parent="RockConverter" unique_id=468512265]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_rockconv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RockConverter/Area3D" unique_id=412298376]
+shape = SubResource("BoxShape3D_swp41")
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]

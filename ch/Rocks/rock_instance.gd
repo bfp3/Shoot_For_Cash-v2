@@ -89,6 +89,8 @@ var current_state : State = State.INACTIVE
 var _pool_setup_token := 0
 
 var rock_has_been_logged := false
+## When true, `setup_rock_type()` skips white-rock / progress logging (mid-flight converter flips).
+var _skip_setup_stat_logs := false
 
 @onready var money_label_3d: Label3D = $Money_Label3D
 
@@ -1024,6 +1026,81 @@ func hide_all_meshes() -> void:
 			mesh.material_override = _mesh_original_overrides[mesh]
 
 
+func _log_white_rock_if_needed() -> void:
+	if _skip_setup_stat_logs:
+		return
+	gl_PlayerState.log_white_rock()
+
+
+## RockConverter gate: yellow/stay ↔ red hazard (mesh + threat), keep current flight motion.
+func flip_converter_alliance() -> bool:
+	if current_state != State.ACTIVE or not rock_activated or rock_destroyed:
+		return false
+	var next_type := _converter_flip_target_type()
+	if next_type < 0 or next_type == rock_type:
+		return false
+
+	var saved_lin := linear_velocity
+	var saved_ang := angular_velocity
+	var saved_grav := gravity_scale
+	var saved_ld := linear_damp
+	var saved_ad := angular_damp
+	var saved_force := constant_force
+
+	_hazard_crosshair_armed = false
+	_hazard_crosshair_arm_token += 1
+	_destroy_on_crosshair_armed = false
+	_destroy_on_crosshair_arm_token += 1
+	_set_small_rock_fire(false)
+	_set_threat_fire(false)
+
+	rock_type = next_type as RockSize
+	_skip_setup_stat_logs = true
+	hide_all_meshes()
+	setup_rock_type()
+	_skip_setup_stat_logs = false
+
+	## Keep whatever flight the rock already had.
+	linear_velocity = saved_lin
+	angular_velocity = saved_ang
+	gravity_scale = saved_grav
+	linear_damp = saved_ld
+	angular_damp = saved_ad
+	constant_force = saved_force
+	rock_type_gravity_scale = saved_grav
+
+	if not is_in_group("Target"):
+		add_to_group("Target")
+
+	## Refresh stay timers for stay↔stay-black; cancel if leaving stay family.
+	_stay_life_token += 1
+	if rock_type == RockSize.STAY or is_stay_black():
+		_start_rock_stay_lifetime()
+
+	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black():
+		if _player_wants_overlap_destroy("hazards"):
+			_arm_hazard_crosshair()
+	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.STAY:
+		if _player_wants_overlap_destroy("rocks"):
+			_arm_destroy_on_crosshair()
+		if rock_type == RockSize.SMALL or rock_type == RockSize.STAY:
+			_set_small_rock_fire(true)
+
+	return true
+
+
+func _converter_flip_target_type() -> int:
+	match rock_type:
+		RockSize.SMALL, RockSize.GREY, RockSize.SMALL_2:
+			return RockSize.HAZARD
+		RockSize.STAY:
+			return RockSize.STAY_BLACK
+		RockSize.HAZARD, RockSize.HAZARD_SMALL, RockSize.RED_ROCK_ERROR:
+			return RockSize.SMALL
+		RockSize.STAY_BLACK, RockSize.CARDINAL:
+			return RockSize.STAY
+		_:
+			return -1
 
 
 func reset_rock_back_on() -> void:
@@ -1068,7 +1145,7 @@ func setup_rock_type() -> void:
 
 			current_rock_type 	= "Small Rock"
 			rock_type_name 		= "rock_type_1"
-			gl_PlayerState.log_white_rock()
+			_log_white_rock_if_needed()
 			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 			var base_cash   := int(gl_DataSet.get_value("rock_type_1", 0))
 			var base_scale  := Vector3.ONE * 0.35
@@ -1105,7 +1182,7 @@ func setup_rock_type() -> void:
 		RockSize.SMALL_2:
 			current_rock_type 	= "Pigeon"
 			rock_type_name 		= "rock_type_1"
-			gl_PlayerState.log_white_rock()
+			_log_white_rock_if_needed()
 			#var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 			var base_cash   := 0 #int(gl_DataSet.get_value("rock_type_1", 0))
 			var base_scale  := Vector3.ONE * 0.35
@@ -1170,7 +1247,7 @@ func setup_rock_type() -> void:
 			# Base values
 			current_rock_type 	= "Red Rock"
 			rock_type_name 		= "rock_type_9"
-			gl_PlayerState.log_white_rock()
+			_log_white_rock_if_needed()
 			var base_health :=  int(gl_DataSet.get_value("rock_type_9", 1))
 			var base_cash   := int(gl_DataSet.get_value("rock_type_9", 0))
 			var base_scale  := Vector3.ONE * 0.35
@@ -1254,7 +1331,7 @@ func setup_rock_type() -> void:
 		RockSize.CHASER:
 			current_rock_type = "Rock Chaser"
 			rock_type_name = "rock_type_chaser"
-			gl_PlayerState.log_white_rock()
+			_log_white_rock_if_needed()
 			var chaser_scale := Vector3.ONE * 0.35
 			var chaser_size := 1.35
 			health = 1
@@ -1312,7 +1389,7 @@ func setup_rock_type() -> void:
 		RockSize.CRATE:
 			current_rock_type = "Crate"
 			rock_type_name = "rock_type_crate"
-			gl_PlayerState.log_white_rock()
+			_log_white_rock_if_needed()
 			var crate_scale := Vector3.ONE * 0.5
 			var crate_size := 1.2
 			health = 3
@@ -1339,7 +1416,7 @@ func setup_rock_type() -> void:
 			## Hang at aim after a fast straight approach. Pace commands do not affect flight.
 			current_rock_type = "Rock Stay"
 			rock_type_name = "rock_type_stay"
-			gl_PlayerState.log_white_rock()
+			_log_white_rock_if_needed()
 			var stay_health := int(gl_DataSet.get_value("rock_type_stay", 1))
 			var stay_cash := int(gl_DataSet.get_value("rock_type_stay", 0))
 			health = maxi(stay_health, 1)
