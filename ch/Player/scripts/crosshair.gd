@@ -96,6 +96,7 @@ func _ready() -> void:
 	
 #	EventBus.instance.wrapping_up_a_level.connect(_fade_out)
 	self.show()
+	$Panel.hide()
 	_cache_default_weapon_style()
 	_setup_target_laser_dots()
 	set_process(true)
@@ -260,9 +261,6 @@ func _fade_out() -> void:
 func crosshair_shake() -> void:
 	crosshair_inner_tween()
 	crosshair_shooting_something()
-	var rossy := get_node_or_null("Rossy")
-	if rossy and rossy.has_method("notify_shot"):
-		rossy.notify_shot()
 	#outer_crosshair_rotation_tween()
 	var scope = $Large_outer_scope/center_container
 	orig_scale = scale

@@ -12,11 +12,6 @@
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="9_ts3hu"]
 [ext_resource type="AudioStream" uid="uid://xuojfr4w7ox3" path="res://sfx/Gun_SFX_attempt_2.ogg" id="10_bpx2c"]
 [ext_resource type="Script" uid="uid://bh2xro2ru0ok0" path="res://ch/Player/scripts/crosshair.gd" id="10_hwyif"]
-[ext_resource type="Script" path="res://ch/Player/scripts/rossy_face.gd" id="10_rossy"]
-[ext_resource type="Texture2D" uid="uid://brossyfaceidle01" path="res://res/rossy/face_idle.png" id="10_rossyi"]
-[ext_resource type="Texture2D" uid="uid://brossyfacehappy01" path="res://res/rossy/face_happy.png" id="10_rossyh"]
-[ext_resource type="Texture2D" uid="uid://brossyfacehurt01" path="res://res/rossy/face_hurt.png" id="10_rossyx"]
-[ext_resource type="Texture2D" uid="uid://brossyfacesad001" path="res://res/rossy/face_sad.png" id="10_rossys"]
 [ext_resource type="Script" uid="uid://lqvwdyu058t8" path="res://ch/Player/scripts/cam_pivot.gd" id="10_kkix3"]
 [ext_resource type="Script" uid="uid://snu7cq0wsbqk" path="res://ch/Player/scripts/player_camera.gd" id="10_n6ds6"]
 [ext_resource type="AudioStream" uid="uid://dqbrbkai0p60l" path="res://sfx/opt_3_fade_shortened.ogg" id="11_txfio"]
@@ -1413,33 +1408,6 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-script = ExtResource("10_rossy")
-face_idle = ExtResource("10_rossyi")
-face_happy = ExtResource("10_rossyh")
-face_hurt = ExtResource("10_rossyx")
-face_sad = ExtResource("10_rossys")
-face_display_size = 12.0
-
-[node name="Face" type="TextureRect" parent="CanvasLayer/Crosshair/Rossy" unique_id=871799164]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -6.0
-offset_top = -6.0
-offset_right = 6.0
-offset_bottom = 6.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-texture = ExtResource("10_rossyi")
-expand_mode = 1
-stretch_mode = 5
-texture_filter = 1
 
 [node name="HUD_bottom_corner" type="Control" parent="CanvasLayer" unique_id=116034029]
 unique_name_in_owner = true
