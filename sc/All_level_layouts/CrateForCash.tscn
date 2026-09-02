@@ -3,6 +3,7 @@
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="1_a45tf"]
 [ext_resource type="Script" uid="uid://kwy6oqdohvii" path="res://ch/Rocks/crate_rigid_body.gd" id="2_crate"]
 [ext_resource type="Texture2D" uid="uid://b5u7lsrknpw78" path="res://res/crateMesh2_CrateWoodAlbedo.png" id="2_jdshi"]
+[ext_resource type="PackedScene" uid="uid://c5v3o1eq73ikc" path="res://ch/HiddenCrate/HiddenCrate.tscn" id="4_p2bv1"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1cyfr"]
 
@@ -93,24 +94,33 @@ hit_torque_strength = 350.0
 shape = SubResource("BoxShape3D_1cyfr")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1563009357]
+visible = false
 mesh = SubResource("ArrayMesh_p2bv1")
 
 [node name="Dollar" type="MeshInstance3D" parent="." unique_id=1259198699]
 transform = Transform3D(1.261, 0, 0, 0, 0.701, 0, 0, 0, 0.1, 0, 0.040947646, 0.5)
+visible = false
 material_override = ExtResource("1_a45tf")
 mesh = SubResource("TextMesh_jdshi")
 
 [node name="Dollar2" type="MeshInstance3D" parent="." unique_id=933127782]
 transform = Transform3D(-1.261, 0, 1.509958e-08, 0, 0.701, 0, -1.9040571e-07, 0, -0.1, 0, 0.041, -0.5)
+visible = false
 material_override = ExtResource("1_a45tf")
 mesh = SubResource("TextMesh_jdshi")
 
 [node name="Dollar3" type="MeshInstance3D" parent="." unique_id=199280901]
 transform = Transform3D(-5.512006e-08, 0, -0.1, 0, 0.701, 0, 1.261, 0, -4.371139e-09, -0.5, 0.040947646, -2.1855694e-08)
+visible = false
 material_override = ExtResource("1_a45tf")
 mesh = SubResource("TextMesh_jdshi")
 
 [node name="Dollar4" type="MeshInstance3D" parent="." unique_id=665315159]
 transform = Transform3D(9.520286e-08, 0, 0.1, 0, 0.701, 0, -1.261, 0, 7.54979e-09, 0.5, 0.041, 2.1855694e-08)
+visible = false
 material_override = ExtResource("1_a45tf")
 mesh = SubResource("TextMesh_jdshi")
+
+[node name="HiddenCrate" parent="." unique_id=737478994 instance=ExtResource("4_p2bv1")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
+skeleton = NodePath("../MeshInstance3D")

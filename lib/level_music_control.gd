@@ -5,6 +5,7 @@ extends Node
 
 @onready var wind_noises: AudioStreamPlayer = $WindNoises
 @onready var shop_music: AudioStreamPlayer = $Shop_Music
+@onready var game_over_music: AudioStreamPlayer = get_node_or_null("GameOver_Music") as AudioStreamPlayer
 
 var default_volume_map : Dictionary = {}
 
@@ -16,6 +17,8 @@ var default_volume_map : Dictionary = {}
 @export var background_music_vol_out_of_shop := -40.0
 ## Dedicated shop-menu track volume when the shop is open.
 @export var shop_music_volume := -30.0
+## Strike-out / continue / game-over track (USERSONG164).
+@export var game_over_music_volume := -30.0
 ## Title difficulty / level select track.
 @export var title_select_music_volume := 0.0
 
@@ -32,7 +35,8 @@ const STREAM_PATHS := {
 	"NightNoises": "res://sfx/night-noises.ogg",
 	"Opening_song": "res://sfx/Windmill_Sprint.ogg",
 	#"Shop_Music": "res://sfx/shop_music.ogg",
-	"Shop_Music": "res://sfx/USERSONG164.ogg",
+	"Shop_Music": "res://sfx/USERSONG166.ogg",
+	"GameOver_Music": "res://sfx/USERSONG164.ogg",
 	"Title_Select_Music": "res://sfx/greyscale_compressed.ogg",
 	"PerfectPineappleRound": "res://sfx/one_hundred_percent.ogg",
 }
@@ -49,6 +53,7 @@ const STREAM_PATHS := {
 var _audio_ready := false
 var _pending_stream_loads: Dictionary = {} # path -> [AudioStreamPlayer]
 var _title_select_tween: Tween
+var _game_over_music_tween: Tween
 var _opening_fade_tween: Tween
 var _opening_song_rest_db := -35.0
 var _opening_song_rest_pitch := 1.0
@@ -215,6 +220,7 @@ func stop_all_music_immediate() -> void:
 		"Birds5": true,
 		"NightNoises": true,
 		"WindNoises": true,
+		"GameOver_Music": true,
 	}
 	for child in get_children():
 		if child is AudioStreamPlayer and not keep.has(child.name):
@@ -241,6 +247,65 @@ func lower_shop_menu_music() -> void:
 		return
 	var tween := create_tween()
 	tween.tween_property(shop_music, "volume_db", -80.0, 3.0)
+
+
+## Fade in USERSONG164 at strike-out. Keeps playing through continue / game over.
+func raise_game_over_music(fade_sec := 2.0) -> void:
+	var player := _ensure_game_over_player()
+	if player == null:
+		return
+	if player.stream == null:
+		var path := String(STREAM_PATHS.get("GameOver_Music", ""))
+		if not path.is_empty() and ResourceLoader.exists(path):
+			player.stream = load(path) as AudioStream
+	if player.stream == null:
+		return
+	if player.playing and _game_over_music_tween != null and is_instance_valid(_game_over_music_tween):
+		return
+	_kill_game_over_music_tween()
+	if not player.playing:
+		player.volume_db = -80.0
+		player.play()
+	elif absf(player.volume_db - game_over_music_volume) < 0.4:
+		return
+	_game_over_music_tween = create_tween()
+	_game_over_music_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	_game_over_music_tween.tween_property(player, "volume_db", game_over_music_volume, maxf(fade_sec, 0.05))
+
+
+## Fade out USERSONG164 after the continue screen closes.
+func lower_game_over_music(fade_sec := 3.0) -> void:
+	var player := _ensure_game_over_player()
+	if player == null or not player.playing:
+		return
+	_kill_game_over_music_tween()
+	var song := player
+	_game_over_music_tween = create_tween()
+	_game_over_music_tween.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	_game_over_music_tween.tween_property(song, "volume_db", -80.0, maxf(fade_sec, 0.05))
+	_game_over_music_tween.tween_callback(func() -> void:
+		if is_instance_valid(song):
+			song.stop()
+	)
+
+
+func _ensure_game_over_player() -> AudioStreamPlayer:
+	if game_over_music != null and is_instance_valid(game_over_music):
+		return game_over_music
+	game_over_music = get_node_or_null("GameOver_Music") as AudioStreamPlayer
+	if game_over_music == null:
+		game_over_music = AudioStreamPlayer.new()
+		game_over_music.name = "GameOver_Music"
+		game_over_music.bus = &"MusicBus"
+		game_over_music.volume_db = -80.0
+		add_child(game_over_music)
+	return game_over_music
+
+
+func _kill_game_over_music_tween() -> void:
+	if _game_over_music_tween != null and is_instance_valid(_game_over_music_tween):
+		_game_over_music_tween.kill()
+	_game_over_music_tween = null
 
 	
 func shop_music_raise_volume() -> void:

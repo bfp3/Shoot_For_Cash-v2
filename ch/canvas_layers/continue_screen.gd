@@ -106,7 +106,7 @@ func play(fee: int, cash: int) -> String:
 	_refresh_money_labels(_cash_amount, _fee_amount)
 	show()
 	_play_open_sfx()
-	_raise_shop_music()
+	_raise_game_over_music()
 	if _root:
 		_root.mouse_filter = Control.MOUSE_FILTER_STOP
 
@@ -136,7 +136,7 @@ func close_now() -> void:
 	_countdown_token += 1
 	_coin_token += 1
 	_close_abandon_prompt()
-	_lower_shop_music()
+	_lower_game_over_music()
 	hide()
 	_reset_visuals()
 
@@ -163,9 +163,11 @@ func play_run_loss_overlay() -> void:
 		_fade_to_black.modulate.a = 0.0
 		_fade_to_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	show()
+	_raise_game_over_music()
 	if _root:
 		_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	await _play_game_over_sequence()
+	_lower_game_over_music()
 	layer = prev_layer
 	_busy = false
 
@@ -533,7 +535,7 @@ func _finish(outcome: String) -> void:
 	_outcome = outcome
 	_waiting = false
 	_countdown_token += 1
-	_lower_shop_music()
+	_lower_game_over_music()
 	if not _holding_blackout:
 		hide()
 		_play_close_sfx()
@@ -886,13 +888,12 @@ func _play_named_sfx(sfx_name: String) -> void:
 	player.play()
 
 
-func _raise_shop_music() -> void:
-	_music_call("ensure_shop_music_playing")
-	_music_call("raise_shop_menu_music")
+func _raise_game_over_music() -> void:
+	_music_call("raise_game_over_music")
 
 
-func _lower_shop_music() -> void:
-	_music_call("lower_shop_menu_music")
+func _lower_game_over_music() -> void:
+	_music_call("lower_game_over_music")
 
 
 func _music_call(method_name: String) -> void:

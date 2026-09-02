@@ -907,7 +907,7 @@ target_color = Color(0.6, 0, 0, 0.662745)
 
 [node name="Large_outer_scope" type="Control" parent="CanvasLayer/Crosshair" unique_id=60949367]
 unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0.137255)
+modulate = Color(1, 1, 1, 0.13725491)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -995,6 +995,7 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="Large_outer_scope2" type="Control" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=1894959879]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1047,6 +1048,7 @@ texture_mode = 2
 
 [node name="SmallDisplay" type="Control" parent="CanvasLayer/Crosshair/Inner_scope" unique_id=206799733]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1390,16 +1392,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Rossy" type="Control" parent="CanvasLayer/Crosshair" unique_id=871799163]
+visible = false
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -1408,6 +1406,8 @@ script = ExtResource("10_rossy")
 personality = ExtResource("10_rossypers")
 
 [node name="Gun2" type="Control" parent="CanvasLayer/Crosshair" unique_id=184499510]
+visible = false
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1421,6 +1421,8 @@ script = ExtResource("10_rossy")
 personality = ExtResource("10_rossypers")
 
 [node name="Gun3" type="Control" parent="CanvasLayer/Crosshair" unique_id=1060219451]
+visible = false
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

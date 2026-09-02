@@ -1,17 +1,17 @@
-[gd_scene format=4]
+[gd_scene format=4 uid="uid://c3p6ovdbn0gkc"]
 
-[ext_resource type="Script" path="res://ch/Rocks/balloon.gd" id="1_6ube6"]
-[ext_resource type="Material" path="res://res/BALLOON_MAT_MULTIPLIER_BALLOON.tres" id="2_6ube6"]
-[ext_resource type="AudioStream" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="3_824l8"]
-[ext_resource type="Texture2D" path="res://res/white_circle_256.png" id="3_aljlg"]
-[ext_resource type="AudioStream" path="res://sfx/rock_hit_sfx_01.ogg" id="4_824l8"]
-[ext_resource type="AudioStream" path="res://sfx/ninja_flicker.ogg" id="5_gfu80"]
-[ext_resource type="AudioStream" path="res://sfx/shop_money_coin_sfx_01.ogg" id="6_6ube6"]
-[ext_resource type="AudioStream" path="res://sfx/shop_purchase_sfx_02.ogg" id="7_q6jln"]
-[ext_resource type="AudioStream" path="res://sfx/explosion_sfx_01.ogg" id="8_cqen7"]
-[ext_resource type="AudioStream" path="res://sfx/balloon_popsfx_00.ogg" id="9_jjdpg"]
-[ext_resource type="AudioStream" path="res://sfx/windSnippet.ogg" id="10_gfu80"]
-[ext_resource type="AudioStream" path="res://sfx/balloon_blowing_up_sfx_02.ogg" id="11_6ube6"]
+[ext_resource type="Script" uid="uid://bxjmk0cn2o5bb" path="res://ch/Rocks/balloon.gd" id="1_6ube6"]
+[ext_resource type="Material" uid="uid://c4yaglnwrc7wp" path="res://res/BALLOON_MAT_MULTIPLIER_BALLOON.tres" id="2_6ube6"]
+[ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="3_824l8"]
+[ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="3_aljlg"]
+[ext_resource type="AudioStream" uid="uid://b80l3vjxv4if4" path="res://sfx/rock_hit_sfx_01.ogg" id="4_824l8"]
+[ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="5_gfu80"]
+[ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="6_6ube6"]
+[ext_resource type="AudioStream" uid="uid://0vh3jww4727l" path="res://sfx/shop_purchase_sfx_02.ogg" id="7_q6jln"]
+[ext_resource type="AudioStream" uid="uid://m75w4o7bl00c" path="res://sfx/explosion_sfx_01.ogg" id="8_cqen7"]
+[ext_resource type="AudioStream" uid="uid://cpvfg5fpp3w1g" path="res://sfx/balloon_popsfx_00.ogg" id="9_jjdpg"]
+[ext_resource type="AudioStream" uid="uid://badqlbcg2sde6" path="res://sfx/windSnippet.ogg" id="10_gfu80"]
+[ext_resource type="AudioStream" uid="uid://bp0bqqkqfg257" path="res://sfx/balloon_blowing_up_sfx_02.ogg" id="11_6ube6"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lrylr"]
 radius = 0.57746214
@@ -125,8 +125,8 @@ collision_layer = 786432
 collision_mask = 786432
 axis_lock_linear_z = true
 script = ExtResource("1_6ube6")
-pan_distance = 1.0
-pan_duration = 2.5
+pan_distance = 0.25
+pan_duration = 1.0
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=809893561]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.06935346, 0)

@@ -1,5 +1,8 @@
 class_name Player extends Node3D
 
+## When true, pressing the `ctrl` action cycles gun1 → gun2 → gun3 → gun4 → gun1.
+@export var ctrl_swap_guns := true
+
 const mouse_no_lerp := false
 
 @onready var mobile_controller: Node = $MobileControl
@@ -1908,6 +1911,9 @@ func _input(event: InputEvent) -> void:
 
 	if current_state != State.ACTIVE:
 		return
+
+	if ctrl_swap_guns and InputMap.has_action("ctrl") and event.is_action_pressed("ctrl", false):
+		_cycle_gun_loadout()
 	
 	if !running_on_mobile and event is InputEventMouseMotion:
 		# Resolution-independent look: same screen-fraction motion on any monitor.
@@ -2138,7 +2144,7 @@ func gun_2_stats() -> void:
 
 
 func gun_3_stats() -> void:
-	power_gun_fire_rate = 0.5
+	power_gun_fire_rate = 0.15
 	scope_base_scale = 2.0
 	_loadout_bullet_speed_override = gun3_bullet_travel_sec
 	power_bullet_speed = gun3_bullet_travel_sec
@@ -2165,6 +2171,13 @@ func _apply_active_gun_shot_stats() -> void:
 			gun_4_stats()
 		_:
 			gun_stats()
+
+
+func _cycle_gun_loadout() -> void:
+	var next_id := int(active_gun_loadout) + 1
+	if next_id > int(GunLoadout.GUN4):
+		next_id = int(GunLoadout.GUN1)
+	switch_gun_loadout(next_id)
 
 
 ## Script command `gun1` / `gun2` / `gun3` / `gun4`: dip the mesh, swap HUD, raise with new stats.

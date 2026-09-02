@@ -12,6 +12,8 @@ var current_state : State = State.INACTIVE
 const pulse_magnitude := 1.1
 ## When true, waves after wave 1 randomise rock columns (existing behaviour).
 @export var randomize_later_waves := true
+## When true, `launch_next_command` skips waits and fires the next script line. Off by default so Ctrl can be used for gun swap.
+@export var launch_next_command_enabled := false
 ## Depth launch strength for `rock-pigeon` (into the distance). Raise to send them further back.
 const pigeon_depth_impulse := 35.0 #70.0
 const rock_pigeon_upward_force := 2.0
@@ -232,6 +234,12 @@ var _pending_ammo_entries: Array = []
 var _sequence_delay_active := false
 ## `wait` after the last rock in a beat — applied before the next command.
 var _pending_sequence_delay_sec := 0.0
+## Bumped to cancel an in-flight wait timer (debug `launch_next_command`).
+var _sequence_delay_token := 0
+## Skip waits / wait-until-clear and launch one script command.
+var _force_next_command := false
+## Fast-path pulse: no 0.4s gap, no column telegraph.
+var _instant_sequence_pulse := false
 
 enum OobSide { NONE, LEFT, RIGHT, BOTTOM, BEHIND }
 
@@ -330,6 +338,46 @@ func _process(delta: float) -> void:
 	_bounds_check_accum = 0.0
 	
 	check_rocks_out_of_bounds()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not launch_next_command_enabled:
+		return
+	if not InputMap.has_action("launch_next_command"):
+		return
+	if not event.is_action_pressed("launch_next_command", false):
+		return
+	force_launch_next_command()
+	get_viewport().set_input_as_handled()
+
+
+## Input `launch_next_command`: skip waits and fire the next script line now.
+func force_launch_next_command() -> void:
+	if not launch_next_command_enabled:
+		return
+	if _paused_for_continue:
+		return
+	if current_state == State.ROUND_END:
+		return
+	if not _script_has_more_commands() and not _sequence_delay_active and not _waiting_until_clear:
+		return
+	_sequence_delay_token += 1
+	_sequence_delay_active = false
+	_pending_sequence_delay_sec = 0.0
+	_waiting_until_clear = false
+	_checkpoint_hold = false
+	_ladder_hold = false
+	_final_atmosphere_playing = false
+	_pineapple_round_playing = false
+	_advancing_sequence = false
+	if not _script_has_more_commands():
+		_sequence_active = false
+		return
+	_sequence_active = true
+	_force_next_command = true
+	_instant_sequence_pulse = true
+	_auto_pulse_next_beat = true
+	_launch_next_sequence_beat()
 
 func enter_state(new_state : State) -> void:
 	if _paused_for_continue and new_state == State.PULSE_ROCKS:
@@ -440,17 +488,19 @@ func _is_script_sfx_cmd(cmd: String) -> bool:
 
 
 func _launch_next_sequence_beat() -> void:
+	var force := _force_next_command
 	if _paused_for_continue or not _sequence_active:
+		_force_next_command = false
 		return
+
+	if force:
+		_pending_sequence_delay_sec = 0.0
 
 	if _pending_sequence_delay_sec > 0.0:
 		var delay_sec := _pending_sequence_delay_sec
 		_pending_sequence_delay_sec = 0.0
-		_sequence_delay_active = true
-		_waiting_until_clear = true
-		await get_tree().create_timer(delay_sec, false).timeout
-		_sequence_delay_active = false
-		if not _sequence_active:
+		if not await _sleep_sequence_delay(delay_sec):
+			_force_next_command = false
 			return
 
 	while _sequence_cursor < _full_wave_sequence.size():
@@ -458,22 +508,24 @@ func _launch_next_sequence_beat() -> void:
 		if cmd == "wait":
 			var wait_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
+			if force:
+				continue
 			var wait_ms := 0
 			if wait_entry is Dictionary:
 				wait_ms = maxi(int(wait_entry.get("ms", 0)), 0)
 			if wait_ms > 0:
-				_sequence_delay_active = true
-				_waiting_until_clear = true
-				await get_tree().create_timer(float(wait_ms) / 1000.0, false).timeout
-				_sequence_delay_active = false
-				if not _sequence_active:
+				if not await _sleep_sequence_delay(float(wait_ms) / 1000.0):
+					_force_next_command = false
 					return
 			continue
 		if cmd == "wait-until-clear":
 			_sequence_cursor += 1
 			_consumed_sequence_barrier = true
+			if force:
+				continue
 			if not _sky_is_clear_for_sequence():
 				_waiting_until_clear = true
+				_force_next_command = false
 				return
 			continue
 		if cmd == "pineapples":
@@ -499,48 +551,61 @@ func _launch_next_sequence_beat() -> void:
 			var ammo_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
 			_spawn_or_queue_ammo_balloon(ammo_entry)
+			if force:
+				_waiting_until_clear = true
+				_force_next_command = false
+				return
 			continue
 		if _is_clear_cmd(cmd):
 			var clear_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
 			_consumed_sequence_barrier = true
 			_handle_clear_command(clear_entry)
+			if force:
+				_waiting_until_clear = true
+				_force_next_command = false
+				return
 			continue
 		if _is_ladder_balloon_cmd(cmd):
 			var ladder_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
 			_spawn_ladder_balloon(ladder_entry)
+			if force:
+				_waiting_until_clear = true
+				_force_next_command = false
+				return
 			continue
 		if _is_balloon_check_cmd(cmd):
-			await _maybe_run_pineapple_opportunity()
+			if not force:
+				await _maybe_run_pineapple_opportunity()
 			flush_pending_ammo()
 			if not _sequence_active:
+				_force_next_command = false
 				return
 			var round_manager = get_tree().get_first_node_in_group("round_manager")
 			if round_manager != null:
 				if bool(round_manager.get("wave_ending")) or bool(round_manager.get("player_failed")) or bool(round_manager.get("game_over_triggered")):
 					_sequence_active = false
 					_waiting_until_clear = false
+					_force_next_command = false
 					return
 			var check_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
 			_consumed_sequence_barrier = true
 			_spawn_checkpoint_balloon(check_entry)
 			_waiting_until_clear = true
+			_force_next_command = false
 			return
 
 		var beat := _collect_next_beat()
 		if not _beat_has_work(beat):
-			var wait_sec := _beat_standalone_wait_sec(beat)
+			var wait_sec := 0.0 if force else _beat_standalone_wait_sec(beat)
 			if wait_sec > 0.0:
-				_sequence_delay_active = true
-				_waiting_until_clear = true
-				await get_tree().create_timer(wait_sec, false).timeout
-				_sequence_delay_active = false
-				if not _sequence_active:
+				if not await _sleep_sequence_delay(wait_sec):
+					_force_next_command = false
 					return
 			continue
-		if _should_play_final_atmosphere():
+		if not force and _should_play_final_atmosphere():
 			_waiting_until_clear = true
 			_final_atmosphere_playing = true
 			var rm = get_tree().get_first_node_in_group("round_manager")
@@ -549,17 +614,33 @@ func _launch_next_sequence_beat() -> void:
 			_final_atmosphere_played = true
 			_final_atmosphere_playing = false
 			if not _sequence_active:
+				_force_next_command = false
 				return
 		_begin_beat(beat)
-		_pending_sequence_delay_sec = _beat_trailing_wait_sec(beat)
+		_pending_sequence_delay_sec = 0.0 if force else _beat_trailing_wait_sec(beat)
 		_waiting_until_clear = true
+		_force_next_command = false
 		return
 
 	_sequence_active = false
+	_force_next_command = false
 	if not _sky_is_clear_for_sequence():
 		_waiting_until_clear = true
 	else:
 		_waiting_until_clear = false
+
+
+func _sleep_sequence_delay(delay_sec: float) -> bool:
+	if delay_sec <= 0.0:
+		return true
+	_sequence_delay_active = true
+	_waiting_until_clear = true
+	var token := _sequence_delay_token
+	await get_tree().create_timer(delay_sec, false).timeout
+	if token != _sequence_delay_token:
+		return false
+	_sequence_delay_active = false
+	return _sequence_active
 
 
 func _collect_next_beat() -> Array:
@@ -568,6 +649,9 @@ func _collect_next_beat() -> Array:
 		var cmd := _sequence_cmd_at(_sequence_cursor)
 		if cmd == "pineapples":
 			_arm_pineapple_opportunity()
+			_sequence_cursor += 1
+			continue
+		if cmd == "wait" and _force_next_command:
 			_sequence_cursor += 1
 			continue
 		if _is_script_sfx_cmd(cmd):
@@ -586,6 +670,8 @@ func _collect_next_beat() -> Array:
 			break
 		beat.append(_full_wave_sequence[_sequence_cursor])
 		_sequence_cursor += 1
+		if _force_next_command and _beat_entry_is_work(beat[beat.size() - 1]):
+			break
 	return beat
 
 
@@ -707,6 +793,9 @@ func _begin_beat(sequence: Array) -> void:
 	manual_rock_sequence = rocks
 	if not rocks.is_empty():
 		_launched_rocks_this_sequence = true
+	if _force_next_command:
+		for i in delays_sec.size():
+			delays_sec[i] = 0.0
 	_launch_delays_sec = delays_sec
 	_timed_event_schedule = _build_timed_event_schedule(sequence)
 	enter_state(State.PREPARE_ROCKS)
@@ -1414,6 +1503,9 @@ func _cancel_sequence() -> void:
 	_pineapple_round_playing = false
 	_sequence_delay_active = false
 	_pending_sequence_delay_sec = 0.0
+	_sequence_delay_token += 1
+	_force_next_command = false
+	_instant_sequence_pulse = false
 	_launched_rocks_this_sequence = false
 	_dismiss_checkpoint()
 	_dismiss_ladder_balloons()
@@ -1613,7 +1705,8 @@ func update_prepare_rocks() -> void:
 
 
 func _pulse_continuation_beat() -> void:
-	await get_tree().create_timer(0.4, false).timeout
+	if not _instant_sequence_pulse:
+		await get_tree().create_timer(0.4, false).timeout
 	if _paused_for_continue or not _sequence_active:
 		return
 	if current_state == State.PREPARE_ROCKS:
@@ -1964,10 +2057,16 @@ func _any_live_balloons() -> bool:
 
 func _any_live_pineapples() -> bool:
 	for node in get_tree().get_nodes_in_group("pineapple_container"):
+		if node != null and node.has_method("is_pineapple_in_play") and bool(node.is_pineapple_in_play()):
+			return true
 		for child in node.get_children():
 			if child is RigidBody3D and bool(child.get("rock_activated")):
 				return true
 	return false
+
+
+func any_live_pineapples() -> bool:
+	return _any_live_pineapples()
 
 
 func _any_live_oranges() -> bool:
@@ -3012,7 +3111,7 @@ func bounce_rocks() -> void:
 	_stream_launches_remaining = manual_rock_sequence.size()
 	var launched: Array = []
 
-	if telegraph_before_launch and _resolve_telegraph_columns_node() != null:
+	if telegraph_before_launch and not _instant_sequence_pulse and _resolve_telegraph_columns_node() != null:
 		sync_telegraph_column_positions()
 		telegraph_columns.visible = true
 
@@ -3033,7 +3132,7 @@ func bounce_rocks() -> void:
 		if index < manual_rock_sequence.size():
 			entry = manual_rock_sequence[index]
 
-		if telegraph_before_launch:
+		if telegraph_before_launch and not _instant_sequence_pulse:
 			var column := _spawn_column_for_launch_index(index, entry)
 			await _telegraph_column_before_launch(column, epoch)
 			if _paused_for_continue or epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
@@ -3060,6 +3159,7 @@ func bounce_rocks() -> void:
 
 	if epoch == _launch_epoch and current_state == State.PULSE_ROCKS:
 		spin_rocks(launched)
+	_instant_sequence_pulse = false
 
 
 func _spawn_column_for_launch_index(index: int, entry) -> int:

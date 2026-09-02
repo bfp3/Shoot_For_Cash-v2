@@ -1715,6 +1715,8 @@ func handle_three_strikes() -> void:
 
 	if music_manager and music_manager.has_method("stop_all_music_immediate"):
 		music_manager.stop_all_music_immediate()
+	if music_manager and music_manager.has_method("raise_game_over_music"):
+		music_manager.raise_game_over_music()
 	if rocks_container and rocks_container.has_method("stop_script_sfx_immediate"):
 		rocks_container.stop_script_sfx_immediate()
 
@@ -1910,12 +1912,52 @@ func round_timer_time_out() -> void:
 
 	stop_timer()
 
+	await _wait_for_live_pineapples_after_timeout()
+	if not _can_finish_after_timer_timeout():
+		return
+
 	success = true
 	if is_hold_out_round():
 		player_failed = false
 		if not _boss_mode and not is_endless_mode() and not level_editor_test_active:
 			_advance_range_after_hold_out = true
 	enter_state(RoundState.WAVE_END)
+
+
+## Timer hit 0 during a pineapple cue or while one is airborne: wait until it is gone, then 1s, then end.
+func _wait_for_live_pineapples_after_timeout() -> void:
+	if not _any_live_pineapples():
+		return
+	while _any_live_pineapples() and is_inside_tree():
+		if not _can_finish_after_timer_timeout():
+			return
+		await get_tree().process_frame
+	if not _can_finish_after_timer_timeout():
+		return
+	await get_tree().create_timer(1.0, false).timeout
+
+
+func _can_finish_after_timer_timeout() -> bool:
+	if not is_inside_tree():
+		return false
+	if game_over_triggered or _continue_open or player_failed:
+		return false
+	return true
+
+
+func _any_live_pineapples() -> bool:
+	if not is_inside_tree():
+		return false
+	for node in get_tree().get_nodes_in_group("pineapple_container"):
+		if node != null and node.has_method("is_pineapple_in_play") and bool(node.is_pineapple_in_play()):
+			return true
+	if rocks_container and rocks_container.has_method("any_live_pineapples"):
+		if bool(rocks_container.any_live_pineapples()):
+			return true
+	for node in get_tree().get_nodes_in_group("pineapple"):
+		if is_instance_valid(node) and bool(node.get("rock_activated")):
+			return true
+	return false
 
 	
 

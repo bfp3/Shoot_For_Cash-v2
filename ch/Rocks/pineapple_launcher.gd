@@ -35,6 +35,8 @@ const PRELAUNCH_FANFARE_COOLDOWN_SEC := 12.0
 
 var _fanfare_inflight := false
 var _last_fanfare_sec := -99999.0
+## `launch_from_spawn_entry` started (fanfare / particles) but the body may not be airborne yet.
+var _pending_pineapple_spawns := 0
 
 
 func start_bonus_round() -> void:
@@ -119,20 +121,24 @@ func _rock_manager() -> Node:
 ## Level-script launch: `pineapple 1` (straight up), `pineapple 1 A8` (aimed),
 ## or `pineapple A0 A8` (lateral fly-across from off-camera).
 func launch_from_spawn_entry(entry: Dictionary) -> void:
+	_pending_pineapple_spawns += 1
 	await _ensure_prelaunch_fanfare()
 
 	var body := _get_next_available_pineapple()
 	if body == null:
+		_pending_pineapple_spawns = maxi(_pending_pineapple_spawns - 1, 0)
 		push_warning("PineappleLauncher: no available pineapple for spawn")
 		return
 
 	if _is_lateral_launch(entry):
 		_launch_lateral_pineapple(body, entry)
+		_pending_pineapple_spawns = maxi(_pending_pineapple_spawns - 1, 0)
 		return
 
 	var column := int(entry.get('column', -1))
 	if _is_side_lane_column(column):
 		_launch_lateral_pineapple(body, entry)
+		_pending_pineapple_spawns = maxi(_pending_pineapple_spawns - 1, 0)
 		return
 	if column < 1:
 		column = randi_range(1, COLUMN_COUNT)
@@ -144,6 +150,17 @@ func launch_from_spawn_entry(entry: Dictionary) -> void:
 	if aim_column < 0:
 		aim_column = randi_range(1, COLUMN_COUNT)
 	launch_pineapple(body, x_pos, aim_row, aim_column)
+	_pending_pineapple_spawns = maxi(_pending_pineapple_spawns - 1, 0)
+
+
+## True from the 2D particle / jingle cue until that pineapple is destroyed or leaves.
+func is_pineapple_in_play() -> bool:
+	if _fanfare_inflight or _pending_pineapple_spawns > 0:
+		return true
+	for child in get_children():
+		if child is RigidBody3D and bool(child.get("rock_activated")):
+			return true
+	return false
 
 
 ## Plays PerfectPineappleRound + particles once per wave (shared by multi-pineapple

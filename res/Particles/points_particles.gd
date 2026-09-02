@@ -33,9 +33,9 @@ func activate() -> void:
 	set_physics_process(true)
 	await get_tree().create_timer(0.5).timeout
 	
-	var points_receptor_ui : Points_receptor_UI = get_tree().get_first_node_in_group('points_receptor_ui')
-	if points_receptor_ui:
-		points_receptor_ui.update_points_receptor()
+	#var points_receptor_ui : Points_receptor_UI = get_tree().get_first_node_in_group('points_receptor_ui')
+	#if points_receptor_ui:
+		#points_receptor_ui.update_points_receptor()
 
 func _physics_process(delta: float) -> void:
 	var dist := global_position.distance_to(target_pos.global_position)

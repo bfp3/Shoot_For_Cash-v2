@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://kd81sanmrnt4" path="res://res/scope_radius_upgrade_icon_large.png" id="10_ohn7f"]
 [ext_resource type="PackedScene" uid="uid://bnvrnccnsas5n" path="res://ch/Shop/PlayButton_v2.tscn" id="17_xklyy"]
 [ext_resource type="AudioStream" uid="uid://6v2a82fwxem1" path="res://sfx/stepwood_1_short.ogg" id="26_bovdg"]
+[ext_resource type="PackedScene" uid="uid://pm7i6qr0v4or" path="res://ch/2D_pieces/star_node.tscn" id="27_yuebc"]
 [ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="40_8mk8u"]
 [ext_resource type="AudioStream" uid="uid://nqetalimu2xa" path="res://sfx/shop_money_coin_sfx_01.ogg" id="41_5w0u1"]
 [ext_resource type="AudioStream" uid="uid://cm1nv2psoneac" path="res://sfx/shop_purchase_sfx_01.ogg" id="42_hfqf8"]
@@ -963,12 +964,6 @@ wiggle_amount = 0.46
 wiggle_amount_exit = 0.444
 metadata/_edit_group_ = true
 
-[node name="RedPanel3" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="0" unique_id=564021378]
-visible = false
-
-[node name="Icon" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="1" unique_id=667654554]
-visible = false
-
 [node name="PlayLabel" parent="CenterContainer/MainPanel/VBoxContainer/RoundSelector/BuyAmmo/VBoxContainer2/Play" parent_id_path=PackedInt32Array(388452363, 628628411) index="2" unique_id=160258226]
 modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
 offset_left = -93.63642
@@ -1450,6 +1445,31 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="StarNode" parent="." unique_id=1455358656 instance=ExtResource("27_yuebc")]
+layout_mode = 1
+offset_top = -228.0
+offset_bottom = -188.0
+scale = Vector2(2.64, 2.64)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="StarNode2" parent="." unique_id=1572111429 instance=ExtResource("27_yuebc")]
+layout_mode = 1
+offset_left = -156.0
+offset_top = -211.99997
+offset_right = -116.0
+offset_bottom = -171.99997
+scale = Vector2(1.499, 1.499)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="StarNode3" parent="." unique_id=21293968 instance=ExtResource("27_yuebc")]
+layout_mode = 1
+offset_left = 116.0
+offset_top = -211.99997
+offset_right = 156.0
+offset_bottom = -171.99997
+scale = Vector2(1.499, 1.499)
+pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/TopRedPanel/MapButton" to="." method="_on_map_button_pressed"]
 [connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/RoundSelector/PlayButton" to="." method="play_round_button_pressed"]
