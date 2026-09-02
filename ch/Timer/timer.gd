@@ -26,6 +26,8 @@ var additional_increment := 1.0
 
 var _timer_paused := false
 var _pause_toggle_locked := false
+## True while balloon-check has this clock held. Resume only pops that latch.
+var _checkpoint_timer_latched := false
 ## Endless mode: count up from 0 instead of counting down.
 var count_up := false
 ## Last count-up elapsed, kept after stop so tally can still read it.
@@ -311,9 +313,37 @@ func update_resume_timer() -> void:
 	enter_state(State.RUNNING)
 	await get_tree().create_timer(0.5).timeout
 	_pause_toggle_locked = false
+
+
+## Hold the running clock while balloon-check is in the sky.
+func latch_timer() -> void:
+	if _checkpoint_timer_latched:
+		return
+	if current_state != State.RUNNING:
+		return
+	_checkpoint_timer_latched = true
+	enter_state(State.PAUSE_TIMER)
+
+
+## Resume after balloon-check is popped (or dismissed). No-op if we didn't latch.
+func unlatch_timer() -> void:
+	if not _checkpoint_timer_latched:
+		return
+	_checkpoint_timer_latched = false
+	if current_state != State.PAUSE_TIMER:
+		return
+	var rm = get_tree().get_first_node_in_group("round_manager")
+	if rm:
+		if bool(rm.get("_continue_open")):
+			return
+		var st = rm.get("current_state")
+		if st != null and (st == rm.RoundState.PAUSE or st == rm.RoundState.CONTINUE):
+			return
+	enter_state(State.RESUME_TIMER)
 	
 
 func stop_timer() -> void:
+	_checkpoint_timer_latched = false
 	if count_up:
 		_last_count_up_elapsed = maxf(_last_count_up_elapsed, time_left)
 	enter_state(State.INACTIVE)
