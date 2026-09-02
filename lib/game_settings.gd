@@ -337,12 +337,12 @@ func _apply_window_resolution(size: Vector2i, force_windowed: bool) -> void:
 	_center_window(size)
 
 
-func _center_window(size: Vector2i) -> void:
+func _center_window(_size: Vector2i) -> void:
 	var screen := DisplayServer.window_get_current_screen()
 	var screen_pos := DisplayServer.screen_get_position(screen)
 	var screen_size := DisplayServer.screen_get_size(screen)
-	var pos := screen_pos + ((screen_size - size) / 2)
-	DisplayServer.window_set_position(pos)
+	var __pos := screen_pos + ((screen_size - _size) / 2)
+	DisplayServer.window_set_position(__pos)
 
 
 func _apply_msaa() -> void:

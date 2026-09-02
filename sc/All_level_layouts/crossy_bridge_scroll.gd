@@ -27,6 +27,9 @@ var _move_tween: Tween
 
 
 func _ready() -> void:
+	
+	
+	
 	_base_position = position
 	forward_axis = forward_axis.normalized()
 	if forward_axis.length_squared() < 0.0001:

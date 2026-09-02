@@ -9,7 +9,7 @@ static func is_level_editor_available() -> bool:
 ## Keep these under sc/All_level_layouts only. Do NOT point at sc/2025_Levels/* giants.
 const LAYOUT_PATH_START := "res://sc/All_level_layouts/level_layout_00_start.tscn"
 const LAYOUT_PATH_BY_PLACE_INDEX := {
-	0: "res://sc/All_level_layouts/level_layout_moss.tscn",
+	0: "res://sc/All_level_layouts/level_layout_moss_01.tscn",
 	1: "res://sc/All_level_layouts/level_layout_02_redd.tscn",
 	2: "res://sc/All_level_layouts/level_layout_03_glory.tscn",
 	3: "res://sc/All_level_layouts/level_layout_000_jetz.tscn",
@@ -25,8 +25,16 @@ const LAYOUT_PATH_BOSS_BY_ISLAND := {
 }
 ## Script ranges that are not in gl_DataSet.place_name (e.g. moss2 in level-beginner.txt).
 const LAYOUT_PATH_BY_PLACE_NAME := {
-	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",   # "res://sc/All_level_layouts/level_layout_moss_02.tscn",
+	"moss1": "res://sc/All_level_layouts/level_layout_moss_01.tscn",
+	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",
 	"moss3": "res://sc/All_level_layouts/level_layout_moss_03.tscn",
+	"moss4": "res://sc/All_level_layouts/level_layout_moss_04.tscn",
+	"moss5": "res://sc/All_level_layouts/level_layout_moss_05.tscn",
+	"moss6": "res://sc/All_level_layouts/level_layout_moss_06.tscn",
+	"moss7": "res://sc/All_level_layouts/level_layout_moss_07.tscn",
+	"moss8": "res://sc/All_level_layouts/level_layout_moss_08.tscn",
+	"moss9": "res://sc/All_level_layouts/level_layout_moss_09.tscn",
+	"moss10": "res://sc/All_level_layouts/level_layout_moss_10.tscn",
 	"hood": "res://sc/All_level_layouts/level_layout_hood_01.tscn",
 	"mine": "res://sc/All_level_layouts/level_layout_mine_01.tscn",
 	"kings": "res://sc/All_level_layouts/level_layout_moss_crossy_bridge.tscn"
@@ -37,8 +45,18 @@ const LAYOUT_PATH_BY_PLACE_NAME := {
 const ENV_PATH_BY_LEVEL := {
 	"start": "res://res/skyEnvironments/greyscale_world.tres",
 	"moss": "res://res/moss_env_v2.tres",
-	"moss2": "res://res/skyEnvironments/moss_env_v2.tres",
-	"moss3": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"moss1": "res://res/moss_env_v2.tres",
+	"moss2": "res://res/moss_env_v2.tres",
+	"moss3": "res://res/moss_env_v2.tres",
+	"moss4": "res://res/moss_env_v2.tres",
+	"moss5": "res://res/moss_env_v2.tres",
+	"moss6": "res://res/moss_env_v2.tres",
+	"moss7": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"moss8": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"moss9": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"moss10": "res://res/skyEnvironments/boss_2_world_env.tres",
+	
+	
 	"redd": "res://res/world_env_redd.tres",
 	"glory": "res://res/skyEnvironments/Level_simple_art_style.tres",
 	"jetz": "res://res/skyEnvironments/greyscale_world.tres",
@@ -57,8 +75,16 @@ const ENV_PATH_BY_LAYOUT := {
 	"res://sc/All_level_layouts/level_layout_000_jetz.tscn": "res://res/skyEnvironments/greyscale_world.tres",
 	"res://sc/All_level_layouts/level_layout_04_noir.tscn": "res://res/start_04_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_05_vesper.tscn": "res://res/start_05_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_moss_01.tscn": "res://res/moss_env_v2.tres",
 	"res://sc/All_level_layouts/level_layout_moss_02.tscn": "res://res/moss_env_v2.tres",
 	"res://sc/All_level_layouts/level_layout_moss_03.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_moss_04.tscn": "res://res/moss_env_v2.tres",
+	"res://sc/All_level_layouts/level_layout_moss_05.tscn": "res://res/moss_env_v2.tres",
+	"res://sc/All_level_layouts/level_layout_moss_06.tscn": "res://res/moss_env_v2.tres",
+	"res://sc/All_level_layouts/level_layout_moss_07.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_moss_08.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_moss_09.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_moss_10.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_hood.tscn": "res://res/skyEnvironments/greyscale_world.tres",
 	"res://sc/All_level_layouts/level_layout_mine_01.tscn": "res://mine_temp/mine_sunset_env.tres",
 }
@@ -741,6 +767,18 @@ func list_script_levels() -> PackedStringArray:
 			continue
 		out.append(name)
 	return out
+
+
+## 1-based index in the active difficulty script (beginner moss2 → 2). 0 if unknown.
+func get_script_level_number(place_id: String) -> int:
+	var key := gl_DataSet.resolve_place_name(place_id).to_lower()
+	if key.is_empty() or key == "start" or key == gl_DataSet.get_start_place_name().to_lower():
+		return 0
+	var levels := list_script_levels()
+	for i in levels.size():
+		if String(levels[i]).to_lower() == key:
+			return i + 1
+	return 0
 
 
 func has_next_script_level(place_id: String = "") -> bool:

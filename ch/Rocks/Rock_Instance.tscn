@@ -258,36 +258,12 @@ shadow_mesh = SubResource("ArrayMesh_2t2ha")
 
 [sub_resource type="Animation" id="Animation_ltsxa"]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Dollar3:material_override:albedo_color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1.353256, 0.7931468, 0.059608817, 1)]
-}
 
 [sub_resource type="Animation" id="Animation_8mu68"]
 resource_name = "flashing_dollar"
 length = 0.8
 loop_mode = 1
 step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Dollar3:material_override:albedo_color")
-tracks/0/interp = 0
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.37, 0.7),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Color(1.353256, 0.7931468, 0.059608817, 1), Color(1, 0.5796666, 0.029999971, 1), Color(1.353256, 0.7931468, 0.059608817, 1)]
-}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_q8tld"]
 _data = {
@@ -460,7 +436,9 @@ rock_stay_lifetime_sec = 5.0
 rock_stay_expire_gives_strike = true
 rock_stay_burst_warn_sec = 1.5
 rock_stay_burst_grow = 1.8
-rock_stay_burst_shake = 0.3
+rock_stay_burst_shake = 0.2
+cardinal_burst_speed = 5.0
+cardinal_burst_lifetime_sec = 3.0
 avoider_arm_delay_sec = 1.25
 avoider_retarget_delay_sec = 0.15
 avoider_lifetime_sec = 8.0
@@ -833,6 +811,17 @@ mesh = SubResource("TextMesh_gsivy")
 transform = Transform3D(9.520286e-08, 0, 0.1, 0, 0.701, 0, -1.261, 0, 7.54979e-09, 0.5, 0.041, 2.1855694e-08)
 material_override = ExtResource("15_q8tld")
 mesh = SubResource("TextMesh_gsivy")
+
+[node name="Cardinal" type="MeshInstance3D" parent="Mesh" unique_id=649217467]
+unique_name_in_owner = true
+visible = false
+layers = 524289
+cast_shadow = 0
+mesh = SubResource("ArrayMesh_xxiuv")
+
+[node name="CrateAnimplayer" type="AnimationPlayer" parent="Mesh/Cardinal" unique_id=432831129]
+libraries/ = SubResource("AnimationLibrary_q8tld")
+speed_scale = 6.0
 
 [node name="BadCookie_Mesh" type="MeshInstance3D" parent="Mesh" unique_id=308536769]
 transform = Transform3D(1.9488992e-16, 8.348875e-09, 0.102, 0.102, -8.348875e-09, 0, 4.4585615e-09, 0.191, -4.4585615e-09, 0, 0, 0)

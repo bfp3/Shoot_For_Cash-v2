@@ -176,14 +176,16 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-chaser / rock-juggle / rock-grey / rock-stay / mothership / smokecan / crate / pineapple / red_rock_error:
+## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-chaser / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / mothership / smokecan / crate / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, spawn_row, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
 ##   `rock A4` is invalid — use `rock ? A4`. Side lanes: `rock A0 A8` / `rock A0 A9`
 ##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
-##   `rock-grey` is $1 and does not strike on miss. `rock-stay` flies straight to aim then hangs (pace ignored). `mothership` flees the player for bonus cash.
+##   `rock-grey` is $1 and does not strike on miss. `rock-stay` flies straight to aim then hangs (pace ignored). `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `mothership` flees the player for bonus cash.
 ##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
+##   `rock-red-attacker 1 a1` flies to A1 then dashes at the crosshair (and through it).
+##   `rock-red-attacker 1 a1 a8` same, but dashes toward A8 instead of the crosshair.
 ##   `rock-gap` / `rock-red-gap [gapCols…] [aim]`: expands to large red hazards in every
 ##   column except the listed gap(s). Default gap = 8. Aim may be `a4`, `a?` / `a` (row A,
 ##   random col), or `?`. Example: `rock-gap 4 6 8 a?` → gaps at 4/6/8, aim row A.
@@ -261,7 +263,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'rock-stay', 'rock-still', 'mothership', 'red_rock_error', 'smokecan', 'crate':
+		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'mothership', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
 
 		'rock-gap', 'rock-red-gap':
@@ -515,7 +517,7 @@ func _is_random_token(token: String) -> bool:
 	return token.strip_edges() == '?'
 
 
-## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / rock-stay / mothership / smokecan / crate / pineapple / red_rock_error
+## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / mothership / smokecan / crate / pineapple / red_rock_error
 ##   rock          → rock ? ?   (random column, aim row A + random aim column)
 ##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
@@ -532,6 +534,8 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 		'spawn_row': RANDOM_SLOT,
 		'aim_row': RANDOM_SLOT,
 		'aim_column': RANDOM_SLOT,
+		'end_row': RANDOM_SLOT,
+		'end_column': RANDOM_SLOT,
 		'param': '',
 	}
 
@@ -574,6 +578,7 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 					result.aim_column = aim.column
 				else:
 					result.param = token2
+			_apply_optional_end_cell(result, parts)
 			return result
 		result.param = token1
 		return result
@@ -594,7 +599,22 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 		else:
 			result.param = token2
 
+	_apply_optional_end_cell(result, parts)
 	return result
+
+
+## Optional third cell on rock-red-attacker: dash heading (`rock-red-attacker 1 a1 a8`).
+func _apply_optional_end_cell(result: Dictionary, parts: PackedStringArray) -> void:
+	if parts.size() < 4:
+		return
+	var token := String(parts[3]).strip_edges()
+	if token.is_empty() or _is_random_token(token):
+		return
+	var cell := _parse_balloon_cell(token, true)
+	if cell.is_empty():
+		return
+	result.end_row = cell.row
+	result.end_column = cell.column
 
 
 ## rock-gap / rock-red-gap — gap columns then optional aim.
@@ -1405,7 +1425,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'rock-stay', 'rock-still', 'mothership', 'smokecan', 'crate', 'red_rock_error':
+		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'mothership', 'smokecan', 'crate', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))
@@ -1416,12 +1436,21 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				aim = '%s%d' % [letters[clampi(ar, 1, 3)], ac]
 			elif ar > 0 and ac < 0:
 				aim = '%s?' % letters[clampi(ar, 1, 3)]
+			var end := ''
+			var er := int(entry.get('end_row', RANDOM_SLOT))
+			var ec := int(entry.get('end_column', RANDOM_SLOT))
+			if er > 0 and ec >= 0:
+				end = '%s%d' % [letters[clampi(er, 1, 3)], ec]
 			if spawn_row >= 1 and col >= 0:
 				var spawn := '%s%d' % [letters[clampi(spawn_row, 1, 3)], col]
+				if aim != '' and end != '':
+					return '%s %s %s %s' % [cmd, spawn, aim, end]
 				if aim != '':
 					return '%s %s %s' % [cmd, spawn, aim]
 				return '%s %s' % [cmd, spawn]
 			var col_token := '?' if col < 0 else str(col)
+			if aim != '' and end != '':
+				return '%s %s %s %s' % [cmd, col_token, aim, end]
 			if aim != '':
 				return '%s %s %s' % [cmd, col_token, aim]
 			if col < 0:

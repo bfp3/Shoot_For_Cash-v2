@@ -227,6 +227,20 @@ shader_parameter/shine_strength = 0.050000002375
 shader_parameter/base_color = Color(0.8, 0.6954667, 0.57600003, 0.4392157)
 shader_parameter/shine_color = Color(1, 0.98, 0.88, 0.39215687)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ta7gf"]
+bg_color = Color(0.92, 0.8770667, 0.8464, 0.15686275)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.47382927, 0.50620335, 0.5386369, 1)
+corner_radius_top_left = 200
+corner_radius_top_right = 200
+corner_radius_bottom_right = 200
+corner_radius_bottom_left = 200
+corner_detail = 12
+shadow_color = Color(1, 1, 1, 0.11764706)
+
 [sub_resource type="Animation" id="Animation_3q72g"]
 length = 0.001
 tracks/0/type = "value"
@@ -424,7 +438,6 @@ offset_right = 1198.0
 offset_bottom = 124.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/MainPanel/MainPanel/100_percent" unique_id=113222203]
-visible = false
 self_modulate = Color(1, 1, 1, 0.39215687)
 clip_contents = false
 layout_mode = 1
@@ -818,10 +831,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -669.0
-offset_top = -381.0
-offset_right = -425.0
-offset_bottom = -281.0
+offset_left = -701.0
+offset_top = -387.0
+offset_right = -457.0
+offset_bottom = -287.0
 grow_horizontal = 0
 grow_vertical = 0
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -839,6 +852,7 @@ purchase_sfx = NodePath("../SFX/shop_purchase_02")
 wiggle_amount = 1.05
 
 [node name="LevelSelectBadgeUnlocked" type="Control" parent="NextRound" unique_id=399074095]
+visible = false
 custom_minimum_size = Vector2(188, 188)
 layout_mode = 1
 anchors_preset = 8
@@ -970,23 +984,51 @@ volume_db = -32.0
 pitch_scale = 1.6
 
 [node name="RichTextLabel" type="RichTextLabel" parent="NextRound" unique_id=69238808]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -24.0
-offset_right = -24.0
+offset_top = 8.0
+offset_bottom = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
 theme_override_colors/default_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/normal_font_size = 90
+theme_override_font_sizes/normal_font_size = 80
+bbcode_enabled = true
 text = "[pulse freq=3][wave freq=10]NEXT"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Circle" type="Panel" parent="NextRound" unique_id=367822567]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -64.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7600049, 0.7600049)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ta7gf")
+
+[node name="Circle2" type="Panel" parent="NextRound" unique_id=1734850623]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -64.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.6399241, 0.6399241)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ta7gf")
 
 [node name="LevelSelect" type="Button" parent="." unique_id=1629270956 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true

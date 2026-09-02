@@ -44,9 +44,7 @@ func play_arrival_card(place_id: String) -> void:
 	show()
 	if place_label:
 		place_label.hide()
-	var title := gl_DataSet.display_place_name(place_id)
-	if title.strip_edges().is_empty():
-		title = String(place_id).strip_edges().to_upper()
+	var title := _arrival_title(place_id)
 	if _arrival_name:
 		_arrival_name.text = "[center][wave]%s" % title
 		_arrival_name.modulate.a = 0.0
@@ -76,6 +74,20 @@ func play_arrival_card(place_id: String) -> void:
 	_hide_arrival_card()
 
 
+func _arrival_title(place_id: String) -> String:
+	var name := gl_DataSet.display_place_name(place_id)
+	if name.strip_edges().is_empty():
+		name = String(place_id).strip_edges().to_upper()
+	name = name.to_upper()
+	var n := 0
+	var rm := get_tree().get_first_node_in_group("round_manager")
+	if rm and rm.has_method("get_script_level_number"):
+		n = int(rm.get_script_level_number(place_id))
+	if n > 0:
+		return "%d\n%s" % [n, name]
+	return name
+
+
 func _hide_arrival_card() -> void:
 	if _arrival_name:
 		_arrival_name.hide()
@@ -87,9 +99,9 @@ func _hide_arrival_card() -> void:
 
 func _ensure_arrival_labels() -> void:
 	if _arrival_name == null:
-		_arrival_name = _make_arrival_label("ArrivalName", 148, Vector2(-420, -120), Vector2(420, 40))
+		_arrival_name = _make_arrival_label("ArrivalName", 132, Vector2(-420, -280), Vector2(420, 80))
 	if _arrival_time == null:
-		_arrival_time = _make_arrival_label("ArrivalTime", 56, Vector2(-280, 36), Vector2(280, 120))
+		_arrival_time = _make_arrival_label("ArrivalTime", 56, Vector2(-280, 92), Vector2(280, 176))
 
 
 func _make_arrival_label(node_name: String, font_size: int, top_left: Vector2, bottom_right: Vector2) -> RichTextLabel:

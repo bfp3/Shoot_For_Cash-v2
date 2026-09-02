@@ -63,7 +63,6 @@
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 [ext_resource type="PackedScene" uid="uid://b8lj768x0yxac" path="res://ch/debug/round_editor_menu.tscn" id="81_rounded"]
-[ext_resource type="PackedScene" uid="uid://cafj0iwnxs1k3" path="res://ch/targets/ammo_reload_target.tscn" id="83_ammo"]
 [ext_resource type="Script" uid="uid://tyrtfghjsjni" path="res://lib/deferred_menu_loader.gd" id="def_menu_loader"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_balloon_destroy.tscn" id="vfx_balloon"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_crate_destroy.tscn" id="vfx_crate"]
@@ -913,10 +912,6 @@ unique_name_in_owner = true
 transform = Transform3D(-1, -1.4472306e-08, -1.5030065e-07, 0, 0.9953962, -0.09584575, 1.509958e-07, -0.09584575, -0.9953962, 0, -0.875, 0.5)
 roundManager = NodePath("../Round_manager")
 
-[node name="AmmoReloadTarget" parent="." unique_id=1821285975 instance=ExtResource("83_ammo")]
-transform = Transform3D(0.446, 0, 0, 0, 0.446, 0, 0, 0, 0.446, 2.994, -21.959, 19.628)
-visible = false
-
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.045, 0)
@@ -1183,16 +1178,17 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -420.0
-offset_top = -120.0
+offset_top = -280.0
 offset_right = 420.0
-offset_bottom = 40.0
+offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"WhiteRichText"
-theme_override_font_sizes/normal_font_size = 148
+theme_override_font_sizes/normal_font_size = 132
 bbcode_enabled = true
-text = "[center][wave]MOSS"
+text = "[center][wave]1
+MOSS"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -1211,9 +1207,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -280.0
-offset_top = 36.0
+offset_top = 92.0
 offset_right = 280.0
-offset_bottom = 120.0
+offset_bottom = 176.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -1606,7 +1602,7 @@ balloon_type = 3
 [node name="Balloon_wait_positions" type="Node3D" parent="." unique_id=242094308]
 
 [node name="Balloon_pos_1" type="Marker3D" parent="Balloon_wait_positions" unique_id=796756762]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9000003, -1.1999999, 11.799999)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, -1, 11.8)
 
 [node name="Checkpoint_container" type="Node3D" parent="." unique_id=1888000001 groups=["checkpoint_container"]]
 

@@ -1,5 +1,5 @@
 extends Node
-## When true, Advanced / Expert / all challenges are treated as unlocked.
+## When true, Advanced / Expert / all challenges and all numbered levels are treated as unlocked.
 const debug_everything_unlocked := true
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
@@ -122,6 +122,8 @@ var dataset_float : Dictionary = {
 	,"rock_type_grey"		: [1,		1]
 	## rock-stay: hangs at aim after a fast straight approach.
 	,"rock_type_stay"		: [2,		1]
+	## rock-stay-black uses hazard_type_1 (shooting it strikes; 3s self-destruct).
+	## rock-cardinal is the same, plus four cardinal energy bursts on explode.
 	## Mothership: [bonus cash, hits to destroy].
 	,"mothership_reward"	: [35,		3]
 	## Crate: same cash/health as a basic rock; uses crate mesh + crate_particles.
@@ -207,6 +209,11 @@ var dataset_string : Dictionary = {
 # DATASET.get_value('bullet_speed',4)
 
 func is_debug_everything_unlocked() -> bool:
+	return debug_everything_unlocked
+
+
+## Numbered level-select badges (beginner 1–N, etc.) skip sequential clear gates.
+func are_all_levels_unlocked() -> bool:
 	return debug_everything_unlocked
 
 

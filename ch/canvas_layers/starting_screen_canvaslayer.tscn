@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="5_3jj4g"]
 [ext_resource type="Texture2D" uid="uid://gvpsjidpvqm4" path="res://res/red_balloon.png" id="6_a6mtr"]
 [ext_resource type="Texture2D" uid="uid://c84cff7ybdw60" path="res://res/scope_radius_upgrade_icon.png" id="6_hmuk5"]
-[ext_resource type="PackedScene" uid="uid://bxx83kupf6rgj" path="res://ch/2D_pieces/top_red_panel.tscn" id="7_qxvgm"]
 [ext_resource type="Texture2D" uid="uid://cfmll74u0gqg1" path="res://res/ROCKS - title_rock_centered_large.png" id="7_wliss"]
 [ext_resource type="Texture2D" uid="uid://d0mp5i07h5hd3" path="res://res/bullet_texture_plain.png" id="9_uk8vt"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="10_40wae"]
@@ -250,6 +249,8 @@ PanelContainer/styles/panel = SubResource("StyleBoxFlat_ms1v2")
 bg_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
 border_color = Color(0.15, 0.15, 0.15, 1)
 border_blend = true
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
 corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
@@ -508,45 +509,6 @@ grow_vertical = 2
 scale = Vector2(0.9948992, 0.9948992)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
-
-[node name="BackgroundPanel2" type="PanelContainer" parent="SplashScreen_v2/GameTitleBackground" unique_id=1286405205]
-visible = false
-modulate = Color(0.86, 0.7674067, 0.6966, 0.25882354)
-custom_minimum_size = Vector2(1100, 500)
-layout_mode = 0
-offset_left = 410.00003
-offset_top = 243.48761
-offset_right = 1510.0
-offset_bottom = 760.8514
-scale = Vector2(1.72, 0.625)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("2_a6mtr")
-
-[node name="BackgroundPanel" type="PanelContainer" parent="SplashScreen_v2/GameTitleBackground" unique_id=1419090721]
-visible = false
-custom_minimum_size = Vector2(1100, 500)
-layout_mode = 0
-offset_left = 410.0
-offset_top = 272.63626
-offset_right = 1510.0
-offset_bottom = 790.0
-mouse_filter = 2
-theme_override_styles/panel = ExtResource("2_a6mtr")
-
-[node name="TopRedPanel" parent="SplashScreen_v2/GameTitleBackground" unique_id=2081657472 instance=ExtResource("7_qxvgm")]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.21354167
-anchor_top = 0.19326238
-anchor_right = 0.7864583
-anchor_bottom = 0.3432624
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-metadata/_edit_use_anchors_ = true
 
 [node name="Bullets" type="TextureRect" parent="SplashScreen_v2/GameTitleBackground" unique_id=606292427]
 modulate = Color(1, 1, 1, 0.41568628)
@@ -1060,6 +1022,7 @@ theme = SubResource("Theme_a6mtr")
 theme_override_styles/panel = ExtResource("2_a6mtr")
 
 [node name="Panel2" type="Panel" parent="SplashScreen_v2/GameName" unique_id=88588453]
+modulate = Color(1, 1, 1, 0.8627451)
 custom_minimum_size = Vector2(180, 130)
 layout_mode = 1
 anchors_preset = 8
@@ -1164,9 +1127,9 @@ vertical_alignment = 1
 
 [node name="RightTriangle" type="MeshInstance2D" parent="SplashScreen_v2/GameName" unique_id=271043440]
 visible = false
-modulate = Color(0.5803922, 0.003921569, 0.015686275, 1)
+modulate = Color(0.57254905, 0.078431375, 0.08627451, 1)
 z_index = -10
-position = Vector2(956.025, 500)
+position = Vector2(955.45, 499.8)
 rotation = 6.2831855
 scale = Vector2(486.845, -292.41)
 mesh = SubResource("PrismMesh_a6mtr")
@@ -1195,7 +1158,7 @@ theme_type_variation = &"RedPanel"
 theme_override_styles/panel = SubResource("StyleBoxFlat_3jj4g")
 
 [node name="RightTriangle2" type="MeshInstance2D" parent="SplashScreen_v2/GameName" unique_id=670052274]
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
+modulate = Color(0.37, 0.33053333, 0.296, 0.8627451)
 z_index = -10
 position = Vector2(246.025, 531.99994)
 rotation = 9.424778

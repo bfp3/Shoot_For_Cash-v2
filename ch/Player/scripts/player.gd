@@ -1724,10 +1724,10 @@ func fire_weapon(force_plant: bool = false) -> void:
 
 	power_gun_fire_rate = 0.05
 	#power_bullet_speed = 0.01
-	#
+	
 	#weapon_shooting.power_bullet_speed = 0.3
 	#power_target_circle = 60.0
-
+	weapon_shooting.power_bullet_delay = 0.01
 	weapon_shooting.shoot_target()
 	player_did_not_miss()
 	if shoot_ring_pulse_on_release:

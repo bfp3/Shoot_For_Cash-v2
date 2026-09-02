@@ -330,7 +330,9 @@ func update_inactive() -> void:
 	_cancel_pending_launches()
 	_wave_telegraph_plan.clear()
 	for i in $Container_1.get_children():
-		i.enter_state(i.State.INACTIVE)
+		if i is RockInstance:
+			i.enter_state(i.State.INACTIVE)
+	clear_cardinal_bursts()
 	
 
 # This is the start of arranging the rocks.
@@ -826,13 +828,40 @@ func pause_sequence_for_continue() -> void:
 func freeze_live_rocks(frozen: bool) -> void:
 	if not has_node("Container_1"):
 		return
-	for body in $Container_1.get_children():
+	_freeze_rigid_children($Container_1, frozen)
+	var burst_host := get_node_or_null("CardinalBurstHost")
+	if burst_host:
+		_freeze_rigid_children(burst_host, frozen)
+
+
+func _freeze_rigid_children(host: Node, frozen: bool) -> void:
+	for body in host.get_children():
 		if body is RigidBody3D:
 			(body as RigidBody3D).freeze = frozen
 			if frozen:
 				(body as RigidBody3D).sleeping = true
 			else:
 				(body as RigidBody3D).sleeping = false
+
+
+func get_cardinal_burst_host() -> Node3D:
+	var host := get_node_or_null("CardinalBurstHost") as Node3D
+	if host == null:
+		host = Node3D.new()
+		host.name = "CardinalBurstHost"
+		add_child(host)
+	return host
+
+
+func clear_cardinal_bursts() -> void:
+	var host := get_node_or_null("CardinalBurstHost")
+	if host == null:
+		return
+	for child in host.get_children():
+		if child.has_method("dismiss"):
+			child.dismiss()
+		elif is_instance_valid(child):
+			child.queue_free()
 
 
 ## Unfreeze live rocks and keep the script cursor. Returns true when the caller
@@ -1527,6 +1556,8 @@ func _pulse_continuation_beat() -> void:
 
 ## Slots still mid-flight or dying must not be reclaimed for the next beat.
 func _rock_slot_busy(body) -> bool:
+	if not (body is RockInstance):
+		return true
 	return body.current_state != body.State.INACTIVE
 
 
@@ -1555,6 +1586,10 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.GREY
 			'rock-stay', 'rock-still':
 				return RockInstance.RockSize.STAY
+			'rock-stay-black':
+				return RockInstance.RockSize.STAY_BLACK
+			'rock-cardinal':
+				return RockInstance.RockSize.CARDINAL
 			'mothership':
 				return RockInstance.RockSize.MOTHERSHIP
 			'crate':
@@ -1585,6 +1620,8 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-juggle'
 		or cmd == 'rock-grey'
 		or cmd == 'rock-stay'
+		or cmd == 'rock-stay-black'
+		or cmd == 'rock-cardinal'
 		or cmd == 'rock-still'
 		or cmd == 'mothership'
 		or cmd == 'crate'
@@ -2842,7 +2879,9 @@ func update_round_end() -> void:
 	#$pitch_shift_rock_sound.volume_db = -9.0
 	update_gravity(1.0)
 	for body in $Container_1.get_children():
-		body.round_end_check_rock_status()
+		if body is RockInstance:
+			body.round_end_check_rock_status()
+	clear_cardinal_bursts()
 
 
 ## Stop staggered `wait` launches mid-sequence (lose / abort / round end).
@@ -2856,6 +2895,8 @@ func detonate_sky_mines() -> void:
 	for body in bodies:
 		if counter >= bodies.size():
 			break
+		if not (body is RockInstance):
+			continue
 		if body.player_has_marked_rock == true && body.rock_activated:
 			body.detonate_rock()
 			
@@ -2885,6 +2926,8 @@ func bounce_rocks() -> void:
 	if _wave_telegraph_plan.is_empty():
 		var prepared: Array = []
 		for body in $Container_1.get_children():
+			if not (body is RockInstance):
+				continue
 			if body.current_state == body.State.PREPARE_ROCK:
 				prepared.append(body)
 		_rebuild_wave_convergence_aim_columns(prepared)
@@ -2893,6 +2936,8 @@ func bounce_rocks() -> void:
 	var epoch := _launch_epoch
 	var prepared_queue: Array = []
 	for body in $Container_1.get_children():
+		if not (body is RockInstance):
+			continue
 		if body.current_state == body.State.PREPARE_ROCK:
 			prepared_queue.append(body)
 
@@ -3032,7 +3077,7 @@ func spawn_threat_rock(cmd: String = "rock") -> void:
 		return
 	body.enter_state(body.State.ACTIVE)
 	var upward_force := 10.0
-	if body.rock_type == RockInstance.RockSize.STAY:
+	if body.has_method("is_stay_flight") and body.is_stay_flight():
 		var aim := _resolve_aim_cell(entry, true, column)
 		var aim_pos := _aim_cell_world_position(aim.x, aim.y, true)
 		if body.has_method("begin_rock_stay_flight"):
@@ -3085,6 +3130,7 @@ func _launch_stream_rock(body, counter: int) -> void:
 	var counter_idx := counter
 	if counter_idx >= 0 and counter_idx < manual_rock_sequence.size():
 		entry = manual_rock_sequence[counter_idx]
+	_apply_red_attacker_script_dash(body, entry)
 	if _is_lateral_launch(entry):
 		body.constant_force = Vector3.ZERO
 		BallisticAim.configure_body_for_ballistic_launch(body, LATERAL_LAUNCH_GRAVITY)
@@ -3095,7 +3141,7 @@ func _launch_stream_rock(body, counter: int) -> void:
 		upward_force = upward_force * rock_pigeon_upward_force
 		impulse = _pigeon_launch_impulse(body, counter, upward_force)
 		body.apply_central_impulse(impulse)
-	elif body.rock_type == RockInstance.RockSize.STAY:
+	elif body.has_method("is_stay_flight") and body.is_stay_flight():
 		var aim_pos := _stay_aim_world(body, counter, entry)
 		if body.has_method("begin_rock_stay_flight"):
 			body.begin_rock_stay_flight(aim_pos)
@@ -3112,6 +3158,23 @@ func _launch_stream_rock(body, counter: int) -> void:
 
 	if rock_rock_collisions_enabled:
 		body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
+
+
+## `rock-red-attacker 1 a1 a8`: dash toward A8 instead of the live crosshair.
+func _apply_red_attacker_script_dash(body, entry) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	if body.rock_type != RockInstance.RockSize.RED_ATTACKER:
+		return
+	if not (entry is Dictionary):
+		return
+	var end_row := int(entry.get("end_row", -1))
+	var end_column := int(entry.get("end_column", -1))
+	if end_row < 1 or end_column < 0:
+		return
+	var world := _aim_cell_world_position(end_row, end_column, false)
+	if body.has_method("set_red_attacker_dash_aim"):
+		body.set_red_attacker_dash_aim(world)
 
 
 func _stay_aim_world(body, rock_index: int, entry) -> Vector3:
@@ -3403,13 +3466,13 @@ func _aimed_launch_impulse_to_world(body, aim_pos: Vector3, gravity_scale: float
 
 
 ## Red-avoiders / red-attackers always launch at gravity 1.0, ignoring pace / difficulty.
-## rock-stay ignores pace entirely (custom straight flight + hang).
+## rock-stay / rock-stay-black / rock-cardinal ignore pace entirely (custom straight flight + hang).
 func _aim_launch_gravity_for(body, entry = null) -> float:
 	if body != null and is_instance_valid(body) and body.rock_type == RockInstance.RockSize.AVOIDER:
 		return 1.0
 	if body != null and is_instance_valid(body) and body.rock_type == RockInstance.RockSize.RED_ATTACKER:
 		return 1.0
-	if body != null and is_instance_valid(body) and body.rock_type == RockInstance.RockSize.STAY:
+	if body != null and is_instance_valid(body) and body.has_method("is_stay_flight") and body.is_stay_flight():
 		return 0.0
 	if entry is Dictionary and entry.has("gravity_scale"):
 		return float(entry.get("gravity_scale"))
@@ -3424,6 +3487,8 @@ func spin_rocks(bodies: Array = []) -> void:
 	for body in bodies:
 		if counter >= rocks_limit:
 			break
+		if not (body is RockInstance):
+			continue
 
 		body.apply_torque_impulse(Vector3.LEFT * 3000.0)
 		counter += 1
@@ -3432,6 +3497,8 @@ func update_gravity(_gravity_scale : float) -> void:
 	#var counter := 0
 	var bodies = $Container_1.get_children()
 	for body in bodies:
+		if not (body is RockInstance):
+			continue
 		body.update_gravity(_gravity_scale)
 		#counter += 1
 
@@ -3439,10 +3506,12 @@ func update_gravity(_gravity_scale : float) -> void:
 
 func reset_all_rocks() -> void:
 	_cancel_sequence()
+	clear_cardinal_bursts()
 	var bodies = $Container_1.get_children()
 
 	for body in bodies:
-		body.enter_state(body.State.INACTIVE)
+		if body is RockInstance:
+			body.enter_state(body.State.INACTIVE)
 
 
 ## Instantiates extra inactive rocks into Container_1 across frames to avoid hitching.

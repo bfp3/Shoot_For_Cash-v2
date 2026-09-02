@@ -810,6 +810,8 @@ func mark_level_cleared(difficulty: String, place_id: String) -> void:
 
 ## Level 1 is always open. Level N opens after N-1 is cleared in that difficulty.
 func is_sequential_level_unlocked(difficulty: String, range_list: PackedStringArray, index: int) -> bool:
+	if gl_DataSet and gl_DataSet.has_method("are_all_levels_unlocked") and gl_DataSet.are_all_levels_unlocked():
+		return true
 	if index <= 0:
 		return true
 	if index >= range_list.size():

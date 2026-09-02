@@ -8,15 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://b830br7pig61j" path="res://res/Kenney_prototype_textures/Dark/texture_08.png" id="8_qhy3c"]
 [ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="9_bnvqn"]
 [ext_resource type="Texture2D" uid="uid://bvou2vqya4adq" path="res://res/white_circle_256.png" id="10_6ab4r"]
-[ext_resource type="PackedScene" uid="uid://cbelgvglet2ae" path="res://sc/All_level_layouts/moss_visual_boost.tscn" id="10_c5n8r"]
 [ext_resource type="Texture2D" uid="uid://udb8jdxvl5d8" path="res://res/cloud-svgrepo-com.png" id="11_yyju4"]
 [ext_resource type="Texture2D" uid="uid://cmk72g2wr4ulq" path="res://res/mountains-svgrepo-com.png" id="12_gasc2"]
-[ext_resource type="PackedScene" uid="uid://bdgpfw3241vuc" path="res://sc/All_level_layouts/CrateForCash.tscn" id="14_aw6p4"]
-[ext_resource type="Script" uid="uid://jrsa7e3mhuxu" path="res://ch/wall_puzzle_setup.gd" id="14_obp0s"]
-[ext_resource type="AudioStream" uid="uid://pqc60gfwwbnp" path="res://sfx/low_pitch_humming_loop.ogg" id="15_6ol7e"]
-[ext_resource type="AudioStream" uid="uid://ub17xcey7moy" path="res://sfx/sfx-click.ogg" id="16_aw6p4"]
 [ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="16_xsjl2"]
-[ext_resource type="PackedScene" uid="uid://djfufa3thf27j" path="res://to_bring_over/Mechanical_crane_object.tscn" id="17_6ol7e"]
 [ext_resource type="Script" uid="uid://cg6xll53va6hj" path="res://sc/All_level_layouts/crossy_bridge_scroll.gd" id="layout_scroll"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x8ffe"]
@@ -584,50 +578,12 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_obp0s")
 
-[sub_resource type="Animation" id="Animation_6ol7e"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.033333335),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-9.13381, 8.066948, 24.631828)]
-}
-
-[sub_resource type="Animation" id="Animation_aw6p4"]
-resource_name = "up_down"
-length = 10.0
-loop_mode = 2
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 3, 9.25),
-"transitions": PackedFloat32Array(1, 2, 0.5),
-"update": 0,
-"values": [Vector3(-9.134, 6.835, 24.632), Vector3(-9.134, 6.835, 24.632), Vector3(-9.134, 2.41, 24.632)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_e6ieb"]
-_data = {
-&"RESET": SubResource("Animation_6ol7e"),
-&"up_down": SubResource("Animation_aw6p4")
-}
-
 [node name="Moss" type="Node3D" unique_id=229302118]
 script = ExtResource("layout_scroll")
 
 [node name="Egg" parent="." unique_id=2127545510 instance=ExtResource("9_bnvqn")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -4.590103, -1.8200959, 11.896428)
+visible = false
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true
@@ -1185,9 +1141,6 @@ cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
 skeleton = NodePath("../Boatmesh")
 
-[node name="MossVisualBoost" parent="." unique_id=420365207 instance=ExtResource("10_c5n8r")]
-visible = false
-
 [node name="AddedMesh" type="Node3D" parent="." unique_id=556421505]
 
 [node name="Moon" type="Sprite3D" parent="AddedMesh" unique_id=285724482]
@@ -1254,141 +1207,6 @@ material_override = ExtResource("7_aksgf")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_6ol7e")
 skeleton = NodePath("")
-
-[node name="WallPuzzleSetup" type="Node3D" parent="." unique_id=877850024]
-script = ExtResource("14_obp0s")
-knock_crosshair_distance = 40.0
-spawn_rock_on_hit = true
-
-[node name="TouchingWallWithCrosshair" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=1587768212]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.642, 20.14)
-visible = false
-light_color = Color(1, 0, 0, 1)
-light_energy = 20.0
-omni_range = 15.0
-omni_attenuation = 0.0
-
-[node name="Allgood" type="OmniLight3D" parent="WallPuzzleSetup" unique_id=494246532]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7756195, 1.642421, 20.14018)
-
-[node name="WallPuzzle" parent="WallPuzzleSetup" unique_id=223314719 instance=ExtResource("17_6ol7e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.13381, 8.066948, 24.631828)
-
-[node name="AnimationPlayer2" type="AnimationPlayer" parent="WallPuzzleSetup/WallPuzzle" unique_id=856418249]
-libraries/ = SubResource("AnimationLibrary_e6ieb")
-autoplay = &"up_down"
-speed_scale = 1.25
-
-[node name="WallPuzzleX" type="CSGCombiner3D" parent="WallPuzzleSetup" unique_id=1710731574]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 2.363, 24.75)
-use_collision = true
-
-[node name="WallPuzzle2" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX" unique_id=1724403144]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 5, -0.021998882, 6.4342394, -0.0021209717)
-use_collision = true
-size = Vector3(17.595, 1.3591309, 0.191)
-
-[node name="WallPuzzle3" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=809039645]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 9.161, -5.213, 0)
-use_collision = true
-size = Vector3(17.595, 0.71606445, 0.191)
-
-[node name="WallPuzzle6" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1834759514]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 8.362942, -10.499947, 0)
-use_collision = true
-size = Vector3(7.0211325, 1.5470581, 0.191)
-
-[node name="WallPuzzle5" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=542382116]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7568296, -0.089764595, 0)
-operation = 2
-use_collision = true
-size = Vector3(16.624914, 1.733, 0.856)
-
-[node name="WallPuzzle4" type="CSGBox3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1067585502]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -9.134092, -5.2130136, 0)
-use_collision = true
-size = Vector3(17.595, 0.71606445, 0.191)
-
-[node name="CSGSphere3D" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1335209420]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55.541348, -4.691353, 0)
-radial_segments = 16
-rings = 12
-smooth_faces = false
-
-[node name="CSGSphere3D2" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=341432589]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.019466, -3.6913528, 0)
-radius = 0.25
-radial_segments = 16
-rings = 12
-smooth_faces = false
-
-[node name="CSGSphere3D9" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1535580230]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.275, -6.357, 0)
-visible = false
-radius = 0.171
-radial_segments = 16
-rings = 12
-smooth_faces = false
-
-[node name="CSGSphere3D3" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1796831370]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.476227, -3.6913528, 0)
-radius = 0.25
-radial_segments = 16
-rings = 12
-smooth_faces = false
-
-[node name="CSGSphere3D4" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1828463530]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.940075, -4.691353, 0)
-radial_segments = 16
-rings = 12
-smooth_faces = false
-
-[node name="CSGSphere3D5" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1979776525]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55.541348, -8.043463, 0)
-radial_segments = 16
-rings = 12
-smooth_faces = false
-
-[node name="CSGSphere3D6" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=258713454]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.019466, -9.043463, 0)
-radius = 0.25
-radial_segments = 16
-rings = 12
-smooth_faces = false
-
-[node name="CSGSphere3D7" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1373006493]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.476227, -9.043463, 0)
-radius = 0.25
-radial_segments = 16
-rings = 12
-smooth_faces = false
-
-[node name="CSGSphere3D8" type="CSGSphere3D" parent="WallPuzzleSetup/WallPuzzleX/WallPuzzle2" unique_id=1028346731]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.940075, -8.043463, 0)
-radial_segments = 16
-rings = 12
-smooth_faces = false
-
-[node name="SFX" type="Node" parent="WallPuzzleSetup" unique_id=340847336]
-
-[node name="OverlappingWallHum" type="AudioStreamPlayer" parent="WallPuzzleSetup/SFX" unique_id=1879804477]
-stream = ExtResource("15_6ol7e")
-volume_db = 8.0
-pitch_scale = 0.8
-
-[node name="TurningLightOnOrOff" type="AudioStreamPlayer" parent="WallPuzzleSetup/SFX" unique_id=895695835]
-stream = ExtResource("16_aw6p4")
-volume_db = -35.0
-pitch_scale = 2.0
-bus = &"ReverbBus"
-
-[node name="Mechanical_crane_object" parent="WallPuzzleSetup" unique_id=767213718 instance=ExtResource("17_6ol7e")]
-transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 0.18, 300.812)
-
-[node name="CrateForCash" parent="." unique_id=1706272792 instance=ExtResource("14_aw6p4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.986, 9.239, 24.804583)
-mass = 50.0
-gravity_scale = 1.15
 
 [editable path="Boatmesh/FrontRotatingPillars/brick_fountain_2"]
 [editable path="Boatmesh/brick_fountain_4"]

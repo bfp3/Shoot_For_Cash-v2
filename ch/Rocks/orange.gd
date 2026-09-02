@@ -676,7 +676,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 
 	
 	if body is RockInstance:
-		if body.rock_type == body.RockSize.HAZARD or body.rock_type == body.RockSize.HAZARD_SMALL:
+		if body.rock_type == body.RockSize.HAZARD or body.rock_type == body.RockSize.HAZARD_SMALL or (body.has_method("is_stay_black") and body.is_stay_black()):
 			_neutralize_black_rock_from_orange(body)
 			return
 

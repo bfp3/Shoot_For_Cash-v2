@@ -1,6 +1,8 @@
 extends RigidBody3D
 class_name RockInstance
 
+const CARDINAL_BURST_SCENE := preload("res://ch/Rocks/cardinal_burst.tscn")
+
 @onready var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
 var _rocks_sfx: Node = null
 
@@ -67,6 +69,10 @@ enum RockSize {
 	RED_ATTACKER,
 	## Red-attacker look, 3× scale; arms hazardous after a short delay (crosshair overlap = strike).
 	GAP,
+	## Same flight as STAY, black hazard look. Shooting it strikes. Self-destructs in 3s.
+	STAY_BLACK,
+	## Same as STAY_BLACK, Cardinal mesh. Explode releases 4 cardinal energy bursts.
+	CARDINAL,
 }
 
 enum State {
@@ -100,6 +106,7 @@ var rock_has_been_logged := false
 @onready var blue_rock: MeshInstance3D = %blue_rock
 @onready var smokecan: MeshInstance3D = %Smokecan
 @onready var crate: MeshInstance3D = get_node_or_null("%Crate")
+@onready var cardinal_mesh: MeshInstance3D = get_node_or_null("%Cardinal")
 
 @onready var hazard_large: MeshInstance3D = %Hazard_large
 @onready var rock_red_attack_mode: GPUParticles3D = get_node_or_null("rock_red_attack_mode") as GPUParticles3D
@@ -217,6 +224,8 @@ var _destroy_on_crosshair_arm_token := 0
 @export var rock_stay_self_destruct := true
 ## Seconds after launch before an unshot rock-stay pops with $0.
 @export_range(0.5, 30.0, 0.1) var rock_stay_lifetime_sec := 3.0
+## rock-stay-black always pops after this many seconds (leave it, don't shoot).
+const ROCK_STAY_BLACK_LIFETIME_SEC := 3.0
 ## When true, lifetime expire counts as a miss strike.
 @export var rock_stay_expire_gives_strike := false
 ## Seconds before expire when the mesh starts shaking / swelling.
@@ -230,6 +239,14 @@ var _destroy_on_crosshair_arm_token := 0
 ## Near-zero damp so the launch torque keeps spinning.
 @export_range(0.0, 2.0, 0.01) var rock_stay_angular_damp := 0.05
 
+@export_group("rock-cardinal bursts")
+## How fast each energy burst flies after the parent explodes (world units / sec).
+@export_range(2.0, 80.0, 0.5) var cardinal_burst_speed := 16.0
+## Visual + collision size. Default matches rock-stay-black / this rock (0.625).
+@export_range(0.15, 2.0, 0.05) var cardinal_burst_size := 0.625
+## How long the four bursts stay in play before vanishing (no strike).
+@export_range(0.4, 12.0, 0.1) var cardinal_burst_lifetime_sec := 2.75
+
 ## Soft hang at aim after rock-stay brakes (like orange apex lock).
 var _stay_flight_active := false
 var _stay_locked := false
@@ -240,6 +257,19 @@ var _stay_burst_warn_elapsed := 0.0
 var _stay_burst_warn_duration := 1.0
 var _stay_mesh_base_scale := Vector3.ONE
 var _stay_mesh_base_pos := Vector3.ZERO
+var _cardinal_bursts_spawned := false
+
+
+func is_stay_flight() -> bool:
+	return rock_type == RockSize.STAY or is_stay_black()
+
+
+func is_stay_black() -> bool:
+	return rock_type == RockSize.STAY_BLACK or rock_type == RockSize.CARDINAL
+
+
+func is_cardinal() -> bool:
+	return rock_type == RockSize.CARDINAL
 
 # --- Rock Avoider (rock-avoider) ---------------------------------------------
 @export_group("Rock Avoider")
@@ -295,6 +325,9 @@ var _red_attacker_life_token := 0
 var _red_attacker_dash_target := Vector3.ZERO
 var _red_attacker_dash_dir := Vector3(0.0, -1.0, 0.0)
 var _red_attacker_dash_speed_current := 0.0
+## Scripted dash heading from `rock-red-attacker 1 a1 a8` (world XY). Empty = lock onto the crosshair.
+var _red_attacker_has_script_aim := false
+var _red_attacker_script_aim := Vector3.ZERO
 
 # --- Rock Gap (rock-gap / rock-red-gap) --------------------------------------
 @export_group("Rock Gap")
@@ -438,17 +471,17 @@ func _clear_rock_stay() -> void:
 
 func _start_rock_stay_lifetime() -> void:
 	_stay_life_token += 1
-	if not rock_stay_self_destruct:
+	if not rock_stay_self_destruct and not is_stay_black():
 		return
 	var token := _stay_life_token
-	var lifetime := maxf(rock_stay_lifetime_sec, 0.1)
+	var lifetime := ROCK_STAY_BLACK_LIFETIME_SEC if is_stay_black() else maxf(rock_stay_lifetime_sec, 0.1)
 	var warn_dur := clampf(rock_stay_burst_warn_sec, 0.0, lifetime)
 	var cruise := lifetime - warn_dur
 	if cruise > 0.0:
 		await get_tree().create_timer(cruise, false).timeout
 		if token != _stay_life_token:
 			return
-		if current_state != State.ACTIVE or rock_type != RockSize.STAY:
+		if current_state != State.ACTIVE or not is_stay_flight():
 			return
 		if not rock_activated or rock_destroyed:
 			return
@@ -457,7 +490,7 @@ func _start_rock_stay_lifetime() -> void:
 		await get_tree().create_timer(warn_dur, false).timeout
 		if token != _stay_life_token:
 			return
-		if current_state != State.ACTIVE or rock_type != RockSize.STAY:
+		if current_state != State.ACTIVE or not is_stay_flight():
 			return
 		if not rock_activated or rock_destroyed:
 			return
@@ -503,7 +536,7 @@ func _update_rock_stay_burst_warn(delta: float) -> void:
 ## Timed out without a shot — destroy smoke + hit sfx, no cash.
 ## Optional strike via `rock_stay_expire_gives_strike`.
 func _expire_rock_stay_lifetime() -> void:
-	if rock_type != RockSize.STAY:
+	if not is_stay_flight():
 		return
 	if current_state != State.ACTIVE or not rock_activated or rock_destroyed:
 		return
@@ -533,9 +566,11 @@ func _expire_rock_stay_lifetime() -> void:
 	smoke_particles()
 	_play_rocks_sfx("rock_hit_sound")
 
-	if rock_stay_expire_gives_strike:
+	if rock_stay_expire_gives_strike and not is_stay_black():
 		_set_strike_feedback_origin_here()
 		gl_PlayerState.add_strike()
+
+	_spawn_cardinal_bursts()
 
 	var tween := create_tween().set_ease(Tween.EASE_OUT)
 	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.12)
@@ -544,13 +579,50 @@ func _expire_rock_stay_lifetime() -> void:
 		enter_state(State.MISSED)
 
 
+func _spawn_cardinal_bursts() -> void:
+	if _cardinal_bursts_spawned:
+		return
+	if not is_cardinal():
+		return
+	_cardinal_bursts_spawned = true
+	var host := _cardinal_burst_host()
+	if host == null:
+		return
+	var origin := global_position
+	var dirs := [Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN]
+	var spawned: Array = []
+	for dir in dirs:
+		var burst = CARDINAL_BURST_SCENE.instantiate()
+		host.add_child(burst)
+		if burst.has_method("launch"):
+			burst.launch(origin, dir, cardinal_burst_speed, cardinal_burst_size, cardinal_burst_lifetime_sec)
+		spawned.append(burst)
+	for a in spawned:
+		if not is_instance_valid(a):
+			continue
+		a.add_collision_exception_with(self)
+		for b in spawned:
+			if a != b and is_instance_valid(b):
+				a.add_collision_exception_with(b)
+
+
+func _cardinal_burst_host() -> Node:
+	var rm := _find_rock_manager()
+	if rm and rm.has_method("get_cardinal_burst_host"):
+		return rm.get_cardinal_burst_host()
+	return get_parent()
+
+
 func _physics_process(delta: float) -> void:
 	if current_state == State.ACTIVE and rock_activated:
 		_update_orbit_bonus(delta)
 		_update_mesh_face_velocity()
-		if rock_type == RockSize.STAY:
+		if is_stay_flight():
 			_update_rock_stay(delta)
-			_update_destroy_on_crosshair_overlap()
+			if is_stay_black():
+				_update_hazard_crosshair_overlap()
+			else:
+				_update_destroy_on_crosshair_overlap()
 		elif rock_type == RockSize.AVOIDER:
 			## Always pin depth so collisions stay on the rock plane.
 			linear_velocity.z = 0.0
@@ -697,7 +769,7 @@ func update_active() -> void:
 	elif rock_type == RockSize.CHASER:
 		constant_force.x = 1.5
 		rotation_degrees = Vector3.ZERO
-	elif rock_type == RockSize.STAY:
+	elif is_stay_flight():
 		constant_force = Vector3.ZERO
 		rotation_degrees = Vector3.ZERO
 		gravity_scale = 0.0
@@ -741,7 +813,7 @@ func update_active() -> void:
 		linear_velocity.z = 0.0
 		gravity_scale = 0.0
 		_arm_mothership()
-	elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
+	elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black():
 		if _player_wants_overlap_destroy("hazards"):
 			_arm_hazard_crosshair()
 	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.STAY:
@@ -792,6 +864,8 @@ func round_end_check_rock_status() -> void:
 			if (
 				rock_type == RockSize.HAZARD
 				or rock_type == RockSize.HAZARD_SMALL
+				or rock_type == RockSize.STAY_BLACK
+				or rock_type == RockSize.CARDINAL
 				or rock_type == RockSize.SMOKECAN
 				or rock_type == RockSize.AVOIDER
 				or rock_type == RockSize.RED_ATTACKER
@@ -884,7 +958,7 @@ func update_gravity(_gravity_scale : float) -> void:
 		linear_damp = 0.0
 
 func _visual_meshes() -> Array:
-	return [small_rock, grey_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate]
+	return [small_rock, grey_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate, cardinal_mesh]
 
 
 func _cache_mesh_original_overrides() -> void:
@@ -939,6 +1013,9 @@ func setup_rock_type() -> void:
 	$Mesh.scale = Vector3.ONE
 	
 	$Mesh/Crate/CrateAnimplayer.stop()
+	var cardinal_anim := get_node_or_null("Mesh/Cardinal/CrateAnimplayer") as AnimationPlayer
+	if cardinal_anim:
+		cardinal_anim.stop()
 	
 	match rock_type:
 		# 0
@@ -1040,7 +1117,6 @@ func setup_rock_type() -> void:
 			current_mesh.scale  = Vector3.ONE * 1.5 #* 0.399
 			max_health = health
 			rock_type_gravity_scale = 0.1
-			gl_PlayerState.log_hazard()
 			linear_damp = 1.0
 
 			
@@ -1241,6 +1317,53 @@ func setup_rock_type() -> void:
 			if current_mesh.has_node("GoldParticles"):
 				current_particles = current_mesh.get_node("GoldParticles")
 				current_particles.emitting = true
+
+		RockSize.STAY_BLACK:
+			## Same hang-flight as rock-stay; black hazard mesh. Shoot = strike. Pops in 3s.
+			current_rock_type = "Rock Stay Black"
+			rock_type_name = "hazard_type_1"
+			health = 1
+			cash_value = 0
+			max_health = health
+			hazard_large.visible = true
+			current_mesh = hazard_large
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = Vector3.ONE * 0.625
+			main_col.scale = Vector3.ONE * 0.2
+			rock_type_gravity_scale = 0.0
+			gravity_scale = 0.0
+			linear_damp = 0.0
+			angular_damp = rock_stay_angular_damp
+			force_mult.clear()
+			force_mult = [4]
+			force_mult_index = 0
+			current_particles = null
+
+		RockSize.CARDINAL:
+			## Same hang-flight as rock-stay-black; Cardinal mesh. Explode fires 4 bursts.
+			current_rock_type = "Rock Cardinal"
+			rock_type_name = "hazard_type_1"
+			health = 1
+			cash_value = 0
+			max_health = health
+			if cardinal_mesh:
+				cardinal_mesh.visible = true
+				current_mesh = cardinal_mesh
+			else:
+				hazard_large.visible = true
+				current_mesh = hazard_large
+				assign_random_mesh(current_mesh)
+			current_mesh.scale = Vector3.ONE * cardinal_burst_size
+			main_col.scale = Vector3.ONE * (0.2 * (cardinal_burst_size / 0.625))
+			rock_type_gravity_scale = 0.0
+			gravity_scale = 0.0
+			linear_damp = 0.0
+			angular_damp = rock_stay_angular_damp
+			force_mult.clear()
+			force_mult = [4]
+			force_mult_index = 0
+			current_particles = null
+			_cardinal_bursts_spawned = false
 				
 		RockSize.GREY:
 			current_rock_type = "Grey Rock"
@@ -1292,6 +1415,8 @@ func setup_rock_type() -> void:
 			_red_attacker_locking = false
 			_red_attacker_saw_ascent = false
 			_red_attacker_dash_speed_current = 0.0
+			_red_attacker_has_script_aim = false
+			_red_attacker_script_aim = Vector3.ZERO
 			_avoider_plane_z = avoider_lock_z
 			global_position.z = _avoider_plane_z
 			_set_red_attack_mesh_particles(false)
@@ -1379,6 +1504,8 @@ func reset_stats() -> void:
 	_red_attacker_locking = false
 	_red_attacker_arm_token += 1
 	_red_attacker_life_token += 1
+	_red_attacker_has_script_aim = false
+	_red_attacker_script_aim = Vector3.ZERO
 	_gap_armed = false
 	_gap_arm_token += 1
 	_gap_life_token += 1
@@ -1388,6 +1515,7 @@ func reset_stats() -> void:
 	_chaser_locked = false
 	_chaser_lock_spin_applied = false
 	_stay_life_token += 1
+	_cardinal_bursts_spawned = false
 	can_sleep = true
 	$Mesh.scale = Vector3.ONE
 	$Mesh.position = Vector3.ZERO
@@ -1583,7 +1711,7 @@ func apply_aoe_freeze(duration: float = 1.0) -> void:
 	elif rock_type == RockSize.GAP:
 		_gap_life_token += 1
 		_gap_arm_token += 1
-	elif rock_type == RockSize.STAY:
+	elif is_stay_flight():
 		_stay_life_token += 1
 		_stop_rock_stay_burst_warn(true)
 		if current_mesh != null and is_instance_valid(current_mesh):
@@ -1612,7 +1740,7 @@ func apply_aoe_freeze(duration: float = 1.0) -> void:
 	elif rock_type == RockSize.GAP and rock_activated and current_state == State.ACTIVE:
 		_start_gap_lifetime()
 		_arm_gap_hazard()
-	elif rock_type == RockSize.STAY and rock_activated and current_state == State.ACTIVE:
+	elif is_stay_flight() and rock_activated and current_state == State.ACTIVE:
 		_start_rock_stay_lifetime()
 
 
@@ -1648,6 +1776,9 @@ func shake_camera() -> void:
 		RockSize.STAY:
 			if player_cam.has_method("shake_camera_rock_stay"):
 				player_cam.shake_camera_rock_stay()
+		RockSize.STAY_BLACK, RockSize.CARDINAL:
+			if player_cam.has_method("shake_camera_rock_hazard"):
+				player_cam.shake_camera_rock_hazard()
 		RockSize.GREY:
 			if player_cam.has_method("shake_camera_rock_grey"):
 				player_cam.shake_camera_rock_grey()
@@ -1866,7 +1997,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 		
 	#Rock Destroyed Process
 	
-	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
+	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black():
 		## Strike immediately on a direct shot — don't wait for the explode delay.
 		_apply_direct_hazard_strike()
 
@@ -1933,6 +2064,7 @@ func start_destroyed_process() -> void:
 	_shutdown_threat_fx()
 	%RedParticles.emitting = false
 	rock_activated = false
+	_spawn_cardinal_bursts()
 	var rm := _find_rock_manager()
 	if rm and rm.has_method("notify_clearable_destroyed"):
 		rm.notify_clearable_destroyed()
@@ -1944,7 +2076,7 @@ func start_destroyed_process() -> void:
 	#if player_has_marked_rock == false:
 	expand_blast_radius()
 	enter_state(State.HIT)
-	var destroyed_as_hazard := rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL
+	var destroyed_as_hazard := rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black()
 	
 	if rock_type == RockSize.SMALL || rock_type == RockSize.STAY:
 		_play_rocks_sfx("rock_flicker_sfx")
@@ -2098,6 +2230,9 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 	#if rock_destroyed:
 		#return
 
+	if body != null and body.is_in_group("cardinal_burst"):
+		return
+
 	# PUSH ROCKS AWAY IN BLAST
 	if player_has_marked_rock == false:
 		if body is RigidBody3D:
@@ -2243,7 +2378,7 @@ func smoke_particles() -> void:
 func _try_apply_hazard_smoke_blur() -> void:
 	if not hazard_smoke_blurs_camera:
 		return
-	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL:
+	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL and not is_stay_black():
 		return
 	var player_cam = get_tree().get_first_node_in_group("player_cam")
 	if player_cam and player_cam.has_method("apply_hazard_smoke_blur"):
@@ -2363,7 +2498,7 @@ func _arm_hazard_crosshair() -> void:
 		return
 	if current_state != State.ACTIVE:
 		return
-	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL:
+	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL and not is_stay_black():
 		return
 	if not _player_wants_overlap_destroy("hazards"):
 		return
@@ -2383,7 +2518,7 @@ func _update_hazard_crosshair_overlap() -> void:
 func _trigger_hazard_crosshair_contact() -> void:
 	if not _player_wants_overlap_destroy("hazards"):
 		return
-	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL:
+	if rock_type != RockSize.HAZARD and rock_type != RockSize.HAZARD_SMALL and not is_stay_black():
 		return
 	if _orange_neutralized_hazard:
 		return
@@ -2646,6 +2781,11 @@ func _expire_red_attacker_lifetime() -> void:
 		enter_state(State.MISSED)
 
 
+func set_red_attacker_dash_aim(world_pos: Vector3) -> void:
+	_red_attacker_has_script_aim = true
+	_red_attacker_script_aim = world_pos
+
+
 func _begin_red_attacker_dash() -> void:
 	if _red_attacker_dashing or _red_attacker_locking or not rock_activated:
 		return
@@ -2656,7 +2796,14 @@ func _begin_red_attacker_dash() -> void:
 	gravity_scale = 0.0
 
 	var aim_xy := _crosshair_world_xy_at_depth(_avoider_plane_z)
-	_red_attacker_dash_target = Vector3(aim_xy.x, aim_xy.y, _avoider_plane_z)
+	if _red_attacker_has_script_aim:
+		_red_attacker_dash_target = Vector3(
+			_red_attacker_script_aim.x,
+			_red_attacker_script_aim.y,
+			_avoider_plane_z
+		)
+	else:
+		_red_attacker_dash_target = Vector3(aim_xy.x, aim_xy.y, _avoider_plane_z)
 
 	_play_rocks_sfx(red_attacker_lock_sfx)
 	_activate_threat_mode()
@@ -2674,7 +2821,7 @@ func _begin_red_attacker_dash() -> void:
 	linear_damp = 0.0
 	angular_damp = 0.05
 	constant_force = Vector3.ZERO
-	## Crosshair lock only sets the heading — keep flying past that point in a straight line.
+	## Crosshair / scripted cell only sets the heading — keep flying past that point in a straight line.
 	var to_target := _red_attacker_dash_target - global_position
 	to_target.z = 0.0
 	_red_attacker_dash_dir = to_target.normalized() if to_target.length_squared() > 0.0001 else Vector3(0.0, -1.0, 0.0)
