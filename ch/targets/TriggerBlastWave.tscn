@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://ch/targets/trigger_blast_wave.gd" id="1_blast"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_blast"]
+height = 1.0
+radius = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_blast"]
+transparency = 1
+albedo_color = Color(1, 0.75, 0.2, 0.35)
+emission_enabled = true
+emission = Color(1, 0.55, 0.1, 1)
+emission_energy_multiplier = 1.5
+shading_mode = 0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_blast"]
+top_radius = 0.5
+bottom_radius = 0.5
+height = 1.0
+radial_segments = 24
+
+[node name="TriggerBlastWave" type="Area3D"]
+collision_layer = 0
+collision_mask = 2147483647
+monitoring = true
+monitorable = false
+script = ExtResource("1_blast")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CylinderShape3D_blast")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_blast")
+mesh = SubResource("CylinderMesh_blast")

@@ -4,22 +4,7 @@
 [ext_resource type="Shader" uid="uid://cmlqla52b8rko" path="res://res/Shaders/vector_wireframe.gdshader" id="2_r3y2n"]
 [ext_resource type="Script" uid="uid://ddme36qr2t6fn" path="res://res/Shaders/vector_wireframe.gd" id="2_wire"]
 [ext_resource type="Shader" uid="uid://d0dm73yo3u4k6" path="res://res/Shaders/vector_crt.gdshader" id="3_crt"]
-
-[sub_resource type="Environment" id="Environment_wire"]
-background_mode = 1
-background_color = Color(0.015686275, 0.039215688, 0.11764706, 1)
-ambient_light_source = 1
-ambient_light_color = Color(0.050980393, 0.078431375, 0.14117648, 1)
-ambient_light_energy = 0.0
-tonemap_mode = 4
-glow_enabled = true
-glow_intensity = 0.5
-glow_bloom = 0.1
-glow_blend_mode = 0
-adjustment_enabled = true
-adjustment_brightness = 1.1
-adjustment_contrast = 1.1
-adjustment_saturation = 1.1
+[ext_resource type="Environment" uid="uid://ccreccpde57d" path="res://res/wireframe_glow_effect.tres" id="4_env"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_eneci"]
 render_priority = 0
@@ -27,7 +12,7 @@ shader = ExtResource("2_r3y2n")
 shader_parameter/face_color = Color(0, 0, 0, 1)
 shader_parameter/edge_color = Color(1, 0.72, 0.28, 1)
 shader_parameter/edge_thickness = 1.0
-shader_parameter/glow_amount = 0.0
+shader_parameter/glow_amount = 2.0
 shader_parameter/edge_softness = 0.1
 
 [sub_resource type="BoxMesh" id="BoxMesh_cube"]
@@ -39,7 +24,7 @@ shader = ExtResource("2_r3y2n")
 shader_parameter/face_color = Color(0.0627, 0.16516498, 0.33, 1)
 shader_parameter/edge_color = Color(1, 0.72, 0.28, 1)
 shader_parameter/edge_thickness = 0.4
-shader_parameter/glow_amount = 0.0
+shader_parameter/glow_amount = 2.0
 shader_parameter/edge_softness = 4.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_tower"]
@@ -51,7 +36,7 @@ shader = ExtResource("2_r3y2n")
 shader_parameter/face_color = Color(0, 0, 0, 1)
 shader_parameter/edge_color = Color(0.36372238, 0.46112728, 1.8247963, 1)
 shader_parameter/edge_thickness = 1.0
-shader_parameter/glow_amount = 0.0
+shader_parameter/glow_amount = 2.0
 shader_parameter/edge_softness = 0.1
 
 [sub_resource type="PrismMesh" id="PrismMesh_peak"]
@@ -63,7 +48,7 @@ shader = ExtResource("2_r3y2n")
 shader_parameter/face_color = Color(0, 0, 0, 1)
 shader_parameter/edge_color = Color(0.55, 0.72, 0.95, 1)
 shader_parameter/edge_thickness = 0.4
-shader_parameter/glow_amount = 0.0
+shader_parameter/glow_amount = 2.0
 shader_parameter/edge_softness = 4.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
@@ -90,7 +75,7 @@ shader_parameter/phosphor_tint = Color(1, 1, 1, 1)
 script = ExtResource("1_scene")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1046259707]
-environment = SubResource("Environment_wire")
+environment = ExtResource("4_env")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=861406820]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 2.4, 5.5)
@@ -108,7 +93,7 @@ script = ExtResource("2_wire")
 source_mesh = SubResource("BoxMesh_cube")
 face_color = Color(0, 0, 0, 1)
 edge_thickness = 1.0
-glow_amount = 0.0
+glow_amount = 2.0
 edge_softness = 0.1
 
 [node name="Tower" type="MeshInstance3D" parent="Meshes" unique_id=2143470111]
@@ -120,7 +105,7 @@ script = ExtResource("2_wire")
 source_mesh = SubResource("BoxMesh_tower")
 face_color = Color(0.0627, 0.16516498, 0.33, 1)
 edge_thickness = 0.4
-glow_amount = 0.0
+glow_amount = 2.0
 edge_softness = 4.0
 crease_angle_degrees = 80.0
 
@@ -134,7 +119,7 @@ source_mesh = SubResource("PrismMesh_peak")
 face_color = Color(0, 0, 0, 1)
 edge_color = Color(0.36372238, 0.46112728, 1.8247963, 1)
 edge_thickness = 1.0
-glow_amount = 0.0
+glow_amount = 2.0
 edge_softness = 0.1
 
 [node name="Ground" type="MeshInstance3D" parent="Meshes" unique_id=1204215137]
@@ -147,7 +132,7 @@ source_mesh = SubResource("BoxMesh_ground")
 face_color = Color(0, 0, 0, 1)
 edge_color = Color(0.55, 0.72, 0.95, 1)
 edge_thickness = 0.4
-glow_amount = 0.0
+glow_amount = 2.0
 edge_softness = 4.0
 crease_angle_degrees = 80.0
 

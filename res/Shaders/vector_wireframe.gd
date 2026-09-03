@@ -7,7 +7,9 @@ class_name VectorWireframeMesh
 ## Internal triangle diagonals are hidden using a crease-angle test.
 
 const WIRE_SHADER: Shader = preload("res://res/Shaders/vector_wireframe.gdshader")
+const WIRE_SHADER_TRANSPARENT: Shader = preload("res://res/Shaders/vector_wireframe_transparent.gdshader")
 const POINT_SCALE := 1000.0
+const FACE_ALPHA_OPAQUE := 0.999
 
 @export var source_mesh: Mesh:
 	set(value):
@@ -29,12 +31,12 @@ const POINT_SCALE := 1000.0
 		edge_color = value
 		_apply_params()
 
-@export_range(0.0, 12.0, 0.1, "or_greater") var edge_thickness := 1.8:
+@export_range(0.0, 60.0, 0.1, "or_greater") var edge_thickness := 1.8:
 	set(value):
 		edge_thickness = value
 		_apply_params()
 
-@export_range(0.0, 12.0, 0.1) var glow_amount := 2.5:
+@export_range(0.0, 60.0, 0.1) var glow_amount := 60.0:
 	set(value):
 		glow_amount = value
 		_apply_params()
@@ -48,6 +50,37 @@ const POINT_SCALE := 1000.0
 	set(value):
 		crease_angle_degrees = value
 		_rebuild()
+
+@export_group("Line Gaps")
+@export_range(0.0, 1.0, 0.01) var line_gap_amount := 0.85:
+	set(value):
+		line_gap_amount = value
+		_apply_params()
+
+@export_range(1.0, 24.0, 0.1) var line_gap_spacing := 4.0:
+	set(value):
+		line_gap_spacing = value
+		_apply_params()
+
+@export_range(0.0, 12.0, 0.05) var line_gap_size := 1.4:
+	set(value):
+		line_gap_size = value
+		_apply_params()
+
+@export_range(0.0, 4.0, 0.05) var line_gap_softness := 0.55:
+	set(value):
+		line_gap_softness = value
+		_apply_params()
+
+@export_range(0.0, 180.0, 1.0) var line_gap_angle := 0.0:
+	set(value):
+		line_gap_angle = value
+		_apply_params()
+
+@export_range(0.0, 1.0, 0.01) var line_gap_offset := 0.0:
+	set(value):
+		line_gap_offset = value
+		_apply_params()
 
 var _mat: ShaderMaterial
 var _wire_mesh: ArrayMesh
@@ -83,11 +116,20 @@ func _disconnect_source() -> void:
 func _apply_params() -> void:
 	if _mat == null:
 		return
+	var wanted: Shader = WIRE_SHADER_TRANSPARENT if face_color.a < FACE_ALPHA_OPAQUE else WIRE_SHADER
+	if _mat.shader != wanted:
+		_mat.shader = wanted
 	_mat.set_shader_parameter("face_color", face_color)
 	_mat.set_shader_parameter("edge_color", edge_color)
 	_mat.set_shader_parameter("edge_thickness", edge_thickness)
 	_mat.set_shader_parameter("glow_amount", glow_amount)
 	_mat.set_shader_parameter("edge_softness", edge_softness)
+	_mat.set_shader_parameter("line_gap_amount", line_gap_amount)
+	_mat.set_shader_parameter("line_gap_spacing", line_gap_spacing)
+	_mat.set_shader_parameter("line_gap_size", line_gap_size)
+	_mat.set_shader_parameter("line_gap_softness", line_gap_softness)
+	_mat.set_shader_parameter("line_gap_angle", line_gap_angle)
+	_mat.set_shader_parameter("line_gap_offset", line_gap_offset)
 
 
 func _rebuild() -> void:

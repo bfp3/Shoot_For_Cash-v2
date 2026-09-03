@@ -28,6 +28,7 @@
 [ext_resource type="AudioStream" uid="uid://bbw3ygb8vgyrj" path="res://sfx/ninja_flicker.ogg" id="23_1i2h1"]
 [ext_resource type="PackedScene" uid="uid://bowsa0qmgtgxx" path="res://ch/Player.tscn" id="23_ellt3"]
 [ext_resource type="AudioStream" uid="uid://b8jsfrc6gqwd" path="res://sfx/3rdInt.ogg" id="23_gf2tl"]
+[ext_resource type="PackedScene" path="res://ch/targets/TriggerPoint.tscn" id="23_triggerpt"]
 [ext_resource type="Script" uid="uid://cbcv8383lu5sl" path="res://ch/splash_zone.gd" id="24_dse8t"]
 [ext_resource type="AudioStream" uid="uid://byhyspj0ng0gr" path="res://sfx/4thInt.ogg" id="24_wtxnc"]
 [ext_resource type="Texture2D" uid="uid://dmi0jvftnf3jf" path="res://res/textures_2D/White_Circle.svg.png" id="25_ibr3v"]
@@ -315,7 +316,7 @@ size = Vector3(50, 0.1, 0.1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ufvrt"]
 shader = ExtResource("79_fjxa8")
-shader_parameter/warp_amount = 0.0
+shader_parameter/warp_amount = 0.0850000040375
 shader_parameter/aberration = 0.0010000000475
 shader_parameter/scanline_count = 300.00001045
 shader_parameter/scanline_opacity = 0.10000000475
@@ -323,14 +324,12 @@ shader_parameter/grille_opacity = 0.0
 shader_parameter/bloom_amount = 0.0
 shader_parameter/bloom_spread = 0.02999999932945
 shader_parameter/bloom_threshold = 0.12
-shader_parameter/brightness = 1.1580000312549998
-shader_parameter/vignette_intensity = 0.0
+shader_parameter/brightness = 1.40800004313
+shader_parameter/vignette_intensity = 0.3950000187625
 shader_parameter/corner_radius = 0.0
 shader_parameter/grain_amount = 0.0
 shader_parameter/flicker_amount = 0.0
 shader_parameter/phosphor_tint = Color(1, 0.96, 0.88, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_fjxa8"]
 
 [node name="Scene-101" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "round_timer", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
@@ -1765,7 +1764,6 @@ disabled = true
 
 [node name="CRTOverlay" type="CanvasLayer" parent="." unique_id=1845980939]
 layer = 4096
-visible = false
 
 [node name="CRT" type="ColorRect" parent="CRTOverlay" unique_id=2106409939]
 material = SubResource("ShaderMaterial_ufvrt")
@@ -1777,40 +1775,49 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="TriggerPoints" type="Node3D" parent="." unique_id=1577435896]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.9847338, 20.15758)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.985, 19.418)
 top_level = true
+visible = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="TriggerPoints" unique_id=2081997859]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
-mesh = SubResource("BoxMesh_fjxa8")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="TriggerPoints" unique_id=9572540]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
-mesh = SubResource("BoxMesh_fjxa8")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="TriggerPoints" unique_id=1176069860]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
-mesh = SubResource("BoxMesh_fjxa8")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="TriggerPoints" unique_id=58105723]
+[node name="TriggerPoint" parent="TriggerPoints" unique_id=2081997859 instance=ExtResource("23_triggerpt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
-mesh = SubResource("BoxMesh_fjxa8")
+blast_speed = 20.0
+cooldown_sec = 0.5
 
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="TriggerPoints" unique_id=1124969985]
+[node name="TriggerPoint2" parent="TriggerPoints" unique_id=9572540 instance=ExtResource("23_triggerpt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+blast_speed = 20.0
+cooldown_sec = 0.5
+
+[node name="TriggerPoint3" parent="TriggerPoints" unique_id=1176069860 instance=ExtResource("23_triggerpt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+blast_speed = 20.0
+cooldown_sec = 0.5
+
+[node name="TriggerPoint4" parent="TriggerPoints" unique_id=58105723 instance=ExtResource("23_triggerpt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+blast_speed = 20.0
+cooldown_sec = 0.5
+
+[node name="TriggerPoint5" parent="TriggerPoints" unique_id=1124969985 instance=ExtResource("23_triggerpt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
-mesh = SubResource("BoxMesh_fjxa8")
+blast_speed = 20.0
+cooldown_sec = 0.5
 
-[node name="MeshInstance3D6" type="MeshInstance3D" parent="TriggerPoints" unique_id=35723807]
+[node name="TriggerPoint6" parent="TriggerPoints" unique_id=35723807 instance=ExtResource("23_triggerpt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
-mesh = SubResource("BoxMesh_fjxa8")
+blast_speed = 20.0
+cooldown_sec = 0.5
 
-[node name="MeshInstance3D7" type="MeshInstance3D" parent="TriggerPoints" unique_id=792726320]
+[node name="TriggerPoint7" parent="TriggerPoints" unique_id=792726320 instance=ExtResource("23_triggerpt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
-mesh = SubResource("BoxMesh_fjxa8")
+blast_speed = 20.0
+cooldown_sec = 0.5
 
-[node name="MeshInstance3D8" type="MeshInstance3D" parent="TriggerPoints" unique_id=629961782]
+[node name="TriggerPoint8" parent="TriggerPoints" unique_id=629961782 instance=ExtResource("23_triggerpt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
-mesh = SubResource("BoxMesh_fjxa8")
+blast_speed = 20.0
+cooldown_sec = 0.5
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]

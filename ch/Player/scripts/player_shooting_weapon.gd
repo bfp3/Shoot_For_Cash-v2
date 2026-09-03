@@ -132,6 +132,9 @@ func _collect_targets_in_scope(screen_center: Variant, circle_radius: float, rep
 		if target.visible == false:
 			continue
 
+		if target.has_method("can_accept_shot") and not bool(target.can_accept_shot()):
+			continue
+
 		var aim_pos: Vector3 = _target_aim_position(target)
 		if predict_sec > 0.0:
 			aim_pos = _predict_aim_position(target, predict_sec)
@@ -398,8 +401,8 @@ func shoot_target() -> void:
 		if targets.is_empty() and generous_amount and generous_check_duration > 0.0:
 			targets = await _poll_generous_scope_targets(aim_center)
 
-	# If a special mid-round target is the closest aim, only shoot that — don't multi-hit rocks.
-	if not targets.is_empty() and _is_special_midround_target(targets[0].target):
+	# If a special / trigger pad is the closest aim, only shoot that — don't multi-hit rocks.
+	if not targets.is_empty() and _is_solo_aim_target(targets[0].target):
 		targets = [targets[0]]
 
 	var rock_count := 0
@@ -557,10 +560,21 @@ func _is_special_midround_target(target: Node) -> bool:
 	return target.is_in_group("early_exit_target") or target.is_in_group("ammo_reload_target") or target.is_in_group("ammo_balloon") or target.is_in_group("checkpoint")
 
 
+func _is_trigger_point(target: Node) -> bool:
+	if target == null or not is_instance_valid(target):
+		return false
+	return target.is_in_group("trigger_point")
+
+
+## Closest-aim exclusivity (specials + trigger pads). Ammo-free is only `_is_special_midround_target`.
+func _is_solo_aim_target(target: Node) -> bool:
+	return _is_special_midround_target(target) or _is_trigger_point(target)
+
+
 func _counts_for_multishot(target: Node) -> bool:
 	if target == null or not is_instance_valid(target):
 		return false
-	if _is_special_midround_target(target):
+	if _is_solo_aim_target(target):
 		return false
 	if target is RockInstance:
 		return true
