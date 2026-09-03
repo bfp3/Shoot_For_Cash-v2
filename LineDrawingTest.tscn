@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://73qx7l2ljow"]
+
+[ext_resource type="Shader" uid="uid://d0dm73yo3u4k6" path="res://res/Shaders/vector_crt.gdshader" id="1_crt"]
+[ext_resource type="Script" uid="uid://ch1flsh23we5l" path="res://unfiled/Circle_polygon/circle_polygon.gd" id="2_k2425"]
+
+[sub_resource type="Curve2D" id="Curve2D_7i8yo"]
+_data = {
+"points": PackedVector2Array(-81.818184, -131.36363, 81.818184, 131.36363, -295, 376, -12, 37, 12, -37, 245, 371, 90, 5, -90, -5, 134, 278, 0, 0, 0, 0, 25, 326, 158.9, -0.9000015, -158.9, 0.9000015, -122, 141, 0, 0, 0, 0, -295, 376)
+}
+point_count = 6
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("1_crt")
+shader_parameter/warp_amount = 0.0
+shader_parameter/aberration = 0.0010000000475
+shader_parameter/scanline_count = 300.00001045
+shader_parameter/scanline_opacity = 0.400000019
+shader_parameter/grille_opacity = 0.0
+shader_parameter/bloom_amount = 0.0
+shader_parameter/bloom_spread = 0.02999999932945
+shader_parameter/bloom_threshold = 0.12
+shader_parameter/brightness = 1.4950000472625
+shader_parameter/vignette_intensity = 0.0
+shader_parameter/corner_radius = 0.0
+shader_parameter/grain_amount = 0.20000000298023
+shader_parameter/flicker_amount = 0.018
+shader_parameter/phosphor_tint = Color(0.39999986, 1, 0, 1)
+
+[node name="Node2D" type="Node2D" unique_id=79367423]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=650911855]
+position = Vector2(-24, 252)
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=1411028176]
+polygon = PackedVector2Array(-290.415, 372, 243.317, 372, 118, 252, 26.367, 322, -124.733, 132)
+uv = PackedVector2Array(-294.17108, 364.127, 239.56, 360.13403, 103.79791, 223.04102, 34.585938, 276.281, -163.7331, 121.885)
+vertex_colors = PackedColorArray(1, 0, 0, 1, 0.5803922, 0.003921569, 0.015686275, 1, 1, 0, 0.7833333, 1, 0.5803922, 0.003921569, 0.015686275, 1, 0.5803922, 0.003921569, 0.015686275, 1)
+
+[node name="Path2D" type="Path2D" parent="." unique_id=1270563216]
+visible = false
+curve = SubResource("Curve2D_7i8yo")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=756048263]
+z_index = -2
+offset_left = -379.0
+offset_top = -24.0
+offset_right = 354.0
+offset_bottom = 557.0
+color = Color(0.015686275, 0.039215688, 0.11764706, 1)
+
+[node name="CRTOverlay" type="CanvasLayer" parent="." unique_id=1236855742]
+layer = 10
+
+[node name="CRT" type="ColorRect" parent="CRTOverlay" unique_id=1761211926]
+material = SubResource("ShaderMaterial_crt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Polygon2D2" type="Polygon2D" parent="." unique_id=14824910]
+visible = false
+position = Vector2(-646.58496, 202)
+polygon = PackedVector2Array(-290.415, 372, 243.317, 372, 118, 252, 26.367, 322, -124.733, 132)
+uv = PackedVector2Array(-294.17108, 364.127, 239.56, 360.13403, 103.79791, 223.04102, 34.585938, 276.281, -163.7331, 121.885)
+vertex_colors = PackedColorArray(1, 0, 0, 1, 0.5803922, 0.003921569, 0.015686275, 1, 1, 0, 0.7833333, 1, 0.5803922, 0.003921569, 0.015686275, 1, 0.5803922, 0.003921569, 0.015686275, 1)
+
+[node name="Polygon2D3" type="Polygon2D" parent="." unique_id=951797531]
+visible = false
+position = Vector2(636, -78)
+scale = Vector2(-1, 1)
+polygon = PackedVector2Array(-290.415, 372, 243.317, 372, 118, 252, 26.367, 322, -124.733, 132)
+uv = PackedVector2Array(-294.17108, 364.127, 239.56, 360.13403, 103.79791, 223.04102, 34.585938, 276.281, -163.7331, 121.885)
+vertex_colors = PackedColorArray(1, 0, 0, 1, 0.5803922, 0.003921569, 0.015686275, 1, 1, 0, 0.7833333, 1, 0.5803922, 0.003921569, 0.015686275, 1, 0.5803922, 0.003921569, 0.015686275, 1)
+
+[node name="Circle_polygon" type="Polygon2D" parent="." unique_id=1521506550]
+position = Vector2(68, 152)
+antialiased = true
+invert_border = 5.0
+polygon = PackedVector2Array(3.0615159e-15, -50, 15.4508505, -47.552826, 29.389263, -40.45085, 40.45085, -29.389263, 47.552826, -15.4508505, 50, 0, 47.552826, 15.4508505, 40.45085, 29.389263, 29.389263, 40.45085, 15.4508505, 47.552826, 3.0615159e-15, 50, -15.4508505, 47.552826, -29.389263, 40.45085, -40.45085, 29.389263, -47.552826, 15.4508505, -50, 6.1230318e-15, -47.552826, -15.4508505, -40.45085, -29.389263, -29.389263, -40.45085, -15.4508505, -47.552826, -9.184548e-15, -50, -9.000857e-15, -49, -15.141833, -46.601772, -28.801477, -39.641834, -39.641834, -28.801477, -46.601772, -15.141833, -49, 6.000571e-15, -46.601772, 15.141833, -39.641834, 28.801477, -28.801477, 39.641834, -15.141833, 46.601772, 3.0002856e-15, 49, 15.141833, 46.601772, 28.801477, 39.641834, 39.641834, 28.801477, 46.601772, 15.141833, 49, 0, 46.601772, -15.141833, 39.641834, -28.801477, 28.801477, -39.641834, 15.141833, -46.601772, 3.0002856e-15, -49)
+uv = PackedVector2Array(0, 14.675)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+script = ExtResource("2_k2425")
+radius = 50
+thickness = 1
+segments = 20

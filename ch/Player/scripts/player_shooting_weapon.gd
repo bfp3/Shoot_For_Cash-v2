@@ -77,6 +77,46 @@ func set_active_bullet_scene(scene: PackedScene) -> void:
 
 
 func get_targets_in_scope(screen_center: Variant = null, circle_radius: float = -1.0, report_blocked_los: bool = true) -> Array:
+	return _collect_targets_in_scope(screen_center, circle_radius, report_blocked_los, 0.0)
+
+
+## Same as hitscan scope, but aims at where each target will be after `predict_sec` (gun5 lead shot).
+func get_targets_in_scope_predicted(screen_center: Variant = null, predict_sec: float = 0.3, circle_radius: float = -1.0, report_blocked_los: bool = true) -> Array:
+	return _collect_targets_in_scope(screen_center, circle_radius, report_blocked_los, maxf(predict_sec, 0.0))
+
+
+## Gun5: hit if the target is under the reticle at any sample within ± half of `window_sec` around `predict_sec`.
+func get_targets_in_scope_predicted_window(screen_center: Variant = null, predict_sec: float = 0.3, window_sec: float = 0.1, circle_radius: float = -1.0, report_blocked_los: bool = true) -> Array:
+	var lead := maxf(predict_sec, 0.0)
+	var half := maxf(window_sec, 0.0) * 0.5
+	if half <= 0.0001:
+		return _collect_targets_in_scope(screen_center, circle_radius, report_blocked_los, lead)
+	var sample_times: Array[float] = [
+		maxf(lead - half, 0.0),
+		maxf(lead - half * 0.5, 0.0),
+		lead,
+		lead + half * 0.5,
+		lead + half,
+	]
+	var best_by_target: Dictionary = {}
+	for t_sec in sample_times:
+		var batch := _collect_targets_in_scope(screen_center, circle_radius, report_blocked_los and t_sec == lead, t_sec)
+		for entry in batch:
+			var target = entry.get("target")
+			if target == null or not is_instance_valid(target):
+				continue
+			var id = target.get_instance_id()
+			var dist := float(entry.get("distance", INF))
+			if not best_by_target.has(id) or dist < float(best_by_target[id].get("distance", INF)):
+				best_by_target[id] = entry
+	var out: Array = best_by_target.values()
+	out.sort_custom(func(a, b):
+		return a.distance < b.distance
+	)
+	return out
+
+
+func _collect_targets_in_scope(screen_center: Variant, circle_radius: float, report_blocked_los: bool, predict_sec: float) -> Array:
 	var max_check_distance := view_limit
 	var targets_in_scope: Array = []
 	var aim_center: Vector2 = crosshair.global_position if screen_center == null else screen_center
@@ -93,6 +133,8 @@ func get_targets_in_scope(screen_center: Variant = null, circle_radius: float = 
 			continue
 
 		var aim_pos: Vector3 = _target_aim_position(target)
+		if predict_sec > 0.0:
+			aim_pos = _predict_aim_position(target, predict_sec)
 
 		if stable_camera.is_position_behind(aim_pos):
 			continue
@@ -131,6 +173,32 @@ func get_targets_in_scope(screen_center: Variant = null, circle_radius: float = 
 	)
 
 	return targets_in_scope
+
+
+func _predict_aim_position(target: Node, predict_sec: float) -> Vector3:
+	var aim_pos := _target_aim_position(target as Node3D)
+	var vel := _target_predict_velocity(target)
+	aim_pos += vel * predict_sec
+	## Include gravity for rigid rocks so lead shots track arcs, not straight lines.
+	if target is RigidBody3D:
+		var rb := target as RigidBody3D
+		if not rb.freeze and absf(rb.gravity_scale) > 0.001:
+			var g_mag := float(ProjectSettings.get_setting("physics/3d/default_gravity", 9.8))
+			var g_dir: Vector3 = ProjectSettings.get_setting("physics/3d/default_gravity_vector", Vector3(0, -1, 0))
+			aim_pos += 0.5 * g_dir.normalized() * g_mag * rb.gravity_scale * predict_sec * predict_sec
+	return aim_pos
+
+
+func _target_predict_velocity(target: Node) -> Vector3:
+	if target is RigidBody3D:
+		return (target as RigidBody3D).linear_velocity
+	if target is CharacterBody3D:
+		return (target as CharacterBody3D).velocity
+	if "linear_velocity" in target:
+		return target.linear_velocity as Vector3
+	if "velocity" in target:
+		return target.velocity as Vector3
+	return Vector3.ZERO
 
 
 func _target_aim_position(target: Node3D) -> Vector3:
@@ -314,11 +382,21 @@ func shoot_target() -> void:
 
 	var double_power: bool = get_parent()._scope_at_min
 	var aim_center: Vector2 = crosshair.global_position
-	var targets = get_targets_in_scope(aim_center)
-
-	## Empty on the fire frame: keep polling the frozen aim for a short window (fast movers).
-	if targets.is_empty() and generous_amount and generous_check_duration > 0.0:
-		targets = await _poll_generous_scope_targets(aim_center)
+	var targets: Array = []
+	var use_timed_lead := player != null and int(player.get("active_gun_loadout")) == 5
+	if use_timed_lead:
+		var lead_sec := 0.3
+		var window_sec := 0.1
+		if "gun5_timed_shot_sec" in player:
+			lead_sec = float(player.gun5_timed_shot_sec)
+		if "gun5_hit_window_sec" in player:
+			window_sec = float(player.gun5_hit_window_sec)
+		targets = get_targets_in_scope_predicted_window(aim_center, lead_sec, window_sec)
+	else:
+		targets = get_targets_in_scope(aim_center)
+		## Empty on the fire frame: keep polling the frozen aim for a short window (fast movers).
+		if targets.is_empty() and generous_amount and generous_check_duration > 0.0:
+			targets = await _poll_generous_scope_targets(aim_center)
 
 	# If a special mid-round target is the closest aim, only shoot that — don't multi-hit rocks.
 	if not targets.is_empty() and _is_special_midround_target(targets[0].target):
@@ -527,7 +605,7 @@ func shoot_special_midround_target_if_aimed() -> bool:
 	return true
 	
 	
-func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO, free_shot := false) -> bool:
+func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos : Vector3 = Vector3.ZERO, free_shot := false, lob_height: float = 0.0) -> bool:
 
 	if not free_shot and not player.consume_ammo(1):
 		return false
@@ -549,8 +627,9 @@ func spawn_projectile(_target : Node3D, _power_bullet_speed : float, result_pos 
 	if _target != null:
 		new_bullet.bullet_setup(_target, _power_bullet_speed)
 	else:
-		# No target — fly toward the raycast hit point / horizon instead
-		new_bullet.bullet_setup_no_target(result_pos, _power_bullet_speed)
+		# No target — fly toward the aim point (optional lob arc for gun5 misses).
+		if new_bullet.has_method("bullet_setup_no_target"):
+			new_bullet.bullet_setup_no_target(result_pos, _power_bullet_speed, lob_height)
 
 	return true
 
@@ -585,39 +664,54 @@ func play_missed_sounds() -> void:
 	%cannot_shoot_sfx.play(0.91)
 
 func shoot_bullet_without_target() -> void:
-	
+	var use_gun5 := player != null and int(player.get("active_gun_loadout")) == 5
+	var lob_h := 0.0
+	var aim_point := _miss_aim_point(use_gun5)
+	if use_gun5 and "gun5_miss_lob_height" in player:
+		lob_h = float(player.gun5_miss_lob_height)
+
 	#%cannot_shoot_sfx.play(0.91)
 	#$"../SFX/Flicker_sound".play()
 	play_missed_sounds()
-	await get_tree().create_timer(0.1, false).timeout
-	create_shot_instance(ON_TARGET_SFX, -35.0, 0.65 + pitch_adjustment)
 	%Crosshair.crosshair_shake()
 	player_camera.shake_camera_shooting()
-	round_manager.bullet_active = false
-
-
-	# Raycast from the crosshair center out into the world to find
-	# where the "missed" bullet should fly toward.
-	var screen_pos = crosshair.global_position
-	var origin = stable_camera.project_ray_origin(screen_pos)
-	var direction = stable_camera.project_ray_normal(screen_pos)
-	var end = origin + direction * view_limit
-
-	var space_state = get_world_3d().direct_space_state
-	var result = space_state.intersect_ray(
-		PhysicsRayQueryParameters3D.create(origin, end)
-	)
-
-	var aim_point : Vector3
-	if result.has("position"):
-		aim_point = result.position
-	else:
-		aim_point = end
 
 	if player_gun:
 		player_gun.get_barrel_position(aim_point.x)
 
-	spawn_projectile(null, power_bullet_speed, aim_point)
+	# Gun5 miss: spawn the lobbing projectile immediately at the same travel pace as a hit.
+	spawn_projectile(null, power_bullet_speed, aim_point, false, lob_h)
+
+	await get_tree().create_timer(0.1, false).timeout
+	create_shot_instance(ON_TARGET_SFX, -35.0, 0.65 + pitch_adjustment)
+	round_manager.bullet_active = false
+
+
+## Aim point for a miss shot. Gun5 always targets the configured world-Z plane (default 23).
+func _miss_aim_point(use_gun5: bool) -> Vector3:
+	var screen_pos = crosshair.global_position
+	var origin = stable_camera.project_ray_origin(screen_pos)
+	var direction = stable_camera.project_ray_normal(screen_pos)
+
+	if use_gun5:
+		var plane_z := 23.0
+		if player != null and "gun5_aim_plane_z" in player:
+			plane_z = float(player.gun5_aim_plane_z)
+		if absf(direction.z) > 0.0001:
+			var t = (plane_z - origin.z) / direction.z
+			if t > 0.05:
+				return origin + direction * t
+		# Fallback: push out along the ray to roughly that depth.
+		return origin + direction * absf(plane_z - origin.z)
+
+	var end = origin + direction * view_limit
+	var space_state = get_world_3d().direct_space_state
+	var result = space_state.intersect_ray(
+		PhysicsRayQueryParameters3D.create(origin, end)
+	)
+	if result.has("position"):
+		return result.position
+	return end
 	
 func get_shootable_hit() -> Dictionary:
 	

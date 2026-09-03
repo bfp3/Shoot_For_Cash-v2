@@ -640,12 +640,16 @@ turbulence_influence_over_life = SubResource("CurveTexture_y08kl")
 [node name="Player" type="Node3D" unique_id=1061800479 node_paths=PackedStringArray("weapon_shooting", "player_gun") groups=["Player"]]
 script = ExtResource("1_6ljxy")
 scope_return_duration = 0.15
+scope_return_overshoot = 1.6
 scope_shrink_delay_dur = 0.15
 scope_shrink_bullet_speed_scale = 0.35
 scope_expand_bullet_speed_scale = 0.35
 scope_shrink_fire_rate_scale = 0.8
 weapon_shooting = NodePath("Weapon_shooting")
 player_gun = NodePath("Cam_pivot/Camera3D/Player_gun")
+starting_gun_loadout = 5
+gun5_timed_shot_sec = 0.1
+gun5_miss_lob_height = 1.0
 grid_aim_enabled = true
 grid_aim_move_speed = 6000.0
 grid_aim_extra_columns_each_side = 2

@@ -1274,28 +1274,27 @@ func get_script_range_reward() -> int:
 
 
 func get_resume_spawn_index() -> int:
-	return maxi(int(_script_checkpoint_resume.get("spawn_index", 0)), 0)
+	## Mid-script resume is retired — balloon-check no longer stores a fail-resume cursor.
+	return 0
 
 
 func clear_script_checkpoint() -> void:
 	_script_checkpoint_resume = {}
 
 
-func set_script_checkpoint(spawn_index: int) -> void:
-	_script_checkpoint_resume = {"spawn_index": maxi(spawn_index, 0)}
+func set_script_checkpoint(_spawn_index: int) -> void:
+	## No-op: retries always start from the beginning of the round script.
+	_script_checkpoint_resume = {}
 
 
-## Player shot the balloon-check: save this script cursor as the fail-resume
-## point and clear strikes. No cash bank, no money-label pull, no CHECKPOINT banner.
+## Player shot the balloon-check: clear strikes and continue the script.
+## Does NOT save a mid-script resume point — retries always start from the top.
 func on_checkpoint_shot() -> void:
 	if _checkpoint_advancing or player_failed or game_over_triggered:
 		return
 	_checkpoint_advancing = true
 
-	if not _is_editor_playtest():
-		if rocks_container and rocks_container.has_method("get_sequence_cursor"):
-			set_script_checkpoint(int(rocks_container.get_sequence_cursor()))
-		_save_level_progress()
+	clear_script_checkpoint()
 
 	var strike_hud = null
 	if wave_progress_feedback and "strike_hud" in wave_progress_feedback:
@@ -1824,6 +1823,7 @@ func unsuccessful_round_locked(skip_tally: bool = false) -> void:
 	if balloon_container:
 		balloon_container.end_round()
 	_forfeit_round_cash_pool()
+	clear_script_checkpoint()
 	if skip_tally:
 		if gl_PlayerState.has_method("lose_range_banked_cash"):
 			gl_PlayerState.lose_range_banked_cash()
@@ -1882,6 +1882,7 @@ func abort_round_to_shop() -> void:
 		balloon_container.end_round()
 	_bank_round_cash_pool(true)
 	_reset_range_banked_after_loss()
+	clear_script_checkpoint()
 
 	music_manager.shop_music_lower_volume()
 	current_wave = 0
@@ -2137,9 +2138,9 @@ func update_continue() -> void:
 		outcome = String(await screen.play(fee, cash))
 	_continue_open = false
 	if outcome == "flip_win":
-		## Coin-flip win: resume mid-wave from where they left off.
+		## Coin-flip win: still restart the round from the top (no mid-script resume).
 		await _play_strike_finale_return()
-		await _resume_after_continue()
+		await _restart_round_after_continue()
 	elif outcome == "paid":
 		## Paid continue: replay the round from the start (debt allowed).
 		await _play_strike_finale_return()
@@ -2181,14 +2182,8 @@ func _set_group_rigid_bodies_frozen(group_name: String, frozen: bool) -> void:
 
 
 func _is_continue_resume_in_place() -> bool:
-	var screen := get_tree().get_first_node_in_group("continue_screen")
-	if screen == null:
-		var menus := get_tree().get_first_node_in_group("deferred_menu_loader")
-		if menus and menus.has_method("ensure_continue"):
-			screen = menus.ensure_continue()
-	if screen != null and "resume_in_place" in screen:
-		return bool(screen.resume_in_place)
-	return true
+	## Mid-script continue is retired — always wipe and restart from the top.
+	return false
 
 
 ## Same wipe as abort / backspace: rocks, balloons, pineapples gone for a fresh retry.
@@ -2579,6 +2574,7 @@ func update_round_start() -> void:
 	player_failed = false
 	bonus_oranges_ready = false
 	clear_live_oranges_quietly()
+	clear_script_checkpoint()
 	current_wave = 0
 	_shots_fired_this_round = 0
 	_endless_elapsed_sec = 0.0
@@ -2610,7 +2606,9 @@ func update_round_start() -> void:
 	
 
 func update_wave_start() -> void:
-	var resume_index := 0 if (is_hold_out_round() or is_endless_mode()) else get_resume_spawn_index()
+	## Fresh attempt always starts at the top of the round script (no mid-script resume).
+	clear_script_checkpoint()
+	var resume_index := 0
 	if is_endless_mode():
 		## Endless: no wave banners — just keep the strike HUD ready.
 		if wave_progress_feedback and wave_progress_feedback.has_method("show_strike_hud"):
@@ -3056,9 +3054,6 @@ func update_shop_start() -> void:
 	# Add Balloons from Array into the Level during the SHOP phase
 	if current_round > 0:
 		var rock_seq := update_rock_sequence()
-		var resume := get_resume_spawn_index()
-		if resume > 0 and resume < rock_seq.size():
-			rock_seq = rock_seq.slice(resume)
 		if rock_seq != []:
 			balloon_container.add_balloon(rock_seq)
 	
@@ -3693,7 +3688,7 @@ func _save_level_progress() -> void:
 		'player_round': int(gl_PlayerState.dataset.round),
 		'cash_earned': int(existing.get('cash_earned', gl_PlayerState.get_place_cash_earned(level_id))),
 		'entered': true,
-		'script_checkpoint': _script_checkpoint_resume.duplicate(true),
+		'script_checkpoint': {},
 	}
 	_level_progress[level_id] = entry
 	gl_PlayerState.set_level_progress_entry(level_id, entry)
@@ -3720,11 +3715,8 @@ func _restore_level_progress(level_id: String) -> void:
 	current_sequence_index = int(saved.get('sequence_index', 0))
 	current_round = int(saved.get('round', maxi(current_sequence_index + 1, 1)))
 	gl_PlayerState.dataset.round = int(saved.get('player_round', current_round))
-	var saved_checkpoint = saved.get('script_checkpoint', {})
-	if saved_checkpoint is Dictionary:
-		_script_checkpoint_resume = (saved_checkpoint as Dictionary).duplicate(true)
-	else:
-		_script_checkpoint_resume = {}
+	## Ignore any legacy mid-script resume saved from balloon-check.
+	clear_script_checkpoint()
 
 
 ## Swap scenery + round data for a shooting range. Used for first arrival and mid-run map travel.

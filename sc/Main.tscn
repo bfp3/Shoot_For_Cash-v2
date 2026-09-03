@@ -65,6 +65,7 @@
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="75_mdemw"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="Material" uid="uid://hn35w2qwra5g" path="res://res/balloon_blue_mat.tres" id="77_heewt"]
+[ext_resource type="Shader" uid="uid://d0dm73yo3u4k6" path="res://res/Shaders/vector_crt.gdshader" id="79_fjxa8"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 [ext_resource type="PackedScene" uid="uid://b8lj768x0yxac" path="res://ch/debug/round_editor_menu.tscn" id="81_rounded"]
 [ext_resource type="Script" uid="uid://tyrtfghjsjni" path="res://lib/deferred_menu_loader.gd" id="def_menu_loader"]
@@ -311,6 +312,23 @@ _data = {
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_swp41"]
 size = Vector3(50, 0.1, 0.1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ufvrt"]
+shader = ExtResource("79_fjxa8")
+shader_parameter/warp_amount = 0.0
+shader_parameter/aberration = 0.0010000000475
+shader_parameter/scanline_count = 300.00001045
+shader_parameter/scanline_opacity = 0.10000000475
+shader_parameter/grille_opacity = 0.0
+shader_parameter/bloom_amount = 0.0
+shader_parameter/bloom_spread = 0.02999999932945
+shader_parameter/bloom_threshold = 0.12
+shader_parameter/brightness = 1.1580000312549998
+shader_parameter/vignette_intensity = 0.0
+shader_parameter/corner_radius = 0.0
+shader_parameter/grain_amount = 0.0
+shader_parameter/flicker_amount = 0.0
+shader_parameter/phosphor_tint = Color(1, 0.96, 0.88, 1)
 
 [node name="Scene-101" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "round_timer", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
@@ -1100,9 +1118,6 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
 
 [node name="Money_labels" parent="MainGameCanvasLayer" unique_id=2012145336 instance=ExtResource("54_i541k")]
-loss_scatter_count = 18
-loss_scatter_distance_px = 220.0
-loss_scatter_fly_sec = 0.7
 
 [node name="Timer" parent="MainGameCanvasLayer" unique_id=779418741 instance=ExtResource("55_3u5oq")]
 mouse_filter = 2
@@ -1745,6 +1760,18 @@ script = ExtResource("1_mysteryconv")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MysteryRockConverter/Area3D" unique_id=1658898021]
 shape = SubResource("BoxShape3D_swp41")
 disabled = true
+
+[node name="CRTOverlay" type="CanvasLayer" parent="." unique_id=1845980939]
+layer = 4096
+
+[node name="CRT" type="ColorRect" parent="CRTOverlay" unique_id=2106409939]
+material = SubResource("ShaderMaterial_ufvrt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="body_entered" from="Splash_zone" to="Splash_zone" method="_on_body_entered"]
 [connection signal="pressed" from="MainGameCanvasLayer/QuitMenu/HBoxContainer/VBoxContainer/CloseGame" to="MainGameCanvasLayer/QuitMenu" method="_on_close_game_pressed"]

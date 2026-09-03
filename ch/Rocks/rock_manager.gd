@@ -302,7 +302,7 @@ func _is_pace_cmd(cmd: String) -> bool:
 
 
 func _is_gun_cmd(cmd: String) -> bool:
-	return cmd == "gun" or cmd == "gun1" or cmd == "gun2" or cmd == "gun3" or cmd == "gun4"
+	return cmd == "gun" or cmd == "gun1" or cmd == "gun2" or cmd == "gun3" or cmd == "gun4" or cmd == "gun5"
 
 
 func _is_light_cmd(cmd: String) -> bool:
@@ -347,6 +347,8 @@ func _apply_gun_entry(entry) -> void:
 		gun_id = 3
 	elif cmd == "gun4":
 		gun_id = 4
+	elif cmd == "gun5":
+		gun_id = 5
 	var player = get_tree().get_first_node_in_group("Player") if get_tree() else null
 	if player and player.has_method("switch_gun_loadout"):
 		player.switch_gun_loadout(gun_id)
@@ -447,6 +449,8 @@ func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
 	_hold_out_pineapple_finale.clear()
 	_full_wave_sequence = sequence.duplicate(true)
 	_sequence_cursor = clampi(resume_index, 0, _full_wave_sequence.size())
+	## Fresh script pass — reset mid-round pace so retries don't inherit the last pace-* line.
+	aim_launch_gravity_scale = _base_aim_launch_gravity_scale
 	_sequence_active = true
 	_waiting_until_clear = false
 	_checkpoint_hold = false
@@ -1203,35 +1207,14 @@ func clear_cardinal_bursts() -> void:
 			child.queue_free()
 
 
-## Unfreeze live rocks and keep the script cursor. Returns true when the caller
-## should pulse a freshly prepared beat (empty sky / checkpoint restart).
+## Unfreeze / restart after continue. Always begins the script from spawn 0.
 func resume_from_continue() -> bool:
 	_paused_for_continue = false
-	var remaining := int(gl_PlayerState.dataset.total_rocks_in_round_remaining)
-	if remaining > 0 or _any_live_round_rocks():
-		freeze_live_rocks(false)
-		_sequence_active = true
-		current_state = State.PULSE_ROCKS
-		_bounds_check_active = true
-		if splash_zone:
-			splash_zone.activate_splash_zone()
-		return false
 	freeze_live_rocks(false)
-	if _script_has_more_commands():
-		_sequence_active = true
-		_sequence_delay_active = false
-		_advancing_sequence = false
-		_auto_pulse_next_beat = true
-		_launch_next_sequence_beat()
-		return false
 	var seq: Array = _full_wave_sequence.duplicate(true)
 	if seq.is_empty():
 		return false
-	var cursor := 0
-	var round_manager = get_tree().get_first_node_in_group("round_manager")
-	if round_manager and round_manager.has_method("get_resume_spawn_index"):
-		cursor = int(round_manager.get_resume_spawn_index())
-	start_manual_rock_round(seq, cursor)
+	start_manual_rock_round(seq, 0)
 	return true
 
 

@@ -55,6 +55,7 @@ const COMMAND_BUTTONS: PackedStringArray = [
 	"gun2",
 	"gun3",
 	"gun4",
+	"gun5",
 	"light-dim",
 	"light-bright",
 	"surprise-me",

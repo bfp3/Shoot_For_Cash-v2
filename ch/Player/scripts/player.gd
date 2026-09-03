@@ -1,6 +1,6 @@
 class_name Player extends Node3D
 
-## When true, pressing the `ctrl` action cycles gun1 → gun2 → gun3 → gun4 → gun1.
+## When true, pressing the `ctrl` action cycles gun1 → gun2 → gun3 → gun4 → gun5 → gun1.
 @export var ctrl_swap_guns := true
 
 const mouse_no_lerp := false
@@ -25,6 +25,8 @@ const scope_shrink_reference_circle := 60.0  # "normal" size; circles above this
 @export var _current_shrink_duration := 0.15
 const scope_min_target_circle := 30.0 #20.0
 @export var scope_return_duration := 0.3
+## On shrink/expand release: ease past resting size by this factor, then settle to default.
+@export_range(1.0, 15.5, 0.01) var scope_return_overshoot := 1.12
 @export var scope_shrink_delay_dur := 0.4
 ## Max scope size while holding right-click, as a multiple of resting radius (1.0 = no grow).
 const SCOPE_EXPAND_MAX_SCALE := 1.5 #1.85
@@ -119,13 +121,24 @@ var current_round : int
 @export var weapon_shooting : Node3D
 @export var player_gun : Node3D
 
-## Scripted loadouts: gun1 (Rossy), gun2 (rapid fire), gun3 (gun_3_stats), gun4 (plant trap).
-enum GunLoadout { GUN1 = 1, GUN2 = 2, GUN3 = 3, GUN4 = 4 }
+## Scripted loadouts: gun1 (Rossy), gun2 (rapid), gun3 (slow travel), gun4 (plant), gun5 (timed lead).
+enum GunLoadout { GUN1 = 1, GUN2 = 2, GUN3 = 3, GUN4 = 4, GUN5 = 5 }
+## Which loadout is equipped when a round starts (`start_player` / boot).
+@export var starting_gun_loadout: GunLoadout = GunLoadout.GUN1
 var active_gun_loadout: GunLoadout = GunLoadout.GUN1
 var _gun_swap_token := 0
 ## When >= 0, `_apply_scope_shot_stats` uses this travel time instead of the hardcoded 0.05.
 var _loadout_bullet_speed_override := -1.0
 @export_range(0.05, 2.0, 0.01) var gun3_bullet_travel_sec := 0.3
+## Gun5: seconds ahead to predict target positions for the bow-style lead shot.
+@export_range(0.05, 2.0, 0.01) var gun5_timed_shot_sec := 0.3
+## Extra forgiveness around the lead time — a hit still counts if the target is under the
+## reticle anywhere in [lead − window/2, lead + window/2].
+@export_range(0.0, 0.5, 0.01) var gun5_hit_window_sec := 0.1
+## How high a missed gun5 projectile arcs (world units) on its way to the aim plane.
+@export_range(0.0, 12.0, 0.1) var gun5_miss_lob_height := 3.0
+## World Z of the aim plane gun5 miss shots fly toward (rocks typically sit near this).
+@export var gun5_aim_plane_z := 23.0
 
 var current_gun_fire_rate_cooldown := 0.0
 var _is_currently_shooting := false
@@ -320,7 +333,9 @@ func _ready() -> void:
 		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 
 	%HUD_bottom_corner.hide()
+	active_gun_loadout = starting_gun_loadout
 	_apply_gun_crosshair_visibility()
+	_apply_gun_loadout_stats(false)
 	
 	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_WIREFRAME
 	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
@@ -1417,6 +1432,8 @@ func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
 		fire_rate = 0.05
 	elif active_gun_loadout == GunLoadout.GUN3:
 		fire_rate = 0.5
+	elif active_gun_loadout == GunLoadout.GUN5:
+		fire_rate = 0.15
 	power_bullet_speed = bullet_speed
 	power_gun_fire_rate = fire_rate
 	if weapon_shooting:
@@ -1524,10 +1541,19 @@ func _tween_scope_back_to_base() -> void:
 		scope_base_target_circle = resting
 		scope_base_scale = _inner_scope_scale_for_radius(resting)
 
+	var overshoot := maxf(scope_return_overshoot, 1.0)
+	var overshoot_scale := scope_base_scale * overshoot
+	var overshoot_circle := scope_base_target_circle * overshoot
+	var total := maxf(scope_return_duration, 0.05)
+	var to_overshoot := total * 0.55
+	var to_rest := total * 0.45
+
 	_shrink_return_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	_shrink_return_tween.tween_interval(0.1)
-	_shrink_return_tween.tween_property(%Inner_scope, "scale", Vector2.ONE * scope_base_scale, scope_return_duration)
-	_shrink_return_tween.parallel().tween_property(weapon_shooting, "power_target_circle", scope_base_target_circle, scope_return_duration)
+	_shrink_return_tween.tween_property(%Inner_scope, "scale", Vector2.ONE * overshoot_scale, to_overshoot)
+	_shrink_return_tween.parallel().tween_property(weapon_shooting, "power_target_circle", overshoot_circle, to_overshoot)
+	_shrink_return_tween.tween_property(%Inner_scope, "scale", Vector2.ONE * scope_base_scale, to_rest).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	_shrink_return_tween.parallel().tween_property(weapon_shooting, "power_target_circle", scope_base_target_circle, to_rest).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 
 
 
@@ -2044,10 +2070,11 @@ func start_player() -> void:
 		return
 	game_lost = false
 	weapon_shooting.shot_with_right_click = false
-	## Fresh round always starts on the default gun / Rossy crosshair.
-	active_gun_loadout = GunLoadout.GUN1
+	## Fresh round starts on the chosen starting loadout.
+	active_gun_loadout = starting_gun_loadout
 	_loadout_bullet_speed_override = -1.0
 	_apply_gun_crosshair_visibility()
+	_apply_gun_loadout_stats(false)
 	if _level_editor_ammo_active:
 		_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
 	else:
@@ -2239,6 +2266,17 @@ func gun_4_stats() -> void:
 		weapon_shooting.power_bullet_delay = 0.1
 
 
+func gun_5_stats() -> void:
+	## Timed lead shot — bullet travel matches the prediction window.
+	power_gun_fire_rate = 0.15
+	var travel := maxf(gun5_timed_shot_sec, 0.05)
+	_loadout_bullet_speed_override = travel
+	power_bullet_speed = travel
+	if weapon_shooting:
+		weapon_shooting.power_bullet_delay = 0.1
+		weapon_shooting.power_bullet_speed = travel
+
+
 func _apply_active_gun_shot_stats() -> void:
 	match active_gun_loadout:
 		GunLoadout.GUN2:
@@ -2247,27 +2285,31 @@ func _apply_active_gun_shot_stats() -> void:
 			gun_3_stats()
 		GunLoadout.GUN4:
 			gun_4_stats()
+		GunLoadout.GUN5:
+			gun_5_stats()
 		_:
 			gun_stats()
 
 
 func _cycle_gun_loadout() -> void:
 	var next_id := int(active_gun_loadout) + 1
-	if next_id > int(GunLoadout.GUN4):
+	if next_id > int(GunLoadout.GUN5):
 		next_id = int(GunLoadout.GUN1)
 	switch_gun_loadout(next_id)
 
 
-## Script command `gun1` / `gun2` / `gun3` / `gun4`: dip the mesh, swap HUD, raise with new stats.
+## Script command `gun1` … `gun5`: dip the mesh, swap HUD, raise with new stats.
 func switch_gun_loadout(gun_id: int) -> void:
 	var next: GunLoadout = GunLoadout.GUN1
-	match clampi(gun_id, 1, 4):
+	match clampi(gun_id, 1, 5):
 		2:
 			next = GunLoadout.GUN2
 		3:
 			next = GunLoadout.GUN3
 		4:
 			next = GunLoadout.GUN4
+		5:
+			next = GunLoadout.GUN5
 		_:
 			next = GunLoadout.GUN1
 	if next == active_gun_loadout:
@@ -2301,14 +2343,18 @@ func _apply_gun_crosshair_visibility() -> void:
 	var gun2 := ch.get_node_or_null("Gun2") as CanvasItem
 	var gun3 := ch.get_node_or_null("Gun3") as CanvasItem
 	var gun4 := ch.get_node_or_null("Gun4") as CanvasItem
+	var gun5 := ch.get_node_or_null("Gun5") as CanvasItem
 	if rossy:
-		rossy.visible = active_gun_loadout == GunLoadout.GUN1
+		## Gun5 reuses Rossy until a dedicated Gun5 HUD art exists.
+		rossy.visible = active_gun_loadout == GunLoadout.GUN1 or (active_gun_loadout == GunLoadout.GUN5 and gun5 == null)
 	if gun2:
 		gun2.visible = active_gun_loadout == GunLoadout.GUN2
 	if gun3:
 		gun3.visible = active_gun_loadout == GunLoadout.GUN3
 	if gun4:
 		gun4.visible = active_gun_loadout == GunLoadout.GUN4
+	if gun5:
+		gun5.visible = active_gun_loadout == GunLoadout.GUN5
 
 
 func _apply_gun_loadout_stats(animate_scope: bool) -> void:
@@ -2325,6 +2371,10 @@ func _apply_gun_loadout_stats(animate_scope: bool) -> void:
 				%Inner_scope.scale = Vector2.ONE * scope_base_scale
 		GunLoadout.GUN4:
 			gun_4_stats()
+			if animate_scope:
+				_apply_resting_crosshair_size(0.25)
+		GunLoadout.GUN5:
+			gun_5_stats()
 			if animate_scope:
 				_apply_resting_crosshair_size(0.25)
 		_:

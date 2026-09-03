@@ -37,8 +37,8 @@ const COIN_FLIP_CHANCE := 0.0
 @onready var _fade_to_black: ColorRect = $Control/FadeToBlack
 
 @export var resume_from := 3
-## Kept for inspector compatibility. Round manager treats paid as replay and flip_win as resume-in-place.
-@export var resume_in_place := true
+## Deprecated: round manager always restarts the round from the top after continue.
+@export var resume_in_place := false
 
 var _busy := false
 var _waiting := false

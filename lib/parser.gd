@@ -245,9 +245,10 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   (0.25 / 0.5 / 1.0 / 1.5 / 2.25 / 3.0). `pace fastest` form is accepted.
 ##   Replaces `difficulty-*` for launch speed. difficulty-* still sets round gravity
 ##   (and hard/expert still set bullet travel to 0.1).
-## gun / gun1 / gun2 / gun3 / gun4: mid-round weapon swap. Drops the gun mesh briefly, then
-##   raises it with that loadout's crosshair (Rossy / Gun2 / Gun3 / Gun4) and fire behaviour.
+## gun / gun1 / gun2 / gun3 / gun4 / gun5: mid-round weapon swap. Drops the gun mesh briefly, then
+##   raises it with that loadout's crosshair (Rossy / Gun2 / Gun3 / Gun4 / Gun5) and fire behaviour.
 ##   gun4 plants a crosshair trap on shoot instead of a normal shot.
+##   gun5 uses a timed lead shot (predict where targets will be after gun5_timed_shot_sec).
 ## light-dim / light-bright: {cmd}. Smoothly change every `directional_light` energy
 ##   by -0.25 / +0.25 over 3 seconds. Does not pause the sequence.
 ## hold out 90000 / hold-out 90000 / boss-timer 90000: {cmd: hold-out, ms}.
@@ -435,7 +436,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'pace':
 			return _parse_pace_command(parts)
 
-		'gun', 'gun1', 'gun2', 'gun3', 'gun4':
+		'gun', 'gun1', 'gun2', 'gun3', 'gun4', 'gun5':
 			## Alias `gun` → gun1 (default loadout).
 			var gun_cmd := 'gun1' if cmd == 'gun' else cmd
 			return {'cmd': gun_cmd}
@@ -1163,7 +1164,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			rounds[key]._pending.append(parsed)
 			continue
 
-		if parsed_cmd == 'gun1' or parsed_cmd == 'gun2' or parsed_cmd == 'gun3' or parsed_cmd == 'gun4':
+		if parsed_cmd == 'gun1' or parsed_cmd == 'gun2' or parsed_cmd == 'gun3' or parsed_cmd == 'gun4' or parsed_cmd == 'gun5':
 			# Mid-round weapon swap — stay in the spawn timeline.
 			rounds[key]._pending.append(parsed)
 			continue
@@ -1495,7 +1496,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return 'wait'
 		'pace-slowest', 'pace-slow', 'pace-normal', 'pace-fast', 'pace-fastest', 'pace-impossible':
 			return cmd
-		'gun1', 'gun2', 'gun3', 'gun4':
+		'gun1', 'gun2', 'gun3', 'gun4', 'gun5':
 			return cmd
 		'light-dim', 'light-bright':
 			return cmd
