@@ -342,9 +342,43 @@ size = Vector3(0.108, 0.502, 0.007)
 [sub_resource type="BoxMesh" id="BoxMesh_ggfu5"]
 size = Vector3(2.7, 30.455, 1)
 
+[sub_resource type="Animation" id="Animation_wsk7r"]
+resource_name = "trippy"
+length = 5.0
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material_override:uv1_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.51, 5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.1, 0.1, 0.1), Vector3(1, 1, 1), Vector3(0.1, 0.1, 0.1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:material_override:uv1_offset")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.2, 0, 0), Vector3(-0.2, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xrvai"]
+_data = {
+&"trippy": SubResource("Animation_wsk7r")
+}
+
 [node name="TestAtJetz" type="Node3D" unique_id=229302118]
 script = ExtResource("layout_scroll")
-enabled = false
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true
@@ -624,6 +658,7 @@ mesh = SubResource("BoxMesh_s470r")
 
 [node name="MultiMesh" type="Node3D" parent="." unique_id=395954942]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8.52803, 49.33937)
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MultiMesh" unique_id=1481701675]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, -6.6928215)
@@ -947,6 +982,7 @@ mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MultiMesh2" type="Node3D" parent="." unique_id=1570907150]
 transform = Transform3D(1.71, 0, 0, 0, 1.71, 0, 0, 0, 1.71, 0, -8.52803, 88.132935)
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MultiMesh2" unique_id=543195036]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, -6.6928215)
@@ -1921,6 +1957,10 @@ transform = Transform3D(4.99, 0, 0, 0, -2.1811982e-07, -4.99, 0, 4.99, -2.181198
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, -7.4947476, -6.6928253)
 material_override = ExtResource("4_ax6c5")
 mesh = SubResource("BoxMesh_ggfu5")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MultiMesh7/MeshInstance3D" unique_id=1162354065]
+libraries/ = SubResource("AnimationLibrary_xrvai")
+autoplay = &"trippy"
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="MultiMesh7" unique_id=11548730]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 4.0000005, -7.4947476, -6.6928253)

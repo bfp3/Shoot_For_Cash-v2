@@ -12,7 +12,8 @@ const LAYOUT_PATH_BY_PLACE_INDEX := {
 	0: "res://sc/All_level_layouts/level_layout_moss_01.tscn",
 	1: "res://sc/All_level_layouts/level_layout_02_redd.tscn",
 	2: "res://sc/All_level_layouts/level_layout_03_glory.tscn",
-	3: "res://sc/All_level_layouts/level_layout_000_jetz.tscn",
+	#3: "res://sc/All_level_layouts/level_layout_000_jetz.tscn",
+	3: "res://sc/All_level_layouts/level_layout_hood_01.tscn",
 	4: "res://sc/All_level_layouts/level_layout_04_noir.tscn",
 	5: "res://sc/All_level_layouts/level_layout_05_vesper.tscn",
 }

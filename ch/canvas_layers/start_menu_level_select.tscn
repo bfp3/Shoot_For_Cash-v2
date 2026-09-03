@@ -208,6 +208,7 @@ stretch_mode = 5
 
 [node name="DifficultyHeader" type="HBoxContainer" parent="MainPanel/VBoxContainer/TopRedPanel" unique_id=1998075301]
 unique_name_in_owner = true
+visible = false
 z_index = 2
 layout_mode = 1
 anchors_preset = 8
@@ -269,6 +270,18 @@ visible = false
 [node name="Banner3" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="5" unique_id=1205367444]
 scale = Vector2(1.082, 1.39)
 
+[node name="Title" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="8" unique_id=2020352176]
+visible = false
+
+[node name="StarNode" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="13" unique_id=1455358656]
+visible = false
+
+[node name="StarNode2" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="14" unique_id=28305478]
+visible = false
+
+[node name="StarNode3" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="15" unique_id=1818572149]
+visible = false
+
 [node name="NextDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075304 node_paths=PackedStringArray("focus_enter_sfx", "purchase_sfx")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
@@ -307,9 +320,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -430.0
-offset_top = -146.0
+offset_top = -145.0
 offset_right = 430.0
-offset_bottom = 154.0
+offset_bottom = 155.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)

@@ -12,28 +12,16 @@
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="10_2cor1"]
 [ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="12_nkykc"]
 [ext_resource type="Texture2D" uid="uid://drvjio7oxqunn" path="res://res/ring512.png" id="14_er7go"]
+[ext_resource type="Shader" uid="uid://d0dm73yo3u4k6" path="res://res/Shaders/vector_crt.gdshader" id="17_4x1xd"]
 [ext_resource type="PackedScene" uid="uid://dee8qfh0jrlf1" path="res://lib/Flag_rollout_Scene/FlagRollout.tscn" id="17_gmr7m"]
 [ext_resource type="PackedScene" uid="uid://bdgpfw3241vuc" path="res://sc/All_level_layouts/CrateForCash.tscn" id="19_rta1d"]
 [ext_resource type="Texture2D" uid="uid://udb8jdxvl5d8" path="res://res/cloud-svgrepo-com.png" id="23_qrgtt"]
 [ext_resource type="Texture2D" uid="uid://cmk72g2wr4ulq" path="res://res/mountains-svgrepo-com.png" id="24_jwbkf"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_lcvh6"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-
-[sub_resource type="Sky" id="Sky_kvivd"]
-sky_material = SubResource("ProceduralSkyMaterial_lcvh6")
-
-[sub_resource type="Environment" id="Environment_gbo2g"]
-background_mode = 1
-sky = SubResource("Sky_kvivd")
-tonemap_mode = 2
-glow_enabled = true
-
 [sub_resource type="QuadMesh" id="QuadMesh_k7lvh"]
 size = Vector2(19.91, 10)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0fn0c"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_78d2f"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -52,7 +40,7 @@ shader_parameter/line_gap_offset = 0.0
 text = "W"
 font_size = 17
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_er7go"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_32frn"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -72,7 +60,7 @@ text = "O"
 font = ExtResource("4_dhtr8")
 font_size = 17
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4x1xd"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wf0y0"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -99,52 +87,52 @@ _surfaces = [{
 "vertex_data": PackedByteArray("xVAbvla4970pXI++AYAGvj2F1r0pXI++nPsyvipjrL0pXI++xVAbvla4970pXI++V7j3vcVQG74pXI++PoXWvQGABr4pXI++xVAbvla4970pXI++PoXWvQGABr4pXI++AYAGvj2F1r0pXI++V7j3vcVQG74pXI++qUiVvdj+Gr4pXI++PoXWvQGABr4pXI++V7j3vcNQG74pXI8+JWOsvZ77Mr4pXI++V7j3vcVQG74pXI++xVAbvlK4970pXI8+V7j3vcVQG74pXI++xVAbvla4970pXI++AYAGvjmF1r0pXI8+AYAGvj2F1r0pXI++PoXWvQGABr4pXI++nPsyvipjrL0pXI++1v4avq1Ilb0pXI++36xBvgvSML0pXI++nPsyvipjrL0pXI++AYAGvj2F1r0pXI++1v4avq1Ilb0pXI++36xBvgvSML0pXI++1v4avq1Ilb0pXI++A7gnvnYfGb0pXI++36xBvgvSML0pXI++A7gnvnYfGb0pXI++MQgsvmBL57IpXI++36xBvgvSML0pXI++MQgsvmBL57IpXI++8KdGvrzR+rIpXI++36xBvgXSML0pXI8+nPsyvipjrL0pXI++36xBvgvSML0pXI++nPsyviZjrL0pXI8+xVAbvla4970pXI++nPsyvipjrL0pXI++1v4avq1Ilb0pXI++A7gnvnAfGb0pXI8+A7gnvnYfGb0pXI++8KdGvt40orEpXI8+36xBvgvSML0pXI++8KdGvrzR+rIpXI++MQgsvtQ2KLEpXI8+MQgsvmBL57IpXI++A7gnvnYfGb0pXI++AYAGvj2F1r0pXI++1v4avqlIlb0pXI8+1v4avq1Ilb0pXI++V7j3vcVQG74pXI++JWOsvZ77Mr4pXI++qUiVvdj+Gr4pXI++JWOsvZ77Mr4pXI++D9IwveCsQb4pXI++qUiVvdj+Gr4pXI++D9IwveCsQb4pXI++eR8ZvQS4J74pXI++qUiVvdj+Gr4pXI++D9IwveCsQb4pXI++PfoeMfGnRr4pXI++eR8ZvQS4J74pXI++PfoeMfGnRr4pXI++1asJMTIILL4pXI++eR8ZvQS4J74pXI++JWOsvZz7Mr4pXI8+D9IwveCsQb4pXI++JWOsvZ77Mr4pXI++eR8ZvQS4J74pXI++qUiVvdb+Gr4pXI8+qUiVvdj+Gr4pXI++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/z//H///////P/8f//////8//x///////z//H///////P/8f/////5rOTaf/////ms5Np/////+azk2np0lXNqfJ06S6U0QsutPcqclENjvIxGSiNjvJRDW7mp3JRDY7yMRkolc2p0lXtiubyMQ1uzW7ZGKnyVe2V7bTZDW7yMTIxJpd/////9FelhD/////0V6WEP/////RXpYQ/////2OxsZj/////Y7GxmP////9jsbGY/////y2hlpD/////LaGWkP////8toZaQ/////wlzewb/////CXN7Bv////8Jc3sG/////wlzewb/////CXN7Bv////8Jc3sGDxvvZA+bh43eJiBZ3qZuk1oUpWtZlCyKRCy6U0SsIZZXNqdJV7Yrm94mIFnepm6TINnept6mkGzv5A+bD5t3cqTrWZRZlNJ1ogRde6GEUIJaFKVrWZQsiqIEoYRde1CCXPuhhKGErn1c+117XXuufaTrWZRZlNJ1p8lXtle202S600SsRKzdaSDZ3qbeppBs/////2QxTSf/////ZDFNJ/////9kMU0n/////y0haC//////LSFoL/////8tIWgv/////9HeaK//////0d5or//////R3miv//////YMhDn/////9gyEOf/////2DIQ5//////YMhDn/////9gyEOf/////2DIQ5IFneJiDZj6zvZA8b7+R3srpTRCy609ypD5vv5O/kh03epiDZINlvU0SsutO60yJWRKy607rTIlZXtqfJp8krWzW7yMTIxJpdpWtaFKTr0rVde6IEXPuuve9kDxvv5HeyWZSk66TrLEoPm+/k7+SHTaGEXPtc+1BCNjvJRDW7mp1XNqdJV7Yrm0QsulNErCGWNjvJRDW7mp2nSVc2p8nTpMlENjvIxGSiyMQ1uzW7ZGI1u8jEyMSaXVe2p8mnyStb/3//fzXHZFz/f/9/NcdkXP9//39k1s1U/3//f8m4mmP/f/9/NcdkXP9//381x2Rc/3//f8m4mmP/f/9/mqkya/9//3/JuJpj/3//f8m4mmP/f/9/ybiaY/9//381x2RcRCy6U0SsIZbeJiBZ3qZukw8b72QPm4eN7+QPmw+bd3Ig2d6m3qaQbLrTRKxErN1pDxvvZA+bh41aFKVrWZQsiqIEXXuhhFCCXPuhhKGErn2k61mUWZTSde/kD5sPm3dyutNErESs3WmnyVe2V7bTZMjENbs1u2Ri/3//f5qpMmv/f/9/yJcadP9//3+aqTJr/3//f8m4mmP/f/9/mqkya/9//3+aqTJr/3//f8iXGnT/f/9/yJcadP9//3+aqTJr/3//f8iXGnT/f/9/9YyEef9//3/Ilxp0/3//f8iXGnT/f/9/9YyEef9//3/1jIR5p0lXNqfJ06QgWd4mINmPrLpTRCy609ypIFneJiDZj6yla1oUpOvSte9kDxvv5Hey3qYg2SDZb1MPm+/k7+SHTVmUpOuk6yxKV7anyafJK1tErLrTutMiVt6mINkg2W9TpWtaFKTr0rWhhKIEXPtQwl17ogRc+669WZSk66TrLEqhhFz7XPtQQl17XPtc+649/3//f2TWzVT/f/9/NcdkXP9//39k1s1U/3//f2TWzVT/f/9/ZNbNVP9//3816ORL/3//fzXo5Ev/f/9/ZNbNVP9//3816ORL/3//fzXo5Ev/f/9/NejkS/9//3////8//3//f////z//f/9/NejkS/9//3////8//////wlzeob/////CXN6hv////8Jc3qG/////wlzeob/////CXN6hv////8Jc3qG/////9FelpD/////0V6WkP/////RXpaQ/////y2hlhD/////LaGWEP////8toZYQ/////5tOsZj/////m06xmP////+bTrGYWhRZlKVrLIqiBKGEXXtQgg8bD5vvZIeNXPtde117rn2k66VrpWvSde/k72TvZHdy3ibepiBZbpMPGw+b72SHjUQsRKy6UyGW7+TvZO9kd3Ig2SBZIFmQbLrTulO6U91putO6U7pT3WmnyadJp0nTZMjEyUTJRGRi/////2Oxshj/////Y7GyGP////9jsbIY//////8//5///////z//n///////P/+f//////+//x///////7//H///////v/8f/////2QxTaf/////ZDFNp/////9kMU2nVzZXtqdJK5tELESsulMhljY7NbvJRJqdyUTIxDY7ZKI2OzW7yUSanadJp8lXNtOkyMTJRMlEZGI1uzY7NjuaXVe2VzZXNitb/////5rOTSf/////ms5NJ/////+azk0n/////9HeaC//////0d5oL//////R3mgv/////y0haK//////LSFor/////8tIWiv//////YMhLn/////9gyEuf/////2DIS5//////YMhLn/////9gyEuf/////2DIS5V7ZXNlc2K1tErEQsRCwiVt6m3ibeJm9TulO600Qs3KmnSafJVzbTpCBZINneJo+s3qbeJt4mb1MPmw8bDxuHTVmUWhRaFCxK72Tv5A8bd7IgWSDZ3iaPrKVrpOtaFNK1oYSiBKIEUEJde6IEogSuPVmUWhRaFCxKXXtc+6IErr2la6TrWhTStaGEXPuiBFDCogRde6GEUIKiBKGEXXtQgloUWZSlayyKpOula6Vr0nVc+117XXuufVz7oYShhK59WhRZlKVrLIoPGw+b72SHjd4m3qYgWW6TINkgWSBZkGzv5O9k72R3cqTrpWula9J13ibepiBZbpNELESsulMhllc2V7anSSubp8mnSadJ02S607pTulPdaSDZIFkgWZBs/3//f/WMg/n/f/9/yJca9P9//3/1jIP5/3//f/WMg/n/f/9/yJca9P9//3/Ilxr0/3//f8iXGvT/f/9/mqkx6/9//3+aqTHr/3//f8iXGvT/f/9/mqkx6/9//3/Ilxr0/3//f5qpMev/f/9/ybia4/9//3+aqTHrNbs2OzY7ml3IxMlEyURkYqfJp0mnSdNkVzZXtqdJK5s2OzW7yUSanclEyMQ2O2SiyUTIxDY7ZKKnSafJVzbTpLpTutNELNyp/3//f5qpMev/f/9/ybia4/9//3/JuJrj/3//f8m4muP/f/9/Ncdk3P9//3/JuJrj/3//f8m4muP/f/9/Ncdk3P9//381x2Tc/3//fzXHZNz/f/9/ZNbM1P9//381x2TcRKxELEQsIlZXtlc2VzYrWzW7Njs2O5pdD5sPGw8bh03ept4m3iZvU0SsRCxELCJWulO600Qs3KkgWSDZ3iaPrO9k7+QPG3eyoYSiBKIEUEJZlFoUWhQsSg+bDxsPG4dN72Tv5A8bd7Kla6TrWhTStV17XPuiBK69/3//f2TWzNT/f/9/ZNbM1P9//381x2Tc/3//fzXo48v/f/9/Nejjy/9//39k1szU/3//f2TWzNT/f/9/Nejjy/9//39k1szU/3//fzXo48v/f/9/////v/9//3816OPL/3//f////7//f/9/////v/9//3816OPL//////YMekb/////9gx6Rv/////2DHpG/////wjzesb/////CPN6xv////8I83rG/////y0hllD/////LSGWUP////8tIZZQ/////y0hllD/////LSGWUP////8tIZZQ/////5rOsdj/////ms6x2P////+azrHYoYSiBFz7UMJZlFoUpOssyl17ogRc+669pWuk66Tr0jVde1z7XPuuPaGEXPtc+1BCD5sPG+/kh83ept4mINlu01mUWhSk6yzK72Tv5O/kdzKla6TrpOvSNSBZINkg2ZAsRKxELLrTIdZXtlc2p8kr296m3iYg2W7Tp0mnyafJ0yS6U7rTutPdKSBZINkg2ZAs/////2QxsVj/////ZDGxWP////9kMbFY//////8//1///////z//X///////P/9f//////+//9///////7//3///////v//f/////5tOTWf/////m05NZ/////+bTk1nNjs1uzW7mx3JRMjEyMRkIqdJp8mnydMkNbs2O8jEmt3IxMlENbtj4le2VzanySvbp8mnSVe20+S607pTRKzc6cjEyUQ1u2Pi/////5tOTWf/////m05NZ/////+bTk1n/////y2haO//////LaFo7/////8toWjv/////9FeaG//////0V5ob//////RXmhv/////wlzhHn/////CXOEef////8Jc4R5/////wlzhHn/////CXOEef////8Jc4R5VzZXtle2Kxs2OzW7NbubHUQsRKxErCIWDxsPmw+bhw3eJt6m3qZvE0QsRKxErCIWINkgWd6mj+zv5O9kD5t38rrTulNErNzpWhRZlKVrLIoPGw+b72SHjaIEoYRde1CCpOula6Vr0nVc+117XXuufe/k72TvZHdyoYSiBFz7UMIPmw8b7+SHzVmUWhSk6yzKXXtc+1z7rj2la6TrpOvSNe9k7+Tv5HcyD5sPG+/kh81ErEQsutMh1t6m3iYg2W7T72Tv5O/kdzIgWSDZINmQLLpTutO6090pulO607rT3SmnSafJp8nTJMlEyMTIxGQi/3//f////z//f/9/////P/9//3816Bs0/3//fzXoGzT/f/9/////P/9//3816Bs0/3//fzXoGzT/f/9/ZNYyK/9//39k1jIr/3//fzXoGzT/f/9/NegbNP9//39k1jIr/3//f2TWMiv/f/9/ZNYyK/9//381x5ojRKxELLrTIdY1uzY7yMSa3Ve2VzanySvbNbs2O8jEmt2nyadJV7bT5MjEyUQ1u2PiyUTIxMjEZCI2OzW7NbubHVc2V7ZXtisb/3//fzXHmiP/f/9/ZNYyK/9//381x5oj/3//fzXHmiP/f/9/NceaI/9//3/JuGQc/3//f8m4ZBz/f/9/NceaI/9//3/JuGQc/3//f8m4ZBz/f/9/ybhkHP9//3+aqc0UVzZXtle2KxtELESsRKwiFt4m3qbepm8Tp8mnSVe20+Qg2SBZ3qaP7LrTulNErNzp3ibept6mbxMPGw+bD5uHDVoUWZRZlC0KINkgWd6mj+yk66VrWZTR9e/k72QPm3fyWhRZlKVrLIqiBKGEXXtQgqIEXXuhhFCCpOula6Vr0nVc+6GEoYSufVz7XXtde659/3//f5qpzRT/f/9/ybhkHP9//3+aqc0U/3//f8iX5Av/f/9/mqnNFP9//3/Il+QL/3//f5qpzRT/f/9/mqnNFP9//3/Il+QL/3//f8iX5Av/f/9/yJfkC/9//3/1jHsG/3//f8iX5Av/f/9/9Yx7Bv9//3/1jHsG//////YMesb/////9gx6xv/////2DHrG/////wjzekb/////CPN6Rv////8I83pG/////9HellD/////0d6WUP/////R3pZQ/////y0hltD/////LSGW0P////8tIZbQ/////2Qxsdj/////ZDGx2P////9kMbHYXXuiBKIErj2la1oUWhTSNe9kDxsPG3cyoYRc+6IEUMIPm+/kDxuHzVmUpOtaFCzKulNELEQs3SmnSVc2VzbTJMlENjs2O2Qi72QPGw8bdzIgWd4m3iaQLLpTRCxELN0p3qYg2d4mbtMPm+/kDxuHzUSsutNELCHW/////wlzg/n/////CXOD+f////8Jc4P5/////wlzg/n/////CXOD+f////8Jc4P5/////y2haG//////LaFob/////8toWhv/////5tOTOf/////m05M5/////+bTkzn/////9FeaO//////0V5o7//////RXmjvRCy6U7pTIhbeJiBZIFlvE1c2p0mnSSsbogRde117UQKiBKGEoYRRAloUpWulay0KXPuhhF17rf2k61mUpWvR9Vz7XXuhhK393iYgWSBZbxMPG+9k72SHDVoUpWulay0KutNErLpT3OmnyVe2p0nT5CDZ3qYgWY/s7+QPm+9kd/Ig2d6mIFmP7KTrWZSla9H1/////5rOsVj/////ms6xWP////+azrFY//////+//1///////7//X///////v/9f//////8//9///////z//3///////P//f/////5tOTOf/////m05M5/////+bTkznyUQ2OzY7ZCI2O8lEyUSbHVc2p0mnSSsbyMQ1u8lEY+I1u8jENjua3afJV7anSdPkV7anyVc2K9tErLrTRCwh1jW7yMQ2O5rdoYSiBKIEUEKla1oUWhTSNV17ogSiBK49XXtc+6IErr2hhFz7ogRQwlmUpOtaFCzKp0lXNlc20yS6U0QsRCzdKSBZ3ibeJpAsIFneJt4mkCzvZA8bDxt3MqVrWhRaFNI1WZSk61oULMoPm+/kDxuHzd6mINneJm7T3qYg2d4mbtNErLrTRCwh1le2p8lXNivb/3//f////7//f/9/NegatP9//3////+//3//fzXoGrT/f/9/NegatP9//3////+//3//fzXoGrT/f/9/ZNYxq/9//3816Bq0/3//fzXoGrT/f/9/ZNYxq/9//39k1jGr/3//f2TWMav/f/9/Nceao/9//39k1jGrRCy6U7pTIhZXNqdJp0krGzY7yUTJRJsdogRde117UQJaFKVrpWstCg8b72TvZIcNXPuhhF17rf3v5A+b72R38qTrWZSla9H1DxvvZO9khw3eJiBZIFlvE0QsulO6UyIW7+QPm+9kd/K600SsulPc6SDZ3qYgWY/s/3//f/WMeob/f/9/9Yx6hv9//3/Il+SL/3//f/WMeob/f/9/yJfki/9//3/Il+SL/3//f5qpzJT/f/9/yJfki/9//3+aqcyU/3//f5qpzJT/f/9/mqnMlP9//3/JuGSc/3//f8iX5Iv/f/9/yJfki/9//3+aqcyUNjvJRMlEmx3JRDY7NjtkIqdJVzZXNtMkV7anyVc2K9s1u8jENjua3cjENbvJRGPiutNErLpT3OnIxDW7yURj4qfJV7anSdPk/3//fzXHmqP/f/9/Nceao/9//39k1jGr/3//fzXHmqP/f/9/ybhknP9//381x5qj/3//fzXHmqP/f/9/ybhknP9//3/JuGSc/3//f5qpzJT/f/9/ybhknP9//3/JuGSc")
 }]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_78d2f"]
-render_priority = 0
-shader = ExtResource("3_lcvh6")
-shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
-shader_parameter/edge_color = Color(5.912981, 5.158734, 0, 1)
-shader_parameter/edge_thickness = 0.2
-shader_parameter/glow_amount = 30.0
-shader_parameter/edge_softness = 4.0
-shader_parameter/line_gap_amount = 0.99
-shader_parameter/line_gap_spacing = 3.2
-shader_parameter/line_gap_size = 2.1
-shader_parameter/line_gap_softness = 1.95
-shader_parameter/line_gap_angle = 0.0
-shader_parameter/line_gap_offset = 0.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_32frn"]
-render_priority = 0
-shader = ExtResource("3_lcvh6")
-shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
-shader_parameter/edge_color = Color(5.912981, 5.158734, 0, 1)
-shader_parameter/edge_thickness = 0.2
-shader_parameter/glow_amount = 30.0
-shader_parameter/edge_softness = 4.0
-shader_parameter/line_gap_amount = 0.99
-shader_parameter/line_gap_spacing = 3.2
-shader_parameter/line_gap_size = 2.1
-shader_parameter/line_gap_softness = 1.95
-shader_parameter/line_gap_angle = 0.0
-shader_parameter/line_gap_offset = 0.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wf0y0"]
-render_priority = 0
-shader = ExtResource("3_lcvh6")
-shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
-shader_parameter/edge_color = Color(5.912981, 5.158734, 0, 1)
-shader_parameter/edge_thickness = 0.2
-shader_parameter/glow_amount = 30.0
-shader_parameter/edge_softness = 4.0
-shader_parameter/line_gap_amount = 0.99
-shader_parameter/line_gap_spacing = 3.2
-shader_parameter/line_gap_size = 2.1
-shader_parameter/line_gap_softness = 1.95
-shader_parameter/line_gap_angle = 0.0
-shader_parameter/line_gap_offset = 0.0
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lcvh6"]
+render_priority = 0
+shader = ExtResource("3_lcvh6")
+shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
+shader_parameter/edge_color = Color(5.912981, 5.158734, 0, 1)
+shader_parameter/edge_thickness = 0.2
+shader_parameter/glow_amount = 30.0
+shader_parameter/edge_softness = 4.0
+shader_parameter/line_gap_amount = 0.99
+shader_parameter/line_gap_spacing = 3.2
+shader_parameter/line_gap_size = 2.1
+shader_parameter/line_gap_softness = 1.95
+shader_parameter/line_gap_angle = 0.0
+shader_parameter/line_gap_offset = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kvivd"]
+render_priority = 0
+shader = ExtResource("3_lcvh6")
+shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
+shader_parameter/edge_color = Color(5.912981, 5.158734, 0, 1)
+shader_parameter/edge_thickness = 0.2
+shader_parameter/glow_amount = 30.0
+shader_parameter/edge_softness = 4.0
+shader_parameter/line_gap_amount = 0.99
+shader_parameter/line_gap_spacing = 3.2
+shader_parameter/line_gap_size = 2.1
+shader_parameter/line_gap_softness = 1.95
+shader_parameter/line_gap_angle = 0.0
+shader_parameter/line_gap_offset = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gbo2g"]
+render_priority = 0
+shader = ExtResource("3_lcvh6")
+shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
+shader_parameter/edge_color = Color(5.912981, 5.158734, 0, 1)
+shader_parameter/edge_thickness = 0.2
+shader_parameter/glow_amount = 30.0
+shader_parameter/edge_softness = 4.0
+shader_parameter/line_gap_amount = 0.99
+shader_parameter/line_gap_spacing = 3.2
+shader_parameter/line_gap_size = 2.1
+shader_parameter/line_gap_softness = 1.95
+shader_parameter/line_gap_angle = 0.0
+shader_parameter/line_gap_offset = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wyuqv"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -174,7 +162,7 @@ _surfaces = [{
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_1vd3e"]
 data = PackedVector3Array(-1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, -1.087, 0, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -3.2609, -1.087, -1.087, -3.2609, 1.087, 0, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -1.087, -1.087, 0, -1.087, 1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, 1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -3.2609, 1.087, 0, -1.087, -1.087, 0, -1.087, 1.087, 1.087, -3.2609, -1.087, 1.087, -3.2609, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -3.2609, 1.087, 0, -1.087, 1.087, 1.087, -1.087, 1.087)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kvivd"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_trjxu"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -192,7 +180,7 @@ shader_parameter/line_gap_offset = 0.0
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_2svof"]
 data = PackedVector3Array(-1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, -1.087, 0, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -3.2609, -1.087, -1.087, -3.2609, 1.087, 0, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -1.087, -1.087, 0, -1.087, 1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, 1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -3.2609, 1.087, 0, -1.087, -1.087, 0, -1.087, 1.087, 1.087, -3.2609, -1.087, 1.087, -3.2609, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -3.2609, 1.087, 0, -1.087, 1.087, 1.087, -1.087, 1.087)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gbo2g"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bkidj"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -210,7 +198,7 @@ shader_parameter/line_gap_offset = 0.0
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_u0cw1"]
 data = PackedVector3Array(-1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, -1.087, 0, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -3.2609, -1.087, -1.087, -3.2609, 1.087, 0, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -1.087, -1.087, 0, -1.087, 1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, 1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -3.2609, 1.087, 0, -1.087, -1.087, 0, -1.087, 1.087, 1.087, -3.2609, -1.087, 1.087, -3.2609, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -3.2609, 1.087, 0, -1.087, 1.087, 1.087, -1.087, 1.087)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wyuqv"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dhtr8"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -228,7 +216,7 @@ shader_parameter/line_gap_offset = 0.0
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_74xva"]
 data = PackedVector3Array(-1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, -1.087, 1.087, -1.087, -1.087, -1.087, 0, -1.087, 1.087, -1.087, -1.087, 1.087, 1.087, 1.087, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 1.087, 1.087, 1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, -1.087, 0, -1.087, 1.087, -1.087, -1.087, -1.087, -1.087, -3.2609, -1.087, -1.087, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -3.2609, -1.087, -1.087, -3.2609, 1.087, 0, -1.087, 1.087, -1.087, -3.2609, 1.087, -1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -1.087, -1.087, 0, -1.087, 1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, 1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, -1.087, 0, -1.087, -1.087, 1.087, -3.2609, -1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -3.2609, 1.087, 0, -1.087, -1.087, 0, -1.087, 1.087, 1.087, -3.2609, -1.087, 1.087, -3.2609, 1.087, 1.087, -1.087, 1.087, 1.087, -1.087, -1.087, 1.087, -1.087, 1.087, 0, -1.087, 1.087, 1.087, -3.2609, 1.087, 0, -1.087, 1.087, 1.087, -1.087, 1.087)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_trjxu"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fj5nh"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -249,7 +237,7 @@ Save Lives"
 font_size = 13
 line_spacing = -1.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bkidj"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sliq7"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -296,7 +284,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_cqboi")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dhtr8"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c1dhy"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -346,7 +334,7 @@ shadow_mesh = SubResource("ArrayMesh_jc3wt")
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_qy441"]
 data = PackedVector3Array(-0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fj5nh"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2cor1"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.03, 0.08, 0.16, 1)
@@ -393,7 +381,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_hdnsd")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sliq7"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hpai5"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -442,7 +430,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_5oi5w")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_c1dhy"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nkykc"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -457,7 +445,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2cor1"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nal1j"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -487,7 +475,7 @@ _surfaces = [{
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_md1in"]
 data = PackedVector3Array(-0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 1.5, -0.5, -0.5, 2.5, -0.5, 0.5, 2.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 1.5, -0.5, -0.5, 2.5, -0.5, -0.5, 2.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 1.5, -0.5, 0.5, 1.5, -0.5, -0.5, 1.5, 0.5, -0.5, 3.5, -0.5, -0.5, 4.5, -0.5, 0.5, 4.5, -0.5, -0.5, 5.5, -0.5, -0.5, 6.5, -0.5, 0.5, 6.5, -0.5, -0.5, 3.5, -0.5, -0.5, 4.5, -0.5, -0.5, 4.5, 0.5, -0.5, 5.5, -0.5, -0.5, 6.5, -0.5, -0.5, 6.5, 0.5, -0.5, 3.5, -0.5, 0.5, 3.5, -0.5, -0.5, 3.5, 0.5, -0.5, 5.5, -0.5, 0.5, 5.5, -0.5, -0.5, 5.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 1.5, -0.5, -0.5, 1.5, -0.5, 0.5, 2.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 2.5, -0.5, -0.5, 2.5, -0.5, 0.5, 2.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 2.5, -0.5, 0.5, 1.5, -0.5, 0.5, 1.5, 0.5, 0.5, 3.5, -0.5, -0.5, 3.5, -0.5, 0.5, 4.5, -0.5, 0.5, 5.5, -0.5, -0.5, 5.5, -0.5, 0.5, 6.5, -0.5, 0.5, 4.5, -0.5, -0.5, 4.5, -0.5, 0.5, 4.5, 0.5, 0.5, 6.5, -0.5, -0.5, 6.5, -0.5, 0.5, 6.5, 0.5, 0.5, 4.5, -0.5, 0.5, 3.5, -0.5, 0.5, 3.5, 0.5, 0.5, 6.5, -0.5, 0.5, 5.5, -0.5, 0.5, 5.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 1.5, -0.5, -0.5, 2.5, 0.5, -0.5, 1.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 2.5, -0.5, -0.5, 2.5, 0.5, 0.5, 2.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 2.5, 0.5, -0.5, 1.5, 0.5, 0.5, 1.5, 0.5, -0.5, 3.5, -0.5, -0.5, 4.5, 0.5, -0.5, 3.5, 0.5, -0.5, 5.5, -0.5, -0.5, 6.5, 0.5, -0.5, 5.5, 0.5, -0.5, 4.5, -0.5, -0.5, 4.5, 0.5, 0.5, 4.5, 0.5, -0.5, 6.5, -0.5, -0.5, 6.5, 0.5, 0.5, 6.5, 0.5, -0.5, 4.5, 0.5, -0.5, 3.5, 0.5, 0.5, 3.5, 0.5, -0.5, 6.5, 0.5, -0.5, 5.5, 0.5, 0.5, 5.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 1.5, -0.5, 0.5, 1.5, 0.5, -0.5, 1.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 2.5, -0.5, 0.5, 1.5, 0.5, 0.5, 2.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 2.5, 0.5, -0.5, 2.5, 0.5, 0.5, 1.5, 0.5, 0.5, 3.5, -0.5, 0.5, 3.5, 0.5, -0.5, 3.5, 0.5, 0.5, 5.5, -0.5, 0.5, 5.5, 0.5, -0.5, 5.5, 0.5, 0.5, 4.5, -0.5, 0.5, 3.5, 0.5, 0.5, 4.5, 0.5, 0.5, 6.5, -0.5, 0.5, 5.5, 0.5, 0.5, 6.5, 0.5, 0.5, 4.5, 0.5, -0.5, 4.5, 0.5, 0.5, 3.5, 0.5, 0.5, 6.5, 0.5, -0.5, 6.5, 0.5, 0.5, 5.5, 0.5, 0.5, 7.5, -0.5, -0.5, 8.5, -0.5, 0.5, 8.5, -0.5, -0.5, 9.5, -0.5, -0.5, 10.5, -0.5, 0.5, 10.5, -0.5, -0.5, 7.5, -0.5, -0.5, 8.5, -0.5, -0.5, 8.5, 0.5, -0.5, 9.5, -0.5, -0.5, 10.5, -0.5, -0.5, 10.5, 0.5, -0.5, 7.5, -0.5, 0.5, 7.5, -0.5, -0.5, 7.5, 0.5, -0.5, 9.5, -0.5, 0.5, 9.5, -0.5, -0.5, 9.5, 0.5, -0.5, 11.5, -0.5, -0.5, 12.5, -0.5, 0.5, 12.5, -0.5, -0.5, 13.5, -0.5, -0.5, 14.5, -0.5, 0.5, 14.5, -0.5, -0.5, 11.5, -0.5, -0.5, 12.5, -0.5, -0.5, 12.5, 0.5, -0.5, 13.5, -0.5, -0.5, 14.5, -0.5, -0.5, 14.5, 0.5, -0.5, 11.5, -0.5, 0.5, 11.5, -0.5, -0.5, 11.5, 0.5, -0.5, 13.5, -0.5, 0.5, 13.5, -0.5, -0.5, 13.5, 0.5, -0.5, 7.5, -0.5, -0.5, 7.5, -0.5, 0.5, 8.5, -0.5, 0.5, 9.5, -0.5, -0.5, 9.5, -0.5, 0.5, 10.5, -0.5, 0.5, 8.5, -0.5, -0.5, 8.5, -0.5, 0.5, 8.5, 0.5, 0.5, 10.5, -0.5, -0.5, 10.5, -0.5, 0.5, 10.5, 0.5, 0.5, 8.5, -0.5, 0.5, 7.5, -0.5, 0.5, 7.5, 0.5, 0.5, 10.5, -0.5, 0.5, 9.5, -0.5, 0.5, 9.5, 0.5, 0.5, 11.5, -0.5, -0.5, 11.5, -0.5, 0.5, 12.5, -0.5, 0.5, 13.5, -0.5, -0.5, 13.5, -0.5, 0.5, 14.5, -0.5, 0.5, 12.5, -0.5, -0.5, 12.5, -0.5, 0.5, 12.5, 0.5, 0.5, 14.5, -0.5, -0.5, 14.5, -0.5, 0.5, 14.5, 0.5, 0.5, 12.5, -0.5, 0.5, 11.5, -0.5, 0.5, 11.5, 0.5, 0.5, 14.5, -0.5, 0.5, 13.5, -0.5, 0.5, 13.5, 0.5, 0.5, 7.5, -0.5, -0.5, 8.5, 0.5, -0.5, 7.5, 0.5, -0.5, 9.5, -0.5, -0.5, 10.5, 0.5, -0.5, 9.5, 0.5, -0.5, 8.5, -0.5, -0.5, 8.5, 0.5, 0.5, 8.5, 0.5, -0.5, 10.5, -0.5, -0.5, 10.5, 0.5, 0.5, 10.5, 0.5, -0.5, 8.5, 0.5, -0.5, 7.5, 0.5, 0.5, 7.5, 0.5, -0.5, 10.5, 0.5, -0.5, 9.5, 0.5, 0.5, 9.5, 0.5, -0.5, 11.5, -0.5, -0.5, 12.5, 0.5, -0.5, 11.5, 0.5, -0.5, 13.5, -0.5, -0.5, 14.5, 0.5, -0.5, 13.5, 0.5, -0.5, 12.5, -0.5, -0.5, 12.5, 0.5, 0.5, 12.5, 0.5, -0.5, 14.5, -0.5, -0.5, 14.5, 0.5, 0.5, 14.5, 0.5, -0.5, 12.5, 0.5, -0.5, 11.5, 0.5, 0.5, 11.5, 0.5, -0.5, 14.5, 0.5, -0.5, 13.5, 0.5, 0.5, 13.5, 0.5, -0.5, 7.5, -0.5, 0.5, 7.5, 0.5, -0.5, 7.5, 0.5, 0.5, 9.5, -0.5, 0.5, 9.5, 0.5, -0.5, 9.5, 0.5, 0.5, 8.5, -0.5, 0.5, 7.5, 0.5, 0.5, 8.5, 0.5, 0.5, 10.5, -0.5, 0.5, 9.5, 0.5, 0.5, 10.5, 0.5, 0.5, 8.5, 0.5, -0.5, 8.5, 0.5, 0.5, 7.5, 0.5, 0.5, 10.5, 0.5, -0.5, 10.5, 0.5, 0.5, 9.5, 0.5, 0.5, 11.5, -0.5, 0.5, 11.5, 0.5, -0.5, 11.5, 0.5, 0.5, 13.5, -0.5, 0.5, 13.5, 0.5, -0.5, 13.5, 0.5, 0.5, 12.5, -0.5, 0.5, 11.5, 0.5, 0.5, 12.5, 0.5, 0.5, 14.5, -0.5, 0.5, 13.5, 0.5, 0.5, 14.5, 0.5, 0.5, 12.5, 0.5, -0.5, 12.5, 0.5, 0.5, 11.5, 0.5, 0.5, 14.5, 0.5, -0.5, 14.5, 0.5, 0.5, 13.5, 0.5, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hpai5"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hkcy3"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -534,7 +522,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_lve4p")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nkykc"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3p3ns"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -549,7 +537,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nal1j"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hdnsd"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -567,7 +555,7 @@ shader_parameter/line_gap_offset = 0.0
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_hj3yw"]
 data = PackedVector3Array(-0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hkcy3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gmr7m"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -614,7 +602,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ab17f")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3p3ns"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pcygo"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -664,7 +652,7 @@ shadow_mesh = SubResource("ArrayMesh_s470r")
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_oyq6x"]
 data = PackedVector3Array(-0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hdnsd"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rta1d"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -679,7 +667,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gmr7m"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yeij3"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -697,7 +685,7 @@ shader_parameter/line_gap_offset = 0.0
 [sub_resource type="PrismMesh" id="PrismMesh_pcygo"]
 size = Vector3(50, 3, 0.1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_pcygo"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ckeui"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -712,7 +700,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_o1g8v"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h4cee"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -727,7 +715,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8bwrn"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qrgtt"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -742,7 +730,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fd204"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jwbkf"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -757,7 +745,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_y65rl"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x6vcw"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -772,7 +760,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_paj87"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_adf8l"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -787,7 +775,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_24kr5"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_51a4j"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -802,7 +790,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jyfw7"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4215b"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -817,7 +805,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vhsrk"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qetcw"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -832,7 +820,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2mamo"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_41u70"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -847,7 +835,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yplbv"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nbdum"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -868,7 +856,7 @@ radial_segments = 24
 rings = 0
 cap_top = false
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rkmxq"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4coy5"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -883,7 +871,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wb3r1"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt7t"]
 render_priority = 0
 shader = ExtResource("9_4x1xd")
 shader_parameter/face_color = Color(0.0323, 0.08737998, 0.17, 0)
@@ -898,7 +886,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rta1d"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dvetn"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -913,7 +901,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yeij3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1rx7e"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -931,7 +919,7 @@ shader_parameter/line_gap_offset = 0.0
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_tej34"]
 data = PackedVector3Array(-0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ckeui"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_unifw"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -978,7 +966,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_2du6t")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_h4cee"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yckvh"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1025,7 +1013,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_npqra")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qrgtt"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q3hqb"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1072,7 +1060,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_w143a")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jwbkf"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1xvxb"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1087,7 +1075,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_x6vcw"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hdc51"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1102,7 +1090,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_adf8l"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1i6g3"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1152,7 +1140,7 @@ shadow_mesh = SubResource("ArrayMesh_fwjsh")
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_uud5r"]
 data = PackedVector3Array(-0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 1.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 1.5, -0.5, -0.5, 1.5, 0.5, -0.5, 1.5, -0.5, -0.5, 1.5, 0.5, 0.5, 1.5, 0.5, -0.5, 1.5, -0.5, -0.5, 1.5, -0.5, 0.5, 1.5, 0.5, 0.5, 1.5, -0.5, 0.5, 0.5, 0.5, 0.5, 1.5, 0.5, 0.5, 1.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 1.5, -0.5, 0.5, 1.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 1.5, -0.5, 0.5, 1.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 1.5, 0.5, -0.5, 1.5, 0.5, 0.5, 0.5, 0.5, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_51a4j"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iqtmm"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1167,7 +1155,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4215b"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qdipm"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1182,7 +1170,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qetcw"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oms4o"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1197,7 +1185,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_41u70"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kornp"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1212,7 +1200,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nbdum"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ug0ug"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1277,7 +1265,7 @@ metadata/vector_wireframe = true
 [sub_resource type="BoxShape3D" id="BoxShape3D_3vvr1"]
 size = Vector3(27, 1, 39)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4coy5"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k1oqr"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1295,7 +1283,7 @@ shader_parameter/line_gap_offset = 0.0
 [sub_resource type="BoxMesh" id="BoxMesh_3vvr1"]
 size = Vector3(28, 1, 39)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt7t"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_es4ir"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1313,7 +1301,7 @@ shader_parameter/line_gap_offset = 0.0
 [sub_resource type="QuadMesh" id="QuadMesh_78d2f"]
 size = Vector2(30, 0.2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dvetn"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o1g8v"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1328,7 +1316,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1rx7e"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8bwrn"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1343,7 +1331,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_unifw"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fd204"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1358,7 +1346,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yckvh"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y65rl"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1373,7 +1361,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_q3hqb"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_paj87"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1388,7 +1376,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1xvxb"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_24kr5"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.03, 0.08, 0.16, 1)
@@ -1403,7 +1391,7 @@ shader_parameter/line_gap_softness = 0.55
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hdc51"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jyfw7"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1429,7 +1417,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray("Lt5MMUjhrMAAAIC+8QQ1PkjhrMD1BDW+8QQ1PkjhrED1BDW+AACAPkjhrEAAAAAA8wQ1PkjhrEDzBDU+AAAAAEjhrEAAAAAA8wQ1PkjhrEDzBDU+AACAPkjhrEAAAAAAAACAPkjhrMAAAAAA8wQ1PkjhrEDzBDU+Lr07skjhrEAAAIA+AAAAAEjhrEAAAAAALr07skjhrEAAAIA+8wQ1PkjhrEDzBDU+8wQ1PkjhrMDzBDU+8QQ1PkjhrED1BDW+AACAPkjhrEAAAAAAAAAAAEjhrEAAAAAAAACAPkjhrEAAAAAA8QQ1PkjhrED1BDW+8QQ1PkjhrMD1BDW+Lt5MMUjhrEAAAIC+8QQ1PkjhrED1BDW+AAAAAEjhrEAAAAAA8QQ1PkjhrED1BDW+Lt5MMUjhrEAAAIC+Lt5MMUjhrMAAAIC+AACAPkjhrMAAAAAA8wQ1PkjhrMDzBDU+8wQ1PkjhrEDzBDU+Lr07skjhrMAAAIA+8wQ1PkjhrMDzBDU+AACAPkjhrMAAAAAA8wQ1PkjhrMDzBDU+Lr07skjhrMAAAIA+Lr07skjhrEAAAIA+8wQ1vkjhrMDzBDU+Lr07skjhrMAAAIA+AACAPkjhrMAAAAAA8QQ1PkjhrMD1BDW+AACAPkjhrMAAAAAAAACAPkjhrEAAAAAA8QQ1PkjhrMD1BDW+Lt5MMUjhrMAAAIC+AACAPkjhrMAAAAAAAACAvkjhrMAuvbuy9AQ1vkjhrMDyBDW+9AQ1vkjhrEDyBDW+Lt5MMUjhrMAAAIC+9AQ1vkjhrMDyBDW+AACAPkjhrMAAAAAALr07skjhrEAAAIA+8wQ1vkjhrEDzBDU+AAAAAEjhrEAAAAAA8wQ1vkjhrEDzBDU+Lr07skjhrEAAAIA+Lr07skjhrMAAAIA+8wQ1vkjhrEDzBDU+AACAvkjhrEAuvbuyAAAAAEjhrEAAAAAAAACAvkjhrEAuvbuy8wQ1vkjhrEDzBDU+8wQ1vkjhrMDzBDU+9AQ1vkjhrEDyBDW+Lt5MMUjhrEAAAIC+AAAAAEjhrEAAAAAALt5MMUjhrEAAAIC+9AQ1vkjhrEDyBDW+9AQ1vkjhrMDyBDW+AACAvkjhrEAuvbuy9AQ1vkjhrEDyBDW+AAAAAEjhrEAAAAAA9AQ1vkjhrEDyBDW+AACAvkjhrEAuvbuyAACAvkjhrMAuvbuyLr07skjhrMAAAIA+8wQ1vkjhrMDzBDU+8wQ1vkjhrEDzBDU+AACAvkjhrMAuvbuy8wQ1vkjhrMDzBDU+AACAPkjhrMAAAAAA8wQ1vkjhrMDzBDU+AACAvkjhrMAuvbuyAACAvkjhrEAuvbuy9AQ1vkjhrMDyBDW+Lt5MMUjhrMAAAIC+Lt5MMUjhrEAAAIC+9AQ1vkjhrMDyBDW+AACAvkjhrMAuvbuyAACAPkjhrMAAAAAA//938Hfw/7///ym3Kbf/v///1cjVyP+//3///4Ja/7//f///glr/v/9///+CWv+/1cj/f9VI/7///4aPho//v3fw/394cP+//3///30l/7//f///fSX/v/9///99Jf+/ho//f4cP/7/VyP9/1Uj/vym3/38pN/+//3///wAAvhL/f///AAC+Ev9///8AAL4S//+GjwAAwwf//9XIAABqJP//KbcAAJQb/3///wAAQS3/f///AABBLf9///8AAEEt///VyNXI/78AAHfw///Cx///d/B38P+/d/D/f3hw/78pt/9/KTf/v9XI/3/VSP+//38AAP///7//fwAA////v/9/AAD///+/Kbf/fyk3/794cP9/AADCx4aP/3+HD/+//38AAP///7//fwAA////v/9/AAD///+///8ptwAAlBt38P9////DB///ho8AAMMH/38AAP///7//fwAA////v/9/AAD///+/AACGj///O/gAANXI//+U2wAAKbf//2rk/38AAP///7//fwAA////v/9/AAD///+//3///wAAvdL/f///AAC90v9///8AAL3S1Uj/fwAAlNuGj/9/hw//v3hw/38AAMLH/3///wAAQO3/f///AABA7f9///8AAEDthw//fwAAO/jVSP9/AACU2yk3/38AAGrk/3///30l/z//f///fSX/P/9///99Jf8/AAB38P//wscAACm3//9q5AAA1cj//5Tb/3///4Ja/z//f///glr/P/9///+CWv8/AAApt///auSHD/9/AAA7+AAAho///zv4eHD/fwAAwscpN/9/AABq5NVI/38AAJTb/38AAP///7//fwAA////v/9/AAD///+/KTf/fwAAauQAAIaP//87+IcP/38AADv4AADVyP//lNv//3fwd/D/vwAAd/D//8LH/38AAP///7//fwAA////v/9/AAD///+/")
 }]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1i6g3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vhsrk"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1444,7 +1432,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_iqtmm"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2mamo"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.03, 0.08, 0.16, 1)
@@ -1523,7 +1511,7 @@ _data = {
 &"sailboat": SubResource("Animation_vla5s")
 }
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qdipm"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yplbv"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1552,7 +1540,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray("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ZgD6vmYA+j4gheu+ZgD6vmYA+j4ghes+AAAAvx+F6z4fheu+IIXrvmYA+j5mAPq+H4XrvgAAAD8fheu+Glj3vhpY9z4aWPe+IIXrvmYA+j5mAPq+Glj3vhpY9z4aWPe+H4Xrvh+F6z4AAAC/H4XrvgAAAD8fheu+ZgD6vmYA+j4gheu+Glj3vhpY9z4aWPe+Glj3vhpY9z4aWPe+ZgD6vmYA+j4gheu+AAAAvx+F6z4fheu+H4Xrvh+F6z4AAAC/Glj3vhpY9z4aWPe+ZgD6viCF6z5mAPq+Glj3vhpY9z4aWPe+AAAAvx+F6z4fheu+ZgD6viCF6z5mAPq+H4Xrvh+F6z4AAAC/ZgD6viCF6z5mAPq+ZgD6viCF675mAPq+//98pf9//////3yl/3//////fKX/f///gdr/f/9///+B2v9//3///4Ha/3//f///fKX/f/9///98pf9//3///3yl/3//f///////f/9///////9//3///////3//f///5cmCaNiTJuzlyYJo2JMm7OXJgmjYkybsm56CaNiTJuybnoJo2JMm7JuegmjYkybs5cljYXylQO3lyWNhfKVA7eXJY2F8pUDtm54ZNoHavdKbnhk2gdq90pueGTaB2r3SfJdjYf9/QO18l2Nh/39A7XyXY2H/f0DtfJcZNibs19N8lxk2JuzX03yXGTYm7NfTgdqCWnylQO2B2oJafKVA7YHaglp8pUDtfKV9JYHavdJ8pX0lgdq90nylfSWB2r3S/3+CWv9/QO3/f4Ja/39A7f9/glr/f0Dt/399Jf///7//f30l////v/9/fSX///+/gdr///9/QO2B2v///39A7YHa////f0Dt//+B2v9//////4Ha/3//////gdr/f///gdqCWnylQO2B2oJafKVA7YHaglp8pUDtfKV9JYHavdJ8pX0lgdq90nylfSWB2r3SgujmSRKh7/GC6OZJEqHv8YLo5kkSoe/xguicHnKtme+C6Jwecq2Z74LonB5yrZnvYuHmSXylQO1i4eZJfKVA7WLh5kl8pUDtGLacHoHavdIYtpwegdq90hi2nB6B2r3SYuF8F4Ja/v9i4XwXglr+/2LhfBeCWv7/GLZ8F+zeDs4YtnwX7N4Ozhi2fBfs3g7O//////9//////////3//////////f////38AAP///7//fwAA////v/9/AAD///+/gdoAAIJa/v+B2gAAglr+/4HaAACCWv///3//f/9/////f/9//3////9//3//f///5cmbnoJaQO3lyZueglpA7eXJm56CWkDtm57lyX0lvdKbnuXJfSW90pue5cl9Jb3S5cl8l+xe7/HlyXyX7F7v8eXJfJfsXu/xm558l4xSme+bnnyXjFKZ75uefJeMUpnvfJflyRIhDs58l+XJEiEOznyX5ckSIQ7OfJebnnyl/v98l5uefKX+/3yXm558pf7/gdp8pYJaQO2B2nylglpA7YHafKWCWkDtfKWB2n0lvdJ8pYHafSW90nylgdp9Jb3Sgdr/f/9///+B2v9//3///4Ha/3//f///fKX/f/9///98pf9//3///3yl/3//f////3+B2gAA/7//f4HaAAD/v/9/gdoAAP+//398pXyl/v//f3ylfKX+//9/fKWCWv7//3///wAA/7//f///AAD/v/9///8AAP+/fKUAAP///798pQAA////v3ylAAD///+/gdp8pYJaQO2B2nylglpA7YHafKWCWkDtfKWB2n0lvdJ8pYHafSW90nylgdp9Jb3SYuEYtoJaQO1i4Ri2glpA7WLhGLaCWkDtGLZi4X0lvdIYtmLhfSW90hi2YuF9Jb3SgugYtiZsJuyC6Bi2Jmwm7ILoGLYmbCbsguhi4SZsJuyC6GLhJmwm7ILoYuEmbCbsGLaC6NgT19MYtoLo2BPX0xi2gujYE9fTYuGC6P9/QO1i4YLo/39A7WLhguj/f0Dt////f/9///////9//3///////3//f/////98pf9//////3yl/3//////fKX/f/////+B2v9//////4Ha/3//////gdr/f///fKX//wAA/798pf//AAD/v3yl//8AAP+/fSWCWoJaQO19JYJaglpA7X0lglqCWkDt/3//f/9/////f/9//3/+//9//3//f////3+CWv9/QO3/f4Ja/39A7f9/glr/f0Dt/399Jf///7//f30l////v/9/fSX///+//38AAP///7//fwAA////v/9/AAD///+/glr/f/9///+CWv9//3///4Ja/3//f/7/fSX/f/9///99Jf9//3///30l/3//f///gmhjYf9/QO2CaGNh/39A7YJoY2H/f0DtgmgZNk3YEraCaBk2TdgStoJoGTZN2BK2Y2GCaCZsJuxjYYJoJmwm7GNhgmgmbCbsGTaCaOZJxO8ZNoJo5knE7xk2gmjmScTvY2EZNoHaQK1jYRk2gdpArWNhGTaB2kCtGTZjYYJaQO0ZNmNhglpA7Rk2Y2GCWkDtglp9JYHaQK2CWn0lgdpArYJafSWB2kCtAAB8pf9///8AAHyl/3///wAAfKX/f///gdoAAIJa/v+B2gAAglr//4HaAAB8pf//fKUAAP///798pQAA////v3ylAAD///+/AAD/f/9///8AAP9//3///wAA/3//f///AACB2v9///8AAIHa/3///wAAgdr/f///AAB8pf9///8AAHyl/3///wAAfKX/f///glp9JYHaQK2CWn0lgdpArYJafSWB2kCtfSWCWoJaQO19JYJaglpA7X0lglqCWkDtnB58F3yl/v+cHnwXfKX+/5wefBd8pf7/5kl8F+XJxa/mSXwX5cnFr+ZJfBflycWvfBecHhi2LPV8F5weGLYs9XwXnB4Ytiz1fBfmSU5YEvZ8F+ZJTlgS9nwX5klOWBL25kmcHoHaQK3mSZwegdpAreZJnB6B2kCt/3///wAA/7//f///AAD/v/9///8AAP+//3+B2gAA/7//f4HaAAD/v/9/gdoAAP+//398pYJa/v//f3ylfKX+//9/fKWCWv7/gmjlyRk2xa+CaOXJGTbFr4Jo5ckZNsWvgmibnoJa/v+CaJueglr+/4Jom56CWv7/Y2HlyX0lQK1jYeXJfSVArWNh5cl9JUCtGTabnnylQO0ZNpuefKVA7Rk2m558pUDtY2F8l+ZJLPVjYXyX5kks9WNhfJfmSSz1GTZ8l7CnEvYZNnyXsKcS9hk2fJewpxL2glqB2n0lQK2CWoHafSVArYJagdp9JUCtfSV8pXylQO19JXylfKVA7X0lfKV8pUDtglr/f/9//v+CWv9//3/+/4Ja/3//f///fSX/f/9///99Jf9//3///30l/3//f///AAD/f/9///8AAP9//3///wAA/3//f///nB7mSYJaQO2cHuZJglpA7Zwe5kmCWkDtfKX//wAA/798pf//AAD/v3yl//8AAP+/gdr///9/QO2B2v///39A7YHa////f0Dt//////9//////////3//////////f///glqB2n0lQK2CWoHafSVArYJagdp9JUCtfSV8pXylQO19JXylfKVA7X0lfKV8pUDt5kmC6LEnErbmSYLosScStuZJguixJxK2nB6C6P9/QO2cHoLo/39A7Zweguj/f0Dt5kli4X0lQK3mSWLhfSVAreZJYuF9JUCtnB4YtnylQO2cHhi2fKVA7ZweGLZ8pUDtfBdi4diTJux8F2Lh2JMm7HwXYuHYkybsfBcYthi2xO98Fxi2GLbE73wXGLYYtsTvAACB2v9///8AAIHa/3///wAAgdr/f///")
 }]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_oms4o"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yw8fw"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1567,7 +1555,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kornp"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rkmxq"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1582,7 +1570,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ug0ug"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wb3r1"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1597,7 +1585,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_k1oqr"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vtbd4"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1612,7 +1600,7 @@ shader_parameter/line_gap_softness = 1.95
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_es4ir"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sa51u"]
 render_priority = 0
 shader = ExtResource("3_lcvh6")
 shader_parameter/face_color = Color(0.0323, 0.08508498, 0.17, 1)
@@ -1642,13 +1630,27 @@ shader_parameter/line_gap_softness = 0.55
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_55am7"]
+shader = ExtResource("17_4x1xd")
+shader_parameter/warp_amount = 0.0850000040375
+shader_parameter/aberration = 0.0010000000475
+shader_parameter/scanline_count = 300.00001045
+shader_parameter/scanline_opacity = 0.10000000475
+shader_parameter/grille_opacity = 0.0
+shader_parameter/bloom_amount = 0.0
+shader_parameter/bloom_spread = 0.02999999932945
+shader_parameter/bloom_threshold = 0.12
+shader_parameter/brightness = 1.40800004313
+shader_parameter/vignette_intensity = 0.3950000187625
+shader_parameter/corner_radius = 0.0
+shader_parameter/grain_amount = 0.0
+shader_parameter/flicker_amount = 0.0
+shader_parameter/phosphor_tint = Color(1, 0.96, 0.88, 1)
+
 [node name="Moss2" type="Node3D" unique_id=229302118]
 script = ExtResource("1_wyuqv")
 forward_axis = Vector3(0, 0, 0)
 lerp_duration = 1.0
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1867718980]
-environment = SubResource("Environment_gbo2g")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1419458972 groups=["directional_light"]]
 unique_name_in_owner = true
@@ -1679,7 +1681,7 @@ transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 0.2, 9.4, 2.93, 19.66)
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D" unique_id=499092404]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, -0.17584229)
-material_override = SubResource("ShaderMaterial_0fn0c")
+material_override = SubResource("ShaderMaterial_78d2f")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -1697,7 +1699,7 @@ line_gap_softness = 1.95
 
 [node name="Circle" type="MeshInstance3D" parent="Emblem_3D" unique_id=1283789252]
 transform = Transform3D(-3.18, 0, 4.8016665e-07, 0, 3.18, 0, -4.8016665e-07, 0, -3.18, 0, 0.02580738, 0.030000687)
-material_override = SubResource("ShaderMaterial_er7go")
+material_override = SubResource("ShaderMaterial_32frn")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -1715,7 +1717,7 @@ line_gap_softness = 1.95
 
 [node name="Circle2" type="MeshInstance3D" parent="Emblem_3D" unique_id=451021924]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0.0079603195, 0.02744925, -0.03149128)
-material_override = SubResource("ShaderMaterial_4x1xd")
+material_override = SubResource("ShaderMaterial_wf0y0")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -1735,7 +1737,7 @@ transform = Transform3D(1.534, 0, 0, 0, 1.534, 0, 0, 0, 0.2, -9.400002, 2.93, 19
 
 [node name="W" type="MeshInstance3D" parent="Emblem_3D2" unique_id=1172860492]
 transform = Transform3D(-3.418, 0, 5.161036e-07, 0, 3.418, 0, -5.161036e-07, 0, -3.418, 0, 0, 0)
-material_override = SubResource("ShaderMaterial_78d2f")
+material_override = SubResource("ShaderMaterial_lcvh6")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -1753,7 +1755,7 @@ line_gap_softness = 1.95
 
 [node name="Circle" type="MeshInstance3D" parent="Emblem_3D2" unique_id=1420083700]
 transform = Transform3D(-3.18, 0, 4.8016665e-07, 0, 3.18, 0, -4.8016665e-07, 0, -3.18, 0, 0.02580738, 0.030000687)
-material_override = SubResource("ShaderMaterial_32frn")
+material_override = SubResource("ShaderMaterial_kvivd")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -1771,7 +1773,7 @@ line_gap_softness = 1.95
 
 [node name="Circle2" type="MeshInstance3D" parent="Emblem_3D2" unique_id=1231849896]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0.0079603195, 0.02744925, -0.03149128)
-material_override = SubResource("ShaderMaterial_wf0y0")
+material_override = SubResource("ShaderMaterial_gbo2g")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -1790,7 +1792,7 @@ line_gap_softness = 1.95
 
 [node name="Pillar" type="MeshInstance3D" parent="Boatmesh" unique_id=623093765]
 transform = Transform3D(0.46, 0, 0, 0, -0.46, 4.0214477e-08, 0, -4.0214477e-08, -0.46, -9.357407, 0, 20.15)
-material_override = SubResource("ShaderMaterial_lcvh6")
+material_override = SubResource("ShaderMaterial_wyuqv")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -1813,7 +1815,7 @@ shape = SubResource("ConcavePolygonShape3D_1vd3e")
 
 [node name="Pillar2" type="MeshInstance3D" parent="Boatmesh" unique_id=853160674]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, -9.357407, 3, 20.15)
-material_override = SubResource("ShaderMaterial_kvivd")
+material_override = SubResource("ShaderMaterial_trjxu")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -1835,7 +1837,7 @@ shape = SubResource("ConcavePolygonShape3D_2svof")
 
 [node name="Pillar3" type="MeshInstance3D" parent="Boatmesh" unique_id=271162901]
 transform = Transform3D(-0.46, 0, -4.0214477e-08, 0, 0.46, 0, 4.0214477e-08, 0, -0.46, 9.399999, 3, 20.15)
-material_override = SubResource("ShaderMaterial_gbo2g")
+material_override = SubResource("ShaderMaterial_bkidj")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -1858,7 +1860,7 @@ shape = SubResource("ConcavePolygonShape3D_u0cw1")
 
 [node name="Pillar4" type="MeshInstance3D" parent="Boatmesh" unique_id=1076136885]
 transform = Transform3D(0.46, 0, 0, 0, -0.46, 4.0214477e-08, 0, -4.0214477e-08, -0.46, 9.41, 0, 20.15)
-material_override = SubResource("ShaderMaterial_wyuqv")
+material_override = SubResource("ShaderMaterial_dhtr8")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -1881,7 +1883,7 @@ shape = SubResource("ConcavePolygonShape3D_74xva")
 
 [node name="Quotes" type="MeshInstance3D" parent="Boatmesh" unique_id=10351786]
 transform = Transform3D(-1.32, 0, -1.9931447e-07, 0, 1.32, 0, 1.9931447e-07, 0, -1.32, 4.6, -2.291, 11.3005905)
-material_override = SubResource("ShaderMaterial_trjxu")
+material_override = SubResource("ShaderMaterial_fj5nh")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -1899,7 +1901,7 @@ line_gap_softness = 1.95
 
 [node name="brickRing" type="MeshInstance3D" parent="Boatmesh" unique_id=1800679336]
 transform = Transform3D(0.09775001, 0, 0, 0, 0.28000003, 0, 0, 0, 0.24225001, 4.630125, -2.505, 11.775)
-material_override = SubResource("ShaderMaterial_bkidj")
+material_override = SubResource("ShaderMaterial_sliq7")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -1917,7 +1919,7 @@ line_gap_softness = 1.95
 
 [node name="Right_tall_pillar4" type="MeshInstance3D" parent="Boatmesh" unique_id=1971536597]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.582716, -2.4185681, 11.774998)
-material_override = SubResource("ShaderMaterial_dhtr8")
+material_override = SubResource("ShaderMaterial_c1dhy")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -1943,25 +1945,19 @@ transform = Transform3D(0.425, 0, 0, 0, 1, 0, 0, 0, 0.425, -6.27, -2.505, 11.775
 
 [node name="Cube_001" parent="Boatmesh/brick_fountain_4" index="0" unique_id=1800679336]
 transform = Transform3D(0.23000003, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57000005, 3.94353, 0, 0)
-material_override = SubResource("ShaderMaterial_fj5nh")
+material_override = SubResource("ShaderMaterial_2cor1")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
 source_mesh = SubResource("ArrayMesh_gmr7m")
 glow_amount = 2.5
-line_gap_amount = null
-line_gap_spacing = null
-line_gap_size = null
-line_gap_softness = null
-line_gap_angle = null
-line_gap_offset = null
 
 [node name="Brick_wall_2" type="Node3D" parent="Boatmesh" unique_id=1643600064]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -1.5, 20.15)
 
 [node name="Cube_001" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1644174907]
 transform = Transform3D(0.25, 0, 0, 0, 0.33, 0, 0, 0, 0.4, -8.29, -1.076, -0.509)
-material_override = SubResource("ShaderMaterial_sliq7")
+material_override = SubResource("ShaderMaterial_hpai5")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -1978,7 +1974,7 @@ line_gap_softness = 1.95
 
 [node name="Cube_002" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=849807802]
 transform = Transform3D(0.25, 0, 0, 0, 0.33, 0, 0, 0, 0.4, 6.865, -1.076, -0.509)
-material_override = SubResource("ShaderMaterial_c1dhy")
+material_override = SubResource("ShaderMaterial_nkykc")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -1996,7 +1992,7 @@ line_gap_softness = 1.95
 
 [node name="Wall" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=674074660]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 0)
-material_override = SubResource("ShaderMaterial_2cor1")
+material_override = SubResource("ShaderMaterial_nal1j")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2017,7 +2013,7 @@ line_gap_softness = 1.95
 shape = SubResource("ConcavePolygonShape3D_md1in")
 
 [node name="Cube_004" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1368513560]
-material_override = SubResource("ShaderMaterial_hpai5")
+material_override = SubResource("ShaderMaterial_hkcy3")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2034,7 +2030,7 @@ line_gap_softness = 1.95
 
 [node name="Right_tall_pillar" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=2051219897]
 transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, -6.2, -1.4000001, -0.06386757)
-material_override = SubResource("ShaderMaterial_nkykc")
+material_override = SubResource("ShaderMaterial_3p3ns")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2052,7 +2048,7 @@ line_gap_softness = 1.95
 
 [node name="Right_tall_pillar5" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1758020979]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.406, -0.895, -8.4)
-material_override = SubResource("ShaderMaterial_nal1j")
+material_override = SubResource("ShaderMaterial_hdnsd")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2075,7 +2071,7 @@ shape = SubResource("ConcavePolygonShape3D_hj3yw")
 
 [node name="Right_tall_pillar_caps" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=879694892]
 transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, -3.3768702, 5, 0)
-material_override = SubResource("ShaderMaterial_hkcy3")
+material_override = SubResource("ShaderMaterial_gmr7m")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2093,7 +2089,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar2" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=297421995]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.399999, 0.5, 0)
-material_override = SubResource("ShaderMaterial_3p3ns")
+material_override = SubResource("ShaderMaterial_pcygo")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2116,7 +2112,7 @@ shape = SubResource("ConcavePolygonShape3D_oyq6x")
 
 [node name="Left_tall_pillar3" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=951834894]
 transform = Transform3D(1, 0, 0, 0, 5, 0, 0, 0, 1, 15.337, 2.4, -0.065)
-material_override = SubResource("ShaderMaterial_hdnsd")
+material_override = SubResource("ShaderMaterial_rta1d")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2134,7 +2130,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar6" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1519746267]
 transform = Transform3D(1, 0, 0, 0, 5, 0, 0, 0, 1, 6.015932, 2.4, 119.63186)
-material_override = SubResource("ShaderMaterial_gmr7m")
+material_override = SubResource("ShaderMaterial_yeij3")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2152,7 +2148,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar7" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=498858845]
 transform = Transform3D(1, 0, 0, 0, 5, 0, 0, 0, 1, 68.657234, 2.4, 119.63186)
-material_override = SubResource("ShaderMaterial_pcygo")
+material_override = SubResource("ShaderMaterial_ckeui")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2170,7 +2166,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar8" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=153746724]
 transform = Transform3D(1, 0, 0, 0, 10.39, 0, 0, 0, 1, 103.349, 11.805, 119.632)
-material_override = SubResource("ShaderMaterial_o1g8v")
+material_override = SubResource("ShaderMaterial_h4cee")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2188,7 +2184,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar9" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=575985407]
 transform = Transform3D(1, 0, 0, 0, 10.39, 0, 0, 0, 1, 32.16098, 11.805, 119.631996)
-material_override = SubResource("ShaderMaterial_8bwrn")
+material_override = SubResource("ShaderMaterial_qrgtt")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2206,7 +2202,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar12" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1648227494]
 transform = Transform3D(1, 0, 0, 0, 10.39, 0, 0, 0, 1, 55.32908, 11.805, 140.96217)
-material_override = SubResource("ShaderMaterial_fd204")
+material_override = SubResource("ShaderMaterial_jwbkf")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2224,7 +2220,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar13" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1327340019]
 transform = Transform3D(1, 0, 0, 0, 10.39, 0, 0, 0, 1, 96.89009, 3.0816727, 140.96217)
-material_override = SubResource("ShaderMaterial_y65rl")
+material_override = SubResource("ShaderMaterial_x6vcw")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2242,7 +2238,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar14" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=2007141831]
 transform = Transform3D(1, 0, 0, 0, 10.39, 0, 0, 0, 1, -3.4788742, 3.0816727, 140.96217)
-material_override = SubResource("ShaderMaterial_paj87")
+material_override = SubResource("ShaderMaterial_adf8l")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2260,7 +2256,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar15" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1272831889]
 transform = Transform3D(1, 0, 0, 0, 10.39, 0, 0, 0, 1, -50.072266, 3.0816727, 140.96217)
-material_override = SubResource("ShaderMaterial_24kr5")
+material_override = SubResource("ShaderMaterial_51a4j")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2278,7 +2274,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar16" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=168933099]
 transform = Transform3D(2.14, 0, 0, 0, 22.235, 0, 0, 0, 2.14, -50.072266, 3.0816727, 166.53809)
-material_override = SubResource("ShaderMaterial_jyfw7")
+material_override = SubResource("ShaderMaterial_4215b")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2296,7 +2292,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar17" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1168301146]
 transform = Transform3D(2.14, 0, 0, 0, 22.235, 0, 0, 0, 2.14, -0.40691757, 9.426193, 210.06352)
-material_override = SubResource("ShaderMaterial_vhsrk")
+material_override = SubResource("ShaderMaterial_qetcw")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2314,7 +2310,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar18" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=793207585]
 transform = Transform3D(2.14, 0, 0, 0, 22.235, 0, 0, 0, 2.14, 87.23961, 9.426193, 210.06352)
-material_override = SubResource("ShaderMaterial_2mamo")
+material_override = SubResource("ShaderMaterial_41u70")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2332,7 +2328,7 @@ line_gap_softness = 1.95
 
 [node name="Moon" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=198293556]
 transform = Transform3D(33.34, 0, 0, 0, -4.371139e-08, -33.34, 0, 1, -1.4573377e-06, -42.638, 60.084, 224.637)
-material_override = SubResource("ShaderMaterial_yplbv")
+material_override = SubResource("ShaderMaterial_nbdum")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2351,7 +2347,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar10" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=612972822]
 transform = Transform3D(1, 0, 0, 0, 10.39, 0, 0, 0, 1, -55.914764, 11.805, 119.631996)
-material_override = SubResource("ShaderMaterial_rkmxq")
+material_override = SubResource("ShaderMaterial_4coy5")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2369,7 +2365,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar11" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=173442917]
 transform = Transform3D(1, 0, 0, 0, 10.39, 0, 0, 0, 1, -27.590942, 4.2193356, 133.43347)
-material_override = SubResource("ShaderMaterial_wb3r1")
+material_override = SubResource("ShaderMaterial_crt7t")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2387,7 +2383,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar4" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=21381463]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3623505, 0.5, 0)
-material_override = SubResource("ShaderMaterial_rta1d")
+material_override = SubResource("ShaderMaterial_dvetn")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2410,7 +2406,7 @@ shape = SubResource("ConcavePolygonShape3D_oyq6x")
 
 [node name="Left_tall_pillar5" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1905404369]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3574066, 1.5, 0)
-material_override = SubResource("ShaderMaterial_yeij3")
+material_override = SubResource("ShaderMaterial_1rx7e")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2433,7 +2429,7 @@ shape = SubResource("ConcavePolygonShape3D_tej34")
 
 [node name="Left_tall_pillar_caps" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1740899981]
 transform = Transform3D(1.15, 0, 0, 0, 0.15, 0, 0, 0, 1.15, 15.399999, 5, 0)
-material_override = SubResource("ShaderMaterial_ckeui")
+material_override = SubResource("ShaderMaterial_unifw")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2450,7 +2446,7 @@ line_gap_softness = 1.95
 
 [node name="Right_tall_pillar_002" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=2100494882]
 transform = Transform3D(1, 0, 0, 0, 1.5, 0, 0, 0, 1, 17, -0.25, -0.234825)
-material_override = SubResource("ShaderMaterial_h4cee")
+material_override = SubResource("ShaderMaterial_yckvh")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2468,7 +2464,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar_caps_001" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1310451546]
 transform = Transform3D(1.15, 0, 0, 0, 0.25, 0, 0, 0, 1.15, 17, 0.56, -0.234825)
-material_override = SubResource("ShaderMaterial_qrgtt")
+material_override = SubResource("ShaderMaterial_q3hqb")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2486,7 +2482,7 @@ line_gap_softness = 1.95
 
 [node name="Right_tall_pillar8" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=363266803]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.5, 0)
-material_override = SubResource("ShaderMaterial_jwbkf")
+material_override = SubResource("ShaderMaterial_1xvxb")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2504,7 +2500,7 @@ line_gap_softness = 1.95
 
 [node name="Left_tall_pillar_caps_005" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=207351152]
 transform = Transform3D(1.15, 0, 0, 0, 0.125, 0, 0, 0, 1.15, -6, 0.907, -0.034999847)
-material_override = SubResource("ShaderMaterial_x6vcw")
+material_override = SubResource("ShaderMaterial_hdc51")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2522,7 +2518,7 @@ line_gap_softness = 1.95
 
 [node name="Cube_005" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=636515491]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, -0.5, 0)
-material_override = SubResource("ShaderMaterial_adf8l")
+material_override = SubResource("ShaderMaterial_1i6g3")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2545,7 +2541,7 @@ shape = SubResource("ConcavePolygonShape3D_uud5r")
 
 [node name="Cube_010" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=62576566]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.5, 0)
-material_override = SubResource("ShaderMaterial_51a4j")
+material_override = SubResource("ShaderMaterial_iqtmm")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2563,7 +2559,7 @@ line_gap_softness = 1.95
 
 [node name="Cube_013" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1242496383]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -0.5, -0.19999886)
-material_override = SubResource("ShaderMaterial_4215b")
+material_override = SubResource("ShaderMaterial_qdipm")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2580,7 +2576,7 @@ line_gap_softness = 1.95
 
 [node name="Cube_014" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=2085368038]
 transform = Transform3D(1.175, 0, 0, 0, 1, 0, 0, 0, 1, -5.415, -0.49, -0.15500069)
-material_override = SubResource("ShaderMaterial_qetcw")
+material_override = SubResource("ShaderMaterial_oms4o")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2598,7 +2594,7 @@ line_gap_softness = 1.95
 
 [node name="Cube_011" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=1386672727]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -0.5, 0)
-material_override = SubResource("ShaderMaterial_41u70")
+material_override = SubResource("ShaderMaterial_kornp")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2616,7 +2612,7 @@ line_gap_softness = 1.95
 
 [node name="Cube_006" type="MeshInstance3D" parent="Boatmesh/Brick_wall_2" unique_id=991490914]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, 0.14)
-material_override = SubResource("ShaderMaterial_nbdum")
+material_override = SubResource("ShaderMaterial_ug0ug")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("")
@@ -2654,7 +2650,7 @@ debug_color = Color(1, 0, 0.016666412, 1)
 
 [node name="floor4" type="MeshInstance3D" parent="Boatmesh" unique_id=1363320637]
 transform = Transform3D(13.965, 0, 0, 0, 0.1, 0, 0, 0, 8.615, -0.37295914, -3.4752522, 180.55154)
-material_override = SubResource("ShaderMaterial_4coy5")
+material_override = SubResource("ShaderMaterial_k1oqr")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2671,7 +2667,7 @@ line_gap_softness = 1.95
 
 [node name="Line" type="MeshInstance3D" parent="Boatmesh" unique_id=739350726]
 transform = Transform3D(-1.4418926, -0.2756373, 1.3113419e-07, -0.413456, 0.9612617, 6.3282213e-15, -1.2605426e-07, -2.4096975e-08, -1.5000002, -176.77188, 2.1676145, 292.07385)
-material_override = SubResource("ShaderMaterial_crt7t")
+material_override = SubResource("ShaderMaterial_es4ir")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -2689,7 +2685,7 @@ line_gap_softness = 1.95
 
 [node name="Line4" type="MeshInstance3D" parent="Boatmesh" unique_id=2018073563]
 transform = Transform3D(-1.4418924, 0.27563736, 1.3113416e-07, 0.413456, 0.9612617, 0, -1.2605425e-07, 2.4096984e-08, -1.5, -134.54106, 2.1676145, 292.07385)
-material_override = SubResource("ShaderMaterial_dvetn")
+material_override = SubResource("ShaderMaterial_o1g8v")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -2707,7 +2703,7 @@ line_gap_softness = 1.95
 
 [node name="Line2" type="MeshInstance3D" parent="Boatmesh" unique_id=384061058]
 transform = Transform3D(-2.0561888, 0.7193398, -1.3113416e-07, 2.1292458, 0.6946584, 0, 1.7975773e-07, -6.2886684e-08, -1.5, -47.83941, 4.7662663, 292.07385)
-material_override = SubResource("ShaderMaterial_1rx7e")
+material_override = SubResource("ShaderMaterial_8bwrn")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -2725,7 +2721,7 @@ line_gap_softness = 1.95
 
 [node name="Line3" type="MeshInstance3D" parent="Boatmesh" unique_id=399431487]
 transform = Transform3D(-1.6548903, -0.78693503, -1.3113416e-07, -2.1105597, 0.6170359, 0, 1.4467511e-07, 6.879605e-08, -1.5, -103.793, 4.766, 292.074)
-material_override = SubResource("ShaderMaterial_unifw")
+material_override = SubResource("ShaderMaterial_fd204")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -2743,7 +2739,7 @@ line_gap_softness = 1.95
 
 [node name="Line5" type="MeshInstance3D" parent="Boatmesh" unique_id=1701132212]
 transform = Transform3D(-1.704744e-08, 0.385, 4.371139e-08, 0, -1.6828885e-08, 1, 0.39, 1.6828885e-08, 1.9106855e-15, 0, -2.454167, 13.473675)
-material_override = SubResource("ShaderMaterial_yckvh")
+material_override = SubResource("ShaderMaterial_y65rl")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -2761,7 +2757,7 @@ line_gap_softness = 1.95
 
 [node name="Line6" type="MeshInstance3D" parent="Boatmesh" unique_id=932074362]
 transform = Transform3D(-1.704744e-08, 0.385, 4.371139e-08, 0, -1.6828885e-08, 1, 0.39, 1.6828885e-08, 1.9106855e-15, -3, -2.454167, 13.473675)
-material_override = SubResource("ShaderMaterial_q3hqb")
+material_override = SubResource("ShaderMaterial_paj87")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -2783,18 +2779,12 @@ visible = false
 
 [node name="Cube_001" parent="Boatmesh/brick_fountain_3" index="0" unique_id=1800679336]
 transform = Transform3D(0.23000002, 0, 0, 0, 0.28000003, 0, 0, 0, 0.57, -0.235, 0, 0)
-material_override = SubResource("ShaderMaterial_1xvxb")
+material_override = SubResource("ShaderMaterial_24kr5")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
 source_mesh = SubResource("ArrayMesh_gmr7m")
 glow_amount = 2.5
-line_gap_amount = null
-line_gap_spacing = null
-line_gap_size = null
-line_gap_softness = null
-line_gap_angle = null
-line_gap_offset = null
 
 [node name="Egg" parent="Boatmesh" unique_id=2127545510 instance=ExtResource("12_nkykc")]
 transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -9.4, 3.811, 20.154)
@@ -2802,7 +2792,7 @@ transform = Transform3D(1.48, 0, 0, 0, 0.185, 0, 0, 0, 1.48, -9.4, 3.811, 20.154
 [node name="Boat_Flag" parent="Boatmesh" unique_id=1149056858 instance=ExtResource("17_gmr7m")]
 unique_name_in_owner = true
 transform = Transform3D(-0.14, 0, -2.1139412e-08, 0, 0.14, 0, 2.1139412e-08, 0, -0.14, 9.41, 4.497, 20.165)
-material_override = SubResource("ShaderMaterial_hdc51")
+material_override = SubResource("ShaderMaterial_jyfw7")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2820,7 +2810,7 @@ line_gap_softness = 1.95
 [node name="Boat_Flag2" parent="Boatmesh" unique_id=950646453 instance=ExtResource("17_gmr7m")]
 unique_name_in_owner = true
 transform = Transform3D(-0.14, 0, -2.1139412e-08, 0, 0.14, 0, 2.1139412e-08, 0, -0.14, -9.449, 4.942, 20.271)
-material_override = SubResource("ShaderMaterial_1i6g3")
+material_override = SubResource("ShaderMaterial_vhsrk")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2842,7 +2832,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.935976, 2.2364707, 43.8600
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Moving_nodes" unique_id=1716538620]
 transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, 16.935976, -0.7635293, 43.860092)
-material_override = SubResource("ShaderMaterial_iqtmm")
+material_override = SubResource("ShaderMaterial_2mamo")
 cast_shadow = 0
 gi_mode = 0
 skeleton = NodePath("../..")
@@ -2852,11 +2842,7 @@ edge_color = Color(1, 0.8666667, 0, 1)
 edge_thickness = 0.3
 glow_amount = 30.0
 edge_softness = 4.0
-line_gap_amount = null
 line_gap_size = 1.0
-line_gap_softness = null
-line_gap_angle = null
-line_gap_offset = null
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Moving_nodes/MeshInstance3D" unique_id=1489660971]
 
@@ -2876,7 +2862,7 @@ speed_scale = 0.2
 [node name="Single_brick14" type="MeshInstance3D" parent="." unique_id=2120223287]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, -1, -2.4150002, 19.492796)
 layers = 16384
-material_override = SubResource("ShaderMaterial_qdipm")
+material_override = SubResource("ShaderMaterial_yplbv")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2894,7 +2880,7 @@ line_gap_softness = 1.95
 [node name="Single_brick15" type="MeshInstance3D" parent="." unique_id=2017985420]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, 1, -2.4150002, 19.492796)
 layers = 16384
-material_override = SubResource("ShaderMaterial_oms4o")
+material_override = SubResource("ShaderMaterial_yw8fw")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2912,7 +2898,7 @@ line_gap_softness = 1.95
 [node name="Single_brick" type="MeshInstance3D" parent="." unique_id=1913530891]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, 8, -2.4150002, 19.492794)
 layers = 16384
-material_override = SubResource("ShaderMaterial_kornp")
+material_override = SubResource("ShaderMaterial_rkmxq")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2930,7 +2916,7 @@ line_gap_softness = 1.95
 [node name="Single_brick2" type="MeshInstance3D" parent="." unique_id=1725147241]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, 5, -2.4150002, 19.492794)
 layers = 16384
-material_override = SubResource("ShaderMaterial_ug0ug")
+material_override = SubResource("ShaderMaterial_wb3r1")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2948,7 +2934,7 @@ line_gap_softness = 1.95
 [node name="Single_brick16" type="MeshInstance3D" parent="." unique_id=1714868667]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, -8.304131, -2.4150002, 19.625273)
 layers = 16384
-material_override = SubResource("ShaderMaterial_k1oqr")
+material_override = SubResource("ShaderMaterial_vtbd4")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -2966,7 +2952,7 @@ line_gap_softness = 1.95
 [node name="Single_brick3" type="MeshInstance3D" parent="." unique_id=1542845044]
 transform = Transform3D(0.52396613, -1.7283738e-09, 0.52396613, -0.52396613, -4.172664e-09, 0.52396613, 9.486851e-09, -0.135, -2.2903286e-08, -5, -2.4150002, 19.492794)
 layers = 16384
-material_override = SubResource("ShaderMaterial_es4ir")
+material_override = SubResource("ShaderMaterial_sa51u")
 cast_shadow = 0
 gi_mode = 0
 script = ExtResource("4_wf0y0")
@@ -3044,6 +3030,19 @@ transform = Transform3D(-6.5, 0, -3.3898556e-07, 0, 2.245, 0, 9.814727e-07, 0, -
 visible = false
 modulate = Color(0.33, 0.33, 0.33, 0.29411766)
 texture = ExtResource("24_jwbkf")
+
+[node name="CRTOverlay" type="CanvasLayer" parent="." unique_id=1843780002]
+layer = 4096
+visible = false
+
+[node name="CRT" type="ColorRect" parent="CRTOverlay" unique_id=1770433937]
+material = SubResource("ShaderMaterial_55am7")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [editable path="Boatmesh/brick_fountain_4"]
 [editable path="Boatmesh/brick_fountain_3"]

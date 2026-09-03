@@ -66,7 +66,6 @@
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="75_mdemw"]
 [ext_resource type="Script" uid="uid://ddsh02yd7dal7" path="res://ch/multi_shot_bonus.gd" id="76_qmj5w"]
 [ext_resource type="Material" uid="uid://hn35w2qwra5g" path="res://res/balloon_blue_mat.tres" id="77_heewt"]
-[ext_resource type="Shader" uid="uid://d0dm73yo3u4k6" path="res://res/Shaders/vector_crt.gdshader" id="79_fjxa8"]
 [ext_resource type="PackedScene" uid="uid://sg6uosg7dbbs" path="res://ch/debug/level_editor_menu.tscn" id="81_lvled"]
 [ext_resource type="PackedScene" uid="uid://b8lj768x0yxac" path="res://ch/debug/round_editor_menu.tscn" id="81_rounded"]
 [ext_resource type="Script" uid="uid://tyrtfghjsjni" path="res://lib/deferred_menu_loader.gd" id="def_menu_loader"]
@@ -313,23 +312,6 @@ _data = {
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_swp41"]
 size = Vector3(50, 0.1, 0.1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ufvrt"]
-shader = ExtResource("79_fjxa8")
-shader_parameter/warp_amount = 0.0850000040375
-shader_parameter/aberration = 0.0010000000475
-shader_parameter/scanline_count = 300.00001045
-shader_parameter/scanline_opacity = 0.10000000475
-shader_parameter/grille_opacity = 0.0
-shader_parameter/bloom_amount = 0.0
-shader_parameter/bloom_spread = 0.02999999932945
-shader_parameter/bloom_threshold = 0.12
-shader_parameter/brightness = 1.40800004313
-shader_parameter/vignette_intensity = 0.3950000187625
-shader_parameter/corner_radius = 0.0
-shader_parameter/grain_amount = 0.0
-shader_parameter/flicker_amount = 0.0
-shader_parameter/phosphor_tint = Color(1, 0.96, 0.88, 1)
 
 [node name="Scene-101" type="Node3D" unique_id=419955722 node_paths=PackedStringArray("player", "round_manager", "round_timer", "splash_screen", "music_manager", "main_game_canvas") groups=["scene_manager"]]
 script = ExtResource("1_gf2tl")
@@ -985,6 +967,7 @@ debug_color = Color(0, 1, 0, 1)
 [node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("23_ellt3")]
 unique_name_in_owner = true
 transform = Transform3D(-1, -1.4472306e-08, -1.5030065e-07, 0, 0.9953962, -0.09584575, 1.509958e-07, -0.09584575, -0.9953962, 0, -0.875, 0.5)
+ctrl_swap_guns = false
 roundManager = NodePath("../Round_manager")
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
@@ -1762,60 +1745,48 @@ script = ExtResource("1_mysteryconv")
 shape = SubResource("BoxShape3D_swp41")
 disabled = true
 
-[node name="CRTOverlay" type="CanvasLayer" parent="." unique_id=1845980939]
-layer = 4096
-
-[node name="CRT" type="ColorRect" parent="CRTOverlay" unique_id=2106409939]
-material = SubResource("ShaderMaterial_ufvrt")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
 [node name="TriggerPoints" type="Node3D" parent="." unique_id=1577435896]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.985, 19.418)
 top_level = true
 visible = false
 
 [node name="TriggerPoint" parent="TriggerPoints" unique_id=2081997859 instance=ExtResource("23_triggerpt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -100, 0)
 blast_speed = 20.0
 cooldown_sec = 0.5
 
 [node name="TriggerPoint2" parent="TriggerPoints" unique_id=9572540 instance=ExtResource("23_triggerpt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -100, 0)
 blast_speed = 20.0
 cooldown_sec = 0.5
 
 [node name="TriggerPoint3" parent="TriggerPoints" unique_id=1176069860 instance=ExtResource("23_triggerpt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -100, 0)
 blast_speed = 20.0
 cooldown_sec = 0.5
 
 [node name="TriggerPoint4" parent="TriggerPoints" unique_id=58105723 instance=ExtResource("23_triggerpt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -100, 0)
 blast_speed = 20.0
 cooldown_sec = 0.5
 
 [node name="TriggerPoint5" parent="TriggerPoints" unique_id=1124969985 instance=ExtResource("23_triggerpt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -100, 0)
 blast_speed = 20.0
 cooldown_sec = 0.5
 
 [node name="TriggerPoint6" parent="TriggerPoints" unique_id=35723807 instance=ExtResource("23_triggerpt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -100, 0)
 blast_speed = 20.0
 cooldown_sec = 0.5
 
 [node name="TriggerPoint7" parent="TriggerPoints" unique_id=792726320 instance=ExtResource("23_triggerpt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -100, 0)
 blast_speed = 20.0
 cooldown_sec = 0.5
 
 [node name="TriggerPoint8" parent="TriggerPoints" unique_id=629961782 instance=ExtResource("23_triggerpt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, -100, 0)
 blast_speed = 20.0
 cooldown_sec = 0.5
 
