@@ -75,17 +75,17 @@ func play_arrival_card(place_id: String) -> void:
 
 
 func _arrival_title(place_id: String) -> String:
-	var name := gl_DataSet.display_place_name(place_id)
-	if name.strip_edges().is_empty():
-		name = String(place_id).strip_edges().to_upper()
-	name = name.to_upper()
+	var _name := gl_DataSet.display_place_name(place_id)
+	if _name.strip_edges().is_empty():
+		_name = String(place_id).strip_edges().to_upper()
+	_name = _name.to_upper()
 	var n := 0
 	var rm := get_tree().get_first_node_in_group("round_manager")
 	if rm and rm.has_method("get_script_level_number"):
 		n = int(rm.get_script_level_number(place_id))
 	if n > 0:
-		return "%d\n%s" % [n, name]
-	return name
+		return "%d\n%s" % [n, _name]
+	return _name
 
 
 func _hide_arrival_card() -> void:

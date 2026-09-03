@@ -2,11 +2,20 @@ extends MeshInstance3D
 ## Invisible until the reticle covers it. Only the disc under the crosshair is drawn
 ## (crosshair as x-ray). Place this scene in a layout; it hides itself in play.
 
+
+
 const WOOD_ALBEDO := preload("res://res/crateMesh2_CrateWoodAlbedo.png")
+const CAMO_MAT := preload("res://res/camo_material.tres")
 const XRAY_SHADER := preload("res://ch/HiddenCrate/hidden_crate_xray.gdshader")
 const WOOD_TINT := Color(0.7, 0.5105334, 0.294, 1.0)
+const CAMO_TINT := Color(1.0, 1.0, 1.0, 1.0)
+const CAMO_GLOW := Color(0.45, 0.95, 0.18, 1.0)
 
 @export var enabled := true
+@export var use_camo_version := false:
+	set(value):
+		use_camo_version = value
+		_apply_version_look()
 ## 1 = same size as the live hit-radius. Lower = a smaller peek through the scope.
 @export_range(0.2, 1.5, 0.05) var reveal_radius_scale := 0.85
 @export_range(0.0, 48.0, 1.0) var reveal_softness_px := 14.0
@@ -16,6 +25,7 @@ const WOOD_TINT := Color(0.7, 0.5105334, 0.294, 1.0)
 
 var _mat: ShaderMaterial
 var _glow_rest_energy := 1.0
+var _glow_wood_color := Color(1.0, 0.6166667, 0.0, 1.0)
 
 
 func _ready() -> void:
@@ -23,14 +33,43 @@ func _ready() -> void:
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_mat = ShaderMaterial.new()
 	_mat.shader = XRAY_SHADER
-	_mat.set_shader_parameter("albedo_tex", WOOD_ALBEDO)
-	_mat.set_shader_parameter("albedo_tint", WOOD_TINT)
 	if _glow:
 		_glow_rest_energy = _glow.light_energy
-		_mat.set_shader_parameter("emission_color", _glow.light_color)
+		_glow_wood_color = _glow.light_color
 		_glow.light_energy = 0.0
 	material_override = _mat
+	_apply_version_look()
 	_apply_xray(Vector2.ZERO, 0.0, false)
+
+
+func _apply_version_look() -> void:
+	if _mat == null:
+		return
+	if use_camo_version:
+		var camo := CAMO_MAT as StandardMaterial3D
+		_mat.set_shader_parameter("use_albedo_tex", 1.0)
+		_mat.set_shader_parameter("albedo_tex", camo.albedo_texture if camo else null)
+		_mat.set_shader_parameter("albedo_tint", CAMO_TINT)
+		_mat.set_shader_parameter("use_triplanar", 1.0)
+		_mat.set_shader_parameter("uv1_scale", camo.uv1_scale if camo else Vector3(0.5, 0.5, 0.5))
+		_mat.set_shader_parameter("uv1_offset", camo.uv1_offset if camo else Vector3(0.25, 0.25, 0.25))
+		_mat.set_shader_parameter("surface_roughness", camo.roughness if camo else 0.22)
+		if _glow:
+			_glow.light_color = CAMO_GLOW
+			_mat.set_shader_parameter("emission_color", CAMO_GLOW)
+		else:
+			_mat.set_shader_parameter("emission_color", CAMO_GLOW)
+	else:
+		_mat.set_shader_parameter("use_albedo_tex", 1.0)
+		_mat.set_shader_parameter("albedo_tex", WOOD_ALBEDO)
+		_mat.set_shader_parameter("albedo_tint", WOOD_TINT)
+		_mat.set_shader_parameter("use_triplanar", 0.0)
+		_mat.set_shader_parameter("surface_roughness", 0.78)
+		if _glow:
+			_glow.light_color = _glow_wood_color
+			_mat.set_shader_parameter("emission_color", _glow_wood_color)
+		else:
+			_mat.set_shader_parameter("emission_color", WOOD_TINT)
 
 
 func _process(_delta: float) -> void:

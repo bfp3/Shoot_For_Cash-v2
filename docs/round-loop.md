@@ -60,11 +60,12 @@ Script commands. Default poses: BANK CASH left (`-2.8, 3.5, 22.5`), +1 Multiplie
 - Environments: `ENV_PATH_BY_LEVEL` on the camera, not inside the layout.
 - Round modifiers on the sequence dict: `no_lives`, `bonus` (e.g. protect), `shuffle`, `difficulty`, `max_strikes`, `hold_out_ms`.
 - Pace: `pace-slowest` / `slow` / `normal` / `fast` / `fastest` / `impossible` mid-round. Sets `aim_launch_gravity_scale` for every rock from that line on (0.25 / 0.5 / 1.0 / 1.5 / 2.25 / 3.0). Replaces `difficulty-*` for launch speed. (`rock-avoider` always uses gravity 1.0; `rock-stay` ignores pace and flies straight then hangs. Multi-cell: `rock-stay 1 a1 a8 c8 c1 a4 1` visits those cells then exits to splash; trailing `0`/omit hangs on the last cell.)
+- `rock-avoider-kill`: pop every live avoider (no strike). Avoiders do not block `wait` / `wait-until-clear`.
 - Side lanes: `rock A0 A8` / `pineapple A0 A9` spawn just off-camera at column 0 (outside 1) or 9 (outside 8) and fly across. Out-of-bounds is ignored until the target has been on-screen.
 
 ## Special modes
 
-- **Hold-out (`hold out 90000`):** looping rocks, countdown timer in milliseconds. Win = timer, not clearing rocks. Works on any range, including boss. After a non-boss hold-out tally, travel to the next `range` header in `level-beginner.txt`. Surviving the last range opens the stage-complete screen instead of the map. `boss-timer` is still accepted as an alias.
+- **Hold-out (`hold out 90000`):** looping rocks, countdown timer in milliseconds. Win = timer, not clearing rocks — unless the script ends with `pineapple` spawns. Then pineapples are guaranteed: timer expiry jumps to that section if it has not played yet; shooting those pineapples while time remains ends the round and the timer. Works on any range, including boss. After a non-boss hold-out tally, travel to the next `range` header in `level-beginner.txt`. Surviving the last range opens the stage-complete screen instead of the map. `boss-timer` is still accepted as an alias.
 - **Boss:** hold-out in a boss arena. After tally, island map.
 - **Endless:** looping rocks, count-up timer, no wave banners.
 - **Level / round editor (D from shop, editor only):** sandbox under island `test`; does not write wallet unless forced.

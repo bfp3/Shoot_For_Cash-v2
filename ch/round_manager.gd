@@ -51,8 +51,8 @@ const ENV_PATH_BY_LEVEL := {
 	"moss4": "res://res/moss_env_v2.tres",
 	"moss5": "res://res/moss_env_v2.tres",
 	"moss6": "res://res/moss_env_v2.tres",
-	"moss7": "res://res/skyEnvironments/boss_2_world_env.tres",
-	"moss8": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"moss7": "res://res/moss_env_v2.tres",
+	"moss8": "res://res/moss_env_v2.tres",
 	"moss9": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"moss10": "res://res/skyEnvironments/boss_2_world_env.tres",
 	
@@ -90,11 +90,10 @@ const ENV_PATH_BY_LAYOUT := {
 }
 
 
-const FINAL_ROUND_ATMOSPHERE_SEC := 5.0
-const FINAL_ROUND_LIGHT_DIM := 0.3
-var _final_atmosphere_tween: Tween
-var _final_light_snapshot: Array = []
-var _final_world_env_snapshot: Array = []
+const SCRIPT_LIGHT_STEP := 0.25
+const SCRIPT_LIGHT_TWEEN_SEC := 3.0
+var _script_light_tween: Tween
+var _script_light_base: Dictionary = {}
 
 ## Cached PackedScenes so revisiting Moss/Redd/etc. does not re-parse from disk.
 var _layout_cache: Dictionary = {} # path -> PackedScene
@@ -662,9 +661,7 @@ func finish_level_editor_test_round() -> void:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
 		rocks_container.reset_all_rocks()
 
-	# Explode any oranges still in play so they don't carry into the next test.
-	await _await_post_win_orange_settle()
-	await explode_active_oranges_staggered()
+	clear_live_oranges_quietly()
 	EventBus.instance.oranges_start_falling.emit()
 
 	await get_tree().create_timer(0.2, false).timeout
@@ -805,11 +802,12 @@ func request_tally_level_select() -> void:
 	_tally_exit_to_level_select = true
 	_tally_travel_next_level = false
 	_tally_replay_level = false
-	_reopen_on_level_grid = true
+	_reopen_on_level_grid = not is_challenge_run()
 	enter_state(RoundState.TALLY_END)
 
 
 ## Shop MapButton / tally Level Select: reset the run and reopen the numbered grid for this difficulty.
+## Challenge runs return to difficulty select (where the challenge row lives) instead of the Beginner grid.
 func return_to_level_select() -> void:
 	if gl_PlayerState:
 		var stage := "BEGINNER"
@@ -819,8 +817,18 @@ func return_to_level_select() -> void:
 			stage = String(gl_PlayerState.get_select_difficulty())
 		if gl_PlayerState.has_method("set_select_difficulty"):
 			gl_PlayerState.set_select_difficulty(stage)
-	_reopen_on_level_grid = true
+	_reopen_on_level_grid = not is_challenge_run()
 	await return_to_difficulty_select()
+
+
+func is_challenge_run() -> bool:
+	var stage := ""
+	if gl_PlayerState and gl_PlayerState.has_method("get_run_difficulty"):
+		stage = String(gl_PlayerState.get_run_difficulty())
+	elif gl_PlayerState and gl_PlayerState.has_method("get_select_difficulty"):
+		stage = String(gl_PlayerState.get_select_difficulty())
+	stage = stage.strip_edges().to_upper().replace("_", " ")
+	return stage.begins_with("CHALLENGE")
 
 
 func request_tally_next_level() -> void:
@@ -938,6 +946,12 @@ func is_hold_out_round() -> bool:
 	if _boss_mode:
 		return true
 	return _get_current_hold_out_ms() > 0
+
+
+func _hold_out_should_finish_on_pineapples() -> bool:
+	if rocks_container == null or not rocks_container.has_method("should_end_hold_out_on_pineapples"):
+		return false
+	return bool(rocks_container.should_end_hold_out_on_pineapples())
 
 
 func _get_current_hold_out_ms() -> int:
@@ -1112,82 +1126,44 @@ func bonus_oranges() -> void:
 	bonus_oranges_ready = true
 
 
-## Brief pause after a win so a last-shot double can finish spawning its orange
-## before we explode leftovers / open the tally.
-@export var post_win_orange_settle_sec := 0.4
-## Delay between each end-of-round orange explode kickoff.
-@export var orange_end_explode_stagger_sec := 0.15
-
-
-## Wait until orange_active stops climbing (late multi-shot spawns) or timeout.
-func _await_post_win_orange_settle() -> void:
-	var settle_budget := maxf(post_win_orange_settle_sec, 0.15)
-	var elapsed := 0.0
-	var last_count := orange_active
-	var stable := 0.0
-	## Always give at least a couple frames for deferred launch_orange calls.
-	await get_tree().process_frame
-	await get_tree().process_frame
-	while elapsed < settle_budget:
-		await get_tree().process_frame
-		var dt := get_process_delta_time()
-		elapsed += dt
-		if orange_active != last_count:
-			last_count = orange_active
-			stable = 0.0
-		else:
-			stable += dt
-		## Count stable briefly after a minimum wait → safe to explode.
-		if elapsed >= 0.2 and stable >= 0.12:
-			break
-
-
-func _collect_active_oranges() -> Array:
-	var oranges: Array = []
+## Leftover oranges never hold the round open. Hide and park them with no VFX / cash.
+func clear_live_oranges_quietly() -> void:
+	if not is_inside_tree():
+		orange_active = 0
+		return
+	var seen: Dictionary = {}
 	for container in get_tree().get_nodes_in_group("orange_container"):
 		if not is_instance_valid(container):
 			continue
 		for child in container.get_children():
-			if not is_instance_valid(child):
-				continue
-			if not child.has_method("force_end_of_round_explode"):
-				continue
-			if bool(child.get("rock_activated")):
-				oranges.append(child)
-	return oranges
-
-
-## Explode every still-active orange with a stagger between each (end of round).
-## Does not wait for full VFX — only staggers the kickoff so each one actually starts.
-func explode_active_oranges_staggered() -> void:
-	var oranges := _collect_active_oranges()
-	## If a spawn landed mid-collect, grab again once.
-	if oranges.size() < orange_active:
-		await get_tree().process_frame
-		oranges = _collect_active_oranges()
-
-	var stagger := maxf(orange_end_explode_stagger_sec, 0.05)
-	for i in oranges.size():
-		var orange = oranges[i]
-		if is_instance_valid(orange) and bool(orange.get("rock_activated")):
-			orange.force_end_of_round_explode()
-			## Let the destroy coroutine pass its first frame (mesh/VFX start).
-			await get_tree().process_frame
-		if i < oranges.size() - 1:
-			await get_tree().create_timer(stagger, false).timeout
-
-	## Any stragglers that activated during the stagger (rare) — kick once more.
-	var leftovers := _collect_active_oranges()
-	for i in leftovers.size():
-		var orange = leftovers[i]
-		if is_instance_valid(orange):
-			orange.force_end_of_round_explode()
-			await get_tree().process_frame
-		if i < leftovers.size() - 1:
-			await get_tree().create_timer(stagger, false).timeout
-
-	## Round wrap no longer waits for orange VFX to finish.
+			_dismiss_orange_node(child, seen)
+	for node in get_tree().get_nodes_in_group("orange"):
+		_dismiss_orange_node(node, seen)
 	orange_active = 0
+
+
+func _dismiss_orange_node(node: Node, seen: Dictionary) -> void:
+	if node == null or not is_instance_valid(node):
+		return
+	if seen.has(node):
+		return
+	seen[node] = true
+	if node.has_method("dismiss_quietly_for_round_end"):
+		node.dismiss_quietly_for_round_end()
+	elif node.has_method("reset_stats"):
+		node.reset_stats()
+
+
+## Oranges used to share the pineapple group. Never treat them as live pineapples.
+func _node_is_orange(node: Node) -> bool:
+	if node == null:
+		return false
+	if node.is_in_group("orange"):
+		return true
+	var script = node.get_script()
+	if script and String(script.resource_path).get_file() == "orange.gd":
+		return true
+	return String(node.name).begins_with("Orange")
 
 	
 func check_round_for_strikes() -> void:
@@ -1768,6 +1744,9 @@ func check_if_rocks_still_in_air() -> void:
 			return
 
 	if is_hold_out_round():
+		if _hold_out_should_finish_on_pineapples():
+			finish_round_after_last_pineapple()
+			return
 		_loop_boss_sequence()
 		return
 
@@ -1793,6 +1772,9 @@ func successful_round() -> void:
 			return
 	if is_hold_out_round():
 		## Clearing a loop of rocks does not win a hold-out — only surviving the timer does.
+		if _hold_out_should_finish_on_pineapples():
+			finish_round_after_last_pineapple()
+			return
 		_loop_boss_sequence()
 		return
 
@@ -1833,6 +1815,7 @@ func unsuccessful_round_locked(skip_tally: bool = false) -> void:
 	success = false
 	EventBus.instance.end_round_rock_missed.emit()
 	%Splash_zone.deactivate_splash_zone()
+	clear_live_oranges_quietly()
 	## Stop staggered launches immediately (boss waits can be several seconds).
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -1888,6 +1871,7 @@ func abort_round_to_shop() -> void:
 	stop_timer()
 	stop_player()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	clear_live_oranges_quietly()
 
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
@@ -1908,7 +1892,13 @@ func abort_round_to_shop() -> void:
 func round_timer_time_out() -> void:
 	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
 		return
+	if is_hold_out_round() and rocks_container and rocks_container.has_method("jump_to_trailing_pineapples_if_needed"):
+		if bool(rocks_container.jump_to_trailing_pineapples_if_needed()):
+			clear_live_oranges_quietly()
+			stop_timer()
+			return
 	wave_ending = true
+	clear_live_oranges_quietly()
 
 	stop_timer()
 
@@ -1916,6 +1906,29 @@ func round_timer_time_out() -> void:
 	if not _can_finish_after_timer_timeout():
 		return
 
+	success = true
+	if is_hold_out_round():
+		player_failed = false
+		if not _boss_mode and not is_endless_mode() and not level_editor_test_active:
+			_advance_range_after_hold_out = true
+	enter_state(RoundState.WAVE_END)
+
+
+## Last scripted pineapple of the round is gone and nothing else remains — end now.
+func finish_round_after_last_pineapple() -> void:
+	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
+		return
+	if pineapple_mode:
+		return
+	wave_ending = true
+	clear_live_oranges_quietly()
+	stop_timer()
+	await get_tree().create_timer(1.0, false).timeout
+	if not _can_finish_after_timer_timeout():
+		## Continue / fail already owns the session — don't leave WAVE_END hanging.
+		if not _continue_open and not player_failed and not game_over_triggered:
+			wave_ending = false
+		return
 	success = true
 	if is_hold_out_round():
 		player_failed = false
@@ -1955,7 +1968,11 @@ func _any_live_pineapples() -> bool:
 		if bool(rocks_container.any_live_pineapples()):
 			return true
 	for node in get_tree().get_nodes_in_group("pineapple"):
-		if is_instance_valid(node) and bool(node.get("rock_activated")):
+		if not is_instance_valid(node):
+			continue
+		if _node_is_orange(node):
+			continue
+		if bool(node.get("rock_activated")):
 			return true
 	return false
 
@@ -2126,10 +2143,8 @@ func _freeze_gameplay_for_continue() -> void:
 		balloon_container.process_mode = Node.PROCESS_MODE_DISABLED
 	if has_node("%Splash_zone"):
 		%Splash_zone.deactivate_splash_zone()
-	for node in get_tree().get_nodes_in_group("pineapple"):
-		if node is RigidBody3D:
-			(node as RigidBody3D).freeze = true
-			(node as RigidBody3D).sleeping = true
+	_set_group_rigid_bodies_frozen("pineapple", true)
+	_set_group_rigid_bodies_frozen("orange", true)
 
 
 func _unfreeze_gameplay_for_continue() -> void:
@@ -2137,10 +2152,17 @@ func _unfreeze_gameplay_for_continue() -> void:
 		balloon_container.process_mode = Node.PROCESS_MODE_INHERIT
 	if rocks_container and rocks_container.has_method("freeze_live_rocks"):
 		rocks_container.freeze_live_rocks(false)
-	for node in get_tree().get_nodes_in_group("pineapple"):
+	_set_group_rigid_bodies_frozen("pineapple", false)
+	_set_group_rigid_bodies_frozen("orange", false)
+
+
+func _set_group_rigid_bodies_frozen(group_name: String, frozen: bool) -> void:
+	if not is_inside_tree():
+		return
+	for node in get_tree().get_nodes_in_group(group_name):
 		if node is RigidBody3D:
-			(node as RigidBody3D).freeze = false
-			(node as RigidBody3D).sleeping = false
+			(node as RigidBody3D).freeze = frozen
+			(node as RigidBody3D).sleeping = frozen
 
 
 func _is_continue_resume_in_place() -> bool:
@@ -2165,10 +2187,9 @@ func _clear_round_entities_for_retry() -> void:
 		await balloon_container.end_round()
 	if has_node("%Splash_zone"):
 		%Splash_zone.deactivate_splash_zone()
-	for node in get_tree().get_nodes_in_group("pineapple"):
-		if node is RigidBody3D:
-			(node as RigidBody3D).freeze = false
-			(node as RigidBody3D).sleeping = false
+	clear_live_oranges_quietly()
+	_set_group_rigid_bodies_frozen("pineapple", false)
+	_set_group_rigid_bodies_frozen("orange", false)
 
 
 func _play_continue_loss_scatter() -> void:
@@ -2542,6 +2563,7 @@ func update_round_start() -> void:
 	success = false
 	player_failed = false
 	bonus_oranges_ready = false
+	clear_live_oranges_quietly()
 	current_wave = 0
 	_shots_fired_this_round = 0
 	_endless_elapsed_sec = 0.0
@@ -2836,11 +2858,9 @@ func update_round_end() -> void:
 		player_can_progress = true
 	
 	
-	## Fire remaining oranges; settle first so a last-shot double's orange is included.
-	await _await_post_win_orange_settle()
-	await explode_active_oranges_staggered()
+	## Leftover oranges do not delay the tally — park them and start the next round clean.
+	clear_live_oranges_quietly()
 	EventBus.instance.oranges_start_falling.emit()
-	await get_tree().create_timer(1.0, false).timeout
 	
 	if player_failed:
 		bonus_oranges_ready = false
@@ -3590,56 +3610,31 @@ func apply_level_environment(level_id: String, layout_path: String = "") -> void
 			cam.set("environment", env)
 
 
-func play_final_round_atmosphere() -> void:
-	_snapshot_final_round_lights()
-	if _final_atmosphere_tween and _final_atmosphere_tween.is_valid():
-		_final_atmosphere_tween.kill()
-	_final_atmosphere_tween = create_tween()
-	_final_atmosphere_tween.set_parallel(true)
-	for item in _final_light_snapshot:
-		var light = item.get("light")
-		if light == null or not is_instance_valid(light):
+## `light-dim` / `light-bright`: nudge every `directional_light` by ±0.25 over 3s.
+func apply_script_light_shift(delta_energy: float) -> void:
+	_snapshot_script_lights_if_needed()
+	if _script_light_tween and _script_light_tween.is_valid():
+		_script_light_tween.kill()
+	_script_light_tween = create_tween()
+	_script_light_tween.set_parallel(true)
+	for light in get_tree().get_nodes_in_group("directional_light"):
+		if not (light is DirectionalLight3D):
 			continue
-		var from_energy := float(item.get("energy", light.light_energy))
-		var to_energy := maxf(from_energy - FINAL_ROUND_LIGHT_DIM, 0.0)
-		_final_atmosphere_tween.tween_property(light, "light_energy", to_energy, FINAL_ROUND_ATMOSPHERE_SEC)
-	var cam = get_tree().get_first_node_in_group("player_cam")
-	if cam and cam.has_method("dim_final_round_environment"):
-		cam.dim_final_round_environment(FINAL_ROUND_LIGHT_DIM, FINAL_ROUND_ATMOSPHERE_SEC)
-	for we in get_tree().get_nodes_in_group("world_env"):
-		if not (we is WorldEnvironment) or we.environment == null:
-			continue
-		_final_world_env_snapshot.append({
-			"node": we,
-			"env": we.environment,
-		})
-		var working := we.environment.duplicate() as Environment
-		if working == null:
-			continue
-		we.environment = working
-		var ambient_to := maxf(working.ambient_light_energy - FINAL_ROUND_LIGHT_DIM, 0.0)
-		var bg_to := maxf(working.background_energy_multiplier - FINAL_ROUND_LIGHT_DIM, 0.0)
-		_final_atmosphere_tween.tween_property(working, "ambient_light_energy", ambient_to, FINAL_ROUND_ATMOSPHERE_SEC)
-		_final_atmosphere_tween.tween_property(working, "background_energy_multiplier", bg_to, FINAL_ROUND_ATMOSPHERE_SEC)
-	await get_tree().create_timer(FINAL_ROUND_ATMOSPHERE_SEC, false).timeout
+		var to_energy := maxf(float(light.light_energy) + delta_energy, 0.0)
+		_script_light_tween.tween_property(light, "light_energy", to_energy, SCRIPT_LIGHT_TWEEN_SEC)
 
 
 func restore_final_round_atmosphere(reapply_env: bool = true) -> void:
-	if _final_atmosphere_tween and _final_atmosphere_tween.is_valid():
-		_final_atmosphere_tween.kill()
-	_final_atmosphere_tween = null
-	for item in _final_light_snapshot:
-		var light = item.get("light")
-		if light == null or not is_instance_valid(light):
+	if _script_light_tween and _script_light_tween.is_valid():
+		_script_light_tween.kill()
+	_script_light_tween = null
+	for light in get_tree().get_nodes_in_group("directional_light"):
+		if not (light is DirectionalLight3D):
 			continue
-		light.light_energy = float(item.get("energy", light.light_energy))
-	_final_light_snapshot.clear()
-	for item in _final_world_env_snapshot:
-		var node = item.get("node")
-		if node == null or not is_instance_valid(node):
-			continue
-		node.environment = item.get("env")
-	_final_world_env_snapshot.clear()
+		var id := light.get_instance_id()
+		if _script_light_base.has(id):
+			light.light_energy = float(_script_light_base[id])
+	_script_light_base.clear()
 	if reapply_env:
 		var level_id := String(gl_PlayerState.dataset.get("level_name", ""))
 		var path := _environment_path_for_level(level_id)
@@ -3648,15 +3643,12 @@ func restore_final_round_atmosphere(reapply_env: bool = true) -> void:
 			cam.set_level_environment_from_path(path)
 
 
-func _snapshot_final_round_lights() -> void:
-	_final_light_snapshot.clear()
-	_final_world_env_snapshot.clear()
+func _snapshot_script_lights_if_needed() -> void:
+	if not _script_light_base.is_empty():
+		return
 	for light in get_tree().get_nodes_in_group("directional_light"):
 		if light is DirectionalLight3D:
-			_final_light_snapshot.append({
-				"light": light,
-				"energy": light.light_energy,
-			})
+			_script_light_base[light.get_instance_id()] = light.light_energy
 
 
 func _reattach_heavy_layout_nodes(detached: Array) -> void:
@@ -4072,6 +4064,11 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 func _loop_boss_sequence() -> void:
 	if not is_hold_out_round() or wave_ending or player_failed or _boss_looping or _continue_open or _continue_resuming:
 		return
+	if rocks_container and rocks_container.has_method("has_trailing_pineapples"):
+		if bool(rocks_container.has_trailing_pineapples()):
+			if rocks_container.has_method("try_continue_sequence") and bool(rocks_container.try_continue_sequence()):
+				return
+			return
 	_boss_looping = true
 	var rock_seq := update_rock_sequence()
 	if rocks_container and not rock_seq.is_empty():

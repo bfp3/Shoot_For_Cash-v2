@@ -537,10 +537,11 @@ script/source = "extends RigidBody3D
 @export var impulse := Vector3.ONE * 15000.0
 @export var torque_impulse := Vector3.ONE * 3550.0
 
-func _ready() -> void:
-	EventBus.instance.egg_pulsed.connect(pulse_sand)
+#func _ready() -> void:
+	#EventBus.instance.egg_pulsed.connect(pulse_sand)
 	
 func pulse_sand() -> void:
+	return
 	apply_torque(Vector3.LEFT * torque_impulse)
 	apply_central_impulse(impulse)
 	
@@ -1048,6 +1049,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6114335, -1.9232558, 11.79
 
 [node name="CrateLayout" type="Node3D" parent="." unique_id=1312412720]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 44.303)
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CrateLayout" unique_id=812953412]
 transform = Transform3D(0.15899903, 0, 0.03313756, 0, 0.165, 0, -0.044094335, 0, 0.11949017, 0, 0, 14.087341)
@@ -1147,7 +1149,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70000005, -1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.7, 0)
 
 [node name="RigidBody3D26" parent="CrateLayout/Node3D" unique_id=356783124 instance=ExtResource("12_ac7en")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.7, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 97, 1.7, 1)
 
 [node name="RigidBody3D27" parent="CrateLayout/Node3D" unique_id=1077017999 instance=ExtResource("12_ac7en")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.7, 0)

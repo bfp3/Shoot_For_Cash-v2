@@ -131,6 +131,20 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ta7gf"]
+bg_color = Color(0.92, 0.8770667, 0.8464, 0.15686275)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.47382927, 0.50620335, 0.5386369, 1)
+corner_radius_top_left = 200
+corner_radius_top_right = 200
+corner_radius_bottom_right = 200
+corner_radius_bottom_left = 200
+corner_detail = 12
+shadow_color = Color(1, 1, 1, 0.11764706)
+
 [sub_resource type="Curve" id="Curve_f258a"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.70105827, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
@@ -226,20 +240,6 @@ shader_parameter/shine_width = 0.42700001958398
 shader_parameter/shine_strength = 0.050000002375
 shader_parameter/base_color = Color(0.8, 0.6954667, 0.57600003, 0.4392157)
 shader_parameter/shine_color = Color(1, 0.98, 0.88, 0.39215687)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ta7gf"]
-bg_color = Color(0.92, 0.8770667, 0.8464, 0.15686275)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.47382927, 0.50620335, 0.5386369, 1)
-corner_radius_top_left = 200
-corner_radius_top_right = 200
-corner_radius_bottom_right = 200
-corner_radius_bottom_left = 200
-corner_detail = 12
-shadow_color = Color(1, 1, 1, 0.11764706)
 
 [sub_resource type="Animation" id="Animation_3q72g"]
 length = 0.001
@@ -753,8 +753,7 @@ mesh = SubResource("BoxMesh_ta7gf")
 
 [node name="Replay" type="Button" parent="." unique_id=1534249608 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true
-visible = false
-self_modulate = Color(1, 1, 1, 0.13725491)
+self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(220, 88)
 layout_mode = 1
 anchors_preset = 3
@@ -762,10 +761,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -669.0
-offset_top = -540.0
-offset_right = -425.0
-offset_bottom = -440.0
+offset_left = -1461.0
+offset_top = -387.0
+offset_right = -1217.0
+offset_bottom = -287.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
@@ -775,27 +774,29 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_next")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_next")
 theme_override_styles/hover = SubResource("StyleBoxFlat_next_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_next_hover")
+disabled = true
 script = ExtResource("25_next")
 focus_enter_sfx = NodePath("../SFX/focus_enter_sfx")
 focus_exit_sfx = NodePath("../SFX/focus_exit")
 purchase_sfx = NodePath("../SFX/shop_purchase_02")
+wiggle_amount = 1.05
 
 [node name="Arrow" type="TextureRect" parent="Replay" unique_id=1316183755]
 visible = false
 modulate = Color(0.92156863, 0.8745098, 0.84313726, 1)
 layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
+anchors_preset = 8
+anchor_left = 0.5
 anchor_top = 0.5
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -65.0
-offset_top = -28.0
-offset_right = -9.0
-offset_bottom = 28.0
-grow_horizontal = 0
+offset_left = -29.0
+offset_top = -21.0
+offset_right = 27.0
+offset_bottom = 35.0
+grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(-1, 1)
+scale = Vector2(1.82, 1.82)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 texture = ExtResource("26_arrow")
@@ -803,23 +804,56 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Replay" unique_id=69238809]
-visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -32.0
-offset_right = -32.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.0
+offset_top = -30.5
+offset_right = 85.0
+offset_bottom = 46.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.92, 0.92, 0.92, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/normal_font_size = 70
+theme_override_font_sizes/normal_font_size = 60
 bbcode_enabled = true
-text = "[pulse freq=3][wave freq=10]REPLAY"
+text = "[wave freq=10]REPLAY"
+fit_content = true
+autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Circle" type="Panel" parent="Replay" unique_id=2100468999]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -64.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7600049, 0.7600049)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ta7gf")
+
+[node name="Circle2" type="Panel" parent="Replay" unique_id=667263558]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -64.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.6399241, 0.6399241)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ta7gf")
 
 [node name="NextRound" type="Button" parent="." unique_id=1534249607 node_paths=PackedStringArray("focus_enter_sfx", "focus_exit_sfx", "purchase_sfx")]
 unique_name_in_owner = true

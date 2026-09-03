@@ -72,10 +72,16 @@ func start_bonus_round() -> void:
 
 
 func stop_pineapples() -> void:
+	clear_spawn_bookkeeping()
 	await get_tree().create_timer(2.0, false).timeout
 	for child in get_children():
 		if child is RigidBody3D and child.has_method('reset_stats'):
 			child.reset_stats()
+
+
+func clear_spawn_bookkeeping() -> void:
+	_fanfare_inflight = false
+	_pending_pineapple_spawns = 0
 
 
 func column_to_x(column: int) -> float:
@@ -155,11 +161,12 @@ func launch_from_spawn_entry(entry: Dictionary) -> void:
 
 ## True from the 2D particle / jingle cue until that pineapple is destroyed or leaves.
 func is_pineapple_in_play() -> bool:
-	if _fanfare_inflight or _pending_pineapple_spawns > 0:
+	if _fanfare_inflight:
 		return true
 	for child in get_children():
 		if child is RigidBody3D and bool(child.get("rock_activated")):
 			return true
+	## Stale pending from overlapping launches must not freeze the round.
 	return false
 
 

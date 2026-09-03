@@ -176,18 +176,21 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-black / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-chaser / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / mothership / smokecan / crate / pineapple / red_rock_error:
+## Targets — rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-chaser / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / mothership / smokecan / crate / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, spawn_row, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
 ##   `rock A4` is invalid — use `rock ? A4`. Side lanes: `rock A0 A8` / `rock A0 A9`
 ##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
-##   `rock-grey` is $1 and does not strike on miss. `rock-stay` flies straight to aim then hangs (pace ignored).
+##   `rock-grey` is $1 and does not strike on miss. `rock-invisible` is a yellow rock hidden until the crosshair overlaps it; missing it does not strike. `rock-stay` flies straight to aim then hangs (pace ignored).
 ##   `rock-stay 1 a1 a8 c8 c1 a4 1` — spawn col 1, visit those cells in order; trailing `1` = then leave into the splash zone (`0` or omit = hang on the last cell).
-##   `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `mothership` flees the player for bonus cash.
+##   `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `rock-fake` looks and flies like `rock-black` but never strikes; the crosshair x-ray reveals a grey rock. `mothership` flees the player for bonus cash.
 ##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
 ##   `rock-red-attacker 1 a1` flies to A1 then dashes at the crosshair (and through it).
 ##   `rock-red-attacker 1 a1 a8` same, but dashes toward A8 instead of the crosshair.
+## rock-avoider-kill: {cmd} — pop every live rock-avoider (no strike). Does not pause
+##   the sequence. Avoiders do not block `wait` / `wait-until-clear`; use this after
+##   a wait to clear leftovers. Does not affect rock-red-attacker.
 ##   `rock-gap` / `rock-red-gap [gapCols…] [aim]`: expands to large red hazards in every
 ##   column except the listed gap(s). Default gap = 8. Aim may be `a4`, `a?` / `a` (row A,
 ##   random col), or `?`. Example: `rock-gap 4 6 8 a?` → gaps at 4/6/8, aim row A.
@@ -199,9 +202,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## wait 0 / wait 600: {cmd, ms} — delay that many milliseconds before the next rock.
 ## wait until clear / wait-until-clear: still accepted as an alias of bare `wait`.
 ##   Hold the next command until live rocks / pineapples / smokecans / balloon-checks
-##   / bonus targets are gone. Oranges and regular balloons are ignored. A miss
-##   does not skip this wait. Objects count as gone as soon as their destroy
-##   process starts (do not wait for pop tweens).
+##   / bonus targets are gone. Oranges, regular balloons, and rock-avoiders are ignored
+##   (use `rock-avoider-kill` for leftovers). A miss does not skip this wait. Objects
+##   count as gone as soon as their destroy process starts (do not wait for pop tweens).
 ## balloon-check / balloon check / balloon-check A4: {cmd, row, column}.
 ##   Bare command uses the default centre rest pose. A cell parks it on the balloon grid.
 ##   Shooting it saves this script cursor as the resume point after a strike-out.
@@ -245,6 +248,8 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## gun / gun1 / gun2 / gun3 / gun4: mid-round weapon swap. Drops the gun mesh briefly, then
 ##   raises it with that loadout's crosshair (Rossy / Gun2 / Gun3 / Gun4) and fire behaviour.
 ##   gun4 plants a crosshair trap on shoot instead of a normal shot.
+## light-dim / light-bright: {cmd}. Smoothly change every `directional_light` energy
+##   by -0.25 / +0.25 over 3 seconds. Does not pause the sequence.
 ## hold out 90000 / hold-out 90000 / boss-timer 90000: {cmd: hold-out, ms}.
 ##   Range- or round-level survival timer in milliseconds. Same as a boss hold-out:
 ##   rocks loop and the round lasts until the timer hits 0.
@@ -268,7 +273,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'red_rock_error', 'smokecan', 'crate':
+		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
 
 		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still':
@@ -434,6 +439,12 @@ func parse_spawn_command(token: String) -> Dictionary:
 			var gun_cmd := 'gun1' if cmd == 'gun' else cmd
 			return {'cmd': gun_cmd}
 
+		'light-dim', 'light-bright':
+			return {'cmd': cmd}
+
+		'rock-avoider-kill':
+			return {'cmd': cmd}
+
 		'difficulty-easy':
 			return {'cmd': 'difficulty-easy'}
 		
@@ -530,7 +541,7 @@ func _is_random_token(token: String) -> bool:
 	return token.strip_edges() == '?'
 
 
-## rock / rock-black / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / mothership / smokecan / crate / pineapple / red_rock_error
+## rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / mothership / smokecan / crate / pineapple / red_rock_error
 ##   rock          → rock ? ?   (random column, aim row A + random aim column)
 ##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
@@ -1487,6 +1498,10 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return cmd
 		'gun1', 'gun2', 'gun3', 'gun4':
 			return cmd
+		'light-dim', 'light-bright':
+			return cmd
+		'rock-avoider-kill':
+			return cmd
 		'pineapples':
 			return 'pineapples'
 		'balloon-check', 'checkpoint':
@@ -1534,7 +1549,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-black', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'smokecan', 'crate', 'red_rock_error':
+		'pineapple', 'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'smokecan', 'crate', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))

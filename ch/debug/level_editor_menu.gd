@@ -10,9 +10,12 @@ const COLOR_INK := Color(0.12, 0.08, 0.06, 1)
 ## Keywords inserted by the right-hand command panel (one per button).
 const COMMAND_BUTTONS: PackedStringArray = [
 	"rock",
+	"rock-invisible",
 	"rock-black",
+	"rock-fake",
 	"rock-pigeon",
 	"rock-avoider",
+	"rock-avoider-kill",
 	"rock-red-attacker",
 	"rock-gap",
 	"rock-red-gap",
@@ -52,6 +55,8 @@ const COMMAND_BUTTONS: PackedStringArray = [
 	"gun2",
 	"gun3",
 	"gun4",
+	"light-dim",
+	"light-bright",
 	"surprise-me",
 	"bonus-type1",
 	"bonus-target",

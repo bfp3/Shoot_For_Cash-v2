@@ -12,6 +12,8 @@ const LOCKED_BADGE_SCENE := preload("res://ch/canvas_layers/level_select_badge_l
 const LEVEL_BADGE_SIZE := Vector2(118, 118)
 
 @export_group("Level Grid")
+## If true, choosing a level skips the center/blink animation and closes this menu immediately.
+@export var skip_select_animation := false
 @export_range(0.15, 2.5, 0.01, "or_greater") var unlocked_badge_scale := 1.0:
 	set(value):
 		unlocked_badge_scale = maxf(value, 0.05)
@@ -253,6 +255,7 @@ func _rebuild_level_grid() -> void:
 			_level_grid.add_child(badge)
 			_style_grid_badge(badge, true)
 			open_badge.configure_as_level(i + 1, place, true, boss, armored, stage)
+			open_badge.skip_select_animation = skip_select_animation
 			open_badge.pressed.connect(_on_level_chosen.bind(place, stage))
 		else:
 			badge = LOCKED_BADGE_SCENE.instantiate() as Control
@@ -471,12 +474,12 @@ func _appear_level_badges() -> void:
 func _sfx_page() -> void:
 	if _open_sfx:
 		_open_sfx.play(0.35)
-	if _click_1:
-		_click_1.play()
-	if _click_2:
-		_click_2.play()
-	if _click_3:
-		_click_3.play()
+	#if _click_1:
+		#_click_1.play()
+	#if _click_2:
+		#_click_2.play()
+	#if _click_3:
+		#_click_3.play()
 
 
 func _store_select_difficulty() -> void:
@@ -497,7 +500,10 @@ func _on_level_chosen(place: String, stage_title: String = "BEGINNER") -> void:
 		return
 	_busy = true
 	_store_select_difficulty()
-	await close_pop_up_animated()
+	if skip_select_animation:
+		close_pop_up()
+	else:
+		await close_pop_up_animated()
 	if gl_PlayerState and gl_PlayerState.has_method("set_run_difficulty"):
 		gl_PlayerState.set_run_difficulty(stage_title)
 	else:
@@ -546,12 +552,12 @@ func _sfx_open() -> void:
 func _sfx_close() -> void:
 	if _close_sfx:
 		_close_sfx.play(0.5)
-	if _click_1:
-		_click_1.play()
-	if _click_2:
-		_click_2.play()
-	if _click_3:
-		_click_3.play()
+	#if _click_1:
+		#_click_1.play()
+	#if _click_2:	
+		#_click_2.play()
+	#if _click_3:
+		#_click_3.play()
 	if _hum:
 		_hum.stop()
 

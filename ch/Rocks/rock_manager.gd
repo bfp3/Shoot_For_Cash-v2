@@ -223,12 +223,11 @@ var _advancing_sequence := false
 var _active_checkpoint: Node = null
 var _stream_launches_remaining := 0
 var _consumed_sequence_barrier := false
-var _final_atmosphere_played := false
-var _final_atmosphere_playing := false
 ## `pineapples` keyword seen this sequence — bonus may fire before balloon-check.
 var _pineapple_opportunity_armed := false
 var _pineapple_round_playing := false
 var _launched_rocks_this_sequence := false
+var _launched_scripted_pineapple := false
 var _pending_ammo_entries: Array = []
 ## True while a timed `wait N` is sleeping so sky-clear does not skip it.
 var _sequence_delay_active := false
@@ -301,6 +300,30 @@ func _is_gun_cmd(cmd: String) -> bool:
 	return cmd == "gun" or cmd == "gun1" or cmd == "gun2" or cmd == "gun3" or cmd == "gun4"
 
 
+func _is_light_cmd(cmd: String) -> bool:
+	return cmd == "light-dim" or cmd == "light-bright"
+
+
+func _is_avoider_kill_cmd(cmd: String) -> bool:
+	return cmd == "rock-avoider-kill"
+
+
+func _apply_light_entry(entry) -> void:
+	var cmd := ""
+	if entry is Dictionary:
+		cmd = String(entry.get("cmd", "")).to_lower()
+	var delta := 0.0
+	if cmd == "light-dim":
+		delta = -0.25
+	elif cmd == "light-bright":
+		delta = 0.25
+	else:
+		return
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager and round_manager.has_method("apply_script_light_shift"):
+		round_manager.apply_script_light_shift(delta)
+
+
 func _apply_pace_entry(entry) -> void:
 	if entry is Dictionary:
 		set_pace_gravity(String(entry.get("cmd", "")))
@@ -324,10 +347,11 @@ func _apply_gun_entry(entry) -> void:
 		player.switch_gun_loadout(gun_id)
 
 func _process(delta: float) -> void:
-	if _waiting_until_clear and not _checkpoint_hold and not _ladder_hold and not _advancing_sequence and not _final_atmosphere_playing and not _pineapple_round_playing and not _sequence_delay_active:
+	if _waiting_until_clear and not _checkpoint_hold and not _ladder_hold and not _advancing_sequence and not _pineapple_round_playing and not _sequence_delay_active:
 		if current_state != State.INACTIVE and current_state != State.ROUND_END:
 			if _sky_is_clear_for_sequence():
-				try_continue_sequence()
+				if not try_continue_sequence():
+					_finish_round_if_sequence_idle()
 
 	if not _bounds_check_active:
 		return
@@ -367,7 +391,6 @@ func force_launch_next_command() -> void:
 	_waiting_until_clear = false
 	_checkpoint_hold = false
 	_ladder_hold = false
-	_final_atmosphere_playing = false
 	_pineapple_round_playing = false
 	_advancing_sequence = false
 	if not _script_has_more_commands():
@@ -424,14 +447,14 @@ func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
 	_timed_events_running = false
 	_stream_launches_remaining = 0
 	_consumed_sequence_barrier = resume_index > 0
-	_final_atmosphere_played = false
-	_final_atmosphere_playing = false
 	_pineapple_opportunity_armed = false
 	_pineapple_round_playing = false
 	_sequence_delay_active = false
 	_pending_sequence_delay_sec = 0.0
 	_launched_rocks_this_sequence = false
+	_launched_scripted_pineapple = false
 	_pending_ammo_entries.clear()
+	_reset_pineapple_spawn_bookkeeping()
 	_launch_next_sequence_beat()
 
 
@@ -487,10 +510,102 @@ func _is_script_sfx_cmd(cmd: String) -> bool:
 	return cmd.begins_with("sfx-")
 
 
+func _is_trailing_pineapple_filler(cmd: String) -> bool:
+	return (
+		cmd == "wait"
+		or cmd == "wait-until-clear"
+		or _is_clear_cmd(cmd)
+		or _is_pace_cmd(cmd)
+		or _is_gun_cmd(cmd)
+		or _is_script_sfx_cmd(cmd)
+		or _is_light_cmd(cmd)
+		or cmd == "pineapples"
+		or _is_avoider_kill_cmd(cmd)
+	)
+
+
+## First trailing `pineapple` index, or -1 if the script does not end with pineapples.
+func _trailing_pineapple_start_index() -> int:
+	var first := -1
+	var i := _full_wave_sequence.size() - 1
+	while i >= 0:
+		var cmd := _sequence_cmd_at(i)
+		if cmd == "pineapple":
+			first = i
+			i -= 1
+			continue
+		if _is_trailing_pineapple_filler(cmd) or cmd.is_empty():
+			i -= 1
+			continue
+		break
+	return first
+
+
+func has_trailing_pineapples() -> bool:
+	return _trailing_pineapple_start_index() >= 0
+
+
+func should_end_hold_out_on_pineapples() -> bool:
+	if not _launched_scripted_pineapple:
+		return false
+	if _any_airborne_pineapples():
+		return false
+	if _sequence_has_more_play_work():
+		return false
+	return true
+
+
+## Hold-out timer ran out before the trailing pineapple section. Park leftover rocks
+## and jump the cursor so those pineapples still launch. Returns true when the round
+## should stay open for pineapples instead of ending on the timer.
+func jump_to_trailing_pineapples_if_needed() -> bool:
+	var start := _trailing_pineapple_start_index()
+	if start < 0:
+		return false
+	if _any_airborne_pineapples():
+		return true
+	if _sequence_cursor > start and not _script_has_more_commands() and not _launched_scripted_pineapple:
+		return false
+	if _sequence_cursor >= start:
+		if not _sequence_active and _script_has_more_commands():
+			_sequence_active = true
+			_waiting_until_clear = false
+			_launch_next_sequence_beat()
+		return _launched_scripted_pineapple or _script_has_more_commands() or _any_airborne_pineapples()
+	_park_live_rocks_for_pineapple_skip()
+	_sequence_cursor = start
+	_sequence_active = true
+	_waiting_until_clear = false
+	_sequence_delay_token += 1
+	_sequence_delay_active = false
+	_pending_sequence_delay_sec = 0.0
+	_advancing_sequence = false
+	_launch_next_sequence_beat()
+	return true
+
+
+func _park_live_rocks_for_pineapple_skip() -> void:
+	_timed_event_epoch += 1
+	_timed_events_running = false
+	_stream_launches_remaining = 0
+	if has_node("Container_1"):
+		for body in $Container_1.get_children():
+			if not (body is RockInstance):
+				continue
+			if body.current_state == body.State.INACTIVE:
+				continue
+			body.enter_state(body.State.INACTIVE)
+	if gl_PlayerState:
+		gl_PlayerState.dataset.total_rocks_in_round_remaining = 0
+
+
 func _launch_next_sequence_beat() -> void:
 	var force := _force_next_command
-	if _paused_for_continue or not _sequence_active:
+	if _paused_for_continue or not _sequence_active or _round_is_closing():
 		_force_next_command = false
+		if _round_is_closing():
+			_sequence_active = false
+			_waiting_until_clear = false
 		return
 
 	if force:
@@ -546,6 +661,15 @@ func _launch_next_sequence_beat() -> void:
 			var gun_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
 			_apply_gun_entry(gun_entry)
+			continue
+		if _is_light_cmd(cmd):
+			var light_entry = _full_wave_sequence[_sequence_cursor]
+			_sequence_cursor += 1
+			_apply_light_entry(light_entry)
+			continue
+		if _is_avoider_kill_cmd(cmd):
+			_sequence_cursor += 1
+			_handle_avoider_kill_command()
 			continue
 		if cmd == "ammo":
 			var ammo_entry = _full_wave_sequence[_sequence_cursor]
@@ -605,17 +729,11 @@ func _launch_next_sequence_beat() -> void:
 					_force_next_command = false
 					return
 			continue
-		if not force and _should_play_final_atmosphere():
-			_waiting_until_clear = true
-			_final_atmosphere_playing = true
-			var rm = get_tree().get_first_node_in_group("round_manager")
-			if rm and rm.has_method("play_final_round_atmosphere"):
-				await rm.play_final_round_atmosphere()
-			_final_atmosphere_played = true
-			_final_atmosphere_playing = false
-			if not _sequence_active:
-				_force_next_command = false
-				return
+		if _round_is_closing():
+			_sequence_active = false
+			_waiting_until_clear = false
+			_force_next_command = false
+			return
 		_begin_beat(beat)
 		_pending_sequence_delay_sec = 0.0 if force else _beat_trailing_wait_sec(beat)
 		_waiting_until_clear = true
@@ -640,7 +758,7 @@ func _sleep_sequence_delay(delay_sec: float) -> bool:
 	if token != _sequence_delay_token:
 		return false
 	_sequence_delay_active = false
-	return _sequence_active
+	return _sequence_active and not _round_is_closing()
 
 
 func _collect_next_beat() -> Array:
@@ -666,7 +784,11 @@ func _collect_next_beat() -> Array:
 			_apply_gun_entry(_full_wave_sequence[_sequence_cursor])
 			_sequence_cursor += 1
 			continue
-		if cmd == "ammo" or _is_sequence_barrier_cmd(cmd) or _is_clear_cmd(cmd):
+		if _is_light_cmd(cmd):
+			_apply_light_entry(_full_wave_sequence[_sequence_cursor])
+			_sequence_cursor += 1
+			continue
+		if cmd == "ammo" or _is_sequence_barrier_cmd(cmd) or _is_clear_cmd(cmd) or _is_avoider_kill_cmd(cmd):
 			break
 		beat.append(_full_wave_sequence[_sequence_cursor])
 		_sequence_cursor += 1
@@ -734,6 +856,9 @@ func _begin_beat(sequence: Array) -> void:
 				continue
 			if _is_gun_cmd(cmd):
 				_apply_gun_entry(entry)
+				continue
+			if _is_light_cmd(cmd):
+				_apply_light_entry(entry)
 				continue
 			if cmd == 'rock-gap' or cmd == 'rock-red-gap':
 				var gap_entries := _expand_rock_gap_entry(entry)
@@ -844,15 +969,22 @@ func _script_has_more_commands() -> bool:
 	return _sequence_cursor < _full_wave_sequence.size()
 
 
+func _round_is_closing() -> bool:
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager == null:
+		return false
+	return bool(round_manager.get("wave_ending")) or bool(round_manager.get("player_failed")) or bool(round_manager.get("game_over_triggered"))
+
+
 ## Called when remaining rocks hit 0. Returns true if the wave must stay open.
 func try_continue_sequence() -> bool:
-	if _final_atmosphere_playing or _pineapple_round_playing or _sequence_delay_active:
+	if _pineapple_round_playing or _sequence_delay_active:
 		return true
 	var round_manager = get_tree().get_first_node_in_group("round_manager")
 	if round_manager != null:
 		if bool(round_manager.get("pineapple_mode")):
 			return true
-		if bool(round_manager.get("wave_ending")) or bool(round_manager.get("player_failed")) or bool(round_manager.get("game_over_triggered")):
+		if _round_is_closing():
 			_sequence_active = false
 			_waiting_until_clear = false
 			return false
@@ -907,6 +1039,10 @@ func _sky_is_clear_for_sequence() -> bool:
 	if _has_live_checkpoint():
 		return false
 	if _has_live_ladder_balloons():
+		return false
+	## Pineapple / balloon-only beats have no PREPARE_ROCK bodies. Without this,
+	## `_process` treats the sky as clear and skips the pulse, so they never spawn.
+	if current_state == State.PREPARE_ROCKS:
 		return false
 	if _timed_events_running:
 		return false
@@ -1261,17 +1397,6 @@ func _dismiss_ammo_balloons() -> void:
 			node.queue_free()
 
 
-func _should_play_final_atmosphere() -> bool:
-	if _final_atmosphere_played or _final_atmosphere_playing:
-		return false
-	if not _consumed_sequence_barrier:
-		return false
-	for i in range(_sequence_cursor, _full_wave_sequence.size()):
-		if _is_sequence_barrier_cmd(_sequence_cmd_at(i)):
-			return false
-	return true
-
-
 func _handle_clear_command(entry) -> void:
 	if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "clear-ammo":
 		_clear_ammo_balloons()
@@ -1283,6 +1408,21 @@ func _handle_clear_command(entry) -> void:
 			_clear_balloon_at(row, column)
 		return
 	_clear_live_balloons()
+
+
+func _handle_avoider_kill_command() -> void:
+	if not has_node("Container_1"):
+		return
+	var live: Array = []
+	for body in $Container_1.get_children():
+		if not (body is RockInstance):
+			continue
+		if body.rock_type != RockInstance.RockSize.AVOIDER:
+			continue
+		live.append(body)
+	for body in live:
+		if is_instance_valid(body) and body.has_method("kill_avoider_from_script"):
+			body.kill_avoider_from_script()
 
 
 func _handle_sfx_command(entry) -> void:
@@ -1498,7 +1638,6 @@ func _cancel_sequence() -> void:
 	_advancing_sequence = false
 	_timed_events_running = false
 	_stream_launches_remaining = 0
-	_final_atmosphere_playing = false
 	_pineapple_opportunity_armed = false
 	_pineapple_round_playing = false
 	_sequence_delay_active = false
@@ -1507,11 +1646,21 @@ func _cancel_sequence() -> void:
 	_force_next_command = false
 	_instant_sequence_pulse = false
 	_launched_rocks_this_sequence = false
+	_launched_scripted_pineapple = false
 	_dismiss_checkpoint()
 	_dismiss_ladder_balloons()
 	_dismiss_ammo_balloons()
 	_pending_ammo_entries.clear()
 	_script_sfx_stop_all()
+	_reset_pineapple_spawn_bookkeeping()
+
+
+func _reset_pineapple_spawn_bookkeeping() -> void:
+	if not is_inside_tree():
+		return
+	for node in get_tree().get_nodes_in_group("pineapple_container"):
+		if node != null and node.has_method("clear_spawn_bookkeeping"):
+			node.clear_spawn_bookkeeping()
 
 
 func begin_checkpoint_hold() -> void:
@@ -1525,6 +1674,69 @@ func notify_clearable_destroyed() -> void:
 	if not _waiting_until_clear and not _checkpoint_hold:
 		return
 	try_continue_sequence()
+
+
+## Scripted pineapple left play. If it was the last one and nothing else remains, end the round.
+func notify_pineapple_left_play() -> void:
+	if not is_inside_tree():
+		return
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	if _round_is_closing() or _pineapple_round_playing:
+		return
+	if not _launched_scripted_pineapple:
+		return
+	## Dual launches share a fanfare; don't treat leftover pending/fanfare as a live pineapple.
+	if _any_airborne_pineapples():
+		return
+	if _sequence_has_more_play_work():
+		return
+	_sequence_delay_token += 1
+	_sequence_delay_active = false
+	_pending_sequence_delay_sec = 0.0
+	_sequence_active = false
+	_waiting_until_clear = false
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager and round_manager.has_method("finish_round_after_last_pineapple"):
+		round_manager.finish_round_after_last_pineapple()
+
+
+## Sequence finished and the sky is empty — tally even if remaining-rocks already hit 0.
+func _finish_round_if_sequence_idle() -> void:
+	if _script_has_more_commands() or _checkpoint_hold or _ladder_hold or _pineapple_round_playing:
+		return
+	if _any_airborne_pineapples() or _any_live_round_rocks() or _timed_events_running:
+		return
+	if _round_is_closing():
+		return
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager == null:
+		return
+	if _launched_scripted_pineapple and round_manager.has_method("finish_round_after_last_pineapple"):
+		round_manager.finish_round_after_last_pineapple()
+		return
+	if round_manager.has_method("check_if_rocks_still_in_air"):
+		round_manager.check_if_rocks_still_in_air()
+
+
+func _sequence_has_more_play_work() -> bool:
+	for i in range(_sequence_cursor, _full_wave_sequence.size()):
+		var entry = _full_wave_sequence[i]
+		if typeof(entry) == TYPE_INT:
+			if int(entry) < 300:
+				return true
+			continue
+		if not (entry is Dictionary):
+			continue
+		var cmd := String(entry.get("cmd", "")).to_lower()
+		if cmd == "wait" or cmd == "wait-until-clear" or _is_clear_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_script_sfx_cmd(cmd) or _is_light_cmd(cmd) or cmd == "pineapples":
+			continue
+		if _is_launchable_spawn_cmd(cmd) or cmd == "balloon" or cmd == "pineapple" or cmd == "ammo" or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or cmd == "bonus-target" or _is_avoider_kill_cmd(cmd):
+			return true
+		## Markers / unknown lines must not keep the round open forever.
+		continue
+	return false
 
 
 ## Checkpoint was shot — stop treating it as a live hold. Sequence continues via end_checkpoint_hold.
@@ -1707,7 +1919,7 @@ func update_prepare_rocks() -> void:
 func _pulse_continuation_beat() -> void:
 	if not _instant_sequence_pulse:
 		await get_tree().create_timer(0.4, false).timeout
-	if _paused_for_continue or not _sequence_active:
+	if _paused_for_continue or not _sequence_active or _round_is_closing():
 		return
 	if current_state == State.PREPARE_ROCKS:
 		enter_state(State.PULSE_ROCKS)
@@ -1723,8 +1935,12 @@ func _rock_slot_busy(body) -> bool:
 func _spawn_entry_to_rock_type(entry) -> int:
 	if entry is Dictionary:
 		match String(entry.get('cmd', '')).to_lower():
+			'rock-invisible':
+				return RockInstance.RockSize.INVISIBLE
 			'rock-black':
 				return RockInstance.RockSize.HAZARD
+			'rock-fake':
+				return RockInstance.RockSize.FAKE
 			'rock-pigeon':
 				return RockInstance.RockSize.SMALL_2
 			'red_rock_error':
@@ -1766,7 +1982,9 @@ func _spawn_entry_to_rock_type(entry) -> int:
 func _is_launchable_spawn_cmd(cmd: String) -> bool:
 	return (
 		cmd == 'rock'
+		or cmd == 'rock-invisible'
 		or cmd == 'rock-black'
+		or cmd == 'rock-fake'
 		or cmd == 'rock-pigeon'
 		or cmd == 'red_rock_error'
 		or cmd == 'smokecan'
@@ -1819,7 +2037,7 @@ func _run_timed_event_spawns() -> void:
 	var elapsed := 0.0
 
 	for item in schedule:
-		if _paused_for_continue or epoch != _timed_event_epoch:
+		if _paused_for_continue or epoch != _timed_event_epoch or _round_is_closing():
 			_timed_events_running = false
 			return
 		if current_state != State.PULSE_ROCKS:
@@ -1832,7 +2050,7 @@ func _run_timed_event_spawns() -> void:
 			await get_tree().create_timer(wait_for, false).timeout
 			elapsed += wait_for
 
-		if _paused_for_continue or epoch != _timed_event_epoch:
+		if _paused_for_continue or epoch != _timed_event_epoch or _round_is_closing():
 			_timed_events_running = false
 			return
 		if current_state != State.PULSE_ROCKS:
@@ -1850,7 +2068,8 @@ func _run_timed_event_spawns() -> void:
 					await balloon_container.spawn_balloon_entry(entry)
 			'pineapple':
 				if pineapple_launcher and pineapple_launcher.has_method('launch_from_spawn_entry'):
-					pineapple_launcher.launch_from_spawn_entry(entry)
+					_launched_scripted_pineapple = true
+					await pineapple_launcher.launch_from_spawn_entry(entry)
 
 	if epoch == _timed_event_epoch:
 		_timed_events_running = false
@@ -2033,6 +2252,9 @@ func _any_live_round_rocks() -> bool:
 			continue
 		if body.rock_type == RockInstance.RockSize.MOTHERSHIP:
 			continue
+		## Avoiders are not remaining-rocks; `rock-avoider-kill` pops leftovers after wait.
+		if body.rock_type == RockInstance.RockSize.AVOIDER:
+			continue
 		## Still waiting to launch this wave.
 		if body.current_state == body.State.PREPARE_ROCK:
 			return true
@@ -2055,14 +2277,23 @@ func _any_live_balloons() -> bool:
 	return false
 
 
-func _any_live_pineapples() -> bool:
+func _any_airborne_pineapples() -> bool:
 	for node in get_tree().get_nodes_in_group("pineapple_container"):
-		if node != null and node.has_method("is_pineapple_in_play") and bool(node.is_pineapple_in_play()):
-			return true
+		if node == null:
+			continue
+		if not node.has_method("launch_from_spawn_entry"):
+			continue
 		for child in node.get_children():
 			if child is RigidBody3D and bool(child.get("rock_activated")):
 				return true
 	return false
+
+
+func _any_live_pineapples() -> bool:
+	for node in get_tree().get_nodes_in_group("pineapple_container"):
+		if node != null and node.has_method("is_pineapple_in_play") and bool(node.is_pineapple_in_play()):
+			return true
+	return _any_airborne_pineapples()
 
 
 func any_live_pineapples() -> bool:
@@ -3816,7 +4047,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
 			# Keep wait / sequence barriers in place so launch stagger, balloon-checks, and clear survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or _is_script_sfx_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd):
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_check_cmd(cmd) or _is_ladder_balloon_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or _is_script_sfx_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_light_cmd(cmd) or _is_avoider_kill_cmd(cmd):
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue

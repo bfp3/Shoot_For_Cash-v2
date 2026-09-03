@@ -58,8 +58,8 @@
 [ext_resource type="Script" uid="uid://bns2a7l7rdc41" path="res://ch/targets/orange_bombs.gd" id="68_qmj5w"]
 [ext_resource type="Script" uid="uid://byuybau4gp23h" path="res://ch/Balllons/player_balloon_container.gd" id="68_r5w5l"]
 [ext_resource type="PackedScene" uid="uid://c4hrryyn4don0" path="res://ch/Rocks/PlayerBalloon.tscn" id="68_wtxnc"]
-[ext_resource type="PackedScene" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
-[ext_resource type="PackedScene" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
+[ext_resource type="PackedScene" uid="uid://c3p6ovdbn0gkc" path="res://ch/Rocks/Balloon.tscn" id="69_6j2wd"]
+[ext_resource type="PackedScene" uid="uid://c3ydasvyhv7ed" path="res://ch/Rocks/Orange.tscn" id="69_swp41"]
 [ext_resource type="Script" uid="uid://cw36fy6a37j1h" path="res://ch/bonus_rounds/bonus_target_manager.gd" id="71_3ga0b"]
 [ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="74_vwwt2"]
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="75_mdemw"]
@@ -916,42 +916,42 @@ pitch_scale = 0.8
 
 [node name="1" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=642236541]
 stream = ExtResource("21_ymbdo")
-volume_db = -50.0
+volume_db = -55.0
 bus = &"ReverbBus"
 
 [node name="2" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=2128760860]
 stream = ExtResource("22_wv0tc")
-volume_db = -50.0
+volume_db = -55.0
 bus = &"ReverbBus"
 
 [node name="3" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=417658203]
 stream = ExtResource("23_gf2tl")
-volume_db = -50.0
+volume_db = -55.0
 bus = &"ReverbBus"
 
 [node name="4" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=452249262]
 stream = ExtResource("24_wtxnc")
-volume_db = -50.0
+volume_db = -55.0
 bus = &"ReverbBus"
 
 [node name="5" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=1942782523]
 stream = ExtResource("25_r5w5l")
-volume_db = -50.0
+volume_db = -55.0
 bus = &"ReverbBus"
 
 [node name="6" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=2002803183]
 stream = ExtResource("26_8twtg")
-volume_db = -50.0
+volume_db = -55.0
 bus = &"ReverbBus"
 
 [node name="7" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=82412626]
 stream = ExtResource("27_3ga0b")
-volume_db = -50.0
+volume_db = -55.0
 bus = &"ReverbBus"
 
 [node name="8" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/PianoNotesSFX" unique_id=765474263]
 stream = ExtResource("28_vwwt2")
-volume_db = -70.0
+volume_db = -55.0
 bus = &"ReverbBus"
 
 [node name="SolidPlatformforRocks" type="StaticBody3D" parent="Rocks" unique_id=1202508704]
@@ -1121,9 +1121,9 @@ mouse_filter = 2
 script = ExtResource("56_4ta1g")
 arrival_time_text = ""
 arrival_fade_in_sec = 0.25
-arrival_hold_sec = 0.5
-arrival_fade_out_sec = 1.0
-arrival_shop_delay_sec = 0.5
+arrival_hold_sec = 0.4
+arrival_fade_out_sec = 0.2
+arrival_shop_delay_sec = 0.01
 metadata/_edit_use_anchors_ = true
 
 [node name="CenterPOS" type="Control" parent="MainGameCanvasLayer/Place_name" unique_id=1728009373]
@@ -1494,67 +1494,123 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, 23)
 [node name="RightMarker" type="Marker3D" parent="Pineapple_markers" unique_id=2133183574]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4, 23)
 
+[node name="Balloon_container" type="Node3D" parent="." unique_id=906093422 groups=["balloon_container", "restartable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 22.5)
+script = ExtResource("63_nn6vd")
+approach_duration = 2.0
+spawn_distance = 24.0
+
+[node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 7, 0)
+balloon_type = 3
+
+[node name="Balloon2" parent="Balloon_container" unique_id=121622778 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 7, 0)
+balloon_type = 3
+
+[node name="Balloon3" parent="Balloon_container" unique_id=1030168432 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 7, 0)
+balloon_type = 3
+
+[node name="Balloon4" parent="Balloon_container" unique_id=355297050 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 7, 0)
+balloon_type = 3
+
+[node name="Balloon5" parent="Balloon_container" unique_id=95575164 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 7, 0)
+balloon_type = 3
+
+[node name="Balloon6" parent="Balloon_container" unique_id=1531073187 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 7, 0)
+balloon_type = 3
+
+[node name="Balloon7" parent="Balloon_container" unique_id=884139657 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 7, 0)
+balloon_type = 3
+
+[node name="Balloon8" parent="Balloon_container" unique_id=1953252365 instance=ExtResource("69_6j2wd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 7, 0)
+balloon_type = 3
+
+[node name="Balloon_wait_positions" type="Node3D" parent="." unique_id=242094308]
+
+[node name="Balloon_pos_1" type="Marker3D" parent="Balloon_wait_positions" unique_id=796756762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, -1, 11.8)
+
+[node name="Checkpoint_container" type="Node3D" parent="." unique_id=1888000001 groups=["checkpoint_container"]]
+
+[node name="PlayerBalloon" type="Node3D" parent="." unique_id=375306820 node_paths=PackedStringArray("round_manager") groups=["player_balloon_container", "restartable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
+script = ExtResource("68_r5w5l")
+starting_balloons = 1
+round_manager = NodePath("../Round_manager")
+
+[node name="PlayerBalloon" parent="PlayerBalloon" unique_id=966203961 instance=ExtResource("68_wtxnc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 8, 23.225)
+top_level = true
+
 [node name="OrangeBombs" type="Node3D" parent="." unique_id=28184370 node_paths=PackedStringArray("round_manager") groups=["orange_container"]]
 script = ExtResource("68_qmj5w")
 round_manager = NodePath("../Round_manager")
+invisible_oranges = true
 
-[node name="Orange" parent="OrangeBombs" unique_id=1226943477 instance=ExtResource("69_swp41")]
+[node name="Orange" parent="OrangeBombs" unique_id=1226943477 groups=["pineapple"] instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -2.9, 23)
 mass = 0.5
 gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
-[node name="Orange2" parent="OrangeBombs" unique_id=1044980419 instance=ExtResource("69_swp41")]
+[node name="Orange2" parent="OrangeBombs" unique_id=1044980419 groups=["pineapple"] instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -2.9, 23)
 mass = 0.5
 gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
-[node name="Orange3" parent="OrangeBombs" unique_id=63026475 instance=ExtResource("69_swp41")]
+[node name="Orange3" parent="OrangeBombs" unique_id=63026475 groups=["pineapple"] instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -2.9, 23)
 mass = 0.5
 gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
-[node name="Orange4" parent="OrangeBombs" unique_id=1337323973 instance=ExtResource("69_swp41")]
+[node name="Orange4" parent="OrangeBombs" unique_id=1337323973 groups=["pineapple"] instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -2.9, 23)
 mass = 0.5
 gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
-[node name="Orange5" parent="OrangeBombs" unique_id=170169503 instance=ExtResource("69_swp41")]
+[node name="Orange5" parent="OrangeBombs" unique_id=170169503 groups=["pineapple"] instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -2.9, 23)
 mass = 0.5
 gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
-[node name="Orange6" parent="OrangeBombs" unique_id=587617743 instance=ExtResource("69_swp41")]
+[node name="Orange6" parent="OrangeBombs" unique_id=587617743 groups=["pineapple"] instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -2.9, 23)
 mass = 0.5
 gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
-[node name="Orange7" parent="OrangeBombs" unique_id=1646497334 instance=ExtResource("69_swp41")]
+[node name="Orange7" parent="OrangeBombs" unique_id=1646497334 groups=["pineapple"] instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, -2.9, 23)
 mass = 0.5
 gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
-[node name="Orange8" parent="OrangeBombs" unique_id=701289244 instance=ExtResource("69_swp41")]
+[node name="Orange8" parent="OrangeBombs" unique_id=701289244 groups=["pineapple"] instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, -2.9, 23)
 mass = 0.5
 gravity_scale = 0.0
 linear_damp = 5.0
 force_multiplier = 1.0
 
-[node name="Orange9" parent="OrangeBombs" unique_id=281292951 instance=ExtResource("69_swp41")]
+[node name="Orange9" parent="OrangeBombs" unique_id=281292951 groups=["pineapple"] instance=ExtResource("69_swp41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, -2.9, 23)
 mass = 0.5
 gravity_scale = 0.0
@@ -1616,61 +1672,6 @@ volume_db = -15.0
 [node name="Pineapple_destroyed" type="AudioStreamPlayer" parent="OrangeBombs/SFX" unique_id=1198644935]
 stream = ExtResource("56_gf2tl")
 volume_db = -13.0
-
-[node name="Balloon_container" type="Node3D" parent="." unique_id=906093422 groups=["balloon_container", "restartable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 22.5)
-script = ExtResource("63_nn6vd")
-approach_duration = 2.0
-spawn_distance = 24.0
-
-[node name="Balloon" parent="Balloon_container" unique_id=174291880 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 7, 0)
-balloon_type = 3
-
-[node name="Balloon2" parent="Balloon_container" unique_id=121622778 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 7, 0)
-balloon_type = 3
-
-[node name="Balloon3" parent="Balloon_container" unique_id=1030168432 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 7, 0)
-balloon_type = 3
-
-[node name="Balloon4" parent="Balloon_container" unique_id=355297050 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 7, 0)
-balloon_type = 3
-
-[node name="Balloon5" parent="Balloon_container" unique_id=95575164 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 7, 0)
-balloon_type = 3
-
-[node name="Balloon6" parent="Balloon_container" unique_id=1531073187 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 7, 0)
-balloon_type = 3
-
-[node name="Balloon7" parent="Balloon_container" unique_id=884139657 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 7, 0)
-balloon_type = 3
-
-[node name="Balloon8" parent="Balloon_container" unique_id=1953252365 instance=ExtResource("69_6j2wd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 7, 0)
-balloon_type = 3
-
-[node name="Balloon_wait_positions" type="Node3D" parent="." unique_id=242094308]
-
-[node name="Balloon_pos_1" type="Marker3D" parent="Balloon_wait_positions" unique_id=796756762]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, -1, 11.8)
-
-[node name="Checkpoint_container" type="Node3D" parent="." unique_id=1888000001 groups=["checkpoint_container"]]
-
-[node name="PlayerBalloon" type="Node3D" parent="." unique_id=375306820 node_paths=PackedStringArray("round_manager") groups=["player_balloon_container", "restartable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
-script = ExtResource("68_r5w5l")
-starting_balloons = 1
-round_manager = NodePath("../Round_manager")
-
-[node name="PlayerBalloon" parent="PlayerBalloon" unique_id=966203961 instance=ExtResource("68_wtxnc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 8, 23.225)
-top_level = true
 
 [node name="BonusCash" type="Node3D" parent="." unique_id=836260086 groups=["multi_shot"]]
 script = ExtResource("76_qmj5w")

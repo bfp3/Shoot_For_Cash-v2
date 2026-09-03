@@ -30,11 +30,11 @@ render_priority = 0
 shader = ExtResource("17_1thcr")
 shader_parameter/albedo = Color(0.02159998, 0.34752002, 0.72, 1)
 shader_parameter/albedo_highlight = Color(0.44650003, 0.7486, 0.95, 1)
-shader_parameter/roughness = 0.18
+shader_parameter/roughness = 0.4210000199975
 shader_parameter/specular = 0.55
 shader_parameter/metallic = 0.0
 shader_parameter/fresnel_power = 2.8
-shader_parameter/wave_height = 1.0000000475
+shader_parameter/wave_height = 0.2000000095
 shader_parameter/wave_speed = 0.250000011875
 shader_parameter/wave_scale = 0.045
 shader_parameter/wave_secondary = 0.55
@@ -43,8 +43,8 @@ shader_parameter/freeze_time = false
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_gwxhc"]
 size = Vector2(150, 312.865)
-subdivide_width = 24
-subdivide_depth = 24
+subdivide_width = 30
+subdivide_depth = 30
 
 [sub_resource type="QuadMesh" id="QuadMesh_k7lvh"]
 size = Vector2(19.91, 10)
@@ -850,7 +850,7 @@ sky_mode = 1
 transform = Transform3D(1, 0, 0, 0, 0.9999984, -0.0017453282, 0, 0.0017453282, 0.9999984, 3.36, -4.228, 177.888)
 script = ExtResource("21_x8ffe")
 water_size = Vector2(150, 312.865)
-subdivide = 24
+subdivide = 30
 metadata/_custom_type_script = "uid://cwee1r4c8ea3p"
 
 [node name="Mesh" type="MeshInstance3D" parent="SimpleWater" unique_id=650506395]
@@ -1246,6 +1246,7 @@ debug_color = Color(1, 0, 0.016666412, 1)
 
 [node name="floor4" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=1363320637]
 transform = Transform3D(13.965, 0, 0, 0, 0.1, 0, 0, 0, 8.615, 0, -3.038, 180.867)
+visible = false
 cast_shadow = 0
 mesh = SubResource("BoxMesh_3vvr1")
 
@@ -1404,6 +1405,7 @@ skeleton = NodePath("../..")
 [node name="CrateForCash" parent="Level1/Moving_nodes" unique_id=1706272792 instance=ExtResource("crate_cash")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.177458, 2.2364707, 43.860092)
 mass = 1.0
+max_hits = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Level1/Moving_nodes" unique_id=1716538620]
 transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, 11.177458, -0.7635293, 43.860092)
@@ -1643,12 +1645,12 @@ modulate = Color(0.33333334, 0.33333334, 0.33333334, 0.44705883)
 texture = ExtResource("22_61oqc")
 
 [node name="Mountain2" type="Sprite3D" parent="Level1" unique_id=1185072818]
-transform = Transform3D(18.4, 0, 0, 0, 6.355, 0, 0, 0, 6.355, 163.89539, 7.756, 256.847)
+transform = Transform3D(18.4, 0, 0, 0, 6.355, 0, 0, 0, 6.355, 163.89539, 7.1574492, 256.847)
 modulate = Color(0.33333334, 0.33333334, 0.33333334, 0.44705883)
 texture = ExtResource("22_61oqc")
 
 [node name="Mountain3" type="Sprite3D" parent="Level1" unique_id=88604400]
-transform = Transform3D(-6.5, 0, -3.3898556e-07, 0, 2.245, 0, 9.814727e-07, 0, -2.245, 35.591, 4.016, 256.847)
+transform = Transform3D(-6.5, 0, -3.3898556e-07, 0, 2.245, 0, 9.814727e-07, 0, -2.245, 49.766, 2.067, 256.847)
 modulate = Color(0.33, 0.33, 0.33, 0.29411766)
 texture = ExtResource("22_61oqc")
 

@@ -2,6 +2,9 @@ extends RigidBody3D
 class_name RockInstance
 
 const CARDINAL_BURST_SCENE := preload("res://ch/Rocks/cardinal_burst.tscn")
+const FAKE_XRAY_SHADER := preload("res://ch/Rocks/fake_rock_xray.gdshader")
+const FAKE_XRAY_TINT := Color(0.52, 0.54, 0.58, 1.0)
+const INVISIBLE_XRAY_TINT := Color(0.95, 0.8, 0.22, 1.0)
 
 @onready var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
 var _rocks_sfx: Node = null
@@ -74,6 +77,11 @@ enum RockSize {
 	STAY_BLACK,
 	## Same as STAY_BLACK, Cardinal mesh. Explode releases 4 cardinal energy bursts.
 	CARDINAL,
+	## Looks and flies like rock-black. Shot / splash / OOB never strike.
+	## Crosshair x-ray reveals the grey rock underneath.
+	FAKE,
+	## Same as SMALL, but the mesh stays hidden until the crosshair overlaps it.
+	INVISIBLE,
 }
 
 enum State {
@@ -100,6 +108,7 @@ var _skip_setup_stat_logs := false
 @onready var small_rock: MeshInstance3D = %small_rock
 @onready var clay_pigeon: MeshInstance3D = %clay_pigeon
 @onready var grey_rock: MeshInstance3D = %grey_rock
+@onready var grey_rock_hidden_mesh: MeshInstance3D = get_node_or_null("%grey_rock_hidden_mesh")
 
 @onready var medium_rock: MeshInstance3D = %medium_rock
 @onready var large_rock: MeshInstance3D = %Large_rock
@@ -161,6 +170,10 @@ var _hazard_strike_from_direct_shot := false
 ## Set by RockManager once this rock has been inside the camera viewport.
 ## Off-screen spawns won't miss until they've entered play at least once.
 var has_entered_camera_view := false
+## rock-invisible: peek through the reticle like fake-rock / hidden-crate x-ray.
+var _invisible_until_aim := false
+var _invisible_xray_mat: ShaderMaterial = null
+var _invisible_xray_originals: Dictionary = {}
 ## Bumps to cancel a pending airborne rock–rock collision schedule.
 var _airborne_collision_token := 0
 
@@ -177,6 +190,9 @@ const ROCK_STAY_BLACK_LIFETIME_SEC := 3.0
 var _orange_neutralized_hazard := false
 var _hazard_crosshair_armed := false
 var _hazard_crosshair_arm_token := 0
+var _fake_xray_mat: ShaderMaterial
+@export_range(0.2, 1.5, 0.05) var fake_reveal_radius_scale := 0.85
+@export_range(0.0, 48.0, 1.0) var fake_reveal_softness_px := 14.0
 
 @export_group("Aim Hold Bonus (Basic Rock)")
 ## While the crosshair overlaps a basic rock, add this much cash every interval (paid only if shot).
@@ -301,6 +317,97 @@ func is_stay_black() -> bool:
 
 func is_cardinal() -> bool:
 	return rock_type == RockSize.CARDINAL
+
+
+func is_fake() -> bool:
+	return rock_type == RockSize.FAKE
+
+
+func is_invisible_rock() -> bool:
+	return rock_type == RockSize.INVISIBLE
+
+
+## Basic yellow rock, including rock-invisible (same cash / clear rules; miss does not strike).
+func is_standard_rock() -> bool:
+	return rock_type == RockSize.SMALL or rock_type == RockSize.INVISIBLE
+
+
+func _hide_invisible_rock_visuals() -> void:
+	if not is_invisible_rock():
+		return
+	_set_small_rock_fire(false)
+	if current_particles:
+		current_particles.emitting = false
+	if small_rock:
+		small_rock.visible = true
+	_setup_invisible_rock_xray()
+
+
+func _setup_invisible_rock_xray() -> void:
+	if _invisible_xray_mat == null:
+		_invisible_xray_mat = ShaderMaterial.new()
+		_invisible_xray_mat.shader = FAKE_XRAY_SHADER
+		_invisible_xray_mat.render_priority = 2
+		_invisible_xray_mat.set_shader_parameter("use_albedo_tex", 0.0)
+		_invisible_xray_mat.set_shader_parameter("albedo_tint", INVISIBLE_XRAY_TINT)
+		_invisible_xray_mat.set_shader_parameter("emission_color", INVISIBLE_XRAY_TINT)
+		_invisible_xray_mat.set_shader_parameter("emission_mul", 0.35)
+	for mesh in _invisible_rock_xray_meshes():
+		if not _invisible_xray_originals.has(mesh):
+			_invisible_xray_originals[mesh] = mesh.material_override
+		mesh.material_override = _invisible_xray_mat
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mesh.visible = true
+	_apply_invisible_rock_xray(Vector2.ZERO, 0.0)
+
+
+func _clear_invisible_rock_xray() -> void:
+	for mesh in _invisible_xray_originals.keys():
+		if mesh == null or not is_instance_valid(mesh):
+			continue
+		mesh.material_override = _invisible_xray_originals[mesh]
+	_invisible_xray_originals.clear()
+	_apply_invisible_rock_xray(Vector2.ZERO, 0.0)
+
+
+func _invisible_rock_xray_meshes() -> Array[MeshInstance3D]:
+	var meshes: Array[MeshInstance3D] = []
+	var root: Node = current_mesh if current_mesh else small_rock
+	if root is MeshInstance3D:
+		meshes.append(root)
+	if root:
+		for child in root.find_children("*", "MeshInstance3D", true, false):
+			if child is MeshInstance3D:
+				meshes.append(child)
+	return meshes
+
+
+func _update_invisible_rock_reveal() -> void:
+	if not _invisible_until_aim or not is_invisible_rock():
+		return
+	if not rock_activated or rock_destroyed:
+		return
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null or ("current_state" in player and "State" in player and player.current_state != player.State.ACTIVE):
+		_apply_invisible_rock_xray(Vector2.ZERO, 0.0)
+		return
+	var cam := get_viewport().get_camera_3d()
+	if cam == null or cam.is_position_behind(global_position):
+		_apply_invisible_rock_xray(Vector2.ZERO, 0.0)
+		return
+	var aim := _fake_aim_center_px(player)
+	var radius := _fake_aim_radius_px(player) * fake_reveal_radius_scale
+	_apply_invisible_rock_xray(aim, radius)
+
+
+func _apply_invisible_rock_xray(center_px: Vector2, radius_px: float) -> void:
+	if _invisible_xray_mat == null:
+		return
+	var softness := maxf(fake_reveal_softness_px, radius_px * 0.12)
+	_invisible_xray_mat.set_shader_parameter("xray_center_px", center_px)
+	_invisible_xray_mat.set_shader_parameter("xray_radius_px", radius_px)
+	_invisible_xray_mat.set_shader_parameter("xray_softness_px", softness)
+	_invisible_xray_mat.set_shader_parameter("emission_mul", 0.35 if radius_px > 0.0 else 0.0)
 
 # --- Rock Avoider (rock-avoider) ---------------------------------------------
 @export_group("Rock Avoider")
@@ -905,12 +1012,16 @@ func _physics_process(delta: float) -> void:
 			global_position.z = _avoider_plane_z
 			if not _freeze_shot_pending:
 				_update_mothership(delta)
-		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY:
-			if rock_type == RockSize.SMALL:
+		elif is_standard_rock() or rock_type == RockSize.GREY:
+			if is_standard_rock():
 				_update_aim_hold_bonus(delta)
 			_update_destroy_on_crosshair_overlap()
+			if _invisible_until_aim:
+				_update_invisible_rock_reveal()
 		elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 			_update_hazard_crosshair_overlap()
+		elif is_fake():
+			_update_fake_xray_reveal()
 
 	if not ballistic_aim_active or _ballistic_in_descent:
 		return
@@ -1097,11 +1208,13 @@ func update_active() -> void:
 	elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black():
 		if _player_wants_overlap_destroy("hazards"):
 			_arm_hazard_crosshair()
-	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.STAY:
+	elif is_standard_rock() or rock_type == RockSize.GREY or rock_type == RockSize.STAY:
 		if _player_wants_overlap_destroy("rocks"):
 			_arm_destroy_on_crosshair()
-	if rock_type == RockSize.SMALL or rock_type == RockSize.STAY:
+	if is_standard_rock() or rock_type == RockSize.STAY:
 		_set_small_rock_fire(true)
+		if _invisible_until_aim:
+			_hide_invisible_rock_visuals()
 	
 	#%rock_launch_sound.pitch_scale = randf_range(3.0,3.2)
 	_play_rocks_sfx("rock_launch_sound")
@@ -1147,6 +1260,7 @@ func round_end_check_rock_status() -> void:
 				or rock_type == RockSize.HAZARD_SMALL
 				or rock_type == RockSize.STAY_BLACK
 				or rock_type == RockSize.CARDINAL
+				or rock_type == RockSize.FAKE
 				or rock_type == RockSize.SMOKECAN
 				or rock_type == RockSize.AVOIDER
 				or rock_type == RockSize.RED_ATTACKER
@@ -1212,6 +1326,10 @@ func schedule_airborne_rock_collisions(delay_sec: float, bounce: float) -> void:
 
 
 func _enable_airborne_rock_collisions(bounce: float) -> void:
+	## Avoiders / red-attackers only scan other rocks after they go aggressive.
+	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER:
+		if not _is_threat_hazardous():
+			return
 	set_collision_mask_value(1, true)
 	if physics_material_override == null:
 		physics_material_override = PhysicsMaterial.new()
@@ -1259,6 +1377,8 @@ func hide_all_meshes() -> void:
 		mesh.visible = false
 		if _mesh_original_overrides.has(mesh):
 			mesh.material_override = _mesh_original_overrides[mesh]
+	if grey_rock_hidden_mesh:
+		grey_rock_hidden_mesh.visible = false
 
 
 func _log_white_rock_if_needed() -> void:
@@ -1321,11 +1441,13 @@ func flip_converter_alliance() -> bool:
 
 	if becoming_red:
 		_arm_converter_red_threat()
-	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.STAY:
+	elif is_standard_rock() or rock_type == RockSize.GREY or rock_type == RockSize.STAY:
 		if _player_wants_overlap_destroy("rocks"):
 			_arm_destroy_on_crosshair()
-		if rock_type == RockSize.SMALL or rock_type == RockSize.STAY:
-			_set_small_rock_fire(true)
+	if is_standard_rock() or rock_type == RockSize.STAY:
+		_set_small_rock_fire(true)
+		if _invisible_until_aim:
+			_hide_invisible_rock_visuals()
 
 	_play_converter_flip_feedback()
 	return true
@@ -1333,14 +1455,14 @@ func flip_converter_alliance() -> bool:
 
 func _converter_flip_target_type() -> int:
 	match rock_type:
-		RockSize.SMALL, RockSize.GREY, RockSize.SMALL_2:
+		RockSize.SMALL, RockSize.INVISIBLE, RockSize.GREY, RockSize.SMALL_2:
 			return RockSize.RED_ROCK_ERROR
 		RockSize.STAY:
 			return RockSize.RED_ROCK_ERROR
 		RockSize.RED_ROCK_ERROR:
 			## Stay-origin reds flip back to hang-flight yellows.
 			return RockSize.STAY if _converter_keep_stay_flight else RockSize.SMALL
-		RockSize.HAZARD, RockSize.HAZARD_SMALL, RockSize.AVOIDER, RockSize.RED_ATTACKER, RockSize.GAP:
+		RockSize.HAZARD, RockSize.HAZARD_SMALL, RockSize.AVOIDER, RockSize.RED_ATTACKER, RockSize.GAP, RockSize.FAKE:
 			return RockSize.SMALL
 		RockSize.STAY_BLACK, RockSize.CARDINAL:
 			return RockSize.STAY
@@ -1440,13 +1562,13 @@ func _mystery_pool_types() -> Array:
 
 func _mystery_current_pool_key() -> int:
 	match rock_type:
-		RockSize.SMALL, RockSize.GREY, RockSize.SMALL_2, RockSize.STAY, RockSize.RED_ROCK_ERROR:
+		RockSize.SMALL, RockSize.INVISIBLE, RockSize.GREY, RockSize.SMALL_2, RockSize.STAY, RockSize.RED_ROCK_ERROR:
 			return RockSize.SMALL
 		RockSize.RED_ATTACKER, RockSize.GAP:
 			return RockSize.RED_ATTACKER
 		RockSize.AVOIDER:
 			return RockSize.AVOIDER
-		RockSize.HAZARD, RockSize.HAZARD_SMALL, RockSize.STAY_BLACK, RockSize.CARDINAL:
+		RockSize.HAZARD, RockSize.HAZARD_SMALL, RockSize.STAY_BLACK, RockSize.CARDINAL, RockSize.FAKE:
 			return RockSize.HAZARD
 		_:
 			return -1
@@ -1529,12 +1651,14 @@ func _apply_mystery_type_behavior() -> void:
 			apply_torque_impulse(Vector3.LEFT * 1500)
 			if _player_wants_overlap_destroy("hazards"):
 				_arm_hazard_crosshair()
-		RockSize.SMALL:
+		RockSize.SMALL, RockSize.INVISIBLE:
 			constant_force.x = 0.01
 			apply_torque_impulse(Vector3.LEFT * 1500)
 			if _player_wants_overlap_destroy("rocks"):
 				_arm_destroy_on_crosshair()
 			_set_small_rock_fire(true)
+			if _invisible_until_aim:
+				_hide_invisible_rock_visuals()
 		_:
 			pass
 
@@ -1562,6 +1686,8 @@ func _tint_mesh(color: Color) -> void:
 
 func setup_rock_type() -> void:
 	current_mesh.scale = Vector3.ONE
+	_invisible_until_aim = false
+	_clear_invisible_rock_xray()
 	
 	angular_damp = 1.0
 	force_mult.clear()
@@ -1576,12 +1702,13 @@ func setup_rock_type() -> void:
 	
 	match rock_type:
 		# 0
-		RockSize.SMALL:
+		RockSize.SMALL, RockSize.INVISIBLE:
 			# Base values
 
 			current_rock_type 	= "Small Rock"
 			rock_type_name 		= "rock_type_1"
-			_log_white_rock_if_needed()
+			if rock_type != RockSize.INVISIBLE:
+				_log_white_rock_if_needed()
 			var base_health := int(gl_DataSet.get_value("rock_type_1", 1))
 			var base_cash   := int(gl_DataSet.get_value("rock_type_1", 0))
 			var base_scale  := Vector3.ONE * 0.35
@@ -1612,6 +1739,11 @@ func setup_rock_type() -> void:
 			current_particles.emitting = true
 			_reset_aim_hold_bonus()
 			_aim_bonus_mesh_base_scale = current_mesh.scale
+			if rock_type == RockSize.INVISIBLE:
+				current_rock_type = "Invisible Rock"
+				rock_type_name = "rock_type_invisible"
+				_invisible_until_aim = true
+				_hide_invisible_rock_visuals()
 
 		
 		
@@ -1661,6 +1793,21 @@ func setup_rock_type() -> void:
 			rock_type_gravity_scale = 0.1
 
 			
+		RockSize.FAKE:
+			## Same look / flight as rock-black. Never strikes. X-ray shows grey underneath.
+			current_rock_type = "Fake Rock"
+			rock_type_name = "hazard_type_1"
+			health = int(gl_DataSet.get_value("hazard_type_1", 1))
+			cash_value = 0
+			hazard_large.visible = true
+			current_mesh = hazard_large
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = Vector3.ONE * 0.625
+			main_col.scale = Vector3.ONE * 0.2
+			max_health = health
+			rock_type_gravity_scale = 0.1
+			_setup_fake_xray_overlay()
+
 		RockSize.HAZARD_SMALL:
 			current_rock_type 	= "Hazard Large"
 			rock_type_name		= "hazard_type_1"
@@ -2047,6 +2194,8 @@ func reset_stats() -> void:
 	_destroy_on_crosshair_armed = false
 	_destroy_on_crosshair_arm_token += 1
 	has_entered_camera_view = false
+	_invisible_until_aim = false
+	_clear_invisible_rock_xray()
 	_avoider_armed = false
 	_avoider_arm_token += 1
 	_avoider_life_token += 1
@@ -2077,6 +2226,7 @@ func reset_stats() -> void:
 	_chaser_lock_spin_applied = false
 	_stay_life_token += 1
 	_cardinal_bursts_spawned = false
+	_clear_fake_xray()
 	can_sleep = true
 	$Mesh.scale = Vector3.ONE
 	$Mesh.position = Vector3.ZERO
@@ -2355,6 +2505,11 @@ func shake_camera() -> void:
 		RockSize.HAZARD, RockSize.HAZARD_SMALL:
 			if player_cam.has_method("shake_camera_rock_hazard"):
 				player_cam.shake_camera_rock_hazard()
+		RockSize.FAKE:
+			if player_cam.has_method("shake_camera_rock_grey"):
+				player_cam.shake_camera_rock_grey()
+			elif player_cam.has_method("shake_camera_rock_hazard"):
+				player_cam.shake_camera_rock_hazard()
 		RockSize.CRATE:
 			if player_cam.has_method("shake_camera_rock_crate"):
 				player_cam.shake_camera_rock_crate()
@@ -2622,6 +2777,10 @@ func start_destroyed_process() -> void:
 	if rock_destroyed:
 		return
 
+	if _invisible_until_aim:
+		_clear_invisible_rock_xray()
+		_invisible_until_aim = false
+
 	_clear_rock_stay()
 	_shutdown_threat_fx()
 	%RedParticles.emitting = false
@@ -2640,7 +2799,7 @@ func start_destroyed_process() -> void:
 	enter_state(State.HIT)
 	var destroyed_as_hazard := rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black()
 	
-	if rock_type == RockSize.SMALL || rock_type == RockSize.STAY:
+	if is_standard_rock() || rock_type == RockSize.STAY:
 		_play_rocks_sfx("rock_flicker_sfx")
 		_play_rocks_pitch_shift()
 
@@ -3044,11 +3203,96 @@ func play_strike_impact_sfx() -> void:
 func _apply_direct_hazard_strike() -> void:
 	if _hazard_strike_from_direct_shot:
 		return
+	if is_fake():
+		return
 	_hazard_strike_from_direct_shot = true
 	_play_rocks_sfx("hazard_hit_sound")
 	EventBus.instance.hazard_hit.emit()
 	_set_strike_feedback_origin_here()
 	gl_PlayerState.add_strike()
+
+
+func _setup_fake_xray_overlay() -> void:
+	if grey_rock_hidden_mesh == null:
+		return
+	if _fake_xray_mat == null:
+		_fake_xray_mat = ShaderMaterial.new()
+		_fake_xray_mat.shader = FAKE_XRAY_SHADER
+		_fake_xray_mat.render_priority = 2
+		_fake_xray_mat.set_shader_parameter("use_albedo_tex", 0.0)
+		_fake_xray_mat.set_shader_parameter("albedo_tint", FAKE_XRAY_TINT)
+		_fake_xray_mat.set_shader_parameter("emission_mul", 0.2)
+		_fake_xray_mat.set_shader_parameter("emission_color", FAKE_XRAY_TINT)
+	grey_rock_hidden_mesh.material_override = _fake_xray_mat
+	grey_rock_hidden_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	grey_rock_hidden_mesh.visible = true
+	_apply_fake_xray(Vector2.ZERO, 0.0)
+
+
+func _clear_fake_xray() -> void:
+	if grey_rock_hidden_mesh == null:
+		return
+	grey_rock_hidden_mesh.visible = false
+	if _mesh_original_overrides.has(grey_rock_hidden_mesh):
+		grey_rock_hidden_mesh.material_override = _mesh_original_overrides[grey_rock_hidden_mesh]
+	else:
+		grey_rock_hidden_mesh.material_override = null
+	_apply_fake_xray(Vector2.ZERO, 0.0)
+
+
+func _update_fake_xray_reveal() -> void:
+	if _fake_xray_mat == null or grey_rock_hidden_mesh == null:
+		return
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null or ("current_state" in player and "State" in player and player.current_state != player.State.ACTIVE):
+		_apply_fake_xray(Vector2.ZERO, 0.0)
+		return
+	var cam := get_viewport().get_camera_3d()
+	if cam == null or cam.is_position_behind(global_position):
+		_apply_fake_xray(Vector2.ZERO, 0.0)
+		return
+	var aim := _fake_aim_center_px(player)
+	var radius := _fake_aim_radius_px(player) * fake_reveal_radius_scale
+	_apply_fake_xray(aim, radius)
+
+
+func _fake_aim_center_px(player: Node) -> Vector2:
+	var canvas := Vector2.ZERO
+	if player != null:
+		var weapon = player.get("weapon_shooting")
+		if weapon and weapon.get("crosshair") is Control:
+			canvas = (weapon.crosshair as Control).global_position
+		elif player.has_method("_aim_screen_center"):
+			canvas = player._aim_screen_center()
+		else:
+			canvas = get_viewport().get_visible_rect().size * 0.5
+	else:
+		canvas = get_viewport().get_visible_rect().size * 0.5
+	var vp := get_viewport()
+	if vp:
+		return vp.get_screen_transform() * canvas
+	return canvas
+
+
+func _fake_aim_radius_px(player: Node) -> float:
+	var radius := 60.0
+	if player != null and player.has_method("get_current_crosshair_hit_radius"):
+		radius = float(player.get_current_crosshair_hit_radius())
+	var vp := get_viewport()
+	if vp:
+		var scale := vp.get_screen_transform().get_scale()
+		if scale.x > 0.001:
+			radius *= scale.x
+	return radius
+
+
+func _apply_fake_xray(center_px: Vector2, radius_px: float) -> void:
+	if _fake_xray_mat == null:
+		return
+	var softness := maxf(fake_reveal_softness_px, radius_px * 0.12)
+	_fake_xray_mat.set_shader_parameter("xray_center_px", center_px)
+	_fake_xray_mat.set_shader_parameter("xray_radius_px", radius_px)
+	_fake_xray_mat.set_shader_parameter("xray_softness_px", softness)
 
 
 func _arm_hazard_crosshair() -> void:
@@ -3124,9 +3368,6 @@ func _arm_avoider() -> void:
 	_avoider_has_seek_target = true
 	_avoider_retarget_timer = maxf(avoider_retarget_delay_sec, 0.0)
 	_activate_threat_mode()
-	# Detect rock contacts for destroy-on-hit (independent of bounce toggle timing).
-	set_collision_mask_value(1, true)
-	_sync_avoider_collision_exceptions()
 
 
 ## One-shot / restart of this rock's `rock_red_attack_mode` particle (also used by avoiders).
@@ -3207,6 +3448,9 @@ func _activate_threat_mode() -> void:
 	_set_marked_embers(true)
 	if rock_type == RockSize.AVOIDER:
 		_set_avoider_hum(true)
+	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER:
+		set_collision_mask_value(1, true)
+		_sync_avoider_collision_exceptions()
 
 
 func _shutdown_threat_fx() -> void:
@@ -3269,8 +3513,6 @@ func _arm_red_attacker() -> void:
 	if current_state != State.ACTIVE or rock_type != RockSize.RED_ATTACKER:
 		return
 	_red_attacker_armed = true
-	set_collision_mask_value(1, true)
-	_sync_avoider_collision_exceptions()
 
 
 ## Ballistic gap rock: after a short delay, reticle overlap (or a shot) is a strike.
@@ -3459,6 +3701,17 @@ func _start_avoider_lifetime() -> void:
 			return
 		if not rock_activated or rock_destroyed:
 			return
+	_expire_avoider_lifetime()
+
+
+## Script `rock-avoider-kill` — pop with no strike, same as lifetime expire.
+func kill_avoider_from_script() -> void:
+	if rock_type != RockSize.AVOIDER:
+		return
+	if current_state != State.ACTIVE:
+		return
+	if not rock_activated:
+		rock_activated = true
 	_expire_avoider_lifetime()
 
 
@@ -3762,7 +4015,7 @@ func _award_orbit_bonus() -> void:
 func _update_aim_hold_bonus(delta: float) -> void:
 	if not aim_bonus_enabled or rock_destroyed or not rock_activated:
 		return
-	if rock_type != RockSize.SMALL:
+	if not is_standard_rock():
 		return
 
 	var overlapping := _avoider_overlaps_crosshair()
@@ -3802,7 +4055,7 @@ func _arm_destroy_on_crosshair() -> void:
 		return
 	if current_state != State.ACTIVE:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.STAY:
+	if not is_standard_rock() and rock_type != RockSize.GREY and rock_type != RockSize.STAY:
 		return
 	if not _player_wants_overlap_destroy("rocks"):
 		return
@@ -3816,7 +4069,7 @@ func _update_destroy_on_crosshair_overlap() -> void:
 		return
 	if rock_destroyed or not rock_activated:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.STAY:
+	if not is_standard_rock() and rock_type != RockSize.GREY and rock_type != RockSize.STAY:
 		return
 	if _freeze_shot_pending:
 		return
@@ -4212,6 +4465,11 @@ func _on_rock_body_entered(body: Node) -> void:
 	if body is StaticBody3D:
 		_shake_camera_rock_collision()
 		_destroy_avoider_from_rock_collision(self)
+		return
+
+	## Launch / pre-attack: pass through rocks and oranges. Only the armed / dashing
+	## threat mode blows anything else up.
+	if not _is_threat_hazardous():
 		return
 
 	## Orange pineapple: explode like a player shot (orange destroy already shakes).

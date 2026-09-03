@@ -1,9 +1,9 @@
-[gd_scene format=4]
+[gd_scene format=4 uid="uid://c3ydasvyhv7ed"]
 
-[ext_resource type="Script" path="res://ch/Rocks/orange.gd" id="1_osrcr"]
-[ext_resource type="Texture2D" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_osrcr"]
+[ext_resource type="Script" uid="uid://dq6cbl62l07oc" path="res://ch/Rocks/orange.gd" id="1_osrcr"]
+[ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="2_osrcr"]
 [ext_resource type="Material" path="res://mine_temp/materials/mat_fire.tres" id="3_7qv74"]
-[ext_resource type="Texture2D" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="15_5ah37"]
+[ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="15_5ah37"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gmvr6"]
 bounce = 0.5
@@ -365,16 +365,28 @@ height = 0.608
 radial_segments = 18
 rings = 6
 
-[node name="Orange" type="RigidBody3D" unique_id=1539472592 groups=["Target", "pineapple"]]
+[node name="Orange" type="RigidBody3D" unique_id=1539472592 groups=["Target", "orange"]]
 collision_layer = 128
 collision_mask = 128
 physics_material_override = SubResource("PhysicsMaterial_gmvr6")
 linear_damp = 0.3
 angular_damp = 1.0
 script = ExtResource("1_osrcr")
+explode_on_rock_collision = false
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=767476959]
 shape = SubResource("SphereShape3D_nul74")
+
+[node name="InvisibleCol" type="Area3D" parent="."]
+unique_name_in_owner = true
+collision_layer = 512
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InvisibleCol"]
+shape = SubResource("SphereShape3D_nul74")
+disabled = true
 
 [node name="Mesh" type="Node3D" parent="." unique_id=1406987277]
 unique_name_in_owner = true

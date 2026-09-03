@@ -2132,7 +2132,7 @@ func gun_stats() -> void:
 	power_gun_fire_rate = 0.1
 	_loadout_bullet_speed_override = -1.0
 	if weapon_shooting:
-		weapon_shooting.power_bullet_delay = 0.01
+		weapon_shooting.power_bullet_delay = 0.1
 
 
 func gun_2_stats() -> void:
@@ -2140,7 +2140,7 @@ func gun_2_stats() -> void:
 	power_gun_fire_rate = 0.05
 	_loadout_bullet_speed_override = -1.0
 	if weapon_shooting:
-		weapon_shooting.power_bullet_delay = 0.01
+		weapon_shooting.power_bullet_delay = 0.1
 
 
 func gun_3_stats() -> void:
@@ -2149,7 +2149,7 @@ func gun_3_stats() -> void:
 	_loadout_bullet_speed_override = gun3_bullet_travel_sec
 	power_bullet_speed = gun3_bullet_travel_sec
 	if weapon_shooting:
-		weapon_shooting.power_bullet_delay = 0.01
+		weapon_shooting.power_bullet_delay = 0.1
 		weapon_shooting.power_bullet_speed = gun3_bullet_travel_sec
 
 
@@ -2158,7 +2158,7 @@ func gun_4_stats() -> void:
 	power_gun_fire_rate = 0.1
 	_loadout_bullet_speed_override = -1.0
 	if weapon_shooting:
-		weapon_shooting.power_bullet_delay = 0.01
+		weapon_shooting.power_bullet_delay = 0.1
 
 
 func _apply_active_gun_shot_stats() -> void:

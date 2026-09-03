@@ -451,10 +451,9 @@ func start_destroyed_process() -> void:
 		#money_label_3d.pineapple_is_pineapple()
 	
 	is_deactivated = true
-	#$Mesh.hide()
-	#freeze = true
 	did_not_get_all_pineapples = false
 	was_hit_tween()
+	_notify_sequence_pineapple_left()
 	
 
 	var tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
@@ -578,6 +577,18 @@ func hit_out_of_bounds() -> void:
 	#$Pineapple_destroyed.play()
 
 	enter_state(State.MISSED)
+	_notify_sequence_pineapple_left()
+
+
+func _notify_sequence_pineapple_left() -> void:
+	var rocks: Node = null
+	var round_manager := get_tree().get_first_node_in_group("round_manager")
+	if round_manager:
+		rocks = round_manager.get("rocks_container")
+	if rocks == null:
+		rocks = get_tree().get_first_node_in_group("rocks_container")
+	if rocks and rocks.has_method("notify_pineapple_left_play"):
+		rocks.notify_pineapple_left_play()
 
 func hit_wall_effects() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)

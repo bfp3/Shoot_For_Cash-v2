@@ -94,6 +94,7 @@ scale = Vector2(1.325, 1.325)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 script = ExtResource("0_script")
+skip_select_animation = true
 unlocked_badge_scale = 0.8
 locked_badge_scale = 0.8
 level_grid_position = Vector2(0, 1)
@@ -268,16 +269,6 @@ visible = false
 [node name="Banner3" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge" index="5" unique_id=1205367444]
 scale = Vector2(1.082, 1.39)
 
-[node name="Icon" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge/HBoxContainer" parent_id_path=PackedInt32Array(1998075303, 4134395) index="0" unique_id=2119161989]
-visible = false
-self_modulate = Color(1, 1, 1, 0)
-
-[node name="Icon2" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge/HBoxContainer" parent_id_path=PackedInt32Array(1998075303, 4134395) index="1" unique_id=1183234057]
-self_modulate = Color(1, 1, 1, 0)
-
-[node name="Icon3" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader/HeaderBadge/HBoxContainer" parent_id_path=PackedInt32Array(1998075303, 4134395) index="2" unique_id=176816404]
-self_modulate = Color(1, 1, 1, 0)
-
 [node name="NextDifficultyButton" type="Button" parent="MainPanel/VBoxContainer/TopRedPanel/DifficultyHeader" unique_id=1998075304 node_paths=PackedStringArray("focus_enter_sfx", "purchase_sfx")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
@@ -316,9 +307,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -430.0
-offset_top = -149.0
+offset_top = -147.0
 offset_right = 430.0
-offset_bottom = 151.0
+offset_bottom = 153.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -506,15 +497,15 @@ pitch_scale = 1.5
 
 [node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=880011104]
 stream = ExtResource("13_click1")
-volume_db = -34.0
+volume_db = -80.0
 
 [node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=880011105]
 stream = ExtResource("14_click2")
-volume_db = -20.0
+volume_db = -80.0
 
 [node name="hud_click_3" type="AudioStreamPlayer" parent="SFX" unique_id=880011106]
 stream = ExtResource("15_click3")
-volume_db = -20.0
+volume_db = -80.0
 
 [node name="low_humming" type="AudioStreamPlayer" parent="SFX" unique_id=880011107]
 stream = ExtResource("16_hum")

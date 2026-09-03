@@ -65,13 +65,22 @@ bbcode_enabled = true
 text = "[color=#C70102]COMMANDS[/color]
 [color=#C70102]rock[/color]  basic rock
 
+[color=#C70102]rock-invisible[/color] / [color=#C70102]rock-invisible 4 B3[/color]
+same as rock, but hidden until the crosshair overlaps it
+
 [color=#C70102]rock-black[/color] black rock / hazard
+
+[color=#C70102]rock-fake[/color] / [color=#C70102]rock-fake 4 B3[/color]
+looks and flies like rock-black, but shooting it or letting it splash never strikes. Crosshair x-ray reveals a grey rock
 
 [color=#C70102]rock-pigeon[/color] / [color=#C70102]rock-pigeon 1 A8[/color]
 flies into the distance (fan aim)
 
 [color=#C70102]rock-avoider[/color] / [color=#C70102]rock-avoider 4 A3[/color]
 chases the crosshair — keep the reticle off it or take a strike
+
+[color=#C70102]rock-avoider-kill[/color]
+pop every live rock-avoider (no strike). Avoiders do not block wait — use this after wait to clear leftovers
 
 [color=#C70102]rock-red-attacker[/color] / [color=#C70102]rock-red-attacker 1 A1[/color] / [color=#C70102]rock-red-attacker 1 A1 A8[/color]
 flies to aim, then dashes through the crosshair — or through the extra cell if given
@@ -141,6 +150,9 @@ no-strike last rock starts a pineapple bonus before balloon-check
 [color=#C70102]pace-fastest[/color] gravity 2.25 (old difficulty-expert)
 [color=#C70102]pace-impossible[/color] gravity 3.0
 from that line on, later rocks use that speed
+
+[color=#C70102]light-dim[/color] / [color=#C70102]light-bright[/color]
+directional light -0.25 / +0.25 over 3s
 
 [color=#C70102]shuffle[/color] randomise columns on later waves
 

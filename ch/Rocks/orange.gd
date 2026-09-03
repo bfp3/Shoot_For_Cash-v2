@@ -1,6 +1,8 @@
 extends RigidBody3D
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
+const INVISIBLE_XRAY_SHADER := preload("res://ch/Rocks/fake_rock_xray.gdshader")
+const INVISIBLE_XRAY_TINT := Color(1.35, 0.72, 0.12, 1.0)
 
 ## When true, multi-shot oranges rise to the hit / midpoint Y instead of a fixed apex.
 @export var aim_apex_at_hit_height := true
@@ -21,6 +23,11 @@ var pitch_adjustment := 0.02
 var _orange_sfx: Node = null
 var taken_hit = false
 @onready var main_col: CollisionShape3D = $main_col
+@onready var invisible_col: Area3D = get_node_or_null("%InvisibleCol") as Area3D
+@onready var invisible_col_shape: CollisionShape3D = get_node_or_null("%InvisibleCol/CollisionShape3D") as CollisionShape3D
+
+## Dedicated physics layer for the invisible-orange Area3D (independent of main_col).
+const INVISIBLE_COL_LAYER := 10
 
 enum ExitSide {
 	LEFT,
@@ -78,10 +85,30 @@ var falling := false
 ## Soft apex lock for multi-shot launches (world Y). INF = disabled.
 var _apex_target_y := INF
 var _apex_lock_active := false
+## This launch uses InvisibleCol for all aim / overlap / shooting — never main_col.
+var _invisible_mode := false
+## Peek through the reticle like fake-rock / hidden-crate x-ray (not a one-shot unlock).
+var _invisible_until_aim := false
+var _invisible_xray_mat: ShaderMaterial = null
+var _invisible_xray_originals: Dictionary = {}
+var _invisible_overlay: MeshInstance3D = null
+## Same visual layers as hidden-crate (16) and fake-rock overlay (20), plus default.
+const INVISIBLE_OVERLAY_LAYERS := 1 | 32768 | 524288
+
+
+func _process(_delta: float) -> void:
+	if _invisible_until_aim and rock_activated and not rock_destroyed:
+		_update_invisible_aim_reveal()
 
 
 func _physics_process(_delta: float) -> void:
 	if not _apex_lock_active or not rock_activated or falling or rock_destroyed:
+		return
+	## Invisible oranges spawn on the cell — pin Y even if gravity tugs downward.
+	if _invisible_until_aim:
+		global_position.y = _apex_target_y
+		if linear_velocity.y != 0.0:
+			linear_velocity.y = 0.0
 		return
 	if global_position.y < _apex_target_y:
 		return
@@ -108,6 +135,219 @@ func configure_multi_launch(hit_pos: Vector3) -> void:
 	if aim_apex_at_hit_height:
 		_apex_target_y = hit_pos.y
 		_apex_lock_active = true
+
+
+func prepare_invisible_launch() -> void:
+	_invisible_mode = true
+	_invisible_until_aim = true
+
+
+## Hidden until the reticle peeks it. Sits on the aim cell (not the underground pool Y).
+func configure_invisible_launch(aim_pos: Vector3) -> void:
+	_invisible_mode = true
+	_invisible_until_aim = true
+	_apex_lock_active = true
+	_apex_target_y = aim_pos.y
+	freeze = false
+	sleeping = false
+	global_position = aim_pos
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+	_hide_until_aim_reveal()
+
+
+func _hide_until_aim_reveal() -> void:
+	show()
+	_disable_rigid_collision()
+	_set_invisible_col_active(true)
+	_set_invisible_explosion_hidden(true)
+	if has_node("%GoldParticless"):
+		%GoldParticless.emitting = false
+	if has_node("Mesh/small_rock/Fire"):
+		$Mesh/small_rock/Fire.emitting = false
+		$Mesh/small_rock/Fire.hide()
+	if has_node("Mesh"):
+		$Mesh.show()
+	## Authored pineapple mesh is an ArrayMesh under a mesh-less parent — peek uses
+	## a dedicated sphere overlay (same approach as fake-rock x-ray).
+	if orange_mesh:
+		orange_mesh.hide()
+	_setup_invisible_xray()
+	if not is_in_group("Target"):
+		add_to_group("Target")
+
+
+func _set_invisible_explosion_hidden(hidden: bool) -> void:
+	if not has_node("Explosion_area"):
+		return
+	if not hidden:
+		return
+	$Explosion_area.monitoring = false
+	$Explosion_area.hide()
+	if has_node("Explosion_area/CollisionShape3D"):
+		$Explosion_area/CollisionShape3D.disabled = true
+	if has_node("%explosion_radius_mesh"):
+		%explosion_radius_mesh.hide()
+		%explosion_radius_mesh.transparency = 1.0
+
+
+func _ensure_invisible_overlay() -> MeshInstance3D:
+	if _invisible_overlay != null and is_instance_valid(_invisible_overlay):
+		return _invisible_overlay
+	var mesh_root: Node = get_node_or_null("Mesh")
+	if mesh_root == null:
+		return null
+	_invisible_overlay = MeshInstance3D.new()
+	_invisible_overlay.name = "InvisibleXrayOverlay"
+	var sphere := SphereMesh.new()
+	sphere.radius = 0.45
+	sphere.height = 0.9
+	sphere.radial_segments = 16
+	sphere.rings = 8
+	_invisible_overlay.mesh = sphere
+	_invisible_overlay.layers = INVISIBLE_OVERLAY_LAYERS
+	_invisible_overlay.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_invisible_overlay.extra_cull_margin = 4.0
+	_invisible_overlay.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
+	mesh_root.add_child(_invisible_overlay)
+	return _invisible_overlay
+
+
+func _setup_invisible_xray() -> void:
+	var overlay := _ensure_invisible_overlay()
+	if _invisible_xray_mat == null:
+		_invisible_xray_mat = ShaderMaterial.new()
+		_invisible_xray_mat.shader = INVISIBLE_XRAY_SHADER
+		_invisible_xray_mat.render_priority = 2
+		_invisible_xray_mat.set_shader_parameter("use_albedo_tex", 0.0)
+		_invisible_xray_mat.set_shader_parameter("albedo_tint", INVISIBLE_XRAY_TINT)
+		_invisible_xray_mat.set_shader_parameter("emission_color", INVISIBLE_XRAY_TINT)
+		_invisible_xray_mat.set_shader_parameter("emission_mul", 0.85)
+	if overlay:
+		if not _invisible_xray_originals.has(overlay):
+			_invisible_xray_originals[overlay] = overlay.material_override
+		overlay.material_override = _invisible_xray_mat
+		overlay.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		overlay.transparency = 0.0
+		overlay.visible = true
+	_apply_invisible_xray(Vector2.ZERO, 0.0)
+
+
+func _clear_invisible_xray() -> void:
+	for mesh in _invisible_xray_originals.keys():
+		if mesh == null or not is_instance_valid(mesh):
+			continue
+		mesh.material_override = _invisible_xray_originals[mesh]
+	_invisible_xray_originals.clear()
+	if _invisible_overlay != null and is_instance_valid(_invisible_overlay):
+		_invisible_overlay.visible = false
+	if orange_mesh:
+		orange_mesh.show()
+	_apply_invisible_xray(Vector2.ZERO, 0.0)
+
+
+func _update_invisible_aim_reveal() -> void:
+	if not _invisible_until_aim:
+		return
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null:
+		_apply_invisible_xray(Vector2.ZERO, 0.0)
+		return
+	if "current_state" in player and "State" in player and player.current_state != player.State.ACTIVE:
+		_apply_invisible_xray(Vector2.ZERO, 0.0)
+		return
+	var aim := _invisible_aim_center_px(player)
+	var radius := _invisible_aim_radius_px(player)
+	_apply_invisible_xray(aim, radius)
+
+
+func _invisible_aim_center_px(player: Node) -> Vector2:
+	var canvas := Vector2.ZERO
+	if player != null and player.has_method("_aim_screen_center"):
+		canvas = player._aim_screen_center()
+	else:
+		canvas = _player_crosshair_screen_pos(player)
+	var vp := get_viewport()
+	if vp:
+		return vp.get_screen_transform() * canvas
+	return canvas
+
+
+func _invisible_aim_radius_px(player: Node) -> float:
+	var radius := 60.0
+	if player != null and player.has_method("get_current_crosshair_hit_radius"):
+		radius = float(player.get_current_crosshair_hit_radius())
+	var vp := get_viewport()
+	if vp:
+		var scale := vp.get_screen_transform().get_scale()
+		if scale.x > 0.001:
+			radius *= scale.x
+	return maxf(radius, 28.0)
+
+
+func _apply_invisible_xray(center_px: Vector2, radius_px: float) -> void:
+	if _invisible_xray_mat == null:
+		return
+	var softness := maxf(14.0, radius_px * 0.12)
+	_invisible_xray_mat.set_shader_parameter("xray_center_px", center_px)
+	_invisible_xray_mat.set_shader_parameter("xray_radius_px", radius_px)
+	_invisible_xray_mat.set_shader_parameter("xray_softness_px", softness)
+	_invisible_xray_mat.set_shader_parameter("emission_mul", 0.85 if radius_px > 0.0 else 0.0)
+
+
+func get_aim_global_position() -> Vector3:
+	if _invisible_mode and invisible_col != null and is_instance_valid(invisible_col):
+		return invisible_col.global_position
+	if main_col != null and is_instance_valid(main_col):
+		return main_col.global_position
+	return global_position
+
+
+func get_aim_world_radius() -> float:
+	if _invisible_mode and invisible_col_shape != null and is_instance_valid(invisible_col_shape):
+		if invisible_col_shape.shape is SphereShape3D:
+			var world_scale := invisible_col_shape.global_transform.basis.get_scale()
+			return (invisible_col_shape.shape as SphereShape3D).radius * absf(world_scale.x)
+	if main_col != null and is_instance_valid(main_col):
+		return absf(main_col.global_transform.basis.get_scale().x) * 0.5
+	if current_mesh:
+		return maxf(current_mesh.scale.x, 0.2) * 0.5
+	return 0.5
+
+
+func _set_invisible_col_active(active: bool) -> void:
+	if invisible_col == null or not is_instance_valid(invisible_col):
+		return
+	if invisible_col_shape:
+		invisible_col_shape.disabled = not active
+	invisible_col.collision_layer = 0
+	invisible_col.collision_mask = 0
+	if active:
+		invisible_col.set_collision_layer_value(INVISIBLE_COL_LAYER, true)
+	invisible_col.monitorable = active
+	invisible_col.monitoring = false
+
+
+func _disable_rigid_collision() -> void:
+	set_collision_layer_value(1, false)
+	set_collision_layer_value(8, false)
+	set_collision_mask_value(8, false)
+	set_collision_mask_value(1, false)
+	if main_col:
+		main_col.disabled = true
+
+
+func _player_crosshair_screen_pos(player: Node) -> Vector2:
+	var offset := Vector2(20.0, 20.0)
+	if player and "CROSSHAIR_CENTER_OFFSET" in player:
+		offset = player.CROSSHAIR_CENTER_OFFSET
+	var weapon = player.get("weapon_shooting")
+	if weapon and weapon.get("crosshair") is Control:
+		return (weapon.crosshair as Control).global_position + offset
+	var crosshair: Control = player.get_node_or_null("%Crosshair") as Control
+	if crosshair:
+		return crosshair.global_position + offset
+	return get_viewport().get_visible_rect().size * 0.5
 
 
 func _get_rock_manager() -> RockManager:
@@ -156,15 +396,29 @@ func start_falling() -> void:
 
 
 func force_end_of_round_explode() -> void:
-	## Round wrap: explode in place without blast cash. Safe to call on every live orange.
-	if current_state == State.HIT:
-		return
-	if not rock_activated:
-		return
-	## Must be clear so destroy / VFX path isn't skipped by a stale flag.
-	rock_destroyed = false
-	is_deactivated = false
-	start_destroyed_process(false, false)
+	## Round wrap used to explode leftovers; they now despawn quietly so the tally isn't held.
+	dismiss_quietly_for_round_end()
+
+
+## Hide and park this orange with no cash, blast, or SFX. Next round can reuse the body.
+func dismiss_quietly_for_round_end() -> void:
+	var was_live := rock_activated
+	_award_cash_on_hit = false
+	_invisible_until_aim = false
+	_invisible_mode = false
+	_clear_invisible_xray()
+	_set_invisible_col_active(false)
+	if was_live:
+		var round_manager: RoundManager = get_tree().get_first_node_in_group("round_manager")
+		if round_manager:
+			round_manager.orange_active = maxi(int(round_manager.orange_active) - 1, 0)
+	remove_from_group("Target")
+	reset_stats()
+	disable_collision()
+	freeze = true
+	hide()
+	enter_state(State.INACTIVE)
+	_award_cash_on_hit = true
 
 func enter_state(new_state : State) -> void:
 
@@ -201,14 +455,14 @@ func update_prepare_rock() -> void:
 	await get_tree().process_frame
 	
 func update_active() -> void:
+	var keep_invisible := _invisible_until_aim
+	var keep_invisible_mode := _invisible_mode
 	disable_collision()
-	enable_collision()
-	%GoldParticless.emitting = true
-	$Mesh/small_rock/Fire.emitting = true
-	$Mesh/small_rock/Fire.show()
 	reset_stats()
+	_invisible_until_aim = keep_invisible
+	_invisible_mode = keep_invisible_mode
+	enable_collision()
 	reset_rock_back_on()
-	add_to_group('Target')
 	#update_gravity(0.0)
 	update_gravity(0.01)
 	global_position = start_pos
@@ -218,25 +472,20 @@ func update_active() -> void:
 		global_position.x = randi_range(-8, 8)
 	health = 1
 	linear_damp = 5.0
-	orange_mesh.show()
 	rock_activated = true
-
+	apply_torque_impulse(Vector3.UP * 1000.0)
+	_play_orange_sfx("launch_sound")
+	if _invisible_until_aim:
+		_hide_until_aim_reveal()
+		return
+	%GoldParticless.emitting = true
+	$Mesh/small_rock/Fire.emitting = true
+	$Mesh/small_rock/Fire.show()
+	add_to_group('Target')
+	orange_mesh.show()
 	$Mesh.show()
-	## Stay at apex — do not arm the old fall-back timer.
-	#$Start_falling_timer.start(2.2)
-	
 	_play_orange_sfx("explosion_sfx")
 	_play_vfx(&"orange_hit")
-	
-	#apply_torque_impulse(Vector3.RIGHT * 1000.0)
-	apply_torque_impulse(Vector3.UP * 1000.0)
-	
-	_play_orange_sfx("launch_sound")
-	
-	#await get_tree().create_timer(2.0,false).timeout
-	#update_gravity(1.0)
-	
-	#apply_hit_reaction(Vector2.ZERO)
 	
 func update_hit() -> void:
 	update_gravity(1.0)
@@ -283,18 +532,17 @@ func update_disabled() -> void:
 
 
 func disable_collision() -> void:
-	set_collision_layer_value(1, false)
-	set_collision_layer_value(8, false)
-	
-	set_collision_mask_value(8, false)
-	set_collision_mask_value(1, false)
-	
+	_disable_rigid_collision()
+	_set_invisible_col_active(false)
+
+
 func enable_collision() -> void:
-	set_collision_layer_value(8, true)
-	#return
-	
-	
-	
+	_disable_rigid_collision()
+	if _invisible_mode:
+		_set_invisible_col_active(true)
+		return
+	if main_col:
+		main_col.disabled = false
 	set_collision_layer_value(8, true)
 	set_collision_mask_value(8, true)
 	set_collision_mask_value(1, true)
@@ -351,6 +599,10 @@ func reset_stats() -> void:
 	is_deactivated = false
 	_apex_lock_active = false
 	_apex_target_y = INF
+	_invisible_until_aim = false
+	_invisible_mode = false
+	_clear_invisible_xray()
+	_set_invisible_col_active(false)
 	global_position = start_pos
 
 
@@ -495,6 +747,8 @@ func start_destroyed_process(expand_blast: bool = true, award_cash: bool = true)
 		
 	_award_cash_on_hit = award_cash
 	rock_destroyed = true
+	_invisible_until_aim = false
+	_clear_invisible_xray()
 	
 	if expand_blast:
 		expand_blast_radius()
@@ -636,8 +890,7 @@ func hit_out_of_bounds() -> void:
 		return
 	rock_activated = false
 	rock_destroyed = true
-	set_collision_layer_value(1, false)
-	set_collision_layer_value(8, false)
+	disable_collision()
 	
 	var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
 	if round_manager:
@@ -681,7 +934,10 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 			return
 
 		# Pineapples / non-basic rocks: no staggered chain — keep existing short delay.
-		if body.rock_type != body.RockSize.SMALL:
+		var is_basic = body.rock_type == body.RockSize.SMALL
+		if body.has_method("is_standard_rock"):
+			is_basic = bool(body.is_standard_rock())
+		if not is_basic:
 			await get_tree().create_timer(randf_range(0.1, 0.15), false).timeout
 			body.start_destroyed_process()
 			return
@@ -743,6 +999,7 @@ func fly_away_from_player() -> Vector3:
 func expand_blast_radius() -> void:
 	#return
 	_blast_destroy_stagger_index = 0
+	_set_invisible_explosion_hidden(false)
 	%explosion_radius_mesh.show()
 	%explosion_radius_mesh.transparency = 0.2
 	#%explosion_radius_mesh.transparency = 1.0

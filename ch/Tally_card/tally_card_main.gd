@@ -449,7 +449,7 @@ func _hide_level_select_button() -> void:
 
 func _show_next_button() -> void:
 	_show_level_select_button()
-	#_show_replay_button()
+	_show_replay_button()
 	var show_next := true
 	if _is_level_complete_tally() and round_manager and round_manager.has_method("has_next_script_level"):
 		show_next = bool(round_manager.has_next_script_level())
@@ -478,7 +478,7 @@ func _show_next_button() -> void:
 
 
 func _show_replay_button() -> void:
-	return
+	
 	if _replay_button == null:
 		return
 	_replay_button.disabled = false
@@ -778,9 +778,9 @@ func sfx_open_tally() -> void:
 	
 func sfx_close_tally() -> void:
 	$SFX/shop_close_sfx_01.play(0.5)
-	$SFX/hud_click_1.play()
-	$SFX/hud_click_2.play()
-	$SFX/hud_click_3.play()
+	#$SFX/hud_click_1.play()
+	#$SFX/hud_click_2.play()
+	#$SFX/hud_click_3.play()
 	$SFX/low_humming.stop()
 
 

@@ -54,7 +54,8 @@ func _on_body_entered(body: Node3D) -> void:
 		splash_particles(body)
 		## Soft water splash only for black rocks — no strike sting / OOB hit SFX.
 		var missed_rock_type_name : String = body.rock_type_name
-		var is_hazard := missed_rock_type_name.contains("hazard")
+		var is_hazard := missed_rock_type_name.contains("hazard") \
+			or (body.has_method("is_fake") and bool(body.is_fake()))
 		if not is_hazard:
 			splash_sfx()
 

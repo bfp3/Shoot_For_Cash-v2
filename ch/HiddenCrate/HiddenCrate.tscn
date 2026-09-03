@@ -1,15 +1,17 @@
 [gd_scene format=3 uid="uid://c5v3o1eq73ikc"]
 
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="1_g7qie"]
-[ext_resource type="Script" path="res://ch/HiddenCrate/hidden_crate.gd" id="2_hidden"]
+[ext_resource type="Script" uid="uid://dnvsr1ppfx6jt" path="res://ch/HiddenCrate/hidden_crate.gd" id="2_hidden"]
 
 [node name="HiddenCrate" type="MeshInstance3D" unique_id=737478994]
 layers = 32768
 cast_shadow = 0
 mesh = ExtResource("1_g7qie")
 script = ExtResource("2_hidden")
+use_camo_version = true
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=884196432]
+visible = false
 layers = 32768
 light_color = Color(1, 0.6166667, 0, 1)
 omni_range = 15.0

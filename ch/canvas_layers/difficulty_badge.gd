@@ -12,6 +12,13 @@ signal pressed
 	set(value):
 		subtitle = value
 		_apply_visuals()
+## First letter at the Title default size (54), remaining letters at 34/54 of that size.
+@export var camel_case := true:
+	set(value):
+		camel_case = value
+		_apply_visuals()
+## Authored proportion: remaining letters vs default Title size (`[wave]B[font_size=34]EGINNER`).
+const CAMEL_CASE_REST_RATIO := 34.0 / 54.0
 
 @export_group("Art")
 @export var icon: Texture2D:
@@ -115,6 +122,8 @@ enum ColorScheme { BEGINNER, ADVANCED, EXPERT }
 @export var hide_when_locked := false
 ## Level-select numbered badges: locked click blinks the lock icon instead of flipping to copy.
 @export var blink_lock_instead_of_flip := false
+## Skip the center / blink travel animation and emit `pressed` immediately.
+@export var skip_select_animation := false
 
 @export_group("Locked Flip")
 @export_multiline var locked_back_text := "[pulse freq=8 color=#FFFFFF90]NOT\nUNLOCKED YET":
@@ -227,7 +236,7 @@ func _apply_visuals() -> void:
 		_coat_arms.modulate = coat_arms_modulate
 		_coat_arms.visible = not is_boss and coat_arms_modulate.a > 0.01 and not _showing_back
 	if _title:
-		_title.text = "[wave]" + title
+		_title.text = _formatted_title_bbcode(title)
 		_title.add_theme_color_override("default_color", title_color)
 		_title.visible = not _showing_back and not _hide_number_for_lock()
 	if _subtitle:
@@ -271,6 +280,40 @@ func _icon_rects() -> Array[TextureRect]:
 		if child is TextureRect:
 			rects.append(child)
 	return rects
+
+
+func _plain_title_text(raw: String) -> String:
+	var text := raw.strip_edges()
+	var out := ""
+	var i := 0
+	while i < text.length():
+		if text[i] == "[":
+			var close := text.find("]", i)
+			if close < 0:
+				out += text.substr(i)
+				break
+			i = close + 1
+			continue
+		out += text[i]
+		i += 1
+	return out.strip_edges()
+
+
+func _formatted_title_bbcode(raw: String) -> String:
+	if not camel_case:
+		return "[wave]" + raw
+	var plain := _plain_title_text(raw)
+	if plain.is_empty():
+		return ""
+	if plain.length() <= 1:
+		return "[wave]%s" % plain
+	var default_size := 54
+	if _title:
+		default_size = _title.get_theme_font_size("normal_font_size")
+	if default_size <= 0:
+		default_size = 54
+	var small := maxi(1, int(round(float(default_size) * CAMEL_CASE_REST_RATIO)))
+	return "[wave]%s[font_size=%d]%s[/font_size]" % [plain.substr(0, 1), small, plain.substr(1)]
 
 
 func _apply_icons() -> void:
@@ -351,6 +394,7 @@ func copy_look_from(other: DifficultyBadge) -> void:
 		return
 	title = other.title
 	subtitle = other.subtitle
+	camel_case = other.camel_case
 	icon_count = other.icon_count
 	circle_self_modulate = other.circle_self_modulate
 	circle2_self_modulate = other.circle2_self_modulate
@@ -377,6 +421,9 @@ func _on_hit() -> void:
 	if travel_place.strip_edges().is_empty():
 		return
 	get_tree().call_group("difficulty_badge", "lock_out_selection")
+	if skip_select_animation:
+		pressed.emit()
+		return
 	await play_unlocked_spin()
 
 

@@ -41,6 +41,17 @@ var _expand_callout_bag: Array[String] = []
 var _last_shrink_callout := ""
 var _last_expand_callout := ""
 
+const STREAK_PITCH_MIN := 1.6
+const STREAK_PITCH_MAX := 2.2
+const STREAK_PITCH_STEP := 0.05
+const STREAK_CHAIN_SEC := 3.0
+const STREAK_COOL_SEC := 4.0
+
+var _streak_pitch := STREAK_PITCH_MIN
+var _streak_cool_from := STREAK_PITCH_MIN
+var _streak_idle_sec := 0.0
+var _streak_has_played := false
+
 
 
 
@@ -52,7 +63,7 @@ func multi_shot(multiplier: int, pos : Vector3) -> void:
 	
 	
 	#start_oranges(multiplier, pos)
-	#start_oranges(2, pos)
+	start_oranges(2, pos)
 		
 	var data = MULTI_SHOT_DATA[multiplier]
 
@@ -140,8 +151,7 @@ func _play_named_banner(text: String, pos: Vector3, color: Color, font_size: int
 	if gl_PlayerState.dataset.total_hazards > 0:
 		return
 	
-	$MultiShotSFX.pitch_scale = [1.8,1.9,2.0].pick_random()
-	$MultiShotSFX.play()
+	_play_streak_sfx()
 
 	if tween:
 		tween.kill()
@@ -152,6 +162,35 @@ func _play_named_banner(text: String, pos: Vector3, color: Color, font_size: int
 	tween.tween_interval(0.85)
 	tween.tween_property(multi_label, "modulate:a", 0.0, 0.2)
 	tween.parallel().tween_property(multi_label, "outline_modulate:a", 0.0, 0.2)
+
+
+func _play_streak_sfx() -> void:
+	if _streak_has_played and _streak_idle_sec <= STREAK_CHAIN_SEC:
+		_streak_pitch = minf(_streak_pitch + STREAK_PITCH_STEP, STREAK_PITCH_MAX)
+	_streak_pitch = clampf(_streak_pitch, STREAK_PITCH_MIN, STREAK_PITCH_MAX)
+	_streak_cool_from = _streak_pitch
+	_streak_idle_sec = 0.0
+	_streak_has_played = true
+	var sfx := $MultiShotSFX as AudioStreamPlayer
+	if sfx == null:
+		return
+	sfx.pitch_scale = _streak_pitch
+	sfx.stop()
+	sfx.play()
+
+
+func _process(delta: float) -> void:
+	if not _streak_has_played:
+		return
+	_streak_idle_sec += delta
+	if _streak_idle_sec <= STREAK_CHAIN_SEC:
+		return
+	var cool_t := (_streak_idle_sec - STREAK_CHAIN_SEC) / STREAK_COOL_SEC
+	if cool_t >= 1.0:
+		_streak_pitch = STREAK_PITCH_MIN
+		return
+	_streak_pitch = lerpf(_streak_cool_from, STREAK_PITCH_MIN, clampf(cool_t, 0.0, 1.0))
+
 
 func check_if_within_zone(pos : float) -> int:
 	return -1
@@ -182,4 +221,4 @@ func start_oranges(multiplier : int, _pos : Vector3) -> void:
 	#for i in range(multiplier - 1):
 		#
 		#orange_container.launch_orange(_pos)
-		#await get_tree().create_timer(0.5).timeout
+		#await get_tree().create_timer(0.5, false).timeout

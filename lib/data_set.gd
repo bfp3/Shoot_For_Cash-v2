@@ -9,12 +9,12 @@ var expert_unlocked := false
 var mystery_unlocked := false
 
 ## Net worth needed to unlock these difficulties from the title screen.
-var advanced_unlock_net_worth := 10000
-var expert_unlock_net_worth := 50000
+var advanced_unlock_net_worth := 1000000
+var expert_unlock_net_worth := 5000000
 
 ## Challenge row appears at this net worth. Each later challenge adds `challenge_unlock_net_worth_step`.
-var challenges_unlock_net_worth := 50000
-var challenge_unlock_net_worth_step := 10000
+var challenges_unlock_net_worth := 5000000
+var challenge_unlock_net_worth_step := 1000000
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 var challenges_unlocked := false
@@ -109,6 +109,8 @@ var dataset_float : Dictionary = {
 	,"hazard_type_1"		: [0,		1]
 	
 	,"rock_type_1"			: [2,		1]
+	## rock-invisible: same cash/health as a yellow rock; miss does not strike.
+	,"rock_type_invisible"	: [2,		1]
 	,"rock_type_2"			: [0,		3]
 	,"rock_type_3"			: [20,		15]
 	,"rock_type_4"			: [120,		30]

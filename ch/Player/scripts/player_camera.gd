@@ -26,7 +26,7 @@ var orig_rot : Vector3
 ## While shootWeapon is held, ease FOV by hold_aim_fov_delta, then restore on release.
 @export var hold_aim_zoom_enabled := true
 ## Added to resting FOV while held. Negative = zoom in (narrower). Positive = widen.
-@export var hold_aim_fov_delta := -2.5
+@export var hold_aim_fov_delta := -5.0
 ## Must hold this long before the FOV zoom starts.
 @export var hold_aim_press_threshold_sec := 0.25
 @export var hold_aim_zoom_in_sec := 0.16
@@ -590,7 +590,7 @@ func _shake_pineapple() -> void:
 	cam_shake_tween.tween_property(self, "position:y", -0.28, 0.05).as_relative()
 	cam_shake_tween.parallel().tween_property(self, "position:z", 0.32, 0.05).as_relative()
 	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:x", 1.4, 0.05).as_relative()
-	cam_shake_tween.tween_interval(0.1)
+	#cam_shake_tween.tween_interval(0.1)
 	#cam_shake_tween.parallel().tween_property(self, "fov", _orig_fov_for_shake + 3.0, 0.05)
 	cam_shake_tween.tween_property(self, "position:y", 0.14, 0.29).as_relative()
 	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:x", -0.9, 0.39).as_relative()
