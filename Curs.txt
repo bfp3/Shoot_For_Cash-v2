@@ -1,0 +1,123 @@
+Copy everything below into the other Cursor agent:
+
+---
+
+**Shoot For Cash — pick up previous session and fix two regressions.** Godot **4.6** GDScript. Owners: `ch/round_manager.gd`, `lib/player_state.gd`, `lib/data_set.gd`, `scripts/EventBus.gd`. Round loop: `docs/round-loop.md`. Island layouts: `sc/All_level_layouts/` only. Hits go through `gl_PlayerState.add_to_cash_pool()`. Match existing GDScript style. No drive-by refactors. Do not edit `.godot/` or `addons/`.
+
+## What already landed (keep these)
+
+These were implemented in the last session and are **fine** — do not revert them:
+
+1. **Shop `$mapButton`** (`ch/Shop/shop_main_menu.gd` → `RoundManager.return_to_level_select()`): Beginner/Advanced/Expert returns to `start_menu_level_select.tscn` on that difficulty’s page. A **Challenge** run (`get_run_difficulty()` begins with `"CHALLENGE"`) must open `start_menu_difficulty_select.tscn`, not the Beginner grid. Helper: `is_challenge_run()`. Same routing for tally Level Select (`request_tally_level_select`).
+
+2. **`skip_select_animation`** on `ch/canvas_layers/start_menu_level_select.gd` (default **false**). When true, numbered-level pick skips the center/blink and closes the menu immediately. Passed onto badges as `DifficultyBadge.skip_select_animation`.
+
+3. **`rock-avoider-kill`** script command (parser + `rock_manager`) — unrelated, leave it.
+
+4. **`camel_case` title formatting** on `DifficultyBadge` — **keep the feature**, but see bug 1.
+
+## Bug 1 — camel_case on numbered level badges (easy)
+
+`DifficultyBadge.camel_case` defaults to **true** in `ch/canvas_layers/difficulty_badge.gd`. Numbered badges in `ch/canvas_layers/level_select_badge_unlocked.tscn` **extend** `DifficultyBadge` (`ch/canvas_layers/level_select_badge_unlocked.gd`), so level numbers render as `1` huge / rest tiny and look wrong.
+
+**Wanted:** camel-case (`[wave]B[font_size=34]EGINNER` — first letter at that label’s default size, rest at **34/54** of that size) **only** on `difficulty_badge.tscn` instances inside `ch/canvas_layers/start_menu_difficulty_select.tscn` (Beginner / Advanced / Expert row **and** the Challenge 1–6 row).
+
+**Not wanted:** `level_select_badge_unlocked.tscn` (the `1`, `2`, `3`… grid). Those must use normal `[wave]` + number, same size.
+
+Suggested fix: set `camel_case = false` in `LevelSelectBadgeUnlocked._ready()` / `configure_as_level()`, **or** default `camel_case` to false and enable it only on the difficulty-select / challenge badges. Do not change the 34/54 ratio helper.
+
+## Bug 2 — hold-out pineapples freeze the round (critical)
+
+The last session **misimplemented** hold-out pineapples. Current code **breaks ending** and **poisons the next retry**.
+
+### What I actually wanted
+
+Hold-out rounds in `sc/level-beginner.txt` often end with a **pineapple pattern**, e.g. moss:
+
+```
+pineapple 5 a5
+```
+
+or moss3:
+
+```
+pineapple 2 a2
+wait 1500
+pineapple 4 a4
+wait 1500
+pineapple 6 a6
+```
+
+That pattern is **how pineapples should look** (columns, waits, dual/triple, fanfare). It is **not** something to play in the middle of the hold-out rock loop.
+
+**Correct rules:**
+
+1. During the countdown, play/loop the **rock** script as hold-out always did (`_loop_boss_sequence`). **Do not** freeze because trailing `pineapple` cmds exist. **Do not** jump the cursor to pineapples while the timer is still running.
+
+2. When the **timer hits 0**:
+   - Stop feeding rocks. Clear leftover rocks quietly (no strike).
+   - Then run the **trailing pineapple sequence** as a real launch: `PineappleLauncher.launch_from_spawn_entry()` so **`_ensure_prelaunch_fanfare()`** still plays (`PerfectPineappleRound` SFX + particles in `ch/Rocks/pineapple_launcher.gd`).
+   - Launch the pineapples in script order (respect `wait` stagger between them).
+   - After the last pineapple is destroyed / leaves play → `finish_round_after_last_pineapple()` → tally. Stop the timer (already 0).
+
+3. If the player somehow reaches those pineapples **before** the timer (should be rare if they are only started on timeout): shooting them all still ends the round and the timer. Do **not** loop the rock script after that.
+
+4. Hold-outs **with no trailing `pineapple` cmds** keep the old behaviour: timer ends the round (after any live pineapples), rocks loop until then.
+
+5. Abort / backspace / Play again must start the **rock** sequence from the beginning — **never** leftover pineapples.
+
+### What is broken now (fix or replace this)
+
+In `ch/Rocks/rock_manager.gd`:
+
+- `jump_to_trailing_pineapples_if_needed()`, `_trailing_pineapple_start_index()`, `_park_live_rocks_for_pineapple_skip()`, `has_trailing_pineapples()`, `should_end_hold_out_on_pineapples()`.
+
+In `ch/round_manager.gd`:
+
+- `round_timer_time_out()` calls `jump_to_trailing_pineapples_if_needed()` then **returns without `wave_ending`**.
+- `check_if_rocks_still_in_air()` / `successful_round()` call `_hold_out_should_finish_on_pineapples()` then `_loop_boss_sequence()`.
+- `_loop_boss_sequence()` **returns without looping** if `has_trailing_pineapples()`:
+
+```
+if rocks_container.has_trailing_pineapples():
+    if try_continue_sequence(): return
+    return   # THIS FREEZES THE ROUND
+```
+
+That is the freeze: remaining rocks hit 0, hold-out refuses to loop, timer has not expired, pineapples never launch, tally never opens.
+
+Jump path is also wrong for pineapple-only beats: `_begin_beat()` skips `pineapple` (not a launchable rock), `enter_state(PREPARE_ROCKS)` with an **empty rock list**, egg pulse may never happen, so `_run_timed_event_spawns()` never runs `launch_from_spawn_entry` — no fanfare, no pineapples, stuck.
+
+Retry bug: jump/`_cancel_sequence()` leave `_sequence_cursor` on the pineapple block. `_cancel_sequence()` does **not** reset the cursor. Next Play continues from pineapples. After shooting them, hold-out still will not loop / will not tally → stuck again → abort → pineapples again.
+
+`docs/round-loop.md` hold-out bullet currently describes the broken “jump cursor” design — update it to match the timer-then-finale behaviour above.
+
+### Implementation guidance
+
+- Restore hold-out **rock looping** for as long as the timer is running.
+- On **timer timeout only**, start a dedicated pineapple finale (do not rely on “skip cursor into the same looping sequence and hope PREPARE/PULSE fires”).
+- Prefer collecting trailing `pineapple` (+ inter-pineapple `wait`) entries from the current round’s spawn list, then launching them through `PineappleLauncher.launch_from_spawn_entry` so fanfare always plays. Clear live rocks first. Do not count pineapples as remaining-rocks.
+- After finale, `finish_round_after_last_pineapple()` must actually reach `WAVE_END` / tally. Do not leave `wave_ending` stuck false, and do not `_loop_boss_sequence()` after the finale.
+- On abort / `reset_all_rocks` / `start_manual_rock_round`, reset cursor **and** `_launched_scripted_pineapple`. Next Play must not start on pineapples.
+- `pineapple` mid-script (e.g. moss9 has a pineapple then more rocks) is **not** a trailing finale — ignore those for the timeout finale. Only a **trailing** pineapple block at the end of the round script.
+
+## Files to touch
+
+- `ch/canvas_layers/difficulty_badge.gd`
+- `ch/canvas_layers/level_select_badge_unlocked.gd` (and/or the difficulty-select scenes)
+- `ch/Rocks/rock_manager.gd`
+- `ch/round_manager.gd`
+- `ch/Rocks/pineapple_launcher.gd` (only if needed for fanfare; do not strip `_ensure_prelaunch_fanfare`)
+- `docs/round-loop.md` hold-out bullet
+
+## Test
+
+1. Difficulty select: BEGINNER / ADVANCED / EXPERT / CHALLENGE N show big first letter, smaller rest. Numbered grid `1`–`n` all same size.
+2. Hold-out with trailing pineapples (beginner moss / moss3 / moss6): rocks loop until timer; at 0: fanfare + particles, then the scripted pineapple pattern; shoot them → tally.
+3. Hold-out **without** trailing pineapples: timer still ends the round as before.
+4. Backspace mid-hold-out, Play again: rocks first, **not** pineapples. After a pineapple finale, abort+replay also starts on rocks.
+5. Challenge shop map button still returns to difficulty select; Beginner map button still returns to the Beginner level grid.
+
+---
+
+That should be enough for the other agent to fix the two regressions without redoing the shop-back / skip-animation work.
