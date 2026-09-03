@@ -7,6 +7,8 @@ class_name LevelSelectBadgeUnlocked
 
 
 func _ready() -> void:
+	## Numbered grid badges must not use difficulty-title camel_case sizing.
+	camel_case = false
 	hide_icons = true
 	hide_subtitle = true
 	hide_banners = true
@@ -16,6 +18,7 @@ func _ready() -> void:
 
 
 func configure_as_level(number: int, place: String, unlocked: bool, boss: bool, armored: bool = false, stage: String = "BEGINNER") -> void:
+	camel_case = false
 	super.configure_as_level(number, place, unlocked, boss, armored, stage)
 	_refresh_stars()
 

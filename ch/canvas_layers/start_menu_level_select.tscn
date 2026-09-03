@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://3lhebrkp1khl" path="res://res/back_arrow_icon.png" id="10_arrow"]
 [ext_resource type="AudioStream" uid="uid://u5dt1yxa4ajh" path="res://sfx/Egg_pulse_sfx.ogg" id="11_open"]
 [ext_resource type="AudioStream" uid="uid://drgwredsvcgo0" path="res://sfx/Egg_pulse_sfx_reverse.ogg" id="12_close"]
-[ext_resource type="AudioStream" uid="uid://cjmw167csloh7" path="res://sfx/HUD on click.ogg" id="13_click1"]
+[ext_resource type="AudioStream" uid="uid://dhk8hoyujdxkl" path="res://sfx/transition_01.wav" id="13_ri81s"]
 [ext_resource type="AudioStream" uid="uid://d1xyyo4k7rovu" path="res://sfx/HUD on_v2.ogg" id="14_click2"]
 [ext_resource type="AudioStream" uid="uid://b324egueflmgu" path="res://sfx/HUD on.ogg" id="15_click3"]
 [ext_resource type="AudioStream" uid="uid://syubrv2axhso" path="res://sfx/low_pitch_humming.ogg" id="16_hum"]
@@ -307,9 +307,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -430.0
-offset_top = -147.0
+offset_top = -146.0
 offset_right = 430.0
-offset_bottom = 153.0
+offset_bottom = 154.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -496,8 +496,8 @@ volume_db = -40.0
 pitch_scale = 1.5
 
 [node name="hud_click_1" type="AudioStreamPlayer" parent="SFX" unique_id=880011104]
-stream = ExtResource("13_click1")
-volume_db = -80.0
+stream = ExtResource("13_ri81s")
+volume_db = -30.0
 
 [node name="hud_click_2" type="AudioStreamPlayer" parent="SFX" unique_id=880011105]
 stream = ExtResource("14_click2")

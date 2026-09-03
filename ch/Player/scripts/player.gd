@@ -202,6 +202,28 @@ var joystick_sensitivity := 500.0
 		if is_node_ready():
 			_apply_resting_crosshair_size(0.2)
 
+@export_group("Drunken_affect")
+## When true, the crosshair wobbles / sways and aim input feels heavier.
+@export var drunken_affect_enabled := false
+## Fast tremor amplitude in screen pixels.
+@export_range(0.0, 80.0, 0.5) var drunken_wobble_amp := 2.5
+## Fast tremor frequency.
+@export_range(0.1, 12.0, 0.05) var drunken_wobble_speed := 2.4
+## Slow sway amplitude in screen pixels.
+@export_range(0.0, 80.0, 0.5) var drunken_sway_amp := 4.0
+## Slow horizontal sway frequency.
+@export_range(0.05, 4.0, 0.05) var drunken_sway_speed := 0.55
+## Slow vertical sway frequency (offset for a looser figure-eight).
+@export_range(0.05, 4.0, 0.05) var drunken_sway_speed_y := 0.4
+## Multiplier on mouse / stick / keyboard aim (lower = heavier / harder to steer).
+@export_range(0.15, 1.0, 0.05) var drunken_input_scale := 0.85
+## Crosshair follow lag while drunk (lower = heavier catch-up).
+@export_range(1.0, 20.0, 0.5) var drunken_lag_speed := 7.5
+## Extra random wander amplitude (pixels).
+@export_range(0.0, 40.0, 0.5) var drunken_drift_amp := 1.5
+## How quickly the random wander eases toward a new offset.
+@export_range(0.1, 6.0, 0.05) var drunken_drift_speed := 1.0
+
 @export_group("Planted Crosshair")
 ## When true, fire-release plants a crosshair trap instead of shooting. Overlap = hit; expires after lifetime. Max 5.
 @export var plant_crosshair_on_fire := false
@@ -251,6 +273,10 @@ var target_crosshair_position: Vector2 = Vector2(980, 540)
 var crosshair_position := Vector2.ZERO
 var crosshair_lag_speed := 11.0  # Higher = faster catch-up
 var _crosshair_knock_tween: Tween
+var _drunken_time := 0.0
+var _drunken_drift := Vector2.ZERO
+var _drunken_drift_target := Vector2.ZERO
+var _drunken_drift_retarget_left := 0.0
 
 ## Grid aim lock (rows A=1…C=3; columns 1…8, plus optional side lanes 0 / 9).
 var _grid_aim_row := 2
@@ -296,6 +322,7 @@ func _ready() -> void:
 	%HUD_bottom_corner.hide()
 	_apply_gun_crosshair_visibility()
 	
+	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_WIREFRAME
 	#get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
 	
 	scope_shrink_sfx.finished.connect(_on_scope_shrink_sfx_finished)
@@ -503,7 +530,10 @@ func _process(delta: float) -> void:
 	)
 	
 	if running_on_mobile:
-		target_crosshair_position += mobile_controller.get_crosshair_motion()
+		var mobile_motion = mobile_controller.get_crosshair_motion()
+		if drunken_affect_enabled:
+			mobile_motion *= drunken_input_scale
+		target_crosshair_position += mobile_motion
 
 	# Keyboard / left stick / D-pad before reticle push so grid slides apply this frame.
 	handle_keyboard_and_controller_input(delta)
@@ -515,10 +545,14 @@ func _process(delta: float) -> void:
 	elif mouse_no_lerp:
 		crosshair_position = target_crosshair_position
 	else:
-		crosshair_position = crosshair_position.lerp(target_crosshair_position, (crosshair_lag_speed / 10) - pow(0.001, delta))
+		var lag := drunken_lag_speed if drunken_affect_enabled else crosshair_lag_speed
+		crosshair_position = crosshair_position.lerp(target_crosshair_position, (lag / 10) - pow(0.001, delta))
 		
 		
-	%Crosshair.global_position = crosshair_position
+	var display_pos := crosshair_position
+	if drunken_affect_enabled and current_state == State.ACTIVE:
+		display_pos += _update_drunken_offset(delta)
+	%Crosshair.global_position = display_pos
 
 	# Desktop: InputMap shoot / scope. Mobile: left-half touch only (ignore emulated mouse).
 	if running_on_mobile:
@@ -697,6 +731,8 @@ func handle_joystick(delta : float) -> void:
 	strength = pow(strength, 1.5)  # Makes small inputs more precise, big inputs still fast
 
 	var joystick_motion := direction * strength * joystick_sensitivity * GameSettings.crosshair_speed_multiplier() * delta
+	if drunken_affect_enabled:
+		joystick_motion *= drunken_input_scale
 	target_crosshair_position += joystick_motion
 
 func handle_keyboard_and_controller_input(delta: float) -> void:
@@ -717,14 +753,20 @@ func handle_keyboard_and_controller_input(delta: float) -> void:
 		var target_velocity := stick.normalized() * strength
 		const ACCEL := 60.0
 		keyboard_velocity = keyboard_velocity.lerp(target_velocity, ACCEL * delta)
-		target_crosshair_position += keyboard_velocity * delta
+		var motion := keyboard_velocity * delta
+		if drunken_affect_enabled:
+			motion *= drunken_input_scale
+		target_crosshair_position += motion
 	else:
 		const DECEL := 18.0
 		keyboard_velocity = keyboard_velocity.lerp(Vector2.ZERO, DECEL * delta)
 		if keyboard_velocity.length_squared() < 0.01:
 			keyboard_velocity = Vector2.ZERO
 		else:
-			target_crosshair_position += keyboard_velocity * delta
+			var coast := keyboard_velocity * delta
+			if drunken_affect_enabled:
+				coast *= drunken_input_scale
+			target_crosshair_position += coast
 
 	_update_player_lean(delta, _player_lean_input())
 
@@ -1919,7 +1961,43 @@ func _input(event: InputEvent) -> void:
 		# Resolution-independent look: same screen-fraction motion on any monitor.
 		if grid_aim_enabled:
 			_clear_grid_aim_lock()
-		target_crosshair_position += GameSettings.mouse_look_delta(event.relative)
+		var look := GameSettings.mouse_look_delta(event.relative)
+		if drunken_affect_enabled:
+			look *= drunken_input_scale
+		target_crosshair_position += look
+
+
+## Procedural wobble + sway + drift for drunken aim (screen pixels).
+func _update_drunken_offset(delta: float) -> Vector2:
+	_drunken_time += delta
+	var t := _drunken_time
+
+	var wobble := Vector2(
+		sin(t * TAU * drunken_wobble_speed) * drunken_wobble_amp,
+		cos(t * TAU * drunken_wobble_speed * 1.37 + 1.1) * drunken_wobble_amp * 0.85
+	)
+	var sway := Vector2(
+		sin(t * TAU * drunken_sway_speed) * drunken_sway_amp,
+		sin(t * TAU * drunken_sway_speed_y + 0.8) * drunken_sway_amp * 0.75
+	)
+
+	_drunken_drift_retarget_left -= delta
+	if _drunken_drift_retarget_left <= 0.0:
+		_drunken_drift_retarget_left = randf_range(0.45, 1.1)
+		var amp := maxf(drunken_drift_amp, 0.0)
+		_drunken_drift_target = Vector2(
+			randf_range(-amp, amp),
+			randf_range(-amp, amp)
+		)
+	var drift_lerp := 1.0 - exp(-maxf(drunken_drift_speed, 0.01) * delta)
+	_drunken_drift = _drunken_drift.lerp(_drunken_drift_target, drift_lerp)
+
+	var offset := wobble + sway + _drunken_drift
+	## Hard cap so cranked exports cannot flip the gun look_at behind the camera.
+	const MAX_OFFSET_PX := 18.0
+	if offset.length() > MAX_OFFSET_PX:
+		offset = offset.normalized() * MAX_OFFSET_PX
+	return offset
 
 
 func _notify_reticle_sensitivity_popup(event: InputEvent) -> void:

@@ -1747,7 +1747,8 @@ func check_if_rocks_still_in_air() -> void:
 		if _hold_out_should_finish_on_pineapples():
 			finish_round_after_last_pineapple()
 			return
-		_loop_boss_sequence()
+		## Play-once: script finished and sky clear — win (do not loop rocks).
+		_finish_hold_out_success()
 		return
 
 	if is_endless_mode():
@@ -1771,11 +1772,11 @@ func successful_round() -> void:
 		if rocks_container.is_holding_wave():
 			return
 	if is_hold_out_round():
-		## Clearing a loop of rocks does not win a hold-out — only surviving the timer does.
 		if _hold_out_should_finish_on_pineapples():
 			finish_round_after_last_pineapple()
 			return
-		_loop_boss_sequence()
+		## Play-once: script finished and sky clear — win (do not loop rocks).
+		_finish_hold_out_success()
 		return
 
 	if is_endless_mode():
@@ -1892,20 +1893,34 @@ func abort_round_to_shop() -> void:
 func round_timer_time_out() -> void:
 	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
 		return
-	if is_hold_out_round() and rocks_container and rocks_container.has_method("jump_to_trailing_pineapples_if_needed"):
-		if bool(rocks_container.jump_to_trailing_pineapples_if_needed()):
-			clear_live_oranges_quietly()
+	## Pineapple finale owns the end — ignore timer if already running.
+	if rocks_container and rocks_container.has_method("is_hold_out_pineapple_finale_active"):
+		if bool(rocks_container.is_hold_out_pineapple_finale_active()):
 			stop_timer()
 			return
-	wave_ending = true
-	clear_live_oranges_quietly()
+	## Timer ran out before script end: still run the pineapple phase if the script has one.
+	if rocks_container and rocks_container.has_method("jump_to_pineapple_finale_from_script"):
+		if bool(rocks_container.jump_to_pineapple_finale_from_script()):
+			return
+	_finish_hold_out_success()
 
+
+## `pineapples` keyword hit: stop the countdown; finale owns the round end.
+func begin_pineapple_finale_from_script() -> void:
+	clear_live_oranges_quietly()
 	stop_timer()
 
+
+## Survive hold-out by timer or by finishing the script (no pineapple finale).
+func _finish_hold_out_success() -> void:
+	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
+		return
+	wave_ending = true
+	clear_live_oranges_quietly()
+	stop_timer()
 	await _wait_for_live_pineapples_after_timeout()
 	if not _can_finish_after_timer_timeout():
 		return
-
 	success = true
 	if is_hold_out_round():
 		player_failed = false
@@ -1923,7 +1938,7 @@ func finish_round_after_last_pineapple() -> void:
 	wave_ending = true
 	clear_live_oranges_quietly()
 	stop_timer()
-	await get_tree().create_timer(1.0, false).timeout
+	await get_tree().create_timer(0.5, false).timeout
 	if not _can_finish_after_timer_timeout():
 		## Continue / fail already owns the session — don't leave WAVE_END hanging.
 		if not _continue_open and not player_failed and not game_over_triggered:
@@ -1937,7 +1952,7 @@ func finish_round_after_last_pineapple() -> void:
 	enter_state(RoundState.WAVE_END)
 
 
-## Timer hit 0 during a pineapple cue or while one is airborne: wait until it is gone, then 1s, then end.
+## Timer hit 0 during a pineapple cue or while one is airborne: wait until it is gone, then 0.5s, then end.
 func _wait_for_live_pineapples_after_timeout() -> void:
 	if not _any_live_pineapples():
 		return
@@ -1947,7 +1962,7 @@ func _wait_for_live_pineapples_after_timeout() -> void:
 		await get_tree().process_frame
 	if not _can_finish_after_timer_timeout():
 		return
-	await get_tree().create_timer(1.0, false).timeout
+	await get_tree().create_timer(0.5, false).timeout
 
 
 func _can_finish_after_timer_timeout() -> bool:
@@ -4064,10 +4079,9 @@ func travel_to_boss(island_index: int = 0, use_transition_overlay: bool = true, 
 func _loop_boss_sequence() -> void:
 	if not is_hold_out_round() or wave_ending or player_failed or _boss_looping or _continue_open or _continue_resuming:
 		return
-	if rocks_container and rocks_container.has_method("has_trailing_pineapples"):
-		if bool(rocks_container.has_trailing_pineapples()):
-			if rocks_container.has_method("try_continue_sequence") and bool(rocks_container.try_continue_sequence()):
-				return
+	## Pineapple finale owns the end of the round — do not feed more rocks.
+	if rocks_container and rocks_container.has_method("is_hold_out_pineapple_finale_active"):
+		if bool(rocks_container.is_hold_out_pineapple_finale_active()):
 			return
 	_boss_looping = true
 	var rock_seq := update_rock_sequence()
@@ -4211,28 +4225,6 @@ func pineapple_round() -> void:
 	
 	$'../Pineapple'.stop_pineapples()
 	EventBus.instance.pineapple_round_used.emit()
-
-
-## Scripted `pineapples` keyword: bonus round after the last rock, before balloon-check.
-## Requires zero strikes. Does nothing if the opportunity was already spent this range.
-func try_scripted_pineapple_round() -> void:
-	if pineapple_mode:
-		return
-	if is_bonus_type1_round():
-		return
-	if player_failed or wave_ending or game_over_triggered:
-		return
-	if gl_PlayerState.dataset.total_current_strikes > 0:
-		return
-
-	gl_PlayerState.dataset.total_pineapples_destroyed = 0
-	if wave_progress_feedback and wave_progress_feedback.has_method("start_bonus"):
-		wave_progress_feedback.start_bonus()
-	if player:
-		player.round_finished(false)
-	pineapple_mode = true
-	await pineapple_round()
-	pineapple_mode = false
 
 
 func start_game_over() -> void:

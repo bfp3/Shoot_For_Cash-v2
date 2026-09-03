@@ -226,9 +226,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   Commands after a `repeat` start the next section / next set of waves.
 ##   Example: `rock 2` / `repeat 3` / `rock 4` / `repeat 2` → 5 waves total.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
-## pineapples: {cmd} — this round only; if you still have no strikes when the
-##   last rock is shot, a pineapple bonus round starts before balloon-check.
-##   Distinct from the `pineapple` spawn command.
+## pineapples: {cmd} — stop the hold-out timer (if any), play fanfare + particles,
+##   then launch the following `pineapple` / `wait` lines. When those are cleared,
+##   wait 1s and end the round (tally). Distinct from the `pineapple` spawn command.
 ## strikes N: {cmd, count} — this round only; player can take N strikes (default 3).
 ##   Example: `strikes 5`.
 ## sfx-play Name volume_db: {cmd, name, volume_db} — play `res://sfx/Name.ogg` (etc.)
@@ -251,8 +251,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## light-dim / light-bright: {cmd}. Smoothly change every `directional_light` energy
 ##   by -0.25 / +0.25 over 3 seconds. Does not pause the sequence.
 ## hold out 90000 / hold-out 90000 / boss-timer 90000: {cmd: hold-out, ms}.
-##   Range- or round-level survival timer in milliseconds. Same as a boss hold-out:
-##   rocks loop and the round lasts until the timer hits 0.
+##   Range- or round-level survival timer in milliseconds. Script plays once:
+##   script end (no pineapples) → win; timer hit 0 or `pineapples` keyword → optional
+##   pineapple finale, then tally.
 ## play $100 / play 100: {cmd: play, price}. Range-level PLAY / continue fee.
 ##   Put under `range moss` (before or inside a round). Shop PLAY and CONTINUE
 ##   both charge this amount. Fallback is data_set `price_play_round`.
@@ -1070,7 +1071,6 @@ func parse_round_text(text: String) -> Dictionary:
 			"bonus": "",
 			"bonus_targets": [],
 			"shuffle": false,
-			"pineapples": false,
 			"difficulty": "",
 			"max_strikes": 3,
 			"hold_out_ms": 0,
@@ -1084,7 +1084,7 @@ func parse_round_text(text: String) -> Dictionary:
 ## are merged). File order is kept.
 ## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"type1"|...,
 ##   "bonus_targets": [{ "waypoints": [{row, column}, ...] }, ...], "shuffle": bool,
-##   "pineapples": bool, "hold_out_ms": int }
+##   "hold_out_ms": int }
 ## Pass an empty island_name to include every island in the loaded file.
 ## Pass range_name (e.g. "moss", "redd") to only include that shooting range.
 func get_rock_sequences(island_name: String = '', range_name: String = '') -> Array:
@@ -1106,7 +1106,6 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				'bonus': '',
 				'bonus_targets': [],
 				'shuffle': false,
-				'pineapples': false,
 				'surprise': false,
 				'difficulty': '',
 				'max_strikes': 3,
@@ -1150,7 +1149,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			continue
 
 		if parsed_cmd == 'pineapples':
-			rounds[key].pineapples = true
+			# Timeline command — finale gate; stay in the spawn sequence.
 			rounds[key]._pending.append(parsed)
 			continue
 

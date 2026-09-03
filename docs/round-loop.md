@@ -40,7 +40,7 @@ Range clear (last round of a place, first time): tally, then shop (no island map
 
 ## How a round ends
 
-- **Clear:** `EventBus.instance.all_rocks_destroyed` → `successful_round()` → `WAVE_END`. Boss / hold-out / endless ignore this and loop spawns.
+- **Clear:** `EventBus.instance.all_rocks_destroyed` → `successful_round()` → `WAVE_END`. Endless ignores this and loops spawns. Hold-out: if the script still has work or a pineapple finale is active, stay open; otherwise stop the timer and win.
 - **Miss / strike:** `EventBus.instance.add_strike` → strike HUD. At max strikes, `has_hit_three_strikes` → `handle_three_strikes()` → `unsuccessful_round_locked()`.
 - **Strikeout:** forfeit unbanked pool, subtract range-banked from wallet, **keep multiplier**, skip tally, reopen shop (`_return_to_shop_after_strikeout()`).
 - **Cancel:** in-round cancel action → `abort_round_to_shop()`.
@@ -65,7 +65,7 @@ Script commands. Default poses: BANK CASH left (`-2.8, 3.5, 22.5`), +1 Multiplie
 
 ## Special modes
 
-- **Hold-out (`hold out 90000`):** looping rocks, countdown timer in milliseconds. Win = timer, not clearing rocks — unless the script ends with `pineapple` spawns. Then pineapples are guaranteed: timer expiry jumps to that section if it has not played yet; shooting those pineapples while time remains ends the round and the timer. Works on any range, including boss. After a non-boss hold-out tally, travel to the next `range` header in `level-beginner.txt`. Surviving the last range opens the stage-complete screen instead of the map. `boss-timer` is still accepted as an alias.
+- **Hold-out (`hold out 90000`):** countdown timer in milliseconds. Script plays **once** (no rock loop). Win if the script finishes and the sky clears (no `pineapples` gate), **or** if the timer hits 0. If the script has a `pineapples` keyword, either reaching it early or the timer hitting 0 jumps to that finale: stop the timer, fanfare + particles, launch the following `pineapple` / `wait` lines; midair rocks stay shootable as overtime (they no longer advance the script). When the pineapples are gone, wait 0.5s, then tally. Abort / Play again always restarts from the rock script, never mid-finale. Works on any range, including boss. After a non-boss hold-out tally, travel to the next `range` header in `level-beginner.txt`. Surviving the last range opens the stage-complete screen instead of the map. `boss-timer` is still accepted as an alias.
 - **Boss:** hold-out in a boss arena. After tally, island map.
 - **Endless:** looping rocks, count-up timer, no wave banners.
 - **Level / round editor (D from shop, editor only):** sandbox under island `test`; does not write wallet unless forced.

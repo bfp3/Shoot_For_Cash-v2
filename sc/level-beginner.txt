@@ -1,4 +1,4 @@
-island shipper
+﻿island shipper
 
 range moss
 
@@ -52,8 +52,7 @@ range moss
 		rock-grey 3 a3
 		wait 50
 		rock-grey 4 a4
-		wait 0
-		rock-invisible 5 a5
+
 		wait
 		rock-grey 8 a8
 		wait 50
@@ -64,14 +63,10 @@ range moss
 		rock-grey 5 a5
 		wait 50
 		rock 4 a4
-		wait 0
-		rock-invisible 3 a3
 		wait
+		pineapples
 		pineapple 5 a5
 		clear
-
-
-		wait 6000
 range moss2
 
 	play $0
@@ -96,8 +91,8 @@ range moss2
 		rock-grey 3 a3
 		wait 0
 		rock 5 a5
-		wait 0
-		rock-invisible 1 a1
+		#wait 0
+		#rock-invisible 1 a1
 		wait
 
 		balloon a4
@@ -122,7 +117,7 @@ range moss2
 		rock 3 b3
 		wait 0
 		rock 5 b5
-		rock-invisible 1 a8
+		#rock-invisible 1 a8
 		wait
 
 		balloon a4
@@ -153,13 +148,13 @@ range moss2
 		rock 3 a3
 		wait 0
 		rock 5 a5
-		wait 0
-		rock-invisible 1 a3
+		#wait 0
+		#rock-invisible 1 a3
 		wait
 		clear
+		pineapples
 		pineapple 8 a8
 		pineapple 4 a4
-		
 range moss3
 	play $0
 	reward $1,000
@@ -168,7 +163,8 @@ range moss3
 
 		# Phase 1 - slow
 		pace-slow
-		rock-fake 2 b2
+		#rock-fake 2 b2
+		rock-black 2 b2
 		wait 1000
 		rock-black 7 b7
 		wait 1200
@@ -290,6 +286,7 @@ range moss3
 		rock 4 a4
 		wait
 
+		pineapples
 		pineapple 2 a2
 		wait 1500
 		pineapple 4 a4
@@ -303,7 +300,7 @@ range moss4
 	round
 		hold out 30000
 
-		sfx-play Windmill_Sunburst_NOT_IN_USE -45.0
+		sfx-play Windmill_Sunburst_NOT_IN_USE -50.0
 
 		pace-slow
 		rock 4 a7
@@ -359,6 +356,7 @@ range moss4
 		rock 8 a8
 		wait
 		clear
+		pineapples
 		pineapple 2 a2
 		pineapple 5 a5
 		pineapple 8 a8
@@ -811,6 +809,7 @@ range moss6
 		wait 0
 		rock-invisible 3 a3
 		wait
+		pineapples
 		pineapple 5 a5
 		clear
 
@@ -906,6 +905,7 @@ range moss7
 		wait
 
 		clear
+		pineapples
 		pineapple 2 a2
 		wait 500
 		pineapple 4 a4
@@ -1000,6 +1000,7 @@ range moss8
 		wait
 		balloon-check
 
+		pineapples
 		pineapple 2 a2
 		wait 1000
 		pineapple 4 a4

@@ -552,8 +552,9 @@ func _sfx_open() -> void:
 func _sfx_close() -> void:
 	if _close_sfx:
 		_close_sfx.play(0.5)
-	#if _click_1:
-		#_click_1.play()
+
+	if _click_1:
+		_click_1.play()
 	#if _click_2:	
 		#_click_2.play()
 	#if _click_3:

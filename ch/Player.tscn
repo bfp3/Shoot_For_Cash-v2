@@ -657,6 +657,15 @@ lean_sideways = 2.0
 lean_upwards = 1.0
 lean_roll_degrees = -6.0
 lean_in_speed = 12.0
+drunken_wobble_amp = 0.0
+drunken_wobble_speed = 0.1
+drunken_sway_amp = 0.0
+drunken_sway_speed = 0.05
+drunken_sway_speed_y = 0.05
+drunken_input_scale = 0.15
+drunken_lag_speed = 1.0
+drunken_drift_amp = 0.0
+drunken_drift_speed = 0.1
 planted_crosshair_arm_delay = 0.25
 shoot_ring_pulse_on_release = true
 shoot_ring_pulse_scale = 1.5
@@ -668,6 +677,8 @@ player_camera = NodePath("../Cam_pivot/Camera3D")
 stable_camera = NodePath("../Cam_pivot/Camera3D")
 player_gun = NodePath("../Cam_pivot/Camera3D/Player_gun")
 view_limit = 1500.0
+generous_amount = true
+generous_check_duration = 0.04
 
 [node name="Cam_pivot" type="Node3D" parent="." unique_id=674976526]
 script = ExtResource("10_kkix3")

@@ -19,6 +19,12 @@ var can_fire_weapon := true
 @export var player_gun : Node3D
 @export var view_limit := 100.0
 
+@export_group("Generous Hit")
+## When true, an empty reticle on the fire frame keeps checking for a short window so fast movers still count.
+@export var generous_amount := false
+## How long after the shot to keep polling the (frozen) aim circle for a target.
+@export_range(0.0, 0.5, 0.005) var generous_check_duration := 0.05
+
 var power_target_circle := 60.0
 var power_bullet_speed = 30.0
 var power_bullet_damage : int = 1
@@ -34,6 +40,7 @@ var shooting_sky_mine := false
 var round_manager : RoundManager
 ## Active projectile scene (default or alternate weapon).
 var active_bullet_scene: PackedScene = BULLET_VISUAL_1
+var _generous_poll_token := 0
 
 
 func _ready() -> void:
@@ -306,7 +313,12 @@ func shoot_target() -> void:
 	_reset_pitch_adjustment()
 
 	var double_power: bool = get_parent()._scope_at_min
-	var targets = get_targets_in_scope()
+	var aim_center: Vector2 = crosshair.global_position
+	var targets = get_targets_in_scope(aim_center)
+
+	## Empty on the fire frame: keep polling the frozen aim for a short window (fast movers).
+	if targets.is_empty() and generous_amount and generous_check_duration > 0.0:
+		targets = await _poll_generous_scope_targets(aim_center)
 
 	# If a special mid-round target is the closest aim, only shoot that — don't multi-hit rocks.
 	if not targets.is_empty() and _is_special_midround_target(targets[0].target):
@@ -391,7 +403,7 @@ func shoot_target() -> void:
 			break
 
 		var rock_screen_pos = stable_camera.unproject_position(target.global_position)
-		var screen_offset = rock_screen_pos - crosshair.global_position
+		var screen_offset = rock_screen_pos - aim_center
 
 		process_target_hit.call_deferred(
 			target,
@@ -434,8 +446,24 @@ func shoot_target() -> void:
 		if gl_PlayerState.dataset.total_hazards > 0:
 			return
 		activate_multishot_bonus(rock_count)
-		
-	
+
+
+## Poll frozen aim for `generous_check_duration` until a target overlaps (or time runs out).
+func _poll_generous_scope_targets(aim_center: Vector2) -> Array:
+	_generous_poll_token += 1
+	var token := _generous_poll_token
+	var elapsed := 0.0
+	while elapsed < generous_check_duration:
+		await get_tree().process_frame
+		if token != _generous_poll_token:
+			return []
+		if not can_fire_weapon:
+			return []
+		var found := get_targets_in_scope(aim_center, -1.0, false)
+		if not found.is_empty():
+			return found
+		elapsed += get_process_delta_time()
+	return []
 func can_shoot(_can_shoot : bool) -> void:
 	can_fire_weapon = _can_shoot
 
