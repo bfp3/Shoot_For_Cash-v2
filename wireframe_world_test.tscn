@@ -1,0 +1,164 @@
+[gd_scene format=3 uid="uid://cj2emu7pjiwil"]
+
+[ext_resource type="Script" uid="uid://b2om1pjqrnico" path="res://wireframe_world_test.gd" id="1_scene"]
+[ext_resource type="Shader" uid="uid://cmlqla52b8rko" path="res://res/Shaders/vector_wireframe.gdshader" id="2_r3y2n"]
+[ext_resource type="Script" uid="uid://ddme36qr2t6fn" path="res://res/Shaders/vector_wireframe.gd" id="2_wire"]
+[ext_resource type="Shader" uid="uid://d0dm73yo3u4k6" path="res://res/Shaders/vector_crt.gdshader" id="3_crt"]
+
+[sub_resource type="Environment" id="Environment_wire"]
+background_mode = 1
+background_color = Color(0.015686275, 0.039215688, 0.11764706, 1)
+ambient_light_source = 1
+ambient_light_color = Color(0.050980393, 0.078431375, 0.14117648, 1)
+ambient_light_energy = 0.0
+tonemap_mode = 4
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.1
+glow_blend_mode = 0
+adjustment_enabled = true
+adjustment_brightness = 1.1
+adjustment_contrast = 1.1
+adjustment_saturation = 1.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eneci"]
+render_priority = 0
+shader = ExtResource("2_r3y2n")
+shader_parameter/face_color = Color(0, 0, 0, 1)
+shader_parameter/edge_color = Color(1, 0.72, 0.28, 1)
+shader_parameter/edge_thickness = 1.0
+shader_parameter/glow_amount = 0.0
+shader_parameter/edge_softness = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_cube"]
+size = Vector3(1, 2.5, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lhimd"]
+render_priority = 0
+shader = ExtResource("2_r3y2n")
+shader_parameter/face_color = Color(0.0627, 0.16516498, 0.33, 1)
+shader_parameter/edge_color = Color(1, 0.72, 0.28, 1)
+shader_parameter/edge_thickness = 0.4
+shader_parameter/glow_amount = 0.0
+shader_parameter/edge_softness = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_tower"]
+size = Vector3(0.7, 2.4, 0.7)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ylu3"]
+render_priority = 0
+shader = ExtResource("2_r3y2n")
+shader_parameter/face_color = Color(0, 0, 0, 1)
+shader_parameter/edge_color = Color(0.36372238, 0.46112728, 1.8247963, 1)
+shader_parameter/edge_thickness = 1.0
+shader_parameter/glow_amount = 0.0
+shader_parameter/edge_softness = 0.1
+
+[sub_resource type="PrismMesh" id="PrismMesh_peak"]
+size = Vector3(1.5, 1.35, 1.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vjwxd"]
+render_priority = 0
+shader = ExtResource("2_r3y2n")
+shader_parameter/face_color = Color(0, 0, 0, 1)
+shader_parameter/edge_color = Color(0.55, 0.72, 0.95, 1)
+shader_parameter/edge_thickness = 0.4
+shader_parameter/glow_amount = 0.0
+shader_parameter/edge_softness = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ground"]
+size = Vector3(10, 0.08, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("3_crt")
+shader_parameter/warp_amount = 0.32
+shader_parameter/aberration = 0.0
+shader_parameter/scanline_count = 800.0000342
+shader_parameter/scanline_opacity = 0.2000000095
+shader_parameter/grille_opacity = 0.0
+shader_parameter/bloom_amount = 0.0
+shader_parameter/bloom_spread = 0.0010000000475
+shader_parameter/bloom_threshold = 0.0
+shader_parameter/brightness = 1.20000003325
+shader_parameter/vignette_intensity = 0.0
+shader_parameter/corner_radius = 0.0
+shader_parameter/grain_amount = 0.0
+shader_parameter/flicker_amount = 0.0
+shader_parameter/phosphor_tint = Color(1, 1, 1, 1)
+
+[node name="WireframeWorldTest" type="Node3D" unique_id=2101555825]
+script = ExtResource("1_scene")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1046259707]
+environment = SubResource("Environment_wire")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=861406820]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 2.4, 5.5)
+current = true
+fov = 62.0
+
+[node name="Meshes" type="Node3D" parent="." unique_id=1081006782]
+
+[node name="Cube" type="MeshInstance3D" parent="Meshes" unique_id=1705709720]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+material_override = SubResource("ShaderMaterial_eneci")
+cast_shadow = 0
+gi_mode = 0
+script = ExtResource("2_wire")
+source_mesh = SubResource("BoxMesh_cube")
+face_color = Color(0, 0, 0, 1)
+edge_thickness = 1.0
+glow_amount = 0.0
+edge_softness = 0.1
+
+[node name="Tower" type="MeshInstance3D" parent="Meshes" unique_id=2143470111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.85, 1.2, 0)
+material_override = SubResource("ShaderMaterial_lhimd")
+cast_shadow = 0
+gi_mode = 0
+script = ExtResource("2_wire")
+source_mesh = SubResource("BoxMesh_tower")
+face_color = Color(0.0627, 0.16516498, 0.33, 1)
+edge_thickness = 0.4
+glow_amount = 0.0
+edge_softness = 4.0
+crease_angle_degrees = 80.0
+
+[node name="Peak" type="MeshInstance3D" parent="Meshes" unique_id=798815368]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75, 0.68, 0.15)
+material_override = SubResource("ShaderMaterial_3ylu3")
+cast_shadow = 0
+gi_mode = 0
+script = ExtResource("2_wire")
+source_mesh = SubResource("PrismMesh_peak")
+face_color = Color(0, 0, 0, 1)
+edge_color = Color(0.36372238, 0.46112728, 1.8247963, 1)
+edge_thickness = 1.0
+glow_amount = 0.0
+edge_softness = 0.1
+
+[node name="Ground" type="MeshInstance3D" parent="Meshes" unique_id=1204215137]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.04, 0)
+material_override = SubResource("ShaderMaterial_vjwxd")
+cast_shadow = 0
+gi_mode = 0
+script = ExtResource("2_wire")
+source_mesh = SubResource("BoxMesh_ground")
+face_color = Color(0, 0, 0, 1)
+edge_color = Color(0.55, 0.72, 0.95, 1)
+edge_thickness = 0.4
+glow_amount = 0.0
+edge_softness = 4.0
+crease_angle_degrees = 80.0
+
+[node name="CRTOverlay" type="CanvasLayer" parent="." unique_id=942089568]
+layer = 10
+
+[node name="CRT" type="ColorRect" parent="CRTOverlay" unique_id=303120866]
+material = SubResource("ShaderMaterial_crt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
