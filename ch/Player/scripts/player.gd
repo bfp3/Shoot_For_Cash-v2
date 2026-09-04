@@ -1657,28 +1657,18 @@ func consume_ammo(amount: int = 1) -> bool:
 		_level_editor_ammo = maxi(_level_editor_ammo - amount, 0)
 		_refresh_ammo_display()
 		if _level_editor_ammo <= 0:
-			# Editor rounds keep a full separate mag — never block the test.
-			_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
-			_refresh_ammo_display()
+			out_of_ammo()
 		return true
 
 	if shot_count < amount:
-		if _is_in_testing_room():
-			_refill_regular_ammo_to_max()
-			if shot_count < amount:
-				return false
-		else:
-			return false
+		return false
 
 	max_ammo = get_max_ammo()
 	shot_count = clampi(shot_count - amount, 0, max_ammo)
 	_refresh_ammo_display()
 
 	if shot_count <= 0:
-		if _is_in_testing_room():
-			_refill_regular_ammo_to_max()
-		else:
-			out_of_ammo()
+		out_of_ammo()
 
 	return true
 
@@ -1786,19 +1776,13 @@ func fire_weapon_auto(force_plant: bool = false) -> void:
 		return
 
 	if get_displayed_ammo() <= 0 and not debug_infinite_ammo:
-		if _is_in_testing_room() and not _level_editor_ammo_active:
-			_refill_regular_ammo_to_max()
-		elif _level_editor_ammo_active:
-			_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
-			_refresh_ammo_display()
-		else:
-			# Empty magazine: still allow shooting early-exit / ammo-reload targets.
-			if weapon_shooting.shoot_special_midround_target_if_aimed():
-				return
-			out_of_ammo()
-			weapon_shooting.play_missed_sounds()
-			register_accuracy_miss()
+		if weapon_shooting.shoot_early_exit_if_aimed():
+			player_did_not_miss()
 			return
+		out_of_ammo()
+		weapon_shooting.play_missed_sounds()
+		register_accuracy_miss()
+		return
 
 	## Glory six-ammo is enforced via get_max_ammo() / magazine, not a separate fire counter.
 	var rm = get_tree().get_first_node_in_group("round_manager")
@@ -1837,19 +1821,13 @@ func fire_weapon(force_plant: bool = false) -> void:
 		return
 
 	if get_displayed_ammo() <= 0 and not debug_infinite_ammo:
-		if _is_in_testing_room() and not _level_editor_ammo_active:
-			_refill_regular_ammo_to_max()
-		elif _level_editor_ammo_active:
-			_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
-			_refresh_ammo_display()
-		else:
-			# Empty magazine: still allow shooting early-exit / ammo-reload targets.
-			if weapon_shooting.shoot_special_midround_target_if_aimed():
-				return
-			out_of_ammo()
-			weapon_shooting.play_missed_sounds()
-			register_accuracy_miss()
+		if weapon_shooting.shoot_early_exit_if_aimed():
+			player_did_not_miss()
 			return
+		out_of_ammo()
+		weapon_shooting.play_missed_sounds()
+		register_accuracy_miss()
+		return
 
 	## Glory six-ammo is enforced via get_max_ammo() / magazine, not a separate fire counter.
 	var rm = get_tree().get_first_node_in_group("round_manager")
@@ -2117,10 +2095,10 @@ func start_player() -> void:
 	_apply_gun_crosshair_visibility()
 	_apply_gun_loadout_stats(false)
 	if _level_editor_ammo_active:
-		_level_editor_ammo = LEVEL_EDITOR_AMMO_MAX
-	else:
-		max_ammo = get_max_ammo()
-		shot_count = clampi(shot_count, 0, max_ammo)
+		end_level_editor_ammo()
+	max_ammo = get_max_ammo()
+	shot_count = clampi(shot_count, 0, max_ammo)
+	_is_currently_shooting = false
 	_refresh_ammo_display()
 	weapon_shooting.can_shoot(true)
 

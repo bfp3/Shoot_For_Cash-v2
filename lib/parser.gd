@@ -188,6 +188,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
 ##   `threat 1 a4 a1 a8` — invincible smoke canister that patrols those cells back and forth.
 ##     Crosshair overlap plays `alarm_smoke` then releases `aoe_threat_smoke` (1.5s cooldown).
+##     `threat 1 a4 a1 a8 fastest` uses the threat export speed for that token.
 ##     `clear threat` sends it down into the splash zone.
 ##   `rock-red-attacker 1 a1` flies to A1 then dashes at the crosshair (and through it).
 ##   `rock-red-attacker 1 a1 a8` same, but dashes toward A8 instead of the crosshair.
@@ -230,6 +231,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   Commands after a `repeat` start the next section / next set of waves.
 ##   Example: `rock 2` / `repeat 3` / `rock 4` / `repeat 2` → 5 waves total.
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
+## ammo-unlimited: {cmd} — this round only; shots do not consume bullets (editor TEST / play).
 ## pineapples: {cmd} — stop the hold-out timer (if any), play fanfare + particles,
 ##   then launch the following `pineapple` / `wait` lines. When those are cleared,
 ##   wait 1s and end the round (tally). Distinct from the `pineapple` spawn command.
@@ -361,6 +363,9 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 		'no-lives':
 			return {'cmd': 'no-lives'}
+
+		'ammo-unlimited':
+			return {'cmd': 'ammo-unlimited'}
 
 		'pineapples':
 			return {'cmd': 'pineapples'}
@@ -637,8 +642,10 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 ##   rock-stay 1 a1                 → spawn col 1, hang at A1
 ##   rock-stay 1 a1 a8 c8 c1 a4 1   → path A1→A8→C8→C1→A4, then splash exit
 ##   threat 1 a4 a1 a8              → spawn col 1, patrol those cells back and forth
+##   threat 1 a1 a4 a8 fastest      → same patrol at threat_speed_fastest
 ##   Trailing bare `0`/`1` after cells = path_exit_splash (1 = leave into splash zone).
 ##   `threat` ignores trailing 0/1 — use `clear threat` to splash-exit.
+##   Optional last token on threat: `slow` / `fast` / `fastest` (own export speeds).
 func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': cmd,
@@ -649,6 +656,7 @@ func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictiona
 		'end_row': RANDOM_SLOT,
 		'end_column': RANDOM_SLOT,
 		'path_exit_splash': false,
+		'threat_pace': '',
 		'param': '',
 		'raw': ' '.join(parts),
 	}
@@ -682,9 +690,15 @@ func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictiona
 
 	var end_i := parts.size() - 1
 	var last_tok := String(parts[end_i]).strip_edges().trim_suffix(',').strip_edges()
+	## `threat … slow|fast|fastest` — pace token is always last.
+	if cmd == 'threat':
+		var pace := last_tok.to_lower()
+		if pace == 'slow' or pace == 'fast' or pace == 'fastest':
+			result.threat_pace = pace
+			end_i -= 1
 	## Trailing 0/1 only counts as splash-exit when at least one grid cell precedes it.
 	## Threat patrols forever — splash exit is `clear threat`, not a trailing 1.
-	if cmd != 'threat' and (last_tok == '0' or last_tok == '1'):
+	elif last_tok == '0' or last_tok == '1':
 		var cell_before := false
 		for i in range(cell_start, end_i):
 			var mid := String(parts[i]).strip_edges().trim_suffix(',').strip_edges()
@@ -1074,6 +1088,7 @@ func parse_round_text(text: String) -> Dictionary:
 			"spawns": [],
 			"repeat": DEFAULT_ROUND_REPEAT,
 			"no_lives": false,
+			"ammo_unlimited": false,
 			"bonus": "",
 			"bonus_targets": [],
 			"shuffle": false,
@@ -1109,6 +1124,7 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				'spawns': [],
 				'repeat': DEFAULT_ROUND_REPEAT,
 				'no_lives': false,
+				'ammo_unlimited': false,
 				'bonus': '',
 				'bonus_targets': [],
 				'shuffle': false,
@@ -1148,6 +1164,10 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 
 		if parsed_cmd == 'no-lives':
 			rounds[key].no_lives = true
+			continue
+
+		if parsed_cmd == 'ammo-unlimited':
+			rounds[key].ammo_unlimited = true
 			continue
 
 		if parsed_cmd == 'strikes':
@@ -1442,6 +1462,8 @@ func surprise_round_to_text(round_data: Dictionary) -> String:
 	var lines: PackedStringArray = []
 	if bool(round_data.get('no_lives', false)):
 		lines.append('no-lives')
+	if bool(round_data.get('ammo_unlimited', false)):
+		lines.append('ammo-unlimited')
 	if bool(round_data.get('shuffle', false)):
 		lines.append('shuffle')
 	var max_strikes := int(round_data.get('max_strikes', 3))
@@ -1615,6 +1637,9 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 					stay_bits.append('%s?' % letters_s[clampi(pr, 1, 3)])
 			if bool(entry.get('path_exit_splash', false)):
 				stay_bits.append('1')
+			var threat_pace := String(entry.get('threat_pace', '')).strip_edges().to_lower()
+			if cmd == 'threat' and (threat_pace == 'slow' or threat_pace == 'fast' or threat_pace == 'fastest'):
+				stay_bits.append(threat_pace)
 			return ' '.join(stay_bits)
 		'rock-gap', 'rock-red-gap':
 			var gap_parts: PackedStringArray = [cmd]

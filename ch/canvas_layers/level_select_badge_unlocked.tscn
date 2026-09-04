@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d8u1jr5rxudy"]
 
-[ext_resource type="Script" uid="uid://ru5h7vo6ehu6" path="res://ch/canvas_layers/level_select_badge_unlocked.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bd1xy3epn6nb5" path="res://ch/canvas_layers/level_select_badge_unlocked.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://du24q4ceh1rta" path="res://res/star_png_256.png" id="4_2givc"]
 [ext_resource type="Texture2D" uid="uid://cp255yy4k2lna" path="res://res/lock-svgrepo-com.png" id="4_lock"]
 [ext_resource type="Texture2D" uid="uid://c2vlvp7tqncih" path="res://res/star_filled_256.png" id="4_w73f1"]
@@ -33,8 +33,8 @@ particle_flag_disable_z = true
 emission_shape = 6
 emission_ring_axis = Vector3(0, 0, 1)
 emission_ring_height = 1.0
-emission_ring_radius = 125.0
-emission_ring_inner_radius = 100.0
+emission_ring_radius = 48.0
+emission_ring_inner_radius = 50.0
 emission_ring_cone_angle = 90.0
 initial_velocity_min = 1.0
 initial_velocity_max = 2.0
@@ -44,10 +44,10 @@ orbit_velocity_min = 9.49949e-08
 orbit_velocity_max = 9.49949e-08
 tangential_accel_min = 4.9999976
 tangential_accel_max = 4.9999976
-scale_min = 0.02
-scale_max = 0.04
+scale_min = 0.01
+scale_max = 0.01
 scale_curve = SubResource("CurveTexture_pmshx")
-color = Color(0.95, 0.95, 0.95, 1)
+color = Color(0.96, 0.90879995, 0.86399996, 1)
 alpha_curve = SubResource("CurveTexture_tt1wp")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_circle"]
@@ -105,7 +105,7 @@ void fragment() {
 resource_local_to_scene = true
 shader = SubResource("Shader_sc68w")
 shader_parameter/shine_progress = 1.1850000562875
-shader_parameter/shine_width = 0.42700001958398004
+shader_parameter/shine_width = 0.42700001958398
 shader_parameter/shine_strength = 0.050000002375
 shader_parameter/base_color = Color(0.8, 0.6954667, 0.57600003, 0.4392157)
 shader_parameter/shine_color = Color(1, 0.98, 0.88, 0.39215687)
@@ -141,8 +141,9 @@ blink_lock_instead_of_flip = true
 locked_hold_sec = 1.0
 
 [node name="BackgroundParticles" type="GPUParticles2D" parent="." unique_id=660221732]
-position = Vector2(95, 100)
-amount = 3
+z_index = 1
+position = Vector2(47, 50)
+amount = 50
 texture = ExtResource("4_xilsf")
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_gn3u7")
@@ -434,6 +435,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/normal = SubResource("StyleBoxEmpty_hit")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_hit")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_hit")

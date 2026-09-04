@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://vfx/aoe_crate_destroy.tscn" id="3_crate"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_hazard_destroy.tscn" id="4_hazard"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_smokecan_destroy.tscn" id="5_smoke"]
+[ext_resource type="PackedScene" uid="uid://bfsjwji6k2570" path="res://vfx/aoe_threat_smoke.tscn" id="6_bw8o8"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_rock_hit.tscn" id="6_rockhit"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_balloon_destroy.tscn" id="7_balloon"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_orange_destroy.tscn" id="8_orange"]
@@ -315,7 +316,8 @@ delays = {
 [node name="aoe_smokecan_destroy" parent="." unique_id=2134392262 instance=ExtResource("5_smoke")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
 
-[node name="aoe_threat_smoke" parent="." unique_id=2094245899 instance=ExtResource("5_smoke")]
+[node name="aoe_threat_smoke" parent="." unique_id=1534310441 instance=ExtResource("6_bw8o8")]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
 
 [node name="aoe_rock_hit" parent="." unique_id=316448190 instance=ExtResource("6_rockhit")]

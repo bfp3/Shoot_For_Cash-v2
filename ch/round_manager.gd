@@ -242,6 +242,8 @@ var egg_pulse : Egg
 var no_lives_this_round := false
 ## Debug chat `no-lives` / `lives` — persists across rounds until toggled off.
 var debug_no_lives := false
+## Script `ammo-unlimited` — this round only; shots do not consume bullets.
+var ammo_unlimited_this_round := false
 ## `difficulty-easy` / `difficulty-normal` / `difficulty-hard` / `difficulty-expert` for the active range (legacy gravity). Prefer `pace-*` in the script.
 var difficulty_this_round := ""
 
@@ -554,6 +556,7 @@ func _begin_editor_test_round(text: String) -> void:
 	round_editor_open = false
 	level_editor_test_active = true
 	_reset_level_editor_round_runtime()
+	_ensure_gun_equipped_for_map()
 
 	print("Level editor: starting test round (bonus=%s, targets=%d, repeat=%s, spawns=%d)" % [
 		str(round_data.get("bonus", "")),
@@ -607,8 +610,7 @@ func _reset_level_editor_round_runtime() -> void:
 		wave_progress_feedback.reset_strikes()
 	if rocks_container:
 		rocks_container.reset_all_rocks()
-	if player and player.has_method("begin_level_editor_ammo"):
-		player.begin_level_editor_ammo()
+	## Test rounds use the same magazine as play (12) unless the script has `ammo-unlimited`.
 
 
 ## Backspace during a test round — abort and return to the editor with text kept.
@@ -625,6 +627,7 @@ func abort_level_editor_test() -> void:
 	stop_player()
 	_bank_round_cash_pool(true)
 	_reset_range_banked_after_loss()
+	_apply_ammo_unlimited(false)
 	if player and player.has_method("end_level_editor_ammo"):
 		player.end_level_editor_ammo()
 	if rocks_container:
@@ -702,6 +705,7 @@ func finish_level_editor_test_round() -> void:
 
 	_restore_level_editor_sequence()
 	level_editor_test_active = false
+	_apply_ammo_unlimited(false)
 	if player and player.has_method("end_level_editor_ammo"):
 		player.end_level_editor_ammo()
 
@@ -1284,10 +1288,27 @@ func get_resume_spawn_index() -> int:
 
 
 func _clear_player_ammo() -> void:
+	_apply_ammo_unlimited(false)
 	if player and player.has_method("clear_ammo"):
 		player.clear_ammo()
 	elif player and "shot_count" in player:
 		player.shot_count = 0
+
+
+func _apply_ammo_unlimited(enabled: bool) -> void:
+	ammo_unlimited_this_round = enabled
+	if player:
+		player.debug_infinite_ammo = enabled
+
+
+## Editor TEST does not press Play — load the same starting mag as a real round.
+func _apply_editor_test_starting_ammo() -> void:
+	if not level_editor_test_active:
+		return
+	if player and player.has_method("end_level_editor_ammo"):
+		player.end_level_editor_ammo()
+	if player and player.has_method("refill_starting_ammo"):
+		player.refill_starting_ammo(false)
 
 
 func clear_script_checkpoint() -> void:
@@ -1456,12 +1477,14 @@ func _hide_round_cash_hud() -> void:
 ## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-easy` / `strikes N` from the active sequence entry only.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
+	ammo_unlimited_this_round = false
 	bonus_type_this_round = ""
 	quiz_this_round = false
 	difficulty_this_round = ""
 	protect_bonus_failed = false
 	_apply_shuffle_modifier(false)
 	_apply_round_max_strikes(3)
+	_apply_ammo_unlimited(false)
 	if current_rock_sequence.is_empty():
 		_apply_difficulty_runtime()
 		return
@@ -1476,8 +1499,11 @@ func apply_current_round_modifiers() -> void:
 		difficulty_this_round = String(round_data.get('difficulty', '')).to_lower()
 		_apply_shuffle_modifier(bool(round_data.get('shuffle', false)))
 		_apply_round_max_strikes(int(round_data.get('max_strikes', 3)))
+		_apply_ammo_unlimited(bool(round_data.get('ammo_unlimited', false)))
 		if no_lives_this_round:
 			print('RoundManager: no-lives active for this round only')
+		if ammo_unlimited_this_round:
+			print('RoundManager: ammo-unlimited active for this round only')
 		if bonus_type_this_round != "":
 			print('RoundManager: bonus-%s active for this round' % bonus_type_this_round)
 		if quiz_this_round:
@@ -2601,6 +2627,7 @@ func update_round_start() -> void:
 	gl_PlayerState.dataset.bonus_cash_this_round = 20
 	gl_PlayerState.next_round() # This is placed here to prevent going to round 1 
 	apply_current_round_modifiers()
+	_apply_editor_test_starting_ammo()
 	_show_round_cash_hud()
 	
 	# If we are in the starting world, don't continue further

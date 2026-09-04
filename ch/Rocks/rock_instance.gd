@@ -270,6 +270,25 @@ var _destroy_on_crosshair_arm_token := 0
 ## Floor so long paths never crawl to a stop (fraction of `rock_stay_speed`).
 @export_range(0.05, 1.0, 0.01) var rock_stay_path_min_speed_factor := 0.25
 
+@export_group("threat settings")
+## Default cruise speed when the script has no slow/fast/fastest token.
+@export_range(4.0, 80.0, 0.5) var threat_speed := 30.0
+## `threat … slow`
+@export_range(4.0, 80.0, 0.5) var threat_speed_slow := 12.0
+## `threat … fast`
+@export_range(4.0, 80.0, 0.5) var threat_speed_fast := 45.0
+## `threat … fastest`
+@export_range(4.0, 80.0, 0.5) var threat_speed_fastest := 70.0
+@export_range(4.0, 200.0, 1.0) var threat_brake := 100.0
+@export_range(0.25, 10.0, 0.05) var threat_brake_distance := 5.0
+@export_range(0.02, 1.0, 0.01) var threat_lock_radius := 0.02
+@export_range(0.0, 2.0, 0.01) var threat_angular_damp := 0.05
+@export_range(0.0, 3.0, 0.05) var threat_path_hold_sec := 0.35
+@export_range(0.0, 0.5, 0.001) var threat_path_leg_slowdown := 0.01
+@export_range(0.05, 1.0, 0.01) var threat_path_min_speed_factor := 0.25
+## Seconds after a smoke burst before overlap can trigger another.
+@export_range(0.5, 5.0, 0.05) var threat_smoke_cooldown_sec := 1.5
+
 @export_group("rock-cardinal bursts")
 ## How fast each energy burst flies after the parent explodes (world units / sec).
 @export_range(2.0, 80.0, 0.5) var cardinal_burst_speed := 16.0
@@ -307,10 +326,11 @@ var _stay_path_drive_token := 0
 var _stay_path_driving := false
 ## Threat rocks ping-pong their scripted cells until `clear threat`.
 var _stay_path_loop := false
+var _threat_pace := ""
+var _threat_motion_paused := false
 
 ## Cylinder collision for threat: radius 0.31 at mesh scale Vector3.ONE.
 const THREAT_CYLINDER_RADIUS := 0.31
-const THREAT_SMOKE_COOLDOWN_SEC := 1.5
 var _default_main_col_shape: Shape3D = null
 var _threat_smoke_token := 0
 var _threat_smoke_busy := false
@@ -326,6 +346,70 @@ func is_stay_flight() -> bool:
 
 func is_threat() -> bool:
 	return rock_type == RockSize.THREAT
+
+
+func configure_threat_pace(pace: String) -> void:
+	_threat_pace = String(pace).strip_edges().to_lower()
+
+
+func _threat_cruise_speed() -> float:
+	match _threat_pace:
+		"slow":
+			return maxf(threat_speed_slow, 1.0)
+		"fast":
+			return maxf(threat_speed_fast, 1.0)
+		"fastest":
+			return maxf(threat_speed_fastest, 1.0)
+		_:
+			return maxf(threat_speed, 1.0)
+
+
+func _path_cruise_speed() -> float:
+	if is_threat():
+		return _threat_cruise_speed()
+	return maxf(rock_stay_speed, 1.0)
+
+
+func _path_hold_sec() -> float:
+	if is_threat():
+		return threat_path_hold_sec
+	return rock_stay_path_hold_sec
+
+
+func _path_leg_slowdown() -> float:
+	if is_threat():
+		return threat_path_leg_slowdown
+	return rock_stay_path_leg_slowdown
+
+
+func _path_min_speed_factor() -> float:
+	if is_threat():
+		return threat_path_min_speed_factor
+	return rock_stay_path_min_speed_factor
+
+
+func _path_brake() -> float:
+	if is_threat():
+		return threat_brake
+	return rock_stay_brake
+
+
+func _path_brake_distance() -> float:
+	if is_threat():
+		return threat_brake_distance
+	return rock_stay_brake_distance
+
+
+func _path_lock_radius() -> float:
+	if is_threat():
+		return threat_lock_radius
+	return rock_stay_lock_radius
+
+
+func _path_angular_damp() -> float:
+	if is_threat():
+		return threat_angular_damp
+	return rock_stay_angular_damp
 
 
 func is_stay_black() -> bool:
@@ -564,6 +648,7 @@ func begin_rock_stay_flight(aim_pos: Vector3, path_world: Array = [], exit_splas
 	_stay_locked = false
 	_stay_path_exiting = false
 	_stay_path_driving = false
+	_threat_motion_paused = false
 	_stay_path.clear()
 	_stay_path_index = 0
 	_stay_path_hold_left = 0.0
@@ -588,7 +673,7 @@ func begin_rock_stay_flight(aim_pos: Vector3, path_world: Array = [], exit_splas
 	can_sleep = false
 	gravity_scale = 0.0
 	linear_damp = 0.0
-	angular_damp = rock_stay_angular_damp
+	angular_damp = _path_angular_damp()
 	constant_force = Vector3.ZERO
 	if not is_threat():
 		apply_torque_impulse(Vector3.FORWARD * _stay_spin_torque_amount())
@@ -605,7 +690,7 @@ func begin_rock_stay_flight(aim_pos: Vector3, path_world: Array = [], exit_splas
 	var to_target := _stay_target - from
 	var dist := to_target.length()
 	var dir := to_target / maxf(dist, 0.001)
-	linear_velocity = dir * maxf(rock_stay_speed, 1.0)
+	linear_velocity = dir * _path_cruise_speed()
 	_start_rock_stay_lifetime()
 
 
@@ -646,11 +731,7 @@ func _drive_stay_path(token: int) -> void:
 		var is_last := i >= _stay_path.size() - 1
 		## Pause on every cell; also pause on last before splash exit.
 		if (not is_last) or _stay_path_exit_splash:
-			var hold := maxf(rock_stay_path_hold_sec, 0.0)
-			if hold > 0.0:
-				await get_tree().create_timer(hold, false).timeout
-			if token != _stay_path_drive_token or not _stay_flight_active:
-				return
+			await _await_path_hold(token)
 
 	if token != _stay_path_drive_token or not _stay_flight_active:
 		return
@@ -677,9 +758,7 @@ func _drive_stay_path(token: int) -> void:
 					await _tween_stay_to_point(_stay_target, token, i)
 					if token != _stay_path_drive_token or not _stay_flight_active or not _stay_path_loop:
 						return
-					var hold := maxf(rock_stay_path_hold_sec, 0.0)
-					if hold > 0.0:
-						await get_tree().create_timer(hold, false).timeout
+					await _await_path_hold(token)
 			else:
 				for i in range(_stay_path.size() - 2, -1, -1):
 					if token != _stay_path_drive_token or not _stay_flight_active or not _stay_path_loop:
@@ -689,9 +768,7 @@ func _drive_stay_path(token: int) -> void:
 					await _tween_stay_to_point(_stay_target, token, i)
 					if token != _stay_path_drive_token or not _stay_flight_active or not _stay_path_loop:
 						return
-					var hold := maxf(rock_stay_path_hold_sec, 0.0)
-					if hold > 0.0:
-						await get_tree().create_timer(hold, false).timeout
+					await _await_path_hold(token)
 			going_forward = not going_forward
 		return
 
@@ -705,20 +782,56 @@ func _drive_stay_path(token: int) -> void:
 
 func _stay_path_leg_speed(leg_index: int) -> float:
 	## Leg 0 (spawn→first cell) = full speed. Each later leg compounds the slowdown.
-	var base := maxf(rock_stay_speed, 1.0)
-	var slow := clampf(rock_stay_path_leg_slowdown, 0.0, 0.95)
+	var base := _path_cruise_speed()
+	var slow := clampf(_path_leg_slowdown(), 0.0, 0.95)
 	var factor := pow(1.0 - slow, maxi(leg_index, 0))
-	var floor_factor := clampf(rock_stay_path_min_speed_factor, 0.05, 1.0)
+	var floor_factor := clampf(_path_min_speed_factor(), 0.05, 1.0)
 	return maxf(base * factor, base * floor_factor)
 
 
+func _await_path_hold(token: int) -> void:
+	var hold := maxf(_path_hold_sec(), 0.0)
+	if hold > 0.0:
+		await get_tree().create_timer(hold, false).timeout
+	if token != _stay_path_drive_token or not _stay_flight_active:
+		return
+	await _await_threat_motion_unpaused()
+	if token != _stay_path_drive_token or not _stay_flight_active:
+		return
+
+
+func _await_threat_motion_unpaused() -> void:
+	while _threat_motion_paused and is_instance_valid(self):
+		if current_state != State.ACTIVE or rock_destroyed:
+			return
+		await get_tree().process_frame
+
+
+func _pause_threat_motion() -> void:
+	_threat_motion_paused = true
+	if _stay_path_tween != null and is_instance_valid(_stay_path_tween):
+		_stay_path_tween.pause()
+	linear_velocity = Vector3.ZERO
+
+
+func _resume_threat_motion() -> void:
+	_threat_motion_paused = false
+	if _stay_path_tween != null and is_instance_valid(_stay_path_tween):
+		_stay_path_tween.play()
+
+
 func _tween_stay_to_point(dest: Vector3, token: int, leg_index: int = 0) -> void:
+	await _await_threat_motion_unpaused()
+	if token != _stay_path_drive_token or not _stay_flight_active:
+		return
 	_stop_stay_path_tween()
 	var dist := global_position.distance_to(dest)
 	var cruise := _stay_path_leg_speed(leg_index)
 	var duration := clampf(dist / cruise, 0.08, 8.0)
 	_stay_path_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	_stay_path_tween.tween_property(self, "global_position", dest, duration)
+	if _threat_motion_paused:
+		_stay_path_tween.pause()
 	await _stay_path_tween.finished
 	if token != _stay_path_drive_token:
 		return
@@ -732,8 +845,12 @@ func _update_rock_stay(delta: float) -> void:
 	_update_rock_stay_burst_warn(delta)
 	gravity_scale = 0.0
 	linear_damp = 0.0
-	angular_damp = rock_stay_angular_damp
+	angular_damp = _path_angular_damp()
 	constant_force = Vector3.ZERO
+
+	if _threat_motion_paused:
+		linear_velocity = Vector3.ZERO
+		return
 
 	## Tween driver owns multi-leg motion.
 	if _stay_path_driving:
@@ -752,7 +869,7 @@ func _update_rock_stay(delta: float) -> void:
 
 	var to_target := _stay_target - global_position
 	var dist := to_target.length()
-	var lock_r := maxf(rock_stay_lock_radius, 0.02)
+	var lock_r := maxf(_path_lock_radius(), 0.02)
 	if dist <= lock_r:
 		_lock_rock_stay()
 		return
@@ -760,13 +877,13 @@ func _update_rock_stay(delta: float) -> void:
 	sleeping = false
 	freeze = false
 	var dir := to_target / maxf(dist, 0.001)
-	var cruise := maxf(rock_stay_speed, 1.0)
-	var brake_dist := maxf(rock_stay_brake_distance, lock_r * 2.0)
+	var cruise := _path_cruise_speed()
+	var brake_dist := maxf(_path_brake_distance(), lock_r * 2.0)
 	var desired_speed := cruise
 	if dist < brake_dist:
 		desired_speed = cruise * clampf(dist / brake_dist, 0.0, 1.0)
 	var desired_vel := dir * desired_speed
-	var brake := maxf(rock_stay_brake, 1.0)
+	var brake := maxf(_path_brake(), 1.0)
 	linear_velocity = linear_velocity.move_toward(desired_vel, brake * delta)
 	if absf(linear_velocity.z) > 0.01 and absf(_stay_target.z - global_position.z) < 0.05:
 		linear_velocity.z = move_toward(linear_velocity.z, 0.0, brake * delta)
@@ -805,7 +922,7 @@ func _update_stay_splash_exit_flight() -> void:
 	var cruise := _stay_path_leg_speed(_stay_path.size()) * 1.15
 	var to_target := _stay_target - global_position
 	var dist := to_target.length()
-	var lock_r := maxf(rock_stay_lock_radius, 0.5)
+	var lock_r := maxf(_path_lock_radius(), 0.5)
 	if dist > lock_r:
 		linear_velocity = to_target.normalized() * cruise
 		return
@@ -866,6 +983,7 @@ func _clear_rock_stay() -> void:
 	_stay_path_loop = false
 	_stay_path_hold_left = 0.0
 	_stay_splash_exit_pos = Vector3.ZERO
+	_threat_motion_paused = false
 	can_sleep = true
 	_stop_rock_stay_burst_warn(true)
 
@@ -880,6 +998,9 @@ func begin_threat_splash_exit() -> void:
 	_stay_path_drive_token += 1
 	_threat_smoke_token += 1
 	_threat_smoke_busy = false
+	_resume_threat_motion()
+	_stop_threat_alarm_anim()
+	_play_threat_blink_anim()
 	_stop_stay_path_tween()
 	_stay_flight_active = true
 	_begin_stay_splash_exit()
@@ -2156,8 +2277,6 @@ func setup_rock_type() -> void:
 			max_health = health
 			if threat_smoke:
 				threat_smoke.visible = true
-				threat_smoke.transform = Transform3D.IDENTITY
-				threat_smoke.scale = Vector3.ONE
 				current_mesh = threat_smoke
 			else:
 				smokecan.visible = true
@@ -2167,16 +2286,15 @@ func setup_rock_type() -> void:
 			rock_type_gravity_scale = 0.0
 			gravity_scale = 0.0
 			linear_damp = 0.0
-			angular_damp = 0.0
+			angular_damp = _path_angular_damp()
 			force_mult.clear()
 			force_mult = [4]
 			force_mult_index = 0
 			current_particles = null
 			_threat_smoke_busy = false
 			_threat_smoke_cooldown_until_msec = 0
-			var blink := get_node_or_null("Mesh/Threat_smoke/AnimationPlayer") as AnimationPlayer
-			if blink and blink.has_animation("blinkinganim"):
-				blink.play("blinkinganim")
+			_threat_motion_paused = false
+			_play_threat_blink_anim()
 				
 		RockSize.GREY:
 			current_rock_type = "Grey Rock"
@@ -2338,6 +2456,8 @@ func reset_stats() -> void:
 	_threat_smoke_token += 1
 	_threat_smoke_busy = false
 	_threat_smoke_cooldown_until_msec = 0
+	_threat_pace = ""
+	_threat_motion_paused = false
 	_stop_threat_alarm_anim()
 	_restore_default_collision()
 	_clear_fake_xray()
@@ -3627,6 +3747,8 @@ func _update_threat_smoke_overlap() -> void:
 		return
 	if _threat_smoke_busy:
 		return
+	if _stay_path_exiting:
+		return
 	if Time.get_ticks_msec() < _threat_smoke_cooldown_until_msec:
 		return
 	if not _avoider_overlaps_crosshair():
@@ -3634,32 +3756,54 @@ func _update_threat_smoke_overlap() -> void:
 	_run_threat_alarm_smoke()
 
 
+func _threat_blink_player() -> AnimationPlayer:
+	return get_node_or_null("Mesh/Threat_smoke/AnimationPlayer") as AnimationPlayer
+
+
+func _threat_alarm_player() -> AnimationPlayer:
+	return get_node_or_null("Mesh/Threat_smoke/AnimationPlayer2") as AnimationPlayer
+
+
+func _play_threat_blink_anim() -> void:
+	var blink := _threat_blink_player()
+	if blink and blink.has_animation("blinkinganim"):
+		blink.play("blinkinganim")
+
+
 func _run_threat_alarm_smoke() -> void:
 	_threat_smoke_busy = true
 	_threat_smoke_token += 1
 	var token := _threat_smoke_token
-	var anim := get_node_or_null("Mesh/Threat_smoke/AnimationPlayer2") as AnimationPlayer
-	if anim:
+	_pause_threat_motion()
+	_play_rocks_sfx("Threat_sfx_01")
+	var blink := _threat_blink_player()
+	if blink:
+		blink.stop()
+	var anim := _threat_alarm_player()
+	if anim and anim.has_animation("alarm_smoke"):
 		anim.play("alarm_smoke")
 		if anim.is_playing():
 			await anim.animation_finished
 		else:
-			await get_tree().create_timer(0.5, false).timeout
+			await get_tree().create_timer(0.8, false).timeout
 	else:
-		await get_tree().create_timer(0.5, false).timeout
+		await get_tree().create_timer(0.8, false).timeout
 	if token != _threat_smoke_token or not is_instance_valid(self):
 		return
 	if current_state != State.ACTIVE or rock_destroyed or not rock_activated:
 		_threat_smoke_busy = false
+		_resume_threat_motion()
+		_play_threat_blink_anim()
 		return
 	_play_vfx(&"threat_smoke")
-	_play_rocks_sfx("Threat_sfx_01")
-	_threat_smoke_cooldown_until_msec = Time.get_ticks_msec() + int(THREAT_SMOKE_COOLDOWN_SEC * 1000.0)
+	_play_threat_blink_anim()
+	_threat_smoke_cooldown_until_msec = Time.get_ticks_msec() + int(threat_smoke_cooldown_sec * 1000.0)
 	_threat_smoke_busy = false
+	_resume_threat_motion()
 
 
 func _stop_threat_alarm_anim() -> void:
-	var anim := get_node_or_null("Mesh/Threat_smoke/AnimationPlayer2") as AnimationPlayer
+	var anim := _threat_alarm_player()
 	if anim:
 		anim.stop()
 

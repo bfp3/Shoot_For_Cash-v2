@@ -3,11 +3,16 @@ island shipper
 range jetz
 
 	play $0
-	reward $1,000
+	reward $100,000
 	round
 		pace-impossible
-		sfx-play star_wars_cantina -40.0
-		#sfx-play sephiroff -45.0
+		#sfx-play star_wars_cantina -40.0
+		sfx-play sephiroff -45.0
+		ammo
+
+		ammo c1
+		ammo a1
+
 		rock 4 a4
 		wait
 
@@ -28,6 +33,7 @@ range jetz
 		wait 450
 		rock 8 a7
 		wait
+		ammo
 		balloon-check
 
 		rock 8 a7
@@ -138,7 +144,9 @@ range jetz
 		rock
 		wait
 
-		ammo
+		sfx-faster sephiroff
+		ammo c1
+		ammo a1
 		balloon-check
 		wait 2000
 
@@ -165,10 +173,6 @@ range jetz
 
 		rock-avoider 1 a7
 
-
-		smokecan
-		smokecan
-
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -186,10 +190,9 @@ range jetz
 		rock
 		rock
 
-		smokecan
-		wait 3000
-		smokecan
-		smokecan
+		ammo
+		balloon-check
+
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -211,25 +214,32 @@ range jetz
 
 		wait 4000
 
+
+
+
 		rock
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait
+		red-avoider
+		wait 1000
+		rock 4 a4
+		wait
 
-		wait 4000
-
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
+		ammo
+		balloon-check
 
 		rock 4 a4
 		wait 3000
@@ -256,6 +266,10 @@ range jetz
 
 		wait 3000
 
+
+		sfx-faster sephiroff
+		ammo c1
+		ammo a1
 		balloon-check
 
 		rock 1 a1
@@ -340,8 +354,8 @@ range jetz
 
 		rock-avoider 1 a7
 
-		smokecan
-		smokecan
+		ammo
+		balloon-check
 
 		rock 8 a8
 		wait 0
@@ -360,10 +374,8 @@ range jetz
 		rock
 		rock
 
-		smokecan
-		wait 3000
-		smokecan
-		smokecan
+
+
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -402,5 +414,14 @@ range jetz
 		rock-avoider
 		wait 4000
 		rock
-		wait until clear
-		repeat 99
+		wait
+
+		ammo
+
+		pineapples
+		pineapple 1 a1
+		pineapple 2 a2
+		pineapple 3 a3
+		pineapple 4 a4
+		pineapple 5 a5
+		#repeat 99

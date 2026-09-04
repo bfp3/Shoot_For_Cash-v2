@@ -45,6 +45,7 @@ const COMMAND_BUTTONS: PackedStringArray = [
 	"repeat",
 	"shuffle",
 	"no-lives",
+	"ammo-unlimited",
 	"strikes 5",
 	"pineapples",
 	"pace-slowest",

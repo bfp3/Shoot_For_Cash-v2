@@ -1,11 +1,11 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://m76x0i4rb0o"]
 
-[ext_resource type="Script" path="res://res/aoe_script.gd" id="1_6udtm"]
-[ext_resource type="Texture2D" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="2_cw2ap"]
-[ext_resource type="Texture2D" path="res://res/fire_explosions_gradient.res" id="3_fwwdq"]
-[ext_resource type="Texture2D" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="4_3qho2"]
-[ext_resource type="Texture2D" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="5_vmbbf"]
-[ext_resource type="ArrayMesh" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="6_hooyf"]
+[ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="1_6udtm"]
+[ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="2_cw2ap"]
+[ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="3_fwwdq"]
+[ext_resource type="Texture2D" uid="uid://2h2mibb8lclu" path="res://res/Particle_sprite_sheet/particle_sprite_smoke.webp" id="4_3qho2"]
+[ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="5_vmbbf"]
+[ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="6_hooyf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xb1fg"]
 render_priority = 2
@@ -456,6 +456,60 @@ turbulence_noise_scale = 0.0
 turbulence_noise_speed = Vector3(0, 1, 0)
 turbulence_influence_over_life = SubResource("CurveTexture_qfoqq")
 
+[sub_resource type="Curve" id="Curve_6udtm"]
+_data = [Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.48931625, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_cw2ap"]
+curve = SubResource("Curve_6udtm")
+
+[sub_resource type="Gradient" id="Gradient_fwwdq"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.22, 0.22, 0.22, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3qho2"]
+gradient = SubResource("Gradient_fwwdq")
+
+[sub_resource type="Curve" id="Curve_vmbbf"]
+_data = [Vector2(0, 0.5801174), 0.0, 0.0, 0, 0, Vector2(0.04878049, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.5583053), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_hooyf"]
+curve = SubResource("Curve_vmbbf")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qvt50"]
+emission_shape_scale = Vector3(0.6, 0.6, 0.6)
+direction = Vector3(0, 1, 0)
+spread = 5.0
+angular_velocity_min = -1.6093254e-05
+angular_velocity_max = -1.6093254e-05
+radial_velocity_min = 0.99997765
+radial_velocity_max = 1.9999776
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 0.5
+scale_curve = SubResource("CurveTexture_hooyf")
+color = Color(0.63, 0, 0, 1)
+color_ramp = SubResource("GradientTexture1D_3qho2")
+alpha_curve = SubResource("CurveTexture_cw2ap")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hqmo"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("4_3qho2")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_ogdna"]
+material = SubResource("StandardMaterial3D_0hqmo")
+size = Vector2(150, 150)
+
 [node name="Aoe_SmokecanDestroy" type="Node3D" unique_id=2094245899]
 unique_name_in_owner = true
 top_level = true
@@ -516,6 +570,18 @@ explosiveness = 1.0
 fixed_fps = 60
 draw_order = 3
 transform_align = 1
-transform_align_channel_filter = 1
 process_material = SubResource("ParticleProcessMaterial_8mu68")
 draw_pass_1 = ExtResource("6_hooyf")
+
+[node name="Smoke_quick2" type="GPUParticles3D" parent="." unique_id=1104733585 groups=["smoke_particles"]]
+transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
+cast_shadow = 0
+emitting = false
+amount = 25
+lifetime = 10.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_qvt50")
+draw_pass_1 = SubResource("QuadMesh_ogdna")

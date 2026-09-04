@@ -2,8 +2,8 @@ extends RigidBody3D
 ## Shootable layout crate. Regular crates knock outward on each hit; cash crates also play VFX.
 ## SFX live on the shared crates_sfx manager (see Main), not in this scene.
 
-@export var max_hits := 3
-@export var cash_value := 0
+const max_hits := 1
+const cash_value := 0
 @export var use_hit_vfx := false
 @export var use_destroy_sfx := true
 @export var destroy_vfx_cue := &""

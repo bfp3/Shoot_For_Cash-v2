@@ -450,9 +450,11 @@ func shoot_target() -> void:
 			continue
 
 		var free_shot := _is_special_midround_target(target)
-		## Ammo balloons / checkpoints / early-exit never spend a bullet.
-		if not free_shot and player.shot_count <= 0:
-			break
+		## Need at least one bullet for anything that isn't the early-exit target.
+		if not free_shot and player != null:
+			var live_ammo := int(player.get_displayed_ammo()) if player.has_method("get_displayed_ammo") else int(player.shot_count)
+			if live_ammo <= 0 and player.get("debug_infinite_ammo") != true:
+				break
 
 		var damage := power_bullet_damage
 
@@ -557,7 +559,8 @@ func shoot_early_exit_if_aimed() -> bool:
 func _is_special_midround_target(target: Node) -> bool:
 	if target == null or not is_instance_valid(target):
 		return false
-	return target.is_in_group("early_exit_target") or target.is_in_group("ammo_reload_target") or target.is_in_group("ammo_balloon") or target.is_in_group("checkpoint")
+	## Early-exit is the only ammo-free shot. Balloons / ammo balloons / balloon-check need a loaded round.
+	return target.is_in_group("early_exit_target")
 
 
 func _is_trigger_point(target: Node) -> bool:

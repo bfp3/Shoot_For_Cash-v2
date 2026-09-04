@@ -1,4 +1,4 @@
-﻿island shipper
+island shipper
 
 
 range moss
@@ -335,7 +335,8 @@ range moss
 
 		balloon-check
 		
-		
+
+	
 range moss2
 	play $0
 	reward $1,000
@@ -1273,6 +1274,152 @@ range moss3
 		red-avoider
 
 		wait until clear
+
+range moss4
+	# SUPER FUN
+		hold out 60000
+
+		ammo
+
+		threat 1 a1 a4 a8
+		wait 1000
+		threat 1 b1 b4 b8
+		wait 1000
+		threat 1 c1 c4 c8
+		wait 1000
+
+		# Phase 1 - slow
+		pace-slow
+		#rock-fake 2 b2
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2000
+
+		rock-grey 2 b2
+		wait 1000
+		rock-grey 7 b7
+		wait 1200
+		rock 4 b4
+		wait
+
+		sfx-play C418 -35.0
+
+		# faster - 1 change
+		pace-normal
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2000
+
+		# yellows slow
+		rock 2 b2
+		wait 1000
+		rock 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait
+
+
+		# 3 - faster, add blacks
+		pace-fast
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2500
+
+
+		# yellows slow
+		rock 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock 4 b4
+		wait 1200
+		rock 7 b7
+		wait 1200
+		rock-black 7 b7
+		wait
+
+		#Repeat pattern faster 2
+		pace-faster
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2000
+
+		# yellows slow
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 1200
+		rock-black 7 b7
+		wait 1200
+		rock-black 2 b2
+		wait 1200
+		rock 4 b4
+		wait
+
+		wait 2000
+
+		pace-impossible
+		rock-black 2 b2
+		wait 400
+		rock-black 7 b7
+		wait 600
+		rock-black 4 b4
+		wait 1000
+
+		# increase the sequencing
+		rock-black 2 b2
+		wait 500
+		rock-black 7 b7
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		pace-normal
+		rock 4 a4
+		wait
+
+		pineapples
+		pineapple 2 a2
+		wait 1500
+		pineapple 4 a4
+		wait 1500
+		pineapple 6 a6
+
 range redd
 	play $0
 	reward $1,000

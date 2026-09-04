@@ -3657,6 +3657,8 @@ func _launch_stream_rock(body, counter: int) -> void:
 			"RockManager: rock-stay launch path_cells=%d path_world=%d exit=%s raw=%s"
 			% [cell_count, path_world.size(), str(exit_splash), str(entry.get("raw", "") if entry is Dictionary else "")]
 		)
+		if body.has_method("configure_threat_pace") and entry is Dictionary:
+			body.configure_threat_pace(str(entry.get("threat_pace", "")))
 		if body.has_method("begin_rock_stay_flight"):
 			body.begin_rock_stay_flight(aim_pos, path_world, exit_splash, splash_pos)
 		else:
