@@ -850,6 +850,10 @@ directional_shadow_blend_splits = true
 directional_shadow_max_distance = 520.0
 sky_mode = 1
 
+[node name="CrateForCash" parent="." unique_id=1706272792 instance=ExtResource("10_qs0km")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5912194, -1.3761702, 11.760092)
+top_level = true
+
 [node name="SimpleWater" type="Node3D" parent="." unique_id=1041667159]
 transform = Transform3D(1, 0, 0, 0, 0.9999984, -0.0017453282, 0, 0.0017453282, 0.9999984, 3.36, -4.228, 177.888)
 script = ExtResource("2_ueey4")
@@ -1403,11 +1407,6 @@ skeleton = NodePath("../..")
 
 [node name="Moving_nodes" type="Node3D" parent="." unique_id=1239968480]
 
-[node name="CrateForCash" parent="Moving_nodes" unique_id=1706272792 instance=ExtResource("10_qs0km")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4640236, -1.095, 11.860092)
-top_level = true
-max_hits = 1
-
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Moving_nodes" unique_id=1716538620]
 transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1.5, 16.935976, -0.7635293, 43.860092)
 material_override = ExtResource("6_etjfo")
@@ -1821,7 +1820,6 @@ bus = &"ReverbBus"
 
 [node name="Crate" parent="WallPuzzleSetup" unique_id=575272199 instance=ExtResource("11_op5gy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.824073, 2.340082, 24.577652)
-cash_value = 100
 hit_impulse_power = 80.0
 hit_upward_bias = 0.15
 hit_torque_strength = 10.0
@@ -1829,7 +1827,6 @@ force_mult = [6, 8]
 
 [node name="Crate2" parent="WallPuzzleSetup" unique_id=1398462483 instance=ExtResource("11_op5gy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4339585, 5.165947, 24.577652)
-cash_value = 100
 hit_impulse_power = 80.0
 hit_upward_bias = 0.15
 hit_torque_strength = 10.0
@@ -1837,7 +1834,6 @@ force_mult = [6, 8]
 
 [node name="Crate3" parent="WallPuzzleSetup" unique_id=68173347 instance=ExtResource("11_op5gy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4339585, 7.3008623, 24.577652)
-cash_value = 100
 hit_impulse_power = 80.0
 hit_upward_bias = 0.15
 hit_torque_strength = 10.0
@@ -1845,7 +1841,6 @@ force_mult = [6, 8]
 
 [node name="Crate4" parent="WallPuzzleSetup" unique_id=1234434006 instance=ExtResource("11_op5gy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3008132, 7.3008623, 24.577652)
-cash_value = 100
 hit_impulse_power = 80.0
 hit_upward_bias = 0.15
 hit_torque_strength = 10.0
@@ -1853,7 +1848,6 @@ force_mult = [6, 8]
 
 [node name="Crate5" parent="WallPuzzleSetup" unique_id=426406392 instance=ExtResource("11_op5gy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.8984714, 10.019372, 24.577652)
-cash_value = 100
 hit_impulse_power = 80.0
 hit_upward_bias = 0.15
 hit_torque_strength = 10.0

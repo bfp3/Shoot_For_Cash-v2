@@ -12,10 +12,7 @@ const CAMO_TINT := Color(1.0, 1.0, 1.0, 1.0)
 const CAMO_GLOW := Color(0.45, 0.95, 0.18, 1.0)
 
 @export var enabled := true
-@export var use_camo_version := false:
-	set(value):
-		use_camo_version = value
-		_apply_version_look()
+
 ## 1 = same size as the live hit-radius. Lower = a smaller peek through the scope.
 @export_range(0.2, 1.5, 0.05) var reveal_radius_scale := 0.85
 @export_range(0.0, 48.0, 1.0) var reveal_softness_px := 14.0
@@ -45,31 +42,17 @@ func _ready() -> void:
 func _apply_version_look() -> void:
 	if _mat == null:
 		return
-	if use_camo_version:
-		var camo := CAMO_MAT as StandardMaterial3D
-		_mat.set_shader_parameter("use_albedo_tex", 1.0)
-		_mat.set_shader_parameter("albedo_tex", camo.albedo_texture if camo else null)
-		_mat.set_shader_parameter("albedo_tint", CAMO_TINT)
-		_mat.set_shader_parameter("use_triplanar", 1.0)
-		_mat.set_shader_parameter("uv1_scale", camo.uv1_scale if camo else Vector3(0.5, 0.5, 0.5))
-		_mat.set_shader_parameter("uv1_offset", camo.uv1_offset if camo else Vector3(0.25, 0.25, 0.25))
-		_mat.set_shader_parameter("surface_roughness", camo.roughness if camo else 0.22)
-		if _glow:
-			_glow.light_color = CAMO_GLOW
-			_mat.set_shader_parameter("emission_color", CAMO_GLOW)
-		else:
-			_mat.set_shader_parameter("emission_color", CAMO_GLOW)
+
+	_mat.set_shader_parameter("use_albedo_tex", 1.0)
+	_mat.set_shader_parameter("albedo_tex", WOOD_ALBEDO)
+	_mat.set_shader_parameter("albedo_tint", WOOD_TINT)
+	_mat.set_shader_parameter("use_triplanar", 0.0)
+	_mat.set_shader_parameter("surface_roughness", 0.78)
+	if _glow:
+		_glow.light_color = _glow_wood_color
+		_mat.set_shader_parameter("emission_color", _glow_wood_color)
 	else:
-		_mat.set_shader_parameter("use_albedo_tex", 1.0)
-		_mat.set_shader_parameter("albedo_tex", WOOD_ALBEDO)
-		_mat.set_shader_parameter("albedo_tint", WOOD_TINT)
-		_mat.set_shader_parameter("use_triplanar", 0.0)
-		_mat.set_shader_parameter("surface_roughness", 0.78)
-		if _glow:
-			_glow.light_color = _glow_wood_color
-			_mat.set_shader_parameter("emission_color", _glow_wood_color)
-		else:
-			_mat.set_shader_parameter("emission_color", WOOD_TINT)
+		_mat.set_shader_parameter("emission_color", WOOD_TINT)
 
 
 func _process(_delta: float) -> void:

@@ -6,11 +6,6 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_1cyfr"]
 size = Vector3(0.75, 0.75, 0.75)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qs0km"]
-albedo_color = Color(0.55, 0.46355835, 0.32450002, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_n5s7k"]
-
 [node name="Crate" type="RigidBody3D" unique_id=575272199]
 collision_layer = 1048577
 collision_mask = 1048577
@@ -23,12 +18,6 @@ metadata/_edit_group_ = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=241339504]
 shape = SubResource("BoxShape3D_1cyfr")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=677938910]
-transform = Transform3D(0.615, 0, 0, 0, 0.615, 0, 0, 0, 0.615, 0, 0, 0)
-visible = false
-material_override = SubResource("StandardMaterial3D_qs0km")
-mesh = SubResource("BoxMesh_n5s7k")
 
 [node name="crateMesh" type="Node3D" parent="." unique_id=1851666554]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
