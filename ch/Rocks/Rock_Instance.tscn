@@ -18,9 +18,11 @@
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="15_q8tld"]
 [ext_resource type="PackedScene" uid="uid://crflenc26g7jw" path="res://vfx/Trails_scene.tscn" id="19_dfmc7"]
 [ext_resource type="Texture2D" uid="uid://g4cwajqxv0l4" path="res://to_bring_over/orange_dented_texture.png" id="19_lwuhr"]
+[ext_resource type="ArrayMesh" uid="uid://mk0dna4yesux" path="res://res/Rocks/smokebomb_mesh.tres" id="20_0eg31"]
 [ext_resource type="Script" uid="uid://xc6wi8vk61t3" path="res://vfx/Trails3D.gd" id="20_2063v"]
 [ext_resource type="Texture2D" uid="uid://crr7wof022lvr" path="res://to_bring_over/white_dented_texture2.png" id="20_pcxxs"]
 [ext_resource type="Texture2D" uid="uid://g45mg7rbp5fy" path="res://to_bring_over/medieval_blocks_03_diff_2k.png" id="21_nqo67"]
+[ext_resource type="Material" uid="uid://dwkobh78rf0ah" path="res://res/threat_lights_material.tres" id="21_xxiuv"]
 [ext_resource type="Material" uid="uid://boaovmkpgnp38" path="res://to_bring_over/dark_road.tres" id="22_3ox50"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lrylr"]
@@ -409,6 +411,63 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_6th3u")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xxiuv"]
+disable_ambient_light = true
+albedo_color = Color(0.67, 0.67, 0.67, 1)
+metallic = 1.0
+roughness = 0.3
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_pcxxs"]
+radius = 0.04
+height = 0.08
+radial_segments = 6
+rings = 4
+
+[sub_resource type="Animation" id="Animation_lwuhr"]
+resource_name = "blinkinganim"
+length = 1.1
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("redlights:material_override:emission")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.53, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 0, 0, 1), Color(0, 0, 0, 1), Color(1, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("redlights:material_override:emission_energy_multiplier")
+tracks/1/interp = 0
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.54, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [10.0, 0.0, 10.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pcxxs"]
+_data = {
+&"blinkinganim": SubResource("Animation_lwuhr")
+}
+
+[sub_resource type="Animation" id="Animation_nqo67"]
+resource_name = "alarm_smoke"
+length = 0.5
+step = 0.05
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3ox50"]
+_data = {
+&"alarm_smoke": SubResource("Animation_nqo67")
+}
 
 [node name="Rock_Instance" type="RigidBody3D" unique_id=641614515]
 collision_layer = 2
@@ -1530,6 +1589,48 @@ transform = Transform3D(0.209, 0, 0, 0, 0.254, 0, 0, 0, 0.517, 0, -0.472, 0)
 material_override = SubResource("StandardMaterial3D_cslqd")
 cast_shadow = 0
 mesh = SubResource("ArrayMesh_1h1dk")
+
+[node name="Threat_smoke" type="MeshInstance3D" parent="Mesh" unique_id=893370913]
+transform = Transform3D(3.821371e-15, 8.742278e-08, 2, 2, -8.742278e-08, 0, 8.742278e-08, 2, -8.742278e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_xxiuv")
+mesh = ExtResource("20_0eg31")
+
+[node name="redlights" type="MeshInstance3D" parent="Mesh/Threat_smoke" unique_id=2114129346]
+transform = Transform3D(-4.371139e-08, -1, 4.3711392e-08, 1, -4.3711385e-08, 4.3711385e-08, -4.3711385e-08, 4.3711392e-08, 1, 0, 0.3234911, -1.41402445e-08)
+material_override = ExtResource("21_xxiuv")
+mesh = SubResource("CapsuleMesh_pcxxs")
+
+[node name="redlights2" type="MeshInstance3D" parent="Mesh/Threat_smoke" unique_id=180257413]
+transform = Transform3D(-4.371139e-08, -1, 4.3711392e-08, 1, -4.3711385e-08, 4.3711385e-08, -4.3711385e-08, 4.3711392e-08, 1, 0, -0.323, 0)
+material_override = ExtResource("21_xxiuv")
+mesh = SubResource("CapsuleMesh_pcxxs")
+
+[node name="redlights5" type="MeshInstance3D" parent="Mesh/Threat_smoke" unique_id=351991395]
+transform = Transform3D(-8.742278e-08, -1, -3.5527137e-15, 0, 3.5527137e-15, -1, 1, -8.742277e-08, 0, 0, 0.00024557114, 0.32324553)
+material_override = ExtResource("21_xxiuv")
+mesh = SubResource("CapsuleMesh_pcxxs")
+
+[node name="redlights6" type="MeshInstance3D" parent="Mesh/Threat_smoke" unique_id=56900981]
+transform = Transform3D(-8.742278e-08, -1, -3.5527137e-15, 0, 3.5527137e-15, -1, 1, -8.742277e-08, 0, 0, 0.00024557114, -0.32324553)
+material_override = ExtResource("21_xxiuv")
+mesh = SubResource("CapsuleMesh_pcxxs")
+
+[node name="redlights3" type="MeshInstance3D" parent="Mesh/Threat_smoke" unique_id=1184005192]
+transform = Transform3D(-1, 8.742277e-08, -3.2840564e-15, -8.742277e-08, -1, 8.7422784e-08, 5.732056e-15, 8.742278e-08, 1, -0.32324553, 0.00024557114, -1.0736301e-11)
+material_override = ExtResource("21_xxiuv")
+mesh = SubResource("CapsuleMesh_pcxxs")
+
+[node name="redlights4" type="MeshInstance3D" parent="Mesh/Threat_smoke" unique_id=1498411892]
+transform = Transform3D(-1, 8.742277e-08, -3.2840564e-15, -8.742277e-08, -1, 8.7422784e-08, 5.732056e-15, 8.742278e-08, 1, 0.32324553, 0.00024557114, -1.4129519e-08)
+material_override = ExtResource("21_xxiuv")
+mesh = SubResource("CapsuleMesh_pcxxs")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Mesh/Threat_smoke" unique_id=440156133]
+libraries/ = SubResource("AnimationLibrary_pcxxs")
+autoplay = &"blinkinganim"
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Mesh/Threat_smoke" unique_id=373883551]
+libraries/ = SubResource("AnimationLibrary_3ox50")
 
 [node name="Trails" parent="Mesh" unique_id=517111670 instance=ExtResource("19_dfmc7")]
 visible = false

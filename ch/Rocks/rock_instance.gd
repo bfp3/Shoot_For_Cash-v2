@@ -82,6 +82,8 @@ enum RockSize {
 	FAKE,
 	## Same as SMALL, but the mesh stays hidden until the crosshair overlaps it.
 	INVISIBLE,
+	## Patrol canister: invincible to shots. Crosshair overlap plays alarm_smoke then aoe_threat_smoke.
+	THREAT,
 }
 
 enum State {
@@ -119,6 +121,7 @@ var _skip_setup_stat_logs := false
 @onready var smokecan: MeshInstance3D = %Smokecan
 @onready var crate: MeshInstance3D = get_node_or_null("%Crate")
 @onready var cardinal_mesh: MeshInstance3D = get_node_or_null("%Cardinal")
+@onready var threat_smoke: MeshInstance3D = get_node_or_null("Mesh/Threat_smoke") as MeshInstance3D
 
 @onready var hazard_large: MeshInstance3D = %Hazard_large
 @onready var rock_red_attack_mode: GPUParticles3D = get_node_or_null("rock_red_attack_mode") as GPUParticles3D
@@ -302,13 +305,27 @@ var _stay_splash_exit_pos := Vector3.ZERO
 var _stay_path_tween: Tween
 var _stay_path_drive_token := 0
 var _stay_path_driving := false
+## Threat rocks ping-pong their scripted cells until `clear threat`.
+var _stay_path_loop := false
+
+## Cylinder collision for threat: radius 0.31 at mesh scale Vector3.ONE.
+const THREAT_CYLINDER_RADIUS := 0.31
+const THREAT_SMOKE_COOLDOWN_SEC := 1.5
+var _default_main_col_shape: Shape3D = null
+var _threat_smoke_token := 0
+var _threat_smoke_busy := false
+var _threat_smoke_cooldown_until_msec := 0
 
 
 
 func is_stay_flight() -> bool:
 	## Converter-flipped red rocks from rock-stay keep hang-flight while looking red.
-	return rock_type == RockSize.STAY or is_stay_black() \
+	return rock_type == RockSize.STAY or is_stay_black() or is_threat() \
 		or (rock_type == RockSize.RED_ROCK_ERROR and _converter_keep_stay_flight)
+
+
+func is_threat() -> bool:
+	return rock_type == RockSize.THREAT
 
 
 func is_stay_black() -> bool:
@@ -551,6 +568,7 @@ func begin_rock_stay_flight(aim_pos: Vector3, path_world: Array = [], exit_splas
 	_stay_path_index = 0
 	_stay_path_hold_left = 0.0
 	_stay_path_exit_splash = exit_splash
+	_stay_path_loop = false
 	_stay_splash_exit_pos = splash_pos
 	for p in path_world:
 		if typeof(p) == TYPE_VECTOR3:
@@ -560,6 +578,8 @@ func begin_rock_stay_flight(aim_pos: Vector3, path_world: Array = [], exit_splas
 	if _stay_path.is_empty():
 		_stay_path.append(aim_pos)
 	_stay_target = _stay_path[0]
+	## Threat patrols cells back and forth until `clear threat`.
+	_stay_path_loop = is_threat() and _stay_path.size() >= 2 and not exit_splash
 	ballistic_aim_active = false
 	_ballistic_in_descent = false
 	falling = false
@@ -570,10 +590,11 @@ func begin_rock_stay_flight(aim_pos: Vector3, path_world: Array = [], exit_splas
 	linear_damp = 0.0
 	angular_damp = rock_stay_angular_damp
 	constant_force = Vector3.ZERO
-	apply_torque_impulse(Vector3.FORWARD * _stay_spin_torque_amount())
+	if not is_threat():
+		apply_torque_impulse(Vector3.FORWARD * _stay_spin_torque_amount())
 
-	## Multi-leg / splash-exit: coroutine + tweens (rigidbody sleep cannot stall this).
-	if _stay_path.size() >= 2 or _stay_path_exit_splash:
+	## Multi-leg / splash-exit / threat patrol: coroutine + tweens (rigidbody sleep cannot stall this).
+	if _stay_path.size() >= 2 or _stay_path_exit_splash or _stay_path_loop:
 		_stay_life_token += 1
 		_stay_path_drive_token += 1
 		_drive_stay_path(_stay_path_drive_token)
@@ -638,6 +659,40 @@ func _drive_stay_path(token: int) -> void:
 	if _stay_path_exit_splash:
 		freeze = false
 		_begin_stay_splash_exit()
+		return
+
+	## Threat: ping-pong the cells until `clear threat`.
+	if _stay_path_loop and _stay_path.size() >= 2:
+		_stay_path_driving = true
+		var going_forward := false
+		while token == _stay_path_drive_token and _stay_flight_active and _stay_path_loop:
+			if current_state != State.ACTIVE or rock_destroyed:
+				return
+			if going_forward:
+				for i in range(1, _stay_path.size()):
+					if token != _stay_path_drive_token or not _stay_flight_active or not _stay_path_loop:
+						return
+					_stay_path_index = i
+					_stay_target = _stay_path[i]
+					await _tween_stay_to_point(_stay_target, token, i)
+					if token != _stay_path_drive_token or not _stay_flight_active or not _stay_path_loop:
+						return
+					var hold := maxf(rock_stay_path_hold_sec, 0.0)
+					if hold > 0.0:
+						await get_tree().create_timer(hold, false).timeout
+			else:
+				for i in range(_stay_path.size() - 2, -1, -1):
+					if token != _stay_path_drive_token or not _stay_flight_active or not _stay_path_loop:
+						return
+					_stay_path_index = i
+					_stay_target = _stay_path[i]
+					await _tween_stay_to_point(_stay_target, token, i)
+					if token != _stay_path_drive_token or not _stay_flight_active or not _stay_path_loop:
+						return
+					var hold := maxf(rock_stay_path_hold_sec, 0.0)
+					if hold > 0.0:
+						await get_tree().create_timer(hold, false).timeout
+			going_forward = not going_forward
 		return
 
 	## Hang on final cell.
@@ -808,14 +863,32 @@ func _clear_rock_stay() -> void:
 	_stay_path_index = 0
 	_stay_path_exit_splash = false
 	_stay_path_exiting = false
+	_stay_path_loop = false
 	_stay_path_hold_left = 0.0
 	_stay_splash_exit_pos = Vector3.ZERO
 	can_sleep = true
 	_stop_rock_stay_burst_warn(true)
 
 
+## Script `clear threat`: stop patrol and drop into the splash zone.
+func begin_threat_splash_exit() -> void:
+	if not is_threat():
+		return
+	if current_state != State.ACTIVE or rock_destroyed:
+		return
+	_stay_path_loop = false
+	_stay_path_drive_token += 1
+	_threat_smoke_token += 1
+	_threat_smoke_busy = false
+	_stop_stay_path_tween()
+	_stay_flight_active = true
+	_begin_stay_splash_exit()
+
+
 func _start_rock_stay_lifetime() -> void:
 	_stay_life_token += 1
+	if is_threat():
+		return
 	if not rock_stay_self_destruct and not is_stay_black():
 		return
 	var token := _stay_life_token
@@ -977,7 +1050,9 @@ func _physics_process(delta: float) -> void:
 			_update_mesh_face_velocity()
 		if is_stay_flight():
 			_update_rock_stay(delta)
-			if is_stay_black():
+			if rock_type == RockSize.THREAT:
+				_update_threat_smoke_overlap()
+			elif is_stay_black():
 				_update_hazard_crosshair_overlap()
 			elif rock_type == RockSize.RED_ROCK_ERROR and _converter_keep_stay_flight:
 				if not _freeze_shot_pending:
@@ -1125,7 +1200,7 @@ func update_prepare_rock() -> void:
 	if token != _pool_setup_token or current_state != State.PREPARE_ROCK:
 		return
 	setup_rock_type()
-	# Hazards / smokecans / avoiders / juggle are obstacles — not required to clear the round.
+	# Hazards / smokecans / avoiders / juggle / threat are obstacles — not required to clear the round.
 	if (
 		rock_type_name != 'hazard_type_1'
 		and rock_type != RockSize.SMOKECAN
@@ -1134,6 +1209,7 @@ func update_prepare_rock() -> void:
 		and rock_type != RockSize.GAP
 		and rock_type != RockSize.JUGGLE
 		and rock_type != RockSize.MOTHERSHIP
+		and rock_type != RockSize.THREAT
 	):
 		gl_PlayerState.log_rocks(1, rock_type_name)
 		
@@ -1357,7 +1433,7 @@ func update_gravity(_gravity_scale : float) -> void:
 		linear_damp = 0.0
 
 func _visual_meshes() -> Array:
-	return [small_rock, grey_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate, cardinal_mesh]
+	return [small_rock, grey_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate, cardinal_mesh, threat_smoke]
 
 
 func _cache_mesh_original_overrides() -> void:
@@ -1688,6 +1764,8 @@ func setup_rock_type() -> void:
 	current_mesh.scale = Vector3.ONE
 	_invisible_until_aim = false
 	_clear_invisible_rock_xray()
+	_restore_default_collision()
+	_stop_threat_alarm_anim()
 	
 	angular_damp = 1.0
 	force_mult.clear()
@@ -2068,6 +2146,37 @@ func setup_rock_type() -> void:
 			force_mult_index = 0
 			current_particles = null
 			_cardinal_bursts_spawned = false
+
+		RockSize.THREAT:
+			## Invincible patrol canister. Overlap plays alarm_smoke then aoe_threat_smoke.
+			current_rock_type = "Threat"
+			rock_type_name = "rock_type_threat"
+			health = 1
+			cash_value = 0
+			max_health = health
+			if threat_smoke:
+				threat_smoke.visible = true
+				threat_smoke.transform = Transform3D.IDENTITY
+				threat_smoke.scale = Vector3.ONE
+				current_mesh = threat_smoke
+			else:
+				smokecan.visible = true
+				current_mesh = smokecan
+				current_mesh.scale = Vector3.ONE
+			_apply_threat_collision(current_mesh.scale)
+			rock_type_gravity_scale = 0.0
+			gravity_scale = 0.0
+			linear_damp = 0.0
+			angular_damp = 0.0
+			force_mult.clear()
+			force_mult = [4]
+			force_mult_index = 0
+			current_particles = null
+			_threat_smoke_busy = false
+			_threat_smoke_cooldown_until_msec = 0
+			var blink := get_node_or_null("Mesh/Threat_smoke/AnimationPlayer") as AnimationPlayer
+			if blink and blink.has_animation("blinkinganim"):
+				blink.play("blinkinganim")
 				
 		RockSize.GREY:
 			current_rock_type = "Grey Rock"
@@ -2226,6 +2335,11 @@ func reset_stats() -> void:
 	_chaser_lock_spin_applied = false
 	_stay_life_token += 1
 	_cardinal_bursts_spawned = false
+	_threat_smoke_token += 1
+	_threat_smoke_busy = false
+	_threat_smoke_cooldown_until_msec = 0
+	_stop_threat_alarm_anim()
+	_restore_default_collision()
 	_clear_fake_xray()
 	can_sleep = true
 	$Mesh.scale = Vector3.ONE
@@ -2330,6 +2444,9 @@ func setup_for_pool_launch(new_type: int, spawn_x: float, spawn_y: float = -INF,
 		and rock_type != RockSize.AVOIDER
 		and rock_type != RockSize.RED_ATTACKER
 		and rock_type != RockSize.GAP
+		and rock_type != RockSize.JUGGLE
+		and rock_type != RockSize.MOTHERSHIP
+		and rock_type != RockSize.THREAT
 	):
 		gl_PlayerState.log_rocks(1, rock_type_name)
 	var y := start_pos.y if spawn_y == -INF else spawn_y
@@ -2647,6 +2764,10 @@ func get_hit_force_direction(
 func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_shot := false) -> void:	
 	
 	#freeze_mine = true
+
+	# Threat canisters cannot be shot down — overlap is the only interaction.
+	if rock_type == RockSize.THREAT:
+		return
 
 	# Avoiders / red-attackers / gap / converter-reds: while calm (or frozen), a shot destroys with no strike.
 	# Once in attack mode, a shot or reticle overlap is a hazard strike.
@@ -3499,6 +3620,82 @@ func _check_threat_crosshair() -> void:
 		_trigger_avoider_crosshair_contact()
 
 
+func _update_threat_smoke_overlap() -> void:
+	if rock_type != RockSize.THREAT:
+		return
+	if current_state != State.ACTIVE or not rock_activated or rock_destroyed:
+		return
+	if _threat_smoke_busy:
+		return
+	if Time.get_ticks_msec() < _threat_smoke_cooldown_until_msec:
+		return
+	if not _avoider_overlaps_crosshair():
+		return
+	_run_threat_alarm_smoke()
+
+
+func _run_threat_alarm_smoke() -> void:
+	_threat_smoke_busy = true
+	_threat_smoke_token += 1
+	var token := _threat_smoke_token
+	var anim := get_node_or_null("Mesh/Threat_smoke/AnimationPlayer2") as AnimationPlayer
+	if anim:
+		anim.play("alarm_smoke")
+		if anim.is_playing():
+			await anim.animation_finished
+		else:
+			await get_tree().create_timer(0.5, false).timeout
+	else:
+		await get_tree().create_timer(0.5, false).timeout
+	if token != _threat_smoke_token or not is_instance_valid(self):
+		return
+	if current_state != State.ACTIVE or rock_destroyed or not rock_activated:
+		_threat_smoke_busy = false
+		return
+	_play_vfx(&"threat_smoke")
+	_play_rocks_sfx("Threat_sfx_01")
+	_threat_smoke_cooldown_until_msec = Time.get_ticks_msec() + int(THREAT_SMOKE_COOLDOWN_SEC * 1000.0)
+	_threat_smoke_busy = false
+
+
+func _stop_threat_alarm_anim() -> void:
+	var anim := get_node_or_null("Mesh/Threat_smoke/AnimationPlayer2") as AnimationPlayer
+	if anim:
+		anim.stop()
+
+
+func _cache_default_collision() -> void:
+	if _default_main_col_shape == null and main_col and main_col.shape:
+		_default_main_col_shape = main_col.shape
+
+
+func _restore_default_collision() -> void:
+	_cache_default_collision()
+	if main_col == null:
+		return
+	if _default_main_col_shape:
+		main_col.shape = _default_main_col_shape
+	main_col.scale = Vector3.ONE
+
+
+func _apply_threat_collision(mesh_scale: Vector3) -> void:
+	_cache_default_collision()
+	if main_col == null:
+		return
+	var cyl := CylinderShape3D.new()
+	cyl.radius = THREAT_CYLINDER_RADIUS
+	var height := THREAT_CYLINDER_RADIUS * 2.0
+	if threat_smoke and threat_smoke.mesh:
+		var aabb := threat_smoke.mesh.get_aabb()
+		height = maxf(aabb.size.y, maxf(aabb.size.x, aabb.size.z))
+		if height < 0.1:
+			height = THREAT_CYLINDER_RADIUS * 2.0
+	cyl.height = height
+	main_col.shape = cyl
+	main_col.scale = mesh_scale
+	main_col.rotation = Vector3.ZERO
+
+
 func _arm_red_attacker() -> void:
 	_red_attacker_armed = false
 	_red_attacker_dashing = false
@@ -3891,7 +4088,9 @@ func _avoider_overlaps_crosshair() -> bool:
 
 	var world_radius := 0.5
 	if main_col and main_col.shape is SphereShape3D:
-		world_radius = (main_col.shape as SphereShape3D).radius * main_col.scale.x
+		world_radius = (main_col.shape as SphereShape3D).radius * absf(main_col.scale.x)
+	elif main_col and main_col.shape is CylinderShape3D:
+		world_radius = (main_col.shape as CylinderShape3D).radius * absf(main_col.scale.x)
 	elif current_mesh:
 		world_radius = maxf(current_mesh.scale.x, 0.2) * 0.5
 

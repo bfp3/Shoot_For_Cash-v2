@@ -12,6 +12,7 @@ const DEFAULT_LIFETIME := 5.0
 @export var pool_crate_for_cash := 2
 @export var pool_hazard := 2
 @export var pool_smokecan := 2
+@export var pool_threat_smoke := 2
 @export var pool_rock_hit := 4
 @export var pool_balloon := 2
 @export var pool_oranges := 4
@@ -30,6 +31,7 @@ const DEFAULT_LIFETIME := 5.0
 @export var scene_crate_for_cash_destroy: PackedScene
 @export var scene_hazard_destroy: PackedScene
 @export var scene_smokecan_destroy: PackedScene
+@export var scene_threat_smoke: PackedScene
 @export var scene_rock_hit: PackedScene
 @export var scene_balloon_destroy: PackedScene
 @export var scene_orange_destroy: PackedScene
@@ -52,6 +54,7 @@ func _ready() -> void:
 		&"crate_for_cash_destroy": scene_crate_for_cash_destroy,
 		&"hazard_destroy": scene_hazard_destroy,
 		&"smokecan_destroy": scene_smokecan_destroy,
+		&"threat_smoke": scene_threat_smoke if scene_threat_smoke else scene_smokecan_destroy,
 		&"rock_hit": scene_rock_hit,
 		&"balloon_destroy": scene_balloon_destroy,
 		&"orange_destroy": scene_orange_destroy,
@@ -64,6 +67,7 @@ func _ready() -> void:
 		&"crate_for_cash_destroy": pool_crate_for_cash,
 		&"hazard_destroy": pool_hazard,
 		&"smokecan_destroy": pool_smokecan,
+		&"threat_smoke": pool_threat_smoke,
 		&"rock_hit": pool_rock_hit,
 		&"balloon_destroy": pool_balloon,
 		&"orange_destroy": pool_oranges,
@@ -144,6 +148,10 @@ func play_hazard_destroy(at: Vector3) -> Node3D:
 
 func play_smokecan_destroy(at: Vector3) -> Node3D:
 	return play(&"smokecan_destroy", at)
+
+
+func play_threat_smoke(at: Vector3) -> Node3D:
+	return play(&"threat_smoke", at)
 
 
 func play_rock_hit(at: Vector3) -> Node3D:

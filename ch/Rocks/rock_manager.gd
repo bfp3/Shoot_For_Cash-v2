@@ -441,8 +441,9 @@ func update_inactive() -> void:
 
 # This is the start of arranging the rocks.
 func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
-	if _paused_for_continue:
-		return
+	## Fresh script start — mid-round resume (balloon-check cursor) is retired.
+	_paused_for_continue = false
+	resume_index = 0
 	_hold_out_finale_token += 1
 	_hold_out_finale_active = false
 	_hold_out_finale_spawning = false
@@ -493,7 +494,7 @@ func _is_ladder_balloon_cmd(cmd: String) -> bool:
 
 
 func _is_clear_cmd(cmd: String) -> bool:
-	return cmd == "clear" or cmd == "clear-balloon" or cmd == "clear-ammo"
+	return cmd == "clear" or cmd == "clear-balloon" or cmd == "clear-ammo" or cmd == "clear-threat"
 
 
 func _is_sequence_barrier_cmd(cmd: String) -> bool:
@@ -1442,6 +1443,18 @@ func _clear_ammo_balloons() -> void:
 			node.pop_without_reward()
 
 
+func _clear_threats() -> void:
+	if not has_node("Container_1"):
+		return
+	for body in $Container_1.get_children():
+		if not (body is RockInstance):
+			continue
+		if body.rock_type != RockInstance.RockSize.THREAT:
+			continue
+		if body.has_method("begin_threat_splash_exit"):
+			body.begin_threat_splash_exit()
+
+
 func _dismiss_ammo_balloons() -> void:
 	for node in get_tree().get_nodes_in_group("ammo_balloon"):
 		if node == null or not is_instance_valid(node):
@@ -1455,6 +1468,9 @@ func _dismiss_ammo_balloons() -> void:
 func _handle_clear_command(entry) -> void:
 	if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "clear-ammo":
 		_clear_ammo_balloons()
+		return
+	if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "clear-threat":
+		_clear_threats()
 		return
 	if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "clear-balloon":
 		var row := int(entry.get("row", -1))
@@ -2033,6 +2049,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.MOTHERSHIP
 			'crate':
 				return RockInstance.RockSize.CRATE
+			'threat':
+				return RockInstance.RockSize.THREAT
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -2066,6 +2084,7 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-still'
 		or cmd == 'mothership'
 		or cmd == 'crate'
+		or cmd == 'threat'
 	)
 
 
@@ -2316,8 +2335,10 @@ func _any_live_round_rocks() -> bool:
 			continue
 		if body.rock_type == RockInstance.RockSize.MOTHERSHIP:
 			continue
-		## Avoiders are not remaining-rocks; `rock-avoider-kill` pops leftovers after wait.
+		## Avoiders / threat canisters are not remaining-rocks; script commands pop leftovers after wait.
 		if body.rock_type == RockInstance.RockSize.AVOIDER:
+			continue
+		if body.rock_type == RockInstance.RockSize.THREAT:
 			continue
 		## Still waiting to launch this wave.
 		if body.current_state == body.State.PREPARE_ROCK:
@@ -2391,6 +2412,8 @@ func _oob_miss_should_show_feedback(rock_type_name: String) -> bool:
 	if rock_type_name.contains("rock_type_8") or rock_type_name.contains("smokecan"):
 		return false
 	if rock_type_name.contains("rock_type_avoider") or rock_type_name.contains("avoider"):
+		return false
+	if rock_type_name.contains("rock_type_threat") or rock_type_name.contains("threat"):
 		return false
 	return true
 
@@ -3612,10 +3635,12 @@ func _launch_stream_rock(body, counter: int) -> void:
 				raw_line = str(Parser._spawn_entry_to_line(entry)).strip_edges()
 			if not raw_line.is_empty() and Parser and Parser.has_method("parse_spawn_command"):
 				var reparsed: Dictionary = Parser.parse_spawn_command(raw_line)
-				if not reparsed.is_empty() and String(reparsed.get("cmd", "")).begins_with("rock-stay"):
-					entry = reparsed
-					if counter_idx >= 0 and counter_idx < manual_rock_sequence.size():
-						manual_rock_sequence[counter_idx] = reparsed
+				if not reparsed.is_empty():
+					var re_cmd := String(reparsed.get("cmd", "")).to_lower()
+					if re_cmd.begins_with("rock-stay") or re_cmd == "rock-still" or re_cmd == "threat":
+						entry = reparsed
+						if counter_idx >= 0 and counter_idx < manual_rock_sequence.size():
+							manual_rock_sequence[counter_idx] = reparsed
 		var aim_pos := _stay_aim_world(body, counter, entry)
 		var path_world := _stay_path_worlds(entry, counter)
 		var exit_splash := bool(entry.get("path_exit_splash", false)) if entry is Dictionary else false

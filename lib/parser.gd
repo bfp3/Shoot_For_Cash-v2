@@ -186,6 +186,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   `rock-stay 1 a1 a8 c8 c1 a4 1` — spawn col 1, visit those cells in order; trailing `1` = then leave into the splash zone (`0` or omit = hang on the last cell).
 ##   `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `rock-fake` looks and flies like `rock-black` but never strikes; the crosshair x-ray reveals a grey rock. `mothership` flees the player for bonus cash.
 ##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
+##   `threat 1 a4 a1 a8` — invincible smoke canister that patrols those cells back and forth.
+##     Crosshair overlap plays `alarm_smoke` then releases `aoe_threat_smoke` (1.5s cooldown).
+##     `clear threat` sends it down into the splash zone.
 ##   `rock-red-attacker 1 a1` flies to A1 then dashes at the crosshair (and through it).
 ##   `rock-red-attacker 1 a1 a8` same, but dashes toward A8 instead of the crosshair.
 ## rock-avoider-kill: {cmd} — pop every live rock-avoider (no strike). Does not pause
@@ -202,15 +205,15 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## wait 0 / wait 600: {cmd, ms} — delay that many milliseconds before the next rock.
 ## wait until clear / wait-until-clear: still accepted as an alias of bare `wait`.
 ##   Hold the next command until live rocks / pineapples / smokecans / balloon-checks
-##   / bonus targets are gone. Oranges, regular balloons, and rock-avoiders are ignored
-##   (use `rock-avoider-kill` for leftovers). A miss does not skip this wait. Objects
+##   / bonus targets are gone. Oranges, regular balloons, rock-avoiders, and threat
+##   canisters are ignored (use `rock-avoider-kill` / `clear threat` for leftovers). A miss does not skip this wait. Objects
 ##   count as gone as soon as their destroy process starts (do not wait for pop tweens).
 ## balloon-check / balloon check / balloon-check A4: {cmd, row, column}.
 ##   Bare command uses the default centre rest pose. A cell parks it on the balloon grid.
-##   Shooting it saves this script cursor as the resume point after a strike-out.
-##   It does not jump rounds, reset strikes, or send leftover balloons away.
+##   Shooting it clears strikes and continues the script. Retries always start
+##   from the top of the round — it does not save a mid-script resume point.
+##   It does not jump rounds or send leftover balloons away.
 ##   `checkpoint` is accepted as an alias.
-##   If no balloon-check has been shot, fail restarts the range from the beginning.
 ## balloon-mult / balloon-bank: {cmd}. BANK CASH (left) vs +1 Multiplier (right).
 ##   Shoot one; the other leaves. Place both next to `balloon-check` so they appear together.
 ## ammo / ammo 16 / ammo 69 $100 / ammo C8 / ammo C8 16 99:
@@ -221,6 +224,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   a balloon-check. `wait clear` is still wait-until-clear, not this command.
 ## clear balloon A4: {cmd: clear-balloon, row, column} — same drift/pay for one cell.
 ## clear ammo: {cmd: clear-ammo} — pop leftover ammo balloons with no ammo and no charge.
+## clear threat: {cmd: clear-threat} — send live threat canisters into the splash zone.
 ## repeat: {cmd, count} — closes a wave section that plays as `count` separate waves.
 ##   Bare `repeat` / `repeat 1` / `repeat 2` → 2 waves. `repeat N` (N ≥ 2) → N waves.
 ##   Commands after a `repeat` start the next section / next set of waves.
@@ -278,7 +282,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
 
-		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still':
+		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat':
 			return _parse_rock_stay_command(cmd, parts)
 
 		'rock-gap', 'rock-red-gap':
@@ -629,14 +633,12 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	return result
 
 
-## rock-stay / rock-stay-black / rock-cardinal / rock-still
+## rock-stay / rock-stay-black / rock-cardinal / rock-still / threat
 ##   rock-stay 1 a1                 → spawn col 1, hang at A1
 ##   rock-stay 1 a1 a8 c8 c1 a4 1   → path A1→A8→C8→C1→A4, then splash exit
+##   threat 1 a4 a1 a8              → spawn col 1, patrol those cells back and forth
 ##   Trailing bare `0`/`1` after cells = path_exit_splash (1 = leave into splash zone).
-## rock-stay / rock-stay-black / rock-cardinal / rock-still
-##   rock-stay 1 a1                 → spawn col 1, hang at A1
-##   rock-stay 1 a1 a8 c8 c1 a4 1   → path A1→A8→C8→C1→A4, then splash exit
-##   Trailing bare `0`/`1` after cells = path_exit_splash (1 = leave into splash zone).
+##   `threat` ignores trailing 0/1 — use `clear threat` to splash-exit.
 func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': cmd,
@@ -681,7 +683,8 @@ func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictiona
 	var end_i := parts.size() - 1
 	var last_tok := String(parts[end_i]).strip_edges().trim_suffix(',').strip_edges()
 	## Trailing 0/1 only counts as splash-exit when at least one grid cell precedes it.
-	if last_tok == '0' or last_tok == '1':
+	## Threat patrols forever — splash exit is `clear threat`, not a trailing 1.
+	if cmd != 'threat' and (last_tok == '0' or last_tok == '1'):
 		var cell_before := false
 		for i in range(cell_start, end_i):
 			var mid := String(parts[i]).strip_edges().trim_suffix(',').strip_edges()
@@ -838,6 +841,8 @@ func _parse_clear_command(parts: PackedStringArray) -> Dictionary:
 		var next := String(parts[i]).strip_edges().to_lower()
 		if next == 'ammo':
 			return {'cmd': 'clear-ammo'}
+		if next == 'threat':
+			return {'cmd': 'clear-threat'}
 		if next == 'balloon':
 			result.cmd = 'clear-balloon'
 			i += 1
@@ -1535,6 +1540,8 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return 'clear'
 		'clear-ammo':
 			return 'clear ammo'
+		'clear-threat':
+			return 'clear threat'
 		'clear-balloon':
 			var clrow := int(entry.get('row', RANDOM_SLOT))
 			var clcol := int(entry.get('column', RANDOM_SLOT))
@@ -1580,7 +1587,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			if col < 0:
 				return cmd
 			return '%s %s' % [cmd, col_token]
-		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still':
+		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat':
 			var stay_bits: PackedStringArray = [cmd]
 			var stay_col := int(entry.get('column', RANDOM_SLOT))
 			stay_bits.append('?' if stay_col < 0 else str(stay_col))

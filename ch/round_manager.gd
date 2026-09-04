@@ -871,7 +871,11 @@ func _replay_current_level_from_start() -> void:
 	if balloon_container and (balloon_container.started or balloon_container.balloons_in_play > 0):
 		await balloon_container.end_round()
 	if player:
-		if player.has_method("refill_ammo_to_max_animated"):
+		if player.has_method("refill_starting_ammo_animated"):
+			await player.refill_starting_ammo_animated()
+		elif player.has_method("refill_starting_ammo"):
+			player.refill_starting_ammo(true)
+		elif player.has_method("refill_ammo_to_max_animated"):
 			await player.refill_ammo_to_max_animated()
 		elif player.has_method("refill_ammo_to_max"):
 			player.refill_ammo_to_max(true)
@@ -1277,6 +1281,13 @@ func get_script_range_reward() -> int:
 func get_resume_spawn_index() -> int:
 	## Mid-script resume is retired — balloon-check no longer stores a fail-resume cursor.
 	return 0
+
+
+func _clear_player_ammo() -> void:
+	if player and player.has_method("clear_ammo"):
+		player.clear_ammo()
+	elif player and "shot_count" in player:
+		player.shot_count = 0
 
 
 func clear_script_checkpoint() -> void:
@@ -1814,6 +1825,8 @@ func unsuccessful_round_locked(skip_tally: bool = false) -> void:
 	_advance_range_after_hold_out = false
 	force_shop_open = true
 	success = false
+	current_wave = 0
+	_clear_player_ammo()
 	EventBus.instance.end_round_rock_missed.emit()
 	%Splash_zone.deactivate_splash_zone()
 	clear_live_oranges_quietly()
@@ -1888,6 +1901,7 @@ func abort_round_to_shop() -> void:
 	music_manager.shop_music_lower_volume()
 	current_wave = 0
 	bullet_active = false
+	_clear_player_ammo()
 
 	enter_state(RoundState.SHOP_START)
 
@@ -2226,7 +2240,11 @@ func _play_strike_finale_return() -> void:
 func _refill_ammo_after_continue() -> void:
 	if player == null:
 		return
-	if player.has_method("refill_ammo_to_max_animated"):
+	if player.has_method("refill_starting_ammo_animated"):
+		await player.refill_starting_ammo_animated()
+	elif player.has_method("refill_starting_ammo"):
+		player.refill_starting_ammo(true)
+	elif player.has_method("refill_ammo_to_max_animated"):
 		await player.refill_ammo_to_max_animated()
 	elif player.has_method("refill_ammo_to_max"):
 		player.refill_ammo_to_max(true)
@@ -2664,7 +2682,8 @@ func update_wave_start() -> void:
 		else:
 			var rock_seq := update_rock_sequence()
 			# Always prepare (even empty) so bonus-type1 target-only rounds don't hang on old rock state.
-			rocks_container.start_manual_rock_round(rock_seq, resume_index)
+			# Mid-script resume is retired — always spawn index 0.
+			rocks_container.start_manual_rock_round(rock_seq, 0)
 		
 	else:
 		var rock_seq := update_rock_sequence()
@@ -3046,6 +3065,7 @@ func update_shop_start() -> void:
 	protect_bonus_failed = false
 	_apply_shuffle_modifier(false)
 	_apply_difficulty_runtime()
+	_clear_player_ammo()
 	CommonCode.apply_ui_overlay_blur()
 	EventBus.instance.open_shop.emit()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -3779,6 +3799,7 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	_tally_travel_next_level = false
 	_tally_replay_level = false
 	_boss_ceremony_island = -1
+	_clear_player_ammo()
 
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)

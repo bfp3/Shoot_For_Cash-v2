@@ -4,6 +4,7 @@
 [ext_resource type="Material" uid="uid://be3ktn7h2r3kb" path="res://res/test_room_prototype_mat.tres" id="1_ggfu5"]
 [ext_resource type="Material" uid="uid://bbajws0h7sed2" path="res://res/grey_flat_mat.tres" id="4_ax6c5"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="5_cylgj"]
+[ext_resource type="Material" uid="uid://caaiagabyc0ly" path="res://res/boss_trippy_mesh.tres" id="5_xrvai"]
 [ext_resource type="Script" uid="uid://cg6xll53va6hj" path="res://sc/All_level_layouts/crossy_bridge_scroll.gd" id="layout_scroll"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tt2ep"]
@@ -351,7 +352,7 @@ tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath(".:material_override:uv1_scale")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 2.51, 5),
@@ -363,13 +364,25 @@ tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/path = NodePath(".:material_override:uv1_offset")
-tracks/1/interp = 1
+tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0, 5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(-0.2, 0, 0), Vector3(-0.2, 1, 1)]
+"values": [Vector3(0, 0, 0), Vector3(0.25, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:material_override:albedo_color")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.25, 2.45, 3.47, 4.25, 4.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 0, 0, 1), Color(0.85, 1, 0, 1), Color(0, 1, 0.66666675, 1), Color(0.2166667, 0, 1, 1), Color(1, 0, 0.9500003, 1), Color(1, 0, 0, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xrvai"]
@@ -662,7 +675,7 @@ visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MultiMesh" unique_id=1481701675]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="MultiMesh" unique_id=1241561241]
@@ -1955,326 +1968,327 @@ transform = Transform3D(4.99, 0, 0, 0, -2.1811982e-07, -4.99, 0, 4.99, -2.181198
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MultiMesh7" unique_id=1886613236]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="MultiMesh7/MeshInstance3D" unique_id=1162354065]
 libraries/ = SubResource("AnimationLibrary_xrvai")
 autoplay = &"trippy"
+speed_scale = 0.05
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="MultiMesh7" unique_id=11548730]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 4.0000005, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="MultiMesh7" unique_id=303037055]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 8.000001, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="MultiMesh7" unique_id=2096687114]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 12.000001, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="MultiMesh7" unique_id=1956736862]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D6" type="MeshInstance3D" parent="MultiMesh7" unique_id=1098870593]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D7" type="MeshInstance3D" parent="MultiMesh7" unique_id=1616066979]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D8" type="MeshInstance3D" parent="MultiMesh7" unique_id=1816992834]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D9" type="MeshInstance3D" parent="MultiMesh7" unique_id=1095241426]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D10" type="MeshInstance3D" parent="MultiMesh7" unique_id=1987056446]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D11" type="MeshInstance3D" parent="MultiMesh7" unique_id=1330555309]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D12" type="MeshInstance3D" parent="MultiMesh7" unique_id=1086376994]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D13" type="MeshInstance3D" parent="MultiMesh7" unique_id=626558435]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D14" type="MeshInstance3D" parent="MultiMesh7" unique_id=653224513]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D15" type="MeshInstance3D" parent="MultiMesh7" unique_id=1189050850]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D16" type="MeshInstance3D" parent="MultiMesh7" unique_id=1649222356]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D17" type="MeshInstance3D" parent="MultiMesh7" unique_id=921117569]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 16.000002, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D18" type="MeshInstance3D" parent="MultiMesh7" unique_id=607356147]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D19" type="MeshInstance3D" parent="MultiMesh7" unique_id=2062474129]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D20" type="MeshInstance3D" parent="MultiMesh7" unique_id=1778547707]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D21" type="MeshInstance3D" parent="MultiMesh7" unique_id=205237277]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D22" type="MeshInstance3D" parent="MultiMesh7" unique_id=390548687]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D23" type="MeshInstance3D" parent="MultiMesh7" unique_id=968482952]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D24" type="MeshInstance3D" parent="MultiMesh7" unique_id=294726490]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D25" type="MeshInstance3D" parent="MultiMesh7" unique_id=2090610146]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D26" type="MeshInstance3D" parent="MultiMesh7" unique_id=582174134]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D27" type="MeshInstance3D" parent="MultiMesh7" unique_id=1775298654]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D28" type="MeshInstance3D" parent="MultiMesh7" unique_id=1259273564]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D29" type="MeshInstance3D" parent="MultiMesh7" unique_id=1520791100]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D30" type="MeshInstance3D" parent="MultiMesh7" unique_id=2084315032]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D31" type="MeshInstance3D" parent="MultiMesh7" unique_id=1383117282]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D32" type="MeshInstance3D" parent="MultiMesh7" unique_id=683551832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D33" type="MeshInstance3D" parent="MultiMesh7" unique_id=1636890724]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D34" type="MeshInstance3D" parent="MultiMesh7" unique_id=794075288]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D35" type="MeshInstance3D" parent="MultiMesh7" unique_id=1609104818]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D36" type="MeshInstance3D" parent="MultiMesh7" unique_id=65150615]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D37" type="MeshInstance3D" parent="MultiMesh7" unique_id=217413217]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D38" type="MeshInstance3D" parent="MultiMesh7" unique_id=1008210466]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D39" type="MeshInstance3D" parent="MultiMesh7" unique_id=2130426396]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D40" type="MeshInstance3D" parent="MultiMesh7" unique_id=1384904161]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D41" type="MeshInstance3D" parent="MultiMesh7" unique_id=1245715611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D42" type="MeshInstance3D" parent="MultiMesh7" unique_id=1131212700]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D43" type="MeshInstance3D" parent="MultiMesh7" unique_id=1054110912]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D44" type="MeshInstance3D" parent="MultiMesh7" unique_id=2020071176]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D45" type="MeshInstance3D" parent="MultiMesh7" unique_id=1122168365]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D46" type="MeshInstance3D" parent="MultiMesh7" unique_id=1648845541]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D47" type="MeshInstance3D" parent="MultiMesh7" unique_id=905879246]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D48" type="MeshInstance3D" parent="MultiMesh7" unique_id=766171142]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D49" type="MeshInstance3D" parent="MultiMesh7" unique_id=901590468]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D50" type="MeshInstance3D" parent="MultiMesh7" unique_id=1975468489]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, -12.000001, -7.250568, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D51" type="MeshInstance3D" parent="MultiMesh7" unique_id=1038980338]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, -8.000001, -7.250568, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D52" type="MeshInstance3D" parent="MultiMesh7" unique_id=353718876]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, -4.0000005, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D53" type="MeshInstance3D" parent="MultiMesh7" unique_id=1310268421]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D54" type="MeshInstance3D" parent="MultiMesh7" unique_id=2041125045]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D55" type="MeshInstance3D" parent="MultiMesh7" unique_id=1669960984]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D56" type="MeshInstance3D" parent="MultiMesh7" unique_id=609447368]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D57" type="MeshInstance3D" parent="MultiMesh7" unique_id=1423195762]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D58" type="MeshInstance3D" parent="MultiMesh7" unique_id=153917728]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D59" type="MeshInstance3D" parent="MultiMesh7" unique_id=523358468]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D60" type="MeshInstance3D" parent="MultiMesh7" unique_id=1832538814]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D61" type="MeshInstance3D" parent="MultiMesh7" unique_id=264596544]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D62" type="MeshInstance3D" parent="MultiMesh7" unique_id=657712991]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D63" type="MeshInstance3D" parent="MultiMesh7" unique_id=711545841]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D64" type="MeshInstance3D" parent="MultiMesh7" unique_id=1818355584]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MultiMesh8" type="Node3D" parent="." unique_id=969007576]
@@ -2282,322 +2296,322 @@ transform = Transform3D(4.015, 0, 0, 0, -1.7550121e-07, -4.015, 0, 4.015, -1.755
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MultiMesh8" unique_id=40410158]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="MultiMesh8" unique_id=1390360830]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 4.0000005, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="MultiMesh8" unique_id=2017049365]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 8.000001, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="MultiMesh8" unique_id=1814896523]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 12.000001, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="MultiMesh8" unique_id=998620064]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D6" type="MeshInstance3D" parent="MultiMesh8" unique_id=19822789]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D7" type="MeshInstance3D" parent="MultiMesh8" unique_id=1263439946]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D8" type="MeshInstance3D" parent="MultiMesh8" unique_id=1483364019]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D9" type="MeshInstance3D" parent="MultiMesh8" unique_id=8858524]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D10" type="MeshInstance3D" parent="MultiMesh8" unique_id=3695624]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D11" type="MeshInstance3D" parent="MultiMesh8" unique_id=1755505299]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D12" type="MeshInstance3D" parent="MultiMesh8" unique_id=192539696]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D13" type="MeshInstance3D" parent="MultiMesh8" unique_id=1415886110]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D14" type="MeshInstance3D" parent="MultiMesh8" unique_id=718906919]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D15" type="MeshInstance3D" parent="MultiMesh8" unique_id=1500128261]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D16" type="MeshInstance3D" parent="MultiMesh8" unique_id=1182040917]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D17" type="MeshInstance3D" parent="MultiMesh8" unique_id=854302364]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 16.000002, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D18" type="MeshInstance3D" parent="MultiMesh8" unique_id=1238460020]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D19" type="MeshInstance3D" parent="MultiMesh8" unique_id=735046592]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D20" type="MeshInstance3D" parent="MultiMesh8" unique_id=1402702600]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D21" type="MeshInstance3D" parent="MultiMesh8" unique_id=1608599363]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D22" type="MeshInstance3D" parent="MultiMesh8" unique_id=790384387]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D23" type="MeshInstance3D" parent="MultiMesh8" unique_id=1062683929]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D24" type="MeshInstance3D" parent="MultiMesh8" unique_id=264713029]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D25" type="MeshInstance3D" parent="MultiMesh8" unique_id=1147314019]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D26" type="MeshInstance3D" parent="MultiMesh8" unique_id=714554347]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D27" type="MeshInstance3D" parent="MultiMesh8" unique_id=520588670]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D28" type="MeshInstance3D" parent="MultiMesh8" unique_id=1391947891]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D29" type="MeshInstance3D" parent="MultiMesh8" unique_id=664867941]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D30" type="MeshInstance3D" parent="MultiMesh8" unique_id=495547392]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D31" type="MeshInstance3D" parent="MultiMesh8" unique_id=272876838]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D32" type="MeshInstance3D" parent="MultiMesh8" unique_id=533875982]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D33" type="MeshInstance3D" parent="MultiMesh8" unique_id=1666167252]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D34" type="MeshInstance3D" parent="MultiMesh8" unique_id=534307737]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D35" type="MeshInstance3D" parent="MultiMesh8" unique_id=336983422]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D36" type="MeshInstance3D" parent="MultiMesh8" unique_id=2039081552]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D37" type="MeshInstance3D" parent="MultiMesh8" unique_id=1969369067]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D38" type="MeshInstance3D" parent="MultiMesh8" unique_id=103186036]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D39" type="MeshInstance3D" parent="MultiMesh8" unique_id=1440279878]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D40" type="MeshInstance3D" parent="MultiMesh8" unique_id=1074585411]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D41" type="MeshInstance3D" parent="MultiMesh8" unique_id=184537246]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D42" type="MeshInstance3D" parent="MultiMesh8" unique_id=1091065320]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D43" type="MeshInstance3D" parent="MultiMesh8" unique_id=1882988569]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D44" type="MeshInstance3D" parent="MultiMesh8" unique_id=167624144]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D45" type="MeshInstance3D" parent="MultiMesh8" unique_id=1642638165]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D46" type="MeshInstance3D" parent="MultiMesh8" unique_id=1266040181]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D47" type="MeshInstance3D" parent="MultiMesh8" unique_id=594989255]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D48" type="MeshInstance3D" parent="MultiMesh8" unique_id=1225313763]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D49" type="MeshInstance3D" parent="MultiMesh8" unique_id=2055462226]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D50" type="MeshInstance3D" parent="MultiMesh8" unique_id=1535413895]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, -12.000001, -7.250568, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D51" type="MeshInstance3D" parent="MultiMesh8" unique_id=623576169]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, -8.000001, -7.250568, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D52" type="MeshInstance3D" parent="MultiMesh8" unique_id=1134185385]
 transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, -4.0000005, -7.4947476, -6.6928253)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D53" type="MeshInstance3D" parent="MultiMesh8" unique_id=302652209]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D54" type="MeshInstance3D" parent="MultiMesh8" unique_id=83484940]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D55" type="MeshInstance3D" parent="MultiMesh8" unique_id=652593336]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D56" type="MeshInstance3D" parent="MultiMesh8" unique_id=90456827]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D57" type="MeshInstance3D" parent="MultiMesh8" unique_id=291213016]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D58" type="MeshInstance3D" parent="MultiMesh8" unique_id=1348028236]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D59" type="MeshInstance3D" parent="MultiMesh8" unique_id=628294131]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D60" type="MeshInstance3D" parent="MultiMesh8" unique_id=1744673140]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D61" type="MeshInstance3D" parent="MultiMesh8" unique_id=514700649]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D62" type="MeshInstance3D" parent="MultiMesh8" unique_id=1545496696]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D63" type="MeshInstance3D" parent="MultiMesh8" unique_id=1900866318]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D64" type="MeshInstance3D" parent="MultiMesh8" unique_id=88016746]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MultiMesh5" type="Node3D" parent="." unique_id=912753115]
@@ -2605,322 +2619,322 @@ transform = Transform3D(3.115, 0, 0, 0, 3.115, 0, 0, 0, 3.115, 193.12024, 32.934
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MultiMesh5" unique_id=1349446117]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="MultiMesh5" unique_id=935437974]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="MultiMesh5" unique_id=1145931945]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="MultiMesh5" unique_id=1617809975]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="MultiMesh5" unique_id=2035361030]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D6" type="MeshInstance3D" parent="MultiMesh5" unique_id=1099381661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D7" type="MeshInstance3D" parent="MultiMesh5" unique_id=1943338133]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D8" type="MeshInstance3D" parent="MultiMesh5" unique_id=1779120992]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D9" type="MeshInstance3D" parent="MultiMesh5" unique_id=428803542]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D10" type="MeshInstance3D" parent="MultiMesh5" unique_id=1064946021]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D11" type="MeshInstance3D" parent="MultiMesh5" unique_id=766931506]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D12" type="MeshInstance3D" parent="MultiMesh5" unique_id=76528143]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D13" type="MeshInstance3D" parent="MultiMesh5" unique_id=856123983]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D14" type="MeshInstance3D" parent="MultiMesh5" unique_id=1198568712]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D15" type="MeshInstance3D" parent="MultiMesh5" unique_id=96063890]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D16" type="MeshInstance3D" parent="MultiMesh5" unique_id=1006150477]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D17" type="MeshInstance3D" parent="MultiMesh5" unique_id=2083905813]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D18" type="MeshInstance3D" parent="MultiMesh5" unique_id=1674152405]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D19" type="MeshInstance3D" parent="MultiMesh5" unique_id=417885574]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D20" type="MeshInstance3D" parent="MultiMesh5" unique_id=2126539755]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D21" type="MeshInstance3D" parent="MultiMesh5" unique_id=287906184]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D22" type="MeshInstance3D" parent="MultiMesh5" unique_id=1977870983]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D23" type="MeshInstance3D" parent="MultiMesh5" unique_id=173926342]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D24" type="MeshInstance3D" parent="MultiMesh5" unique_id=489803725]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D25" type="MeshInstance3D" parent="MultiMesh5" unique_id=1048282303]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D26" type="MeshInstance3D" parent="MultiMesh5" unique_id=597903517]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D27" type="MeshInstance3D" parent="MultiMesh5" unique_id=29519139]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D28" type="MeshInstance3D" parent="MultiMesh5" unique_id=1484753418]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D29" type="MeshInstance3D" parent="MultiMesh5" unique_id=1718581844]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D30" type="MeshInstance3D" parent="MultiMesh5" unique_id=183186186]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D31" type="MeshInstance3D" parent="MultiMesh5" unique_id=983281055]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D32" type="MeshInstance3D" parent="MultiMesh5" unique_id=1661296166]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D33" type="MeshInstance3D" parent="MultiMesh5" unique_id=269996759]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D34" type="MeshInstance3D" parent="MultiMesh5" unique_id=1656276684]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D35" type="MeshInstance3D" parent="MultiMesh5" unique_id=377364848]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D36" type="MeshInstance3D" parent="MultiMesh5" unique_id=1266947745]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D37" type="MeshInstance3D" parent="MultiMesh5" unique_id=1520474503]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D38" type="MeshInstance3D" parent="MultiMesh5" unique_id=1160201510]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D39" type="MeshInstance3D" parent="MultiMesh5" unique_id=2087038039]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D40" type="MeshInstance3D" parent="MultiMesh5" unique_id=1430702905]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D41" type="MeshInstance3D" parent="MultiMesh5" unique_id=1046927320]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D42" type="MeshInstance3D" parent="MultiMesh5" unique_id=1822207364]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D43" type="MeshInstance3D" parent="MultiMesh5" unique_id=1894249953]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D44" type="MeshInstance3D" parent="MultiMesh5" unique_id=1253469870]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D45" type="MeshInstance3D" parent="MultiMesh5" unique_id=878062981]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D46" type="MeshInstance3D" parent="MultiMesh5" unique_id=134931461]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D47" type="MeshInstance3D" parent="MultiMesh5" unique_id=1700652835]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D48" type="MeshInstance3D" parent="MultiMesh5" unique_id=270149715]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D49" type="MeshInstance3D" parent="MultiMesh5" unique_id=397733402]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D50" type="MeshInstance3D" parent="MultiMesh5" unique_id=729352808]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D51" type="MeshInstance3D" parent="MultiMesh5" unique_id=2107709047]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D52" type="MeshInstance3D" parent="MultiMesh5" unique_id=2026298745]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D53" type="MeshInstance3D" parent="MultiMesh5" unique_id=337481812]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D54" type="MeshInstance3D" parent="MultiMesh5" unique_id=1172959414]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D55" type="MeshInstance3D" parent="MultiMesh5" unique_id=1633300971]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D56" type="MeshInstance3D" parent="MultiMesh5" unique_id=879542114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D57" type="MeshInstance3D" parent="MultiMesh5" unique_id=1638734799]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D58" type="MeshInstance3D" parent="MultiMesh5" unique_id=1770912184]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D59" type="MeshInstance3D" parent="MultiMesh5" unique_id=1809176373]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D60" type="MeshInstance3D" parent="MultiMesh5" unique_id=193715061]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D61" type="MeshInstance3D" parent="MultiMesh5" unique_id=2145060702]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D62" type="MeshInstance3D" parent="MultiMesh5" unique_id=1617391178]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D63" type="MeshInstance3D" parent="MultiMesh5" unique_id=152077027]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D64" type="MeshInstance3D" parent="MultiMesh5" unique_id=2020120416]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MultiMesh6" type="Node3D" parent="." unique_id=1074908324]
@@ -2928,320 +2942,320 @@ transform = Transform3D(3.115, 0, 0, 0, 3.115, 0, 0, 0, 3.115, -184.96353, 32.16
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MultiMesh6" unique_id=1204510590]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="MultiMesh6" unique_id=606115531]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="MultiMesh6" unique_id=1335594882]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="MultiMesh6" unique_id=1718870344]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="MultiMesh6" unique_id=149433345]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D6" type="MeshInstance3D" parent="MultiMesh6" unique_id=783411839]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D7" type="MeshInstance3D" parent="MultiMesh6" unique_id=1746596501]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D8" type="MeshInstance3D" parent="MultiMesh6" unique_id=759893679]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D9" type="MeshInstance3D" parent="MultiMesh6" unique_id=1341478120]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D10" type="MeshInstance3D" parent="MultiMesh6" unique_id=551545563]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D11" type="MeshInstance3D" parent="MultiMesh6" unique_id=691239769]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D12" type="MeshInstance3D" parent="MultiMesh6" unique_id=854839653]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D13" type="MeshInstance3D" parent="MultiMesh6" unique_id=655280812]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D14" type="MeshInstance3D" parent="MultiMesh6" unique_id=1050499456]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D15" type="MeshInstance3D" parent="MultiMesh6" unique_id=537691730]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D16" type="MeshInstance3D" parent="MultiMesh6" unique_id=131770679]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D17" type="MeshInstance3D" parent="MultiMesh6" unique_id=1869184183]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D18" type="MeshInstance3D" parent="MultiMesh6" unique_id=1559271021]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D19" type="MeshInstance3D" parent="MultiMesh6" unique_id=1009111769]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D20" type="MeshInstance3D" parent="MultiMesh6" unique_id=1621561653]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D21" type="MeshInstance3D" parent="MultiMesh6" unique_id=1220551244]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D22" type="MeshInstance3D" parent="MultiMesh6" unique_id=1330355423]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D23" type="MeshInstance3D" parent="MultiMesh6" unique_id=728606169]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D24" type="MeshInstance3D" parent="MultiMesh6" unique_id=734155576]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D25" type="MeshInstance3D" parent="MultiMesh6" unique_id=1946586464]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D26" type="MeshInstance3D" parent="MultiMesh6" unique_id=1849136978]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D27" type="MeshInstance3D" parent="MultiMesh6" unique_id=428393026]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D28" type="MeshInstance3D" parent="MultiMesh6" unique_id=309766071]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D29" type="MeshInstance3D" parent="MultiMesh6" unique_id=749048557]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D30" type="MeshInstance3D" parent="MultiMesh6" unique_id=1039453414]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D31" type="MeshInstance3D" parent="MultiMesh6" unique_id=1030715695]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D32" type="MeshInstance3D" parent="MultiMesh6" unique_id=859184882]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D33" type="MeshInstance3D" parent="MultiMesh6" unique_id=2064222215]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D34" type="MeshInstance3D" parent="MultiMesh6" unique_id=1488325098]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D35" type="MeshInstance3D" parent="MultiMesh6" unique_id=1979715812]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D36" type="MeshInstance3D" parent="MultiMesh6" unique_id=1383745452]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D37" type="MeshInstance3D" parent="MultiMesh6" unique_id=1324317115]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D38" type="MeshInstance3D" parent="MultiMesh6" unique_id=615578626]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D39" type="MeshInstance3D" parent="MultiMesh6" unique_id=1954098191]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D40" type="MeshInstance3D" parent="MultiMesh6" unique_id=732048037]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D41" type="MeshInstance3D" parent="MultiMesh6" unique_id=169888096]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D42" type="MeshInstance3D" parent="MultiMesh6" unique_id=616809219]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D43" type="MeshInstance3D" parent="MultiMesh6" unique_id=623612688]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D44" type="MeshInstance3D" parent="MultiMesh6" unique_id=96239415]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D45" type="MeshInstance3D" parent="MultiMesh6" unique_id=339584295]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D46" type="MeshInstance3D" parent="MultiMesh6" unique_id=618022694]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D47" type="MeshInstance3D" parent="MultiMesh6" unique_id=926291596]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D48" type="MeshInstance3D" parent="MultiMesh6" unique_id=751311866]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D49" type="MeshInstance3D" parent="MultiMesh6" unique_id=213839652]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D50" type="MeshInstance3D" parent="MultiMesh6" unique_id=1558971920]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D51" type="MeshInstance3D" parent="MultiMesh6" unique_id=764842648]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D52" type="MeshInstance3D" parent="MultiMesh6" unique_id=400760643]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, -6.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D53" type="MeshInstance3D" parent="MultiMesh6" unique_id=544725071]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D54" type="MeshInstance3D" parent="MultiMesh6" unique_id=731805187]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D55" type="MeshInstance3D" parent="MultiMesh6" unique_id=906735586]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D56" type="MeshInstance3D" parent="MultiMesh6" unique_id=2015500077]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, -2.6928215)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D57" type="MeshInstance3D" parent="MultiMesh6" unique_id=336346124]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D58" type="MeshInstance3D" parent="MultiMesh6" unique_id=286640401]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D59" type="MeshInstance3D" parent="MultiMesh6" unique_id=1974381484]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D60" type="MeshInstance3D" parent="MultiMesh6" unique_id=1237622096]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, 1.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D61" type="MeshInstance3D" parent="MultiMesh6" unique_id=486316581]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D62" type="MeshInstance3D" parent="MultiMesh6" unique_id=55914795]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D63" type="MeshInstance3D" parent="MultiMesh6" unique_id=419343972]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")
 
 [node name="MeshInstance3D64" type="MeshInstance3D" parent="MultiMesh6" unique_id=1436637024]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -4.032645, 5.3071785)
-material_override = ExtResource("4_ax6c5")
+material_override = ExtResource("5_xrvai")
 mesh = SubResource("BoxMesh_ggfu5")

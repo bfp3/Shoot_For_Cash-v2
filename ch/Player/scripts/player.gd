@@ -81,6 +81,8 @@ var shot_count := 0
 var max_ammo := 0
 ## Glory `six_shots_only` challenge: hard magazine cap (see get_max_ammo).
 const SIX_SHOTS_AMMO_CAP := 6
+## Magazine loaded when Play is pressed, and granted by an ammo balloon with no amount.
+const STARTING_AMMO := 12
 ## Separate magazine used only while a level-editor test round is active.
 var _level_editor_ammo_active := false
 var _level_editor_ammo := 99
@@ -1578,13 +1580,17 @@ func is_ammo_full() -> bool:
 	return get_displayed_ammo() >= get_max_ammo()
 
 
+func get_starting_ammo() -> int:
+	var pack := int(gl_DataSet.get_value("power_ammo", 0))
+	if pack <= 0:
+		pack = STARTING_AMMO
+	return mini(pack, get_max_ammo())
+
+
 func _init_ammo() -> void:
 	max_ammo = get_max_ammo()
-	## Export resume: restore magazine from checkpoint when present.
-	if gl_PlayerState.dataset.has("shot_count"):
-		shot_count = clampi(int(gl_PlayerState.dataset.shot_count), 0, max_ammo)
-	else:
-		shot_count = max_ammo
+	## Shop Play loads the starting pack. Travel / restart / fail leave the mag empty.
+	shot_count = 0
 	_refresh_ammo_display()
 
 
@@ -1723,7 +1729,42 @@ func end_level_editor_ammo() -> void:
 
 
 func get_ammo_pack_size() -> int:
-	return int(gl_DataSet.get_value('ammo_pack_size', 0))
+	var pack := int(gl_DataSet.get_value('ammo_pack_size', 0))
+	if pack <= 0:
+		pack = get_starting_ammo()
+	return pack
+
+
+func set_ammo(amount: int, animate := false) -> void:
+	if _level_editor_ammo_active:
+		return
+	max_ammo = get_max_ammo()
+	shot_count = clampi(amount, 0, max_ammo)
+	_refresh_ammo_display(animate)
+
+
+func clear_ammo(animate := false) -> void:
+	set_ammo(0, animate)
+
+
+func refill_starting_ammo(animate := true) -> void:
+	var before := shot_count
+	set_ammo(get_starting_ammo(), false)
+	if animate and shot_count != before:
+		_refresh_ammo_display(true)
+
+
+func refill_starting_ammo_animated() -> void:
+	max_ammo = get_max_ammo()
+	var before := shot_count
+	shot_count = get_starting_ammo()
+	var hud := $CanvasLayer/HUD_bottom_corner/AmmoCorner/ShotRemaining
+	if hud and hud.has_method("await_reload_fill"):
+		ensure_ammo_panel_visible()
+		await hud.await_reload_fill(before, shot_count)
+	else:
+		_refresh_ammo_display(true)
+		await get_tree().create_timer(0.5, false).timeout
 
 
 func fire_oranges() -> void:

@@ -845,7 +845,11 @@ func play_round_button_pressed() -> void:
 		focused.release_focus()
 
 	var player := get_tree().get_first_node_in_group('Player') as Player
-	if player and player.has_method("refill_ammo_to_max_animated"):
+	if player and player.has_method("refill_starting_ammo_animated"):
+		player.refill_starting_ammo_animated()
+	elif player and player.has_method("refill_starting_ammo"):
+		player.refill_starting_ammo(true)
+	elif player and player.has_method("refill_ammo_to_max_animated"):
 		player.refill_ammo_to_max_animated()
 	elif player and player.has_method("refill_ammo_to_max"):
 		player.refill_ammo_to_max(true)

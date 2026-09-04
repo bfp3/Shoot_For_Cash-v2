@@ -100,6 +100,12 @@ same hang-flight as rock-stay, black hazard look — shooting it strikes; pops a
 [color=#C70102]rock-cardinal[/color] / [color=#C70102]rock-cardinal 4 B3[/color]
 same as rock-stay-black with the Cardinal mesh — explode fires 4 energy bursts in the cardinal directions (overlap = strike)
 
+[color=#C70102]threat[/color] / [color=#C70102]threat 1 A4 A1 A8[/color]
+invincible smoke canister that patrols those cells back and forth. Crosshair overlap plays alarm then releases smoke (1.5s cooldown). Shots do not break it
+
+[color=#C70102]clear threat[/color]
+sends live threat canisters down into the splash zone
+
 [color=#C70102]rock-grey[/color] / [color=#C70102]rock-grey 4 B3[/color]
 $1 rock — clears the wave, but missing it does not strike
 
@@ -116,13 +122,16 @@ hold the next command until live rocks / pineapples / balloon-checks are gone (o
 delay that many milliseconds before the next rock
 
 [color=#C70102]balloon-check[/color] / [color=#C70102]balloon-check A4[/color]
-appears until shot — optional cell uses the balloon grid (A1–C8); bare uses the default centre. Saves progress so a strike-out resumes from here (does not start a new round, does not send balloons away)
+appears until shot — optional cell uses the balloon grid (A1–C8); bare uses the default centre. Clears strikes and continues the script. A retry always starts from the top of the round
 
 [color=#C70102]ammo[/color] / [color=#C70102]ammo 16[/color] / [color=#C70102]ammo 69 $100[/color] / [color=#C70102]ammo C8 16 99[/color]
 ammo balloon (default C6). Shoot it to buy ammo. Amount/price default from power_ammo / price_ammo
 
 [color=#C70102]clear ammo[/color]
 pop leftover ammo balloons with no ammo and no charge
+
+[color=#C70102]clear threat[/color]
+send live threat canisters down into the splash zone
 
 [color=#C70102]clear[/color]
 send leftover balloons away (+$10 each)

@@ -40,6 +40,7 @@
 [ext_resource type="PackedScene" uid="uid://b6o112wnsu6a" path="res://ch/canvas_layers/starting_screen_canvaslayer.tscn" id="29_c7cmr"]
 [ext_resource type="AudioStream" uid="uid://bwulgbjlr2hv5" path="res://sfx/water_splash_sfx_02.ogg" id="29_q3aq7"]
 [ext_resource type="StyleBox" uid="uid://dntrv1ctpmicw" path="res://res/custom_themes_by_blake/shop_main_panel_stylebox.tres" id="31_hwubp"]
+[ext_resource type="AudioStream" uid="uid://dqaimmr880tr2" path="res://sfx/opt_2.ogg" id="34_ufvrt"]
 [ext_resource type="Script" uid="uid://b6vm1n6ygnwva" path="res://ch/UpgradeMenu/continue_button.gd" id="34_v17ib"]
 [ext_resource type="FontFile" uid="uid://bfitqgpk0bsyj" path="res://unfiled/Fonts/montreal/Montreal-Bold.ttf" id="47_wtxnc"]
 [ext_resource type="PackedScene" uid="uid://dy6clm2tp8825" path="res://ch/Player/HUD/money_labels.tscn" id="54_i541k"]
@@ -463,6 +464,7 @@ scene_crate_destroy = ExtResource("vfx_crate")
 scene_crate_for_cash_destroy = ExtResource("vfx_crate_cash")
 scene_hazard_destroy = ExtResource("vfx_hazard")
 scene_smokecan_destroy = ExtResource("vfx_smoke")
+scene_threat_smoke = ExtResource("vfx_smoke")
 scene_rock_hit = ExtResource("vfx_rockhit")
 scene_balloon_destroy = ExtResource("vfx_balloon")
 scene_orange_destroy = ExtResource("vfx_orange")
@@ -905,8 +907,13 @@ max_polyphony = 8
 
 [node name="low_humming" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=399372403]
 stream = ExtResource("20_humloop")
-volume_db = -22.0
+volume_db = 10.0
 pitch_scale = 0.55
+
+[node name="Threat_sfx_01" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=2114929129]
+stream = ExtResource("34_ufvrt")
+volume_db = -22.0
+pitch_scale = 2.0
 
 [node name="PianoNotesSFX" type="Node" parent="Rocks/RocksSFXManager" unique_id=890040565]
 

@@ -1,7 +1,7 @@
 extends "res://ch/Rocks/checkpoint.gd"
 ## Scripted ammo balloon: shoot to buy ammo. `clear ammo` pops it with no reward.
 
-var ammo_amount := 99
+var ammo_amount := 12
 var ammo_price := 0
 var _grant_on_pop := true
 
@@ -22,8 +22,8 @@ func configure_from_entry(entry: Dictionary) -> void:
 	var amount := int(entry.get("amount", -1))
 	if amount < 0:
 		amount = int(gl_DataSet.get_value("power_ammo", 0))
-		if amount < 0:
-			amount = 99
+		if amount <= 0:
+			amount = 12
 	ammo_amount = maxi(amount, 0)
 	
 	var balloon_mesh : MeshInstance3D = $Mesh/small_rock2
@@ -115,8 +115,11 @@ func _grant_ammo_purchase() -> void:
 			EventBus.instance.purchase_made.emit("ammo")
 
 	var player = get_tree().get_first_node_in_group("Player")
-	if player and player.has_method("add_ammo") and ammo_amount > 0:
-		player.add_ammo(ammo_amount, true)
+	if player and ammo_amount > 0:
+		if player.has_method("add_ammo"):
+			player.add_ammo(ammo_amount, true)
+		elif "shot_count" in player:
+			player.shot_count = int(player.shot_count) + ammo_amount
 
 	var rm = get_tree().get_first_node_in_group("round_manager")
 	var wave_feedback = null
