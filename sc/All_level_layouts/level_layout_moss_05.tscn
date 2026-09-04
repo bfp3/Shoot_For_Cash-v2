@@ -535,7 +535,7 @@ radial_segments = 10
 size = Vector3(41, 1, 50.645)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ibei4"]
-size = Vector3(250, 1, 250)
+size = Vector3(250.115, 2, 250)
 
 [node name="Moss" type="Node3D" unique_id=229302118]
 script = ExtResource("1_txrxy")
@@ -1031,7 +1031,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6114335, -1.9232558, 11.79
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 39.303)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CrateLayout" unique_id=812953412]
-transform = Transform3D(0.15899903, 0, 0.03313756, 0, 0.165, 0, -0.044094335, 0, 0.11949017, 0.9941268, 0, 17.672047)
+transform = Transform3D(0.15899903, 0, 0.03313756, 0, 0.165, 0, -0.044094335, 0, 0.11949017, 1.2227759, 0, 18.496529)
 material_override = SubResource("StandardMaterial3D_qs0km")
 mesh = SubResource("CylinderMesh_op5gy")
 skeleton = NodePath("../Base")
@@ -1052,10 +1052,10 @@ gravity_scale = 9.0
 shape = SubResource("BoxShape3D_phipx")
 
 [node name="Node3D" type="Node3D" parent="CrateLayout" unique_id=1910894865]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.4485321)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -5.551468)
 
-[node name="CrateForCash" parent="CrateLayout/Node3D" unique_id=1706272792 instance=ExtResource("11_cmq0c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 1.6, -3.8000002)
+[node name="CrateForCash2" parent="CrateLayout/Node3D" unique_id=1706272792 instance=ExtResource("11_cmq0c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 4, -4)
 
 [node name="Crate" parent="CrateLayout/Node3D" unique_id=575272199 instance=ExtResource("12_ac7en")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1000001, 3.7, 0)
@@ -1150,8 +1150,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1000001, 2.7, 0)
 script = null
 
 [node name="RigidBody3D26" parent="CrateLayout/Node3D" unique_id=356783124 instance=ExtResource("12_ac7en")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9000015, 20.7, 1)
-gravity_scale = 2.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9000015, 6.700001, 1)
 script = null
 
 [node name="RigidBody3D27" parent="CrateLayout/Node3D" unique_id=1077017999 instance=ExtResource("12_ac7en")]
@@ -1263,8 +1262,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.1, 2.7, 0)
 script = null
 
 [node name="RigidBody3D52" parent="CrateLayout/Node3D" unique_id=796398145 instance=ExtResource("12_ac7en")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0999985, 20.7, 1)
-gravity_scale = 2.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0999985, 6.700001, 1)
 script = null
 
 [node name="RigidBody3D53" parent="CrateLayout/Node3D" unique_id=307851644 instance=ExtResource("12_ac7en")]
@@ -1376,8 +1374,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1000004, 2.7, 5)
 script = null
 
 [node name="RigidBody3D79" parent="CrateLayout/Node3D" unique_id=2133127613 instance=ExtResource("12_ac7en")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099998474, 20.7, 6)
-gravity_scale = 2.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099998474, 6.700001, 6)
 script = null
 
 [node name="RigidBody3D80" parent="CrateLayout/Node3D" unique_id=304569221 instance=ExtResource("12_ac7en")]
@@ -1489,8 +1486,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.1, 2.7, 5)
 script = null
 
 [node name="RigidBody3D106" parent="CrateLayout/Node3D" unique_id=1584254898 instance=ExtResource("12_ac7en")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.099998, 20.7, 6)
-gravity_scale = 2.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.099998, 6.700001, 6)
 script = null
 
 [node name="RigidBody3D107" parent="CrateLayout/Node3D" unique_id=1955988541 instance=ExtResource("12_ac7en")]
@@ -1590,11 +1586,143 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.1, 0.70000005, -5)
 script = null
 
 [node name="RigidBody3D130" parent="CrateLayout/Node3D" unique_id=1619653440 instance=ExtResource("12_ac7en")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.1, 0.70000005, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.50000006, -4)
+script = null
+
+[node name="RigidBody3D138" parent="CrateLayout/Node3D" unique_id=367484925 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.50000006, -4)
+script = null
+
+[node name="RigidBody3D139" parent="CrateLayout/Node3D" unique_id=410128455 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 1, -4)
+script = null
+
+[node name="RigidBody3D140" parent="CrateLayout/Node3D" unique_id=638836778 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 1, -4)
+script = null
+
+[node name="RigidBody3D141" parent="CrateLayout/Node3D" unique_id=1309866195 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 1.5, -4)
+script = null
+
+[node name="RigidBody3D142" parent="CrateLayout/Node3D" unique_id=1264996274 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, -4)
+script = null
+
+[node name="RigidBody3D185" parent="CrateLayout/Node3D" unique_id=991395833 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1, -4)
+script = null
+
+[node name="RigidBody3D143" parent="CrateLayout/Node3D" unique_id=1771044977 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 1.5, -4)
+script = null
+
+[node name="RigidBody3D144" parent="CrateLayout/Node3D" unique_id=615791212 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 2, -4)
+script = null
+
+[node name="RigidBody3D145" parent="CrateLayout/Node3D" unique_id=1016607668 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2, -4)
+script = null
+
+[node name="RigidBody3D146" parent="CrateLayout/Node3D" unique_id=1589661193 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 2, -4)
+script = null
+
+[node name="RigidBody3D162" parent="CrateLayout/Node3D" unique_id=136800500 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.50000006, -4)
+script = null
+
+[node name="RigidBody3D163" parent="CrateLayout/Node3D" unique_id=1356232251 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 1, -4)
+script = null
+
+[node name="RigidBody3D164" parent="CrateLayout/Node3D" unique_id=2073944857 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 1.5, -4)
+script = null
+
+[node name="RigidBody3D165" parent="CrateLayout/Node3D" unique_id=2075308216 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 2, -4)
+script = null
+
+[node name="RigidBody3D166" parent="CrateLayout/Node3D" unique_id=339987112 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 2.5, -4)
+script = null
+
+[node name="RigidBody3D167" parent="CrateLayout/Node3D" unique_id=1908153586 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 3, -4)
+script = null
+
+[node name="RigidBody3D168" parent="CrateLayout/Node3D" unique_id=1898778410 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 3.5, -4)
+script = null
+
+[node name="RigidBody3D169" parent="CrateLayout/Node3D" unique_id=1385656302 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 4, -4)
+script = null
+
+[node name="RigidBody3D182" parent="CrateLayout/Node3D" unique_id=223997898 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 4.5, -4)
+script = null
+
+[node name="RigidBody3D170" parent="CrateLayout/Node3D" unique_id=553400608 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 2.5, -4)
+script = null
+
+[node name="RigidBody3D171" parent="CrateLayout/Node3D" unique_id=1578109328 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 3, -4)
+script = null
+
+[node name="RigidBody3D172" parent="CrateLayout/Node3D" unique_id=1128766463 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 3.5, -4)
+script = null
+
+[node name="RigidBody3D173" parent="CrateLayout/Node3D" unique_id=2070519930 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 4, -4)
+script = null
+
+[node name="RigidBody3D174" parent="CrateLayout/Node3D" unique_id=978248561 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2.5, -4)
+script = null
+
+[node name="RigidBody3D175" parent="CrateLayout/Node3D" unique_id=71328121 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, -4)
+script = null
+
+[node name="RigidBody3D176" parent="CrateLayout/Node3D" unique_id=1778008508 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3.5, -4)
+script = null
+
+[node name="RigidBody3D177" parent="CrateLayout/Node3D" unique_id=1592046486 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 4.5, -4)
+script = null
+
+[node name="RigidBody3D183" parent="CrateLayout/Node3D" unique_id=1525661097 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 4.5, -4)
+script = null
+
+[node name="RigidBody3D184" parent="CrateLayout/Node3D" unique_id=1098041839 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 4.5, -4)
+script = null
+
+[node name="RigidBody3D178" parent="CrateLayout/Node3D" unique_id=1664224621 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 2.5, -4)
+script = null
+
+[node name="RigidBody3D179" parent="CrateLayout/Node3D" unique_id=234824148 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 3, -4)
+script = null
+
+[node name="RigidBody3D180" parent="CrateLayout/Node3D" unique_id=1378275450 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 3.5, -4)
+script = null
+
+[node name="RigidBody3D181" parent="CrateLayout/Node3D" unique_id=1875453404 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 4, -4)
 script = null
 
 [node name="RigidBody3D131" parent="CrateLayout/Node3D" unique_id=985739533 instance=ExtResource("12_ac7en")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 0.70000005, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.5, -4)
 script = null
 
 [node name="RigidBody3D132" parent="CrateLayout/Node3D" unique_id=603871355 instance=ExtResource("12_ac7en")]
@@ -1602,8 +1730,67 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.1, 2.7, -3)
 script = null
 
 [node name="RigidBody3D133" parent="CrateLayout/Node3D" unique_id=471539578 instance=ExtResource("12_ac7en")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.099998, 20.7, -2)
-gravity_scale = 2.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.099998, 6.700001, -2)
+script = null
+
+[node name="RigidBody3D147" parent="CrateLayout/Node3D" unique_id=1249247376 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6000016, 5.000001, 1)
+script = null
+
+[node name="RigidBody3D148" parent="CrateLayout/Node3D" unique_id=1365805112 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3999987, 5.000001, 1)
+script = null
+
+[node name="RigidBody3D149" parent="CrateLayout/Node3D" unique_id=1630035678 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999984, 5.000001, 6)
+script = null
+
+[node name="RigidBody3D150" parent="CrateLayout/Node3D" unique_id=314343814 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.399999, 5.000001, 6)
+script = null
+
+[node name="RigidBody3D151" parent="CrateLayout/Node3D" unique_id=960744497 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.399999, 5.000001, -2)
+script = null
+
+[node name="RigidBody3D152" parent="CrateLayout/Node3D" unique_id=953235139 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6000016, 3.2000008, -3.6)
+script = null
+
+[node name="RigidBody3D153" parent="CrateLayout/Node3D" unique_id=2100981865 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3999987, 3.2000008, -3.6)
+script = null
+
+[node name="RigidBody3D154" parent="CrateLayout/Node3D" unique_id=1243220332 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999984, 3.2000008, 1.4000001)
+script = null
+
+[node name="RigidBody3D155" parent="CrateLayout/Node3D" unique_id=1873285731 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.399999, 3.2000008, 1.4000001)
+script = null
+
+[node name="RigidBody3D156" parent="CrateLayout/Node3D" unique_id=453677778 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.399999, 3.2000008, -6.6)
+script = null
+
+[node name="RigidBody3D157" parent="CrateLayout/Node3D" unique_id=2016201576 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6000016, 3.2000008, -5.2)
+script = null
+
+[node name="RigidBody3D158" parent="CrateLayout/Node3D" unique_id=1082629459 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3999987, 3.2000008, -5.2)
+script = null
+
+[node name="RigidBody3D159" parent="CrateLayout/Node3D" unique_id=275127394 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999984, 3.2000008, -0.19999993)
+script = null
+
+[node name="RigidBody3D160" parent="CrateLayout/Node3D" unique_id=1957408964 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.399999, 3.2000008, -0.19999993)
+script = null
+
+[node name="RigidBody3D161" parent="CrateLayout/Node3D" unique_id=2068640313 instance=ExtResource("12_ac7en")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.399999, 3.2000008, -8.2)
 script = null
 
 [node name="RigidBody3D134" parent="CrateLayout/Node3D" unique_id=825624082 instance=ExtResource("12_ac7en")]
@@ -1623,7 +1810,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.1, 2.7, -3)
 script = null
 
 [node name="StaticBody3D" type="StaticBody3D" parent="CrateLayout" unique_id=2130671757]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.615, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.615, 117.1)
 collision_layer = 1048577
 collision_mask = 1048577
 

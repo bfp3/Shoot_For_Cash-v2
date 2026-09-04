@@ -3,7 +3,7 @@ class_name Player extends Node3D
 ## When true, pressing the `ctrl` action cycles gun1 → gun2 → gun3 → gun4 → gun5 → gun1.
 @export var ctrl_swap_guns := true
 
-const mouse_no_lerp := false
+const mouse_no_lerp := true
 
 @onready var mobile_controller: Node = $MobileControl
 var is_mobile := OS.has_feature("mobile")
@@ -583,8 +583,12 @@ func _process(delta: float) -> void:
 			## Hold shoot = rapid fire (same as old TAB path). No release-tap shot / no scope expand.
 			if Input.is_action_pressed("shootWeapon"):
 				fire_weapon_auto()
-		elif Input.is_action_just_released("shootWeapon"):
+				
+		elif Input.is_action_just_pressed("shootWeapon"):
 			fire_weapon()
+			
+		#elif Input.is_action_just_released("shootWeapon"):
+			#fire_weapon()
 
 		## Debug / leftover: TAB still rapid-fires on any loadout.
 		if Input.is_key_label_pressed(KEY_TAB):
@@ -2254,7 +2258,9 @@ func gun_stats() -> void:
 	## `_apply_resting_crosshair_size()`. Forcing 1.0 here made every shot
 	## snap the reticle too small on release.
 	power_gun_fire_rate = 0.1
-	_loadout_bullet_speed_override = -1.0
+	#_loadout_bullet_speed_override = -1.0
+	weapon_shooting.power_bullet_speed = 0.1
+
 	if weapon_shooting:
 		weapon_shooting.power_bullet_delay = 0.1
 

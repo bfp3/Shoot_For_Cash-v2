@@ -26,7 +26,7 @@ var additional_increment := 1.0
 
 var _timer_paused := false
 var _pause_toggle_locked := false
-## True while balloon-check has this clock held. Resume only pops that latch.
+## True while balloon-rest has this clock held. Resume only pops that latch.
 var _checkpoint_timer_latched := false
 ## Endless mode: count up from 0 instead of counting down.
 var count_up := false
@@ -315,7 +315,7 @@ func update_resume_timer() -> void:
 	_pause_toggle_locked = false
 
 
-## Hold the running clock while balloon-check is in the sky.
+## Hold the running clock while balloon-rest is in the sky.
 func latch_timer() -> void:
 	if _checkpoint_timer_latched:
 		return
@@ -325,7 +325,7 @@ func latch_timer() -> void:
 	enter_state(State.PAUSE_TIMER)
 
 
-## Resume after balloon-check is popped (or dismissed). No-op if we didn't latch.
+## Resume after balloon-rest is popped (or dismissed). No-op if we didn't latch.
 func unlatch_timer() -> void:
 	if not _checkpoint_timer_latched:
 		return

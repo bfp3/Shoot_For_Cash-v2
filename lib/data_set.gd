@@ -1,6 +1,6 @@
 extends Node
 ## When true, Advanced / Expert / all challenges and all numbered levels are treated as unlocked.
-const debug_everything_unlocked := false
+const debug_everything_unlocked := true
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 ## Advanced / Expert also require net worth (see unlock amounts below).
@@ -120,7 +120,6 @@ var dataset_float : Dictionary = {
 	,"rock_type_avoider"	: [0,		1]
 	,"rock_type_red_attacker": [0,		1]
 	,"rock_type_gap"		: [0,		1]
-	,"rock_type_chaser"		: [0,		1]
 	## Grey rock: $1, 1 health. Misses do not strike.
 	,"rock_type_grey"		: [1,		1]
 	## rock-stay: hangs at aim after a fast straight approach.
@@ -129,8 +128,6 @@ var dataset_float : Dictionary = {
 	,"rock_type_threat"		: [0,		1]
 	## rock-stay-black uses hazard_type_1 (shooting it strikes; 3s self-destruct).
 	## rock-cardinal is the same, plus four cardinal energy bursts on explode.
-	## Mothership: [bonus cash, hits to destroy].
-	,"mothership_reward"	: [35,		3]
 	## Crate: same cash/health as a basic rock; uses crate mesh + crate_particles.
 	,"rock_type_crate"		: [2,		1]
 	## Shop range-target cash shown when entering a place.

@@ -6,6 +6,7 @@ range jetz
 	reward $100,000
 	round
 		pace-impossible
+
 		#sfx-play star_wars_cantina -40.0
 		sfx-play sephiroff -45.0
 		ammo
@@ -34,7 +35,7 @@ range jetz
 		rock 8 a7
 		wait
 		ammo
-		balloon-check
+		balloon-rest
 
 		rock 8 a7
 		wait 350
@@ -54,7 +55,7 @@ range jetz
 		wait
 
 		ammo
-		balloon-check
+		balloon-rest
 
 		wait 1000
 		rock 1 a4
@@ -82,7 +83,7 @@ range jetz
 		wait 3000
 
 		ammo
-		balloon-check
+		balloon-rest
 
 		sfx-faster sephiroff
 
@@ -99,31 +100,19 @@ range jetz
 
 		wait 3000
 		rock
-		wait 4000
-
-		rock-avoider 1 a1
-		rock-avoider 8 a8
-
-		wait 3000
-		rock-avoider 1 a1
-		rock-avoider 8 a8
-		rock
-		wait 3000
-
-		rock
-		wait 3000
-
-
-		rock 8 a8
-		wait 0
-		rock 7 a7
-		wait 0
-		rock 6 a6
-		wait 1000
-		rock-avoider 1 a8
 		wait 2000
 
-		rock-avoider 1 a7
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+
+		wait 3000
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		rock
+		wait 3000
+
+		rock
+		wait 2000
 
 		rock 8 a8
 		wait 0
@@ -131,7 +120,16 @@ range jetz
 		wait 0
 		rock 6 a6
 		wait 1000
-		rock-avoider 1 a8
+
+		rock-avoider 1 a1
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
 		wait 2000
 		rock
 		rock
@@ -147,31 +145,10 @@ range jetz
 		sfx-faster sephiroff
 		ammo c1
 		ammo a1
-		balloon-check
+		balloon-rest
 		wait 2000
 
-		rock-avoider 1 a7
-
-		rock 8 a8
-		wait 0
-		rock 7 a7
-		wait 0
-		rock 6 a6
-		wait 1000
-		rock-avoider 1 a8
-		wait 2000
-		rock
-		rock
-		rock
-		wait 2000
-		rock
-		rock
-		wait 2000
-		rock
-		rock
-		wait 2000
-
-		rock-avoider 1 a7
+		rock-avoider 1 a1
 
 		rock 8 a8
 		wait 0
@@ -179,7 +156,7 @@ range jetz
 		wait 0
 		rock 6 a6
 		wait 1000
-		rock-avoider 1 a8
+		rock-avoider 1 a1
 		wait 2000
 		rock
 		rock
@@ -187,11 +164,29 @@ range jetz
 		wait 2000
 		rock
 		rock
+		wait 2000
 		rock
 		rock
+		wait 2000
+
+		rock-avoider 1 a1
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+
 
 		ammo
-		balloon-check
+		balloon-rest
 
 		rock 8 a8
 		wait 0
@@ -199,7 +194,7 @@ range jetz
 		wait 0
 		rock 6 a6
 		wait 1000
-		rock-avoider 1 a8
+		rock-avoider 4 a4
 		wait 2000
 		rock
 		rock
@@ -212,37 +207,29 @@ range jetz
 		rock
 		wait 2000
 
-		wait 4000
-
-
-
 
 		rock
 		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
-		wait
-		red-avoider
+		rock-avoider 1 a1
+		wait 500
+		rock-avoider 2 a2
+		wait 500
+		rock-avoider 1 b1
+		wait 500
+		rock-avoider 2 b2
+		wait 500
+		rock-avoider 1 c1
+		wait 500
+		rock-avoider 2 c2
 		wait 1000
 		rock 4 a4
 		wait
 
 		ammo
-		balloon-check
+		balloon-rest
 
 		rock 4 a4
-		wait 3000
+		wait 2000
 		rock 1 a4
 		wait 2500
 
@@ -264,13 +251,12 @@ range jetz
 		rock
 		rock
 
-		wait 3000
-
+		wait
 
 		sfx-faster sephiroff
 		ammo c1
 		ammo a1
-		balloon-check
+		balloon-rest
 
 		rock 1 a1
 		wait 0
@@ -285,7 +271,7 @@ range jetz
 
 		wait 3000
 		rock
-		wait 4000
+		wait 2000
 
 		rock-avoider 1 a1
 		rock-avoider 8 a8
@@ -304,34 +290,27 @@ range jetz
 		rock 7 a7
 		wait 0
 		rock 6 a6
+
 		wait 1000
 		rock-avoider 1 a8
 		wait 2000
 
-		rock-avoider 1 a7
 
-		balloon-check
+		ammo
+		balloon-rest
 
-		rock 8 a8
-		wait 0
-		rock 7 a7
-		wait 0
-		rock 6 a6
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+
 		wait 1000
-		rock-avoider 1 a8
-		wait 2000
-		rock
-		rock
-		rock
-		wait 2000
-		rock
-		rock
-		wait 2000
-		rock
-		rock
-		wait 2000
-
-		rock-avoider 1 a7
 
 		rock 8 a8
 		wait 0
@@ -355,8 +334,28 @@ range jetz
 		rock-avoider 1 a7
 
 		ammo
-		balloon-check
+		balloon-rest
 
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		rock
+		
+		
+		ammo
+		balloon-rest
+		
 		rock 8 a8
 		wait 0
 		rock 7 a7
@@ -371,50 +370,13 @@ range jetz
 		wait 2000
 		rock
 		rock
-		rock
-		rock
-
-
-
-		rock 8 a8
-		wait 0
-		rock 7 a7
-		wait 0
-		rock 6 a6
-		wait 1000
-		rock-avoider 1 a8
-		wait 2000
-		rock
-		rock
-		rock
 		wait 2000
 		rock
 		rock
 		wait 2000
-		rock
-		rock
-		wait 2000
-
-		wait 4000
-
 		rock
 
 		wait 4000
-
-		rock-avoider
-		wait
-		rock-avoider
-		wait
-		rock-avoider
-		wait
-		rock-avoider
-		wait
-		rock-avoider
-		wait
-		rock-avoider
-		wait 4000
-		rock
-		wait
 
 		ammo
 
@@ -424,4 +386,3 @@ range jetz
 		pineapple 3 a3
 		pineapple 4 a4
 		pineapple 5 a5
-		#repeat 99

@@ -267,14 +267,6 @@ func shake_camera_rock_smokecan() -> void:
 	await _shake_rock_smokecan()
 
 
-func shake_camera_rock_chaser() -> void:
-	await _shake_rock_chaser()
-
-
-func shake_camera_rock_mothership() -> void:
-	await _shake_rock_mothership()
-
-
 func shake_camera_rock_juggle() -> void:
 	await _shake_rock_juggle()
 
@@ -491,33 +483,6 @@ func _shake_rock_smokecan() -> void:
 	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", 0.35, 0.07).as_relative()
 	cam_shake_tween.tween_property(self, "fov", _orig_fov_for_shake + 1.5, 0.1)
 	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:z", -0.45, 0.1).as_relative()
-	_settle_shake(0.4)
-	await cam_shake_tween.finished
-
-
-func _shake_rock_chaser() -> void:
-	if not _prepare_shake():
-		return
-	cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
-	cam_shake_tween.tween_property(self, "rotation_degrees:y", 0.9, 0.08).as_relative()
-	cam_shake_tween.parallel().tween_property(self, "position:x", 0.1, 0.08).as_relative()
-	cam_shake_tween.tween_property(self, "rotation_degrees:y", -1.4, 0.12).as_relative()
-	cam_shake_tween.parallel().tween_property(self, "position:x", -0.14, 0.12).as_relative()
-	cam_shake_tween.parallel().tween_property(self, "fov", _orig_fov_for_shake - 1.5, 0.12)
-	cam_shake_tween.tween_property(self, "rotation_degrees:y", 0.5, 0.09).as_relative()
-	_settle_shake(0.4)
-	await cam_shake_tween.finished
-
-
-func _shake_rock_mothership() -> void:
-	if not _prepare_shake():
-		return
-	cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	cam_shake_tween.tween_property(self, "fov", _orig_fov_for_shake - 5.0, 0.08)
-	cam_shake_tween.parallel().tween_property(self, "position:z", -0.15, 0.08).as_relative()
-	cam_shake_tween.tween_property(self, "fov", _orig_fov_for_shake + 2.0, 0.12)
-	cam_shake_tween.parallel().tween_property(self, "position:z", 0.2, 0.12).as_relative()
-	cam_shake_tween.parallel().tween_property(self, "rotation_degrees:x", -0.4, 0.12).as_relative()
 	_settle_shake(0.4)
 	await cam_shake_tween.finished
 

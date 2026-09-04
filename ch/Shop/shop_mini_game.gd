@@ -811,7 +811,6 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == "red-attacker"
 		or cmd == "rock-gap"
 		or cmd == "rock-red-gap"
-		or cmd == "rock-chaser"
 		or cmd == "rock-juggle"
 		or cmd == "crate"
 	)
@@ -928,8 +927,6 @@ func _kind_from_spawn_cmd(cmd: String) -> ShopMiniRock.RockKind:
 			return ShopMiniRock.RockKind.RED
 		"rock-avoider":
 			return ShopMiniRock.RockKind.AVOIDER
-		"rock-chaser":
-			return ShopMiniRock.RockKind.CHASER
 		_:
 			return ShopMiniRock.RockKind.BASIC
 
@@ -2001,7 +1998,7 @@ func _radius_for_kind(kind: ShopMiniRock.RockKind) -> float:
 			return _rng.randf_range(minf(black_rock_size_min, black_rock_size_max), maxf(black_rock_size_min, black_rock_size_max)) * size_scale * black_rock_size_scale
 		ShopMiniRock.RockKind.RED:
 			return _rng.randf_range(minf(red_rock_size_min, red_rock_size_max), maxf(red_rock_size_min, red_rock_size_max)) * size_scale * rock_size_scale
-		ShopMiniRock.RockKind.AVOIDER, ShopMiniRock.RockKind.CHASER:
+		ShopMiniRock.RockKind.AVOIDER:
 			return _rng.randf_range(minf(basic_rock_size_min, basic_rock_size_max), maxf(basic_rock_size_min, basic_rock_size_max)) * size_scale * rock_size_scale * 1.15
 		_:
 			return _rng.randf_range(minf(basic_rock_size_min, basic_rock_size_max), maxf(basic_rock_size_min, basic_rock_size_max)) * size_scale * rock_size_scale
@@ -2600,9 +2597,6 @@ func _try_shoot() -> void:
 				on_shop_avoider_finished(rock, true)
 				_rocks.remove_at(i)
 				continue
-			# Chaser: ignore shots until fully locked.
-			if rock.kind == ShopMiniRock.RockKind.CHASER and not rock._chaser_locked:
-				continue
 			hit_any = true
 			var hit_pos := rock.position
 			var kind: ShopMiniRock.RockKind = rock.kind
@@ -2703,22 +2697,6 @@ func get_aim_crosshair() -> Vector2:
 
 func get_aim_radius() -> float:
 	return _current_target_radius
-
-
-## Column 1–8 / row A–C play rectangle (above the wall) for rock-chasers.
-func get_chaser_play_bounds() -> Rect2:
-	var x1 := _column_to_x(1)
-	var x8 := _column_to_x(8)
-	var y_a := _row_to_y(1)
-	var y_c := _row_to_y(3)
-	var min_x := minf(x1, x8)
-	var max_x := maxf(x1, x8)
-	var min_y := minf(y_a, y_c)
-	var max_y := maxf(y_a, y_c)
-	# Keep a little room above the wall so they don't splash while dodging.
-	var wall_y := _overlay.size.y * WALL_Y_RATIO
-	max_y = minf(max_y, wall_y - 36.0)
-	return Rect2(Vector2(min_x, min_y), Vector2(maxf(max_x - min_x, 40.0), maxf(max_y - min_y, 40.0)))
 
 
 ## Avoider finished: crosshair contact = strike + big shake; lifetime expire = quiet pop.
@@ -2858,8 +2836,6 @@ func _blast_intercept(entry: Dictionary) -> void:
 			_rocks.remove_at(i)
 			_play_destroy_sfx()
 			_play_aoe(hit_pos)
-			continue
-		if kind == ShopMiniRock.RockKind.CHASER and not rock._chaser_locked:
 			continue
 		rock.mark_destroyed()
 		_rocks.remove_at(i)

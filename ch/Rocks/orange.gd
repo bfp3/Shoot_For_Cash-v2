@@ -324,8 +324,8 @@ func _set_invisible_col_active(active: bool) -> void:
 	invisible_col.collision_mask = 0
 	if active:
 		invisible_col.set_collision_layer_value(INVISIBLE_COL_LAYER, true)
-	invisible_col.monitorable = active
-	invisible_col.monitoring = false
+	invisible_col.set_deferred("monitorable", active)
+	invisible_col.set_deferred("monitoring", active)
 
 
 func _disable_rigid_collision() -> void:

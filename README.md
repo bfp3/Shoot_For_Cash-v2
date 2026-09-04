@@ -28,7 +28,7 @@ Arcade shooter built in Godot 4.6.
 | File | What it is for |
 |---|---|
 | [`AGENTS.md`](AGENTS.md) | Conventions for people and agents working in this repo |
-| [`docs/round-loop.md`](docs/round-loop.md) | Shop → round → ladder → tally |
+| [`docs/round-loop.md`](docs/round-loop.md) | Shop → round → tally |
 
 ## Notes
 

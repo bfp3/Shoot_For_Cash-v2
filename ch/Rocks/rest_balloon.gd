@@ -1,7 +1,6 @@
 extends "res://ch/Rocks/balloon.gd"
-## Balloon-check: drifts up into centre, bobs in place, never leaves until shot.
-## Shooting it clears strikes and continues the script. It does NOT save a mid-script
-## fail-resume point — retries always start from the beginning of the round.
+## Balloon-rest (health balloon): drifts up into centre, bobs in place, never leaves until shot.
+## Shooting it clears strikes and continues the script.
 
 const REST_POS := Vector3(-1.0, 3.5, 22.5) ## B5 (row 2, column 5)
 const SPAWN_POS := Vector3(0.0, -12.0, 26.0)
@@ -10,6 +9,8 @@ const ARRIVE_DURATION := 1.0
 const BOB_DISTANCE := 0.28
 const BOB_DURATION := 1.35
 
+const HEALTH_MAT := preload("res://res/BALLOON_MAT_HEALTH_BALLOON.tres")
+
 var _bob_tween: Tween
 var _arrived := false
 var _consumed := false
@@ -17,17 +18,24 @@ var _rest_pos := REST_POS
 
 
 func _ready() -> void:
-	
 	balloon_type = BalloonType.WHITE
 	default_balloon_type = BalloonType.WHITE
 	penalty_amount = 0
 	original_penalty_amount = 0
-	add_to_group("checkpoint")
+	add_to_group("rest_balloon")
+	add_to_group("health_balloon")
 	configure_balloon_colour()
+	_apply_health_look()
 	hide()
 	disable_collision()
 	set_process_input(false)
-	
+
+
+func _apply_health_look() -> void:
+	var mesh := get_node_or_null("Mesh/small_rock2") as MeshInstance3D
+	if mesh and HEALTH_MAT:
+		mesh.material_override = HEALTH_MAT
+
 
 func arrive_from_below(rest: Vector3 = REST_POS) -> void:
 	if transition_locked:
@@ -46,6 +54,7 @@ func arrive_from_below(rest: Vector3 = REST_POS) -> void:
 	if has_node("Mesh"):
 		$Mesh.show()
 		$Mesh.scale = Vector3.ONE
+	_apply_health_look()
 	enter_state(State.ACTIVE)
 	if has_node("AnimationPlayer"):
 		$AnimationPlayer.stop()
@@ -71,7 +80,6 @@ func arrive_from_below(rest: Vector3 = REST_POS) -> void:
 
 func _start_bob() -> void:
 	_stop_bob()
-	#$Checkpoint.play()
 	_bob_tween = create_tween()
 	_bob_tween.set_ease(Tween.EASE_IN_OUT)
 	_bob_tween.set_trans(Tween.TRANS_SINE)
@@ -101,7 +109,7 @@ func hit_by_player(damage: int, _screen_offset: Vector2 = Vector2.ZERO) -> void:
 
 
 func rock_pop_balloon() -> void:
-	## Rocks / pineapples must not clear a balloon-check — only a player shot does.
+	## Rocks / pineapples must not clear a rest balloon — only a player shot does.
 	return
 
 
@@ -110,7 +118,7 @@ func _on_area_3d_body_entered(_body: Node3D) -> void:
 
 
 func start_destroyed_process() -> void:
-	## Ignore generic hazard destroy — balloon-check only pops from a player shot.
+	## Ignore generic hazard destroy — rest balloon only pops from a player shot.
 	smoke_particles()
 	return
 
@@ -118,7 +126,10 @@ func start_destroyed_process() -> void:
 func _consume_by_player() -> void:
 	if _consumed:
 		return
-	$Checkpoint.play()
+	if has_node("RestBalloon") and $RestBalloon is AudioStreamPlayer:
+		$RestBalloon.play()
+	elif has_node("Checkpoint") and $Checkpoint is AudioStreamPlayer:
+		$Checkpoint.play()
 	_consumed = true
 	rock_activated = false
 	_stop_bob()
@@ -135,10 +146,11 @@ func _consume_by_player() -> void:
 	play_destroy_sfx()
 	_keep_playing_audio_after_free()
 	if EventBus.instance:
+		EventBus.instance.rest_balloon_shot.emit()
 		EventBus.instance.checkpoint_shot.emit()
 	var round_manager = get_tree().get_first_node_in_group("round_manager")
-	if round_manager and round_manager.has_method("on_checkpoint_shot"):
-		round_manager.on_checkpoint_shot()
+	if round_manager and round_manager.has_method("on_rest_balloon_shot"):
+		round_manager.on_rest_balloon_shot()
 	await was_hit_tween()
 	if is_instance_valid(self):
 		queue_free()

@@ -176,7 +176,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-chaser / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / mothership / smokecan / crate / pineapple / red_rock_error:
+## Targets — rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, spawn_row, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
@@ -184,7 +184,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
 ##   `rock-grey` is $1 and does not strike on miss. `rock-invisible` is a yellow rock hidden until the crosshair overlaps it; missing it does not strike. `rock-stay` flies straight to aim then hangs (pace ignored).
 ##   `rock-stay 1 a1 a8 c8 c1 a4 1` — spawn col 1, visit those cells in order; trailing `1` = then leave into the splash zone (`0` or omit = hang on the last cell).
-##   `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `rock-fake` looks and flies like `rock-black` but never strikes; the crosshair x-ray reveals a grey rock. `mothership` flees the player for bonus cash.
+##   `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `rock-fake` looks and flies like `rock-black` but never strikes; the crosshair x-ray reveals a grey rock.
 ##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
 ##   `threat 1 a4 a1 a8` — invincible smoke canister that patrols those cells back and forth.
 ##     Crosshair overlap plays `alarm_smoke` then releases `aoe_threat_smoke` (1.5s cooldown).
@@ -205,24 +205,22 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## wait: {cmd} — hold until the sky is clear (same as old `wait until clear`).
 ## wait 0 / wait 600: {cmd, ms} — delay that many milliseconds before the next rock.
 ## wait until clear / wait-until-clear: still accepted as an alias of bare `wait`.
-##   Hold the next command until live rocks / pineapples / smokecans / balloon-checks
+##   Hold the next command until live rocks / pineapples / smokecans / balloon-rests
 ##   / bonus targets are gone. Oranges, regular balloons, rock-avoiders, and threat
 ##   canisters are ignored (use `rock-avoider-kill` / `clear threat` for leftovers). A miss does not skip this wait. Objects
 ##   count as gone as soon as their destroy process starts (do not wait for pop tweens).
-## balloon-check / balloon check / balloon-check A4: {cmd, row, column}.
+## balloon-rest / balloon rest / balloon-rest A4: {cmd, row, column}.
 ##   Bare command uses the default centre rest pose. A cell parks it on the balloon grid.
 ##   Shooting it clears strikes and continues the script. Retries always start
 ##   from the top of the round — it does not save a mid-script resume point.
 ##   It does not jump rounds or send leftover balloons away.
 ##   `checkpoint` is accepted as an alias.
-## balloon-mult / balloon-bank: {cmd}. BANK CASH (left) vs +1 Multiplier (right).
-##   Shoot one; the other leaves. Place both next to `balloon-check` so they appear together.
 ## ammo / ammo 16 / ammo 69 $100 / ammo C8 / ammo C8 16 99:
 ##   {cmd, row, column, amount, price}. Bare parks at C6.
 ##   Amount omitted → power_ammo. Price omitted → price_ammo.
 ##   `$N` or a second number is the cash cost. Distinct from `clear ammo`.
 ## clear: {cmd} — send all live round balloons away (+$10 each). Does not pop
-##   a balloon-check. `wait clear` is still wait-until-clear, not this command.
+##   a balloon-rest. `wait clear` is still wait-until-clear, not this command.
 ## clear balloon A4: {cmd: clear-balloon, row, column} — same drift/pay for one cell.
 ## clear ammo: {cmd: clear-ammo} — pop leftover ammo balloons with no ammo and no charge.
 ## clear threat: {cmd: clear-threat} — send live threat canisters into the splash zone.
@@ -281,7 +279,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'red_rock_error', 'smokecan', 'crate':
+		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
 
 		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat':
@@ -297,22 +295,12 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'balloon':
 			if parts.size() > 1:
 				var balloon_extra := String(parts[1]).strip_edges().to_lower()
-				if balloon_extra == 'check':
-					return _parse_balloon_check_command(parts)
-				if balloon_extra == 'mult' or balloon_extra == 'multiply':
-					return _parse_ladder_balloon_command('balloon-mult', parts)
-				if balloon_extra == 'bank':
-					return _parse_ladder_balloon_command('balloon-bank', parts)
+				if balloon_extra == 'rest' or balloon_extra == 'check':
+					return _parse_balloon_rest_command(parts)
 			return _parse_balloon_command(parts)
 
-		'balloon-check':
-			return _parse_balloon_check_command(parts)
-
-		'balloon-mult', 'balloon-multiply':
-			return _parse_ladder_balloon_command('balloon-mult', parts)
-
-		'balloon-bank':
-			return _parse_ladder_balloon_command('balloon-bank', parts)
+		'balloon-rest':
+			return _parse_balloon_rest_command(parts)
 
 		'ammo':
 			return _parse_ammo_command(parts)
@@ -329,11 +317,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'wait-until-clear':
 			return {'cmd': 'wait-until-clear'}
 
-		'checkpoint':
-			return _parse_balloon_check_command(parts)
 
-		'ladder':
-			return {'cmd': 'ladder'}
 
 		'hold':
 			var hold_ms := _hold_out_ms_from_tokens(parts)
@@ -546,13 +530,16 @@ const DEFAULT_ROUND_REPEAT := 1
 const DEFAULT_WAIT_MS := 1000
 ## Sentinel: leave spawn column / aim cell / balloon cell to the game at launch time.
 const RANDOM_SLOT := -1
+## Bare `ammo` with no cell → C6 (row 3, column 6).
+const DEFAULT_AMMO_ROW := 3
+const DEFAULT_AMMO_COLUMN := 6
 
 
 func _is_random_token(token: String) -> bool:
 	return token.strip_edges() == '?'
 
 
-## rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-chaser / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / mothership / smokecan / crate / pineapple / red_rock_error
+## rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-juggle / rock-grey / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error
 ##   rock          → rock ? ?   (random column, aim row A + random aim column)
 ##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
@@ -842,7 +829,7 @@ func _parse_repeat_command(parts: PackedStringArray) -> Dictionary:
 
 
 ## clear / clear balloon A4 / clear ammo. Bare `clear` = all live round balloons.
-## `clear balloon A4` = only that cell (no-op if empty). Does not pop a balloon-check.
+## `clear balloon A4` = only that cell (no-op if empty). Does not pop a balloon-rest.
 ## `clear ammo` = pop leftover ammo balloons with no ammo and no charge.
 func _parse_clear_command(parts: PackedStringArray) -> Dictionary:
 	var result := {
@@ -869,10 +856,10 @@ func _parse_clear_command(parts: PackedStringArray) -> Dictionary:
 	return result
 
 
-## balloon-check / balloon check / checkpoint, optional cell (A4). Bare = default rest pose.
-func _parse_balloon_check_command(parts: PackedStringArray) -> Dictionary:
+## balloon-rest / balloon rest / checkpoint, optional cell (A4). Bare = default rest pose.
+func _parse_balloon_rest_command(parts: PackedStringArray) -> Dictionary:
 	var result := {
-		'cmd': 'balloon-check',
+		'cmd': 'balloon-rest',
 		'row': RANDOM_SLOT,
 		'column': RANDOM_SLOT,
 	}
@@ -888,19 +875,7 @@ func _parse_balloon_check_command(parts: PackedStringArray) -> Dictionary:
 	return result
 
 
-func _parse_ladder_balloon_command(cmd: String, parts: PackedStringArray) -> Dictionary:
-	var result := _parse_balloon_check_command(parts)
-	result.cmd = cmd
-	return result
 
-
-const DEFAULT_AMMO_ROW := 3
-const DEFAULT_AMMO_COLUMN := 6
-
-
-## ammo / ammo 16 / ammo 69 $100 / ammo C8 / ammo C8 16 99
-## Default cell C6. First integer = ammo amount. `$N` or second integer = price.
-## Omitted amount/price stay -1 so gameplay uses power_ammo / price_ammo.
 func _parse_ammo_command(parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': 'ammo',
@@ -1531,19 +1506,13 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return cmd
 		'pineapples':
 			return 'pineapples'
-		'balloon-check', 'checkpoint':
+		'balloon-rest':
 			var crow := int(entry.get('row', RANDOM_SLOT))
 			var ccol := int(entry.get('column', RANDOM_SLOT))
 			if crow < 1 or ccol < 1:
-				return 'balloon-check'
+				return 'balloon-rest'
 			var check_letter = ['', 'A', 'B', 'C'][clampi(crow, 1, 3)]
-			return 'balloon-check %s%d' % [check_letter, ccol]
-		'ladder':
-			return 'ladder'
-		'balloon-mult', 'balloon-multiply':
-			return 'balloon-mult'
-		'balloon-bank':
-			return 'balloon-bank'
+			return 'balloon-rest %s%d' % [check_letter, ccol]
 		'ammo':
 			var bits: PackedStringArray = ['ammo']
 			var arow := int(entry.get('row', DEFAULT_AMMO_ROW))
@@ -1578,7 +1547,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-chaser', 'rock-juggle', 'rock-grey', 'mothership', 'smokecan', 'crate', 'red_rock_error':
+		'pineapple', 'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'smokecan', 'crate', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))

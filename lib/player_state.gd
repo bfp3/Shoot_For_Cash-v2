@@ -513,9 +513,6 @@ func log_hit(item:String, item_type:String, value:int, world_origin: Vector3 = V
 	# Smokecans are obstacles only — do not gate round progress.
 	elif item.contains('rock_type_8') or item.contains('smokecan'):
 		return
-
-	elif item.contains('mothership'):
-		return
 		
 		
 	elif item.contains('pineapple'):
@@ -548,8 +545,6 @@ func log_rocks(_total_rocks : int, rock_type_name : String) -> void:
 		return
 	if rock_type_name.contains('rock_type_avoider') or rock_type_name.contains('avoider'):
 		return
-	if rock_type_name.contains('mothership'):
-		return
 	
 	dataset.total_rocks_in_round += 1
 	dataset.total_rocks_in_round_remaining += 1
@@ -567,8 +562,6 @@ func log_rock_missed(item : String = '') -> void:
 	if item.contains('red_attacker'):
 		return
 	if item.contains('rock_type_juggle') or item.contains('juggle'):
-		return
-	if item.contains('mothership'):
 		return
 
 	dataset.total_rocks_in_round_remaining -= 1

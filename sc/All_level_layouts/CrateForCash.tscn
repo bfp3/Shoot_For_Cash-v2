@@ -4,13 +4,13 @@
 [ext_resource type="PackedScene" uid="uid://c5v3o1eq73ikc" path="res://ch/HiddenCrate/HiddenCrate.tscn" id="4_p2bv1"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1cyfr"]
+size = Vector3(0.5, 0.5, 0.5)
 
 [node name="CrateForCash" type="RigidBody3D" unique_id=1706272792]
 collision_layer = 1048577
 collision_mask = 1048577
 axis_lock_linear_z = true
 mass = 10.0
-gravity_scale = 0.06
 script = ExtResource("2_crate")
 use_hit_vfx = true
 destroy_vfx_cue = &"crate_for_cash_destroy"
@@ -22,5 +22,5 @@ hit_torque_strength = 350.0
 shape = SubResource("BoxShape3D_1cyfr")
 
 [node name="HiddenCrate" parent="." unique_id=737478994 instance=ExtResource("4_p2bv1")]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 skeleton = NodePath("")

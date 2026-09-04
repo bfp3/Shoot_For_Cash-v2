@@ -1,4 +1,4 @@
-extends "res://ch/Rocks/checkpoint.gd"
+extends "res://ch/Rocks/rest_balloon.gd"
 ## Scripted ammo balloon: shoot to buy ammo. `clear ammo` pops it with no reward.
 
 var ammo_amount := 12
@@ -11,6 +11,10 @@ var _grant_on_pop := true
 
 func _ready() -> void:
 	super._ready()
+	if is_in_group("rest_balloon"):
+		remove_from_group("rest_balloon")
+	if is_in_group("health_balloon"):
+		remove_from_group("health_balloon")
 	if is_in_group("checkpoint"):
 		remove_from_group("checkpoint")
 	add_to_group("ammo_balloon")

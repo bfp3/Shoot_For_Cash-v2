@@ -1,6 +1,24 @@
 [gd_scene format=3 uid="uid://b4ddmogbrspeb"]
 
 [ext_resource type="Script" uid="uid://cft21aci3a61s" path="res://ch/canvas_layers/net_worth_label.gd" id="1_script"]
+[ext_resource type="Shader" uid="uid://d0dm73yo3u4k6" path="res://res/Shaders/vector_crt.gdshader" id="2_mu804"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pqyrb"]
+shader = ExtResource("2_mu804")
+shader_parameter/warp_amount = 0.0850000040375
+shader_parameter/aberration = 0.0010000000475
+shader_parameter/scanline_count = 300.00001045
+shader_parameter/scanline_opacity = 0.10000000475
+shader_parameter/grille_opacity = 0.0
+shader_parameter/bloom_amount = 0.0
+shader_parameter/bloom_spread = 0.02999999932945
+shader_parameter/bloom_threshold = 0.12
+shader_parameter/brightness = 1.40800004313
+shader_parameter/vignette_intensity = 0.3950000187625
+shader_parameter/corner_radius = 0.0
+shader_parameter/grain_amount = 0.0
+shader_parameter/flicker_amount = 0.0
+shader_parameter/phosphor_tint = Color(1, 0.96, 0.88, 1)
 
 [node name="NetWorth" type="Control" unique_id=2010015299]
 z_index = 1
@@ -40,3 +58,18 @@ fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 2
 vertical_alignment = 1
+
+[node name="CRT" type="ColorRect" parent="Amount" unique_id=1477454954]
+z_index = 31
+material = SubResource("ShaderMaterial_pqyrb")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5005716
+anchor_top = 0.19717064
+anchor_right = 1.2057143
+anchor_bottom = 0.8651685
+offset_right = -3.0517578e-05
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true

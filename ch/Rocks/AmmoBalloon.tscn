@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://ckx6qjnfh8tf2"]
 
-[ext_resource type="PackedScene" uid="uid://ca23ac3kc4wdk" path="res://ch/Rocks/Checkpoint.tscn" id="1_ckpt"]
+[ext_resource type="PackedScene" uid="uid://cjnx473cat5op" path="res://ch/Rocks/RestBalloon.tscn" id="1_ckpt"]
 [ext_resource type="Script" uid="uid://cro3d0g2qmcxt" path="res://ch/Rocks/ammo_balloon.gd" id="2_script"]
 [ext_resource type="Material" uid="uid://cte0j125svd7e" path="res://res/camo_material.tres" id="3_5tkbb"]
-[ext_resource type="Material" uid="uid://c265b2f4yjk72" path="res://res/pileon_clay_material_2.tres" id="4_5tkbb"]
 [ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="4_rtqgq"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="5_vlpx7"]
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="6_m4c4i"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="7_qndsk"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_act0r"]
+[ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="9_rtqgq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5tkbb"]
 size = Vector3(1, 2.506958, 1)
@@ -324,10 +324,11 @@ turbulence_noise_scale = 0.0
 turbulence_noise_speed = Vector3(0, 1, 0)
 turbulence_influence_over_life = SubResource("CurveTexture_kxxwn")
 
-[sub_resource type="BoxMesh" id="BoxMesh_5tkbb"]
-
 [node name="AmmoBalloon" unique_id=1844229001 instance=ExtResource("1_ckpt")]
 script = ExtResource("2_script")
+pan_distance = 0.5
+pan_duration = 3.5
+balloon_type = 0
 
 [node name="main_col" parent="." index="0" unique_id=809893561]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0.788, 0)
@@ -360,12 +361,6 @@ modulate = Color(0.32, 0.82, 0.28, 1)
 outline_modulate = Color(0.12, 0.08, 0.06, 1)
 text = "$100"
 font_size = 56
-
-[node name="Decal" parent="Mesh/small_rock2" index="5" unique_id=425748152]
-visible = false
-
-[node name="Decal3" parent="Mesh/small_rock2" index="7" unique_id=270295909]
-visible = false
 
 [node name="AoE" type="Node3D" parent="." index="13" unique_id=2099865106]
 transform = Transform3D(0.5882353, 0, 0, 0, 0.5882353, 0, 0, 0, 0.5882353, 0, 0, 0)
@@ -419,79 +414,18 @@ script = ExtResource("8_act0r")
 [node name="Crate2" type="Node3D" parent="." index="17" unique_id=1478522592]
 transform = Transform3D(0.655, 0, 0, 0, 0.655, 0, 0, 0, 0.655, 0, 0.324, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Crate2" index="0" unique_id=1653878877]
-transform = Transform3D(0.65800005, 0, 0, 0, 0.65800005, 0, 0, 0, 0.65800005, 0, -0.5882354, 0)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Crate2" index="1" unique_id=788901591]
-transform = Transform3D(0.100000024, 0, 0, 0, 0.6580002, 0, 0, 0, 0.100000024, -0.23449892, -0.5882354, -0.31515577)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Crate2" index="2" unique_id=83000375]
-transform = Transform3D(0.10000004, 0, 0, 0, 0.65800023, 0, 0, 0, 0.10000004, 0.24217428, -0.5882354, -0.31515577)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Crate2" index="3" unique_id=1193801515]
-transform = Transform3D(0.100000046, 0, 0, 0, 0.65800023, 0, 0, 0, 0.100000046, -0.23449896, -0.5882354, 0.3049099)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="Crate2" index="4" unique_id=200150862]
-transform = Transform3D(0.100000046, 0, 0, 0, 0.65800023, 0, 0, 0, 0.100000046, 0.24217433, -0.5882354, 0.3049099)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D6" type="MeshInstance3D" parent="Crate2" index="5" unique_id=2054178108]
-transform = Transform3D(-2.4216112e-08, 0, -0.5540001, 0, 0.072000004, 0, 0.5540001, 0, -2.4216112e-08, -0.0010000002, -0.26900002, 0)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D11" type="MeshInstance3D" parent="Crate2" index="6" unique_id=892990071]
-transform = Transform3D(-2.4216112e-08, 0, -0.55400014, 0, 0.072000004, 0, 0.55400014, 0, -2.4216112e-08, -0.0010000003, -0.9166274, 0)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D7" type="MeshInstance3D" parent="Crate2" index="7" unique_id=178048405]
-transform = Transform3D(-4.3711403e-09, 0, -0.10000003, 0, 0.65800023, 0, 0.10000003, 0, -4.3711403e-09, 0.31412756, -0.5882354, -0.2416674)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D8" type="MeshInstance3D" parent="Crate2" index="8" unique_id=915441963]
-transform = Transform3D(-4.3711417e-09, 0, -0.100000046, 0, 0.65800023, 0, 0.100000046, 0, -4.3711417e-09, 0.31412756, -0.5882354, 0.23500583)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D9" type="MeshInstance3D" parent="Crate2" index="9" unique_id=1558667484]
-transform = Transform3D(-4.3711417e-09, 0, -0.100000046, 0, 0.65800023, 0, 0.100000046, 0, -4.3711417e-09, -0.30593812, -0.5882354, -0.2416675)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D10" type="MeshInstance3D" parent="Crate2" index="10" unique_id=393412662]
-transform = Transform3D(-4.3711412e-09, 0, -0.100000046, 0, 0.65800023, 0, 0.100000046, 0, -4.3711412e-09, -0.30593812, -0.5882354, 0.23500584)
-material_override = ExtResource("4_5tkbb")
-mesh = SubResource("BoxMesh_5tkbb")
-skeleton = NodePath("../..")
-
-[node name="Label3D" type="Label3D" parent="Crate2" index="11" unique_id=841766037]
+[node name="Label3D" type="Label3D" parent="Crate2" index="0" unique_id=841766037]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.599, -0.372)
 billboard = 1
 shaded = true
 no_depth_test = true
 text = "AMMO"
 font_size = 61
+
+[node name="CrateMesh" type="MeshInstance3D" parent="Crate2" index="1" unique_id=284808236]
+transform = Transform3D(0.65800005, 0, 0, 0, 0.65800005, 0, 0, 0, 0.65800005, 0, -0.5882354, 0)
+mesh = ExtResource("9_rtqgq")
+skeleton = NodePath("../..")
 
 [node name="Crate" parent="." index="18" unique_id=133431577]
 visible = false

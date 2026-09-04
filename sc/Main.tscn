@@ -79,7 +79,8 @@
 [ext_resource type="PackedScene" path="res://vfx/aoe_pineapple_destroy.tscn" id="vfx_pine"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_rock_destroy.tscn" id="vfx_rock"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_rock_hit.tscn" id="vfx_rockhit"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_smokecan_destroy.tscn" id="vfx_smoke"]
+[ext_resource type="PackedScene" uid="uid://m76x0i4rb0o" path="res://vfx/aoe_smokecan_destroy.tscn" id="vfx_smoke"]
+[ext_resource type="PackedScene" uid="uid://bfsjwji6k2570" path="res://vfx/aoe_threat_smoke.tscn" id="vfx_threat"]
 
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
 bake_interval = 5.0
@@ -418,6 +419,32 @@ bus = &"MusicBus"
 volume_db = -80.0
 bus = &"MusicBus"
 
+[node name="CratesSFXManager" type="Node" parent="." unique_id=1928374650]
+script = ExtResource("14_24t6b")
+sfx_group = &"crates_sfx"
+
+[node name="SFX" type="Node" parent="CratesSFXManager" unique_id=1928374651]
+
+[node name="crate_hit_sound" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374652]
+stream = ExtResource("16_8xhv2")
+volume_db = -23.0
+max_polyphony = 2
+
+[node name="crate_hitSound" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374653]
+stream = ExtResource("14_gspdd")
+volume_db = -35.0
+max_polyphony = 2
+
+[node name="crate_explosion_sfx" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374654]
+stream = ExtResource("17_2300m")
+volume_db = -30.0
+max_polyphony = 2
+
+[node name="crate_destroy_sfx" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374655]
+stream = ExtResource("14_gspdd")
+volume_db = -22.0
+max_polyphony = 4
+
 [node name="BirdsFlightPath" type="Path3D" parent="." unique_id=659428985]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
 curve = SubResource("Curve3D_gr7pb")
@@ -464,52 +491,19 @@ scene_crate_destroy = ExtResource("vfx_crate")
 scene_crate_for_cash_destroy = ExtResource("vfx_crate_cash")
 scene_hazard_destroy = ExtResource("vfx_hazard")
 scene_smokecan_destroy = ExtResource("vfx_smoke")
-scene_threat_smoke = ExtResource("vfx_smoke")
+scene_threat_smoke = ExtResource("vfx_threat")
 scene_rock_hit = ExtResource("vfx_rockhit")
 scene_balloon_destroy = ExtResource("vfx_balloon")
 scene_orange_destroy = ExtResource("vfx_orange")
 scene_orange_hit = ExtResource("vfx_orangehit")
 scene_pineapple_destroy = ExtResource("vfx_pine")
 
-[node name="CratesSFXManager" type="Node" parent="." unique_id=1928374650]
-script = ExtResource("14_24t6b")
-sfx_group = &"crates_sfx"
-
-[node name="SFX" type="Node" parent="CratesSFXManager" unique_id=1928374651]
-
-[node name="crate_hit_sound" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374652]
-stream = ExtResource("16_8xhv2")
-volume_db = -23.0
-max_polyphony = 2
-
-[node name="crate_hitSound" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374653]
-stream = ExtResource("14_gspdd")
-volume_db = -35.0
-max_polyphony = 2
-
-[node name="crate_explosion_sfx" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374654]
-stream = ExtResource("17_2300m")
-volume_db = -30.0
-max_polyphony = 2
-
-[node name="crate_destroy_sfx" type="AudioStreamPlayer" parent="CratesSFXManager/SFX" unique_id=1928374655]
-stream = ExtResource("14_gspdd")
-volume_db = -22.0
-max_polyphony = 4
-
 [node name="Rocks" type="Node3D" parent="." unique_id=859468523 node_paths=PackedStringArray("pigeon_aim_markers", "telegraph_columns", "debug_visualiser")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
 script = ExtResource("20_l8wgb")
-randomize_later_waves = false
 pigeon_aim_markers = NodePath("../PigeonAimMarkers")
 telegraph_columns = NodePath("Columns2")
 debug_visualiser = NodePath("DebugVisualiser")
-telegraph_lead_sec = 0.0
-telegraph_blink_color = Color(1.8247963, 1.2783784, 0.39935833, 1)
-telegraph_blink_on_sec = 0.2
-telegraph_gap_between_rocks_sec = 0.0
-telegraph_sfx_volume_db = -30.0
-oob_miss_shake_amount = 0.5
 
 [node name="DebugVisualiser" type="Node3D" parent="Rocks" unique_id=1321570169]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.81, 0.25)
@@ -962,11 +956,11 @@ stream = ExtResource("28_vwwt2")
 volume_db = -55.0
 bus = &"ReverbBus"
 
-[node name="SolidPlatformforRocks" type="StaticBody3D" parent="Rocks" unique_id=1202508704]
+[node name="DONOTDELETESolidPlatformforRocks" type="StaticBody3D" parent="Rocks" unique_id=1202508704]
 collision_layer = 7
 collision_mask = 7
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Rocks/SolidPlatformforRocks" unique_id=1619768210]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rocks/DONOTDELETESolidPlatformforRocks" unique_id=1619768210]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2012472, 0)
 shape = SubResource("BoxShape3D_ymbdo")
 debug_color = Color(0, 1, 0, 1)
@@ -1543,7 +1537,7 @@ balloon_type = 3
 [node name="Balloon_pos_1" type="Marker3D" parent="Balloon_wait_positions" unique_id=796756762]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, -1, 11.8)
 
-[node name="Checkpoint_container" type="Node3D" parent="." unique_id=1888000001 groups=["checkpoint_container"]]
+[node name="RestBalloon_container" type="Node3D" parent="." unique_id=1888000001 groups=["rest_balloon_container"]]
 
 [node name="PlayerBalloon" type="Node3D" parent="." unique_id=375306820 node_paths=PackedStringArray("round_manager") groups=["player_balloon_container", "restartable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)

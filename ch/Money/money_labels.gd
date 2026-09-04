@@ -5,7 +5,7 @@ extends Control
 ## chip into it and roll the number up. Wallet cash is not shown here — it
 ## cashes in at tally. Strikeout scatters the round total back to $0.
 ## PoolLabel is kept for checkpoint / bank internals but can stay hidden.
-## MultiplierLabel = current ladder multiplier.
+## MultiplierLabel = current cash multiplier.
 
 const COLOR_POOL := Color("EBE0D8")
 const COLOR_BANK := Color("cf9e5bff")

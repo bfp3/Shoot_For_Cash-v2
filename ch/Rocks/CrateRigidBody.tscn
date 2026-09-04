@@ -4,13 +4,12 @@
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="2_bnvqr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1cyfr"]
-size = Vector3(0.75, 0.75, 0.75)
+size = Vector3(0.5, 0.5, 0.5)
 
 [node name="Crate" type="RigidBody3D" unique_id=575272199]
 collision_layer = 1048577
 collision_mask = 1048577
 mass = 10.0
-gravity_scale = 0.06
 script = ExtResource("1_crate")
 use_hit_vfx = true
 destroy_vfx_cue = &"crate_for_cash_destroy"
@@ -20,7 +19,7 @@ metadata/_edit_group_ = true
 shape = SubResource("BoxShape3D_1cyfr")
 
 [node name="crateMesh" type="Node3D" parent="." unique_id=1851666554]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 
 [node name="Crate" type="MeshInstance3D" parent="crateMesh" unique_id=1776381222]
 mesh = ExtResource("2_bnvqr")

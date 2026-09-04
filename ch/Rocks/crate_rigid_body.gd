@@ -18,7 +18,7 @@ const cash_value := 0
 @export var force_mult: Array = [3, 4]
 
 @onready var main_col: CollisionShape3D = $CollisionShape3D
-@onready var mesh_instance: MeshInstance3D = $MeshInstance3D
+
 
 var health := 3
 var force_mult_index := 0
@@ -99,8 +99,7 @@ func _start_destroyed() -> void:
 	freeze = true
 	collision_layer = 0
 	collision_mask = 0
-	if mesh_instance:
-		mesh_instance.hide()
+
 	if main_col:
 		main_col.disabled = true
 	await get_tree().create_timer(0.05, false).timeout

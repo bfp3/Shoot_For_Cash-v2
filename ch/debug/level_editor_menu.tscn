@@ -85,9 +85,6 @@ pop every live rock-avoider (no strike). Avoiders do not block wait — use this
 [color=#C70102]rock-red-attacker[/color] / [color=#C70102]rock-red-attacker 1 A1[/color] / [color=#C70102]rock-red-attacker 1 A1 A8[/color]
 flies to aim, then dashes through the crosshair — or through the extra cell if given
 
-[color=#C70102]rock-chaser[/color] / [color=#C70102]rock-chaser 3 A2[/color]
-flees the reticle — hold aim on it for 2s, then shoot
-
 [color=#C70102]rock-juggle[/color] / [color=#C70102]rock-juggle 4 B3[/color]
 independent tank rock (100 HP) — does not block wait / wait-until-clear and ignores splash miss
 
@@ -116,12 +113,12 @@ smoke can obstacle
 crate rock — crate mesh and crate burst particles
 
 [color=#C70102]wait[/color]
-hold the next command until live rocks / pineapples / balloon-checks are gone (oranges and balloons ignored)
+hold the next command until live rocks / pineapples / balloon-rests are gone (oranges and balloons ignored)
 
 [color=#C70102]wait 200[/color]
 delay that many milliseconds before the next rock
 
-[color=#C70102]balloon-check[/color] / [color=#C70102]balloon-check A4[/color]
+[color=#C70102]balloon-rest[/color] / [color=#C70102]balloon-rest A4[/color]
 appears until shot — optional cell uses the balloon grid (A1–C8); bare uses the default centre. Clears strikes and continues the script. A retry always starts from the top of the round
 
 [color=#C70102]ammo[/color] / [color=#C70102]ammo 16[/color] / [color=#C70102]ammo 69 $100[/color] / [color=#C70102]ammo C8 16 99[/color]
@@ -152,7 +149,7 @@ place a balloon (bare = random)
 [color=#C70102]ammo-unlimited[/color] this round only — shots do not spend ammo (TEST and play)
 
 [color=#C70102]pineapples[/color]
-no-strike last rock starts a pineapple bonus before balloon-check
+no-strike last rock starts a pineapple bonus before balloon-rest
 
 [color=#C70102]pace-slowest[/color] gravity 0.25
 [color=#C70102]pace-slow[/color] gravity 0.5

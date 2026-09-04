@@ -1,6 +1,6 @@
 # Round loop
 
-`ch/round_manager.gd` is the session state machine. Shop, shooting, ladder, tally, and map travel all go through `enter_state()`.
+`ch/round_manager.gd` is the session state machine. Shop, shooting, tally, and map travel all go through `enter_state()`.
 
 ## Happy path
 
@@ -13,7 +13,7 @@ START_START (difficulty select)
         more waves → WAVE_START
         last wave  → ROUND_END
   → ROUND_END
-      win  → BANK / x+1 balloons → TALLY_START
+      win  → TALLY_START
       fail → forfeit pool → TALLY_START (or skip tally on strikeout)
   → TALLY_END → SHOP_START
 ```
@@ -31,7 +31,7 @@ Range clear (last round of a place, first time): tally, then shop (no island map
 | `WAVE_START` | Round banner / checkpoint banner, start rocks, egg pulse. |
 | `WAVE_END` | → `CHECK_SCORE`. |
 | `CHECK_SCORE` | More waves → `WAVE_START`; else `ROUND_END`. |
-| `ROUND_END` | Win: `_offer_ladder_choice()` then tally. Fail: forfeit pool then tally. |
+| `ROUND_END` | Win: tally. Fail: forfeit pool then tally. |
 | `TALLY_START` | `EventBus.instance.open_tally_card`. |
 | `TALLY_END` | Fail: forfeit leftover pool + `lose_range_banked_cash()`. Save checkpoint. Back to shop or map. |
 | `INACTIVE` / `PAUSE` / `RESUME` | Idle / timer pause. |
@@ -44,14 +44,6 @@ Range clear (last round of a place, first time): tally, then shop (no island map
 - **Miss / strike:** `EventBus.instance.add_strike` → strike HUD. At max strikes, `has_hit_three_strikes` → `handle_three_strikes()` → `unsuccessful_round_locked()`.
 - **Strikeout:** forfeit unbanked pool, subtract range-banked from wallet, **keep multiplier**, skip tally, reopen shop (`_return_to_shop_after_strikeout()`).
 - **Cancel:** in-round cancel action → `abort_round_to_shop()`.
-
-## Ladder (`balloon-mult` / `balloon-bank`)
-
-Script commands. Default poses: BANK CASH left (`-2.8, 3.5, 22.5`), +1 Multiplier right (`2.8, 3.5, 22.5`).
-
-- `balloon-bank` → `bank_cash_pool()`, then `reset_cash_multiplier()`.
-- `balloon-mult` → keep pool, `increase_cash_multiplier()`.
-- Shoot one; the other leaves. Place both next to `balloon-check` so they appear together.
 
 ## Level data
 

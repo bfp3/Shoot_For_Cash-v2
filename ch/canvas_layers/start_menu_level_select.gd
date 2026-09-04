@@ -23,11 +23,11 @@ const LEVEL_BADGE_SIZE := Vector2(118, 118)
 		locked_badge_scale = maxf(value, 0.05)
 		_apply_badge_layout()
 ## Extra offset from the grid's scene layout. (0, 0) keeps the authored centre placement.
-@export var level_grid_position := Vector2.ZERO:
-	set(value):
-		level_grid_position = value
-		if _grid_layout_ready:
-			_apply_grid_position()
+#@export var level_grid_position := Vector2.ZERO:
+	#set(value):
+		#level_grid_position = value
+		#if _grid_layout_ready:
+			#_apply_grid_position()
 
 var default_scale := Vector2.ONE
 var default_position := Vector2.ZERO
@@ -300,16 +300,16 @@ func _apply_grid_position() -> void:
 	var grid := _grid_node()
 	if grid == null:
 		return
-	var pos := _grid_home_offset + level_grid_position
-	var size := _grid_home_size
-	if size.x < 1.0 or size.y < 1.0:
-		size = grid.size
-	if size.x < 1.0 or size.y < 1.0:
+	var pos := _grid_home_offset #+ level_grid_position
+	var _size := _grid_home_size
+	if _size.x < 1.0 or _size.y < 1.0:
+		_size = grid.size
+	if _size.x < 1.0 or _size.y < 1.0:
 		return
 	grid.offset_left = pos.x
 	grid.offset_top = pos.y
-	grid.offset_right = pos.x + size.x
-	grid.offset_bottom = pos.y + size.y
+	grid.offset_right = pos.x + _size.x
+	grid.offset_bottom = pos.y + _size.y
 
 
 func _apply_badge_layout() -> void:

@@ -500,13 +500,7 @@ physics_material_override = ExtResource("1_p78v0")
 linear_damp = 0.5
 angular_damp = 1.0
 script = ExtResource("1_bc0l2")
-rock_stay_path_leg_slowdown = 0.25
-threat_speed_slow = 4.0
-threat_path_hold_sec = 0.5
-threat_path_leg_slowdown = 0.25
-cardinal_burst_lifetime_sec = 3.0
-avoider_lifetime_sec = 60.0
-red_attacker_dash_speed = 120.0
+avoider_arm_delay_sec = 1.0
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=291819753]
 shape = SubResource("SphereShape3D_lrylr")
@@ -1619,6 +1613,7 @@ mesh = SubResource("ArrayMesh_1h1dk")
 
 [node name="Threat_smoke" type="MeshInstance3D" parent="Mesh" unique_id=893370913]
 transform = Transform3D(3.821371e-15, 8.742278e-08, 2, 2, -8.742278e-08, 0, 8.742278e-08, 2, -8.742278e-08, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_xxiuv")
 mesh = ExtResource("20_0eg31")
 

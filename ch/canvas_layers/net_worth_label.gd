@@ -19,9 +19,9 @@ func refresh(amount: int = -1) -> void:
 	if _label == null:
 		return
 	if CommonCode and CommonCode.has_method("format_money"):
-		_label.text = String(CommonCode.format_money(amount))
+		_label.text = "[wave]" + String(CommonCode.format_money(amount))
 	else:
-		_label.text = "$" + str(amount)
+		_label.text = "[wave]$" + str(amount)
 	_label.add_theme_font_size_override("normal_font_size", font_size_for(amount))
 
 

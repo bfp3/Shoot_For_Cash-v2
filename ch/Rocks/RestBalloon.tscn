@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://ca23ac3kc4wdk"]
+[gd_scene format=3 uid="uid://cjnx473cat5op"]
 
 [ext_resource type="PackedScene" uid="uid://c3p6ovdbn0gkc" path="res://ch/Rocks/Balloon.tscn" id="1_balloon"]
-[ext_resource type="Script" uid="uid://1nciv6xvqfrj" path="res://ch/Rocks/checkpoint.gd" id="2_script"]
+[ext_resource type="Script" path="res://ch/Rocks/rest_balloon.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://drvjio7oxqunn" path="res://res/ring512.png" id="4_7wlsc"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="4_lwyt0"]
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="7_vr0ep"]
@@ -12,8 +12,8 @@ size = Vector3(1, 2.506958, 1)
 
 [sub_resource type="QuadMesh" id="QuadMesh_35jbi"]
 
-[node name="Checkpoint" unique_id=397951874 instance=ExtResource("1_balloon")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 3.5, 22.5)
+[node name="RestBalloon" unique_id=397951874 instance=ExtResource("1_balloon")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("2_script")
 balloon_type = 1
 
@@ -83,7 +83,7 @@ upper_fade = 0.016322825
 lower_fade = 0.005384526
 cull_mask = 1048574
 
-[node name="Checkpoint" type="AudioStreamPlayer" parent="." index="14" unique_id=1932517619]
+[node name="RestBalloon" type="AudioStreamPlayer" parent="." index="14" unique_id=1932517619]
 stream = ExtResource("4_lwyt0")
 volume_db = -42.0
 pitch_scale = 1.2

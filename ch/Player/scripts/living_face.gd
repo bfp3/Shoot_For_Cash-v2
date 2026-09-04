@@ -289,7 +289,9 @@ func _connect_game_signals() -> void:
 		bus.has_hit_three_strikes.connect(_on_three_strikes)
 	if not bus.all_rocks_destroyed.is_connected(_on_perfect):
 		bus.all_rocks_destroyed.connect(_on_perfect)
-	if not bus.checkpoint_shot.is_connected(_on_happy_moment):
+	if not bus.rest_balloon_shot.is_connected(_on_happy_moment):
+		bus.rest_balloon_shot.connect(_on_happy_moment)
+	elif not bus.checkpoint_shot.is_connected(_on_happy_moment):
 		bus.checkpoint_shot.connect(_on_happy_moment)
 	if not bus.next_round.is_connected(_on_round_reset):
 		bus.next_round.connect(_on_round_reset)

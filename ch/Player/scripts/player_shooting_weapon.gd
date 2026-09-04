@@ -410,7 +410,7 @@ func shoot_target() -> void:
 
 	for target_data in targets:
 		var target = target_data.target
-		# Balloons / oranges / ammo / balloon-check do not count toward multi-shot.
+		# Balloons / oranges / ammo / balloon-rest do not count toward multi-shot.
 		if not _counts_for_multishot(target):
 			continue
 		rock_count += 1
@@ -559,8 +559,14 @@ func shoot_early_exit_if_aimed() -> bool:
 func _is_special_midround_target(target: Node) -> bool:
 	if target == null or not is_instance_valid(target):
 		return false
-	## Early-exit is the only ammo-free shot. Balloons / ammo balloons / balloon-check need a loaded round.
+	## Early-exit is the only ammo-free shot. Balloons / ammo balloons / balloon-rest need a loaded round.
 	return target.is_in_group("early_exit_target")
+
+
+func _is_rest_balloon(target: Node) -> bool:
+	if target == null or not is_instance_valid(target):
+		return false
+	return target.is_in_group("rest_balloon") or target.is_in_group("health_balloon")
 
 
 func _is_trigger_point(target: Node) -> bool:
@@ -569,9 +575,9 @@ func _is_trigger_point(target: Node) -> bool:
 	return target.is_in_group("trigger_point")
 
 
-## Closest-aim exclusivity (specials + trigger pads). Ammo-free is only `_is_special_midround_target`.
+## Closest-aim exclusivity (specials + rest balloons + trigger pads). Ammo-free is only `_is_special_midround_target`.
 func _is_solo_aim_target(target: Node) -> bool:
-	return _is_special_midround_target(target) or _is_trigger_point(target)
+	return _is_special_midround_target(target) or _is_rest_balloon(target) or _is_trigger_point(target)
 
 
 func _counts_for_multishot(target: Node) -> bool:

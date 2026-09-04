@@ -126,7 +126,7 @@ func _trim_to_base_strike_slots(base_count: int = 3) -> void:
 			extra.queue_free()
 	_cache_indicators()
 
-## Balloon-check: fly the row to centre, flip off each strike, then return home.
+## Balloon-rest: fly the row to centre, flip off each strike, then return home.
 func play_checkpoint_clear_sequence() -> void:
 	await checkpoint_move_to_center()
 	if not is_instance_valid(self):
