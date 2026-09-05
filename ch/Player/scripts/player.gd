@@ -584,11 +584,11 @@ func _process(delta: float) -> void:
 			if Input.is_action_pressed("shootWeapon"):
 				fire_weapon_auto()
 				
-		elif Input.is_action_just_pressed("shootWeapon"):
-			fire_weapon()
-			
-		#elif Input.is_action_just_released("shootWeapon"):
+		#elif Input.is_action_just_pressed("shootWeapon"):
 			#fire_weapon()
+			
+		elif Input.is_action_just_released("shootWeapon"):
+			fire_weapon()
 
 		## Debug / leftover: TAB still rapid-fires on any loadout.
 		if Input.is_key_label_pressed(KEY_TAB):

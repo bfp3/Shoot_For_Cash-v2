@@ -12,9 +12,19 @@ const BOB_DURATION := 1.35
 const HEALTH_MAT := preload("res://res/BALLOON_MAT_HEALTH_BALLOON.tres")
 
 var _bob_tween: Tween
+var _hot_air_balloon_tween: Tween
 var _arrived := false
 var _consumed := false
 var _rest_pos := REST_POS
+var _hot_air_balloon_base_pos := Vector3.ZERO
+var _hot_air_balloon_base_rot := Vector3.ZERO
+
+@export_group("Hot Air Balloon Motion")
+@export var hot_air_balloon_motion_enabled := true
+@export_range(0.0, 0.6, 0.01) var hot_air_balloon_bob_distance := 0.12
+@export_range(0.1, 4.0, 0.05) var hot_air_balloon_bob_duration := 1.9
+@export_range(0.0, 15.0, 0.25) var hot_air_balloon_sway_degrees := 4.0
+@export_range(0.1, 5.0, 0.05) var hot_air_balloon_sway_duration := 2.4
 
 
 func _ready() -> void:
@@ -26,6 +36,7 @@ func _ready() -> void:
 	add_to_group("health_balloon")
 	configure_balloon_colour()
 	_apply_health_look()
+	_cache_hot_air_balloon_rest_pose()
 	hide()
 	disable_collision()
 	set_process_input(false)
@@ -74,6 +85,7 @@ func arrive_from_below(rest: Vector3 = REST_POS) -> void:
 	transition_locked = false
 	_arrived = true
 	_start_bob()
+	_start_hot_air_balloon_motion()
 	if has_node("AnimationPlayer"):
 		$AnimationPlayer.play("idle")
 
@@ -92,7 +104,61 @@ func _stop_bob() -> void:
 	if _bob_tween and _bob_tween.is_valid():
 		_bob_tween.kill()
 	_bob_tween = null
+	_stop_hot_air_balloon_motion()
 	stop_gentle_pan()
+
+
+func _cache_hot_air_balloon_rest_pose() -> void:
+	var balloon := get_node_or_null("hot_air_balloon") as Node3D
+	if balloon == null:
+		return
+	_hot_air_balloon_base_pos = balloon.position
+	_hot_air_balloon_base_rot = balloon.rotation_degrees
+
+
+func _start_hot_air_balloon_motion() -> void:
+	var balloon := get_node_or_null("hot_air_balloon") as Node3D
+	if balloon == null or not hot_air_balloon_motion_enabled:
+		return
+	_stop_hot_air_balloon_motion()
+	balloon.position = _hot_air_balloon_base_pos
+	balloon.rotation_degrees = _hot_air_balloon_base_rot
+	_hot_air_balloon_tween = create_tween()
+	_hot_air_balloon_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT).set_loops()
+	_hot_air_balloon_tween.parallel().tween_property(
+		balloon,
+		"position:y",
+		_hot_air_balloon_base_pos.y + hot_air_balloon_bob_distance,
+		hot_air_balloon_bob_duration
+	)
+	_hot_air_balloon_tween.parallel().tween_property(
+		balloon,
+		"rotation_degrees:z",
+		_hot_air_balloon_base_rot.z + hot_air_balloon_sway_degrees,
+		hot_air_balloon_sway_duration
+	)
+	_hot_air_balloon_tween.tween_property(
+		balloon,
+		"position:y",
+		_hot_air_balloon_base_pos.y - hot_air_balloon_bob_distance,
+		hot_air_balloon_bob_duration
+	)
+	_hot_air_balloon_tween.parallel().tween_property(
+		balloon,
+		"rotation_degrees:z",
+		_hot_air_balloon_base_rot.z - hot_air_balloon_sway_degrees,
+		hot_air_balloon_sway_duration
+	)
+
+
+func _stop_hot_air_balloon_motion() -> void:
+	if _hot_air_balloon_tween and _hot_air_balloon_tween.is_valid():
+		_hot_air_balloon_tween.kill()
+	_hot_air_balloon_tween = null
+	var balloon := get_node_or_null("hot_air_balloon") as Node3D
+	if balloon:
+		balloon.position = _hot_air_balloon_base_pos
+		balloon.rotation_degrees = _hot_air_balloon_base_rot
 
 
 func is_blocking_sky() -> bool:

@@ -109,6 +109,16 @@ var rock_has_been_logged := false
 @onready var current_mesh: MeshInstance3D = small_rock
 ## Scene-file visual materials so grey tints never wipe yellow rocks.
 var _mesh_original_overrides: Dictionary = {}
+## Crosshair x-ray peek: clone of whatever mesh hierarchy is currently displayed.
+var _xray_overlay: Node3D = null
+var _xray_meshes: Array[MeshInstance3D] = []
+const ROCK_XRAY_SHADER := preload("res://ch/Rocks/fake_rock_xray.gdshader")
+@export_group("Crosshair X-Ray")
+@export var crosshair_xray_enabled := true
+@export_range(0.2, 1.5, 0.05) var crosshair_xray_radius_scale := 0.9
+@export_range(0.0, 48.0, 1.0) var crosshair_xray_softness_px := 14.0
+@export_range(0.0, 4.0, 0.05) var crosshair_xray_emission := 0.75
+@export var crosshair_xray_tint := Color(0.92, 0.94, 1.0, 1.0)
 
 
 var hit_torque_strength := 5.0
@@ -297,6 +307,7 @@ var _gap_life_token := 0
 
 func _ready() -> void:
 	_cache_mesh_original_overrides()
+	_setup_crosshair_xray()
 	start_pos = global_position
 	target_x_position = start_pos.x
 	# Own a unique physics material so bounce tweaks never leak across pooled rocks.
@@ -694,6 +705,7 @@ func _expire_rock_stay_lifetime() -> void:
 
 func _physics_process(delta: float) -> void:
 	if current_state == State.ACTIVE and rock_activated:
+		_update_crosshair_xray_reveal()
 		_update_mesh_face_velocity()
 		if rock_type == RockSize.STAY or is_stay_black():
 			_update_rock_stay(delta)
@@ -779,6 +791,7 @@ func enter_state(new_state : State) -> void:
 
 func update_inactive() -> void:
 	hide_all_meshes()
+	_apply_crosshair_xray(Vector2.ZERO, 0.0)
 	force_mult.shuffle()
 	disable_collision()
 	reset_stats()
@@ -1420,6 +1433,8 @@ func setup_rock_type() -> void:
 			_set_red_attack_mesh_particles(false)
 			_set_attack_fire(false)
 
+	_sync_crosshair_xray_mesh()
+
 func reset_stats() -> void:
 	var token := _pool_setup_token
 	ignores_x_out_of_bounds = false
@@ -1452,8 +1467,7 @@ func reset_stats() -> void:
 	$Mesh.scale = Vector3.ONE
 	$Mesh.position = Vector3.ZERO
 	$Mesh.rotation = Vector3.ZERO
-	$Marked.hide()
-	$Freeze.hide()
+
 	$Mesh.hide()
 	start_exploding = false
 	
@@ -1624,10 +1638,7 @@ func apply_aoe_freeze(duration: float = 1.0) -> void:
 		return
 
 	_freeze_shot_pending = true
-	if has_node("Freeze"):
-		$Freeze.show()
-	if has_node("freeze_embers"):
-		$freeze_embers.emitting = true
+
 
 	freeze = true
 	linear_velocity = Vector3.ZERO
@@ -1655,10 +1666,6 @@ func apply_aoe_freeze(duration: float = 1.0) -> void:
 		return
 	_freeze_shot_pending = false
 	freeze = false
-	if has_node("Freeze"):
-		$Freeze.hide()
-	if has_node("freeze_embers"):
-		$freeze_embers.emitting = false
 
 	# Resume avoider / rock-stay lifetime after thaw.
 	if rock_type == RockSize.AVOIDER and rock_activated and current_state == State.ACTIVE:
@@ -1746,13 +1753,7 @@ func apply_marked_ability() -> void:
 	#freeze = true
 	apply_slow_linear_damp()
 	
-	if freeze_mine:
-		$Freeze.show()
-		$freeze_embers.emitting = true
-	
-	else:
-		$Marked.show()
-		$marked_embers.emitting = true
+	$marked_embers.emitting = true
 	
 	
 	
@@ -1920,7 +1921,6 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 		_apply_direct_hazard_strike()
 
 	if rock_type == RockSize.HAZARD:
-		$Marked.show()
 		#$marked_embers.emitting = true
 		_play_rocks_sfx("rock_marked_sfx")
 		apply_slow_linear_damp()
@@ -2025,9 +2025,6 @@ func start_destroyed_process() -> void:
 	remove_from_group('Target')
 	
 	play_destroy_sfx()
-	$Marked.hide()
-	if has_node("Freeze"):
-		$Freeze.hide()
 
 	if rock_type == RockSize.CRATE and cash_value > 0:
 		if money_label_3d and money_label_3d.has_method("money_is_money"):
@@ -2142,6 +2139,114 @@ func assign_random_mesh(mesh_instance: MeshInstance3D) -> void:
 	mesh_instance.mesh = rand_selection
 	if mesh_instance.has_node('damage_mesh'):
 		mesh_instance.get_child(0).mesh = rand_selection
+	if mesh_instance == current_mesh:
+		_sync_crosshair_xray_mesh()
+
+
+func _setup_crosshair_xray() -> void:
+	if mesh_container == null:
+		return
+	_xray_overlay = mesh_container.get_node_or_null("RockXrayOverlay") as Node3D
+	if _xray_overlay == null:
+		_xray_overlay = Node3D.new()
+		_xray_overlay.name = "RockXrayOverlay"
+		mesh_container.add_child(_xray_overlay)
+	_apply_crosshair_xray(Vector2.ZERO, 0.0)
+
+
+func _sync_crosshair_xray_mesh() -> void:
+	if _xray_overlay == null or current_mesh == null:
+		return
+	_sync_xray_branch_from(current_mesh)
+	## Keep original mesh visible — overlay is only drawn under the reticle via shader discard.
+
+
+func _sync_xray_branch_from(source_root: Node) -> void:
+	if _xray_overlay == null or source_root == null:
+		return
+	_xray_meshes.clear()
+	for child in _xray_overlay.get_children():
+		child.queue_free()
+	_clone_xray_mesh_branch(source_root, _xray_overlay)
+
+
+func _clone_xray_mesh_branch(source: Node, parent: Node) -> void:
+	if source is MeshInstance3D:
+		var src_mesh := source as MeshInstance3D
+		var clone := MeshInstance3D.new()
+		clone.name = src_mesh.name
+		clone.transform = src_mesh.transform
+		clone.visible = src_mesh.visible
+		clone.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		clone.layers = 1 | 32768 | 524288
+		clone.mesh = src_mesh.mesh
+		clone.material_override = _make_xray_material_for(src_mesh)
+		parent.add_child(clone)
+		_xray_meshes.append(clone)
+		for child in src_mesh.get_children():
+			_clone_xray_mesh_branch(child, clone)
+		return
+	for child in source.get_children():
+		_clone_xray_mesh_branch(child, parent)
+
+
+func _make_xray_material_for(src_mesh: MeshInstance3D) -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = ROCK_XRAY_SHADER
+	mat.render_priority = 3
+	mat.set_shader_parameter("use_albedo_tex", 0.0)
+	mat.set_shader_parameter("albedo_tint", crosshair_xray_tint)
+	mat.set_shader_parameter("emission_color", crosshair_xray_tint)
+	mat.set_shader_parameter("emission_mul", 0.0)
+
+	var src_mat := src_mesh.material_override
+	if src_mat == null:
+		src_mat = src_mesh.get_active_material(0)
+	if src_mat is StandardMaterial3D:
+		var std := src_mat as StandardMaterial3D
+		mat.set_shader_parameter("albedo_tint", std.albedo_color)
+		var emission_col := std.emission if std.emission_enabled else std.albedo_color
+		mat.set_shader_parameter("emission_color", emission_col)
+		if std.albedo_texture != null:
+			mat.set_shader_parameter("use_albedo_tex", 1.0)
+			mat.set_shader_parameter("albedo_tex", std.albedo_texture)
+	return mat
+
+
+func _update_crosshair_xray_reveal() -> void:
+	if not crosshair_xray_enabled or _xray_overlay == null:
+		return
+	if current_state != State.ACTIVE or not rock_activated or rock_destroyed:
+		_apply_crosshair_xray(Vector2.ZERO, 0.0)
+		return
+	_sync_crosshair_xray_mesh()
+	var cam := get_viewport().get_camera_3d()
+	if cam == null or cam.is_position_behind(global_position):
+		_apply_crosshair_xray(Vector2.ZERO, 0.0)
+		return
+	var player := get_tree().get_first_node_in_group("Player")
+	var aim := _player_crosshair_screen_pos(player)
+	var radius := _player_live_crosshair_hit_radius(player) * crosshair_xray_radius_scale
+	if not _avoider_overlaps_crosshair():
+		_apply_crosshair_xray(Vector2.ZERO, 0.0)
+		return
+	_apply_crosshair_xray(aim, radius)
+
+
+func _apply_crosshair_xray(center_px: Vector2, radius_px: float) -> void:
+	if _xray_meshes.is_empty():
+		return
+	var softness := maxf(crosshair_xray_softness_px, radius_px * 0.12)
+	for mesh in _xray_meshes:
+		if mesh == null or not is_instance_valid(mesh):
+			continue
+		var mat := mesh.material_override as ShaderMaterial
+		if mat == null:
+			continue
+		mat.set_shader_parameter("xray_center_px", center_px)
+		mat.set_shader_parameter("xray_radius_px", radius_px)
+		mat.set_shader_parameter("xray_softness_px", softness)
+		mat.set_shader_parameter("emission_mul", crosshair_xray_emission if radius_px > 0.0 else 0.0)
 
 
 func _on_explosion_area_body_entered(body: Node3D) -> void:
@@ -2890,11 +2995,11 @@ func _player_crosshair_screen_pos(player: Node) -> Vector2:
 	var weapon = player.get("weapon_shooting")
 	if weapon and weapon.get("crosshair") is Control:
 		var rect: Control = weapon.crosshair
-		return rect.global_position
+		return rect.get_global_rect().get_center()
 
 	var crosshair: Control = player.get_node_or_null("%Crosshair") as Control
 	if crosshair:
-		return crosshair.global_position + (crosshair.size * 0.5)
+		return crosshair.get_global_rect().get_center()
 	return get_viewport().get_visible_rect().size * 0.5
 
 
@@ -3080,10 +3185,6 @@ func _destroy_pre_arm_hazard() -> void:
 
 	_freeze_shot_pending = false
 	freeze = false
-	if has_node("Freeze"):
-		$Freeze.hide()
-	if has_node("freeze_embers"):
-		$freeze_embers.emitting = false
 
 	play_hit_sfx()
 	if rock_type == RockSize.RED_ATTACKER:

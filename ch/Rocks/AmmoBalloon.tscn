@@ -9,7 +9,6 @@
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="7_qndsk"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_act0r"]
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="9_rtqgq"]
-[ext_resource type="PackedScene" uid="uid://b3kc1weo4j8hy" path="res://unfiled/Blender_custom_assets/hot_air_balloon.glb" id="10_vlpx7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5tkbb"]
 size = Vector3(1, 2.506958, 1)
@@ -364,7 +363,8 @@ text = "$100"
 font_size = 56
 
 [node name="AoE" type="Node3D" parent="." index="13" unique_id=2099865106]
-transform = Transform3D(0.5882353, 0, 0, 0, 0.5882353, 0, 0, 0, 0.5882353, 0, 0, 0)
+transform = Transform3D(0.5882353, 0, 0, 0, 0.5882353, 0, 0, 0, 0.5882353, 0, 0.636829, 0)
+top_level = true
 script = ExtResource("4_rtqgq")
 delays = {
 &"embers": 0.0,
@@ -385,7 +385,6 @@ process_material = SubResource("ParticleProcessMaterial_65uxc")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
 [node name="upward_smoke_glow" type="GPUParticles3D" parent="AoE" index="1" unique_id=59811981]
-visible = false
 material_override = SubResource("ShaderMaterial_fw7wv")
 cast_shadow = 0
 emitting = false
@@ -413,7 +412,7 @@ outline_size = 4
 script = ExtResource("8_act0r")
 
 [node name="Crate2" type="Node3D" parent="." index="17" unique_id=1478522592]
-transform = Transform3D(0.655, 0, 0, 0, 0.655, 0, 0, 0, 0.655, 0, 0.324, 0)
+transform = Transform3D(0.655, 0, 0, 0, 0.655, 0, 0, 0, 0.655, 0, 0.124, 0)
 
 [node name="Label3D" type="Label3D" parent="Crate2" index="0" unique_id=841766037]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.599, -0.372)
@@ -431,9 +430,5 @@ skeleton = NodePath("../..")
 [node name="Crate" parent="." index="18" unique_id=133431577]
 visible = false
 
-[node name="hot_air_balloon2" parent="." index="19" unique_id=391369195 instance=ExtResource("10_vlpx7")]
+[node name="hot_air_balloon" parent="." index="19" unique_id=391369195]
 transform = Transform3D(0.407, 0, 0, 0, 0.407, 0, 0, 0, 0.407, 0, 0, 0)
-visible = false
-
-[node name="hot_air_balloon" parent="." index="20" unique_id=391369195]
-transform = Transform3D(0.437, 0, 0, 0, 0.437, 0, 0, 0, 0.437, 0, 0, 0)

@@ -60,6 +60,15 @@ func hit_by_player(damage: int, _screen_offset: Vector2 = Vector2.ZERO) -> void:
 		_play_reject()
 		return
 	health -= damage
+	$AoE.top_level = true
+	$AoE.global_position = global_position + Vector3.UP
+	$AoE.play_particles = true
+	if $hot_air_balloon:
+		$hot_air_balloon.hide()
+	if $Crate:
+		$Crate.hide()
+	if $Crate2:
+		$Crate2.hide()
 	_consume_by_player()
 
 
@@ -107,6 +116,7 @@ func _consume_by_player() -> void:
 	_keep_playing_audio_after_free()
 	await was_hit_tween()
 	if is_instance_valid(self):
+		await get_tree().create_timer(3.0, false).timeout
 		queue_free()
 
 

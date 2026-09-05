@@ -3,7 +3,9 @@ extends RigidBody3D
 
 class_name ThreatSmokeMine
 
-const MINE_COLLISION_LAYER := 16 ## Bit 5 — mines only collide with other mines (rocks stay on layer 2).
+const ROCK_COLLISION_LAYER := 1
+const MINE_COLLISION_LAYER := 16 ## Bit 5 — smoke mines.
+const THREAT_ACTIVE_COLLISION_MASK := ROCK_COLLISION_LAYER | MINE_COLLISION_LAYER
 const THREAT_SMOKE_VFX_LIFETIME := 10.0
 
 @export_group("Patrol")
@@ -48,6 +50,15 @@ const THREAT_SMOKE_VFX_LIFETIME := 10.0
 ## Optional random delay before each beep (makes a pack feel less synced).
 @export_range(0.0, 1.0, 0.05) var beep_jitter_sec := 0.25
 
+@export_group("Humming")
+@export var humming_enabled := true
+@export_range(0.0, 40.0, 0.1) var humming_motion_speed_min := 0.5
+@export_range(0.0, 40.0, 0.1) var humming_motion_speed_max := 14.0
+@export_range(0.5, 2.0, 0.01) var humming_pitch_min := 0.92
+@export_range(0.5, 2.0, 0.01) var humming_pitch_max := 1.08
+@export_range(-40.0, 18.0, 0.5) var humming_volume_db_min := 8.0
+@export_range(-40.0, 18.0, 0.5) var humming_volume_db_max := 11.0
+
 @export_group("Alarm")
 ## Hold after alarm SFX before smoke (mine stays frozen / upright).
 @export_range(0.0, 3.0, 0.05) var alarm_spin_delay_sec := 0.5
@@ -84,6 +95,8 @@ const CORE_XRAY_SHADER := preload("res://ch/Rocks/fake_rock_xray.gdshader")
 @onready var _stun_sfx: AudioStreamPlayer3D = $SFX/stun_sfx
 @onready var _release_smoke_sfx: AudioStreamPlayer3D = get_node_or_null("SFX/release_smoke_sfx") as AudioStreamPlayer3D
 @onready var _activate_sfx: AudioStreamPlayer3D = get_node_or_null("SFX/beep_sfx") as AudioStreamPlayer3D
+@onready var _low_humming: AudioStreamPlayer3D = get_node_or_null("lowHumming") as AudioStreamPlayer3D
+@onready var _rock_ding: AudioStreamPlayer3D = get_node_or_null("RockDing") as AudioStreamPlayer3D
 @onready var _marked_embers: GPUParticles3D = get_node_or_null("marked_embers") as GPUParticles3D
 @onready var _lights: ThreatLightsContainer = (
 	get_node_or_null("Mesh/Threat_smoke/LightsContainer") as ThreatLightsContainer
@@ -122,6 +135,9 @@ var _splash_exit_pos := Vector3.ZERO
 var _plane_z := 23.0
 var _home_pos := Vector3.ZERO
 var _resume_path_index := 0
+## Grid cell we departed from on the current leg (collision return target).
+var _left_cell_pos := Vector3.ZERO
+var _left_path_index := 0
 var _mesh_base_pos := Vector3.ZERO
 var _bob_t := 0.0
 var _beep_left := 0.0
@@ -169,6 +185,7 @@ func _physics_process(delta: float) -> void:
 		return
 	_update_core_reveal()
 	_update_bob(delta)
+	_update_humming_from_velocity()
 
 	var trail := get_node_or_null("GPUParticles3D") as Node3D
 	if trail:
@@ -221,6 +238,8 @@ func activate_from_script(
 	_smoke_ready_at = 0.0
 	_path_index = 0
 	_home_pos = _path[0]
+	_left_cell_pos = _path[0]
+	_left_path_index = 0
 	_resume_path_index = 0
 	_bob_t = randf() * TAU
 	_beep_left = _next_beep_wait()
@@ -293,6 +312,7 @@ func start_patrol() -> void:
 	_enable_mine_collision(true)
 	_set_dormant_look(false, 0.0)
 	_set_lights_state(ThreatLightsContainer.State.DORMANT, false)
+	_start_humming()
 	_drive_token += 1
 	_drive_path(_drive_token)
 
@@ -320,6 +340,7 @@ func enter_round_dormant(instant_lights: bool = false) -> void:
 	_spin_enabled = false
 	_smoke_ready_at = 0.0
 	_stop_path_motion()
+	_stop_humming()
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
 	freeze = true
@@ -342,6 +363,7 @@ func arm_from_dormant() -> void:
 	_set_dormant_look(false, light_fade_sec)
 	_set_lights_state(ThreatLightsContainer.State.DORMANT, false)
 	_spin_enabled = true
+	_start_humming()
 	start_patrol()
 
 
@@ -376,6 +398,7 @@ func begin_threat_splash_exit() -> void:
 	_alarming = false
 	_alarm_fast_spin = false
 	_stop_path_motion()
+	_stop_humming()
 	freeze = false
 	sleeping = false
 	_enable_mine_collision(false)
@@ -414,6 +437,8 @@ func _plunge_then_free(splash: Vector3, cruise: float) -> void:
 func _drive_path(token: int) -> void:
 	while token == _drive_token and _active and not _exiting and not _dormant:
 		if _path.size() < 2:
+			_left_path_index = 0
+			_left_cell_pos = _path[0]
 			_path_index = 0
 			await _move_to_point(_path[0], token)
 			return
@@ -423,7 +448,14 @@ func _drive_path(token: int) -> void:
 			while _stunned or _alarming:
 				if token != _drive_token or not _active or _exiting or _dormant:
 					return
-				await get_tree().physics_frame
+				await _await_unpaused_physics_frame()
+			## Remember the cell we leave before claiming the next.
+			_left_path_index = _path_index
+			if _left_path_index >= 0 and _left_path_index < _path.size():
+				_left_cell_pos = _path[_left_path_index]
+			else:
+				_left_cell_pos = global_position
+			_left_cell_pos.z = _plane_z
 			_path_index = i
 			_home_pos = _path[i]
 			_resume_path_index = i
@@ -436,10 +468,10 @@ func _drive_path(token: int) -> void:
 				while held < hold:
 					if token != _drive_token or not _active or _exiting or _dormant:
 						return
-					if _stunned or _alarming:
-						await get_tree().physics_frame
+					if _stunned or _alarming or freeze or get_tree().paused:
+						await _await_unpaused_physics_frame()
 						continue
-					await get_tree().physics_frame
+					await _await_unpaused_physics_frame()
 					held += get_physics_process_delta_time()
 
 
@@ -458,8 +490,18 @@ func _move_to_point(dest: Vector3, token: int) -> void:
 	while elapsed < duration:
 		if token != _drive_token or not _active or _exiting or _dormant:
 			return
+		## Paused / frozen: hold place — never advance the leg or snap ahead.
+		if freeze or get_tree().paused:
+			linear_velocity = Vector3.ZERO
+			await _await_unpaused_physics_frame()
+			from = global_position
+			from.z = _plane_z
+			dist = from.distance_to(dest)
+			duration = clampf(dist / base_speed, 0.08, 6.0)
+			elapsed = 0.0
+			continue
 		if _stunned or _alarming:
-			await get_tree().physics_frame
+			await _await_unpaused_physics_frame()
 			## Do not advance elapsed while interrupted — resume this leg afterward.
 			from = global_position
 			from.z = _plane_z
@@ -481,12 +523,22 @@ func _move_to_point(dest: Vector3, token: int) -> void:
 			global_position = dest
 			linear_velocity = Vector3.ZERO
 			return
-		await get_tree().physics_frame
+		await _await_unpaused_physics_frame()
 		elapsed += get_physics_process_delta_time() * maxf(speed_mul, 0.15)
 	if token != _drive_token:
 		return
+	## Don't teleport onto the cell if we got frozen mid-leg.
+	if freeze or get_tree().paused:
+		return
 	global_position = dest
 	linear_velocity = Vector3.ZERO
+
+
+## Wait one physics frame, skipping time while the tree is paused.
+func _await_unpaused_physics_frame() -> void:
+	while get_tree().paused:
+		await get_tree().process_frame
+	await get_tree().physics_frame
 
 
 func _sample_travel_curve(u: float) -> float:
@@ -516,8 +568,9 @@ func _stop_path_motion() -> void:
 
 func _enable_mine_collision(on: bool) -> void:
 	if on:
-		collision_layer = MINE_COLLISION_LAYER
-		collision_mask = MINE_COLLISION_LAYER
+		## Active threats should bounce with both normal airborne rocks and other threats.
+		collision_layer = THREAT_ACTIVE_COLLISION_MASK
+		collision_mask = THREAT_ACTIVE_COLLISION_MASK
 	else:
 		collision_layer = 0
 		collision_mask = 0
@@ -534,6 +587,9 @@ func _on_body_entered(body: Node) -> void:
 		return
 	if body == null or body == self:
 		return
+	if body is RockInstance:
+		_play_rock_ding()
+		return
 	if not (body is ThreatSmokeMine):
 		return
 	_begin_collision_stun(body as ThreatSmokeMine)
@@ -545,9 +601,14 @@ func _begin_collision_stun(other: ThreatSmokeMine) -> void:
 	_stunned = true
 	_alarming = false
 	_spin_mul = 1.0
-	var resume := _path[_resume_path_index] if _resume_path_index >= 0 and _resume_path_index < _path.size() else global_position
-	resume.z = _plane_z
-	_home_pos = resume
+
+	var return_to := _left_cell_pos
+	if return_to == Vector3.ZERO and _left_path_index >= 0 and _left_path_index < _path.size():
+		return_to = _path[_left_path_index]
+	if return_to == Vector3.ZERO:
+		return_to = global_position
+	return_to.z = _plane_z
+	_home_pos = return_to
 
 	var away := global_position - other.global_position
 	away.z = 0.0
@@ -565,25 +626,62 @@ func _begin_collision_stun(other: ThreatSmokeMine) -> void:
 		_stunned = false
 		return
 
-	## Return toward the path cell we were claiming.
-	var back_t := 0.0
-	var back_dur := maxf(return_home_sec, 0.05)
-	var back_from := global_position
-	while back_t < back_dur:
-		if not is_instance_valid(self) or token != _drive_token or _exiting or _dormant:
-			_stunned = false
-			return
-		var u := clampf(back_t / back_dur, 0.0, 1.0)
-		var eased := u * u * (3.0 - 2.0 * u)
-		var desired := back_from.lerp(_home_pos, eased)
-		desired.z = _plane_z
-		linear_velocity = (desired - global_position) * 16.0
-		await get_tree().physics_frame
-		back_t += get_physics_process_delta_time()
-	if is_instance_valid(self):
-		global_position = _home_pos
-		linear_velocity = Vector3.ZERO
+	## Cruise back to the cell we left — same travel speed as patrol (no teleport).
+	await _return_to_cell_at_cruise(return_to, token)
+	if not is_instance_valid(self) or token != _drive_token or _exiting or _dormant:
 		_stunned = false
+		return
+	_path_index = _left_path_index
+	_resume_path_index = _left_path_index
+	_home_pos = return_to
+	global_position = return_to
+	linear_velocity = Vector3.ZERO
+	_stunned = false
+
+
+## Smooth return used after mine↔mine hits (ignores stun so the leg can complete).
+func _return_to_cell_at_cruise(dest: Vector3, token: int) -> void:
+	dest.z = _plane_z
+	var from := global_position
+	from.z = _plane_z
+	var dist := from.distance_to(dest)
+	if dist < 0.02:
+		global_position = dest
+		linear_velocity = Vector3.ZERO
+		return
+	var base_speed := maxf(_cruise_speed, 1.0)
+	var duration := clampf(dist / base_speed, 0.08, 6.0)
+	var elapsed := 0.0
+	while elapsed < duration:
+		if token != _drive_token or _exiting or _dormant:
+			return
+		if freeze or get_tree().paused:
+			linear_velocity = Vector3.ZERO
+			await _await_unpaused_physics_frame()
+			from = global_position
+			from.z = _plane_z
+			dist = from.distance_to(dest)
+			duration = clampf(dist / base_speed, 0.08, 6.0)
+			elapsed = 0.0
+			continue
+		var u := clampf(elapsed / duration, 0.0, 1.0)
+		var eased := _sample_travel_curve(u)
+		var speed_mul := _sample_speed_curve(u)
+		var desired := from.lerp(dest, eased)
+		desired.z = _plane_z
+		var to_desired := desired - global_position
+		var chase := clampf(12.0 * speed_mul, 4.0, 28.0)
+		linear_velocity = to_desired * chase
+		if to_desired.length() < 0.04 and u > 0.92:
+			global_position = dest
+			linear_velocity = Vector3.ZERO
+			return
+		await _await_unpaused_physics_frame()
+		elapsed += get_physics_process_delta_time() * maxf(speed_mul, 0.15)
+	if token != _drive_token or freeze or get_tree().paused:
+		return
+	global_position = dest
+	linear_velocity = Vector3.ZERO
 
 
 func _wobble_mesh() -> void:
@@ -712,6 +810,7 @@ func _enter_post_smoke_dormant() -> void:
 	_spin_mul = 1.0
 	_spin_enabled = false
 	_stop_path_motion()
+	_stop_humming()
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
 	freeze = true
@@ -731,6 +830,7 @@ func _enter_post_smoke_dormant() -> void:
 	_set_dormant_look(false, light_fade_sec)
 	_set_lights_state(ThreatLightsContainer.State.DORMANT, false)
 	_spin_enabled = true
+	_start_humming()
 	start_patrol()
 
 
@@ -766,6 +866,7 @@ func _tween_arrive_to(dest: Vector3) -> void:
 	dest.z = _plane_z
 	var dur := maxf(arrive_duration_sec, 0.05)
 	_arrive_tween = create_tween()
+	_arrive_tween.set_pause_mode(Tween.TWEEN_PAUSE_STOP)
 	_arrive_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_arrive_tween.tween_property(self, "global_position", dest, dur)
 	await _arrive_tween.finished
@@ -851,6 +952,44 @@ func _play_beep() -> void:
 		if not is_instance_valid(self) or not _active or _dormant or _arriving or _exiting:
 			return
 	_play_local_sfx(_beep_sfx, beep_volume_db)
+
+
+func _start_humming() -> void:
+	if not humming_enabled or _low_humming == null or _low_humming.stream == null:
+		return
+	if not _low_humming.playing:
+		_low_humming.pitch_scale = humming_pitch_min
+		_low_humming.volume_db = humming_volume_db_min
+		_low_humming.play()
+
+
+func _stop_humming() -> void:
+	if _low_humming and _low_humming.playing:
+		_low_humming.stop()
+
+
+func _update_humming_from_velocity() -> void:
+	if _low_humming == null:
+		return
+	var should_hum := humming_enabled and visible and _active and not _dormant and not _arriving and not _alarming and not _stunned and not _exiting
+	if not should_hum:
+		_stop_humming()
+		return
+	_start_humming()
+	var speed := Vector2(linear_velocity.x, linear_velocity.y).length()
+	var min_speed := minf(humming_motion_speed_min, humming_motion_speed_max)
+	var max_speed := maxf(humming_motion_speed_min, humming_motion_speed_max)
+	var t := inverse_lerp(min_speed, max_speed, speed) if max_speed - min_speed > 0.001 else 0.0
+	t = clampf(t, 0.0, 1.0)
+	_low_humming.pitch_scale = lerpf(humming_pitch_min, humming_pitch_max, t)
+	_low_humming.volume_db = lerpf(humming_volume_db_min, humming_volume_db_max, t)
+
+
+func _play_rock_ding() -> void:
+	if _rock_ding == null or _rock_ding.stream == null:
+		return
+	_rock_ding.pitch_scale = randf_range(0.9, 1.1)
+	_rock_ding.play()
 
 
 func _update_spin(delta: float) -> void:
@@ -973,10 +1112,10 @@ func _player_crosshair_screen_pos(player: Node) -> Vector2:
 	var weapon = player.get("weapon_shooting")
 	if weapon and weapon.get("crosshair") is Control:
 		var rect: Control = weapon.crosshair
-		return rect.global_position
+		return rect.get_global_rect().get_center()
 	var crosshair: Control = player.get_node_or_null("%Crosshair") as Control
 	if crosshair:
-		return crosshair.global_position + (crosshair.size * 0.5)
+		return crosshair.get_global_rect().get_center()
 	return get_viewport().get_visible_rect().size * 0.5
 
 

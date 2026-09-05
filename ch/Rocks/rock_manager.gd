@@ -1361,7 +1361,10 @@ func clear_script_threat_mines() -> void:
 			continue
 		if bool(node.get("is_range_default")):
 			continue
-		node.queue_free()
+		if node.has_method("begin_threat_splash_exit"):
+			node.begin_threat_splash_exit()
+		else:
+			node.queue_free()
 
 
 func _clear_threats_immediate() -> void:
@@ -1383,10 +1386,13 @@ func has_live_default_threats() -> bool:
 	return false
 
 
-## Park every live mine in dormant (round stop / reset / end). Keeps ambient mines in place.
+## Park only ambient preamble mines in dormant (round stop / reset / end).
+## Mid-round scripted mines should use their splash-exit routine instead.
 func dormant_threat_mines(instant_lights: bool = false) -> void:
 	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
 		if node == null or not is_instance_valid(node):
+			continue
+		if not bool(node.get("is_range_default")):
 			continue
 		if node.has_method("enter_round_dormant"):
 			node.enter_round_dormant(instant_lights)

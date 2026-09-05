@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://drvjio7oxqunn" path="res://res/ring512.png" id="14_er7go"]
 [ext_resource type="Shader" uid="uid://d0dm73yo3u4k6" path="res://res/Shaders/vector_crt.gdshader" id="17_4x1xd"]
 [ext_resource type="PackedScene" uid="uid://dee8qfh0jrlf1" path="res://lib/Flag_rollout_Scene/FlagRollout.tscn" id="17_gmr7m"]
+[ext_resource type="PackedScene" uid="uid://c4h6aveq47bhy" path="res://mine_temp/scenes/mine_brazier.tscn" id="18_78d2f"]
 [ext_resource type="PackedScene" uid="uid://bdgpfw3241vuc" path="res://sc/All_level_layouts/CrateForCash.tscn" id="19_rta1d"]
 [ext_resource type="Texture2D" uid="uid://udb8jdxvl5d8" path="res://res/cloud-svgrepo-com.png" id="23_qrgtt"]
 [ext_resource type="Texture2D" uid="uid://cmk72g2wr4ulq" path="res://res/mountains-svgrepo-com.png" id="24_jwbkf"]
@@ -2419,5 +2420,11 @@ light_energy = 5.0
 shadow_enabled = true
 omni_range = 25.0
 omni_attenuation = 5.0
+
+[node name="Brazier" parent="." unique_id=1767535159 instance=ExtResource("18_78d2f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5885663, -1.9232558, 11.799999)
+
+[node name="Brazier2" parent="." unique_id=684701777 instance=ExtResource("18_78d2f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6114335, -1.9232558, 11.799999)
 
 [editable path="Boatmesh/brick_fountain_3"]

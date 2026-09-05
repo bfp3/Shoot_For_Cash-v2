@@ -91,5 +91,6 @@ func _tween_to(target: Vector3, duration: float) -> void:
 		scale = target
 		return
 	_scale_tween = create_tween()
+	_scale_tween.set_pause_mode(Tween.TWEEN_PAUSE_STOP)
 	_scale_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_scale_tween.tween_property(self, "scale", target, duration)

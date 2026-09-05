@@ -35,7 +35,7 @@ rings = 6
 _data = [Vector2(0.23722628, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_0cvxb"]
+[sub_resource type="CurveTexture" id="CurveTexture_blsls"]
 curve = SubResource("Curve_p78v0")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q8tld"]
@@ -47,10 +47,10 @@ radial_velocity_max = -2.2351742e-05
 gravity = Vector3(0, 0, 0)
 scale_min = 0.099999994
 scale_max = 0.19999999
-scale_curve = SubResource("CurveTexture_0cvxb")
+scale_curve = SubResource("CurveTexture_blsls")
 color = Color(4.415934, 0, 0, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gsivy"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_imegm"]
 transparency = 1
 cull_mode = 2
 vertex_color_use_as_albedo = true
@@ -59,7 +59,14 @@ billboard_mode = 2
 billboard_keep_scale = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_ltsxa"]
-material = SubResource("StandardMaterial3D_gsivy")
+material = SubResource("StandardMaterial3D_imegm")
+
+[sub_resource type="Curve" id="Curve_0f66w"]
+_data = [Vector2(0.23722628, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_0cvxb"]
+curve = SubResource("Curve_0f66w")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_herjc"]
 emission_shape = 1
@@ -77,14 +84,14 @@ color = Color(4.415934, 3.4977326, 0, 1)
 offsets = PackedFloat32Array(0, 0.28, 0.7, 1)
 colors = PackedColorArray(1, 0.95, 0.55, 1, 1, 0.48, 0.08, 0.95, 0.85, 0.12, 0.02, 0.45, 0.15, 0.02, 0, 0)
 
-[sub_resource type="GradientTexture1D" id="FireRamp"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1mmv2"]
 gradient = SubResource("Gradient_imegm")
 
 [sub_resource type="Curve" id="Curve_1mmv2"]
 _data = [Vector2(0, 0.35), 0.0, 0.0, 0, 0, Vector2(0.22, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CurveTexture" id="ScaleTex"]
+[sub_resource type="CurveTexture" id="CurveTexture_dfmc7"]
 curve = SubResource("Curve_1mmv2")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dfmc7"]
@@ -99,9 +106,9 @@ damping_min = 0.1
 damping_max = 0.4
 scale_min = 0.12
 scale_max = 0.32
-scale_curve = SubResource("ScaleTex")
+scale_curve = SubResource("CurveTexture_dfmc7")
 color = Color(1, 0.7, 0.25, 1)
-color_ramp = SubResource("FireRamp")
+color_ramp = SubResource("GradientTexture1D_1mmv2")
 turbulence_enabled = true
 turbulence_noise_strength = 0.6
 turbulence_noise_scale = 1.5
@@ -186,7 +193,7 @@ shadow_mesh = SubResource("ArrayMesh_2t2ha")
 height = 0.095
 radial_segments = 22
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s0kjy"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2063v"]
 render_priority = 1
 transparency = 1
 shading_mode = 0
@@ -199,7 +206,7 @@ stencil_compare = 5
 metadata/_stencil_owned = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p78v0"]
-next_pass = SubResource("StandardMaterial3D_s0kjy")
+next_pass = SubResource("StandardMaterial3D_2063v")
 albedo_color = Color(1, 0.00999999, 0.026499748, 1)
 metallic = 0.8
 uv1_scale = Vector3(0.5, 0.5, 0.5)
@@ -457,7 +464,7 @@ draw_pass_1 = SubResource("QuadMesh_2063v")
 [node name="Glow" type="OmniLight3D" parent="Mesh/Red_rock/Fire" unique_id=1386905732]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4882101, 0, 0)
 light_color = Color(1, 0.00999999, 0.026499748, 1)
-light_energy = 5.0
+light_energy = 2.0
 light_indirect_energy = 0.6
 light_volumetric_fog_energy = 1.4
 light_size = 7.155
@@ -664,42 +671,6 @@ _fromWidth = 0.05
 _lifespan = 0.1
 _startColor = Color(1, 1, 1, 0.24705882)
 _endColor = Color(1, 1, 1, 1)
-
-[node name="Marked" type="Node3D" parent="." unique_id=649707594]
-visible = false
-
-[node name="Decal" type="Decal" parent="Marked" unique_id=411693682]
-layers = 524288
-size = Vector3(0.3, 2, 0.3)
-texture_albedo = ExtResource("11_fao6x")
-modulate = Color(10.5787325, 0, 0, 1)
-cull_mask = 1048574
-
-[node name="Decal2" type="Decal" parent="Marked" unique_id=308356931]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
-layers = 524288
-size = Vector3(0.3, 2, 0.3)
-texture_albedo = ExtResource("11_fao6x")
-modulate = Color(10.5787325, 0, 0, 1)
-cull_mask = 1048574
-
-[node name="Freeze" type="Node3D" parent="." unique_id=1310957161]
-visible = false
-
-[node name="Decal" type="Decal" parent="Freeze" unique_id=1609754804]
-layers = 524288
-size = Vector3(0.7, 2.5, 0.7)
-texture_albedo = ExtResource("11_fao6x")
-modulate = Color(0.00014786291, 2.6319327, 3.5783958, 1)
-cull_mask = 1048574
-
-[node name="Decal2" type="Decal" parent="Freeze" unique_id=925499963]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
-layers = 524288
-size = Vector3(0.7, 2.5, 0.7)
-texture_albedo = ExtResource("11_fao6x")
-modulate = Color(0.00014786291, 2.6319327, 3.5783958, 1)
-cull_mask = 1048574
 
 [node name="Start_falling_timer" type="Timer" parent="." unique_id=1355709089]
 wait_time = 2.0

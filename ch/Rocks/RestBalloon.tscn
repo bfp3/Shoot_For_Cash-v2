@@ -16,6 +16,11 @@ size = Vector3(1, 2.506958, 1)
 [node name="RestBalloon" unique_id=397951874 instance=ExtResource("1_balloon")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("2_script")
+hot_air_balloon_motion_enabled = true
+hot_air_balloon_bob_distance = 0.12
+hot_air_balloon_bob_duration = 1.9
+hot_air_balloon_sway_degrees = 4.0
+hot_air_balloon_sway_duration = 2.4
 balloon_type = 1
 
 [node name="main_col" parent="." index="0" unique_id=809893561]
@@ -27,6 +32,7 @@ visible = false
 
 [node name="small_rock2" parent="Mesh" index="0" unique_id=2102516094]
 transform = Transform3D(1.705, 0, 0, 0, 1.705, 0, 0, 0, 1.705, 0, 0.123, 0)
+visible = false
 
 [node name="string" parent="Mesh/small_rock2" index="0" unique_id=2071839589]
 visible = false
@@ -89,12 +95,11 @@ cull_mask = 1048574
 
 [node name="RestBalloon" type="AudioStreamPlayer" parent="." index="14" unique_id=1932517619]
 stream = ExtResource("4_lwyt0")
-volume_db = -42.0
-pitch_scale = 1.2
-bus = &"ReverbBus"
+volume_db = -45.0
+pitch_scale = 1.3
 
 [node name="Crate" type="Node3D" parent="." index="15" unique_id=133431577]
-transform = Transform3D(0.65500003, 0, 0, 0, 0.65500003, 0, 0, 0, 0.65500003, 0, -0.38175172, 0)
+transform = Transform3D(0.65500003, 0, 0, 0, 0.65500003, 0, 0, 0, 0.65500003, 0, 0.12365565, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Crate" index="0" unique_id=2098571721]
 transform = Transform3D(0.65800005, 0, 0, 0, 0.65800005, 0, 0, 0, 0.65800005, 0, -0.5882354, 0)
@@ -121,4 +126,4 @@ font_size = 305
 outline_size = 15
 
 [node name="hot_air_balloon" parent="." index="16" unique_id=391369195 instance=ExtResource("7_ke2lg")]
-transform = Transform3D(0.407, 0, 0, 0, 0.407, 0, 0, 0, 0.407, 0, 0, 0)
+transform = Transform3D(0.407, 0, 0, 0, 0.407, 0, 0, 0, 0.407, 0, -0.20134434, 0)

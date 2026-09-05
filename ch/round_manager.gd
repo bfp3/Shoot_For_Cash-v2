@@ -139,6 +139,10 @@ var current_sequence_index := 0
 var current_wave := 0
 var success := false
 var wave_ending := false
+## True during WAVE_START setup so leftover clear signals cannot WAVE_END
+## before the new script has begun. Distinct from `wave_ending`, which also
+## makes RockManager treat the round as closing and skip a fresh start.
+var _suppress_wave_end := false
 var player_failed := false
 var force_shop_open := false
 var _continue_open := false
@@ -1689,7 +1693,7 @@ func handle_three_strikes() -> void:
 	enter_state(RoundState.CONTINUE)
 
 func check_if_rocks_still_in_air() -> void:
-	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
+	if wave_ending or _suppress_wave_end or _continue_open or _continue_resuming or _continue_grace:
 		return
 	if _quiz_active:
 		return
@@ -1721,7 +1725,7 @@ func check_if_rocks_still_in_air() -> void:
 	enter_state(RoundState.WAVE_END)
 
 func successful_round() -> void:
-	if wave_ending or _continue_open or _continue_resuming or _continue_grace:
+	if wave_ending or _suppress_wave_end or _continue_open or _continue_resuming or _continue_grace:
 		return
 	## Quiz ends itself via successful_round / unsuccessful_round_locked when finished.
 	if _quiz_active and _quiz_controller != null and _quiz_controller.is_active():
@@ -1773,6 +1777,7 @@ func unsuccessful_round_locked(skip_tally: bool = false) -> void:
 	stop_timer()
 	player_failed = true
 	_advance_range_after_hold_out = false
+	_suppress_wave_end = false
 	force_shop_open = true
 	success = false
 	current_wave = 0
@@ -1831,6 +1836,7 @@ func abort_round_to_shop() -> void:
 	force_shop_open = false
 	success = false
 	_boss_looping = false
+	_suppress_wave_end = false
 
 	stop_timer()
 	stop_player()
@@ -2572,6 +2578,7 @@ func update_round_start() -> void:
 
 func update_wave_start() -> void:
 	## Fresh attempt always starts at the top of the round script (no mid-script resume).
+	_suppress_wave_end = true
 	var resume_index := 0
 	if is_endless_mode():
 		## Endless: no wave banners — just keep the strike HUD ready.
@@ -2592,9 +2599,11 @@ func update_wave_start() -> void:
 	
 	await get_tree().create_timer(0.1, false).timeout
 	if force_shop_open or _level_editor_finishing:
+		_suppress_wave_end = false
 		return
 	
 	if gl_PlayerState.dataset.total_current_strikes >= _max_strikes():
+		_suppress_wave_end = false
 		wave_progress_feedback.start_miss()
 		unsuccessful_round_locked()
 		return
@@ -2605,6 +2614,7 @@ func update_wave_start() -> void:
 
 	await get_tree().create_timer(0.1, false).timeout
 	if force_shop_open or _level_editor_finishing:
+		_suppress_wave_end = false
 		return
 
 	if current_wave == 1 and is_bonus_type1_round() and bonus_target_manager:
@@ -2617,6 +2627,11 @@ func update_wave_start() -> void:
 			bonus_target_manager.begin_bonus_round(targets)
 
 	gl_PlayerState.next_wave()
+
+	## Allow the rock script to start. `wave_ending` leftover from abort/lose
+	## makes RockManager treat the round as closing and skip spawn 0.
+	## `_suppress_wave_end` still blocks premature WAVE_END until setup finishes.
+	wave_ending = false
 
 	if current_wave == 1:
 		if quiz_this_round:
@@ -2661,12 +2676,14 @@ func update_wave_start() -> void:
 
 	await get_tree().create_timer(0.75, false).timeout
 	if force_shop_open or _level_editor_finishing:
+		_suppress_wave_end = false
 		return
 		
 	#if egg_pulse:
 		#egg_pulse.activate_pulse_wave()
 
 	wave_ending = false   # only now can a wave-end signal be accepted
+	_suppress_wave_end = false
 
 	if quiz_this_round:
 		_start_quiz_round_if_needed()
