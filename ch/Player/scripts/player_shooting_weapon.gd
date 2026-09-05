@@ -440,8 +440,6 @@ func shoot_target() -> void:
 	if player and player.has_method("register_accurate_shot"):
 		player.register_accurate_shot()
 
-	_try_scope_mechanic_callout(targets)
-
 	for target_data in targets:
 
 		var target = target_data.target
@@ -508,6 +506,8 @@ func shoot_target() -> void:
 			break
 		
 		shooting_sky_mine = false
+
+	_try_scope_mechanic_callout(targets)
 
 	if rocks_to_destroy.size() >= 2 && !shot_with_right_click:
 		## Glory: fail as soon as a double is scored (don't wait for clear / wave end).
@@ -841,9 +841,16 @@ func _try_scope_mechanic_callout(targets: Array) -> void:
 		if not (entry is Dictionary):
 			continue
 		var target = entry.get("target")
-		if is_instance_valid(target):
-			label_pos += target.global_position
-			count += 1
+		if not (target is RockInstance):
+			continue
+		if not is_instance_valid(target):
+			continue
+		if not String(target.get("rock_type_name")).contains("rock_type_1"):
+			continue
+		if int(target.get("current_state")) != int(RockInstance.State.HIT):
+			continue
+		label_pos += target.global_position
+		count += 1
 	if count <= 0:
 		return
 	label_pos /= float(count)

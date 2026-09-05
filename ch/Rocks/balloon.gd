@@ -864,6 +864,8 @@ func _apply_script_balloon_shot() -> void:
 			rocks = round_manager.get("rocks_container")
 		if rocks and rocks.has_method("suppress_next_strike_feedback"):
 			rocks.suppress_next_strike_feedback()
+		if EventBus.instance:
+			EventBus.instance.balloon_strike_requested.emit(global_position)
 		gl_PlayerState.add_strike()
 	else:
 		gl_PlayerState.log_hit(rock_type_name, current_rock_type, -10)

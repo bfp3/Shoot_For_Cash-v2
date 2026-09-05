@@ -10,15 +10,23 @@ extends Panel
 @export var hold_at_center_time := 0.45
 @export var return_time := 0.3
 @export var strike_out_hold_sec := 2.0
+@export_group("Balloon Strike FX")
+@export_range(0.1, 3.0, 0.05) var balloon_strike_blink_total_sec := 0.75
+@export_range(0.1, 2.0, 0.05) var balloon_strike_fly_sec := 0.12
+@export_range(0.05, 4.0, 0.05) var balloon_strike_spawn_scale := 0.3
+@export_range(0.05, 1.5, 0.05) var balloon_strike_target_scale := 0.05
 
 var strike_count := 0
 var _indicators: Array[StrikeIndicator] = []
 var _row_original_position: Vector2
 var _row_original_modulate: Color
 var _active_tween: Tween
+var _balloon_strike_tween: Tween
 var _is_playing_finale := false
 ## True once the row is parked centre with "Oh no..." — stays until play_finale_return().
 var _finale_held := false
+var _pending_balloon_strike_world: Vector3 = Vector3.ZERO
+var _has_pending_balloon_strike := false
 @onready var strike_out_label: RichTextLabel = $StrikeLabel
 
 func _ready() -> void:
@@ -27,6 +35,7 @@ func _ready() -> void:
 	_cache_indicators()
 	EventBus.instance.add_strike.connect(add_strike)
 	EventBus.instance.has_hit_three_strikes.connect(three_strikes)
+	EventBus.instance.balloon_strike_requested.connect(_queue_balloon_strike_fx)
 	_hide_strike_out_label()
 	reset()
 
@@ -43,14 +52,15 @@ func add_strike() -> void:
 	if indicator == null:
 		return
 	strike_count += 1
-	
+
 	_start_hud_notice()
-	
-	indicator.reveal_strike(true)
 	if strike_sfx:
 		$StrikeSFX3.play()
 		$StrikeSFX4.play()
 		$StrikeSFX5.play()
+
+	await _play_pending_balloon_strike_fx(indicator)
+	indicator.reveal_strike(true)
 
 
 func ensure_extra_strike_slot() -> void:
@@ -87,6 +97,7 @@ func three_strikes() -> void:
 	for indicator in _indicators:
 		if not indicator.is_struck:
 			strike_count += 1
+			await _play_pending_balloon_strike_fx(indicator)
 			indicator.reveal_strike(false)
 	_play_three_strikes_sequence()
 
@@ -96,6 +107,7 @@ func reset() -> void:
 	_finale_held = false
 	strike_count = 0
 	stop_strike_notices()
+	_clear_pending_balloon_strike_fx()
 	_hide_strike_out_label()
 	restore_row_position()
 	indicators_row.modulate = _row_original_modulate
@@ -317,5 +329,82 @@ func _kill_tween() -> void:
 		_active_tween.kill()
 	_active_tween = null
 
+	if _balloon_strike_tween and _balloon_strike_tween.is_valid():
+		_balloon_strike_tween.kill()
+	_balloon_strike_tween = null
+
 func restart() -> void:
 	reset()
+
+
+func _queue_balloon_strike_fx(world_position: Vector3) -> void:
+	_pending_balloon_strike_world = world_position
+	_has_pending_balloon_strike = true
+
+
+func _clear_pending_balloon_strike_fx() -> void:
+	_has_pending_balloon_strike = false
+	_pending_balloon_strike_world = Vector3.ZERO
+
+
+func _play_pending_balloon_strike_fx(indicator: StrikeIndicator) -> void:
+	if not _has_pending_balloon_strike or indicator == null:
+		return
+	var world_position := _pending_balloon_strike_world
+	_clear_pending_balloon_strike_fx()
+	await _play_balloon_strike_fx(world_position, indicator)
+
+
+func _play_balloon_strike_fx(world_position: Vector3, indicator: StrikeIndicator) -> void:
+	if indicator == null or not is_instance_valid(indicator):
+		return
+	var source_screen = _world_to_screen(world_position)
+	if source_screen == null:
+		return
+	var target_screen := indicator.get_global_rect().get_center()
+	var overlay := indicator.create_strike_fx_overlay()
+	if overlay == null:
+		return
+	add_child(overlay)
+	overlay.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	overlay.pivot_offset = overlay.size * 0.5
+	overlay.position = source_screen
+	overlay.scale = Vector2.ONE * balloon_strike_spawn_scale
+	overlay.modulate = Color.WHITE
+	var blink_loops := maxi(blink_count, 1)
+	var blink_step := balloon_strike_blink_total_sec / float(blink_loops * 2)
+	_balloon_strike_tween = create_tween()
+	for i in range(blink_loops):
+		_balloon_strike_tween.tween_property(overlay, "modulate:a", 0.12, blink_step)\
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_balloon_strike_tween.tween_property(overlay, "modulate:a", 1.0, blink_step)\
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_balloon_strike_tween.tween_property(
+		overlay,
+		"position",
+		target_screen,
+		balloon_strike_fly_sec
+	).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	_balloon_strike_tween.parallel().tween_property(
+		overlay,
+		"scale",
+		Vector2.ONE * balloon_strike_target_scale,
+		balloon_strike_fly_sec
+	).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	_balloon_strike_tween.parallel().tween_property(
+		overlay,
+		"modulate:a",
+		0.0,
+		balloon_strike_fly_sec
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await _balloon_strike_tween.finished
+	if is_instance_valid(overlay):
+		overlay.queue_free()
+	_balloon_strike_tween = null
+
+
+func _world_to_screen(world_position: Vector3) -> Variant:
+	var camera := get_viewport().get_camera_3d()
+	if camera == null or camera.is_position_behind(world_position):
+		return null
+	return camera.unproject_position(world_position)

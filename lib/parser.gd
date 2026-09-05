@@ -86,8 +86,9 @@ func loadIsland(data : String) -> bool:
 				if reward >= 0:
 					reward_by_range['%s|%s' % [island_name, range_name]] = reward
 					continue
-				## Preamble `threat …` (before any `round`) — ambient mines for the range.
-				if round_no <= 0 and String(tokens[0]).to_lower() == "threat":
+				## Preamble `threat …` / `threat-small …` / `threat-large …` (before any `round`) — ambient mines for the range.
+				var first_token := String(tokens[0]).to_lower()
+				if round_no <= 0 and (first_token == "threat" or first_token == "threat-small" or first_token == "threat-large"):
 					var threat_line := sanitise_token(token)
 					var threat_parsed := parse_spawn_command(threat_line)
 					if not threat_parsed.is_empty():
@@ -212,6 +213,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   `threat 1 a4 a1 a8` — invincible smoke canister that patrols those cells back and forth.
 ##     Crosshair overlap plays `alarm_smoke` then releases `aoe_threat_smoke` (1.5s cooldown).
 ##     `threat 1 a4 a1 a8 fastest` uses the threat export speed for that token.
+##     `threat-small ...` / `threat-large ...` use the same pathing with optional size presets.
 ##     `clear threat` sends it down into the splash zone.
 ##   `rock-red-attacker 1 a1` flies to A1 then dashes at the crosshair (and through it).
 ##   `rock-red-attacker 1 a1 a8` same, but dashes toward A8 instead of the crosshair.
@@ -307,7 +309,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
 
-		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat':
+		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat', 'threat-small', 'threat-large':
 			return _parse_rock_stay_command(cmd, parts)
 
 		'rock-gap', 'rock-red-gap':
@@ -654,13 +656,23 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 ##   rock-stay 1 a1                 → spawn col 1, hang at A1
 ##   rock-stay 1 a1 a8 c8 c1 a4 1   → path A1→A8→C8→C1→A4, then splash exit
 ##   threat 1 a4 a1 a8              → spawn col 1, patrol those cells back and forth
+##   threat-small 1 a4 a1 a8        → same patrol using the "small" size multiplier
+##   threat-large 1 a4 a1 a8        → same patrol using the "large" size multiplier
 ##   threat 1 a1 a4 a8 fastest      → same patrol at threat_speed_fastest
 ##   Trailing bare `0`/`1` after cells = path_exit_splash (1 = leave into splash zone).
 ##   `threat` ignores trailing 0/1 — use `clear threat` to splash-exit.
 ##   Optional last token on threat: `slow` / `fast` / `fastest` (own export speeds).
 func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictionary:
+	var threat_size := ""
+	var normalized_cmd := cmd
+	if cmd == "threat-small":
+		normalized_cmd = "threat"
+		threat_size = "small"
+	elif cmd == "threat-large":
+		normalized_cmd = "threat"
+		threat_size = "large"
 	var result := {
-		'cmd': cmd,
+		'cmd': normalized_cmd,
 		'column': RANDOM_SLOT,
 		'spawn_row': RANDOM_SLOT,
 		'aim_row': RANDOM_SLOT,
@@ -669,6 +681,7 @@ func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictiona
 		'end_column': RANDOM_SLOT,
 		'path_exit_splash': false,
 		'threat_pace': '',
+		'threat_size': threat_size,
 		'param': '',
 		'raw': ' '.join(parts),
 	}
@@ -703,7 +716,7 @@ func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictiona
 	var end_i := parts.size() - 1
 	var last_tok := String(parts[end_i]).strip_edges().trim_suffix(',').strip_edges()
 	## `threat … slow|fast|fastest` — pace token is always last.
-	if cmd == 'threat':
+	if normalized_cmd == 'threat':
 		var pace := last_tok.to_lower()
 		if pace == 'slow' or pace == 'fast' or pace == 'fastest':
 			result.threat_pace = pace
@@ -1613,6 +1626,12 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return '%s %s' % [cmd, col_token]
 		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat':
 			var stay_bits: PackedStringArray = [cmd]
+			if cmd == 'threat':
+				var threat_size := String(entry.get('threat_size', '')).strip_edges().to_lower()
+				if threat_size == 'small':
+					stay_bits[0] = 'threat-small'
+				elif threat_size == 'large':
+					stay_bits[0] = 'threat-large'
 			var stay_col := int(entry.get('column', RANDOM_SLOT))
 			stay_bits.append('?' if stay_col < 0 else str(stay_col))
 			var letters_s := ['', 'A', 'B', 'C']

@@ -144,6 +144,36 @@ func _show_struck_face() -> void:
 	cross_front.modulate.a = _cross_front_modulate.a
 
 
+func show_struck_face_static() -> void:
+	stop_notice_pulses()
+	_kill_tween()
+	is_struck = true
+	miss_text_label.modulate.a = 0.0
+	size_control.visible = true
+	size_control.scale = _size_control_scale
+	size_control.position = Vector2.ZERO
+	_show_struck_face()
+
+
+func create_strike_fx_overlay() -> Control:
+	var overlay := size_control.duplicate() as Control
+	if overlay == null:
+		return null
+	var overlay_circle := overlay.get_node_or_null("Circle") as TextureRect
+	var overlay_cross_front := overlay.get_node_or_null("CrossFront") as TextureRect
+	var overlay_cross := overlay.get_node_or_null("CrossFront/Cross") as TextureRect
+	if overlay_circle:
+		overlay_circle.visible = true
+		overlay_circle.modulate.a = circle.modulate.a
+	if overlay_cross_front:
+		overlay_cross_front.visible = true
+		overlay_cross_front.modulate = _cross_front_modulate
+	if overlay_cross:
+		overlay_cross.visible = true
+		overlay_cross.modulate = _cross_modulate
+	return overlay
+
+
 func reset() -> void:
 	stop_notice_pulses()
 	_kill_tween()

@@ -17,6 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="14_ws5ov"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="15_upgbk"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="16_2pfik"]
+[ext_resource type="AudioStream" uid="uid://b5jm8thplb0ul" path="res://sfx/smoke_release_sfx_01.ogg" id="17_j5hxi"]
 [ext_resource type="Script" uid="uid://clxav3efm6yfj" path="res://ch/Rocks/threat_lights_container.gd" id="17_lights"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="18_noifa"]
 [ext_resource type="Material" path="res://mine_temp/materials/mat_fire.tres" id="19_8hruo"]
@@ -25,7 +26,7 @@
 [ext_resource type="AudioStream" uid="uid://bvl5cx4v4ypn7" path="res://sfx/metal_ding_sound.ogg" id="23_j5hxi"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lrylr"]
-radius = 0.305
+radius = 0.316
 
 [sub_resource type="Gradient" id="Gradient_6an4g"]
 colors = PackedColorArray(0.1, 0.08933333, 0.080000006, 1, 0.45, 0.40199998, 0.35999998, 1)
@@ -37,7 +38,6 @@ fill_to = Vector2(0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xxiuv"]
 shading_mode = 0
-albedo_color = Color(0.52, 0.52, 0.52, 1)
 albedo_texture = SubResource("GradientTexture2D_hg7hp")
 uv1_offset = Vector3(0.27, 0, 0.3)
 uv1_triplanar = true
@@ -387,6 +387,9 @@ angular_damp = 8.0
 script = ExtResource("6_threat")
 travel_curve = ExtResource("8_travel")
 travel_speed_curve = ExtResource("9_speed")
+threat_normal_scale_multiplier = 2.0
+threat_small_scale_multiplier = 1.0
+threat_large_scale_multiplier = 2.5
 humming_motion_speed_min = 0.1
 humming_motion_speed_max = 5.0
 humming_pitch_min = 0.6
@@ -405,7 +408,7 @@ debug_color = Color(0.13208885, 1.8247963, 0, 1)
 unique_name_in_owner = true
 
 [node name="Threat_smoke" type="MeshInstance3D" parent="Mesh" unique_id=893370913]
-transform = Transform3D(3.821371e-15, 8.742278e-08, 2, 2, -8.742278e-08, 0, 8.742278e-08, 2, -8.742278e-08, 0, 0, 0)
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_xxiuv")
 mesh = ExtResource("2_xt4er")
 
@@ -467,18 +470,21 @@ mesh = ExtResource("4_a8y1e")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Mesh/HiddenMesh/Red_rock_attack" unique_id=580641184]
 transform = Transform3D(1.8181818, 0, 0, 0, 1.8181818, 0, 0, 0, 1.8181818, 0, 0, 0)
+visible = false
 cast_shadow = 0
 mesh = SubResource("SphereMesh_hg7hp")
 skeleton = NodePath("../..")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="Mesh/HiddenMesh/Red_rock_attack" unique_id=1515768794]
 transform = Transform3D(0.77454543, 0, 0, 0, 0.77454543, 0, 0, 0, 0.77454543, 0, -0.05090909, -0.6181818)
+visible = false
 cast_shadow = 0
 mesh = SubResource("SphereMesh_hg7hp")
 skeleton = NodePath("../..")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Mesh/HiddenMesh/Red_rock_attack" unique_id=1690880401]
 transform = Transform3D(1.2527273, 0, 0, 0, 1.2527273, 0, 0, 0, 1.2527273, 0, 0, -0.3623262)
+visible = false
 material_override = ExtResource("11_8hruo")
 cast_shadow = 0
 mesh = SubResource("SphereMesh_hg7hp")
@@ -548,8 +554,20 @@ emission_angle_degrees = 15.0
 
 [node name="release_smoke_sfx" type="AudioStreamPlayer3D" parent="SFX" unique_id=2109131195]
 stream = ExtResource("12_ws5ov")
-volume_db = -5.0
-pitch_scale = 1.5
+volume_db = -10.0
+autoplay = true
+max_distance = 30.0
+emission_angle_enabled = true
+emission_angle_degrees = 15.0
+
+[node name="smoke_release" type="AudioStreamPlayer3D" parent="SFX" unique_id=42590063]
+stream = ExtResource("17_j5hxi")
+max_distance = 30.0
+emission_angle_enabled = true
+emission_angle_degrees = 15.0
+
+[node name="smoke_release_02" type="AudioStreamPlayer3D" parent="SFX" unique_id=1983472642]
+stream = ExtResource("17_j5hxi")
 max_distance = 30.0
 emission_angle_enabled = true
 emission_angle_degrees = 15.0
@@ -563,9 +581,8 @@ emission_angle_enabled = true
 emission_angle_degrees = 15.0
 
 [node name="rock_hitSound" type="AudioStreamPlayer3D" parent="SFX" unique_id=1467204600]
-unique_name_in_owner = true
 stream = ExtResource("14_ws5ov")
-volume_db = -21.0
+volume_db = -10.0
 max_polyphony = 2
 emission_angle_enabled = true
 emission_angle_degrees = 15.0

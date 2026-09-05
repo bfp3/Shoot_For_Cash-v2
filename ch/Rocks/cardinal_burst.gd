@@ -351,6 +351,8 @@ func _set_strike_feedback_origin_here() -> void:
 	var rocks_container = get_tree().get_first_node_in_group("rocks_container")
 	if rocks_container and rocks_container.has_method("set_strike_feedback_origin"):
 		rocks_container.set_strike_feedback_origin(global_position)
+	if EventBus.instance:
+		EventBus.instance.balloon_strike_requested.emit(global_position)
 
 
 func _shake_hazard() -> void:

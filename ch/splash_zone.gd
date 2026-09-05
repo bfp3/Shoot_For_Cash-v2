@@ -50,7 +50,7 @@ func _on_body_entered(body: Node3D) -> void:
 			splash_sfx()
 			return
 		## Red-attacker: splash + despawn via OOB path, never a strike.
-		
+		var splash_hit_pos := body.global_position
 		splash_particles(body)
 		## Soft water splash only for black rocks — no strike sting / OOB hit SFX.
 		var missed_rock_type_name : String = body.rock_type_name
@@ -70,12 +70,19 @@ func _on_body_entered(body: Node3D) -> void:
 			rocks_container = round_manager.get("rocks_container")
 		if rocks_container == null:
 			rocks_container = get_tree().get_first_node_in_group("rocks_container")
-		if not is_hazard and rocks_container and rocks_container.has_method("set_strike_feedback_origin"):
-			var give_strike := bool(rocks_container.get("rock_yellows_give_strikes"))
-			if give_strike and missed_rock_type_name.contains("rock_type_1"):
-				rocks_container.set_strike_feedback_origin(body.global_position)
-
-		gl_PlayerState.log_rock_missed(missed_rock_type_name)
+		var give_strike := false
+		if rocks_container != null:
+			give_strike = bool(rocks_container.get("rock_yellows_give_strikes"))
+		var is_must_hit := missed_rock_type_name.contains("rock_type_1")
+		if not is_hazard and rocks_container and rocks_container.has_method("set_strike_feedback_origin") and give_strike and is_must_hit:
+			rocks_container.set_strike_feedback_origin(splash_hit_pos)
+		if not is_hazard and give_strike and is_must_hit:
+			if EventBus.instance:
+				EventBus.instance.balloon_strike_requested.emit(splash_hit_pos)
+			gl_PlayerState.add_strike()
+			gl_PlayerState.log_rock_missed(missed_rock_type_name, true)
+		else:
+			gl_PlayerState.log_rock_missed(missed_rock_type_name)
 
 		if is_hazard or missed_rock_type_name.contains("red_attacker"):
 			if rocks_container and rocks_container.has_method("check_wave_clear_if_no_live_rocks"):

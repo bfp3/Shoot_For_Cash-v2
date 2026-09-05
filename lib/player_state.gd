@@ -549,7 +549,7 @@ func log_rocks(_total_rocks : int, rock_type_name : String) -> void:
 	dataset.total_rocks_in_round += 1
 	dataset.total_rocks_in_round_remaining += 1
 	
-func log_rock_missed(item : String = '') -> void:
+func log_rock_missed(item : String = '', skip_strike: bool = false) -> void:
 	# Hazards / smokecans are never added to total_rocks_in_round_remaining (see log_rocks).
 	# If they still decrement it on splash/OOB, a batch can zero out remaining and end
 	# the wave while real rocks are still in the air / waiting to launch.
@@ -567,7 +567,7 @@ func log_rock_missed(item : String = '') -> void:
 	dataset.total_rocks_in_round_remaining -= 1
 	
 
-	if item.contains('rock_type_1'):
+	if not skip_strike and item.contains('rock_type_1'):
 		if _yellow_rocks_give_strikes():
 			add_strike()
 		#return

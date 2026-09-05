@@ -1469,15 +1469,16 @@ func _spawn_threat_smoke_mine(entry = null, as_range_default: bool = false) -> v
 	var splash_from: Vector3 = path_world[path_world.size() - 1]
 	var splash_pos := _stay_splash_exit_world(splash_from)
 	var pace := str(parsed.get("threat_pace", ""))
+	var threat_size := str(parsed.get("threat_size", ""))
 
 	var mine: Node = THREAT_SMOKE_MINE_SCENE.instantiate()
 	mine.set("is_range_default", as_range_default)
 	_threat_mine_host().add_child(mine)
 	if mine.has_method("activate_from_script"):
-		mine.activate_from_script(path_world, splash_pos, pace, AIM_PLANE_Z)
+		mine.activate_from_script(path_world, splash_pos, pace, AIM_PLANE_Z, threat_size)
 	print(
-		"RockManager: threat mine path=%d pace=%s default=%s z=%.1f raw=%s"
-		% [path_world.size(), pace, str(as_range_default), AIM_PLANE_Z, str(parsed.get("raw", ""))]
+		"RockManager: threat mine path=%d pace=%s size=%s default=%s z=%.1f raw=%s"
+		% [path_world.size(), pace, threat_size, str(as_range_default), AIM_PLANE_Z, str(parsed.get("raw", ""))]
 	)
 
 
@@ -3557,9 +3558,12 @@ func _find_free_pool_rock():
 
 ## Ad-hoc smoke mine (wall-puzzle, etc.). Does not advance the script sequence.
 func spawn_threat_rock(cmd: String = "threat") -> void:
-	var entry := {"cmd": String(cmd).to_lower(), "column": -1}
-	if String(entry.cmd) != "threat":
-		entry.cmd = "threat"
+	var cmd_name := String(cmd).to_lower()
+	var entry := {"cmd": "threat", "column": -1, "threat_size": ""}
+	if cmd_name == "threat-small":
+		entry["threat_size"] = "small"
+	elif cmd_name == "threat-large":
+		entry["threat_size"] = "large"
 	_spawn_threat_smoke_mine(entry)
 
 

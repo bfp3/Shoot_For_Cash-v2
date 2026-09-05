@@ -31,6 +31,12 @@ const THREAT_SMOKE_VFX_LIFETIME := 10.0
 @export_range(1.0, 64.0, 0.5) var active_light_energy := 48.0
 @export_range(0.05, 1.5, 0.05) var light_fade_sec := 0.35
 
+@export_group("Size")
+## Plain `threat` uses the normal multiplier (default 1.0 = current authored size).
+@export_range(0.1, 4.0, 0.05) var threat_normal_scale_multiplier := 1.0
+@export_range(0.1, 4.0, 0.05) var threat_small_scale_multiplier := 1.2
+@export_range(0.1, 4.0, 0.05) var threat_large_scale_multiplier := 1.6
+
 @export_group("Spin")
 ## Idle spin (degrees / sec) while active.
 @export var spin_deg_per_sec := Vector3(90.0, 140.0, 40.0)
@@ -86,6 +92,7 @@ const THREAT_SMOKE_VFX_LIFETIME := 10.0
 
 const CORE_XRAY_SHADER := preload("res://ch/Rocks/fake_rock_xray.gdshader")
 
+@onready var _main_col: CollisionShape3D = $main_col
 @onready var _mesh_root: Node3D = $Mesh
 @onready var _mesh: MeshInstance3D = $Mesh/Threat_smoke
 @onready var _blink_player: AnimationPlayer = $Mesh/Threat_smoke/AnimationPlayer
@@ -147,10 +154,15 @@ var _arrive_tween: Tween
 var _alarm_pose_tween: Tween
 var _core_xray_mat: ShaderMaterial = null
 var _core_glow_rest_energy := 5.0
+var _base_scale := Vector3.ONE
+var _mesh_root_base_scale := Vector3.ONE
+var _main_col_base_scale := Vector3.ONE
+var _main_col_base_radius := 0.316
 
 
 func _ready() -> void:
 	add_to_group("threat_smoke_mine")
+	_base_scale = scale
 	gravity_scale = 0.0
 	linear_damp = 2.0
 	angular_damp = 8.0
@@ -162,9 +174,17 @@ func _ready() -> void:
 	collision_mask = 0
 	freeze = true
 	sleeping = true
+	if _main_col:
+		_main_col_base_scale = _main_col.scale
+		if _main_col.shape:
+			_main_col.shape = _main_col.shape.duplicate()
+		var sphere := _main_col.shape as SphereShape3D
+		if sphere:
+			_main_col_base_radius = sphere.radius
 	if _mesh:
 		_mesh.visible = true
 	if _mesh_root:
+		_mesh_root_base_scale = _mesh_root.scale
 		_mesh_base_pos = _mesh_root.position
 	_cache_light_materials()
 	_setup_core_xray()
@@ -215,9 +235,11 @@ func activate_from_script(
 	path_world: Array,
 	splash_pos: Vector3 = Vector3.ZERO,
 	pace: String = "",
-	plane_z: float = 23.0
+	plane_z: float = 23.0,
+	size_preset: String = ""
 ) -> void:
 	configure_pace(pace)
+	_apply_size_preset(size_preset)
 	_plane_z = plane_z
 	_splash_exit_pos = splash_pos
 	_path.clear()
@@ -382,6 +404,23 @@ func configure_pace(pace: String) -> void:
 			_cruise_speed = speed_fastest
 		_:
 			_cruise_speed = speed_slow
+
+
+func _apply_size_preset(size_preset: String) -> void:
+	var preset := String(size_preset).strip_edges().to_lower()
+	var scale_mul := threat_normal_scale_multiplier
+	if preset == "small":
+		scale_mul = threat_small_scale_multiplier
+	elif preset == "large":
+		scale_mul = threat_large_scale_multiplier
+	scale = _base_scale
+	if _mesh_root:
+		_mesh_root.scale = _mesh_root_base_scale * scale_mul
+	if _main_col:
+		_main_col.scale = _main_col_base_scale * scale_mul
+		var sphere := _main_col.shape as SphereShape3D
+		if sphere:
+			sphere.radius = _main_col_base_radius
 
 
 func begin_threat_splash_exit() -> void:
@@ -724,6 +763,7 @@ func _run_alarm_sequence() -> void:
 	_trigger_alarm_camera_shake()
 	
 	start_steam_particles(true)
+	_play_local_sfx($SFX/smoke_release)
 	if _stun_sfx:
 		_stun_sfx.play()
 	if _marked_embers:
@@ -751,6 +791,8 @@ func _run_alarm_sequence() -> void:
 	_alarming = false
 	_alarm_fast_spin = false
 	_play_local_sfx(_release_smoke_sfx)
+	_play_local_sfx($SFX/rock_hitSound)
+	_play_local_sfx($SFX/smoke_release_02)
 	await get_tree().create_timer(0.1, false).timeout
 	if not is_instance_valid(self) or _exiting:
 		return
@@ -845,7 +887,7 @@ func _play_threat_smoke() -> void:
 	elif pool.has_method("play_threat_smoke"):
 		pool.play_threat_smoke(global_position)
 
-	%rock_hitSound.play()
+
 
 
 
