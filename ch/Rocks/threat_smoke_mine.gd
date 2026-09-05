@@ -9,9 +9,9 @@ const THREAT_ACTIVE_COLLISION_MASK := ROCK_COLLISION_LAYER | MINE_COLLISION_LAYE
 const THREAT_SMOKE_VFX_LIFETIME := 10.0
 
 @export_group("Patrol")
-@export_range(4.0, 80.0, 0.5) var speed_slow := 4.0
-@export_range(4.0, 80.0, 0.5) var speed_fast := 22.0
-@export_range(4.0, 120.0, 0.5) var speed_fastest := 36.0
+const speed_slow := 4.0
+const speed_fast := 10.0
+const speed_fastest := 20.0
 @export_range(0.0, 3.0, 0.05) var path_hold_sec := 0.35
 ## Brief hold after activate SFX before patrol starts.
 @export_range(0.0, 5.0, 0.05) var dormant_arm_sec := 0.2
@@ -48,6 +48,12 @@ const THREAT_SMOKE_VFX_LIFETIME := 10.0
 @export_range(0.0, 1.0, 0.01) var bob_amplitude := 0.12
 @export_range(0.1, 8.0, 0.05) var bob_speed := 1.6
 
+@export_group("Exit Motion")
+@export_range(0.0, 1.0, 0.01) var right_exit_bob_amplitude := 0.18
+@export_range(0.1, 8.0, 0.05) var right_exit_bob_speed := 2.0
+@export var right_exit_spin_deg_per_sec := Vector3(40.0, 80.0, 28.0)
+@export_range(0.0, 2.0, 0.05) var right_exit_upward_bias := 0.4
+
 @export_group("Idle Beep")
 @export var beep_enabled := true
 @export_range(0.5, 10.0, 0.1) var beep_interval_min_sec := 2.0
@@ -64,6 +70,9 @@ const THREAT_SMOKE_VFX_LIFETIME := 10.0
 @export_range(0.5, 2.0, 0.01) var humming_pitch_max := 1.08
 @export_range(-40.0, 18.0, 0.5) var humming_volume_db_min := 8.0
 @export_range(-40.0, 18.0, 0.5) var humming_volume_db_max := 11.0
+
+@export_group("Steam Movement")
+@export var steam_movement := false
 
 @export_group("Alarm")
 ## Hold after alarm SFX before smoke (mine stays frozen / upright).
@@ -102,9 +111,14 @@ const CORE_XRAY_SHADER := preload("res://ch/Rocks/fake_rock_xray.gdshader")
 @onready var _stun_sfx: AudioStreamPlayer3D = $SFX/stun_sfx
 @onready var _release_smoke_sfx: AudioStreamPlayer3D = get_node_or_null("SFX/release_smoke_sfx") as AudioStreamPlayer3D
 @onready var _activate_sfx: AudioStreamPlayer3D = get_node_or_null("SFX/beep_sfx") as AudioStreamPlayer3D
+@onready var _movement_steam_sfx: AudioStreamPlayer3D = get_node_or_null("SFX/smoke_release_movement") as AudioStreamPlayer3D
 @onready var _low_humming: AudioStreamPlayer3D = get_node_or_null("lowHumming") as AudioStreamPlayer3D
 @onready var _rock_ding: AudioStreamPlayer3D = get_node_or_null("RockDing") as AudioStreamPlayer3D
 @onready var _marked_embers: GPUParticles3D = get_node_or_null("marked_embers") as GPUParticles3D
+@onready var _steam_move_down: GPUParticles3D = get_node_or_null("SteamParticlesMovement/Steam_for_Downwards") as GPUParticles3D
+@onready var _steam_move_up: GPUParticles3D = get_node_or_null("SteamParticlesMovement/Steam_for_Upwards") as GPUParticles3D
+@onready var _steam_move_left: GPUParticles3D = get_node_or_null("SteamParticlesMovement/Steam_for_leftwards") as GPUParticles3D
+@onready var _steam_move_right: GPUParticles3D = get_node_or_null("SteamParticlesMovement/Steam_for_rightwards") as GPUParticles3D
 @onready var _lights: ThreatLightsContainer = (
 	get_node_or_null("Mesh/Threat_smoke/LightsContainer") as ThreatLightsContainer
 )
@@ -158,6 +172,10 @@ var _base_scale := Vector3.ONE
 var _mesh_root_base_scale := Vector3.ONE
 var _main_col_base_scale := Vector3.ONE
 var _main_col_base_radius := 0.316
+var _movement_steam_base_lifetimes: Dictionary = {}
+var _pace_key := "slow"
+var _right_exit_visuals := false
+var _exit_bob_t := 0.0
 
 
 func _ready() -> void:
@@ -196,6 +214,7 @@ func _ready() -> void:
 		body_entered.connect(_on_body_entered)
 	if _marked_embers:
 		_marked_embers.emitting = false
+	_prepare_movement_steam_particles()
 	hide()
 
 
@@ -210,8 +229,11 @@ func _physics_process(delta: float) -> void:
 	var trail := get_node_or_null("GPUParticles3D") as Node3D
 	if trail:
 		trail.rotate_y(-2.0 * delta)
-	if _dormant or _arriving or _exiting or _alarming:
+	if _dormant or _arriving or _alarming:
 		linear_velocity = Vector3.ZERO
+		return
+	if _exiting:
+		_update_exit_visuals(delta)
 		return
 	if not _active:
 		return
@@ -226,6 +248,9 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	if not visible:
+		return
+	if _right_exit_visuals:
+		_update_exit_spin(delta)
 		return
 	_update_spin(delta)
 
@@ -253,6 +278,7 @@ func activate_from_script(
 		return
 
 	_exiting = false
+	_right_exit_visuals = false
 	_stunned = false
 	_alarming = false
 	_alarm_fast_spin = false
@@ -397,12 +423,16 @@ func stop_patrol() -> void:
 func configure_pace(pace: String) -> void:
 	match String(pace).strip_edges().to_lower():
 		"slow":
+			_pace_key = "slow"
 			_cruise_speed = speed_slow
 		"fast":
+			_pace_key = "fast"
 			_cruise_speed = speed_fast
 		"fastest":
+			_pace_key = "fastest"
 			_cruise_speed = speed_fastest
 		_:
+			_pace_key = "slow"
 			_cruise_speed = speed_slow
 
 
@@ -423,9 +453,45 @@ func _apply_size_preset(size_preset: String) -> void:
 			sphere.radius = _main_col_base_radius
 
 
+func _prepare_movement_steam_particles() -> void:
+	for burst in [_steam_move_down, _steam_move_up, _steam_move_left, _steam_move_right]:
+		if burst == null:
+			continue
+		_movement_steam_base_lifetimes[burst.get_instance_id()] = burst.lifetime
+		burst.one_shot = true
+		burst.emitting = false
+
+
+func _stop_movement_steam_particles() -> void:
+	for burst in [_steam_move_down, _steam_move_up, _steam_move_left, _steam_move_right]:
+		if burst:
+			burst.emitting = false
+
+
+func _play_directional_movement_steam(direction: Vector2) -> void:
+	if not steam_movement:
+		return
+	var burst := _movement_steam_particle_for_direction(direction)
+	if burst == null:
+		return
+	var base_lifetime := float(_movement_steam_base_lifetimes.get(burst.get_instance_id(), burst.lifetime))
+	burst.lifetime = base_lifetime * 0.5 if _pace_key == "fast" or _pace_key == "fastest" else base_lifetime
+	burst.emitting = false
+	burst.restart()
+	burst.emitting = true
+	_play_local_sfx(_movement_steam_sfx)
+
+
+func _movement_steam_particle_for_direction(direction: Vector2) -> GPUParticles3D:
+	if absf(direction.x) >= absf(direction.y):
+		return _steam_move_right if direction.x >= 0.0 else _steam_move_left
+	return _steam_move_up if direction.y >= 0.0 else _steam_move_down
+
+
 func begin_threat_splash_exit() -> void:
 	if _exiting:
 		return
+	_right_exit_visuals = false
 	_exiting = true
 	_kill_arrive_tween()
 	_arriving = false
@@ -458,6 +524,40 @@ func begin_threat_splash_exit() -> void:
 	_plunge_then_free(splash, cruise)
 
 
+func begin_threat_right_exit() -> void:
+	if _exiting:
+		return
+	_right_exit_visuals = true
+	_exit_bob_t = randf() * TAU
+	_exiting = true
+	_kill_arrive_tween()
+	_arriving = false
+	_active = false
+	_dormant = false
+	_spin_enabled = false
+	_drive_token += 1
+	_stunned = false
+	_alarming = false
+	_alarm_fast_spin = false
+	_stop_path_motion()
+	_stop_humming()
+	freeze = false
+	sleeping = false
+	_enable_mine_collision(false)
+	if _marked_embers:
+		_marked_embers.emitting = false
+	var exit_dir := _screen_right_world_direction()
+	var planar_dir := Vector2(exit_dir.x, exit_dir.y)
+	if planar_dir.length() < 0.001:
+		planar_dir = Vector2.RIGHT
+	planar_dir = Vector2(planar_dir.x, right_exit_upward_bias).normalized()
+	if planar_dir.length() > 0.001:
+		_play_directional_movement_steam(planar_dir)
+	var cruise := maxf(_cruise_speed * 1.15, 1.0)
+	linear_velocity = Vector3(planar_dir.x, planar_dir.y, 0.0) * cruise
+	_exit_right_then_free(cruise)
+
+
 func _plunge_then_free(splash: Vector3, cruise: float) -> void:
 	var token := _drive_token
 	var elapsed := 0.0
@@ -471,6 +571,66 @@ func _plunge_then_free(splash: Vector3, cruise: float) -> void:
 		elapsed += get_physics_process_delta_time()
 	if is_instance_valid(self):
 		queue_free()
+
+
+func _exit_right_then_free(cruise: float) -> void:
+	var token := _drive_token
+	var offscreen_seen := false
+	var offscreen_for := 0.0
+	var elapsed := 0.0
+	var exit_dir := _screen_right_world_direction()
+	while token == _drive_token and is_instance_valid(self) and elapsed < 8.0:
+		var planar_dir := Vector2(exit_dir.x, exit_dir.y)
+		if planar_dir.length() < 0.001:
+			planar_dir = Vector2.RIGHT
+		planar_dir = Vector2(planar_dir.x, right_exit_upward_bias).normalized()
+		linear_velocity = Vector3(planar_dir.x, planar_dir.y, 0.0) * cruise
+		if _is_offscreen_to_screen_right():
+			offscreen_seen = true
+			offscreen_for += get_physics_process_delta_time()
+			if offscreen_for >= 1.0:
+				break
+		elif offscreen_seen:
+			offscreen_for = 0.0
+		await _await_unpaused_physics_frame()
+		elapsed += get_physics_process_delta_time()
+	if is_instance_valid(self):
+		queue_free()
+
+
+func _screen_right_world_direction() -> Vector3:
+	var cam := get_viewport().get_camera_3d()
+	if cam == null:
+		return Vector3.RIGHT
+	var current_screen := cam.unproject_position(global_position)
+	var plus_x_screen := cam.unproject_position(global_position + Vector3.RIGHT)
+	return Vector3.RIGHT if plus_x_screen.x > current_screen.x else Vector3.LEFT
+
+
+func _is_offscreen_to_screen_right() -> bool:
+	var cam := get_viewport().get_camera_3d()
+	if cam == null or cam.is_position_behind(global_position):
+		return false
+	var screen_pos := cam.unproject_position(global_position)
+	return screen_pos.x > get_viewport().get_visible_rect().size.x + 64.0
+
+
+func _update_exit_visuals(delta: float) -> void:
+	if not _right_exit_visuals or _mesh_root == null:
+		if _mesh_root:
+			_mesh_root.position = _mesh_base_pos
+		return
+	_exit_bob_t += delta * right_exit_bob_speed
+	var y := sin(_exit_bob_t) * right_exit_bob_amplitude
+	_mesh_root.position = _mesh_base_pos + Vector3(0.0, y, 0.0)
+
+
+func _update_exit_spin(delta: float) -> void:
+	if not _right_exit_visuals or _mesh_root == null:
+		return
+	_mesh_root.rotate_x(deg_to_rad(right_exit_spin_deg_per_sec.x) * delta)
+	_mesh_root.rotate_y(deg_to_rad(right_exit_spin_deg_per_sec.y) * delta)
+	_mesh_root.rotate_z(deg_to_rad(right_exit_spin_deg_per_sec.z) * delta)
 
 
 func _drive_path(token: int) -> void:
@@ -526,6 +686,9 @@ func _move_to_point(dest: Vector3, token: int) -> void:
 	var base_speed := maxf(_cruise_speed, 1.0)
 	var duration := clampf(dist / base_speed, 0.08, 6.0)
 	var elapsed := 0.0
+	var move_dir := Vector2(dest.x - from.x, dest.y - from.y)
+	if move_dir.length() > 0.001:
+		_play_directional_movement_steam(move_dir.normalized())
 	while elapsed < duration:
 		if token != _drive_token or not _active or _exiting or _dormant:
 			return
@@ -549,26 +712,31 @@ func _move_to_point(dest: Vector3, token: int) -> void:
 			elapsed = 0.0
 			continue
 		var u := clampf(elapsed / duration, 0.0, 1.0)
-		var eased := _sample_travel_curve(u)
-		var speed_mul := _sample_speed_curve(u)
+		var eased := _ease_in_out(u)
 		var desired := from.lerp(dest, eased)
 		desired.z = _plane_z
 		## Velocity chase so RigidBody contacts can push mines apart.
 		var to_desired := desired - global_position
-		var chase := clampf(12.0 * speed_mul, 4.0, 28.0)
-		linear_velocity = to_desired * chase
+		var dt := maxf(get_physics_process_delta_time(), 0.001)
+		linear_velocity = to_desired / dt
 		## Snap when very close to avoid endless micro-chase.
-		if to_desired.length() < 0.04 and u > 0.92:
+		if to_desired.length() < 0.01 and u > 0.995:
 			global_position = dest
 			linear_velocity = Vector3.ZERO
 			return
 		await _await_unpaused_physics_frame()
-		elapsed += get_physics_process_delta_time() * maxf(speed_mul, 0.15)
+		elapsed += get_physics_process_delta_time()
 	if token != _drive_token:
 		return
 	## Don't teleport onto the cell if we got frozen mid-leg.
 	if freeze or get_tree().paused:
 		return
+	var settle_elapsed := 0.0
+	while global_position.distance_to(dest) > 0.01 and settle_elapsed < 0.25:
+		var dt := maxf(get_physics_process_delta_time(), 0.001)
+		linear_velocity = (dest - global_position) / dt
+		await _await_unpaused_physics_frame()
+		settle_elapsed += get_physics_process_delta_time()
 	global_position = dest
 	linear_velocity = Vector3.ZERO
 
@@ -580,19 +748,9 @@ func _await_unpaused_physics_frame() -> void:
 	await get_tree().physics_frame
 
 
-func _sample_travel_curve(u: float) -> float:
-	var c := _curve_from_texture(travel_curve)
-	if c:
-		return clampf(c.sample(u), 0.0, 1.0)
-	## Smoothstep fallback.
+func _ease_in_out(u: float) -> float:
+	u = clampf(u, 0.0, 1.0)
 	return u * u * (3.0 - 2.0 * u)
-
-
-func _sample_speed_curve(u: float) -> float:
-	var c := _curve_from_texture(travel_speed_curve)
-	if c:
-		return maxf(c.sample(u), 0.05)
-	return 1.0
 
 
 func _curve_from_texture(tex: CurveTexture) -> Curve:
@@ -657,6 +815,7 @@ func _begin_collision_stun(other: ThreatSmokeMine) -> void:
 	linear_velocity = away * knockback_speed
 
 	_play_local_sfx(_stun_sfx)
+	_set_lights_state(ThreatLightsContainer.State.DEACTIVATED, false)
 	_wobble_mesh()
 
 	var token := _drive_token
@@ -676,6 +835,7 @@ func _begin_collision_stun(other: ThreatSmokeMine) -> void:
 	global_position = return_to
 	linear_velocity = Vector3.ZERO
 	_stunned = false
+	_set_lights_state(ThreatLightsContainer.State.DORMANT, false)
 
 
 ## Smooth return used after mine↔mine hits (ignores stun so the leg can complete).
@@ -691,6 +851,9 @@ func _return_to_cell_at_cruise(dest: Vector3, token: int) -> void:
 	var base_speed := maxf(_cruise_speed, 1.0)
 	var duration := clampf(dist / base_speed, 0.08, 6.0)
 	var elapsed := 0.0
+	var move_dir := Vector2(dest.x - from.x, dest.y - from.y)
+	if move_dir.length() > 0.001:
+		_play_directional_movement_steam(move_dir.normalized())
 	while elapsed < duration:
 		if token != _drive_token or _exiting or _dormant:
 			return
@@ -704,21 +867,26 @@ func _return_to_cell_at_cruise(dest: Vector3, token: int) -> void:
 			elapsed = 0.0
 			continue
 		var u := clampf(elapsed / duration, 0.0, 1.0)
-		var eased := _sample_travel_curve(u)
-		var speed_mul := _sample_speed_curve(u)
+		var eased := _ease_in_out(u)
 		var desired := from.lerp(dest, eased)
 		desired.z = _plane_z
 		var to_desired := desired - global_position
-		var chase := clampf(12.0 * speed_mul, 4.0, 28.0)
-		linear_velocity = to_desired * chase
-		if to_desired.length() < 0.04 and u > 0.92:
+		var dt := maxf(get_physics_process_delta_time(), 0.001)
+		linear_velocity = to_desired / dt
+		if to_desired.length() < 0.01 and u > 0.995:
 			global_position = dest
 			linear_velocity = Vector3.ZERO
 			return
 		await _await_unpaused_physics_frame()
-		elapsed += get_physics_process_delta_time() * maxf(speed_mul, 0.15)
+		elapsed += get_physics_process_delta_time()
 	if token != _drive_token or freeze or get_tree().paused:
 		return
+	var settle_elapsed := 0.0
+	while global_position.distance_to(dest) > 0.01 and settle_elapsed < 0.25:
+		var dt := maxf(get_physics_process_delta_time(), 0.001)
+		linear_velocity = (dest - global_position) / dt
+		await _await_unpaused_physics_frame()
+		settle_elapsed += get_physics_process_delta_time()
 	global_position = dest
 	linear_velocity = Vector3.ZERO
 

@@ -1878,6 +1878,8 @@ func round_timer_time_out() -> void:
 ## `pineapples` keyword hit: stop the countdown; finale owns the round end.
 func begin_pineapple_finale_from_script() -> void:
 	clear_live_oranges_quietly()
+	if rocks_container and rocks_container.has_method("exit_threat_mines_right_for_pineapple_win"):
+		rocks_container.exit_threat_mines_right_for_pineapple_win()
 	stop_timer()
 
 
@@ -1907,6 +1909,8 @@ func finish_round_after_last_pineapple() -> void:
 		return
 	wave_ending = true
 	clear_live_oranges_quietly()
+	if rocks_container and rocks_container.has_method("exit_threat_mines_right_for_pineapple_win"):
+		rocks_container.exit_threat_mines_right_for_pineapple_win()
 	stop_timer()
 	await get_tree().create_timer(0.5, false).timeout
 	if not _can_finish_after_timer_timeout():

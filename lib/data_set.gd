@@ -1,6 +1,6 @@
 extends Node
 ## When true, Advanced / Expert / all challenges and all numbered levels are treated as unlocked.
-const debug_everything_unlocked := true
+const debug_everything_unlocked := false
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 ## Advanced / Expert also require net worth (see unlock amounts below).

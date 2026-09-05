@@ -234,6 +234,7 @@ var _hold_out_finale_token := 0
 ## True while the finale coroutine is still launching the pattern (waits / pineapples).
 var _hold_out_finale_spawning := false
 var _pending_ammo_entries: Array = []
+var _threats_exiting_for_pineapple_win := false
 ## True while a timed `wait N` is sleeping so sky-clear does not skip it.
 var _sequence_delay_active := false
 ## `wait` after the last rock in a beat — applied before the next command.
@@ -432,6 +433,7 @@ func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
 	_launched_rocks_this_sequence = false
 	_launched_scripted_pineapple = false
 	_pending_ammo_entries.clear()
+	_threats_exiting_for_pineapple_win = false
 	_reset_pineapple_spawn_bookkeeping()
 	## Ambient mines that parked dormant in the shop / between rounds.
 	arm_default_threat_mines()
@@ -539,6 +541,7 @@ func jump_to_pineapple_finale_from_script() -> bool:
 			break
 	if keyword_idx < 0:
 		return false
+	_run_pre_pineapple_cleanup_between(_sequence_cursor, keyword_idx)
 	_sequence_cursor = keyword_idx + 1
 	_sequence_delay_token += 1
 	_sequence_delay_active = false
@@ -546,6 +549,20 @@ func jump_to_pineapple_finale_from_script() -> bool:
 	_waiting_until_clear = false
 	_sequence_active = false
 	return start_scripted_pineapple_finale_from_cursor()
+
+
+func _run_pre_pineapple_cleanup_between(start_idx: int, end_idx: int) -> void:
+	var begin := clampi(start_idx, 0, _full_wave_sequence.size())
+	var finish := clampi(end_idx, 0, _full_wave_sequence.size())
+	for i in range(begin, finish):
+		var entry = _full_wave_sequence[i]
+		if not (entry is Dictionary):
+			continue
+		var cmd := String(entry.get("cmd", "")).to_lower()
+		if _is_clear_cmd(cmd):
+			_handle_clear_command(entry)
+		elif _is_avoider_kill_cmd(cmd):
+			_handle_avoider_kill_command()
 
 
 ## Stop rocks, then launch the collected pineapple pattern with fanfare.
@@ -1363,6 +1380,17 @@ func clear_script_threat_mines() -> void:
 			continue
 		if node.has_method("begin_threat_splash_exit"):
 			node.begin_threat_splash_exit()
+		else:
+			node.queue_free()
+
+
+func exit_threat_mines_right_for_pineapple_win() -> void:
+	_threats_exiting_for_pineapple_win = true
+	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if node.has_method("begin_threat_right_exit"):
+			node.begin_threat_right_exit()
 		else:
 			node.queue_free()
 
@@ -3376,6 +3404,8 @@ func update_round_end() -> void:
 		if body is RockInstance:
 			body.round_end_check_rock_status()
 	clear_cardinal_bursts()
+	if _threats_exiting_for_pineapple_win:
+		return
 	## Drop mid-script mines only; ambient preamble threats park dormant for shop / next PLAY.
 	clear_script_threat_mines()
 	dormant_threat_mines()

@@ -1334,6 +1334,35 @@ shader_parameter/line_gap_softness = 0.55
 shader_parameter/line_gap_angle = 0.0
 shader_parameter/line_gap_offset = 0.0
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_78d2f"]
+angular_velocity_min = 14.999984
+angular_velocity_max = 14.999984
+orbit_velocity_min = 50.000004
+orbit_velocity_max = 50.000004
+radial_velocity_min = 49.999977
+radial_velocity_max = 49.999977
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 150.0
+radial_accel_max = 150.0
+tangential_accel_min = 150.0
+tangential_accel_max = 300.0
+color = Color(1, 0, 0, 1)
+hue_variation_min = -1.0
+hue_variation_max = 0.99999994
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_32frn"]
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+use_particle_trails = true
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_wf0y0"]
+material = SubResource("StandardMaterial3D_32frn")
+size = 0.16
+
 [node name="Moss2" type="Node3D" unique_id=229302118]
 script = ExtResource("1_wyuqv")
 forward_axis = Vector3(0, 0, 0)
@@ -2415,16 +2444,25 @@ edge_softness = 0.0
 line_gap_amount = 0.0
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=635601312]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.577779)
-light_energy = 5.0
-shadow_enabled = true
-omni_range = 25.0
-omni_attenuation = 5.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1470191, 15.527961)
+light_energy = 3.0
+omni_range = 75.0
+omni_attenuation = 0.0
 
 [node name="Brazier" parent="." unique_id=1767535159 instance=ExtResource("18_78d2f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5885663, -1.9232558, 11.799999)
 
 [node name="Brazier2" parent="." unique_id=684701777 instance=ExtResource("18_78d2f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6114335, -1.9232558, 11.799999)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=1126315813]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4, 450)
+amount = 600
+lifetime = 7.0
+speed_scale = 0.5
+fixed_fps = 60
+trail_enabled = true
+process_material = SubResource("ParticleProcessMaterial_78d2f")
+draw_pass_1 = SubResource("RibbonTrailMesh_wf0y0")
 
 [editable path="Boatmesh/brick_fountain_3"]

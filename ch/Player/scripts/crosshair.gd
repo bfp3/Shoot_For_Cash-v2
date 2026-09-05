@@ -44,7 +44,7 @@ var orig_pos := Vector2.ZERO
 
 @export_group("Low Ammo Warning")
 ## Show blinking LOW AMMO on the reticle when ammo is below this (and above 0).
-@export var low_ammo_threshold := 20
+@export var low_ammo_threshold := 6
 @export var low_ammo_blink_sec := 0.35
 @export var low_ammo_blink_min_alpha := 0.2
 @export var low_ammo_blink_max_alpha := 1.0
