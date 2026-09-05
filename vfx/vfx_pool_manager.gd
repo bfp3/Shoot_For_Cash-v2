@@ -151,7 +151,8 @@ func play_smokecan_destroy(at: Vector3) -> Node3D:
 
 
 func play_threat_smoke(at: Vector3) -> Node3D:
-	return play(&"threat_smoke", at)
+	## Long enough for aoe_threat_smoke particle lifetimes (embers ≈ 4s).
+	return play(&"threat_smoke", at, 6.0)
 
 
 func play_rock_hit(at: Vector3) -> Node3D:

@@ -99,6 +99,61 @@ turbulence_influence_over_life = SubResource("CurveTexture_q8tld")
 
 [sub_resource type="QuadMesh" id="QuadMesh_bymj0"]
 
+[sub_resource type="Curve" id="Curve_1ijg2"]
+_data = [Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.92356694, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_fkfg0"]
+curve = SubResource("Curve_1ijg2")
+
+[sub_resource type="Gradient" id="Gradient_byssh"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.22, 0.22, 0.22, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_b00sn"]
+gradient = SubResource("Gradient_byssh")
+
+[sub_resource type="Curve" id="Curve_ltsxa"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.13057326, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_7v60h"]
+curve = SubResource("Curve_ltsxa")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ltsxa"]
+direction = Vector3(0, 1, 0)
+spread = 5.0
+angular_velocity_min = -1.6093254e-05
+angular_velocity_max = -1.6093254e-05
+radial_velocity_min = 0.99997765
+radial_velocity_max = 1.9999776
+gravity = Vector3(0, 0, 0)
+tangential_accel_min = 1.9999977
+tangential_accel_max = 1.9999977
+scale_min = 0.5
+scale_max = 0.5
+scale_curve = SubResource("CurveTexture_7v60h")
+color = Color(0.8, 0.8, 0.8, 1)
+color_ramp = SubResource("GradientTexture1D_b00sn")
+alpha_curve = SubResource("CurveTexture_fkfg0")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bfdk"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("4_5tgbh")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 8
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_herjc"]
+material = SubResource("StandardMaterial3D_6bfdk")
+size = Vector2(150, 150)
+
 [sub_resource type="Curve" id="Curve_b1tng"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
@@ -176,60 +231,6 @@ turbulence_noise_speed = Vector3(1, 1, 1)
 turbulence_influence_min = 0.25
 turbulence_influence_max = 1.0
 turbulence_influence_over_life = SubResource("CurveTexture_daqgf")
-
-[sub_resource type="Curve" id="Curve_7ohxg"]
-_data = [Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.48931625, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_fkfg0"]
-curve = SubResource("Curve_7ohxg")
-
-[sub_resource type="Gradient" id="Gradient_luarq"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(0.22, 0.22, 0.22, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_b00sn"]
-gradient = SubResource("Gradient_luarq")
-
-[sub_resource type="Curve" id="Curve_ltsxa"]
-_data = [Vector2(0, 0.5801174), 0.0, 0.0, 0, 0, Vector2(0.04878049, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.5583053), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_7v60h"]
-curve = SubResource("Curve_ltsxa")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ltsxa"]
-emission_shape_scale = Vector3(0.6, 0.6, 0.6)
-direction = Vector3(0, 1, 0)
-spread = 5.0
-angular_velocity_min = -1.6093254e-05
-angular_velocity_max = -1.6093254e-05
-radial_velocity_min = 0.99997765
-radial_velocity_max = 1.9999776
-gravity = Vector3(0, 0, 0)
-scale_min = 0.5
-scale_max = 0.5
-scale_curve = SubResource("CurveTexture_7v60h")
-color = Color(0.63, 0, 0, 1)
-color_ramp = SubResource("GradientTexture1D_b00sn")
-alpha_curve = SubResource("CurveTexture_fkfg0")
-anim_speed_min = 1.0
-anim_speed_max = 1.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bfdk"]
-transparency = 1
-shading_mode = 0
-vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("4_5tgbh")
-billboard_mode = 3
-billboard_keep_scale = true
-particles_anim_h_frames = 8
-particles_anim_v_frames = 8
-particles_anim_loop = false
-
-[sub_resource type="QuadMesh" id="QuadMesh_herjc"]
-material = SubResource("StandardMaterial3D_6bfdk")
-size = Vector2(150, 150)
 
 [sub_resource type="Shader" id="Shader_herjc"]
 code = "shader_type spatial;
@@ -468,6 +469,7 @@ delays = {
 }
 
 [node name="embers" type="GPUParticles3D" parent="." unique_id=1446493087]
+layers = 4096
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false
@@ -480,7 +482,22 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_65uxc")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
+[node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=26366362 groups=["smoke_particles"]]
+transform = Transform3D(1, 0, 0, 0, 0.999998, 0, 0, 0, 0.999998, 0, 0, -1.561213)
+layers = 4096
+cast_shadow = 0
+emitting = false
+amount = 15
+lifetime = 9.0
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_ltsxa")
+draw_pass_1 = SubResource("QuadMesh_herjc")
+
 [node name="Sparks01" type="GPUParticles3D" parent="." unique_id=1305213114]
+layers = 4096
 material_override = SubResource("StandardMaterial3D_xb1fg")
 cast_shadow = 0
 emitting = false
@@ -492,20 +509,9 @@ visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
 process_material = SubResource("ParticleProcessMaterial_beb3h")
 draw_pass_1 = SubResource("QuadMesh_bymj0")
 
-[node name="Smoke_quick" type="GPUParticles3D" parent="." unique_id=26366362 groups=["smoke_particles"]]
-transform = Transform3D(1, -3.80409e-13, -1.66282e-20, 0, -4.37113e-08, 0.999998, -3.80409e-13, -0.999998, -4.37113e-08, 0, 0, 0)
-cast_shadow = 0
-amount = 25
-lifetime = 10.0
-one_shot = true
-explosiveness = 1.0
-fixed_fps = 60
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_ltsxa")
-draw_pass_1 = SubResource("QuadMesh_herjc")
-
 [node name="upward_smoke_glow" type="GPUParticles3D" parent="." unique_id=1691115471 groups=["smoke_particles"]]
 visible = false
+layers = 4096
 material_override = SubResource("ShaderMaterial_fw7wv")
 cast_shadow = 0
 emitting = false

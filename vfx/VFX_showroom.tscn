@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://vfx/aoe_rock_destroy.tscn" id="2_rock"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_crate_destroy.tscn" id="3_crate"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_hazard_destroy.tscn" id="4_hazard"]
-[ext_resource type="PackedScene" path="res://vfx/aoe_smokecan_destroy.tscn" id="5_smoke"]
+[ext_resource type="PackedScene" uid="uid://m76x0i4rb0o" path="res://vfx/aoe_smokecan_destroy.tscn" id="5_smoke"]
 [ext_resource type="PackedScene" uid="uid://bfsjwji6k2570" path="res://vfx/aoe_threat_smoke.tscn" id="6_bw8o8"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_rock_hit.tscn" id="6_rockhit"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_balloon_destroy.tscn" id="7_balloon"]
@@ -31,7 +31,7 @@ proximity_fade_enabled = true
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_4wuxv"]
+[sub_resource type="CurveTexture" id="CurveTexture_y833t"]
 texture_mode = 1
 curve = SubResource("Curve_ndl4v")
 
@@ -39,35 +39,35 @@ curve = SubResource("Curve_ndl4v")
 _data = [Vector2(0, 0), 0.0, 2.89056, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_eq13p"]
+[sub_resource type="CurveTexture" id="CurveTexture_1ty00"]
 curve = SubResource("Curve_16y61")
 
 [sub_resource type="Curve" id="Curve_rb7bf"]
 _data = [Vector2(0, 1), 0.0, -2.29396, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_icx4h"]
+[sub_resource type="CurveTexture" id="CurveTexture_jmj5q"]
 curve = SubResource("Curve_rb7bf")
 
 [sub_resource type="Curve" id="Curve_44k1l"]
 _data = [Vector2(0.00268096, 0.973057), 0.0, -23.8681, 0, 0, Vector2(0.10992, 0.0569948), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CurveTexture" id="CurveTexture_nxkf2"]
+[sub_resource type="CurveTexture" id="CurveTexture_6utsq"]
 curve = SubResource("Curve_44k1l")
 
 [sub_resource type="Curve" id="Curve_y833t"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.87403, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_s0kjy"]
+[sub_resource type="CurveTexture" id="CurveTexture_qpotu"]
 curve = SubResource("Curve_y833t")
 
 [sub_resource type="Curve" id="Curve_1ty00"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_p78v0"]
+[sub_resource type="CurveTexture" id="CurveTexture_85g66"]
 curve = SubResource("Curve_1ty00")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jmj5q"]
@@ -81,10 +81,10 @@ initial_velocity_min = 0.5
 initial_velocity_max = 1.0
 angular_velocity_min = -360.0
 angular_velocity_max = 360.0
-angular_velocity_curve = SubResource("CurveTexture_eq13p")
+angular_velocity_curve = SubResource("CurveTexture_1ty00")
 radial_velocity_min = 19.999977
 radial_velocity_max = 29.999977
-radial_velocity_curve = SubResource("CurveTexture_nxkf2")
+radial_velocity_curve = SubResource("CurveTexture_6utsq")
 gravity = Vector3(0, 0, 0)
 radial_accel_min = 0.49999776
 radial_accel_max = 0.99999774
@@ -92,19 +92,19 @@ tangential_accel_min = -4.0
 tangential_accel_max = -2.0
 damping_min = 3.0
 damping_max = 10.0
-damping_curve = SubResource("CurveTexture_icx4h")
+damping_curve = SubResource("CurveTexture_jmj5q")
 scale_min = 0.29999998
 scale_max = 0.5
-scale_curve = SubResource("CurveTexture_s0kjy")
+scale_curve = SubResource("CurveTexture_qpotu")
 color = Color(4.415934, 0, 0, 1)
 color_ramp = ExtResource("12_bw8o8")
-alpha_curve = SubResource("CurveTexture_4wuxv")
+alpha_curve = SubResource("CurveTexture_y833t")
 anim_offset_max = 1.0
 turbulence_enabled = true
 turbulence_noise_speed = Vector3(1, 1, 1)
 turbulence_influence_min = 0.25
 turbulence_influence_max = 1.0
-turbulence_influence_over_life = SubResource("CurveTexture_p78v0")
+turbulence_influence_over_life = SubResource("CurveTexture_85g66")
 
 [sub_resource type="QuadMesh" id="QuadMesh_6utsq"]
 
@@ -315,6 +315,13 @@ delays = {
 
 [node name="aoe_smokecan_destroy" parent="." unique_id=2134392262 instance=ExtResource("5_smoke")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+delays = {
+&"Smoke_quick": 0.0,
+&"Smoke_quick2": 0.0,
+&"Sparks01": 0.0,
+&"embers": 0.0,
+&"upward_smoke_glow": 0.0
+}
 
 [node name="aoe_threat_smoke" parent="." unique_id=1534310441 instance=ExtResource("6_bw8o8")]
 unique_name_in_owner = true

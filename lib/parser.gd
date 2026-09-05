@@ -9,6 +9,8 @@ var boss_timer_ms_by_range: Dictionary = {}
 var play_price_by_range: Dictionary = {}
 ## "island|range" -> range clear reward (`reward $400` under a range header).
 var reward_by_range: Dictionary = {}
+## "island|range" -> Array of parsed `threat …` entries declared before `round`.
+var threats_by_range: Dictionary = {}
 
 func loadIslandFile(file_name : String) -> bool:
 	var file = FileAccess.open(file_name, FileAccess.READ)
@@ -23,6 +25,7 @@ func loadIsland(data : String) -> bool:
 	boss_timer_ms_by_range.clear()
 	play_price_by_range.clear()
 	reward_by_range.clear()
+	threats_by_range.clear()
 	
 	var ary : Array = data.split("\n", false)
 	
@@ -83,6 +86,18 @@ func loadIsland(data : String) -> bool:
 				if reward >= 0:
 					reward_by_range['%s|%s' % [island_name, range_name]] = reward
 					continue
+				## Preamble `threat …` (before any `round`) — ambient mines for the range.
+				if round_no <= 0 and String(tokens[0]).to_lower() == "threat":
+					var threat_line := sanitise_token(token)
+					var threat_parsed := parse_spawn_command(threat_line)
+					if not threat_parsed.is_empty():
+						var tkey := '%s|%s' % [island_name, range_name]
+						if not threats_by_range.has(tkey):
+							threats_by_range[tkey] = []
+						var bucket: Array = threats_by_range[tkey]
+						bucket.append(threat_parsed)
+						threats_by_range[tkey] = bucket
+					continue
 				if round_no > 0:
 					data_set.push_back( [island_name,range_name,round_no,sanitise_token(token)] )
 					
@@ -133,6 +148,14 @@ func get_range_reward(island_name: String, range_name: String) -> int:
 
 func has_range_reward(island_name: String, range_name: String) -> bool:
 	return reward_by_range.has("%s|%s" % [island_name, range_name])
+
+
+## Ambient `threat …` lines declared under a range header before `round`.
+func get_range_threats(island_name: String, range_name: String) -> Array:
+	var key := "%s|%s" % [island_name, range_name]
+	if not threats_by_range.has(key):
+		return []
+	return (threats_by_range[key] as Array).duplicate(true)
 
 
 ## `hold out 90000`, `hold-out 90000`, or `boss-timer 90000`. Returns ms, or -1 if not that command.
@@ -264,6 +287,8 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   both charge this amount. Fallback is data_set `price_play_round`.
 ## reward $400 / reward 400: {cmd: reward, price}. Range-clear bonus shown in the
 ##   shop CashBalanceLabel and paid at tally instead of data_set `range_clear_reward`.
+## threat … (before `round`): ambient smoke mines for that range. Shown when you
+##   arrive at the level and re-synced at round start / after round end.
 ## shuffle: {cmd} — this round only; later waves randomise rock columns.
 ## surprise-me: {cmd} — replace this round's spawns with a random generated sequence.
 ## bonus-type1 / bonus type1: marks the round as bonus type 1 (no strikes).
@@ -1027,6 +1052,7 @@ func peek_rock_sequences_from_file(file_name: String, island_name: String = "", 
 	var backup_timers: Dictionary = boss_timer_ms_by_range.duplicate(true)
 	var backup_play: Dictionary = play_price_by_range.duplicate(true)
 	var backup_reward: Dictionary = reward_by_range.duplicate(true)
+	var backup_threats: Dictionary = threats_by_range.duplicate(true)
 	var sequences: Array = []
 	if loadIslandFile(file_name):
 		sequences = get_rock_sequences(island_name, range_name)
@@ -1034,6 +1060,7 @@ func peek_rock_sequences_from_file(file_name: String, island_name: String = "", 
 	boss_timer_ms_by_range = backup_timers
 	play_price_by_range = backup_play
 	reward_by_range = backup_reward
+	threats_by_range = backup_threats
 	return sequences
 
 
@@ -1051,12 +1078,14 @@ func parse_round_text(text: String) -> Dictionary:
 	var backup_timers: Dictionary = boss_timer_ms_by_range.duplicate(true)
 	var backup_play: Dictionary = play_price_by_range.duplicate(true)
 	var backup_reward: Dictionary = reward_by_range.duplicate(true)
+	var backup_threats: Dictionary = threats_by_range.duplicate(true)
 	loadIsland(wrapped)
 	var sequences: Array = get_rock_sequences("test")
 	data_set = backup
 	boss_timer_ms_by_range = backup_timers
 	play_price_by_range = backup_play
 	reward_by_range = backup_reward
+	threats_by_range = backup_threats
 
 	if sequences.is_empty():
 		return {
@@ -1121,6 +1150,10 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 				rounds[key].play_price = maxi(int(play_price_by_range[key]), 0)
 			if reward_by_range.has(key):
 				rounds[key].reward = maxi(int(reward_by_range[key]), 0)
+			if threats_by_range.has(key):
+				rounds[key].default_threats = (threats_by_range[key] as Array).duplicate(true)
+			else:
+				rounds[key].default_threats = []
 			order.append(key)
 
 		var parsed := parse_spawn_command(entry[3])

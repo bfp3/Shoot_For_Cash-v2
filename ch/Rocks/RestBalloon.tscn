@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://cjnx473cat5op"]
 
 [ext_resource type="PackedScene" uid="uid://c3p6ovdbn0gkc" path="res://ch/Rocks/Balloon.tscn" id="1_balloon"]
-[ext_resource type="Script" path="res://ch/Rocks/rest_balloon.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://dwk3uqmfos8su" path="res://ch/Rocks/rest_balloon.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://drvjio7oxqunn" path="res://res/ring512.png" id="4_7wlsc"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="4_lwyt0"]
+[ext_resource type="PackedScene" uid="uid://b3kc1weo4j8hy" path="res://unfiled/Blender_custom_assets/hot_air_balloon.glb" id="7_ke2lg"]
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="7_vr0ep"]
 [ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="8_sqnik"]
 
@@ -21,7 +22,10 @@ balloon_type = 1
 transform = Transform3D(0.5000001, 0, 0, 0, 0.5000001, 0, 0, 0, 0.5000001, 0, -0.05748114, 0)
 shape = SubResource("BoxShape3D_5tkbb")
 
-[node name="small_rock2" parent="Mesh" parent_id_path=PackedInt32Array(950426368) index="0" unique_id=2102516094]
+[node name="Mesh" parent="." index="2" unique_id=950426368]
+visible = false
+
+[node name="small_rock2" parent="Mesh" index="0" unique_id=2102516094]
 transform = Transform3D(1.705, 0, 0, 0, 1.705, 0, 0, 0, 1.705, 0, 0.123, 0)
 
 [node name="string" parent="Mesh/small_rock2" index="0" unique_id=2071839589]
@@ -115,3 +119,6 @@ outline_modulate = Color(0.8117647, 0.61960787, 0.35686275, 1)
 text = "+"
 font_size = 305
 outline_size = 15
+
+[node name="hot_air_balloon" parent="." index="16" unique_id=391369195 instance=ExtResource("7_ke2lg")]
+transform = Transform3D(0.407, 0, 0, 0, 0.407, 0, 0, 0, 0.407, 0, 0, 0)

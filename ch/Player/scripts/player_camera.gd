@@ -280,6 +280,11 @@ func shake_camera_sky_mine() -> void:
 	await _shake_sky_mine()
 
 
+## Threat smoke-mine alarm (crosshair lock / wind-up).
+func shake_camera_threat_smoke_mine() -> void:
+	await _shake_threat_smoke_mine()
+
+
 func shake_camera_balloon() -> void:
 	await _shake_balloon()
 
@@ -521,6 +526,34 @@ func _shake_sky_mine() -> void:
 	cam_shake_tween.tween_property(self, "rotation_degrees:x", _shake_amount, _dur)
 	cam_shake_tween.tween_property(self, "rotation_degrees:x", -_shake_amount, _dur)
 	cam_shake_tween.tween_property(self, "rotation_degrees:x", 0.0, _dur + 0.1)
+	await cam_shake_tween.finished
+
+
+
+func _shake_threat_smoke_mine() -> void:
+	if not _prepare_shake():
+		return
+	
+	const threat_shake_strength: float = 2.0
+	
+	var strength := threat_shake_strength
+
+	cam_shake_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+
+	# Fast side-to-side wobble: 0.2 seconds total.
+	cam_shake_tween.tween_property(self, "rotation_degrees:z", 1.4 * strength, 0.04).as_relative()
+	cam_shake_tween.tween_property(self, "rotation_degrees:z", -2.8 * strength, 0.04).as_relative()
+	cam_shake_tween.tween_property(self, "rotation_degrees:z", 2.2 * strength, 0.04).as_relative()
+	cam_shake_tween.tween_property(self, "rotation_degrees:z", -0.9 * strength, 0.04).as_relative()
+	cam_shake_tween.tween_property(self, "rotation_degrees:z", 0.0, 0.04).as_relative()
+
+	# Tiny accompanying vertical movement.
+	cam_shake_tween.parallel().tween_property(self, "position:y", 0.012 * strength, 0.04).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "position:y", -0.024 * strength, 0.04).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "position:y", 0.018 * strength, 0.04).as_relative()
+	cam_shake_tween.parallel().tween_property(self, "position:y", -0.006 * strength, 0.04).as_relative()
+
+	_settle_shake(0.2)
 	await cam_shake_tween.finished
 
 

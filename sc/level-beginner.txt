@@ -165,12 +165,15 @@ range moss2
 range moss3
 	play $0
 	reward $1,000
+	#threat 6 c6 a6 c6 slow
+	#threat 3 c3 a3 c3 slow
+	
+	threat 3 b3
+	threat 6 b6
+	
 	round
 		hold out 60000
-
-		ammo
-
-		threat 6 c6 a6 c6 slow
+		ammo c8
 		wait 1000
 
 		# Phase 1 - slow
@@ -190,7 +193,7 @@ range moss3
 		wait
 
 		sfx-play C418 -35.0
-		threat 3 c3 a3 c3 slow
+
 
 
 		# faster - 1 change
@@ -242,7 +245,6 @@ range moss3
 		rock-black 4 b4
 		wait 2000
 
-		threat 1 c1 c8 c1 slow
 
 		# yellows slow
 		rock-black 2 b2
@@ -257,6 +259,9 @@ range moss3
 		wait 1200
 		rock 4 b4
 		wait
+
+		threat 3 c3
+		threat 6 c6
 
 		wait 2000
 
@@ -577,3 +582,388 @@ range moss5
 		pineapple 2 a2
 		pineapple 5 a5
 		pineapple 8 a8
+range moss8
+play $0
+	reward $100,000
+	round
+		pace-impossible
+
+		#sfx-play star_wars_cantina -40.0
+		sfx-play sephiroff -45.0
+		ammo
+
+		ammo c1
+		ammo a1
+
+		rock 4 a4
+		wait
+
+
+		rock 2 a1
+		wait 450
+		rock 3 a2
+		wait 450
+		rock 4 a3
+		wait 450
+		rock 5 a4
+		wait 450
+		rock 6 a5
+		wait 450
+		rock 6 a5
+		wait 450
+		rock 7 a6
+		wait 450
+		rock 8 a7
+		wait
+		ammo
+		balloon-rest
+
+		rock 8 a7
+		wait 350
+		rock 7 a6
+		wait 350
+		rock 6 a5
+		wait 350
+		rock 5 a4
+		wait 350
+		rock 4 a3
+		wait 350
+		rock 3 a2
+		wait 350
+		rock 2 a1
+		wait 350
+		rock-stay 1 a8
+		wait
+
+		ammo
+		balloon-rest
+
+		wait 1000
+		rock 1 a4
+		wait 2500
+
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
+
+		rock
+		rock
+		wait 3000
+		rock
+		rock
+		wait 3000
+
+		rock
+		rock
+		wait 1500
+		rock
+		rock
+		wait
+
+		wait 3000
+
+		ammo
+		balloon-rest
+
+		sfx-faster sephiroff
+
+		rock 1 a1
+		wait 0
+		rock 2 a2
+		wait 0
+		rock 3 a3
+
+		wait 3000
+
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+
+		wait 3000
+		rock
+		wait 2000
+
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+
+		wait 3000
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		rock
+		wait 3000
+
+		rock
+		wait 2000
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+
+		rock-avoider 1 a1
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait
+
+		sfx-faster sephiroff
+		ammo c1
+		ammo a1
+		balloon-rest
+		wait 2000
+
+		rock-avoider 1 a1
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+
+		rock-avoider 1 a1
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+
+
+		ammo
+		balloon-rest
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 4 a4
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+
+
+		rock
+		wait
+		rock-avoider 1 a1
+		wait 500
+		rock-avoider 2 a2
+		wait 500
+		rock-avoider 1 b1
+		wait 500
+		rock-avoider 2 b2
+		wait 500
+		rock-avoider 1 c1
+		wait 500
+		rock-avoider 2 c2
+		wait 1000
+		rock 4 a4
+		wait
+
+		ammo
+		balloon-rest
+
+		rock 4 a4
+		wait 2000
+		rock 1 a4
+		wait 2500
+
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
+
+		rock
+		rock
+		wait 3000
+		rock
+		rock
+		wait 3000
+
+		rock
+		rock
+		wait 1500
+		rock
+		rock
+
+		wait
+
+		sfx-faster sephiroff
+		ammo c1
+		ammo a1
+		balloon-rest
+
+		rock 1 a1
+		wait 0
+		rock 2 a2
+		wait 0
+		rock 3 a3
+
+		wait 3000
+
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+
+		wait 3000
+		rock
+		wait 2000
+
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+
+		wait 3000
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		rock
+		wait 3000
+
+		rock
+		wait 3000
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+
+
+		ammo
+		balloon-rest
+
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+
+		wait 1000
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+
+		rock-avoider 1 a7
+
+		ammo
+		balloon-rest
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		rock
+		
+		
+		ammo
+		balloon-rest
+		
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+
+		wait 4000
+
+		ammo
+
+		pineapples
+		pineapple 1 a1
+		pineapple 2 a2
+		pineapple 3 a3
+		pineapple 4 a4
+		pineapple 5 a5

@@ -53,7 +53,7 @@ const ENV_PATH_BY_LEVEL := {
 	"moss5": "res://res/moss_env_v2.tres",
 	"moss6": "res://res/moss_env_v2.tres",
 	"moss7": "res://res/moss_env_v2.tres",
-	"moss8": "res://res/moss_env_v2.tres",
+	"moss8": "res://res/wireframe_glow_effect.tres",
 	"moss9": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"moss10": "res://res/skyEnvironments/boss_2_world_env.tres",
 	
@@ -1127,6 +1127,25 @@ func load_level_sequence() -> void:
 			shop_main_menu.sync_rounds_to_progress(current_sequence_index, current_rock_sequence.size())
 
 	_refresh_boss_timer_from_parser()
+
+
+## Clear leftover smoke mines when leaving a range; spawn preamble threats only if missing.
+func _sync_range_default_threats(force_replace: bool = false) -> void:
+	if rocks_container == null:
+		return
+	var entries: Array = []
+	if Parser and Parser.has_method("get_range_threats"):
+		entries = Parser.get_range_threats(LEVEL_ISLAND_NAME, get_active_range_name())
+	## Fallback: first round dict's default_threats (same range).
+	if entries.is_empty() and not current_rock_sequence.is_empty():
+		var first = current_rock_sequence[0]
+		if first is Dictionary:
+			entries = first.get("default_threats", [])
+	if rocks_container.has_method("spawn_default_threats"):
+		rocks_container.spawn_default_threats(entries, force_replace)
+	elif force_replace and rocks_container.has_method("clear_threat_mines"):
+		rocks_container.clear_threat_mines()
+
 
 func bonus_oranges() -> void:
 	bonus_oranges_ready = true
@@ -2609,6 +2628,8 @@ func update_wave_start() -> void:
 			var rock_seq := update_rock_sequence()
 			# Always prepare (even empty) so bonus-type1 target-only rounds don't hang on old rock state.
 			# Mid-script resume is retired — always spawn index 0.
+			## Defaults already live from arrival — only ensure they're present.
+			_sync_range_default_threats(false)
 			rocks_container.start_manual_rock_round(rock_seq, 0)
 		
 	else:
@@ -2800,6 +2821,7 @@ func update_round_end() -> void:
 
 	if rocks_container:
 		rocks_container.enter_state(rocks_container.State.ROUND_END)
+	## Ambient preamble threats stay put (script mines already cleared in ROUND_END).
 
 	while bullet_active:
 		await get_tree().process_frame
@@ -3792,6 +3814,9 @@ func travel_to_level(level_id: String, use_transition_overlay: bool = true, prog
 	else:
 		current_round = mini(current_sequence_index + 1, maxi(current_rock_sequence.size(), 1))
 	gl_PlayerState.dataset.round = current_round
+
+	## Ambient mines for this range (preamble `threat` lines). Force replace after travel.
+	_sync_range_default_threats(true)
 
 	shop_main_menu.setup_shop_for_rounds()
 	shop_main_menu.sync_rounds_to_progress(current_sequence_index, current_rock_sequence.size())

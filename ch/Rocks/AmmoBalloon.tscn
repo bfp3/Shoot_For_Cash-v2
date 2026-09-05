@@ -9,6 +9,7 @@
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="7_qndsk"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_act0r"]
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="9_rtqgq"]
+[ext_resource type="PackedScene" uid="uid://b3kc1weo4j8hy" path="res://unfiled/Blender_custom_assets/hot_air_balloon.glb" id="10_vlpx7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5tkbb"]
 size = Vector3(1, 2.506958, 1)
@@ -429,3 +430,10 @@ skeleton = NodePath("../..")
 
 [node name="Crate" parent="." index="18" unique_id=133431577]
 visible = false
+
+[node name="hot_air_balloon2" parent="." index="19" unique_id=391369195 instance=ExtResource("10_vlpx7")]
+transform = Transform3D(0.407, 0, 0, 0, 0.407, 0, 0, 0, 0.407, 0, 0, 0)
+visible = false
+
+[node name="hot_air_balloon" parent="." index="20" unique_id=391369195]
+transform = Transform3D(0.437, 0, 0, 0, 0.437, 0, 0, 0, 0.437, 0, 0, 0)

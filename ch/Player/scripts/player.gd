@@ -3,7 +3,7 @@ class_name Player extends Node3D
 ## When true, pressing the `ctrl` action cycles gun1 → gun2 → gun3 → gun4 → gun5 → gun1.
 @export var ctrl_swap_guns := true
 
-const mouse_no_lerp := true
+const mouse_no_lerp := false
 
 @onready var mobile_controller: Node = $MobileControl
 var is_mobile := OS.has_feature("mobile")

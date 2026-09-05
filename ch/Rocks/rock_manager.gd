@@ -30,6 +30,7 @@ var rocks_limit := 0
 const ROCK_INSTANCE_SCENE := preload("res://ch/Rocks/Rock_Instance.tscn")
 const REST_BALLOON_SCENE := preload("res://ch/Rocks/RestBalloon.tscn")
 const AMMO_BALLOON_SCENE := preload("res://ch/Rocks/AmmoBalloon.tscn")
+const THREAT_SMOKE_MINE_SCENE := preload("res://ch/Rocks/Threat_SmokeMine.tscn")
 ## Extra pool rocks added once when entering the boss layout (batched across frames).
 var _boss_extra_rocks_added := false
 
@@ -400,6 +401,8 @@ func update_inactive() -> void:
 		if i is RockInstance:
 			i.enter_state(i.State.INACTIVE)
 	clear_cardinal_bursts()
+	## Park ambient mines dormant while rock manager is inactive.
+	dormant_threat_mines()
 	
 
 # This is the start of arranging the rocks.
@@ -430,6 +433,8 @@ func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
 	_launched_scripted_pineapple = false
 	_pending_ammo_entries.clear()
 	_reset_pineapple_spawn_bookkeeping()
+	## Ambient mines that parked dormant in the shop / between rounds.
+	arm_default_threat_mines()
 	_launch_next_sequence_beat()
 
 
@@ -714,6 +719,15 @@ func _launch_next_sequence_beat() -> void:
 				_force_next_command = false
 				return
 			continue
+		if cmd == "threat":
+			var threat_entry = _full_wave_sequence[_sequence_cursor]
+			_sequence_cursor += 1
+			_spawn_threat_smoke_mine(threat_entry)
+			if force:
+				_waiting_until_clear = true
+				_force_next_command = false
+				return
+			continue
 		if _is_clear_cmd(cmd):
 			var clear_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
@@ -810,7 +824,13 @@ func _collect_next_beat() -> Array:
 			_apply_light_entry(_full_wave_sequence[_sequence_cursor])
 			_sequence_cursor += 1
 			continue
-		if cmd == "ammo" or _is_sequence_barrier_cmd(cmd) or _is_clear_cmd(cmd) or _is_avoider_kill_cmd(cmd):
+		if (
+			cmd == "ammo"
+			or cmd == "threat"
+			or _is_sequence_barrier_cmd(cmd)
+			or _is_clear_cmd(cmd)
+			or _is_avoider_kill_cmd(cmd)
+		):
 			break
 		beat.append(_full_wave_sequence[_sequence_cursor])
 		_sequence_cursor += 1
@@ -1116,6 +1136,9 @@ func freeze_live_rocks(frozen: bool) -> void:
 	var burst_host := get_node_or_null("CardinalBurstHost")
 	if burst_host:
 		_freeze_rigid_children(burst_host, frozen)
+	var threat_host := get_node_or_null("ThreatMines")
+	if threat_host:
+		_freeze_rigid_children(threat_host, frozen)
 
 
 func _freeze_rigid_children(host: Node, frozen: bool) -> void:
@@ -1317,15 +1340,139 @@ func _clear_ammo_balloons() -> void:
 
 
 func _clear_threats() -> void:
-	if not has_node("Container_1"):
+	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if node.has_method("begin_threat_splash_exit"):
+			node.begin_threat_splash_exit()
+		else:
+			node.queue_free()
+
+
+## Hard remove every live smoke mine (level travel / leave range).
+func clear_threat_mines() -> void:
+	_clear_threats_immediate()
+
+
+## Remove mid-script mines only — keep ambient preamble defaults in place.
+func clear_script_threat_mines() -> void:
+	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if bool(node.get("is_range_default")):
+			continue
+		node.queue_free()
+
+
+func _clear_threats_immediate() -> void:
+	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
+		if node != null and is_instance_valid(node):
+			node.queue_free()
+	var host := get_node_or_null("ThreatMines")
+	if host:
+		for child in host.get_children():
+			if is_instance_valid(child):
+				child.queue_free()
+
+
+## True when ambient preamble mines are already live for this range.
+func has_live_default_threats() -> bool:
+	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
+		if node != null and is_instance_valid(node) and bool(node.get("is_range_default")):
+			return true
+	return false
+
+
+## Park every live mine in dormant (round stop / reset / end). Keeps ambient mines in place.
+func dormant_threat_mines(instant_lights: bool = false) -> void:
+	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if node.has_method("enter_round_dormant"):
+			node.enter_round_dormant(instant_lights)
+
+
+## Wake ambient preamble mines for PLAY / wave start.
+func arm_default_threat_mines() -> void:
+	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if not bool(node.get("is_range_default")):
+			continue
+		if node.has_method("arm_from_dormant"):
+			node.arm_from_dormant()
+
+
+## Spawn ambient mines from range preamble (`threat …` before `round`).
+## Does not wipe existing defaults unless `force_replace` is true.
+func spawn_default_threats(entries: Array, force_replace: bool = false) -> void:
+	if force_replace:
+		clear_threat_mines()
+	elif has_live_default_threats():
+		## Already ambient — only drop script extras.
+		clear_script_threat_mines()
 		return
-	for body in $Container_1.get_children():
-		if not (body is RockInstance):
-			continue
-		if body.rock_type != RockInstance.RockSize.THREAT:
-			continue
-		if body.has_method("begin_threat_splash_exit"):
-			body.begin_threat_splash_exit()
+	else:
+		clear_script_threat_mines()
+	if entries.is_empty():
+		return
+	for entry in entries:
+		if entry is Dictionary:
+			_spawn_threat_smoke_mine(entry, true)
+		elif typeof(entry) == TYPE_STRING:
+			var line := String(entry).strip_edges()
+			if line.is_empty() or Parser == null:
+				continue
+			var parsed: Dictionary = Parser.parse_spawn_command(line)
+			if not parsed.is_empty():
+				_spawn_threat_smoke_mine(parsed, true)
+
+
+func _threat_mine_host() -> Node:
+	var host := get_node_or_null("ThreatMines")
+	if host == null:
+		host = Node3D.new()
+		host.name = "ThreatMines"
+		add_child(host)
+	return host
+
+
+## Script / preamble smoke mine spawn.
+func _spawn_threat_smoke_mine(entry = null, as_range_default: bool = false) -> void:
+	if entry == null or not (entry is Dictionary):
+		return
+	## Prefer a fresh parse so path_cells / pace survive stamped copies.
+	var parsed: Dictionary = entry
+	var raw_line := str(entry.get("raw", "")).strip_edges()
+	if raw_line.is_empty() and Parser and Parser.has_method("_spawn_entry_to_line"):
+		raw_line = str(Parser._spawn_entry_to_line(entry)).strip_edges()
+	if not raw_line.is_empty() and Parser and Parser.has_method("parse_spawn_command"):
+		var reparsed: Dictionary = Parser.parse_spawn_command(raw_line)
+		if not reparsed.is_empty() and String(reparsed.get("cmd", "")).to_lower() == "threat":
+			parsed = reparsed
+
+	var path_world := _stay_path_worlds(parsed, -1)
+	if path_world.is_empty():
+		var aim := _resolve_aim_cell(parsed, true, int(parsed.get("column", -1)))
+		path_world = [_aim_cell_world_position(aim.x, aim.y, false)]
+	## Lock to the same aim plane rocks use so mines share depth / collide cleanly.
+	for i in path_world.size():
+		var p: Vector3 = path_world[i]
+		p.z = AIM_PLANE_Z
+		path_world[i] = p
+	var splash_from: Vector3 = path_world[path_world.size() - 1]
+	var splash_pos := _stay_splash_exit_world(splash_from)
+	var pace := str(parsed.get("threat_pace", ""))
+
+	var mine: Node = THREAT_SMOKE_MINE_SCENE.instantiate()
+	mine.set("is_range_default", as_range_default)
+	_threat_mine_host().add_child(mine)
+	if mine.has_method("activate_from_script"):
+		mine.activate_from_script(path_world, splash_pos, pace, AIM_PLANE_Z)
+	print(
+		"RockManager: threat mine path=%d pace=%s default=%s z=%.1f raw=%s"
+		% [path_world.size(), pace, str(as_range_default), AIM_PLANE_Z, str(parsed.get("raw", ""))]
+	)
 
 
 func _dismiss_ammo_balloons() -> void:
@@ -1910,12 +2057,9 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.STAY
 			'rock-stay-black':
 				return RockInstance.RockSize.STAY_BLACK
-			'rock-cardinal':
-				return RockInstance.RockSize.CARDINAL
+
 			'crate':
 				return RockInstance.RockSize.CRATE
-			'threat':
-				return RockInstance.RockSize.THREAT
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -1947,7 +2091,6 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-cardinal'
 		or cmd == 'rock-still'
 		or cmd == 'crate'
-		or cmd == 'threat'
 	)
 
 
@@ -2196,10 +2339,8 @@ func _any_live_round_rocks() -> bool:
 		## Juggle rocks run independently — never block wait / wait-until-clear.
 		if body.rock_type == RockInstance.RockSize.JUGGLE:
 			continue
-		## Avoiders / threat canisters are not remaining-rocks; script commands pop leftovers after wait.
+		## Avoiders are not remaining-rocks; script `rock-avoider-kill` pops leftovers after wait.
 		if body.rock_type == RockInstance.RockSize.AVOIDER:
-			continue
-		if body.rock_type == RockInstance.RockSize.THREAT:
 			continue
 		## Still waiting to launch this wave.
 		if body.current_state == body.State.PREPARE_ROCK:
@@ -3228,6 +3369,9 @@ func update_round_end() -> void:
 		if body is RockInstance:
 			body.round_end_check_rock_status()
 	clear_cardinal_bursts()
+	## Drop mid-script mines only; ambient preamble threats park dormant for shop / next PLAY.
+	clear_script_threat_mines()
+	dormant_threat_mines()
 
 
 ## Stop staggered `wait` launches mid-sequence (lose / abort / round end).
@@ -3405,41 +3549,12 @@ func _find_free_pool_rock():
 	return fallback
 
 
-## Ad-hoc single rock (wall-puzzle threat, etc.). Does not advance the script sequence.
-func spawn_threat_rock(cmd: String = "rock") -> void:
-	var body = _find_free_pool_rock()
-	if body == null:
-		return
+## Ad-hoc smoke mine (wall-puzzle, etc.). Does not advance the script sequence.
+func spawn_threat_rock(cmd: String = "threat") -> void:
 	var entry := {"cmd": String(cmd).to_lower(), "column": -1}
-	var column := _resolve_spawn_column(entry)
-	var spawn_x := _spawn_x_for_entry(entry, column)
-	if body.has_method("setup_for_pool_launch"):
-		body.setup_for_pool_launch(_spawn_entry_to_rock_type(entry), spawn_x)
-	else:
-		body.rock_type = _spawn_entry_to_rock_type(entry)
-		body.target_x_position = spawn_x
-		body.enter_state(body.State.PREPARE_ROCK)
-	await get_tree().create_timer(0.35, false).timeout
-	if not is_instance_valid(body) or body.current_state != body.State.PREPARE_ROCK:
-		return
-	body.enter_state(body.State.ACTIVE)
-	var upward_force := 10.0
-	if body.has_method("is_stay_flight") and body.is_stay_flight():
-		var aim := _resolve_aim_cell(entry, true, column)
-		var aim_pos := _aim_cell_world_position(aim.x, aim.y, true)
-		if body.has_method("begin_rock_stay_flight"):
-			body.begin_rock_stay_flight(aim_pos)
-		if rock_rock_collisions_enabled and body.has_method("schedule_airborne_rock_collisions"):
-			body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
-		return
-	var launch_g := _aim_launch_gravity_for(body, entry)
-	BallisticAim.configure_body_for_ballistic_launch(body, launch_g)
-	if body.has_method("begin_ballistic_aim_feel"):
-		body.begin_ballistic_aim_feel(aim_descent_linear_damp)
-	var impulse := _build_launch_impulse(body, -1, upward_force, 0.0, launch_g)
-	body.apply_central_impulse(impulse)
-	if rock_rock_collisions_enabled and body.has_method("schedule_airborne_rock_collisions"):
-		body.schedule_airborne_rock_collisions(rock_rock_collision_delay_sec, rock_rock_bounce)
+	if String(entry.cmd) != "threat":
+		entry.cmd = "threat"
+	_spawn_threat_smoke_mine(entry)
 
 
 func _configure_stream_rock(body, rock_index: int) -> void:
@@ -3498,7 +3613,7 @@ func _launch_stream_rock(body, counter: int) -> void:
 				var reparsed: Dictionary = Parser.parse_spawn_command(raw_line)
 				if not reparsed.is_empty():
 					var re_cmd := String(reparsed.get("cmd", "")).to_lower()
-					if re_cmd.begins_with("rock-stay") or re_cmd == "rock-still" or re_cmd == "threat":
+					if re_cmd.begins_with("rock-stay") or re_cmd == "rock-still":
 						entry = reparsed
 						if counter_idx >= 0 and counter_idx < manual_rock_sequence.size():
 							manual_rock_sequence[counter_idx] = reparsed
@@ -3518,8 +3633,6 @@ func _launch_stream_rock(body, counter: int) -> void:
 			"RockManager: rock-stay launch path_cells=%d path_world=%d exit=%s raw=%s"
 			% [cell_count, path_world.size(), str(exit_splash), str(entry.get("raw", "") if entry is Dictionary else "")]
 		)
-		if body.has_method("configure_threat_pace") and entry is Dictionary:
-			body.configure_threat_pace(str(entry.get("threat_pace", "")))
 		if body.has_method("begin_rock_stay_flight"):
 			body.begin_rock_stay_flight(aim_pos, path_world, exit_splash, splash_pos)
 		else:
@@ -3938,6 +4051,8 @@ func update_gravity(_gravity_scale : float) -> void:
 func reset_all_rocks() -> void:
 	_cancel_sequence()
 	clear_cardinal_bursts()
+	## Ambient mines stay in the level but reset to dormant (shop / abort / reset).
+	dormant_threat_mines()
 	var bodies = $Container_1.get_children()
 
 	for body in bodies:
