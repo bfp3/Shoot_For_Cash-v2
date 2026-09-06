@@ -1,6 +1,6 @@
 island shipper
 
-range moss
+range moss11
 
 	play $0
 	reward $1,000
@@ -10,7 +10,7 @@ range moss
 		#1
 
 		#sfx-play USERSONG166 -35.0
-
+		sfx-play Windmill_YokoKanno -35.0
 		ammo
 
 		pace-slow
@@ -584,11 +584,15 @@ range moss8
 play $0
 	reward $100,000
 	round
+		hold out 120000
 		pace-impossible
 
-		#sfx-play star_wars_cantina -40.0
-		sfx-play sephiroff -45.0
+		sfx-play star_wars_cantina -40.0
+		#sfx-play sephiroff -45.0
 		ammo
+
+		threat-small 1 b3 b7
+		threat-small 8 b7 b3
 
 		ammo c1
 		ammo a1

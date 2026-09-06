@@ -1,0 +1,28 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b8styillugrnd"]
+
+[ext_resource type="Shader" uid="uid://cfnpoqn60gh01" path="res://res/Shaders/stylized_illustrated.gdshader" id="1_shader"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/sty_shadow_color = Color(0.056, 0.0648, 0.1, 1)
+shader_parameter/sty_shadow_strength = 1.0
+shader_parameter/sty_shadow_threshold = 1.0
+shader_parameter/sty_mid_color = Color(0.6509804, 0.5019608, 0.38431373, 1)
+shader_parameter/sty_mid_threshold = 0.26
+shader_parameter/sty_light_color = Color(0.6509804, 0.5019608, 0.38431373, 1)
+shader_parameter/sty_light_strength = 1.0
+shader_parameter/sty_light_threshold = 0.0
+shader_parameter/sty_band_softness = 0.018
+shader_parameter/sty_saturation = 0.92
+shader_parameter/sty_contrast = 1.08
+shader_parameter/sty_fog_color = Color(0.45, 0.62, 0.78, 1)
+shader_parameter/sty_fog_strength = 0.55
+shader_parameter/sty_fog_start = 28.0
+shader_parameter/sty_fog_end = 260.0
+shader_parameter/albedo_color = Color(0.6, 0.24, 0.24, 1)
+shader_parameter/use_albedo_texture = false
+shader_parameter/texture_blend = 0.0
+shader_parameter/roughness_value = 0.97
+shader_parameter/specular_value = 0.0
+shader_parameter/use_flat_shading = true

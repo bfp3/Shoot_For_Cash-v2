@@ -9,6 +9,7 @@
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="7_qndsk"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_act0r"]
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="9_rtqgq"]
+[ext_resource type="Material" path="res://mine_temp/materials/mat_fire.tres" id="10_vlpx7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5tkbb"]
 size = Vector3(1, 2.506958, 1)
@@ -324,6 +325,43 @@ turbulence_noise_scale = 0.0
 turbulence_noise_speed = Vector3(0, 1, 0)
 turbulence_influence_over_life = SubResource("CurveTexture_kxxwn")
 
+[sub_resource type="Gradient" id="Gradient_m4c4i"]
+offsets = PackedFloat32Array(0, 0.28, 0.7, 1)
+colors = PackedColorArray(1, 0.95, 0.55, 1, 1, 0.48, 0.08, 0.95, 0.85, 0.12, 0.02, 0.45, 0.15, 0.02, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1mmv2"]
+gradient = SubResource("Gradient_m4c4i")
+
+[sub_resource type="Curve" id="Curve_qndsk"]
+_data = [Vector2(0, 0.35), 0.0, 0.0, 0, 0, Vector2(0.22, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_dfmc7"]
+curve = SubResource("Curve_qndsk")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_act0r"]
+emission_shape = 1
+emission_sphere_radius = 0.14
+direction = Vector3(0, 1, 0)
+spread = 16.0
+initial_velocity_min = 0.45
+initial_velocity_max = 1.55
+gravity = Vector3(0, 0.55, 0)
+damping_min = 0.1
+damping_max = 0.4
+scale_min = 0.12
+scale_max = 0.32
+scale_curve = SubResource("CurveTexture_dfmc7")
+color = Color(1, 0.7, 0.25, 1)
+color_ramp = SubResource("GradientTexture1D_1mmv2")
+turbulence_enabled = true
+turbulence_noise_strength = 0.6
+turbulence_noise_scale = 1.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_5jmjl"]
+material = ExtResource("10_vlpx7")
+size = Vector2(0.55, 0.7)
+
 [node name="AmmoBalloon" unique_id=1844229001 instance=ExtResource("1_ckpt")]
 script = ExtResource("2_script")
 pan_duration = 3.5
@@ -431,3 +469,23 @@ visible = false
 
 [node name="hot_air_balloon" parent="." index="19" unique_id=391369195]
 transform = Transform3D(0.407, 0, 0, 0, 0.407, 0, 0, 0, 0.407, 0, 0, 0)
+
+[node name="Fire" type="GPUParticles3D" parent="hot_air_balloon" index="1" unique_id=642856619]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.110554695, 0)
+cast_shadow = 0
+amount = 26
+lifetime = 0.7
+explosiveness = 0.05
+randomness = 0.35
+visibility_aabb = AABB(-1.2, -0.2, -1.2, 2.4, 2.8, 2.4)
+process_material = SubResource("ParticleProcessMaterial_act0r")
+draw_pass_1 = SubResource("QuadMesh_5jmjl")
+
+[node name="Glow" type="OmniLight3D" parent="hot_air_balloon/Fire" index="0" unique_id=112392581]
+light_color = Color(1, 0.52, 0.14, 1)
+light_energy = 2.4
+light_indirect_energy = 0.6
+light_volumetric_fog_energy = 1.4
+light_size = 0.5
+omni_range = 7.5
+omni_attenuation = 1.2

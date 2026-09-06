@@ -1,0 +1,30 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b3v6hmyk7esre"]
+
+[ext_resource type="Shader" uid="uid://cfnpoqn60gh01" path="res://res/Shaders/stylized_illustrated.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="2_n8jub"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/sty_shadow_color = Color(0.056, 0.0648, 0.1, 1)
+shader_parameter/sty_shadow_strength = 0.91
+shader_parameter/sty_shadow_threshold = 0.82
+shader_parameter/sty_mid_color = Color(0.93834233, 0, 0.20530832, 1)
+shader_parameter/sty_mid_threshold = 0.52
+shader_parameter/sty_light_color = Color(0, 1, 0.01666665, 1)
+shader_parameter/sty_light_strength = 0.34
+shader_parameter/sty_light_threshold = 0.74
+shader_parameter/sty_band_softness = 0.018
+shader_parameter/sty_saturation = 0.92
+shader_parameter/sty_contrast = 1.08
+shader_parameter/sty_fog_color = Color(0.45, 0.62, 0.78, 1)
+shader_parameter/sty_fog_strength = 0.55
+shader_parameter/sty_fog_start = 28.0
+shader_parameter/sty_fog_end = 260.0
+shader_parameter/albedo_color = Color(0.953, 0.898, 0.788, 1)
+shader_parameter/albedo_texture = ExtResource("2_n8jub")
+shader_parameter/use_albedo_texture = false
+shader_parameter/texture_blend = 0.47200002242
+shader_parameter/roughness_value = 0.95
+shader_parameter/specular_value = 0.0
+shader_parameter/use_flat_shading = false

@@ -36,6 +36,7 @@ const LAYOUT_PATH_BY_PLACE_NAME := {
 	"moss8": "res://sc/All_level_layouts/level_layout_moss_08.tscn",
 	"moss9": "res://sc/All_level_layouts/level_layout_moss_09.tscn",
 	"moss10": "res://sc/All_level_layouts/level_layout_moss_10.tscn",
+	"moss11": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
 	"hood": "res://sc/All_level_layouts/level_layout_hood_01.tscn",
 	"mine": "res://sc/All_level_layouts/level_layout_mine_01.tscn",
 	"kings": "res://sc/All_level_layouts/level_layout_moss_crossy_bridge.tscn"
@@ -56,6 +57,7 @@ const ENV_PATH_BY_LEVEL := {
 	"moss8": "res://res/wireframe_glow_effect.tres",
 	"moss9": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"moss10": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"moss11": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
 	
 	
 	"redd": "res://res/world_env_redd.tres",
@@ -86,6 +88,7 @@ const ENV_PATH_BY_LAYOUT := {
 	"res://sc/All_level_layouts/level_layout_moss_08.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_moss_09.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"res://sc/All_level_layouts/level_layout_moss_10.tscn": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"res://sc/All_level_layouts/level_layout_moss_11.tscn": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
 	"res://sc/All_level_layouts/level_layout_hood.tscn": "res://res/skyEnvironments/greyscale_world.tres",
 	"res://sc/All_level_layouts/level_layout_mine_01.tscn": "res://mine_temp/mine_sunset_env.tres",
 }
