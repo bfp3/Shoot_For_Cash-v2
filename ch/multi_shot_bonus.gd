@@ -2,6 +2,16 @@ extends Node3D
 
 @onready var multi_label: Label3D = $mutli_label
 
+const AMMO_BALLOON_SCENE := preload("res://ch/Rocks/AmmoBalloon.tscn")
+const CASH_BALLOON_SCENE := preload("res://ch/Rocks/CashBalloon.tscn")
+
+@export_group("Grey Rocks Ammo")
+## Grey rocks needed in one volley to spawn an ammo balloon at the hit. 0 disables.
+@export var grey_rocks_ammo := 3
+
+@export_group("Yellow Rocks Cash")
+## Yellow rocks needed in one volley to spawn a cash balloon at the hit. 0 disables.
+@export var yellow_rocks_cash := 1
 
 var bonus_cash_labels_zone_a = null
 var bonus_cash_labels_zone_b = null
@@ -222,3 +232,58 @@ func start_oranges(multiplier : int, _pos : Vector3) -> void:
 		#
 		#orange_container.launch_orange(_pos)
 		#await get_tree().create_timer(0.5, false).timeout
+
+
+## Called from a volley: spawn an ammo balloon if enough grey rocks were hit in one go.
+func try_grey_rocks_ammo(grey_count: int, pos: Vector3) -> void:
+	if grey_rocks_ammo <= 0:
+		return
+	if grey_count < grey_rocks_ammo:
+		return
+	if not pos.is_finite():
+		return
+	_spawn_ammo_balloon_at(pos)
+
+
+func _spawn_ammo_balloon_at(pos: Vector3) -> void:
+	var balloon: Node = _instantiate_bonus_balloon(AMMO_BALLOON_SCENE)
+	if balloon == null:
+		return
+	if balloon.has_method("spawn_at_world"):
+		balloon.spawn_at_world(pos)
+	elif balloon.has_method("arrive_from_below"):
+		balloon.arrive_from_below(pos)
+
+
+## Called from a volley: spawn a cash balloon if enough yellow rocks were hit in one go.
+func try_yellow_rocks_cash(yellow_count: int, pos: Vector3) -> void:
+	if yellow_rocks_cash <= 0:
+		return
+	if yellow_count < yellow_rocks_cash:
+		return
+	if not pos.is_finite():
+		return
+	_spawn_cash_balloon_at(pos)
+
+
+func _spawn_cash_balloon_at(pos: Vector3) -> void:
+	var balloon: Node = _instantiate_bonus_balloon(CASH_BALLOON_SCENE)
+	if balloon == null:
+		return
+	if balloon.has_method("spawn_at_world"):
+		balloon.spawn_at_world(pos)
+	elif balloon.has_method("arrive_from_below"):
+		balloon.arrive_from_below(pos)
+
+
+func _instantiate_bonus_balloon(scene: PackedScene) -> Node:
+	if scene == null:
+		return null
+	var host := get_tree().get_first_node_in_group("rest_balloon_container")
+	if host == null:
+		host = get_tree().current_scene
+	if host == null:
+		host = self
+	var balloon: Node = scene.instantiate()
+	host.add_child(balloon)
+	return balloon

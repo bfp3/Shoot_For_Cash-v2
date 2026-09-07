@@ -4,12 +4,38 @@
 [ext_resource type="Script" uid="uid://dwk3uqmfos8su" path="res://ch/Rocks/rest_balloon.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://drvjio7oxqunn" path="res://res/ring512.png" id="4_7wlsc"]
 [ext_resource type="AudioStream" uid="uid://cad0x7feau285" path="res://sfx/one_hundred_percent.ogg" id="4_lwyt0"]
+[ext_resource type="Shader" uid="uid://cfnpoqn60gh01" path="res://res/Shaders/stylized_illustrated.gdshader" id="5_whiud"]
 [ext_resource type="PackedScene" uid="uid://b3kc1weo4j8hy" path="res://unfiled/Blender_custom_assets/hot_air_balloon.glb" id="7_ke2lg"]
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="7_vr0ep"]
 [ext_resource type="Material" uid="uid://jf1f8wg2pit2" path="res://res/redd_red_material.tres" id="8_sqnik"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5tkbb"]
 size = Vector3(1, 2.506958, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1h7yn"]
+render_priority = 0
+shader = ExtResource("5_whiud")
+shader_parameter/sty_shadow_color = Color(0.17, 0.17, 0.17, 1)
+shader_parameter/sty_shadow_strength = 1.0
+shader_parameter/sty_shadow_threshold = 0.22
+shader_parameter/sty_mid_color = Color(0.58, 0.50112, 0.44079998, 1)
+shader_parameter/sty_mid_threshold = 0.4
+shader_parameter/sty_light_color = Color(0.33, 0.33, 0.33, 1)
+shader_parameter/sty_light_strength = 0.48
+shader_parameter/sty_light_threshold = 0.55
+shader_parameter/sty_band_softness = 0.2
+shader_parameter/sty_saturation = 1.2
+shader_parameter/sty_contrast = 1.2
+shader_parameter/sty_fog_color = Color(0.45, 0.62, 0.78, 1)
+shader_parameter/sty_fog_strength = 0.55
+shader_parameter/sty_fog_start = 30.0
+shader_parameter/sty_fog_end = 400.0
+shader_parameter/albedo_color = Color(0.5803922, 0.003921569, 0.015686275, 1)
+shader_parameter/use_albedo_texture = false
+shader_parameter/texture_blend = 0.0
+shader_parameter/roughness_value = 0.96
+shader_parameter/specular_value = 0.0
+shader_parameter/use_flat_shading = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_35jbi"]
 
@@ -104,7 +130,7 @@ transform = Transform3D(0.65500003, 0, 0, 0, 0.65500003, 0, 0, 0, 0.65500003, 0,
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Crate" index="0" unique_id=2098571721]
 transform = Transform3D(0.65800005, 0, 0, 0, 0.65800005, 0, 0, 0, 0.65800005, 0, -0.5882354, 0)
-material_override = ExtResource("8_sqnik")
+material_override = SubResource("ShaderMaterial_1h7yn")
 mesh = ExtResource("7_vr0ep")
 skeleton = NodePath("../..")
 

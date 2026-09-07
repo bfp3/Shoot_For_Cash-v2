@@ -1,6 +1,6 @@
 extends Node
 ## When true, Advanced / Expert / all challenges and all numbered levels are treated as unlocked.
-const debug_everything_unlocked := false
+const debug_everything_unlocked := true
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 ## Advanced / Expert also require net worth (see unlock amounts below).
@@ -32,8 +32,10 @@ var dataset_float : Dictionary = {
 	"power_bonus_round_pineapples" 	: [0, 1]
 	,"power_max_ammo"				: [99]
 	,"ammo_pack_size"				: [99]
-	## Play fill + ammo-balloon default pack size.
-	,"power_ammo"					: [12]
+	## Magazine loaded when Play is pressed.
+	,"power_ammo_start"				: [6]
+	## Ammo granted by shooting an ammo balloon / pack.
+	,"power_ammo_pack"				: [6]
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 	,"power_target_circle"	: [60.0,80.0,120.0,160.0, 200.0, 240.0,280.0,380.0,420.0,460.0]

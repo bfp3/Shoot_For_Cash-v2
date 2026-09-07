@@ -76,13 +76,15 @@ func wants_crosshair_destroy_on_overlap(kind: String) -> bool:
 		_:
 			return false
 
-## Current bullets loaded. Starts at power_max_ammo and is refilled via shop ammo packs.
+## Current bullets loaded. Starts at power_ammo_start; packs grant power_ammo_pack.
 var shot_count := 0
 var max_ammo := 0
 ## Glory `six_shots_only` challenge: hard magazine cap (see get_max_ammo).
 const SIX_SHOTS_AMMO_CAP := 6
-## Magazine loaded when Play is pressed, and granted by an ammo balloon with no amount.
-const STARTING_AMMO := 12
+## Fallback magazine if `power_ammo_start` is missing or 0.
+const STARTING_AMMO := 3
+## Fallback pack size if `power_ammo_pack` is missing or 0.
+const AMMO_PACK_FALLBACK := 6
 ## Separate magazine used only while a level-editor test round is active.
 var _level_editor_ammo_active := false
 var _level_editor_ammo := 99
@@ -1585,10 +1587,10 @@ func is_ammo_full() -> bool:
 
 
 func get_starting_ammo() -> int:
-	var pack := int(gl_DataSet.get_value("power_ammo", 0))
-	if pack <= 0:
-		pack = STARTING_AMMO
-	return mini(pack, get_max_ammo())
+	var amount := int(gl_DataSet.get_value("power_ammo_start", 0))
+	if amount <= 0:
+		amount = STARTING_AMMO
+	return mini(amount, get_max_ammo())
 
 
 func _init_ammo() -> void:
@@ -1723,10 +1725,18 @@ func end_level_editor_ammo() -> void:
 
 
 func get_ammo_pack_size() -> int:
-	var pack := int(gl_DataSet.get_value('ammo_pack_size', 0))
+	var pack := int(gl_DataSet.get_value("power_ammo_pack", 0))
 	if pack <= 0:
-		pack = get_starting_ammo()
-	return pack
+		pack = AMMO_PACK_FALLBACK
+	return maxi(pack, 0)
+
+
+## Shop buy-ammo amount (separate from shooting an ammo balloon).
+func get_shop_ammo_pack_size() -> int:
+	var pack := int(gl_DataSet.get_value("ammo_pack_size", 0))
+	if pack <= 0:
+		pack = get_ammo_pack_size()
+	return maxi(pack, 0)
 
 
 func set_ammo(amount: int, animate := false) -> void:

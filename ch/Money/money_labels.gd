@@ -12,9 +12,6 @@ const COLOR_BANK := Color("cf9e5bff")
 const COLOR_LOSE := Color("C70102")
 
 @onready var pool_label: RichTextLabel = $PoolLabel
-@onready var total_cash_label: RichTextLabel = $TotalCash2
-@onready var multiplier_label: RichTextLabel = $MultiplierLabel
-@onready var continue_fee_label: RichTextLabel = $ContinueFeeLabel
 @onready var coin_sfx: AudioStreamPlayer = $CoinSfx
 @onready var kaching_sfx: AudioStreamPlayer = $KachingSfx
 @onready var kaching_sfx_2: AudioStreamPlayer = $KachingSfx2
@@ -69,12 +66,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if pool_label:
 		pool_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if total_cash_label:
-		total_cash_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if multiplier_label:
-		multiplier_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if continue_fee_label:
-		continue_fee_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(0)
 	_sync_total_from_state(true)
@@ -85,11 +77,8 @@ func _ready() -> void:
 		EventBus.instance.cash_pool_changed.connect(_on_pool_changed)
 		EventBus.instance.cash_pool_banked.connect(_on_pool_banked)
 		EventBus.instance.cash_pool_forfeited.connect(_on_pool_forfeited)
-		if EventBus.instance.has_signal("cash_multiplier_changed"):
-			EventBus.instance.cash_multiplier_changed.connect(_on_multiplier_changed)
-		EventBus.instance.update_money.connect(_on_wallet_changed)
-		if EventBus.instance.has_signal("continue_fee_changed"):
-			EventBus.instance.continue_fee_changed.connect(_on_continue_fee_changed)
+
+
 		EventBus.instance.open_tally_card.connect(hide_for_menus)
 		EventBus.instance.open_shop.connect(hide_for_menus)
 		EventBus.instance.egg_pulsed.connect(show_for_round)
@@ -108,47 +97,15 @@ func show_for_round() -> void:
 	_sync_total_from_state(true)
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(int(_displayed_pool))
-	_refresh_multiplier()
-	_refresh_continue_fee()
+
 	show()
 	modulate.a = 1.0
 
 
-func _on_multiplier_changed(_new_multiplier: int = 0) -> void:
-	_refresh_multiplier()
 
 
-func _refresh_multiplier() -> void:
-	if multiplier_label == null:
-		return
-	var mult := 2
-	if gl_PlayerState and gl_PlayerState.has_method("get_cash_multiplier"):
-		mult = int(gl_PlayerState.get_cash_multiplier())
-	elif gl_PlayerState:
-		mult = int(gl_PlayerState.get("cash_multiplier"))
-	multiplier_label.text = "x%d" % maxi(mult, 1)
 
 
-func _on_continue_fee_changed(_new_fee: int = 0) -> void:
-	_refresh_continue_fee()
-
-
-func _refresh_continue_fee() -> void:
-	if continue_fee_label == null:
-		return
-	var fee := 0
-	if gl_PlayerState and gl_PlayerState.has_method("get_continue_fee"):
-		fee = int(gl_PlayerState.get_continue_fee())
-	continue_fee_label.text = "CONTINUE %s" % CommonCode.format_money(fee)
-	var cash := 0
-	if gl_PlayerState and gl_PlayerState.has_method("get_spendable_cash"):
-		cash = int(gl_PlayerState.get_spendable_cash())
-	else:
-		cash = _live_total_amount()
-	if cash >= fee:
-		continue_fee_label.add_theme_color_override("default_color", COLOR_BANK)
-	else:
-		continue_fee_label.add_theme_color_override("default_color", COLOR_LOSE)
 
 
 func hide_for_menus() -> void:
@@ -187,8 +144,7 @@ func fade_in_for_continue(duration: float = 0.55) -> void:
 	_sync_total_from_state(true)
 	_set_pool_color(COLOR_POOL)
 	_set_pool_text(int(_displayed_pool))
-	_refresh_multiplier()
-	_refresh_continue_fee()
+
 	_visible_for_round = true
 	show()
 	modulate.a = 0.0
@@ -207,7 +163,7 @@ func _on_pool_changed(new_amount: int) -> void:
 	var delta := new_amount - _tracked_pool
 	_tracked_pool = new_amount
 	_tracked_total = _live_total_amount()
-	_refresh_continue_fee()
+
 	if not _visible_for_round or _animating_settle or _ceremony_lock:
 		_set_pool_text(new_amount)
 		_set_total_text(float(_tracked_total))
@@ -219,10 +175,6 @@ func _on_pool_changed(new_amount: int) -> void:
 		_set_pool_text(new_amount)
 		_roll_total_to(float(_tracked_total))
 
-
-func _on_wallet_changed() -> void:
-	_refresh_continue_fee()
-	## Round HUD is pool-only; wallet updates belong to the shop / tally.
 
 
 func _on_pool_banked(_amount: int, _previous_cash: int, _new_total_cash: int) -> void:
@@ -292,8 +244,6 @@ func _spawn_gain_chip(amount: int) -> void:
 
 
 func _gain_chip_target() -> RichTextLabel:
-	if total_cash_label:
-		return total_cash_label
 	return pool_label
 
 
@@ -492,9 +442,7 @@ func _set_displayed_pool(value: float) -> void:
 
 func _set_total_text(value: float) -> void:
 	_displayed_total = value
-	if total_cash_label:
-		total_cash_label.text = "$%d" % int(round(value))
-		total_cash_label.text = "[wave]" + CommonCode.format_money(value)
+
 
 func _set_pool_text(amount: int) -> void:
 	if pool_label:
@@ -545,24 +493,7 @@ func end_checkpoint_ceremony() -> void:
 	_restore_scene_layout()
 
 
-func checkpoint_move_to_center() -> void:
-	if not _visible_for_round:
-		return
-	_cache_scene_layout()
-	_kill_move()
-	var home_label := total_cash_label if total_cash_label else pool_label
-	if home_label == null:
-		return
-	var home := _top_left(home_label)
-	var target := _checkpoint_center_for(home_label)
-	var delta := target - home
-	_set_total_text(float(_tracked_total))
-	_move_tween = create_tween()
-	_move_tween.set_parallel(true)
-	_tween_offsets_to(_move_tween, home_label, target, 0.35)
-	if pool_label and pool_label != home_label and pool_label.visible:
-		_tween_offsets_to(_move_tween, pool_label, _top_left(pool_label) + delta, 0.35)
-	await _move_tween.finished
+
 
 
 func checkpoint_play_bank(amount: int, _previous_cash: int, _new_total_cash: int) -> void:
@@ -594,8 +525,7 @@ func checkpoint_return_home() -> void:
 	_move_tween.set_parallel(true)
 	if pool_label and not _pool_layout.is_empty():
 		_tween_layout_to(_move_tween, pool_label, _pool_layout, 0.3)
-	if total_cash_label and not _total_layout.is_empty():
-		_tween_layout_to(_move_tween, total_cash_label, _total_layout, 0.3)
+
 	await _move_tween.finished
 	_restore_scene_layout()
 
@@ -603,8 +533,7 @@ func checkpoint_return_home() -> void:
 func _cache_scene_layout() -> void:
 	if pool_label and _pool_layout.is_empty():
 		_pool_layout = _snapshot_layout(pool_label)
-	if total_cash_label and _total_layout.is_empty():
-		_total_layout = _snapshot_layout(total_cash_label)
+
 
 
 func _snapshot_layout(ctrl: Control) -> Dictionary:
@@ -636,11 +565,10 @@ func _apply_layout(ctrl: Control, snap: Dictionary) -> void:
 func _restore_scene_layout() -> void:
 	_kill_move()
 	_apply_layout(pool_label, _pool_layout)
-	_apply_layout(total_cash_label, _total_layout)
+
 	if pool_label:
 		pool_label.scale = Vector2.ONE
-	if total_cash_label:
-		total_cash_label.scale = Vector2.ONE
+
 	_sync_total_from_state(true)
 
 

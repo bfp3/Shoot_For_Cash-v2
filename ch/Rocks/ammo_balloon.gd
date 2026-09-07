@@ -1,7 +1,7 @@
 extends "res://ch/Rocks/rest_balloon.gd"
 ## Scripted ammo balloon: shoot to buy ammo. `clear ammo` pops it with no reward.
 
-var ammo_amount := 12
+var ammo_amount := 6
 var ammo_price := 0
 var _grant_on_pop := true
 
@@ -22,12 +22,26 @@ func _ready() -> void:
 	_refresh_labels()
 
 
+## Bonus spawn: float up to a world point (no grid cell). Uses default ammo amount.
+func spawn_at_world(pos: Vector3, amount: int = -1) -> void:
+	occupy_row = -1
+	occupy_column = -1
+	if amount >= 0:
+		ammo_amount = maxi(amount, 0)
+	else:
+		ammo_amount = _default_pack_amount()
+	ammo_price = 0
+	var balloon_mesh := get_node_or_null("Mesh/small_rock2") as MeshInstance3D
+	if balloon_mesh and CAMO_MATERIAL:
+		balloon_mesh.material_override = CAMO_MATERIAL
+	_refresh_labels()
+	arrive_from_below(pos)
+
+
 func configure_from_entry(entry: Dictionary) -> void:
 	var amount := int(entry.get("amount", -1))
 	if amount < 0:
-		amount = int(gl_DataSet.get_value("power_ammo", 0))
-		if amount <= 0:
-			amount = 12
+		amount = _default_pack_amount()
 	ammo_amount = maxi(amount, 0)
 	
 	var balloon_mesh : MeshInstance3D = $Mesh/small_rock2
@@ -49,6 +63,14 @@ func configure_from_entry(entry: Dictionary) -> void:
 
 func is_blocking_sky() -> bool:
 	return false
+
+
+func _default_pack_amount() -> int:
+	var player = get_tree().get_first_node_in_group("Player")
+	if player and player.has_method("get_ammo_pack_size"):
+		return maxi(int(player.get_ammo_pack_size()), 0)
+	var pack := int(gl_DataSet.get_value("power_ammo_pack", 0))
+	return pack if pack > 0 else 6
 
 
 func hit_by_player(damage: int, _screen_offset: Vector2 = Vector2.ZERO) -> void:

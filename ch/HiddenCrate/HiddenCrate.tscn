@@ -1,10 +1,106 @@
 [gd_scene format=3 uid="uid://c5v3o1eq73ikc"]
 
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="1_g7qie"]
+[ext_resource type="Material" uid="uid://b8styilluwood" path="res://res/Materials/stylized/stylized_wood.tres" id="1_mnlgb"]
 [ext_resource type="Script" uid="uid://dnvsr1ppfx6jt" path="res://ch/HiddenCrate/hidden_crate.gd" id="2_hidden"]
+[ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="3_ubmwj"]
+[ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="4_mnlgb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5p2dd"]
+render_priority = 2
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("3_ubmwj")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 2
+particles_anim_loop = false
+proximity_fade_enabled = true
+
+[sub_resource type="Curve" id="Curve_76ptj"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_gxoxp"]
+texture_mode = 1
+curve = SubResource("Curve_76ptj")
+
+[sub_resource type="Curve" id="Curve_5g0j7"]
+_data = [Vector2(0, 0), 0.0, 2.89056, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_herjc"]
+curve = SubResource("Curve_5g0j7")
+
+[sub_resource type="Curve" id="Curve_u2bbj"]
+_data = [Vector2(0, 1), 0.0, -2.29396, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_pqbxg"]
+curve = SubResource("Curve_u2bbj")
+
+[sub_resource type="Curve" id="Curve_pgihu"]
+_data = [Vector2(0.00268096, 0.973057), 0.0, -23.8681, 0, 0, Vector2(0.10992, 0.0569948), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_ltsxa"]
+curve = SubResource("Curve_pgihu")
+
+[sub_resource type="Curve" id="Curve_r3b0u"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.87403, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_8mu68"]
+curve = SubResource("Curve_r3b0u")
+
+[sub_resource type="Curve" id="Curve_acisb"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_q8tld"]
+curve = SubResource("Curve_acisb")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vaxib"]
+lifetime_randomness = 1.0
+particle_flag_rotate_y = true
+emission_shape = 1
+emission_sphere_radius = 0.5
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+angular_velocity_curve = SubResource("CurveTexture_herjc")
+radial_velocity_min = 10.0
+radial_velocity_max = 20.0
+radial_velocity_curve = SubResource("CurveTexture_ltsxa")
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 0.25
+radial_accel_max = 0.5
+tangential_accel_min = -4.0
+tangential_accel_max = -2.0
+damping_min = 3.0
+damping_max = 10.0
+damping_curve = SubResource("CurveTexture_pqbxg")
+scale_min = 0.1
+scale_max = 0.2
+scale_curve = SubResource("CurveTexture_8mu68")
+color_ramp = ExtResource("4_mnlgb")
+alpha_curve = SubResource("CurveTexture_gxoxp")
+anim_offset_max = 1.0
+turbulence_enabled = true
+turbulence_noise_speed = Vector3(1, 1, 1)
+turbulence_influence_min = 0.25
+turbulence_influence_max = 1.0
+turbulence_influence_over_life = SubResource("CurveTexture_q8tld")
+
+[sub_resource type="QuadMesh" id="QuadMesh_35vws"]
 
 [node name="HiddenCrate" type="MeshInstance3D" unique_id=737478994]
 layers = 32768
+material_override = ExtResource("1_mnlgb")
 cast_shadow = 0
 mesh = ExtResource("1_g7qie")
 script = ExtResource("2_hidden")
@@ -15,3 +111,14 @@ light_color = Color(1, 0.6166667, 0, 1)
 light_energy = 1.3
 omni_range = 1.076
 omni_attenuation = 2.6
+
+[node name="embers" type="GPUParticles3D" parent="." unique_id=628099294]
+material_override = SubResource("StandardMaterial3D_5p2dd")
+cast_shadow = 0
+amount = 50
+lifetime = 2.0
+speed_scale = 0.5
+fixed_fps = 60
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_vaxib")
+draw_pass_1 = SubResource("QuadMesh_35vws")

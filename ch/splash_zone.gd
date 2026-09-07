@@ -77,8 +77,6 @@ func _on_body_entered(body: Node3D) -> void:
 		if not is_hazard and rocks_container and rocks_container.has_method("set_strike_feedback_origin") and give_strike and is_must_hit:
 			rocks_container.set_strike_feedback_origin(splash_hit_pos)
 		if not is_hazard and give_strike and is_must_hit:
-			if EventBus.instance:
-				EventBus.instance.balloon_strike_requested.emit(splash_hit_pos)
 			gl_PlayerState.add_strike()
 			gl_PlayerState.log_rock_missed(missed_rock_type_name, true)
 		else:

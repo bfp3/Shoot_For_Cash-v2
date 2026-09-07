@@ -21,7 +21,7 @@ func money_is_money(_display_pos : Vector3, money_yield : int) -> void:
 	#if money_container:
 	#get_tree().get_current_scene().add_child(new_money_label)
 	new_money_label.top_level = true
-	new_money_label.text = "$" + str(money_yield) #.pad_zeros(2)
+	new_money_label.text = CommonCode.format_money(money_yield)
 	new_money_label.global_position = _display_pos
 	#new_money_label.text = "+$" + str(2) +".00"
 	#money_container.update_money()

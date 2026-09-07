@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://brfnjd75lfp6m" path="res://res/Explosion_paid_patreon/textures/noises/smoke_erosion_b.png" id="6_m4c4i"]
 [ext_resource type="ArrayMesh" uid="uid://daaw7tfip8kxg" path="res://res/Explosion_paid_patreon/meshes/Cloud.res" id="7_qndsk"]
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_act0r"]
+[ext_resource type="Material" uid="uid://b8styilluwood" path="res://res/Materials/stylized/stylized_wood.tres" id="9_m4c4i"]
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="9_rtqgq"]
 [ext_resource type="Material" path="res://mine_temp/materials/mat_fire.tres" id="10_vlpx7"]
 
@@ -461,6 +462,7 @@ font_size = 61
 
 [node name="CrateMesh" type="MeshInstance3D" parent="Crate2" index="1" unique_id=284808236]
 transform = Transform3D(0.65800005, 0, 0, 0, 0.65800005, 0, 0, 0, 0.65800005, 0, -0.5882354, 0)
+material_override = ExtResource("9_m4c4i")
 mesh = ExtResource("9_rtqgq")
 skeleton = NodePath("../..")
 

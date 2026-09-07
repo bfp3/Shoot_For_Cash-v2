@@ -7,14 +7,6 @@
 [ext_resource type="AudioStream" uid="uid://b0arllxttckmg" path="res://sfx/cash_money_kaching.ogg" id="4_kaching"]
 [ext_resource type="AudioStream" uid="uid://dbfc71l56cdct" path="res://sfx/cash-money-kaching.ogg" id="5_kaching2"]
 
-[sub_resource type="PrismMesh" id="PrismMesh_2urmc"]
-left_to_right = 1.0
-
-[sub_resource type="PrismMesh" id="PrismMesh_iajia"]
-left_to_right = 1.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_ivjbg"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pivo4"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
 border_width_left = 1
@@ -66,7 +58,6 @@ Panel/styles/panel = SubResource("StyleBoxFlat_k5tjv")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_ms1v2")
 
 [node name="Money_labels" type="Control" unique_id=2075768694 groups=["money_manager"]]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -76,204 +67,8 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_aaxe5")
 
-[node name="RedCornerPanel" type="Control" parent="." unique_id=1772394240]
-unique_name_in_owner = true
+[node name="PoolLabelX" type="RichTextLabel" parent="." unique_id=433932978]
 visible = false
-modulate = Color(1, 1, 1, 0.5058824)
-self_modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -569.0
-offset_top = -102.0
-offset_right = 1.0
-offset_bottom = -22.0
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-
-[node name="Control" type="Control" parent="RedCornerPanel" unique_id=352746031]
-modulate = Color(1, 1, 1, 0.56078434)
-show_behind_parent = true
-layout_mode = 1
-anchor_left = 0.5877193
-anchor_top = -0.7757538
-anchor_right = 0.5877193
-anchor_bottom = -0.7757538
-offset_left = 84.0
-offset_top = 88.0
-offset_right = 84.0
-offset_bottom = 88.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = -3.1415927
-scale = Vector2(1.339, 1.257)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-
-[node name="LeftTriangle" type="MeshInstance2D" parent="RedCornerPanel/Control" unique_id=1037194623]
-visible = false
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(-203.8343, 0)
-scale = Vector2(183.79362, -82)
-mesh = SubResource("PrismMesh_2urmc")
-
-[node name="RightTriangle" type="MeshInstance2D" parent="RedCornerPanel/Control" unique_id=1196324208]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-position = Vector2(203.53, 0)
-rotation = 3.1415925
-scale = Vector2(182.139, -82)
-mesh = SubResource("PrismMesh_iajia")
-
-[node name="Square" type="MeshInstance2D" parent="RedCornerPanel/Control" unique_id=9756611]
-modulate = Color(0.6313726, 0.007843138, 0.015686275, 1)
-rotation = 3.1415925
-scale = Vector2(225, 82)
-mesh = SubResource("BoxMesh_ivjbg")
-
-[node name="MultiplierLabel" type="RichTextLabel" parent="." unique_id=111020114]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -564.0
-offset_top = -241.0
-offset_right = -172.0
-offset_bottom = 22.0
-grow_horizontal = 0
-grow_vertical = 0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_colors/font_outline_color = Color(0.36862746, 0.32941177, 0.29411766, 1)
-theme_override_constants/outline_size = 12
-theme_override_fonts/normal_font = ExtResource("2_font")
-theme_override_font_sizes/normal_font_size = 243
-bbcode_enabled = true
-text = "[rainbow]x2"
-fit_content = true
-scroll_active = false
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="TotalCash2" type="RichTextLabel" parent="." unique_id=1123567456]
-visible = false
-modulate = Color(0.36862746, 0.32941177, 0.29411766, 1)
-z_index = 1
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -413.515
-offset_top = -152.685
-offset_right = -42.829956
-offset_bottom = -9.684692
-grow_horizontal = 0
-grow_vertical = 0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_constants/outline_size = 0
-theme_override_fonts/normal_font = ExtResource("2_font")
-theme_override_font_sizes/normal_font_size = 132
-bbcode_enabled = true
-text = "$21"
-fit_content = true
-scroll_active = false
-horizontal_alignment = 2
-vertical_alignment = 2
-
-[node name="ContinueFeeLabel" type="RichTextLabel" parent="." unique_id=2051222769]
-visible = false
-clip_contents = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -415.0
-offset_top = -210.0
-offset_right = -23.0
-offset_bottom = -130.83502
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-theme_override_colors/default_color = Color(0.8117647, 0.61960787, 0.35686275, 1)
-theme_override_colors/font_outline_color = Color(0.08, 0.06, 0.04, 0.85)
-theme_override_constants/outline_size = 4
-theme_override_fonts/normal_font = ExtResource("2_font")
-theme_override_font_sizes/normal_font_size = 36
-bbcode_enabled = true
-text = "CONTINUE $50"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 2
-vertical_alignment = 2
-
-[node name="BankedLabel2" type="RichTextLabel" parent="." unique_id=130190943]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -436.0
-offset_top = -340.0
-offset_right = -44.0
-offset_bottom = -197.0
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_constants/outline_size = 2
-theme_override_fonts/normal_font = ExtResource("2_font")
-theme_override_font_sizes/normal_font_size = 74
-bbcode_enabled = true
-text = "Target: $1,000"
-fit_content = true
-scroll_active = false
-horizontal_alignment = 2
-vertical_alignment = 2
-
-[node name="TotalCash" type="RichTextLabel" parent="." unique_id=1825297992]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -436.0
-offset_top = -340.0
-offset_right = -44.0
-offset_bottom = -197.0
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-theme_type_variation = &"WhiteRichText"
-theme_override_constants/outline_size = 2
-theme_override_fonts/normal_font = ExtResource("2_font")
-theme_override_font_sizes/normal_font_size = 74
-bbcode_enabled = true
-text = "Target: $1,000"
-fit_content = true
-scroll_active = false
-horizontal_alignment = 2
-vertical_alignment = 2
-
-[node name="PoolLabel" type="RichTextLabel" parent="." unique_id=433932978]
 clip_contents = false
 layout_mode = 1
 anchors_preset = 3
@@ -298,7 +93,7 @@ fit_content = true
 scroll_active = false
 horizontal_alignment = 2
 
-[node name="Panel" type="Panel" parent="PoolLabel" unique_id=1053188580]
+[node name="Panel" type="Panel" parent="PoolLabelX" unique_id=1053188580]
 visible = false
 show_behind_parent = true
 custom_minimum_size = Vector2(180, 130)
@@ -317,7 +112,50 @@ mouse_filter = 2
 theme = SubResource("Theme_24e6o")
 theme_override_styles/panel = ExtResource("2_6hiqh")
 
-[node name="Panel2" type="Panel" parent="PoolLabel" unique_id=1851206435]
+[node name="Panel2" type="Panel" parent="PoolLabelX" unique_id=1851206435]
+show_behind_parent = true
+custom_minimum_size = Vector2(180, 130)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -107.905
+offset_top = -276.19702
+offset_right = 415.57303
+offset_bottom = 130.32495
+grow_vertical = 0
+scale = Vector2(0.67, 0.332)
+pivot_offset_ratio = Vector2(1, 0.5)
+mouse_filter = 2
+theme = SubResource("Theme_24e6o")
+theme_override_styles/panel = ExtResource("2_6hiqh")
+
+[node name="PoolLabel" type="RichTextLabel" parent="." unique_id=422782365]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1522.0
+offset_top = -1056.0
+offset_right = -1130.0
+offset_bottom = -913.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset = Vector2(392, 88)
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92156863, 0.8784314, 0.84705883, 1)
+theme_override_fonts/normal_font = ExtResource("2_font")
+theme_override_font_sizes/normal_font_size = 132
+bbcode_enabled = true
+text = "$0"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 2
+
+[node name="Panel2" type="Panel" parent="PoolLabel" unique_id=2069028118]
 show_behind_parent = true
 custom_minimum_size = Vector2(180, 130)
 layout_mode = 1

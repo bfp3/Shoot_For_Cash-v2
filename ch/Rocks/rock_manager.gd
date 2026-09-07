@@ -1520,6 +1520,16 @@ func _dismiss_ammo_balloons() -> void:
 			node.queue_free()
 
 
+func _dismiss_cash_balloons() -> void:
+	for node in get_tree().get_nodes_in_group("cash_balloon"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if node.has_method("dismiss_without_shot"):
+			node.dismiss_without_shot()
+		else:
+			node.queue_free()
+
+
 func _handle_clear_command(entry) -> void:
 	if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "clear-ammo":
 		_clear_ammo_balloons()
@@ -1779,6 +1789,7 @@ func _cancel_sequence() -> void:
 	_hold_out_pineapple_finale.clear()
 	_dismiss_rest_balloon()
 	_dismiss_ammo_balloons()
+	_dismiss_cash_balloons()
 	_pending_ammo_entries.clear()
 	_script_sfx_stop_all()
 	_reset_pineapple_spawn_bookkeeping()

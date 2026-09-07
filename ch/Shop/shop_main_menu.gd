@@ -1608,7 +1608,7 @@ func _on_buy_ammo_pressed() -> void:
 		purchase_denied_tween()
 		return
 
-	var pack_size := player.get_ammo_pack_size()
+	var pack_size := player.get_shop_ammo_pack_size() if player.has_method("get_shop_ammo_pack_size") else player.get_ammo_pack_size()
 	if not gl_PlayerState.log_buy('ammo_packs_bought', ammo_price):
 		purchase_denied_tween()
 		return

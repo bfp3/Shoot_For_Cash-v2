@@ -210,6 +210,7 @@ func _apply_architecture_shadows() -> void:
 
 
 func _enable_mesh_shadows(node: Node) -> void:
+	return
 	var n := String(node.name)
 	if node is Sprite3D or node is Decal:
 		return

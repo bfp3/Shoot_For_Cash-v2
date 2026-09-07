@@ -2,6 +2,7 @@
 
 [ext_resource type="PhysicsMaterial" path="res://ch/Rocks/threat_mine_physics.tres" id="1_pirko"]
 [ext_resource type="ArrayMesh" uid="uid://mk0dna4yesux" path="res://res/Rocks/smokebomb_mesh.tres" id="2_xt4er"]
+[ext_resource type="Shader" uid="uid://cfnpoqn60gh01" path="res://res/Shaders/stylized_illustrated.gdshader" id="5_0f66w"]
 [ext_resource type="Material" uid="uid://dwkobh78rf0ah" path="res://res/threat_lights_material.tres" id="5_q3chw"]
 [ext_resource type="Script" uid="uid://b27pflexs074j" path="res://ch/Rocks/threat_smoke_mine.gd" id="6_threat"]
 [ext_resource type="Material" uid="uid://djr3i2her73mp" path="res://res/Materials/smokey_grey_material.tres" id="8_j5hxi"]
@@ -28,20 +29,30 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_lrylr"]
 radius = 0.316
 
-[sub_resource type="Gradient" id="Gradient_6an4g"]
-colors = PackedColorArray(0.1, 0.08933333, 0.080000006, 1, 0.45, 0.40199998, 0.35999998, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_hg7hp"]
-gradient = SubResource("Gradient_6an4g")
-fill_from = Vector2(1, 1)
-fill_to = Vector2(0, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xxiuv"]
-shading_mode = 0
-albedo_texture = SubResource("GradientTexture2D_hg7hp")
-uv1_offset = Vector3(0.27, 0, 0.3)
-uv1_triplanar = true
-stencil_flags = 2
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1ijg2"]
+render_priority = 0
+shader = ExtResource("5_0f66w")
+shader_parameter/sty_shadow_color = Color(0.17, 0.17, 0.17, 1)
+shader_parameter/sty_shadow_strength = 1.0
+shader_parameter/sty_shadow_threshold = 0.22
+shader_parameter/sty_mid_color = Color(0.58, 0.50112, 0.44079998, 1)
+shader_parameter/sty_mid_threshold = 0.4
+shader_parameter/sty_light_color = Color(0.45, 0.42299998, 0.369, 1)
+shader_parameter/sty_light_strength = 0.48
+shader_parameter/sty_light_threshold = 0.55
+shader_parameter/sty_band_softness = 0.2
+shader_parameter/sty_saturation = 1.2
+shader_parameter/sty_contrast = 1.2
+shader_parameter/sty_fog_color = Color(0.45, 0.62, 0.78, 1)
+shader_parameter/sty_fog_strength = 0.55
+shader_parameter/sty_fog_start = 30.0
+shader_parameter/sty_fog_end = 400.0
+shader_parameter/albedo_color = Color(0.58, 0.53533995, 0.4582, 1)
+shader_parameter/use_albedo_texture = false
+shader_parameter/texture_blend = 0.0
+shader_parameter/roughness_value = 0.95
+shader_parameter/specular_value = 0.0
+shader_parameter/use_flat_shading = false
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_pcxxs"]
 radius = 0.04
@@ -422,7 +433,7 @@ unique_name_in_owner = true
 
 [node name="Threat_smoke" type="MeshInstance3D" parent="Mesh" unique_id=893370913]
 transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_xxiuv")
+material_override = SubResource("ShaderMaterial_1ijg2")
 mesh = ExtResource("2_xt4er")
 
 [node name="LightsContainer" type="Node3D" parent="Mesh/Threat_smoke" unique_id=1430408629]
@@ -430,7 +441,27 @@ transform = Transform3D(0.905, 0, 0, 0, 0.905, 0, 0, 0, 0.905, 0, 0, 0)
 script = ExtResource("17_lights")
 
 [node name="redlights" type="MeshInstance3D" parent="Mesh/Threat_smoke/LightsContainer" unique_id=2114129346]
-transform = Transform3D(-4.371139e-08, -1, 4.3711392e-08, 1, -4.3711385e-08, 4.3711385e-08, -4.3711385e-08, 4.3711392e-08, 1, 0, 0.3234911, -1.41402445e-08)
+transform = Transform3D(-4.3711392e-08, -0.9999999, 4.37114e-08, 0.9999999, -4.371138e-08, 4.3711378e-08, -4.3711385e-08, 4.3711392e-08, 0.9999999, 1.7763568e-15, 0.32349107, -0.068301216)
+material_override = ExtResource("5_q3chw")
+mesh = SubResource("CapsuleMesh_pcxxs")
+skeleton = NodePath("../..")
+
+[node name="redlights8" type="MeshInstance3D" parent="Mesh/Threat_smoke/LightsContainer" unique_id=529817645]
+transform = Transform3D(-8.807846e-08, -0.395, 8.8078465e-08, 2.015, -1.7265998e-08, 8.807846e-08, -8.807845e-08, 1.7266004e-08, 2.015, 0.278, 0.294, -0.088)
+visible = false
+material_override = ExtResource("5_q3chw")
+mesh = SubResource("CapsuleMesh_pcxxs")
+skeleton = NodePath("../..")
+
+[node name="redlights9" type="MeshInstance3D" parent="Mesh/Threat_smoke/LightsContainer" unique_id=391455393]
+transform = Transform3D(-8.807845e-08, -0.395, 8.8078465e-08, 2.015, -1.7265997e-08, 8.8078444e-08, -8.8078444e-08, 1.7266004e-08, 2.015, 0.278, 0.29399997, 0.08837102)
+visible = false
+material_override = ExtResource("5_q3chw")
+mesh = SubResource("CapsuleMesh_pcxxs")
+skeleton = NodePath("../..")
+
+[node name="redlights7" type="MeshInstance3D" parent="Mesh/Threat_smoke/LightsContainer" unique_id=1275449872]
+transform = Transform3D(-4.4170463e-08, -0.9999998, 3.739309e-08, 0.9894979, -4.91116e-08, -0.14454609, 0.14454609, 3.0615716e-08, 0.9894979, -1.7518964e-10, 0.31948313, 0.08115744)
 material_override = ExtResource("5_q3chw")
 mesh = SubResource("CapsuleMesh_pcxxs")
 skeleton = NodePath("../..")

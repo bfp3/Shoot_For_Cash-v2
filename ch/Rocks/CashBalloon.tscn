@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bo7uqgp72vcfx"]
+
+[ext_resource type="PackedScene" uid="uid://ckx6qjnfh8tf2" path="res://ch/Rocks/AmmoBalloon.tscn" id="1_ammo"]
+[ext_resource type="Script" uid="uid://dtiut0671k5om" path="res://ch/Rocks/cash_balloon.gd" id="2_script"]
+
+[node name="CashBalloon" unique_id=316794895 instance=ExtResource("1_ammo")]
+script = ExtResource("2_script")
+cash_min = -40
+cash_max = 40
+balloon_health = 1
+
+[node name="Crate2" parent="." index="17" unique_id=1478522592]
+visible = false
+
+[node name="Crate" parent="." index="18" unique_id=133431577]
+visible = true
+
+[node name="Label3D" parent="Crate" index="2" unique_id=1524231842]
+modulate = Color(0.96, 0.83, 0.7, 1)
+outline_modulate = Color(0.18, 0.1, 0.02, 1)
+text = "$8"
+font_size = 72
+outline_size = 12

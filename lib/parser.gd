@@ -242,7 +242,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   `checkpoint` is accepted as an alias.
 ## ammo / ammo 16 / ammo 69 $100 / ammo C8 / ammo C8 16 99:
 ##   {cmd, row, column, amount, price}. Bare parks at C6.
-##   Amount omitted → power_ammo. Price omitted → price_ammo.
+##   Amount omitted → power_ammo_pack. Price omitted → price_ammo.
 ##   `$N` or a second number is the cash cost. Distinct from `clear ammo`.
 ## clear: {cmd} — send all live round balloons away (+$10 each). Does not pop
 ##   a balloon-rest. `wait clear` is still wait-until-clear, not this command.

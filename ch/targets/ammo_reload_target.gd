@@ -76,7 +76,7 @@ func _apply_ammo_reload() -> void:
 		if EventBus.instance.has_signal("purchase_made"):
 			EventBus.instance.purchase_made.emit("ammo_reload_target")
 
-	var pack := 12
+	var pack := 6
 	if player.has_method("get_ammo_pack_size"):
 		pack = int(player.get_ammo_pack_size())
 	_show_reloading_banner()

@@ -407,6 +407,10 @@ func shoot_target() -> void:
 
 	var rock_count := 0
 	var rocks_to_destroy := []
+	var grey_count := 0
+	var grey_sum := Vector3.ZERO
+	var yellow_count := 0
+	var yellow_sum := Vector3.ZERO
 
 	for target_data in targets:
 		var target = target_data.target
@@ -415,6 +419,12 @@ func shoot_target() -> void:
 			continue
 		rock_count += 1
 		rocks_to_destroy.append(target)
+		if _is_grey_rock(target):
+			grey_count += 1
+			grey_sum += target.global_position
+		elif _is_yellow_rock(target):
+			yellow_count += 1
+			yellow_sum += target.global_position
 
 	#if gl_PlayerState.dataset.power_sky_mine > 0 && !shot_with_right_click:
 		#shooting_sky_mine = true
@@ -508,6 +518,8 @@ func shoot_target() -> void:
 		shooting_sky_mine = false
 
 	_try_scope_mechanic_callout(targets)
+	_try_grey_rocks_ammo_balloon(grey_count, grey_sum)
+	_try_yellow_rocks_cash_balloon(yellow_count, yellow_sum)
 
 	if rocks_to_destroy.size() >= 2 && !shot_with_right_click:
 		## Glory: fail as soon as a double is scored (don't wait for clear / wave end).
@@ -588,6 +600,45 @@ func _counts_for_multishot(target: Node) -> bool:
 	if target is RockInstance:
 		return true
 	return false
+
+
+func _is_grey_rock(target: Node) -> bool:
+	if target == null or not is_instance_valid(target):
+		return false
+	if target is RockInstance:
+		if String(target.get("rock_type_name")).contains("rock_type_grey"):
+			return true
+		if int(target.get("rock_type")) == int(RockInstance.RockSize.GREY):
+			return true
+	return false
+
+
+func _is_yellow_rock(target: Node) -> bool:
+	if target == null or not is_instance_valid(target):
+		return false
+	if not (target is RockInstance):
+		return false
+	if int(target.get("rock_type")) == int(RockInstance.RockSize.SMALL):
+		return true
+	return String(target.get("current_rock_type")) == "Small Rock"
+
+
+func _try_grey_rocks_ammo_balloon(grey_count: int, grey_sum: Vector3) -> void:
+	if grey_count <= 0:
+		return
+	var bonus := get_tree().get_first_node_in_group("multi_shot")
+	if bonus == null or not bonus.has_method("try_grey_rocks_ammo"):
+		return
+	bonus.try_grey_rocks_ammo(grey_count, grey_sum / float(grey_count))
+
+
+func _try_yellow_rocks_cash_balloon(yellow_count: int, yellow_sum: Vector3) -> void:
+	if yellow_count <= 0:
+		return
+	var bonus := get_tree().get_first_node_in_group("multi_shot")
+	if bonus == null or not bonus.has_method("try_yellow_rocks_cash"):
+		return
+	bonus.try_yellow_rocks_cash(yellow_count, yellow_sum / float(yellow_count))
 
 
 func shoot_special_midround_target_if_aimed() -> bool:
