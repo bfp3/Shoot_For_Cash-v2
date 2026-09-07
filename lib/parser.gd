@@ -215,6 +215,11 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##     `threat 1 a4 a1 a8 fastest` uses the threat export speed for that token.
 ##     `threat-small ...` / `threat-large ...` use the same pathing with optional size presets.
 ##     `clear threat` sends it down into the splash zone.
+##   `collector 1 c1 c8` — helper that patrols those cells. Does not alarm on the reticle.
+##     Near a cash crate (still on the balloon or already falling) it banks the cash
+##     (positive or negative). Shooting the balloon still drops the crate. A miss is no
+##     cash and no strike. Optional last word: `slow` / `fast` / `fastest`.
+##     `clear collector` splash-exits it.
 ##   `rock-red-attacker 1 a1` flies to A1 then dashes at the crosshair (and through it).
 ##   `rock-red-attacker 1 a1 a8` same, but dashes toward A8 instead of the crosshair.
 ## rock-avoider-kill: {cmd} — pop every live rock-avoider (no strike). Does not pause
@@ -231,8 +236,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## wait 0 / wait 600: {cmd, ms} — delay that many milliseconds before the next rock.
 ## wait until clear / wait-until-clear: still accepted as an alias of bare `wait`.
 ##   Hold the next command until live rocks / pineapples / smokecans / balloon-rests
-##   / bonus targets are gone. Oranges, regular balloons, rock-avoiders, and threat
-##   canisters are ignored (use `rock-avoider-kill` / `clear threat` for leftovers). A miss does not skip this wait. Objects
+##   / bonus targets are gone. Oranges, regular balloons, rock-avoiders, threat
+##   canisters, and collectors are ignored (use `rock-avoider-kill` / `clear threat` /
+##   `clear collector` for leftovers). A miss does not skip this wait. Objects
 ##   count as gone as soon as their destroy process starts (do not wait for pop tweens).
 ## balloon-rest / balloon rest / balloon-rest A4: {cmd, row, column}.
 ##   Bare command uses the default centre rest pose. A cell parks it on the balloon grid.
@@ -249,6 +255,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## clear balloon A4: {cmd: clear-balloon, row, column} — same drift/pay for one cell.
 ## clear ammo: {cmd: clear-ammo} — pop leftover ammo balloons with no ammo and no charge.
 ## clear threat: {cmd: clear-threat} — send live threat canisters into the splash zone.
+## clear collector: {cmd: clear-collector} — send live collectors into the splash zone.
 ## repeat: {cmd, count} — closes a wave section that plays as `count` separate waves.
 ##   Bare `repeat` / `repeat 1` / `repeat 2` → 2 waves. `repeat N` (N ≥ 2) → N waves.
 ##   Commands after a `repeat` start the next section / next set of waves.
@@ -309,7 +316,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'red_rock_error', 'smokecan', 'crate':
 			return _parse_rock_command(cmd, parts)
 
-		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat', 'threat-small', 'threat-large':
+		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat', 'threat-small', 'threat-large', 'collector':
 			return _parse_rock_stay_command(cmd, parts)
 
 		'rock-gap', 'rock-red-gap':
@@ -652,16 +659,17 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	return result
 
 
-## rock-stay / rock-stay-black / rock-cardinal / rock-still / threat
+## rock-stay / rock-stay-black / rock-cardinal / rock-still / threat / collector
 ##   rock-stay 1 a1                 → spawn col 1, hang at A1
 ##   rock-stay 1 a1 a8 c8 c1 a4 1   → path A1→A8→C8→C1→A4, then splash exit
 ##   threat 1 a4 a1 a8              → spawn col 1, patrol those cells back and forth
 ##   threat-small 1 a4 a1 a8        → same patrol using the "small" size multiplier
 ##   threat-large 1 a4 a1 a8        → same patrol using the "large" size multiplier
 ##   threat 1 a1 a4 a8 fastest      → same patrol at threat_speed_fastest
+##   collector 1 c1 c8              → helper patrol; banks falling cash crates; no reticle alarm
 ##   Trailing bare `0`/`1` after cells = path_exit_splash (1 = leave into splash zone).
-##   `threat` ignores trailing 0/1 — use `clear threat` to splash-exit.
-##   Optional last token on threat: `slow` / `fast` / `fastest` (own export speeds).
+##   `threat` / `collector` ignore trailing 0/1 — use `clear threat` / `clear collector`.
+##   Optional last token on threat / collector: `slow` / `fast` / `fastest` (own export speeds).
 func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var threat_size := ""
 	var normalized_cmd := cmd
@@ -715,14 +723,14 @@ func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictiona
 
 	var end_i := parts.size() - 1
 	var last_tok := String(parts[end_i]).strip_edges().trim_suffix(',').strip_edges()
-	## `threat … slow|fast|fastest` — pace token is always last.
-	if normalized_cmd == 'threat':
+	## `threat` / `collector` … slow|fast|fastest — pace token is always last.
+	if normalized_cmd == 'threat' or normalized_cmd == 'collector':
 		var pace := last_tok.to_lower()
 		if pace == 'slow' or pace == 'fast' or pace == 'fastest':
 			result.threat_pace = pace
 			end_i -= 1
 	## Trailing 0/1 only counts as splash-exit when at least one grid cell precedes it.
-	## Threat patrols forever — splash exit is `clear threat`, not a trailing 1.
+	## Threat / collector patrol forever — splash exit is `clear threat` / `clear collector`.
 	elif last_tok == '0' or last_tok == '1':
 		var cell_before := false
 		for i in range(cell_start, end_i):
@@ -882,6 +890,8 @@ func _parse_clear_command(parts: PackedStringArray) -> Dictionary:
 			return {'cmd': 'clear-ammo'}
 		if next == 'threat':
 			return {'cmd': 'clear-threat'}
+		if next == 'collector':
+			return {'cmd': 'clear-collector'}
 		if next == 'balloon':
 			result.cmd = 'clear-balloon'
 			i += 1
@@ -1579,6 +1589,8 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return 'clear ammo'
 		'clear-threat':
 			return 'clear threat'
+		'clear-collector':
+			return 'clear collector'
 		'clear-balloon':
 			var clrow := int(entry.get('row', RANDOM_SLOT))
 			var clcol := int(entry.get('column', RANDOM_SLOT))
@@ -1624,7 +1636,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			if col < 0:
 				return cmd
 			return '%s %s' % [cmd, col_token]
-		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat':
+		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat', 'collector':
 			var stay_bits: PackedStringArray = [cmd]
 			if cmd == 'threat':
 				var threat_size := String(entry.get('threat_size', '')).strip_edges().to_lower()
@@ -1659,7 +1671,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			if bool(entry.get('path_exit_splash', false)):
 				stay_bits.append('1')
 			var threat_pace := String(entry.get('threat_pace', '')).strip_edges().to_lower()
-			if cmd == 'threat' and (threat_pace == 'slow' or threat_pace == 'fast' or threat_pace == 'fastest'):
+			if (cmd == 'threat' or cmd == 'collector') and (threat_pace == 'slow' or threat_pace == 'fast' or threat_pace == 'fastest'):
 				stay_bits.append(threat_pace)
 			return ' '.join(stay_bits)
 		'rock-gap', 'rock-red-gap':

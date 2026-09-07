@@ -31,6 +31,7 @@ const ROCK_INSTANCE_SCENE := preload("res://ch/Rocks/Rock_Instance.tscn")
 const REST_BALLOON_SCENE := preload("res://ch/Rocks/RestBalloon.tscn")
 const AMMO_BALLOON_SCENE := preload("res://ch/Rocks/AmmoBalloon.tscn")
 const THREAT_SMOKE_MINE_SCENE := preload("res://ch/Rocks/Threat_SmokeMine.tscn")
+const COLLECTOR_SCENE := preload("res://ch/Rocks/TheCollector.tscn")
 ## Extra pool rocks added once when entering the boss layout (batched across frames).
 var _boss_extra_rocks_added := false
 
@@ -404,6 +405,7 @@ func update_inactive() -> void:
 	clear_cardinal_bursts()
 	## Park ambient mines dormant while rock manager is inactive.
 	dormant_threat_mines()
+	_clear_collectors()
 	
 
 # This is the start of arranging the rocks.
@@ -461,7 +463,7 @@ func _is_balloon_rest_cmd(cmd: String) -> bool:
 
 
 func _is_clear_cmd(cmd: String) -> bool:
-	return cmd == "clear" or cmd == "clear-balloon" or cmd == "clear-ammo" or cmd == "clear-threat"
+	return cmd == "clear" or cmd == "clear-balloon" or cmd == "clear-ammo" or cmd == "clear-threat" or cmd == "clear-collector"
 
 
 func _is_sequence_barrier_cmd(cmd: String) -> bool:
@@ -745,6 +747,15 @@ func _launch_next_sequence_beat() -> void:
 				_force_next_command = false
 				return
 			continue
+		if cmd == "collector":
+			var collector_entry = _full_wave_sequence[_sequence_cursor]
+			_sequence_cursor += 1
+			_spawn_collector(collector_entry)
+			if force:
+				_waiting_until_clear = true
+				_force_next_command = false
+				return
+			continue
 		if _is_clear_cmd(cmd):
 			var clear_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
@@ -844,6 +855,7 @@ func _collect_next_beat() -> Array:
 		if (
 			cmd == "ammo"
 			or cmd == "threat"
+			or cmd == "collector"
 			or _is_sequence_barrier_cmd(cmd)
 			or _is_clear_cmd(cmd)
 			or _is_avoider_kill_cmd(cmd)
@@ -1369,6 +1381,7 @@ func _clear_threats() -> void:
 ## Hard remove every live smoke mine (level travel / leave range).
 func clear_threat_mines() -> void:
 	_clear_threats_immediate()
+	_clear_collectors_immediate()
 
 
 ## Remove mid-script mines only — keep ambient preamble defaults in place.
@@ -1393,6 +1406,7 @@ func exit_threat_mines_right_for_pineapple_win() -> void:
 			node.begin_threat_right_exit()
 		else:
 			node.queue_free()
+	_clear_collectors()
 
 
 func _clear_threats_immediate() -> void:
@@ -1510,6 +1524,77 @@ func _spawn_threat_smoke_mine(entry = null, as_range_default: bool = false) -> v
 	)
 
 
+func _collector_host() -> Node:
+	var host := get_node_or_null("Collectors")
+	if host == null:
+		host = Node3D.new()
+		host.name = "Collectors"
+		add_child(host)
+	return host
+
+
+func _spawn_collector(entry = null) -> void:
+	if entry == null or not (entry is Dictionary):
+		return
+	var parsed: Dictionary = entry
+	var raw_line := str(entry.get("raw", "")).strip_edges()
+	if raw_line.is_empty() and Parser and Parser.has_method("_spawn_entry_to_line"):
+		raw_line = str(Parser._spawn_entry_to_line(entry)).strip_edges()
+	if not raw_line.is_empty() and Parser and Parser.has_method("parse_spawn_command"):
+		var reparsed: Dictionary = Parser.parse_spawn_command(raw_line)
+		if not reparsed.is_empty() and String(reparsed.get("cmd", "")).to_lower() == "collector":
+			parsed = reparsed
+
+	var path_world := _stay_path_worlds(parsed, -1)
+	if path_world.is_empty():
+		var aim := _resolve_aim_cell(parsed, true, int(parsed.get("column", -1)))
+		path_world = [_aim_cell_world_position(aim.x, aim.y, false)]
+	for i in path_world.size():
+		var p: Vector3 = path_world[i]
+		p.z = AIM_PLANE_Z
+		path_world[i] = p
+	var splash_from: Vector3 = path_world[path_world.size() - 1]
+	var splash_pos := _stay_splash_exit_world(splash_from)
+	var pace := str(parsed.get("threat_pace", ""))
+
+	var collector: Node = COLLECTOR_SCENE.instantiate()
+	collector.set("is_range_default", false)
+	_collector_host().add_child(collector)
+	if collector.has_method("activate_from_script"):
+		collector.activate_from_script(path_world, splash_pos, pace, AIM_PLANE_Z, "")
+
+
+func _clear_collectors() -> void:
+	for node in get_tree().get_nodes_in_group("collector"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if node.has_method("begin_threat_splash_exit"):
+			node.begin_threat_splash_exit()
+		else:
+			node.queue_free()
+
+
+func _clear_collectors_immediate() -> void:
+	for node in get_tree().get_nodes_in_group("collector"):
+		if node != null and is_instance_valid(node):
+			node.queue_free()
+	var host := get_node_or_null("Collectors")
+	if host:
+		for child in host.get_children():
+			if is_instance_valid(child):
+				child.queue_free()
+
+
+func _dismiss_cash_crate_drops() -> void:
+	for node in get_tree().get_nodes_in_group("cash_crate_drop"):
+		if node == null or not is_instance_valid(node):
+			continue
+		if node.has_method("dismiss"):
+			node.dismiss()
+		else:
+			node.queue_free()
+
+
 func _dismiss_ammo_balloons() -> void:
 	for node in get_tree().get_nodes_in_group("ammo_balloon"):
 		if node == null or not is_instance_valid(node):
@@ -1536,6 +1621,9 @@ func _handle_clear_command(entry) -> void:
 		return
 	if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "clear-threat":
 		_clear_threats()
+		return
+	if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "clear-collector":
+		_clear_collectors()
 		return
 	if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "clear-balloon":
 		var row := int(entry.get("row", -1))
@@ -1790,6 +1878,8 @@ func _cancel_sequence() -> void:
 	_dismiss_rest_balloon()
 	_dismiss_ammo_balloons()
 	_dismiss_cash_balloons()
+	_dismiss_cash_crate_drops()
+	_clear_collectors()
 	_pending_ammo_entries.clear()
 	_script_sfx_stop_all()
 	_reset_pineapple_spawn_bookkeeping()
@@ -1876,7 +1966,7 @@ func _sequence_has_more_play_work() -> bool:
 		var cmd := String(entry.get("cmd", "")).to_lower()
 		if cmd == "wait" or cmd == "wait-until-clear" or _is_clear_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_script_sfx_cmd(cmd) or _is_light_cmd(cmd):
 			continue
-		if cmd == "pineapples" or _is_launchable_spawn_cmd(cmd) or cmd == "balloon" or cmd == "pineapple" or cmd == "ammo" or _is_balloon_rest_cmd(cmd) or cmd == "bonus-target" or _is_avoider_kill_cmd(cmd):
+		if cmd == "pineapples" or _is_launchable_spawn_cmd(cmd) or cmd == "balloon" or cmd == "pineapple" or cmd == "ammo" or cmd == "threat" or cmd == "collector" or _is_balloon_rest_cmd(cmd) or cmd == "bonus-target" or _is_avoider_kill_cmd(cmd):
 			return true
 		## Markers / unknown lines must not keep the round open forever.
 		continue
@@ -3420,6 +3510,7 @@ func update_round_end() -> void:
 	## Drop mid-script mines only; ambient preamble threats park dormant for shop / next PLAY.
 	clear_script_threat_mines()
 	dormant_threat_mines()
+	_clear_collectors()
 
 
 ## Stop staggered `wait` launches mid-sequence (lose / abort / round end).
@@ -4165,7 +4256,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
 			# Keep wait / sequence barriers in place so launch stagger, balloon-rests, and clear survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_rest_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or _is_script_sfx_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_light_cmd(cmd) or _is_avoider_kill_cmd(cmd):
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_rest_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'threat' or cmd == 'collector' or _is_script_sfx_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_light_cmd(cmd) or _is_avoider_kill_cmd(cmd):
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue

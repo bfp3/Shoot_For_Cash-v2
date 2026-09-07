@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ch/Rocks/cash_crate_drop.gd" id="1_script"]
+[ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="2_mesh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_drop"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="CashCrateDrop" type="RigidBody3D"]
+collision_layer = 32
+collision_mask = 0
+mass = 4.0
+gravity_scale = 1.6
+continuous_cd = true
+can_sleep = false
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_drop")
+
+[node name="crateMesh" type="Node3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="Crate" type="MeshInstance3D" parent="crateMesh"]
+mesh = ExtResource("2_mesh")
+skeleton = NodePath("")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+billboard = 1
+shaded = true
+no_depth_test = true
+modulate = Color(0.96, 0.83, 0.7, 1)
+outline_modulate = Color(0.18, 0.1, 0.02, 1)
+text = "$0"
+font_size = 64
+outline_size = 10

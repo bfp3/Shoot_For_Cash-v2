@@ -1,6 +1,6 @@
 extends Node
 ## When true, Advanced / Expert / all challenges and all numbered levels are treated as unlocked.
-const debug_everything_unlocked := true
+const debug_everything_unlocked := false
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 ## Advanced / Expert also require net worth (see unlock amounts below).
@@ -33,7 +33,7 @@ var dataset_float : Dictionary = {
 	,"power_max_ammo"				: [99]
 	,"ammo_pack_size"				: [99]
 	## Magazine loaded when Play is pressed.
-	,"power_ammo_start"				: [6]
+	,"power_ammo_start"				: [4]
 	## Ammo granted by shooting an ammo balloon / pack.
 	,"power_ammo_pack"				: [6]
 	,"power_sky_mine" 					: [0, 1, 2]
