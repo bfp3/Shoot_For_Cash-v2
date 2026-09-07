@@ -8,11 +8,11 @@ var flag_raised := false
 #signal flag_has_folded
 
 
-func _ready():
-	#hide()
-	#rollout_flag()
-	$Sprite3D.hide()
-
+#func _ready():
+	##hide()
+	##rollout_flag()
+	#$Sprite3D.hide()
+#
 
 	#EventBus.instance.player_has_hit_winning_score.connect(_on_player_has_hit_winning_score)
 

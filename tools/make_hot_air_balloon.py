@@ -1,8 +1,8 @@
 """
 Shoot For Cash — low-poly hot air balloon (envelope + metal collar/struts)
 
-Matches the faceted red/cream envelope, dark metal neck ring, and four
-inward-angled holder struts. No crate / basket.
+Matches the red/cream envelope, dark metal neck ring, and four
+inward-angled holder struts. Envelope uses smooth shading. No crate / basket.
 
 HOW TO RUN (Blender UI)
   1. Open Blender (empty scene is fine).
@@ -297,6 +297,8 @@ def _build_envelope_bmesh(
 		um = 0.5 * (u0 + u1)
 		_assign_uv(face, [(u0, v0), (u1, v0), (um, v1)])
 
+	for face in bm.faces:
+		face.smooth = True
 	bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
 	return bm
 
@@ -368,12 +370,67 @@ def _shade_flat(obj: bpy.types.Object) -> None:
 		poly.use_smooth = False
 	if hasattr(mesh, "use_auto_smooth"):
 		mesh.use_auto_smooth = False
+	bpy.ops.object.select_all(action="DESELECT")
 	bpy.context.view_layer.objects.active = obj
 	obj.select_set(True)
 	try:
 		bpy.ops.object.shade_flat()
 	except Exception:
 		pass
+
+
+def _shade_smooth(obj: bpy.types.Object, angle_deg: float | None = None) -> None:
+	mesh = obj.data
+	# Blender 4.1+ stores flat shading as sharp_face / sharp_edge attributes.
+	for attr_name in ("sharp_face", "sharp_edge"):
+		attr = mesh.attributes.get(attr_name)
+		if attr is not None:
+			mesh.attributes.remove(attr)
+	for poly in mesh.polygons:
+		poly.use_smooth = True
+	bpy.ops.object.select_all(action="DESELECT")
+	bpy.context.view_layer.objects.active = obj
+	obj.select_set(True)
+	override = dict(
+		selected_objects=[obj],
+		selected_editable_objects=[obj],
+		object=obj,
+		active_object=obj,
+	)
+	try:
+		with bpy.context.temp_override(**override):
+			if angle_deg is None:
+				bpy.ops.object.shade_smooth()
+			else:
+				bpy.ops.object.shade_smooth_by_angle(angle=math.radians(angle_deg))
+	except Exception:
+		try:
+			if angle_deg is None:
+				bpy.ops.object.shade_smooth()
+			else:
+				bpy.ops.object.shade_smooth_by_angle(angle=math.radians(angle_deg))
+		except Exception as exc:
+			print(f"[make_hot_air_balloon] shade_smooth fallback: {exc}")
+	if hasattr(mesh, "use_auto_smooth"):
+		mesh.use_auto_smooth = angle_deg is not None
+		if angle_deg is not None:
+			mesh.auto_smooth_angle = math.radians(angle_deg)
+	if angle_deg is None:
+		for attr_name in ("sharp_face", "sharp_edge"):
+			attr = mesh.attributes.get(attr_name)
+			if attr is not None:
+				mesh.attributes.remove(attr)
+		for poly in mesh.polygons:
+			poly.use_smooth = True
+
+
+def _add_subsurf(obj: bpy.types.Object, levels: int = 2) -> None:
+	mod = obj.modifiers.new(name="Subdivision", type="SUBSURF")
+	mod.subdivision_type = "CATMULL_CLARK"
+	mod.levels = levels
+	mod.render_levels = levels
+	if hasattr(mod, "use_limit_surface"):
+		mod.use_limit_surface = False
 
 
 def _fix_normals(obj: bpy.types.Object) -> None:
@@ -458,7 +515,10 @@ def build_balloon(args: argparse.Namespace) -> bpy.types.Object:
 		obj.parent = root
 		bpy.ops.object.select_all(action="DESELECT")
 		_fix_normals(obj)
-		_shade_flat(obj)
+	_shade_smooth(env_obj)
+	_add_subsurf(env_obj, levels=2)
+	bpy.ops.object.select_all(action="DESELECT")
+	_shade_flat(hold_obj)
 
 	bpy.ops.object.select_all(action="DESELECT")
 	root.select_set(True)

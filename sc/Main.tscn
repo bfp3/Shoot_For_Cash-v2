@@ -984,7 +984,6 @@ debug_color = Color(0, 1, 0, 1)
 [node name="Player" parent="." unique_id=17640389 node_paths=PackedStringArray("roundManager") instance=ExtResource("23_ellt3")]
 unique_name_in_owner = true
 transform = Transform3D(-1, -1.4472306e-08, -1.5030065e-07, 0, 0.9953962, -0.09584575, 1.509958e-07, -0.09584575, -0.9953962, 0, -0.875, 0.5)
-ctrl_swap_guns = false
 roundManager = NodePath("../Round_manager")
 
 [node name="Splash_zone" type="Area3D" parent="." unique_id=1776510858 node_paths=PackedStringArray("round_manager") groups=["restartable"]]
@@ -1119,7 +1118,6 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_ec2we")
 
 [node name="Money_labels" parent="MainGameCanvasLayer" unique_id=2012145336 instance=ExtResource("54_i541k")]
-visible = false
 
 [node name="Timer" parent="MainGameCanvasLayer" unique_id=779418741 instance=ExtResource("55_3u5oq")]
 mouse_filter = 2
@@ -1692,7 +1690,7 @@ volume_db = -13.0
 
 [node name="BonusCash" type="Node3D" parent="." unique_id=836260086 groups=["multi_shot"]]
 script = ExtResource("76_qmj5w")
-grey_rocks_ammo = 0
+grey_rocks_ammo = 1
 yellow_rocks_cash = 0
 
 [node name="mutli_label" type="Label3D" parent="BonusCash" unique_id=262291951]
