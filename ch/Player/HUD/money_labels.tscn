@@ -58,6 +58,7 @@ Panel/styles/panel = SubResource("StyleBoxFlat_k5tjv")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_ms1v2")
 
 [node name="Money_labels" type="Control" unique_id=2075768694 groups=["money_manager"]]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -67,8 +68,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_aaxe5")
 
-[node name="PoolLabelX" type="RichTextLabel" parent="." unique_id=433932978]
-visible = false
+[node name="PoolLabel" type="RichTextLabel" parent="." unique_id=433932978]
 clip_contents = false
 layout_mode = 1
 anchors_preset = 3
@@ -93,7 +93,7 @@ fit_content = true
 scroll_active = false
 horizontal_alignment = 2
 
-[node name="Panel" type="Panel" parent="PoolLabelX" unique_id=1053188580]
+[node name="Panel" type="Panel" parent="PoolLabel" unique_id=1053188580]
 visible = false
 show_behind_parent = true
 custom_minimum_size = Vector2(180, 130)
@@ -112,7 +112,7 @@ mouse_filter = 2
 theme = SubResource("Theme_24e6o")
 theme_override_styles/panel = ExtResource("2_6hiqh")
 
-[node name="Panel2" type="Panel" parent="PoolLabelX" unique_id=1851206435]
+[node name="Panel2" type="Panel" parent="PoolLabel" unique_id=1851206435]
 show_behind_parent = true
 custom_minimum_size = Vector2(180, 130)
 layout_mode = 1
@@ -130,7 +130,8 @@ mouse_filter = 2
 theme = SubResource("Theme_24e6o")
 theme_override_styles/panel = ExtResource("2_6hiqh")
 
-[node name="PoolLabel" type="RichTextLabel" parent="." unique_id=422782365]
+[node name="PoolLabelXX" type="RichTextLabel" parent="." unique_id=422782365]
+visible = false
 clip_contents = false
 layout_mode = 1
 anchors_preset = 3
@@ -155,7 +156,7 @@ fit_content = true
 scroll_active = false
 horizontal_alignment = 2
 
-[node name="Panel2" type="Panel" parent="PoolLabel" unique_id=2069028118]
+[node name="Panel2" type="Panel" parent="PoolLabelXX" unique_id=2069028118]
 show_behind_parent = true
 custom_minimum_size = Vector2(180, 130)
 layout_mode = 1
