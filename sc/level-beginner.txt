@@ -664,6 +664,9 @@ range moss11
 	play $0
 	reward $100,000
 	round
+
+
+
 		ammo c1
 		ammo c2
 		ammo c7
@@ -726,16 +729,13 @@ range moss11
 
 		pineapples
 		pineapple 1 a1
-
-
-
 range moss12
 
 	play $0
 	reward $1,000
 
 	round
-		hold out 30000
+		#hold out 30000
 		#1
 		no-lives
 		collector 1 c1 c2 c3 c4 c5 c6 c7 c8 slow
@@ -934,9 +934,13 @@ range moss12
 		pineapples
 		pineapple 5 a5
 		clear
-
 		round
+		hold out 180000
 		pace-impossible
+
+		threat 1 a1
+		threat 8 a8
+		threat c1 c8 c1 fast
 
 		#sfx-play star_wars_cantina -40.0
 		#sfx-play sephiroff -45.0
@@ -987,7 +991,7 @@ range moss12
 
 		ammo
 		balloon-rest
-
+		clear threat 
 		wait 1000
 		rock 1 a4
 		wait 2500
@@ -1348,7 +1352,7 @@ range moss12
 
 
 
-		hold out 30000
+		#hold out 30000
 		#1
 		no-lives
 		collector 1 c1 c2 c3 c4 c5 c6 c7 c8 slow

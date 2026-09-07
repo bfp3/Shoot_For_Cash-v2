@@ -39,6 +39,10 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	
+	rotate_x(2.0 * delta)
+
+	
 	if not _shaking or alarm_shake_intensity <= 0.0:
 		return
 	_shake_t += delta * alarm_shake_speed
@@ -55,7 +59,10 @@ func _process(delta: float) -> void:
 			cos(_shake_t * 1.8) * r * 0.7,
 			sin(_shake_t * 3.4) * r * 0.5
 		)
-
+		
+	else:
+		print('d')
+	
 
 func enter_state(new_state: State, instant: bool = false) -> void:
 	current_state = new_state

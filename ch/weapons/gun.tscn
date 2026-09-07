@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://slic61syofs7"]
 
+[ext_resource type="Shader" uid="uid://cfnpoqn60gh01" path="res://res/Shaders/stylized_illustrated.gdshader" id="1_0k0dw"]
+
 [sub_resource type="Animation" id="Animation_8a00f"]
 length = 0.001
 tracks/0/type = "value"
@@ -137,8 +139,32 @@ outer_radius = 0.188
 rings = 8
 ring_segments = 8
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mqmh4"]
+render_priority = 0
+shader = ExtResource("1_0k0dw")
+shader_parameter/sty_shadow_color = Color(0, 0, 0, 1)
+shader_parameter/sty_shadow_strength = 0.17
+shader_parameter/sty_shadow_threshold = 0.22
+shader_parameter/sty_mid_color = Color(0, 0, 0, 1)
+shader_parameter/sty_mid_threshold = 0.4
+shader_parameter/sty_light_color = Color(0.2, 0.14646666, 0.053999998, 1)
+shader_parameter/sty_light_strength = 0.48
+shader_parameter/sty_light_threshold = 0.55
+shader_parameter/sty_band_softness = 0.2
+shader_parameter/sty_saturation = 1.2
+shader_parameter/sty_contrast = 1.2
+shader_parameter/sty_fog_color = Color(0.45, 0.62, 0.78, 1)
+shader_parameter/sty_fog_strength = 0.55
+shader_parameter/sty_fog_start = 30.0
+shader_parameter/sty_fog_end = 400.0
+shader_parameter/albedo_color = Color(0.91, 0.84, 0.72, 1)
+shader_parameter/use_albedo_texture = false
+shader_parameter/texture_blend = 0.0
+shader_parameter/roughness_value = 1.0
+shader_parameter/specular_value = 0.0
+shader_parameter/use_flat_shading = true
+
 [node name="mockGun" type="Node3D" unique_id=1054081565]
-visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=327544690]
 libraries/ = SubResource("AnimationLibrary_byku7")
@@ -146,6 +172,7 @@ speed_scale = 0.5
 
 [node name="top" type="Node3D" parent="." unique_id=1806577118]
 transform = Transform3D(0.336, 0, 0, 0, 0.336, 0, 0, 0, 0.336, 0, -0.096, 0.714)
+visible = false
 
 [node name="scope" type="MeshInstance3D" parent="top" unique_id=1313439302]
 transform = Transform3D(0.70710677, 1.2802769e-08, 0.70710677, 0.70710677, -3.090862e-08, -0.70710677, 1.2802769e-08, 1, -3.090862e-08, 0, 1, -0.82)
@@ -203,6 +230,71 @@ mesh = SubResource("CylinderMesh_eumxl")
 skeleton = NodePath("../..")
 
 [node name="eyeRubber" type="MeshInstance3D" parent="top" unique_id=633418753]
+transform = Transform3D(1, 0, 0, 0, -1.31134e-07, -1, 0, 3, -4.37114e-08, 0, 1, -2)
+material_override = SubResource("StandardMaterial3D_r5uma")
+cast_shadow = 0
+mesh = SubResource("TorusMesh_nxho2")
+skeleton = NodePath("../..")
+
+[node name="top2" type="Node3D" parent="." unique_id=215936364]
+transform = Transform3D(0.336, 0, 0, 0, 0.336, 0, 0, 0, 0.336, 0, -0.096, 0.714)
+
+[node name="scope" type="MeshInstance3D" parent="top2" unique_id=425400658]
+transform = Transform3D(0.70710677, 1.2802769e-08, 0.70710677, 0.70710677, -3.090862e-08, -0.70710677, 1.2802769e-08, 1, -3.090862e-08, 0, 1, -0.82)
+material_override = SubResource("ShaderMaterial_mqmh4")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8xld4")
+
+[node name="scope3" type="MeshInstance3D" parent="top2" unique_id=1473858926]
+transform = Transform3D(0.48861086, 8.84671e-09, 0.4886107, 0.4886107, -2.1357852e-08, -0.48861086, 8.84671e-09, 0.691, -2.1357852e-08, 0, 1, 1.3135202)
+material_override = SubResource("ShaderMaterial_mqmh4")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_mqmh4")
+skeleton = NodePath("../..")
+
+[node name="scope2" type="MeshInstance3D" parent="top2" unique_id=118285112]
+transform = Transform3D(0.7071068, 1.2802769e-08, 0.7071067, 0.7071067, -3.0908616e-08, -0.7071068, 1.2802769e-08, 1, -3.0908616e-08, 0, 1, 2.5)
+material_override = SubResource("ShaderMaterial_mqmh4")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8343t")
+skeleton = NodePath("../..")
+
+[node name="notch3" type="MeshInstance3D" parent="top2/scope2" unique_id=1799486808]
+transform = Transform3D(0.18031226, 0.18031223, 3.2647058e-09, 3.2647058e-09, -7.881697e-09, 0.255, 0.18031223, -0.18031226, -7.881697e-09, 0.111722946, -0.39799976, -0.111722946)
+material_override = SubResource("StandardMaterial3D_byku7")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_eumxl")
+skeleton = NodePath("../../..")
+
+[node name="scope4" type="MeshInstance3D" parent="top2" unique_id=1552821825]
+transform = Transform3D(0.8237794, 1.4979239e-09, 0.8237793, 0.8237793, -3.6163081e-09, -0.8237794, 1.4915225e-08, 0.117, -3.6008537e-08, 0, 1, 2.94)
+material_override = SubResource("ShaderMaterial_mqmh4")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8343t")
+skeleton = NodePath("../..")
+
+[node name="scope5" type="MeshInstance3D" parent="top2" unique_id=1294824577]
+transform = Transform3D(0.98994964, 1.8051899e-09, 0.9899494, 0.9899494, -4.3581148e-09, -0.98994964, 1.792387e-08, 0.141, -4.3272063e-08, 0, 1, 0.175)
+material_override = SubResource("ShaderMaterial_mqmh4")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_8343t")
+skeleton = NodePath("../..")
+
+[node name="bump" type="MeshInstance3D" parent="top2" unique_id=1136691263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35292, -0.87785)
+material_override = SubResource("StandardMaterial3D_byku7")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_hjpow")
+skeleton = NodePath("../..")
+
+[node name="notch" type="MeshInstance3D" parent="top2" unique_id=296256850]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2264, -0.874655)
+material_override = SubResource("ShaderMaterial_mqmh4")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_eumxl")
+skeleton = NodePath("../..")
+
+[node name="eyeRubber" type="MeshInstance3D" parent="top2" unique_id=891260203]
 transform = Transform3D(1, 0, 0, 0, -1.31134e-07, -1, 0, 3, -4.37114e-08, 0, 1, -2)
 material_override = SubResource("StandardMaterial3D_r5uma")
 cast_shadow = 0

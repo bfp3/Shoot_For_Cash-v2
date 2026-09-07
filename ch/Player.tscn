@@ -639,6 +639,7 @@ turbulence_influence_over_life = SubResource("CurveTexture_y08kl")
 
 [node name="Player" type="Node3D" unique_id=1061800479 node_paths=PackedStringArray("weapon_shooting", "player_gun") groups=["Player"]]
 script = ExtResource("1_6ljxy")
+ctrl_swap_guns = false
 scope_return_duration = 0.15
 scope_return_overshoot = 1.6
 scope_shrink_delay_dur = 0.15
@@ -1416,9 +1417,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -104.0
-offset_top = -94.0
+offset_top = -62.975
 offset_right = 104.0
-offset_bottom = 34.0
+offset_bottom = 65.025
 grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"WhiteRichText"
@@ -1548,6 +1549,115 @@ expand_mode = 1
 stretch_mode = 4
 
 [node name="Cooldown_progressBar3" type="TextureProgressBar" parent="CanvasLayer/Crosshair/Gun3" unique_id=805191581]
+modulate = Color(1, 1, 1, 0.20784314)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1000.0
+offset_top = -1000.0
+offset_right = 1000.0
+offset_bottom = 1000.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.02, 0.02)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+value = 100.0
+fill_mode = 4
+texture_under = ExtResource("2_kbm6s")
+texture_progress = ExtResource("2_kbm6s")
+tint_under = Color(1, 1, 1, 0.05882353)
+
+[node name="GunGrey" type="Control" parent="CanvasLayer/Crosshair" unique_id=270031193]
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("10_rossy")
+personality = ExtResource("10_rossypers")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Crosshair/GunGrey" unique_id=1991566677]
+modulate = Color(1, 1, 1, 0.20784314)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4375
+anchor_top = 0.4375
+anchor_right = 0.5625
+anchor_bottom = 0.5625
+offset_left = -17.5
+offset_top = -17.5
+offset_right = 17.5
+offset_bottom = 17.5
+scale = Vector2(0.09, 0.09)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+
+[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/Crosshair/GunGrey" unique_id=33635442]
+modulate = Color(1, 1, 1, 0.20784314)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4375
+anchor_top = 0.4375
+anchor_right = 0.5625
+anchor_bottom = 0.5625
+offset_left = -17.5
+offset_top = -17.5
+offset_right = 17.5
+offset_bottom = 17.5
+scale = Vector2(0.95, 0.95)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+
+[node name="RingTexture" type="TextureRect" parent="CanvasLayer/Crosshair/GunGrey" unique_id=1086076042]
+modulate = Color(1, 1, 1, 0.20784314)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.5
+offset_top = -125.5
+offset_right = 125.5
+offset_bottom = 125.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.165, 0.165)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("29_txfio")
+expand_mode = 1
+
+[node name="blackTexture" type="TextureRect" parent="CanvasLayer/Crosshair/GunGrey" unique_id=1480684931]
+modulate = Color(1, 1, 1, 0.20784314)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.325, 0.325)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("9_ts3hu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Cooldown_progressBar3" type="TextureProgressBar" parent="CanvasLayer/Crosshair/GunGrey" unique_id=1244420432]
 modulate = Color(1, 1, 1, 0.20784314)
 layout_mode = 1
 anchors_preset = 8

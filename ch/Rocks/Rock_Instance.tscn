@@ -14,8 +14,13 @@
 [ext_resource type="Material" uid="uid://4w3skkrnoirr" path="res://res/hazard_black_mat.tres" id="10_herjc"]
 [ext_resource type="Material" uid="uid://hn35w2qwra5g" path="res://res/balloon_blue_mat.tres" id="11_8mu68"]
 [ext_resource type="Texture2D" uid="uid://ck5382c1w6lbt" path="res://unfiled/Decal_placeholders/Cherry_placeholder_icon.png" id="11_fao6x"]
+[ext_resource type="Shader" uid="uid://cfnpoqn60gh01" path="res://res/Shaders/stylized_illustrated.gdshader" id="12_0eg31"]
+[ext_resource type="ArrayMesh" uid="uid://mk0dna4yesux" path="res://res/Rocks/smokebomb_mesh.tres" id="13_xxiuv"]
+[ext_resource type="Script" uid="uid://clxav3efm6yfj" path="res://ch/Rocks/threat_lights_container.gd" id="14_lwuhr"]
 [ext_resource type="Texture2D" uid="uid://b5u7lsrknpw78" path="res://res/crateMesh2_CrateWoodAlbedo.png" id="15_0eg31"]
+[ext_resource type="Material" uid="uid://dwkobh78rf0ah" path="res://res/threat_lights_material.tres" id="15_pcxxs"]
 [ext_resource type="Material" uid="uid://crfc1nl6wlrdd" path="res://res/gold_no_depth.tres" id="15_q8tld"]
+[ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="16_nqo67"]
 [ext_resource type="PackedScene" uid="uid://crflenc26g7jw" path="res://vfx/Trails_scene.tscn" id="19_dfmc7"]
 [ext_resource type="Script" uid="uid://xc6wi8vk61t3" path="res://vfx/Trails3D.gd" id="20_2063v"]
 
@@ -214,6 +219,148 @@ uv1_offset = Vector3(0.25, 0.25, 0.25)
 uv1_triplanar = true
 stencil_mode = 1
 stencil_flags = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0eg31"]
+render_priority = 0
+shader = ExtResource("12_0eg31")
+shader_parameter/sty_shadow_color = Color(0.17, 0.17, 0.17, 1)
+shader_parameter/sty_shadow_strength = 1.0
+shader_parameter/sty_shadow_threshold = 0.22
+shader_parameter/sty_mid_color = Color(0.58, 0.50112, 0.44079998, 1)
+shader_parameter/sty_mid_threshold = 0.4
+shader_parameter/sty_light_color = Color(0.45, 0.42299998, 0.369, 1)
+shader_parameter/sty_light_strength = 0.48
+shader_parameter/sty_light_threshold = 0.55
+shader_parameter/sty_band_softness = 0.2
+shader_parameter/sty_saturation = 1.2
+shader_parameter/sty_contrast = 1.2
+shader_parameter/sty_fog_color = Color(0.45, 0.62, 0.78, 1)
+shader_parameter/sty_fog_strength = 0.55
+shader_parameter/sty_fog_start = 30.0
+shader_parameter/sty_fog_end = 400.0
+shader_parameter/albedo_color = Color(0.58, 0.53533995, 0.4582, 1)
+shader_parameter/use_albedo_texture = false
+shader_parameter/texture_blend = 0.0
+shader_parameter/roughness_value = 0.95
+shader_parameter/specular_value = 0.0
+shader_parameter/use_flat_shading = false
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ysfao"]
+radius = 0.04
+height = 0.08
+radial_segments = 6
+rings = 4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0eg31"]
+top_radius = 0.0
+height = 1.581
+radial_segments = 4
+
+[sub_resource type="Animation" id="Animation_lwuhr"]
+resource_name = "blinkinganim"
+length = 1.1
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LightsContainer/redlights:material_override:emission")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.53, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0.5803922, 0.003921569, 0.015686275, 1), Color(0, 0, 0, 1), Color(0.5803922, 0.003921569, 0.015686275, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LightsContainer/redlights:material_override:emission_energy_multiplier")
+tracks/1/interp = 0
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.54, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [10.0, 0.0, 10.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4wuxv"]
+_data = {
+&"blinkinganim": SubResource("Animation_lwuhr")
+}
+
+[sub_resource type="Animation" id="Animation_nqo67"]
+resource_name = "alarm_smoke"
+length = 0.8
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LightsContainer/redlights:material_override:emission")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 0.95, 0.45, 1), Color(1, 0.12, 0.04, 1), Color(1, 1, 0.9, 1), Color(1, 0.12, 0.04, 1), Color(1, 1, 0.9, 1), Color(1, 0.12, 0.04, 1), Color(1, 0.95, 0.45, 1), Color(1, 0.35, 0.08, 1), Color(1, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LightsContainer/redlights:material_override:emission_energy_multiplier")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [48.0, 10.0, 72.0, 10.0, 72.0, 10.0, 48.0, 22.0, 10.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eq13p"]
+_data = {
+&"alarm_smoke": SubResource("Animation_nqo67")
+}
+
+[sub_resource type="Curve" id="Curve_icx4h"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3471338, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_q3chw"]
+curve = SubResource("Curve_icx4h")
+
+[sub_resource type="Curve" id="Curve_gxoxp"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_0oikw"]
+curve = SubResource("Curve_gxoxp")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nxkf2"]
+lifetime_randomness = 1.0
+angle_min = 1.0728835e-05
+angle_max = 360.00003
+gravity = Vector3(0, 0, 0)
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_0oikw")
+color = Color(1, 0, 0, 1)
+alpha_curve = SubResource("CurveTexture_q3chw")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cte68"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("16_nqo67")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_s0kjy"]
+material = SubResource("StandardMaterial3D_cte68")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_herjc"]
 emission_enabled = true
@@ -470,6 +617,94 @@ light_volumetric_fog_energy = 1.4
 light_size = 7.155
 omni_range = 25.0
 omni_attenuation = 1.5
+
+[node name="Threat_smoke" type="MeshInstance3D" parent="Mesh/Red_rock" unique_id=1132558281]
+transform = Transform3D(3.9742256e-15, 9.0919684e-08, 2.08, 2.08, -9.0919684e-08, 0, 9.0919684e-08, 2.08, -9.0919684e-08, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_0eg31")
+mesh = ExtResource("13_xxiuv")
+
+[node name="LightsContainer" type="Node3D" parent="Mesh/Red_rock/Threat_smoke" unique_id=876400371]
+transform = Transform3D(1.086, 0, 0, 0, 1.086, 0, 0, 0, 1.086, 0, 0, 0)
+script = ExtResource("14_lwuhr")
+
+[node name="redlights" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=507778513]
+transform = Transform3D(-4.3711392e-08, -0.9999999, 4.37114e-08, 0.9999999, -4.371138e-08, 4.3711378e-08, -4.3711385e-08, 4.3711392e-08, 0.9999999, 1.7763568e-15, 0.32349107, -0.068301216)
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CapsuleMesh_ysfao")
+skeleton = NodePath("../..")
+
+[node name="redlights8" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=352563851]
+transform = Transform3D(-8.807846e-08, -0.395, 8.8078465e-08, 2.015, -1.7265998e-08, 8.807846e-08, -8.807845e-08, 1.7266004e-08, 2.015, 0.278, 0.294, -0.088)
+visible = false
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CapsuleMesh_ysfao")
+skeleton = NodePath("../..")
+
+[node name="redlights9" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=141961832]
+transform = Transform3D(-8.807845e-08, -0.395, 8.8078465e-08, 2.015, -1.7265997e-08, 8.8078444e-08, -8.8078444e-08, 1.7266004e-08, 2.015, 0.278, 0.29399997, 0.08837102)
+visible = false
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CapsuleMesh_ysfao")
+skeleton = NodePath("../..")
+
+[node name="redlights7" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=1973424578]
+transform = Transform3D(-4.4170463e-08, -0.9999998, 3.739309e-08, 0.9894979, -4.91116e-08, -0.14454609, 0.14454609, 3.0615716e-08, 0.9894979, -1.7518964e-10, 0.31948313, 0.08115744)
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CapsuleMesh_ysfao")
+skeleton = NodePath("../..")
+
+[node name="redlights2" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=411005768]
+transform = Transform3D(-4.371139e-08, -1, 4.3711392e-08, 1, -4.3711385e-08, 4.3711385e-08, -4.3711385e-08, 4.3711392e-08, 1, 0, -0.323, 0)
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CapsuleMesh_ysfao")
+skeleton = NodePath("../..")
+
+[node name="redlights5" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=191301101]
+transform = Transform3D(-8.742278e-08, -1, -3.5527137e-15, 0, 3.5527137e-15, -1, 1, -8.742277e-08, 0, 0, 0.00024557114, 0.32324553)
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CapsuleMesh_ysfao")
+skeleton = NodePath("../..")
+
+[node name="redlights6" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=1938756395]
+transform = Transform3D(-8.742278e-08, -1, -3.5527137e-15, 0, 3.5527137e-15, -1, 1, -8.742277e-08, 0, -8.6736174e-19, 0.00024557114, -0.32324553)
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CapsuleMesh_ysfao")
+skeleton = NodePath("../..")
+
+[node name="redlights3" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=1191794809]
+transform = Transform3D(-1, 8.742277e-08, -3.2840564e-15, -8.742277e-08, -1, 8.7422784e-08, 5.7320566e-15, 8.742278e-08, 1, -0.32324553, 0.00024557114, -1.0736301e-11)
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CapsuleMesh_ysfao")
+skeleton = NodePath("../..")
+
+[node name="redlights4" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=1192003519]
+transform = Transform3D(-1, 8.742277e-08, -3.2840564e-15, -8.742277e-08, -1, 8.7422784e-08, 5.7320566e-15, 8.742278e-08, 1, 0.32324553, 0.00024557114, -1.4129519e-08)
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CapsuleMesh_ysfao")
+skeleton = NodePath("../..")
+
+[node name="redlights10" type="MeshInstance3D" parent="Mesh/Red_rock/Threat_smoke/LightsContainer" unique_id=359319034]
+transform = Transform3D(-2.1112601e-08, 0.483, 0, -0.483, -2.1112601e-08, 0, 0, 0, 0.483, 0.475, 0, 0)
+material_override = ExtResource("15_pcxxs")
+mesh = SubResource("CylinderMesh_0eg31")
+skeleton = NodePath("../..")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Mesh/Red_rock/Threat_smoke" unique_id=330592832]
+libraries/ = SubResource("AnimationLibrary_4wuxv")
+autoplay = &"blinkinganim"
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Mesh/Red_rock/Threat_smoke" unique_id=1267324374]
+libraries/ = SubResource("AnimationLibrary_eq13p")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Mesh/Red_rock" unique_id=1116171342]
+process_mode = 3
+transform = Transform3D(2.08, 0, 0, 0, 2.08, 0, 0, 0, 2.08, 0, 0, 0)
+amount = 5
+lifetime = 3.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_nxkf2")
+draw_pass_1 = SubResource("SphereMesh_s0kjy")
 
 [node name="Red_rock_attack" type="MeshInstance3D" parent="Mesh" unique_id=561141429]
 unique_name_in_owner = true

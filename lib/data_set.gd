@@ -33,10 +33,10 @@ var dataset_float : Dictionary = {
 	,"power_max_ammo"				: [999]
 	,"ammo_pack_size"				: [999]
 	## Magazine loaded when Play is pressed.
-	,"power_ammo_start"				: [999]
+	,"power_ammo_start"				: [6]
 	## Ammo granted by shooting an ammo balloon / pack.
 	#,"power_ammo_pack"				: [6]
-	,"power_ammo_pack"				: [60]
+	,"power_ammo_pack"				: [6]
 	,"power_sky_mine" 					: [0, 1, 2]
 	,"power_balloon_buster" 			: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 	,"power_target_circle"	: [60.0,80.0,120.0,160.0, 200.0, 240.0,280.0,380.0,420.0,460.0]

@@ -1514,7 +1514,8 @@ func was_hit_tween() -> void:
 		tween.tween_callback(crate_particles)
 	else:
 		tween.tween_callback(smoke_particles)
-	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.10)
+	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.02)
+	tween.tween_interval(0.1)
 	await tween.finished
 
 
