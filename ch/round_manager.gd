@@ -63,8 +63,7 @@ const ENV_PATH_BY_LEVEL := {
 	"moss10": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"moss11": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
 	"moss12": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
-	"moss13": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
-	
+	"moss13": "res://res/skyEnvironments/moss_13_illustrated_env.tres",
 	
 	
 	"redd": "res://res/world_env_redd.tres",

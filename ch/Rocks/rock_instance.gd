@@ -1187,7 +1187,8 @@ func setup_rock_type() -> void:
 			rock_type_gravity_scale = 0.1 # + (size_multiplier / 10)
 
 			force_mult.clear()
-			force_mult = [3,4]
+			#force_mult = [3,4]
+			force_mult = [4]
 			force_mult_index = 0
 			
 			current_particles = $Mesh/small_rock/GoldParticles
@@ -1502,7 +1503,7 @@ func setup_rock_type() -> void:
 			main_col.scale = Vector3.ONE * 0.125 * 1.2
 			rock_type_gravity_scale = 0.1
 			force_mult.clear()
-			force_mult = [5]
+			force_mult = [4]
 			force_mult_index = 0
 			_set_rico_particles(false)
 
