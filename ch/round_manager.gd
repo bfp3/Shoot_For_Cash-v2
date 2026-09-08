@@ -9,7 +9,7 @@ static func is_level_editor_available() -> bool:
 ## Keep these under sc/All_level_layouts only. Do NOT point at sc/2025_Levels/* giants.
 const LAYOUT_PATH_START := "res://sc/All_level_layouts/level_layout_00_start.tscn"
 const LAYOUT_PATH_BY_PLACE_INDEX := {
-	0: "res://sc/All_level_layouts/level_layout_moss_01.tscn",
+	0: "res://sc/All_level_layouts/level_layout_moss_11.tscn",
 	1: "res://sc/All_level_layouts/level_layout_02_redd.tscn",
 	2: "res://sc/All_level_layouts/level_layout_03_glory.tscn",
 	#3: "res://sc/All_level_layouts/level_layout_000_jetz.tscn",
@@ -26,7 +26,7 @@ const LAYOUT_PATH_BOSS_BY_ISLAND := {
 }
 ## Script ranges that are not in gl_DataSet.place_name (e.g. moss2 in level-beginner.txt).
 const LAYOUT_PATH_BY_PLACE_NAME := {
-	"moss1": "res://sc/All_level_layouts/level_layout_moss_01.tscn",
+	"moss1": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
 	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",
 	"moss3": "res://sc/All_level_layouts/level_layout_moss_03.tscn",
 	"moss4": "res://sc/All_level_layouts/level_layout_moss_04.tscn",
@@ -38,6 +38,7 @@ const LAYOUT_PATH_BY_PLACE_NAME := {
 	"moss10": "res://sc/All_level_layouts/level_layout_moss_10.tscn",
 	"moss11": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
 	"moss12": "res://sc/All_level_layouts/level_layout_moss_12.tscn",
+	"moss13": "res://sc/All_level_layouts/level_layout_moss_13.tscn",
 	"hood": "res://sc/All_level_layouts/level_layout_hood_01.tscn",
 	"mine": "res://sc/All_level_layouts/level_layout_mine_01.tscn",
 	"kings": "res://sc/All_level_layouts/level_layout_moss_crossy_bridge.tscn"
@@ -47,8 +48,10 @@ const LAYOUT_PATH_BY_PLACE_NAME := {
 ## Camera3D.environment resources per place / boss (layouts no longer carry WorldEnvironment).
 const ENV_PATH_BY_LEVEL := {
 	"start": "res://res/skyEnvironments/greyscale_world.tres",
-	"moss": "res://res/moss_env_v2.tres",
-	"moss1": "res://res/moss_env_v2.tres",
+	#"moss": "res://res/moss_env_v2.tres",
+	#"moss1": "res://res/moss_env_v2.tres",
+	"moss": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss1": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
 	"moss2": "res://res/moss_env_v2.tres",
 	"moss3": "res://res/moss_env_v2.tres",
 	"moss4": "res://res/moss_env_v2.tres",
@@ -60,6 +63,8 @@ const ENV_PATH_BY_LEVEL := {
 	"moss10": "res://res/skyEnvironments/boss_2_world_env.tres",
 	"moss11": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
 	"moss12": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss13": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	
 	
 	
 	"redd": "res://res/world_env_redd.tres",
@@ -973,10 +978,10 @@ func _get_current_hold_out_ms() -> int:
 	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
 		var round_data = current_rock_sequence[current_sequence_index]
 		if round_data is Dictionary:
-			var ms := int(round_data.get("hold_out_ms", 0))
-			if ms > 0:
-				return ms
-	return Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, get_active_range_name())
+			return maxi(int(round_data.get("hold_out_ms", 0)), 0)
+	if _boss_mode:
+		return Parser.get_boss_timer_ms(LEVEL_ISLAND_NAME, get_active_range_name())
+	return 0
 
 
 func is_endless_mode() -> bool:
@@ -2730,7 +2735,7 @@ func update_check_score() -> void:
 
 
 ## Waves for the active round — built from `repeat` sections (see parser).
-## A range plays as one continuous round; `repeat` sections are flattened in-line.
+## A `round` heading plays as one continuous script. `repeat` sections are flattened in-line.
 func get_current_round_wave_count() -> int:
 	const DEFAULT_WAVES := 1
 	## Endless mode ignores shipper repeats — continuous rock loops instead.
@@ -2792,7 +2797,7 @@ func _copy_spawn_list(source: Array) -> Array:
 	return copy
 
 
-## Play a whole range as one script. `repeat` sections stay in order, with
+## Play a round as one script. `repeat` sections stay in order, with
 ## `wait` (until clear) between copies so the next section cannot overlap.
 func _flatten_round_spawns(round_data) -> Array:
 	if round_data is Array:

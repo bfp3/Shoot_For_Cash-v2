@@ -10,6 +10,7 @@ var detected_bodies: Array[Node3D] = []
 
 
 func _ready() -> void:
+	set_physics_process(false)
 	$splash_sfx_01.volume_db = -80.0
 	$splash_sfx_02.volume_db = -80.0
 	await get_tree().create_timer(3.0, false).timeout
@@ -92,15 +93,53 @@ func _on_body_entered(body: Node3D) -> void:
 func reset_detected_bodies() -> void:
 	return
 	
-func deactivate_splash_zone() -> void:
-	self.set_deferred('monitoring', false)
-	self.set_deferred('monitorable', false)
-
 func activate_splash_zone() -> void:
 	self.set_deferred('monitoring', true)
 	self.set_deferred('monitorable', true)
+	set_physics_process(true)
 	var tween = create_tween()
 	tween.tween_property($Visual, 'transparency', 0.0,1.0)
+
+func deactivate_splash_zone() -> void:
+	self.set_deferred('monitoring', false)
+	self.set_deferred('monitorable', false)
+	set_physics_process(false)
+
+
+## Area3D is a thin slab — fast falling rocks skip `body_entered`. Catch anything
+## that is already below the water plane and still counted as live.
+func _physics_process(_delta: float) -> void:
+	if not monitoring:
+		return
+	_catch_tunneled_rocks()
+
+
+func _catch_tunneled_rocks() -> void:
+	var rocks_container = null
+	if round_manager:
+		rocks_container = round_manager.get("rocks_container")
+	if rocks_container == null:
+		rocks_container = get_tree().get_first_node_in_group("rocks_container")
+	if rocks_container == null or not rocks_container.has_node("Container_1"):
+		return
+	## Splash collision is ~0.1m thick; anything clearly under that slab skipped body_entered.
+	var y_cut := global_position.y - 0.25
+	for child in rocks_container.get_node("Container_1").get_children():
+		if not (child is RockInstance):
+			continue
+		var body := child as RockInstance
+		if body.current_state != RockInstance.State.ACTIVE or not body.rock_activated:
+			continue
+		## Same opt-outs as a real splash overlap — do not re-fire every physics tick.
+		if body.rock_type == RockInstance.RockSize.JUGGLE:
+			continue
+		if body.rock_type == RockInstance.RockSize.AVOIDER and not body.avoider_destroys_on_out_of_bounds:
+			continue
+		if body.linear_velocity.y > 0.0:
+			continue
+		if body.global_position.y >= y_cut:
+			continue
+		_on_body_entered(body)
 
 func splash_sfx() -> void:
 	var _sfx = sfx_array.pick_random()
@@ -111,7 +150,10 @@ func splash_particles(body: Node3D) -> void:
 	var particles: GPUParticles3D = gpu_particles_3d.duplicate()
 
 	get_tree().get_current_scene().add_child(particles)
-	particles.global_position = body.global_position
+	var splash_pos := body.global_position
+	if splash_pos.y < global_position.y:
+		splash_pos.y = global_position.y
+	particles.global_position = splash_pos
 	particles.emitting = true
 
 	await get_tree().create_timer(particles.lifetime).timeout

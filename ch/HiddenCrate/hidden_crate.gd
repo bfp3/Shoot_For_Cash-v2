@@ -3,6 +3,8 @@ extends MeshInstance3D
 ## (crosshair as x-ray). Place this scene in a layout; it hides itself in play.
 
 
+var particles_play := false
+
 
 const WOOD_ALBEDO := preload("res://res/crateMesh2_CrateWoodAlbedo.png")
 const CAMO_MAT := preload("res://res/camo_material.tres")
@@ -26,6 +28,14 @@ var _glow_wood_color := Color(1.0, 0.6166667, 0.0, 1.0)
 
 
 func _ready() -> void:
+	if get_parent() == RigidBody3D:
+		particles_play =  get_parent().particles_play
+		
+	if particles_play:
+		$embers.emitting = true
+	else:
+		$embers.emitting = false
+	
 	add_to_group("hidden_crate")
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_mat = ShaderMaterial.new()

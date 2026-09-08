@@ -15,7 +15,31 @@ var _rocks_sfx: Node = null
 @export var freeze_burst_duration := 1.0
 ## Visual size of the freeze pulse (Explosion_area scale).
 @export var freeze_burst_visual_scale := 3.0
+## When true, `rock` / `rock-grey` / `rock-black` bounce off each other after launch.
+## Off = they pass through each other. `rock-avoider` and `rock-red-attacker` always
+## collide with any rock. Grey blast still destroys via Explosion_area (not rigidbody bounce).
+@export var collide_with_other_rocks := false
 var sky_mine_blast_radius := 5.0 #15.0
+
+@export_group("Grey Blast")
+## If true, shooting a `rock-grey` expands a blast that destroys other rocks inside it.
+@export var grey_blast_on_shot := false
+## Full size of the blast sphere (`Explosion_area` scale; orange uses 14).
+@export_range(1.0, 40.0, 0.5) var grey_blast_radius := 14.0
+## Seconds to grow to full radius. Lower = faster.
+@export_range(0.05, 2.0, 0.05) var grey_blast_speed := 0.25
+## Seconds to hold at full size before fading. 0 = fade immediately.
+@export_range(0.0, 2.0, 0.05) var grey_blast_hold_sec := 0.22
+## Seconds for the blast mesh to fade out after the hold. Lower = faster.
+@export_range(0.05, 2.0, 0.05) var grey_blast_fade_sec := 0.28
+
+var _grey_blast_active := false
+var _grey_blast_stagger_index := 0
+var _grey_blast_mat: ShaderMaterial
+const GREY_BLAST_STAGGER_SEC := 0.075
+## Same toon blast shell as Orange `explosion_radius_mesh`, tinted white.
+const GREY_BLAST_SHADER_MAT := preload("res://res/Explosion_paid_patreon/shaders/toon_smoke_front.tres")
+const GREY_BLAST_MESH_LAYERS := 16
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 var start_exploding := false
@@ -69,6 +93,8 @@ enum RockSize {
 	FAKE,
 	## Same as SMALL, but the mesh stays hidden until the crosshair overlaps it.
 	INVISIBLE,
+	## Script `rock-pineapple`: pineapple mesh, GoldParticles while live, pineapple VFX on pop.
+	PINEAPPLE,
 }
 
 enum State {
@@ -102,6 +128,7 @@ var rock_has_been_logged := false
 @onready var blue_rock: MeshInstance3D = %blue_rock
 @onready var smokecan: MeshInstance3D = %Smokecan
 @onready var crate: MeshInstance3D = get_node_or_null("%Crate")
+@onready var pineapple_mesh: MeshInstance3D = get_node_or_null("%pineapple") as MeshInstance3D
 
 @onready var hazard_large: MeshInstance3D = %Hazard_large
 @onready var rock_red_attack_mode: GPUParticles3D = get_node_or_null("rock_red_attack_mode") as GPUParticles3D
@@ -727,7 +754,7 @@ func _physics_process(delta: float) -> void:
 		elif rock_type == RockSize.GAP:
 			if not _freeze_shot_pending:
 				_check_hazard_crosshair()
-		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY:
+		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.PINEAPPLE:
 			_update_destroy_on_crosshair_overlap()
 		elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 			_update_hazard_crosshair_overlap()
@@ -745,6 +772,9 @@ func _physics_process(delta: float) -> void:
 ## Point mesh local +Y along travel; RigidBody can keep spinning underneath.
 func _update_mesh_face_velocity() -> void:
 	if not mesh_face_velocity:
+		return
+	## Black rocks keep the launch torque tumble instead of aiming along the arc.
+	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black() or rock_type == RockSize.PINEAPPLE:
 		return
 	if mesh_container == null or not is_instance_valid(mesh_container):
 		return
@@ -882,7 +912,7 @@ func update_active() -> void:
 	elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 		if _player_wants_overlap_destroy("hazards"):
 			_arm_hazard_crosshair()
-	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.STAY:
+	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.STAY or rock_type == RockSize.PINEAPPLE:
 		if _player_wants_overlap_destroy("rocks"):
 			_arm_destroy_on_crosshair()
 	if rock_type == RockSize.SMALL or rock_type == RockSize.STAY:
@@ -900,6 +930,8 @@ func update_hit() -> void:
 	#linear_velocity = Vector3.ZERO
 	gravity_scale = 0.0
 	await get_tree().create_timer(1.0, false).timeout
+	while _grey_blast_active and token == _pool_setup_token and is_instance_valid(self):
+		await get_tree().process_frame
 	if token != _pool_setup_token or current_state != State.HIT:
 		return
 	disable_collision()
@@ -995,12 +1027,22 @@ func schedule_airborne_rock_collisions(delay_sec: float, bounce: float) -> void:
 
 
 func _enable_airborne_rock_collisions(bounce: float) -> void:
+	if not _wants_peer_rock_collisions():
+		set_collision_mask_value(1, false)
+		return
 	set_collision_mask_value(1, true)
 	if physics_material_override == null:
 		physics_material_override = PhysicsMaterial.new()
 	physics_material_override.bounce = clampf(bounce, 0.0, 1.0)
 	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER:
 		_sync_avoider_collision_exceptions()
+
+
+## Avoiders / red-attackers always bump rocks. Other types follow `collide_with_other_rocks`.
+func _wants_peer_rock_collisions() -> bool:
+	if rock_type == RockSize.AVOIDER or rock_type == RockSize.RED_ATTACKER:
+		return true
+	return collide_with_other_rocks
 
 
 func _cancel_airborne_rock_collisions() -> void:
@@ -1022,7 +1064,7 @@ func update_gravity(_gravity_scale : float) -> void:
 		linear_damp = 0.0
 
 func _visual_meshes() -> Array:
-	return [small_rock, grey_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate]
+	return [small_rock, grey_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate, pineapple_mesh]
 
 
 func _cache_mesh_original_overrides() -> void:
@@ -1323,6 +1365,34 @@ func setup_rock_type() -> void:
 			if has_node("Mesh/Crate/CrateAnimplayer"):
 				$Mesh/Crate/CrateAnimplayer.play("flashing_dollar")
 
+		RockSize.PINEAPPLE:
+			current_rock_type = "Pineapple Rock"
+			rock_type_name = "rock_type_1"
+			gl_PlayerState.log_white_rock()
+			var pine_health := int(gl_DataSet.get_value("pineapple", 1))
+			var pine_cash := int(gl_DataSet.get_value("pineapple", 0))
+			health = maxi(pine_health, 1)
+			cash_value = pine_cash
+			max_health = health
+			if pineapple_mesh:
+				pineapple_mesh.visible = true
+				current_mesh = pineapple_mesh
+			else:
+				small_rock.visible = true
+				current_mesh = small_rock
+			current_mesh.scale = Vector3.ONE * 2.5
+			main_col.scale = Vector3.ONE * 0.125 * 2.5
+			rock_type_gravity_scale = 0.1
+			force_mult.clear()
+			force_mult = [3, 4]
+			force_mult_index = 0
+			if current_mesh.has_node("GoldParticles"):
+				current_particles = current_mesh.get_node("GoldParticles") as GPUParticles3D
+				if current_particles:
+					current_particles.amount += 1
+					current_particles.amount -= 1
+					current_particles.emitting = true
+
 		RockSize.STAY:
 			## Hang at aim after a fast straight approach. Pace commands do not affect flight.
 			current_rock_type = "Rock Stay"
@@ -1444,6 +1514,14 @@ func reset_stats() -> void:
 	_hazard_crosshair_arm_token += 1
 	_destroy_on_crosshair_armed = false
 	_destroy_on_crosshair_arm_token += 1
+	_grey_blast_active = false
+	_grey_blast_stagger_index = 0
+	if has_node("%explosion_radius_mesh"):
+		%explosion_radius_mesh.material_override = null
+		%explosion_radius_mesh.scale = Vector3.ONE
+		%explosion_radius_mesh.extra_cull_margin = 0.0
+		%explosion_radius_mesh.layers = 1
+		%explosion_radius_mesh.transparency = 0.0
 	has_entered_camera_view = false
 	_avoider_armed = false
 	_avoider_arm_token += 1
@@ -1512,6 +1590,8 @@ func was_hit_tween() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
 	if rock_type == RockSize.CRATE:
 		tween.tween_callback(crate_particles)
+	elif rock_type == RockSize.PINEAPPLE:
+		tween.tween_callback(pineapple_particles)
 	else:
 		tween.tween_callback(smoke_particles)
 	tween.tween_property($Mesh, "scale", Vector3.ONE / 99, 0.02)
@@ -1733,6 +1813,9 @@ func shake_camera() -> void:
 		RockSize.CRATE:
 			if player_cam.has_method("shake_camera_rock_crate"):
 				player_cam.shake_camera_rock_crate()
+		RockSize.PINEAPPLE:
+			if player_cam.has_method("shake_camera_pineapple"):
+				player_cam.shake_camera_pineapple()
 		RockSize.SMOKECAN:
 			if player_cam.has_method("shake_camera_rock_smokecan"):
 				player_cam.shake_camera_rock_smokecan()
@@ -2060,7 +2143,7 @@ func start_destroyed_process() -> void:
 			money_label_3d.money_is_money(global_position, cash_value)
 		## Positive cash already shown above via cash_value > 0.
 
-		## Direct shots already struck above; orange-neutralized blacks never strike.
+		## Direct shots already struck above; orange / grey-blast neutralized blacks never strike.
 		## Blast/indirect destroys of live hazards still strike here.
 		if not _hazard_strike_from_direct_shot and not _orange_neutralized_hazard:
 			_play_rocks_sfx("hazard_hit_sound")
@@ -2079,6 +2162,8 @@ func start_destroyed_process() -> void:
 
 	if current_state == State.HIT:
 		await was_hit_tween()
+		while _grey_blast_active and is_instance_valid(self):
+			await get_tree().process_frame
 		if current_state == State.HIT:
 			release_to_pool()
 
@@ -2254,6 +2339,10 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 	#if rock_destroyed:
 		#return
 
+	if _grey_blast_active:
+		_grey_blast_hit(body)
+		return
+
 	# PUSH ROCKS AWAY IN BLAST
 	if player_has_marked_rock == false:
 		if body is RigidBody3D:
@@ -2308,6 +2397,10 @@ func expand_blast_radius() -> void:
 	if rock_type == RockSize.CRATE:
 		return
 
+	if rock_type == RockSize.GREY and grey_blast_on_shot:
+		_expand_grey_blast()
+		return
+
 	if !player_has_marked_rock && !start_exploding:
 		#gl_PlayerState.dataset.power_sky_mine = clamp(gl_PlayerState.dataset.power_sky_mine -1,0,3)
 		standard_blast()
@@ -2346,7 +2439,102 @@ func expand_blast_radius() -> void:
 	%explosion_radius_mesh.transparency = 0.4
 	blast_node.hide()
 	blast_node.monitoring = false
-	
+
+
+func _expand_grey_blast() -> void:
+	_grey_blast_active = true
+	_grey_blast_stagger_index = 0
+	if not has_node("Explosion_area"):
+		_grey_blast_active = false
+		return
+	var blast_node: Area3D = $Explosion_area
+	var vis: MeshInstance3D = %explosion_radius_mesh
+	var vis_match := _grey_blast_visual_to_collision_scale()
+	vis.material_override = _grey_blast_material()
+	vis.scale = Vector3.ONE * vis_match
+	vis.extra_cull_margin = maxf(grey_blast_radius, 8.0)
+	vis.layers = GREY_BLAST_MESH_LAYERS
+	vis.transparency = 0.0
+	vis.show()
+	blast_node.scale = Vector3.ONE
+	blast_node.show()
+	blast_node.monitoring = true
+	$Explosion_area/CollisionShape3D.disabled = false
+	var dur := maxf(grey_blast_speed, 0.05)
+	var reach := maxf(grey_blast_radius, 1.0)
+	var grow := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	grow.tween_property(blast_node, "scale", Vector3.ONE * reach, dur)
+	await grow.finished
+	if not is_instance_valid(self) or not has_node("Explosion_area"):
+		_grey_blast_active = false
+		return
+	$Explosion_area/CollisionShape3D.disabled = true
+	blast_node.monitoring = false
+	var hold := maxf(grey_blast_hold_sec, 0.0)
+	if hold > 0.0:
+		await get_tree().create_timer(hold, false).timeout
+	if is_instance_valid(vis):
+		var fade := create_tween().set_trans(Tween.TRANS_CUBIC)
+		fade.tween_property(vis, "transparency", 1.0, maxf(grey_blast_fade_sec, 0.05))
+		await fade.finished
+	_grey_blast_active = false
+	if not is_instance_valid(self) or not has_node("Explosion_area"):
+		return
+	blast_node.scale = Vector3.ONE
+	vis.scale = Vector3.ONE
+	vis.extra_cull_margin = 0.0
+	vis.layers = 1
+	vis.material_override = null
+	vis.transparency = 0.0
+	vis.hide()
+	blast_node.hide()
+
+
+func _grey_blast_visual_to_collision_scale() -> float:
+	var col := $Explosion_area/CollisionShape3D
+	var shape := col.shape as SphereShape3D
+	var sphere := %explosion_radius_mesh.mesh as SphereMesh
+	if shape == null or sphere == null:
+		return 1.0
+	return maxf(shape.radius, 0.001) / maxf(sphere.radius, 0.001)
+
+
+func _grey_blast_material() -> ShaderMaterial:
+	if _grey_blast_mat != null:
+		return _grey_blast_mat
+	var mat := GREY_BLAST_SHADER_MAT.duplicate() as ShaderMaterial
+	## Orange blast albedo is HDR orange; same punch, kept white.
+	mat.set_shader_parameter("albedo", Color(1.82, 1.82, 1.82, 1.0))
+	mat.set_shader_parameter("uv1_scale", Vector3(1.0, 0.025, 1.0))
+	mat.set_shader_parameter("erosion_tiling", Vector2(0.69, 19.32))
+	mat.set_shader_parameter("erosion_threshold_offset", 0.045)
+	mat.set_shader_parameter("roughness", 0.0)
+	_grey_blast_mat = mat
+	return mat
+
+
+func _grey_blast_hit(body: Node3D) -> void:
+	if body == self or not (body is RockInstance):
+		return
+	var rock := body as RockInstance
+	if rock.rock_destroyed or rock.current_state != rock.State.ACTIVE:
+		return
+	if (
+		rock.rock_type == RockSize.HAZARD
+		or rock.rock_type == RockSize.HAZARD_SMALL
+		or rock.is_stay_black()
+	):
+		## Same as orange: grey blast popping a black rock is not a strike.
+		rock._orange_neutralized_hazard = true
+		if rock.cash_value < 0:
+			rock.cash_value = 0
+	var stagger_i := _grey_blast_stagger_index
+	_grey_blast_stagger_index += 1
+	await get_tree().create_timer(float(stagger_i) * GREY_BLAST_STAGGER_SEC, false).timeout
+	if is_instance_valid(rock) and not rock.rock_destroyed:
+		rock.start_destroyed_process()
+
+
 func standard_blast() -> void:
 
 	var blast_node : Area3D = $Explosion_area
@@ -2376,9 +2564,16 @@ func crate_particles() -> void:
 	_play_vfx(&"crate_destroy")
 
 
+func pineapple_particles() -> void:
+	_play_vfx(&"pineapple_destroy")
+
+
 func smoke_particles() -> void:
 	if rock_type == RockSize.CRATE:
 		crate_particles()
+		return
+	if rock_type == RockSize.PINEAPPLE:
+		pineapple_particles()
 		return
 	
 	if rock_type == RockSize.SMOKECAN:
@@ -3083,7 +3278,7 @@ func _arm_destroy_on_crosshair() -> void:
 		return
 	if current_state != State.ACTIVE:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.STAY:
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
 		return
 	if not _player_wants_overlap_destroy("rocks"):
 		return
@@ -3097,7 +3292,7 @@ func _update_destroy_on_crosshair_overlap() -> void:
 		return
 	if rock_destroyed or not rock_activated:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.STAY:
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
 		return
 	if _freeze_shot_pending:
 		return

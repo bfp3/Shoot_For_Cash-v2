@@ -586,11 +586,11 @@ func _process(delta: float) -> void:
 			if Input.is_action_pressed("shootWeapon"):
 				fire_weapon_auto()
 				
-		#elif Input.is_action_just_pressed("shootWeapon"):
-			#fire_weapon()
-			
-		elif Input.is_action_just_released("shootWeapon"):
+		elif Input.is_action_just_pressed("shootWeapon"):
 			fire_weapon()
+			
+		#elif Input.is_action_just_released("shootWeapon"):
+			#fire_weapon()
 
 		## Debug / leftover: TAB still rapid-fires on any loadout.
 		if Input.is_key_label_pressed(KEY_TAB):
@@ -1632,7 +1632,7 @@ func _update_low_ammo_warning(ammo_amount: int = -1) -> void:
 	var threshold := 20
 	if "low_ammo_threshold" in crosshair:
 		threshold = int(crosshair.low_ammo_threshold)
-	## Blink LOW AMMO while critically low but not empty (empty uses OUT).
+	## Show LOW AMMO once when critically low but not empty (empty uses OUT).
 	var show_low := ammo_amount > 0 and ammo_amount < threshold
 	if crosshair.has_method("set_low_ammo_warning"):
 		crosshair.set_low_ammo_warning(show_low)

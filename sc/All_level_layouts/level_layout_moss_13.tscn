@@ -31,6 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://cmk72g2wr4ulq" path="res://res/mountains-svgrepo-com.png" id="29_3tw4y"]
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="30_8esi1"]
 [ext_resource type="ArrayMesh" uid="uid://c2pmyrm3e4ty5" path="res://res/Rocks/rock_mesh_01.tres" id="31_7l2js"]
+[ext_resource type="PackedScene" uid="uid://c4h6aveq47bhy" path="res://mine_temp/scenes/mine_brazier.tscn" id="32_c7k25"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5wter"]
 shader = ExtResource("4_8so87")
@@ -952,6 +953,69 @@ cap_bottom = false
 
 [sub_resource type="BoxMesh" id="BoxMesh_bpeli"]
 size = Vector3(20, 20, 20)
+
+[sub_resource type="Animation" id="Animation_c7k25"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:omni_range")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [10.31]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [2.4]
+}
+
+[sub_resource type="Animation" id="Animation_iho4g"]
+resource_name = "glow_light"
+length = 4.2
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:omni_range")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.7, 4.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [10.31, 8.0, 10.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2.7, 4.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [2.4, 2.0, 2.4]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8so87"]
+_data = {
+&"RESET": SubResource("Animation_c7k25"),
+&"glow_light": SubResource("Animation_iho4g")
+}
 
 [node name="MossMain" type="Node3D" unique_id=229302118]
 script = ExtResource("1_5bjgp")
@@ -2801,8 +2865,11 @@ material_override = ExtResource("13_h57cm")
 mesh = ExtResource("31_7l2js")
 skeleton = NodePath("../..")
 
+[node name="Brazier" parent="." unique_id=1767535159 instance=ExtResource("32_c7k25")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5885663, -1.9232558, 11.799999)
+
 [node name="Glow" type="OmniLight3D" parent="." unique_id=987628613]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 15.997734)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6051903, -0.6885121, 11.821022)
 light_color = Color(1, 0.52, 0.14, 1)
 light_energy = 2.4
 light_indirect_energy = 0.6
@@ -2810,5 +2877,10 @@ light_volumetric_fog_energy = 1.4
 light_size = 0.5
 omni_range = 10.31
 omni_attenuation = 0.24
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Glow" unique_id=934104446]
+libraries/ = SubResource("AnimationLibrary_8so87")
+autoplay = &"glow_light"
+speed_scale = 2.0
 
 [editable path="Level1/Boatmesh/brick_fountain_4"]

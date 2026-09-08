@@ -9,6 +9,9 @@ const cash_value := 0
 @export var destroy_vfx_cue := &""
 @export var hit_vfx_cue := &"rock_hit"
 
+@export var particles_play := true
+
+
 @export_group("Hit Knockback")
 @export var hit_impulse_power := 8.0
 @export var hit_upward_bias := 0.35
@@ -32,6 +35,7 @@ func _ready() -> void:
 	if force_mult.is_empty():
 		force_mult = [3, 4]
 	force_mult.shuffle()
+
 
 
 func hit_by_player(damage: int, _screen_offset: Vector2 = Vector2.ZERO) -> void:

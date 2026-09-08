@@ -32,6 +32,7 @@
 [ext_resource type="ArrayMesh" uid="uid://p727wv2xk0n4" path="res://res/crateMesh2.tres" id="30_7iorp"]
 [ext_resource type="ArrayMesh" uid="uid://c2pmyrm3e4ty5" path="res://res/Rocks/rock_mesh_01.tres" id="31_v3jng"]
 [ext_resource type="PackedScene" uid="uid://sjs7v6euem4n" path="res://lib/Flag_rollout_Scene/Start_flag.tscn" id="32_8mok6"]
+[ext_resource type="Material" uid="uid://dbv3cp0pmavlb" path="res://res/hidden_mesh_standard.tres" id="33_ksjtj"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5wter"]
 shader = ExtResource("4_oovdm")
@@ -954,6 +955,9 @@ cap_bottom = false
 [sub_resource type="BoxMesh" id="BoxMesh_bpeli"]
 size = Vector3(20, 20, 20)
 
+[sub_resource type="PrismMesh" id="PrismMesh_ksjtj"]
+size = Vector3(0.01, 1, 0.425)
+
 [node name="MossMain" type="Node3D" unique_id=229302118]
 script = ExtResource("1_laovq")
 forward_axis = Vector3(0, 0, 0)
@@ -1207,7 +1211,7 @@ mesh = SubResource("ArrayMesh_fyjqt")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Level1/Boatmesh/Right_tall_pillar4/StaticBody3D" unique_id=1954168202]
 shape = SubResource("ConcavePolygonShape3D_qy441")
 
-[node name="Right_tall_pillar5" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=852091970]
+[node name="InvisibleMesh" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=852091970]
 transform = Transform3D(1, 0, 0, 0, 3.0021923, -0.57357645, 0, 2.1021576, 0.81915206, 4.037, -0.49491727, 7.993)
 material_override = ExtResource("11_vgcwt")
 transparency = 1.0
@@ -1220,56 +1224,56 @@ material_override = ExtResource("11_vgcwt")
 mesh = SubResource("PrismMesh_laovq")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar14" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=1818324304]
+[node name="QuadDetail" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=1818324304]
 transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, 2.7981644, -2.4120078, 12.145053)
 material_override = SubResource("ShaderMaterial_ksjtj")
 cast_shadow = 0
 mesh = SubResource("QuadMesh_oovdm")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar15" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=482835370]
+[node name="QuadDetail2" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=482835370]
 transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, 2.7981644, -2.4120078, 15.857265)
 material_override = SubResource("ShaderMaterial_ksjtj")
 cast_shadow = 0
 mesh = SubResource("QuadMesh_oovdm")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar16" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=502157993]
+[node name="QuadDetail3" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=502157993]
 transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, -1.6956491, -2.4120078, 15.857265)
 material_override = SubResource("ShaderMaterial_ksjtj")
 cast_shadow = 0
 mesh = SubResource("QuadMesh_oovdm")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar17" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=341923915]
+[node name="QuadDetail4" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=341923915]
 transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, -2.2526488, -2.4120078, 12.184086)
 material_override = SubResource("ShaderMaterial_ksjtj")
 cast_shadow = 0
 mesh = SubResource("QuadMesh_oovdm")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar18" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=1488241210]
+[node name="QuadDetail5" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=1488241210]
 transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, 4.2751684, -2.4120078, 17.46966)
 material_override = SubResource("ShaderMaterial_ksjtj")
 cast_shadow = 0
 mesh = SubResource("QuadMesh_oovdm")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar19" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=2061028565]
+[node name="QuadDetail6" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=2061028565]
 transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, 4.870201, -2.4120078, 15.376425)
 material_override = SubResource("ShaderMaterial_ksjtj")
 cast_shadow = 0
 mesh = SubResource("QuadMesh_oovdm")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar20" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=759698502]
+[node name="QuadDetail7" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=759698502]
 transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, 8.28408, -2.4120078, 15.376425)
 material_override = SubResource("ShaderMaterial_ksjtj")
 cast_shadow = 0
 mesh = SubResource("QuadMesh_oovdm")
 skeleton = NodePath("")
 
-[node name="Right_tall_pillar21" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=152920951]
+[node name="QuadDetail8" type="MeshInstance3D" parent="Level1/Boatmesh" unique_id=152920951]
 transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, 7.7114754, -2.4120078, 13.434211)
 material_override = SubResource("ShaderMaterial_ksjtj")
 cast_shadow = 0
@@ -1814,7 +1818,7 @@ mesh = SubResource("ArrayMesh_kgf3r")
 skeleton = NodePath("../..")
 
 [node name="Moon" type="Sprite3D" parent="Level1" unique_id=1627859436]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 149, 110, 980)
+transform = Transform3D(0.47, 0, 0, 0, 0.47, 0, 0, 0, 0.47, -73.055, 51, 980)
 cast_shadow = 0
 modulate = Color(1, 0.88, 0.7, 0.32)
 pixel_size = 0.85
@@ -2844,5 +2848,25 @@ light_volumetric_fog_energy = 1.4
 light_size = 0.5
 omni_range = 10.31
 omni_attenuation = 0.24
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=252374031]
+transform = Transform3D(-0.237, 0, 0, 0, 7.0290112, 0.03990256, 0, -100.51955, 0.002790259, 86.475, 58.251, 170.622)
+material_override = ExtResource("33_ksjtj")
+mesh = SubResource("PrismMesh_ksjtj")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1549700388]
+transform = Transform3D(-0.237, 0, 0, 0, 7.0290112, 0.03990256, 0, -100.51955, 0.002790259, -86.475, 58.251, 170.622)
+material_override = ExtResource("33_ksjtj")
+mesh = SubResource("PrismMesh_ksjtj")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=1896149955]
+transform = Transform3D(-0.237, 0, 0, 0, 7.0290112, 0.03990256, 0, -100.51955, 0.002790259, 75.83967, 57.078106, 187.39513)
+material_override = ExtResource("33_ksjtj")
+mesh = SubResource("PrismMesh_ksjtj")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=262849984]
+transform = Transform3D(-0.237, 0, 0, 0, 7.0290112, 0.03990256, 0, -100.51955, 0.002790259, -97.11033, 54.9669, 217.58678)
+material_override = ExtResource("33_ksjtj")
+mesh = SubResource("PrismMesh_ksjtj")
 
 [editable path="Level1/Boatmesh/brick_fountain_4"]

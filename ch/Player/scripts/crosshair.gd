@@ -43,10 +43,11 @@ var right_pos_x : float
 var orig_pos := Vector2.ZERO
 
 @export_group("Low Ammo Warning")
-## Show blinking LOW AMMO on the reticle when ammo is below this (and above 0).
+## Show LOW AMMO on the reticle when ammo is below this (and above 0).
 @export var low_ammo_threshold := 6
-@export var low_ammo_blink_sec := 0.35
-@export var low_ammo_blink_min_alpha := 0.2
+## Hold at full opacity before fading out.
+@export_range(0.5, 12.0, 0.1) var low_ammo_display_sec := 4.0
+@export_range(0.05, 2.0, 0.05) var low_ammo_fade_sec := 0.45
 @export var low_ammo_blink_max_alpha := 1.0
 
 @onready var low_ammo_label: RichTextLabel = get_node_or_null("LowAmmoLabel") as RichTextLabel
@@ -440,7 +441,7 @@ func out_of_ammo_hide() -> void:
 	tween.tween_property(no_ammo_label, "modulate:a", 0.0, 0.1)
 
 
-## Blinking "LOW AMMO" under the reticle while ammo is critically low.
+## Show "LOW AMMO" under the reticle for a few seconds, then fade it out.
 func set_low_ammo_warning(active: bool) -> void:
 	if active == _low_ammo_warning_active:
 		return
@@ -460,11 +461,16 @@ func set_low_ammo_warning(active: bool) -> void:
 	low_ammo_label.text = "LOW AMMO"
 	low_ammo_label.show()
 	low_ammo_label.modulate.a = low_ammo_blink_max_alpha
-	_low_ammo_blink_tween = create_tween().set_loops()
+	_low_ammo_blink_tween = create_tween()
 	_low_ammo_blink_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	var half := maxf(low_ammo_blink_sec, 0.05)
-	_low_ammo_blink_tween.tween_property(low_ammo_label, "modulate:a", low_ammo_blink_min_alpha, half)
-	_low_ammo_blink_tween.tween_property(low_ammo_label, "modulate:a", low_ammo_blink_max_alpha, half)
+	_low_ammo_blink_tween.tween_interval(maxf(low_ammo_display_sec, 0.05))
+	_low_ammo_blink_tween.tween_property(
+		low_ammo_label,
+		"modulate:a",
+		0.0,
+		maxf(low_ammo_fade_sec, 0.05)
+	)
+	_low_ammo_blink_tween.tween_callback(low_ammo_label.hide)
 
 	
 func crosshair_fade_out_mode() -> void:

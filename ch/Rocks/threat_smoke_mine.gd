@@ -21,9 +21,13 @@ const speed_fastest := 20.0
 @export var travel_speed_curve: CurveTexture
 
 @export_group("Arrival")
-## Rise from below into the first path cell (no spin / dim lights).
-@export_range(0.15, 4.0, 0.05) var arrive_duration_sec := 1.1
-## How far below the home cell the mine starts (world Y).
+## If true, drop in from `arrive_from_top_y`; if false, rise from below.
+@export var start_at_top := true
+## World Y to start from when `start_at_top` is on.
+@export_range(4.0, 40.0, 0.5) var arrive_from_top_y := 15.0
+## Seconds to ease into the first path cell (no spin / dim lights). Higher = slower.
+@export_range(0.15, 8.0, 0.05) var arrive_duration_sec := 1.8
+## How far below the home cell the mine starts when `start_at_top` is off.
 @export_range(2.0, 28.0, 0.5) var arrive_from_below_y := 14.0
 ## Optional random stagger so packs don't land in lockstep.
 @export_range(0.0, 1.5, 0.05) var arrive_stagger_max_sec := 0.35
@@ -75,6 +79,10 @@ const speed_fastest := 20.0
 @export var steam_movement := false
 
 @export_group("Alarm")
+## If true, raising the alarm also awards a strike.
+@export var alarm_gives_strike := false
+## If true, the mine is destroyed after the alarm smoke explodes.
+@export var destroy_after_alarm := false
 ## Hold after alarm SFX before smoke (mine stays frozen / upright).
 @export_range(0.0, 3.0, 0.05) var alarm_spin_delay_sec := 0.5
 ## Extra hold after the freeze delay before releasing AOE smoke.
@@ -255,7 +263,7 @@ func _process(delta: float) -> void:
 	_update_spin(delta)
 
 
-## Manager entry: rise into place dormant, activate, then patrol.
+## Manager entry: ease into place dormant, activate, then patrol.
 func activate_from_script(
 	path_world: Array,
 	splash_pos: Vector3 = Vector3.ZERO,
@@ -939,6 +947,8 @@ func _run_alarm_sequence() -> void:
 	if _alarm_player:
 		_alarm_player.play(&"alarm_smoke")
 	_play_local_sfx(_alarm_sfx)
+	if alarm_gives_strike:
+		_award_alarm_strike()
 
 	## Hold upright while alarm winds up, then release smoke.
 	var spin_delay := maxf(alarm_spin_delay_sec, 0.0)
@@ -967,7 +977,37 @@ func _run_alarm_sequence() -> void:
 	_play_threat_smoke()
 	start_steam_particles(false)
 	_trigger_alarm_camera_shake()
+	if destroy_after_alarm:
+		await _destroy_after_alarm()
+		return
 	await _enter_post_smoke_dormant()
+
+
+func _destroy_after_alarm() -> void:
+	_exiting = true
+	_drive_token += 1
+	_life_token += 1
+	_active = false
+	_dormant = false
+	_arriving = false
+	_alarming = false
+	_alarm_fast_spin = false
+	_spin_enabled = false
+	_stop_path_motion()
+	_stop_humming()
+	_enable_mine_collision(false)
+	freeze = true
+	linear_velocity = Vector3.ZERO
+	if _marked_embers:
+		_marked_embers.emitting = false
+	if _mesh_root:
+		_mesh_root.hide()
+	if is_in_group("threat_smoke_mine"):
+		remove_from_group("threat_smoke_mine")
+	await get_tree().create_timer(0.15, false).timeout
+	if is_instance_valid(self):
+		queue_free()
+
 
 func _cancel_alarm_visuals() -> void:
 	_alarming = false
@@ -993,6 +1033,13 @@ func _snap_mesh_upright() -> void:
 		Vector3.ZERO,
 		maxf(alarm_rotation_snap_sec, 0.05)
 	)
+
+
+func _award_alarm_strike() -> void:
+	var rocks_container = get_tree().get_first_node_in_group("rocks_container")
+	if rocks_container and rocks_container.has_method("set_strike_feedback_origin"):
+		rocks_container.set_strike_feedback_origin(global_position)
+	gl_PlayerState.add_strike()
 
 
 func _trigger_alarm_camera_shake() -> void:
@@ -1061,11 +1108,13 @@ func _play_threat_smoke() -> void:
 
 func _arrival_spawn_pos(home: Vector3) -> Vector3:
 	var spawn := home
-	if _splash_exit_pos != Vector3.ZERO:
+	if start_at_top:
+		spawn = Vector3(home.x, arrive_from_top_y, home.z)
+	elif _splash_exit_pos != Vector3.ZERO:
 		spawn = Vector3(home.x, _splash_exit_pos.y, home.z)
 	else:
 		spawn = Vector3(home.x, home.y - arrive_from_below_y, home.z)
-	if spawn.y > home.y - 2.0:
+	if not start_at_top and spawn.y > home.y - 2.0:
 		spawn.y = home.y - arrive_from_below_y
 	spawn.z = _plane_z
 	return spawn

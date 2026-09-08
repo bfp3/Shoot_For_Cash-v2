@@ -151,11 +151,13 @@ func launch_from_spawn_entry(entry: Dictionary) -> void:
 	var x_pos := column_to_x(column)
 	var aim_row := int(entry.get('aim_row', -1))
 	var aim_column := int(entry.get('aim_column', -1))
-	if aim_row < 1:
-		aim_row = 1
-	if aim_column < 0:
-		aim_column = randi_range(1, COLUMN_COUNT)
-	launch_pineapple(body, x_pos, aim_row, aim_column)
+	## `pineapple 4` / `rock-pineapple 4 y20` stay straight-up. Only a real aim cell
+	## (`pineapple 4 A8`) uses the slower ballistic arc.
+	var has_aim_cell := aim_row >= 1 and aim_column >= 0
+	if has_aim_cell:
+		launch_pineapple(body, x_pos, aim_row, aim_column, entry)
+	else:
+		launch_pineapple(body, x_pos, 0, 0, entry)
 	_pending_pineapple_spawns = maxi(_pending_pineapple_spawns - 1, 0)
 
 
@@ -226,7 +228,7 @@ func _launch_lateral_pineapple(body: RigidBody3D, entry: Dictionary) -> void:
 		spawn_row = aim_row
 
 	var spawn := _lateral_spawn_world(column, spawn_row)
-	var aim := _lateral_aim_world(aim_row, aim_column)
+	var aim := _with_aim_world_y(_lateral_aim_world(aim_row, aim_column), entry)
 	body.global_position = spawn
 	if spawn.x < aim.x:
 		body.exit_side = body.ExitSide.LEFT
@@ -271,7 +273,7 @@ func _get_next_available_pineapple() -> RigidBody3D:
 
 ## Ballistic launch through aim cell apex (same math as RockManager).
 ## Callers should resolve `?` / random aim before calling when random aim is desired.
-func launch_pineapple(body: RigidBody3D, x_pos: float, aim_row: int = 0, aim_column: int = 0) -> void:
+func launch_pineapple(body: RigidBody3D, x_pos: float, aim_row: int = 0, aim_column: int = 0, entry: Dictionary = {}) -> void:
 	body.update_active()
 	body.exit_side = body.ExitSide.TOP
 
@@ -280,7 +282,7 @@ func launch_pineapple(body: RigidBody3D, x_pos: float, aim_row: int = 0, aim_col
 	var impulse: Vector3
 	if aim_row > 0 and aim_column > 0:
 		BallisticAim.configure_body_for_ballistic_launch(body)
-		impulse = _pineapple_aimed_impulse(body, aim_row, aim_column)
+		impulse = _pineapple_aimed_impulse(body, aim_row, aim_column, entry)
 	else:
 		body.linear_damp = 0.0
 		impulse = Vector3(0.0, STRAIGHT_UP_FORCE * body.force_multiplier, 0.0) * body.pulse_magnitude
@@ -290,10 +292,24 @@ func launch_pineapple(body: RigidBody3D, x_pos: float, aim_row: int = 0, aim_col
 	body.start_timer()
 
 
-func _pineapple_aimed_impulse(body: RigidBody3D, aim_row: int, aim_column: int) -> Vector3:
+func _pineapple_aimed_impulse(body: RigidBody3D, aim_row: int, aim_column: int, entry: Dictionary = {}) -> Vector3:
 	var aim_pos := Vector3(
 		column_to_x(aim_column),
 		float(AIM_LANE_Y.get(aim_row, AIM_LANE_Y[1])),
 		AIM_PLANE_Z
 	)
+	aim_pos = _with_aim_world_y(aim_pos, entry)
 	return BallisticAim.impulse_to_point(body, body.global_position, aim_pos)
+
+
+func _with_aim_world_y(pos: Vector3, entry: Dictionary) -> Vector3:
+	if entry.is_empty():
+		return pos
+	if not entry.has("aim_world_y") and entry.has("aim_world_y_min") and entry.has("aim_world_y_max"):
+		var a := float(entry.get("aim_world_y_min", 0.0))
+		var b := float(entry.get("aim_world_y_max", 0.0))
+		entry["aim_world_y"] = randf_range(minf(a, b), maxf(a, b))
+	if not entry.has("aim_world_y"):
+		return pos
+	pos.y = float(entry.get("aim_world_y", pos.y))
+	return pos

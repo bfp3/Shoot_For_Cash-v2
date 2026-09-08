@@ -76,7 +76,12 @@ func loadIsland(data : String) -> bool:
 					continue
 				var hold_ms := _hold_out_ms_from_tokens(tokens)
 				if hold_ms >= 0:
-					boss_timer_ms_by_range['%s|%s' % [island_name, range_name]] = hold_ms
+					## Range-level (before any `round`) is the default timer for that range.
+					## Hold-out under a `round` stays on that round only — see get_rock_sequences.
+					if round_no <= 0:
+						boss_timer_ms_by_range['%s|%s' % [island_name, range_name]] = hold_ms
+					else:
+						data_set.push_back([island_name, range_name, round_no, sanitise_token(token)])
 					continue
 				var play_price := _cash_command_amount(tokens, "play")
 				if play_price >= 0:
@@ -206,15 +211,19 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
 ##   `rock A4` is invalid — use `rock ? A4`. Side lanes: `rock A0 A8` / `rock A0 A9`
 ##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
+##   `rock 4 y20` — spawn column 4, fly straight up to world Y 20 (same X). `y8-20`
+##   picks a random height in that range. `rock 4 a8 y20` uses A8's X at Y 20.
 ##   `rock-grey` is $1 and does not strike on miss. `rock-invisible` is a yellow rock hidden until the crosshair overlaps it; missing it does not strike. `rock-stay` flies straight to aim then hangs (pace ignored).
 ##   `rock-stay 1 a1 a8 c8 c1 a4 1` — spawn col 1, visit those cells in order; trailing `1` = then leave into the splash zone (`0` or omit = hang on the last cell).
 ##   `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `rock-fake` looks and flies like `rock-black` but never strikes; the crosshair x-ray reveals a grey rock.
 ##   `crate` is a standard rock that uses the crate mesh and crate burst particles.
+##   `rock-pineapple` is a must-hit rock with the pineapple mesh, GoldParticles while
+##   live, and pineapple destroy VFX on pop ($10 from dataset `pineapple`).
 ##   `threat 1 a4 a1 a8` — invincible smoke canister that patrols those cells back and forth.
 ##     Crosshair overlap plays `alarm_smoke` then releases `aoe_threat_smoke` (1.5s cooldown).
 ##     `threat 1 a4 a1 a8 fastest` uses the threat export speed for that token.
 ##     `threat-small ...` / `threat-large ...` use the same pathing with optional size presets.
-##     `clear threat` sends it down into the splash zone.
+##     `clear threat` sends it off-screen to the right (same as pineapple-win exit).
 ##   `collector 1 c1 c8` — helper that patrols those cells. Does not alarm on the reticle.
 ##     Near a cash crate (still on the balloon or already falling) it banks the cash
 ##     (positive or negative). Shooting the balloon still drops the crate. A miss is no
@@ -254,7 +263,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   a balloon-rest. `wait clear` is still wait-until-clear, not this command.
 ## clear balloon A4: {cmd: clear-balloon, row, column} — same drift/pay for one cell.
 ## clear ammo: {cmd: clear-ammo} — pop leftover ammo balloons with no ammo and no charge.
-## clear threat: {cmd: clear-threat} — send live threat canisters into the splash zone.
+## clear threat: {cmd: clear-threat} — send live threat canisters off-screen to the right.
 ## clear collector: {cmd: clear-collector} — send live collectors into the splash zone.
 ## repeat: {cmd, count} — closes a wave section that plays as `count` separate waves.
 ##   Bare `repeat` / `repeat 1` / `repeat 2` → 2 waves. `repeat N` (N ≥ 2) → N waves.
@@ -263,8 +272,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## no-lives: {cmd} — this round only; missed rocks do not award strikes.
 ## ammo-unlimited: {cmd} — this round only; shots do not consume bullets (editor TEST / play).
 ## pineapples: {cmd} — stop the hold-out timer (if any), play fanfare + particles,
-##   then launch the following `pineapple` / `wait` lines. When those are cleared,
-##   wait 1s and end the round (tally). Distinct from the `pineapple` spawn command.
+##   then launch the following `pineapple` / `rock-pineapple` / `wait` lines. When
+##   those are cleared, wait 1s and end the round (tally). `rock-pineapple` here is
+##   the same prize spawn as `pineapple` (not the mid-round rock type).
 ## strikes N: {cmd, count} — this round only; player can take N strikes (default 3).
 ##   Example: `strikes 5`.
 ## sfx-play Name volume_db: {cmd, name, volume_db} — play `res://sfx/Name.ogg` (etc.)
@@ -279,6 +289,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## pace-slowest / pace-slow / pace-normal / pace-fast / pace-fastest / pace-impossible:
 ##   mid-round command. From that line on, aimed rocks use that gravity
 ##   (0.25 / 0.5 / 1.0 / 1.5 / 2.25 / 3.0). `pace fastest` form is accepted.
+##   `pace-faster` is an alias of `pace-fastest`.
 ##   Replaces `difficulty-*` for launch speed. difficulty-* still sets round gravity
 ##   (and hard/expert still set bullet travel to 0.1).
 ## gun / gun1 / gun2 / gun3 / gun4 / gun5: mid-round weapon swap. Drops the gun mesh briefly, then
@@ -288,9 +299,11 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## light-dim / light-bright: {cmd}. Smoothly change every `directional_light` energy
 ##   by -0.25 / +0.25 over 3 seconds. Does not pause the sequence.
 ## hold out 90000 / hold-out 90000 / boss-timer 90000: {cmd: hold-out, ms}.
-##   Range- or round-level survival timer in milliseconds. Script plays once:
-##   script end (no pineapples) → win; timer hit 0 or `pineapples` keyword → optional
-##   pineapple finale, then tally.
+##   Survival timer in milliseconds. Under a `round` it applies to that round only —
+##   sibling rounds in the same range are unaffected. Under the `range` header
+##   (before any `round`) it is the default for rounds that do not set their own.
+##   Script plays once: script end (no pineapples) → win; timer hit 0 or `pineapples`
+##   keyword → optional pineapple finale, then tally.
 ## play $100 / play 100: {cmd: play, price}. Range-level PLAY / continue fee.
 ##   Put under `range moss` (before or inside a round). Shop PLAY and CONTINUE
 ##   both charge this amount. Fallback is data_set `price_play_round`.
@@ -313,7 +326,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'red_rock_error', 'smokecan', 'crate':
+		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'red_rock_error', 'smokecan', 'crate', 'rock-pineapple':
 			return _parse_rock_command(cmd, parts)
 
 		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat', 'threat-small', 'threat-large', 'collector':
@@ -554,6 +567,9 @@ func _parse_pace_command(parts: PackedStringArray) -> Dictionary:
 		level = first.substr(5)
 	if level.begins_with('pace-'):
 		level = level.substr(5)
+	## Scripts often write `pace-faster`; same gravity as `pace-fastest`.
+	if level == 'faster':
+		level = 'fastest'
 	if not PACE_LEVELS.has(level):
 		push_warning("parser: unknown pace '%s' — using pace-normal" % first)
 		return {'cmd': 'pace-normal'}
@@ -583,6 +599,9 @@ func _is_random_token(token: String) -> bool:
 ##   rock A0 A8    → spawn at row A, column 0 (off-camera), fly across to A8
 ##   rock A0 A9    → fly in from outside column 1 to outside column 8
 ##   rock 0 A8     → same as `rock A0 A8` (spawn row taken from aim, default A)
+##   rock 4 y20    → column 4, fly up to world Y 20 (same column X)
+##   rock 4 y8-20  → column 4, random aim Y between 8 and 20
+##   rock 4 a8 y20 → column 4, aim at A8's X and world Y 20
 func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 	var result := {
 		'cmd': cmd,
@@ -632,11 +651,13 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 				if not aim.is_empty():
 					result.aim_row = aim.row
 					result.aim_column = aim.column
-				else:
+				elif _parse_aim_world_y_token(token2).is_empty():
 					result.param = token2
 			_apply_optional_end_cell(result, parts)
+			_apply_aim_world_y_from_parts(result, parts)
 			return result
 		result.param = token1
+		_apply_aim_world_y_from_parts(result, parts)
 		return result
 
 	if parts.size() <= 2:
@@ -652,11 +673,71 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 		if not aim.is_empty():
 			result.aim_row = aim.row
 			result.aim_column = aim.column
-		else:
+		elif _parse_aim_world_y_token(token2).is_empty():
 			result.param = token2
 
 	_apply_optional_end_cell(result, parts)
+	_apply_aim_world_y_from_parts(result, parts)
 	return result
+
+
+## `y20` / `Y20` / `y=20` → exact world Y. `y8-20` → random Y in that range.
+func _parse_aim_world_y_token(token: String) -> Dictionary:
+	var raw := token.strip_edges().to_lower()
+	if raw.is_empty() or not raw.begins_with("y"):
+		return {}
+	var rest := raw.substr(1).lstrip("=").lstrip(":").strip_edges()
+	if rest.is_empty():
+		return {}
+	if rest.contains("-") and not rest.begins_with("-"):
+		var bits := rest.split("-", false)
+		if bits.size() == 2 and String(bits[0]).is_valid_float() and String(bits[1]).is_valid_float():
+			return {
+				"aim_world_y_min": float(bits[0]),
+				"aim_world_y_max": float(bits[1]),
+			}
+		return {}
+	if rest.is_valid_float():
+		return {"aim_world_y": float(rest)}
+	return {}
+
+
+func _apply_aim_world_y_from_parts(result: Dictionary, parts: PackedStringArray) -> void:
+	var i := 1
+	while i < parts.size():
+		var tok := String(parts[i]).strip_edges()
+		var parsed := _parse_aim_world_y_token(tok)
+		if parsed.is_empty() and tok.to_lower() == "y" and i + 1 < parts.size():
+			parsed = _parse_aim_world_y_token("y" + String(parts[i + 1]).strip_edges())
+			if not parsed.is_empty():
+				i += 1
+		if not parsed.is_empty():
+			result.merge(parsed)
+		i += 1
+	if not result.has("aim_world_y") and not result.has("aim_world_y_min"):
+		return
+	## No aim cell → fly straight up in the spawn column.
+	if int(result.get("aim_column", RANDOM_SLOT)) < 0:
+		var col := int(result.get("column", RANDOM_SLOT))
+		if col >= 0:
+			result.aim_column = col
+
+
+func _format_aim_world_y_token(entry: Dictionary) -> String:
+	if entry.has("aim_world_y_min") and entry.has("aim_world_y_max"):
+		return "y%s-%s" % [
+			_format_aim_world_y_number(float(entry.get("aim_world_y_min", 0.0))),
+			_format_aim_world_y_number(float(entry.get("aim_world_y_max", 0.0))),
+		]
+	if entry.has("aim_world_y"):
+		return "y%s" % _format_aim_world_y_number(float(entry.get("aim_world_y", 0.0)))
+	return ""
+
+
+func _format_aim_world_y_number(value: float) -> String:
+	if is_equal_approx(value, roundf(value)):
+		return str(int(roundf(value)))
+	return str(value)
 
 
 ## rock-stay / rock-stay-black / rock-cardinal / rock-still / threat / collector
@@ -730,7 +811,7 @@ func _parse_rock_stay_command(cmd: String, parts: PackedStringArray) -> Dictiona
 			result.threat_pace = pace
 			end_i -= 1
 	## Trailing 0/1 only counts as splash-exit when at least one grid cell precedes it.
-	## Threat / collector patrol forever — splash exit is `clear threat` / `clear collector`.
+	## Threat / collector patrol forever — `clear threat` exits right; `clear collector` splash-exits.
 	elif last_tok == '0' or last_tok == '1':
 		var cell_before := false
 		for i in range(cell_start, end_i):
@@ -773,7 +854,7 @@ func _apply_optional_end_cell(result: Dictionary, parts: PackedStringArray) -> v
 	if parts.size() < 4:
 		return
 	var token := String(parts[3]).strip_edges()
-	if token.is_empty() or _is_random_token(token):
+	if token.is_empty() or _is_random_token(token) or not _parse_aim_world_y_token(token).is_empty():
 		return
 	var cell := _parse_balloon_cell(token, true)
 	if cell.is_empty():
@@ -1128,8 +1209,9 @@ func parse_round_text(text: String) -> Dictionary:
 	return sequences[0]
 
 
-## Builds one sequence dict per shooting range (all `round` headings in that range
-## are merged). File order is kept.
+## Builds one sequence dict per `round` heading (file order kept).
+## Hold-out under a round applies only to that round. A `hold out` under the range
+## header (before any `round`) is the default for rounds that do not set their own.
 ## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"type1"|...,
 ##   "bonus_targets": [{ "waypoints": [{row, column}, ...] }, ...], "shuffle": bool,
 ##   "hold_out_ms": int }
@@ -1145,38 +1227,10 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 		if range_name != '' and entry[1] != range_name:
 			continue
 
-		var key := '%s|%s' % [entry[0], entry[1]]
+		var range_key := '%s|%s' % [entry[0], entry[1]]
+		var key := '%s|%d' % [range_key, int(entry[2])]
 		if not rounds.has(key):
-			rounds[key] = {
-				'spawns': [],
-				'repeat': DEFAULT_ROUND_REPEAT,
-				'no_lives': false,
-				'ammo_unlimited': false,
-				'bonus': '',
-				'bonus_targets': [],
-				'shuffle': false,
-				'surprise': false,
-				'difficulty': '',
-				'max_strikes': 3,
-				'hold_out_ms': 0,
-				'quiz': false,
-				'quiz_timer_sec': 60,
-				'quiz_wrong_limit': 3,
-				'quiz_prize_start': 100,
-				'quiz_prize_step': 100,
-				'quiz_questions': [],
-				# Temporary while parsing — removed by `_finalize_round_repeats`.
-				'_pending': [],
-				'_sections': [],
-			}
-			if play_price_by_range.has(key):
-				rounds[key].play_price = maxi(int(play_price_by_range[key]), 0)
-			if reward_by_range.has(key):
-				rounds[key].reward = maxi(int(reward_by_range[key]), 0)
-			if threats_by_range.has(key):
-				rounds[key].default_threats = (threats_by_range[key] as Array).duplicate(true)
-			else:
-				rounds[key].default_threats = []
+			rounds[key] = _blank_round_record(range_key)
 			order.append(key)
 
 		var parsed := parse_spawn_command(entry[3])
@@ -1243,19 +1297,18 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 		if parsed_cmd == 'hold-out' or parsed_cmd == 'boss-timer':
 			var ms := int(parsed.get('ms', 0))
 			rounds[key].hold_out_ms = maxi(ms, 0)
-			boss_timer_ms_by_range['%s|%s' % [entry[0], entry[1]]] = maxi(ms, 0)
 			continue
 
 		if parsed_cmd == 'play':
 			var price := maxi(int(parsed.get('price', 0)), 0)
 			rounds[key].play_price = price
-			play_price_by_range['%s|%s' % [entry[0], entry[1]]] = price
+			play_price_by_range[range_key] = price
 			continue
 
 		if parsed_cmd == 'reward':
 			var reward := maxi(int(parsed.get('price', 0)), 0)
 			rounds[key].reward = reward
-			reward_by_range['%s|%s' % [entry[0], entry[1]]] = reward
+			reward_by_range[range_key] = reward
 			continue
 
 		if parsed_cmd == 'shuffle':
@@ -1332,15 +1385,58 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 		if bool(rounds[key].get('surprise', false)):
 			_apply_surprise_me(rounds[key])
 		_finalize_bonus_round(rounds[key])
-		var range_ms := int(boss_timer_ms_by_range.get(key, 0))
-		if range_ms > 0:
-			rounds[key].hold_out_ms = range_ms
-		if play_price_by_range.has(key):
-			rounds[key].play_price = maxi(int(play_price_by_range[key]), 0)
-		if reward_by_range.has(key):
-			rounds[key].reward = maxi(int(reward_by_range[key]), 0)
+		var range_key := _range_key_from_sequence_key(key)
+		if int(rounds[key].hold_out_ms) <= 0:
+			var range_ms := int(boss_timer_ms_by_range.get(range_key, 0))
+			if range_ms > 0:
+				rounds[key].hold_out_ms = range_ms
+		if play_price_by_range.has(range_key):
+			rounds[key].play_price = maxi(int(play_price_by_range[range_key]), 0)
+		if reward_by_range.has(range_key):
+			rounds[key].reward = maxi(int(reward_by_range[range_key]), 0)
 		sequences.append(rounds[key])
 	return sequences
+
+
+func _blank_round_record(range_key: String) -> Dictionary:
+	var rec := {
+		'spawns': [],
+		'repeat': DEFAULT_ROUND_REPEAT,
+		'no_lives': false,
+		'ammo_unlimited': false,
+		'bonus': '',
+		'bonus_targets': [],
+		'shuffle': false,
+		'surprise': false,
+		'difficulty': '',
+		'max_strikes': 3,
+		'hold_out_ms': 0,
+		'quiz': false,
+		'quiz_timer_sec': 60,
+		'quiz_wrong_limit': 3,
+		'quiz_prize_start': 100,
+		'quiz_prize_step': 100,
+		'quiz_questions': [],
+		# Temporary while parsing — removed by `_finalize_round_repeats`.
+		'_pending': [],
+		'_sections': [],
+	}
+	if play_price_by_range.has(range_key):
+		rec.play_price = maxi(int(play_price_by_range[range_key]), 0)
+	if reward_by_range.has(range_key):
+		rec.reward = maxi(int(reward_by_range[range_key]), 0)
+	if threats_by_range.has(range_key):
+		rec.default_threats = (threats_by_range[range_key] as Array).duplicate(true)
+	else:
+		rec.default_threats = []
+	return rec
+
+
+func _range_key_from_sequence_key(key: String) -> String:
+	var last := key.rfind("|")
+	if last <= 0:
+		return key
+	return key.substr(0, last)
 
 
 ## Resolves `repeat` markers into a per-wave spawn list.
@@ -1605,7 +1701,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'smokecan', 'crate', 'red_rock_error':
+		'pineapple', 'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'smokecan', 'crate', 'rock-pineapple', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))
@@ -1621,21 +1717,27 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			var ec := int(entry.get('end_column', RANDOM_SLOT))
 			if er > 0 and ec >= 0:
 				end = '%s%d' % [letters[clampi(er, 1, 3)], ec]
+			var line := cmd
 			if spawn_row >= 1 and col >= 0:
 				var spawn := '%s%d' % [letters[clampi(spawn_row, 1, 3)], col]
 				if aim != '' and end != '':
-					return '%s %s %s %s' % [cmd, spawn, aim, end]
-				if aim != '':
-					return '%s %s %s' % [cmd, spawn, aim]
-				return '%s %s' % [cmd, spawn]
-			var col_token := '?' if col < 0 else str(col)
-			if aim != '' and end != '':
-				return '%s %s %s %s' % [cmd, col_token, aim, end]
-			if aim != '':
-				return '%s %s %s' % [cmd, col_token, aim]
-			if col < 0:
-				return cmd
-			return '%s %s' % [cmd, col_token]
+					line = '%s %s %s %s' % [cmd, spawn, aim, end]
+				elif aim != '':
+					line = '%s %s %s' % [cmd, spawn, aim]
+				else:
+					line = '%s %s' % [cmd, spawn]
+			else:
+				var col_token := '?' if col < 0 else str(col)
+				if aim != '' and end != '':
+					line = '%s %s %s %s' % [cmd, col_token, aim, end]
+				elif aim != '':
+					line = '%s %s %s' % [cmd, col_token, aim]
+				elif col >= 0:
+					line = '%s %s' % [cmd, col_token]
+			var y_bit := _format_aim_world_y_token(entry)
+			if y_bit != '':
+				return '%s %s' % [line, y_bit]
+			return line
 		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat', 'collector':
 			var stay_bits: PackedStringArray = [cmd]
 			if cmd == 'threat':

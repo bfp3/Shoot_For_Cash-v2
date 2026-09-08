@@ -295,6 +295,8 @@ func set_pace_gravity(pace: String) -> void:
 	var key := String(pace).strip_edges().to_lower()
 	if key.begins_with("pace-"):
 		key = key.substr(5)
+	if key == "faster":
+		key = "fastest"
 	if PACE_GRAVITY.has(key):
 		aim_launch_gravity_scale = float(PACE_GRAVITY[key])
 
@@ -487,6 +489,10 @@ func _is_pineapple_finale_filler(cmd: String) -> bool:
 	)
 
 
+func _is_finale_pineapple_spawn_cmd(cmd: String) -> bool:
+	return cmd == "pineapple" or cmd == "rock-pineapple"
+
+
 func has_trailing_pineapples() -> bool:
 	return not _hold_out_pineapple_finale.is_empty()
 
@@ -518,7 +524,7 @@ func start_scripted_pineapple_finale_from_cursor() -> bool:
 		var cmd := ""
 		if entry is Dictionary:
 			cmd = String(entry.get("cmd", "")).to_lower()
-		if cmd == "pineapple" or cmd == "wait":
+		if _is_finale_pineapple_spawn_cmd(cmd) or cmd == "wait":
 			finale.append(entry)
 			continue
 		if _is_pineapple_finale_filler(cmd) or cmd.is_empty():
@@ -621,7 +627,7 @@ func _run_hold_out_pineapple_finale(token: int) -> void:
 			if wait_ms > 0:
 				await get_tree().create_timer(float(wait_ms) / 1000.0, false).timeout
 			continue
-		if cmd != "pineapple":
+		if not _is_finale_pineapple_spawn_cmd(cmd):
 			continue
 		var launcher := _resolve_pineapple_launcher()
 		if launcher == null:
@@ -840,16 +846,10 @@ func _collect_next_beat() -> Array:
 			_handle_sfx_command(_full_wave_sequence[_sequence_cursor])
 			_sequence_cursor += 1
 			continue
-		if _is_pace_cmd(cmd):
-			_apply_pace_entry(_full_wave_sequence[_sequence_cursor])
-			_sequence_cursor += 1
-			continue
-		if _is_gun_cmd(cmd):
-			_apply_gun_entry(_full_wave_sequence[_sequence_cursor])
-			_sequence_cursor += 1
-			continue
-		if _is_light_cmd(cmd):
-			_apply_light_entry(_full_wave_sequence[_sequence_cursor])
+		## Leave pace / gun / light in the beat so `_begin_beat` applies them
+		## in script order. Applying here would stamp the last `pace-*` onto every rock.
+		if _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_light_cmd(cmd):
+			beat.append(_full_wave_sequence[_sequence_cursor])
 			_sequence_cursor += 1
 			continue
 		if (
@@ -950,6 +950,7 @@ func _begin_beat(sequence: Array) -> void:
 					pending_wait_ms = null
 					var stamped_gap: Dictionary = gap_entry.duplicate()
 					stamped_gap["gravity_scale"] = aim_launch_gravity_scale
+					_stamp_aim_world_y(stamped_gap)
 					rocks.append(stamped_gap)
 				continue
 			if not _is_launchable_spawn_cmd(cmd):
@@ -967,6 +968,7 @@ func _begin_beat(sequence: Array) -> void:
 			pending_wait_ms = null
 			var stamped: Dictionary = entry.duplicate(true)
 			stamped["gravity_scale"] = aim_launch_gravity_scale
+			_stamp_aim_world_y(stamped)
 			rocks.append(stamped)
 			continue
 
@@ -1369,13 +1371,7 @@ func _clear_ammo_balloons() -> void:
 
 
 func _clear_threats() -> void:
-	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
-		if node == null or not is_instance_valid(node):
-			continue
-		if node.has_method("begin_threat_splash_exit"):
-			node.begin_threat_splash_exit()
-		else:
-			node.queue_free()
+	_stagger_threat_right_exits(get_tree().get_nodes_in_group("threat_smoke_mine"))
 
 
 ## Hard remove every live smoke mine (level travel / leave range).
@@ -1399,14 +1395,28 @@ func clear_script_threat_mines() -> void:
 
 func exit_threat_mines_right_for_pineapple_win() -> void:
 	_threats_exiting_for_pineapple_win = true
-	for node in get_tree().get_nodes_in_group("threat_smoke_mine"):
+	_stagger_threat_right_exits(get_tree().get_nodes_in_group("threat_smoke_mine"))
+	_clear_collectors()
+
+
+func _stagger_threat_right_exits(nodes: Array) -> void:
+	var delay := 0.0
+	for node in nodes:
 		if node == null or not is_instance_valid(node):
 			continue
-		if node.has_method("begin_threat_right_exit"):
-			node.begin_threat_right_exit()
-		else:
-			node.queue_free()
-	_clear_collectors()
+		_threat_right_exit_after(node, delay)
+		delay += randf_range(0.1, 0.2)
+
+
+func _threat_right_exit_after(node: Node, delay_sec: float) -> void:
+	if delay_sec > 0.0:
+		await get_tree().create_timer(delay_sec, false).timeout
+	if node == null or not is_instance_valid(node):
+		return
+	if node.has_method("begin_threat_right_exit"):
+		node.begin_threat_right_exit()
+	else:
+		node.queue_free()
 
 
 func _clear_threats_immediate() -> void:
@@ -2196,6 +2206,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 
 			'crate':
 				return RockInstance.RockSize.CRATE
+			'rock-pineapple':
+				return RockInstance.RockSize.PINEAPPLE
 			_:
 				return RockInstance.RockSize.SMALL
 
@@ -2227,6 +2239,7 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-cardinal'
 		or cmd == 'rock-still'
 		or cmd == 'crate'
+		or cmd == 'rock-pineapple'
 	)
 
 
@@ -3029,6 +3042,7 @@ func _build_wave_telegraph_plan(bodies: Array) -> void:
 				aim_world = _lateral_aim_world(aim)
 			else:
 				aim_world = _aim_cell_world_position(aim.x, aim.y, true)
+		aim_world = _with_aim_world_y(aim_world, entry)
 
 		_wave_telegraph_plan.append({
 			'spawn': spawn,
@@ -3364,7 +3378,9 @@ func _resolve_aim_cell(entry, apply_center_bias: bool = false, spawn_column: int
 	if aim_row < 1:
 		aim_row = 1
 	if aim_column < 0:
-		if apply_center_bias and not _wave_aim_pool.is_empty():
+		if _entry_has_aim_world_y(entry) and spawn_column >= 0:
+			aim_column = spawn_column
+		elif apply_center_bias and not _wave_aim_pool.is_empty():
 			aim_column = _pick_wave_aim_column(spawn_column)
 		else:
 			aim_column = randi_range(1, COLUMN_COUNT)
@@ -3814,7 +3830,7 @@ func _stay_aim_world(body, rock_index: int, entry) -> Vector3:
 		return _wave_telegraph_plan[rock_index].aim
 	var spawn_column := _x_to_nearest_column(body.target_x_position)
 	var aim := _resolve_aim_cell(entry, true, spawn_column)
-	return _aim_cell_world_position(aim.x, aim.y, true)
+	return _with_aim_world_y(_aim_cell_world_position(aim.x, aim.y, true), entry)
 
 
 ## Resolve `path_cells` from a rock-stay script entry into world points (no jitter).
@@ -3883,7 +3899,10 @@ func _pigeon_launch_impulse(body, rock_index: int, upward_force: float) -> Vecto
 		if rock_index >= 0 and rock_index < manual_rock_sequence.size():
 			entry = manual_rock_sequence[rock_index]
 		var aim := _resolve_aim_cell(entry)
-		aim_point = _pigeon_aim_world_point(aim.y, aim.x, body.global_position.y)
+		aim_point = _with_aim_world_y(
+			_pigeon_aim_world_point(aim.y, aim.x, body.global_position.y),
+			entry
+		)
 
 	var y_force: float = upward_force
 	var dx: float = aim_point.x - body.global_position.x
@@ -3972,6 +3991,7 @@ func _build_launch_impulse(body, rock_index: int, _upward_force: float, _z_varia
 		var spawn_column := _x_to_nearest_column(body.target_x_position)
 		var aim := _resolve_aim_cell(entry, true, spawn_column)
 		aim_pos = _aim_cell_world_position(aim.x, aim.y, true)
+		aim_pos = _with_aim_world_y(aim_pos, entry)
 		if gravity_scale < 0.0:
 			gravity_scale = _aim_launch_gravity_for(body, entry)
 	return _aimed_launch_impulse_to_world(body, aim_pos, gravity_scale)
@@ -3982,6 +4002,7 @@ func _lateral_launch_impulse(body, entry) -> Vector3:
 	var spawn :Vector3= body.global_position
 	var aim := _resolve_aim_cell(entry, false, column)
 	var aim_pos := _lateral_aim_world(aim)
+	aim_pos = _with_aim_world_y(aim_pos, entry)
 	var dist := spawn.distance_to(aim_pos)
 	var flight_t := clampf(dist / LATERAL_FLIGHT_SPEED, 0.45, 1.75)
 	return BallisticAim.impulse_to_point(
@@ -4001,6 +4022,33 @@ func _aim_cell_world_position(aim_row: int, aim_column: int, apply_jitter: bool 
 		var radius := aim_offset * sqrt(randf())
 		pos.x += cos(angle) * radius
 		pos.y += sin(angle) * radius
+	return pos
+
+
+func _entry_has_aim_world_y(entry) -> bool:
+	if not (entry is Dictionary):
+		return false
+	return entry.has("aim_world_y") or (entry.has("aim_world_y_min") and entry.has("aim_world_y_max"))
+
+
+func _stamp_aim_world_y(entry: Dictionary) -> void:
+	if entry.has("aim_world_y"):
+		return
+	if not entry.has("aim_world_y_min") or not entry.has("aim_world_y_max"):
+		return
+	var a := float(entry.get("aim_world_y_min", 0.0))
+	var b := float(entry.get("aim_world_y_max", 0.0))
+	entry["aim_world_y"] = randf_range(minf(a, b), maxf(a, b))
+
+
+func _with_aim_world_y(pos: Vector3, entry) -> Vector3:
+	if not (entry is Dictionary):
+		return pos
+	if not entry.has("aim_world_y") and entry.has("aim_world_y_min") and entry.has("aim_world_y_max"):
+		_stamp_aim_world_y(entry)
+	if not entry.has("aim_world_y"):
+		return pos
+	pos.y = float(entry.get("aim_world_y", pos.y))
 	return pos
 
 

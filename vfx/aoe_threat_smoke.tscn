@@ -100,7 +100,7 @@ turbulence_influence_over_life = SubResource("CurveTexture_q8tld")
 [sub_resource type="QuadMesh" id="QuadMesh_bymj0"]
 
 [sub_resource type="Curve" id="Curve_1ijg2"]
-_data = [Vector2(0.028169, 1), 0.0, 0.0, 0, 0, Vector2(0.92356694, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.9789228, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
 [sub_resource type="CurveTexture" id="CurveTexture_fkfg0"]
@@ -121,19 +121,17 @@ point_count = 2
 curve = SubResource("Curve_ltsxa")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ltsxa"]
-direction = Vector3(0, 1, 0)
+direction = Vector3(0, 0, 0)
 spread = 5.0
-angular_velocity_min = -1.6093254e-05
-angular_velocity_max = -1.6093254e-05
-radial_velocity_min = 0.99997765
-radial_velocity_max = 1.9999776
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = 0.049977645
 gravity = Vector3(0, 0, 0)
-tangential_accel_min = 1.9999977
-tangential_accel_max = 1.9999977
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = 0.99999774
 scale_min = 0.5
 scale_max = 0.5
 scale_curve = SubResource("CurveTexture_7v60h")
-color = Color(0.8, 0.8, 0.8, 1)
+color = Color(0.7, 0.7, 0.7, 1)
 color_ramp = SubResource("GradientTexture1D_b00sn")
 alpha_curve = SubResource("CurveTexture_fkfg0")
 anim_speed_min = 1.0
@@ -152,7 +150,7 @@ particles_anim_loop = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_herjc"]
 material = SubResource("StandardMaterial3D_6bfdk")
-size = Vector2(60, 60)
+size = Vector2(80, 80)
 
 [sub_resource type="Curve" id="Curve_b1tng"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -198,7 +196,6 @@ point_count = 2
 curve = SubResource("Curve_iec0l")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_beb3h"]
-lifetime_randomness = 1.0
 particle_flag_rotate_y = true
 emission_shape = 1
 emission_sphere_radius = 0.5
@@ -214,8 +211,8 @@ radial_velocity_curve = SubResource("CurveTexture_k7mg4")
 gravity = Vector3(0, 0, 0)
 radial_accel_min = 0.25
 radial_accel_max = 0.5
-tangential_accel_min = -4.0
-tangential_accel_max = -2.0
+tangential_accel_min = -1.0000023
+tangential_accel_max = -2.2351742e-06
 damping_min = 3.0
 damping_max = 10.0
 damping_curve = SubResource("CurveTexture_n58sw")
@@ -487,11 +484,11 @@ transform = Transform3D(1, 0, 0, 0, 0.999998, 0, 0, 0, 0.999998, 0, 0, -1.561213
 layers = 4096
 cast_shadow = 0
 emitting = false
-amount = 5
-lifetime = 9.0
+amount = 10
+lifetime = 12.0
 one_shot = true
 explosiveness = 1.0
-fixed_fps = 60
+fixed_fps = 120
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_ltsxa")
 draw_pass_1 = SubResource("QuadMesh_herjc")
