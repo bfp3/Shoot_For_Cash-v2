@@ -525,9 +525,8 @@ angular_damp = 1.0
 script = ExtResource("1_bc0l2")
 grey_blast_radius = 6.0
 grey_blast_speed = 0.35
-rico_speed = 25.0
-rico_hit_radius = 1.0
-rico_hang_sec = 0.0
+rico_speed = 20.0
+rico_hit_radius = 2.0
 rico_fall_gravity = 1.0
 avoider_arm_delay_sec = 1.0
 
@@ -643,10 +642,10 @@ process_material = SubResource("ParticleProcessMaterial_herjc")
 draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
 [node name="Trails" parent="Mesh/rock_rico" unique_id=563776842 instance=ExtResource("19_dfmc7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.49)
 script = ExtResource("20_2063v")
-_fromWidth = 0.05
-_lifespan = 0.1
-_endColor = Color(1, 1, 1, 1)
+_fromWidth = 0.1
+_lifespan = 0.3
 
 [node name="rock_ammo" type="MeshInstance3D" parent="Mesh" unique_id=887828543]
 unique_name_in_owner = true

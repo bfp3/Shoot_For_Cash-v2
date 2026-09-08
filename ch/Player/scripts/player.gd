@@ -146,7 +146,7 @@ enum GunLoadout { GUN1 = 1, GUN2 = 2, GUN3 = 3, GUN4 = 4, GUN5 = 5 }
 @export var starting_gun_loadout: GunLoadout = GunLoadout.GUN1
 var active_gun_loadout: GunLoadout = GunLoadout.GUN1
 var _gun_swap_token := 0
-## When >= 0, `_apply_scope_shot_stats` uses this travel time instead of the hardcoded 0.05.
+## When >= 0, `_apply_scope_shot_stats` uses this travel time instead of the upgrade `power_bullet_speed`.
 var _loadout_bullet_speed_override := -1.0
 @export_range(0.05, 2.0, 0.01) var gun3_bullet_travel_sec := 0.3
 ## Gun5: seconds ahead to predict target positions for the bow-style lead shot.
@@ -1514,11 +1514,9 @@ func handle_scope_adjust(delta: float) -> void:
 
 ## Keep Player + Weapon_shooting in sync. Bullets read weapon_shooting.power_bullet_speed.
 func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
-	## Gun3 override must stick — the old path always forced 0.05 every frame.
+	## Gun3 / gun5 keep their scripted travel; otherwise use upgrade / scope `bullet_speed`.
 	if _loadout_bullet_speed_override >= 0.0:
 		bullet_speed = _loadout_bullet_speed_override
-	else:
-		bullet_speed = 0.001 #0.05
 	if active_gun_loadout == GunLoadout.GUN2:
 		fire_rate = 0.05
 	elif active_gun_loadout == GunLoadout.GUN3:

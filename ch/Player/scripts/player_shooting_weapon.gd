@@ -346,8 +346,9 @@ func _reset_pitch_adjustment() -> void:
 func _cannot_shoot() -> void:
 	process_mode = Node.PROCESS_MODE_DISABLED
 	
-func process_target_hit(target, damage, screen_offset) -> void:
-	await get_tree().create_timer(power_bullet_speed, false).timeout
+func process_target_hit(target, damage, screen_offset, travel_sec: float = -1.0) -> void:
+	var wait_sec := float(power_bullet_speed) if travel_sec < 0.0 else travel_sec
+	await get_tree().create_timer(maxf(wait_sec, 0.0), false).timeout
 	if is_instance_valid(target):
 		var freeze_shot := false
 		if player and player.get("using_alt_weapon") == true:
@@ -490,7 +491,8 @@ func shoot_target() -> void:
 			#damage = 0
 			#power_bullet_speed /= 4
 
-		if not spawn_projectile(target, power_bullet_speed, Vector3.ZERO, free_shot):
+		var travel_sec := float(power_bullet_speed)
+		if not spawn_projectile(target, travel_sec, Vector3.ZERO, free_shot):
 			break
 
 		var rock_screen_pos = stable_camera.unproject_position(target.global_position)
@@ -499,7 +501,8 @@ func shoot_target() -> void:
 		process_target_hit.call_deferred(
 			target,
 			damage,
-			screen_offset
+			screen_offset,
+			travel_sec
 		)
 
 		if time_ran_out:
@@ -667,13 +670,14 @@ func shoot_special_midround_target_if_aimed() -> bool:
 	if special_target.has_method("start_bullet_to_target"):
 		special_target.start_bullet_to_target()
 
-	if not spawn_projectile(special_target, power_bullet_speed, Vector3.ZERO, true):
+	var travel_sec := float(power_bullet_speed)
+	if not spawn_projectile(special_target, travel_sec, Vector3.ZERO, true):
 		round_manager.bullet_active = false
 		return false
 
 	var rock_screen_pos = stable_camera.unproject_position(_target_aim_position(special_target))
 	var screen_offset = rock_screen_pos - crosshair.global_position
-	process_target_hit.call_deferred(special_target, power_bullet_damage, screen_offset)
+	process_target_hit.call_deferred(special_target, power_bullet_damage, screen_offset, travel_sec)
 	if player and player.has_method("register_accurate_shot"):
 		player.register_accurate_shot()
 	return true
@@ -823,12 +827,14 @@ func shoot_shootable_object(hit: Dictionary) -> void:
 	#player_camera.shake_camera_shooting()
 	%Crosshair.crosshair_shake()
 
-	spawn_projectile(null, power_bullet_speed, hit_position)
+	var travel_sec := float(power_bullet_speed)
+	spawn_projectile(null, travel_sec, hit_position)
 
-	process_shootable_hit.call_deferred(hit_position, hit_normal)
+	process_shootable_hit.call_deferred(hit_position, hit_normal, travel_sec)
 
-func process_shootable_hit(hit_position: Vector3, hit_normal: Vector3) -> void:
-	await get_tree().create_timer(power_bullet_speed, false).timeout
+func process_shootable_hit(hit_position: Vector3, hit_normal: Vector3, travel_sec: float = -1.0) -> void:
+	var wait_sec := float(power_bullet_speed) if travel_sec < 0.0 else travel_sec
+	await get_tree().create_timer(maxf(wait_sec, 0.0), false).timeout
 	explode_at_point(hit_position, hit_normal)
 
 

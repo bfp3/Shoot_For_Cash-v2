@@ -2723,9 +2723,11 @@ func _start_rico_slide() -> void:
 	linear_damp = 0.0
 	angular_damp = 2.5
 	linear_velocity = Vector3(_rico_dir * rico_speed, 0.0, 0.0)
+	
 	angular_velocity = Vector3.ZERO
 	sleeping = false
 	freeze = false
+	apply_torque_impulse(Vector3.FORWARD * 1500)
 	_set_rico_particles(true)
 	play_hit_sfx()
 	_play_vfx(&"rock_hit")
