@@ -5,9 +5,9 @@ extends Node3D
 const AMMO_BALLOON_SCENE := preload("res://ch/Rocks/AmmoBalloon.tscn")
 const CASH_BALLOON_SCENE := preload("res://ch/Rocks/CashBalloon.tscn")
 
-@export_group("Grey Rocks Ammo")
-## Grey rocks needed in one volley to spawn an ammo balloon at the hit. 0 disables.
-@export var grey_rocks_ammo := 3
+@export_group("Ammo Rocks")
+## `rock-ammo` hits in one volley to spawn an ammo balloon at the hit. 0 disables.
+@export var ammo_rocks_needed := 1
 
 @export_group("Yellow Rocks Cash")
 ## Yellow rocks needed in one volley to spawn a cash balloon at the hit. 0 disables.
@@ -234,15 +234,20 @@ func start_oranges(multiplier : int, _pos : Vector3) -> void:
 		#await get_tree().create_timer(0.5, false).timeout
 
 
-## Called from a volley: spawn an ammo balloon if enough grey rocks were hit in one go.
-func try_grey_rocks_ammo(grey_count: int, pos: Vector3) -> void:
-	if grey_rocks_ammo <= 0:
+## Called from a volley: spawn an ammo balloon if enough `rock-ammo` were hit in one go.
+func try_ammo_rocks_ammo(ammo_count: int, pos: Vector3) -> void:
+	if ammo_rocks_needed <= 0:
 		return
-	if grey_count < grey_rocks_ammo:
+	if ammo_count < ammo_rocks_needed:
 		return
 	if not pos.is_finite():
 		return
 	_spawn_ammo_balloon_at(pos)
+
+
+## Kept for older callers; ammo balloons now come from `rock-ammo`.
+func try_grey_rocks_ammo(grey_count: int, pos: Vector3) -> void:
+	try_ammo_rocks_ammo(grey_count, pos)
 
 
 func _spawn_ammo_balloon_at(pos: Vector3) -> void:

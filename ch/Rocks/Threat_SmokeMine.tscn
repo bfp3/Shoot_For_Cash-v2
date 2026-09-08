@@ -16,6 +16,7 @@
 [ext_resource type="AudioStream" uid="uid://dp73yy0kj3q8u" path="res://sfx/bump_sfx.ogg" id="12_cte68"]
 [ext_resource type="AudioStream" uid="uid://eqghtysjf3ig" path="res://sfx/Explosion.ogg" id="12_ws5ov"]
 [ext_resource type="AudioStream" uid="uid://yg5j827dnd2i" path="res://sfx/rocks_destroyed_sfx_02.ogg" id="14_ws5ov"]
+[ext_resource type="AudioStream" uid="uid://dkq103dmuncnc" path="res://sfx/fart_01.ogg" id="15_1ijg2"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="15_upgbk"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="16_2pfik"]
 [ext_resource type="AudioStream" uid="uid://b5jm8thplb0ul" path="res://sfx/smoke_release_sfx_01.ogg" id="17_j5hxi"]
@@ -420,9 +421,7 @@ humming_pitch_max = 1.5
 humming_volume_db_min = 5.0
 humming_volume_db_max = 18.0
 steam_movement = true
-arrive_duration_sec = 1.8
 alarm_gives_strike = true
-destroy_after_alarm = false
 smoke_release_delay_sec = 1.0
 smoke_cooldown_sec = 2.0
 stun_duration_sec = 1.0
@@ -585,7 +584,13 @@ stream = ExtResource("10_70osm")
 max_distance = 30.0
 emission_angle_degrees = 15.0
 
-[node name="alarm_sfx" type="AudioStreamPlayer3D" parent="SFX" unique_id=647815128]
+[node name="fart_sfx" type="AudioStreamPlayer3D" parent="SFX" unique_id=647815128]
+stream = ExtResource("15_1ijg2")
+volume_db = 10.0
+max_distance = 30.0
+emission_angle_degrees = 15.0
+
+[node name="alarm_sfx" type="AudioStreamPlayer3D" parent="SFX" unique_id=637792974]
 stream = ExtResource("10_upgbk")
 volume_db = -10.0
 max_distance = 30.0

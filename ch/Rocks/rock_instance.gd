@@ -41,6 +41,29 @@ const GREY_BLAST_STAGGER_SEC := 0.075
 const GREY_BLAST_SHADER_MAT := preload("res://res/Explosion_paid_patreon/shaders/toon_smoke_front.tres")
 const GREY_BLAST_MESH_LAYERS := 16
 
+const RICO_SIDE_MAT := preload("res://res/rock-side_material.tres")
+const AMMO_ROCK_MAT := preload("res://res/rock-ammo_material.tres")
+
+@export_group("Rock Rico")
+## Horizontal travel speed after a shot (world units / sec).
+@export_range(4.0, 80.0, 0.5) var rico_speed := 32.0
+## Kill radius while sliding (`Explosion_area` scale; sphere is 0.5m at scale 1).
+@export_range(0.5, 12.0, 0.1) var rico_hit_radius := 3.0
+## Seconds of straight horizontal flight before gravity turns on.
+@export_range(0.0, 2.0, 0.01) var rico_hang_sec := 0.25
+## Gravity scale applied after the hang. Higher = faster drop.
+@export_range(0.1, 4.0, 0.05) var rico_fall_gravity := 1.15
+## |X| below this uses travel-velocity to pick a side (otherwise left→+X, right→−X).
+@export_range(0.0, 1.0, 0.001) var rico_center_threshold := 0.01
+
+var _rico_sliding := false
+var _rico_hanging := false
+var _rico_cash_paid := false
+var _rico_force_pop := false
+var _rico_dir := 1.0
+var _rico_lock_z := 0.0
+var _rico_hit_ids: Dictionary = {}
+
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 var start_exploding := false
 var pitch_adjustment := 0.02
@@ -95,6 +118,10 @@ enum RockSize {
 	INVISIBLE,
 	## Script `rock-pineapple`: pineapple mesh, GoldParticles while live, pineapple VFX on pop.
 	PINEAPPLE,
+	## Script `rock-rico`: grey mesh + rock-side_material. Shot slides sideways then falls.
+	RICO,
+	## Script `rock-ammo`: grey mesh + rock-ammo_material (red/white balloon stripes). Shot can spawn an ammo balloon.
+	AMMO,
 }
 
 enum State {
@@ -119,6 +146,8 @@ var rock_has_been_logged := false
 @onready var small_rock: MeshInstance3D = %small_rock
 @onready var clay_pigeon: MeshInstance3D = %clay_pigeon
 @onready var grey_rock: MeshInstance3D = %grey_rock
+@onready var rock_rico_mesh: MeshInstance3D = get_node_or_null("%rock_rico") as MeshInstance3D
+@onready var rock_ammo_mesh: MeshInstance3D = get_node_or_null("%rock_ammo") as MeshInstance3D
 
 @onready var medium_rock: MeshInstance3D = %medium_rock
 @onready var large_rock: MeshInstance3D = %Large_rock
@@ -754,10 +783,13 @@ func _physics_process(delta: float) -> void:
 		elif rock_type == RockSize.GAP:
 			if not _freeze_shot_pending:
 				_check_hazard_crosshair()
-		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.PINEAPPLE:
+		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.AMMO or rock_type == RockSize.PINEAPPLE:
 			_update_destroy_on_crosshair_overlap()
 		elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 			_update_hazard_crosshair_overlap()
+
+		if _rico_sliding:
+			_update_rico_slide()
 
 	if not ballistic_aim_active or _ballistic_in_descent:
 		return
@@ -774,7 +806,7 @@ func _update_mesh_face_velocity() -> void:
 	if not mesh_face_velocity:
 		return
 	## Black rocks keep the launch torque tumble instead of aiming along the arc.
-	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black() or rock_type == RockSize.PINEAPPLE:
+	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black() or rock_type == RockSize.PINEAPPLE or rock_type == RockSize.AMMO:
 		return
 	if mesh_container == null or not is_instance_valid(mesh_container):
 		return
@@ -912,7 +944,7 @@ func update_active() -> void:
 	elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 		if _player_wants_overlap_destroy("hazards"):
 			_arm_hazard_crosshair()
-	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.STAY or rock_type == RockSize.PINEAPPLE:
+	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.AMMO or rock_type == RockSize.STAY or rock_type == RockSize.PINEAPPLE:
 		if _player_wants_overlap_destroy("rocks"):
 			_arm_destroy_on_crosshair()
 	if rock_type == RockSize.SMALL or rock_type == RockSize.STAY:
@@ -966,6 +998,7 @@ func round_end_check_rock_status() -> void:
 				or rock_type == RockSize.AVOIDER
 				or rock_type == RockSize.RED_ATTACKER
 				or rock_type == RockSize.GAP
+				or (_rico_sliding and rock_type == RockSize.RICO)
 			):
 				pass
 			else:
@@ -1054,6 +1087,8 @@ func _cancel_airborne_rock_collisions() -> void:
 
 func update_gravity(_gravity_scale : float) -> void:
 	for i in range(3):
+		if _rico_sliding:
+			return
 		#gravity_scale = _gravity_scale
 		gravity_scale = 0.15
 		#linear_damp = 0.0
@@ -1061,10 +1096,12 @@ func update_gravity(_gravity_scale : float) -> void:
 	
 	if rock_activated:
 		await get_tree().create_timer(1.5, false).timeout
+		if _rico_sliding:
+			return
 		linear_damp = 0.0
 
 func _visual_meshes() -> Array:
-	return [small_rock, grey_rock, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate, pineapple_mesh]
+	return [small_rock, grey_rock, rock_rico_mesh, rock_ammo_mesh, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate, pineapple_mesh]
 
 
 func _cache_mesh_original_overrides() -> void:
@@ -1084,6 +1121,7 @@ func hide_all_meshes() -> void:
 		mesh.visible = false
 		if _mesh_original_overrides.has(mesh):
 			mesh.material_override = _mesh_original_overrides[mesh]
+	_set_rico_particles(false)
 
 
 
@@ -1442,6 +1480,57 @@ func setup_rock_type() -> void:
 			force_mult = [5]
 			force_mult_index = 0
 
+		RockSize.RICO:
+			current_rock_type = "Rico Rock"
+			rock_type_name = "rock_type_rico"
+			var rico_health := int(gl_DataSet.get_value("rock_type_rico", 1))
+			var rico_cash := int(gl_DataSet.get_value("rock_type_rico", 0))
+			health = maxi(rico_health, 1)
+			cash_value = rico_cash
+			max_health = health
+			if rock_rico_mesh:
+				rock_rico_mesh.visible = true
+				current_mesh = rock_rico_mesh
+			elif grey_rock:
+				grey_rock.visible = true
+				current_mesh = grey_rock
+			else:
+				small_rock.visible = true
+				current_mesh = small_rock
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = Vector3.ONE * randf_range(0.42, 0.6)
+			main_col.scale = Vector3.ONE * 0.125 * 1.2
+			rock_type_gravity_scale = 0.1
+			force_mult.clear()
+			force_mult = [5]
+			force_mult_index = 0
+			_set_rico_particles(false)
+
+		RockSize.AMMO:
+			current_rock_type = "Ammo Rock"
+			rock_type_name = "rock_type_ammo"
+			var ammo_health := int(gl_DataSet.get_value("rock_type_ammo", 1))
+			var ammo_cash := int(gl_DataSet.get_value("rock_type_ammo", 0))
+			health = maxi(ammo_health, 1)
+			cash_value = ammo_cash
+			max_health = health
+			if rock_ammo_mesh:
+				rock_ammo_mesh.visible = true
+				current_mesh = rock_ammo_mesh
+			elif grey_rock:
+				grey_rock.visible = true
+				current_mesh = grey_rock
+			else:
+				small_rock.visible = true
+				current_mesh = small_rock
+			assign_random_mesh(current_mesh)
+			current_mesh.scale = Vector3.ONE * randf_range(0.42, 0.6)
+			main_col.scale = Vector3.ONE * 0.125 * 1.2
+			rock_type_gravity_scale = 0.1
+			force_mult.clear()
+			force_mult = [5]
+			force_mult_index = 0
+
 		RockSize.RED_ATTACKER:
 			## Launch like avoider; at apex lock crosshair and dash straight at it.
 			current_rock_type = "Rock Red Attacker"
@@ -1516,6 +1605,14 @@ func reset_stats() -> void:
 	_destroy_on_crosshair_arm_token += 1
 	_grey_blast_active = false
 	_grey_blast_stagger_index = 0
+	_rico_sliding = false
+	_rico_hanging = false
+	_rico_cash_paid = false
+	_rico_force_pop = false
+	_rico_dir = 1.0
+	_rico_hit_ids.clear()
+	_disable_rico_kill_area()
+	_set_rico_particles(false)
 	if has_node("%explosion_radius_mesh"):
 		%explosion_radius_mesh.material_override = null
 		%explosion_radius_mesh.scale = Vector3.ONE
@@ -1798,6 +1895,12 @@ func shake_camera() -> void:
 		RockSize.GREY:
 			if player_cam.has_method("shake_camera_rock_grey"):
 				player_cam.shake_camera_rock_grey()
+		RockSize.RICO:
+			if player_cam.has_method("shake_camera_rock_grey"):
+				player_cam.shake_camera_rock_grey()
+		RockSize.AMMO:
+			if player_cam.has_method("shake_camera_rock_grey"):
+				player_cam.shake_camera_rock_grey()
 		RockSize.AVOIDER:
 			if player_cam.has_method("shake_camera_rock_avoider"):
 				player_cam.shake_camera_rock_avoider()
@@ -1997,6 +2100,10 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 		var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween.tween_property($Mesh, "position:y", 0.5, 0.5)
 		return
+
+	if rock_type == RockSize.RICO:
+		_start_rico_slide()
+		return
 		
 	#Rock Destroyed Process
 	
@@ -2062,6 +2169,10 @@ func start_destroyed_process() -> void:
 		return
 	if rock_destroyed:
 		return
+	## Unshot rico: a player pop becomes the side-slide. A rico-chain hit force-pops it.
+	if rock_type == RockSize.RICO and not _rico_sliding and not _rico_force_pop:
+		_start_rico_slide()
+		return
 
 	_clear_rock_stay()
 	_shutdown_attack_fx()
@@ -2102,8 +2213,10 @@ func start_destroyed_process() -> void:
 
 	if !rock_has_been_logged:
 		rock_has_been_logged = true
-
-		gl_PlayerState.log_hit(rock_type_name, current_rock_type, cash_value, global_position)
+		var pay := cash_value
+		if _rico_cash_paid:
+			pay = 0
+		gl_PlayerState.log_hit(rock_type_name, current_rock_type, pay, global_position)
 			
 	
 	remove_from_group('Target')
@@ -2198,6 +2311,8 @@ func play_destroy_sfx() -> void:
 		
 
 func _on_start_falling_timer_timeout() -> void:
+	if _rico_sliding:
+		return
 	falling = true
 	# Rock–rock collision is scheduled after launch via schedule_airborne_rock_collisions().
 	
@@ -2339,6 +2454,10 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 	#if rock_destroyed:
 		#return
 
+	if _rico_sliding:
+		_rico_try_hit(body)
+		return
+
 	if _grey_blast_active:
 		_grey_blast_hit(body)
 		return
@@ -2395,6 +2514,9 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 func expand_blast_radius() -> void:
 
 	if rock_type == RockSize.CRATE:
+		return
+
+	if rock_type == RockSize.RICO:
 		return
 
 	if rock_type == RockSize.GREY and grey_blast_on_shot:
@@ -2533,6 +2655,165 @@ func _grey_blast_hit(body: Node3D) -> void:
 	await get_tree().create_timer(float(stagger_i) * GREY_BLAST_STAGGER_SEC, false).timeout
 	if is_instance_valid(rock) and not rock.rock_destroyed:
 		rock.start_destroyed_process()
+
+
+func _rico_particles() -> GPUParticles3D:
+	if rock_rico_mesh and rock_rico_mesh.has_node("GoldParticles"):
+		return rock_rico_mesh.get_node("GoldParticles") as GPUParticles3D
+	if current_mesh and current_mesh.has_node("GoldParticles") and rock_type == RockSize.RICO:
+		return current_mesh.get_node("GoldParticles") as GPUParticles3D
+	return null
+
+
+func _set_rico_particles(active: bool) -> void:
+	var particles := _rico_particles()
+	if particles == null:
+		if not active:
+			current_particles = null
+		return
+	particles.emitting = active
+	if active:
+		particles.amount += 1
+		particles.amount -= 1
+		current_particles = particles
+	elif current_particles == particles:
+		current_particles = null
+
+
+func _start_rico_slide() -> void:
+	if _rico_sliding:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+	_rico_sliding = true
+	_rico_hanging = true
+	_rico_hit_ids.clear()
+	_rico_lock_z = global_position.z
+	if has_node("Start_falling_timer"):
+		$Start_falling_timer.stop()
+	remove_from_group("Target")
+	_destroy_on_crosshair_armed = false
+	_destroy_on_crosshair_arm_token += 1
+	ballistic_aim_active = false
+	_ballistic_in_descent = true
+	constant_force = Vector3.ZERO
+	if global_position.x < -rico_center_threshold:
+		_rico_dir = 1.0
+	elif global_position.x > rico_center_threshold:
+		_rico_dir = -1.0
+	elif linear_velocity.x < 0.0:
+		_rico_dir = -1.0
+	else:
+		_rico_dir = 1.0
+	gravity_scale = 0.0
+	linear_damp = 0.0
+	angular_damp = 2.5
+	linear_velocity = Vector3(_rico_dir * rico_speed, 0.0, 0.0)
+	angular_velocity = Vector3.ZERO
+	sleeping = false
+	freeze = false
+	_set_rico_particles(true)
+	play_hit_sfx()
+	_play_vfx(&"rock_hit")
+	shake_camera()
+	if not _rico_cash_paid and cash_value != 0:
+		_rico_cash_paid = true
+		gl_PlayerState.add_to_cash_pool(cash_value, global_position)
+		if EventBus.instance and EventBus.instance.has_signal("rock_hit_logged"):
+			EventBus.instance.rock_hit_logged.emit(rock_type_name, current_rock_type, cash_value)
+		if money_label_3d and cash_value > 0 and money_label_3d.has_method("money_is_money"):
+			money_label_3d.money_is_money(global_position, cash_value)
+	_enable_rico_kill_area()
+	var token := _pool_setup_token
+	await get_tree().create_timer(maxf(rico_hang_sec, 0.0), false).timeout
+	if token != _pool_setup_token or not _rico_sliding:
+		return
+	if current_state != State.ACTIVE:
+		return
+	_rico_hanging = false
+	gravity_scale = rico_fall_gravity
+
+
+func _update_rico_slide() -> void:
+	if not _rico_sliding or current_state != State.ACTIVE or not rock_activated:
+		return
+	constant_force = Vector3.ZERO
+	linear_velocity.x = _rico_dir * rico_speed
+	linear_velocity.z = 0.0
+	global_position.z = _rico_lock_z
+	if _rico_hanging:
+		linear_velocity.y = 0.0
+	_rico_scan_nearby_rocks()
+
+
+func _enable_rico_kill_area() -> void:
+	if not has_node("Explosion_area"):
+		return
+	var blast_node: Area3D = $Explosion_area
+	blast_node.scale = Vector3.ONE * maxf(rico_hit_radius, 0.25)
+	blast_node.monitoring = true
+	$Explosion_area/CollisionShape3D.disabled = false
+	if has_node("%explosion_radius_mesh"):
+		%explosion_radius_mesh.hide()
+
+
+func _disable_rico_kill_area() -> void:
+	if not has_node("Explosion_area"):
+		return
+	$Explosion_area.monitoring = false
+	$Explosion_area/CollisionShape3D.disabled = true
+	$Explosion_area.scale = Vector3.ONE
+	$Explosion_area.hide()
+
+
+func _rico_world_radius() -> float:
+	var base := 0.5
+	if has_node("Explosion_area/CollisionShape3D"):
+		var shape := $Explosion_area/CollisionShape3D.shape as SphereShape3D
+		if shape:
+			base = shape.radius
+	return base * maxf(rico_hit_radius, 0.25)
+
+
+func _rico_scan_nearby_rocks() -> void:
+	var host := get_parent()
+	if host == null:
+		return
+	var reach := _rico_world_radius()
+	var reach_sq := reach * reach
+	for child in host.get_children():
+		if child == self or not (child is RockInstance):
+			continue
+		if global_position.distance_squared_to(child.global_position) > reach_sq:
+			continue
+		_rico_try_hit(child)
+
+
+func _rico_try_hit(body: Node3D) -> void:
+	if not _rico_sliding:
+		return
+	if body == self or not (body is RockInstance):
+		return
+	var rock := body as RockInstance
+	if rock.rock_destroyed or rock.current_state != rock.State.ACTIVE:
+		return
+	if not rock.rock_activated:
+		return
+	var id := rock.get_instance_id()
+	if _rico_hit_ids.has(id):
+		return
+	_rico_hit_ids[id] = true
+	if rock.rock_type == RockSize.RICO:
+		rock._rico_force_pop = true
+	if (
+		rock.rock_type == RockSize.HAZARD
+		or rock.rock_type == RockSize.HAZARD_SMALL
+		or rock.is_stay_black()
+	):
+		rock._orange_neutralized_hazard = true
+		if rock.cash_value < 0:
+			rock.cash_value = 0
+	rock.start_destroyed_process()
 
 
 func standard_blast() -> void:
@@ -3278,7 +3559,7 @@ func _arm_destroy_on_crosshair() -> void:
 		return
 	if current_state != State.ACTIVE:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.AMMO and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
 		return
 	if not _player_wants_overlap_destroy("rocks"):
 		return
@@ -3292,7 +3573,9 @@ func _update_destroy_on_crosshair_overlap() -> void:
 		return
 	if rock_destroyed or not rock_activated:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
+	if rock_type == RockSize.RICO and _rico_sliding:
+		return
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.AMMO and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
 		return
 	if _freeze_shot_pending:
 		return

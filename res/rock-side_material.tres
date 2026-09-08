@@ -1,0 +1,27 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://da0a12w5y8ifa"]
+
+[sub_resource type="Gradient" id="Gradient_rico"]
+offsets = PackedFloat32Array(0.22, 0.48, 0.78)
+colors = PackedColorArray(0.22, 0.28, 0.36, 1, 0.55, 0.62, 0.7, 1, 0.92, 0.95, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rico"]
+gradient = SubResource("Gradient_rico")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0, 0.5)
+fill_to = Vector2(1, 0.5)
+repeat = 1
+
+[resource]
+resource_name = "rock-side_material"
+albedo_texture = SubResource("GradientTexture2D_rico")
+albedo_texture_force_srgb = true
+metallic = 0.12
+metallic_specular = 0.35
+roughness = 0.42
+uv1_scale = Vector3(0.18, 0.18, 0.18)
+uv1_offset = Vector3(0, 0.35, 0)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 5

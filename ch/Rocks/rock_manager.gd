@@ -2199,6 +2199,10 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.JUGGLE
 			'rock-grey':
 				return RockInstance.RockSize.GREY
+			'rock-rico':
+				return RockInstance.RockSize.RICO
+			'rock-ammo':
+				return RockInstance.RockSize.AMMO
 			'rock-stay', 'rock-still':
 				return RockInstance.RockSize.STAY
 			'rock-stay-black':
@@ -2234,6 +2238,8 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-red-gap'
 		or cmd == 'rock-juggle'
 		or cmd == 'rock-grey'
+		or cmd == 'rock-rico'
+		or cmd == 'rock-ammo'
 		or cmd == 'rock-stay'
 		or cmd == 'rock-stay-black'
 		or cmd == 'rock-cardinal'

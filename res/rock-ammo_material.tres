@@ -1,0 +1,26 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://hxs5nhpp5by7"]
+
+[sub_resource type="Gradient" id="Gradient_ammo"]
+offsets = PackedFloat32Array(0, 0.124, 0.125, 0.249, 0.25, 0.374, 0.375, 0.499, 0.5, 0.624, 0.625, 0.749, 0.75, 0.874, 0.875, 1)
+colors = PackedColorArray(0.78, 0.004, 0.008, 1, 0.78, 0.004, 0.008, 1, 0.95, 0.95, 0.95, 1, 0.95, 0.95, 0.95, 1, 0.78, 0.004, 0.008, 1, 0.78, 0.004, 0.008, 1, 0.95, 0.95, 0.95, 1, 0.95, 0.95, 0.95, 1, 0.78, 0.004, 0.008, 1, 0.78, 0.004, 0.008, 1, 0.95, 0.95, 0.95, 1, 0.95, 0.95, 0.95, 1, 0.78, 0.004, 0.008, 1, 0.78, 0.004, 0.008, 1, 0.95, 0.95, 0.95, 1, 0.95, 0.95, 0.95, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ammo"]
+gradient = SubResource("Gradient_ammo")
+width = 256
+height = 256
+fill_from = Vector2(0, 0.5)
+fill_to = Vector2(1, 0.5)
+repeat = 1
+
+[resource]
+resource_name = "rock-ammo_material"
+albedo_texture = SubResource("GradientTexture2D_ammo")
+albedo_texture_force_srgb = true
+metallic = 0.08
+metallic_specular = 0.2
+roughness = 0.38
+uv1_scale = Vector3(-0.205, -0.205, -0.205)
+uv1_offset = Vector3(0.475, 0, 0)
+uv1_triplanar = true
+uv1_triplanar_sharpness = 7.3554773
+texture_filter = 5

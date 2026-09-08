@@ -1,5 +1,7 @@
 island shipper
 
+
+	
 range moss1
 
 	play $0
@@ -8,11 +10,9 @@ range moss1
 	round
 		#AMMO needed was 47
 
-
-
 		#define yellow1
-		#rock
 		#wait
+		#rock
 		#end
 
 		#run yellow1
@@ -23,7 +23,7 @@ range moss1
 		# This one has no breaks, a constant rhythm that progressively gets faster.
 		# It also has a pattern of 3 blacks and then a mix up round.
 
-		no-lives
+		#no-lives
 		#ammo-unlimited
 
 		ammo c6
@@ -32,6 +32,13 @@ range moss1
 		ammo c1
 		ammo c2
 		ammo c3
+
+		ammo b6
+		ammo b7
+		ammo b8
+		ammo b1
+		ammo b2
+		ammo b3
 
 		sfx-play c418 -45.0
 
@@ -311,11 +318,454 @@ range moss1
 		rock-black 4 c4
 		wait 250
 
-		rock-grey 2 c2
+
+		rock-black 7 c7
+		wait 250
+		rock-black 4 c4
+		wait 250
+		rock-black 4 c4
+		wait 250
+
+
+		# Start final phase
+		pace-normal
+		rock-ammo 8 a4
+		wait 2000
+
+
+
+		pace-impossible
+		rock-black 2 b2
+		wait 500
+		rock-black 7 b7
+		wait 500
+		rock-black 4 b4
+		wait 500
+		rock-black 2 b2
+		wait 500
+		rock-black 7 b7
+		wait 500
+		rock-black 4 b4
+		wait 500
+		rock-black 7 b7
+		wait 500
+		rock-black 2 b2
+		wait 500
+		rock-black 4 b4
+		wait 500
+		rock-black 7 b7
+		wait 500
+		rock-black 2 b2
+		wait 500
+		rock 4 b4
+		wait 500
+		rock-black 7 b7
+		wait 500
+		rock-black 2 b2
+		wait 500
+		rock-black 4 b4
+		wait 500
+		rock-black 7 b7
+		wait 500
+		rock-black 2 b2
+		wait 500
+		pace-normal
+		rock-black 4 a4
+		wait 500
+
+
+		#3 yellow rocks three
+		pace-slow
+		rock 1 a4
+		wait 0
+		rock 5 a4
+		wait 0
+		rock 8 a4
+		wait
+
+		pace-fast
+		rock 4 y20
+		wait
+
+
+		pineapples
+		pineapple 2 a2
+		wait 1500
+		pineapple 4 a4
+		wait 1500
+		pineapple 7 a7
+	round
+		#This is the ricochet rock 
+		#AMMO needed was 47
+
+		threat b6
+
+		pace-slow
+		rock 1 b1
+		wait 0
+		rock-black  2 b2
+		wait 0
+		rock-black  3 b3
+		wait 0
+		rock-black  4 b4
+		wait 0
+		rock-black  5 b5
+		wait 0
+		rock-black  6 b6
+		wait 0
+		rock-black 7 b7
+		wait 0
+		rock-rico 8 b8
+		wait
+
+
+		pace-slow
+		rock 4 b4
+		wait 0
+		rock-rico 8 b8
+		wait
+
+		wait 500
+
+		rock 1 b1
+		wait 0
+		rock-rico 8 b8
+		wait
+		wait 500
+
+		rock 8 a8
+		wait 0
+		rock-rico 1 a1
+		wait
+
+		wait 500
+
+		rock 8 a8
+		wait 0
+		rock 4 a4
+		wait 0
+		rock-rico 1 a1
+		wait
+
+
+
+
+		#define yellow1
+		#rock
+		#wait
+		#end
+
+		#run yellow1
+		#run yellow2
+		#run yellow3
+
+
+		# This one has no breaks, a constant rhythm that progressively gets faster.
+		# It also has a pattern of 3 blacks and then a mix up round.
+
+		no-lives
+		#ammo-unlimited
+
+		ammo c6
+		ammo c7
+		ammo c8
+		ammo c1
+		ammo c2
+		ammo c3
+
+		ammo b6
+		ammo b7
+		ammo b8
+		ammo b1
+		ammo b2
+		ammo b3
+
+
+		sfx-play c418 -45.0
+
+		# Phase 1 - slow
+		pace-slow
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+
+		#Mix up
+		rock-black 2 b2
+		wait 1000
+		rock-rico 7 b7
+		wait 1000
+		rock 4 b4
+		wait 1000
+
+
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+
+		#Mix up
+		rock-rico 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock 4 b4
+		wait 1000
+
+
+
+		#pace-normal
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		#Mix up
+		rock 2 b2
+		wait 1000
+		rock-rico 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+
+		#3 yellow rocks two
+		rock 1 a5
+		wait 0
+		rock 2 a5
+		wait 0
+		rock 7 a5
+		wait 0
+
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+
+		#Mix up
+		rock-black 2 b2
+		wait 1000
+		rock 7 b7
+		wait 1000
+		#3 yellow rocks two
+		rock 1 a3
+		wait 0
+		rock 2 a3
+		wait 0
+		rock 7 a3
+		wait 0
+
+		rock-black 4 b4
+		wait 1000
+
+
+
+
+
+
+		#pace-fast
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		#Mix up
+		rock-black 2 b2
+		wait 1000
+		rock-rico 7 b7
+		wait 1000
+		#3 yellow rocks three
+		rock 1 a7
+		wait 0
+		rock 2 a7
+		wait 0
+		rock 7 a7
+		wait 0
+
+		wait 2000
+
+
+
+
+
+		# PHASE 2
+		pace-faster
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		#Mix up
+		rock 2 b2
+		wait 1000
+		rock-rico 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+
+		#3 yellow rocks two
+		pace-normal
+		rock 1 a5
+		wait 0
+		rock 2 a5
+		wait 0
+		rock 7 a5
+		wait 0
+
+		pace-faster
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+
+		#Mix up
+		rock-black 2 b2
+		wait 1000
+		rock 7 b7
+		wait 1000
+		#3 yellow rocks two
+		pace-normal
+		rock 1 a3
+		wait 0
+		rock 2 a3
+		wait 0
+		rock 7 a3
+		wait 0
+
+		pace-faster
+		rock-black 4 b4
+		wait 1000
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		#Mix up
+		rock-black 2 b2
+		wait 1000
+		rock-rico 7 b7
+		wait 1000
+		#3 yellow rocks three
+		pace-normal
+		rock 1 a7
+		wait 0
+		rock 2 a7
+		wait 0
+		rock 7 a7
+		wait 
+
+
+		#PHASE 3
+
+
+		wait 3000
+		rock 7 a2
+		wait
+		wait 2000
+
+
+		pace-impossible
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		#Mix up
+		rock 2 b2
+		wait 1000
+		rock 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		#3 yellow rocks two
+		pace-normal
+		rock 1 a5
+		wait 0
+		rock 2 a5
+		wait 0
+		rock 8 a5
+		wait
+
+		# RIGHT HERE THE BUG HAPPENS
+
+		wait 3000
+		rock 7 a2
+		wait 4000
+
+		pace-faster
+		rock-black 2 c2
 		wait 250
 		rock-black 7 c7
 		wait 250
 		rock-black 4 c4
+		wait 250
+
+		rock-black 2 c2
+		wait 250
+		rock-black 7 c7
+		wait 250
+		rock-black 4 c4
+		wait 250
+
+
+		rock-black 7 c7
+		wait 250
+		rock-black 4 c4
+		wait 250
+
+		rock-ammo 2 b2
 		wait 250
 
 
@@ -1151,6 +1601,11 @@ range moss1
 		pineapples
 		pineapple 5 a5
 		clear
+
+
+
+
+
 range moss2
 
 	play $0
@@ -2639,11 +3094,11 @@ range moss12
 range moss13
 	round
 
-		rock-grey 3 b3
+		rock-rico 3 b3
 		rock 4 b4
 		wait
 
 
-		rock-grey 3 b3
+		rock-rico 3 b3
 		rock 5 b5
 		wait

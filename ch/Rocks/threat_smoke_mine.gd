@@ -939,6 +939,7 @@ func _run_alarm_sequence() -> void:
 	_trigger_alarm_camera_shake()
 	
 	start_steam_particles(true)
+
 	_play_local_sfx($SFX/smoke_release)
 	if _stun_sfx:
 		_stun_sfx.play()
@@ -968,7 +969,12 @@ func _run_alarm_sequence() -> void:
 	_spin_mul = 1.0
 	_alarming = false
 	_alarm_fast_spin = false
+	
+	_play_local_sfx($SFX/fart_sfx)
+	await get_tree().create_timer(0.03,false).timeout
+	
 	_play_local_sfx(_release_smoke_sfx)
+
 	_play_local_sfx($SFX/rock_hitSound)
 	_play_local_sfx($SFX/smoke_release_02)
 	await get_tree().create_timer(0.1, false).timeout

@@ -125,6 +125,10 @@ var dataset_float : Dictionary = {
 	,"rock_type_gap"		: [0,		1]
 	## Grey rock: $1, 1 health. Misses do not strike.
 	,"rock_type_grey"		: [1,		1]
+	## rock-rico: grey mesh + rock-side_material. Shot pays $1 then slides sideways. Splash/OOB no strike.
+	,"rock_type_rico"		: [1,		1]
+	## rock-ammo: grey-like $1 rock; miss does not strike. Shooting it can spawn an ammo balloon.
+	,"rock_type_ammo"		: [1,		1]
 	## rock-stay: hangs at aim after a fast straight approach.
 	,"rock_type_stay"		: [2,		1]
 	## threat: invincible overlap-smoke canister (not a clearable rock).
