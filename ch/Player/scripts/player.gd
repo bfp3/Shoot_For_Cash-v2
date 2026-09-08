@@ -2351,7 +2351,7 @@ func gun_stats() -> void:
 	## snap the reticle too small on release.
 	power_gun_fire_rate = 0.1
 	#_loadout_bullet_speed_override = -1.0
-	weapon_shooting.power_bullet_speed = 0.25  #0.5 # should be relative to how fast the rock travels down
+	weapon_shooting.power_bullet_speed = 0.05 #0.25  #0.5 # should be relative to how fast the rock travels down
 
 
 func gun_2_stats() -> void:
