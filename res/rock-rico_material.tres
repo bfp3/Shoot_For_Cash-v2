@@ -1,10 +1,30 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://da0a12w5y8ifa"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bqym222yi5jnf"]
+
+[ext_resource type="Shader" uid="uid://cfnpoqn60gh01" path="res://res/Shaders/stylized_illustrated.gdshader" id="1_o7ncs"]
+[ext_resource type="Texture2D" uid="uid://cfek28u6ahl5k" path="res://res/egg_diffuse.png" id="2_bftfr"]
 
 [resource]
-resource_name = "rock-side_material"
-albedo_color = Color(0, 0.4666667, 1, 1)
-albedo_texture_force_srgb = true
-roughness = 0.42
-uv1_offset = Vector3(0, 0.35, 0)
-uv1_world_triplanar = true
-texture_filter = 5
+render_priority = 0
+shader = ExtResource("1_o7ncs")
+shader_parameter/sty_shadow_color = Color(0, 0, 0, 1)
+shader_parameter/sty_shadow_strength = 1.0
+shader_parameter/sty_shadow_threshold = 0.22
+shader_parameter/sty_mid_color = Color(0.51, 0.42959, 0.2907, 1)
+shader_parameter/sty_mid_threshold = 0.52
+shader_parameter/sty_light_color = Color(0.2, 0.14646666, 0.053999998, 1)
+shader_parameter/sty_light_strength = 0.48
+shader_parameter/sty_light_threshold = 0.55
+shader_parameter/sty_band_softness = 0.2
+shader_parameter/sty_saturation = 1.2
+shader_parameter/sty_contrast = 1.2
+shader_parameter/sty_fog_color = Color(0.45, 0.62, 0.78, 1)
+shader_parameter/sty_fog_strength = 0.0
+shader_parameter/sty_fog_start = 250.0
+shader_parameter/sty_fog_end = 400.0
+shader_parameter/albedo_color = Color(0.953, 0.898, 0.788, 1)
+shader_parameter/albedo_texture = ExtResource("2_bftfr")
+shader_parameter/use_albedo_texture = false
+shader_parameter/texture_blend = 0.47200002242
+shader_parameter/roughness_value = 0.95
+shader_parameter/specular_value = 0.0
+shader_parameter/use_flat_shading = false

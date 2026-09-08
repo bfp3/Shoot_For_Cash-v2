@@ -18,6 +18,7 @@
 [ext_resource type="Material" uid="uid://b8styilludark" path="res://res/Materials/stylized/stylized_dark_stone.tres" id="16_bfgfx"]
 [ext_resource type="Material" uid="uid://b8styillugrnd" path="res://res/Materials/stylized/stylized_ground.tres" id="17_d6g4r"]
 [ext_resource type="Material" uid="uid://boaovmkpgnp38" path="res://to_bring_over/dark_road.tres" id="18_14ohp"]
+[ext_resource type="Material" uid="uid://bqym222yi5jnf" path="res://res/rock-rico_material.tres" id="18_oovdm"]
 [ext_resource type="PackedScene" uid="uid://gc08gcnmga6d" path="res://ch/Egg/EggSimplified.tscn" id="19_kxsii"]
 [ext_resource type="Material" uid="uid://bl3gllx7weywe" path="res://ch/Egg/Materials/Egg_cage_orange.tres" id="20_aphvb"]
 [ext_resource type="Material" uid="uid://bjtlwim75ionw" path="res://res/pedestal_mat_01.tres" id="21_vmd1c"]
@@ -82,7 +83,7 @@ shader_parameter/wave_secondary = 0.0
 shader_parameter/wave_tertiary = 0.2800000133
 shader_parameter/freeze_time = false
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_ksjtj"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_y4jhr"]
 size = Vector2(150, 312.865)
 subdivide_width = 30
 subdivide_depth = 30
@@ -1019,7 +1020,7 @@ metadata/_custom_type_script = "uid://cwee1r4c8ea3p"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.52, 0)
 material_override = SubResource("ShaderMaterial_md1in")
 cast_shadow = 0
-mesh = SubResource("PlaneMesh_ksjtj")
+mesh = SubResource("PlaneMesh_y4jhr")
 
 [node name="Level1" type="Node3D" parent="." unique_id=59961671]
 
@@ -1328,6 +1329,12 @@ skeleton = NodePath("")
 [node name="Right_tall_pillar2" type="MeshInstance3D" parent="Level1/Boatmesh/Brick_wall_2" unique_id=999866789]
 transform = Transform3D(1, 0, 0, 0, 5, 0, 0, 0, 1, 1.9386544, -1.7816997, -6.856344)
 material_override = ExtResource("11_vgcwt")
+mesh = SubResource("ArrayMesh_fyjqt")
+skeleton = NodePath("")
+
+[node name="Right_tall_pillar27" type="MeshInstance3D" parent="Level1/Boatmesh/Brick_wall_2" unique_id=577105983]
+transform = Transform3D(1, 0, 0, 0, 5, 0, 0, 0, 1, 1.9386544, -1.7816997, -6.856344)
+material_override = ExtResource("18_oovdm")
 mesh = SubResource("ArrayMesh_fyjqt")
 skeleton = NodePath("")
 

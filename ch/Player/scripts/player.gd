@@ -23,7 +23,7 @@ const scope_shrink_duration := 0.15 #0.5          # total seconds to fully shrin
 @export var scope_shrink_large_bonus := 0.2        # extra seconds tacked on for very large scopes
 const scope_shrink_reference_circle := 60.0  # "normal" size; circles above this scale toward the bonus
 @export var _current_shrink_duration := 0.15
-const scope_min_target_circle := 30.0 #20.0
+const scope_min_target_circle := 10.0 #20.0
 @export var scope_return_duration := 0.3
 ## On shrink/expand release: ease past resting size by this factor, then settle to default.
 @export_range(1.0, 15.5, 0.01) var scope_return_overshoot := 1.12
@@ -50,6 +50,21 @@ var _upgrade_gun_fire_rate := 0.35
 var _difficulty_bullet_speed := -1.0
 
 @export var can_right_click_shoot := false
+
+@export_group("Right Click Slow Time")
+## Hold `shoot_weapon_2` (right-click) to ease Engine.time_scale down for a snipe-shot feel.
+@export var right_click_slow_time := false
+## Time scale while fully held. 1.0 = normal, lower = slower.
+@export_range(0.05, 1.0, 0.01) var right_click_slow_time_min := 0.5
+## X = hold progress (0–1), Y = how far toward `right_click_slow_time_min` (0 = normal, 1 = min).
+@export var right_click_slow_time_curve: Curve
+## Real-time seconds to travel the curve from 0 → 1 while held.
+@export_range(0.05, 3.0, 0.01) var right_click_slow_time_in_sec := 0.35
+## How fast blend returns to 0 when released (higher = snappier). 1.0 ≈ one second from full slow-mo.
+@export_range(0.1, 12.0, 0.05) var right_click_slow_time_return_speed := 2.5
+
+var _slow_time_blend := 0.0
+var _slow_time_owning_scale := false
 
 @export_group("Accuracy Streak")
 ## Progress bar near the bottom: +1 per accurate shot, miss resets. At max, bar resets and you gain a 4th strike slot (then take a strike).
@@ -358,6 +373,7 @@ func _ready() -> void:
 	_init_ammo()
 	update_player_stats()
 	_setup_grid_aim_step_sfx()
+	_ensure_slow_time_curve()
 	
 	#%Bullet_icon.hide()
 
@@ -368,6 +384,71 @@ func _ready() -> void:
 	_lean_rest_rotation_y = rotation.y
 	_lean_rest_rotation_x = rotation.x
 	_setup_mobile_pause_button()
+
+
+func _exit_tree() -> void:
+	_restore_slow_time_if_owning()
+
+
+func _ensure_slow_time_curve() -> Curve:
+	if right_click_slow_time_curve == null:
+		var c := Curve.new()
+		c.min_value = 0.0
+		c.max_value = 1.0
+		## Ease-out: snappy start, then settle at the min time scale.
+		c.add_point(Vector2(0.0, 0.0), 0.0, 2.4)
+		c.add_point(Vector2(1.0, 1.0), 0.0, 0.0)
+		right_click_slow_time_curve = c
+	return right_click_slow_time_curve
+
+
+func _slow_time_base_scale() -> float:
+	var chat := get_tree().get_first_node_in_group("debug_tool_chatbox")
+	if chat != null and "base_time_scale" in chat:
+		return maxf(float(chat.base_time_scale), 0.05)
+	return 1.0
+
+
+func _restore_slow_time_if_owning() -> void:
+	if not _slow_time_owning_scale:
+		return
+	Engine.time_scale = _slow_time_base_scale()
+	_slow_time_owning_scale = false
+
+
+func _update_right_click_slow_time(delta: float, mmb_boost: bool) -> void:
+	if not right_click_slow_time:
+		if _slow_time_blend > 0.0 or _slow_time_owning_scale:
+			_slow_time_blend = 0.0
+			if not mmb_boost:
+				_restore_slow_time_if_owning()
+		return
+
+	var holding := (
+		current_state == State.ACTIVE
+		and not game_lost
+		and Input.is_action_pressed("shoot_weapon_2")
+	)
+	var unscaled := delta / maxf(Engine.time_scale, 0.0001)
+	if holding:
+		var in_sec := maxf(right_click_slow_time_in_sec, 0.05)
+		_slow_time_blend = minf(_slow_time_blend + unscaled / in_sec, 1.0)
+	else:
+		_slow_time_blend = maxf(_slow_time_blend - unscaled * maxf(right_click_slow_time_return_speed, 0.01), 0.0)
+
+	var curve := _ensure_slow_time_curve()
+	var eased := clampf(curve.sample(_slow_time_blend), 0.0, 1.0)
+
+	if mmb_boost:
+		return
+	if _slow_time_blend <= 0.0 and eased <= 0.0:
+		if _slow_time_owning_scale:
+			_restore_slow_time_if_owning()
+		return
+	var base := _slow_time_base_scale()
+	var target_min := clampf(right_click_slow_time_min, 0.05, 1.0) * base
+	Engine.time_scale = lerpf(base, target_min, eased)
+	_slow_time_owning_scale = true
 
 
 func _setup_mobile_pause_button() -> void:
@@ -490,17 +571,19 @@ func handle_pan_left_and_right(delta) -> void:
 		
 
 func _process(delta: float) -> void:
-	
+	var mmb_boost := false
 	if (OS.has_feature("editor") or OS.is_debug_build()) and not game_lost:
 	#if not game_lost:
 		if Input.is_action_pressed("middle_mouse"):
 			Engine.time_scale = 10.0
+			mmb_boost = true
 		if Input.is_action_just_released("middle_mouse"):
 			var restore := 1.0
 			var chat := get_tree().get_first_node_in_group("debug_tool_chatbox")
 			if chat != null and "base_time_scale" in chat:
 				restore = float(chat.base_time_scale)
 			Engine.time_scale = restore
+	_update_right_click_slow_time(delta, mmb_boost)
 	
 	if current_state == State.IN_SHOP:
 		_update_player_lean(delta, Vector2.ZERO)

@@ -149,6 +149,8 @@ var rock_has_been_logged := false
 @onready var clay_pigeon: MeshInstance3D = %clay_pigeon
 @onready var grey_rock: MeshInstance3D = %grey_rock
 @onready var rock_rico_mesh: MeshInstance3D = get_node_or_null("%rock_rico") as MeshInstance3D
+var _rico_default_mesh: Mesh
+var _rico_default_scale := Vector3.ONE
 @onready var rock_ammo_mesh: MeshInstance3D = get_node_or_null("%rock_ammo") as MeshInstance3D
 
 @onready var medium_rock: MeshInstance3D = %medium_rock
@@ -365,6 +367,9 @@ var _gap_life_token := 0
 
 func _ready() -> void:
 	_cache_mesh_original_overrides()
+	if rock_rico_mesh:
+		_rico_default_mesh = rock_rico_mesh.mesh
+		_rico_default_scale = rock_rico_mesh.scale
 	_setup_crosshair_xray()
 	start_pos = global_position
 	target_x_position = start_pos.x
@@ -1502,6 +1507,9 @@ func setup_rock_type() -> void:
 			cash_value = rico_cash
 			max_health = health
 			if rock_rico_mesh:
+				if _rico_default_mesh:
+					rock_rico_mesh.mesh = _rico_default_mesh
+				rock_rico_mesh.scale = _rico_default_scale
 				rock_rico_mesh.visible = true
 				current_mesh = rock_rico_mesh
 			elif grey_rock:
@@ -1510,9 +1518,7 @@ func setup_rock_type() -> void:
 			else:
 				small_rock.visible = true
 				current_mesh = small_rock
-			assign_random_mesh(current_mesh)
-			current_mesh.scale = Vector3.ONE * 0.45 # randf_range(0.42, 0.6)
-			main_col.scale = Vector3.ONE * 0.125 * 1.2
+			main_col.scale = Vector3.ONE
 			rock_type_gravity_scale = 0.1
 			force_mult.clear()
 			force_mult = [4]
