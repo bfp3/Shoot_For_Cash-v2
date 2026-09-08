@@ -61,8 +61,7 @@ func apply_upgrades() -> void:
 	power_target_circle = player.power_target_circle
 	power_bullet_speed = player.power_bullet_speed
 	power_bullet_damage = player.power_bullet_damage
-	#power_bullet_delay = player.power_bullet_delay
-	power_bullet_delay = 0.05
+	power_bullet_delay = player.power_bullet_delay
 
 
 	if active_bullet_scene == null:
@@ -451,8 +450,8 @@ func shoot_target() -> void:
 	if player and player.has_method("register_accurate_shot"):
 		player.register_accurate_shot()
 
-	for target_data in targets:
-
+	for i in targets.size():
+		var target_data = targets[i]
 		var target = target_data.target
 
 		if !is_instance_valid(target):
@@ -508,17 +507,15 @@ func shoot_target() -> void:
 		if time_ran_out:
 			break
 
-		var delay := power_bullet_delay
-
-		if shooting_sky_mine:
-			delay += 0.5
-
-		await get_tree().create_timer(delay, false).timeout
 		if shooting_sky_mine:
 			shooting_sky_mine = false
 			break
-		
-		shooting_sky_mine = false
+
+		## Stagger only — do not wait for the previous bullet to arrive.
+		if i < targets.size() - 1:
+			var delay := _volley_bullet_delay()
+			if delay > 0.0:
+				await get_tree().create_timer(delay, false).timeout
 
 	_try_scope_mechanic_callout(targets)
 	_try_ammo_rocks_balloon(ammo_count, ammo_sum)
@@ -865,7 +862,14 @@ func wait_for_all_rocks_destroyed(rocks: Array) -> void:
 			return
 
 		await get_tree().process_frame
-	
+
+
+func _volley_bullet_delay() -> float:
+	if player != null and "power_bullet_delay" in player:
+		return maxf(float(player.power_bullet_delay), 0.0)
+	return maxf(float(power_bullet_delay), 0.0)
+
+
 func activate_multishot_bonus(rock_count: int) -> void:
 	
 	print('called a Multi')

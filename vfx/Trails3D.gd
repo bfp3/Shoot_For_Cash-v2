@@ -32,6 +32,19 @@ func _ready() -> void:
 	mesh = ImmediateMesh.new()
 
 
+func stop_emitting() -> void:
+	_trailEnabled = false
+
+
+func is_trail_alive() -> bool:
+	if _active_points.size() > 1:
+		return true
+	for old_trail in _old_trails:
+		if old_trail["points"].size() > 1:
+			return true
+	return false
+
+
 func _start_new_trail() -> void:
 	_active_points.clear()
 	_active_widths.clear()

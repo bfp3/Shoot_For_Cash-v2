@@ -528,6 +528,8 @@ grey_blast_speed = 0.35
 rico_speed = 20.0
 rico_hit_radius = 2.0
 rico_fall_gravity = 1.0
+rico_spin_axis = 5
+rico_spin_speed_deg = 500.0
 avoider_arm_delay_sec = 1.0
 
 [node name="main_col" type="CollisionShape3D" parent="." unique_id=291819753]
@@ -646,6 +648,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.49)
 script = ExtResource("20_2063v")
 _fromWidth = 0.1
 _lifespan = 0.3
+_endColor = Color(1, 1, 1, 1)
 
 [node name="rock_ammo" type="MeshInstance3D" parent="Mesh" unique_id=887828543]
 unique_name_in_owner = true

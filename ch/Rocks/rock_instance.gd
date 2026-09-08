@@ -55,6 +55,32 @@ const AMMO_ROCK_MAT := preload("res://res/rock-ammo_material.tres")
 @export_range(0.1, 4.0, 0.05) var rico_fall_gravity := 1.15
 ## |X| below this uses travel-velocity to pick a side (otherwise left→+X, right→−X).
 @export_range(0.0, 1.0, 0.001) var rico_center_threshold := 0.01
+## Face-on propeller (Z) vs rolling (X) vs turntable (Y) vs always-into-camera.
+## Local Y snaps so mesh +Y faces the camera; spin flips with travel so both sides roll the same way.
+enum RicoSpinAxis {
+	Z_VIEW,
+	Y_UP,
+	X_SIDE,
+	CAMERA,
+	LOCAL_X,
+	LOCAL_Y,
+	LOCAL_Z,
+	CAMERA_RIGHT,
+	CAMERA_UP,
+	TRAVEL,
+	CUSTOM,
+}
+@export var rico_spin_axis := RicoSpinAxis.Z_VIEW
+## Used when Rico Spin Axis is Custom. Does not need to be normalized.
+@export var rico_spin_custom_axis := Vector3(0, 0, 1)
+## Deg/sec around the locked axis after a shot. Higher = faster propeller.
+@export_range(0.0, 4000.0, 10.0) var rico_spin_speed_deg := 1080.0
+## Flip spin with travel direction (left vs right).
+@export var rico_spin_match_travel_dir := true
+## Square the pose on shot so the face sits in the spin plane (needed for a clean propeller).
+@export var rico_spin_reset_pose := true
+## Freeze the other two angular axes so it cannot tumble.
+@export var rico_spin_lock_axes := true
 
 var _rico_sliding := false
 var _rico_hanging := false
@@ -62,6 +88,7 @@ var _rico_cash_paid := false
 var _rico_force_pop := false
 var _rico_dir := 1.0
 var _rico_lock_z := 0.0
+var _rico_spin_axis_cached := Vector3.BACK
 var _rico_hit_ids: Dictionary = {}
 ## Bumped on recycle / new slide so a leftover hang timer cannot retarget gravity.
 var _rico_slide_token := 0
@@ -2721,13 +2748,11 @@ func _start_rico_slide() -> void:
 		_rico_dir = 1.0
 	gravity_scale = 0.0
 	linear_damp = 0.0
-	angular_damp = 2.5
+	angular_damp = 0.0
 	linear_velocity = Vector3(_rico_dir * rico_speed, 0.0, 0.0)
-	
-	angular_velocity = Vector3.ZERO
+	_begin_rico_propeller_spin()
 	sleeping = false
 	freeze = false
-	apply_torque_impulse(Vector3.FORWARD * 1500)
 	_set_rico_particles(true)
 	play_hit_sfx()
 	_play_vfx(&"rock_hit")
@@ -2761,7 +2786,161 @@ func _update_rico_slide() -> void:
 	global_position.z = _rico_lock_z
 	if _rico_hanging:
 		linear_velocity.y = 0.0
+	_apply_rico_propeller_spin()
 	_rico_scan_nearby_rocks()
+
+
+func _rico_spin_world_axis() -> Vector3:
+	match rico_spin_axis:
+		RicoSpinAxis.Y_UP:
+			return Vector3.UP
+		RicoSpinAxis.X_SIDE:
+			return Vector3.RIGHT
+		RicoSpinAxis.CAMERA:
+			return _rico_camera_look_axis()
+		RicoSpinAxis.LOCAL_X:
+			return _rico_basis_axis(Vector3.RIGHT)
+		RicoSpinAxis.LOCAL_Y:
+			return _rico_basis_axis(Vector3.UP)
+		RicoSpinAxis.LOCAL_Z:
+			return _rico_basis_axis(Vector3.BACK)
+		RicoSpinAxis.CAMERA_RIGHT:
+			return _rico_camera_basis_axis(Vector3.RIGHT)
+		RicoSpinAxis.CAMERA_UP:
+			return _rico_camera_basis_axis(Vector3.UP)
+		RicoSpinAxis.TRAVEL:
+			return Vector3.RIGHT * _rico_dir
+		RicoSpinAxis.CUSTOM:
+			var custom := rico_spin_custom_axis
+			if custom.length_squared() < 0.0001:
+				return Vector3.BACK
+			return custom.normalized()
+		_:
+			## World +Z: face-on propeller for the usual gallery camera.
+			return Vector3.BACK
+
+
+func _rico_basis_axis(local_axis: Vector3) -> Vector3:
+	var axis := (global_transform.basis * local_axis).normalized()
+	if axis.length_squared() < 0.0001:
+		return Vector3.BACK
+	return axis
+
+
+func _rico_camera_look_axis() -> Vector3:
+	var cam := get_viewport().get_camera_3d() if get_viewport() else null
+	if cam == null:
+		return Vector3.BACK
+	var look := -cam.global_transform.basis.z
+	if look.length_squared() < 0.0001:
+		return Vector3.BACK
+	return look.normalized()
+
+
+func _rico_camera_basis_axis(local_axis: Vector3) -> Vector3:
+	var cam := get_viewport().get_camera_3d() if get_viewport() else null
+	if cam == null:
+		return local_axis
+	var axis := (cam.global_transform.basis * local_axis).normalized()
+	if axis.length_squared() < 0.0001:
+		return local_axis
+	return axis
+
+
+func _rico_spin_uses_world_lock() -> bool:
+	return (
+		rico_spin_axis == RicoSpinAxis.Z_VIEW
+		or rico_spin_axis == RicoSpinAxis.Y_UP
+		or rico_spin_axis == RicoSpinAxis.X_SIDE
+	)
+
+
+func _rico_spin_is_local() -> bool:
+	return (
+		rico_spin_axis == RicoSpinAxis.LOCAL_X
+		or rico_spin_axis == RicoSpinAxis.LOCAL_Y
+		or rico_spin_axis == RicoSpinAxis.LOCAL_Z
+	)
+
+
+func _rico_spin_rad_s() -> float:
+	var dir := 1.0
+	if rico_spin_match_travel_dir:
+		dir = _rico_dir
+		## Local Y's "correct" tumble is the opposite of travel dir.
+		if rico_spin_axis == RicoSpinAxis.LOCAL_Y:
+			dir = -dir
+	return deg_to_rad(rico_spin_speed_deg) * dir
+
+
+## Put mesh +Y on the camera look axis with a fixed twist so Local Y is the same every shot.
+func _rico_snap_local_y_to_camera() -> void:
+	var world_y := _rico_camera_look_axis()
+	if world_y.length_squared() < 0.0001:
+		world_y = Vector3.BACK
+	world_y = world_y.normalized()
+	var hint := Vector3.UP
+	if absf(world_y.dot(hint)) > 0.98:
+		hint = Vector3.RIGHT
+	var x := hint.cross(world_y)
+	if x.length_squared() < 0.0001:
+		x = Vector3.RIGHT
+	else:
+		x = x.normalized()
+	var z := x.cross(world_y).normalized()
+	var kept_scale := scale
+	global_transform.basis = Basis(x, world_y, z).orthonormalized()
+	scale = kept_scale
+	if has_node("Mesh"):
+		$Mesh.rotation = Vector3.ZERO
+
+
+func _begin_rico_propeller_spin() -> void:
+	can_sleep = false
+	freeze = true
+	angular_velocity = Vector3.ZERO
+	if rico_spin_axis == RicoSpinAxis.LOCAL_Y:
+		_rico_snap_local_y_to_camera()
+	elif rico_spin_reset_pose and not _rico_spin_is_local():
+		if rico_spin_axis == RicoSpinAxis.CAMERA or rico_spin_axis == RicoSpinAxis.CAMERA_RIGHT or rico_spin_axis == RicoSpinAxis.CAMERA_UP:
+			var cam := get_viewport().get_camera_3d() if get_viewport() else null
+			if cam and not cam.global_position.is_equal_approx(global_position):
+				look_at(cam.global_position, Vector3.UP)
+			else:
+				rotation = Vector3.ZERO
+		else:
+			rotation = Vector3.ZERO
+	_rico_spin_axis_cached = _rico_spin_world_axis()
+	if rico_spin_lock_axes:
+		if _rico_spin_uses_world_lock():
+			axis_lock_angular_x = rico_spin_axis != RicoSpinAxis.X_SIDE
+			axis_lock_angular_y = rico_spin_axis != RicoSpinAxis.Y_UP
+			axis_lock_angular_z = rico_spin_axis != RicoSpinAxis.Z_VIEW
+		else:
+			axis_lock_angular_x = false
+			axis_lock_angular_y = false
+			axis_lock_angular_z = false
+	freeze = false
+	_apply_rico_propeller_spin()
+
+
+func _apply_rico_propeller_spin() -> void:
+	var axis := _rico_spin_axis_cached
+	if rico_spin_axis == RicoSpinAxis.CAMERA or rico_spin_axis == RicoSpinAxis.CAMERA_RIGHT or rico_spin_axis == RicoSpinAxis.CAMERA_UP:
+		axis = _rico_spin_world_axis()
+		_rico_spin_axis_cached = axis
+	if axis.length_squared() < 0.0001:
+		axis = Vector3.BACK
+	angular_velocity = axis.normalized() * _rico_spin_rad_s()
+
+
+func _clear_rico_propeller_spin() -> void:
+	axis_lock_angular_x = false
+	axis_lock_angular_y = false
+	axis_lock_angular_z = false
+	angular_velocity = Vector3.ZERO
+	can_sleep = true
+	_rico_spin_axis_cached = Vector3.BACK
 
 
 func _enable_rico_kill_area() -> void:
@@ -2796,6 +2975,7 @@ func _reset_rico_flight_state() -> void:
 	_ballistic_in_descent = false
 	freeze = false
 	sleeping = false
+	_clear_rico_propeller_spin()
 
 
 func _disable_rico_kill_area() -> void:

@@ -1527,6 +1527,7 @@ func _apply_scope_shot_stats(bullet_speed: float, fire_rate: float) -> void:
 	power_gun_fire_rate = fire_rate
 	if weapon_shooting:
 		weapon_shooting.power_bullet_speed = bullet_speed
+		weapon_shooting.power_bullet_delay = power_bullet_delay
 
 
 ## Live reticle hit radius in screen pixels (shrink/expand updates Weapon_shooting).
@@ -2350,18 +2351,13 @@ func gun_stats() -> void:
 	## snap the reticle too small on release.
 	power_gun_fire_rate = 0.1
 	#_loadout_bullet_speed_override = -1.0
-	weapon_shooting.power_bullet_speed = 0.1
-
-	if weapon_shooting:
-		weapon_shooting.power_bullet_delay = 0.1
+	weapon_shooting.power_bullet_speed = 0.25  #0.5 # should be relative to how fast the rock travels down
 
 
 func gun_2_stats() -> void:
 	## Rapid-fire hold gun — same travel as default; fire rate matches fire_weapon_auto.
 	power_gun_fire_rate = 0.05
 	_loadout_bullet_speed_override = -1.0
-	if weapon_shooting:
-		weapon_shooting.power_bullet_delay = 0.1
 
 
 func gun_3_stats() -> void:
@@ -2370,7 +2366,6 @@ func gun_3_stats() -> void:
 	_loadout_bullet_speed_override = gun3_bullet_travel_sec
 	power_bullet_speed = gun3_bullet_travel_sec
 	if weapon_shooting:
-		weapon_shooting.power_bullet_delay = 0.1
 		weapon_shooting.power_bullet_speed = gun3_bullet_travel_sec
 
 
@@ -2378,8 +2373,6 @@ func gun_4_stats() -> void:
 	## Plant-trap gun — same resting scope / fire cadence as gun1; shoot plants a trap.
 	power_gun_fire_rate = 0.1
 	_loadout_bullet_speed_override = -1.0
-	if weapon_shooting:
-		weapon_shooting.power_bullet_delay = 0.1
 
 
 func gun_5_stats() -> void:
@@ -2389,7 +2382,6 @@ func gun_5_stats() -> void:
 	_loadout_bullet_speed_override = travel
 	power_bullet_speed = travel
 	if weapon_shooting:
-		weapon_shooting.power_bullet_delay = 0.1
 		weapon_shooting.power_bullet_speed = travel
 
 
