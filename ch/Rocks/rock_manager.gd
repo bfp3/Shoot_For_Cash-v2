@@ -249,8 +249,7 @@ var _instant_sequence_pulse := false
 
 enum OobSide { NONE, LEFT, RIGHT, BOTTOM, BEHIND }
 
-const _OOB_MISS_SMOKE := preload("res://res/Particles/Smoke_particles/SmokeQuick.tscn")
-const _OOB_MISS_SPARKS = preload("uid://fsbgvpv0703x")
+const _OOB_MISS := preload("res://vfx/oob_miss.tscn")
 # --------------------------------------------------------------------------
 
 func _ready() -> void:
@@ -2607,30 +2606,20 @@ func _spawn_oob_miss_particles(world_pos: Vector3) -> void:
 	if host == null:
 		host = self
 
-	var smoke: Node = _OOB_MISS_SMOKE.instantiate()
-	host.add_child(smoke)
-	if smoke is Node3D:
-		(smoke as Node3D).global_position = world_pos
-	if smoke is GPUParticles3D:
-		var gp := smoke as GPUParticles3D
-		gp.one_shot = true
-		gp.emitting = true
-		gp.finished.connect(smoke.queue_free, CONNECT_ONE_SHOT)
+	var fx: Node = _OOB_MISS.instantiate()
+	host.add_child(fx)
+	if fx is Node3D:
+		(fx as Node3D).global_position = world_pos
+	if "play_particles" in fx:
+		fx.set("play_particles", true)
 	else:
-		smoke.queue_free.call_deferred()
-
-	var sparks: Node = _OOB_MISS_SPARKS.instantiate()
-	host.add_child(sparks)
-	if sparks is Node3D:
-		(sparks as Node3D).global_position = world_pos
-	if sparks is GPUParticles3D:
-		var sp := sparks as GPUParticles3D
-		sp.one_shot = true
-		sp.emitting = true
-		sp.finished.connect(sparks.queue_free, CONNECT_ONE_SHOT)
-	else:
-		# Fallback free if scene root isn't a GPUParticles3D.
-		get_tree().create_timer(1.2).timeout.connect(sparks.queue_free, CONNECT_ONE_SHOT)
+		for child in fx.get_children():
+			if child is GPUParticles3D:
+				var gp := child as GPUParticles3D
+				gp.one_shot = true
+				gp.restart()
+				gp.emitting = true
+	get_tree().create_timer(2.0).timeout.connect(fx.queue_free, CONNECT_ONE_SHOT)
 
 
 func assign_rock_positions(bodies: Array) -> void:

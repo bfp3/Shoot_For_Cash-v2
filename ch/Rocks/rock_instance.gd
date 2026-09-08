@@ -41,7 +41,7 @@ const GREY_BLAST_STAGGER_SEC := 0.075
 const GREY_BLAST_SHADER_MAT := preload("res://res/Explosion_paid_patreon/shaders/toon_smoke_front.tres")
 const GREY_BLAST_MESH_LAYERS := 16
 
-const RICO_SIDE_MAT := preload("res://res/rock-side_material.tres")
+const RICO_SIDE_MAT := preload("res://res/rock-rico_material.tres")
 const AMMO_ROCK_MAT := preload("res://res/rock-ammo_material.tres")
 
 @export_group("Rock Rico")
@@ -63,6 +63,8 @@ var _rico_force_pop := false
 var _rico_dir := 1.0
 var _rico_lock_z := 0.0
 var _rico_hit_ids: Dictionary = {}
+## Bumped on recycle / new slide so a leftover hang timer cannot retarget gravity.
+var _rico_slide_token := 0
 
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 var start_exploding := false
@@ -808,6 +810,14 @@ func _update_mesh_face_velocity() -> void:
 	## Black rocks keep the launch torque tumble instead of aiming along the arc.
 	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black() or rock_type == RockSize.PINEAPPLE or rock_type == RockSize.AMMO:
 		return
+		
+	if rock_type == RockSize.SMALL or rock_type == RockSize.GREY:
+		return
+		
+	if rock_type == RockSize.RICO:
+		return
+		
+	
 	if mesh_container == null or not is_instance_valid(mesh_container):
 		return
 	if not mesh_container.visible:
@@ -887,6 +897,8 @@ func update_prepare_rock() -> void:
 	await get_tree().create_timer(0.2, false).timeout
 	if token != _pool_setup_token or current_state != State.PREPARE_ROCK:
 		return
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
 	global_position.x = target_x_position
 	
 func update_active() -> void:
@@ -1499,7 +1511,7 @@ func setup_rock_type() -> void:
 				small_rock.visible = true
 				current_mesh = small_rock
 			assign_random_mesh(current_mesh)
-			current_mesh.scale = Vector3.ONE * randf_range(0.42, 0.6)
+			current_mesh.scale = Vector3.ONE * 0.45 # randf_range(0.42, 0.6)
 			main_col.scale = Vector3.ONE * 0.125 * 1.2
 			rock_type_gravity_scale = 0.1
 			force_mult.clear()
@@ -1606,14 +1618,7 @@ func reset_stats() -> void:
 	_destroy_on_crosshair_arm_token += 1
 	_grey_blast_active = false
 	_grey_blast_stagger_index = 0
-	_rico_sliding = false
-	_rico_hanging = false
-	_rico_cash_paid = false
-	_rico_force_pop = false
-	_rico_dir = 1.0
-	_rico_hit_ids.clear()
-	_disable_rico_kill_area()
-	_set_rico_particles(false)
+	_reset_rico_flight_state()
 	if has_node("%explosion_radius_mesh"):
 		%explosion_radius_mesh.material_override = null
 		%explosion_radius_mesh.scale = Vector3.ONE
@@ -1702,6 +1707,7 @@ func release_to_pool() -> void:
 	if current_state == State.INACTIVE:
 		return
 	_pool_setup_token += 1
+	_reset_rico_flight_state()
 	disable_collision()
 	remove_from_group("Target")
 	rock_activated = false
@@ -1719,6 +1725,7 @@ func release_to_pool() -> void:
 ## Claim an inactive pool rock for a later launch without the async PREPARE wait.
 func setup_for_pool_launch(new_type: int, spawn_x: float, spawn_y: float = -INF, spawn_z: float = -INF) -> void:
 	_pool_setup_token += 1
+	_reset_rico_flight_state()
 	disable_collision()
 	remove_from_group("Target")
 	rock_activated = false
@@ -1728,7 +1735,6 @@ func setup_for_pool_launch(new_type: int, spawn_x: float, spawn_y: float = -INF,
 	has_entered_camera_view = false
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
-	gravity_scale = rock_type_gravity_scale
 	if has_node("Mesh"):
 		$Mesh.scale = Vector3.ONE
 		$Mesh.position = Vector3.ZERO
@@ -1737,6 +1743,7 @@ func setup_for_pool_launch(new_type: int, spawn_x: float, spawn_y: float = -INF,
 	target_x_position = spawn_x
 	hide_all_meshes()
 	setup_rock_type()
+	gravity_scale = rock_type_gravity_scale
 	if (
 		rock_type_name != 'hazard_type_1'
 		and rock_type != RockSize.SMOKECAN
@@ -2725,11 +2732,13 @@ func _start_rico_slide() -> void:
 		if money_label_3d and cash_value > 0 and money_label_3d.has_method("money_is_money"):
 			money_label_3d.money_is_money(global_position, cash_value)
 	_enable_rico_kill_area()
+	_rico_slide_token += 1
 	var token := _pool_setup_token
+	var slide_token := _rico_slide_token
 	await get_tree().create_timer(maxf(rico_hang_sec, 0.0), false).timeout
-	if token != _pool_setup_token or not _rico_sliding:
+	if token != _pool_setup_token or slide_token != _rico_slide_token or not _rico_sliding:
 		return
-	if current_state != State.ACTIVE:
+	if current_state != State.ACTIVE or not rock_activated:
 		return
 	_rico_hanging = false
 	gravity_scale = rico_fall_gravity
@@ -2756,6 +2765,29 @@ func _enable_rico_kill_area() -> void:
 	$Explosion_area/CollisionShape3D.disabled = false
 	if has_node("%explosion_radius_mesh"):
 		%explosion_radius_mesh.hide()
+
+
+func _reset_rico_flight_state() -> void:
+	_rico_slide_token += 1
+	_rico_sliding = false
+	_rico_hanging = false
+	_rico_cash_paid = false
+	_rico_force_pop = false
+	_rico_dir = 1.0
+	_rico_lock_z = 0.0
+	_rico_hit_ids.clear()
+	_disable_rico_kill_area()
+	if has_node("Explosion_area"):
+		$Explosion_area.show()
+	_set_rico_particles(false)
+	gravity_scale = 0.0
+	linear_damp = 0.5
+	angular_damp = 1.0
+	constant_force = Vector3.ZERO
+	ballistic_aim_active = false
+	_ballistic_in_descent = false
+	freeze = false
+	sleeping = false
 
 
 func _disable_rico_kill_area() -> void:
