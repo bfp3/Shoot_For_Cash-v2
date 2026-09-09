@@ -7,6 +7,8 @@ const COLOR_CREAM_PANEL := Color(0.92156863, 0.8784314, 0.84705883, 1)
 const COLOR_RED := Color("C70102")
 const COLOR_INK := Color(0.12, 0.08, 0.06, 1)
 const COLOR_TAB_IDLE := Color(0.85, 0.78, 0.72, 1)
+const COLOR_LINE_ERROR := Color(0.78, 0.004, 0.008, 0.2)
+const LINT_DELAY_SEC := 2.0
 
 @export var round_manager: RoundManager
 @export var shop_main_menu: Control
@@ -26,6 +28,11 @@ var _baselines: Dictionary = {}
 
 var _range_tab_buttons: Array[Button] = []
 var _round_buttons: Array[Button] = []
+## 1-based phase -> last known lint error in the current range.
+var _phase_has_script_error: Dictionary = {}
+var _hide_current_phase_dot := false
+var _error_dot_phase := 0.0
+var _lint_timer: Timer
 
 @onready var _main_panel: PanelContainer = %MainPanel
 @onready var _rounds_panel: PanelContainer = %RoundsPanel
@@ -52,6 +59,13 @@ func _ready() -> void:
 	set_process_unhandled_input(true)
 
 	_apply_styles()
+	_script_edit.syntax_highlighter = RoundScriptHighlighter.new()
+	_lint_timer = Timer.new()
+	_lint_timer.one_shot = true
+	_lint_timer.wait_time = LINT_DELAY_SEC
+	_lint_timer.timeout.connect(_refresh_script_lint)
+	add_child(_lint_timer)
+	set_process(false)
 	_save_button.disabled = true
 	_save_button.pressed.connect(_on_save_pressed)
 	_test_button.pressed.connect(_on_test_pressed)
@@ -99,6 +113,7 @@ func open_menu() -> void:
 	_is_open = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	show()
+	set_process(true)
 	_rebuild_range_tabs(start_range)
 	_select_range(start_range, false)
 	_script_edit.release_focus()
@@ -108,6 +123,9 @@ func open_menu() -> void:
 func close_menu() -> void:
 	_stash_current_draft()
 	_is_open = false
+	if _lint_timer:
+		_lint_timer.stop()
+	set_process(false)
 	hide()
 
 
@@ -204,6 +222,7 @@ func keep_open_after_travel() -> void:
 	_is_open = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	show()
+	set_process(true)
 	_script_edit.release_focus()
 	_focus_script_edit_after_open_key()
 
@@ -242,8 +261,11 @@ func _rebuild_round_buttons() -> void:
 		_style_round_button(btn)
 		var captured := i
 		btn.pressed.connect(func(): _on_round_button_pressed(captured))
+		_attach_phase_error_dot(btn)
 		_rounds_vbox.add_child(btn)
 		_round_buttons.append(btn)
+	_scan_all_phase_errors()
+	_refresh_phase_error_dots()
 
 
 func _on_round_button_pressed(round_no: int) -> void:
@@ -282,12 +304,18 @@ func _load_round_into_editor(range_name: String, round_no: int) -> void:
 	_suppress_text_signal = true
 	_script_edit.text = text
 	_suppress_text_signal = false
+	_hide_current_phase_dot = false
+	if _lint_timer:
+		_lint_timer.stop()
+	_refresh_script_lint()
 
 
 func _stash_current_draft() -> void:
 	if _current_range.is_empty() or _current_round <= 0:
 		return
-	_drafts[_draft_key(_current_range, _current_round)] = _script_edit.text
+	var text := _script_edit.text
+	_drafts[_draft_key(_current_range, _current_round)] = text
+	_phase_has_script_error[_current_round] = _text_has_lint_errors(text)
 
 
 func _on_script_text_changed() -> void:
@@ -295,6 +323,11 @@ func _on_script_text_changed() -> void:
 		return
 	_drafts[_draft_key(_current_range, _current_round)] = _script_edit.text
 	_refresh_save_enabled()
+	_hide_current_phase_dot = true
+	_clear_live_error_marks()
+	_refresh_phase_error_dots()
+	if _lint_timer:
+		_lint_timer.start(LINT_DELAY_SEC)
 
 
 func _has_unsaved_changes() -> bool:
@@ -305,6 +338,104 @@ func _has_unsaved_changes() -> bool:
 		if draft != base:
 			return true
 	return false
+
+
+func _refresh_script_lint() -> void:
+	if _script_edit == null:
+		return
+	_hide_current_phase_dot = false
+	var errors: Dictionary = {}
+	var count := _script_edit.get_line_count()
+	for i in count:
+		var lint: Dictionary = Parser.lint_spawn_line(_script_edit.get_line(i))
+		if bool(lint.get("ok", true)):
+			_script_edit.set_line_background_color(i, Color(0, 0, 0, 0))
+		else:
+			_script_edit.set_line_background_color(i, COLOR_LINE_ERROR)
+			errors[i] = {"from": int(lint.get("from", 0)), "to": int(lint.get("to", 0))}
+	var highlighter := _script_edit.syntax_highlighter as RoundScriptHighlighter
+	if highlighter:
+		highlighter.set_error_spans(errors)
+	_phase_has_script_error[_current_round] = not errors.is_empty()
+	_refresh_phase_error_dots()
+
+
+func _clear_live_error_marks() -> void:
+	if _script_edit == null:
+		return
+	for i in _script_edit.get_line_count():
+		_script_edit.set_line_background_color(i, Color(0, 0, 0, 0))
+	var highlighter := _script_edit.syntax_highlighter as RoundScriptHighlighter
+	if highlighter:
+		highlighter.set_error_spans({})
+
+
+func _text_has_lint_errors(text: String) -> bool:
+	for line in String(text).split("\n"):
+		var lint: Dictionary = Parser.lint_spawn_line(line)
+		if not bool(lint.get("ok", true)):
+			return true
+	return false
+
+
+func _phase_script_text(round_no: int) -> String:
+	var key := _draft_key(_current_range, round_no)
+	if _drafts.has(key):
+		return String(_drafts[key])
+	return Parser.get_raw_round_body(_level_file_path(), _current_range, round_no)
+
+
+func _scan_all_phase_errors() -> void:
+	_phase_has_script_error.clear()
+	for i in _round_buttons.size():
+		var round_no := i + 1
+		_phase_has_script_error[round_no] = _text_has_lint_errors(_phase_script_text(round_no))
+
+
+func _attach_phase_error_dot(button: Button) -> void:
+	var dot := Panel.new()
+	dot.name = "ErrorDot"
+	dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dot.visible = false
+	var style := StyleBoxFlat.new()
+	style.bg_color = COLOR_RED
+	style.border_color = COLOR_CREAM
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(8)
+	dot.add_theme_stylebox_override("panel", style)
+	dot.anchor_left = 1.0
+	dot.anchor_right = 1.0
+	dot.anchor_top = 0.0
+	dot.anchor_bottom = 0.0
+	dot.offset_left = -18.0
+	dot.offset_top = 6.0
+	dot.offset_right = -6.0
+	dot.offset_bottom = 18.0
+	button.add_child(dot)
+
+
+func _refresh_phase_error_dots() -> void:
+	for i in _round_buttons.size():
+		var btn := _round_buttons[i]
+		var dot := btn.get_node_or_null("ErrorDot") as Control
+		if dot == null:
+			continue
+		var round_no := i + 1
+		var show := bool(_phase_has_script_error.get(round_no, false))
+		if show and _hide_current_phase_dot and round_no == _current_round:
+			show = false
+		dot.visible = show
+
+
+func _process(delta: float) -> void:
+	if not _is_open:
+		return
+	_error_dot_phase += delta * 3.4
+	var alpha := 0.18 + 0.82 * absf(sin(_error_dot_phase))
+	for btn in _round_buttons:
+		var dot := btn.get_node_or_null("ErrorDot") as Control
+		if dot and dot.visible:
+			dot.modulate = Color(1, 1, 1, alpha)
 
 
 func _refresh_save_enabled() -> void:
@@ -565,7 +696,7 @@ func _style_round_button(button: Button, active: bool = false) -> void:
 	normal.set_corner_radius_all(4)
 	normal.content_margin_left = 10
 	normal.content_margin_top = 8
-	normal.content_margin_right = 10
+	normal.content_margin_right = 22
 	normal.content_margin_bottom = 8
 	var hover := normal.duplicate() as StyleBoxFlat
 	hover.bg_color = Color(0.85, 0.02, 0.03, 1) if active else Color(0.95, 0.9, 0.86, 1)
@@ -603,3 +734,38 @@ func _style_action_button(button: Button, primary: bool) -> void:
 	button.add_theme_color_override("font_hover_color", COLOR_CREAM if primary else COLOR_RED)
 	button.add_theme_color_override("font_disabled_color", Color(0.7, 0.65, 0.6, 0.55))
 	button.add_theme_font_size_override("font_size", 28)
+
+
+## Colors unknown commands after a short idle delay (not while the word is being typed).
+class RoundScriptHighlighter extends SyntaxHighlighter:
+	const _INK := Color(0.12, 0.08, 0.06, 1)
+	const _ERROR := Color("C70102")
+	const _COMMENT := Color(0.5, 0.44, 0.4, 1)
+	## line index -> {from, to}
+	var _error_spans: Dictionary = {}
+
+	func set_error_spans(spans: Dictionary) -> void:
+		_error_spans = spans
+		clear_highlighting_cache()
+
+	func _get_line_syntax_highlighting(line: int) -> Dictionary:
+		var te := get_text_edit()
+		if te == null:
+			return {}
+		var text := te.get_line(line)
+		var stripped := text.strip_edges()
+		if stripped.begins_with("#"):
+			return {0: {"color": _COMMENT}}
+		if not _error_spans.has(line):
+			return {}
+		var span: Dictionary = _error_spans[line]
+		var from := int(span.get("from", 0))
+		var to := int(span.get("to", text.length()))
+		var colors := {}
+		if from > 0:
+			colors[0] = {"color": _INK}
+		colors[from] = {"color": _ERROR}
+		if to < text.length():
+			colors[to] = {"color": _INK}
+		return colors
+

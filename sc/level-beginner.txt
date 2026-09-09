@@ -1,39 +1,244 @@
 island shipper
 
 
-	
-range moss1
 
+range moss1
 	play $0
 	reward $200
 	
 	round
-		#SETUP
-
-		#AMMO needed was 47
+		#  SETUP ammo 
+		#  2:40
 
 		#no-lives
 		#ammo-unlimited
 
 		ammo c6
-		ammo c7
-		ammo c8
-		ammo c1
-		ammo c2
-		ammo c3
+		ammo-mega c7
 
-		ammo b6
-		ammo b7
-		ammo b8
-		ammo b1
-		ammo b2
-		ammo b3
-
+		sfx-play oasisWorld -37.0
 		#sfx-play c418 -45.0
-
+		
 	round
+		# 80bpm — 750ms beat. Ostinato: left pair (1+2) / right pair (8+7).
+		pace-slow
 
-		# Phase 1 - slow
+		# MID — establish the groove
+		rock-grey 1 b1
+		wait 0
+		rock-grey 2 b2
+		wait 750
+		rock-grey 8 b8
+		wait 0
+		rock-grey 7 b7
+		wait 750
+
+		rock-grey 1 b1
+		wait 0
+		rock-grey 2 b2
+		wait 750
+		rock-grey 8 b8
+		wait 0
+		rock-grey 7 b7
+		wait 750
+
+		rock-grey 1 b1
+		wait 0
+		rock-grey 2 b2
+		wait 750
+		rock-grey 8 b8
+		wait 0
+		rock-grey 7 b7
+		wait 750
+
+		# LOW — same groove, drop the row
+		rock-grey 1 c1
+		wait 0
+		rock-grey 2 c2
+		wait 750
+		rock-grey 8 c8
+		wait 0
+		rock-grey 7 c7
+		wait 750
+
+		rock-grey 1 c1
+		wait 0
+		rock-grey 2 c2
+		wait 750
+		rock-grey 8 c8
+		wait 0
+		rock-grey 7 c7
+		wait 750
+
+		# colour — yellow in the hole
+		rock-grey 1 c1
+		wait 0
+		rock-grey 2 c2
+		wait 375
+		rock ? a4
+		wait 375
+		rock-grey 8 c8
+		wait 0
+		rock-grey 7 c7
+		wait 750
+
+		wait
+	round
+		# develop — blacks join, a few more yellows
+		pace-normal
+
+		# groove with a black on the right
+		rock-grey 1 b1
+		wait 0
+		rock-grey 2 b2
+		wait 750
+		rock-black 8 b8
+		wait 0
+		rock-black 7 b7
+		wait 750
+
+		rock-grey 1 b1
+		wait 0
+		rock-grey 2 b2
+		wait 750
+		rock-black 8 b8
+		wait 0
+		rock-black 7 b7
+		wait 750
+
+		# colour — yellow after the left pair
+		rock-grey 1 c1
+		wait 0
+		rock-grey 2 c2
+		wait 375
+		rock ? a4
+		wait 375
+		rock-black 8 c8
+		wait 0
+		rock-black 7 c7
+		wait 750
+
+		rock-grey 1 c1
+		wait 0
+		rock-grey 2 c2
+		wait 375
+		rock ? a5
+		wait 375
+		rock-black 8 c8
+		wait 0
+		rock-black 7 c7
+		wait 750
+
+		# swap — blacks on the left, greys answer
+		rock-black 1 b1
+		wait 0
+		rock-black 2 b2
+		wait 750
+		rock-grey 8 b8
+		wait 0
+		rock-grey 7 b7
+		wait 750
+
+		# colour — yellows on both holes
+		rock-black 1 c1
+		wait 0
+		rock-black 2 c2
+		wait 375
+		rock ? a4
+		wait 375
+		rock-grey 8 c8
+		wait 0
+		rock-grey 7 c7
+		wait 375
+		rock ? a5
+		wait 375
+
+		wait
+	round
+		# climax — tighter groove, more yellow
+		pace-normal
+
+		rock-grey 1 b1
+		wait 0
+		rock-grey 2 b2
+		wait 375
+		rock-black 8 b8
+		wait 0
+		rock-black 7 b7
+		wait 375
+
+		rock ? a4
+		wait 375
+
+		rock-black 1 b1
+		wait 0
+		rock-black 2 b2
+		wait 375
+		rock-grey 8 b8
+		wait 0
+		rock-grey 7 b7
+		wait 375
+
+		rock ? a5
+		wait 375
+
+		# both sides then a centre yellow
+		rock-grey 1 c1
+		wait 0
+		rock-grey 2 c2
+		wait 0
+		rock-black 8 c8
+		wait 0
+		rock-black 7 c7
+		wait 375
+		rock 4 a4
+		wait 375
+
+		rock-black 1 c1
+		wait 0
+		rock-black 2 c2
+		wait 0
+		rock-grey 8 c8
+		wait 0
+		rock-grey 7 c7
+		wait 375
+		rock 5 a5
+		wait 375
+		rock 4 a4
+		wait 750
+
+		wait
+	round
+		# This is the ending.
+		#ammo-unlimited
+
+		wait 2000
+
+		pace-normal
+		rock-white 4 y20
+		wait
+
+range moss7
+	play $0
+	reward $200
+	
+	round
+		#  SETUP ammo 
+		#  2:40
+
+		#no-lives
+		#ammo-unlimited
+
+		ammo c6
+		ammo-mega c7
+
+		sfx-play oasisWorld -37.0
+		#sfx-play c418 -45.0
+	round
+		#PART 1 # MADE it longer
+		#ammo-unlimited
+
+		# BLACKS 
 		pace-slow
 		rock-black 2 b2
 		wait 1000
@@ -43,7 +248,7 @@ range moss1
 		wait 1000
 
 
-		#Mix up
+		#MIX up
 		rock-black 2 b2
 		wait 1000
 		rock-grey 7 b7
@@ -51,7 +256,7 @@ range moss1
 		rock 4 b4
 		wait 1000
 
-
+		# BLACKS 
 		rock-black 2 b2
 		wait 1000
 		rock-black 7 b7
@@ -69,8 +274,9 @@ range moss1
 		wait 1000
 
 
+		wait 4000
 
-		#pace-normal
+		# BLACKS
 		rock-black 2 b2
 		wait 1000
 		rock-black 7 b7
@@ -78,6 +284,43 @@ range moss1
 		rock-black 4 b4
 		wait 1000
 
+		#Mix up
+		rock-black 2 b2
+		wait 1000
+		rock-grey 7 b7
+		wait 1000
+		rock 4 b4
+		wait 1000
+
+	round
+		# Part 1 - ADDED Section to make it longer
+
+		# BLACKS
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+
+		#Mix up
+		rock-grey 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock 4 b4
+		wait 1000
+
+		wait 4000
+
+		# BLACKS
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1000
+		rock-black 4 b4
+		wait 1000
+	round
 		#Mix up
 		rock 2 b2
 		wait 1000
@@ -87,7 +330,7 @@ range moss1
 		wait 1000
 
 
-		#3 yellow rocks two
+		#THREE YELLOW rocks 
 		rock 1 a5
 		wait 0
 		rock 2 a5
@@ -108,7 +351,9 @@ range moss1
 		wait 1000
 		rock 7 b7
 		wait 1000
-		#3 yellow rocks two
+
+
+		#THREE YELLOW rocks 
 		rock 1 a3
 		wait 0
 		rock 2 a3
@@ -119,12 +364,6 @@ range moss1
 		rock-black 4 b4
 		wait 1000
 
-
-
-
-
-
-		#pace-fast
 		rock-black 2 b2
 		wait 1000
 		rock-black 7 b7
@@ -135,21 +374,25 @@ range moss1
 		#Mix up
 		rock-black 2 b2
 		wait 1000
-		rock-grey 7 b7
+		rock 7 b7
 		wait 1000
-		#3 yellow rocks three
+
+		# THREE YELLOW ROCKS
 		rock 1 a7
 		wait 0
 		rock 2 a7
 		wait 0
 		rock 7 a7
 		wait 0
-
+	round
+		#ammo-unlimited
 		wait 2000
+		bird
+		wait 3000
 
-
-
-
+		rock-white
+		wait
+		wait 2500
 
 		# PHASE 2
 		pace-faster
@@ -175,11 +418,11 @@ range moss1
 		wait 1000
 
 		#Mix up
-		rock 2 b2
+		rock-black 2 b2
 		wait 1000
 		rock-grey 7 b7
 		wait 1000
-		rock-black 4 b4
+		rock 4 b4
 		wait 1000
 
 
@@ -204,9 +447,12 @@ range moss1
 		#Mix up
 		rock-black 2 b2
 		wait 1000
+		rock-black 4 b4
+		wait 1000
 		rock 7 b7
 		wait 1000
-		#3 yellow rocks two
+
+		# THREE YELLOWS
 		pace-normal
 		rock 1 a3
 		wait 0
@@ -228,105 +474,37 @@ range moss1
 		#Mix up
 		rock-black 2 b2
 		wait 1000
-		rock-grey 7 b7
+		rock 7 b7
 		wait 1000
-		#3 yellow rocks three
+
+		#THREE YELLOW ROCKS
 		pace-normal
 		rock 1 a7
 		wait 0
 		rock 2 a7
 		wait 0
 		rock 7 a7
-		wait 
-
-
-		#PHASE 3
-
-
-		wait 3000
-		rock 7 a2
 		wait
+
+	round
+		#fINAL PHASE start
+
+		#ammo-unlimited
+		#no-lives
+
+		bird
+
+		ammo-mega c7
+		balloon-rest
+
+		wait 2000
+		pace-normal
+		rock-white 8 a4
 		wait 2000
 
 
 		pace-impossible
 		rock-black 2 b2
-		wait 1000
-		rock-black 7 b7
-		wait 1000
-		rock-black 4 b4
-		wait 1000
-
-		rock-black 2 b2
-		wait 1000
-		rock-black 7 b7
-		wait 1000
-		rock-black 4 b4
-		wait 1000
-
-		rock-black 2 b2
-		wait 1000
-		rock-black 7 b7
-		wait 1000
-		rock-black 4 b4
-		wait 1000
-
-		#Mix up
-		rock 2 b2
-		wait 1000
-		rock 7 b7
-		wait 1000
-		rock-black 4 b4
-		wait 1000
-
-		#3 yellow rocks two
-		pace-normal
-		rock 1 a5
-		wait 0
-		rock 2 a5
-		wait 0
-		rock 8 a5
-		wait
-
-		# RIGHT HERE THE BUG HAPPENS
-
-		wait 3000
-		rock 7 a2
-		wait 4000
-
-		pace-faster
-		rock-black 2 c2
-		wait 250
-		rock-black 7 c7
-		wait 250
-		rock-black 4 c4
-		wait 250
-
-		rock-black 2 c2
-		wait 250
-		rock-black 7 c7
-		wait 250
-		rock-black 4 c4
-		wait 250
-
-
-		rock-black 7 c7
-		wait 250
-		rock-black 4 c4
-		wait 250
-		rock-black 4 c4
-		wait 250
-
-
-		# Start final phase
-		pace-normal
-		rock-ammo 8 a4
-		wait 2000
-
-
-
-		pace-impossible
-		rock-black 2 b2
 		wait 500
 		rock-black 7 b7
 		wait 500
@@ -340,62 +518,403 @@ range moss1
 		wait 500
 		rock-black 7 b7
 		wait 500
-		rock-black 2 b2
-		wait 500
-		rock-black 4 b4
-		wait 500
-		rock-black 7 b7
-		wait 500
-		rock-black 2 b2
+		rock-grey 2 b2
 		wait 500
 		rock 4 b4
 		wait 500
 		rock-black 7 b7
 		wait 500
 		rock-black 2 b2
-		wait 500
-		rock-black 4 b4
-		wait 500
-		rock-black 7 b7
-		wait 500
-		rock-black 2 b2
-		wait 500
-		pace-normal
-		rock-black 4 a4
-		wait 500
 
+		wait 4000
+	round
+		# ROCKS TO C
+
+		rock-black 7 c7
+		wait 200
+		rock-black 4 c4
+		wait 200
+		rock-black 2 c2
+		wait 200
+		rock-black 7 c7
+		wait 200
+		rock-black 4 c4
+		wait 200
+		rock-black 7 c7
+		wait 200
+		rock 2 b2
+	round
+		# final phase sped up - part 2
+
+		#ammo-unlimited
+
+		wait 3000
+
+		pace-impossible
+
+		rock-black 4 b4
+		wait 400
+		rock-black 2 b2
+		wait 400
+		rock-black 7 b7
+		wait 400
+		rock-grey 4 b4
+		wait 400
+		rock-black 2 b2
+		wait 400
+		rock 7 b7
+		wait 400
+		rock-black 4 b4
+		wait 400
+		rock-black 7 b7
+		wait 400
+		rock-black 2 b2
+		wait 400
+		rock-black 4 b4
+		wait 400
+		rock 7 b7
+		wait 400
+	round
+		#frenzy mode 
+
+		wait 3000
+
+		pace-impossible
+
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+
+		# BATCH 1
+		pace-slow
+		rock 2 a8
+		wait 0
+		rock 3 a8
+		wait 0
+		rock 8 a8
+		wait 0
+
+	round
+		#
+
+		wait 1000
+		ammo
+		wait 4000
+
+		pace-impossible
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+
+		# BATCH 1
+		pace-slow
+		rock 2 a2
+		wait 0
+		rock 3 a2
+		wait 0
+		rock 8 a2
+		wait 0
+
+	round
+		#
+		wait 1000
+		ammo-mega
+		wait 3000
+		sfx-play windSnippet -5.0
+		wait 4000
+
+		pace-impossible
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+
+		# BATCH 1
+		pace-slow
+		rock 2 a1
+		wait 0
+		rock 3 a1
+		wait 0
+		rock 8 a1
+		wait 0
+
+		pace-impossible
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
 
 		#3 yellow rocks three
 		pace-slow
-		rock 1 a4
+		rock 2 a2
+		wait 0
+		rock 5 a2
+		wait 0
+		rock 6 a2
+		wait 0
+
+
+
+		pace-impossible
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+		rock-black 4 b4
+		wait 150
+		rock-black 7 b7
+		wait 150
+		rock-black 2 b2
+		wait 150
+
+		#3 yellow rocks three
+		pace-slow
+		rock 2 a4
 		wait 0
 		rock 5 a4
 		wait 0
-		rock 8 a4
-		wait
-
-		pace-fast
-		rock 4 y20
+		rock 6 a4
 		wait
 	round
 		#
 	round
-		#
-	round
-		#
-	round
-		#
-	round
-		#
-	round
+		#ammo-unlimited
+
+		wait 2000
+
+		pace-normal
+		rock-white 4 y20
+		wait
 
 
-		pineapples
-		pineapple 2 a2
-		wait 1500
-		pineapple 4 a4
-		wait 1500
-		pineapple 7 a7
 range moss6
 
 	play $0
@@ -410,20 +929,8 @@ range moss6
 		#no-lives
 		#ammo-unlimited
 
-		ammo c6
-		ammo c7
-		ammo c8
-		ammo c1
-		ammo c2
-		ammo c3
-
-		ammo b6
-		ammo b7
-		ammo b8
-		ammo b1
-		ammo b2
-		ammo b3
-
+		ammo-mega c6
+		ammo-mega c7
 
 
 		# Phase 1 - slow
@@ -845,7 +1352,7 @@ range moss6
 		# This one has no breaks, a constant rhythm that progressively gets faster.
 		# It also has a pattern of 3 blacks and then a mix up round.
 
-		no-lives
+		#no-lives
 		#ammo-unlimited
 
 		ammo c6
@@ -1985,7 +2492,139 @@ range moss6
 		clear
 
 
+range moss13
+	ge moss
 
+	play $0
+	reward $1,000
+
+	round
+		#
+	round
+		#
+		ammo c6
+		#ammo c7
+		#ammo c8
+
+		rock 1 a1
+		wait 450
+		rock 2 a1
+		wait 450
+		rock 3 a2
+		wait 450
+		rock 4 a3
+		wait 450
+		rock 5 a4
+		wait 450
+		rock 6 a5
+		wait 450
+		rock 7 a6
+		wait 450
+		rock 8 a7
+		wait 450
+		rock 8 a7
+		wait 450
+		rock 8 a7
+		#wait 450
+		#rock 8 a7
+		#wait 450
+		#rock 8 a7
+		#wait 450
+		#rock 8 a7
+		wait
+
+	round
+		# grey rounds 1
+		wait 1000
+		ammo
+		rock 8 a2
+		wait
+
+		wait 3000
+
+		rock-grey 8 a7
+		wait 350	
+		rock 7 a6
+		wait 350
+		rock-grey 6 a5
+		wait 350
+		rock 5 a4
+		wait 350
+
+		rock-grey 4 a3
+		wait 350	
+		rock 3 a2
+		wait 350
+		rock-grey 2 a1
+		wait 350
+		rock 1 a2
+		wait 350
+
+
+		wait
+	
+	
+	round
+		#grey phase 2
+
+		wait 1000
+		ammo
+		rock 2 a8
+		wait
+
+		wait 3000
+
+		rock-grey 8 a7
+		wait 350	
+		rock 7 a6
+		wait 350
+		rock-grey 6 a5
+		wait 350
+		rock 5 a4
+		wait 350
+
+		rock-grey 4 a3
+		wait 350	
+		rock 3 a2
+		wait 350
+		rock-grey 2 a1
+		wait 350
+		rock 1 a2
+		wait 350
+		rock-grey 2 a3
+		wait 350
+		wait
+	round
+		#finale
+		wait 1000
+		ammo c6
+		ammo c7
+		rock 8 a2
+
+
+		wait 3000
+
+		rock 7 a6
+		wait 350
+		rock 6 a5
+		wait 350
+		rock 5 a4
+		wait 350
+		rock 4 a3
+		wait 350
+		rock 3 a2
+		wait 350
+		rock 2 a1
+		wait 350
+		rock 1 a1
+		wait 450
+		rock 2 a1
+		wait 450
+		rock 3 a2
+		wait
+
+		rock-white 4 y12
+		wait
 
 
 
@@ -3476,7 +4115,9 @@ range moss12
 		pineapple 5 a5
 		clear
 
-range moss13
+
+
+range moss14
 	round
 		hold out 30000
 		#1

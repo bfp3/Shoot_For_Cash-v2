@@ -160,4 +160,12 @@ func _template_for(sfx_name: String) -> Node:
 		return _templates[sfx_name]
 	if sfx_name == "launched_into_distance_3d":
 		return _templates.get("rock_launch_sound")
+	var nested := get_node_or_null("SFX/" + sfx_name)
+	if nested is AudioStreamPlayer or nested is AudioStreamPlayer3D:
+		_register_player(nested)
+		return nested
+	var found := find_child(sfx_name, true, false)
+	if found is AudioStreamPlayer or found is AudioStreamPlayer3D:
+		_register_player(found)
+		return found
 	return null

@@ -1,6 +1,7 @@
 extends Node
 
-## Debug-only Moss skip (Shift+M). Never runs in exported builds.
+## Debug-only Moss skip. Never runs in exported builds.
+## Fast travel is `debug_jump_to_level` / Main-lofi — no Shift+M hotkey.
 var _level_jump_busy := false
 
 ## Set by Main-lofi before loading Main.tscn — consumed once on boot.
@@ -44,9 +45,6 @@ func _input(event) -> void:
 		return
 
 	if event is InputEventKey and event.pressed and not event.echo:
-		if event.shift_pressed and event.keycode == KEY_M:
-			debug_jump_to_level(gl_DataSet.get_default_range_name())
-			return
 		## Shift+C — replay the range-clear tally (GREAT WORK / banked / winnings → map).
 		if event.shift_pressed and event.keycode == KEY_C:
 			if debug_preview_win_sequence():

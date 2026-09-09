@@ -59,6 +59,9 @@ Range clear (last round of a place, first time): tally, then shop (no island map
 - `rock-pineapple`: must-hit rock using the pineapple mesh. GoldParticles while airborne; `pineapple_destroy` VFX on pop. After a `pineapples` keyword it is accepted as a prize spawn, same as `pineapple`.
 - `rock-rico`: grey-like $1 rock with `rock-side_material`. A shot slides it horizontally (x < 0 → +X, x > 0 → −X) then it falls. Splash/OOB is not a strike. While sliding it pops other rocks (blacks: no strike) and is not destroyed until it leaves play.
 - `rock-ammo`: grey-like $1 rock with red/white `rock-ammo_material`. Miss is not a strike. Shooting it can spawn an ammo balloon (`BonusCash.ammo_rocks_needed`, default 1). Tumbling spin like a black rock.
+- `rock-white`: scene white mesh and material (no random mesh). Miss and shot do not strike. Destroy plays `aoe_white_rock` and `rock_white_01`–`03`.
+- `ammo-mega`: AmmoMegaPack balloon (1.5×, 30 ammo, MEGA / AMMO label). Same cell / amount / price tokens as `ammo`.
+- `bird` / `birds` / `bird slow` / `bird fast`: play the flying-birds path via `start_birds()`.
 - Aim height: `rock 4 y20` flies straight up in column 4 to world Y 20. `y8-20` picks a random Y in that range. `rock 4 a8 y20` keeps A8's X and overrides Y.
 
 ## Special modes

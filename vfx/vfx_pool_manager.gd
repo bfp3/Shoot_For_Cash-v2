@@ -18,6 +18,8 @@ const DEFAULT_LIFETIME := 5.0
 @export var pool_oranges := 4
 @export var pool_orange_hit := 2
 @export var pool_pineapples := 1
+@export var pool_white_rock := 4
+@export var pool_oob_miss_rock_strike := 4
 
 @export_group("Warmup")
 ## Instances created per idle frame while filling pools.
@@ -37,6 +39,8 @@ const DEFAULT_LIFETIME := 5.0
 @export var scene_orange_destroy: PackedScene
 @export var scene_orange_hit: PackedScene
 @export var scene_pineapple_destroy: PackedScene
+@export var scene_aoe_white_rock: PackedScene
+@export var scene_oob_miss_rock_strike: PackedScene
 
 var _idle: Dictionary = {} ## StringName -> Array[Node3D]
 var _busy: Dictionary = {} ## StringName -> Array[Node3D]
@@ -60,6 +64,8 @@ func _ready() -> void:
 		&"orange_destroy": scene_orange_destroy,
 		&"orange_hit": scene_orange_hit,
 		&"pineapple_destroy": scene_pineapple_destroy,
+		&"aoe_white_rock": scene_aoe_white_rock,
+		&"oob_miss_rock_strike": scene_oob_miss_rock_strike,
 	}
 	_targets = {
 		&"rock_destroy": pool_rocks,
@@ -73,6 +79,8 @@ func _ready() -> void:
 		&"orange_destroy": pool_oranges,
 		&"orange_hit": pool_orange_hit,
 		&"pineapple_destroy": pool_pineapples,
+		&"aoe_white_rock": pool_white_rock,
+		&"oob_miss_rock_strike": pool_oob_miss_rock_strike,
 	}
 	for key in _scenes.keys():
 		_idle[key] = []
@@ -125,6 +133,8 @@ func play(cue: StringName, at: Vector3, lifetime: float = DEFAULT_LIFETIME) -> N
 	_busy[key].append(inst)
 	inst.visible = true
 	inst.global_position = at
+	if inst.has_method("reset_physics_interpolation"):
+		inst.reset_physics_interpolation()
 	_play_aoe(inst)
 	_schedule_release(key, inst, lifetime)
 	return inst
@@ -173,6 +183,14 @@ func play_orange_hit(at: Vector3) -> Node3D:
 
 func play_pineapple_destroy(at: Vector3) -> Node3D:
 	return play(&"pineapple_destroy", at)
+
+
+func play_aoe_white_rock(at: Vector3) -> Node3D:
+	return play(&"aoe_white_rock", at)
+
+
+func play_oob_miss_rock_strike(at: Vector3) -> Node3D:
+	return play(&"oob_miss_rock_strike", at)
 
 
 static func get_pool(tree: SceneTree) -> VfxPoolManager:

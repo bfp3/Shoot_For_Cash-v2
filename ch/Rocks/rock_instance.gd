@@ -153,6 +153,8 @@ enum RockSize {
 	RICO,
 	## Script `rock-ammo`: grey mesh + rock-ammo_material (red/white balloon stripes). Shot can spawn an ammo balloon.
 	AMMO,
+	## Script `rock-white`: scene white mesh + material. Miss and shot do not strike.
+	WHITE,
 }
 
 enum State {
@@ -175,6 +177,7 @@ var rock_has_been_logged := false
 @onready var mesh_container: Node3D = %Mesh
 
 @onready var small_rock: MeshInstance3D = %small_rock
+@onready var white_rock: MeshInstance3D = get_node_or_null("%small_rock_white") as MeshInstance3D
 @onready var clay_pigeon: MeshInstance3D = %clay_pigeon
 @onready var grey_rock: MeshInstance3D = %grey_rock
 @onready var rock_rico_mesh: MeshInstance3D = get_node_or_null("%rock_rico") as MeshInstance3D
@@ -819,7 +822,7 @@ func _physics_process(delta: float) -> void:
 		elif rock_type == RockSize.GAP:
 			if not _freeze_shot_pending:
 				_check_hazard_crosshair()
-		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.AMMO or rock_type == RockSize.PINEAPPLE:
+		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.AMMO or rock_type == RockSize.WHITE or rock_type == RockSize.PINEAPPLE:
 			_update_destroy_on_crosshair_overlap()
 		elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 			_update_hazard_crosshair_overlap()
@@ -845,7 +848,7 @@ func _update_mesh_face_velocity() -> void:
 	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black() or rock_type == RockSize.PINEAPPLE or rock_type == RockSize.AMMO:
 		return
 		
-	if rock_type == RockSize.SMALL or rock_type == RockSize.GREY:
+	if rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.WHITE:
 		return
 		
 	if rock_type == RockSize.RICO:
@@ -990,11 +993,13 @@ func update_active() -> void:
 	elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 		if _player_wants_overlap_destroy("hazards"):
 			_arm_hazard_crosshair()
-	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.AMMO or rock_type == RockSize.STAY or rock_type == RockSize.PINEAPPLE:
+	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.AMMO or rock_type == RockSize.WHITE or rock_type == RockSize.STAY or rock_type == RockSize.PINEAPPLE:
 		if _player_wants_overlap_destroy("rocks"):
 			_arm_destroy_on_crosshair()
 	if rock_type == RockSize.SMALL or rock_type == RockSize.STAY:
 		_set_small_rock_fire(true)
+	if rock_type == RockSize.WHITE:
+		_set_white_rock_fx(true)
 	
 	#%rock_launch_sound.pitch_scale = randf_range(3.0,3.2)
 	_play_rocks_sfx("rock_launch_sound")
@@ -1152,7 +1157,7 @@ func update_gravity(_gravity_scale : float) -> void:
 		linear_damp = 0.0
 
 func _visual_meshes() -> Array:
-	return [small_rock, grey_rock, rock_rico_mesh, rock_ammo_mesh, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate, pineapple_mesh]
+	return [small_rock, white_rock, grey_rock, rock_rico_mesh, rock_ammo_mesh, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate, pineapple_mesh]
 
 
 func _cache_mesh_original_overrides() -> void:
@@ -1173,6 +1178,7 @@ func hide_all_meshes() -> void:
 		if _mesh_original_overrides.has(mesh):
 			mesh.material_override = _mesh_original_overrides[mesh]
 	_set_rico_particles(false)
+	_set_white_rock_fx(false)
 
 
 
@@ -1584,6 +1590,31 @@ func setup_rock_type() -> void:
 			force_mult = [5]
 			force_mult_index = 0
 
+		RockSize.WHITE:
+			current_rock_type = "White Rock"
+			rock_type_name = "rock_type_white"
+			var white_health := int(gl_DataSet.get_value("rock_type_white", 1))
+			var white_cash := int(gl_DataSet.get_value("rock_type_white", 0))
+			health = maxi(white_health, 1)
+			cash_value = white_cash
+			max_health = health
+			if white_rock:
+				white_rock.visible = true
+				current_mesh = white_rock
+			else:
+				small_rock.visible = true
+				current_mesh = small_rock
+			current_mesh.scale = Vector3.ONE * 0.5
+			main_col.scale = Vector3.ONE * 0.125 * 1.2
+			rock_type_gravity_scale = 0.1
+			force_mult.clear()
+			force_mult = [5]
+			force_mult_index = 0
+			_set_white_rock_fx(true)
+			if current_mesh.has_node("GoldParticles"):
+				current_particles = current_mesh.get_node("GoldParticles")
+				current_particles.emitting = true
+
 		RockSize.RED_ATTACKER:
 			## Launch like avoider; at apex lock crosshair and dash straight at it.
 			current_rock_type = "Rock Red Attacker"
@@ -1674,6 +1705,7 @@ func reset_stats() -> void:
 	_set_avoider_hum(false)
 	_set_attack_fire(false)
 	_set_small_rock_fire(false)
+	_set_white_rock_fx(false)
 	_set_marked_embers(false)
 	_red_attacker_armed = false
 	_red_attacker_dashing = false
@@ -1947,6 +1979,9 @@ func shake_camera() -> void:
 			if player_cam.has_method("shake_camera_rock_grey"):
 				player_cam.shake_camera_rock_grey()
 		RockSize.AMMO:
+			if player_cam.has_method("shake_camera_rock_grey"):
+				player_cam.shake_camera_rock_grey()
+		RockSize.WHITE:
 			if player_cam.has_method("shake_camera_rock_grey"):
 				player_cam.shake_camera_rock_grey()
 		RockSize.AVOIDER:
@@ -2232,6 +2267,8 @@ func start_destroyed_process() -> void:
 	
 	if current_particles != null:
 		current_particles.emitting = false
+	if rock_type == RockSize.WHITE:
+		_set_white_rock_fx(false)
 
 	
 	#if player_has_marked_rock == false:
@@ -2348,6 +2385,13 @@ func play_hit_sfx() -> void:
 
 
 func play_destroy_sfx() -> void:
+	if rock_type == RockSize.WHITE:
+		_play_white_rock_sfx()
+		return
+	_play_normal_destroy_sfx()
+
+
+func _play_normal_destroy_sfx() -> void:
 	_play_rocks_sfx("rock_hit_sound", 0.02)
 	await get_tree().create_timer(0.1, false).timeout
 	_play_rocks_sfx("rock_hitSound")
@@ -2355,8 +2399,22 @@ func play_destroy_sfx() -> void:
 	_play_rocks_sfx("rock_explosion_sfx")
 
 
+func _play_white_rock_sfx() -> void:
+	#var cue: String = ["rock_white_01", "rock_white_02", "rock_white_03"]#.pick_random()
+	#_play_rocks_sfx(cue)
+	
+	#await get_tree().create_timer(0.05, false).timeout
+	_play_rocks_sfx("rock_white_05")
+	_play_rocks_sfx("rock_white_03")
+	_play_rocks_sfx("rock_white_04")
+	await get_tree().create_timer(0.05, false).timeout
+	await get_tree().create_timer(0.05, false).timeout
+	_play_rocks_sfx("rock_white_01")
+	await get_tree().create_timer(0.05, false).timeout
+	_play_rocks_sfx("rock_white_02")
 
-		
+
+
 
 func _on_start_falling_timer_timeout() -> void:
 	if _rico_sliding:
@@ -3084,6 +3142,9 @@ func smoke_particles() -> void:
 	if rock_type == RockSize.PINEAPPLE:
 		pineapple_particles()
 		return
+	if rock_type == RockSize.WHITE:
+		_play_vfx(&"aoe_white_rock")
+		return
 	
 	if rock_type == RockSize.SMOKECAN:
 		_play_vfx(&"smokecan_destroy")
@@ -3120,10 +3181,16 @@ func hazard_smoke_particles_duplicates() -> void:
 	_play_vfx(&"rock_hit")
 
 
-func _play_vfx(cue: StringName) -> void:
+func play_splash_strike_vfx(at: Vector3 = Vector3.INF) -> void:
+	var pos := at if at.is_finite() else global_position
+	_play_vfx(&"oob_miss_rock_strike", pos)
+
+
+func _play_vfx(cue: StringName, at: Vector3 = Vector3.INF) -> void:
 	var pool := get_tree().get_first_node_in_group("vfx_pool")
 	if pool and pool.has_method("play"):
-		pool.play(cue, global_position)
+		var pos := at if at.is_finite() else global_position
+		pool.play(cue, pos)
 
 
 func start_bullet_to_target() -> void:
@@ -3333,6 +3400,19 @@ func _set_attack_fire(active: bool) -> void:
 func _set_small_rock_fire(active: bool) -> void:
 	if small_rock:
 		_set_mesh_fire(small_rock, active)
+
+
+func _set_white_rock_fx(active: bool) -> void:
+	if white_rock == null:
+		return
+	for particle_name in ["GoldParticles", "GoldParticles2"]:
+		var gp := white_rock.get_node_or_null(particle_name) as GPUParticles3D
+		if gp:
+			gp.emitting = active
+	_set_mesh_fire(white_rock, active)
+	var glow := white_rock.get_node_or_null("Fire/Glow") as OmniLight3D
+	if glow:
+		glow.visible = active
 
 
 func _set_mesh_fire(mesh: Node, active: bool) -> void:
@@ -3787,7 +3867,7 @@ func _arm_destroy_on_crosshair() -> void:
 		return
 	if current_state != State.ACTIVE:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.AMMO and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.AMMO and rock_type != RockSize.WHITE and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
 		return
 	if not _player_wants_overlap_destroy("rocks"):
 		return
@@ -3803,7 +3883,7 @@ func _update_destroy_on_crosshair_overlap() -> void:
 		return
 	if rock_type == RockSize.RICO and _rico_sliding:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.AMMO and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.AMMO and rock_type != RockSize.WHITE and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
 		return
 	if _freeze_shot_pending:
 		return

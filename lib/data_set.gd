@@ -129,6 +129,8 @@ var dataset_float : Dictionary = {
 	,"rock_type_rico"		: [1,		1]
 	## rock-ammo: grey-like $1 rock; miss does not strike. Shooting it can spawn an ammo balloon.
 	,"rock_type_ammo"		: [1,		1]
+	## rock-white: scene white mesh; miss and shot do not strike.
+	,"rock_type_white"		: [1,		1]
 	## rock-stay: hangs at aim after a fast straight approach.
 	,"rock_type_stay"		: [2,		1]
 	## threat: invincible overlap-smoke canister (not a clearable rock).

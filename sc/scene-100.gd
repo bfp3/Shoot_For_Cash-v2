@@ -178,7 +178,7 @@ func start_game() -> void:
 		splash_screen.hide()
 
 
-## Debug (Shift+M): tear down title/splash so Moss can start immediately.
+## Debug fast travel: tear down title/splash so Moss can start immediately.
 func debug_bootstrap_gameplay() -> void:
 	moving_camera = false
 	set_process(false)

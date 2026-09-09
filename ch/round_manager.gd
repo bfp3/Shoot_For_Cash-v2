@@ -4418,7 +4418,7 @@ func restart() -> void:
 	birds.start_birds()
 
 
-## Debug (Shift+M / Main-lofi): same end-state as travel, with no transition waits.
+## Debug (Main-lofi / debug_jump_to_level): same end-state as travel, with no transition waits.
 func debug_restart_to_moss() -> void:
 	await debug_restart_to_level(gl_DataSet.get_default_range_name())
 

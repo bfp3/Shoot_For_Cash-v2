@@ -60,12 +60,6 @@ func _on_body_entered(body: Node3D) -> void:
 		if not is_hazard:
 			splash_sfx()
 
-		body.rock_activated = false
-		## Strike-worthy only — black rocks skip the OOB impact sting.
-		if not is_hazard and body.has_method("out_of_bounds"):
-			body.out_of_bounds()
-		body.enter_state(RockInstance.State.MISSED)
-
 		var rocks_container = null
 		if round_manager:
 			rocks_container = round_manager.get("rocks_container")
@@ -75,6 +69,23 @@ func _on_body_entered(body: Node3D) -> void:
 		if rocks_container != null:
 			give_strike = bool(rocks_container.get("rock_yellows_give_strikes"))
 		var is_must_hit := missed_rock_type_name.contains("rock_type_1")
+		## Play strike VFX at the water hit *before* MISSED pools the rock
+		## (pooling snaps it back to start_pos / the next launch slot).
+		if not is_hazard and give_strike and is_must_hit and bool(body.get("missed_rock_use_oob_particles")):
+			if rocks_container and rocks_container.has_method("suppress_next_strike_feedback"):
+				rocks_container.suppress_next_strike_feedback()
+			var vfx_pos := splash_hit_pos
+			if vfx_pos.y < global_position.y:
+				vfx_pos.y = global_position.y
+			if body.has_method("play_splash_strike_vfx"):
+				body.play_splash_strike_vfx(vfx_pos)
+
+		body.rock_activated = false
+		## Strike-worthy only — black rocks skip the OOB impact sting.
+		if not is_hazard and body.has_method("out_of_bounds"):
+			body.out_of_bounds()
+		body.enter_state(RockInstance.State.MISSED)
+
 		if not is_hazard and rocks_container and rocks_container.has_method("set_strike_feedback_origin") and give_strike and is_must_hit:
 			rocks_container.set_strike_feedback_origin(splash_hit_pos)
 		if not is_hazard and give_strike and is_must_hit:

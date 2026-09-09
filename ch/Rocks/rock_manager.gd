@@ -30,6 +30,7 @@ var rocks_limit := 0
 const ROCK_INSTANCE_SCENE := preload("res://ch/Rocks/Rock_Instance.tscn")
 const REST_BALLOON_SCENE := preload("res://ch/Rocks/RestBalloon.tscn")
 const AMMO_BALLOON_SCENE := preload("res://ch/Rocks/AmmoBalloon.tscn")
+const AMMO_MEGA_PACK_SCENE := preload("res://ch/Rocks/AmmoMegaPack.tscn")
 const THREAT_SMOKE_MINE_SCENE := preload("res://ch/Rocks/Threat_SmokeMine.tscn")
 const COLLECTOR_SCENE := preload("res://ch/Rocks/TheCollector.tscn")
 ## Extra pool rocks added once when entering the boss layout (batched across frames).
@@ -250,6 +251,8 @@ var _instant_sequence_pulse := false
 ## launch leftover pool rocks with leftover velocity (sky-boost glitch).
 var _pulse_armed_beat := 0
 var _pulse_fired_beat := -1
+## Egg / hold-out pulse arrived before PREPARE (leading `wait N`). Applied when rocks arm.
+var _pending_pulse := false
 
 enum OobSide { NONE, LEFT, RIGHT, BOTTOM, BEHIND }
 
@@ -316,6 +319,14 @@ func _is_light_cmd(cmd: String) -> bool:
 	return cmd == "light-dim" or cmd == "light-bright"
 
 
+func _is_bird_cmd(cmd: String) -> bool:
+	return cmd == "bird" or cmd == "birds"
+
+
+func _is_ammo_cmd(cmd: String) -> bool:
+	return cmd == "ammo" or cmd == "ammo-mega"
+
+
 func _is_avoider_kill_cmd(cmd: String) -> bool:
 	return cmd == "rock-avoider-kill"
 
@@ -334,6 +345,20 @@ func _apply_light_entry(entry) -> void:
 	var round_manager = get_tree().get_first_node_in_group("round_manager")
 	if round_manager and round_manager.has_method("apply_script_light_shift"):
 		round_manager.apply_script_light_shift(delta)
+
+
+func _apply_bird_entry(entry) -> void:
+	var mode := "default"
+	if entry is Dictionary:
+		mode = String(entry.get("speed", "default")).to_lower()
+	if mode != "slow" and mode != "fast":
+		mode = "default"
+	var round_manager = get_tree().get_first_node_in_group("round_manager")
+	if round_manager == null:
+		return
+	var birds = round_manager.get("birds")
+	if birds and birds.has_method("start_birds"):
+		birds.start_birds(mode)
 
 
 func _apply_pace_entry(entry) -> void:
@@ -362,7 +387,7 @@ func _apply_gun_entry(entry) -> void:
 
 func _process(delta: float) -> void:
 	if _waiting_until_clear and not _rest_balloon_hold and not _advancing_sequence and not _pineapple_round_playing and not _sequence_delay_active:
-		if current_state != State.INACTIVE and current_state != State.ROUND_END:
+		if current_state != State.INACTIVE:
 			if _sky_is_clear_for_sequence():
 				if not try_continue_sequence():
 					_finish_round_if_sequence_idle()
@@ -383,8 +408,15 @@ func _process(delta: float) -> void:
 func enter_state(new_state : State) -> void:
 	if _paused_for_continue and new_state == State.PULSE_ROCKS:
 		return
-	if new_state == State.PULSE_ROCKS and _pulse_fired_beat == _pulse_armed_beat:
-		return
+	if new_state == State.PULSE_ROCKS:
+		## Timed `wait N` keeps us in ROUND_END until rocks PREPARE. Stash the
+		## pulse so the egg / hold-out launch is not spent on an empty sky.
+		if current_state != State.PREPARE_ROCKS:
+			if _sequence_active:
+				_pending_pulse = true
+			return
+		if _pulse_fired_beat == _pulse_armed_beat:
+			return
 	current_state = new_state
 	
 	match current_state:
@@ -432,6 +464,7 @@ func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
 	_waiting_until_clear = false
 	_rest_balloon_hold = false
 	_auto_pulse_next_beat = false
+	_pending_pulse = false
 	_force_mid_round_balloons = resume_index > 0
 	_timed_events_running = false
 	_stream_launches_remaining = 0
@@ -490,6 +523,7 @@ func _is_pineapple_finale_filler(cmd: String) -> bool:
 		or _is_gun_cmd(cmd)
 		or _is_script_sfx_cmd(cmd)
 		or _is_light_cmd(cmd)
+		or _is_bird_cmd(cmd)
 		or _is_avoider_kill_cmd(cmd)
 	)
 
@@ -736,11 +770,16 @@ func _launch_next_sequence_beat() -> void:
 			_sequence_cursor += 1
 			_apply_light_entry(light_entry)
 			continue
+		if _is_bird_cmd(cmd):
+			var bird_entry = _full_wave_sequence[_sequence_cursor]
+			_sequence_cursor += 1
+			_apply_bird_entry(bird_entry)
+			continue
 		if _is_avoider_kill_cmd(cmd):
 			_sequence_cursor += 1
 			_handle_avoider_kill_command()
 			continue
-		if cmd == "ammo":
+		if cmd == "ammo" or cmd == "ammo-mega":
 			var ammo_entry = _full_wave_sequence[_sequence_cursor]
 			_sequence_cursor += 1
 			_spawn_or_queue_ammo_balloon(ammo_entry)
@@ -822,6 +861,9 @@ func _launch_next_sequence_beat() -> void:
 		_waiting_until_clear = true
 	else:
 		_waiting_until_clear = false
+		## Trailing `wait N` (or a wait-only script) never hits rock-clear, so
+		## tell RoundManager the wave is done once the timer elapses.
+		_finish_round_if_sequence_idle()
 
 
 func _sleep_sequence_delay(delay_sec: float) -> bool:
@@ -853,12 +895,12 @@ func _collect_next_beat() -> Array:
 			continue
 		## Leave pace / gun / light in the beat so `_begin_beat` applies them
 		## in script order. Applying here would stamp the last `pace-*` onto every rock.
-		if _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_light_cmd(cmd):
+		if _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_light_cmd(cmd) or _is_bird_cmd(cmd):
 			beat.append(_full_wave_sequence[_sequence_cursor])
 			_sequence_cursor += 1
 			continue
 		if (
-			cmd == "ammo"
+			_is_ammo_cmd(cmd)
 			or cmd == "threat"
 			or cmd == "collector"
 			or _is_sequence_barrier_cmd(cmd)
@@ -935,6 +977,9 @@ func _begin_beat(sequence: Array) -> void:
 				continue
 			if _is_light_cmd(cmd):
 				_apply_light_entry(entry)
+				continue
+			if _is_bird_cmd(cmd):
+				_apply_bird_entry(entry)
 				continue
 			if cmd == 'rock-gap' or cmd == 'rock-red-gap':
 				var gap_entries := _expand_rock_gap_entry(entry)
@@ -1156,6 +1201,7 @@ func pause_sequence_for_continue() -> void:
 	_sequence_delay_active = false
 	_advancing_sequence = false
 	_auto_pulse_next_beat = false
+	_pending_pulse = false
 	_waiting_until_clear = true
 	_timed_events_running = false
 	_stream_launches_remaining = 0
@@ -1355,7 +1401,10 @@ func _spawn_ammo_balloon(entry = null) -> void:
 		host = get_tree().current_scene
 	if host == null:
 		host = self
-	var ammo_balloon: Node = AMMO_BALLOON_SCENE.instantiate()
+	var packed: PackedScene = AMMO_BALLOON_SCENE
+	if entry is Dictionary and String(entry.get("cmd", "")).to_lower() == "ammo-mega":
+		packed = AMMO_MEGA_PACK_SCENE
+	var ammo_balloon: Node = packed.instantiate()
 	host.add_child(ammo_balloon)
 	if ammo_balloon.has_method("configure_from_entry") and entry is Dictionary:
 		ammo_balloon.configure_from_entry(entry)
@@ -1873,6 +1922,7 @@ func _cancel_sequence() -> void:
 	_waiting_until_clear = false
 	_rest_balloon_hold = false
 	_auto_pulse_next_beat = false
+	_pending_pulse = false
 	_advancing_sequence = false
 	_timed_events_running = false
 	_stream_launches_remaining = 0
@@ -1962,6 +2012,10 @@ func _finish_round_if_sequence_idle() -> void:
 	var round_manager = get_tree().get_first_node_in_group("round_manager")
 	if round_manager == null:
 		return
+	## WAVE_START still blocking end — keep polling until the latch lifts.
+	if bool(round_manager.get("_suppress_wave_end")):
+		_waiting_until_clear = true
+		return
 	if _launched_scripted_pineapple and round_manager.has_method("finish_round_after_last_pineapple"):
 		round_manager.finish_round_after_last_pineapple()
 		return
@@ -1979,9 +2033,9 @@ func _sequence_has_more_play_work() -> bool:
 		if not (entry is Dictionary):
 			continue
 		var cmd := String(entry.get("cmd", "")).to_lower()
-		if cmd == "wait" or cmd == "wait-until-clear" or _is_clear_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_script_sfx_cmd(cmd) or _is_light_cmd(cmd):
+		if cmd == "wait" or cmd == "wait-until-clear" or _is_clear_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_script_sfx_cmd(cmd) or _is_light_cmd(cmd) or _is_bird_cmd(cmd):
 			continue
-		if cmd == "pineapples" or _is_launchable_spawn_cmd(cmd) or cmd == "balloon" or cmd == "pineapple" or cmd == "ammo" or cmd == "threat" or cmd == "collector" or _is_balloon_rest_cmd(cmd) or cmd == "bonus-target" or _is_avoider_kill_cmd(cmd):
+		if cmd == "pineapples" or _is_launchable_spawn_cmd(cmd) or cmd == "balloon" or cmd == "pineapple" or _is_ammo_cmd(cmd) or cmd == "threat" or cmd == "collector" or _is_balloon_rest_cmd(cmd) or cmd == "bonus-target" or _is_avoider_kill_cmd(cmd):
 			return true
 		## Markers / unknown lines must not keep the round open forever.
 		continue
@@ -2159,8 +2213,9 @@ func update_prepare_rocks() -> void:
 
 	_build_wave_telegraph_plan(active_bodies)
 	## No full-wave telegraph — blinks happen per rock just before launch.
-	if _auto_pulse_next_beat:
+	if _auto_pulse_next_beat or _pending_pulse:
 		_auto_pulse_next_beat = false
+		_pending_pulse = false
 		_pulse_continuation_beat()
 
 
@@ -2205,6 +2260,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.JUGGLE
 			'rock-grey':
 				return RockInstance.RockSize.GREY
+			'rock-white':
+				return RockInstance.RockSize.WHITE
 			'rock-rico':
 				return RockInstance.RockSize.RICO
 			'rock-ammo':
@@ -2244,6 +2301,7 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-red-gap'
 		or cmd == 'rock-juggle'
 		or cmd == 'rock-grey'
+		or cmd == 'rock-white'
 		or cmd == 'rock-rico'
 		or cmd == 'rock-ammo'
 		or cmd == 'rock-stay'
@@ -4323,7 +4381,7 @@ func shuffle_current_sequence(_sequence: Array) -> void:
 		if entry is Dictionary:
 			var cmd: String = String(entry.get('cmd', '')).to_lower()
 			# Keep wait / sequence barriers in place so launch stagger, balloon-rests, and clear survive shuffles.
-			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_rest_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or cmd == 'ammo' or cmd == 'threat' or cmd == 'collector' or _is_script_sfx_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_light_cmd(cmd) or _is_avoider_kill_cmd(cmd):
+			if cmd == 'wait' or cmd == 'wait-until-clear' or _is_balloon_rest_cmd(cmd) or _is_clear_cmd(cmd) or cmd == 'pineapples' or _is_ammo_cmd(cmd) or cmd == 'threat' or cmd == 'collector' or _is_script_sfx_cmd(cmd) or _is_pace_cmd(cmd) or _is_gun_cmd(cmd) or _is_light_cmd(cmd) or _is_bird_cmd(cmd) or _is_avoider_kill_cmd(cmd):
 				continue
 			if cmd == 'balloon' or cmd == 'pineapple':
 				continue

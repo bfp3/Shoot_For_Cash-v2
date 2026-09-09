@@ -305,13 +305,10 @@ script = ExtResource("1_script")
 [node name="aoe_rock_destroy" parent="." unique_id=796285155 instance=ExtResource("2_rock")]
 
 [node name="aoe_crate_destroy" parent="." unique_id=277084577 instance=ExtResource("3_crate")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 
 [node name="aoe_white_rock" parent="." unique_id=1598462809 instance=ExtResource("4_ndl4v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, 0)
 
 [node name="aoe_hazard_destroy" parent="." unique_id=1334474408 instance=ExtResource("4_hazard")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
 delays = {
 &"Smoke_quick": 0.0,
 &"Sparks01": 0.0,
@@ -320,7 +317,6 @@ delays = {
 }
 
 [node name="aoe_smokecan_destroy" parent="." unique_id=2134392262 instance=ExtResource("5_smoke")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
 delays = {
 &"Smoke_quick": 0.0,
 &"Smoke_quick2": 0.0,
@@ -331,35 +327,26 @@ delays = {
 
 [node name="aoe_threat_smoke" parent="." unique_id=1534310441 instance=ExtResource("6_bw8o8")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
 
 [node name="aoe_rock_hit" parent="." unique_id=316448190 instance=ExtResource("6_rockhit")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 0)
 
 [node name="aoe_balloon_destroy" parent="." unique_id=1280674754 instance=ExtResource("7_balloon")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
 
 [node name="aoe_orange_destroy" parent="." unique_id=403825804 instance=ExtResource("8_orange")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, 0)
 
 [node name="aoe_orange_hit" parent="." unique_id=316438204 instance=ExtResource("9_orangehit")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 0)
 
 [node name="aoe_pineapple_destroy" parent="." unique_id=1880069558 instance=ExtResource("10_pine")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 0)
 
 [node name="oob_miss" parent="." unique_id=1762260904 instance=ExtResource("13_oob")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, 0)
 delays = {
 &"MissedSparks": 0.0,
 &"Smoke_quick": 0.0
 }
 
 [node name="oob_miss_rock_strike" parent="." unique_id=712448732 instance=ExtResource("14_16y61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, 0)
 
 [node name="marked_embers" type="GPUParticles3D" parent="." unique_id=382246052]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
 top_level = true
 material_override = SubResource("StandardMaterial3D_gwh3s")
 cast_shadow = 0
@@ -374,7 +361,6 @@ process_material = SubResource("ParticleProcessMaterial_jmj5q")
 draw_pass_1 = SubResource("QuadMesh_6utsq")
 
 [node name="freeze_embers" type="GPUParticles3D" parent="." unique_id=1065945122]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 0)
 top_level = true
 material_override = SubResource("StandardMaterial3D_qpotu")
 cast_shadow = 0
@@ -389,7 +375,6 @@ process_material = SubResource("ParticleProcessMaterial_p2swe")
 draw_pass_1 = SubResource("QuadMesh_jcj1f")
 
 [node name="rock_red_attack_mode" type="GPUParticles3D" parent="." unique_id=980930992 groups=["red_avoider_arm_particles"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
 top_level = true
 material_override = SubResource("StandardMaterial3D_vm71p")
 cast_shadow = 0

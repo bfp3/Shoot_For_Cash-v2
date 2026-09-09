@@ -1,6 +1,9 @@
 extends "res://ch/Rocks/rest_balloon.gd"
 ## Scripted ammo balloon: shoot to buy ammo. `clear ammo` pops it with no reward.
 
+@export var pack_ammo_amount := -1
+@export_multiline var title_text := ""
+
 var ammo_amount := 6
 var ammo_price := 0
 var _grant_on_pop := true
@@ -19,6 +22,7 @@ func _ready() -> void:
 		remove_from_group("checkpoint")
 	add_to_group("ammo_balloon")
 	add_to_group("ammo_reload_target")
+	_apply_title_label()
 	_refresh_labels()
 
 
@@ -66,6 +70,8 @@ func is_blocking_sky() -> bool:
 
 
 func _default_pack_amount() -> int:
+	if pack_ammo_amount > 0:
+		return pack_ammo_amount
 	var player = get_tree().get_first_node_in_group("Player")
 	if player and player.has_method("get_ammo_pack_size"):
 		return maxi(int(player.get_ammo_pack_size()), 0)
@@ -163,6 +169,14 @@ func _grant_ammo_purchase() -> void:
 		wave_feedback = rm.get("wave_progress_feedback")
 	if wave_feedback and wave_feedback.has_method("start_reloading"):
 		wave_feedback.start_reloading()
+
+
+func _apply_title_label() -> void:
+	if title_text.strip_edges().is_empty():
+		return
+	var label := get_node_or_null("Crate2/Label3D") as Label3D
+	if label:
+		label.text = title_text
 
 
 func _refresh_labels() -> void:

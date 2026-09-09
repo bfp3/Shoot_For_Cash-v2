@@ -74,6 +74,7 @@
 [ext_resource type="PackedScene" path="res://vfx/aoe_crate_destroy.tscn" id="vfx_crate"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_crate_for_cash_destroy.tscn" id="vfx_crate_cash"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_hazard_destroy.tscn" id="vfx_hazard"]
+[ext_resource type="PackedScene" uid="uid://cb6fu42vei60p" path="res://vfx/oob_miss_rock_strike.tscn" id="vfx_oob_strike"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_orange_destroy.tscn" id="vfx_orange"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_orange_hit.tscn" id="vfx_orangehit"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_pineapple_destroy.tscn" id="vfx_pine"]
@@ -81,6 +82,7 @@
 [ext_resource type="PackedScene" path="res://vfx/aoe_rock_hit.tscn" id="vfx_rockhit"]
 [ext_resource type="PackedScene" uid="uid://m76x0i4rb0o" path="res://vfx/aoe_smokecan_destroy.tscn" id="vfx_smoke"]
 [ext_resource type="PackedScene" uid="uid://bfsjwji6k2570" path="res://vfx/aoe_threat_smoke.tscn" id="vfx_threat"]
+[ext_resource type="PackedScene" uid="uid://0shsnab027nt" path="res://vfx/aoe_white_rock.tscn" id="vfx_white"]
 
 [sub_resource type="Curve3D" id="Curve3D_gr7pb"]
 bake_interval = 5.0
@@ -462,7 +464,7 @@ volume_db = -22.0
 max_polyphony = 4
 
 [node name="BirdsFlightPath" type="Path3D" parent="." unique_id=659428985]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
 curve = SubResource("Curve3D_gr7pb")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BirdsFlightPath" unique_id=1230755136]
@@ -513,6 +515,8 @@ scene_balloon_destroy = ExtResource("vfx_balloon")
 scene_orange_destroy = ExtResource("vfx_orange")
 scene_orange_hit = ExtResource("vfx_orangehit")
 scene_pineapple_destroy = ExtResource("vfx_pine")
+scene_aoe_white_rock = ExtResource("vfx_white")
+scene_oob_miss_rock_strike = ExtResource("vfx_oob_strike")
 
 [node name="Rocks" type="Node3D" parent="." unique_id=859468523 node_paths=PackedStringArray("pigeon_aim_markers", "telegraph_columns", "debug_visualiser")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.81, 22.75)
@@ -846,20 +850,35 @@ script = ExtResource("14_24t6b")
 [node name="rock_white_01" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1507979501]
 unique_name_in_owner = true
 stream = ExtResource("14_gspdd")
-volume_db = -80.0
-max_polyphony = 2
+volume_db = -30.0
+max_polyphony = 30
 
 [node name="rock_white_02" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1709157630]
 unique_name_in_owner = true
-stream = ExtResource("14_gspdd")
-volume_db = -80.0
-max_polyphony = 2
+stream = ExtResource("23_1i2h1")
+volume_db = -10.0
+max_polyphony = 30
 
 [node name="rock_white_03" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1807543137]
 unique_name_in_owner = true
-stream = ExtResource("14_gspdd")
-volume_db = -80.0
-max_polyphony = 2
+stream = ExtResource("23_1i2h1")
+volume_db = -10.0
+pitch_scale = 0.8
+max_polyphony = 30
+
+[node name="rock_white_04" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=23609355]
+unique_name_in_owner = true
+stream = ExtResource("17_2300m")
+volume_db = -37.0
+pitch_scale = 0.8
+max_polyphony = 30
+
+[node name="rock_white_05" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1765649342]
+unique_name_in_owner = true
+stream = ExtResource("16_8xhv2")
+volume_db = -30.0
+pitch_scale = 0.8
+max_polyphony = 30
 
 [node name="rock_hitSound" type="AudioStreamPlayer" parent="Rocks/RocksSFXManager/SFX" unique_id=1153309406]
 unique_name_in_owner = true
@@ -1039,10 +1058,12 @@ draw_pass_1 = SubResource("QuadMesh_k3oa0")
 [node name="splash_sfx_01" type="AudioStreamPlayer" parent="Splash_zone" unique_id=28607076]
 stream = ExtResource("28_nq3ni")
 volume_db = -18.0
+max_polyphony = 50
 
 [node name="splash_sfx_02" type="AudioStreamPlayer" parent="Splash_zone" unique_id=911794202]
 stream = ExtResource("29_q3aq7")
 volume_db = -18.0
+max_polyphony = 50
 
 [node name="Visual" type="MeshInstance3D" parent="Splash_zone" unique_id=1883425194]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 23)

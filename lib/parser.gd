@@ -11,6 +11,14 @@ var play_price_by_range: Dictionary = {}
 var reward_by_range: Dictionary = {}
 ## "island|range" -> Array of parsed `threat …` entries declared before `round`.
 var threats_by_range: Dictionary = {}
+## Phase-editor live lint increments this so unknown-command warnings are not spammed.
+var _suppress_parse_warnings := 0
+
+
+func _parse_warn(message: String) -> void:
+	if _suppress_parse_warnings > 0:
+		return
+	push_warning(message)
 
 func loadIslandFile(file_name : String) -> bool:
 	var file = FileAccess.open(file_name, FileAccess.READ)
@@ -205,7 +213,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-juggle / rock-grey / rock-rico / rock-ammo / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error:
+## Targets — rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-juggle / rock-grey / rock-white / rock-rico / rock-ammo / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, spawn_row, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
@@ -213,7 +221,9 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   spawn just outside the camera (0 = outside 1, 9 = outside 8) and fly across.
 ##   `rock 4 y20` — spawn column 4, fly straight up to world Y 20 (same X). `y8-20`
 ##   picks a random height in that range. `rock 4 a8 y20` uses A8's X at Y 20.
-##   `rock-grey` is $1 and does not strike on miss. `rock-ammo` looks like grey with red/white
+##   `rock-grey` is $1 and does not strike on miss. `rock-white` uses the scene white mesh
+##   and material (no random mesh). Miss and shot do not strike. Destroy VFX is `aoe_white_rock`.
+##   `rock-ammo` looks like grey with red/white
 ##   balloon stripes (`rock-ammo_material`); shooting it can spawn an ammo balloon. Miss is not a strike.
 ##   `rock-rico` looks like grey with `rock-side_material`;
 ##   a shot bounces it horizontally (left of x=0 goes right, right of x=0 goes left) then it falls.
@@ -264,6 +274,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   {cmd, row, column, amount, price}. Bare parks at C6.
 ##   Amount omitted → power_ammo_pack. Price omitted → price_ammo.
 ##   `$N` or a second number is the cash cost. Distinct from `clear ammo`.
+## ammo-mega / ammo-mega C8: same as ammo, but spawns AmmoMegaPack (30 ammo, 1.5× size, MEGA AMMO label).
 ## clear: {cmd} — send all live round balloons away (+$10 each). Does not pop
 ##   a balloon-rest. `wait clear` is still wait-until-clear, not this command.
 ## clear balloon A4: {cmd: clear-balloon, row, column} — same drift/pay for one cell.
@@ -301,6 +312,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   raises it with that loadout's crosshair (Rossy / Gun2 / Gun3 / Gun4 / Gun5) and fire behaviour.
 ##   gun4 plants a crosshair trap on shoot instead of a normal shot.
 ##   gun5 uses a timed lead shot (predict where targets will be after gun5_timed_shot_sec).
+## bird / birds / bird slow / bird fast: play the flying-birds path. Bare `bird` uses default speed.
 ## light-dim / light-bright: {cmd}. Smoothly change every `directional_light` energy
 ##   by -0.25 / +0.25 over 3 seconds. Does not pause the sequence.
 ## hold out 90000 / hold-out 90000 / boss-timer 90000: {cmd: hold-out, ms}.
@@ -331,7 +343,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'rock-rico', 'rock-ammo', 'red_rock_error', 'smokecan', 'crate', 'rock-pineapple':
+		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'rock-white', 'rock-rico', 'rock-ammo', 'red_rock_error', 'smokecan', 'crate', 'rock-pineapple':
 			return _parse_rock_command(cmd, parts)
 
 		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat', 'threat-small', 'threat-large', 'collector':
@@ -354,7 +366,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'balloon-rest':
 			return _parse_balloon_rest_command(parts)
 
-		'ammo':
+		'ammo', 'ammo-mega':
 			return _parse_ammo_command(parts)
 
 		'clear':
@@ -375,7 +387,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 			var hold_ms := _hold_out_ms_from_tokens(parts)
 			if hold_ms >= 0:
 				return {'cmd': 'hold-out', 'ms': hold_ms}
-			push_warning("parser: unknown spawn command '%s' — using red_rock_error" % token)
+			_parse_warn("parser: unknown spawn command '%s' — using red_rock_error" % token)
 			return {
 				'cmd': 'red_rock_error',
 				'column': 3,
@@ -486,6 +498,9 @@ func parse_spawn_command(token: String) -> Dictionary:
 			var gun_cmd := 'gun1' if cmd == 'gun' else cmd
 			return {'cmd': gun_cmd}
 
+		'bird', 'birds':
+			return _parse_bird_command(parts)
+
 		'light-dim', 'light-bright':
 			return {'cmd': cmd}
 
@@ -510,7 +525,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 				if level.begins_with('difficulty-'):
 					level = level.substr(11)
 				return {'cmd': 'difficulty-%s' % level}
-			push_warning("parser: 'difficulty' needs easy, normal, hard, or expert")
+			_parse_warn("parser: 'difficulty' needs easy, normal, hard, or expert")
 			return {'cmd': 'difficulty-hard'}
 
 		'shuffle':
@@ -529,7 +544,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 				if subtype.begins_with('bonus-'):
 					subtype = subtype.substr(6)
 				return {'cmd': 'bonus-%s' % subtype}
-			push_warning("parser: 'bonus' needs a subtype (e.g. bonus-type1) — using red_rock_error")
+			_parse_warn("parser: 'bonus' needs a subtype (e.g. bonus-type1) — using red_rock_error")
 			return {
 				'cmd': 'red_rock_error',
 				'column': 3,
@@ -545,7 +560,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 			if cmd.begins_with('pace-'):
 				return _parse_pace_command(parts)
 
-			push_warning("parser: unknown spawn command '%s' — using red_rock_error" % token)
+			_parse_warn("parser: unknown spawn command '%s' — using red_rock_error" % token)
 			return {
 				'cmd': 'red_rock_error',
 				'column': 3,
@@ -553,6 +568,61 @@ func parse_spawn_command(token: String) -> Dictionary:
 				'aim_column': 3,
 				'param': token,
 			}
+
+
+## Live lint for the phase editor. `{ok}` or `{ok: false, from, to, message}` (columns 0-based, `to` exclusive).
+func lint_spawn_line(raw_line: String) -> Dictionary:
+	var line := String(raw_line)
+	var trimmed := line.strip_edges()
+	if trimmed.is_empty() or trimmed.begins_with("#"):
+		return {"ok": true}
+	_suppress_parse_warnings += 1
+	var parsed := parse_spawn_command(sanitise_token(trimmed.replace("\t", " ")))
+	_suppress_parse_warnings -= 1
+	if parsed.is_empty():
+		return {"ok": true}
+	if String(parsed.get("cmd", "")).to_lower() != "red_rock_error":
+		return {"ok": true}
+	var span := _error_token_span(line)
+	return {
+		"ok": false,
+		"from": span.x,
+		"to": span.y,
+		"message": String(parsed.get("param", trimmed)),
+	}
+
+
+func _error_token_span(line: String) -> Vector2i:
+	var spans := _line_token_spans(line)
+	if spans.is_empty():
+		return Vector2i(0, line.length())
+	var first := line.substr(spans[0].x, spans[0].y - spans[0].x).strip_edges().to_lower()
+	## `rock A4` / similar — the command is known, the next token is the mistake.
+	if spans.size() >= 2 and _is_known_target_command(first):
+		return spans[1]
+	return spans[0]
+
+
+func _line_token_spans(line: String) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	var i := 0
+	while i < line.length():
+		var ch := line[i]
+		if ch == " " or ch == "\t":
+			i += 1
+			continue
+		var start := i
+		while i < line.length() and line[i] != " " and line[i] != "\t":
+			i += 1
+		out.append(Vector2i(start, i))
+	return out
+
+
+func _is_known_target_command(cmd: String) -> bool:
+	match cmd:
+		"rock", "rock-invisible", "rock-black", "rock-fake", "rock-pigeon", "rock-avoider", "rock-red-attacker", "red-attacker", "rock-juggle", "rock-grey", "rock-white", "rock-rico", "rock-ammo", "red_rock_error", "smokecan", "crate", "rock-pineapple", "pineapple":
+			return true
+	return false
 
 
 const PACE_LEVELS: PackedStringArray = [
@@ -563,7 +633,7 @@ const PACE_LEVELS: PackedStringArray = [
 func _parse_pace_command(parts: PackedStringArray) -> Dictionary:
 	var level := ''
 	if parts.is_empty():
-		push_warning("parser: 'pace' needs slowest, slow, normal, fast, fastest, or impossible")
+		_parse_warn("parser: 'pace' needs slowest, slow, normal, fast, fastest, or impossible")
 		return {'cmd': 'pace-normal'}
 	var first := String(parts[0]).strip_edges().to_lower()
 	if first == 'pace' and parts.size() > 1:
@@ -576,9 +646,18 @@ func _parse_pace_command(parts: PackedStringArray) -> Dictionary:
 	if level == 'faster':
 		level = 'fastest'
 	if not PACE_LEVELS.has(level):
-		push_warning("parser: unknown pace '%s' — using pace-normal" % first)
+		_parse_warn("parser: unknown pace '%s' — using pace-normal" % first)
 		return {'cmd': 'pace-normal'}
 	return {'cmd': 'pace-%s' % level}
+
+
+func _parse_bird_command(parts: PackedStringArray) -> Dictionary:
+	var speed := 'default'
+	if parts.size() > 1:
+		var token := String(parts[1]).strip_edges().to_lower()
+		if token == 'slow' or token == 'fast':
+			speed = token
+	return {'cmd': 'bird', 'speed': speed}
 
 
 const DEFAULT_ROUND_REPEAT := 1
@@ -594,7 +673,7 @@ func _is_random_token(token: String) -> bool:
 	return token.strip_edges() == '?'
 
 
-## rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-juggle / rock-grey / rock-rico / rock-ammo / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error
+## rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-juggle / rock-grey / rock-white / rock-rico / rock-ammo / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error
 ##   rock          → rock ? ?   (random column, aim row A + random aim column)
 ##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
@@ -633,7 +712,7 @@ func _parse_rock_command(cmd: String, parts: PackedStringArray) -> Dictionary:
 			var side_lane := _is_side_lane_column(int(spawn_cell.column))
 			if parts.size() <= 2 and not side_lane:
 				# Aim cell as first arg (`rock A4`) is invalid — require `rock ? A4`.
-				push_warning("parser: '%s' needs column or '?' before aim (use '%s ? %s')" % [
+				_parse_warn("parser: '%s' needs column or '?' before aim (use '%s ? %s')" % [
 					' '.join(parts), cmd, token1,
 				])
 				return {
@@ -1011,8 +1090,11 @@ func _parse_balloon_rest_command(parts: PackedStringArray) -> Dictionary:
 
 
 func _parse_ammo_command(parts: PackedStringArray) -> Dictionary:
+	var ammo_cmd := 'ammo'
+	if parts.size() > 0 and String(parts[0]).strip_edges().to_lower() == 'ammo-mega':
+		ammo_cmd = 'ammo-mega'
 	var result := {
-		'cmd': 'ammo',
+		'cmd': ammo_cmd,
 		'row': DEFAULT_AMMO_ROW,
 		'column': DEFAULT_AMMO_COLUMN,
 		'amount': -1,
@@ -1092,7 +1174,7 @@ func _parse_balloon_command(parts: PackedStringArray) -> Dictionary:
 	result.param = cell
 	if parts.size() > 2:
 		result.param = ' '.join(parts.slice(1))
-	push_warning("parser: could not parse balloon placement '%s', defaulting to random" % cell)
+	_parse_warn("parser: could not parse balloon placement '%s', defaulting to random" % cell)
 	return result
 
 
@@ -1109,7 +1191,7 @@ func _parse_bonus_target_command(parts: PackedStringArray) -> Dictionary:
 			continue
 		var cell := _parse_balloon_cell(token)
 		if cell.is_empty():
-			push_warning("parser: bonus-target ignored invalid cell '%s'" % token)
+			_parse_warn("parser: bonus-target ignored invalid cell '%s'" % token)
 			continue
 		result.waypoints.append(cell)
 
@@ -1657,6 +1739,11 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 			return cmd
 		'gun1', 'gun2', 'gun3', 'gun4', 'gun5':
 			return cmd
+		'bird':
+			var bird_speed := String(entry.get('speed', 'default')).to_lower()
+			if bird_speed == 'slow' or bird_speed == 'fast':
+				return 'bird %s' % bird_speed
+			return 'bird'
 		'light-dim', 'light-bright':
 			return cmd
 		'rock-avoider-kill':
@@ -1670,8 +1757,8 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon-rest'
 			var check_letter = ['', 'A', 'B', 'C'][clampi(crow, 1, 3)]
 			return 'balloon-rest %s%d' % [check_letter, ccol]
-		'ammo':
-			var bits: PackedStringArray = ['ammo']
+		'ammo', 'ammo-mega':
+			var bits: PackedStringArray = [cmd]
 			var arow := int(entry.get('row', DEFAULT_AMMO_ROW))
 			var acol := int(entry.get('column', DEFAULT_AMMO_COLUMN))
 			if arow != DEFAULT_AMMO_ROW or acol != DEFAULT_AMMO_COLUMN:
@@ -1706,7 +1793,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'rock-rico', 'rock-ammo', 'smokecan', 'crate', 'rock-pineapple', 'red_rock_error':
+		'pineapple', 'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'rock-white', 'rock-rico', 'rock-ammo', 'smokecan', 'crate', 'rock-pineapple', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))

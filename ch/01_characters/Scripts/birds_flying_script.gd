@@ -11,6 +11,10 @@ extends Node3D
 #@onready var trails_built_in_4: MeshInstance3D = $body/bird2/Trails_built_in2
 
 @export var speed_multiplier := 1.0  # < 1 = slower, > 1 = faster
+## Used when the script says `bird` / `birds` with no speed word.
+@export var speed_default := 1.0
+@export var speed_slow := 0.55
+@export var speed_fast := 1.8
 
 var flight_timer := 0.0
 
@@ -24,7 +28,15 @@ func _ready() -> void:
 	await get_tree().create_timer(5.0, false).timeout
 	start_birds() 
 
-func start_birds() -> void:
+func start_birds(speed_mode: String = "default") -> void:
+	var mode := speed_mode.strip_edges().to_lower()
+	match mode:
+		"slow":
+			speed_multiplier = speed_slow
+		"fast":
+			speed_multiplier = speed_fast
+		_:
+			speed_multiplier = speed_default
 
 	path_follow_3d.progress = 0.0
 

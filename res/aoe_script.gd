@@ -22,14 +22,18 @@ var particle_systems: Array
 func _find_particles():
 	particle_systems.clear()  # Always clear and re-detect
 	var existing_delays = delays.duplicate()  # Preserve existing delays
+	_collect_gpu_particles(self, existing_delays)
+	delays = existing_delays  # Restore old delays + new ones
 
-	for child in get_children():
+
+func _collect_gpu_particles(node: Node, existing_delays: Dictionary) -> void:
+	for child in node.get_children():
 		if child is GPUParticles3D:
 			particle_systems.append(child)
 			if not existing_delays.has(child.name):
-				existing_delays[child.name] = 0.0  # Assign default delay
-
-	delays = existing_delays  # Restore old delays + new ones
+				existing_delays[child.name] = 0.0
+		else:
+			_collect_gpu_particles(child, existing_delays)
 
 func _cleanup_delays(): # Remove delays for particles that no longer exist	
 	var valid_particle_names = particle_systems.map(func(p): return p.name)
@@ -49,6 +53,7 @@ func _play_particles():
 		
 func _playDelay(ps: GPUParticles3D, delay: float):
 	ps.emitting = false  # Reset first (prevents issues)
-	await get_tree().create_timer(delay).timeout
+	if delay > 0.0:
+		await get_tree().create_timer(delay).timeout
 	ps.restart()  # Works in play mode
 	ps.emitting = true   # Start emitting

@@ -631,6 +631,7 @@ cast_shadow = 0
 mesh = ExtResource("5_27dlh")
 
 [node name="GoldParticles" type="GPUParticles3D" parent="Mesh/small_rock_white" unique_id=1005272884]
+visible = false
 cast_shadow = 0
 emitting = false
 amount = 5
@@ -640,6 +641,7 @@ draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
 [node name="GoldParticles2" type="GPUParticles3D" parent="Mesh/small_rock_white" unique_id=1847523933]
 cast_shadow = 0
+emitting = false
 amount = 2
 speed_scale = 3.0
 fixed_fps = 60
@@ -649,7 +651,9 @@ draw_pass_1 = SubResource("QuadMesh_ltsxa")
 
 [node name="Fire" type="GPUParticles3D" parent="Mesh/small_rock_white" unique_id=1398258907]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2, 0)
+visible = false
 cast_shadow = 0
+emitting = false
 amount = 26
 lifetime = 0.7
 explosiveness = 0.05
