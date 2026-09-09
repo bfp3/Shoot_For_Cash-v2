@@ -246,6 +246,10 @@ var _sequence_delay_token := 0
 var _force_next_command := false
 ## Fast-path pulse: no 0.4s gap, no column telegraph.
 var _instant_sequence_pulse := false
+## Each PREPARE beat may be pulsed once. A second `egg_pulsed` would otherwise
+## launch leftover pool rocks with leftover velocity (sky-boost glitch).
+var _pulse_armed_beat := 0
+var _pulse_fired_beat := -1
 
 enum OobSide { NONE, LEFT, RIGHT, BOTTOM, BEHIND }
 
@@ -378,6 +382,8 @@ func _process(delta: float) -> void:
 
 func enter_state(new_state : State) -> void:
 	if _paused_for_continue and new_state == State.PULSE_ROCKS:
+		return
+	if new_state == State.PULSE_ROCKS and _pulse_fired_beat == _pulse_armed_beat:
 		return
 	current_state = new_state
 	
@@ -2117,6 +2123,7 @@ func _build_timed_event_schedule(sequence: Array) -> Array:
 	return schedule
 	
 func update_prepare_rocks() -> void:
+	_pulse_armed_beat += 1
 	var temp_rock_array : Array = manual_rock_sequence
 	splash_zone.reset_detected_bodies()
 
@@ -2249,6 +2256,9 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 
 
 func update_pulse_rocks() -> void:
+	if _pulse_fired_beat == _pulse_armed_beat:
+		return
+	_pulse_fired_beat = _pulse_armed_beat
 	_cancel_wave_telegraph()
 	splash_zone.activate_splash_zone()
 
@@ -3623,6 +3633,10 @@ func bounce_rocks() -> void:
 			_stream_launches_remaining = maxi(_stream_launches_remaining - 1, 0)
 			continue
 
+		if body.current_state == body.State.ACTIVE and body.rock_activated:
+			_stream_launches_remaining = maxi(_stream_launches_remaining - 1, 0)
+			continue
+
 		if body.current_state != body.State.PREPARE_ROCK:
 			_configure_stream_rock(body, index)
 
@@ -3737,7 +3751,13 @@ func _configure_stream_rock(body, rock_index: int) -> void:
 func _launch_stream_rock(body, counter: int) -> void:
 	if body == null or not is_instance_valid(body):
 		return
+	if body.rock_activated and body.current_state == body.State.ACTIVE:
+		return
 	body.enter_state(body.State.ACTIVE)
+	## Aimed impulse assumes rest. Leftover pool velocity stacks into a sky launch.
+	## Do not clear angular_velocity — `update_active()` already applied launch tumble.
+	body.linear_velocity = Vector3.ZERO
+	body.sleeping = false
 
 	var upward_force = 10.0
 	var impulse: Vector3
@@ -4227,6 +4247,10 @@ func update_gravity(_gravity_scale : float) -> void:
 	var bodies = $Container_1.get_children()
 	for body in bodies:
 		if not (body is RockInstance):
+			continue
+		## WAVE_START parks the manager in ROUND_END first. Do not start a gravity
+		## coroutine on dormant pool rocks — it outlives the next aimed launch.
+		if body.current_state != body.State.ACTIVE or not body.rock_activated:
 			continue
 		body.update_gravity(_gravity_scale)
 		#counter += 1

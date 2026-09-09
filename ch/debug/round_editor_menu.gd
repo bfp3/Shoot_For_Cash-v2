@@ -1,5 +1,5 @@
 extends Control
-## Round Editor: edit level-beginner.txt rounds in-game (Godot editor builds only).
+## Phase editor: edit level-beginner.txt phases in-game (Godot editor builds only).
 
 const FONT_PATH := "res://res/marlbo.ttf"
 const COLOR_CREAM := Color("EBE0D8")
@@ -36,6 +36,8 @@ var _round_buttons: Array[Button] = []
 @onready var _hint_label: RichTextLabel = %HintLabel
 @onready var _save_button: Button = %SaveButton
 @onready var _test_button: Button = %TestButton
+@onready var _play_here_button: Button = %PlayHereButton
+@onready var _play_start_button: Button = %PlayStartButton
 @onready var _back_button: Button = %BackButton
 
 
@@ -53,6 +55,10 @@ func _ready() -> void:
 	_save_button.disabled = true
 	_save_button.pressed.connect(_on_save_pressed)
 	_test_button.pressed.connect(_on_test_pressed)
+	if _play_here_button:
+		_play_here_button.pressed.connect(_on_play_here_pressed)
+	if _play_start_button:
+		_play_start_button.pressed.connect(_on_play_start_pressed)
 	_back_button.pressed.connect(_on_back_pressed)
 	_script_edit.text_changed.connect(_on_script_text_changed)
 	_script_edit.gui_input.connect(_on_script_gui_input)
@@ -211,7 +217,7 @@ func _select_range(range_name: String, stash: bool) -> void:
 	var count := Parser.count_rounds_in_file(_level_file_path(), _current_range)
 	var target := clampi(_current_round, 1, maxi(count, 1))
 	_select_round(target, false)
-	_title_label.text = "ROUND EDITOR — %s" % _current_range.to_upper()
+	_title_label.text = "PHASE EDITOR — %s" % _current_range.to_upper()
 
 
 func _highlight_range_tab(range_name: String) -> void:
@@ -229,7 +235,7 @@ func _rebuild_round_buttons() -> void:
 	var count := Parser.count_rounds_in_file(_level_file_path(), _current_range)
 	for i in range(1, count + 1):
 		var btn := Button.new()
-		btn.text = "ROUND %d" % i
+		btn.text = "PHASE %d" % i
 		btn.toggle_mode = true
 		btn.focus_mode = Control.FOCUS_NONE
 		btn.custom_minimum_size = Vector2(0, 48)
@@ -346,23 +352,46 @@ func _on_save_pressed() -> void:
 func _on_test_pressed() -> void:
 	if not _is_open or _busy:
 		return
-	_busy = true
-	_stash_current_draft()
-	if round_manager == null:
-		push_warning("Round editor: round_manager missing")
-		_busy = false
-		return
 	var text := _get_test_script_text()
 	if text.strip_edges().is_empty():
-		push_warning("Round editor: nothing to test (empty selection / round)")
-		_busy = false
+		push_warning("Phase editor: nothing to test (empty selection / phase)")
 		return
 	var selection_only := _has_nonempty_selection()
-	print("========== ROUND EDITOR TEST (%s round %d%s) ==========" % [
+	await _run_editor_play(text, "TEST (%s phase %d%s)" % [
 		_current_range,
 		_current_round,
 		" — selection" if selection_only else "",
 	])
+
+
+func _on_play_here_pressed() -> void:
+	if not _is_open or _busy:
+		return
+	var text := _concat_phase_scripts(_current_round, _phase_count())
+	if text.strip_edges().is_empty():
+		push_warning("Phase editor: nothing to play from phase %d" % _current_round)
+		return
+	await _run_editor_play(text, "PLAY HERE (%s phase %d → end)" % [_current_range, _current_round])
+
+
+func _on_play_start_pressed() -> void:
+	if not _is_open or _busy:
+		return
+	var text := _concat_phase_scripts(1, _phase_count())
+	if text.strip_edges().is_empty():
+		push_warning("Phase editor: nothing to play (empty range)")
+		return
+	await _run_editor_play(text, "PLAY START (%s all phases)" % _current_range)
+
+
+func _run_editor_play(text: String, label: String) -> void:
+	_busy = true
+	_stash_current_draft()
+	if round_manager == null:
+		push_warning("Phase editor: round_manager missing")
+		_busy = false
+		return
+	print("========== PHASE EDITOR %s ==========" % label)
 	print(text)
 	print("=====================================================")
 	close_menu()
@@ -373,7 +402,34 @@ func _on_test_pressed() -> void:
 	_busy = false
 
 
-## Prefer the current TextEdit selection so you can TEST a snippet of the round.
+func _phase_count() -> int:
+	return Parser.count_rounds_in_file(_level_file_path(), _current_range)
+
+
+## Join unsaved drafts from `from_phase` through `to_phase` (1-based, inclusive).
+func _concat_phase_scripts(from_phase: int, to_phase: int) -> String:
+	_stash_current_draft()
+	var count := _phase_count()
+	var start := clampi(from_phase, 1, maxi(count, 1))
+	var stop := clampi(to_phase, start, maxi(count, 1))
+	var parts: PackedStringArray = []
+	for i in range(start, stop + 1):
+		var key := _draft_key(_current_range, i)
+		var body := ""
+		if _drafts.has(key):
+			body = String(_drafts[key])
+		else:
+			body = Parser.get_raw_round_body(_level_file_path(), _current_range, i)
+			_drafts[key] = body
+			if not _baselines.has(key):
+				_baselines[key] = body
+		body = body.strip_edges()
+		if not body.is_empty():
+			parts.append(body)
+	return "\n\n".join(parts)
+
+
+## Prefer the current TextEdit selection so you can TEST a snippet of the phase.
 func _get_test_script_text() -> String:
 	if _has_nonempty_selection():
 		return _script_edit.get_selected_text()
@@ -449,11 +505,17 @@ func _apply_styles() -> void:
 		_hint_label.add_theme_font_override("normal_font", _font)
 		_save_button.add_theme_font_override("font", _font)
 		_test_button.add_theme_font_override("font", _font)
+		if _play_here_button:
+			_play_here_button.add_theme_font_override("font", _font)
+		if _play_start_button:
+			_play_start_button.add_theme_font_override("font", _font)
 		_back_button.add_theme_font_override("font", _font)
 
 	_title_label.add_theme_color_override("font_color", COLOR_CREAM)
 	_style_action_button(_save_button, true)
 	_style_action_button(_test_button, true)
+	_style_action_button(_play_here_button, true)
+	_style_action_button(_play_start_button, true)
 	_style_action_button(_back_button, false)
 
 
@@ -519,6 +581,8 @@ func _style_round_button(button: Button, active: bool = false) -> void:
 
 
 func _style_action_button(button: Button, primary: bool) -> void:
+	if button == null:
+		return
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = COLOR_RED if primary else COLOR_CREAM
 	normal.set_border_width_all(2)

@@ -8,15 +8,17 @@
 START_START (difficulty select)
   → SHOP_START → SHOP_END
   → ROUND_START (show cash HUD, apply modifiers)
-  → WAVE_START (spawn rocks, pulse egg)
+  → WAVE_START (spawn remaining phases as one script, pulse egg)
       rocks clear → WAVE_END → CHECK_SCORE
         more waves → WAVE_START
-        last wave  → ROUND_END
+        script done  → ROUND_END
   → ROUND_END
       win  → TALLY_START
       fail → forfeit pool → TALLY_START (or skip tally on strikeout)
   → TALLY_END → SHOP_START
 ```
+
+A `range` is one play session. Script `round` headings are **phases** (editor organization). PLAY runs every remaining phase until the next `range` — no shop, tally, or extra egg pulse between them. Phase editor: **TEST** = this phase only; **PLAY HERE** = this phase through the last; **PLAY START** = the whole range.
 
 Range clear (last round of a place, first time): tally, then shop (no island map). Hold-out win: tally, then the next range in `level-beginner.txt` order (shop on that range). Surviving the last hold-out without a strikeout: tally, then the stage-complete screen (fade to black, stage name + cash, DONE → title screen). Shop back: ABANDON RUN? No stays in shop; Yes resets the run and reopens difficulty select. Boss win: tally, then map ceremony. Boss loss: shop in the boss arena.
 

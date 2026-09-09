@@ -974,6 +974,12 @@ func _hold_out_should_finish_on_pineapples() -> bool:
 
 
 func _get_current_hold_out_ms() -> int:
+	var hold_ms := 0
+	for round_data in _phase_dicts_in_play():
+		if round_data is Dictionary:
+			hold_ms = maxi(hold_ms, int(round_data.get("hold_out_ms", 0)))
+	if hold_ms > 0:
+		return hold_ms
 	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
 		var round_data = current_rock_sequence[current_sequence_index]
 		if round_data is Dictionary:
@@ -1208,12 +1214,11 @@ func check_round_for_strikes() -> void:
 	current_round = current_sequence_index + 1
 	wave_progress_feedback.reset_strikes()
 	gl_PlayerState.dataset.total_current_strikes = 0
-	# Restore this round's strike cap (default 3, or `strikes N` from the script).
+	# Restore this session's strike cap (default 3, or `strikes N` from remaining phases).
 	var strikes := 3
-	if current_sequence_index >= 0 and current_sequence_index < current_rock_sequence.size():
-		var round_data = current_rock_sequence[current_sequence_index]
+	for round_data in _phase_dicts_in_play():
 		if round_data is Dictionary:
-			strikes = int(round_data.get('max_strikes', 3))
+			strikes = maxi(strikes, int(round_data.get('max_strikes', 3)))
 	_apply_round_max_strikes(strikes)
 	if player and player.has_method("reset_accuracy_streak"):
 		player.reset_accuracy_streak()
@@ -1411,7 +1416,8 @@ func _hide_round_cash_hud() -> void:
 		hud.hide_for_menus()
 
 
-## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-easy` / `strikes N` from the active sequence entry only.
+## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-easy` / `strikes N`.
+## Live play treats remaining `round` headings as phases of one range session.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
 	ammo_unlimited_this_round = false
@@ -1422,34 +1428,47 @@ func apply_current_round_modifiers() -> void:
 	_apply_shuffle_modifier(false)
 	_apply_round_max_strikes(3)
 	_apply_ammo_unlimited(false)
-	if current_rock_sequence.is_empty():
+	var phases := _phase_dicts_in_play()
+	if phases.is_empty():
 		_apply_difficulty_runtime()
 		return
-	if current_sequence_index < 0 or current_sequence_index >= current_rock_sequence.size():
-		_apply_difficulty_runtime()
-		return
-	var round_data = current_rock_sequence[current_sequence_index]
-	if round_data is Dictionary:
-		bonus_type_this_round = String(round_data.get('bonus', ''))
-		quiz_this_round = bool(round_data.get('quiz', false)) or not (round_data.get('quiz_questions', []) as Array).is_empty()
-		no_lives_this_round = bool(round_data.get('no_lives', false)) or bonus_type_this_round != "" or quiz_this_round
-		difficulty_this_round = String(round_data.get('difficulty', '')).to_lower()
-		_apply_shuffle_modifier(bool(round_data.get('shuffle', false)))
-		_apply_round_max_strikes(int(round_data.get('max_strikes', 3)))
-		_apply_ammo_unlimited(bool(round_data.get('ammo_unlimited', false)))
-		if no_lives_this_round:
-			print('RoundManager: no-lives active for this round only')
-		if ammo_unlimited_this_round:
-			print('RoundManager: ammo-unlimited active for this round only')
-		if bonus_type_this_round != "":
-			print('RoundManager: bonus-%s active for this round' % bonus_type_this_round)
-		if quiz_this_round:
-			print('RoundManager: quiz mode active for this round')
-		if difficulty_this_round != "":
-			print('RoundManager: difficulty-%s active for this round' % difficulty_this_round)
-		var hold_ms := int(round_data.get('hold_out_ms', 0))
-		if hold_ms > 0:
-			print('RoundManager: hold out %d ms for this round' % hold_ms)
+	var shuffle_on := false
+	var max_strikes := 3
+	var hold_ms := 0
+	for round_data in phases:
+		if not (round_data is Dictionary):
+			continue
+		if bonus_type_this_round == "":
+			bonus_type_this_round = String(round_data.get('bonus', ''))
+		if not quiz_this_round:
+			quiz_this_round = bool(round_data.get('quiz', false)) or not (round_data.get('quiz_questions', []) as Array).is_empty()
+		if bool(round_data.get('no_lives', false)):
+			no_lives_this_round = true
+		var diff := String(round_data.get('difficulty', '')).to_lower()
+		if not diff.is_empty():
+			difficulty_this_round = diff
+		if bool(round_data.get('shuffle', false)):
+			shuffle_on = true
+		max_strikes = maxi(max_strikes, int(round_data.get('max_strikes', 3)))
+		if bool(round_data.get('ammo_unlimited', false)):
+			ammo_unlimited_this_round = true
+		hold_ms = maxi(hold_ms, int(round_data.get('hold_out_ms', 0)))
+	no_lives_this_round = no_lives_this_round or bonus_type_this_round != "" or quiz_this_round
+	_apply_shuffle_modifier(shuffle_on)
+	_apply_round_max_strikes(max_strikes)
+	_apply_ammo_unlimited(ammo_unlimited_this_round)
+	if no_lives_this_round:
+		print('RoundManager: no-lives active for this round only')
+	if ammo_unlimited_this_round:
+		print('RoundManager: ammo-unlimited active for this round only')
+	if bonus_type_this_round != "":
+		print('RoundManager: bonus-%s active for this round' % bonus_type_this_round)
+	if quiz_this_round:
+		print('RoundManager: quiz mode active for this round')
+	if difficulty_this_round != "":
+		print('RoundManager: difficulty-%s active for this round' % difficulty_this_round)
+	if hold_ms > 0:
+		print('RoundManager: hold out %d ms for this session' % hold_ms)
 	_apply_difficulty_runtime()
 	_refresh_boss_timer_from_parser()
 
@@ -2601,12 +2620,11 @@ func update_wave_start() -> void:
 		if resume_index > 0 and wave_progress_feedback and wave_progress_feedback.has_method("play_named_banner"):
 			await wave_progress_feedback.play_named_banner("CHECKPOINT")
 		else:
-			var total := get_current_range_round_count()
-			var round_no := current_sequence_index + 1
-			if wave_progress_feedback and wave_progress_feedback.has_method("show_round_banner"):
-				wave_progress_feedback.show_round_banner(round_no, total)
-			else:
+			## A range is one play session; phase headings are editor-only.
+			if wave_progress_feedback and wave_progress_feedback.has_method("start"):
 				wave_progress_feedback.start()
+			elif wave_progress_feedback and wave_progress_feedback.has_method("show_round_banner"):
+				wave_progress_feedback.show_round_banner(1, 1)
 	_skip_next_wave_banner = false
 	
 	
@@ -2653,7 +2671,7 @@ func update_wave_start() -> void:
 				rocks_container.set_quiz_hold(true)
 			rocks_container.start_manual_rock_round([])
 		else:
-			var rock_seq := update_rock_sequence()
+			var rock_seq := _play_session_spawns()
 			# Always prepare (even empty) so bonus-type1 target-only rounds don't hang on old rock state.
 			# Mid-script resume is retired — always spawn index 0.
 			## Defaults already live from arrival — only ensure they're present.
@@ -2661,7 +2679,7 @@ func update_wave_start() -> void:
 			rocks_container.start_manual_rock_round(rock_seq, 0)
 		
 	else:
-		var rock_seq := update_rock_sequence()
+		var rock_seq := _play_session_spawns()
 		rocks_container.shuffle_current_sequence(rock_seq)
 
 	player.start_player()
@@ -2821,6 +2839,35 @@ func _flatten_round_spawns(round_data) -> Array:
 	return out
 
 
+## Phase dicts that will run this PLAY (from the current heading through the range).
+func _phase_dicts_in_play() -> Array:
+	var out: Array = []
+	if current_rock_sequence.is_empty():
+		return out
+	var start := clampi(current_sequence_index, 0, current_rock_sequence.size() - 1)
+	var stop := current_rock_sequence.size()
+	if _boss_mode or is_endless_mode():
+		stop = mini(start + 1, current_rock_sequence.size())
+	for i in range(start, stop):
+		if current_rock_sequence[i] is Dictionary:
+			out.append(current_rock_sequence[i])
+	return out
+
+
+## Script for this PLAY: remaining phases concatenated. Shop balloon preview still uses one phase.
+func _play_session_spawns() -> Array:
+	if _boss_mode or is_endless_mode():
+		return update_rock_sequence()
+	if current_rock_sequence.is_empty():
+		return []
+	if current_sequence_index < 0 or current_sequence_index >= current_rock_sequence.size():
+		return []
+	var out: Array = []
+	for i in range(current_sequence_index, current_rock_sequence.size()):
+		out.append_array(_flatten_round_spawns(current_rock_sequence[i]))
+	return out
+
+
 
 func update_round_end() -> void:
 	restore_final_round_atmosphere()
@@ -2913,11 +2960,16 @@ func update_round_end() -> void:
 			else:
 				existing = gl_PlayerState.get_level_progress_entry(level_id)
 			prev_frontier = int(existing.get("sequence_index", played_index))
-			## Never regress the frontier on a replay win; only advance when clearing the edge.
-			current_sequence_index = maxi(prev_frontier, played_index + 1)
+			## Play remaining phases as one level; stamp every phase that ran this session.
+			var session_end := current_rock_sequence.size()
+			if _boss_mode:
+				session_end = mini(played_index + 1, current_rock_sequence.size())
+			current_sequence_index = maxi(prev_frontier, session_end)
 			player_can_progress = false
-			shop_main_menu.mark_round_as_perfect(played_index)
-			shop_main_menu.increase_round_available(played_index)
+			if shop_main_menu:
+				for i in range(played_index, session_end):
+					shop_main_menu.mark_round_as_perfect(i)
+					shop_main_menu.increase_round_available(i)
 			birds.start_birds()
 			_save_level_progress()
 		else:

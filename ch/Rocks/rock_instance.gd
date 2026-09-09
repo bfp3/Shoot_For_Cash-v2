@@ -4,6 +4,8 @@ class_name RockInstance
 @onready var round_manager : RoundManager = get_tree().get_first_node_in_group('round_manager')
 var _rocks_sfx: Node = null
 
+@export var missed_rock_use_oob_particles := true
+
 @export var freeze_mine := false
 ## Keep RigidBody torque/spin; visually aim mesh +Y along travel velocity.
 @export var mesh_face_velocity := true
@@ -1130,17 +1132,22 @@ func _cancel_airborne_rock_collisions() -> void:
 
 
 func update_gravity(_gravity_scale : float) -> void:
+	## Pool reuse must cancel this coroutine. Otherwise a leftover pigeon / round-end
+	## gravity pass keeps forcing 0.15 after the next aimed launch (rocks shoot into the sky).
+	var token := _pool_setup_token
 	for i in range(3):
-		if _rico_sliding:
+		if token != _pool_setup_token or _rico_sliding:
 			return
 		#gravity_scale = _gravity_scale
 		gravity_scale = 0.15
 		#linear_damp = 0.0
 		await get_tree().create_timer(0.1, false).timeout
-	
+
+	if token != _pool_setup_token:
+		return
 	if rock_activated:
 		await get_tree().create_timer(1.5, false).timeout
-		if _rico_sliding:
+		if token != _pool_setup_token or _rico_sliding:
 			return
 		linear_damp = 0.0
 

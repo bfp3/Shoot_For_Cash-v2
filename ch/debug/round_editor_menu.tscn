@@ -70,7 +70,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 36
 bbcode_enabled = true
-text = "ROUND EDITOR"
+text = "PHASE EDITOR"
 fit_content = true
 
 [node name="HintLabel" type="RichTextLabel" parent="Center/Cluster/MainPanel/VBox" unique_id=286738186]
@@ -79,7 +79,7 @@ layout_mode = 2
 theme_type_variation = &"RedRichText"
 theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
-text = "SHIFT + ENTER = Test · double-click a range tab to travel · select text + TEST = that snippet only · SAVE writes all pending edits"
+text = "SHIFT + ENTER = TEST this phase · PLAY HERE = this phase through the last · PLAY START = whole range · select text + TEST = that snippet only · SAVE writes all pending edits"
 fit_content = true
 
 [node name="RangeTabsScroll" type="ScrollContainer" parent="Center/Cluster/MainPanel/VBox" unique_id=1283639560]
@@ -99,7 +99,7 @@ custom_minimum_size = Vector2(0, 420)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 34
-placeholder_text = "Select a round…"
+placeholder_text = "Select a phase…"
 wrap_mode = 1
 scroll_smooth = true
 
@@ -125,6 +125,20 @@ custom_minimum_size = Vector2(160, 56)
 layout_mode = 2
 disabled = true
 text = "SAVE"
+
+[node name="PlayStartButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PLAY START"
+
+[node name="PlayHereButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PLAY HERE"
 
 [node name="TestButton" type="Button" parent="Center/Cluster/MainPanel/VBox/Buttons" unique_id=1277103302]
 unique_name_in_owner = true

@@ -8,9 +8,20 @@ range moss1
 	reward $200
 	
 	round
-		#SETUP
-
 		#AMMO needed was 47
+
+		#define yellow1
+		#wait
+		#rock
+		#end
+
+		#run yellow1
+		#run yellow2
+		#run yellow3
+
+
+		# This one has no breaks, a constant rhythm that progressively gets faster.
+		# It also has a pattern of 3 blacks and then a mix up round.
 
 		#no-lives
 		#ammo-unlimited
@@ -30,8 +41,6 @@ range moss1
 		ammo b3
 
 		#sfx-play c418 -45.0
-
-	round
 
 		# Phase 1 - slow
 		pace-slow
@@ -377,17 +386,6 @@ range moss1
 		pace-fast
 		rock 4 y20
 		wait
-	round
-		#
-	round
-		#
-	round
-		#
-	round
-		#
-	round
-		#
-	round
 
 
 		pineapples
@@ -396,13 +394,7 @@ range moss1
 		pineapple 4 a4
 		wait 1500
 		pineapple 7 a7
-range moss6
-
-	play $0
-	reward $200
-	
 	round
-		# spare parts from earlier levels moved here
 		# SAME ROUND BUT RICO instead of GREY
 
 		#sfx-play c418 -45.0
@@ -1983,9 +1975,6 @@ range moss6
 		pineapples
 		pineapple 5 a5
 		clear
-
-
-
 
 
 

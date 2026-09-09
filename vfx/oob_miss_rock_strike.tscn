@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cb6fu42vei60p"]
+
+[ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="1_hmdnd"]
+[ext_resource type="PackedScene" uid="uid://dldwpcrllmhxj" path="res://res/Particles/Smoke_particles/SmokeQuick.tscn" id="2_bhjx8"]
+[ext_resource type="PackedScene" uid="uid://fsbgvpv0703x" path="res://res/Particles/Missed_Particles.tscn" id="3_mh57k"]
+
+[node name="oob_miss2" type="Node3D" unique_id=712448732]
+script = ExtResource("1_hmdnd")
+delays = {
+&"MissedSparks": 0.0,
+&"Smoke_quick": 0.0
+}
+
+[node name="Smoke_quick" parent="." unique_id=1585961475 instance=ExtResource("2_bhjx8")]
+
+[node name="MissedSparks" parent="." unique_id=926212167 instance=ExtResource("3_mh57k")]

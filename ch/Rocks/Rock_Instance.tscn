@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://d1dcm7lfm6vsx" path="res://ch/Money/money_in_world_3D_label.gd" id="8_bc0l2"]
 [ext_resource type="Material" uid="uid://bg8ypxqsno1nc" path="res://res/damage_mesh_mat.tres" id="8_eq13p"]
 [ext_resource type="Material" uid="uid://bbajws0h7sed2" path="res://res/grey_flat_mat.tres" id="8_imegm"]
+[ext_resource type="Material" uid="uid://ddhptryba5hop" path="res://res/white_rock_mat.tres" id="8_pcxxs"]
 [ext_resource type="Material" uid="uid://bqym222yi5jnf" path="res://res/rock-rico_material.tres" id="9_lwuhr"]
 [ext_resource type="Material" uid="uid://4w3skkrnoirr" path="res://res/hazard_black_mat.tres" id="10_herjc"]
 [ext_resource type="Material" uid="uid://hxs5nhpp5by7" path="res://res/rock-ammo_material.tres" id="10_pcxxs"]
@@ -614,6 +615,50 @@ draw_pass_1 = SubResource("QuadMesh_2063v")
 
 [node name="Glow" type="OmniLight3D" parent="Mesh/small_rock/Fire" unique_id=1645542459]
 light_color = Color(1, 0.52, 0.14, 1)
+light_energy = 2.4
+light_indirect_energy = 0.6
+light_volumetric_fog_energy = 1.4
+light_size = 0.5
+omni_range = 7.5
+omni_attenuation = 1.2
+
+[node name="small_rock_white" type="MeshInstance3D" parent="Mesh" unique_id=255694670]
+unique_name_in_owner = true
+visible = false
+layers = 524288
+material_override = ExtResource("8_pcxxs")
+cast_shadow = 0
+mesh = ExtResource("5_27dlh")
+
+[node name="GoldParticles" type="GPUParticles3D" parent="Mesh/small_rock_white" unique_id=1005272884]
+cast_shadow = 0
+emitting = false
+amount = 5
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_herjc")
+draw_pass_1 = SubResource("QuadMesh_ltsxa")
+
+[node name="GoldParticles2" type="GPUParticles3D" parent="Mesh/small_rock_white" unique_id=1847523933]
+cast_shadow = 0
+amount = 2
+speed_scale = 3.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_herjc")
+draw_pass_1 = SubResource("QuadMesh_ltsxa")
+
+[node name="Fire" type="GPUParticles3D" parent="Mesh/small_rock_white" unique_id=1398258907]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2, 0)
+cast_shadow = 0
+amount = 26
+lifetime = 0.7
+explosiveness = 0.05
+randomness = 0.35
+visibility_aabb = AABB(-1.2, -0.2, -1.2, 2.4, 2.8, 2.4)
+process_material = SubResource("ParticleProcessMaterial_dfmc7")
+draw_pass_1 = SubResource("QuadMesh_2063v")
+
+[node name="Glow" type="OmniLight3D" parent="Mesh/small_rock_white/Fire" unique_id=437978103]
 light_energy = 2.4
 light_indirect_energy = 0.6
 light_volumetric_fog_energy = 1.4

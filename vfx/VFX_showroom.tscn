@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://vfx/aoe_rock_destroy.tscn" id="2_rock"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_crate_destroy.tscn" id="3_crate"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_hazard_destroy.tscn" id="4_hazard"]
+[ext_resource type="PackedScene" uid="uid://0shsnab027nt" path="res://vfx/aoe_white_rock.tscn" id="4_ndl4v"]
 [ext_resource type="PackedScene" uid="uid://m76x0i4rb0o" path="res://vfx/aoe_smokecan_destroy.tscn" id="5_smoke"]
 [ext_resource type="PackedScene" uid="uid://bfsjwji6k2570" path="res://vfx/aoe_threat_smoke.tscn" id="6_bw8o8"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_rock_hit.tscn" id="6_rockhit"]
@@ -11,9 +12,10 @@
 [ext_resource type="PackedScene" path="res://vfx/aoe_orange_destroy.tscn" id="8_orange"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_orange_hit.tscn" id="9_orangehit"]
 [ext_resource type="PackedScene" path="res://vfx/aoe_pineapple_destroy.tscn" id="10_pine"]
-[ext_resource type="PackedScene" path="res://vfx/oob_miss.tscn" id="13_oob"]
 [ext_resource type="Texture2D" uid="uid://c3wptu5r3w3mx" path="res://res/Explosion_paid_patreon/textures/ember_stylized.png" id="11_vm71p"]
 [ext_resource type="Texture2D" uid="uid://c4qp3kwmwv6ru" path="res://res/fire_explosions_gradient.res" id="12_bw8o8"]
+[ext_resource type="PackedScene" path="res://vfx/oob_miss.tscn" id="13_oob"]
+[ext_resource type="PackedScene" uid="uid://cb6fu42vei60p" path="res://vfx/oob_miss_rock_strike.tscn" id="14_16y61"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gwh3s"]
 render_priority = 2
@@ -305,6 +307,9 @@ script = ExtResource("1_script")
 [node name="aoe_crate_destroy" parent="." unique_id=277084577 instance=ExtResource("3_crate")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 
+[node name="aoe_white_rock" parent="." unique_id=1598462809 instance=ExtResource("4_ndl4v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, 0)
+
 [node name="aoe_hazard_destroy" parent="." unique_id=1334474408 instance=ExtResource("4_hazard")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
 delays = {
@@ -343,7 +348,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 0)
 [node name="aoe_pineapple_destroy" parent="." unique_id=1880069558 instance=ExtResource("10_pine")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 0)
 
-[node name="oob_miss" parent="." instance=ExtResource("13_oob")]
+[node name="oob_miss" parent="." unique_id=1762260904 instance=ExtResource("13_oob")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, 0)
+delays = {
+&"MissedSparks": 0.0,
+&"Smoke_quick": 0.0
+}
+
+[node name="oob_miss_rock_strike" parent="." unique_id=712448732 instance=ExtResource("14_16y61")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, 0)
 
 [node name="marked_embers" type="GPUParticles3D" parent="." unique_id=382246052]

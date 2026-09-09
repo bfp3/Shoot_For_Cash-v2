@@ -21,7 +21,8 @@ func _ready() -> void:
 	hide()
 	set_process(false)
 	path_follow_3d.progress = 0.0
-
+	await get_tree().create_timer(5.0, false).timeout
+	start_birds() 
 
 func start_birds() -> void:
 

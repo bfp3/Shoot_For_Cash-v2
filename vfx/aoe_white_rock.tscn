@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://0shsnab027nt"]
+
+[ext_resource type="Script" uid="uid://dk1slobhkk1xu" path="res://res/aoe_script.gd" id="1_od1m1"]
+[ext_resource type="PackedScene" uid="uid://dldwpcrllmhxj" path="res://res/Particles/Smoke_particles/SmokeQuick.tscn" id="2_eu60y"]
+[ext_resource type="PackedScene" uid="uid://fsbgvpv0703x" path="res://res/Particles/Missed_Particles.tscn" id="3_eq7w1"]
+
+[sub_resource type="Curve" id="Curve_r84vf"]
+_data = [Vector2(0, 0.460674), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_tbjhe"]
+_limits = [0.0, 4.0, 0.0, 1.0]
+_data = [Vector2(0, 2.3866346), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_74yy3"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_aypq8"]
+curve_x = SubResource("Curve_r84vf")
+curve_y = SubResource("Curve_tbjhe")
+curve_z = SubResource("Curve_74yy3")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_od1m1"]
+particle_flag_align_y = true
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 5.0
+gravity = Vector3(0, -2, 0)
+scale_min = 0.19999999
+scale_max = 0.19999999
+scale_curve = SubResource("CurveXYZTexture_aypq8")
+
+[sub_resource type="Gradient" id="Gradient_qrex3"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.610526, 0.663158)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_oqxbv"]
+gradient = SubResource("Gradient_qrex3")
+width = 512
+height = 512
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eu60y"]
+transparency = 1
+blend_mode = 1
+albedo_color = Color(3.2944162, 3.2944162, 3.2944162, 1)
+albedo_texture = SubResource("GradientTexture2D_oqxbv")
+
+[sub_resource type="QuadMesh" id="QuadMesh_eq7w1"]
+material = SubResource("StandardMaterial3D_eu60y")
+size = Vector2(0.2, 0.5)
+
+[node name="aoe_white_rock" type="Node3D" unique_id=1598462809]
+script = ExtResource("1_od1m1")
+delays = {
+&"MissedSparks": 0.0,
+&"Smoke_quick": 0.0
+}
+
+[node name="Smoke_quick" parent="." unique_id=356061348 instance=ExtResource("2_eu60y")]
+visible = false
+
+[node name="MissedSparks" parent="." unique_id=926212167 instance=ExtResource("3_eq7w1")]
+amount = 100
+lifetime = 3.0
+explosiveness = 0.95
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_od1m1")
+draw_pass_1 = SubResource("QuadMesh_eq7w1")
