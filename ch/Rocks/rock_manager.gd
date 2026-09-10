@@ -144,8 +144,8 @@ const OFFSCREEN_SPAWN_PAD_M := 0.85
 ## Gravity during the aimed arc (higher = faster launch, sharper slowdown at apex). Must match impulse math.
 @export_range(0.05, 4.0, 0.01) var aim_launch_gravity_scale := 0.5
 var _base_aim_launch_gravity_scale := 0.5
-## Script `pace-*` → aim_launch_gravity_scale.
-const PACE_GRAVITY := {
+## Script `pace-*` → aim_launch_gravity_scale, looked up on the range's difficulty table.
+const PACE_GRAVITY_BEGINNER := {
 	"slowest": 0.25,
 	"slow": 0.5,
 	"normal": 1.0,
@@ -153,6 +153,24 @@ const PACE_GRAVITY := {
 	"fastest": 2.25,
 	"impossible": 3.0,
 }
+const PACE_GRAVITY_ADVANCED := {
+	"slowest": 0.5,
+	"slow": 1.0,
+	"normal": 1.5,
+	"fast": 2.0,
+	"fastest": 2.75,
+	"impossible": 3.5,
+}
+const PACE_GRAVITY_EXPERT := {
+	"slowest": 1.0,
+	"slow": 1.5,
+	"normal": 3.0,
+	"fast": 4.0,
+	"fastest": 5.0,
+	"impossible": 5.5,
+}
+## Active `pace-*` table. Default is beginner until `difficulty-*` says otherwise.
+var _pace_gravity := PACE_GRAVITY_BEGINNER
 ## Linear damp applied once the rock passes the apex and starts falling.
 @export_range(0.0, 2.0, 0.05) var aim_descent_linear_damp := 0.5
 ## Extra seconds added to the ascent before passing the aim cell (0 = tight apex; try ~0.5 for old hang).
@@ -286,18 +304,18 @@ func _ready() -> void:
 	enter_state(current_state)
 
 
-func set_difficulty_gravity(difficulty: String) -> void:
-	match String(difficulty).to_lower():
-		"easy":
-			set_pace_gravity("slow")
-		"normal":
-			set_pace_gravity("normal")
-		"hard":
-			set_pace_gravity("fast")
+func set_pace_difficulty(difficulty: String) -> void:
+	match String(difficulty).strip_edges().to_lower():
+		"advanced":
+			_pace_gravity = PACE_GRAVITY_ADVANCED
 		"expert":
-			set_pace_gravity("fastest")
+			_pace_gravity = PACE_GRAVITY_EXPERT
 		_:
-			aim_launch_gravity_scale = _base_aim_launch_gravity_scale
+			_pace_gravity = PACE_GRAVITY_BEGINNER
+
+
+func set_difficulty_gravity(difficulty: String) -> void:
+	set_pace_difficulty(difficulty)
 
 
 func set_pace_gravity(pace: String) -> void:
@@ -306,8 +324,8 @@ func set_pace_gravity(pace: String) -> void:
 		key = key.substr(5)
 	if key == "faster":
 		key = "fastest"
-	if PACE_GRAVITY.has(key):
-		aim_launch_gravity_scale = float(PACE_GRAVITY[key])
+	if _pace_gravity.has(key):
+		aim_launch_gravity_scale = float(_pace_gravity[key])
 
 
 func _is_pace_cmd(cmd: String) -> bool:

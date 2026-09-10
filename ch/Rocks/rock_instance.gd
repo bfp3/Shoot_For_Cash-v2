@@ -3422,6 +3422,10 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 func play_piano_note() -> void:
 	#_play_rocks_piano("launch_flick", randf_range(0.8, 0.9))
 	_play_rocks_piano("launch_flick", randf_range(0.7, 1.0))
+	
+	
+		
+	
 	match global_position.x:
 		-7.0:
 			_play_rocks_piano("1")
@@ -3440,6 +3444,11 @@ func play_piano_note() -> void:
 		7.0:
 			_play_rocks_piano("8")
 
+
+	#if rock_type == RockSize.SMALL:
+		#await get_tree().create_timer(0.1, false).timeout
+		#_play_rocks_piano("launch_flick_yellow", 1.0) #randf_range(0.7, 1.0)
+		#print('playing speical sfx')
 
 func out_of_bounds() -> void:
 	_play_rocks_sfx("outofBoundsSFX")

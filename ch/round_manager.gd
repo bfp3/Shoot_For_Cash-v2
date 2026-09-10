@@ -297,7 +297,7 @@ var no_lives_this_round := false
 var debug_no_lives := false
 ## Script `ammo-unlimited` — this round only; shots do not consume bullets.
 var ammo_unlimited_this_round := false
-## `difficulty-easy` / `difficulty-normal` / `difficulty-hard` / `difficulty-expert` for the active range (legacy gravity). Prefer `pace-*` in the script.
+## `difficulty-beginner` / `difficulty-advanced` / `difficulty-expert` for the active range's pace table.
 var difficulty_this_round := ""
 
 ## Active bonus subtype from the level file (`protect`, etc.). Empty = normal round.
@@ -1169,7 +1169,7 @@ func load_level_sequence() -> void:
 	_level_file_mtime = _read_level_file_mtime()
 
 	if current_rock_sequence.is_empty():
-		push_warning('RoundManager: level file loaded but produced no rounds for range "%s".' % range_id)
+		push_warning('RoundManager: level file aded but produced no rounds for range "%s".' % range_id)
 	else:
 		# Only rewind if the level file lost rounds (index past the end).
 		# index == size means the range is fully cleared — keep that.
@@ -1457,7 +1457,7 @@ func _hide_round_cash_hud() -> void:
 		hud.hide_for_menus()
 
 
-## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-easy` / `strikes N`.
+## Reads round modifiers like `no-lives` / `bonus-type1` / `shuffle` / `difficulty-beginner` / `strikes N`.
 ## Live play treats remaining `round` headings as phases of one range session.
 func apply_current_round_modifiers() -> void:
 	no_lives_this_round = false
@@ -1605,14 +1605,12 @@ func _apply_round_max_strikes(count: int) -> void:
 
 
 func _apply_difficulty_runtime() -> void:
-	if rocks_container and rocks_container.has_method("set_difficulty_gravity"):
-		rocks_container.set_difficulty_gravity(difficulty_this_round)
-	if player == null:
-		return
-	if difficulty_this_round == "hard" or difficulty_this_round == "expert":
-		if player.has_method("set_difficulty_bullet_speed"):
-			player.set_difficulty_bullet_speed(0.1)
-	elif player.has_method("clear_difficulty_bullet_speed"):
+	var pace_diff := difficulty_this_round if not difficulty_this_round.is_empty() else "beginner"
+	if rocks_container and rocks_container.has_method("set_pace_difficulty"):
+		rocks_container.set_pace_difficulty(pace_diff)
+	elif rocks_container and rocks_container.has_method("set_difficulty_gravity"):
+		rocks_container.set_difficulty_gravity(pace_diff)
+	if player != null and player.has_method("clear_difficulty_bullet_speed"):
 		player.clear_difficulty_bullet_speed()
 
 

@@ -325,7 +325,6 @@ range moss3
 	round
 		#  SETUP ammo 
 		#  2:40
-
 		#no-lives
 		#ammo-unlimited
 
@@ -339,6 +338,7 @@ range moss3
 	round
 		#PART 1 # MADE it longer
 
+		wait 2300
 		# BLACKS 
 		pace-slow
 
@@ -594,7 +594,6 @@ range moss3
 		#no-lives
 
 		bird
-
 		ammo-mega c7
 		balloon-rest
 
@@ -2378,172 +2377,398 @@ range moss9
 		wait
 
 range moss10
-	# this was the original black rocks juggling level
-
 	play $0
 	reward $1,000
 
-	
-	
-	threat 3 b3
-	threat 6 b6
-	
 	round
-		#hold out 120000
-		ammo c8
-		wait 1000
+		#SETUP
+		ammo-mega b6
 
-		#threat-small 4 a5
-		#threat 4 b5
-		#threat-small 4 c5
 
-		#threat-small 1 c1 c8
-		#threat 1 c8 c1
+		rock-pigeon
+		rock-pigeon
+		rock-pigeon
+		rock-pigeon
 
-		# Phase 1 - slow
+		wait
+		smokecan
+		smokecan
+		smokecan
+
+	round
+		#first phase
+
+		wait 2350
+
 		pace-slow
-		rock-black 2 b2
-		wait 1000
-		rock-black 7 b7
-		wait 1200
-		rock-black 4 b4
-		wait 2000
-
-		rock-grey 2 b2
-		wait 1000
-		rock-grey 7 b7
-		wait 1200
-		rock 4 b4
+		rock 1 a3
+		wait 250
+		rock 1 a3
+		wait 450
+		rock 1 a3
 		wait
 
-		#sfx-play C418 -35.0
+		rock 2 b4
+		wait 250
+		rock 2 b4
+		wait 450
+		rock 2 b4
+		wait
 
+		rock 3 a5
+		wait 250
+		rock 3 a5
+		wait 450
+		rock 3 a5
+		wait
 
+		wait 1500
 
-		# faster - 1 change
+		pace-slow
+		rock 8 a2
+		wait
+	round
+		#Second One
+		bird fast
+		wait 1000
+
 		pace-normal
-		rock-black 2 b2
-		wait 1000
-		rock-black 7 b7
+		rock 1 a3
+		wait 250
+		rock 1 a3
+		wait 450
+		rock 1 a3
 		wait 1200
-		rock-black 4 b4
-		wait 2000
 
-		# yellows slow
-		rock 2 b2
-		wait 1000
-		rock 7 b7
-		wait 1200
-		rock-black 4 b4
+		rock 3 b5
+		wait 250
+		rock 3 b5
+		wait 450
+		rock 3 b5
 		wait
 
+		rock 4 a6
+		wait 250
+		rock 4 a6
+		wait 450
+		rock 4 a6
+		wait 1200
 
-		# 3 - faster, add blacks
-		pace-fast
-		rock-black 2 b2
-		wait 1000
-		rock-black 7 b7
-		wait 1200
-		rock-black 4 b4
-		wait 2500
-
-
-		# yellows slow
-		rock 2 b2
-		wait 1000
-		rock-black 7 b7
-		wait 1200
-		rock 4 b4
-		wait 1200
-		rock 7 b7
-		wait 1200
-		rock-black 7 b7
+		rock 6 b8
+		wait 250
+		rock 6 b8
+		wait 450
+		rock 6 b8
 		wait
 
-		#Repeat pattern faster 2
-		pace-faster
-		rock-black 2 b2
 		wait 1000
-		rock-black 7 b7
-		wait 1200
-		rock-black 4 b4
-		wait 2000
 
-
-		# yellows slow
-		rock-black 2 b2
-		wait 1000
-		rock-black 7 b7
-		wait 1200
-		rock-black 4 b4
-		wait 1200
-		rock-black 7 b7
-		wait 1200
-		rock-black 2 b2
-		wait 1200
-		rock 4 b4
+		pace-slow
+		rock 8 a2
+		wait 1500
+		rock 1 a7
 		wait
+	round
+		#finale
+		bird fast
+		wait 1000
+		ammo-mega b6
 
-		wait 2000
+	round
+		#finale
 
-		pace-impossible
-		rock-black 2 b2
-		wait 400
-		rock-black 7 b7
-		wait 600
-		rock-black 4 b4
+		wait 3000
+
+		pace-normal
+		rock 8 a6
+		wait 250
+		rock 8 a6
+		wait 450
+		rock 8 a6
 		wait 1000
 
-		# increase the sequencing
-		rock-black 2 b2
+		rock 6 b4
+		wait 250
+		rock 6 b4
+		wait 450
+		rock 6 b4
+		wait 1000
+
+		rock 4 a2
+		wait 250
+		rock 4 a2
+		wait 450
+		rock 4 a2
 		wait 500
-		rock-black 7 b7
-		wait 600
-		rock-black 4 b4
-		wait 600
-		rock-black 7 b7
-		wait 600
-		rock-black 2 b2
-		wait 600
-		rock-black 4 b4
-		wait 600
-		rock-black 7 b7
-		wait 600
-		rock-black 2 b2
-		wait 600
-		rock-black 4 b4
-		wait 600
-		rock-black 7 b7
-		wait 600
-		rock-black 2 b2
-		wait 600
-		rock-black 4 b4
-		wait 600
-		rock-black 7 b7
-		wait 600
-		rock-black 2 b2
-		wait 600
-		pace-normal
-		rock 4 a4
+
+		# going back left
+		rock 1 a3
+		wait 250
+		rock 1 a3
+		wait 450
+		rock 1 a3
+		wait 1200
+
+		rock 3 b5
+		wait 250
+		rock 3 b5
+		wait 450
+		rock 3 b5
 		wait
 
-		pineapples
-		pineapple 2 a2
-		wait 1500
-		pineapple 4 a4
-		wait 1500
-		pineapple 7 a7
+		rock 4 a6
+		wait 250
+		rock 4 a6
+		wait 450
+		rock 4 a6
+		wait 1200
 
+		rock 6 b8
+		wait 250
+		rock 6 b8
+		wait 450
+		rock 6 b8
+		wait
+
+	round
+		#ending
+
+		wait 1000
+
+		pace-slow
+		rock 8 a3
+		wait 1500
+		rock 1 a6
+		wait 1500
+
+
+		pace-normal
+		rock-white 4 y20
+		wait
+
+
+		#wait 200
+		#pace-normal
+		#rock-white 4 y12
+		#wait
 range moss11
-	# this was the original black rocks juggling level
-
 	play $0
 	reward $1,000
-	
+
 	round
-		#
+		#SETUP
+		ammo-mega b6
+	round
+		#first phase
+
+		wait 2350
+
+		pace-slow
+		rock 1 a3
+		wait 450
+		rock 1 a3
+		wait 450
+		rock 1 a3
+		wait 450
+
+		rock 8 a6
+		wait 450
+		rock 8 a6
+		wait 450
+		rock 8 a6
+		wait 450
+		rock 1 a3
+		wait 450
+		rock 1 a3
+		wait 450
+		rock 1 a3
+		wait 450
+
+		rock 8 a6
+		wait 450
+		rock 8 a6
+		wait 450
+		rock 8 a6
+		wait
+
+		wait 1500
+
+		pace-normal
+		rock-black 2 b4
+		wait 250
+		rock-black 2 b4
+		wait 250
+		rock 2 b4
+		wait
+	round
+		#Second One
+		wait 1000
+
+		pace-normal
+		rock 1 a3
+		wait 450
+		rock 1 a3
+		wait 450
+		rock 1 a3
+		wait 450
+
+		rock 8 a6
+		wait 450
+		rock 8 a6
+		wait 450
+		rock 8 a6
+		wait 450
+
+		rock 2 a4
+		wait 450
+		rock 2 a4
+		wait 450
+		rock 2 a4
+		wait 450
+
+		rock 7 a5
+		wait 450
+		rock 7 a5
+		wait 450
+		rock 7 a5
+		wait
+
+		wait 1500
+
+		pace-fast
+		rock-black 2 b4
+		wait 250
+		rock-black 2 b4
+		wait 250
+		rock-black 2 b4
+		wait 250
+		rock-black 2 b4
+		wait 250
+		rock 2 b4
+		wait
+	round
+		#finale
+
+		bird fast
+		wait 1000
+		ammo-mega b6
+
+		wait 3000
+	round
+		#finale
+
+		wait 1000
+
+		pace-normal
+		rock-black 1 a3
+		wait 400
+		rock 1 a3
+		wait 400
+		rock 1 a3
+		wait 400
+
+		rock-black 8 a6
+		wait 400
+		rock 8 a6
+		wait 400
+		rock 8 a6
+		wait 400
+
+		rock-black 2 a4
+		wait 400
+		rock 2 a4
+		wait 400
+		rock 2 a4
+		wait 400
+
+		rock-black 7 a5
+		wait 400
+		rock 7 a5
+		wait 400
+		rock 7 a5
+		wait 400
+
+		wait 2000
+
+		rock-black 1 a3
+		wait 400
+		rock 1 a3
+		wait 400
+		rock 1 a3
+		wait 400
+
+		rock-black 8 a6
+		wait 400
+		rock 8 a6
+		wait 400
+		rock 8 a6
+		wait 400
+
+		rock-black 2 a4
+		wait 400
+		rock 2 a4
+		wait 400
+		rock 2 a4
+		wait 400
+
+		rock-black 7 a5
+		wait 400
+		rock 7 a5
+		wait 400
+		rock 7 a5
+		wait 400
 
 
+		rock-black 2 a4
+		wait 400
+		rock 2 a4
+		wait 400
+		rock 2 a4
+		wait 400
+
+		wait 2000
+
+		pace-fast
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock-black 2 b4
+		wait 200
+		rock 2 b4
+		wait
+	round
+		#ending
+
+		wait 250
+
+		pace-slow
+		rock-white 4 y20
+		wait
+
+
+		#wait 200
+		#pace-normal
+		#rock-white 4 y12
+		#wait
 range moss12
 
 	play $0
@@ -3439,7 +3664,7 @@ range moss13
 
 range moss14
 	round
-		# THIS IS THE BIG LEVEL USING RICO ROCKS INSTEAD
+		#	THIS IS THE BIG LEVEL USING RICO ROCKS INSTEAD
 		#  SETUP ammo 
 		#  2:40
 
@@ -3451,7 +3676,6 @@ range moss14
 
 		sfx-play oasisWorld -37.0
 		#sfx-play c418 -45.0
-		
 	round
 		#PART 1 # MADE it longer
 		#ammo-unlimited
@@ -4699,7 +4923,163 @@ range moss15
 		wait 1500
 		pineapple 7 a7
 
+range moss16
+	# this was the original black rocks juggling level
 
+	play $0
+	reward $1,000
+
+	
+	
+	threat 3 b3
+	threat 6 b6
+	
+	round
+		#hold out 120000
+
+		ammo c8
+		wait 1000
+
+		#threat-small 4 a5
+		#threat 4 b5
+		#threat-small 4 c5
+
+		#threat-small 1 c1 c8
+		#threat 1 c8 c1
+
+		# Phase 1 - slow
+		pace-slow
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2000
+
+		rock-grey 2 b2
+		wait 1000
+		rock-grey 7 b7
+		wait 1200
+		rock 4 b4
+		wait
+
+		#sfx-play C418 -35.0
+
+
+
+		# faster - 1 change
+		pace-normal
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2000
+
+		# yellows slow
+		rock 2 b2
+		wait 1000
+		rock 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait
+
+
+		# 3 - faster, add blacks
+		pace-fast
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2500
+
+
+		# yellows slow
+		rock 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock 4 b4
+		wait 1200
+		rock 7 b7
+		wait 1200
+		rock-black 7 b7
+		wait
+
+		#Repeat pattern faster 2
+		pace-faster
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 2000
+
+
+		# yellows slow
+		rock-black 2 b2
+		wait 1000
+		rock-black 7 b7
+		wait 1200
+		rock-black 4 b4
+		wait 1200
+		rock-black 7 b7
+		wait 1200
+		rock-black 2 b2
+		wait 1200
+		rock 4 b4
+		wait
+
+		wait 2000
+
+		pace-impossible
+		rock-black 2 b2
+		wait 400
+		rock-black 7 b7
+		wait 600
+		rock-black 4 b4
+		wait 1000
+
+		# increase the sequencing
+		rock-black 2 b2
+		wait 500
+		rock-black 7 b7
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		rock-black 4 b4
+		wait 600
+		rock-black 7 b7
+		wait 600
+		rock-black 2 b2
+		wait 600
+		pace-normal
+		rock 4 a4
+		wait
+
+		pineapples
+		pineapple 2 a2
+		wait 1500
+		pineapple 4 a4
+		wait 1500
+		pineapple 7 a7
 range spare
 
 	play $0

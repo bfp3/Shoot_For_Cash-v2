@@ -11,6 +11,8 @@ var play_price_by_range: Dictionary = {}
 var reward_by_range: Dictionary = {}
 ## "island|range" -> Array of parsed `threat …` entries declared before `round`.
 var threats_by_range: Dictionary = {}
+## "island|range" -> pace table (`beginner` / `advanced` / `expert`). Default beginner.
+var difficulty_by_range: Dictionary = {}
 ## Phase-editor live lint increments this so unknown-command warnings are not spammed.
 var _suppress_parse_warnings := 0
 
@@ -34,6 +36,7 @@ func loadIsland(data : String) -> bool:
 	play_price_by_range.clear()
 	reward_by_range.clear()
 	threats_by_range.clear()
+	difficulty_by_range.clear()
 	
 	var ary : Array = data.split("\n", false)
 	
@@ -98,6 +101,12 @@ func loadIsland(data : String) -> bool:
 				var reward := _cash_command_amount(tokens, "reward")
 				if reward >= 0:
 					reward_by_range['%s|%s' % [island_name, range_name]] = reward
+					continue
+				var pace_diff := _pace_difficulty_from_tokens(tokens)
+				if not pace_diff.is_empty():
+					difficulty_by_range['%s|%s' % [island_name, range_name]] = pace_diff
+					continue
+				if _tokens_are_difficulty_command(tokens):
 					continue
 				## Preamble `threat …` / `threat-small …` / `threat-large …` (before any `round`) — ambient mines for the range.
 				var first_token := String(tokens[0]).to_lower()
@@ -308,11 +317,12 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ## sfx-slower Name: {cmd, name} — lower that playing sfx's pitch_scale by 0.05 over 3s.
 ##   Stacks each time it is run. Example: `sfx-slower Windmill_YokoKanno`.
 ## pace-slowest / pace-slow / pace-normal / pace-fast / pace-fastest / pace-impossible:
-##   mid-round command. From that line on, aimed rocks use that gravity
-##   (0.25 / 0.5 / 1.0 / 1.5 / 2.25 / 3.0). `pace fastest` form is accepted.
-##   `pace-faster` is an alias of `pace-fastest`.
-##   Replaces `difficulty-*` for launch speed. difficulty-* still sets round gravity
-##   (and hard/expert still set bullet travel to 0.1).
+##   mid-round command. From that line on, aimed rocks use that gravity from the
+##   active range's `difficulty-*` table (default `difficulty-beginner`).
+##   `pace fastest` form is accepted. `pace-faster` is an alias of `pace-fastest`.
+## difficulty-beginner / difficulty-advanced / difficulty-expert:
+##   selects the pace gravity table for that range only (header or inside a round).
+##   Later ranges can set a different table. Default is beginner.
 ## gun / gun1 / gun2 / gun3 / gun4 / gun5: mid-round weapon swap. Drops the gun mesh briefly, then
 ##   raises it with that loadout's crosshair (Rossy / Gun2 / Gun3 / Gun4 / Gun5) and fire behaviour.
 ##   gun4 plants a crosshair trap on shoot instead of a normal shot.
@@ -512,26 +522,11 @@ func parse_spawn_command(token: String) -> Dictionary:
 		'rock-avoider-kill':
 			return {'cmd': cmd}
 
-		'difficulty-easy':
-			return {'cmd': 'difficulty-easy'}
-		
-		'difficulty-normal':
-			return {'cmd': 'difficulty-normal'}
-		
-		'difficulty-hard':
-			return {'cmd': 'difficulty-hard'}
-
-		'difficulty-expert':
-			return {'cmd': 'difficulty-expert'}
+		'difficulty-beginner', 'difficulty-advanced', 'difficulty-expert':
+			return {'cmd': cmd}
 
 		'difficulty':
-			if parts.size() > 1:
-				var level := String(parts[1]).strip_edges().to_lower()
-				if level.begins_with('difficulty-'):
-					level = level.substr(11)
-				return {'cmd': 'difficulty-%s' % level}
-			_parse_warn("parser: 'difficulty' needs easy, normal, hard, or expert")
-			return {'cmd': 'difficulty-hard'}
+			return _parse_difficulty_command(parts)
 
 		'shuffle':
 			return {'cmd': 'shuffle'}
@@ -564,6 +559,8 @@ func parse_spawn_command(token: String) -> Dictionary:
 				return {'cmd': cmd}
 			if cmd.begins_with('pace-'):
 				return _parse_pace_command(parts)
+			if cmd.begins_with('difficulty-'):
+				return _parse_difficulty_command(parts)
 
 			_parse_warn("parser: unknown spawn command '%s' — using red_rock_error" % token)
 			return {
@@ -654,6 +651,47 @@ func _parse_pace_command(parts: PackedStringArray) -> Dictionary:
 		_parse_warn("parser: unknown pace '%s' — using pace-normal" % first)
 		return {'cmd': 'pace-normal'}
 	return {'cmd': 'pace-%s' % level}
+
+
+const PACE_DIFFICULTIES: PackedStringArray = [
+	'beginner', 'advanced', 'expert',
+]
+
+
+func _parse_difficulty_command(parts: PackedStringArray) -> Dictionary:
+	var level := _pace_difficulty_from_tokens(parts)
+	if level.is_empty():
+		return {}
+	return {'cmd': 'difficulty-%s' % level}
+
+
+func _tokens_are_difficulty_command(tokens: Array) -> bool:
+	if tokens.is_empty():
+		return false
+	var first := String(tokens[0]).strip_edges().to_lower()
+	return first == 'difficulty' or first.begins_with('difficulty-')
+
+
+func _pace_difficulty_from_tokens(tokens: Array) -> String:
+	if tokens.is_empty():
+		return ''
+	var first := String(tokens[0]).strip_edges().to_lower()
+	var level := ''
+	if first == 'difficulty':
+		if tokens.size() < 2:
+			_parse_warn("parser: 'difficulty' needs beginner, advanced, or expert")
+			return ''
+		level = String(tokens[1]).strip_edges().to_lower()
+	elif first.begins_with('difficulty-'):
+		level = first.substr(11)
+	else:
+		return ''
+	if level.begins_with('difficulty-'):
+		level = level.substr(11)
+	if PACE_DIFFICULTIES.has(level):
+		return level
+	_parse_warn("parser: unknown difficulty '%s' — use beginner, advanced, or expert" % first)
+	return ''
 
 
 func _parse_bird_command(parts: PackedStringArray) -> Dictionary:
@@ -1249,6 +1287,7 @@ func peek_rock_sequences_from_file(file_name: String, island_name: String = "", 
 	var backup_play: Dictionary = play_price_by_range.duplicate(true)
 	var backup_reward: Dictionary = reward_by_range.duplicate(true)
 	var backup_threats: Dictionary = threats_by_range.duplicate(true)
+	var backup_difficulty: Dictionary = difficulty_by_range.duplicate(true)
 	var sequences: Array = []
 	if loadIslandFile(file_name):
 		sequences = get_rock_sequences(island_name, range_name)
@@ -1257,6 +1296,7 @@ func peek_rock_sequences_from_file(file_name: String, island_name: String = "", 
 	play_price_by_range = backup_play
 	reward_by_range = backup_reward
 	threats_by_range = backup_threats
+	difficulty_by_range = backup_difficulty
 	return sequences
 
 
@@ -1275,6 +1315,7 @@ func parse_round_text(text: String) -> Dictionary:
 	var backup_play: Dictionary = play_price_by_range.duplicate(true)
 	var backup_reward: Dictionary = reward_by_range.duplicate(true)
 	var backup_threats: Dictionary = threats_by_range.duplicate(true)
+	var backup_difficulty: Dictionary = difficulty_by_range.duplicate(true)
 	loadIsland(wrapped)
 	var sequences: Array = get_rock_sequences("test")
 	data_set = backup
@@ -1282,6 +1323,7 @@ func parse_round_text(text: String) -> Dictionary:
 	play_price_by_range = backup_play
 	reward_by_range = backup_reward
 	threats_by_range = backup_threats
+	difficulty_by_range = backup_difficulty
 
 	if sequences.is_empty():
 		return {
@@ -1306,6 +1348,7 @@ func parse_round_text(text: String) -> Dictionary:
 ## header (before any `round`) is the default for rounds that do not set their own.
 ## { "spawns": [...], "repeat": wave_count, "no_lives": bool, "bonus": ""|"type1"|...,
 ##   "bonus_targets": [{ "waypoints": [{row, column}, ...] }, ...], "shuffle": bool,
+##   "difficulty": ""|"beginner"|"advanced"|"expert",
 ##   "hold_out_ms": int }
 ## Pass an empty island_name to include every island in the loaded file.
 ## Pass range_name (e.g. "moss", "redd") to only include that shooting range.
@@ -1371,19 +1414,11 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			rounds[key]._pending.append(parsed)
 			continue
 
-		if parsed_cmd == 'difficulty-hard':
-			if String(rounds[key].get('difficulty', '')) != 'expert':
-				rounds[key].difficulty = 'hard'
-			continue
-
-		if parsed_cmd == 'difficulty-expert':
-			rounds[key].difficulty = 'expert'
-			continue
-
-		if parsed_cmd.begins_with('difficulty-') and parsed_cmd.length() > 11:
+		if parsed_cmd.begins_with('difficulty-'):
 			var level := parsed_cmd.substr(11)
-			if level == 'expert' or String(rounds[key].get('difficulty', '')) != 'expert':
+			if PACE_DIFFICULTIES.has(level):
 				rounds[key].difficulty = level
+				difficulty_by_range[range_key] = level
 			continue
 
 		if parsed_cmd == 'hold-out' or parsed_cmd == 'boss-timer':
@@ -1486,6 +1521,8 @@ func get_rock_sequences(island_name: String = '', range_name: String = '') -> Ar
 			rounds[key].play_price = maxi(int(play_price_by_range[range_key]), 0)
 		if reward_by_range.has(range_key):
 			rounds[key].reward = maxi(int(reward_by_range[range_key]), 0)
+		if difficulty_by_range.has(range_key):
+			rounds[key].difficulty = String(difficulty_by_range[range_key])
 		sequences.append(rounds[key])
 	return sequences
 
@@ -1517,6 +1554,8 @@ func _blank_round_record(range_key: String) -> Dictionary:
 		rec.play_price = maxi(int(play_price_by_range[range_key]), 0)
 	if reward_by_range.has(range_key):
 		rec.reward = maxi(int(reward_by_range[range_key]), 0)
+	if difficulty_by_range.has(range_key):
+		rec.difficulty = String(difficulty_by_range[range_key])
 	if threats_by_range.has(range_key):
 		rec.default_threats = (threats_by_range[range_key] as Array).duplicate(true)
 	else:
