@@ -213,7 +213,7 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 
 
 ## Parses a single spawn line into a spawn dictionary.
-## Targets — rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-juggle / rock-grey / rock-white / rock-rico / rock-ammo / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error:
+## Targets — rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-red-attacker / rock-gap / rock-juggle / rock-grey / rock-white / rock-rico / rock-bounce / rock-ammo / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error:
 ##   {cmd, column, aim_row, aim_column, spawn_row, param}. `?` or omit = random slot (RANDOM_SLOT / -1).
 ##   Unspecified aim row defaults to A; unspecified aim column stays random.
 ##   `rock` = `rock ? ?`. `rock 2` = `rock 2 ?`. `rock ? A4` / `rock 2 A4` OK.
@@ -228,6 +228,11 @@ func _cash_command_amount(tokens, command_name: String) -> int:
 ##   `rock-rico` looks like grey with `rock-side_material`;
 ##   a shot bounces it horizontally (left of x=0 goes right, right of x=0 goes left) then it falls.
 ##   Water / OOB is not a strike; while sliding it pops other rocks (blacks: no penalty) and stays alive.
+##   `rock-bounce` uses `$rock-bounce`. Hop side is automatic like rico (left of centre → right,
+##   right → left). bounce_y still aims the row. Last hit pops it. `rock_bounce_on_timer` (default on)
+##   explodes it if it sits bounce_lifetime_sec (3s) without a shot; a hit resets that timer.
+##   Splash / OOB is not a strike. While hopping it pops other rocks like rico.
+##   Does not block `wait` / `wait-until-clear`.
 ##   `rock-invisible` is a yellow rock hidden until the crosshair overlaps it; missing it does not strike. `rock-stay` flies straight to aim then hangs (pace ignored).
 ##   `rock-stay 1 a1 a8 c8 c1 a4 1` — spawn col 1, visit those cells in order; trailing `1` = then leave into the splash zone (`0` or omit = hang on the last cell).
 ##   `rock-stay-black` is the same flight as a black hazard (shooting it strikes; pops after 3s). `rock-cardinal` is stay-black with the Cardinal mesh — explode fires 4 energy bursts in +X/−X/+Y/−Y. `rock-fake` looks and flies like `rock-black` but never strikes; the crosshair x-ray reveals a grey rock.
@@ -343,7 +348,7 @@ func parse_spawn_command(token: String) -> Dictionary:
 
 	var cmd: String = String(parts[0]).to_lower()
 	match cmd:
-		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'rock-white', 'rock-rico', 'rock-ammo', 'red_rock_error', 'smokecan', 'crate', 'rock-pineapple':
+		'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'rock-white', 'rock-rico', 'rock-bounce', 'rock-ammo', 'red_rock_error', 'smokecan', 'crate', 'rock-pineapple':
 			return _parse_rock_command(cmd, parts)
 
 		'rock-stay', 'rock-stay-black', 'rock-cardinal', 'rock-still', 'threat', 'threat-small', 'threat-large', 'collector':
@@ -620,7 +625,7 @@ func _line_token_spans(line: String) -> Array[Vector2i]:
 
 func _is_known_target_command(cmd: String) -> bool:
 	match cmd:
-		"rock", "rock-invisible", "rock-black", "rock-fake", "rock-pigeon", "rock-avoider", "rock-red-attacker", "red-attacker", "rock-juggle", "rock-grey", "rock-white", "rock-rico", "rock-ammo", "red_rock_error", "smokecan", "crate", "rock-pineapple", "pineapple":
+		"rock", "rock-invisible", "rock-black", "rock-fake", "rock-pigeon", "rock-avoider", "rock-red-attacker", "red-attacker", "rock-juggle", "rock-grey", "rock-white", "rock-rico", "rock-bounce", "rock-ammo", "red_rock_error", "smokecan", "crate", "rock-pineapple", "pineapple":
 			return true
 	return false
 
@@ -673,7 +678,7 @@ func _is_random_token(token: String) -> bool:
 	return token.strip_edges() == '?'
 
 
-## rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-juggle / rock-grey / rock-white / rock-rico / rock-ammo / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error
+## rock / rock-invisible / rock-black / rock-fake / rock-pigeon / rock-avoider / rock-juggle / rock-grey / rock-white / rock-rico / rock-bounce / rock-ammo / rock-stay / rock-stay-black / rock-cardinal / smokecan / crate / pineapple / red_rock_error
 ##   rock          → rock ? ?   (random column, aim row A + random aim column)
 ##   rock 2        → rock 2 ?   (column 2, aim row A + random aim column)
 ##   rock ? A4     → random column, aim A4
@@ -1793,7 +1798,7 @@ func _spawn_entry_to_line(entry: Dictionary) -> String:
 				return 'balloon ?'
 			var row_letter = ['', 'A', 'B', 'C'][clampi(brow, 1, 3)]
 			return 'balloon %s%d' % [row_letter, bcol]
-		'pineapple', 'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'rock-white', 'rock-rico', 'rock-ammo', 'smokecan', 'crate', 'rock-pineapple', 'red_rock_error':
+		'pineapple', 'rock', 'rock-invisible', 'rock-black', 'rock-fake', 'rock-pigeon', 'rock-avoider', 'rock-red-attacker', 'red-attacker', 'rock-juggle', 'rock-grey', 'rock-white', 'rock-rico', 'rock-bounce', 'rock-ammo', 'smokecan', 'crate', 'rock-pineapple', 'red_rock_error':
 			var col := int(entry.get('column', RANDOM_SLOT))
 			var spawn_row := int(entry.get('spawn_row', RANDOM_SLOT))
 			var ar := int(entry.get('aim_row', RANDOM_SLOT))

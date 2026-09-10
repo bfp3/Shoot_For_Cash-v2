@@ -23,7 +23,7 @@ const scope_shrink_duration := 0.15 #0.5          # total seconds to fully shrin
 @export var scope_shrink_large_bonus := 0.2        # extra seconds tacked on for very large scopes
 const scope_shrink_reference_circle := 60.0  # "normal" size; circles above this scale toward the bonus
 @export var _current_shrink_duration := 0.15
-const scope_min_target_circle := 10.0 #20.0
+const scope_min_target_circle := 20.0 #20.0
 @export var scope_return_duration := 0.3
 ## On shrink/expand release: ease past resting size by this factor, then settle to default.
 @export_range(1.0, 15.5, 0.01) var scope_return_overshoot := 1.12
@@ -682,12 +682,12 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_pressed("spacebar"):
 			fire_weapon()
 
-		if Input.is_action_just_released("shoot_weapon_2"):
-			#fire_oranges()
-			if right_click_is_planted_crosshair:
-				fire_weapon(true)
-			else:
-				fire_weapon()
+		#if Input.is_action_just_released("shoot_weapon_2"):
+			##fire_oranges()
+			#if right_click_is_planted_crosshair:
+				#fire_weapon(true)
+			#else:
+				#fire_weapon()
 
 
 

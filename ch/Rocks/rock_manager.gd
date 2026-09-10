@@ -224,6 +224,9 @@ var _force_mid_round_balloons := false
 var _advancing_sequence := false
 var _active_rest_balloon: Node = null
 var _stream_launches_remaining := 0
+## `_begin_beat` bumps this; `bounce_rocks` copies it onto `_stream_launch_finished_gen` when the last rock of that beat has launched (or the stream aborts).
+var _stream_launch_gen := 0
+var _stream_launch_finished_gen := 0
 var _consumed_sequence_barrier := false
 ## Shop / legacy pineapple_mode round (not the script `pineapples` keyword).
 var _pineapple_round_playing := false
@@ -468,8 +471,11 @@ func start_manual_rock_round(sequence: Array, resume_index: int = 0) -> void:
 	_force_mid_round_balloons = resume_index > 0
 	_timed_events_running = false
 	_stream_launches_remaining = 0
+	_stream_launch_gen += 1
+	_stream_launch_finished_gen = _stream_launch_gen
 	_consumed_sequence_barrier = resume_index > 0
 	_pineapple_round_playing = false
+	_sequence_delay_token += 1
 	_sequence_delay_active = false
 	_pending_sequence_delay_sec = 0.0
 	_launched_rocks_this_sequence = false
@@ -850,7 +856,18 @@ func _launch_next_sequence_beat() -> void:
 			_force_next_command = false
 			return
 		_begin_beat(beat)
-		_pending_sequence_delay_sec = 0.0 if force else _beat_trailing_wait_sec(beat)
+		## Trailing `wait N` after the last rock is a clock delay, not wait-until-clear.
+		## Time it from that last launch so a long grey beat + `wait 500` + `ammo`
+		## does not spawn ammo 500ms after the first rock.
+		var trailing := 0.0 if force else _beat_trailing_wait_sec(beat)
+		if trailing > 0.0:
+			if not await _sleep_until_beat_launches_finished():
+				_force_next_command = false
+				return
+			if not await _sleep_sequence_delay(trailing):
+				_force_next_command = false
+				return
+			continue
 		_waiting_until_clear = true
 		_force_next_command = false
 		return
@@ -877,6 +894,30 @@ func _sleep_sequence_delay(delay_sec: float) -> bool:
 		return false
 	_sequence_delay_active = false
 	return _sequence_active and not _round_is_closing()
+
+
+## Wait until this beat's last rock has actually launched (including telegraph / stagger).
+func _sleep_until_beat_launches_finished() -> bool:
+	if _force_next_command:
+		return true
+	var gen := _stream_launch_gen
+	if gen <= _stream_launch_finished_gen:
+		return _sequence_active and not _round_is_closing()
+	_sequence_delay_active = true
+	_waiting_until_clear = true
+	var token := _sequence_delay_token
+	while gen > _stream_launch_finished_gen:
+		if token != _sequence_delay_token or not _sequence_active or _round_is_closing() or _paused_for_continue:
+			_sequence_delay_active = false
+			return false
+		await get_tree().process_frame
+	_sequence_delay_active = false
+	return _sequence_active and not _round_is_closing()
+
+
+func _mark_stream_launches_finished(gen: int) -> void:
+	if gen == _stream_launch_gen:
+		_stream_launch_finished_gen = gen
 
 
 func _collect_next_beat() -> Array:
@@ -958,6 +999,10 @@ func _beat_entry_is_work(entry) -> bool:
 
 
 func _begin_beat(sequence: Array) -> void:
+	## Egg only pulses once at WAVE_START. Later beats (after `wait N`, ammo, etc.)
+	## must auto-pulse or they sit in PREPARE forever.
+	if _pulse_fired_beat >= 0:
+		_auto_pulse_next_beat = true
 	var rocks: Array = []
 	var delays_sec: Array = []
 	var pending_wait_ms = null
@@ -1039,6 +1084,9 @@ func _begin_beat(sequence: Array) -> void:
 			rocks.append(entry)
 
 	manual_rock_sequence = rocks
+	_stream_launch_gen += 1
+	if rocks.is_empty():
+		_stream_launch_finished_gen = _stream_launch_gen
 	if not rocks.is_empty():
 		_launched_rocks_this_sequence = true
 	if _force_next_command:
@@ -1926,6 +1974,8 @@ func _cancel_sequence() -> void:
 	_advancing_sequence = false
 	_timed_events_running = false
 	_stream_launches_remaining = 0
+	_stream_launch_gen += 1
+	_stream_launch_finished_gen = _stream_launch_gen
 	_pineapple_round_playing = false
 	_sequence_delay_active = false
 	_pending_sequence_delay_sec = 0.0
@@ -2264,6 +2314,8 @@ func _spawn_entry_to_rock_type(entry) -> int:
 				return RockInstance.RockSize.WHITE
 			'rock-rico':
 				return RockInstance.RockSize.RICO
+			'rock-bounce':
+				return RockInstance.RockSize.BOUNCE
 			'rock-ammo':
 				return RockInstance.RockSize.AMMO
 			'rock-stay', 'rock-still':
@@ -2271,8 +2323,6 @@ func _spawn_entry_to_rock_type(entry) -> int:
 			'rock-stay-black':
 				return RockInstance.RockSize.STAY_BLACK
 
-			'crate':
-				return RockInstance.RockSize.CRATE
 			'rock-pineapple':
 				return RockInstance.RockSize.PINEAPPLE
 			_:
@@ -2303,12 +2353,13 @@ func _is_launchable_spawn_cmd(cmd: String) -> bool:
 		or cmd == 'rock-grey'
 		or cmd == 'rock-white'
 		or cmd == 'rock-rico'
+		or cmd == 'rock-bounce'
 		or cmd == 'rock-ammo'
 		or cmd == 'rock-stay'
 		or cmd == 'rock-stay-black'
 		or cmd == 'rock-cardinal'
 		or cmd == 'rock-still'
-		or cmd == 'crate'
+
 		or cmd == 'rock-pineapple'
 	)
 
@@ -2563,6 +2614,9 @@ func _any_live_round_rocks() -> bool:
 			continue
 		## Avoiders are not remaining-rocks; script `rock-avoider-kill` pops leftovers after wait.
 		if body.rock_type == RockInstance.RockSize.AVOIDER:
+			continue
+		## Bounce hops on its own timer — never block wait / wait-until-clear.
+		if body.rock_type == RockInstance.RockSize.BOUNCE:
 			continue
 		## Still waiting to launch this wave.
 		if body.current_state == body.State.PREPARE_ROCK:
@@ -3627,7 +3681,9 @@ func get_angle_bias() -> float:
 	return 10.0
 	
 func bounce_rocks() -> void:
+	var launch_gen := _stream_launch_gen
 	if _paused_for_continue:
+		_mark_stream_launches_finished(launch_gen)
 		return
 	angle_bias = get_angle_bias()
 	# Prefer the prepare-time plan so launch matches the cached aim points.
@@ -3659,6 +3715,7 @@ func bounce_rocks() -> void:
 	for index in manual_rock_sequence.size():
 		if _paused_for_continue or epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
 			_stream_launches_remaining = 0
+			_mark_stream_launches_finished(launch_gen)
 			return
 
 		if index < _launch_delays_sec.size():
@@ -3667,6 +3724,7 @@ func bounce_rocks() -> void:
 				await get_tree().create_timer(delay_sec, false).timeout
 				if _paused_for_continue or epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
 					_stream_launches_remaining = 0
+					_mark_stream_launches_finished(launch_gen)
 					return
 
 		var entry = null
@@ -3678,6 +3736,7 @@ func bounce_rocks() -> void:
 			await _telegraph_column_before_launch(column, epoch)
 			if _paused_for_continue or epoch != _launch_epoch or current_state != State.PULSE_ROCKS:
 				_stream_launches_remaining = 0
+				_mark_stream_launches_finished(launch_gen)
 				return
 
 		var body = null
@@ -3705,6 +3764,7 @@ func bounce_rocks() -> void:
 	if epoch == _launch_epoch and current_state == State.PULSE_ROCKS:
 		spin_rocks(launched)
 	_instant_sequence_pulse = false
+	_mark_stream_launches_finished(launch_gen)
 
 
 func _spawn_column_for_launch_index(index: int, entry) -> int:
@@ -4043,6 +4103,39 @@ func _x_to_nearest_column(x: float) -> int:
 			best_dist = dist
 			best = col
 	return best
+
+
+## Nearest script column, including side lanes / off-grid hops (not clamped to 1–8).
+func _x_to_nearest_column_unclamped(x: float) -> int:
+	var step := COLUMN_STEP + broaden_columns
+	if absf(step) < 0.0001:
+		return _x_to_nearest_column(x)
+	var col1 := _column_to_x_unclamped(1)
+	return int(round((col1 - x) / step)) + 1
+
+
+## Nearest aim row from world Y. Row 1 is A (highest). Off-grid rows extrapolate.
+func _y_to_nearest_row(y: float) -> int:
+	var y1 := float(AIM_LANE_Y.get(1, 6.5))
+	var y2 := float(AIM_LANE_Y.get(2, 3.5))
+	var step := y1 - y2
+	if absf(step) < 0.0001:
+		return 2
+	return int(round((y1 - y) / step)) + 1
+
+
+## Aim-lane Y for a row index. Rows outside 1–3 keep the same spacing.
+func aim_row_to_y(row: int) -> float:
+	if AIM_LANE_Y.has(row):
+		return float(AIM_LANE_Y[row])
+	var y1 := float(AIM_LANE_Y.get(1, 6.5))
+	var y2 := float(AIM_LANE_Y.get(2, 3.5))
+	return y1 - float(row - 1) * (y1 - y2)
+
+
+## Script cell for a world point. Vector2i(row, column); column 1 is +X (right).
+func world_to_aim_cell(pos: Vector3) -> Vector2i:
+	return Vector2i(_y_to_nearest_row(pos.y), _x_to_nearest_column_unclamped(pos.x))
 
 
 ## World X of the aim-grid column nearest to `x`.

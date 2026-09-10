@@ -25,45 +25,86 @@ const LAYOUT_PATH_BOSS_BY_ISLAND := {
 	1: "res://sc/All_level_layouts/level_layout_moss_03.tscn",
 }
 ## Script ranges that are not in gl_DataSet.place_name (e.g. moss2 in level-beginner.txt).
+#const LAYOUT_PATH_BY_PLACE_NAME := {
+	#"moss1": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	#"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",
+	#"moss3": "res://sc/All_level_layouts/level_layout_moss_03.tscn",
+	#"moss4": "res://sc/All_level_layouts/level_layout_moss_04.tscn",
+	#"moss5": "res://sc/All_level_layouts/level_layout_moss_05.tscn",
+	#"moss6": "res://sc/All_level_layouts/level_layout_moss_06.tscn",
+	#"moss7": "res://sc/All_level_layouts/level_layout_moss_07.tscn",
+	#"moss8": "res://sc/All_level_layouts/level_layout_moss_08.tscn",
+	#"moss9": "res://sc/All_level_layouts/level_layout_moss_09.tscn",
+	#"moss10": "res://sc/All_level_layouts/level_layout_moss_10.tscn",
+	#"moss11": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	#"moss12": "res://sc/All_level_layouts/level_layout_moss_12.tscn",
+	#"moss13": "res://sc/All_level_layouts/level_layout_moss_13.tscn",
+	#"hood": "res://sc/All_level_layouts/level_layout_hood_01.tscn",
+	#"mine": "res://sc/All_level_layouts/level_layout_mine_01.tscn",
+	#"kings": "res://sc/All_level_layouts/level_layout_moss_crossy_bridge.tscn"
+#}
+
+
 const LAYOUT_PATH_BY_PLACE_NAME := {
 	"moss1": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
-	"moss2": "res://sc/All_level_layouts/level_layout_moss_02.tscn",
-	"moss3": "res://sc/All_level_layouts/level_layout_moss_03.tscn",
-	"moss4": "res://sc/All_level_layouts/level_layout_moss_04.tscn",
-	"moss5": "res://sc/All_level_layouts/level_layout_moss_05.tscn",
-	"moss6": "res://sc/All_level_layouts/level_layout_moss_06.tscn",
-	"moss7": "res://sc/All_level_layouts/level_layout_moss_07.tscn",
-	"moss8": "res://sc/All_level_layouts/level_layout_moss_08.tscn",
-	"moss9": "res://sc/All_level_layouts/level_layout_moss_09.tscn",
-	"moss10": "res://sc/All_level_layouts/level_layout_moss_10.tscn",
+	"moss3": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"moss2": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"moss4": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"moss5": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"moss6": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"moss7": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"moss8": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"moss9": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"moss10": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
 	"moss11": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
-	"moss12": "res://sc/All_level_layouts/level_layout_moss_12.tscn",
-	"moss13": "res://sc/All_level_layouts/level_layout_moss_13.tscn",
-	"hood": "res://sc/All_level_layouts/level_layout_hood_01.tscn",
-	"mine": "res://sc/All_level_layouts/level_layout_mine_01.tscn",
-	"kings": "res://sc/All_level_layouts/level_layout_moss_crossy_bridge.tscn"
+	"moss12": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"moss13": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"hood": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"mine": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"kings": "res://sc/All_level_layouts/level_layout_moss_11.tscn"
 }
+
 
 
 ## Camera3D.environment resources per place / boss (layouts no longer carry WorldEnvironment).
 const ENV_PATH_BY_LEVEL := {
+	#"start": "res://res/skyEnvironments/greyscale_world.tres",
+	##"moss": "res://res/moss_env_v2.tres",
+	##"moss1": "res://res/moss_env_v2.tres",
+	#"moss": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	#"moss1": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	#"moss2": "res://res/moss_env_v2.tres",
+	#"moss3": "res://res/moss_env_v2.tres",
+	#"moss4": "res://res/moss_env_v2.tres",
+	#"moss5": "res://res/moss_env_v2.tres",
+	#"moss6": "res://res/moss_env_v2.tres",
+	#"moss7": "res://res/moss_env_v2.tres",
+	#"moss8": "res://res/wireframe_glow_effect.tres",
+	#"moss9": "res://res/skyEnvironments/boss_2_world_env.tres",
+	#"moss10": "res://res/skyEnvironments/boss_2_world_env.tres",
+	#"moss11": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	#"moss12": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	#"moss13": "res://res/skyEnvironments/moss_13_illustrated_env.tres",
+	
+	
 	"start": "res://res/skyEnvironments/greyscale_world.tres",
 	#"moss": "res://res/moss_env_v2.tres",
 	#"moss1": "res://res/moss_env_v2.tres",
 	"moss": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
 	"moss1": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
-	"moss2": "res://res/moss_env_v2.tres",
-	"moss3": "res://res/moss_env_v2.tres",
-	"moss4": "res://res/moss_env_v2.tres",
-	"moss5": "res://res/moss_env_v2.tres",
-	"moss6": "res://res/moss_env_v2.tres",
-	"moss7": "res://res/moss_env_v2.tres",
-	"moss8": "res://res/wireframe_glow_effect.tres",
-	"moss9": "res://res/skyEnvironments/boss_2_world_env.tres",
-	"moss10": "res://res/skyEnvironments/boss_2_world_env.tres",
+	"moss2": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss3": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss4": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss5": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss6": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss7": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss8": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss9": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	"moss10": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
 	"moss11": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
 	"moss12": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
-	"moss13": "res://res/skyEnvironments/moss_13_illustrated_env.tres",
+	"moss13": "res://res/skyEnvironments/moss_11_illustrated_env.tres",
+	
 	
 	
 	"redd": "res://res/world_env_redd.tres",

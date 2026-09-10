@@ -95,6 +95,29 @@ var _rico_hit_ids: Dictionary = {}
 ## Bumped on recycle / new slide so a leftover hang timer cannot retarget gravity.
 var _rico_slide_token := 0
 
+@export_group("Rock Bounce")
+## Columns to hop per shot. Side is automatic like rico (left of centre → right, right → left).
+@export var bounce_x := 1
+## Shot hop: 1 = one row up (toward A), -1 = one row down (toward C).
+@export var bounce_y := 1
+## Hits before it pops. Each hit that leaves health hops; the last hit destroys it.
+@export var bounce_health := 2
+## Travel speed toward the next cell (world units / sec).
+@export_range(4.0, 80.0, 0.5) var bounce_speed := 20.0
+## rock-bounce_on_timer: if true, hanging without a shot for bounce_lifetime_sec explodes it.
+@export var rock_bounce_on_timer := true
+## Sit lifespan after a hop (or after a hit reset). Ignored if rock_bounce_on_timer is off.
+@export_range(0.5, 30.0, 0.1) var bounce_lifetime_sec := 3.0
+var _bounce_sliding := false
+var _bounce_arrived := false
+var _bounce_force_pop := false
+var _bounce_cash_paid := false
+var _bounce_col := -1
+var _bounce_row := -1
+var _bounce_target := Vector3.ZERO
+var _bounce_lock_z := 0.0
+var _bounce_life_token := 0
+
 const ON_TARGET_SFX = preload('uid://dqbrbkai0p60l')
 var start_exploding := false
 var pitch_adjustment := 0.02
@@ -134,7 +157,6 @@ enum RockSize {
 	JUGGLE,
 	## $1 rock: counts toward wave clear, but missing it does not strike.
 	GREY,
-	CRATE,
 	## Flies straight to aim rapidly, brakes, then hangs (pace-* ignored).
 	STAY,
 	## Like avoider launch, but at apex locks crosshair and dashes straight at that point.
@@ -155,6 +177,8 @@ enum RockSize {
 	AMMO,
 	## Script `rock-white`: scene white mesh + material. Miss and shot do not strike.
 	WHITE,
+	## Script `rock-bounce`: `$rock-bounce` mesh. Shot hops like rico (left→right, right→left) plus bounce_y. No strike.
+	BOUNCE,
 }
 
 enum State {
@@ -183,16 +207,15 @@ var rock_has_been_logged := false
 @onready var rock_rico_mesh: MeshInstance3D = get_node_or_null("%rock_rico") as MeshInstance3D
 var _rico_default_mesh: Mesh
 var _rico_default_scale := Vector3.ONE
+@onready var rock_bounce_mesh: MeshInstance3D = get_node_or_null("%rock-bounce") as MeshInstance3D
 @onready var rock_ammo_mesh: MeshInstance3D = get_node_or_null("%rock_ammo") as MeshInstance3D
 
 @onready var medium_rock: MeshInstance3D = %medium_rock
-@onready var large_rock: MeshInstance3D = %Large_rock
 
 @onready var red_rock: MeshInstance3D = %Red_rock
 @onready var red_rock_attack: MeshInstance3D = %Red_rock_attack
-@onready var blue_rock: MeshInstance3D = %blue_rock
 @onready var smokecan: MeshInstance3D = %Smokecan
-@onready var crate: MeshInstance3D = get_node_or_null("%Crate")
+
 @onready var pineapple_mesh: MeshInstance3D = get_node_or_null("%pineapple") as MeshInstance3D
 
 @onready var hazard_large: MeshInstance3D = %Hazard_large
@@ -402,6 +425,8 @@ func _ready() -> void:
 	if rock_rico_mesh:
 		_rico_default_mesh = rock_rico_mesh.mesh
 		_rico_default_scale = rock_rico_mesh.scale
+	if rock_bounce_mesh == null:
+		rock_bounce_mesh = get_node_or_null("%rock_bounce") as MeshInstance3D
 	_setup_crosshair_xray()
 	start_pos = global_position
 	target_x_position = start_pos.x
@@ -822,13 +847,15 @@ func _physics_process(delta: float) -> void:
 		elif rock_type == RockSize.GAP:
 			if not _freeze_shot_pending:
 				_check_hazard_crosshair()
-		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.AMMO or rock_type == RockSize.WHITE or rock_type == RockSize.PINEAPPLE:
+		elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.BOUNCE or rock_type == RockSize.AMMO or rock_type == RockSize.WHITE or rock_type == RockSize.PINEAPPLE:
 			_update_destroy_on_crosshair_overlap()
 		elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 			_update_hazard_crosshair_overlap()
 
 		if _rico_sliding:
 			_update_rico_slide()
+		if _bounce_sliding:
+			_update_bounce_slide()
 
 	if not ballistic_aim_active or _ballistic_in_descent:
 		return
@@ -852,6 +879,8 @@ func _update_mesh_face_velocity() -> void:
 		return
 		
 	if rock_type == RockSize.RICO:
+		return
+	if rock_type == RockSize.BOUNCE:
 		return
 		
 	
@@ -993,7 +1022,7 @@ func update_active() -> void:
 	elif rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
 		if _player_wants_overlap_destroy("hazards"):
 			_arm_hazard_crosshair()
-	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.AMMO or rock_type == RockSize.WHITE or rock_type == RockSize.STAY or rock_type == RockSize.PINEAPPLE:
+	elif rock_type == RockSize.SMALL or rock_type == RockSize.GREY or rock_type == RockSize.RICO or rock_type == RockSize.BOUNCE or rock_type == RockSize.AMMO or rock_type == RockSize.WHITE or rock_type == RockSize.STAY or rock_type == RockSize.PINEAPPLE:
 		if _player_wants_overlap_destroy("rocks"):
 			_arm_destroy_on_crosshair()
 	if rock_type == RockSize.SMALL or rock_type == RockSize.STAY:
@@ -1050,6 +1079,7 @@ func round_end_check_rock_status() -> void:
 				or rock_type == RockSize.RED_ATTACKER
 				or rock_type == RockSize.GAP
 				or (_rico_sliding and rock_type == RockSize.RICO)
+				or (_bounce_sliding and rock_type == RockSize.BOUNCE)
 			):
 				pass
 			else:
@@ -1141,7 +1171,7 @@ func update_gravity(_gravity_scale : float) -> void:
 	## gravity pass keeps forcing 0.15 after the next aimed launch (rocks shoot into the sky).
 	var token := _pool_setup_token
 	for i in range(3):
-		if token != _pool_setup_token or _rico_sliding:
+		if token != _pool_setup_token or _rico_sliding or _bounce_sliding:
 			return
 		#gravity_scale = _gravity_scale
 		gravity_scale = 0.15
@@ -1152,12 +1182,12 @@ func update_gravity(_gravity_scale : float) -> void:
 		return
 	if rock_activated:
 		await get_tree().create_timer(1.5, false).timeout
-		if token != _pool_setup_token or _rico_sliding:
+		if token != _pool_setup_token or _rico_sliding or _bounce_sliding:
 			return
 		linear_damp = 0.0
 
 func _visual_meshes() -> Array:
-	return [small_rock, white_rock, grey_rock, rock_rico_mesh, rock_ammo_mesh, clay_pigeon, medium_rock, large_rock, hazard_large, red_rock, red_rock_attack, blue_rock, smokecan, crate, pineapple_mesh]
+	return [small_rock, white_rock, grey_rock, rock_rico_mesh, rock_bounce_mesh, rock_ammo_mesh, clay_pigeon, medium_rock, hazard_large, red_rock, red_rock_attack, smokecan, pineapple_mesh]
 
 
 func _cache_mesh_original_overrides() -> void:
@@ -1179,6 +1209,7 @@ func hide_all_meshes() -> void:
 			mesh.material_override = _mesh_original_overrides[mesh]
 	_set_rico_particles(false)
 	_set_white_rock_fx(false)
+	_set_bounce_particles(false)
 
 
 
@@ -1213,7 +1244,7 @@ func setup_rock_type() -> void:
 	linear_damp = 0.5
 	$Mesh.scale = Vector3.ONE
 	
-	$Mesh/Crate/CrateAnimplayer.stop()
+
 	
 	match rock_type:
 		# 0
@@ -1435,31 +1466,7 @@ func setup_rock_type() -> void:
 				current_particles = current_mesh.get_node("GoldParticles")
 				current_particles.emitting = true
 	
-		RockSize.CRATE:
-			current_rock_type = "Crate"
-			rock_type_name = "rock_type_crate"
-			gl_PlayerState.log_white_rock()
-			var crate_scale := Vector3.ONE * 0.5
-			var crate_size := 1.2
-			health = 3
-			## Award this range's script `reward $N` (not rock_type_crate dataset cash).
-			cash_value = _crate_range_reward_amount()
-			max_health = health
-			if crate:
-				crate.visible = true
-				current_mesh = crate
-			else:
-				small_rock.visible = true
-				current_mesh = small_rock
-			current_mesh.scale = crate_scale * crate_size
-			main_col.scale = Vector3.ONE * 0.125 * crate_size
-			rock_type_gravity_scale = 0.1
-			force_mult.clear()
-			force_mult = [12]
-			angular_damp = 3.0
-			force_mult_index = 0
-			if has_node("Mesh/Crate/CrateAnimplayer"):
-				$Mesh/Crate/CrateAnimplayer.play("flashing_dollar")
+		
 
 		RockSize.PINEAPPLE:
 			current_rock_type = "Pineapple Rock"
@@ -1531,7 +1538,8 @@ func setup_rock_type() -> void:
 				small_rock.visible = true
 				current_mesh = small_rock
 			assign_random_mesh(current_mesh)
-			current_mesh.scale = Vector3.ONE * randf_range(0.42, 0.6)
+			current_mesh.scale = Vector3.ONE * 0.6
+			 #randf_range(0.42, 0.6)
 			main_col.scale = Vector3.ONE * 0.125 * 1.2
 			rock_type_gravity_scale = 0.1
 			force_mult.clear()
@@ -1564,6 +1572,33 @@ func setup_rock_type() -> void:
 			force_mult = [4]
 			force_mult_index = 0
 			_set_rico_particles(false)
+
+		RockSize.BOUNCE:
+			current_rock_type = "Bounce Rock"
+			rock_type_name = "rock_type_bounce"
+			var bounce_cash := int(gl_DataSet.get_value("rock_type_bounce", 0))
+			health = maxi(bounce_health, 1)
+			cash_value = bounce_cash
+			max_health = health
+			if rock_bounce_mesh:
+				rock_bounce_mesh.visible = true
+				current_mesh = rock_bounce_mesh
+			elif rock_rico_mesh:
+				rock_rico_mesh.visible = true
+				current_mesh = rock_rico_mesh
+			elif grey_rock:
+				grey_rock.visible = true
+				current_mesh = grey_rock
+			else:
+				small_rock.visible = true
+				current_mesh = small_rock
+			main_col.scale = Vector3.ONE
+			rock_type_gravity_scale = 0.1
+			force_mult.clear()
+			force_mult = [4]
+			force_mult_index = 0
+			_bounce_col = -1
+			_bounce_row = -1
 
 		RockSize.AMMO:
 			current_rock_type = "Ammo Rock"
@@ -1763,9 +1798,8 @@ func reset_stats() -> void:
 
 func was_hit_tween() -> void:
 	var tween = create_tween().set_ease(Tween.EASE_OUT)
-	if rock_type == RockSize.CRATE:
-		tween.tween_callback(crate_particles)
-	elif rock_type == RockSize.PINEAPPLE:
+
+	if rock_type == RockSize.PINEAPPLE:
 		tween.tween_callback(pineapple_particles)
 	else:
 		tween.tween_callback(smoke_particles)
@@ -1978,6 +2012,9 @@ func shake_camera() -> void:
 		RockSize.RICO:
 			if player_cam.has_method("shake_camera_rock_grey"):
 				player_cam.shake_camera_rock_grey()
+		RockSize.BOUNCE:
+			if player_cam.has_method("shake_camera_rock_grey"):
+				player_cam.shake_camera_rock_grey()
 		RockSize.AMMO:
 			if player_cam.has_method("shake_camera_rock_grey"):
 				player_cam.shake_camera_rock_grey()
@@ -1996,9 +2033,7 @@ func shake_camera() -> void:
 		RockSize.HAZARD, RockSize.HAZARD_SMALL:
 			if player_cam.has_method("shake_camera_rock_hazard"):
 				player_cam.shake_camera_rock_hazard()
-		RockSize.CRATE:
-			if player_cam.has_method("shake_camera_rock_crate"):
-				player_cam.shake_camera_rock_crate()
+
 		RockSize.PINEAPPLE:
 			if player_cam.has_method("shake_camera_pineapple"):
 				player_cam.shake_camera_pineapple()
@@ -2093,8 +2128,8 @@ func apply_hit_reaction(screen_offset: Vector2, accurate_direction := true) -> v
 		torque_dir * force_mult[force_mult_index] * hit_torque_strength
 	)
 
-	if rock_type != RockSize.CRATE:
-		smoke_particles_duplicates()
+
+	smoke_particles_duplicates()
 
 
 func get_hit_force_direction(
@@ -2165,6 +2200,12 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 		return
 
 	
+	if rock_type == RockSize.BOUNCE:
+		if health > 0 and not _bounce_force_pop:
+			_start_bounce_slide()
+			return
+		_reset_bounce_flight_state()
+
 	if health > 0:
 		play_hit_sfx()
 		apply_hit_reaction(screen_offset)
@@ -2291,15 +2332,11 @@ func start_destroyed_process() -> void:
 		#cash_value += bonus_cash_reward
 		
 
-	
-	
-	if rock_type == RockSize.CRATE:
-		cash_value = _crate_range_reward_amount()
 
 	if !rock_has_been_logged:
 		rock_has_been_logged = true
 		var pay := cash_value
-		if _rico_cash_paid:
+		if _rico_cash_paid or _bounce_cash_paid:
 			pay = 0
 		gl_PlayerState.log_hit(rock_type_name, current_rock_type, pay, global_position)
 			
@@ -2308,9 +2345,7 @@ func start_destroyed_process() -> void:
 	
 	play_destroy_sfx()
 
-	if rock_type == RockSize.CRATE and cash_value > 0:
-		if money_label_3d and money_label_3d.has_method("money_is_money"):
-			money_label_3d.money_is_money(global_position, cash_value)
+
 
 	#if cash_value > 0:
 		#money_label_3d.money_is_money(global_position, cash_value)
@@ -2322,7 +2357,7 @@ func start_destroyed_process() -> void:
 	is_deactivated = true
 	#$Mesh.hide()
 	#freeze = true
-	
+
 		
 			
 	if current_state != State.HIT:
@@ -2366,13 +2401,6 @@ func start_destroyed_process() -> void:
 			release_to_pool()
 
 
-## Script `reward $N` for the active range (level-*.txt). Falls back to dataset range_clear_reward.
-func _crate_range_reward_amount() -> int:
-	if round_manager and round_manager.has_method("get_current_range_reward"):
-		return maxi(int(round_manager.get_current_range_reward()), 0)
-	if gl_DataSet and gl_DataSet.has_method("get_range_clear_reward"):
-		return maxi(int(gl_DataSet.get_range_clear_reward()), 0)
-	return maxi(int(gl_DataSet.get_value("range_clear_reward", 0)), 0)
 
 
 func play_hit_sfx() -> void:
@@ -2417,7 +2445,7 @@ func _play_white_rock_sfx() -> void:
 
 
 func _on_start_falling_timer_timeout() -> void:
-	if _rico_sliding:
+	if _rico_sliding or _bounce_sliding:
 		return
 	falling = true
 	# Rock–rock collision is scheduled after launch via schedule_airborne_rock_collisions().
@@ -2560,7 +2588,7 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 	#if rock_destroyed:
 		#return
 
-	if _rico_sliding:
+	if _rico_sliding or _bounce_sliding:
 		_rico_try_hit(body)
 		return
 
@@ -2619,10 +2647,11 @@ func _on_explosion_area_body_entered(body: Node3D) -> void:
 
 func expand_blast_radius() -> void:
 
-	if rock_type == RockSize.CRATE:
-		return
 
 	if rock_type == RockSize.RICO:
+		return
+
+	if rock_type == RockSize.BOUNCE:
 		return
 
 	if rock_type == RockSize.GREY and grey_blast_on_shot:
@@ -2784,6 +2813,15 @@ func _set_rico_particles(active: bool) -> void:
 		current_particles = particles
 	elif current_particles == particles:
 		current_particles = null
+
+
+func _set_bounce_particles(active: bool) -> void:
+	if rock_bounce_mesh == null or not rock_bounce_mesh.has_node("GoldParticles"):
+		return
+	var particles := rock_bounce_mesh.get_node("GoldParticles") as GPUParticles3D
+	if particles == null:
+		return
+	particles.emitting = active
 
 
 func _start_rico_slide() -> void:
@@ -3041,6 +3079,181 @@ func _reset_rico_flight_state() -> void:
 	freeze = false
 	sleeping = false
 	_clear_rico_propeller_spin()
+	_bounce_sliding = false
+	_bounce_arrived = false
+	_bounce_force_pop = false
+	_bounce_cash_paid = false
+	_bounce_col = -1
+	_bounce_row = -1
+	_bounce_target = Vector3.ZERO
+	_bounce_life_token += 1
+	_set_bounce_particles(false)
+
+
+func prime_bounce_cell(aim_row: int, aim_column: int) -> void:
+	_bounce_row = aim_row
+	_bounce_col = aim_column
+
+
+func _reset_bounce_flight_state() -> void:
+	_bounce_sliding = false
+	_bounce_arrived = false
+	_bounce_force_pop = false
+	_bounce_target = Vector3.ZERO
+	_bounce_life_token += 1
+	_set_bounce_particles(false)
+	if not _rico_sliding:
+		_disable_rico_kill_area()
+		if has_node("Explosion_area"):
+			$Explosion_area.show()
+
+
+func _ensure_bounce_cell() -> void:
+	var rm := _find_rock_manager()
+	if rm and rm.has_method("world_to_aim_cell"):
+		var cell: Vector2i = rm.world_to_aim_cell(global_position)
+		_bounce_row = cell.x
+		_bounce_col = cell.y
+		return
+	if _bounce_col != -1:
+		return
+	_bounce_row = 2
+	_bounce_col = 4
+
+
+func _bounce_world_for_cell(row: int, col: int) -> Vector3:
+	var rm := _find_rock_manager()
+	var x := global_position.x
+	var y := global_position.y
+	if rm:
+		if rm.has_method("column_to_x_for_aim"):
+			x = float(rm.column_to_x_for_aim(col))
+		elif rm.has_method("column_to_x"):
+			x = float(rm.column_to_x(clampi(col, 1, 8)))
+		if rm.has_method("aim_row_to_y"):
+			y = float(rm.aim_row_to_y(row))
+		else:
+			y = _bounce_fallback_row_y(row)
+	else:
+		y = _bounce_fallback_row_y(row)
+	return Vector3(x, y, _bounce_lock_z)
+
+
+func _bounce_fallback_row_y(row: int) -> float:
+	return 6.5 - float(row - 1) * 3.0
+
+
+func _bounce_auto_col_delta() -> int:
+	var steps := absi(bounce_x)
+	if steps <= 0:
+		return 0
+	## Same side pick as rico: left of centre flies +X (right / toward col 1).
+	var go_right := true
+	if global_position.x < -rico_center_threshold:
+		go_right = true
+	elif global_position.x > rico_center_threshold:
+		go_right = false
+	elif linear_velocity.x < 0.0:
+		go_right = false
+	if go_right:
+		return -steps
+	return steps
+
+
+func _start_bounce_slide() -> void:
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+	_bounce_life_token += 1
+	_ensure_bounce_cell()
+	_bounce_col += _bounce_auto_col_delta()
+	_bounce_row -= bounce_y
+	_bounce_lock_z = global_position.z
+	_bounce_target = _bounce_world_for_cell(_bounce_row, _bounce_col)
+	_bounce_sliding = true
+	_bounce_arrived = false
+	_rico_hit_ids.clear()
+	if has_node("Start_falling_timer"):
+		$Start_falling_timer.stop()
+	ballistic_aim_active = false
+	_ballistic_in_descent = true
+	constant_force = Vector3.ZERO
+	gravity_scale = 0.0
+	linear_damp = 0.0
+	angular_damp = 0.0
+	sleeping = false
+	freeze = false
+	play_hit_sfx()
+	_play_vfx(&"rock_hit")
+	shake_camera()
+	if not _bounce_cash_paid and cash_value != 0:
+		_bounce_cash_paid = true
+		gl_PlayerState.add_to_cash_pool(cash_value, global_position)
+		if EventBus.instance and EventBus.instance.has_signal("rock_hit_logged"):
+			EventBus.instance.rock_hit_logged.emit(rock_type_name, current_rock_type, cash_value)
+		if money_label_3d and cash_value > 0 and money_label_3d.has_method("money_is_money"):
+			money_label_3d.money_is_money(global_position, cash_value)
+	_enable_rico_kill_area()
+	_set_bounce_particles(true)
+	var to := _bounce_target - global_position
+	to.z = 0.0
+	if to.length_squared() < 0.0001:
+		_bounce_arrived = true
+		linear_velocity = Vector3.ZERO
+		_arm_bounce_sit_timer()
+	else:
+		linear_velocity = to.normalized() * bounce_speed
+
+
+func _update_bounce_slide() -> void:
+	if not _bounce_sliding or current_state != State.ACTIVE or not rock_activated:
+		return
+	constant_force = Vector3.ZERO
+	global_position.z = _bounce_lock_z
+	linear_velocity.z = 0.0
+	if not _bounce_arrived:
+		var to := _bounce_target - global_position
+		to.z = 0.0
+		if to.length() <= 0.4:
+			global_position.x = _bounce_target.x
+			global_position.y = _bounce_target.y
+			linear_velocity = Vector3.ZERO
+			_bounce_arrived = true
+			_arm_bounce_sit_timer()
+		else:
+			linear_velocity = to.normalized() * bounce_speed
+	else:
+		linear_velocity = Vector3.ZERO
+	_rico_scan_nearby_rocks()
+
+
+func _arm_bounce_sit_timer() -> void:
+	if not rock_bounce_on_timer:
+		return
+	if rock_type != RockSize.BOUNCE:
+		return
+	_bounce_life_token += 1
+	var token := _bounce_life_token
+	var pool := _pool_setup_token
+	await get_tree().create_timer(maxf(bounce_lifetime_sec, 0.1), false).timeout
+	if token != _bounce_life_token or pool != _pool_setup_token:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+	if rock_type != RockSize.BOUNCE or not _bounce_sliding or not _bounce_arrived:
+		return
+	_expire_bounce_sit()
+
+
+## Sat without a shot for bounce_lifetime_sec — pop with no strike.
+func _expire_bounce_sit() -> void:
+	if rock_type != RockSize.BOUNCE:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+	_bounce_force_pop = true
+	health = 0
+	_reset_bounce_flight_state()
+	start_destroyed_process()
 
 
 func _disable_rico_kill_area() -> void:
@@ -3076,7 +3289,7 @@ func _rico_scan_nearby_rocks() -> void:
 
 
 func _rico_try_hit(body: Node3D) -> void:
-	if not _rico_sliding:
+	if not _rico_sliding and not _bounce_sliding:
 		return
 	if body == self or not (body is RockInstance):
 		return
@@ -3091,6 +3304,8 @@ func _rico_try_hit(body: Node3D) -> void:
 	_rico_hit_ids[id] = true
 	if rock.rock_type == RockSize.RICO:
 		rock._rico_force_pop = true
+	if rock.rock_type == RockSize.BOUNCE:
+		rock._bounce_force_pop = true
 	if (
 		rock.rock_type == RockSize.HAZARD
 		or rock.rock_type == RockSize.HAZARD_SMALL
@@ -3127,8 +3342,6 @@ func standard_blast() -> void:
 func hazard_aoe_delayed() -> void:
 	_play_vfx(&"hazard_destroy")
 
-func crate_particles() -> void:
-	_play_vfx(&"crate_destroy")
 
 
 func pineapple_particles() -> void:
@@ -3136,9 +3349,7 @@ func pineapple_particles() -> void:
 
 
 func smoke_particles() -> void:
-	if rock_type == RockSize.CRATE:
-		crate_particles()
-		return
+
 	if rock_type == RockSize.PINEAPPLE:
 		pineapple_particles()
 		return
@@ -3209,7 +3420,8 @@ func create_shot_instance(sound_file : AudioStream, volume_db : float, pitch_sca
 
 
 func play_piano_note() -> void:
-	_play_rocks_piano("launch_flick", randf_range(0.8, 0.9))
+	#_play_rocks_piano("launch_flick", randf_range(0.8, 0.9))
+	_play_rocks_piano("launch_flick", randf_range(0.7, 1.0))
 	match global_position.x:
 		-7.0:
 			_play_rocks_piano("1")
@@ -3867,7 +4079,7 @@ func _arm_destroy_on_crosshair() -> void:
 		return
 	if current_state != State.ACTIVE:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.AMMO and rock_type != RockSize.WHITE and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.BOUNCE and rock_type != RockSize.AMMO and rock_type != RockSize.WHITE and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
 		return
 	if not _player_wants_overlap_destroy("rocks"):
 		return
@@ -3883,7 +4095,9 @@ func _update_destroy_on_crosshair_overlap() -> void:
 		return
 	if rock_type == RockSize.RICO and _rico_sliding:
 		return
-	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.AMMO and rock_type != RockSize.WHITE and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
+	if rock_type == RockSize.BOUNCE and _bounce_sliding:
+		return
+	if rock_type != RockSize.SMALL and rock_type != RockSize.GREY and rock_type != RockSize.RICO and rock_type != RockSize.BOUNCE and rock_type != RockSize.AMMO and rock_type != RockSize.WHITE and rock_type != RockSize.STAY and rock_type != RockSize.PINEAPPLE:
 		return
 	if _freeze_shot_pending:
 		return

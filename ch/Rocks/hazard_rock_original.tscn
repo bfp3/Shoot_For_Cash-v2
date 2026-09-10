@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://bkn8gywai4vcd"]
+
+[ext_resource type="Material" uid="uid://4w3skkrnoirr" path="res://res/hazard_black_mat.tres" id="1_2fi81"]
+[ext_resource type="ArrayMesh" uid="uid://lxbrgqaovv68" path="res://res/Rocks/rock_mesh_03.tres" id="2_316t1"]
+[ext_resource type="Material" uid="uid://dtudawp4gytv8" path="res://res/red_glow_mat.tres" id="3_316t1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_herjc"]
+size = Vector3(0.019, 0.1, 0.022)
+
+[sub_resource type="Animation" id="Animation_p78v0"]
+resource_name = "pulsating"
+length = 1.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.32, 0.4, 0.59827745, 0.6666667, 0.76666665, 1.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0.7, 0.7, 0.7), Vector3(0.7, 0.7, 0.7), Vector3(0.85, 0.85, 0.85), Vector3(0.7, 0.7, 0.7), Vector3(0.85, 0.85, 0.85), Vector3(0.7, 0.7, 0.7), Vector3(0.7, 0.7, 0.7)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_herjc"]
+_data = {
+&"pulsating": SubResource("Animation_p78v0")
+}
+
+[node name="Hazard_large" type="MeshInstance3D" unique_id=1224955205]
+unique_name_in_owner = true
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
+layers = 524289
+material_override = ExtResource("1_2fi81")
+cast_shadow = 0
+mesh = ExtResource("2_316t1")
+
+[node name="Xmark" type="MeshInstance3D" parent="." unique_id=720857407]
+transform = Transform3D(0.32212183, 0.30283618, 1.4333624, 1.0443203, 0.9817958, -0.4421224, -1.0274398, 1.0928712, -6.265426e-08, -0.21314442, 0.02889894, 0)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark2" type="MeshInstance3D" parent="." unique_id=193044544]
+transform = Transform3D(0.30283615, -0.3221218, 1.4333624, 0.9817958, -1.0443202, -0.44212237, 1.0928711, 1.02744, -6.265426e-08, -0.21314442, 0.02889894, 0)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark5" type="MeshInstance3D" parent="." unique_id=222331126]
+transform = Transform3D(1.2990382, 0.75, -1.4972823e-09, -0.7320116, 1.2678815, -0.3265506, -0.1632753, 0.28280115, 1.4640235, 0.004841362, 0.035692327, -0.23071504)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark6" type="MeshInstance3D" parent="." unique_id=64846238]
+transform = Transform3D(0.7500001, -1.299038, -1.497284e-09, 1.2678814, 0.7320118, -0.32655057, 0.2828011, 0.1632753, 1.4640235, 0.00047584996, 0.02713749, -0.22417474)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark11" type="MeshInstance3D" parent="." unique_id=433027180]
+transform = Transform3D(1.0278924, 1.0922929, 0.018302752, 1.0919845, -1.0265838, -0.06079808, -0.031746652, 0.05498685, -1.4986558, 0.005695734, 0.028898286, 0.2019549)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark12" type="MeshInstance3D" parent="." unique_id=655189119]
+transform = Transform3D(1.0922933, -1.0278921, 0.018302772, -1.0265834, -1.0919851, -0.060798183, 0.05498682, 0.031746775, -1.4986557, -0.0003785221, 0.03393153, 0.20524675)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark3" type="MeshInstance3D" parent="." unique_id=1200187831]
+transform = Transform3D(-7.9146474e-08, -1.3579388e-08, 1.5, -1.0606601, 1.0606601, -4.6362928e-08, -1.0606601, -1.0606601, -6.556708e-08, 0.23886469, -0.0040612705, 0.0016821623)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark4" type="MeshInstance3D" parent="." unique_id=1100043447]
+transform = Transform3D(-7.9146474e-08, 1.3579388e-08, 1.5, 1.0606602, 1.0606601, 4.6362935e-08, -1.0606601, 1.0606602, -6.556708e-08, 0.23886469, 0.00406115, 0.009804487)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark7" type="MeshInstance3D" parent="." unique_id=299534975]
+transform = Transform3D(0.97821367, -0.97821355, 0.57982504, -0.40999818, 0.40999818, 1.3834027, -1.0606604, -1.0606602, 1.512154e-14, 0.022141611, 0.18016721, 0)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark8" type="MeshInstance3D" parent="." unique_id=1300484298]
+transform = Transform3D(-0.97821367, -0.97821355, 0.57982504, 0.40999818, 0.40999818, 1.3834027, -1.0606604, 1.0606602, 3.9555325e-15, 0.023202218, 0.18269773, 0)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark9" type="MeshInstance3D" parent="." unique_id=680000876]
+transform = Transform3D(1.0600567, -1.0600564, 0.050596286, -0.035777, 0.03577695, 1.4991465, -1.06066, -1.0606604, -2.6337823e-08, -0.0009796772, -0.25107297, 0.0016821027)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="Xmark10" type="MeshInstance3D" parent="." unique_id=960742019]
+transform = Transform3D(-1.0600568, -1.0600564, 0.050596286, 0.035776924, 0.035777032, 1.4991465, -1.06066, 1.0606604, -8.6653294e-08, -0.009097468, -0.250799, 0.009804428)
+material_override = ExtResource("3_316t1")
+mesh = SubResource("BoxMesh_herjc")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=343649133]
+libraries/ = SubResource("AnimationLibrary_herjc")
+autoplay = &"pulsating"
+speed_scale = 2.0

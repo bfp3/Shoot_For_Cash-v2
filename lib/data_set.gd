@@ -131,6 +131,8 @@ var dataset_float : Dictionary = {
 	,"rock_type_ammo"		: [1,		1]
 	## rock-white: scene white mesh; miss and shot do not strike.
 	,"rock_type_white"		: [1,		1]
+	## rock-bounce: $rock-bounce mesh. Hop side like rico. Splash/OOB no strike. Sit-timer default 3s.
+	,"rock_type_bounce"		: [1,		2]
 	## rock-stay: hangs at aim after a fast straight approach.
 	,"rock_type_stay"		: [2,		1]
 	## threat: invincible overlap-smoke canister (not a clearable rock).
