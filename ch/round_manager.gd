@@ -59,6 +59,7 @@ const LAYOUT_PATH_BY_PLACE_NAME := {
 	"moss11": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
 	"moss12": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
 	"moss13": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
+	"redd2": "res://sc/All_level_layouts/level_layout_redd_02.tscn",
 	"hood": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
 	"mine": "res://sc/All_level_layouts/level_layout_moss_11.tscn",
 	"kings": "res://sc/All_level_layouts/level_layout_moss_11.tscn"
