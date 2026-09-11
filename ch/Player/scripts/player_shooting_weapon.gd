@@ -885,6 +885,9 @@ func activate_multishot_bonus(rock_count: int) -> void:
 	
 	var multi_shot := get_tree().get_first_node_in_group('multi_shot')
 	multi_shot.multi_shot(rock_count, temp_label_pos)
+	var meter := PerformanceMeter.find_meter(self)
+	if meter != null:
+		meter.apply_combo(rock_count)
 	
 	#%ComboMode.start()
 	
@@ -921,6 +924,9 @@ func _try_scope_mechanic_callout(targets: Array) -> void:
 		return
 	if kind == "shrink" and bonus.has_method("show_shrink_scope_callout"):
 		bonus.show_shrink_scope_callout(label_pos)
+		var meter := PerformanceMeter.find_meter(self)
+		if meter != null and meter.has_method("apply_sniped"):
+			meter.apply_sniped()
 	elif kind == "expand" and bonus.has_method("show_expand_scope_callout"):
 		bonus.show_expand_scope_callout(label_pos)
 	

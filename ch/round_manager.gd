@@ -1256,6 +1256,9 @@ func check_round_for_strikes() -> void:
 	current_round = current_sequence_index + 1
 	wave_progress_feedback.reset_strikes()
 	gl_PlayerState.dataset.total_current_strikes = 0
+	var meter := get_tree().get_first_node_in_group("performance_meter") if is_inside_tree() else null
+	if meter != null and meter.has_method("restore_to_start"):
+		meter.restore_to_start()
 	# Restore this session's strike cap (default 3, or `strikes N` from remaining phases).
 	var strikes := 3
 	for round_data in _phase_dicts_in_play():
@@ -1412,6 +1415,9 @@ func on_rest_balloon_shot() -> void:
 			wave_progress_feedback.strike_label.text = ""
 
 	check_round_for_strikes()
+	var meter := get_tree().get_first_node_in_group("performance_meter")
+	if meter != null and meter.has_method("restore_to_start"):
+		meter.restore_to_start()
 	_rest_balloon_advancing = false
 	if rocks_container and rocks_container.has_method("flush_pending_ammo"):
 		rocks_container.flush_pending_ammo()

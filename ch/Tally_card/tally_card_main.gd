@@ -319,6 +319,9 @@ func _money_text(amount: int) -> String:
 
 
 func _round_prize_amount() -> int:
+	var meter = _performance_meter()
+	if meter != null and meter.has_method("get_star_cash"):
+		return int(meter.get_star_cash())
 	if round_manager and round_manager.has_method("get_script_range_reward"):
 		return int(round_manager.get_script_range_reward())
 	if round_manager and round_manager.has_method("get_current_range_reward"):
@@ -333,6 +336,23 @@ func _round_prize_amount() -> int:
 		if from_place > 0:
 			return from_place
 	return int(gl_DataSet.get_value("reward_perfect_round", 0))
+
+
+func _performance_meter():
+	return get_tree().get_first_node_in_group("performance_meter")
+
+
+func _star_grade_title() -> String:
+	var meter = _performance_meter()
+	if meter == null or not meter.has_method("get_star_count"):
+		return _scene_prize_title
+	var stars := int(meter.get_star_count())
+	if stars <= 0:
+		return "NO STARS"
+	var marks := ""
+	for i in stars:
+		marks += "★"
+	return marks
 
 
 func _play_payout_sequence() -> void:
@@ -356,7 +376,7 @@ func _play_payout_sequence() -> void:
 
 	await get_tree().create_timer(0.35, false).timeout
 	$SFX/shop_purchase_02.play()
-	await _reveal_win_row(grade_label, grade_cash_label, _scene_prize_title, _money_text(prize))
+	await _reveal_win_row(grade_label, grade_cash_label, _star_grade_title(), _money_text(prize))
 
 	await get_tree().create_timer(0.35, false).timeout
 	$SFX/shop_purchase_02.play()

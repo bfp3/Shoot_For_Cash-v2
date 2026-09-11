@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://c4xnr2pda43id" path="res://ch/HUD_components/make_strike_noticeable.gd" id="11_jd1q6"]
 [ext_resource type="AudioStream" uid="uid://jduh5n36fbsx" path="res://sfx/strike_out_jingle_01.ogg" id="11_m17j2"]
 [ext_resource type="Texture2D" uid="uid://drvjio7oxqunn" path="res://res/ring512.png" id="12_452ec"]
+[ext_resource type="PackedScene" path="res://ch/HUD_components/performance_meter.tscn" id="13_meter"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txfio"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
@@ -399,3 +400,6 @@ grow_vertical = 2
 scale = Vector2(0.01, 0.01)
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("12_452ec")
+
+[node name="PerformanceMeter" parent="." instance=ExtResource("13_meter")]
+layout_mode = 1

@@ -13,7 +13,7 @@
 [ext_resource type="Material" path="res://mine_temp/materials/mat_fire.tres" id="10_vlpx7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5tkbb"]
-size = Vector3(1, 2.506958, 1)
+size = Vector3(1, 2.1400757, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xb1fg"]
 render_priority = 2
@@ -365,11 +365,13 @@ size = Vector2(0.55, 0.7)
 
 [node name="AmmoBalloon" unique_id=1844229001 instance=ExtResource("1_ckpt")]
 script = ExtResource("2_script")
+pack_ammo_amount = -1
+title_text = ""
 pan_duration = 3.5
 balloon_type = 0
 
 [node name="main_col" parent="." index="0" unique_id=809893561]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0.788, 0)
+transform = Transform3D(0.487, 0, 0, 0, 0.487, 0, 0, 0, 0.487, 0, 0.09866415, 0)
 shape = SubResource("BoxShape3D_5tkbb")
 
 [node name="small_rock2" parent="Mesh" parent_id_path=PackedInt32Array(950426368) index="0" unique_id=2102516094]

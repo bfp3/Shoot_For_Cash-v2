@@ -228,6 +228,7 @@ func next_round() -> void:
 	dataset.bonus_cash = 0
 	dataset.fines = 0
 	dataset.total_strikes = 0
+	dataset.total_current_strikes = 0
 	dataset.total_white_rocks = 0
 	dataset.total_rocks_in_round = 0
 	dataset.total_rocks_destroyed = 0
@@ -238,6 +239,9 @@ func next_round() -> void:
 	cash_banked_this_round = 0
 	round_finished = false
 	_current_round_log.clear()
+	var meter = _performance_meter()
+	if meter and meter.has_method("reset_for_round"):
+		meter.reset_for_round()
 	
 func next_wave() -> void:
 	dataset.total_white_rocks = 0
@@ -570,8 +574,11 @@ func log_rock_missed(item : String = '', skip_strike: bool = false) -> void:
 	if not skip_strike and item.contains('rock_type_1'):
 		if _yellow_rocks_give_strikes():
 			add_strike()
-		#return
-		
+
+	if item.contains('rock_type_grey'):
+		_apply_meter_miss("grey")
+	elif item.contains('rock_type_white'):
+		_apply_meter_miss("white")
 
 	if dataset.total_rocks_in_round_remaining > 0:
 		return
@@ -595,22 +602,42 @@ func _yellow_rocks_give_strikes() -> bool:
 	return true
 
 
-func add_strike() -> void:
-	# `no-lives` on the active round only — never a global / permanent disable.
+func _apply_meter_miss(kind: String) -> void:
+	var meter = _performance_meter()
+	if meter != null and meter.has_method("apply_generic_penalty"):
+		meter.apply_generic_penalty(kind)
+
+
+func add_strike(kind: String = "miss") -> void:
+	# `no-lives` still moves the meter; it only skips strikeout / old strike counting.
 	var round_manager = get_tree().get_first_node_in_group('round_manager')
-	if round_manager != null and round_manager.has_method('is_current_round_no_lives'):
-		if round_manager.is_current_round_no_lives():
-			return
 	if round_manager != null:
 		if bool(round_manager.get("_continue_open")) or bool(round_manager.get("_continue_resuming")):
 			return
 
+	var meter = _performance_meter()
+	if meter != null and meter.has_method("apply_generic_penalty"):
+		var emptied := bool(meter.apply_generic_penalty(kind))
+		if emptied:
+			return
+		EventBus.instance.add_strike.emit()
+		return
+
+	if round_manager != null and round_manager.has_method('is_current_round_no_lives'):
+		if round_manager.is_current_round_no_lives():
+			return
 	dataset.total_current_strikes += 1
 	var max_strikes := get_max_strikes()
 	if dataset.total_current_strikes >= max_strikes:
 		EventBus.instance.has_hit_three_strikes.emit()
 	else:
 		EventBus.instance.add_strike.emit()
+
+
+func _performance_meter():
+	if not is_inside_tree():
+		return null
+	return get_tree().get_first_node_in_group("performance_meter")
 
 
 func set_max_strikes(value: int) -> void:

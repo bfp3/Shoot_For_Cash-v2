@@ -57,6 +57,10 @@ const AMMO_ROCK_MAT := preload("res://res/rock-ammo_material.tres")
 @export_range(0.1, 4.0, 0.05) var rico_fall_gravity := 1.15
 ## |X| below this uses travel-velocity to pick a side (otherwise left→+X, right→−X).
 @export_range(0.0, 1.0, 0.001) var rico_center_threshold := 0.01
+## Sideways shove when a sliding rico knocks a stationary rico.
+@export_range(2.0, 40.0, 0.5) var rico_knock_speed := 11.0
+## Upward kick on a rico that got bumped (helps it arc into the splash).
+@export_range(0.0, 24.0, 0.5) var rico_knock_up := 5.5
 ## Face-on propeller (Z) vs rolling (X) vs turntable (Y) vs always-into-camera.
 ## Local Y snaps so mesh +Y faces the camera; spin flips with travel so both sides roll the same way.
 enum RicoSpinAxis {
@@ -1050,6 +1054,7 @@ func update_hit() -> void:
 	
 
 func update_missed() -> void:
+	_clear_rico_trails()
 	disable_collision()
 	remove_from_group('Target')
 	rock_destroyed = true
@@ -1201,6 +1206,7 @@ func _cache_mesh_original_overrides() -> void:
 
 func hide_all_meshes() -> void:
 	_cache_mesh_original_overrides()
+	_clear_rico_trails()
 	for mesh in _visual_meshes():
 		if mesh == null:
 			continue
@@ -1572,6 +1578,7 @@ func setup_rock_type() -> void:
 			force_mult = [4]
 			force_mult_index = 0
 			_set_rico_particles(false)
+			_resume_rico_trails()
 
 		RockSize.BOUNCE:
 			current_rock_type = "Bounce Rock"
@@ -1812,6 +1819,7 @@ func was_hit_tween() -> void:
 func release_to_pool() -> void:
 	if current_state == State.INACTIVE:
 		return
+	_clear_rico_trails()
 	_pool_setup_token += 1
 	_reset_rico_flight_state()
 	disable_collision()
@@ -2231,7 +2239,7 @@ func hit_by_player(damage : int, screen_offset : Vector2 = Vector2.ZERO, freeze_
 		
 	#Rock Destroyed Process
 	
-	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL:
+	if rock_type == RockSize.HAZARD or rock_type == RockSize.HAZARD_SMALL or is_stay_black():
 		## Strike immediately on a direct shot — don't wait for the explode delay.
 		_apply_direct_hazard_strike()
 
@@ -2338,7 +2346,13 @@ func start_destroyed_process() -> void:
 		var pay := cash_value
 		if _rico_cash_paid or _bounce_cash_paid:
 			pay = 0
-		gl_PlayerState.log_hit(rock_type_name, current_rock_type, pay, global_position)
+		var meter := PerformanceMeter.find_meter(self)
+		var meter_paid := false
+		if pay != 0 and meter != null and meter.handles_rock_hit(rock_type):
+			pay = meter.apply_rock_hit(rock_type)
+			cash_value = pay
+			meter_paid = true
+		gl_PlayerState.log_hit(rock_type_name, current_rock_type, 0 if meter_paid else pay, global_position)
 			
 	
 	remove_from_group('Target')
@@ -2383,7 +2397,7 @@ func start_destroyed_process() -> void:
 			play_destroy_sfx()
 			EventBus.instance.hazard_hit.emit()
 			_set_strike_feedback_origin_here()
-			gl_PlayerState.add_strike()
+			gl_PlayerState.add_strike("black")
 		_hazard_strike_from_direct_shot = false
 	
 	if rock_type == RockSize.SMOKECAN:
@@ -2800,6 +2814,35 @@ func _rico_particles() -> GPUParticles3D:
 	return null
 
 
+func _rico_trail_nodes() -> Array:
+	var nodes: Array = []
+	if rock_rico_mesh:
+		var trail := rock_rico_mesh.get_node_or_null("Trails")
+		if trail:
+			nodes.append(trail)
+	return nodes
+
+
+func _clear_rico_trails() -> void:
+	for trail in _rico_trail_nodes():
+		if trail.has_method("clear_immediately"):
+			trail.clear_immediately()
+		else:
+			if "_trailEnabled" in trail:
+				trail._trailEnabled = false
+			trail.hide()
+
+
+func _resume_rico_trails() -> void:
+	for trail in _rico_trail_nodes():
+		if trail.has_method("resume_emitting"):
+			trail.resume_emitting()
+		else:
+			trail.show()
+			if "_trailEnabled" in trail:
+				trail._trailEnabled = true
+
+
 func _set_rico_particles(active: bool) -> void:
 	var particles := _rico_particles()
 	if particles == null:
@@ -2860,13 +2903,18 @@ func _start_rico_slide() -> void:
 	play_hit_sfx()
 	_play_vfx(&"rock_hit")
 	shake_camera()
-	if not _rico_cash_paid and cash_value != 0:
+	if not _rico_cash_paid:
 		_rico_cash_paid = true
-		gl_PlayerState.add_to_cash_pool(cash_value, global_position)
+		var meter := PerformanceMeter.find_meter(self)
+		var pay := cash_value
+		if meter != null and meter.handles_rock_hit(rock_type):
+			pay = meter.apply_rock_hit(rock_type)
+		elif cash_value != 0:
+			gl_PlayerState.add_to_cash_pool(cash_value, global_position)
 		if EventBus.instance and EventBus.instance.has_signal("rock_hit_logged"):
-			EventBus.instance.rock_hit_logged.emit(rock_type_name, current_rock_type, cash_value)
-		if money_label_3d and cash_value > 0 and money_label_3d.has_method("money_is_money"):
-			money_label_3d.money_is_money(global_position, cash_value)
+			EventBus.instance.rock_hit_logged.emit(rock_type_name, current_rock_type, pay)
+		if money_label_3d and pay > 0 and money_label_3d.has_method("money_is_money"):
+			money_label_3d.money_is_money(global_position, pay)
 	_enable_rico_kill_area()
 	_rico_slide_token += 1
 	var token := _pool_setup_token
@@ -3185,13 +3233,18 @@ func _start_bounce_slide() -> void:
 	play_hit_sfx()
 	_play_vfx(&"rock_hit")
 	shake_camera()
-	if not _bounce_cash_paid and cash_value != 0:
+	if not _bounce_cash_paid:
 		_bounce_cash_paid = true
-		gl_PlayerState.add_to_cash_pool(cash_value, global_position)
+		var meter := PerformanceMeter.find_meter(self)
+		var pay := cash_value
+		if meter != null and meter.handles_rock_hit(rock_type):
+			pay = meter.apply_rock_hit(rock_type)
+		elif cash_value != 0:
+			gl_PlayerState.add_to_cash_pool(cash_value, global_position)
 		if EventBus.instance and EventBus.instance.has_signal("rock_hit_logged"):
-			EventBus.instance.rock_hit_logged.emit(rock_type_name, current_rock_type, cash_value)
-		if money_label_3d and cash_value > 0 and money_label_3d.has_method("money_is_money"):
-			money_label_3d.money_is_money(global_position, cash_value)
+			EventBus.instance.rock_hit_logged.emit(rock_type_name, current_rock_type, pay)
+		if money_label_3d and pay > 0 and money_label_3d.has_method("money_is_money"):
+			money_label_3d.money_is_money(global_position, pay)
 	_enable_rico_kill_area()
 	_set_bounce_particles(true)
 	var to := _bounce_target - global_position
@@ -3280,10 +3333,16 @@ func _rico_scan_nearby_rocks() -> void:
 		return
 	var reach := _rico_world_radius()
 	var reach_sq := reach * reach
+	var release_sq := reach_sq * 1.35
 	for child in host.get_children():
 		if child == self or not (child is RockInstance):
 			continue
-		if global_position.distance_squared_to(child.global_position) > reach_sq:
+		var dist_sq := global_position.distance_squared_to(child.global_position)
+		var id := child.get_instance_id()
+		if dist_sq > release_sq:
+			_rico_hit_ids.erase(id)
+			continue
+		if dist_sq > reach_sq:
 			continue
 		_rico_try_hit(child)
 
@@ -3302,6 +3361,9 @@ func _rico_try_hit(body: Node3D) -> void:
 	if _rico_hit_ids.has(id):
 		return
 	_rico_hit_ids[id] = true
+	if rock.rock_type == RockSize.RICO and _rico_sliding:
+		_rico_bounce_off_rico(rock)
+		return
 	if rock.rock_type == RockSize.RICO:
 		rock._rico_force_pop = true
 	if rock.rock_type == RockSize.BOUNCE:
@@ -3315,6 +3377,63 @@ func _rico_try_hit(body: Node3D) -> void:
 		if rock.cash_value < 0:
 			rock.cash_value = 0
 	rock.start_destroyed_process()
+
+
+func _rico_bounce_off_rico(rock: RockInstance) -> void:
+	var toward := signf(rock.global_position.x - global_position.x)
+	if is_zero_approx(toward):
+		toward = _rico_dir
+	if signf(_rico_dir) == toward:
+		_rico_reverse_slide()
+	if rock._rico_sliding:
+		var toward_me := signf(global_position.x - rock.global_position.x)
+		if is_zero_approx(toward_me):
+			toward_me = rock._rico_dir
+		if signf(rock._rico_dir) == toward_me:
+			rock._rico_reverse_slide()
+		rock._rico_hit_ids[get_instance_id()] = true
+	else:
+		rock._rico_knock_into_fall(global_position, toward)
+	play_hit_sfx()
+	_play_vfx(&"rock_hit")
+
+
+func _rico_reverse_slide() -> void:
+	if not _rico_sliding:
+		return
+	_rico_dir *= -1.0
+	linear_velocity.x = _rico_dir * rico_speed
+	global_position.x += _rico_dir * 0.2
+	linear_velocity.z = 0.0
+	global_position.z = _rico_lock_z
+
+
+func _rico_knock_into_fall(from_pos: Vector3, incoming_dir: float) -> void:
+	if _rico_sliding:
+		return
+	if current_state != State.ACTIVE or not rock_activated:
+		return
+	var away := global_position - from_pos
+	away.z = 0.0
+	if away.length_squared() < 0.0001:
+		away = Vector3(-incoming_dir, 0.4, 0.0)
+	away = away.normalized()
+	if has_node("Start_falling_timer"):
+		$Start_falling_timer.stop()
+	ballistic_aim_active = false
+	_ballistic_in_descent = true
+	freeze = false
+	sleeping = false
+	gravity_scale = maxf(rico_fall_gravity, 0.9)
+	linear_damp = 0.08
+	angular_damp = 0.25
+	constant_force = Vector3.ZERO
+	linear_velocity = Vector3(
+		away.x * rico_knock_speed,
+		maxf(away.y * rico_knock_speed * 0.45, rico_knock_up),
+		0.0
+	)
+	apply_torque_impulse(Vector3(0.0, 0.0, -incoming_dir * 90.0))
 
 
 func standard_blast() -> void:
@@ -3499,7 +3618,7 @@ func _apply_direct_hazard_strike() -> void:
 	_play_rocks_sfx("hazard_hit_sound")
 	EventBus.instance.hazard_hit.emit()
 	_set_strike_feedback_origin_here()
-	gl_PlayerState.add_strike()
+	gl_PlayerState.add_strike("black")
 
 
 func _arm_hazard_crosshair() -> void:
@@ -4176,7 +4295,7 @@ func _trigger_avoider_crosshair_contact() -> void:
 	play_destroy_sfx()
 	_shake_camera_avoider_hit()
 	_set_strike_feedback_origin_here()
-	gl_PlayerState.add_strike()
+	gl_PlayerState.add_strike("black")
 	await was_hit_tween()
 	if current_state == State.ACTIVE:
 		enter_state(State.MISSED)

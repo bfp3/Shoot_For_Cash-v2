@@ -28,29 +28,18 @@ func _ready() -> void:
 	EventBus.instance.add_strike.connect(add_strike)
 	EventBus.instance.has_hit_three_strikes.connect(three_strikes)
 	_hide_strike_out_label()
+	if indicators_row:
+		indicators_row.hide()
 	reset()
 
 func add_strike() -> void:
 	if _is_playing_finale:
 		return
-	var max_strikes := 3
-	if gl_PlayerState and gl_PlayerState.has_method("get_max_strikes"):
-		max_strikes = gl_PlayerState.get_max_strikes()
-	## Non-final strikes only (final uses has_hit_three_strikes).
-	if strike_count >= max_strikes - 1:
-		return
-	var indicator := _next_unstruck_indicator()
-	if indicator == null:
-		return
-	strike_count += 1
-
 	_start_hud_notice()
 	if strike_sfx:
 		$StrikeSFX3.play()
 		$StrikeSFX4.play()
 		$StrikeSFX5.play()
-
-	indicator.reveal_strike(true)
 
 
 func ensure_extra_strike_slot() -> void:

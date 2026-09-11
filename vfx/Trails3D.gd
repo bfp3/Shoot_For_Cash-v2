@@ -36,6 +36,24 @@ func stop_emitting() -> void:
 	_trailEnabled = false
 
 
+func clear_immediately() -> void:
+	if _trailEnabled:
+		_trailEnabled = false
+	_active_points.clear()
+	_active_widths.clear()
+	_active_lifePoints.clear()
+	_old_trails.clear()
+	if mesh:
+		mesh.clear_surfaces()
+	hide()
+
+
+func resume_emitting() -> void:
+	show()
+	_oldPos = get_global_transform().origin
+	_trailEnabled = true
+
+
 func is_trail_alive() -> bool:
 	if _active_points.size() > 1:
 		return true

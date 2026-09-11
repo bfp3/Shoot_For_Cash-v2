@@ -1,9 +1,10 @@
 @tool
 extends Control
 ## Bottom-right round cash HUD.
-## TotalCash2 = unbanked round pool only. Each round starts at $0. Hits fly a
-## chip into it and roll the number up. Wallet cash is not shown here — it
-## cashes in at tally. Strikeout scatters the round total back to $0.
+## TotalCash2 = unbanked round pool only. Each round starts at the performance
+## meter starting cash (default $500). Hits fly a chip into it and roll the
+## number up. Wallet cash is not shown here — it cashes in at tally. Strikeout
+## scatters the round total back to $0.
 ## PoolLabel is kept for checkpoint / bank internals but can stay hidden.
 ## MultiplierLabel = current cash multiplier.
 

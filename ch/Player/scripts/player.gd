@@ -2063,20 +2063,9 @@ func _tween_accuracy_bar(to_value: float) -> void:
 
 
 func _on_accuracy_streak_complete() -> void:
-	## Grant a 4th strike slot once, then apply a strike — total allowed becomes 4.
-	if not _accuracy_extra_strike_granted:
-		_accuracy_extra_strike_granted = true
-		if gl_PlayerState.has_method("set_max_strikes"):
-			gl_PlayerState.set_max_strikes(4)
-		var rm = get_tree().get_first_node_in_group("round_manager")
-		if rm and rm.get("wave_progress_feedback"):
-			var wpf = rm.wave_progress_feedback
-			if wpf and wpf.has_method("ensure_extra_strike_slot"):
-				wpf.ensure_extra_strike_slot()
-
 	_accuracy_streak = 0
+	_accuracy_extra_strike_granted = false
 	_tween_accuracy_bar(0.0)
-	gl_PlayerState.add_strike()
 	
 	
 

@@ -2569,7 +2569,8 @@ func deactivate_out_of_bounds_rock(body: RockInstance, side: OobSide = OobSide.N
 	# Strike / miss feedback. Must-hit OOB strikes get this via EventBus.add_strike instead
 	# (avoids doubling the shake/particles). Red-attacker: feedback yes, strike no.
 	if oob_miss_feedback_enabled and _oob_miss_should_show_feedback(missed_rock_type_name) \
-			and not _oob_miss_causes_strike(missed_rock_type_name):
+			and not _oob_miss_causes_strike(missed_rock_type_name) \
+			and not missed_rock_type_name.contains("rock_type_rico"):
 		_play_oob_miss_feedback(miss_pos, side)
 
 

@@ -1,612 +1,388 @@
 island shipper
 
 range jetz
+
 	play $0
 	reward $100,000
-
 	round
-		# Blue Danube (Strauss) — Fantasia waltz, ~2:00 Hold Out.
-		# Track is 3:02. Waltz in 3/4 at ~1 bar/sec (1000ms). Beat = 333ms.
-		# Music starts with sfx-play. First rock ~6s (intro horn).
-		# One continuous timed sequence — no bare `wait` until the end,
-		# so the dance stays on the music.
-		#hold out 120000
-		ammo-unlimited
-		ammo c6
-		ammo-mega c7
+		pace-impossible
 
-		sfx-play blue_danube -45.0
-		pace-slow
+		#sfx-play star_wars_cantina -40.0
+		#sfx-play sephiroff -45.0
+		ammo
 
-		# ── INTRO (Andantino) ──────────────────────────────────────────
-		# empty shimmer, then the horn outlines the theme
-		wait 4200
+		ammo c1
+		ammo a1
 
 		rock 4 a4
-		wait 3500
-		rock 4 a4
+		wait
+
+
+		rock 2 a1
+		wait 450
+		rock 3 a2
+		wait 450
+		rock 4 a3
+		wait 450
+		rock 5 a4
+		wait 450
+		rock 6 a5
+		wait 450
+		rock 6 a5
+		wait 450
+		rock 7 a6
+		wait 450
+		rock 8 a7
+		wait
+		ammo
+		balloon-rest
+
+		rock 8 a7
+		wait 350
+		rock 7 a6
+		wait 350
+		rock 6 a5
+		wait 350
+		rock 5 a4
+		wait 350
+		rock 4 a3
+		wait 350
+		rock 3 a2
+		wait 350
+		rock 2 a1
+		wait 350
+		rock-stay 1 a8
+		wait
+
+		ammo
+		balloon-rest
+
+		wait 1000
+		rock 1 a4
 		wait 2500
 
-		# slow rising triad (the waltz, still half-asleep)
-		rock 2 a2
-		wait 1800
-		rock 4 a4
-		wait 1800
-		rock 6 a6
-		wait 2400
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
 
-		# staccato wind chords
-		rock-black 1 c1
-		wait 700
-		rock-black 8 c8
-		wait 700
-		rock-black 4 c4
-		wait 2200
+		rock
+		rock
+		wait 3000
+		rock
+		rock
+		wait 3000
 
-		# forte swell, then die away
+		rock
+		rock
+		wait 1500
+		rock
+		rock
+		wait
+
+		wait 3000
+
+		ammo
+		balloon-rest
+
+		sfx-faster sephiroff
+
 		rock 1 a1
 		wait 0
-		rock 8 a8
-		wait 400
-		rock-black 2 c2
-		wait 0
-		rock-black 7 c7
-		wait 400
-		rock 4 a4
-		wait 0
-		rock 5 a5
-		wait 2800
-
-		# three descending notes usher in the waltz
-		rock 6 a6
-		wait 600
-		rock 4 a4
-		wait 600
 		rock 2 a2
+		wait 0
+		rock 3 a3
+
+		wait 3000
+
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+
+		wait 3000
+		rock
 		wait 2000
 
-		# ── WALTZ 1A — the famous rising triad ─────────────────────────
-		pace-normal
+		rock-avoider 1 a1
+		rock-avoider 8 a8
 
-		# 8 bars, yellows climb 2-4-6 / 3-5-7
-		rock 2 a2
-		wait 333
-		rock 4 a4
-		wait 333
-		rock 6 a6
-		wait 1334
+		wait 3000
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		rock
+		wait 3000
 
-		rock 3 a3
-		wait 333
-		rock 5 a5
-		wait 333
-		rock 7 a7
-		wait 1334
-
-		rock 1 a1
-		wait 333
-		rock 3 a3
-		wait 333
-		rock 5 a5
-		wait 1334
-
-		rock 4 a4
-		wait 333
-		rock 6 a6
-		wait 333
-		rock 8 a8
-		wait 1334
-
-		# 1A again, bass "oom" on beat 1
-		rock-black 4 c4
-		wait 0
-		rock 2 a2
-		wait 333
-		rock 4 a4
-		wait 333
-		rock 6 a6
-		wait 1334
-
-		rock-black 4 c4
-		wait 0
-		rock 3 a3
-		wait 333
-		rock 5 a5
-		wait 333
-		rock 7 a7
-		wait 1334
-
-		rock-black 4 c4
-		wait 0
-		rock 1 a1
-		wait 333
-		rock 3 a3
-		wait 333
-		rock 5 a5
-		wait 1334
-
-		rock-black 4 c4
-		wait 0
-		rock 4 a4
-		wait 333
-		rock 6 a6
-		wait 333
-		rock 8 a8
-		wait 1334
-
-		# ── WALTZ 1B — playful left / right ────────────────────────────
-		# oom-pah-pah: black on 1, yellows on 2-3, swapping sides
-		rock-black 4 c4
-		wait 333
-		rock 1 b1
-		wait 333
-		rock 2 b2
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 8 b8
-		wait 333
-		rock 7 b7
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 1 a1
-		wait 333
-		rock 2 a2
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 8 a8
-		wait 333
-		rock 7 a7
-		wait 334
-
-		rock-black 5 c5
-		wait 333
-		rock 3 b3
-		wait 333
-		rock 6 b6
-		wait 334
-
-		rock-black 3 c3
-		wait 333
-		rock 2 b2
-		wait 333
-		rock 7 b7
-		wait 334
-
-		rock-black 4 c4
-		wait 0
-		rock 1 a1
-		wait 0
-		rock 8 a8
-		wait 1000
-
-		rock 4 a4
-		wait 0
-		rock 5 a5
-		wait 1000
-
-		# ── WALTZ 1B repeat — same joke, one row lower ─────────────────
-		rock-black 4 c4
-		wait 333
-		rock 1 c1
-		wait 333
-		rock 2 b2
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 8 c8
-		wait 333
-		rock 7 b7
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 1 b1
-		wait 333
-		rock 2 a2
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 8 b8
-		wait 333
-		rock 7 a7
-		wait 334
-
-		rock-black 5 c5
-		wait 333
-		rock 3 a3
-		wait 333
-		rock 6 a6
-		wait 334
-
-		rock-black 3 c3
-		wait 333
-		rock 2 a2
-		wait 333
-		rock 7 a7
-		wait 334
-
-		rock-black 4 c4
-		wait 0
-		rock 1 a1
-		wait 0
-		rock 8 a8
-		wait 1000
-
-		rock 3 a3
-		wait 0
-		rock 4 a4
-		wait 0
-		rock 5 a5
-		wait 0
-		rock 6 a6
-		wait 1000
-
-		# ── WALTZ 2 — a line of dancers crossing the stage ─────────────
-		# 1 → 8, one yellow per bar, blacks marking the floor
-		rock-black 1 c1
-		wait 0
-		rock 1 a1
-		wait 1000
-		rock-black 2 c2
-		wait 0
-		rock 2 a2
-		wait 1000
-		rock-black 3 c3
-		wait 0
-		rock 3 a3
-		wait 1000
-		rock-black 4 c4
-		wait 0
-		rock 4 a4
-		wait 1000
-		rock-black 5 c5
-		wait 0
-		rock 5 a5
-		wait 1000
-		rock-black 6 c6
-		wait 0
-		rock 6 a6
-		wait 1000
-		rock-black 7 c7
-		wait 0
-		rock 7 a7
-		wait 1000
-		rock-black 8 c8
-		wait 0
-		rock 8 a8
-		wait 1000
-
-		# 8 → 1, yellows on B (a lower jeté)
-		rock-black 8 c8
-		wait 0
-		rock 8 b8
-		wait 1000
-		rock-black 7 c7
-		wait 0
-		rock 7 b7
-		wait 1000
-		rock-black 6 c6
-		wait 0
-		rock 6 b6
-		wait 1000
-		rock-black 5 c5
-		wait 0
-		rock 5 b5
-		wait 1000
-		rock-black 4 c4
-		wait 0
-		rock 4 b4
-		wait 1000
-		rock-black 3 c3
-		wait 0
-		rock 3 b3
-		wait 1000
-		rock-black 2 c2
-		wait 0
-		rock 2 b2
-		wait 1000
-		rock-black 1 c1
-		wait 0
-		rock 1 b1
-		wait 1000
-
-		# ── WALTZ 2B — two couples, mirror ─────────────────────────────
-		rock 1 a1
-		wait 0
-		rock 8 a8
-		wait 500
-		rock-black 4 c4
-		wait 500
-
-		rock 2 a2
-		wait 0
-		rock 7 a7
-		wait 500
-		rock-black 4 c4
-		wait 500
-
-		rock 3 a3
-		wait 0
-		rock 6 a6
-		wait 500
-		rock-black 4 c4
-		wait 500
-
-		rock 4 a4
-		wait 0
-		rock 5 a5
-		wait 500
-		rock-black 4 c4
-		wait 500
-
-		rock 3 a3
-		wait 0
-		rock 6 a6
-		wait 500
-		rock-black 5 c5
-		wait 500
-
-		rock 2 a2
-		wait 0
-		rock 7 a7
-		wait 500
-		rock-black 3 c3
-		wait 500
-
-		rock 1 a1
-		wait 0
-		rock 8 a8
-		wait 500
-		rock-black 4 c4
-		wait 500
-
-		rock 4 a4
-		wait 0
-		rock 5 a4
-		wait 1000
-
-		# ── 1A REPRISE — the triad comes back ──────────────────────────
-		rock-black 4 c4
-		wait 0
-		rock 2 a2
-		wait 333
-		rock 4 a4
-		wait 333
-		rock 6 a6
-		wait 1334
-
-		rock-black 4 c4
-		wait 0
-		rock 3 a3
-		wait 333
-		rock 5 a5
-		wait 333
-		rock 7 a7
-		wait 1334
-
-		rock-black 4 c4
-		wait 0
-		rock 1 a1
-		wait 333
-		rock 3 a3
-		wait 333
-		rock 5 a5
-		wait 1334
-
-		rock-black 4 c4
-		wait 0
-		rock 4 a4
-		wait 333
-		rock 6 a6
-		wait 333
-		rock 8 a8
-		wait 1334
-
-		rock-black 4 c4
-		wait 0
-		rock 2 b2
-		wait 333
-		rock 4 b4
-		wait 333
-		rock 6 b6
-		wait 1334
-
-		rock-black 4 c4
-		wait 0
-		rock 3 b3
-		wait 333
-		rock 5 b5
-		wait 333
-		rock 7 b7
-		wait 1334
-
-		rock-black 4 c4
-		wait 0
-		rock 1 a1
-		wait 0
-		rock 8 a8
-		wait 1000
-
-		rock 2 a2
-		wait 0
-		rock 4 a4
-		wait 0
-		rock 6 a6
-		wait 1000
-
-		# left / right echo (8 bars)
-		rock-black 4 c4
-		wait 333
-		rock 1 a1
-		wait 333
-		rock 2 a2
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 8 a8
-		wait 333
-		rock 7 a7
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 1 b1
-		wait 333
-		rock 2 b2
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 8 b8
-		wait 333
-		rock 7 b7
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 3 a3
-		wait 333
-		rock 6 a6
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 2 a2
-		wait 333
-		rock 7 a7
-		wait 334
-
-		rock-black 4 c4
-		wait 0
-		rock 1 a1
-		wait 0
-		rock 8 a8
-		wait 1000
-
-		rock 4 a4
-		wait 0
-		rock 5 a5
-		wait 1000
-
-		# ── BUILD — triad again, both directions, blacks on the floor ──
-		pace-fast
-
-		rock-black 4 c4
-		wait 0
-		rock 2 a2
-		wait 333
-		rock 4 a4
-		wait 333
-		rock 6 a6
-		wait 334
-
-		rock-black 4 c4
-		wait 0
-		rock 7 a7
-		wait 333
-		rock 5 a5
-		wait 333
-		rock 3 a3
-		wait 334
-
-		rock-black 1 c1
-		wait 0
-		rock-black 8 c8
-		wait 0
-		rock 1 a1
-		wait 333
-		rock 4 a4
-		wait 333
-		rock 8 a8
-		wait 334
-
-		rock-black 2 c2
-		wait 0
-		rock-black 7 c7
-		wait 0
-		rock 2 a2
-		wait 333
-		rock 4 a4
-		wait 333
-		rock 7 a7
-		wait 334
-
-		# four bars of oom-pah-pah across the whole floor
-		rock-black 1 c1
-		wait 333
-		rock 2 b2
-		wait 333
-		rock 3 b3
-		wait 334
-
-		rock-black 8 c8
-		wait 333
-		rock 7 b7
-		wait 333
-		rock 6 b6
-		wait 334
-
-		rock-black 4 c4
-		wait 333
-		rock 3 a3
-		wait 333
-		rock 5 a5
-		wait 334
-
-		rock-black 5 c5
-		wait 333
-		rock 4 a4
-		wait 333
-		rock 6 a6
-		wait 334
-
-		# ── LAST PHRASE — three chords (dum / dum / DUM) ───────────────
-		rock 2 a2
-		wait 0
-		rock 4 a4
-		wait 0
-		rock 6 a6
-		wait 1000
-
-		rock 1 a1
-		wait 0
-		rock 3 a3
-		wait 0
-		rock 6 a6
-		wait 0
-		rock 8 a8
-		wait 1000
-
-		rock-black 1 c1
-		wait 0
-		rock-black 4 c4
-		wait 0
-		rock-black 8 c8
-		wait 0
-		rock 1 a1
-		wait 0
-		rock 2 a2
-		wait 0
-		rock 3 a3
-		wait 0
-		rock 4 a4
-		wait 0
-		rock 5 a5
-		wait 0
-		rock 6 a6
-		wait 0
-		rock 7 a7
-		wait 0
-		rock 8 a8
+		rock
 		wait 2000
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+
+		rock-avoider 1 a1
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait
+
+		sfx-faster sephiroff
+		ammo c1
+		ammo a1
+		balloon-rest
+		wait 2000
+
+		rock-avoider 1 a1
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+
+		rock-avoider 1 a1
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+
+
+		ammo
+		balloon-rest
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 4 a4
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+
+
+		rock
+		wait
+		rock-avoider 1 a1
+		wait 500
+		rock-avoider 2 a2
+		wait 500
+		rock-avoider 1 b1
+		wait 500
+		rock-avoider 2 b2
+		wait 500
+		rock-avoider 1 c1
+		wait 500
+		rock-avoider 2 c2
+		wait 1000
+		rock 4 a4
+		wait
+
+		ammo
+		balloon-rest
+
+		rock 4 a4
+		wait 2000
+		rock 1 a4
+		wait 2500
+
+		rock 4 a1
+		wait 1500
+		rock 4 a8
+		wait 1500
+
+		rock
+		rock
+		wait 3000
+		rock
+		rock
+		wait 3000
+
+		rock
+		rock
+		wait 1500
+		rock
+		rock
 
 		wait
+
+		sfx-faster sephiroff
+		ammo c1
+		ammo a1
+		balloon-rest
+
+		rock 1 a1
+		wait 0
+		rock 2 a2
+		wait 0
+		rock 3 a3
+
+		wait 3000
+
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+
+		wait 3000
+		rock
+		wait 2000
+
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+
+		wait 3000
+		rock-avoider 1 a1
+		rock-avoider 8 a8
+		rock
+		wait 3000
+
+		rock
+		wait 3000
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+
+
+		ammo
+		balloon-rest
+
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+
+		wait 1000
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+
+		rock-avoider 1 a7
+
+		ammo
+		balloon-rest
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a1
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		rock
+
+
+		ammo
+		balloon-rest
+
+		rock 8 a8
+		wait 0
+		rock 7 a7
+		wait 0
+		rock 6 a6
+		wait 1000
+		rock-avoider 1 a8
+		wait 2000
+		rock
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+		rock
+		wait 2000
+		rock
+
+		wait 4000
+
+		ammo
+
+		pineapples
+		pineapple 1 a1
+		pineapple 2 a2
+		pineapple 3 a3
+		pineapple 4 a4
+		pineapple 5 a5

@@ -14,8 +14,8 @@ range moss1
 		ammo-mega c7
 
 		sfx-play oasisWorld -37.0
+		wait 2300
 		#sfx-play c418 -45.0
-
 	round
 		# 80bpm — 750ms beat. Ostinato: left pair (1+2) / right pair (8+7).
 		pace-slow
@@ -224,35 +224,68 @@ range moss2
 		# hold out 30000
 		ammo-mega
 
+		wait 2300
 
+
+		rock-rico 3 a3
+		wait 0
+		rock-rico 5 a5
+		wait 600
+		rock-rico 8 a8
+		wait 700
+		rock 4 a4
+		wait 450
+		rock-rico 3 a3
+		wait 850
+		rock 7 a7
+		wait
 	round
 		#1
-
-		wait 1000
-
 		# PART 2 - SPARSE PAIRS
+
+
+
 		pace-slow
 		rock-rico 3 a3
 		wait 0
-		rock-rico 5 a5
-		wait 250
-
-		rock-black 2 c2
+		rock-black 5 a5
 		wait 0
-		rock-black 6 c6
+		rock 8 a8
 		wait
+
+		wait 500
 
 
 		rock-rico 3 a3
 		wait 0
 		rock-rico 5 a5
+		wait 600
+		rock-rico 8 a8
+		wait 700
+		rock 4 a4
+		wait 300
+		rock-rico 3 a3
+		wait 500
+		rock 7 a7
 		wait
+
+		rock-black 3 a3
+		wait 0
+		rock-rico 5 a5
+		wait 500
+		rock-rico 1 a1
+		wait
+
+		wait 500
 
 		rock-rico 3 a3
 		wait 0
 		rock 5 a5
+		wait 500
+		rock-rico 8 a8
+		wait 500
+		rock 4 a4
 		wait
-		
 	round
 
 		balloon a4
@@ -325,13 +358,12 @@ range moss3
 	round
 		#  SETUP ammo 
 		#  2:40
-		#no-lives
-		#ammo-unlimited
 
 		ammo c6
-		ammo-mega c7
+		ammo-mega b7
+		ammo-mega b8
 
-
+		wait 2300
 
 		sfx-play oasisWorld -37.0
 		#sfx-play c418 -45.0
@@ -595,9 +627,8 @@ range moss3
 
 		bird
 		ammo-mega c7
-		balloon-rest
 
-		wait 2000
+		wait 3000
 		pace-normal
 		rock-white 8 a4
 		wait 2000
@@ -1022,9 +1053,10 @@ range moss4
 
 	round
 		#SETUP
-		# AMMO and Cash 
+		# AMMO and CASH
 		# Dad and I worked on
-		no-lives
+		#difficulty-expert
+		wait 2300
 	round
 		#
 		ammo c6
@@ -1151,16 +1183,13 @@ range moss5
 	play $0
 	reward $2,000
 	round
-		hold out 10000
-		no-lives
+		hold out 30000
 		#balloon b1
 		#balloon b8
 		balloon b2
 		balloon b3
-
 		balloon b6
 		balloon b7
-
 		balloon a4
 		balloon a5
 		balloon c4
@@ -1325,7 +1354,6 @@ range moss5
 		pineapple 2 a2
 		pineapple 5 a5
 		pineapple 8 a8
-
 range moss6
 	play $0
 	reward $1,000
@@ -1947,6 +1975,7 @@ range moss8
 		#SETUP
 		# AMMO and Cash 
 		ammo
+		#difficulty-expert
 	round
 		#
 
@@ -2021,7 +2050,7 @@ range moss8
 		rock 8 a6
 		wait 450
 
-		rock 1 a3
+		rock-black 1 a3
 		wait 450
 		rock-black 8 a6
 		wait 450

@@ -1,6 +1,6 @@
 extends Node
 ## When true, Advanced / Expert / all challenges and all numbered levels are treated as unlocked.
-const debug_everything_unlocked := true
+const debug_everything_unlocked := false
 
 ## Title-screen difficulty locks. False = badge flips to the locked-back message.
 ## Advanced / Expert also require net worth (see unlock amounts below).
@@ -130,7 +130,7 @@ var dataset_float : Dictionary = {
 	## rock-ammo: grey-like $1 rock; miss does not strike. Shooting it can spawn an ammo balloon.
 	,"rock_type_ammo"		: [1,		1]
 	## rock-white: scene white mesh; miss and shot do not strike.
-	,"rock_type_white"		: [1,		1]
+	,"rock_type_white"		: [6,		1]
 	## rock-bounce: $rock-bounce mesh. Hop side like rico. Splash/OOB no strike. Sit-timer default 3s.
 	,"rock_type_bounce"		: [1,		2]
 	## rock-stay: hangs at aim after a fast straight approach.

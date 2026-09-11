@@ -15,6 +15,7 @@ extends Control
 @onready var strike_panel: Panel = $Strike_system
 @onready var strike_label: RichTextLabel = $Strike_system/StrikeLabel
 @onready var strike_hud: Panel = $Strike_system2
+@onready var performance_meter: Control = get_node_or_null("PerformanceMeter")
 
 var wave_count := 0
 
@@ -65,6 +66,8 @@ func _ready() -> void:
 	_set_strike_hud_hidden_immediate()
 	if has_node("Strike_system3"):
 		$Strike_system3.hide()
+	if performance_meter:
+		performance_meter.hide()
 	
 	end()
 	
@@ -206,27 +209,7 @@ func start_clear() -> void:
 	start_tween(clear_panel, _clear_original_position, _clear_original_modulate)
 
 func add_strike() -> void:
-	strikes_int += 1
-	var max_strikes := 3
-	if gl_PlayerState and gl_PlayerState.has_method("get_max_strikes"):
-		max_strikes = gl_PlayerState.get_max_strikes()
-	if strikes_int > max_strikes:
-		#strike_label.text = 'X X X'
-		return
-
-	#match strikes_int:
-		#1:
-			#strike_label.text = 'X '
-		#2:
-			#strike_label.text = 'X X '
-		#3:
-			#strike_label.text = 'X X X'
-		#_:
-			#strike_label.text = ''
-
-	# Individual strike flashes stay on the old center panel.
-	# Persistent indicators + three-strike finale live on Strike_system2.
-	start_tween(strike_panel, _strike_panel_original_position, _strike_panel_original_modulate)
+	return
 
 
 func start_miss() -> void:
@@ -372,6 +355,9 @@ func show_strike_hud() -> void:
 	_strike_hud_visible = true
 	strike_hud.show()
 	strike_hud.modulate.a = 0.0
+	if performance_meter:
+		performance_meter.show()
+		performance_meter.modulate.a = 1.0
 	_strike_hud_tween = create_tween()
 	_strike_hud_tween.tween_property(strike_hud, "modulate:a", 1.0, strike_hud_anim_time)\
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -402,6 +388,8 @@ func hide_strike_hud() -> void:
 	_strike_hud_tween.tween_callback(func() -> void:
 		if is_instance_valid(strike_hud) and not _strike_hud_visible:
 			strike_hud.hide()
+		if performance_meter:
+			performance_meter.hide()
 	)
 
 
@@ -412,6 +400,8 @@ func _set_strike_hud_hidden_immediate() -> void:
 	if strike_hud:
 		strike_hud.hide()
 		strike_hud.modulate.a = 0.0
+	if performance_meter:
+		performance_meter.hide()
 
 
 func restart() -> void:

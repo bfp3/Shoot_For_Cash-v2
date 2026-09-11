@@ -43,7 +43,7 @@ Range clear (last round of a place, first time): tally, then shop (no island map
 ## How a round ends
 
 - **Clear:** `EventBus.instance.all_rocks_destroyed` → `successful_round()` → `WAVE_END`. Endless ignores this and loops spawns. Hold-out: if the script still has work or a pineapple finale is active, stay open; otherwise stop the timer and win.
-- **Miss / strike:** `EventBus.instance.add_strike` → strike HUD. At max strikes, `has_hit_three_strikes` → `handle_three_strikes()` → `unsuccessful_round_locked()`.
+- **Miss / meter:** penalties (yellow miss, black shot, balloon pop) move a Guitar Hero-style meter (`ch/HUD_components/performance_meter.gd`). Emptying it (`<= 0`) strikeouts via `has_hit_three_strikes`. Strike SFX still play. Strike count HUD is hidden.
 - **Strikeout:** forfeit unbanked pool, subtract range-banked from wallet, **keep multiplier**, skip tally, reopen shop (`_return_to_shop_after_strikeout()`).
 - **Cancel:** in-round cancel action → `abort_round_to_shop()`.
 
@@ -83,7 +83,8 @@ Range clear (last round of a place, first time): tally, then shop (no island map
 | Tally | `ch/Tally_card/tally_card_main.gd` + `EventBus.instance.open_tally_card` |
 | Stage complete | `ch/canvas_layers/stage_complete_screen.gd` |
 | Cash HUD | group `money_manager` (`ch/Money/money_labels.gd`) |
-| Strikes | `wave_progress_feedback` |
+| Meter | group `performance_meter` (`ch/HUD_components/performance_meter.gd`) |
+| Strikes | `wave_progress_feedback` (SFX / fail sting; count HUD hidden) |
 | Player | `ch/Player/scripts/player.gd` |
 
 ## Do not

@@ -271,36 +271,6 @@ scale_curve = SubResource("CurveTexture_bpx2c")
 color = Color(1, 0.78039217, 0, 1)
 alpha_curve = SubResource("CurveTexture_g6ubq")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fuvvr"]
-bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1tjj5"]
-bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.15, 0.15, 1)
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 2
-shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3gdew"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
 border_width_left = 1
@@ -316,10 +286,40 @@ corner_radius_bottom_left = 5
 corner_detail = 2
 shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lf8qf"]
+bg_color = Color(0.5376, 0.5525333, 0.56, 0.6862745)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.15, 0.15, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_11n43"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 0.392157)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 2
+shadow_color = Color(0.5, 0.5, 0.5, 0.317647)
+
 [sub_resource type="Theme" id="Theme_pivo4"]
-Button/styles/normal = SubResource("StyleBoxFlat_fuvvr")
-Panel/styles/panel = SubResource("StyleBoxFlat_1tjj5")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_3gdew")
+Button/styles/normal = SubResource("StyleBoxFlat_3gdew")
+Panel/styles/panel = SubResource("StyleBoxFlat_lf8qf")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_11n43")
 
 [sub_resource type="Shader" id="Shader_qfoqq"]
 code = "shader_type spatial;
@@ -1756,9 +1756,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -253.47815
+offset_left = -253.47812
 offset_top = -385.00024
-offset_right = 269.99988
+offset_right = 269.9999
 offset_bottom = 21.521606
 grow_horizontal = 2
 grow_vertical = 2
